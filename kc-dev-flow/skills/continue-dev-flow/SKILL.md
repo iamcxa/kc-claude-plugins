@@ -53,7 +53,9 @@ merge request, or forge equivalent — no matter who owns the ceremony; it is fa
 only for a route that delivers without one. `pr_delivery_selected` is narrower:
 true only when no local delivery provider owns the PR ceremony, so the portable
 one applies. A repository whose provider mod owns the ceremony has the first
-trigger true and the second false. A newly true trigger loads its reference
+trigger true and the second false. `implementation_exit_observation_declared` is
+true only at a build stage whose emitted typed observation names a provider; it
+is the method for that observation, not an extra review. A newly true trigger loads its reference
 before the stage verdict. Record a named receipt in the existing work item;
 `receipt: null` creates no receipt. A link is not activation. A reference cannot
 add stages, broaden scope, or become a standing policy bundle.
@@ -108,13 +110,18 @@ that changes the decision, and next action.
 
 At implementation exit, inspect only the typed observation in the selected
 `build` contract returned by the loader. When it declares `review_convergence`
-in `observe` mode, resolve the repository-local
-RoboRev runbook from `## Local Profile`, select the reviewer complementary to the
-actual implementation provider family, and pass the emitted profile controls
-explicitly. An absent declaration performs no RoboRev probe or invocation. An unknown
-implementation family or unavailable provider produces an honest non-gating
-`UNAVAILABLE` result; do not guess or use ambient defaults.
+in `observe` mode, that same `build` contract's
+`implementation_exit_observation_declared` trigger is true, so read the provider
+contract it names — `../../references/roborev-implementation-exit.md` — as the
+method. Take the reviewer mapping, state holder, prerequisite, and durability
+command from `## Local Profile`, select the reviewer complementary to the actual
+implementation provider family, and pass the emitted profile controls explicitly.
+An absent declaration leaves the trigger false and performs no RoboRev probe or
+invocation. An unknown implementation family or unavailable provider produces an
+honest non-gating `UNAVAILABLE` result; do not guess or use ambient defaults.
 
-`../../references/roborev-implementation-exit.md` is an adoption source, not a
-runtime fallback. Load improvement harvesting only on an explicit request; it
+The provider contract is vendored and loaded like any other conditional
+reference, so an adopter that vendors the profile tree gets this capability
+rather than having to author a runbook for it. Only the repository-local
+bindings stay local. Load improvement harvesting only on an explicit request; it
 never interrupts the selected product route.

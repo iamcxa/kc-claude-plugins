@@ -25,7 +25,8 @@ repair the cheapest compatible seam.
    `../../references/retained-document-policy.md`,
    `../../references/project-context-maintenance.md`,
    `../../references/delivery-branch-base.md`,
-   `../../references/pr-delivery.md`, and
+   `../../references/pr-delivery.md`,
+   `../../references/roborev-implementation-exit.md`, and
    `../../scripts/profile-contract-loader.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
@@ -51,9 +52,11 @@ repair the cheapest compatible seam.
    than asking. Set `delivery_artifact_review` true when that authority delivers
    through a pull request, merge request, or forge equivalent — a forge remote
    plus an existing delivery-artifact history is sufficient evidence — no matter
-   who owns the ceremony. Set it false only for a route that delivers without one,
-   or for a repository whose recorded policy keeps every artifact on the trunk;
-   record which of those applies. Set `pr_delivery_selected` true only when no
+   who owns the ceremony. Set it false only for a route that delivers without
+   one. A repository that must keep every artifact on the trunk keeps the trigger
+   true and records that as the reference's local base policy; binding the
+   trigger false would misstate how the repository delivers. Set
+   `pr_delivery_selected` true only when no
    local provider mod owns the PR ceremony. When a provider such as Spacedock
    `pr-merge` owns it, that trigger stays false and base selection still applies,
    so one delivery authority survives. Then read the owning ceremony's base
@@ -63,8 +66,12 @@ repair the cheapest compatible seam.
    provider copy; do not bind a stacked default over a ceremony that discards it.
 7. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
-8. Bind the local RoboRev runbook when the emitted observation is supported.
-   Missing provider capability remains an honest non-gating `UNAVAILABLE` result.
+8. The vendored `roborev-implementation-exit.md` supplies the provider method;
+   bind only the repository-local parts the emitted observation needs — the
+   reviewer mapping for the implementation provider family, the registered state
+   holder, its clean-holder prerequisite, and the durability command. Resolve the
+   declared equivalents rather than copying another repository's paths. Missing
+   provider capability remains an honest non-gating `UNAVAILABLE` result.
 9. Run the profile loader contract test and the repository's normal gates.
 
 If the workflow runtime cannot skip inactive stages or represent the Production

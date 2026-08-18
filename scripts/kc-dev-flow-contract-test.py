@@ -71,6 +71,7 @@ required = [
     "kc-dev-flow/references/project-context-maintenance.md",
     "kc-dev-flow/references/delivery-branch-base.md",
     "kc-dev-flow/references/pr-delivery.md",
+    "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -111,6 +112,13 @@ documentation_references = [
         "receipt": "project_context",
     },
 ]
+roborev_reference = [
+    {
+        "path": "../../roborev-implementation-exit.md",
+        "trigger": "implementation_exit_observation_declared",
+        "receipt": None,
+    },
+]
 delivery_references = [
     {
         "path": "../../delivery-branch-base.md",
@@ -124,7 +132,8 @@ delivery_references = [
     },
 ]
 conditional_stage_references = {
-    ("poc-exploration", "build.md"): delivery_references
+    ("poc-exploration", "build.md"): roborev_reference
+    + delivery_references
     + [
         {
             "path": "../../reverse-recovery-audit.md",
@@ -147,7 +156,9 @@ conditional_stage_references = {
         },
     ]
     + documentation_references,
-    ("pilot-product-slice", "build.md"): delivery_references + documentation_references,
+    ("pilot-product-slice", "build.md"): roborev_reference
+    + delivery_references
+    + documentation_references,
     ("pilot-product-slice", "verify-deliver.md"): delivery_references
     + documentation_references,
     ("production", "shape.md"): [
@@ -163,7 +174,9 @@ conditional_stage_references = {
         },
     ]
     + documentation_references,
-    ("production", "build.md"): delivery_references + documentation_references,
+    ("production", "build.md"): roborev_reference
+    + delivery_references
+    + documentation_references,
     ("production", "verify.md"): delivery_references + documentation_references,
     ("production", "release.md"): delivery_references,
 }
@@ -348,6 +361,7 @@ for reference in [
     "project-context-maintenance.md",
     "delivery-branch-base.md",
     "pr-delivery.md",
+    "roborev-implementation-exit.md",
 ]:
     require(
         (PLUGIN / "references" / reference).read_bytes()
@@ -544,7 +558,7 @@ for phrase in [
     "Profiles are per item",
     "No agent is a general gatekeeper",
     "delivery event mod, not a profile contract",
-    "six conditional references",
+    "seven conditional references",
     "`pr_delivery_selected` stays false and `pr-delivery.md` is not loaded here",
     "Work-item records and unrelated Markdown changes activate neither",
 ]:

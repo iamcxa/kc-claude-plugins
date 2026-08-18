@@ -699,7 +699,7 @@ require(
 )
 
 reference = PLUGIN / "references/roborev-implementation-exit.md"
-adopted = ROOT / "docs/dev/runbooks/roborev-implementation-exit.md"
+adopted = ROOT / "docs/dev/_mods/roborev-implementation-exit.md"
 require(reference.is_file(), "missing packaged provider reference")
 require(adopted.is_file(), "missing self-adopted provider runbook")
 require(reference.read_bytes() == adopted.read_bytes(), "package and self-adopted provider contracts differ")

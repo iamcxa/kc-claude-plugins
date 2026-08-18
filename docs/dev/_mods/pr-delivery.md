@@ -109,8 +109,12 @@ Target total length: 60-120 words. Paraphrase; do not paste stage reports.
 
 Delivery is not done at creation. On the next resume, recheck the PR state:
 
-- `MERGED` — terminalize through the existing state owner and clean up the
-  branch and work tree. Do not create a second delivery record.
+- `MERGED` — for a trunk-based PR, terminalize through the existing state owner
+  and clean up the branch and work tree. Do not create a second delivery record.
+  For a stacked layer, `MERGED` means it reached its parent branch, not the
+  trunk: check that every predecessor in its base chain has also merged into the
+  delivery target before terminalizing. An unmerged predecessor leaves this layer
+  delivered but not landed, so keep it open and report the blocking layer.
 - `CLOSED` without merge — report it and ask the Captain how to proceed:
   reopen, open a new PR from the same branch, fall back to local merge, or send
   the item back for rework. Do not choose for them.

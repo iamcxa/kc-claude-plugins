@@ -358,4 +358,66 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "vendored conditional reference did not load, or was read eagerly",
     )
 
+    # Presence is not enough: a path that escapes the contracts root must be
+    # refused even when a real file sits at the resolved location.
+    outside = root.parent / "outside-contracts-root.md"
+    outside.write_text("OUTSIDE\n", encoding="utf-8")
+    for escaping_path, label in [
+        ("../../../outside-contracts-root.md", "traversal"),
+        (str(outside), "absolute"),
+    ]:
+        declaring_stage.write_text(
+            "STAGE-poc-exploration-prove\n\n"
+            "```json\n"
+            '{"schema": "kc-dev-flow-conditional-references/v1", '
+            '"references": [{"path": "' + escaping_path + '", '
+            '"trigger": "example", "receipt": null}]}\n'
+            "```\n",
+            encoding="utf-8",
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(unvendored_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2 and "OUTSIDE" not in rejected.stdout,
+            f"{label} conditional reference escaped the contracts root",
+        )
+
+    # An absolute path is refused even when it resolves inside the root: a
+    # vendored contract carrying one is unportable, which containment misses.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "' + str(root / "never-vendored.md") + '", '
+        '"trigger": "example", "receipt": null}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2 and "absolute" in rejected.stderr,
+        "in-root absolute conditional reference was accepted",
+    )
+
 print("profile contract loader test: PASS")

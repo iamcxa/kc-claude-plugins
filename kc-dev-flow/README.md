@@ -131,6 +131,9 @@ The package source contains:
   selection for a work item delivered through a review artifact;
 - `references/pr-delivery.md` — conditional forge-PR delivery ceremony, loaded
   only when no local provider owns that ceremony;
+- `references/roborev-implementation-exit.md` — the provider method for the
+  `build` contract's typed observation, loaded at implementation exit when that
+  observation names a provider;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's

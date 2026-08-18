@@ -14,6 +14,11 @@ and recovery for bounded use.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../roborev-implementation-exit.md",
+      "trigger": "implementation_exit_observation_declared",
+      "receipt": null
+    },
+    {
       "path": "../../delivery-branch-base.md",
       "trigger": "delivery_artifact_review",
       "receipt": null
