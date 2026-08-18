@@ -1,0 +1,51 @@
+name: kc-pr-flow repository write safety
+
+# This suite proves that PR workflows validate their canonical repository and
+# explicit refspec before any GitHub or Git write. It uses only local stubs.
+
+on:
+  pull_request:
+    paths:
+      - "kc-pr-flow/scripts/github-repo-write.sh"
+      - "kc-pr-flow/scripts/github-repo-write.test.sh"
+      - "kc-pr-flow/skills/kc-pr-create/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-reorg/SKILL.md"
+      - "kc-pr-flow/reference/gh-api-patterns.md"
+      - ".github/workflows/github-repo-write-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-pr-flow/scripts/github-repo-write.sh"
+      - "kc-pr-flow/scripts/github-repo-write.test.sh"
+      - "kc-pr-flow/skills/kc-pr-create/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md"
+      - "kc-pr-flow/skills/kc-pr-reorg/SKILL.md"
+      - "kc-pr-flow/reference/gh-api-patterns.md"
+      - ".github/workflows/github-repo-write-tests.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-repo-write-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-write:
+    name: repository write fail-closed contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Validate source syntax
+        run: |
+          bash -n kc-pr-flow/scripts/github-repo-write.sh
+          bash -n kc-pr-flow/scripts/github-repo-write.test.sh
+
+      - name: Run repository write contract
+        run: bash kc-pr-flow/scripts/github-repo-write.test.sh
