@@ -200,3 +200,49 @@ growth beyond the two accepted files, or loss of a clean current-main merge
 changes the route. This was invocation-only advice because this workflow does
 not vendor or select an engineering-judgment mod; it grants no gate, readiness,
 merge, or state authority.
+
+## Stage Report: build
+
+**Result: the accepted Pilot slice is implemented at PR #254 head
+`8e3594564b25f4607c55f1617a60ae011c2c6b85`.**
+
+- The exact diff contains only `happy-path.test.js` and its local
+  `sleep-argv-stub.js`; it adds no dependency, compiler/runtime code,
+  generalized timing abstraction, or production lifecycle surface.
+- The focused happy-path and codegen run passed 269/269 tests. In a disposable
+  exact-head sabotage, removing `settle: Wait 2` left script execution and the
+  browser transcript intact but failed the new assertion alone with actual
+  `[]` versus expected `[["2"]]`.
+- Exact-head GitHub evidence reports the portable suite successful, version
+  parity successful, GitGuardian successful, and the inapplicable real-browser
+  job skipped. The recorded full portable result is 1060 passed, 0 failed, with
+  two environment-gated skips.
+- The current-main merge simulation remains clean at tree
+  `7f608c5a43fa16511619d00c67b0d58ef13d7636` over
+  `origin/main@03f0325515c110bc12a022fc5bbf662ec7887821`.
+
+### Implementation-exit observation
+
+```yaml
+review_convergence:
+  capability: review_convergence
+  mode: observe
+  selected_profile: pilot-product-slice
+  provider: roborev
+  outcome: UNAVAILABLE
+  reason: unavailable
+  exact_tip: 8e3594564b25f4607c55f1617a60ae011c2c6b85
+  implementation_provider_family: unknown
+  identity_hash: unavailable
+  config_object_sha: e816dfd221a307eee460f0404e4870d464ec7b66
+  job_identity: unavailable
+  member_states: []
+  request_count: 0
+  confirmation_count: 0
+  cost_coverage: unavailable
+```
+
+The commit, PR, and task carry no reliable implementation-provider family.
+The local contract therefore forbids guessing the complementary reviewer and
+classifies the observation as unavailable before any provider query, claim, or
+request. This is observation only; fresh validation remains required.
