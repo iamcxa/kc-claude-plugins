@@ -127,6 +127,10 @@ The package source contains:
   checks at the selected shape/build/verification stage, with no new receipt;
 - `references/project-context-maintenance.md` — conditional correspondence
   checks when accepted behavior may change a claim in bound project context;
+- `references/delivery-branch-base.md` — conditional, forge-neutral base
+  selection for a work item delivered through a review artifact;
+- `references/pr-delivery.md` — conditional forge-PR delivery ceremony, loaded
+  only when no local provider owns that ceremony;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's
@@ -149,9 +153,18 @@ an accepted or observed retained-document change. Project-context maintenance
 fires only when accepted behavior, architecture, or a public contract may change
 a claim in the bound project context. Both are rechecked against the exact diff
 before implementation exit or validation. Improvement harvesting remains explicit.
-An adopter-owned runtime mod such as Spacedock `pr-merge` is orthogonal: any
-profile may use it when PR delivery is selected, and none loads it merely by
-selecting a profile.
+Delivery splits into two conditional references because base choice and merge
+ceremony have different owners. `delivery-branch-base.md` decides what branch the
+work is based on: when an open unmerged review artifact carries work the
+candidate builds on, stack on it rather than targeting the trunk or waiting for
+the merge. That decision precedes any ceremony, is pure target-branch mechanics,
+and so applies to a GitLab merge request as much as a GitHub pull request — and
+it applies even when a provider mod owns the ceremony. A repository that must
+keep every artifact on the trunk declares that policy once instead of re-deciding
+per item. `pr-delivery.md` then carries out the PR ceremony — approval, the
+approved revision by SHA, unknown mergeability treated as a stop, reviewed body
+bytes unmodified — and stays unloaded when an adopter-owned mod such as Spacedock
+`pr-merge` already implements it. Selecting a profile loads neither.
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
 the co-shipped `.codex-plugin` manifest and the same skill and contract files.

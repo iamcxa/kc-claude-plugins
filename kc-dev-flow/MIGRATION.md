@@ -42,7 +42,12 @@ the installed package or silently run the 2.x workflow.
    shared core. Preserve `retained-document-policy.md` and
    `project-context-maintenance.md` as conditional references; bind their
    retained-document and project-context triggers instead of loading either as
-   standing policy.
+   standing policy. Bind `delivery_artifact_review` whenever delivery goes
+   through a review artifact, including when a provider mod owns the ceremony —
+   `delivery-branch-base.md` only selects the base. Bind `pr_delivery_selected`
+   to the vendored `pr-delivery.md` only when no provider mod owns that ceremony.
+   A vendored provider mod that resolves its base as the configured trunk must
+   accept a sibling branch before a stacked base is safe there.
 8. Run every profile-stage loader combination, prove unselected contracts are
    absent, exercise runtime skips, and run the repository's normal gates. Merge
    the adopter refit before updating the installed plugin used for continuation.

@@ -302,4 +302,60 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "missing selected stage did not fail closed",
     )
 
+    # A stage that declares a conditional reference the adopter never vendored
+    # must fail at load, not silently drop the capability the stage declares.
+    declaring_stage = root / "profiles" / "poc-exploration" / "prove.md"
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../never-vendored.md", '
+        '"trigger": "example", "receipt": null}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    unvendored_item = write_work_item(
+        root, "poc-exploration", "validation", "unvendored-conditional-reference"
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2
+        and "never-vendored.md" in rejected.stderr
+        and "not vendored" in rejected.stderr,
+        "unvendored conditional reference did not fail closed",
+    )
+
+    # The same stage passes once the reference exists, so the check gates on
+    # presence rather than on declaring a conditional reference at all.
+    (root / "never-vendored.md").write_text("VENDORED\n", encoding="utf-8")
+    accepted = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        accepted.returncode == 0
+        and "STAGE-poc-exploration-prove" in accepted.stdout
+        and "VENDORED" not in accepted.stdout,
+        "vendored conditional reference did not load, or was read eagerly",
+    )
+
 print("profile contract loader test: PASS")

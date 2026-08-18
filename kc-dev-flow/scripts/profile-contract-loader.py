@@ -104,6 +104,34 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     }
 
 
+CONDITIONAL_SCHEMA = "kc-dev-flow-conditional-references/v1"
+
+
+def check_conditional_references(contract_path: Path, text: str) -> None:
+    """Refuse a stage contract that names a reference the adopter has not vendored.
+
+    The reference itself stays unread until its trigger fires; only its presence
+    is checked, so an incomplete vendor fails at load instead of silently
+    dropping the capability the stage declares.
+    """
+    for block in re.findall(r"```json\s*\n(.*?)```", text, re.DOTALL):
+        try:
+            declared = json.loads(block)
+        except json.JSONDecodeError as exc:
+            raise ContractError(
+                f"{contract_path.name} has an unparseable JSON block: {exc}"
+            ) from exc
+        if declared.get("schema") != CONDITIONAL_SCHEMA:
+            continue
+        for entry in declared.get("references", []):
+            target = (contract_path.parent / entry["path"]).resolve()
+            if not target.is_file():
+                raise ContractError(
+                    f"{contract_path.name} declares conditional reference "
+                    f"{entry['path']!r}, which is not vendored at {target}"
+                )
+
+
 def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
     root = root.expanduser().resolve()
     receipt = resolve_work_item(work_item)
@@ -130,6 +158,7 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
             text = raw.decode("utf-8")
         except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ContractError(f"cannot load selected contract {path}: {exc}") from exc
+        check_conditional_references(path, text)
         loaded.append(
             {
                 "path": relative.as_posix(),

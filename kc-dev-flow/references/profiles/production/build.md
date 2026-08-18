@@ -13,6 +13,16 @@ Build the smallest operable slice and its accepted lifecycle behavior.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../delivery-branch-base.md",
+      "trigger": "delivery_artifact_review",
+      "receipt": null
+    },
+    {
+      "path": "../../pr-delivery.md",
+      "trigger": "pr_delivery_selected",
+      "receipt": null
+    },
+    {
       "path": "../../retained-document-policy.md",
       "trigger": "retained_document_change",
       "receipt": null

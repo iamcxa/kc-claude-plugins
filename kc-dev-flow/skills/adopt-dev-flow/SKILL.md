@@ -23,7 +23,9 @@ repair the cheapest compatible seam.
    `../../references/reverse-recovery-audit.md`,
    `../../references/journey-slicing.md`, and
    `../../references/retained-document-policy.md`,
-   `../../references/project-context-maintenance.md`, and
+   `../../references/project-context-maintenance.md`,
+   `../../references/delivery-branch-base.md`,
+   `../../references/pr-delivery.md`, and
    `../../scripts/profile-contract-loader.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
@@ -45,11 +47,25 @@ repair the cheapest compatible seam.
    implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
-6. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
+6. Derive the two delivery triggers from the audited delivery authority rather
+   than asking. Set `delivery_artifact_review` true when that authority delivers
+   through a pull request, merge request, or forge equivalent — a forge remote
+   plus an existing delivery-artifact history is sufficient evidence — no matter
+   who owns the ceremony. Set it false only for a route that delivers without one,
+   or for a repository whose recorded policy keeps every artifact on the trunk;
+   record which of those applies. Set `pr_delivery_selected` true only when no
+   local provider mod owns the PR ceremony. When a provider such as Spacedock
+   `pr-merge` owns it, that trigger stays false and base selection still applies,
+   so one delivery authority survives. Then read the owning ceremony's base
+   resolution: a ceremony that resolves its base as the configured trunk and
+   rebases onto it will re-target a stacked branch and open an artifact carrying
+   the parent's work. Record that as a refit requirement against the local
+   provider copy; do not bind a stacked default over a ceremony that discards it.
+7. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
-7. Bind the local RoboRev runbook when the emitted observation is supported.
+8. Bind the local RoboRev runbook when the emitted observation is supported.
    Missing provider capability remains an honest non-gating `UNAVAILABLE` result.
-8. Run the profile loader contract test and the repository's normal gates.
+9. Run the profile loader contract test and the repository's normal gates.
 
 If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty
@@ -62,6 +78,16 @@ Present changed authority, route, and proof semantics for acceptance. Replace
 accepted canonical files mechanically; do not create locally edited hybrids.
 Re-run every profile-stage loader combination and prove that unselected profile
 and stage markers are absent.
+
+A reference that exists in this source and not in the adopter is a missing
+capability, not an intentional omission. Compare the source reference set with
+the vendored one, vendor each absent file, and bind its trigger by the adopt
+rules above. The loader enforces presence: `check_conditional_references` refuses
+a stage contract that declares a reference the adopter has not vendored, so an
+incomplete re-vendor stops the route instead of silently dropping the capability.
+It checks presence only — the reference still stays unread until its trigger
+fires. That is the path by which a repository upgraded before a reference existed
+picks it up.
 
 An existing v1 receipt remains evidence of the prior choice but cannot drive the
 new loader. When its basis is unchanged, migrate it mechanically to v2 with the
