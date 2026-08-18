@@ -24,6 +24,20 @@ This task begins at a validated projection snapshot. The projection sibling owns
 
 V1 has no native GitHub draft object. Drafts remain derived local or Actions artifacts until `status publish` revalidates current inputs, shows the exact payload and diff, and receives explicit confirmation. Automatic publication and LLM-authored unattended payloads are out of scope.
 
+## Captain scope correction — 2026-08-18
+
+Scheduled Project reconciliation is disabled at the GitHub host after 73
+consecutive schema-drift failures. The accepted weekly candidate cron and every
+other unattended workflow schedule are withdrawn. Manual dispatch is the
+current boundary while an attended post-state-commit prompt is evaluated.
+
+Implementation must stop before retaining or adding any `schedule` trigger.
+Re-read this correction, migrate the refused v1 work-profile receipt to v2 with
+the same Captain-selected Production profile, and rebind the trigger premise,
+AC-6, tests, and installed/source workflow bytes before continuing. This
+correction authorizes no Project schema mutation, workflow re-enable, new
+trigger, or publication.
+
 ## Work profile receipt
 
 ```yaml
