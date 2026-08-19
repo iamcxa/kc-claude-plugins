@@ -1,13 +1,13 @@
 ---
 id: 7jsybdshk91p4f7p2hfr7ke1
 title: "e2e-pipeline: a dropped `wait` step is invisible to every gate — waits compile to sleep, not to a browser call"
-status: validation
+status: done
 source: GitHub issue #196 (https://github.com/iamcxa/kc-claude-plugins/issues/196) — filed as the third of the three classes #180 named, left open deliberately by PR #195
 product: e2e-pipeline
 sprint:
 started: 2026-08-10T12:26:00Z
-completed:
-verdict:
+completed: 2026-08-19T07:18:15Z
+verdict: passed
 worktree:
 issue: "196"
 pr: pr-merge:254
@@ -15,6 +15,7 @@ pr_artifact_v1:
 mod-block:
 design: required
 lane: main
+archived: 2026-08-19T07:18:15Z
 ---
 
 ## Work profile receipt
