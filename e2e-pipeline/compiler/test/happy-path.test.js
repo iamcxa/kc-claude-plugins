@@ -12,9 +12,11 @@
  *     quoting so an assertion could name a selector as written, which also made a
  *     broken emission — `'input[type='email']'`, which bash passes as
  *     `input[type=email]` — read exactly like a correct one.
- *   - missing actions. Selectors and assertions were pinned; the `open`, `fill`,
- *     `click` and `wait` between them were not. Dropping the navigation, either
- *     wait, or the password fill left every scenario green.
+ *   - missing browser actions. Selectors and assertions were pinned; the `open`,
+ *     `fill`, and `click` between them were not. Dropping the navigation or the
+ *     password fill left every scenario green.
+ *   - missing waits. Waits compile to `sleep`, rather than `agent-browser`, so the
+ *     browser argv gate could not observe a dropped `settle` step.
  *
  * It now also executes the script against a stubbed agent-browser and asserts the
  * argv it receives. "This text appears in the source" becomes "the program passed
@@ -81,9 +83,9 @@
  * the real-browser job (#176, weekly). This proves the script asks for the right
  * things in the right order, not that the page obliges.
  *
- * A dropped `wait` also survives: waits compile to `sleep`, not to a browser call, so
- * nothing reaches the stub to be counted. #180 listed that with the other two; it is
- * the one this instrument does not close.
+ * The local `sleep` shim makes the wait channel observable too. It records its argv
+ * separately from browser calls, so deleting `settle` leaves the browser argv gate
+ * green but fails the required `sleep 2` assertion below.
  *
  * WHEN A BUG IS FIXED
  *
@@ -103,6 +105,7 @@ const { compile } = require('../compiler');
 const FIXTURES = path.join(__dirname, 'fixtures');
 const RUNTIME_SHIM = path.join(FIXTURES, 'browser-runtime-shim.js');
 const ARGV_STUB = path.join(FIXTURES, 'agent-browser-argv-stub.js');
+const SLEEP_ARGV_STUB = path.join(FIXTURES, 'sleep-argv-stub.js');
 
 // The element the flow asserts is NOT visible. The stub must report it absent, or
 // that assertion passes for the wrong reason. A substring, not the whole selector:
@@ -248,6 +251,13 @@ describe('happy path: the commands real flows issue', function() {
     );
 
     const logPath = path.join(runDir, 'argv.log');
+    const sleepLogPath = path.join(runDir, 'sleep-argv.log');
+    const sleepPath = path.join(binDir, 'sleep');
+    fs.writeFileSync(
+      sleepPath,
+      '#!/usr/bin/env bash\nexec "' + process.execPath + '" "' + SLEEP_ARGV_STUB + '" "$@"\n',
+      { mode: 0o755 }
+    );
     const run = childProcess.spawnSync('bash', [result.outputPath], {
       encoding: 'utf8',
       timeout: 120000,
@@ -257,6 +267,7 @@ describe('happy path: the commands real flows issue', function() {
         E2E_BROWSER_RUN_ID: 'happy-path-run',
         E2E_SCREENSHOT_DIR: path.join(runDir, 'shots'),
         E2E_STUB_LOG: logPath,
+        E2E_SLEEP_STUB_LOG: sleepLogPath,
         E2E_STUB_STATE: path.join(runDir, 'state.json'),
         E2E_STUB_ABSENT_SELECTORS: ABSENT,
         E2E_STUB_SNAPSHOT: 'Dashboard',
@@ -265,10 +276,13 @@ describe('happy path: the commands real flows issue', function() {
     });
 
     const calls = readInvocations(logPath);
+    const sleepCalls = readInvocations(sleepLogPath);
     const transcript = calls.map(function(c) { return c.join(' '); }).join('\n');
+    const sleepTranscript = sleepCalls.map(function(c) { return c.join(' '); }).join('\n');
     const diagnostic = '\n--- stdout ---\n' + (run.stdout || '') +
       '\n--- stderr ---\n' + (run.stderr || '') +
-      '\n--- argv ---\n' + transcript;
+      '\n--- browser argv ---\n' + transcript +
+      '\n--- sleep argv ---\n' + sleepTranscript;
 
     // The script's own verdict, before any argv is inspected. Without this the gate
     // asserts that calls were *made* and never that the flow *passed*: reporting the
@@ -278,6 +292,11 @@ describe('happy path: the commands real flows issue', function() {
     assert.equal(run.status, 0, 'the compiled script must exit 0' + diagnostic);
 
     assert.ok(calls.length > 0, 'the script must invoke agent-browser at all' + diagnostic);
+    assert.deepEqual(
+      sleepCalls,
+      [['2']],
+      'the settle wait must invoke sleep once with 2 seconds' + diagnostic
+    );
 
     // Ordered subsequence: every required call appears, and in this relative order.
     let cursor = 0;
