@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree:
 issue: "196"
-pr: 254
+pr: pr-merge:254
 pr_artifact_v1:
 mod-block:
 design: required
