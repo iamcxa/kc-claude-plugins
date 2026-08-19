@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.4](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.3...e2e-pipeline-v3.3.4) (2026-08-19)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** anchor the click action grammar so no click is accepted on a prefix ([#191](https://github.com/iamcxa/kc-claude-plugins/issues/191)) ([03f0325](https://github.com/iamcxa/kc-claude-plugins/commit/03f0325515c110bc12a022fc5bbf662ec7887821))
+
 ## [3.3.3](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.2...e2e-pipeline-v3.3.3) (2026-08-10)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.5.0...kc-dev-flow-v3.0.0) (2026-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **kc-dev-flow:** add profile-native delivery routes ([#249](https://github.com/iamcxa/kc-claude-plugins/issues/249))
+
+### Features
+
+* **kc-dev-flow:** add profile-native delivery routes ([#249](https://github.com/iamcxa/kc-claude-plugins/issues/249)) ([e634d3e](https://github.com/iamcxa/kc-claude-plugins/commit/e634d3e71270d04d72893782e0ecb2482be772c0))
+* **kc-dev-flow:** default to a stacked base and absorb the PR ceremony ([#255](https://github.com/iamcxa/kc-claude-plugins/issues/255)) ([1d13e18](https://github.com/iamcxa/kc-claude-plugins/commit/1d13e189f82d4c085f69475186b08d01c6deaad0))
+* **kc-dev-flow:** make projected issues readable and identity-safe ([#240](https://github.com/iamcxa/kc-claude-plugins/issues/240)) ([54594f1](https://github.com/iamcxa/kc-claude-plugins/commit/54594f1871a1a693528f8bdbbe132010ea4fb6db))
+* **kc-dev-flow:** project SD tasks as GitHub Project drafts ([f187ddb](https://github.com/iamcxa/kc-claude-plugins/commit/f187ddbdf3442b883512dc1d37c05442edf28e08))
+
 ## [2.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.4.0...kc-dev-flow-v2.5.0) (2026-08-14)
 
 
