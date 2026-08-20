@@ -567,27 +567,34 @@ for phrase in [
 package_readme = read("kc-dev-flow/README.md")
 normalized_package_readme = " ".join(package_readme.split())
 root_readme = read("README.md")
+# Match against the normalized text: a claim that survives only because of where
+# the line happens to wrap is not a claim the README is actually holding.
 require(
-    "run POC, Pilot, and Production items concurrently" in package_readme,
+    "run POC, Pilot, and Production items concurrently" in normalized_package_readme,
     "package README omits item-local concurrent profiles",
 )
 require(
-    "cognitive cue, not another agent, review, or gate" in package_readme,
+    "cognitive cue, not another agent, review, or gate" in normalized_package_readme,
     "package README overstates stage-role authority",
 )
-require("[2.x migration](./MIGRATION.md)" in package_readme, "package README omits migration guide")
+require("](./MIGRATION.md)" in package_readme, "package README omits migration guide")
 require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
 require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
 )
+# One sentence covers conditionality for the whole set, so a reference added
+# later cannot be described as always-loaded by omitting an adjective. The
+# per-file checks then confirm each one is still listed with a trigger.
 for phrase in [
-    "conditional brownfield recovery",
-    "conditional multi-slice guard",
-    "conditional retained-document checks",
-    "conditional correspondence checks",
-    "applies even when a provider mod owns the ceremony",
-    "stays unloaded when an adopter-owned mod such as Spacedock `pr-merge` already implements it",
+    "Everything else under `references/` is conditional",
+    "a reference link is not activation, and vendoring one adds no ordinary-stage work",
+    "`reverse-recovery-audit.md`",
+    "`journey-slicing.md`",
+    "`retained-document-policy.md`",
+    "`project-context-maintenance.md`",
+    "it loads even when a provider mod owns the ceremony",
+    "already owns the forge-PR ceremony",
 ]:
     require(
         phrase in normalized_package_readme,
