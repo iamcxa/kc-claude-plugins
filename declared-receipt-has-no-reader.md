@@ -5,7 +5,7 @@ status: ideation
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-20T13:52:18Z
 completed:
 verdict:
 worktree:
