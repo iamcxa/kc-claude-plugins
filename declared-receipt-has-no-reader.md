@@ -1,7 +1,7 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: ideation
+status: implementation
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
@@ -54,7 +54,7 @@ gates:
                 reason: 'Captain approved the ideation shape. Reverse-recovery audit fired with decision build; outcome scoped to the selected stage contract''s non-null receipts only; three acceptance-evidence checks named, two RED today. FO independently verified --format json, the 9-contract declaration set with no kernel/base declarations, declared_receipts absent from the loader, and the cited path fail-closed tests at profile-contract-loader.test.py:305-429. Accepted residual: declared_receipts ships with no consumer, which the chosen direction and the bounded docstring guarantee make explicit.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
