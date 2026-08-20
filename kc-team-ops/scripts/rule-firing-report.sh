@@ -35,27 +35,44 @@ find "$PROJ" -maxdepth 2 -name '*.jsonl' -newermt "$SINCE" 2>/dev/null \
 SESSIONS=$(wc -l < "$WORK/sessions.txt" | tr -d ' ')
 [ "$SESSIONS" -gt 0 ] || { echo "no sessions since $SINCE" >&2; exit 1; }
 
+# find selects files by mtime; a long-lived session file also holds turns from
+# before --since, so each turn is filtered on its own timestamp as well.
+# Full timestamps, and no `sort -u`: the user really does send the same sentence
+# twice, and collapsing those understates how often they had to repeat it.
 while IFS= read -r f; do
   proj=$(basename "$(dirname "$f")")
-  jq -r --arg P "$proj" '
+  jq -r --arg P "$proj" --arg SINCE "$SINCE" '
     select(.type=="user") | select((.isMeta // false) | not)
+    | select((.timestamp // "") >= $SINCE)
     | (.message.content) as $c
     | (if ($c|type)=="string" then $c
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join("\n"))
        else "" end) as $t
     | select(($t|length) > 0)
-    | "\(.timestamp[0:16])\t\($P)\t\($t | gsub("\n"; " "))"
+    | "\(.timestamp)\t\($P)\t\($t | gsub("\n"; " "))"
   ' "$f" 2>/dev/null
-done < "$WORK/sessions.txt" | sort -u > "$WORK/all-user.txt"
+done < "$WORK/sessions.txt" | sort > "$WORK/all-user.txt"
 
 # Drop turns the user did not type: tool plumbing, slash-command echoes, and the
 # dispatch prompts the agent wrote for its own workers. Counting those as user
 # corrections inflates every friction number.
-grep -avE '<system-reminder>|<task-notification>|<system_instruction>|<command-name>|<local-command-stdout>|tool_use_id|Review this change for security vulnerabilities|^[^\t]*\t[^\t]*\t(You are|Respond with exactly)' \
+# The dispatch-prompt filter is deliberately narrow: an earlier version dropped
+# anything opening with "You are", which also deletes a real correction like
+# "You are still ignoring the comment rule".
+grep -avE '<system-reminder>|<task-notification>|<system_instruction>|<command-name>|<local-command-stdout>|tool_use_id|Review this change for security vulnerabilities|^[^\t]*\t[^\t]*\t(You are (a|an|the|Claude|Codex|Gemini|GPT)|Respond with exactly)' \
   "$WORK/all-user.txt" | grep -v $'\t-private-tmp-' > "$WORK/human.txt"
 
+# Assistant prose AND tool calls. A rule whose only marker is "you must read
+# file X" leaves no trace in prose, so counting text alone scores it zero.
 while IFS= read -r f; do
-  jq -r 'select(.type=="assistant") | (.message.content // [])[] | select(.type=="text") | .text' "$f" 2>/dev/null
+  jq -r --arg SINCE "$SINCE" '
+    select(.type=="assistant") | select((.timestamp // "") >= $SINCE)
+    | (.message.content // [])[]
+    | if .type=="text" then .text
+      elif .type=="tool_use" then
+        "TOOL \(.name) \(.input.file_path // .input.command // .input.pattern // "")"
+      else empty end
+  ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
 
 HUMAN=$(wc -l < "$WORK/human.txt" | tr -d ' ')
@@ -74,8 +91,10 @@ friction	size complaint	loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many co
 TSV
 fi
 
-# grep -c prints 0 AND exits 1 on no match, so `|| echo 0` would emit two lines.
-count() { local n; n=$(grep -icE "$2" "$1" 2>/dev/null) || true; echo "${n:-0}"; }
+# -e guards a pattern that starts with `-`, which grep would otherwise read as a
+# flag. -o counts occurrences, not lines, so two markers on one line count twice.
+# grep exits 1 on no match, hence the `|| true`.
+count() { local n; n=$(grep -oiE -e "$2" "$1" 2>/dev/null | wc -l) || true; echo "$(( ${n:-0} ))"; }
 
 printf '\n%s\n' "=== volume since $SINCE ==="
 printf '%-26s %s\n' "sessions"            "$SESSIONS"
@@ -100,6 +119,8 @@ while IFS=$'\t' read -r kind label re; do
 done < "$PATTERNS"
 [ "$FIRED" = 1 ] || printf '%s\n' \
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
+printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
+  "      reading a rule aloud looks identical to one following it. Sample the hits."
 
 printf '\n%s\n' "=== evidence ==="
 cp "$WORK/human.txt" "./rule-review-human-turns.tsv"
