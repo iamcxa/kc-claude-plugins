@@ -87,7 +87,13 @@ repair the cheapest compatible seam.
    adoption defect: the observation would emit and resolve nothing at every
    future implementation exit, so record it as a refit requirement instead of
    leaving a permanent silent `UNAVAILABLE`.
-9. Run the profile loader contract test and the repository's normal gates.
+9. Re-run every profile-stage loader combination this repository will run and
+   prove that unselected profile and stage markers are absent from each result,
+   then run the repository's normal gates. Vendor no test: the packaged loader
+   contract test resolves the loader as its own sibling, so pointing it at the
+   vendored copy would mean copying a test file into a repository that has no
+   other use for it, and running the packaged copy would exercise the package
+   rather than this adoption.
 
 If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty
