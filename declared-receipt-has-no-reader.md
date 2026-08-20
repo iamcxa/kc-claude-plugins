@@ -44,6 +44,17 @@ gates:
                 digest: sha256:04a602dbdccf4a576fcc9dbf8879869915ed578010d96e3c40e9be936e4a5ace
                 request-digest: sha256:3c566f4bdabf44e70b73b8d7c31655b8cd11404c3a417dbf6b8772a609657edb
                 room-ref: ./declared-receipt-has-no-reader/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:ideation:1
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-20T14:24:32.563102Z"
+                decision: approve
+                reason: 'Captain approved the ideation shape. Reverse-recovery audit fired with decision build; outcome scoped to the selected stage contract''s non-null receipts only; three acceptance-evidence checks named, two RED today. FO independently verified --format json, the 9-contract declaration set with no kernel/base declarations, declared_receipts absent from the loader, and the cited path fail-closed tests at profile-contract-loader.test.py:305-429. Accepted residual: declared_receipts ships with no consumer, which the chosen direction and the bounded docstring guarantee make explicit.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Problem
