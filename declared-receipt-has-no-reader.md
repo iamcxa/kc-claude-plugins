@@ -45,6 +45,32 @@ branch: 9 contracts declare receipts; the loader's only entry read is
 
 ## Work profile receipt
 
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: production
+  recommended: production
+  basis: "A marketplace-published plugin contract consumed by external repositories at a pinned release tag. The change alters the loader's output shape and the conditional-reference reference text, so every adopter reads it at their next pin; it carries compatibility and release obligations and no operational runtime."
+  route: [shape, build, verify, release]
+  obligations:
+    architecture:
+      - "Keep the declaration block's schema stable; add a reader for the already-declared `receipt` field rather than a new field or a second declaration surface."
+      - "Do not make `trigger` evaluable and do not add a stage-exit enforcement check; that is a separate, larger decision the Captain declined at this gate."
+    implementation:
+      - "Emit the selected stage's declared receipt names in the loader's JSON output so a caller can read them without re-parsing contracts."
+      - "State in the conditional-reference reference exactly what the loader guarantees and what it does not, so the field stops reading as an enforced obligation."
+    testing:
+      - "A loader test that fails when the declared receipt names are absent from the JSON output, and one that fails when they do not match the selected stage's declarations."
+      - "The existing `path` fail-closed behavior stays proven by its current tests."
+  scope_boundary: "Excludes evaluable triggers, stage-exit receipt verification, any standing enforcement gate, and any change to which references each contract declares."
+  promote_when:
+    - "The Captain accepts that a missing receipt must block a stage, not merely be observable."
+    - "An adopter needs the receipt names before the loader runs, which would move the declaration out of the contract body."
+  decision:
+    authority: person:captain
+    at: 2026-08-20T13:50:38Z
+```
+
 ## Accepted outcome and non-goals
 
 ## Acceptance evidence
