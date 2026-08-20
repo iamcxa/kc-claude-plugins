@@ -55,6 +55,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:q0z8h3xny0qxv0r5srter8tj:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:q0z8h3xny0qxv0r5srter8tj-validation-1
+              briefing:
+                id: briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-1:revision-1
+                digest: sha256:5070851c4e3ad4082a0b3a1bc3429f01475d133ca95b1440d74511370562a924
+                request-digest: sha256:ff9bafb9434c23ba274f12a02ff072a36c3b505e5f253c001c8117b973e06352
+                room-ref: ./declared-receipt-has-no-reader/review/validation/briefing-1
 ---
 
 ## Problem

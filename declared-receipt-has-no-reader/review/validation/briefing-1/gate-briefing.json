@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-1:revision-1",
+  "question": "Approve validation at revision 758c2a70 and advance to release, where the delivery base must be decided before the Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/09fe249cda9cc4cb69fc94a5dc861a9f69a98213/declared-receipt-has-no-reader.md",
+      "rev": "sha256:dbbeaa804759e6bb3628d421fe4ee36a520b53e2230e8593bd65f337462fd83e",
+      "mediaType": "text/markdown",
+      "summary": "Reviewer independently reproduced all three acceptance-evidence items rather than re-reading them: both loader tests pass, both mutants reproduce and are caught only by the isolation assertion, the path fail-closed cases are untouched, and the byte-parity assertion was proven live by a tamper-and-restore. The contract test's single failure is the pre-existing profile-spacedock-route casing bug, now filed as its own task. FO confirmed the worktree is clean and the restore left nothing behind."
+    }
+  ]
+}
