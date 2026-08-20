@@ -217,9 +217,16 @@ defect is that omission, not the extraction.
 
 ## Accepted outcome and non-goals
 
-**Accepted journey.** kc-dev-flow stops carrying an adopter-to-source improvement transport. The
-capability it was reaching for — recent local failures reaching the next session — is rebuilt where
-its input and its consumer already live: the workflow runtime.
+**Accepted journey.** kc-dev-flow stops carrying an adopter-to-source improvement transport, and
+`continue-dev-flow` gains the capability that transport was reaching for: recent local failures
+reaching the next session, in the same repository, with no human carrying a file.
+
+The Captain retired `spacebridge:debrief-promote`, so the duplicate-capability argument for
+placing this on the runtime side no longer applies. The replacement lands in `continue-dev-flow`.
+The structural objection that a kc-dev-flow harvest sees an empty home in carlove resolves through
+the same binding that created it: the observation home is adopter-bound in `## Local Profile`, so
+an adopter that wants its `ship-flow` debriefs observed binds that home. Empty-by-binding is a
+choice the adopter can revisit, not a wall in the plugin.
 
 The evidence for leaving rather than repairing:
 
@@ -254,13 +261,29 @@ another repository.
 is unexecuted. No auto-activation of a workflow-runtime skill from `continue-dev-flow` — see below.
 No cross-project aggregation; that is `debrief-promote`'s existing job. No release-stage rollout.
 
-**Runtime coupling, decided.** `continue-dev-flow` must not activate `spacedock:first-officer`.
-The plugin's stated architecture is that a repository keeps its own workflow runtime, and the
-established pattern for a Spacedock-dependent capability is RoboRev's: declare the precondition and
-record out-of-scope once for a repository that does not meet it, rather than hard-wire the runtime
-into the entry point. The direction is also backwards — the debriefs live on the runtime side, so
-the runtime feeds itself. kc-dev-flow reaching into Spacedock would still see only its own
-workflow's home, which in the best-equipped adopter is empty.
+**Runtime coupling, decided.** `continue-dev-flow` does not activate `spacedock:first-officer`,
+and does not need to. The two plugins compose through a binding, not a call:
+
+| Owner | What it owns |
+|---|---|
+| Workflow runtime (Spacedock here) | The state machine, stage transitions, gates, dispatch, worktrees, concurrency |
+| `continue-dev-flow` | Reading `## Local Profile` plus the exact work item, invoking the local loader, and working under what it emits |
+
+Kernel and stages do not go anywhere — they are exactly what the loader emits. Invoking it on this
+task returned `kernel.md` (4149B) + `pilot-product-slice/base.md` (1033B) +
+`pilot-product-slice/shape.md` (1167B), keyed on the entity's `status` field. The runtime owns
+which state the entity is in; kc-dev-flow owns what policy loads there. `adopt-dev-flow` step 4 is
+where the two are mapped.
+
+Whoever invokes `continue-dev-flow` is the worker: a plain session, a First Officer, a dispatched
+ensign, or Codex. This task is the demonstration — it moved backlog → ideation, loaded the Pilot
+shape contract, and produced this shape, with no FO dispatched.
+
+Auto-activation is refused for three reasons: repositories adopt kc-dev-flow without Spacedock at
+all; an orchestrator calling a policy loader is the right direction and the reverse inverts the
+layering; and every ordinary continuation would pay for an orchestrator boot it does not use. The
+established pattern for a Spacedock-dependent capability is RoboRev's — declare the precondition,
+record out-of-scope once for a repository that does not meet it.
 
 ## Acceptance evidence
 
@@ -279,9 +302,18 @@ broken is this defect repeated under a new name.
 
 ## Open, for the build stage
 
-Where the replacement lands — `spacedock` proper, `spacebridge` beside `debrief-promote`, or a
-kc-dev-flow reference that a Spacedock adopter binds — is not decided here. All three keep the
-input and consumer on the runtime side; they differ in ownership, and that is a scope-owner call.
+1. **Load cost.** The digest loads on ordinary continuations, which is the one thing profile-native
+   exists to prevent — `RATIONALE.md` § "Optional prose is still loaded prose". It needs a hard
+   byte cap, sized against the 6.3KB the whole policy contract costs today, and a stated rule for
+   what gets dropped when the cap binds. Without a cap this reintroduces the cost #218 removed.
+2. **Regeneration trigger.** Cursor-driven, not per-run: recompute only when the bound home has a
+   record newer than the cursor. Per-run synthesis of 34.5KB of raw debriefs is 5.5× the entire
+   policy contract.
+3. **Retire mechanics for the transport.** Whether `improvement-harvesting.md` is deleted or
+   reduced to the digest procedure, and what `promote-dev-flow` becomes once no handoff arrives.
+4. **`spacebridge:debrief-promote`'s own retirement.** The installed copy carries no deprecation
+   marker and is still `user-invocable: true`, so an agent can still route to it. Retiring it is
+   outside this task's scope but is a real loose end while it stays discoverable.
 
 ## Measurement
 
