@@ -5,6 +5,7 @@
 #   release manifest         ==  plugin.json
 #                            ==  marketplace.json entry
 #                            ==  .codex-plugin/plugin.json (if present)
+#                            ==  plugin.json (Agent Plugins v1, if present)
 #
 # Why this exists: release-please owns version propagation (it bumps plugin.json,
 # the Codex manifest, and the marketplace.json entry together in its Release PR).
@@ -66,7 +67,7 @@ manifest_ver () { python3 -c "import json,sys; print(json.load(open(sys.argv[1])
 PLUGINS=$(python3 -c "import json; [print(p['name']) for p in json.load(open('$MARKETPLACE_JSON'))['plugins']]")
 
 FAIL=0
-printf "%-18s %-9s %-9s %-9s %-9s %s\n" PLUGIN release plugin.json market codex RESULT
+printf "%-18s %-9s %-9s %-9s %-9s %-9s %s\n" PLUGIN release plugin.json market codex hermes RESULT
 for P in $PLUGINS; do
   RP=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get(sys.argv[2], ''))" "$RELEASE_MANIFEST_JSON" "$P")
   PJ=$(manifest_ver "$REPO_DIR/$P/.claude-plugin/plugin.json")
@@ -79,16 +80,22 @@ for P in $PLUGINS; do
   else
     CX="-"
   fi
+  if git -C "$REPO_DIR" ls-files --error-unmatch "$P/plugin.json" >/dev/null 2>&1; then
+    HM=$(manifest_ver "$REPO_DIR/$P/plugin.json")
+  else
+    HM="-"
+  fi
   MISMATCH=""
   [ "$RP" != "$PJ" ] && MISMATCH="$MISMATCH release-manifest=$RP"
   [ "$MK" != "$PJ" ] && MISMATCH="$MISMATCH marketplace.json=$MK"
   [ "$CX" != "-" ] && [ "$CX" != "$PJ" ] && MISMATCH="$MISMATCH codex=$CX"
+  [ "$HM" != "-" ] && [ "$HM" != "$PJ" ] && MISMATCH="$MISMATCH hermes=$HM"
 
   if [ -n "$MISMATCH" ]; then
-    printf "%-18s %-9s %-9s %-9s %-9s STALE (expect %s; got%s)\n" "$P" "$RP" "$PJ" "$MK" "$CX" "$PJ" "$MISMATCH"
+    printf "%-18s %-9s %-9s %-9s %-9s %-9s STALE (expect %s; got%s)\n" "$P" "$RP" "$PJ" "$MK" "$CX" "$HM" "$PJ" "$MISMATCH"
     FAIL=1
   else
-    printf "%-18s %-9s %-9s %-9s %-9s ok\n" "$P" "$RP" "$PJ" "$MK" "$CX"
+    printf "%-18s %-9s %-9s %-9s %-9s %-9s ok\n" "$P" "$RP" "$PJ" "$MK" "$CX" "$HM"
   fi
 done
 
@@ -97,7 +104,7 @@ if [ "$FAIL" -eq 0 ]; then
   echo "Version parity: all plugins consistent"
   exit 0
 else
-  echo "Version parity: MISMATCH detected — release manifest / plugin.json / marketplace.json / codex disagree"
+  echo "Version parity: MISMATCH detected — release manifest / plugin.json / marketplace.json / codex / hermes disagree"
   echo "(release-please must keep these in lockstep in its Release PR; a mismatch means version propagation failed)"
   exit 1
 fi

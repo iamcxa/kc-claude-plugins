@@ -128,3 +128,16 @@ moving from an earlier vendored layout follows [MIGRATION.md](./MIGRATION.md).
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
 the co-shipped `.codex-plugin` manifest and the same skill and contract files.
+
+## Hermes Agent
+
+KC Dev Flow ships both an [Agent Plugins v1](https://agent-plugins.org/)
+`plugin.json` and a small native Hermes registration layer. Install the
+`kc-dev-flow` subdirectory through `hermes plugins install`; Hermes keeps the
+package disabled until an operator enables it. Once enabled, the native layer
+exposes the package skills with stable names such as
+`kc-dev-flow:choose-work-profile` and `kc-dev-flow:continue-dev-flow`.
+
+The Hermes package is a distribution route, not a repository runtime fallback:
+an adopter still vendors and binds its own selected contracts in `## Local
+Profile`.

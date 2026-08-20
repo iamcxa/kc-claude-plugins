@@ -216,6 +216,25 @@ for package, package_config in packages.items():
         qualifier = "missing" if not codex_targets else "duplicate"
         failures.append(f"{package}: {qualifier} required Codex manifest target")
 
+    hermes_repo_path = os.path.join(package, "plugin.json")
+    tracked_hermes = subprocess.run(
+        ["git", "-C", repo_dir, "ls-files", "--error-unmatch", hermes_repo_path],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    ).returncode == 0
+    hermes_targets = [
+        extra_file
+        for extra_file in extra_files
+        if isinstance(extra_file, dict)
+        and extra_file.get("type") == "json"
+        and extra_file.get("path") == "plugin.json"
+        and extra_file.get("jsonpath") == "$.version"
+    ]
+    if tracked_hermes and len(hermes_targets) != 1:
+        qualifier = "missing" if not hermes_targets else "duplicate"
+        failures.append(f"{package}: {qualifier} required Hermes manifest target")
+
     marketplace_targets = [
         extra_file
         for extra_file in extra_files

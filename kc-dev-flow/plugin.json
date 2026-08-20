@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "kc-dev-flow",
+  "version": "3.0.0",
+  "description": "Profile-native POC, Pilot, and Production delivery routes with a minimal shared authority core.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "homepage": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-dev-flow",
+  "repository": "https://github.com/iamcxa/kc-claude-plugins",
+  "license": "MIT",
+  "keywords": [
+    "development-workflow",
+    "sprint",
+    "delivery",
+    "evidence",
+    "hermes-agent"
+  ]
+}
