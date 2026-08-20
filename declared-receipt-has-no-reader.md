@@ -1,7 +1,7 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: release
+status: implementation
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-declared-receipt-has-no-reader
 issue: 256
-pr: 262
+pr:
 mod-block:
 gates:
     version: 1
@@ -94,7 +94,7 @@ gates:
                 reason: 'Captain approved release readiness at delivery revision d6619580. Single commit rebased onto origin/main via --onto (the naive rebase would have replayed 13 unrelated commits and was aborted); loader tests, byte-parity, and the contract test were re-run on the rebased revision. Draft PR #262 to main carries exactly the 3 expected files, is MERGEABLE/CLEAN with both reporting checks green at the exact head, and its body records the trunk delivery-base reason plus both residuals. Mark-ready and merge remain the Captain''s actions.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## Problem
