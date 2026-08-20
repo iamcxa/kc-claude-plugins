@@ -62,6 +62,9 @@ profile_observation_limits = {
 required = [
     "kc-dev-flow/.claude-plugin/plugin.json",
     "kc-dev-flow/.codex-plugin/plugin.json",
+    "kc-dev-flow/plugin.json",
+    "kc-dev-flow/plugin.yaml",
+    "kc-dev-flow/__init__.py",
     "kc-dev-flow/MIGRATION.md",
     "kc-dev-flow/RATIONALE.md",
     "kc-dev-flow/references/kernel.md",
@@ -439,6 +442,45 @@ for expected, relative in skills.items():
     require(skill_name(relative) == expected, f"skill name drifted: {relative}")
 
 codex_manifest = json.loads(read("kc-dev-flow/.codex-plugin/plugin.json"))
+hermes_manifest = json.loads(read("kc-dev-flow/plugin.json"))
+require(
+    hermes_manifest
+    == {
+        "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        "name": "kc-dev-flow",
+        "version": codex_manifest["version"],
+        "description": codex_manifest["description"],
+        "author": codex_manifest["author"],
+        "homepage": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-dev-flow",
+        "repository": "https://github.com/iamcxa/kc-claude-plugins",
+        "license": "MIT",
+        "keywords": [
+            "development-workflow",
+            "sprint",
+            "delivery",
+            "evidence",
+            "hermes-agent",
+        ],
+    },
+    "Hermes portable manifest drifted",
+)
+require(
+    {
+        path.parent.name
+        for path in (PLUGIN / "skills").glob("*/SKILL.md")
+    }
+    == {
+        "adopt-dev-flow",
+        "chief-engineer",
+        "choose-work-profile",
+        "continue-dev-flow",
+        "promote-dev-flow",
+        "science-officer",
+        "science-officer-em",
+        "setup-github-project-projection",
+    },
+    "Hermes portable package does not expose the complete direct skills set",
+)
 starter_prompts = codex_manifest["interface"]["defaultPrompt"]
 require(
     any("$chief-engineer" in prompt for prompt in starter_prompts),

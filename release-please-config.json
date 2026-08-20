@@ -63,6 +63,7 @@
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
         { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "plugin.json", "jsonpath": "$.version" },
         { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-dev-flow\")].version" }
       ]
     }

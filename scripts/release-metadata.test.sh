@@ -63,6 +63,9 @@ write_valid_fixture() {
   cat > "$root/alpha/.claude-plugin/plugin.json" <<'EOF'
 {"name":"alpha","version":"1.0.0"}
 EOF
+  cat > "$root/alpha/plugin.json" <<'EOF'
+{"name":"alpha","version":"1.0.0"}
+EOF
   cat > "$root/.claude-plugin/marketplace.json" <<'EOF'
 {"plugins":[{"name":"alpha","version":"1.0.0"}]}
 EOF
@@ -80,6 +83,7 @@ EOF
       "release-type": "simple",
       "extra-files": [
         {"type":"json","path":".claude-plugin/plugin.json","jsonpath":"$.version"},
+        {"type":"json","path":"plugin.json","jsonpath":"$.version"},
         {"type":"json","path":"/.claude-plugin/marketplace.json","jsonpath":"$.plugins[?(@.name==\"alpha\")].version"}
       ]
     }
@@ -88,7 +92,7 @@ EOF
 EOF
   git -C "$root" init -q
   git -C "$root" add release-please-config.json .release-please-manifest.json \
-    .claude-plugin/marketplace.json alpha/.claude-plugin/plugin.json
+    .claude-plugin/marketplace.json alpha/.claude-plugin/plugin.json alpha/plugin.json
 }
 
 probe_release_please_first_tag() {
@@ -413,7 +417,7 @@ python3 - "$MISSING_MARKETPLACE/release-please-config.json" <<'PY'
 import json, sys
 path = sys.argv[1]
 data = json.load(open(path))
-data["packages"]["alpha"]["extra-files"].pop(1)
+data["packages"]["alpha"]["extra-files"].pop(2)
 json.dump(data, open(path, "w"))
 PY
 expect_failure_contains "requires every package's marketplace target" "missing required marketplace target" \
@@ -429,13 +433,25 @@ git -C "$MISSING_CODEX" add alpha/.codex-plugin/plugin.json
 expect_failure_contains "requires a target for every tracked Codex manifest" "missing required Codex manifest target" \
   env REPO_DIR_OVERRIDE="$MISSING_CODEX" bash "$CONFIG_CHECK"
 
+MISSING_HERMES="$TMP_DIR/missing-hermes"
+cp -R "$VALID" "$MISSING_HERMES"
+python3 - "$MISSING_HERMES/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["packages"]["alpha"]["extra-files"].pop(1)
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "requires a target for every tracked Hermes manifest" "missing required Hermes manifest target" \
+  env REPO_DIR_OVERRIDE="$MISSING_HERMES" bash "$CONFIG_CHECK"
+
 CROSSWIRED="$TMP_DIR/crosswired"
 cp -R "$VALID" "$CROSSWIRED"
 python3 - "$CROSSWIRED/release-please-config.json" "$CROSSWIRED/.claude-plugin/marketplace.json" <<'PY'
 import json, sys
 config_path, marketplace_path = sys.argv[1:]
 config = json.load(open(config_path))
-config["packages"]["alpha"]["extra-files"][1]["jsonpath"] = "$.plugins[?(@.name==\"beta\")].version"
+config["packages"]["alpha"]["extra-files"][2]["jsonpath"] = "$.plugins[?(@.name==\"beta\")].version"
 json.dump(config, open(config_path, "w"))
 marketplace = json.load(open(marketplace_path))
 marketplace["plugins"].append({"name": "beta", "version": "1.0.0"})
@@ -451,6 +467,18 @@ cat > "$MANIFEST_DRIFT/.release-please-manifest.json" <<'EOF'
 EOF
 expect_failure_contains "parity checker rejects release manifest drift" "release-manifest=1.1.0" \
   env REPO_DIR_OVERRIDE="$MANIFEST_DRIFT" bash "$PARITY"
+
+HERMES_DRIFT="$TMP_DIR/hermes-drift"
+cp -R "$VALID" "$HERMES_DRIFT"
+python3 - "$HERMES_DRIFT/alpha/plugin.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["version"] = "1.1.0"
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "parity checker rejects Hermes manifest drift" "hermes=1.1.0" \
+  env REPO_DIR_OVERRIDE="$HERMES_DRIFT" bash "$PARITY"
 
 if grep -qF 'release-please-config-check.sh' "$PARITY"; then
   pass "parity gate invokes the release-please config checker"
