@@ -75,8 +75,6 @@ not another agent, review, or gate.
 - `science-officer-em` — legacy report-envelope compatibility only.
 - `adopt-dev-flow` — bind or upgrade a brownfield repository without replacing
   its existing authorities.
-- `promote-dev-flow` — bring sanitized adopter evidence back for source review
-  without granting it task or policy authority.
 - `setup-github-project-projection` — install a deterministic one-way Spacedock
   projection without making GitHub lifecycle authority.
 
@@ -114,7 +112,6 @@ no ordinary-stage work.
 | `delivery-branch-base.md` | The work item is delivered through a review artifact, so its base branch must be chosen. Forge-neutral, and it loads even when a provider mod owns the ceremony. |
 | `pr-delivery.md` | No adopter-owned mod, such as Spacedock `pr-merge`, already owns the forge-PR ceremony. |
 | `roborev-implementation-exit.md` | The `build` observation names a provider and the repository meets its precondition — a Spacedock-registered state holder, which RoboRev needs for single-flight. Any other repository records the observation as out of scope once. |
-| `improvement-harvesting.md`, with `scripts/improvement-intake.py` | Explicitly requested. It cannot create work, change sprint membership, or interrupt the selected route. |
 
 Retained-document and project-context policy both carry a `build` obligation and
 are independently rechecked at validation. An unavailable provider cannot

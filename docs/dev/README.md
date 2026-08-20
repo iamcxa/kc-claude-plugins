@@ -254,6 +254,25 @@ named owner keep a boundary closed; it does not mutate state.
 Use the loader test for must-load/must-not-load claims. Model pressure is a
 bounded behavioral comparison, not a substitute for loader evidence.
 
+## Placing a finding
+
+Kept from the retired `promote-dev-flow` skill, which was deleted with the adopter-to-source
+transport it gated. The transport is gone; this judgment is not, because findings still
+arrive — from a review, an adopter's own audit, or a session debrief. Run the reverse-recovery
+audit first, then pick one:
+
+| Disposition | Meaning | Destination |
+|---|---|---|
+| `rule-gap` | A portable semantic obligation is absent. | Kernel proposal. |
+| `enforcement-gap` | The rule exists but repeated violations lack a control. | Named enforcement point; no duplicate clause. |
+| `local-instance` | The rule is portable but the topology or mechanism is not. | Return to the adopter's authority. |
+| `duplicate/no-change` | Existing work covers it, or the rule worked as designed. | Merge observations or retain evidence only. |
+
+Record the observations, recurrence, expected value, cost, disproof hook, duplicate search,
+disposition, target, and the result that would reverse the classification. Most "missing rule"
+findings are `enforcement-gap`: grep for the rule before proposing it, and check that the
+precedent being copied actually runs.
+
 ## Task template
 
 ```yaml

@@ -29,7 +29,6 @@
     "defaultPrompt": [
       "Audit this repository with adopt-dev-flow",
       "Continue the approved sprint with continue-dev-flow",
-      "Review sanitized adopter evidence with promote-dev-flow",
       "Ask $chief-engineer for the next smallest integrated delivery step",
       "Ask $science-officer for independent assurance on this high-risk technical decision"
     ],
