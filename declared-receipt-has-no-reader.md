@@ -84,6 +84,17 @@ gates:
                 digest: sha256:449bcea18c934332527a3f61a44656f507f9b0cab68c9aa8627df5cfd8a5567e
                 request-digest: sha256:b55760766845217caf2da2ca5663b453050ace438f32e87ec12299f34d3bb306
                 room-ref: ./declared-receipt-has-no-reader/review/release/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:release:1
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:release:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-20T15:01:14.660009Z"
+                decision: approve
+                reason: 'Captain approved release readiness at delivery revision d6619580. Single commit rebased onto origin/main via --onto (the naive rebase would have replayed 13 unrelated commits and was aborted); loader tests, byte-parity, and the contract test were re-run on the rebased revision. Draft PR #262 to main carries exactly the 3 expected files, is MERGEABLE/CLEAN with both reporting checks green at the exact head, and its body records the trunk delivery-base reason plus both residuals. Mark-ready and merge remain the Captain''s actions.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
