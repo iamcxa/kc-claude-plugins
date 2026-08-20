@@ -75,6 +75,15 @@ gates:
               application:
                 target-stage: release
                 state: consumed
+        - id: gate:q0z8h3xny0qxv0r5srter8tj:release
+          stage: release
+          attempts:
+            - id: gate-attempt:q0z8h3xny0qxv0r5srter8tj-release-1
+              briefing:
+                id: briefing:q0z8h3xny0qxv0r5srter8tj:release:attempt-1:revision-1
+                digest: sha256:449bcea18c934332527a3f61a44656f507f9b0cab68c9aa8627df5cfd8a5567e
+                request-digest: sha256:b55760766845217caf2da2ca5663b453050ace438f32e87ec12299f34d3bb306
+                room-ref: ./declared-receipt-has-no-reader/review/release/briefing-1
 ---
 
 ## Problem

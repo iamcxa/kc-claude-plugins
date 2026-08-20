@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:release:attempt-1:revision-1",
+  "question": "Approve release readiness at delivery revision d6619580 (Draft PR #262 to main), leaving mark-ready and merge as your decisions?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:release:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/55140b707eabf01592f5283f63a8b5a74ca4ba71/declared-receipt-has-no-reader.md",
+      "rev": "sha256:d4b5c005375428fe0ce175770649c16336aadd5d570331ecc93de124473a7ed2",
+      "mediaType": "text/markdown",
+      "summary": "Single commit rebased onto origin/main, tests re-run on the rebased revision. PR #262 is Draft, base main, exactly the 3 expected files, MERGEABLE/CLEAN, both reporting checks green at the exact head. Body carries the delivery-base reason and both residuals; no version or marketplace edit."
+    }
+  ]
+}
