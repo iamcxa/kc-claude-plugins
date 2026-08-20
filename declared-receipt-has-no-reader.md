@@ -75,6 +75,12 @@ gates:
               application:
                 target-stage: release
                 state: consumed
+            - id: gate-attempt:q0z8h3xny0qxv0r5srter8tj-validation-2
+              briefing:
+                id: briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-2:revision-1
+                digest: sha256:ab0300e94b73d1602a0dfe53a47fa6769a1ae2aaf73a2e606dab3ee204ecddeb
+                request-digest: sha256:b4c1ebfe114b57507b00cf3c64bcd2ad059fe7ddd45b037ef834ede2757096a0
+                room-ref: ./declared-receipt-has-no-reader/review/validation/briefing-2
         - id: gate:q0z8h3xny0qxv0r5srter8tj:release
           stage: release
           attempts:

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-2:revision-1",
+  "question": "Approve validation at 10edd0a4 after two correction rounds and advance to release, accepting that four prose and non-goal claims stand on code inspection with no automated check?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/f98cd406f8928fb4738e20296f8666ba39c46529/declared-receipt-has-no-reader.md",
+      "rev": "sha256:f90b7b7ae7d3dcf94c42425285f6236d454f7f1b4f3a047bfdb7d1cd682cdf72",
+      "mediaType": "text/markdown",
+      "summary": "Both cross-model rounds are closed. Every falsifiable claim now names a test seen RED: presence, isolation (flatten + null-leak), multi-block document order (truncate-first, sorted-set, group-by-path), and text-format default (format-flip). Reviewer independently reproduced each mutation rather than accepting the implementer's word, and named the four claims that have no automated check instead of asserting the set complete. Production change across all three rounds is still the single 22/3-line reader in both byte-identical loader copies."
+    }
+  ]
+}
