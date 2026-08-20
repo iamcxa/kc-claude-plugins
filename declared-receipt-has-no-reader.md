@@ -24,6 +24,17 @@ gates:
                 digest: sha256:b29f07c33f960893825b1e55a02b9f11e3527102175446986dc91ef5e313029b
                 request-digest: sha256:916b5961b8f51a1d9210c5dc0be4c24ac424c1f737c87da4d03dab1bc98a2c99
                 room-ref: ./declared-receipt-has-no-reader/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:backlog:1
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-20T13:51:10.945911Z"
+                decision: approve
+                reason: 'Captain answered ''1'' to the gate question, selecting direction 1: the loader emits the selected stage''s declared receipt names and the reference states the bounded guarantee. Production profile accepted per published-contract precedent; the v2 receipt is committed and parses under the profile contract loader.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem
