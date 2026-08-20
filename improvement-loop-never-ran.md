@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/improvement-loop-never-ran
 issue:
-pr:
+pr: 260
 mod-block: digest-effect-unmeasured
 ---
 
@@ -324,6 +324,20 @@ Two enforcement facts belong in the record:
   this session violated digest entry 12 — a mutation proof that fired the wrong assertion twice,
   caught only by reading the failure message rather than the exit code. The entry that names that
   exact check was sitting in the digest, unloaded.
+
+## Outcome
+
+The replacement was built, measured, and rejected. Step 0 on
+`digest-effect-unmeasured` returned no measurable headroom: across 55 baseline runs on six
+blind-authored probes, an agent in this configuration already applied the named check in 53 of
+54 informative runs. The disciplines the digest would carry are already in the standing user
+configuration, so it had nothing left to add. Branch `iamcxa/dev-flow-fresh-failure-digest` is
+deleted.
+
+The retirement half stands on its own evidence and shipped separately as PR #260: the
+transport never ran in either direction, needed a human to carry a file between repositories,
+and its four files now sit behind the contract test's retired-file guard. The keep-or-retire
+question this task opened is answered — retire, with nothing put in its place.
 
 ## Measurement, before any delivery
 
