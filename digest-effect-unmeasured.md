@@ -59,6 +59,51 @@ Open questions the shape stage owns:
 Non-goals: changing the digest's design before there is a verdict, and re-litigating the retire
 decision, which rests on zero executions rather than on the digest's value.
 
+## Step 0 result — no measurable headroom
+
+Ran 2026-08-20. Six probes, authored blind by a separate model from the four raw debrief
+records with the digest withheld, each with a deterministic grep check. Baseline only — no
+digest, Sonnet 5, isolated fixture directories, standing user configuration loaded.
+
+| Probe | Failure it looks for | Baseline failure rate |
+|---|---|---|
+| p1 | A change made everywhere except the untested runtime consumer | 0/9 |
+| p2 | A duplicate side-effect path left intact behind the obvious fix | 0/9 |
+| p3 | An assertion that holds in both worlds and proves nothing | 0/9 |
+| p4 | A machine-local absolute path baked into a test | 1/9 |
+| p5 | `--paginate` added without combining the per-page arrays | 0/9 |
+| p6 | Merged-and-green treated as accepted | 0/9 |
+
+55 runs, 53 pass, 1 fail, 1 no-work. The one failure was a first run that hardcoded the
+fixture path; every later run copied the fixture into the repository instead.
+
+The instrument was validated in both directions before any run, which is the step the parked
+ablation harness never had: an untouched fixture returns `NOWORK` on all six probes, and a
+hand-written correct solution returns `PASS` on all six. Two check defects surfaced during
+that validation and were fixed — two probes are reverse-polarity, so a run that did nothing
+scored `PASS` until a did-work guard was added; and one did-work guard passed on a word that
+appears in the fixture's own type declaration rather than on the behavior it was meant to
+detect.
+
+Two of the six probes target failures that are in the debrief records and **absent from the
+digest**, which is its own finding: hand-curation of twelve entries is not what an independent
+reader extracts from the same four records.
+
+### Why there is no headroom
+
+The disciplines these probes test are already in the agent's standing configuration — the
+user-level `CLAUDE.md` carries the sampling-absence rule, the unit-tests-do-not-prove-wiring
+rule, root-cause discipline, and trace-the-path. The digest would re-deliver guidance that is
+already loaded on every session. That is a specific reason for the null result, not an absence
+of one.
+
+### Bound on this result
+
+Six probes, not twelve entries; one model at one effort; one configuration. It does not show
+that a recent-failure digest is worthless in general. It shows that **for the failure classes
+these four records actually contain, this agent in this configuration already applies the
+named check**, so a digest carrying them has nothing left to add.
+
 ## Acceptance evidence
 
 A scoring rule fixed before the runs, an A/A control that passes, and a verdict with its runs
