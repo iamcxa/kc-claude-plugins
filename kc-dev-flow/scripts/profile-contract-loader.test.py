@@ -450,4 +450,99 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             f"{label} did not resolve to a clean rc={expect_rc}: {result.returncode} {result.stderr[:120]}",
         )
 
+    # declared_receipts surfaces the selected stage contract's own receipt
+    # name in the loader's JSON output.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../kernel.md", '
+        '"trigger": "example", "receipt": "example_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    presence = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(presence.returncode == 0, presence.stderr)
+    presence_document = json.loads(presence.stdout)
+    require(
+        presence_document.get("declared_receipts") == ["example_receipt"],
+        "declared_receipts did not surface the stage's own receipt name: "
+        f"{presence_document.get('declared_receipts')!r}",
+    )
+
+    # declared_receipts derives only from the selected stage contract's own
+    # block: kernel.md and base.md may declare the same schema (an adopter
+    # mistake, not a supported input), but their receipts must not flatten
+    # into the output, and a null receipt in the stage's own block must not
+    # leak through either.
+    kernel_path = root / "kernel.md"
+    base_path = root / "profiles" / "poc-exploration" / "base.md"
+    kernel_original = kernel_path.read_text(encoding="utf-8")
+    base_original = base_path.read_text(encoding="utf-8")
+    kernel_path.write_text(
+        kernel_original.rstrip("\n") + "\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "profiles/poc-exploration/build.md", '
+        '"trigger": "example", "receipt": "kernel_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    base_path.write_text(
+        base_original.rstrip("\n") + "\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "build.md", '
+        '"trigger": "example", "receipt": "base_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "example", "receipt": "stage_receipt"}, '
+        '{"path": "../../kernel.md", "trigger": "example_untriggered", "receipt": null}'
+        "]}\n"
+        "```\n",
+        encoding="utf-8",
+    )
+    isolation = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(isolation.returncode == 0, isolation.stderr)
+    isolation_document = json.loads(isolation.stdout)
+    require(
+        isolation_document.get("declared_receipts") == ["stage_receipt"],
+        "declared_receipts leaked a null receipt or a kernel/base receipt, or "
+        f"missed the stage's own receipt: {isolation_document.get('declared_receipts')!r}",
+    )
+    kernel_path.write_text(kernel_original, encoding="utf-8")
+    base_path.write_text(base_original, encoding="utf-8")
+
 print("profile contract loader test: PASS")

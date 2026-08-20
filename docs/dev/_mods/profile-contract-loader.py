@@ -107,8 +107,11 @@ def resolve_work_item(path: Path) -> dict[str, str]:
 CONDITIONAL_SCHEMA = "kc-dev-flow-conditional-references/v1"
 
 
-def check_conditional_references(root: Path, contract_path: Path, text: str) -> None:
-    """Refuse a stage contract that names a reference the adopter has not vendored.
+def check_conditional_references(
+    root: Path, contract_path: Path, text: str
+) -> list[str]:
+    """Refuse a stage contract that names a reference the adopter has not vendored,
+    and return this contract's own declared non-null receipt names.
 
     The reference itself stays unread until its trigger fires; only its presence
     is checked, so an incomplete vendor fails at load instead of silently
@@ -116,7 +119,13 @@ def check_conditional_references(root: Path, contract_path: Path, text: str) -> 
     the resolved target must stay inside the contracts root, so an absolute
     path, a `..` escape, or a symlink out of the tree cannot satisfy the check
     with a file the adopter never vendored.
+
+    Bounded guarantee on the returned receipt names: this surfaces which
+    receipt names this contract's own `kc-dev-flow-conditional-references/v1`
+    block declares. It does not verify that a receipt was produced, does not
+    evaluate `trigger`, and does not block a stage that completes without one.
     """
+    declared_receipts: list[str] = []
     for block in re.findall(r"```json\s*\n(.*?)```", text, re.DOTALL):
         try:
             declared = json.loads(block)
@@ -158,6 +167,10 @@ def check_conditional_references(root: Path, contract_path: Path, text: str) -> 
                     f"{contract_path.name} declares conditional reference "
                     f"{declared_path!r}, which is not vendored at {target}"
                 )
+            receipt = entry.get("receipt")
+            if isinstance(receipt, str):
+                declared_receipts.append(receipt)
+    return declared_receipts
 
 
 def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
@@ -179,6 +192,8 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
         root / "profiles" / profile / f"{logical_stage}.md",
     ]
     loaded: list[dict[str, object]] = []
+    declared_receipts: list[str] = []
+    stage_path = paths[-1]
     for path in paths:
         try:
             relative = path.relative_to(root)
@@ -186,7 +201,9 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
             text = raw.decode("utf-8")
         except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ContractError(f"cannot load selected contract {path}: {exc}") from exc
-        check_conditional_references(root, path, text)
+        receipts = check_conditional_references(root, path, text)
+        if path == stage_path:
+            declared_receipts = receipts
         loaded.append(
             {
                 "path": relative.as_posix(),
@@ -205,6 +222,7 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
         "workflow_stage": workflow_stage,
         "logical_stage": logical_stage,
         "next_workflow_stage": next_stage,
+        "declared_receipts": declared_receipts,
         "loaded": loaded,
     }
 
@@ -221,6 +239,7 @@ def render_text(contract: dict[str, object]) -> str:
             "workflow_stage",
             "logical_stage",
             "next_workflow_stage",
+            "declared_receipts",
         )
     }
     chunks = [json.dumps(header, sort_keys=True)]
