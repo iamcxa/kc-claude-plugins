@@ -1,7 +1,7 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: validation
+status: release
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
@@ -74,7 +74,7 @@ gates:
                 reason: 'Captain approved validation at 758c2a70. All three acceptance-evidence items were independently reproduced, not re-read: both mutants recreate their reported failures and are caught only by the isolation assertion, the path fail-closed cases at 305-429 are untouched in a pure-addition test diff, and the byte-parity assertion was proven live by a deliberate tamper-and-restore. The docstring''s three absolutes each trace to a code fact. FO confirmed the worktree clean at 758c2a70 with parity intact. The contract test''s sole failure is pre-existing and now tracked as spacedock-route-test-passes-nowhere.'
               application:
                 target-stage: release
-                state: pending
+                state: consumed
 ---
 
 ## Problem
