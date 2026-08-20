@@ -11,7 +11,7 @@ verdict:
 worktree: .worktrees/improvement-loop-never-ran
 issue:
 pr:
-mod-block:
+mod-block: digest-effect-unmeasured
 ---
 
 ## Problem
