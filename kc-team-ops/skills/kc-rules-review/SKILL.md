@@ -12,9 +12,11 @@ what actually happened in the user's sessions, then change it one decision at a 
 repaired your output. *Firing* is how often the rule left an observable trace. The verdict lives
 in the pair, never in either alone.
 
-**The trap this exists to stop:** high friction reads as "the rule is missing", so the instinct is
-to write more prose. But the usual cause is a rule that is already there and has no trigger. More
-prose makes that worse — the file grows and compliance does not.
+**The trap this exists to stop:** friction points at one loud rule, and fixing that rule feels like
+finishing. Measured against a control, the loud rule gets fixed either way — what goes unasked is
+whether it ever ran, whether something else already owns it, and what the quiet rules' zeros mean.
+The quiet rules are then scored on friction alone, which is how a safety rule that has never been
+violated gets read as dead weight.
 
 ## When to use
 
@@ -63,8 +65,17 @@ A rule that looks dead is often a **duplicate of a live capability that owns the
 elsewhere** — a plugin reference, a stage contract, a test that asserts the path. Grep the fleet
 for the concept before cutting.
 
-- Found an owner that cannot drift (a contract test asserts it) → delete the copy. That is the ideal outcome, and a better reason than "it never fired".
+- Found an owner → **propose deleting the copy and name the owner**, through Step 4 like any other change. Do not delete it yourself; removal is the user's call.
 - Found no owner → the rule is the only home. Removing it drops the capability.
+
+Finding an owner is the start of the check, not the end. Before proposing removal, answer both:
+
+- **Does the assertion cover content or only existence?** A contract test that asserts a path
+  resolves does not stop the two copies from saying different things. Diff them. If they have
+  already drifted, deleting the copy silently drops whatever only the copy says.
+- **Do they load in the same places?** An owner loaded by two stage contracts does not cover a rule
+  file read in every session. Removing the copy narrows where the rule applies, and that narrowing
+  is the real cost to put in front of the user.
 
 ## Step 4 — Decide, one at a time
 
