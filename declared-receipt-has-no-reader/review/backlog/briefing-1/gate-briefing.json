@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:backlog:attempt-1:revision-1",
+  "question": "Schedule this task, select the Production work profile, and accept direction 1 (loader emits the selected stage's declared receipt names; the reference states the bounded guarantee) over direction 2 (evaluable trigger + stage-exit enforcement) and direction 3 (documentation-only)?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/17088d8857ae061c07170fe961894ad9ae21f7cb/declared-receipt-has-no-reader.md",
+      "rev": "sha256:f38506fc4810681aa4bdb2bb42a0956f20abf9cc96791f5fec1ce7801ac82cc3",
+      "mediaType": "text/markdown",
+      "summary": "kc-dev-flow 3.0.0 declares receipt and trigger on every conditional reference; the loader reads only path. Confirmed unread at the v3.0.0 tag, on origin/main, and on the current branch. Recommend Production profile (precedent: every published kc-dev-flow contract change) and direction 1."
+    }
+  ]
+}
