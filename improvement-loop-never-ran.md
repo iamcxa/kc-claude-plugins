@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree:
 issue:
-pr: 260
+pr: pr-merge:260
 mod-block:
 ---
 
