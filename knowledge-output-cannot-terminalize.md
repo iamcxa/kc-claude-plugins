@@ -151,6 +151,46 @@ Defect 1 is gone. What remains is (a) a scaffolding refit — the local `pr-merg
 replacement would destroy — and (b) two binary-level defects worth reporting upstream, both
 reproduced against 0.27.0-pre8.
 
+## Partial port applied, and the extension audited
+
+### Ported (working, verified end to end)
+
+`docs/dev/_mods/pr-merge.md` 0.12.2 -> 0.12.3. Three hunks brought forward from canonical
+0.27.0, nothing else touched:
+
+- the startup and idle hooks now recognize a merged sentinel (`pr-merge:` / `local-merge:`)
+  and bypass `gh` for a sentinel row;
+- terminalization hands off to `spacedock merge guard --verdict passed` instead of the
+  hand-rolled two-`--set` sequence the 0.12.2 copy prescribed — that sequence is now refused
+  by the binary, so the vendored prose was instructing a procedure that cannot succeed;
+- a new `## Delivery without a PR` section documents the `local-merge:` escape, including why
+  the reason string matters and why `--force` is not the answer.
+
+Verified: a fresh entity with `pr=local-merge:{reason}` archives on the first attempt, the
+workflow validates, and `kc-dev-flow-contract-test.py` passes.
+
+The version stamp reads 0.12.3 with a scope note, **not** 0.27.0. Stamping the canonical
+version on a partial port would make the next refit skip the remaining hunks — the same
+drift-by-false-claim that produced this task.
+
+### Extension audit — one third is now redundant, two thirds are not
+
+The local extension is 392 lines in three sections:
+
+| Section | Canonical 0.27.0 coverage | Verdict |
+|---|---|---|
+| `Portable delivery hardening from shipped Spacedock v0.27.0-pre3` (238 lines) | Covers every concept **and more** — repository qualifier, unresolved-worktree handling, and `dispatch trunk` appear in canonical and not in the extension. No command family the extension uses is missing from canonical. | **Redundant and behind.** It is a hand back-port of a pre-release that the released version has since superseded. |
+| `Delivery topology decision` | Zero mentions of `topology` in canonical. | **Keep.** No upstream equivalent; an open backlog entity (`delivery-topology-review-deduplication`) tracks its own defect. |
+| `Split-root audit-link correction` | Zero mentions of `split-root` or `audit-link` in canonical. | **Keep.** No upstream equivalent; a session debrief recorded the underlying defect (the audit-link template produces a dead link under split-root state). |
+
+That makes the full refit tractable rather than a three-way merge of 492 lines: take the
+canonical 124-line body, drop the 238-line back-port, carry the two genuinely local sections
+forward. Roughly a 60% reduction in locally-maintained prose.
+
+The redundancy itself is the lesson worth keeping: a hand back-port of an unreleased version
+becomes stale debt the moment the release lands, and nothing told us — the file kept claiming
+0.12.2 while carrying 0.27.0-pre3 content.
+
 ## Work profile receipt
 
 ## Accepted outcome and non-goals
