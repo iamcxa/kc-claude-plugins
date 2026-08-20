@@ -1,7 +1,7 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: backlog
+status: ideation
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
@@ -34,7 +34,7 @@ gates:
                 reason: 'Captain answered ''1'' to the gate question, selecting direction 1: the loader emits the selected stage''s declared receipt names and the reference states the bounded guarantee. Production profile accepted per published-contract precedent; the v2 receipt is committed and parses under the profile contract loader.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
