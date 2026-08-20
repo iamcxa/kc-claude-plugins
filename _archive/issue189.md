@@ -1,15 +1,16 @@
 ---
 id: n6hhdhm5tyggcs6408ztm45e
 title: "e2e-pipeline: anchor the click action grammar so no click action is accepted on a prefix"
-status: validation
+status: done
 source: "GitHub issue #189 (iamcxa/kc-claude-plugins) — trusted own-lane intake, dispatched by the captain"
 started: 2026-08-10T09:00:16Z
-completed:
-verdict:
+completed: 2026-08-20T13:46:02Z
+verdict: PASSED
 worktree: /Users/kent/mini-legs/rx-d1b173ab-c5c4-4dca-a82f-1dfb272d3040/worktree
 issue: "189"
 pr: pr-merge:191
 design: required
+archived: 2026-08-20T13:46:02Z
 ---
 
 ## Problem
