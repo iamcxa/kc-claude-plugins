@@ -87,7 +87,6 @@ required = [
     "kc-dev-flow/skills/science-officer/agents/openai.yaml",
     "kc-dev-flow/skills/science-officer-em/SKILL.md",
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
-    "kc-dev-flow/scripts/improvement-intake.test.py",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
@@ -100,6 +99,14 @@ for relative in required:
 for retired in [
     "kc-dev-flow/references/work-control-profile.md",
     "docs/dev/_mods/work-control-profile.md",
+    # The adopter-to-source improvement transport. Retired for never having run:
+    # it needed a human to carry a handoff file between repositories, and no such
+    # artifact ever existed in any adopter. Guarded because a file can come back
+    # quietly and nothing else would notice.
+    "kc-dev-flow/references/improvement-harvesting.md",
+    "kc-dev-flow/scripts/improvement-intake.py",
+    "kc-dev-flow/scripts/improvement-intake.test.py",
+    "kc-dev-flow/skills/promote-dev-flow/SKILL.md",
 ]:
     require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
 
@@ -276,10 +283,6 @@ run(
 run(
     [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
     "portable PR delivery",
-)
-run(
-    [sys.executable, "kc-dev-flow/scripts/improvement-intake.test.py"],
-    "improvement intake",
 )
 run(
     [sys.executable, "kc-dev-flow/scripts/project-spacedock-state.test.py"],
@@ -474,7 +477,6 @@ require(
         "chief-engineer",
         "choose-work-profile",
         "continue-dev-flow",
-        "promote-dev-flow",
         "science-officer",
         "science-officer-em",
         "setup-github-project-projection",
