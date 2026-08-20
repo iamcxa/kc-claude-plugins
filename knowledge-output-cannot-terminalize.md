@@ -95,6 +95,62 @@ never reached. That answers the shape stage's first open question for defect 2 a
 defect 1's candidates to the binary's guard versus the mod's absolute claim at
 `pr-merge.md:342`.
 
+## Re-verified after checking against Spacedock 0.27 — defect 1 retracted
+
+The Captain's instinct was right: check the scaffolding version before filing an upstream bug.
+This workflow's `_mods/pr-merge.md` is **version 0.12.2**; the canonical mod shipped with the
+installed 0.27.0-pre8 plugin is **0.27.0**. Fifteen versions of drift.
+
+### Defect 1 — RETRACTED. There is an exit; the stale mod never mentions it.
+
+Canonical 0.27 recognizes a second delivery sentinel the local copy has never heard of:
+"terminal status carrying a valid merged sentinel (`pr-merge:` or **`local-merge:`**)".
+Setting `pr=local-merge:{reason}` and running `--archive` worked on the first attempt:
+
+```
+archived: docs/dev/.spacedock-state/_archive/digest-effect-unmeasured.md
+```
+
+So knowledge-output work is not stranded. The capability existed; the vendored prose that
+would have told an agent about it was fifteen versions behind. The original finding was a
+stale-vendor artifact, not a missing terminal path — which is the same failure class this
+repository keeps producing: a vendored reference drifting out of sync with the mechanism it
+describes.
+
+### Defect 2 — CONFIRMED on 0.27, and narrowed
+
+Reproduced on a throwaway entity against the current binary. Conditional on `pr` being empty:
+
+```
+mod-block before: merge:pr-merge
+guard says:       "... (pr field is empty and mod-block is empty).
+                   Set mod-block=merge:pr-merge and invoke the hook."
+mod-block after:  (empty)
+```
+
+Three things wrong in one run: the guard **misreports** a set `mod-block` as empty; it
+**clears** the field as a side effect of the failed run; and its remediation text instructs the
+operator to set exactly the field it just destroyed. Each invocation therefore destroys the
+state the next invocation demands.
+
+With `pr` non-empty the guard behaves coherently — it leaves the block intact and reports
+`PR ... is pending — mod-block left intact`. So the livelock is specific to the empty-`pr`
+path, which is precisely the path an operator reaches when the entity has no PR.
+
+### New finding — `--archive` and `merge guard` disagree about `local-merge:`
+
+The same sentinel value is read two ways by the same binary: `--archive` accepted
+`pr=local-merge:...` as proof and archived, while `merge guard` read `pr=local-merge:test` as a
+**pending** PR and refused with "never finalize on an open PR". One of the two is wrong about
+what `local-merge:` means.
+
+### Revised scope
+
+Defect 1 is gone. What remains is (a) a scaffolding refit — the local `pr-merge.md` is
+0.12.2 against canonical 0.27.0, and carries a kc-dev-flow runtime extension that a wholesale
+replacement would destroy — and (b) two binary-level defects worth reporting upstream, both
+reproduced against 0.27.0-pre8.
+
 ## Work profile receipt
 
 ## Accepted outcome and non-goals

@@ -10,8 +10,9 @@ completed:
 verdict:
 worktree:
 issue:
-pr:
+pr: local-merge:no-delivery-measurement-only
 mod-block:
+archived: 2026-08-20T10:12:07Z
 ---
 
 ## Problem
