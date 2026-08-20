@@ -552,14 +552,19 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
     # poc-exploration/build.md each declare more than one non-null receipt);
     # a reader that returned only the first receipt, a sorted list, or a set
     # would still pass a single-block/single-receipt test but must fail this
-    # one.
+    # one. The two blocks also interleave TWO distinct valid vendored paths
+    # (../../kernel.md and the sibling base.md) so that a reader that grouped
+    # entries by resolved path before returning — instead of appending each
+    # entry in document order — would reorder receipt_b ahead of the second
+    # receipt_a and fail this assertion too; with a single shared path that
+    # mutation shape is indistinguishable from a correct reader.
     declaring_stage.write_text(
         "STAGE-poc-exploration-prove\n\n"
         "```json\n"
         '{"schema": "kc-dev-flow-conditional-references/v1", '
         '"references": ['
         '{"path": "../../kernel.md", "trigger": "first", "receipt": "receipt_a"}, '
-        '{"path": "../../kernel.md", "trigger": "second", "receipt": "receipt_b"}'
+        '{"path": "base.md", "trigger": "second", "receipt": "receipt_b"}'
         "]}\n"
         "```\n\n"
         "some prose between the two blocks\n\n"
@@ -567,7 +572,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         '{"schema": "kc-dev-flow-conditional-references/v1", '
         '"references": ['
         '{"path": "../../kernel.md", "trigger": "third", "receipt": "receipt_a"}, '
-        '{"path": "../../kernel.md", "trigger": "fourth", "receipt": "receipt_c"}'
+        '{"path": "base.md", "trigger": "fourth", "receipt": "receipt_c"}'
         "]}\n"
         "```\n",
         encoding="utf-8",
@@ -599,7 +604,14 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
     # The text-format default output (no --format flag — the invocation
     # docs/dev/README.md documents) embeds the header as its first line;
     # declared_receipts must be visible there too, not only under
-    # --format json.
+    # --format json. A single default-only run cannot discriminate render_text
+    # from render_text's own output shape leaking a header key: if the
+    # loader's default changed to json, the whole output would collapse to a
+    # single-line JSON document that still carries declared_receipts, and
+    # splitlines()[0] would still parse. Comparing the no-flag run against an
+    # explicit --format text run on the same fixture closes that gap — the
+    # two only match when the no-flag path actually goes through
+    # render_text().
     declaring_stage.write_text(
         "STAGE-poc-exploration-prove\n\n"
         "```json\n"
@@ -622,6 +634,28 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         capture_output=True,
     )
     require(text_format.returncode == 0, text_format.stderr)
+    explicit_text_format = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "text",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(explicit_text_format.returncode == 0, explicit_text_format.stderr)
+    require(
+        text_format.stdout == explicit_text_format.stdout,
+        "the no-flag default output diverged from an explicit --format text "
+        "run on the same fixture, so the default is not provably rendered by "
+        f"render_text(): {text_format.stdout[:80]!r} vs "
+        f"{explicit_text_format.stdout[:80]!r}",
+    )
     header_line = text_format.stdout.splitlines()[0]
     header_document = json.loads(header_line)
     require(
