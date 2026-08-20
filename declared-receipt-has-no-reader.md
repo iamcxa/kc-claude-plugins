@@ -64,6 +64,17 @@ gates:
                 digest: sha256:5070851c4e3ad4082a0b3a1bc3429f01475d133ca95b1440d74511370562a924
                 request-digest: sha256:ff9bafb9434c23ba274f12a02ff072a36c3b505e5f253c001c8117b973e06352
                 room-ref: ./declared-receipt-has-no-reader/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:validation:1
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-20T14:47:36.985953Z"
+                decision: approve
+                reason: 'Captain approved validation at 758c2a70. All three acceptance-evidence items were independently reproduced, not re-read: both mutants recreate their reported failures and are caught only by the isolation assertion, the path fail-closed cases at 305-429 are untouched in a pure-addition test diff, and the byte-parity assertion was proven live by a deliberate tamper-and-restore. The docstring''s three absolutes each trace to a code fact. FO confirmed the worktree clean at 758c2a70 with parity intact. The contract test''s sole failure is pre-existing and now tracked as spacedock-route-test-passes-nowhere.'
+              application:
+                target-stage: release
+                state: pending
 ---
 
 ## Problem
