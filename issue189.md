@@ -8,7 +8,7 @@ completed:
 verdict:
 worktree: /Users/kent/mini-legs/rx-d1b173ab-c5c4-4dca-a82f-1dfb272d3040/worktree
 issue: "189"
-pr: 191
+pr: pr-merge:191
 design: required
 ---
 
