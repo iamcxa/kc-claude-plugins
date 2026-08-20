@@ -59,6 +59,16 @@ Open questions the shape stage owns:
 Non-goals: changing the digest's design before there is a verdict, and re-litigating the retire
 decision, which rests on zero executions rather than on the digest's value.
 
+## Verdict
+
+**Do not ship.** The task's own design put Step 0 in front as a kill switch, and it fired: with
+no measurable headroom there is nothing for an A/A control or an ablation to resolve, so
+Steps 1 and 2 were never run and the 480-run estimate was never spent. Branch
+`iamcxa/dev-flow-fresh-failure-digest` is deleted.
+
+This closes the question `improvement-loop-never-ran` was blocked on. That task's retirement
+half proceeds on its own evidence as PR #260; nothing replaces the retired transport.
+
 ## Step 0 result — no measurable headroom
 
 Ran 2026-08-20. Six probes, authored blind by a separate model from the four raw debrief

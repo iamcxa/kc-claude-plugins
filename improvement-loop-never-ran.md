@@ -8,10 +8,10 @@ sprint:
 started: 2026-08-20T08:36:33Z
 completed:
 verdict:
-worktree: .worktrees/improvement-loop-never-ran
+worktree:
 issue:
 pr: 260
-mod-block: digest-effect-unmeasured
+mod-block:
 ---
 
 ## Problem
