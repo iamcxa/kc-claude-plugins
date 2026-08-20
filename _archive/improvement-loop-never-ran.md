@@ -1,17 +1,18 @@
 ---
 id: r9jtmpwnd1kd1ypscr41n635
 title: "kc-dev-flow: the improvement loop's adopter half has never run — decide whether to wire it or retire it"
-status: implementation
+status: done
 source: "README fact-check of kc-dev-flow, 2026-08-20. `references/improvement-harvesting.md` has been unreachable from any adopter since #249; archaeology showed #218 extracted it from `continue-dev-flow` and two later refactors deleted the two prose pointers that stood in for a declaration. This repo has 4 `_debriefs/` and no `_improvements/`, so the loop has produced nothing here either."
 product: kc-dev-flow
 sprint:
 started: 2026-08-20T08:36:33Z
-completed:
-verdict:
+completed: 2026-08-20T13:23:43Z
+verdict: PASSED
 worktree:
 issue:
 pr: pr-merge:260
 mod-block:
+archived: 2026-08-20T13:23:43Z
 ---
 
 ## Problem
