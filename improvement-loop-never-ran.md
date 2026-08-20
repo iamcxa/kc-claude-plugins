@@ -300,6 +300,44 @@ record out-of-scope once for a repository that does not meet it.
 Points 4 and 5 are the ones this task exists for. A green check that would still pass with the chain
 broken is this defect repeated under a new name.
 
+## Implementation result, and why it is not being delivered
+
+The slice is built and the branch `iamcxa/dev-flow-fresh-failure-digest` holds it: +176 / -1033
+against `main`, four repository gates green. The transport is fully deleted — the 159-line
+procedure plus the 869 lines of `improvement-intake.py`, its test, and the `promote-dev-flow`
+skill that was its only entry point. The first digest this mechanism has ever produced is
+committed at `_improvements/recent-failures.md`: 12 entries, 2883 of 4096 bytes, generated from
+the four real records, cursor verified to stop a second run.
+
+**It is not being delivered, and the reason is the same one this task was opened about.** No
+evidence exists that loading the digest makes an agent better. Reachability was proven; value was
+not measured. A PR exists to merge, and merging an unmeasured claim of improvement is how the
+mechanism this task retired came to be shipped in the first place.
+
+Two enforcement facts belong in the record:
+
+- Nothing checks the digest. The 4096-byte cap, the one-entry-per-line rule, and the
+  `kc-dev-flow-recent-failures/v1` schema are prose in the reference; the byte count above was
+  measured by hand, not by a gate. This implementation **deleted** a 316-line schema validator and
+  shipped a new schema with none, so enforcement went down on net in a task about enforcement.
+- One n=1 observation from the session that built it, offered as a signal and not as evidence:
+  this session violated digest entry 12 — a mutation proof that fired the wrong assertion twice,
+  caught only by reading the failure message rather than the exit code. The entry that names that
+  exact check was sitting in the digest, unloaded.
+
+## Measurement, before any delivery
+
+The repository already owns the instrument: `kc-pr-flow/scripts/review-ablation.sh`, an A/B harness
+with A/A' control arms built to judge whether a cut to a skill changes behavior. Two things about
+it are load-bearing here, and both come from the digest this task produced: it is parked with no
+accepted A/A verdict at roughly $264 per verdict, and its own `--arms` defect once returned a
+plausible verdict for a comparison nobody asked for. An unvalidated instrument cannot settle this.
+
+So the measurement is its own work, not this task's tail. It needs a corpus of tasks in which the
+digest's entries could plausibly recur, an A/B with the digest present and absent, and a scoring
+rule fixed before the runs. Until it returns a verdict, the branch stays unmerged and the retired
+transport stays retired on that branch only.
+
 ## Open, for the build stage
 
 1. **Load cost.** The digest loads on ordinary continuations, which is the one thing profile-native
