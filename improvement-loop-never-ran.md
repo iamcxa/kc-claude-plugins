@@ -61,14 +61,25 @@ consumer half stayed green throughout, so from the source side the loop looked h
 
 Three repositories carry kc-dev-flow. No single one holds both the wiring and the input.
 
-| Repository | Vendored | `_debriefs/` input | Handoffs produced |
+| Repository | Vendored | `_debriefs/` in the *bound* home | Handoffs produced |
 |---|---|---|---|
-| `kc-claude-plugins` (source) | no | 4 records | none |
-| `carlove-v1/krakow-v1` | **yes**, 8.9K, linked three times from its workflow README | none | none |
+| `kc-claude-plugins` (source) | no | 4 records, none since 2026-07-30 | none |
+| `carlove-v1/krakow-v1` | **yes**, 8.9K, linked three times from its workflow README | none — see below | none |
 | `subspace-relay` | no — vendor set predates 3.0 — but its workflow README names the file | — | none |
 
-No `_improvements/` directory exists on this machine. The chain is intact in exactly one
-repository, and that repository has nothing to feed it.
+No `_improvements/` directory exists on this machine.
+
+The carlove row needs its real shape, because it is the most informative fact in the sweep. That
+repository holds **26 debriefs** — at `docs/ship-flow/_debriefs/`, belonging to a different
+workflow. Its Local Profile binds the dev-flow home to `docs/dev/.spacedock-state/_debriefs/` and
+says so explicitly: "The dev flow's own home, not `docs/ship-flow/_debriefs/` — two directories of
+the same name exist in this repo, and an unbound resolution has to halt on the ambiguity rather
+than guess." That bound home does not exist. So the input is not absent from the repository; it is
+walled off by workflow boundary, correctly and deliberately.
+
+That generalizes. Debrief homes are per-workflow, and the richest ones on this machine belong to
+`ship-flow` (20–26 records per project across carlove, spacedock-ui, helm). A kc-dev-flow harvest
+sees only its own workflow's slice, which in the best-equipped adopter is empty.
 
 `carlove-v1/krakow-v1`'s own 3.0.0 upgrade audit reached this finding independently:
 "`improvement-harvesting.md` — declared by nothing; outside the loader-enforced set. It is where
@@ -170,12 +181,31 @@ reverse_recovery:
       need: NO_OBSERVED_CONSUMER
       evidence: no _improvements/ directory in any adopter; nothing reads a cursor that never existed
       disproof_hook: find -type d -name _improvements returning a hit
-  decision: recover
+    - surface: the capability, elsewhere
+      location: spacebridge/skills/debrief-promote/SKILL.md
+      completeness: WORKING_UNIT_UNPROVEN
+      need: REQUIRED
+      evidence: >-
+        Declares direction "Projects -> Plugin | Aggregate learnings back" — the same capability,
+        with cross-project STRONG/WARN scoring, --since, and --dry-run, and no human-carried
+        handoff file. Found only after the boundary below was widened.
+      disproof_hook: a material capability this covers that debrief-promote cannot
+  boundary_correction: >-
+    The first pass searched kc-claude-plugins and its adopters and stopped there, so it could not
+    see a functional duplicate living in another plugin. Widening to installed plugins found one.
+    The decision below changed as a result.
+  decision: redesign
 ```
 
 The circularity is worth naming: `promote-dev-flow` needs handoffs, handoffs exist only to feed
 `promote-dev-flow`, and neither side has ever fired. That makes both halves unproven together, not
 a working consumer with a broken producer.
+
+A prior Codex review already assessed `debrief-promote` for this purpose and concluded its keyword
+dedupe and auto-promote patch flow do not fit, because "new rule versus existing rule lacking
+enforcement" stays a judgment call. That objection is about the *promote* half. It says nothing
+against reusing the discovery and scoring half, and nothing at all about the local fresh-failure
+memory, which is a different capability that did not exist when that review was written.
 
 ### Why the original move lost reachability
 
@@ -187,44 +217,71 @@ defect is that omission, not the extraction.
 
 ## Accepted outcome and non-goals
 
-**Accepted journey.** This repository harvests one of its four real `_debriefs/` records and
-produces the first `kc-dev-flow-improvement-handoff/v1` artifact that has ever existed, which
-`improvement-intake.py` then accepts. Limited user: this repository. End-to-end value: the loop
-that carries adopter findings upstream runs once for real.
+**Accepted journey.** kc-dev-flow stops carrying an adopter-to-source improvement transport. The
+capability it was reaching for — recent local failures reaching the next session — is rebuilt where
+its input and its consumer already live: the workflow runtime.
 
-The slice is chosen because the two halves of the evidence sit in different repositories —
-`kc-claude-plugins` has the input and no vendored copy, `carlove-v1/krakow-v1` has the vendored copy
-and no input. Vendoring here is the only place both exist.
+The evidence for leaving rather than repairing:
 
-**Persistent state.** `_improvements/state.yaml` in the state checkout, holding
-`newest_processed_debrief`. It is created by this slice. The cursor and the handoff are one write
-unit under the existing Spacedock single-writer transaction: if both cannot be written safely,
-neither is.
+- Both halves have zero executions since the mechanism was written. Not a broken working thing.
+- The one adopter with a complete vendored chain has its debriefs in a different workflow, and its
+  own Local Profile correctly walls them off. A kc-dev-flow harvest there is empty by design, not
+  by accident. Repairing the pointers does not change that.
+- Debrief homes are per-workflow. kc-dev-flow can only ever see its own slice, while the 20–26
+  record homes belong to `ship-flow`. The plugin is structurally in the wrong place to do this.
+- A functional duplicate of the upstream half already exists in `spacebridge:debrief-promote`, with
+  cross-project scoring kc-dev-flow's one-repo-at-a-time design cannot do.
+- The transport requires a human to carry a file between repositories. That is why it has never run,
+  and no pointer repair removes it.
 
-**Recovery and data safety.** The four debriefs are immutable inputs and are never modified. A
-failed or aborted run leaves no cursor and no handoff, so a rerun is a first run. A handoff is a
-file the Captain hands over; nothing uploads, posts, or fetches an adopter repository.
+**Limited user and value.** One repository's next agent session starts already knowing what failed
+in that repository's recent sessions, without a human carrying anything. Value is measured as
+sessions that do not repeat a documented recent failure.
 
-**Non-goals.** No change to `improvement-intake.py`'s validation, the handoff schema, or
-`promote-dev-flow`'s classification and Captain gate. No second skill (#218 ruled that out and
-nothing since changes that). No release-stage rollout proof. No repair of the other two adopters
-beyond recording what they must do. Not a general redesign of request-triggered references — this
-slice needs one reachability mechanism that works, and a broader rule can be lifted from it later
-if a second case appears.
+**Persistent state.** A derived, regenerated digest plus a cursor over the debrief home, in the
+runtime's own state authority. Derived and disposable: deleting it costs a regeneration, never
+evidence. Debriefs stay immutable inputs.
+
+**Freshness rule.** Bound by record count, not by elapsed days. This repository's debriefs are all
+21+ days old, so a five-day window would load nothing while appearing to work — the exact failure
+class this task exists to close. "No fresh records" must be a stated result, not silence.
+
+**Recovery and data safety.** A failed regeneration leaves the previous digest in place and reports
+it; a missing digest degrades to loading nothing and saying so. Nothing uploads, posts, or reads
+another repository.
+
+**Non-goals.** No change to the handoff schema or `improvement-intake.py` while the retire decision
+is unexecuted. No auto-activation of a workflow-runtime skill from `continue-dev-flow` — see below.
+No cross-project aggregation; that is `debrief-promote`'s existing job. No release-stage rollout.
+
+**Runtime coupling, decided.** `continue-dev-flow` must not activate `spacedock:first-officer`.
+The plugin's stated architecture is that a repository keeps its own workflow runtime, and the
+established pattern for a Spacedock-dependent capability is RoboRev's: declare the precondition and
+record out-of-scope once for a repository that does not meet it, rather than hard-wire the runtime
+into the entry point. The direction is also backwards — the debriefs live on the runtime side, so
+the runtime feeds itself. kc-dev-flow reaching into Spacedock would still see only its own
+workflow's home, which in the best-equipped adopter is empty.
 
 ## Acceptance evidence
 
-1. One handoff produced from a real debrief in this repository and accepted by
-   `improvement-intake.py`. Baseline is zero artifacts in existence.
-2. `_improvements/state.yaml` exists afterward with `newest_processed_debrief` set to the consumed
-   record, and a second run consumes nothing.
-3. The reachability mechanism fails closed: with the binding removed, the harvest request stops with
-   a named error instead of silently doing nothing. Proven by mutation.
-4. The producer-contract pointer in `promote-dev-flow` resolves to the file that actually defines
-   the shape, and a check fails when it does not. Proven by mutation.
+1. The retired surface is named exactly, and nothing dangling refers to `reusable-kernel`, the
+   handoff schema, or the producer contract afterward.
+2. The one adopter holding a vendored copy is told what to do with it.
+3. For the replacement: one session demonstrably starts with a digest derived from real debrief
+   records, and a second run with no new records consumes nothing and says so.
+4. A broken binding fails closed with a named error rather than loading nothing silently. Proven by
+   mutation — break each link and show the check fails with its own message.
+5. A stale digest is detectable. Recency without a correctness check is how a summary outlives the
+   thing it describes.
 
-Each of 3 and 4 must fail with its own message. A check that still passes with the chain broken is
-this defect repeated.
+Points 4 and 5 are the ones this task exists for. A green check that would still pass with the chain
+broken is this defect repeated under a new name.
+
+## Open, for the build stage
+
+Where the replacement lands — `spacedock` proper, `spacebridge` beside `debrief-promote`, or a
+kc-dev-flow reference that a Spacedock adopter binds — is not decided here. All three keep the
+input and consumer on the runtime side; they differ in ownership, and that is a scope-owner call.
 
 ## Measurement
 
