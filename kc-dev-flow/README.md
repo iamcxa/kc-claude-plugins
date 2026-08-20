@@ -2,16 +2,9 @@
 
 KC Dev Flow supplies one minimal authority core and three profile-native delivery
 routes. A repository keeps its own tracker, iteration authority, workflow
-runtime, and delivery provider.
-
-## Breaking upgrade from 2.x
-
-Profile-native loading changes the receipt schema, lifecycle routes, role
-semantics, and required local loader. Existing adopters must complete the
-[2.x migration](./MIGRATION.md) before updating the installed plugin used for
-ordinary continuation; a partially upgraded adopter fails closed. The
-[design rationale](./RATIONALE.md) records the observed pain, trade-offs,
-directional evidence, and conditions that would falsify this direction.
+runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
+the observed pain, trade-offs, directional evidence, and conditions that would
+falsify this direction.
 
 ## Routes
 
@@ -28,45 +21,34 @@ flowchart TB
     L --> C{Selected profile}
 
     C -->|POC| P1["Build<br/>smallest real journey"]
-    P1 --> P2["Optional RoboRev<br/>High+ observation"]
+    P1 --> P2["RoboRev exit observation<br/>High+ · Spacedock adopters"]
     P2 --> P3["Prove<br/>journey + riskiest assumption"]
     P3 --> D[Done]
 
     C -->|Pilot| T1["Shape<br/>bounded user journey"]
     T1 --> T2["Build<br/>real seams + recovery"]
-    T2 --> T3["Optional RoboRev<br/>Medium+ observation"]
+    T2 --> T3["RoboRev exit observation<br/>Medium+ · Spacedock adopters"]
     T3 --> T4["Verify and deliver<br/>journey + data safety"]
     T4 --> D
 
     C -->|Production| R1["Shape<br/>operational boundaries"]
     R1 --> R2["Build<br/>operable lifecycle"]
-    R2 --> R3["Optional RoboRev<br/>thorough Medium+ observation"]
+    R2 --> R3["RoboRev exit observation<br/>thorough Medium+ · Spacedock adopters"]
     R3 --> R4["Verify<br/>exact-revision obligations"]
     R4 --> R5["Release<br/>rollout + recovery + authority"]
     R5 --> D
 ```
 
-Backlog and done are state boundaries, not working stages. A runtime may expose
-the union of route states and skip inactive stages. The deterministic profile
-loader emits only these policy contracts:
+Backlog and done are state boundaries, not working stages; a runtime may expose
+the union of route states and skip inactive ones. The profile loader rejects a stage
+outside the committed route, so POC does not pay for Production policy merely
+because both ship in the package. The receipt belongs to the work item rather
+than the repository: one project can run POC, Pilot, and Production items
+concurrently, and each loader result hash-binds the exact item that selected its
+route.
 
-```text
-shared core + selected profile base + selected current stage
-```
-
-The selected `build` contract also contains one typed implementation-exit
-observation. It does not load another profile or stage.
-
-It rejects a stage outside the committed profile route. POC therefore does not
-pay for Production policy merely because both are available in the package.
-The receipt belongs to the work item rather than the repository: one project can
-run POC, Pilot, and Production items concurrently, and each loader result
-hash-binds the exact item that selected its route.
-
-Each stage contract also names a one-line **working perspective**. It is a
-cognitive cue, not another agent, review, or gate; the mission and required
-output remain the operative contract. Chief Engineer and Science Officer are
-separate trigger-based seats and stay unloaded on ordinary green transitions.
+Each stage contract names a one-line **working perspective** — a cognitive cue,
+not another agent, review, or gate.
 
 ## Seats and gates
 
@@ -77,7 +59,8 @@ separate trigger-based seats and stay unloaded on ordinary green transitions.
 - **Chief Engineer** gives bounded normal-delivery advice about the next smallest
   integrated step. It is not a mandatory reviewer.
 - **Science Officer** gives independent assurance on a contested, high-risk,
-  hard-to-reverse, or low-confidence technical claim. It is advisory.
+  hard-to-reverse, or low-confidence technical claim. It is advisory. Both seats
+  are trigger-based and stay unloaded on ordinary green transitions.
 - **Deterministic checks and named accountable owners** hold scoped gates. No
   agent is a general-purpose gatekeeper.
 
@@ -113,64 +96,35 @@ release/rollback ownership enters accepted scope.
 
 ## Distribution and adoption
 
-The package source contains:
+`scripts/profile-contract-loader.py` is the closed route and loading mechanism.
+For a selected work item it emits exactly `references/kernel.md`, that profile's
+`base.md`, and that stage's contract — the `build.md` one carrying the typed
+implementation-exit observation.
 
-- `references/kernel.md` — the shared core;
-- `references/profiles/<profile>/base.md` — one selected base contract;
-- `references/profiles/<profile>/<stage>.md` — one selected role/stage contract,
-  with its proportional exit observation in `build.md`;
-- `references/reverse-recovery-audit.md` — conditional brownfield recovery
-  method triggered by POC build or Pilot/Production shape;
-- `references/journey-slicing.md` — conditional multi-slice guard triggered only
-  by Pilot/Production shape;
-- `references/retained-document-policy.md` — conditional retained-document
-  checks at the selected shape/build/verification stage, with no new receipt;
-- `references/project-context-maintenance.md` — conditional correspondence
-  checks when accepted behavior may change a claim in bound project context;
-- `references/delivery-branch-base.md` — conditional, forge-neutral base
-  selection for a work item delivered through a review artifact;
-- `references/pr-delivery.md` — conditional forge-PR delivery ceremony, loaded
-  only when no local provider owns that ceremony;
-- `references/roborev-implementation-exit.md` — the provider method for the
-  `build` contract's typed observation, loaded at implementation exit when that
-  observation names a provider and the repository meets its recorded
-  precondition. RoboRev claims single-flight through a Spacedock-registered
-  state holder, so the observation is in scope for a Spacedock adopter and
-  recorded once as out of scope for any other;
-- `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
+Everything else under `references/` is conditional. Selecting a profile
+activates none of it; a reference link is not activation, and vendoring one adds
+no ordinary-stage work.
 
-An adopter vendors these files and binds their local paths in the workflow's
-`## Local Profile`. `continue-dev-flow` reads that small binding, the exact work
-item and receipt, then invokes the local loader. It does not read the full
-workflow README, unselected profiles, or installed package fallback.
+| Reference | Loads when |
+|---|---|
+| `reverse-recovery-audit.md` | A POC `build` or Pilot/Production `shape` proposes an addition, replacement, removal, or missing claim in existing code. |
+| `journey-slicing.md` | A Pilot or Production journey cannot be one integrated slice. |
+| `retained-document-policy.md` | An accepted or observed retained-document change reaches the selected shape/build/verification stage. Adds no receipt. |
+| `project-context-maintenance.md` | Accepted behavior, architecture, or a public contract may change a claim in bound project context. |
+| `delivery-branch-base.md` | The work item is delivered through a review artifact, so its base branch must be chosen. Forge-neutral, and it loads even when a provider mod owns the ceremony. |
+| `pr-delivery.md` | No adopter-owned mod, such as Spacedock `pr-merge`, already owns the forge-PR ceremony. |
+| `roborev-implementation-exit.md` | The `build` observation names a provider and the repository meets its precondition — a Spacedock-registered state holder, which RoboRev needs for single-flight. Any other repository records the observation as out of scope once. |
+| `improvement-harvesting.md`, with `scripts/improvement-intake.py` | Explicitly requested. It cannot create work, change sprint membership, or interrupt the selected route. |
 
-Optional observations and conditional references load only on their named
-stage trigger. A reference link is not activation, and vendoring it adds no
-ordinary-stage work.
-An unavailable provider cannot silently become a delivery failure. Improvement
-harvesting also remains explicit and cannot create work, change sprint
-membership, or interrupt the selected product route.
+Retained-document and project-context policy both carry a `build` obligation and
+are independently rechecked at validation. An unavailable provider cannot
+silently become a delivery failure.
 
-Profile selection does not activate standalone references. Reverse recovery
-fires only for a proposed addition, replacement, removal, or missing claim in
-existing code. The multi-slice guard fires only when a Pilot or Production
-journey cannot be one integrated slice. Retained-document policy fires only for
-an accepted or observed retained-document change. Project-context maintenance
-fires only when accepted behavior, architecture, or a public contract may change
-a claim in the bound project context. Both are rechecked against the exact diff
-before implementation exit or validation. Improvement harvesting remains explicit.
-Delivery splits into two conditional references because base choice and merge
-ceremony have different owners. `delivery-branch-base.md` decides what branch the
-work is based on: when an open unmerged review artifact carries work the
-candidate builds on, stack on it rather than targeting the trunk or waiting for
-the merge. That decision precedes any ceremony, is pure target-branch mechanics,
-and so applies to a GitLab merge request as much as a GitHub pull request — and
-it applies even when a provider mod owns the ceremony. A repository that must
-keep every artifact on the trunk declares that policy once instead of re-deciding
-per item. `pr-delivery.md` then carries out the PR ceremony — approval, the
-approved revision by SHA, unknown mergeability treated as a stop, reviewed body
-bytes unmodified — and stays unloaded when an adopter-owned mod such as Spacedock
-`pr-merge` already implements it. Selecting a profile loads neither.
+`adopt-dev-flow` vendors these files and binds their local paths in the
+workflow's `## Local Profile`. `continue-dev-flow` then reads that binding, the
+exact work item and receipt, and invokes the local loader — not the full
+workflow README, unselected profiles, or installed package fallback. An adopter
+moving from an earlier vendored layout follows [MIGRATION.md](./MIGRATION.md).
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
 the co-shipped `.codex-plugin` manifest and the same skill and contract files.
