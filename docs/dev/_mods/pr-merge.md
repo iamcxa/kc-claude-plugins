@@ -1,7 +1,11 @@
 ---
 name: pr-merge
 description: Push branches and create/track GitHub PRs for workflow entities
-version: 0.12.2
+version: 0.12.3
+# Partial port from canonical spacedock 0.27.0: merged-sentinel recognition
+# (pr-merge:/local-merge:), the merge-guard ceremony verb, and the no-PR delivery
+# path. NOT a full refit — the rest of this file is still 0.12.2 and carries a local
+# extension. Do not stamp 0.27.0 until the remaining hunks are reviewed.
 ---
 
 # PR Merge
@@ -10,11 +14,9 @@ Manages the PR lifecycle for workflow entities processed in worktree stages. Pus
 
 ## Hook: startup
 
-Scan all entity files (in the workflow directory only, not `_archive/`) for entities with a non-empty `pr` field and a non-terminal status. For each, extract the PR number (strip any `#`, `owner/repo#` prefix) and check: `gh pr view {number} --json state --jq '.state'`.
+Scan all entity files (in the workflow directory only, not `_archive/`) for entities with a non-empty `pr` field and either a non-terminal status, a terminal status with `mod-block: merge:pr-merge`, or a terminal status carrying a valid merged sentinel (`pr-merge:` or `local-merge:`). A sentinel row already proves MERGED: bypass `gh`, run `spacedock merge guard {slug} --workflow-dir {dir} --verdict passed` directly, and stop processing that row. For every bare PR row, extract the PR number (strip any `#`, `owner/repo#` prefix) and check: `gh pr view {number} --json state --jq '.state'`.
 
-If `MERGED`, advance the entity to its terminal stage. Because a `mod-block` may be set while the PR is pending, the clear and the terminalization are two separate `--set` calls (the mechanism refuses combining `mod-block=` with terminal fields):
-1. `spacedock status --workflow-dir {dir} --set {slug} mod-block=` when a `mod-block` is set (skip when empty);
-2. `spacedock status --workflow-dir {dir} --set {slug} status={terminal} completed verdict=PASSED worktree=`, then `spacedock status --workflow-dir {dir} --archive {slug}`.
+If `MERGED`, first record and commit the landed merge sentinel with `spacedock status --workflow-dir {dir} --set {slug} pr=pr-merge:{N}` then `spacedock state commit {slug} --workflow-dir {dir}`; next finalize through `spacedock merge guard {slug} --workflow-dir {dir} --verdict passed`. The sentinel is the restart-safe durable signal; the guard clears any in-flight `mod-block`, terminalizes, archives, and commits the archive move atomically. Do not hand-roll the terminal write: a non-forced terminal `status --set` is refused in favour of this ceremony.
 
 Clean up any worktree/branch. Report each auto-advanced entity to the captain.
 
@@ -26,7 +28,27 @@ If `gh` is not available, warn the captain and skip PR state checks.
 
 ## Hook: idle
 
-Check PR-pending entities using the same logic as the startup hook: scan entity files for non-empty `pr` and non-terminal status, run `gh pr view` for each, and advance merged PRs (two-step `mod-block=` clear then terminalize). This is the workflow's PR-pending scan: the generic event loop fires this idle hook and owns no PR scan of its own, so a workflow with no `pr-merge` mod never reaches for `gh` in its loop. Report any advanced entities to the captain.
+Check PR-pending entities using the same logic as the startup hook: a row carrying a valid merged sentinel (`pr-merge:` or `local-merge:`) bypasses `gh` and resumes `merge guard` directly, while bare PR rows run `gh pr view` and advance through the same committed sentinel then guard path. This is the workflow's PR-pending scan: the generic event loop fires this idle hook and owns no PR scan of its own, so a workflow with no `pr-merge` mod never reaches for `gh` in its loop. Report any advanced entities to the captain.
+
+## Delivery without a PR
+
+Not every entity delivers through a pull request. Work whose accepted outcome is knowledge — a
+measurement that returns a verdict, an audit, a keep-or-retire decision — produces no diff and
+therefore no PR, and the terminal guard still requires durable delivery proof.
+
+Record that proof as a `local-merge:` sentinel naming why there is no PR, then terminalize
+through the ceremony:
+
+```
+spacedock status --workflow-dir {dir} --set {slug} pr=local-merge:{reason}
+spacedock merge guard {slug} --workflow-dir {dir} --verdict passed
+```
+
+The sentinel is a claim about delivery, not a formality — write the reason the outcome needed no
+artifact, so a later reader can tell "answered, nothing to ship" from "never finished".
+
+Do not reach for `--force` here. A refusal from the guard usually means a ceremony step was
+skipped, and forcing past it trains the habit of overriding a guard that is normally right.
 
 ## Hook: merge
 
