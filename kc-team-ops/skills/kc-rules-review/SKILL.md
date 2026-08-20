@@ -1,12 +1,13 @@
 ---
 name: kc-rules-review
-description: Use when the user wants to change their agent operating rules, says they keep correcting the same thing across projects, suspects a rule is being ignored, asks whether the rule file is too long, or asks which rules to delete. Also use after a rule change lands, when other harnesses or skills may still quote the old wording.
+description: Use when the user wants to change their agent operating rules, says they keep correcting the same thing across projects, suspects a rule is being ignored, asks whether the rule file is too long, or asks which rules to delete. Also use after a rule change lands, when Claude and Codex user rules or downstream skills may need behavioral alignment.
 ---
 
 # Rules Review
 
-Audit an operating rule set — `~/.claude/CLAUDE.md`, project `AGENTS.md`, memories — against
-what actually happened in the user's sessions, then change it one decision at a time.
+Audit an operating rule set — `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, project instruction
+files, memories — against what actually happened in the user's sessions, then change it one
+decision at a time.
 
 **Core principle: measure two numbers per rule, not one.** *Friction* is how often the user
 repaired your output. *Firing* is how often the rule left an observable trace. The verdict lives
@@ -42,6 +43,10 @@ itself the finding** — see Step 2.
 
 Counts are for comparing runs, not for quoting as truth. The script writes every matched human
 turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.
+
+The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
+use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
+Never label Claude firing counts as Codex behavior.
 
 ## Step 2 — Cross-tabulate
 
@@ -98,10 +103,11 @@ not belong in the file.
 Tell the user plainly that a rule file is read at session start, so open sessions keep the old
 rules until they restart.
 
-## Optional route — propagate to AGENTS.md
+## Optional route — propagate across harnesses
 
-**Offer this; never do it silently.** After the rule set changes, ask whether to carry it into the
-repo-level `AGENTS.md` files so other agent harnesses behave the same way.
+**Offer this; never do it silently.** After a user-level `~/.claude/CLAUDE.md` change, ask whether
+to carry its portable semantics into user-level `~/.codex/AGENTS.md`. For a repository rule file,
+offer the sibling harness file in that repository. Do not mix user-level and repository scope.
 
 Split the ruleset before offering, because not all of it should travel:
 
@@ -114,6 +120,26 @@ Split the ruleset before offering, because not all of it should travel:
 
 Then run Step 5's orphan grep again against the repos you touched. Propagation creates new copies,
 and a copy is correct only until one side moves — say which file is authoritative.
+
+### Prove Codex behavior before applying the user file
+
+Text parity is not behavior parity. Translate each traveling semantic rule into a Codex-native,
+observable checkpoint. For example, a durable-addition gate can require a named marker before the
+first write tool call. A marker mentioned only in the final report is self-attestation, not proof.
+
+Run one isolated A/B before replacing `~/.codex/AGENTS.md`:
+
+1. Create two fresh `CODEX_HOME` directories from the same current user `AGENTS.md`; add the
+   candidate rule only to the green home. Keep authentication available without copying credentials
+   into the fixture or report.
+2. Run the same clean fixture, prompt, Codex version, model, and reasoning level in fresh
+   `codex exec --ephemeral` sessions.
+3. Inspect the event order, not only the final text. The green checkpoint must occur before the
+   governed action; baseline must lack it; both runs must still deliver the requested outcome.
+4. If the runs do not separate, the rule is not proven for Codex. Rewrite it as a lower-freedom
+   checkpoint or leave it unsynced and report the gap.
+5. After a pass and the user's propagation decision, apply Step 5 to the real user file and restart
+   open Codex sessions. Never replace the live user file merely because the candidate text matches.
 
 ## Common mistakes
 

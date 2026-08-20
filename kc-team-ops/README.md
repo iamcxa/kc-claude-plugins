@@ -44,7 +44,7 @@ Required plugins:
 - **kc-project-pulse** — Project status update drafting and posting to Linear.
 - **kc-journey-map** — Draw a user journey from the code, or check an existing journey against it. Three lanes per step (person / system / invariant), every system claim cited to `file:line`, and a mandatory status card for what is unproven, unmerged, or undeployed. FigJam when available, self-contained HTML + PNG otherwise.
 
-- **kc-rules-review** — Audit an operating rule set against what actually happened in the user's sessions. Measures friction (how often the user repaired the output) against firing (how often the rule left a trace), because a rule with high friction and low firing is not missing — it has no trigger. Optional route propagates the result to repo `AGENTS.md`.
+- **kc-rules-review** — Audit an operating rule set against what actually happened in the user's sessions. Measures friction (how often the user repaired the output) against firing (how often the rule left a trace), because a rule with high friction and low firing is not missing — it has no trigger. Optional route propagates portable semantics to user or repo `AGENTS.md` only after an isolated Codex behavior check.
 
 ### Agents
 
