@@ -82,8 +82,123 @@ work_profile:
     at: 2026-08-20T13:50:38Z
 ```
 
+## Shape — reverse recovery
+
+`brownfield_capability_change` is true: this work adds a reader for the already-declared
+`receipt` field inside an existing `kc-dev-flow-conditional-references/v1` declaration block.
+Audit per `references/reverse-recovery-audit.md`.
+
+```yaml
+reverse_recovery:
+  trigger: add a reader for the already-declared `receipt` field to an existing conditional-references declaration block
+  boundary: >-
+    Journey — a caller of profile-contract-loader.py's JSON output learns which receipt
+    obligations the selected stage declared, without re-parsing the stage contract's own
+    conditional-references block. Searched kc-dev-flow/scripts (the loader and its test file),
+    kc-dev-flow/references (kernel.md and every profiles/*/*.md), kc-dev-flow/skills
+    (adopt-dev-flow, continue-dev-flow), and kc-dev-flow/README.md for any existing reader or
+    consumer.
+  layers:
+    - surface: declaration (entry.receipt in each stage contract's JSON block)
+      location: "kc-dev-flow/references/profiles/{profile}/{stage}.md — 9 contracts, e.g. production/shape.md:19,24,29,34"
+      completeness: WORKING
+      need: REQUIRED
+      evidence: 9 contracts declare a `receipt` string or null per entry; all parse under check_conditional_references today.
+      disproof_hook: profile-contract-loader.test.py's existing JSON-parse tests failing
+    - surface: reader (code that accesses entry["receipt"])
+      location: "MISSING — scripts/profile-contract-loader.py:137-160 (check_conditional_references) destructures only entry[\"path\"]"
+      completeness: MISSING
+      need: REQUIRED
+      evidence: >-
+        Two strategies: (1) grep -n "receipt" scripts/*.py outside the test file — every hit is the
+        unrelated `## Work profile receipt` / `receipt_route` frontmatter concept, none is
+        entry["receipt"]; (2) read check_conditional_references top to bottom — the per-entry loop
+        binds only `declared_path = entry["path"]`.
+      disproof_hook: check_conditional_references branching on entry.get("receipt")
+    - surface: output field (a receipt-name key in load_contracts()/render_text() JSON)
+      location: "MISSING — scripts/profile-contract-loader.py:199-234 (load_contracts, render_text)"
+      completeness: MISSING
+      need: REQUIRED
+      evidence: the returned dict's keys are schema/work_item/.../profile/.../loaded; no receipt-name field exists.
+      disproof_hook: json.loads(loader --format json output) missing the new key today
+    - surface: downstream consumer of declared receipt names
+      location: MISSING
+      completeness: MISSING
+      need: NO_OBSERVED_CONSUMER
+      evidence: >-
+        Two strategies: (1) grep -rn "declared_receipts\|receipt_names" kc-dev-flow — zero hits; (2)
+        grep -rln "profile-contract-loader" kc-dev-flow/**/*.md — only README.md,
+        adopt-dev-flow/SKILL.md, and the loader's own test reference it, and none reads a
+        receipt-name field from its output. Not searched: any adopter repo outside this workspace.
+      disproof_hook: a grep hit for a caller reading a receipt-name key from the loader's JSON output
+  decision: build
+```
+
+The reader and the output field are genuinely `MISSING`, not `EXISTS_BROKEN` or `STUB` — there is
+no prior attempt to recover, and no working mechanism elsewhere already does this. `build` matches
+the backlog gate's already-selected direction: add a reader to the existing declaration block, not
+a new field or a second declaration surface. The `NO_OBSERVED_CONSUMER` layer is expected, not
+disqualifying — the whole defect this work item reports is that nothing reads `receipt` yet; this
+task builds the first reader, it does not require a pre-existing caller.
+
 ## Accepted outcome and non-goals
+
+**Outcome**
+
+- `profile-contract-loader.py`'s `--format json` output gains a `declared_receipts` field: an
+  ordered list of the non-null `receipt` strings declared by the loaded **stage** contract's
+  (`profiles/{profile}/{logical_stage}.md`) `kc-dev-flow-conditional-references/v1` block only —
+  matching the backlog gate's resolution wording, "the loader emits the selected stage's declared
+  receipt names." `null` receipts (e.g. `retained-document-policy`) are excluded, not emitted as
+  `null` entries. `kernel.md` and `base.md` never declare that block today (confirmed: only the 9
+  stage files do); if a future one of them does, its receipts do **not** feed `declared_receipts` —
+  that would be a scope change to which loaded file counts as "the selected stage," a separate
+  decision if it is ever proposed, not an automatic consequence of this reader.
+- `check_conditional_references`'s docstring in `scripts/profile-contract-loader.py` states the
+  exact bounded guarantee: the loader surfaces which receipt names the selected stage declares in
+  its output; it does **not** verify a receipt was produced, does **not** evaluate `trigger`, and
+  does **not** block a stage that completes without one. `declared_receipts` is an observability
+  aid for a caller (e.g. a first-officer stage-report check) — presence in that list is not proof
+  of an emitted artifact.
+
+**Non-goals** (mirrors the work-profile `scope_boundary`)
+
+- No evaluable `trigger` — the field stays descriptive text, not a condition the loader runs.
+- No stage-exit receipt-verification gate or other standing enforcement.
+- No new declaration field and no second declaration surface — the reader consumes the existing
+  `receipt` key already present in all 9 contracts.
+- No change to which references each contract declares.
 
 ## Acceptance evidence
 
+- A loader test in `profile-contract-loader.test.py` that builds a stage contract declaring a
+  `kc-dev-flow-conditional-references/v1` block with a named `receipt`, loads it with
+  `--format json`, and asserts that name is present in `declared_receipts` — RED today (the key is
+  absent from the output entirely), GREEN once the reader exists.
+- A loader test that builds two stage contracts with different receipt sets (including one with a
+  `null` receipt) and asserts the JSON output's `declared_receipts` matches only the selected
+  stage's own non-null declarations — catches a reader that flattens receipts across every loaded
+  file (kernel.md + base.md + stage.md) or hardcodes a list instead of deriving it from the
+  selected stage's block, and catches a reader that leaks `null` into the list.
+- The existing `path` fail-closed tests (unvendored reference, absolute path, root-escaping path —
+  `profile-contract-loader.test.py` lines ~305-429) stay green unmodified, proving the new reader
+  is additive and does not relax the existing presence check.
+
 ## Measurement
+
+No operational runtime — the work-profile basis already states this: a marketplace-published
+contract read at adopters' pinned tags, not a running service. Acceptance evidence above (the
+loader's own test suite) is the verification; no post-release metric applies.
+
+## Stage Report: ideation
+
+- DONE: Accepted outcome names exactly what the loader will emit and the exact bounded guarantee the conditional-reference reference will state — not a restatement of "make receipts observable".
+  `## Accepted outcome and non-goals` names the `declared_receipts` JSON field (ordered, non-null-only, scoped to the selected stage contract) and the exact guarantee text for `check_conditional_references`'s docstring: surfaces receipt names, does not verify, evaluate `trigger`, or block.
+- DONE: Acceptance evidence names a check that can fail: a loader test that goes red when the declared receipt names are absent from the JSON output, and red when they do not match the selected stage's declarations.
+  `## Acceptance evidence` names two new `profile-contract-loader.test.py` cases (presence RED→GREEN; cross-file/null-leak isolation) plus the existing `path` fail-closed tests staying green as a non-regression check.
+- DONE: The reverse-recovery conditional reference fires (this adds a reader to an existing declaration block) — record its audit result, or record the evidence that it does not apply.
+  `## Shape — reverse recovery` records the fired audit: reader and output field both classified `MISSING`/`REQUIRED` (two search strategies each), consumer classified `MISSING`/`NO_OBSERVED_CONSUMER` (expected, since this task builds the first reader), decision `build`.
+
+### Summary
+
+Filled the ideation stage's three required sections for the Production route: reverse-recovery audit (fired, decision `build`), accepted outcome + non-goals scoped to the backlog gate's selected direction (a `declared_receipts` JSON field plus a docstring guarantee, no evaluable trigger, no enforcement gate), and falsifiable acceptance evidence for the build stage's TDD loop. No code changed at this stage — the loader, its test file, and the referenced audit doc were read for evidence only.
