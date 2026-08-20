@@ -121,40 +121,110 @@ work_profile:
     at: 2026-08-20T08:18:16Z
 ```
 
+## Shape — reverse recovery
+
+`brownfield_capability_change` is true: this work proposes to repair or remove an existing
+capability. Audit per `_mods/reverse-recovery-audit.md`.
+
+```yaml
+reverse_recovery:
+  trigger: repair or removal of the adopter-side improvement producer
+  boundary: >-
+    Journey — an adopter turns an unseen debrief into a handoff the source ingests. Searched
+    kc-claude-plugins, and every kc-dev-flow adopter reachable on this machine
+    (~/conductor/repos, ~/conductor/workspaces, ~/Project). Not searched: any clone outside
+    this machine.
+  layers:
+    - surface: producer procedure
+      location: kc-dev-flow/references/improvement-harvesting.md
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: >-
+        Procedure is complete prose and is the only definition of the handoff shape, but no
+        adopter can resolve it — undeclared, unvendored by the source repo, unnamed by
+        continue-dev-flow, and package fallback is forbidden.
+      disproof_hook: a second authoritative definition of kc-dev-flow-improvement-handoff/v1
+    - surface: reachability binding
+      location: MISSING
+      completeness: MISSING
+      need: REQUIRED
+      evidence: >-
+        Two strategies — filename grep across the repo, and a scan of every
+        kc-dev-flow-conditional-references/v1 block plus kernel.md — both empty.
+      disproof_hook: the loader emitting the file for any profile-stage combination
+    - surface: producer-contract pointer
+      location: kc-dev-flow/skills/promote-dev-flow/SKILL.md:16
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: credits continue-dev-flow/SKILL.md, which has zero occurrences of the shape
+      disproof_hook: grep the three field names in that skill and get a non-zero count
+    - surface: consumer half
+      location: kc-dev-flow/scripts/improvement-intake.py
+      completeness: WORKING_UNIT_UNPROVEN
+      need: REQUIRED
+      evidence: its test runs in a required check, but it has never processed a real handoff
+      disproof_hook: any kc-dev-flow-improvement-handoff artifact on disk
+    - surface: cursor state
+      location: MISSING
+      completeness: MISSING
+      need: NO_OBSERVED_CONSUMER
+      evidence: no _improvements/ directory in any adopter; nothing reads a cursor that never existed
+      disproof_hook: find -type d -name _improvements returning a hit
+  decision: recover
+```
+
+The circularity is worth naming: `promote-dev-flow` needs handoffs, handoffs exist only to feed
+`promote-dev-flow`, and neither side has ever fired. That makes both halves unproven together, not
+a working consumer with a broken producer.
+
+### Why the original move lost reachability
+
+`_archive/product-first-continuation.md` (#218) accepted: "Improvement harvesting remains available
+only through an explicit trigger." It moved the procedure "byte-for-byte" — a move that preserves
+content and not reachability — and explicitly ruled out the obvious mechanism: "Do not create a
+second skill." So the reachability mechanism was rejected without a replacement being named. The
+defect is that omission, not the extraction.
+
 ## Accepted outcome and non-goals
 
-The first decision is whether the loop is wanted, not how to repair it. Four pointers can be fixed
-in an afternoon; that is worth doing only if an adopter is actually expected to produce handoffs.
-Zero handoffs in the plugin's own repository — the most motivated adopter there is — is the
-evidence that should be weighed first.
+**Accepted journey.** This repository harvests one of its four real `_debriefs/` records and
+produces the first `kc-dev-flow-improvement-handoff/v1` artifact that has ever existed, which
+`improvement-intake.py` then accepts. Limited user: this repository. End-to-end value: the loop
+that carries adopter findings upstream runs once for real.
 
-Open design questions:
+The slice is chosen because the two halves of the evidence sit in different repositories —
+`kc-claude-plugins` has the input and no vendored copy, `carlove-v1/krakow-v1` has the vendored copy
+and no input. Vendoring here is the only place both exist.
 
-1. **Keep or retire.** If retired, `improvement-harvesting.md` and the `reusable-kernel` transport
-   label go, and `promote-dev-flow` narrows to whatever real intake path replaces it. If kept, the
-   remaining questions apply.
-2. **Enforcement point.** Request-triggered references have none today. Either bring harvesting
-   inside the declaration system despite not being stage-triggered, or give request-triggered
-   references their own fail-closed mechanism, or accept prose and add a contract-test assertion
-   that pins the chain. Accepting prose without an assertion reproduces this exact failure.
-3. **Precondition.** Harvesting reads `_debriefs/`, which is a Spacedock concept. RoboRev already
-   has a shape for this: declare the precondition, and record out-of-scope once for a repository
-   that does not meet it. Whether harvesting should follow that shape is open.
-4. **Contract ownership.** The handoff shape currently lives in the reference; `promote-dev-flow`
-   credits the skill. Whichever file owns it, the other two must point at it, and the pointer needs
-   a check.
+**Persistent state.** `_improvements/state.yaml` in the state checkout, holding
+`newest_processed_debrief`. It is created by this slice. The cursor and the handoff are one write
+unit under the existing Spacedock single-writer transaction: if both cannot be written safely,
+neither is.
 
-Non-goals: changing `improvement-intake.py`'s validation, changing the handoff schema, and altering
-`promote-dev-flow`'s placement classification or Captain gate. All of those work.
+**Recovery and data safety.** The four debriefs are immutable inputs and are never modified. A
+failed or aborted run leaves no cursor and no handoff, so a rerun is a first run. A handoff is a
+file the Captain hands over; nothing uploads, posts, or fetches an adopter repository.
+
+**Non-goals.** No change to `improvement-intake.py`'s validation, the handoff schema, or
+`promote-dev-flow`'s classification and Captain gate. No second skill (#218 ruled that out and
+nothing since changes that). No release-stage rollout proof. No repair of the other two adopters
+beyond recording what they must do. Not a general redesign of request-triggered references — this
+slice needs one reachability mechanism that works, and a broader rule can be lifted from it later
+if a second case appears.
 
 ## Acceptance evidence
 
-If kept: one handoff produced end-to-end from a real `_debriefs/` record in a repository that
-vendored the files through `adopt-dev-flow`, ingested by `improvement-intake.py`, plus a check that
-fails when any link in the chain is broken — proven by mutation, not by inspection.
+1. One handoff produced from a real debrief in this repository and accepted by
+   `improvement-intake.py`. Baseline is zero artifacts in existence.
+2. `_improvements/state.yaml` exists afterward with `newest_processed_debrief` set to the consumed
+   record, and a second run consumes nothing.
+3. The reachability mechanism fails closed: with the binding removed, the harvest request stops with
+   a named error instead of silently doing nothing. Proven by mutation.
+4. The producer-contract pointer in `promote-dev-flow` resolves to the file that actually defines
+   the shape, and a check fails when it does not. Proven by mutation.
 
-If retired: the removed surface named, the surviving intake path for `promote-dev-flow` named, and
-no dangling reference to `reusable-kernel` or the handoff schema left behind.
+Each of 3 and 4 must fail with its own message. A check that still passes with the chain broken is
+this defect repeated.
 
 ## Measurement
 
