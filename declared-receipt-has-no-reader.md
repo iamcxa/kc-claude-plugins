@@ -205,12 +205,19 @@ task builds the first reader, it does not require a pre-existing caller.
 
 **Outcome**
 
-- `profile-contract-loader.py`'s `--format json` output gains a `declared_receipts` field: an
-  ordered list of the non-null `receipt` strings declared by the loaded **stage** contract's
+- `profile-contract-loader.py`'s output gains a `declared_receipts` field: an ordered list of the
+  non-null `receipt` strings declared by the loaded **stage** contract's
   (`profiles/{profile}/{logical_stage}.md`) `kc-dev-flow-conditional-references/v1` block only —
   matching the backlog gate's resolution wording, "the loader emits the selected stage's declared
-  receipt names." `null` receipts (e.g. `retained-document-policy`) are excluded, not emitted as
-  `null` entries. `kernel.md` and `base.md` never declare that block today (confirmed: only the 9
+  receipt names." This field is visible under both output formats: `--format json` carries it as a
+  top-level key, and the default text format (the invocation `docs/dev/README.md:146` documents,
+  which passes no `--format` flag) carries it in the JSON-encoded header line that `render_text()`
+  emits as the first line of its output — the same header dict feeds both. `null` receipts (e.g.
+  `retained-document-policy`) are excluded, not emitted as `null` entries. When a single stage
+  contract declares the block across more than one JSON block in its document (the shape 3 of the 9
+  shipped contracts use), `declared_receipts` accumulates every entry's non-null receipt in exact
+  document order, including a name that repeats — it is not deduplicated, sorted, or truncated to
+  the first block. `kernel.md` and `base.md` never declare that block today (confirmed: only the 9
   stage files do); if a future one of them does, its receipts do **not** feed `declared_receipts` —
   that would be a scope change to which loaded file counts as "the selected stage," a separate
   decision if it is ever proposed, not an automatic consequence of this reader.
@@ -240,6 +247,18 @@ task builds the first reader, it does not require a pre-existing caller.
   stage's own non-null declarations — catches a reader that flattens receipts across every loaded
   file (kernel.md + base.md + stage.md) or hardcodes a list instead of deriving it from the
   selected stage's block, and catches a reader that leaks `null` into the list.
+- A loader test that builds a stage contract declaring the conditional-references schema across
+  TWO JSON blocks with several non-null receipts including a repeated name, and asserts
+  `declared_receipts` equals the exact document order across both blocks — catches a reader that
+  returns only the first receipt, sorts, or deduplicates via a set. Proven by mutation: the current
+  reader already passes this shape (accumulation across blocks was accidental correctness, not
+  tested), so the test's fail power was proven live by mutating the reader to
+  `declared_receipts[:1]` and to `sorted(set(declared_receipts))`, observing both reproduce the
+  documented failure, then reverting.
+- A loader test that runs the loader with no `--format` flag (the default text format, and the
+  invocation `docs/dev/README.md:146` documents) and asserts `declared_receipts` is present with
+  the selected stage's receipts in the JSON-encoded header line `render_text()` emits — closing the
+  gap where only `--format json` was covered.
 - The existing `path` fail-closed tests (unvendored reference, absolute path, root-escaping path —
   `profile-contract-loader.test.py` lines ~305-429) stay green unmodified, proving the new reader
   is additive and does not relax the existing presence check.
@@ -301,3 +320,22 @@ Independently reproduced all three acceptance-evidence claims from the ideation/
 ### Summary
 
 Rebased the single delivery commit onto current `origin/main` via `git rebase --onto` scoped to just that commit (a plain rebase would have replayed 13 unrelated commits from the branch's cut point — caught and corrected before landing). Re-verified all three acceptance-evidence checks on the rebased revision `d6619580`, confirmed independence from both open delivery artifacts by file-list diff, and opened draft PR #262 to `main` carrying the delivery-base reason and both known residuals.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Finding A closed — a loader test whose selected stage contract declares two conditional-references JSON blocks carrying several non-null receipts, including one name that repeats, and asserts declared_receipts equals the exact document order across both blocks; the test was SEEN to fail before it is green.
+  Added the multi-block test to `kc-dev-flow/scripts/profile-contract-loader.test.py`: a stage contract with two `json` blocks, receipts `[receipt_a, receipt_b]` then `[receipt_a, receipt_c]`, asserting `declared_receipts == ["receipt_a", "receipt_b", "receipt_a", "receipt_c"]`. Running it against the unmodified loader (`check_conditional_references` already accumulates across every `json` block in document order) passed GREEN immediately — no production code change was needed, so per the assignment I proved the test's fail power by mutation instead: temporarily changed the function's `return declared_receipts` to `return declared_receipts[:1]`, reran, got `declared_receipts did not preserve exact document order across multiple conditional-references blocks, or dropped the repeated name: ['receipt_a']` (exit 1); reverted, reran, back to `sorted(set(declared_receipts))`, got `[...'receipt_a', 'receipt_b', 'receipt_c']` (exit 1, dropped the repeat and reordered); reverted and confirmed `diff` against the pre-mutation backup was empty before re-running to green. Both failures fired only at this new test — the presence/isolation tests above it in the file already passed, so this test is the sole catch for both named mutation shapes.
+- DONE: Finding B closed on both sides — the text header keeps declared_receipts and a test asserts it, and the entity's `## Accepted outcome and non-goals` is amended to name both output formats instead of JSON alone.
+  `render_text()`'s header tuple already included `"declared_receipts"` (no code change needed, confirmed by reading the function). Added a test that runs the loader with no `--format` flag, parses the first line of stdout as JSON (the header `render_text()` emits), and asserts `declared_receipts == ["text_format_receipt"]` for a single-receipt fixture — RED would have looked like a `KeyError`/`None` had the field been missing; it passed GREEN against the existing code, confirming the field was already present but untested. Amended `## Accepted outcome and non-goals`: the outcome bullet now states `declared_receipts` is visible under both `--format json` (top-level key) and the default text format (JSON-encoded header line, the invocation `docs/dev/README.md:146` documents), fed by the same header dict, and states the multi-block/repeated-receipt accumulation behavior explicitly.
+- SKIPPED: Finding C — no samefile()/aliasing check added, per the FO's rejection of that finding; found no evidence in the code contradicting the FO's disposition (`paths` in `load_contracts` is constructed positionally from `root`/`profile`/`logical_stage`, never from adopter input, so an adopter cannot reorder it to alias a symlinked contract into the stage-file slot).
+  No code change for this item — verified by re-reading `load_contracts`'s `paths` construction (lines ~178-182) and finding no path adopter can influence beyond selecting `profile`/`workflow_stage`, both validated against `ROUTES`.
+- DONE: `kc-dev-flow/scripts/profile-contract-loader.py` and `docs/dev/_mods/profile-contract-loader.py` remain byte-identical.
+  No change was made to either file this round (only the test file changed); `diff kc-dev-flow/scripts/profile-contract-loader.py docs/dev/_mods/profile-contract-loader.py` is empty.
+- DONE: The existing path fail-closed cases at profile-contract-loader.test.py:305-429 stay unmodified and green.
+  `git diff` for this round shows a pure 85-line addition after line 546 only; `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` prints `profile contract loader test: PASS`.
+- DONE: Full contract test suite passes with the pre-existing, unrelated `profile-spacedock-route` casing residual as the only failure when `spacedock` is on `PATH`.
+  With `spacedock` excluded from `PATH` (its own designed skip path), `python3 scripts/kc-dev-flow-contract-test.py` prints `kc-dev-flow contract: PASS`, exercising both the byte-parity assertion and both new loader tests.
+
+### Summary
+
+Closed both upheld correction-round findings with test-only changes: added a multi-block/repeated-receipt document-order test (Finding A) and a default-text-format header test (Finding B) to `profile-contract-loader.test.py`. Neither required a production code change — `check_conditional_references` already accumulated receipts across every JSON block in document order, and `render_text()`'s header already carried `declared_receipts` — so Finding A's fail power was proven by two named mutations (first-receipt-only, sorted-set), each reproducing the reported failure and caught only by the new test, then reverted (confirmed via empty diff). Amended `## Accepted outcome and non-goals` to name both output formats and the multi-block accumulation behavior explicitly, closing the prose/code gap Finding B named. Finding C stays unimplemented per the FO's rejection. Committed `6d0bd41f` on `spacedock-ensign/declared-receipt-has-no-reader` and pushed onto the existing open draft PR #262 (still MERGEABLE, same branch, no new PR opened).
