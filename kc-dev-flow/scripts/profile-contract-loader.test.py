@@ -545,4 +545,89 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
     kernel_path.write_text(kernel_original, encoding="utf-8")
     base_path.write_text(base_original, encoding="utf-8")
 
+    # declared_receipts preserves exact document order across MULTIPLE
+    # conditional-references blocks in the same stage contract, including a
+    # receipt name that repeats. This is the normal shape for a third of the
+    # shipped contracts (production/shape.md, pilot-product-slice/shape.md,
+    # poc-exploration/build.md each declare more than one non-null receipt);
+    # a reader that returned only the first receipt, a sorted list, or a set
+    # would still pass a single-block/single-receipt test but must fail this
+    # one.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "first", "receipt": "receipt_a"}, '
+        '{"path": "../../kernel.md", "trigger": "second", "receipt": "receipt_b"}'
+        "]}\n"
+        "```\n\n"
+        "some prose between the two blocks\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "third", "receipt": "receipt_a"}, '
+        '{"path": "../../kernel.md", "trigger": "fourth", "receipt": "receipt_c"}'
+        "]}\n"
+        "```\n",
+        encoding="utf-8",
+    )
+    multi_block = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(multi_block.returncode == 0, multi_block.stderr)
+    multi_block_document = json.loads(multi_block.stdout)
+    require(
+        multi_block_document.get("declared_receipts")
+        == ["receipt_a", "receipt_b", "receipt_a", "receipt_c"],
+        "declared_receipts did not preserve exact document order across "
+        "multiple conditional-references blocks, or dropped the repeated "
+        f"name: {multi_block_document.get('declared_receipts')!r}",
+    )
+
+    # The text-format default output (no --format flag — the invocation
+    # docs/dev/README.md documents) embeds the header as its first line;
+    # declared_receipts must be visible there too, not only under
+    # --format json.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../kernel.md", '
+        '"trigger": "example", "receipt": "text_format_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    text_format = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(text_format.returncode == 0, text_format.stderr)
+    header_line = text_format.stdout.splitlines()[0]
+    header_document = json.loads(header_line)
+    require(
+        header_document.get("declared_receipts") == ["text_format_receipt"],
+        "text-format default output's header line did not carry "
+        f"declared_receipts: {header_document.get('declared_receipts')!r}",
+    )
+
 print("profile contract loader test: PASS")
