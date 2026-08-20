@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation shape and enter implementation: emit a declared_receipts list of the selected stage contract's non-null receipt names in the loader's --format json output, and state the bounded guarantee in check_conditional_references' docstring?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e8b9c366fac2c7eb5e40ff8971fefec9a1582619/declared-receipt-has-no-reader.md",
+      "rev": "sha256:86fef3c7fcc4193036578e73fb2683cbaefe3335f135d484fbc35515dee9f05f",
+      "mediaType": "text/markdown",
+      "summary": "Reverse-recovery audit fired and decided build (reader and output field MISSING/REQUIRED; consumer MISSING/NO_OBSERVED_CONSUMER, expected). Outcome scoped to the selected stage contract only, non-null receipts only. Three acceptance-evidence checks named, two of them RED today. FO verified the four load-bearing claims independently."
+    }
+  ]
+}
