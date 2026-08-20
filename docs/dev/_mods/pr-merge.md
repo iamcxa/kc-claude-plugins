@@ -2,10 +2,6 @@
 name: pr-merge
 description: Push branches and create/track GitHub PRs for workflow entities
 version: 0.12.3
-# Partial port from canonical spacedock 0.27.0: merged-sentinel recognition
-# (pr-merge:/local-merge:), the merge-guard ceremony verb, and the no-PR delivery
-# path. NOT a full refit — the rest of this file is still 0.12.2 and carries a local
-# extension. Do not stamp 0.27.0 until the remaining hunks are reviewed.
 ---
 
 # PR Merge
