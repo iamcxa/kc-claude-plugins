@@ -107,6 +107,14 @@ is not evidence of a comfortable user.
 | high | zero | **Rule missing.** Add it — as a check, not a paragraph. |
 | low | zero | **Candidate for deletion** — but first ask which of the two zeros this is. |
 | low | high | **Working.** Leave it alone. |
+| high | high | **Runs but is not believed.** The rule fires and the user asks anyway, so the claim is not carrying what would settle it. Do not add a rule; make the existing one state its evidence. |
+
+The last row is the one that looks like every other row and is not. High friction reads as a gap and
+invites a new rule, but the rule is already running — measured on real history, a verification rule
+left 295 traces in a month while the user still asked "did you actually run this" 24 times. They were
+not asking whether verification happened; they were asking whether it was real. A second rule saying
+the same thing adds nothing. The fix is to make the claim carry the command that was run and what it
+printed, so there is nothing left to ask.
 
 **Two kinds of zero, and they get opposite treatment:**
 
@@ -202,11 +210,18 @@ candidates through the audit's own test before naming one:
 |---|---|---|
 | absent from the rule file | — | **vacant** — nobody is doing this |
 | present, and never fires | zero | **vacant** — the rule is there and does not run, which is the highest-value finding this audit has |
-| present, and fires | high | **occupied** — the low question count is the rule working, not a gap |
+| present, fires, and the question stopped | high | **occupied** — the low question count is the rule working, not a gap |
+| present, fires, and the question keeps coming | high | **not a vacancy at all** — see Step 2's last row. The job is being done and disbelieved, which a job title cannot fix |
 
 The third row is the one that gets missed. A question the user rarely asks looks like a small
 cluster; it is often a seat that is already filled. Read it as evidence the rule is doing its job,
 not as a role with weak support.
+
+The fourth row is the one that produces a wrong hire. A reviewer given only the question counts read
+24 recurring "did you verify this" as a vacant quality-assurance role; the firing column showed the
+rule running 295 times over the same month. Counted, it looked like nobody was doing the job. Counted
+against firing, the job was being done and not believed — and appointing someone to it would have
+changed nothing.
 
 This is Step 2's friction-against-firing applied to roles, and skipping it turns Step 4 into a
 counting exercise that contradicts the rest of the audit.
