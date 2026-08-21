@@ -1,7 +1,7 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: validation
+status: release
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
@@ -91,7 +91,7 @@ gates:
                 reason: 'Captain approved validation at 10edd0a4 after two correction rounds. Every falsifiable claim names a check seen RED across six mutants (flatten, null-leak, truncate-first, sorted-set, group-by-path, format-flip), each independently reproduced by the reviewer rather than accepted from the implementer. Production change across all three rounds remains the single 22/3-line reader in both byte-identical loader copies, with the 305-429 fail-closed range outside every hunk. Four prose and non-goal claims are explicitly named as standing on code inspection with no automated check, accepted rather than closed with a tautological presence-grep. Accepted residual unchanged: declared_receipts ships with no consumer.'
               application:
                 target-stage: release
-                state: pending
+                state: consumed
         - id: gate:q0z8h3xny0qxv0r5srter8tj:release
           stage: release
           attempts:
