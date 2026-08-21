@@ -21,7 +21,7 @@ violated gets read as dead weight.
 
 ## When to use
 
-- The user says some version of 「我一直在糾正同一件事」or "you keep doing this".
+- The user says some version of "you keep doing this" or "I correct the same thing every time".
 - The user quotes their own rule back at you — the strongest possible signal, because it proves the rule exists and did not fire.
 - A rule file has grown and nobody knows which parts still earn their place.
 - A rule change just landed and downstream files may quote the old section names.
@@ -59,7 +59,7 @@ a file the rule makes you read). **A rule with no possible marker cannot be meas
 itself the finding** — see Step 2.
 
 `codify` rows catch the user asking for something to become standing behaviour — "from now on",
-「以後都」、「寫進規則」. Each one has two ways to fail, and the second is the reason this audit
+"remember this", "write it into the rules". Each one has two ways to fail, and the second is the reason this audit
 usually gets started: never written into the rule file at all, or written and never firing. Check
 both against the actual file before reporting either.
 
@@ -184,19 +184,17 @@ When the friction is the user asking what is left, whether a thread can be close
 is, the remedy is a required field at the end of any reply that ends a unit of work:
 
 ```
-剩餘:   …
-下一步: …（你／我）
-可收線: 是／否／未確認
+Remaining: …
+Next:      … (you / me)
+Closable:  yes / no / unverified
 ```
 
-Three things make it work, and dropping any of them breaks it:
+Four things make it work, and dropping any of them breaks it:
 
 - **A fenced block, never inline backticks.** A long inline span wraps into broken fragments in a terminal.
-- **`可收線: 是` only after checking** — working tree, open PRs, task state. Unchecked means `未確認`. A wrong `是` closes a session that still has live work, and that is the expensive failure; the other two fields cost nothing when wrong.
-- **It replaces the empty closer**, it does not sit above one. "需要我繼續嗎？" is what it is there to delete.
-
-It is measurable, which is why it is here: `可收線` is a literal string, so a later run can count it
-as a `firing` row and show whether it is actually being emitted.
+- **`Closable: yes` only after checking** — working tree, open PRs, task state. Unchecked is `unverified`. A wrong `yes` ends a session that still has live work, and that is the expensive failure; the other two fields cost nothing when wrong.
+- **It replaces the empty closer**, it does not sit above one. "Want me to continue?" is what it exists to delete.
+- **Write the labels in the language the user is being answered in**, and fix them once. The block is only measurable because the closable label is a literal string, so it has to be the same string every time — whichever wording is chosen becomes the `firing` pattern for the next run, and changing it later silently zeroes that row.
 
 ## Step 4 — Decide, one at a time
 
