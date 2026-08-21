@@ -31,6 +31,13 @@ A POC label cannot downscope production credentials or data, destructive
 external mutation, irreversible migration, public compatibility, unattended
 operation, broad exposure, SLO/support duty, or release/rollback ownership.
 
+Check the shared core's `backlog` exit bar in the same read. The work item must
+already state what it is and why it is worth doing, in the form that core
+requires for the profile under consideration. When a part is missing, spend the
+clarifying question on it before anything else, because the profile choice rests
+on the answer. In a non-interactive worker, return `NEEDS_PROFILE_DECISION` and
+name the missing part; do not supply it.
+
 Derive a recommendation from the task. Ask one clarifying question only when one
 missing fact could change it. State the task-specific difference in architecture,
 implementation, testing, stages, and delivery. Use the host's best structured

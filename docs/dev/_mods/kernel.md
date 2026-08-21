@@ -49,6 +49,22 @@ stage. A workflow runtime may expose the union of stage names and skip stages
 outside the selected route. Skipping an inactive stage requires no synthetic
 review or receipt.
 
+Queue state still has an exit bar. An item leaves `backlog` only when its
+committed body states both:
+
+- **What it is** — one sentence that lets the Captain recognize and triage the
+  item without opening anything else.
+- **Why it is worth doing** — for `pilot-product-slice` and `production`, the
+  outcome it serves in the repository's existing project-context authority; for
+  `poc-exploration`, the question the experiment answers and the observed result
+  that would abandon it. Do not create a separate vision, roadmap, or outcome
+  document to hold this.
+
+The Captain checks the bar at profile selection, because that is where an item
+first enters a working stage. `kc-dev-flow:choose-work-profile` asks for a
+missing part, and reports the item as not ready to leave `backlog` when it
+cannot ask.
+
 ## Shared boundaries
 
 - Prefer the smallest working mechanism that reaches the accepted outcome.
