@@ -1,7 +1,7 @@
 ---
 id: k69wjs5ttme3z11hph3sy45d
 title: continue-dev-flow states the stage's declared receipts to the working agent
-status: ideation
+status: implementation
 source: residual named at every gate of declared-receipt-has-no-reader (#256) and ruled on by the Captain, 2026-08-20 — ship the reader before the emitted field repeats the defect it was added to answer
 product: kc-dev-flow
 sprint:
@@ -54,7 +54,7 @@ gates:
                 reason: Captain approved the ideation shape. It names the exact replaced sentence pair and the exact replacement text, worded so it says the stage declares receipts behind an agent-evaluated trigger and never that it owes one, and it corrected the FO's own line citation (:40-41 to :41-42) by reading the file rather than copying. Check 1 is verified RED on this branch today (grep -rl declared_receipts kc-dev-flow returns nothing), which also proves the stacked base is a requirement rather than a preference. Approved with the FO condition that check 2 be satisfied by a one-time inspection recorded in the stage report and never committed as a standing presence-grep.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
