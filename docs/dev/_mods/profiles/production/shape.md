@@ -78,10 +78,11 @@ reference — rather than from an impression of the work. A count carried over
 from a sibling work item or from a reviewer's remark is a lower bound until this
 item confirms it.
 
-The table holds no gate: the shared core fixes that a count neither passes nor
-fails the work. It does two things instead — it makes askable a file that
-appears here and nowhere in the journey, or a file the journey depends on and
-this table omits, and it is where the stop numbers below come from.
+The table is diagnostic and holds no gate; the shared core already fixes that
+LOC and file counts are diagnostic signals, never pass/fail gates. What it makes
+askable is a file that appears here and nowhere in the journey, or a file the
+journey depends on and this table omits. It is also where the stop numbers below
+come from.
 
 ## Stop numbers
 

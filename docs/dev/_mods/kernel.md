@@ -100,8 +100,8 @@ cannot ask.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
-  one. LOC and file counts are diagnostic there and never pass or fail the work
-  at exit. When no scope drift is found, create no receipt or commentary.
+  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
+  no scope drift is found, create no receipt or commentary.
 
 ## Communication
 
