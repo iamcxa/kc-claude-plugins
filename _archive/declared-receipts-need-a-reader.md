@@ -1,13 +1,13 @@
 ---
 id: k69wjs5ttme3z11hph3sy45d
 title: continue-dev-flow states the stage's declared receipts to the working agent
-status: release
+status: done
 source: residual named at every gate of declared-receipt-has-no-reader (#256) and ruled on by the Captain, 2026-08-20 — ship the reader before the emitted field repeats the defect it was added to answer
 product: kc-dev-flow
 sprint:
 started: 2026-08-21T07:24:22Z
-completed:
-verdict:
+completed: 2026-08-21T08:39:07Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-declared-receipts-need-a-reader
 issue:
 pr: pr-merge:264
@@ -104,7 +104,8 @@ gates:
                 reason: 'NOT A RELEASE VERDICT. No release review was performed and none is owed: this item is pilot-product-slice, whose route is ideation -> implementation -> validation -> done, and the profile loader refuses the release stage for it. This record exists solely because gate consume advances along the declared graph and cannot skip a stage outside an item''s route, so the terminal approval targeting done could not otherwise exist. Recorded by the FO under the Captain''s explicit grant, quoted verbatim: ''按你建議'', given in this conversation in reply to the FO''s five-step proposal that named this exact transition and its actor. The loader had already computed next_workflow_stage: done for this item at validation; nothing reads that field. Defect filed as profile-routes-are-graph-differences (8x38b1qryjrmy5w4ffk1egy1). The evidence that actually supports terminalization is the verify-deliver gate approved at f351f440, not this transition.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-21T08:39:08Z
 ---
 
 ## Problem
