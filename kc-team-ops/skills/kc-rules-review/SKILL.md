@@ -36,10 +36,15 @@ unit of change is a rule, not a single correction.
 kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 ```
 
-The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction` or `firing`.
+The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
+or `incident`.
 Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
 a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
 itself the finding** — see Step 2.
+
+`incident` rows collect a different thing: turns where the user did work you never offered —
+relaying what another session is doing, routing around you, repairing something you broke. These
+are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
 
 Counts are for comparing runs, not for quoting as truth. The script writes every matched human
 turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.
@@ -64,6 +69,11 @@ Never label Claude firing counts as Codex behavior.
 
 Separate them by asking what the world looks like if the rule is gone, not by counting.
 
+**A third case the two columns cannot show.** Zero friction, zero firing, *and* incidents against
+that subject means no rule was ever violated because none was ever offered — the user simply did
+that work alone. That is a blind spot, and it is the one thing in this audit the friction column
+is structurally blind to: the user never corrected you, because you gave them nothing to correct.
+
 ## Step 3 — Check for an owner before deleting
 
 A rule that looks dead is often a **duplicate of a live capability that owns the concept
@@ -82,29 +92,30 @@ Finding an owner is the start of the check, not the end. Before proposing remova
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
 
-## What to recommend: a rule, not a role
+## Step 3.5 — Name the seat, then fill it
 
-A checkable rule is the lever that binds. A seat ("you are the Chief Engineer") moves what the
-agent notices, and only at the margin.
+The audit's output is a named package: **one seat, and the rules that sit under it.** "It is my
+Chief Engineer, plus these rules." Always give the package a name, and never let the name do the
+work.
 
-This was measured, not argued. Sixteen isolated runs, four seats (none / Chief Engineer / CTO /
-Chief of Staff), two task shapes. The task shape decided the answer every time: on an engineering
-fixture all sixteen opened with the same fix, and on a coordination fixture all sixteen opened with
-the same escalation — the Chief Engineer seat included. Exactly one dimension separated cleanly:
-how often the reply talked about who owns a thread, Chief Engineer at 0 and 1 mentions against
-Chief of Staff at 3 and 3. Meanwhile the rules that were present in an earlier, non-isolated round
-produced the closing status block in 5 of 6 runs and put the decision back to the user in 5 of 6;
-with those rules absent, both dropped to 0 of 8.
+**The seat is for the person, not the agent.** Measured across sixteen isolated runs and four seats
+on two task shapes, the seat did not change what the agent recommended — the task shape decided
+that every time. One dimension separated cleanly: how often the reply named who owns a thread,
+Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. So a seat shifts attention at
+the margin and nothing else. What it does well is give the user one handle for a dozen rules, which
+is how they decide what belongs in the set and what does not.
 
-So when the audit produces a recommendation:
+So:
 
-- **Lead with rules.** Every friction cluster gets a checkable condition, not a paragraph and not
-  a job title.
-- **Offer a seat only for a blind spot** — a whole class of question the friction shows the user is
-  never asked about, ownership being the one case with evidence behind it. Say it is secondary,
-  and say what it is expected to change: attention, not answers.
-- **Never recommend a seat on its own.** On this evidence it would be the weakest change in the
-  file, dressed as the biggest.
+- **Always name the seat, and say what it means here** — the default question that seat asks before
+  every reply. That question is the only part of a seat with any measured effect.
+- **Never ship a seat alone.** The rules are the substance; the seat is the label on the jar. A seat
+  recommended without rules under it is the weakest change in the file, dressed as the biggest.
+- **Change the seat when incidents say to.** A blind spot from Step 2 — zero friction, zero firing,
+  incidents present — names a class of work the user is doing alone. That is the evidence for
+  proposing a different seat, and the proposal has to say which incidents it is answering.
+- **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
+  to change reliably, that is a rule, and it goes in as a rule regardless of the seat.
 
 ## Step 4 — Decide, one at a time
 

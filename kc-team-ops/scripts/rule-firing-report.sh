@@ -88,6 +88,9 @@ friction	undefined term	是什麼|什麼意思|是指什麼|哪來的|what is th
 friction	status pull	還剩|可以收|下一步|回報|現況|what.s left|status\?
 friction	prior-art miss	上游|重複|既有|沒看|already exists|upstream
 friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
+incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
+incident	user did it themselves	我自己(做|改|弄|處理)|我先(做|改)了|我已經(自己|先)|I did it myself|I went ahead and
+incident	loss or recovery	救回|掉了|壞了|覆蓋掉|掃掉|lost work|had to recover|overwrote
 TSV
 fi
 
@@ -126,6 +129,19 @@ done < "$PATTERNS"
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
   "      reading a rule aloud looks identical to one following it. Sample the hits."
+
+printf '\n%s\n' "=== incidents: work you did that the agent never offered ==="
+printf '%-26s %6s\n' "CATEGORY" "TURNS"
+INC=0
+while IFS=$'\t' read -r kind label re; do
+  [ "$kind" = "incident" ] || continue
+  INC=1
+  printf '%-26s %6s\n' "$label" "$(count_turns "$WORK/human.txt" "$re")"
+done < "$PATTERNS"
+[ "$INC" = 1 ] || printf '%s\n' "(none declared)"
+printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \
+  "      user never corrected you, because you never gave them anything to correct." \
+  "      Read every hit. Normal division of labour looks identical to a blind spot here."
 
 printf '\n%s\n' "=== evidence ==="
 cp "$WORK/human.txt" "./rule-review-human-turns.tsv"
