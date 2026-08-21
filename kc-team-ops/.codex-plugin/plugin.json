@@ -1,0 +1,51 @@
+{
+  "name": "kc-team-ops",
+  "version": "1.6.0",
+  "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "homepage": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-team-ops",
+  "repository": "https://github.com/iamcxa/kc-claude-plugins",
+  "license": "MIT",
+  "keywords": [
+    "team-ops",
+    "em",
+    "triage",
+    "linear",
+    "project-pulse",
+    "issue-decomposition",
+    "research",
+    "subagents",
+    "strategic-lens",
+    "context-cache",
+    "plan-review",
+    "keystone-verification",
+    "gemini",
+    "cross-model",
+    "second-opinion",
+    "journey-map",
+    "user-journey",
+    "figjam"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Team Ops",
+    "shortDescription": "EM triage, plan review, project pulse, journey maps, and rule-set audits",
+    "longDescription": "Team operations for Codex and Claude Code. Triage Linear issues with a strategic lens, review a teammate's plan before build, draft and post project status updates, draw user journeys checked against the code, take a cross-model second opinion, and audit an agent's own operating rules against what actually happened in past sessions.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-team-ops",
+    "defaultPrompt": [
+      "Audit my operating rules with kc-rules-review",
+      "Triage this Linear issue with kc-em-triage",
+      "Review this plan as EM with kc-em-plan-review"
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}

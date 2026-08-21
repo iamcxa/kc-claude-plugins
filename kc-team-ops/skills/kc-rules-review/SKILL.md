@@ -26,9 +26,9 @@ violated gets read as dead weight.
 - A rule file has grown and nobody knows which parts still earn their place.
 - A rule change just landed and downstream files may quote the old section names.
 
-**Do not use** for a single skill's behaviour in a single repo — `recce-team:reflection` owns that
-(one target skill, one repeated problem, one gated fix). Do not use for a memory inventory —
-`recce-team:memory-survey` owns that. This skill is the fleet-wide, whole-rule-set pass.
+**Do not use** for one skill's behaviour inside one repository, or for a bare inventory of stored
+memories. This is the whole-rule-set pass: it reads the rules that govern every session, and its
+unit of change is a rule, not a single correction.
 
 ## Step 1 — Measure
 
@@ -36,10 +36,20 @@ violated gets read as dead weight.
 kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 ```
 
-The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction` or `firing`.
+The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
+`incident`, or `codify`.
+
+`codify` rows catch the user asking for something to become standing behaviour — "from now on",
+「以後都」、「寫進規則」. Each one has two ways to fail, and the second is the reason this audit
+usually gets started: never written into the rule file at all, or written and never firing. Check
+both against the actual file before reporting either.
 Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
 a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
 itself the finding** — see Step 2.
+
+`incident` rows collect a different thing: turns where the user did work you never offered —
+relaying what another session is doing, routing around you, repairing something you broke. These
+are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
 
 Counts are for comparing runs, not for quoting as truth. The script writes every matched human
 turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.
@@ -47,6 +57,16 @@ turn to `rule-review-human-turns.tsv`; read the hits before you believe a number
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
 Never label Claude firing counts as Codex behavior.
+
+**Read the coverage table before the friction table.** The report ends with the decoding rate
+against the length of the agent's previous message. Voiced friction is the only kind the columns
+can count; when the user stops correcting and starts adapting, nothing is said and no pattern
+matches. Length is the one proxy that does not need the complaint to be spoken. Over a two-week
+window the rate has run 3% under 500 characters against 10% above 1500 — over two days it is noise,
+so give it a wide window or do not quote it.
+
+Say plainly in the report that the pass misses unvoiced friction, and that a clean friction table
+is not evidence of a comfortable user.
 
 ## Step 2 — Cross-tabulate
 
@@ -63,6 +83,25 @@ Never label Claude firing counts as Codex behavior.
 - *Zero because it worked* — a safety rule whose whole value is that it is never violated. Deleting it is how you find out.
 
 Separate them by asking what the world looks like if the rule is gone, not by counting.
+
+**A third case the two columns cannot show.** Zero friction, zero firing, *and* incidents against
+that subject can mean no rule was ever violated because none was ever offered — the user simply did
+that work alone. The friction column is structurally blind to this: the user never corrected you,
+because you gave them nothing to correct.
+
+**An incident is a candidate, not a verdict.** Read each one in `rule-review-incidents.txt` with the
+assistant turn printed above it, and classify it before it counts:
+
+| The turn before it shows | Classification | Remedy |
+|---|---|---|
+| nothing on the subject | **blind spot** | a rule, and possibly a different seat |
+| the user's own standing authority | **normal division of labour** | none; drop it |
+| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a seat |
+| you lacking the access or the tool | **capability limit** | fix the access; a rule changes nothing |
+
+Only the first row may be used as evidence for changing a seat. The third is the one most easily
+mistaken for the first, and it is the one where a seat change does the most damage: it renames the
+agent instead of making it finish.
 
 ## Step 3 — Check for an owner before deleting
 
@@ -81,6 +120,32 @@ Finding an owner is the start of the check, not the end. Before proposing remova
 - **Do they load in the same places?** An owner loaded by two stage contracts does not cover a rule
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
+
+## Step 3.5 — Name the seat, then fill it
+
+The audit's output is a named package: **one seat, and the rules that sit under it.** "It is my
+Chief Engineer, plus these rules." Always give the package a name, and never let the name do the
+work.
+
+**The seat is for the person, not the agent.** Measured across sixteen isolated runs and four seats
+on two task shapes, the seat did not change what the agent recommended — the task shape decided
+that every time. One dimension separated cleanly: how often the reply named who owns a thread,
+Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. That is one dimension on one
+pair of fixtures — enough to say a seat can move what gets mentioned, not enough to say what else it
+does or does not move. The reason to name one anyway is the user's, not the agent's: a seat is one
+handle for a dozen rules, and that is how they decide what belongs in the set and what does not.
+
+So:
+
+- **Always name the seat, and say what it means here** — the default question that seat asks before
+  every reply. That question is the only part of a seat this audit has measured at all.
+- **Never ship a seat alone.** The rules are the substance; the seat is the label on the jar. A seat
+  recommended without rules under it is the weakest change in the file, dressed as the biggest.
+- **Change the seat when incidents say to.** A blind spot from Step 2 — zero friction, zero firing,
+  incidents present — names a class of work the user is doing alone. That is the evidence for
+  proposing a different seat, and the proposal has to say which incidents it is answering.
+- **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
+  to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
 
 ## Step 4 — Decide, one at a time
 
