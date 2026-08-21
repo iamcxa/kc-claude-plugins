@@ -113,6 +113,129 @@ work_profile:
 
 ## Accepted outcome and non-goals
 
+**Instruction replaced.** In `kc-dev-flow/skills/continue-dev-flow/SKILL.md`,
+"Load one route", the sentence pair that currently sends the working agent to
+discover a stage's receipt names only by parsing the stage contract's own
+`kc-dev-flow-conditional-references/v1` block (current text, verified at
+SKILL.md:41-42 — one line later than this entity's earlier :40-41 citation
+because an unrelated intervening RoboRev edit shifted the file by one line):
+
+> A selected stage may emit a `kc-dev-flow-conditional-references/v1` block.
+> For each entry, resolve `path` relative to the selected stage contract and
+> read it only when its named `trigger` is true; otherwise leave it unread.
+
+is REPLACED by:
+
+> A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
+> the loader's output already parses that block into `declared_receipts` — the
+> receipt names this stage declares, each behind a trigger you evaluate. Read
+> `declared_receipts` for those names instead of re-parsing the block for
+> `receipt`. For each entry, still resolve `path` relative to the selected
+> stage contract and read it only when its named `trigger` is true; otherwise
+> leave it unread.
+
+This sentence is sayable truthfully while `trigger` stays prose: it says the
+stage *declares* receipts behind a trigger the agent evaluates, and it never
+says the stage *owes* one. The paragraph's remaining sentences (trigger
+semantics, `retained_document_change`, `project_context_claim_may_change`,
+`delivery_artifact_review`, `pr_delivery_selected`,
+`implementation_exit_observation_declared`, and "Record a named receipt in the
+existing work item; `receipt: null` creates no receipt." at SKILL.md:62-63) are
+unchanged — this task edits only the one replaced sentence pair, not the
+trigger-resolution or receipt-recording instructions around it.
+
+**Non-goals:** no evaluable `trigger` (stays prose the agent evaluates); no
+stage-exit check that blocks on a missing receipt; no change to the loader,
+either vendored copy, or any stage/profile contract — this task is prose-only
+in one skill file; no second parse added beside the existing one (the replaced
+sentence removes the receipt-parsing need, it does not add a parallel one); no
+claim, anywhere in this entity or the eventual diff, that the instruction
+changes what a working agent records.
+
+**Persistence, recovery, data-safety boundaries:** none apply. This is a
+documentation edit to one skill file — no persisted state, no runtime data
+path, no schema, nothing to recover. The loader's emitted contract shape is
+unchanged by this task (obligation already recorded in the work profile
+receipt above); only the prose that reads one already-emitted field changes.
+
+**Task-specific acceptance checks (falsify the slice):**
+
+1. **Loader-surfaces-the-field check.** Run the canonical loader invocation
+   documented at SKILL.md:66-72 against a stage contract whose own
+   `kc-dev-flow-conditional-references/v1` block declares a non-null `receipt`.
+   Assert the JSON output's top-level `declared_receipts` array contains that
+   receipt's name. This check FAILS if `declared_receipts` is absent, empty, or
+   omits a declared non-null receipt — i.e., it fails if the documented
+   invocation stops surfacing the field, which is exactly what this task's
+   testing obligation requires be falsifiable.
+2. **Skill-reads-the-field check.** Inspect `SKILL.md`'s "Load one route"
+   section for a sentence that reads `declared_receipts` from the loader's
+   output, in place of the removed instruction to discover receipt names by
+   parsing the raw block. This check FAILS if no such sentence exists, or if
+   the sentence asserts the stage *owes* a receipt rather than *declares* one
+   behind an agent-evaluated trigger — i.e., it fails if the instruction
+   reverts to the pre-change parse-it-yourself shape, or oversteps `trigger`'s
+   prose status.
+
+No third check attempts a behavioural measurement. See Measurement.
+
 ## Acceptance evidence
 
+Both checks above sit entirely on the verifiable layer named in "Verification
+boundary": (1) the documented loader invocation surfaces `declared_receipts` to
+the skill's input, and (2) the skill's instruction reads that field instead of
+re-parsing the block. Neither check inspects, samples, or infers a working
+agent's behaviour; both are checkable by direct execution (check 1) and direct
+text inspection (check 2), independent of who or what reads the resulting
+prose.
+
+**Explicitly not asserted:** no acceptance criterion here — and none should be
+added at build or verify-deliver — claims that this wording change causes a
+working agent to record receipts more often or more accurately. That is a
+behavioural A/B comparison between agents that read the old prose and agents
+that read the new prose, and no instrument exists in this repository to run
+it. The entity that would build that instrument,
+`skill-ablation-harness` (`5b5gp68f2aq0bdrcf3q28jgg`, "Cutting prose from a
+skill has no failure signal — build one before cutting"), records its own
+review driver as MISSING and its materiality verdict as EXISTS_BROKEN; it is a
+larger, separate entity than this one and is not a dependency of this task's
+acceptance.
+
 ## Measurement
+
+**Delivery base, with evidence, not preference.** This candidate stacks on PR
+#262 (`spacedock-ensign/declared-receipt-has-no-reader`), not on `main`.
+Verified directly:
+
+- `git diff main origin/spacedock-ensign/declared-receipt-has-no-reader --
+  kc-dev-flow` shows `declared_receipts` introduced only on that branch, in the
+  vendored loader's `check_conditional_references`, `load_contracts`, and
+  `render_text` functions (`kc-dev-flow/references/profile_loader.py` per the
+  diff).
+- `grep -rl declared_receipts kc-dev-flow` against this checkout's current
+  `main`-tracking tree returns no match — the key does not exist anywhere in
+  the vendored loader on `main` today.
+
+Because the key the replaced sentence tells the agent to read does not exist in
+the loader `main` ships, an edit landing on `main` alone would document a field
+the loader never emits — the SKILL.md instruction would not function until the
+loader that emits `declared_receipts` is itself merged. That non-existence on
+`main`, not a stacking preference recorded in `delivery-branch-base.md`, is why
+this candidate's base is #262's branch: #262 is the open artifact that shares
+this candidate's lineage through `declared_receipts`, per the backlog gate's
+resolution reason already recorded above.
+
+## Stage Report: ideation
+
+- DONE: Load the selected `shape` contract and produce its required output — one accepted journey and explicit non-goals, persistence/recovery/data-safety boundaries, and task-specific falsifiable acceptance checks.
+  `kc-dev-flow/references/profiles/pilot-product-slice/shape.md` loaded; "Accepted outcome and non-goals" section written with the exact replaced sentence, the exact replacement sentence, non-goals, and boundaries.
+- DONE: Record the accepted outcome naming the exact wording change — which instruction is replaced (SKILL.md:41-42, not the entity's earlier :40-41 — file drifted one line via commit 4609abe0) and the exact sentence that replaces it, sayable truthfully while `trigger` stays prose.
+  Verified current SKILL.md text via `grep -n '' kc-dev-flow/skills/continue-dev-flow/SKILL.md`; quoted both sentences verbatim in "Accepted outcome and non-goals".
+- DONE: Record acceptance evidence naming a check that fails only on the verifiable layer (loader surfaces `declared_receipts`, skill reads it), stating explicitly that no criterion asserts behavioural change and why that instrument is absent.
+  "Acceptance evidence" section names two checks and cites `skill-ablation-harness` (5b5gp68f2aq0bdrcf3q28jgg) as the missing instrument, out of scope here.
+- DONE: Record the stacked delivery base with evidence, not preference — the vendored loader on `main` carries no `declared_receipts` key, verified against PR #262's branch.
+  `git diff main origin/spacedock-ensign/declared-receipt-has-no-reader -- kc-dev-flow` shows `declared_receipts` added only on #262's branch (`references/profile_loader.py`); `grep -rl declared_receipts kc-dev-flow` against this checkout's `main`-tracking tree returns no match (exit 1). "Measurement" section records both commands and their results.
+
+### Summary
+
+Wrote the Pilot shape's required output for `declared-receipts-need-a-reader`: the exact SKILL.md sentence pair being replaced and its exact replacement, non-goals, persistence/data-safety boundaries (none apply — prose-only), two falsifiable acceptance checks scoped to the verifiable layer only, and the delivery-base evidence tying this candidate to PR #262. No code was changed in this stage — ideation is shape-only; the SKILL.md edit itself belongs to the build stage.
