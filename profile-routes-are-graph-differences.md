@@ -64,6 +64,17 @@ gates:
                 digest: sha256:f9ff09956c625a7b414885ee67a650a86a505647ee0d2fb0f4fc3c734f161f32
                 request-digest: sha256:3c4589787b233af4ff8e13494065147bafee1ef2219c569b65368d240c1ef461
                 room-ref: ./profile-routes-are-graph-differences/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:validation:1
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-21T15:15:13.086512Z"
+                decision: approve
+                reason: 'Captain approved validation at 3ad3725a. All four items were independently reproduced rather than read from the implementer''s transcript: the RED was recreated with a standalone script against the pre-fix loader, all six route-string copies were mutation-tested one at a time with each guarding check seen to fail on its own distinct message (6/6, none unverified), the release-authorization limits were re-probed against a fresh fixture and match the entity''s claims exactly, and the contract test''s sole failure is the pre-existing sibling casing bug reproducing identically on the merge base. The lost second review ceremony is accepted as a named residual, not a closed item. FO observation carried forward: the six new enforcement points are reachable in CI, where the sibling test skips for want of a spacedock binary, but are blocked locally by that test''s fail-fast failure — which promotes spacedock-route-test-passes-nowhere from an incidental find to a blocker on half this work''s local effect.'
+              application:
+                target-stage: release
+                state: pending
 ---
 
 ## Problem
