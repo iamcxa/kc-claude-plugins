@@ -1,7 +1,7 @@
 ---
 id: k69wjs5ttme3z11hph3sy45d
 title: continue-dev-flow states the stage's declared receipts to the working agent
-status: implementation
+status: validation
 source: residual named at every gate of declared-receipt-has-no-reader (#256) and ruled on by the Captain, 2026-08-20 — ship the reader before the emitted field repeats the defect it was added to answer
 product: kc-dev-flow
 sprint:
