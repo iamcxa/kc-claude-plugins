@@ -125,14 +125,14 @@ assistant turn printed above it, and classify it before it counts:
 
 | The turn before it shows | Classification | Remedy |
 |---|---|---|
-| nothing on the subject | **blind spot** | a rule, and possibly a different seat |
+| nothing on the subject | **blind spot** | a rule, and possibly a different lens (Step 4) |
 | the user's own standing authority | **normal division of labour** | none; drop it |
-| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a seat |
+| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a lens |
 | you lacking the access or the tool | **capability limit** | fix the access; a rule changes nothing |
 
-Only the first row may be used as evidence for changing a seat. The third is the one most easily
-mistaken for the first, and it is the one where a seat change does the most damage: it renames the
-agent instead of making it finish.
+Only the first row may be used as evidence for changing the lens. The third is the one most easily
+mistaken for the first, and it is where changing the lens does the most damage: it renames the agent
+instead of making it finish.
 
 ## Step 3 — Check for an owner before deleting
 
@@ -140,7 +140,7 @@ A rule that looks dead is often a **duplicate of a live capability that owns the
 elsewhere** — a plugin reference, a stage contract, a test that asserts the path. Grep the fleet
 for the concept before cutting.
 
-- Found an owner → **propose deleting the copy and name the owner**, through Step 4 like any other change. Do not delete it yourself; removal is the user's call.
+- Found an owner → **propose deleting the copy and name the owner**, through Step 5 like any other change. Do not delete it yourself; removal is the user's call.
 - Found no owner → the rule is the only home. Removing it drops the capability.
 
 Finding an owner is the start of the check, not the end. Before proposing removal, answer both:
@@ -152,31 +152,40 @@ Finding an owner is the start of the check, not the end. Before proposing remova
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
 
-## Step 3.5 — Name the seat, then fill it
+## Step 4 — Name the lens the work needs
 
-The audit's output is a named package: **one seat, and the rules that sit under it.** "It is my
-Chief Engineer, plus these rules." Always give the package a name, and never let the name do the
-work.
+**Required output. Every run ends with this line, including runs that change nothing:**
 
-**The seat is for the person, not the agent.** Measured across sixteen isolated runs and four seats
-on two task shapes, the seat did not change what the agent recommended — the task shape decided
-that every time. One dimension separated cleanly: how often the reply named who owns a thread,
-Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. That is one dimension on one
-pair of fixtures — enough to say a seat can move what gets mentioned, not enough to say what else it
-does or does not move. The reason to name one anyway is the user's, not the agent's: a seat is one
-handle for a dozen rules, and that is how they decide what belongs in the set and what does not.
+> Lens: `<name>` — default question: `<the one question it asks before every reply>`. Chosen because
+> `<the categories that dominated this run>`.
 
-So:
+Do not skip it when the lens is staying the same. Saying "Chief Engineer, unchanged, because
+necessity and size were two thirds of the friction" is the output; silence is not. The previous
+version of this step was written as optional and produced nothing in several independent runs — the
+readers correctly applied the rule for *changing* a lens and never reached the rule for naming one.
 
-- **Always name the seat, and say what it means here** — the default question that seat asks before
-  every reply. That question is the only part of a seat this audit has measured at all.
-- **Never ship a seat alone.** The rules are the substance; the seat is the label on the jar. A seat
-  recommended without rules under it is the weakest change in the file, dressed as the biggest.
-- **Change the seat when incidents say to.** A blind spot from Step 2 — zero friction, zero firing,
-  incidents present — names a class of work the user is doing alone. That is the evidence for
-  proposing a different seat, and the proposal has to say which incidents it is answering.
-- **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
-  to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
+**Read the lens off the category mix.** The run already profiles the work; the lens is a name for
+what that profile is asking of you.
+
+| What dominated the run | Lens | The question it asks first |
+|---|---|---|
+| necessity, size, deletion | engineering integrity | What is the next smallest integrated step, and what can be deleted? |
+| undefined terms, rephrase | explanation | Will this land in one read, with no word they have not used themselves? |
+| status pull, routing incidents | chief of staff | Whose move is it, and what is waiting on whom? |
+| prior-art miss, duplication | stewardship | Who already owns this, and what does keeping our copy cost? |
+
+Only the middle two rows have any measurement behind them, and only for one thing: across sixteen
+isolated runs on two task shapes, a chief-of-staff framing named who owns a thread 3 and 3 times
+against an engineering framing's 0 and 1. The rest of the table is inference from the categories,
+not from measured behaviour, and should be offered as such.
+
+**What a lens is for, and what it is not.** The same sixteen runs found the task decided the
+recommendation every time — the lens moved what got mentioned, not what got done. Its value is to
+the person: one handle for a dozen rules, which is how they judge what belongs in the set. So:
+
+- **Never ship a lens alone.** Rules are the substance; the lens is the label on the jar.
+- **Changing it needs incidents, naming it does not.** A blind spot from Step 2 — zero friction, zero firing, incidents present — is the evidence for proposing a *different* lens, and that proposal must say which incidents it answers. Naming the current one is unconditional.
+- **If a behaviour has to happen every run, that is a rule.** Write it as a rule whatever the lens says.
 
 ## Remedies already measured
 
@@ -204,7 +213,7 @@ Five things make it work, and dropping any of them breaks it:
 - **Write the labels in the language the reply is in.** The block is read every turn by someone whose comprehension cost is the thing it exists to lower; an English label at the end of an otherwise Chinese answer taxes that every time. The template above is the English wording, not a requirement to use English.
 - **Enumerate the wordings, do not fix the language.** What breaks measurement is unbounded variation, not translation: a `firing` pattern is a regex, so `可收線|Closable` costs one alternation and covers both. Settle on one wording per language and add every one of them to the pattern — a synonym invented later is what silently zeroes the row.
 
-## Step 4 — Decide, one at a time
+## Step 5 — Decide, one at a time
 
 Put each change to the user as a single decision with: the evidence, your recommendation, **what
 gets worse under your recommendation**, what breaks if the choice is wrong, and the reversal cost.
@@ -215,7 +224,7 @@ Run the user's own necessity test on every rule you propose to add, including th
 tempted to slip in because they are obviously good. A rule that did not survive a decision does
 not belong in the file.
 
-## Step 5 — Apply, and find the orphans
+## Step 6 — Apply, and find the orphans
 
 1. Back up the current file with a dated name. Verify the copy is byte-identical before overwriting. A rule file outside version control has no other record.
 2. Swap, then verify: line count, section list, any `@` imports still present.
@@ -240,7 +249,7 @@ Split the ruleset before offering, because not all of it should travel:
 | Decision hygiene, conclusion-first | Plugin or skill routing |
 | Cost and measurement discipline | Anything naming one harness's files |
 
-Then run Step 5's orphan grep again against the repos you touched. Propagation creates new copies,
+Then run Step 6's orphan grep again against the repos you touched. Propagation creates new copies,
 and a copy is correct only until one side moves — say which file is authoritative.
 
 ### Prove Codex behavior before applying the user file
@@ -260,7 +269,7 @@ Run one isolated A/B before replacing `~/.codex/AGENTS.md`:
    governed action; baseline must lack it; both runs must still deliver the requested outcome.
 4. If the runs do not separate, the rule is not proven for Codex. Rewrite it as a lower-freedom
    checkpoint or leave it unsynced and report the gap.
-5. After a pass and the user's propagation decision, apply Step 5 to the real user file and restart
+5. After a pass and the user's propagation decision, apply Step 6 to the real user file and restart
    open Codex sessions. Never replace the live user file merely because the candidate text matches.
 
 ## Common mistakes
