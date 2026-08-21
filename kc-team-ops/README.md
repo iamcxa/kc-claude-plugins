@@ -20,6 +20,7 @@ Register in marketplace if using local plugin management:
 /kc-em-triage          # EM triage pipeline (with strategic lens)
 /kc-em-sync            # Sync team context (initiatives, projects, members) to local cache
 /kc-project-pulse      # Project status updates
+/kc-rules-review       # Audit CLAUDE.md / AGENTS.md against real session history
 ```
 
 Invoke with Linear issue IDs, filter criteria, document input, or meeting notes.
@@ -43,6 +44,8 @@ Required plugins:
 - **kc-project-pulse** — Project status update drafting and posting to Linear.
 - **kc-journey-map** — Draw a user journey from the code, or check an existing journey against it. Three lanes per step (person / system / invariant), every system claim cited to `file:line`, and a mandatory status card for what is unproven, unmerged, or undeployed. FigJam when available, self-contained HTML + PNG otherwise.
 
+- **kc-rules-review** — Audit an operating rule set against what actually happened in the user's sessions. Measures friction (how often the user repaired the output) against firing (how often the rule left a trace), because a rule with high friction and low firing is not missing — it has no trigger. Optional route propagates portable semantics to user or repo `AGENTS.md` only after an isolated Codex behavior check.
+
 ### Agents
 
 - **em-lens-scanner** — Lightweight strategic scanner (Haiku). Reads team context cache, verifies issue content against codebase, produces EM Lens cards with depth recommendations.
@@ -62,6 +65,12 @@ Required plugins:
 | `health-assessment.md` | Health assessment heuristic for project pulse updates |
 | `project-creation-flow.md` | Linear project creation process and structured description format |
 | `strategic-lens.md` | EM Lens depth routing logic, estimate scale mapping, card formats |
+
+### Scripts
+
+| File | Purpose |
+|------|---------|
+| `scripts/rule-firing-report.sh` | Counts friction and rule-firing across Claude Code session logs for `kc-rules-review`. `--help` for usage. |
 
 ## License
 
