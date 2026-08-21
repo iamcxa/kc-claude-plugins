@@ -30,6 +30,21 @@ violated gets read as dead weight.
 memories. This is the whole-rule-set pass: it reads the rules that govern every session, and its
 unit of change is a rule, not a single correction.
 
+## Step 0 — Ask how far back, before reading anything
+
+The window changes every number in this audit, and it is the user's call, not a default you pick
+for them. Ask it with the harness's question UI as the first action, offering two weeks, one month,
+two months, and a custom date — and say what each costs, because they find out otherwise only after
+waiting: a one-day window returns in seconds, two weeks across six hundred sessions takes minutes.
+
+Two facts belong in the question, because they change the answer:
+
+- The coverage gradient at the end needs a wide window. Two weeks shows it; two days is noise.
+- A window that does not reach back to the last rule change measures the old rules, not the new ones.
+
+If a previous run exists, say when it was and what window it used. Repeating that window buys a
+delta; changing it buys a fresh baseline and no comparison.
+
 ## Step 1 — Measure
 
 ```bash
@@ -50,6 +65,14 @@ itself the finding** — see Step 2.
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
 are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
+
+Each run is kept under `~/.claude/kc-team-ops/rules-review/<timestamp>/` — the report, the matched
+human turns, the incident pairs, and a `run.json` of every count. Nothing is overwritten, so a
+second run the same day is readable against the first.
+
+When the previous run used the same window and the same patterns, the report ends with what moved
+since it, and says so when nothing did. When either changed, it refuses to compare and says why:
+a delta against a different question is worse than no delta.
 
 Counts are for comparing runs, not for quoting as truth. The script writes every matched human
 turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.

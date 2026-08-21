@@ -17,10 +17,11 @@ turn() { printf '{"type":"%s","timestamp":"%s","message":{"content":[{"type":"te
 
 printf 'incident\ttakeover\t我自己部署好了\n' > "$WORK/p.tsv"
 cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home" \
-  --patterns "$WORK/p.tsv" >/dev/null 2>&1
+  --patterns "$WORK/p.tsv" --out "$WORK/runs" >/dev/null 2>&1
+RUN="$(ls -1dt "$WORK/runs"/*/ 2>/dev/null | head -1)"
 
 fail=0
-before=$(grep -A1 -- '--- takeover' "$WORK/rule-review-incidents.txt" 2>/dev/null | tail -1)
+before=$(grep -A1 -- '--- takeover' "${RUN:-$WORK}incidents.txt" 2>/dev/null | tail -1)
 case "$before" in
   *"I will deploy staging now"*) echo "PASS  BEFORE came from the same session" ;;
   *"documentation typo"*)        echo "FAIL  BEFORE came from another session: $before"; fail=1 ;;
