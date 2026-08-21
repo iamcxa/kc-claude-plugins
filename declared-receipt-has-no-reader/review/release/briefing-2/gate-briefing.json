@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:q0z8h3xny0qxv0r5srter8tj:release:attempt-2:revision-1",
+  "question": "Approve release readiness at delivery revision 10edd0a4 (Draft PR #262 to main), leaving mark-ready and merge as your decisions?",
+  "artifacts": [
+    {
+      "id": "artifact:q0z8h3xny0qxv0r5srter8tj:release:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/662c8000b1bd50ddbbde9b8dcab01265dd10f943/declared-receipt-has-no-reader.md",
+      "rev": "sha256:f2db8b6264974cb06f3e9a543be6a3404790d5dc3f9a9cee279afe86ec64d96f",
+      "mediaType": "text/markdown",
+      "summary": "Second release attempt after the first approval was superseded by cross-model findings. No rebase needed — origin/main..HEAD is exactly the three candidate commits and the PR is MERGEABLE/CLEAN at 10edd0a4 with checks green, despite origin/main advancing independently. PR body rewritten to record both correction rounds, the six mutants, the four claims with no automated check, and both unchanged residuals. Still Draft, no version or marketplace edit."
+    }
+  ]
+}
