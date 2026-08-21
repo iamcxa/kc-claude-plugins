@@ -450,4 +450,218 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             f"{label} did not resolve to a clean rc={expect_rc}: {result.returncode} {result.stderr[:120]}",
         )
 
+    # declared_receipts surfaces the selected stage contract's own receipt
+    # name in the loader's JSON output.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../kernel.md", '
+        '"trigger": "example", "receipt": "example_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    presence = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(presence.returncode == 0, presence.stderr)
+    presence_document = json.loads(presence.stdout)
+    require(
+        presence_document.get("declared_receipts") == ["example_receipt"],
+        "declared_receipts did not surface the stage's own receipt name: "
+        f"{presence_document.get('declared_receipts')!r}",
+    )
+
+    # declared_receipts derives only from the selected stage contract's own
+    # block: kernel.md and base.md may declare the same schema (an adopter
+    # mistake, not a supported input), but their receipts must not flatten
+    # into the output, and a null receipt in the stage's own block must not
+    # leak through either.
+    kernel_path = root / "kernel.md"
+    base_path = root / "profiles" / "poc-exploration" / "base.md"
+    kernel_original = kernel_path.read_text(encoding="utf-8")
+    base_original = base_path.read_text(encoding="utf-8")
+    kernel_path.write_text(
+        kernel_original.rstrip("\n") + "\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "profiles/poc-exploration/build.md", '
+        '"trigger": "example", "receipt": "kernel_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    base_path.write_text(
+        base_original.rstrip("\n") + "\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "build.md", '
+        '"trigger": "example", "receipt": "base_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "example", "receipt": "stage_receipt"}, '
+        '{"path": "../../kernel.md", "trigger": "example_untriggered", "receipt": null}'
+        "]}\n"
+        "```\n",
+        encoding="utf-8",
+    )
+    isolation = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(isolation.returncode == 0, isolation.stderr)
+    isolation_document = json.loads(isolation.stdout)
+    require(
+        isolation_document.get("declared_receipts") == ["stage_receipt"],
+        "declared_receipts leaked a null receipt or a kernel/base receipt, or "
+        f"missed the stage's own receipt: {isolation_document.get('declared_receipts')!r}",
+    )
+    kernel_path.write_text(kernel_original, encoding="utf-8")
+    base_path.write_text(base_original, encoding="utf-8")
+
+    # declared_receipts preserves exact document order across MULTIPLE
+    # conditional-references blocks in the same stage contract, including a
+    # receipt name that repeats. This is the normal shape for a third of the
+    # shipped contracts (production/shape.md, pilot-product-slice/shape.md,
+    # poc-exploration/build.md each declare more than one non-null receipt);
+    # a reader that returned only the first receipt, a sorted list, or a set
+    # would still pass a single-block/single-receipt test but must fail this
+    # one. The two blocks also interleave TWO distinct valid vendored paths
+    # (../../kernel.md and the sibling base.md) so that a reader that grouped
+    # entries by resolved path before returning — instead of appending each
+    # entry in document order — would reorder receipt_b ahead of the second
+    # receipt_a and fail this assertion too; with a single shared path that
+    # mutation shape is indistinguishable from a correct reader.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "first", "receipt": "receipt_a"}, '
+        '{"path": "base.md", "trigger": "second", "receipt": "receipt_b"}'
+        "]}\n"
+        "```\n\n"
+        "some prose between the two blocks\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": ['
+        '{"path": "../../kernel.md", "trigger": "third", "receipt": "receipt_a"}, '
+        '{"path": "base.md", "trigger": "fourth", "receipt": "receipt_c"}'
+        "]}\n"
+        "```\n",
+        encoding="utf-8",
+    )
+    multi_block = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(multi_block.returncode == 0, multi_block.stderr)
+    multi_block_document = json.loads(multi_block.stdout)
+    require(
+        multi_block_document.get("declared_receipts")
+        == ["receipt_a", "receipt_b", "receipt_a", "receipt_c"],
+        "declared_receipts did not preserve exact document order across "
+        "multiple conditional-references blocks, or dropped the repeated "
+        f"name: {multi_block_document.get('declared_receipts')!r}",
+    )
+
+    # The text-format default output (no --format flag — the invocation
+    # docs/dev/README.md documents) embeds the header as its first line;
+    # declared_receipts must be visible there too, not only under
+    # --format json. A single default-only run cannot discriminate render_text
+    # from render_text's own output shape leaking a header key: if the
+    # loader's default changed to json, the whole output would collapse to a
+    # single-line JSON document that still carries declared_receipts, and
+    # splitlines()[0] would still parse. Comparing the no-flag run against an
+    # explicit --format text run on the same fixture closes that gap — the
+    # two only match when the no-flag path actually goes through
+    # render_text().
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../kernel.md", '
+        '"trigger": "example", "receipt": "text_format_receipt"}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    text_format = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(text_format.returncode == 0, text_format.stderr)
+    explicit_text_format = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+            "--format",
+            "text",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(explicit_text_format.returncode == 0, explicit_text_format.stderr)
+    require(
+        text_format.stdout == explicit_text_format.stdout,
+        "the no-flag default output diverged from an explicit --format text "
+        "run on the same fixture, so the default is not provably rendered by "
+        f"render_text(): {text_format.stdout[:80]!r} vs "
+        f"{explicit_text_format.stdout[:80]!r}",
+    )
+    header_line = text_format.stdout.splitlines()[0]
+    header_document = json.loads(header_line)
+    require(
+        header_document.get("declared_receipts") == ["text_format_receipt"],
+        "text-format default output's header line did not carry "
+        f"declared_receipts: {header_document.get('declared_receipts')!r}",
+    )
+
 print("profile contract loader test: PASS")
