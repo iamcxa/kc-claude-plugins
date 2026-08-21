@@ -55,6 +55,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:k69wjs5ttme3z11hph3sy45d:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:k69wjs5ttme3z11hph3sy45d-validation-1
+              briefing:
+                id: briefing:k69wjs5ttme3z11hph3sy45d:validation:attempt-1:revision-1
+                digest: sha256:29a72bc3154e8764e4c6977e3549992c582732bc1017ea125a197d7b423f7dcc
+                request-digest: sha256:16dd612dc3c290d931235d7d33e5e046a0a14f7010d9c209a392691a3713df92
+                room-ref: ./declared-receipts-need-a-reader/review/validation/briefing-1
 ---
 
 ## Problem

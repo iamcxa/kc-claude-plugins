@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k69wjs5ttme3z11hph3sy45d:validation:attempt-1:revision-1",
+  "question": "Approve verify-deliver at f351f440 (Draft PR #264, stacked on #262), leaving mark-ready and merge as your decisions?",
+  "artifacts": [
+    {
+      "id": "artifact:k69wjs5ttme3z11hph3sy45d:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a31a44026df7d89be9c7af19125db26b46735a0c/declared-receipts-need-a-reader.md",
+      "rev": "sha256:97b5f8d286eeca2e63af9896305cd2e5334a5c743ad60a5cb2b01b6c31491b1e",
+      "mediaType": "text/markdown",
+      "summary": "One-file prose edit, verbatim against the accepted outcome, loader and both vendored copies untouched, no standing grep committed. Check 1 was proven by a positive/negative pair on the same real work item and contracts: this branch's loader emits declared_receipts, origin/main's has no such key. PR #264 is Draft, based on #262's branch because the change cannot function without it."
+    }
+  ]
+}
