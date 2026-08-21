@@ -54,13 +54,14 @@ kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
 `incident`, or `codify`.
 
+Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
+a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
+itself the finding** — see Step 2.
+
 `codify` rows catch the user asking for something to become standing behaviour — "from now on",
 「以後都」、「寫進規則」. Each one has two ways to fail, and the second is the reason this audit
 usually gets started: never written into the rule file at all, or written and never firing. Check
 both against the actual file before reporting either.
-Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
-a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
-itself the finding** — see Step 2.
 
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
@@ -74,8 +75,8 @@ When the previous run used the same window and the same patterns, the report end
 since it, and says so when nothing did. When either changed, it refuses to compare and says why:
 a delta against a different question is worse than no delta.
 
-Counts are for comparing runs, not for quoting as truth. The script writes every matched human
-turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.
+Counts are for comparing runs, not for quoting as truth. Every matched human turn is written to
+`human-turns.tsv` in the run directory; read the hits before you believe a number.
 
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
@@ -169,6 +170,33 @@ So:
   proposing a different seat, and the proposal has to say which incidents it is answering.
 - **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
   to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
+
+## Remedies already measured
+
+Most rules this audit proposes are written fresh from the user's own accepted repair. A few have
+been measured well enough to offer as a known text, and those are listed here. Offer one only when
+its friction category actually shows up — an unprompted remedy is a rule with no failure behind it,
+which is the thing this audit exists to remove.
+
+### Close-out block — for the `status pull` category
+
+When the friction is the user asking what is left, whether a thread can be closed, or whose move it
+is, the remedy is a required field at the end of any reply that ends a unit of work:
+
+```
+剩餘:   …
+下一步: …（你／我）
+可收線: 是／否／未確認
+```
+
+Three things make it work, and dropping any of them breaks it:
+
+- **A fenced block, never inline backticks.** A long inline span wraps into broken fragments in a terminal.
+- **`可收線: 是` only after checking** — working tree, open PRs, task state. Unchecked means `未確認`. A wrong `是` closes a session that still has live work, and that is the expensive failure; the other two fields cost nothing when wrong.
+- **It replaces the empty closer**, it does not sit above one. "需要我繼續嗎？" is what it is there to delete.
+
+It is measurable, which is why it is here: `可收線` is a literal string, so a later run can count it
+as a `firing` row and show whether it is actually being emitted.
 
 ## Step 4 — Decide, one at a time
 
