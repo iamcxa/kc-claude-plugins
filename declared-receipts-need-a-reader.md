@@ -94,6 +94,17 @@ gates:
                 digest: sha256:0028f8c278b631d8b1f6a31e66fc90b6a91482a9248d229c66f7bed8fac3d0e9
                 request-digest: sha256:7eb0324ce4a98c1a5ea84ebb1b06e738dc77e71db5fc1db75aa804432236c7cd
                 room-ref: ./declared-receipts-need-a-reader/review/release/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k69wjs5ttme3z11hph3sy45d:release:1
+                briefing: briefing:k69wjs5ttme3z11hph3sy45d:release:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-08-21T08:33:54.30975Z"
+                decision: approve
+                reason: 'NOT A RELEASE VERDICT. No release review was performed and none is owed: this item is pilot-product-slice, whose route is ideation -> implementation -> validation -> done, and the profile loader refuses the release stage for it. This record exists solely because gate consume advances along the declared graph and cannot skip a stage outside an item''s route, so the terminal approval targeting done could not otherwise exist. Recorded by the FO under the Captain''s explicit grant, quoted verbatim: ''按你建議'', given in this conversation in reply to the FO''s five-step proposal that named this exact transition and its actor. The loader had already computed next_workflow_stage: done for this item at validation; nothing reads that field. Defect filed as profile-routes-are-graph-differences (8x38b1qryjrmy5w4ffk1egy1). The evidence that actually supports terminalization is the verify-deliver gate approved at f351f440, not this transition.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
