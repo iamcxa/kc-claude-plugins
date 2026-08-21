@@ -74,8 +74,34 @@ done < "$WORK/sessions.txt" | sort > "$WORK/all-user.txt"
 # The dispatch-prompt filter is deliberately narrow: an earlier version dropped
 # anything opening with "You are", which also deletes a real correction like
 # "You are still ignoring the comment rule".
-grep -avE '<system-reminder>|<task-notification>|<system_instruction>|<command-name>|<local-command-stdout>|tool_use_id|Review this change for security vulnerabilities|^[^\t]*\t[^\t]*\t(You are (a|an|the|Claude|Codex|Gemini|GPT)|Respond with exactly)' \
-  "$WORK/all-user.txt" | grep -v $'\t-private-tmp-' > "$WORK/human.txt"
+# Decided on the text field itself. An earlier version anchored a whole-line regex
+# across two tab-separated fields to reach the text, and dispatch prompts kept
+# surviving it in real data even though the same pattern dropped them in isolation;
+# awk on $3 removes the guesswork about where the field starts.
+cat > "$WORK/drop.awk" <<'AWK'
+function agent_wrote(body) {
+  if (body ~ /<system-reminder>|<task-notification>|<system_instruction>/) return 1
+  if (body ~ /<command-name>|<local-command-stdout>|tool_use_id/) return 1
+  if (body ~ /^Review this change for security vulnerabilities/) return 1
+  if (body ~ /^Respond with exactly/) return 1
+  # Narrow on purpose: "You are still ignoring the comment rule" is a real correction,
+  # while "You are a read-only reviewer" is a prompt the agent wrote for its own worker.
+  # No \y here — this awk does not have it, and an unsupported escape makes the whole
+  # rule silently never match.
+  if (body ~ /^You are (a|an|the|Claude|Codex|Gemini|GPT)( |$)/) return 1
+  if (body ~ /^You are [a-z]+ing /) return 1
+  return 0
+}
+AWK
+
+{ cat "$WORK/drop.awk"; echo '$1 ~ /-private-tmp-/ { next } $3=="assistant" || !agent_wrote($5)'; } > "$WORK/stream-filter.awk"
+{ cat "$WORK/drop.awk"; cat <<'AWK'
+  $2 ~ /-private-tmp-/ { next }
+  { if (agent_wrote($3)) next; print }
+AWK
+} > "$WORK/human-filter.awk"
+
+awk -F'\t' -f "$WORK/human-filter.awk" "$WORK/all-user.txt" > "$WORK/human.txt"
 
 # Assistant prose AND tool calls. A rule whose only marker is "you must read
 # file X" leaves no trace in prose, so counting text alone scores it zero.
@@ -96,6 +122,7 @@ done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
 while IFS= read -r f; do
   jq -r --arg SINCE "$SINCE" --arg SID "$f" '
     select(.type=="user" or .type=="assistant") | select((.timestamp // "") >= $SINCE)
+    | select((.isMeta // false) | not)
     | . as $r | (.message.content) as $c
     | (if ($c|type)=="string" then $c
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
@@ -109,7 +136,8 @@ while IFS= read -r f; do
 # by time alone interleaves parallel sessions, and the turn "before" a user turn then
 # comes from one they were not reading. Do not reach for -t/-k here — `-t'\t'` passes a
 # literal backslash-t to sort, which silently stops keying on the field at all.
-done < "$WORK/sessions.txt" | sort > "$WORK/stream.txt"
+done < "$WORK/sessions.txt" | sort \
+  | awk -F'\t' -f "$WORK/stream-filter.awk" > "$WORK/stream.txt"
 
 HUMAN=$(wc -l < "$WORK/human.txt" | tr -d ' ')
 ASST=$(wc -l < "$WORK/assistant.txt" | tr -d ' ')
