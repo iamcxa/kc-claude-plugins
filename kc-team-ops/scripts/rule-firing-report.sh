@@ -75,6 +75,21 @@ while IFS= read -r f; do
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
 
+# Chronological user+assistant stream. An incident turn is unreadable without the
+# assistant turn before it: "I fixed it myself" means one thing after silence and
+# another after the agent offered to do it and stopped.
+while IFS= read -r f; do
+  jq -r --arg SINCE "$SINCE" '
+    select(.type=="user" or .type=="assistant") | select((.timestamp // "") >= $SINCE)
+    | . as $r | (.message.content) as $c
+    | (if ($c|type)=="string" then $c
+       elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
+       else "" end) as $t
+    | select(($t|length) > 0)
+    | "\(.timestamp)\t\($r.type)\t\($t | gsub("\n"; " ") | .[0:600])"
+  ' "$f" 2>/dev/null
+done < "$WORK/sessions.txt" | sort > "$WORK/stream.txt"
+
 HUMAN=$(wc -l < "$WORK/human.txt" | tr -d ' ')
 ASST=$(wc -l < "$WORK/assistant.txt" | tr -d ' ')
 
@@ -89,8 +104,8 @@ friction	status pull	還剩|可以收|下一步|回報|現況|what.s left|status
 friction	prior-art miss	上游|重複|既有|沒看|already exists|upstream
 friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
 incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
-incident	user did it themselves	我自己(做|改|弄|處理)|我先(做|改)了|我已經(自己|先)|I did it myself|I went ahead and
-incident	loss or recovery	救回|掉了|壞了|覆蓋掉|掃掉|lost work|had to recover|overwrote
+incident	user took it over	我(自己|先|去)?(做|改|弄|處理|修|部署|合)(好|完|了)|我已經(自己|先)|I fixed it|I did it myself|I went ahead and|I had to do it
+incident	loss or recovery	救回|覆蓋掉|掃掉|had to recover|overwrote|clobber
 TSV
 fi
 
@@ -139,6 +154,21 @@ while IFS=$'\t' read -r kind label re; do
   printf '%-26s %6s\n' "$label" "$(count_turns "$WORK/human.txt" "$re")"
 done < "$PATTERNS"
 [ "$INC" = 1 ] || printf '%s\n' "(none declared)"
+if [ "$INC" = 1 ]; then
+  : > ./rule-review-incidents.txt
+  while IFS=$'\t' read -r kind label re; do
+    [ "$kind" = "incident" ] || continue
+    awk -F'\t' -v RE="$re" -v LABEL="$label" '
+      $2=="assistant" { prev=$3 }
+      $2=="user" && tolower($3) ~ tolower(RE) {
+        print "--- " LABEL " @ " $1
+        print "  BEFORE (agent): " (prev=="" ? "(nothing)" : substr(prev,1,300))
+        print "  THEN  (user):   " substr($3,1,300)
+        print ""
+      }' "$WORK/stream.txt" >> ./rule-review-incidents.txt
+  done < "$PATTERNS"
+  printf 'matched incidents with the turn before them: ./rule-review-incidents.txt\n'
+fi
 printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \
   "      user never corrected you, because you never gave them anything to correct." \
   "      Read every hit. Normal division of labour looks identical to a blind spot here."

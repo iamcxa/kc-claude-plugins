@@ -70,9 +70,23 @@ Never label Claude firing counts as Codex behavior.
 Separate them by asking what the world looks like if the rule is gone, not by counting.
 
 **A third case the two columns cannot show.** Zero friction, zero firing, *and* incidents against
-that subject means no rule was ever violated because none was ever offered — the user simply did
-that work alone. That is a blind spot, and it is the one thing in this audit the friction column
-is structurally blind to: the user never corrected you, because you gave them nothing to correct.
+that subject can mean no rule was ever violated because none was ever offered — the user simply did
+that work alone. The friction column is structurally blind to this: the user never corrected you,
+because you gave them nothing to correct.
+
+**An incident is a candidate, not a verdict.** Read each one in `rule-review-incidents.txt` with the
+assistant turn printed above it, and classify it before it counts:
+
+| The turn before it shows | Classification | Remedy |
+|---|---|---|
+| nothing on the subject | **blind spot** | a rule, and possibly a different seat |
+| the user's own standing authority | **normal division of labour** | none; drop it |
+| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a seat |
+| you lacking the access or the tool | **capability limit** | fix the access; a rule changes nothing |
+
+Only the first row may be used as evidence for changing a seat. The third is the one most easily
+mistaken for the first, and it is the one where a seat change does the most damage: it renames the
+agent instead of making it finish.
 
 ## Step 3 — Check for an owner before deleting
 
@@ -101,9 +115,10 @@ work.
 **The seat is for the person, not the agent.** Measured across sixteen isolated runs and four seats
 on two task shapes, the seat did not change what the agent recommended — the task shape decided
 that every time. One dimension separated cleanly: how often the reply named who owns a thread,
-Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. So a seat shifts attention at
-the margin and nothing else. What it does well is give the user one handle for a dozen rules, which
-is how they decide what belongs in the set and what does not.
+Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. That is one dimension on one
+pair of fixtures — enough to say a seat can move what gets mentioned, not enough to say what else it
+does or does not move. What a seat reliably does is give the user one handle for a dozen rules,
+which is how they decide what belongs in the set and what does not.
 
 So:
 
