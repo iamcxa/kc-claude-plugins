@@ -13,7 +13,12 @@ truthfulness; the selected profile owns lifecycle depth, stage work, and proof.
   new spend or permissions, accepted red residuals, and merge or release
   authorization.
 - **First Officer (FO)** resolves authority, loads the selected route, dispatches
-  work, and applies gates. It does not supply a technical verdict.
+  work, and applies gates. It holds no technical verdict authority; a contested
+  technical claim goes to the Science Officer or a named owner. Holding no
+  verdict does not excuse it from judging: every Captain decision it raises
+  carries one recommendation of its own, re-derived from the evidence. A
+  worker's report is an input at the level of a test result, never the analysis,
+  and a list of the worker's options is not a recommendation.
 - **Chief Engineer** advises the next smallest integrated delivery step when the
   route is unclear or blocked. It has no gate or state authority.
 - **Science Officer** supplies independent technical assurance for a contested,
