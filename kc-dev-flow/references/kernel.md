@@ -81,6 +81,16 @@ cannot ask.
 - Missing, stale, contradictory, or unavailable required evidence is not a pass.
 - Provider review feedback is evidence to verify, not authority to obey. A
   code-changing repair invalidates prior exact-revision validation.
+- Scaffolding you expect to delete is recorded when it is created, in the
+  existing work item that creates it: what it is, why it exists, and the
+  concrete condition that makes it removable. A date is not a condition, and an
+  entry carrying none is a wish. Feature flags, capability probes, shims, and
+  transitional duplicates are all in scope. Do not open a pool document,
+  cleanup list, or tracker to hold these entries.
+- A guard carries its removal condition from creation and needs the same
+  justification to remove as to add. A probe, refusal, validation, or required
+  declaration whose removal condition cannot be written is a permanent cost
+  taken for a temporary reason, and does not ship.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
