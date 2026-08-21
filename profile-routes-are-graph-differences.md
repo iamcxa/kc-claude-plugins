@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: validation
+status: release
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
@@ -74,7 +74,7 @@ gates:
                 reason: 'Captain approved validation at 3ad3725a. All four items were independently reproduced rather than read from the implementer''s transcript: the RED was recreated with a standalone script against the pre-fix loader, all six route-string copies were mutation-tested one at a time with each guarding check seen to fail on its own distinct message (6/6, none unverified), the release-authorization limits were re-probed against a fresh fixture and match the entity''s claims exactly, and the contract test''s sole failure is the pre-existing sibling casing bug reproducing identically on the merge base. The lost second review ceremony is accepted as a named residual, not a closed item. FO observation carried forward: the six new enforcement points are reachable in CI, where the sibling test skips for want of a spacedock binary, but are blocked locally by that test''s fail-fast failure — which promotes spacedock-route-test-passes-nowhere from an incidental find to a blocker on half this work''s local effect.'
               application:
                 target-stage: release
-                state: pending
+                state: consumed
 ---
 
 ## Problem
