@@ -119,6 +119,32 @@ for shape, not as a selection.
 
 ## Work profile receipt
 
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: production
+  recommended: production
+  basis: "Any fix touches the ROUTES table or the profile stage contracts, which external repositories consume at a pinned release tag. Changing which stages a profile has is a compatibility event for every adopter whose workflow graph mirrors the current routes, so it carries migration, rollback and announcement obligations."
+  route: [shape, build, verify, release]
+  obligations:
+    architecture:
+      - "Do not require the workflow runtime to skip a stage. The Captain ruled that the wrong ask: traversal that depends on data inside an entity body stops being a graph the runtime can reason about, and gates, invariants and mod-blocks all key off stages."
+      - "Stop expressing profile differences as graph differences, rather than reconciling two graphs at runtime. If a difference must survive, it belongs in what happens inside a stage or in which gates fire, not in which states exist."
+      - "Preserve Production's release authorization as a decision rendered separately from verification. Collapsing the states must not collapse the two rulings."
+    implementation:
+      - "A POC item and a Pilot item must each reach `done` without any recorded no-op transition through a stage their route excludes."
+      - "Name the migration for adopters whose committed workflow graph already contains the stages this changes, including what an in-flight item at an affected stage does."
+    testing:
+      - "A check that FAILS today: drive a POC item and a Pilot item to their terminal state and assert no gate record exists at a stage outside their route. The current tree must go red on it before the fix, or the check is not measuring the defect."
+      - "A check that fails when the loader's `next_workflow_stage` disagrees with the stage the runtime would advance to, so the two can never silently diverge again."
+  scope_boundary: "Excludes a Spacedock skip-stage capability, excludes any FO-side manual nudge that leaves the graph and the routes disagreeing, and excludes broadening or narrowing what work each profile performs."
+  promote_when:
+    - "Already Production; no higher profile exists. Stop and obtain a new Captain choice if the accepted scope grows to changing which work a profile performs rather than which states it occupies."
+  decision:
+    authority: person:captain
+    at: 2026-08-21T08:46:29Z
+```
+
 ## Accepted outcome and non-goals
 
 ## Acceptance evidence
