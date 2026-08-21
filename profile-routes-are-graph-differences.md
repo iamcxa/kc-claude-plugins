@@ -44,6 +44,17 @@ gates:
                 digest: sha256:7a04bf343bec13c50b9054e8109ce64bfd84696657049d70407e4920a421b1dd
                 request-digest: sha256:3808eb2e350c12f10715bf47683125d67a0b6a6e6765a71e1e2a1b9d75ad377c
                 room-ref: ./profile-routes-are-graph-differences/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:ideation:1
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-21T09:34:07.272997Z"
+                decision: approve
+                reason: 'Captain approved Direction 1. The shape drove the real 0.27.0-pre8 CLI rather than reading docs: Fixture A reproduces the production failure red on demand through the full gate lifecycle with no forced status writes, and Fixture B shows a terminal-target approval leaves status put while merge guard terminalizes, so the fix asks nothing new of the runtime — a claim the FO independently corroborated against its own first-hand observations of #262 and #264 today. Direction 2 was rejected by citing the receipt''s own architecture obligation. Every changed file is named and the adopter migration is concrete. Approved with the FO residual carried forward as something implementation must answer with a mechanism: after the demotion, Production''s release authorization rests only on a prose obligation binding whoever types merge guard --verdict, which would collapse the two rulings the receipt''s architecture obligation requires be kept separate.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Problem
