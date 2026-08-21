@@ -87,14 +87,19 @@ friction	rephrase demand	換句話說|太長|簡單一點|簡報|精簡|rephrase
 friction	undefined term	是什麼|什麼意思|是指什麼|哪來的|what is this|what do you mean
 friction	status pull	還剩|可以收|下一步|回報|現況|what.s left|status\?
 friction	prior-art miss	上游|重複|既有|沒看|already exists|upstream
-friction	size complaint	loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
+friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
 TSV
 fi
 
 # -e guards a pattern that starts with `-`, which grep would otherwise read as a
-# flag. -o counts occurrences, not lines, so two markers on one line count twice.
-# grep exits 1 on no match, hence the `|| true`.
-count() { local n; n=$(grep -oiE -e "$2" "$1" 2>/dev/null | wc -l) || true; echo "$(( ${n:-0} ))"; }
+# flag. grep exits 1 on no match, hence the `|| true`.
+#
+# Two counters, because the two halves ask different questions. Friction asks how
+# many turns the user spent repairing you, so it counts turns; counting occurrences
+# there once produced a 122%-of-turns row. Firing asks how many times a marker was
+# emitted, so it counts occurrences and sees both markers on a shared line.
+count_turns() { local n; n=$(grep -ciE -e "$2" "$1" 2>/dev/null) || true; echo "$(( ${n:-0} ))"; }
+count_hits()  { local n; n=$(grep -oiE -e "$2" "$1" 2>/dev/null | wc -l) || true; echo "$(( ${n:-0} ))"; }
 
 printf '\n%s\n' "=== volume since $SINCE ==="
 printf '%-26s %s\n' "sessions"            "$SESSIONS"
@@ -106,7 +111,7 @@ printf '\n%s\n' "=== friction: how often the user repaired you ==="
 printf '%-26s %6s  %s\n' "CATEGORY" "COUNT" "SHARE OF HUMAN TURNS"
 while IFS=$'\t' read -r kind label re; do
   [ "$kind" = "friction" ] || continue
-  n=$(count "$WORK/human.txt" "$re")
+  n=$(count_turns "$WORK/human.txt" "$re")
   printf '%-26s %6s  %s%%\n' "$label" "$n" "$(( HUMAN ? n * 100 / HUMAN : 0 ))"
 done < "$PATTERNS"
 
@@ -115,7 +120,7 @@ FIRED=0
 while IFS=$'\t' read -r kind label re; do
   [ "$kind" = "firing" ] || continue
   FIRED=1
-  printf '%-26s %6s\n' "$label" "$(count "$WORK/assistant.txt" "$re")"
+  printf '%-26s %6s\n' "$label" "$(count_hits "$WORK/assistant.txt" "$re")"
 done < "$PATTERNS"
 [ "$FIRED" = 1 ] || printf '%s\n' \
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
