@@ -189,12 +189,13 @@ Next:      … (you / me)
 Closable:  yes / no / unverified
 ```
 
-Four things make it work, and dropping any of them breaks it:
+Five things make it work, and dropping any of them breaks it:
 
 - **A fenced block, never inline backticks.** A long inline span wraps into broken fragments in a terminal.
 - **`Closable: yes` only after checking** — working tree, open PRs, task state. Unchecked is `unverified`. A wrong `yes` ends a session that still has live work, and that is the expensive failure; the other two fields cost nothing when wrong.
 - **It replaces the empty closer**, it does not sit above one. "Want me to continue?" is what it exists to delete.
-- **Write the labels in the language the user is being answered in**, and fix them once. The block is only measurable because the closable label is a literal string, so it has to be the same string every time — whichever wording is chosen becomes the `firing` pattern for the next run, and changing it later silently zeroes that row.
+- **Write the labels in the language the reply is in.** The block is read every turn by someone whose comprehension cost is the thing it exists to lower; an English label at the end of an otherwise Chinese answer taxes that every time. The template above is the English wording, not a requirement to use English.
+- **Enumerate the wordings, do not fix the language.** What breaks measurement is unbounded variation, not translation: a `firing` pattern is a regex, so `可收線|Closable` costs one alternation and covers both. Settle on one wording per language and add every one of them to the pattern — a synonym invented later is what silently zeroes the row.
 
 ## Step 4 — Decide, one at a time
 
