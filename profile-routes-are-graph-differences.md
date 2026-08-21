@@ -24,6 +24,17 @@ gates:
                 digest: sha256:2a61477e12e737f5b82ec15c384a84b1aab3d3bf5859c30a879f9659d7ddc1d1
                 request-digest: sha256:daee347373ac8139866e8c03b4eca2c5e4f0a1a3cf0eabb58e58f4abe3e7f2e1
                 room-ref: ./profile-routes-are-graph-differences/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:backlog:1
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-21T08:46:04.874207Z"
+                decision: approve
+                reason: 'Captain approved scheduling with the Production work profile, calling this an evident defect. It is an observed failure: the first Pilot item this workflow ran could not reach done and needed a recorded no-op transition to terminalize. Production because any fix touches the ROUTES table or the profile contracts, which external adopters consume at a pinned tag and which carry compatibility obligations. The Captain accepted that the accepted outcome may be a design decision rather than a diff, and had already ruled out asking Spacedock for a skip-stage capability.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem
