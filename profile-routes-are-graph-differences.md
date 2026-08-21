@@ -75,6 +75,15 @@ gates:
               application:
                 target-stage: release
                 state: consumed
+        - id: gate:8x38b1qryjrmy5w4ffk1egy1:release
+          stage: release
+          attempts:
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-release-1
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-1:revision-1
+                digest: sha256:a888c5a62d2512316dc544cb0607ac6eb173b8baccad439d122ddb195575baff
+                request-digest: sha256:c33d3e99e49705f28ae42ab8cd96c92f2e823e38dff8cf553dd1f278fd246e16
+                room-ref: ./profile-routes-are-graph-differences/review/release/briefing-1
 ---
 
 ## Problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-1:revision-1",
+  "question": "Approve release readiness at b3b0e2ed (Draft PR #276 to main), and rule on the base: keep trunk, or stack on the 4-deep open PR chain the contract's literal test would require?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:release:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/dc8f1d87eb7b1ed65fa9c840272e92fc3f014521/profile-routes-are-graph-differences.md",
+      "rev": "sha256:9eda3c5a86bb09c1284711515bdfb6549fbc5c072f1a785801fe4d8a0b468e32",
+      "mediaType": "text/markdown",
+      "summary": "Single commit rebased onto current origin/main with --onto after confirming the branch carried one commit; both suites re-run on the rebased revision. PR #276 is Draft, targets main, 15 files, MERGEABLE/CLEAN, checks green. FO finding: delivery-branch-base.md's trunk clause requires 'no shared file', and this candidate does share kernel.md and choose-work-profile/SKILL.md with the open stack #267 -\u003e #271 -\u003e #272 -\u003e #275. The worker applied the stacked clause's lineage test instead and targeted trunk. The two tests disagree."
+    }
+  ]
+}
