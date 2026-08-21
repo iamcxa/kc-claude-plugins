@@ -12,6 +12,18 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:k69wjs5ttme3z11hph3sy45d:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:k69wjs5ttme3z11hph3sy45d-backlog-1
+              briefing:
+                id: briefing:k69wjs5ttme3z11hph3sy45d:backlog:attempt-1:revision-1
+                digest: sha256:3a819626edd78e0af363c7505c85917b0a412b12425b73720ccfa7903d155150
+                request-digest: sha256:442ee4660c5f499688d44ea995dcbaeb5e470769933ce0787495eebc7d514fac
+                room-ref: ./declared-receipts-need-a-reader/review/backlog/briefing-1
 ---
 
 ## Problem

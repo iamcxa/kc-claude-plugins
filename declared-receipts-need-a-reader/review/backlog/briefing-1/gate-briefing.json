@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k69wjs5ttme3z11hph3sy45d:backlog:attempt-1:revision-1",
+  "question": "Schedule this task, select the Pilot work profile, and accept a stacked delivery base on PR #262's branch rather than trunk?",
+  "artifacts": [
+    {
+      "id": "artifact:k69wjs5ttme3z11hph3sy45d:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/383a4812e56e6d9999063490780c3348725d0052/declared-receipts-need-a-reader.md",
+      "rev": "sha256:b29cb3f3a5fc67ab2ebf1d2d7f9d74d69c23148996a46ad8e4c97b9e5ec5aa17",
+      "mediaType": "text/markdown",
+      "summary": "Ship the first reader for declared_receipts before the emitted field repeats the defect it was added to answer. The seed already fixes the verification boundary: prove the loader's list reaches the skill's documented invocation and that the instruction reads it; do not attempt to measure the prose's effect on agent behaviour. Recommend Pilot, not Production, and a stacked base on PR #262."
+    }
+  ]
+}
