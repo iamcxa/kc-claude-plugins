@@ -118,6 +118,17 @@ gates:
                 digest: sha256:d0a40e11d73d8ffc78f8afb3196336bc98159291f960aff2062168b707bc755e
                 request-digest: sha256:ee01f6c5032cf26cc539c4e608af2242a2e6ea12b73e1464982bde2993e93b76
                 room-ref: ./declared-receipt-has-no-reader/review/release/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:release:2
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:release:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-21T07:20:53.341207Z"
+                decision: approve
+                reason: 'Captain approved release readiness at delivery revision 10edd0a4, second attempt after the first approval was superseded by cross-model findings. No rebase needed: origin/main..HEAD is exactly the three candidate commits and PR #262 is MERGEABLE/CLEAN at that head with checks green despite origin/main advancing independently. PR body rewritten to carry both correction rounds, the six mutants each falsifiable claim was seen RED against, the four claims standing on code inspection with no automated check, and both unchanged residuals. Still Draft, no version or marketplace edit. Mark-ready and merge remain the Captain''s actions.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
