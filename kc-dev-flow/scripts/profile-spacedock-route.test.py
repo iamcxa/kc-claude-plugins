@@ -88,12 +88,10 @@ work_profile:
             f"{profile} validation -> done failed:\n{result.stdout}{result.stderr}",
         )
         updated = entity.read_text(encoding="utf-8")
-        # Spacedock canonicalises conventional frontmatter values on every write,
-        # so the CLI's `verdict=passed` is stored as its schema case, `PASSED`.
-        # Its read side is deliberately case-insensitive -- an enum fixes which
-        # token was chosen, not its casing -- and entities written before that
-        # canonicalisation still carry the lowercase form. Compare the same way,
-        # so this smoke does not pin a casing neither side promises.
+        # This write may store `PASSED`: the observed Spacedock canonicalises the
+        # CLI's `verdict=passed` to its schema case. The smoke checks that the
+        # entity terminalized, not how the value was serialized, so compare
+        # case-insensitively.
         require(
             "status: done" in updated
             and "verdict: passed" in updated.lower()

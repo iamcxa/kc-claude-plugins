@@ -39,7 +39,8 @@ policy, rollout, and release boundary.
 
 ## Required output
 
-- accepted journey, constraints, non-goals, and exact owners;
+- accepted journey, constraints, non-goals, exact owners, and the observable
+  semantics this work may change;
 - applicable lifecycle and specialist-risk obligations;
 - rollback or forward-recovery policy;
 - falsifiable acceptance and release checks;
@@ -51,48 +52,41 @@ irreversibility, and accepted residual risk to the Captain.
 
 ## Journey statement
 
-The accepted journey is a step-by-step account of what a person does and what
-happens behind each step, in the order it happens. Three rules bind it:
+The accepted journey records each actor or runtime component's action and the
+resulting behaviour, in the order it happens. Three rules bind it:
 
 - **Mark every step OBSERVED or DESIGNED.** Observed means someone watched it run
-  on the real components. Designed means written and not yet exercised. A
-  demonstrated step and a designed step must not read alike.
-- **Name programs, not roles.** Say which process acts, and which file or stream
-  carries the fact. "The caller" and "the client" hide the seam that breaks.
+  on the real components. Designed means written and not yet exercised.
+- **Name the acting program, not a role.** Say which process acts and which file
+  or stream carries the fact.
 - **Describe the unhappy paths in the same terms as the happy one.** Abandonment,
-  no answer, death, timeout. A journey that describes only success hides the risk
-  surface it was written to expose.
+  no answer, death, timeout.
 
 Declare alongside it the observable semantics this work may change — command
-grammar, stored formats, authority, runtime behaviour. A small diff that changes
-an undeclared semantic is a boundary breach, and a size signal cannot catch it.
+grammar, stored formats, authority, runtime behaviour — or state that it changes
+none.
 
 ## Where it touches
 
 Name the files this work changes as a table of path, lines now, and lines after.
-It answers where, not how big, so the Captain reads the blast radius without
-reading the reasoning behind it.
+It answers where, not how big.
 
-Build it from sites counted in the current tree — an opened file, a resolved
-reference — rather than from an impression of the work. A count carried over
-from a sibling work item or from a reviewer's remark is a lower bound until this
-item confirms it.
+`lines now` is counted in the current tree — an opened file, a resolved
+reference. `lines after` is this item's estimate. Mark a count inherited from a
+sibling item or a reviewer's remark unverified until checked against the current
+tree.
 
 The table is diagnostic and holds no gate; the shared core already fixes that
-LOC and file counts are diagnostic signals, never pass/fail gates. What it makes
-askable is a file that appears here and nowhere in the journey, or a file the
-journey depends on and this table omits. It is also where the stop numbers below
-come from.
+LOC and file counts are diagnostic signals, never pass/fail gates. Reconcile it
+against the journey in both directions, and take the stop numbers below from
+it.
 
 ## Stop numbers
 
 Name the counts at which implementation stops and reports rather than
-continuing: a total, a file count, and a trip point for the area most likely to
-run away. Take them from the `where it touches` table, so they rest on counted
-sites rather than on a feel for the work.
+continuing, each with its metric and the base it is measured against: changed
+files, changed lines, and one named area most likely to run away. Take them from
+the `where it touches` table.
 
-They are stop conditions, not budgets. Without an expected count on record
-nothing about the work can look wrong — a change several times its expected
-size reads exactly like one that landed as shaped, because nobody wrote down
-which was expected. The shared core fixes what a crossing does: stop, record the
-observed count against the threshold, and hand back to the First Officer.
+They are stop conditions, not budgets. The shared core fixes what a crossing
+does and who resumes the work.

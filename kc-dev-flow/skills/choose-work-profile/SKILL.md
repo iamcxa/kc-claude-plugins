@@ -33,16 +33,16 @@ operation, broad exposure, SLO/support duty, or release/rollback ownership.
 
 Check the shared core's `backlog` exit bar in the same read. The work item must
 already state what it is and why it is worth doing, in the form that core
-requires for the profile under consideration. When a part is missing, spend the
-clarifying question on it before anything else, because the profile choice rests
-on the answer. In a non-interactive worker, return `NEEDS_PROFILE_DECISION` and
-name the missing part; do not supply it.
+requires for the profile under consideration. A missing part is a missing fact:
+carry it into the question below rather than supplying it.
 
 Derive a recommendation from the task. Ask one clarifying question only when one
-missing fact could change it. State the task-specific difference in architecture,
+missing fact — an incomplete exit bar included — could change the choice or
+leave the item unready to leave `backlog`. State the task-specific difference in architecture,
 implementation, testing, stages, and delivery. Use the host's best structured
 Ask UI when available; plain chat is the fallback. In a non-interactive worker,
-return `NEEDS_PROFILE_DECISION` instead of selecting automatically.
+return `NEEDS_PROFILE_DECISION` and name the missing fact; never select
+automatically and never supply the missing part.
 
 ## Return the candidate receipt
 
