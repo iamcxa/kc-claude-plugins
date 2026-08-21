@@ -41,7 +41,8 @@ smallest maintainable slice.
 
 - one accepted journey and explicit non-goals;
 - persistence, recovery, and data-safety boundaries;
-- task-specific acceptance checks able to falsify the slice.
+- task-specific acceptance checks able to falsify the slice;
+- a file-level `where it touches` table.
 
 Stop when one implementation route is sufficient. Do not design for broad scale
 or production operations.
@@ -63,3 +64,19 @@ happens behind each step, in the order it happens. Three rules bind it:
 Declare alongside it the observable semantics this work may change — command
 grammar, stored formats, authority, runtime behaviour. A small diff that changes
 an undeclared semantic is a boundary breach, and a size signal cannot catch it.
+
+## Where it touches
+
+Name the files this work changes as a table of path, lines now, and lines after.
+It answers where, not how big, so the Captain reads the blast radius without
+reading the reasoning behind it.
+
+Build it from sites counted in the current tree — an opened file, a resolved
+reference — rather than from an impression of the work. A count carried over
+from a sibling work item or from a reviewer's remark is a lower bound until this
+item confirms it.
+
+The table is diagnostic and holds no gate; the shared core already fixes that
+LOC and file counts are diagnostic signals, never pass/fail gates. What it makes
+askable is a file that appears here and nowhere in the journey, or a file the
+journey depends on and this table omits.
