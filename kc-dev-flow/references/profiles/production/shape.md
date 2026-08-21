@@ -43,7 +43,8 @@ policy, rollout, and release boundary.
 - applicable lifecycle and specialist-risk obligations;
 - rollback or forward-recovery policy;
 - falsifiable acceptance and release checks;
-- a file-level `where it touches` table.
+- a file-level `where it touches` table;
+- the stop numbers implementation halts on.
 
 Stop when the smallest operable route is decision-ready. Escalate scope,
 irreversibility, and accepted residual risk to the Captain.
@@ -77,7 +78,20 @@ reference — rather than from an impression of the work. A count carried over
 from a sibling work item or from a reviewer's remark is a lower bound until this
 item confirms it.
 
-The table is diagnostic and holds no gate; the shared core already fixes that
-LOC and file counts are diagnostic signals, never pass/fail gates. What it makes
-askable is a file that appears here and nowhere in the journey, or a file the
-journey depends on and this table omits.
+The table holds no gate: the shared core fixes that a count neither passes nor
+fails the work. It does two things instead — it makes askable a file that
+appears here and nowhere in the journey, or a file the journey depends on and
+this table omits, and it is where the stop numbers below come from.
+
+## Stop numbers
+
+Name the counts at which implementation stops and reports rather than
+continuing: a total, a file count, and a trip point for the area most likely to
+run away. Take them from the `where it touches` table, so they rest on counted
+sites rather than on a feel for the work.
+
+They are stop conditions, not budgets. Without an expected count on record
+nothing about the work can look wrong — a change several times its expected
+size reads exactly like one that landed as shaped, because nobody wrote down
+which was expected. The shared core fixes what a crossing does: stop, record the
+observed count against the threshold, and hand back to the First Officer.

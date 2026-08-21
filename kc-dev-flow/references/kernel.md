@@ -76,6 +76,12 @@ cannot ask.
   operation, or an operational support promise.
 - Promote when accepted scope crosses the selected profile's boundary. Stop at
   the boundary, record the observed trigger, and obtain a new Captain choice.
+- A size threshold the work item declared at shape may stop work in progress.
+  When implementation crosses one, stop, record the observed count and the
+  threshold it crossed, and report to the First Officer without continuing.
+  Crossing is a report of what the work turned out to be, not a failure and not
+  a request for a larger number. It routes the way a crossed profile boundary
+  routes, and it still passes and fails nothing.
 - A local check proves only what it observed. Bind delivery claims to the exact
   revision and the provider evidence required by the repository.
 - Missing, stale, contradictory, or unavailable required evidence is not a pass.
@@ -94,8 +100,8 @@ cannot ask.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
-  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
-  no scope drift is found, create no receipt or commentary.
+  one. LOC and file counts are diagnostic there and never pass or fail the work
+  at exit. When no scope drift is found, create no receipt or commentary.
 
 ## Communication
 
