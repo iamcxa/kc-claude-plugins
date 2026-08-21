@@ -59,3 +59,43 @@ cross-model gate, how a custom terminal state closes, whether RoboRev is
 available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
+
+## 2026-08-21 — `release` state removed from the Production route
+
+Profile differences must live in what happens inside a stage or in which
+gates fire, not in which runtime states exist — expressing them as separate
+graph states let one adopter's `pilot-product-slice` item land at
+`status: release`, a stage outside its declared route, with no way to reach
+`done`. `ROUTES["production"]` in `profile-contract-loader.py` no longer has a
+`release` key; `"validation"` now maps to `("verify", "done")`. The
+`production/release.md` stage contract is deleted; its required-output
+content (rollout/rollback readiness, operational owner, explicit
+Captain-or-release-owner authorization) moved into `production/verify.md`'s
+`## Required output`. No Spacedock capability changed: Production's
+validation-gate approval now targets the terminal `done` stage, so
+`gate record --consume` leaves it pending (`route=approved-awaiting-merge`)
+and `spacedock merge guard <slug> --verdict passed|rejected` is the sole
+terminal consumer — already-documented 0.27.0-pre8 behavior, not a new ask.
+This keeps the verification ruling (validation gate's own resolution) and the
+release ruling (merge guard's verdict) as two separately timestamped records
+instead of collapsing them into one state transition.
+
+An adopter whose committed workflow README already declares a `release`
+state upgrades by, in order: (1) drain every entity at `status: release` to
+`done` under the *old* graph first — `spacedock status --where status=release`
+must return empty before editing the README, since a status value with no
+matching declared state silently drops the entity from `--boot`'s dispatchable
+table rather than erroring; (2) edit the vendored `docs/dev/README.md`
+`stages.states` block to drop `release`; (3) re-vendor
+`profile-contract-loader.py` and `kernel.md` byte-for-byte, and the
+`production/verify.md` / (deleted) `production/release.md` contracts —
+`scripts/kc-dev-flow-contract-test.py`'s byte-parity check fails closed on a
+partial re-vendor; (4) re-record every committed Production v2 receipt
+(`kc-dev-flow:choose-work-profile`, mechanically, under the same Captain
+selection — the profile did not change, only its route representation): the
+loader now computes `expected_route = [shape, build, verify]` for
+`production`, and a receipt still reading `route: [shape, build, verify,
+release]` throws `stale route for production` on next load. An adopter that
+does not upgrade keeps working exactly as today (the old graph, the old
+ROUTES, the same stranding risk this change closes) — this is opt-in per
+adopter at their next `kc-dev-flow` tag bump, not a forced break.

@@ -24,8 +24,7 @@ ROUTES = {
     "production": {
         "ideation": ("shape", "implementation"),
         "implementation": ("build", "validation"),
-        "validation": ("verify", "release"),
-        "release": ("release", "done"),
+        "validation": ("verify", "done"),
     },
 }
 

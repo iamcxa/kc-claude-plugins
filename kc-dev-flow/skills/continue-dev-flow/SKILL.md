@@ -87,7 +87,7 @@ For a superset state graph, route as follows:
 |---|---|
 | POC | `backlog -> implementation -> validation -> done` |
 | Pilot | `backlog -> ideation -> implementation -> validation -> done` |
-| Production | `backlog -> ideation -> implementation -> validation -> release -> done` |
+| Production | `backlog -> ideation -> implementation -> validation -> done` |
 
 `backlog` selects and queues; `done` terminalizes. They dispatch no working
 contract. Skipped stages create no review or evidence obligation.

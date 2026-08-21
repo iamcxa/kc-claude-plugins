@@ -51,7 +51,7 @@ profile_files = {
         "build.md",
         "verify-deliver.md",
     ),
-    "production": ("base.md", "shape.md", "build.md", "verify.md", "release.md"),
+    "production": ("base.md", "shape.md", "build.md", "verify.md"),
 }
 profile_observation_limits = {
     "poc-exploration": ("medium", "high", 600, 0),
@@ -188,7 +188,6 @@ conditional_stage_references = {
     + delivery_references
     + documentation_references,
     ("production", "verify.md"): delivery_references + documentation_references,
-    ("production", "release.md"): delivery_references,
 }
 for profile, names in profile_files.items():
     for name in names:
@@ -308,8 +307,7 @@ expected_routes = {
     "production": {
         "ideation": ("shape", "implementation"),
         "implementation": ("build", "validation"),
-        "validation": ("verify", "release"),
-        "release": ("release", "done"),
+        "validation": ("verify", "done"),
     },
 }
 require(loader.ROUTES == expected_routes, "profile route topology drifted")
@@ -516,11 +514,15 @@ for phrase in [
     "kc-dev-flow-work-profile/v2",
     "build -> prove",
     "shape -> build -> verify-deliver",
-    "shape -> build -> verify -> release",
+    "`shape -> build -> verify` | The scope accepts a production boundary",
     "structured Ask UI",
     "do not ask the Captain to repeat the decision",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
+require(
+    "shape -> build -> verify -> release" not in normalized_chooser,
+    "chooser still documents the removed release route element",
+)
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
 
 for phrase in [
@@ -542,6 +544,15 @@ for phrase in [
     "`receipt: null` creates no receipt",
 ]:
     require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
+require(
+    "Production | `backlog -> ideation -> implementation -> validation -> done`"
+    in continue_skill,
+    "continuation route table omits the current Production route",
+)
+require(
+    "-> release ->" not in continue_skill,
+    "continuation route table still documents the removed release stage",
+)
 require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
 for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
     require(retired in adopter, f"adopter omits retired-mod disposition: {retired}")
@@ -591,13 +602,13 @@ require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM
 
 workflow = read("docs/dev/README.md")
 frontmatter = workflow.split("---", 2)[1]
-expected_stage_order = ["backlog", "ideation", "implementation", "validation", "release", "done"]
+expected_stage_order = ["backlog", "ideation", "implementation", "validation", "done"]
 actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)
 require(actual_stage_order == expected_stage_order, f"workflow stage graph drifted: {actual_stage_order}")
 for phrase in [
     "POC | `backlog -> implementation -> validation -> done`",
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",
-    "Production | `backlog -> ideation -> implementation -> validation -> release -> done`",
+    "Production | `backlog -> ideation -> implementation -> validation -> done`",
     "profile-contract-loader.py",
     "Profiles are per item",
     "No agent is a general gatekeeper",
@@ -611,6 +622,15 @@ for phrase in [
 package_readme = read("kc-dev-flow/README.md")
 normalized_package_readme = " ".join(package_readme.split())
 root_readme = read("README.md")
+require(
+    "| Production | `shape -> build -> verify` |" in package_readme,
+    "package README route table omits the current Production route",
+)
+require(
+    "shape -> build -> verify -> release" not in normalized_package_readme
+    and 'R5["Release' not in package_readme,
+    "package README still documents the removed release route element",
+)
 # Match against the normalized text: a claim that survives only because of where
 # the line happens to wrap is not a claim the README is actually holding.
 require(
