@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-21T08:46:56Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-profile-routes-are-graph-differences
 issue:
 pr:
 mod-block:
