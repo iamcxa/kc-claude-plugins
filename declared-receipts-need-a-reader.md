@@ -68,6 +68,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-21T07:50:47.511073Z"
                 reason: 'Captain inserted an integration check before this gate closes: the file-level evidence proves the skill says the right sentence, not that an agent following it sees the field. Replacement briefing follows that probe.'
+            - id: gate-attempt:k69wjs5ttme3z11hph3sy45d-validation-2
+              briefing:
+                id: briefing:k69wjs5ttme3z11hph3sy45d:validation:attempt-2:revision-1
+                digest: sha256:c97cf356dd80e14722b27ac88701d34c1d64f2eb46bde462da953802cb7d316d
+                request-digest: sha256:2b6ca2f2e19b2a9c450485d02435d89409ede23cc800e09e62956b6cd309d1c1
+                room-ref: ./declared-receipts-need-a-reader/review/validation/briefing-2
 ---
 
 ## Problem

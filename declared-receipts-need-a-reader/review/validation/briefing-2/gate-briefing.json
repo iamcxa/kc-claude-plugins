@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k69wjs5ttme3z11hph3sy45d:validation:attempt-2:revision-1",
+  "question": "Approve verify-deliver at f351f440 (Draft PR #264, stacked on #262) now that the integration probe has run, leaving mark-ready and merge as your decisions?",
+  "artifacts": [
+    {
+      "id": "artifact:k69wjs5ttme3z11hph3sy45d:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/bfe286af97c24028dfc7e18f2664de0c11433cef/declared-receipts-need-a-reader.md",
+      "rev": "sha256:5ddaddb780eec70c5210e2c9f5575d9ebb11bd2accff0390599494db6617e825",
+      "mediaType": "text/markdown",
+      "summary": "Replacement briefing after the first was withdrawn to insert the integration check. A blind agent following the edited skill reached declared_receipts through the documented default text invocation rather than by re-parsing the block, and said so unprompted. Check 1 was separately proven by a positive/negative loader pair. One-file prose diff, verbatim, no standing grep. Two prose defects the probe surfaced are pre-existing and recorded as out of scope."
+    }
+  ]
+}
