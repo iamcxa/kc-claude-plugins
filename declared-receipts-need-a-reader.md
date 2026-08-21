@@ -259,3 +259,20 @@ resolution reason already recorded above.
 ### Summary
 
 Wrote the Pilot shape's required output for `declared-receipts-need-a-reader`: the exact SKILL.md sentence pair being replaced and its exact replacement, non-goals, persistence/data-safety boundaries (none apply — prose-only), two falsifiable acceptance checks scoped to the verifiable layer only, and the delivery-base evidence tying this candidate to PR #262. No code was changed in this stage — ideation is shape-only; the SKILL.md edit itself belongs to the build stage.
+
+## Stage Report: implementation
+
+- DONE: Fix the delivery base — re-point the branch at PR #262's branch before editing.
+  `git reset --hard origin/spacedock-ensign/declared-receipt-has-no-reader` (branch moved from `--stamp` tip `679b1614` to `10edd0a4`). Confirmed: pre-reset `grep -rl declared_receipts kc-dev-flow/` returned nothing; post-reset it returns `kc-dev-flow/scripts/profile-contract-loader.py` and `kc-dev-flow/scripts/profile-contract-loader.test.py`.
+- DONE: Make the one prose edit named in "Accepted outcome and non-goals" — replace the sentence pair at SKILL.md:41-42 with the exact replacement text, verbatim, and nothing else in the file.
+  `git diff -- kc-dev-flow/skills/continue-dev-flow/SKILL.md` shows exactly the 2-sentence removal / 4-sentence replacement at the cited location (7 insertions, 3 deletions, 1 file). Trigger-resolution sentences, "Record a named receipt…", the loader, and both vendored copies (`kc-dev-flow/scripts/profile-contract-loader.py`, `docs/dev/_mods/profile-contract-loader.py`) are untouched — confirmed via `git status --short` showing only the one SKILL.md path. Committed as `f351f440` on `spacedock-ensign/declared-receipts-need-a-reader`.
+- DONE: Satisfy check 1 — run the canonical documented loader invocation against a contract declaring a non-null receipt, paste `declared_receipts` output.
+  Built a real work item (`/tmp/check1-work-item.md`, frontmatter `status: implementation`, `Work profile receipt` block selecting `pilot-product-slice`) and ran the documented invocation against the real contracts root:
+  `python3 kc-dev-flow/scripts/profile-contract-loader.py --contracts-root kc-dev-flow/references --work-item /tmp/check1-work-item.md --format json`
+  resolves `logical_stage: "build"` (`kc-dev-flow/references/profiles/pilot-product-slice/build.md`, which declares `"receipt": "project_context"` at line 39). Output: `"declared_receipts": ["project_context"]` — the field surfaces the non-null declared receipt name, satisfying check 1.
+- DONE: Satisfy check 2 — one-time inspection recorded in the stage report; no standing presence-grep, lint rule, or committed check over SKILL.md's own wording.
+  Manual inspection of the "Load one route" section post-edit (SKILL.md:41-46): the new sentence "the loader's output already parses that block into `declared_receipts` — the receipt names this stage declares, each behind a trigger you evaluate. Read `declared_receipts` for those names instead of re-parsing the block for `receipt`." reads the field by name, replaces the removed parse-it-yourself instruction, and uses "declares" (never "owes") — trigger stays prose the agent still evaluates per the retained following sentence. This inspection is not committed as a script, grep, or CI check; only its result is recorded here, per the entity's instruction that a presence-grep over prose just written proves nothing.
+
+### Summary
+
+Reset the worktree branch onto PR #262's branch (`spacedock-ensign/declared-receipt-has-no-reader`) so `declared_receipts` exists to document; made the single prose replacement at SKILL.md:41-42 exactly as specified in "Accepted outcome and non-goals," touching no other line, the loader, or either vendored copy; verified check 1 by running the real vendored loader against a real pilot-product-slice contract with a non-null declared receipt (`project_context`) and observing it in `declared_receipts`; verified check 2 by one-time manual inspection of the edited sentence, recorded here rather than as a standing check. Commit `f351f440` on `spacedock-ensign/declared-receipts-need-a-reader`.
