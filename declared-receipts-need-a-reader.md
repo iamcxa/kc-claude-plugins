@@ -44,6 +44,17 @@ gates:
                 digest: sha256:7a2bc5c6d9a414b5244a7a99879279e458c427a96ae6270493286cc978339700
                 request-digest: sha256:f929090cd0081edfc02658bc368623065f9cca364948954f769b390d8255d088
                 room-ref: ./declared-receipts-need-a-reader/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k69wjs5ttme3z11hph3sy45d:ideation:1
+                briefing: briefing:k69wjs5ttme3z11hph3sy45d:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-21T07:31:05.140044Z"
+                decision: approve
+                reason: Captain approved the ideation shape. It names the exact replaced sentence pair and the exact replacement text, worded so it says the stage declares receipts behind an agent-evaluated trigger and never that it owes one, and it corrected the FO's own line citation (:40-41 to :41-42) by reading the file rather than copying. Check 1 is verified RED on this branch today (grep -rl declared_receipts kc-dev-flow returns nothing), which also proves the stacked base is a requirement rather than a preference. Approved with the FO condition that check 2 be satisfied by a one-time inspection recorded in the stage report and never committed as a standing presence-grep.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Problem
