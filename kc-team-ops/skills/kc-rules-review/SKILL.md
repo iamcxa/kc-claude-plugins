@@ -82,6 +82,30 @@ Finding an owner is the start of the check, not the end. Before proposing remova
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
 
+## What to recommend: a rule, not a role
+
+A checkable rule is the lever that binds. A seat ("you are the Chief Engineer") moves what the
+agent notices, and only at the margin.
+
+This was measured, not argued. Sixteen isolated runs, four seats (none / Chief Engineer / CTO /
+Chief of Staff), two task shapes. The task shape decided the answer every time: on an engineering
+fixture all sixteen opened with the same fix, and on a coordination fixture all sixteen opened with
+the same escalation — the Chief Engineer seat included. Exactly one dimension separated cleanly:
+how often the reply talked about who owns a thread, Chief Engineer at 0 and 1 mentions against
+Chief of Staff at 3 and 3. Meanwhile the rules that were present in an earlier, non-isolated round
+produced the closing status block in 5 of 6 runs and put the decision back to the user in 5 of 6;
+with those rules absent, both dropped to 0 of 8.
+
+So when the audit produces a recommendation:
+
+- **Lead with rules.** Every friction cluster gets a checkable condition, not a paragraph and not
+  a job title.
+- **Offer a seat only for a blind spot** — a whole class of question the friction shows the user is
+  never asked about, ownership being the one case with evidence behind it. Say it is secondary,
+  and say what it is expected to change: attention, not answers.
+- **Never recommend a seat on its own.** On this evidence it would be the weakest change in the
+  file, dressed as the biggest.
+
 ## Step 4 — Decide, one at a time
 
 Put each change to the user as a single decision with: the evidence, your recommendation, **what
