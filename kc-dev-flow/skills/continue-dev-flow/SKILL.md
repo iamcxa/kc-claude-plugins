@@ -38,9 +38,13 @@ Do not separately read the full kernel, another profile, another stage, or an
 installed-package fallback. Profile selection is per work item, never a
 project-global mode; simultaneous items may load different routes.
 
-A selected stage may emit a `kc-dev-flow-conditional-references/v1` block. For
-each entry, resolve `path` relative to the selected stage contract and read it
-only when its named `trigger` is true; otherwise leave it unread. Resolve the
+A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
+the loader's output already parses that block into `declared_receipts` — the
+receipt names this stage declares, each behind a trigger you evaluate. Read
+`declared_receipts` for those names instead of re-parsing the block for
+`receipt`. For each entry, still resolve `path` relative to the selected
+stage contract and read it only when its named `trigger` is true; otherwise
+leave it unread. Resolve the
 trigger first from accepted scope, then recheck it against the exact changed
 files before implementation exit or validation. `retained_document_change` is
 true only when the accepted output or exact diff adds, removes, or changes a
