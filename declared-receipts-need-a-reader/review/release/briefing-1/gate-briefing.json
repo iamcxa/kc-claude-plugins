@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k69wjs5ttme3z11hph3sy45d:release:attempt-1:revision-1",
+  "question": "NOT A RELEASE REVIEW. Record a no-op transition through a stage this item's profile excludes, so a Pilot item can reach done?",
+  "artifacts": [
+    {
+      "id": "artifact:k69wjs5ttme3z11hph3sy45d:release:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/449c8283e4374f58871ab9e5b50ac2926cfb849c/declared-receipts-need-a-reader.md",
+      "rev": "sha256:d3929e80e775e1b07c33db480942b93c3193d0a5b221365e91198cab760836b0",
+      "mediaType": "text/markdown",
+      "summary": "This item is pilot-product-slice, whose route ends validation -\u003e done. The profile loader refuses the release stage for it. No release work was done, none is owed, and no release evidence exists or should exist. This record exists only because the runtime advances by the declared graph and cannot skip a stage outside an item's route. The defect is filed as profile-routes-are-graph-differences (8x38b1qryjrmy5w4ffk1egy1). Do not read this as a release verdict."
+    }
+  ]
+}
