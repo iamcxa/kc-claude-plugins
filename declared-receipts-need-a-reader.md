@@ -24,6 +24,17 @@ gates:
                 digest: sha256:3a819626edd78e0af363c7505c85917b0a412b12425b73720ccfa7903d155150
                 request-digest: sha256:442ee4660c5f499688d44ea995dcbaeb5e470769933ce0787495eebc7d514fac
                 room-ref: ./declared-receipts-need-a-reader/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k69wjs5ttme3z11hph3sy45d:backlog:1
+                briefing: briefing:k69wjs5ttme3z11hph3sy45d:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-21T07:23:24.930534Z"
+                decision: approve
+                reason: 'Captain approved scheduling with the Pilot work profile. The task ships the first reader for declared_receipts so the emitted field does not repeat the defect #256 reported one layer up. Pilot rather than Production because this changes what a skill tells an agent, not an output contract adopters read at a pinned tag, so it carries no release or rollback obligation. Delivery base stays stacked on PR #262''s branch per delivery-branch-base.md: #262 is an open artifact sharing this candidate''s lineage through declared_receipts.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem
