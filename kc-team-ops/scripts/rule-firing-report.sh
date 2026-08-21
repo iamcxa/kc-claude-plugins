@@ -6,18 +6,23 @@
 # Claude Code session logs only. Codex/other harnesses are out of scope.
 set -uo pipefail
 
-SINCE="" ; HOME_DIR="${HOME}/.claude" ; PATTERNS=""
+SINCE="" ; HOME_DIR="${HOME}/.claude" ; PATTERNS="" ; KEEP=20
+OUT_ROOT="${HOME}/.claude/kc-team-ops/rules-review"
 while [ $# -gt 0 ]; do
   case "$1" in
     --since)    SINCE="$2"; shift 2 ;;
     --home)     HOME_DIR="$2"; shift 2 ;;
     --patterns) PATTERNS="$2"; shift 2 ;;
+    --out)      OUT_ROOT="$2"; shift 2 ;;
+    --keep)     KEEP="$2"; shift 2 ;;
     -h|--help)
       sed -n '2,9p' "$0"
       echo
       echo "Usage: $0 --since YYYY-MM-DD [--home ~/.claude] [--patterns FILE]"
       echo "  --patterns  TSV: kind<TAB>label<TAB>regex"
       echo "              kind = friction | firing | incident | codify"
+      echo "  --out       where runs are kept (default ~/.claude/kc-team-ops/rules-review)"
+      echo "  --keep      how many past runs to retain (default 20)"
       exit 0 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
@@ -28,7 +33,16 @@ command -v jq >/dev/null || { echo "jq not found" >&2; exit 2; }
 PROJ="$HOME_DIR/projects"
 [ -d "$PROJ" ] || { echo "no session logs at $PROJ" >&2; exit 2; }
 
-WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
+WORK="$(mktemp -d)"
+
+# Runs are kept, not overwritten: a second run the same day should be readable
+# against the first rather than replacing it.
+STAMP="$(date -u +%Y-%m-%dT%H%M%SZ)"
+RUNDIR="$OUT_ROOT/$STAMP"; mkdir -p "$RUNDIR"
+PREV="$(ls -1dt "$OUT_ROOT"/*/ 2>/dev/null | grep -v "$STAMP" | head -1)"
+PAT_ID="$( { [ -n "$PATTERNS" ] && cat "$PATTERNS" || echo default; } | shasum -a 256 2>/dev/null | cut -c1-12)"
+exec 3>&1 1>"$RUNDIR/report.txt"          # buffer the report; replayed to the terminal at exit
+trap 'cat "$RUNDIR/report.txt" >&3 2>/dev/null; rm -rf "$WORK"' EXIT
 
 # Main-session transcripts only. Subagent logs are the agent talking to itself.
 find "$PROJ" -maxdepth 2 -name '*.jsonl' -newermt "$SINCE" 2>/dev/null \
@@ -60,8 +74,34 @@ done < "$WORK/sessions.txt" | sort > "$WORK/all-user.txt"
 # The dispatch-prompt filter is deliberately narrow: an earlier version dropped
 # anything opening with "You are", which also deletes a real correction like
 # "You are still ignoring the comment rule".
-grep -avE '<system-reminder>|<task-notification>|<system_instruction>|<command-name>|<local-command-stdout>|tool_use_id|Review this change for security vulnerabilities|^[^\t]*\t[^\t]*\t(You are (a|an|the|Claude|Codex|Gemini|GPT)|Respond with exactly)' \
-  "$WORK/all-user.txt" | grep -v $'\t-private-tmp-' > "$WORK/human.txt"
+# Decided on the text field itself. An earlier version anchored a whole-line regex
+# across two tab-separated fields to reach the text, and dispatch prompts kept
+# surviving it in real data even though the same pattern dropped them in isolation;
+# awk on $3 removes the guesswork about where the field starts.
+cat > "$WORK/drop.awk" <<'AWK'
+function agent_wrote(body) {
+  if (body ~ /<system-reminder>|<task-notification>|<system_instruction>/) return 1
+  if (body ~ /<command-name>|<local-command-stdout>|tool_use_id/) return 1
+  if (body ~ /^Review this change for security vulnerabilities/) return 1
+  if (body ~ /^Respond with exactly/) return 1
+  # Narrow on purpose: "You are still ignoring the comment rule" is a real correction,
+  # while "You are a read-only reviewer" is a prompt the agent wrote for its own worker.
+  # No \y here — this awk does not have it, and an unsupported escape makes the whole
+  # rule silently never match.
+  if (body ~ /^You are (a|an|the|Claude|Codex|Gemini|GPT)( |$)/) return 1
+  if (body ~ /^You are [a-z]+ing /) return 1
+  return 0
+}
+AWK
+
+{ cat "$WORK/drop.awk"; echo '$1 ~ /-private-tmp-/ { next } $3=="assistant" || !agent_wrote($5)'; } > "$WORK/stream-filter.awk"
+{ cat "$WORK/drop.awk"; cat <<'AWK'
+  $2 ~ /-private-tmp-/ { next }
+  { if (agent_wrote($3)) next; print }
+AWK
+} > "$WORK/human-filter.awk"
+
+awk -F'\t' -f "$WORK/human-filter.awk" "$WORK/all-user.txt" > "$WORK/human.txt"
 
 # Assistant prose AND tool calls. A rule whose only marker is "you must read
 # file X" leaves no trace in prose, so counting text alone scores it zero.
@@ -82,6 +122,7 @@ done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
 while IFS= read -r f; do
   jq -r --arg SINCE "$SINCE" --arg SID "$f" '
     select(.type=="user" or .type=="assistant") | select((.timestamp // "") >= $SINCE)
+    | select((.isMeta // false) | not)
     | . as $r | (.message.content) as $c
     | (if ($c|type)=="string" then $c
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
@@ -90,7 +131,13 @@ while IFS= read -r f; do
     | ($t | gsub("\n"; " ")) as $flat
     | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
   ' "$f" 2>/dev/null
-done < "$WORK/sessions.txt" | sort -t'\t' -k1,1 -k2,2 > "$WORK/stream.txt"
+# The session key is the first field and the timestamp the second, so a plain sort
+# already groups by session and orders within it. That grouping is the point: sorting
+# by time alone interleaves parallel sessions, and the turn "before" a user turn then
+# comes from one they were not reading. Do not reach for -t/-k here — `-t'\t'` passes a
+# literal backslash-t to sort, which silently stops keying on the field at all.
+done < "$WORK/sessions.txt" | sort \
+  | awk -F'\t' -f "$WORK/stream-filter.awk" > "$WORK/stream.txt"
 
 HUMAN=$(wc -l < "$WORK/human.txt" | tr -d ' ')
 ASST=$(wc -l < "$WORK/assistant.txt" | tr -d ' ')
@@ -108,6 +155,7 @@ friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too
 incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
 incident	user took it over	我(自己|先|去)?(做|改|弄|處理|修|部署|合)(好|完|了)|我已經(自己|先)|I fixed it|I did it myself|I went ahead and|I had to do it
 incident	loss or recovery	救回|覆蓋掉|掃掉|had to recover|overwrote|clobber
+firing	close-out block	可收線|Closable:
 codify	asked to make it a rule	以後(都|請|先|就)|寫回去|寫進.*claude|寫進規則|變成規則|下次(記得|不要)|記住這個|from now on|make (this|that) a rule
 TSV
 fi
@@ -158,7 +206,7 @@ while IFS=$'\t' read -r kind label re; do
 done < "$PATTERNS"
 [ "$INC" = 1 ] || printf '%s\n' "(none declared)"
 if [ "$INC" = 1 ]; then
-  : > ./rule-review-incidents.txt
+  : > "$RUNDIR/incidents.txt"
   while IFS=$'\t' read -r kind label re; do
     case "$kind" in incident|codify) ;; *) continue ;; esac
     awk -F'\t' -v RE="$re" -v LABEL="$label" '
@@ -169,9 +217,9 @@ if [ "$INC" = 1 ]; then
         print "  BEFORE (agent, same session): " (prev=="" ? "(nothing in this session)" : substr(prev,1,300))
         print "  THEN  (user):   " substr($5,1,300)
         print ""
-      }' "$WORK/stream.txt" >> ./rule-review-incidents.txt
+      }' "$WORK/stream.txt" >> "$RUNDIR/incidents.txt"
   done < "$PATTERNS"
-  printf 'matched incidents with the turn before them: ./rule-review-incidents.txt\n'
+  printf 'matched incidents with the turn before them: %s\n' "$RUNDIR/incidents.txt"
 fi
 printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \
   "      user never corrected you, because you never gave them anything to correct." \
@@ -206,6 +254,48 @@ printf '%s\n' \
   "is the one proxy that does not need the complaint to be spoken: if the decoding rate" \
   "climbs with your message length, assume the unspoken cost climbs with it too."
 
+
+{ printf '{"ran_at":"%s","since":"%s","patterns":"%s","sessions":%s,"human_turns":%s,"counts":{' \
+    "$STAMP" "$SINCE" "$PAT_ID" "$SESSIONS" "$HUMAN"
+  first=1
+  while IFS=$'\t' read -r kind label re; do
+    case "$kind" in friction|incident|codify) ;; *) continue ;; esac
+    [ $first -eq 1 ] || printf ','; first=0
+    printf '"%s":%s' "$label" "$(count_turns "$WORK/human.txt" "$re")"
+  done < "$PATTERNS"
+  printf '}}\n'
+} > "$RUNDIR/run.json"
+
+if [ -n "$PREV" ] && [ -f "$PREV/run.json" ]; then
+  PSINCE=$(jq -r '.since' "$PREV/run.json" 2>/dev/null)
+  PPAT=$(jq -r '.patterns' "$PREV/run.json" 2>/dev/null)
+  PWHEN=$(jq -r '.ran_at' "$PREV/run.json" 2>/dev/null)
+  printf '\n%s\n' "=== since your last run ($PWHEN) ==="
+  if [ "$PSINCE" = "$SINCE" ] && [ "$PPAT" = "$PAT_ID" ]; then
+    DELTA=$(jq -r --slurpfile now "$RUNDIR/run.json" '
+      .counts as $old | $now[0].counts | to_entries[]
+      | ($old[.key] // 0) as $o
+      | select(.value != $o)
+      | "\(.key): \($o) -> \(.value)  (+\(.value - $o))"' "$PREV/run.json" 2>/dev/null)
+    if [ -n "$DELTA" ]; then
+      printf '%s\n' "$DELTA" \
+        "Only the differences are listed. Everything else is unchanged since that run."
+    else
+      printf '%s\n' "Nothing moved. Every category holds the same count as that run, so the" \
+        "reading you did then still stands and this run adds no new evidence."
+    fi
+  else
+    printf '%s\n' "Not comparable: the window or the patterns changed since that run." \
+      "  then: --since $PSINCE, patterns $PPAT" \
+      "  now:  --since $SINCE, patterns $PAT_ID" \
+      "Read this run's totals in full; a delta against a different question would mislead."
+  fi
+fi
+
+# keep the last $KEEP runs
+ls -1dt "$OUT_ROOT"/*/ 2>/dev/null | tail -n "+$((KEEP+1))" | while read -r d; do rm -rf "$d"; done
+
 printf '\n%s\n' "=== evidence ==="
-cp "$WORK/human.txt" "./rule-review-human-turns.tsv"
-printf 'human turns written to ./rule-review-human-turns.tsv — read the hits before trusting any count\n\n'
+cp "$WORK/human.txt" "$RUNDIR/human-turns.tsv"
+printf 'this run: %s\n' "$RUNDIR"
+printf '%s\n\n' "  report.txt, run.json, human-turns.tsv, incidents.txt — read the hits before trusting any count"

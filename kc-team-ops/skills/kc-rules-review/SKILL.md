@@ -21,7 +21,7 @@ violated gets read as dead weight.
 
 ## When to use
 
-- The user says some version of 「我一直在糾正同一件事」or "you keep doing this".
+- The user says some version of "you keep doing this" or "I correct the same thing every time".
 - The user quotes their own rule back at you — the strongest possible signal, because it proves the rule exists and did not fire.
 - A rule file has grown and nobody knows which parts still earn their place.
 - A rule change just landed and downstream files may quote the old section names.
@@ -29,6 +29,21 @@ violated gets read as dead weight.
 **Do not use** for one skill's behaviour inside one repository, or for a bare inventory of stored
 memories. This is the whole-rule-set pass: it reads the rules that govern every session, and its
 unit of change is a rule, not a single correction.
+
+## Step 0 — Ask how far back, before reading anything
+
+The window changes every number in this audit, and it is the user's call, not a default you pick
+for them. Ask it with the harness's question UI as the first action, offering two weeks, one month,
+two months, and a custom date — and say what each costs, because they find out otherwise only after
+waiting: a one-day window returns in seconds, two weeks across six hundred sessions takes minutes.
+
+Two facts belong in the question, because they change the answer:
+
+- The coverage gradient at the end needs a wide window. Two weeks shows it; two days is noise.
+- A window that does not reach back to the last rule change measures the old rules, not the new ones.
+
+If a previous run exists, say when it was and what window it used. Repeating that window buys a
+delta; changing it buys a fresh baseline and no comparison.
 
 ## Step 1 — Measure
 
@@ -39,20 +54,29 @@ kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
 `incident`, or `codify`.
 
-`codify` rows catch the user asking for something to become standing behaviour — "from now on",
-「以後都」、「寫進規則」. Each one has two ways to fail, and the second is the reason this audit
-usually gets started: never written into the rule file at all, or written and never firing. Check
-both against the actual file before reporting either.
 Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
 a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
 itself the finding** — see Step 2.
+
+`codify` rows catch the user asking for something to become standing behaviour — "from now on",
+"remember this", "write it into the rules". Each one has two ways to fail, and the second is the reason this audit
+usually gets started: never written into the rule file at all, or written and never firing. Check
+both against the actual file before reporting either.
 
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
 are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
 
-Counts are for comparing runs, not for quoting as truth. The script writes every matched human
-turn to `rule-review-human-turns.tsv`; read the hits before you believe a number.
+Each run is kept under `~/.claude/kc-team-ops/rules-review/<timestamp>/` — the report, the matched
+human turns, the incident pairs, and a `run.json` of every count. Nothing is overwritten, so a
+second run the same day is readable against the first.
+
+When the previous run used the same window and the same patterns, the report ends with what moved
+since it, and says so when nothing did. When either changed, it refuses to compare and says why:
+a delta against a different question is worse than no delta.
+
+Counts are for comparing runs, not for quoting as truth. Every matched human turn is written to
+`human-turns.tsv` in the run directory; read the hits before you believe a number.
 
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
@@ -146,6 +170,32 @@ So:
   proposing a different seat, and the proposal has to say which incidents it is answering.
 - **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
   to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
+
+## Remedies already measured
+
+Most rules this audit proposes are written fresh from the user's own accepted repair. A few have
+been measured well enough to offer as a known text, and those are listed here. Offer one only when
+its friction category actually shows up — an unprompted remedy is a rule with no failure behind it,
+which is the thing this audit exists to remove.
+
+### Close-out block — for the `status pull` category
+
+When the friction is the user asking what is left, whether a thread can be closed, or whose move it
+is, the remedy is a required field at the end of any reply that ends a unit of work:
+
+```
+Remaining: …
+Next:      … (you / me)
+Closable:  yes / no / unverified
+```
+
+Five things make it work, and dropping any of them breaks it:
+
+- **A fenced block, never inline backticks.** A long inline span wraps into broken fragments in a terminal.
+- **`Closable: yes` only after checking** — working tree, open PRs, task state. Unchecked is `unverified`. A wrong `yes` ends a session that still has live work, and that is the expensive failure; the other two fields cost nothing when wrong.
+- **It replaces the empty closer**, it does not sit above one. "Want me to continue?" is what it exists to delete.
+- **Write the labels in the language the reply is in.** The block is read every turn by someone whose comprehension cost is the thing it exists to lower; an English label at the end of an otherwise Chinese answer taxes that every time. The template above is the English wording, not a requirement to use English.
+- **Enumerate the wordings, do not fix the language.** What breaks measurement is unbounded variation, not translation: a `firing` pattern is a regex, so `可收線|Closable` costs one alternation and covers both. Settle on one wording per language and add every one of them to the pattern — a synonym invented later is what silently zeroes the row.
 
 ## Step 4 — Decide, one at a time
 
