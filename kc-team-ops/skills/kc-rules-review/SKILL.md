@@ -75,6 +75,13 @@ When the previous run used the same window and the same patterns, the report end
 since it, and says so when nothing did. When either changed, it refuses to compare and says why:
 a delta against a different question is worse than no delta.
 
+**Run the script or report that you could not.** Do not reconstruct the measurement by hand with
+your own jq and your own patterns when the script fails — a hand-built run leaves no record, no
+`run.json`, and a pattern set nobody can reproduce, so its numbers cannot be compared with the run
+before it or the one after. Three hand-built passes are three different questions answered once
+each. If the script will not run, say so, say what it printed, and stop; a missing audit is
+recoverable and an uncomparable one quietly is not.
+
 Counts are for comparing runs, not for quoting as truth. Every matched human turn is written to
 `human-turns.tsv` in the run directory; read the hits before you believe a number.
 

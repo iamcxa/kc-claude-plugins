@@ -1,0 +1,52 @@
+name: kc-team-ops rule-firing-report tests
+
+# Unit tests for the measurement script behind kc-rules-review. The audit's whole
+# output rests on two things this exercises: that a turn is paired with the
+# assistant turn from its own session, and that prompts the agent wrote for its
+# own workers are not counted as user corrections.
+#
+# Runs on macOS as well as Linux on purpose. Both defects that reached a user
+# here were tool-dialect bugs — a GNU-only `head -n -N`, and a `\y` word boundary
+# that gawk accepts and the awk on macOS silently never matches — so a Linux-only
+# gate would have been green for both. Standard runners are free on public repos.
+#
+# Path-filtered (not a required check), plain bash + awk + jq, five minutes.
+
+on:
+  pull_request:
+    paths:
+      - "kc-team-ops/scripts/rule-firing-report.sh"
+      - "kc-team-ops/scripts/rule-firing-report.test.sh"
+      - "kc-team-ops/skills/kc-rules-review/SKILL.md"
+      - ".github/workflows/kc-team-ops-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-team-ops/scripts/rule-firing-report.sh"
+      - "kc-team-ops/scripts/rule-firing-report.test.sh"
+      - "kc-team-ops/skills/kc-rules-review/SKILL.md"
+      - ".github/workflows/kc-team-ops-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  rule-firing-report:
+    name: rule-firing-report.sh unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax check
+        run: |
+          bash -n kc-team-ops/scripts/rule-firing-report.sh
+          bash -n kc-team-ops/scripts/rule-firing-report.test.sh
+
+      - name: Run unit tests
+        run: bash kc-team-ops/scripts/rule-firing-report.test.sh
