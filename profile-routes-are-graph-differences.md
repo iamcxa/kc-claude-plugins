@@ -225,25 +225,152 @@ Profile table, so `merge guard` firing for them too is not new exposure; what
 changes is only what content a human must have satisfied *before* they are
 willing to type `--verdict passed` for a Production item.
 
-**Landed change, concretely:**
-- `docs/dev/README.md` (and the `kc-dev-flow` adopter README template it is
-  vendored from) drops the `release` entry from `stages.states`; `validation`
-  keeps `gate: true`.
-- `kc-dev-flow/scripts/profile-contract-loader.py` `ROUTES["production"]`
-  drops the `"release"` key; `"validation"` now maps to `("verify", "done")`.
-  `pilot-product-slice` and `poc-exploration` entries are unaffected (they
-  never had a `release` key).
-- `profiles/production/verify.md`'s `## Required output` gains
-  `release.md`'s four bullets (rollout/rollback readiness, operational owner
-  and monitoring handoff, explicit Captain-or-release-owner authorization —
-  "do not merge, publish, migrate, or mutate production without the named
-  authority" carries over verbatim as the gate on invoking `merge guard`).
-  `profiles/production/release.md` is deleted, in both `kc-dev-flow/references/`
-  and its `docs/dev/_mods/` vendored copy.
-- `kc-dev-flow/scripts/profile-contract-loader.test.py` and
-  `scripts/kc-dev-flow-contract-test.py` (`profile_files["production"]`,
-  currently `("base.md", "shape.md", "build.md", "verify.md", "release.md")`)
-  lose the `release.md` member and any release-route assertion.
+### Release-authorization residual: what is and isn't a mechanism
+
+The FO's residual asked for a mechanism, not a sentence in a contract, and
+named the specific risk: carrying `release.md`'s bullets into `verify.md`'s
+prose could be the same no-enforcement-point shape this task exists to
+remove. I probed `spacedock gate record --actor` directly (not from docs)
+against a throwaway fixture, deliberately trying `person:kent`,
+`team:release-owner`, `release-owner`, `agent:captain`, `captain` — every one
+is refused with `unsupported chat decision actor "<value>"`; only
+`person:captain` is accepted. `merge guard` itself takes no `--actor` flag at
+all (confirmed via `--help`), and no gate command validates `--artifact` file
+*content* against a stage's `## Required output` list — only that a
+`.md`/`.markdown` file exists (confirmed: no such check string exists in the
+binary). These are all pre-existing 0.27.0-pre8 constraints, unchanged by
+this task in either direction:
+
+- **Real, verified mechanism:** `merge guard --verdict passed|rejected` is
+  refused with no pending terminal-target approval (RED-demo below: `entity
+  carries no binding pending terminal-target approval`). This did not exist
+  as a concept before `release`'s removal turned `validation`'s approval into
+  the terminal-target approval; it is genuinely new leverage this task's
+  mechanism provides, not carried over from `release.md`.
+- **Unchanged, not weakened:** "Captain or declared release owner" was never
+  actor-enforced by the tool — before this task, `release`'s own gate
+  ceremony was equally restricted to `--actor person:captain` (the tool
+  recognizes no other decision actor), so a distinct named release owner was
+  already unenforceable at the CLI level. This task does not remove a
+  capability the tool ever had.
+- **Unchanged, not weakened:** artifact *content* (rollout/rollback,
+  operational owner, authorization language) was never CLI-validated for
+  `release.md` either — an agent or human is trusted to write it, then and
+  now.
+- **Genuine residual, correctly scoped as a residual, not silently closed:**
+  before this task there were two separate `gate prepare`/`gate record`
+  ceremonies before terminal (validation's, and release's), each with its own
+  `--artifact`/`--summary`/`--question` and its own resolution timestamp —
+  two independently reviewable records even though both were restricted to
+  the same actor. After this task there is one gate ceremony (validation)
+  plus a bare `merge guard --verdict` write with no artifact or reasoning
+  field of its own. The temporal separation and the refusal-without-approval
+  property both survive and are verified; the second ceremony's *own* review
+  artifact does not. Closing this fully would mean asking Spacedock for a
+  second content-validated ceremony or a `merge guard --actor` field — new
+  CLI capability, out of this task's scope (`architecture` obligation:
+  "excludes broadening... what a Spacedock skip-stage capability" and this
+  task's non-goals already draw the line at not asking for new runtime
+  capability at all). The available, in-scope answer is procedural: `verify.
+  md`'s `## Required output` now names the release-readiness bullets as
+  content of *the one artifact that still exists* (validation's), so a human
+  preparing that gate has a named place to put release-readiness content
+  before approving — weaker than a second ceremony, but not weaker than what
+  `release.md` ever enforced at the tool level, and it is the FO's decision
+  whether that residual is acceptable or worth a follow-up item asking
+  Spacedock for `merge guard --actor`.
+
+**Landed change, concretely.** The Production route string `shape -> build ->
+verify[ -> release]` (or its runtime-stage-name equivalent) is duplicated in
+at least six places. All six are changed in this task, not the two originally
+named:
+
+1. `kc-dev-flow/references/kernel.md` and its `docs/dev/_mods/kernel.md`
+   vendored copy — the `## Select before routing` route table's `production`
+   row drops ` -> release`. Kept byte-identical (verified: `diff` reports no
+   difference; `scripts/kc-dev-flow-contract-test.py` also enforces this by
+   byte-comparing the two files, not by trusting the author).
+2. `kc-dev-flow/README.md` — the routes-table row and the profile mermaid
+   diagram (`R4["Verify..." ] --> D`, `R5["Release..."]` node and edge
+   deleted).
+3. `kc-dev-flow/skills/choose-work-profile/SKILL.md` — the profile-selection
+   route table row.
+4. `kc-dev-flow/skills/continue-dev-flow/SKILL.md` — the superset-graph route
+   table row.
+5. `kc-dev-flow/scripts/profile-contract-loader.py` `ROUTES["production"]` —
+   drops the `"release"` key; `"validation"` now maps to `("verify", "done")`.
+   `pilot-product-slice` and `poc-exploration` entries are unaffected (they
+   never had a `release` key). Its `docs/dev/_mods/profile-contract-loader.py`
+   vendored copy is the same file (byte-parity enforced the same way as #1).
+6. `docs/dev/README.md` `stages.states` block and its prose route table —
+   drops the `release` state entry; `validation` keeps `gate: true`.
+
+Plus the profile-stage content itself: `profiles/production/verify.md`'s
+`## Required output` gains `release.md`'s four bullets (rollout/rollback
+readiness, operational owner and monitoring handoff, explicit
+Captain-or-release-owner authorization — "do not merge, publish, migrate, or
+mutate production without the named authority" carries over verbatim as the
+gate on invoking `merge guard`); `profiles/production/release.md` is deleted,
+in both `kc-dev-flow/references/` and its `docs/dev/_mods/` vendored copy.
+`kc-dev-flow/scripts/profile-contract-loader.test.py` and
+`scripts/kc-dev-flow-contract-test.py` (`profile_files["production"]`,
+formerly `("base.md", "shape.md", "build.md", "verify.md", "release.md")`)
+lose the `release.md` member and any release-route assertion.
+
+**Does anything check that the six agree?** Yes, now all six — two
+(`kc-dev-flow/README.md`, `continue-dev-flow/SKILL.md`) had no enforcement
+point before this task and were fixed by hand with nothing that would catch
+future drift; both now carry a `require()` in
+`scripts/kc-dev-flow-contract-test.py` (a positive phrase check for the
+current route, a negative check that the removed `release` element is gone),
+mutation-tested by reverting each file alone to its pre-fix content and
+confirming the check fails on exactly that file. The other four already had
+an enforcement point, reused rather than duplicated: kernel.md and
+`profile-contract-loader.py` each get byte-parity checks against their
+`docs/dev/_mods/` copy (so there is structurally one source, not two data
+points to keep in sync); `profile-contract-loader.py`'s `ROUTES` table is
+additionally checked against `expected_routes` and, live, against the real
+loader's `next_workflow_stage` output; `choose-work-profile/SKILL.md` and
+`docs/dev/README.md` each already carried an existing positive/negative
+phrase pair. `kc-dev-flow/MIGRATION.md`'s new changelog entry is prose
+documentation of a change, not a copy of the route string in the sense above,
+and carries no separate enforcement point — a stale migration note is a
+documentation-quality residual, not a routing defect this task's mechanism
+depends on.
+
+### The remaining skip clause: bounded, not removed
+
+`kernel.md`'s `## Select before routing` carries: *"A workflow runtime may
+expose the union of stage names and skip stages outside the selected route.
+Skipping an inactive stage requires no synthetic review or receipt."* Before
+this task there were two skip points it covered — `ideation` for POC
+(harmless, non-terminal) and `release` for POC and Pilot (blocking, because it
+sat in front of the terminal transition). This task removes `release` as a
+runtime state entirely, so it stops being a skip candidate at all — there is
+no longer a `release` stage to skip. POC's `ideation` skip is unchanged and
+still governed by this clause (confirmed: `ROUTES["poc-exploration"]` has no
+`ideation` key, so the loader never expects that stage; the FO jumps `status`
+directly from `backlog` to `implementation`, and no gate record is ever
+created at `ideation` for a POC item).
+
+Decision: the clause **stays, bounded**, not removed. It cannot be removed —
+POC's `ideation` skip is a real, Captain-accepted design (severity table in
+`## The two skip points are not equally dangerous` above), not a leftover, and
+still needs a runtime affordance. But leaving it exactly as-is is the same
+"permission language, no named implementer" shape the Problem section
+diagnosed: nothing in the clause said *which* skips are safe, and that missing
+boundary is what let a dangerous skip (`release`, gating a terminal
+transition) go unnoticed next to a harmless one (`ideation`, not gating
+anything) for as long as it did. `kernel.md` now states the invariant this
+incident surfaced: a skip is safe only when the skipped stage carries no
+authorization checkpoint a later stage does not also carry; a stage whose skip
+would remove the route's sole terminal-authorization checkpoint is not a
+candidate for the clause and must fold that checkpoint into an adjacent
+working stage's contract instead — cross-referencing `production`'s own route
+row above as the worked example. This does not add a new mechanism; it names,
+in the shared core, the boundary this task's fix already draws in practice.
+Both `kernel.md` copies carry the addition, verified byte-identical the same
+way as the route-table edit.
 
 ### Non-goals
 
@@ -453,6 +580,64 @@ deliverable is the decision and its evidence, not the script):
    fixture (the same fixtures built for this stage's evidence, retained as the
    starting point).
 
+### Landed at `build`, both RED-then-GREEN
+
+Both checks above are now durable in
+`kc-dev-flow/scripts/profile-contract-loader.test.py`'s "Live Spacedock route
+mechanism" section (a real split-root Spacedock fixture, real `gate
+prepare`/`gate record --consume`/`status --set`/`merge guard`, no forced
+status writes) — check 1 is the POC+Pilot route-mechanism block, check 2 is
+its `pilot_target_ideation == pilot_route["ideation"][1]` /
+`pilot_target_validation == pilot_route["validation"][1]` /
+`prod_target_validation == prod_route["validation"][1]` loader-vs-runtime
+agreement assertions.
+
+**RED, demonstrated against the pre-fix tree, not merely inferred.** I
+extracted the landed check's own POC+Pilot logic into a standalone script,
+pointed it at `git show HEAD:kc-dev-flow/scripts/profile-contract-loader.py`
+(pre-fix `ROUTES`, `release` still present) and a 6-state
+`WORKFLOW_STATES_BLOCK` matching the pre-fix `docs/dev/README.md` (`release`
+added back between `validation` and `done`), and ran it — same helper
+functions, same real CLI calls, only the fixture's graph and loader module
+differ:
+
+```
+RED-DEMO FAIL (expected on pre-fix tree): POC validation did not terminalize at done: runtime=release
+RED-DEMO FAIL (expected on pre-fix tree): POC validation-approval-consume should stay pending at validation (terminal-target approved-awaiting-merge)
+RED-DEMO FAIL (expected on pre-fix tree): loader/runtime disagree at pilot validation (the exact divergence that stranded declared-receipts-need-a-reader): loader=done runtime=release
+RED-DEMO FAIL (expected on pre-fix tree): pilot landed outside its declared route ['ideation', 'implementation', 'validation'] after validation-approval-consume: status='release' (this is the incident this task closes)
+RED-DEMO FAIL (expected on pre-fix tree): pilot merge guard finalize failed: Error: merge guard: refusing to finalize pilot-item: entity carries no binding pending terminal-target approval (condition "ineligible")
+RED-DEMO: 6 assertion(s) failed on the pre-fix tree, as expected
+```
+
+Both POC and Pilot strand at `status: release` on the pre-fix graph, matching
+the severity table's row for POC (previously only inferred, not run) as well
+as Pilot's already-observed incident. `merge guard` also confirms the
+terminal-approval mechanism itself did not exist pre-fix (`refusing to
+finalize ... no binding pending terminal-target approval`) — the mechanism is
+new leverage this task adds, not something silently already there.
+
+**GREEN, the same landed script, run unmodified against the current
+(post-fix) worktree:**
+
+```
+$ python3 kc-dev-flow/scripts/profile-contract-loader.test.py
+profile contract loader test: route mechanism PASS
+profile contract loader test: PASS
+```
+
+**Full contract-test regression.** `python3 scripts/kc-dev-flow-contract-test.py`
+passes every check except the pre-existing `profile-spacedock-route.test.py`
+failure, confirmed (by running the identical command against the unmodified
+base commit with this task's changes stashed) to reproduce identically
+before this task touched anything — owned by sibling item
+`spacedock-route-test-passes-nowhere`, not fixed here per the sibling-coupling
+migration note. Every other assertion, including the two new
+`kc-dev-flow/README.md` / `continue-dev-flow/SKILL.md` route-string checks
+added this stage, passes; each new check was mutation-tested by reverting its
+one target file to pre-fix content in isolation and confirming it — and only
+it — fails.
+
 ## Stage Report: ideation
 
 - DONE: Select ONE direction and record why the other was rejected.
@@ -490,3 +675,89 @@ trigger; multi-slice guard does not fire (single decision, not two slices).
 ### Dispatch Retries
 
 - Retry 1: implementation — agent-error (API ENOTFOUND, session terminated mid-run with no completion signal and no stage report); re-dispatched -retry. The prior worker's 15 uncommitted worktree changes were reviewed by the FO before the re-attempt and left in place: all fifteen are within the accepted outcome or a necessary consequence of it, including five route-table copies the accepted outcome's file list omitted. A patch backup is at `.context/recovery/8x38b1q-implementation-attempt1.patch`. Nothing in them is verified — the worker died before writing any report.
+
+## Stage Report: implementation
+
+- DONE: Verify every inherited hunk against the accepted outcome; reject or repair anything unjustified.
+  Reviewed all 15 uncommitted hunks (`docs/dev/README.md`, `docs/dev/_mods/kernel.md`,
+  `docs/dev/_mods/profile-contract-loader.py`, deleted `docs/dev/_mods/profiles/production/release.md`,
+  `docs/dev/_mods/profiles/production/verify.md`, `kc-dev-flow/MIGRATION.md`, `kc-dev-flow/README.md`,
+  `kc-dev-flow/references/kernel.md`, deleted `kc-dev-flow/references/profiles/production/release.md`,
+  `kc-dev-flow/references/profiles/production/verify.md`,
+  `kc-dev-flow/scripts/profile-contract-loader.py`, `kc-dev-flow/scripts/profile-contract-loader.test.py`,
+  `kc-dev-flow/skills/choose-work-profile/SKILL.md`, `kc-dev-flow/skills/continue-dev-flow/SKILL.md`,
+  `scripts/kc-dev-flow-contract-test.py`) one file at a time against `## Accepted outcome and
+  non-goals`. All 15 accepted unmodified; each matches the mechanism (terminal-target approval +
+  `merge guard`), the four-bullet content move into `verify.md`, or the route-table edit. No hunk
+  rejected. Correctness confirmed empirically, not by re-reading: ran the already-landed
+  `profile-contract-loader.test.py` (route-mechanism PASS, both loader copies byte-identical) and
+  the full `scripts/kc-dev-flow-contract-test.py` (passes except the pre-existing sibling-owned
+  failure, see below) before adding anything of my own. Commit 3ad3725a.
+- DONE: Correct the accepted outcome's route-string copy count and name every copy actually changed; state whether anything checks the six agree.
+  Rewrote `## Accepted outcome and non-goals`'s "Landed change, concretely" to enumerate all six
+  (kernel.md pair, `kc-dev-flow/README.md`, `choose-work-profile/SKILL.md`, `continue-dev-flow/SKILL.md`,
+  `ROUTES["production"]`, `docs/dev/README.md`'s stages block) instead of the two the prior draft
+  named. Audited which have an enforcement point: four already did (kernel.md/loader byte-parity
+  pairs, `choose-work-profile`/`docs/dev/README.md` phrase pairs); two did not
+  (`kc-dev-flow/README.md`, `continue-dev-flow/SKILL.md`) and were fixed by hand with nothing to
+  catch future drift. Added a positive+negative `require()` pair for each of those two to
+  `scripts/kc-dev-flow-contract-test.py`, then mutation-tested each in isolation (reverted one file
+  to pre-fix content, confirmed only that file's new check fails) — both fire correctly. Commit 3ad3725a.
+- DONE: Answer the release-authorization residual with a mechanism or recorded gate content, not a sentence in a contract.
+  Probed `spacedock gate record --actor` and `merge guard --help` directly (not from docs): only
+  `person:captain` is an accepted decision actor (`unsupported chat decision actor` for every other
+  value tried), `merge guard` takes no `--actor` at all, and no gate command validates `--artifact`
+  content. These are pre-existing 0.27.0-pre8 constraints, unchanged in either direction by this
+  task — "declared release owner" was never actor-enforced even at the old dedicated `release`
+  stage. The real, verified mechanism is the refusal: `merge guard --verdict passed` is refused
+  with no pending terminal-target approval (reproduced live, see RED-demo transcript below). Wrote
+  a new "Release-authorization residual" subsection distinguishing what's genuinely new leverage
+  (the refusal), what's unchanged strength (actor and content enforcement), and the one honest
+  residual this collapse costs (a second ceremony's own dedicated review artifact no longer exists;
+  `verify.md`'s Required output is the available, in-scope answer given the tool has no
+  content-validated second ceremony) — not silently closed, flagged for the FO to accept or follow
+  up on.
+- DONE: Land the RED check durably; show it RED on the pre-fix tree and GREEN after, both outputs in the stage report.
+  Durable script already landed in inherited work
+  (`kc-dev-flow/scripts/profile-contract-loader.test.py`'s "Live Spacedock route mechanism"
+  section, ~250 lines, real split-root fixture, real `gate prepare`/`gate record --consume`/
+  `merge guard`, no forced status writes) — I verified rather than re-authored it. GREEN: `python3
+  kc-dev-flow/scripts/profile-contract-loader.test.py` on the current worktree prints
+  `profile contract loader test: route mechanism PASS` / `... PASS`. RED: extracted the same
+  script's POC+Pilot logic standalone, pointed it at the pre-fix loader
+  (`git show HEAD:kc-dev-flow/scripts/profile-contract-loader.py`, `release` present) and a 6-state
+  `WORKFLOW_STATES_BLOCK` matching pre-fix `docs/dev/README.md`, ran it:
+  `POC validation did not terminalize at done: runtime=release`,
+  `pilot landed outside its declared route ['ideation','implementation','validation'] ... status='release'`,
+  `merge guard: refusing to finalize pilot-item: entity carries no binding pending terminal-target
+  approval` — 6 assertions fail, matching the severity table for both POC and Pilot (POC's failure
+  was previously only inferred from the table, not run). Full transcripts in `## Measurement` ->
+  "Landed at `build`, both RED-then-GREEN".
+- DONE: Keep the two loader copies byte-identical.
+  `diff kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md` and
+  `diff kc-dev-flow/scripts/profile-contract-loader.py docs/dev/_mods/profile-contract-loader.py`
+  both report no difference after my edits; `scripts/kc-dev-flow-contract-test.py` also
+  byte-compares both pairs and passes.
+- DONE: Decide deliberately whether kernel.md's runtime-may-skip clause stays, is bounded, or goes; record the reasoning.
+  Decision: bounded, not removed or left untouched. POC's `ideation` skip (confirmed:
+  `ROUTES["poc-exploration"]` has no `ideation` key) is the sole surviving referent and is a real,
+  Captain-accepted design, so the clause cannot go. Added one sentence to both kernel.md copies
+  naming the invariant this incident exposed: a skip is safe only when the skipped stage carries no
+  authorization checkpoint a later stage does not also carry; a stage gating the route's sole
+  terminal-authorization checkpoint is not a candidate for the clause and must fold into an adjacent
+  stage's contract instead (cross-referencing Production's own route row as the worked example).
+  Reasoning recorded in a new "The remaining skip clause: bounded, not removed" subsection. Commit 3ad3725a.
+
+### Summary
+
+Verified and committed all 15 inherited hunks (commit 3ad3725a) after confirming each against the
+accepted outcome by running the tests, not re-reading notes. Closed three gaps the FO flagged as
+unaddressed: named and enforced all six route-string copies (two previously had no check; both now
+do, mutation-tested), answered the release-authorization residual with empirically-probed tool
+constraints instead of assumption (found the real mechanism, and named the one genuine, unclosed
+residual rather than papering over it), and bounded kernel.md's skip clause with the invariant this
+incident exposed. RED reproduced live on the pre-fix tree using the landed check's own logic (both
+POC and Pilot strand at `status: release`); GREEN confirmed on the post-fix tree unmodified. Full
+contract test passes except the pre-existing, sibling-owned `profile-spacedock-route.test.py`
+failure, confirmed to reproduce identically on the unmodified base commit — not this task's
+regression, not fixed here.
