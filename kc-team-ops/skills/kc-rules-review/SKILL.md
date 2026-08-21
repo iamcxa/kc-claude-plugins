@@ -193,6 +193,40 @@ Give the reviewer the two kinds above, the run directory, and this brief:
 That last item is what makes the recommendation falsifiable. A role proposal that cannot point at
 turns the user would not have had to write is a job title with nothing under it.
 
+### A recurring question is not yet a vacancy
+
+Count alone picks the wrong role, and the margin is usually too thin to carry a job title. Run the
+candidates through the audit's own test before naming one:
+
+| The rule for that question | Firing | Verdict |
+|---|---|---|
+| absent from the rule file | — | **vacant** — nobody is doing this |
+| present, and never fires | zero | **vacant** — the rule is there and does not run, which is the highest-value finding this audit has |
+| present, and fires | high | **occupied** — the low question count is the rule working, not a gap |
+
+The third row is the one that gets missed. A question the user rarely asks looks like a small
+cluster; it is often a seat that is already filled. Read it as evidence the rule is doing its job,
+not as a role with weak support.
+
+This is Step 2's friction-against-firing applied to roles, and skipping it turns Step 4 into a
+counting exercise that contradicts the rest of the audit.
+
+### Say what it displaces
+
+Attention is finite: across sixteen isolated runs the framing moved what got mentioned, so
+mentioning one thing more means mentioning something else less. A role proposal has to name the
+attention it competes with, and the strongest competitor is whatever is currently *working*.
+
+A verification role, for instance, pulls attention toward proving the last step ran — and away from
+scope and the next integrated step, which is where a well-fed engineering role spends it. Say that
+in the proposal:
+
+> Installing this displaces `<the currently working attention>`, which is firing `<n>` times.
+> Watch that count on the next run; if it falls, the trade was real and you should decide whether
+> you want it.
+
+That makes the trade checkable on the next audit instead of a claim nobody revisits.
+
 ### Then say it, every run
 
 **Required output, including runs that change nothing:**
