@@ -52,18 +52,15 @@ review or receipt.
 Queue state still has an exit bar. An item leaves `backlog` only when its
 committed body states both:
 
-- **What it is** — one sentence that lets the Captain recognize and triage the
-  item without opening anything else.
+- **What it is** — one sentence sufficient for Captain triage.
 - **Why it is worth doing** — for `pilot-product-slice` and `production`, the
   outcome it serves in the repository's existing project-context authority; for
-  `poc-exploration`, the question the experiment answers and the observed result
-  that would abandon it. Do not create a separate vision, roadmap, or outcome
-  document to hold this.
+  `poc-exploration`, the question the experiment answers and the observable
+  result whose occurrence would abandon it.
 
-The Captain checks the bar at profile selection, because that is where an item
-first enters a working stage. `kc-dev-flow:choose-work-profile` asks for a
-missing part, and reports the item as not ready to leave `backlog` when it
-cannot ask.
+The Captain checks the bar at profile selection.
+`kc-dev-flow:choose-work-profile` asks for a missing part, and reports the item
+as not ready to leave `backlog` when it cannot ask.
 
 ## Shared boundaries
 
@@ -77,11 +74,11 @@ cannot ask.
 - Promote when accepted scope crosses the selected profile's boundary. Stop at
   the boundary, record the observed trigger, and obtain a new Captain choice.
 - A size threshold the work item declared at shape may stop work in progress.
-  When implementation crosses one, stop, record the observed count and the
-  threshold it crossed, and report to the First Officer without continuing.
-  Crossing is a report of what the work turned out to be, not a failure and not
-  a request for a larger number. It routes the way a crossed profile boundary
-  routes, and it still passes and fails nothing.
+  Stop on crossing one, record the observed count against the threshold, and
+  report to the First Officer without continuing. Crossing passes and fails
+  nothing; it reports what the work turned out to be. Work resumes on a Captain
+  choice of exactly one of reduce scope, reshape with replacement thresholds, or
+  promote the profile.
 - A local check proves only what it observed. Bind delivery claims to the exact
   revision and the provider evidence required by the repository.
 - Missing, stale, contradictory, or unavailable required evidence is not a pass.
@@ -89,14 +86,14 @@ cannot ask.
   code-changing repair invalidates prior exact-revision validation.
 - Scaffolding you expect to delete is recorded when it is created, in the
   existing work item that creates it: what it is, why it exists, and the
-  concrete condition that makes it removable. A date is not a condition, and an
-  entry carrying none is a wish. Feature flags, capability probes, shims, and
-  transitional duplicates are all in scope. Do not open a pool document,
-  cleanup list, or tracker to hold these entries.
-- A guard carries its removal condition from creation and needs the same
-  justification to remove as to add. A probe, refusal, validation, or required
-  declaration whose removal condition cannot be written is a permanent cost
-  taken for a temporary reason, and does not ship.
+  concrete condition that makes it removable. A date alone is not a removal
+  condition. Feature flags, capability probes, shims, and transitional
+  duplicates are all in scope.
+- A guard meant to be temporary — a probe, refusal, validation, or required
+  declaration — carries a removal condition from creation and takes the same
+  justification to remove as to add. A guard whose removal condition cannot be
+  written is not temporary: record the enduring invariant it holds instead, and
+  keep it out of the scaffolding record.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
