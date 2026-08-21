@@ -1,7 +1,7 @@
 ---
 id: k69wjs5ttme3z11hph3sy45d
 title: continue-dev-flow states the stage's declared receipts to the working agent
-status: validation
+status: release
 source: residual named at every gate of declared-receipt-has-no-reader (#256) and ruled on by the Captain, 2026-08-20 — ship the reader before the emitted field repeats the defect it was added to answer
 product: kc-dev-flow
 sprint:
@@ -84,7 +84,7 @@ gates:
                 reason: 'Captain approved verify-deliver at f351f440 after the inserted integration check. A blind agent following the edited skill reached declared_receipts through the documented default text invocation rather than re-parsing the conditional-references block, and volunteered that the four null receipts correctly did not appear; its blindness conditions (neutral work item containing the field name zero times, field name absent from its prompt, reporting a break declared a valid answer) are recorded. Check 1 separately proven by a positive/negative loader pair against origin/main. One-file verbatim prose diff, loader and both vendored copies untouched, no standing grep committed. Two prose defects the probe surfaced are pre-existing and dispositioned out of scope. PR #264 Draft, based on #262''s branch because the change cannot function without it. Mark-ready and merge remain the Captain''s actions.'
               application:
                 target-stage: release
-                state: pending
+                state: consumed
 ---
 
 ## Problem
