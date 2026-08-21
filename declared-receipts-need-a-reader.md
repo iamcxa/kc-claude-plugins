@@ -74,6 +74,17 @@ gates:
                 digest: sha256:c97cf356dd80e14722b27ac88701d34c1d64f2eb46bde462da953802cb7d316d
                 request-digest: sha256:2b6ca2f2e19b2a9c450485d02435d89409ede23cc800e09e62956b6cd309d1c1
                 room-ref: ./declared-receipts-need-a-reader/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k69wjs5ttme3z11hph3sy45d:validation:2
+                briefing: briefing:k69wjs5ttme3z11hph3sy45d:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-21T08:04:49.003582Z"
+                decision: approve
+                reason: 'Captain approved verify-deliver at f351f440 after the inserted integration check. A blind agent following the edited skill reached declared_receipts through the documented default text invocation rather than re-parsing the conditional-references block, and volunteered that the four null receipts correctly did not appear; its blindness conditions (neutral work item containing the field name zero times, field name absent from its prompt, reporting a break declared a valid answer) are recorded. Check 1 separately proven by a positive/negative loader pair against origin/main. One-file verbatim prose diff, loader and both vendored copies untouched, no standing grep committed. Two prose defects the probe surfaced are pre-existing and dispositioned out of scope. PR #264 Draft, based on #262''s branch because the change cannot function without it. Mark-ready and merge remain the Captain''s actions.'
+              application:
+                target-stage: release
+                state: pending
 ---
 
 ## Problem
