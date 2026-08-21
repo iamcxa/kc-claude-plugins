@@ -16,7 +16,8 @@ while [ $# -gt 0 ]; do
       sed -n '2,9p' "$0"
       echo
       echo "Usage: $0 --since YYYY-MM-DD [--home ~/.claude] [--patterns FILE]"
-      echo "  --patterns  TSV: kind<TAB>label<TAB>regex   kind = friction|firing"
+      echo "  --patterns  TSV: kind<TAB>label<TAB>regex"
+      echo "              kind = friction | firing | incident | codify"
       exit 0 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
@@ -79,7 +80,7 @@ done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
 # assistant turn before it: "I fixed it myself" means one thing after silence and
 # another after the agent offered to do it and stopped.
 while IFS= read -r f; do
-  jq -r --arg SINCE "$SINCE" '
+  jq -r --arg SINCE "$SINCE" --arg SID "$f" '
     select(.type=="user" or .type=="assistant") | select((.timestamp // "") >= $SINCE)
     | . as $r | (.message.content) as $c
     | (if ($c|type)=="string" then $c
@@ -87,9 +88,9 @@ while IFS= read -r f; do
        else "" end) as $t
     | select(($t|length) > 0)
     | ($t | gsub("\n"; " ")) as $flat
-    | "\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
+    | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
   ' "$f" 2>/dev/null
-done < "$WORK/sessions.txt" | sort > "$WORK/stream.txt"
+done < "$WORK/sessions.txt" | sort -t'\t' -k1,1 -k2,2 > "$WORK/stream.txt"
 
 HUMAN=$(wc -l < "$WORK/human.txt" | tr -d ' ')
 ASST=$(wc -l < "$WORK/assistant.txt" | tr -d ' ')
@@ -161,11 +162,12 @@ if [ "$INC" = 1 ]; then
   while IFS=$'\t' read -r kind label re; do
     case "$kind" in incident|codify) ;; *) continue ;; esac
     awk -F'\t' -v RE="$re" -v LABEL="$label" '
-      $2=="assistant" { prev=$4 }
-      $2=="user" && tolower($4) ~ tolower(RE) {
-        print "--- " LABEL " @ " $1
-        print "  BEFORE (agent): " (prev=="" ? "(nothing)" : substr(prev,1,300))
-        print "  THEN  (user):   " substr($4,1,300)
+      $1!=sid { sid=$1; prev="" }
+      $3=="assistant" { prev=$5; next }
+      $3=="user" && tolower($5) ~ tolower(RE) {
+        print "--- " LABEL " @ " $2
+        print "  BEFORE (agent, same session): " (prev=="" ? "(nothing in this session)" : substr(prev,1,300))
+        print "  THEN  (user):   " substr($5,1,300)
         print ""
       }' "$WORK/stream.txt" >> ./rule-review-incidents.txt
   done < "$PATTERNS"
@@ -185,11 +187,12 @@ printf '%s\n' "Each one has two ways to fail: never written into the rule file, 
 
 printf '\n%s\n' "=== coverage: what this pass cannot see ==="
 awk -F'\t' '
-  $2=="assistant" { prev=$3+0; next }
-  $2=="user" && prev>0 {
+  $1!=sid { sid=$1; prev=0 }
+  $3=="assistant" { prev=$4+0; next }
+  $3=="user" && prev>0 {
     b = prev<500 ? "under 500" : prev<1500 ? "500-1500" : prev<3000 ? "1500-3000" : "3000+"
     n[b]++
-    if ($4 ~ /換句話說|白話|太長|簡單一點|是什麼|什麼意思|沒看懂|看不懂|rephrase|what do you mean/) d[b]++
+    if ($5 ~ /換句話說|白話|太長|簡單一點|是什麼|什麼意思|沒看懂|看不懂|rephrase|what do you mean/) d[b]++
     prev=0
   }
   END {

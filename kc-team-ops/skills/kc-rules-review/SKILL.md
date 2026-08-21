@@ -132,20 +132,20 @@ on two task shapes, the seat did not change what the agent recommended — the t
 that every time. One dimension separated cleanly: how often the reply named who owns a thread,
 Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. That is one dimension on one
 pair of fixtures — enough to say a seat can move what gets mentioned, not enough to say what else it
-does or does not move. What a seat reliably does is give the user one handle for a dozen rules,
-which is how they decide what belongs in the set and what does not.
+does or does not move. The reason to name one anyway is the user's, not the agent's: a seat is one
+handle for a dozen rules, and that is how they decide what belongs in the set and what does not.
 
 So:
 
 - **Always name the seat, and say what it means here** — the default question that seat asks before
-  every reply. That question is the only part of a seat with any measured effect.
+  every reply. That question is the only part of a seat this audit has measured at all.
 - **Never ship a seat alone.** The rules are the substance; the seat is the label on the jar. A seat
   recommended without rules under it is the weakest change in the file, dressed as the biggest.
 - **Change the seat when incidents say to.** A blind spot from Step 2 — zero friction, zero firing,
   incidents present — names a class of work the user is doing alone. That is the evidence for
   proposing a different seat, and the proposal has to say which incidents it is answering.
 - **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
-  to change reliably, that is a rule, and it goes in as a rule regardless of the seat.
+  to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
 
 ## Step 4 — Decide, one at a time
 
