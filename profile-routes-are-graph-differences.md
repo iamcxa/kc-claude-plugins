@@ -147,6 +147,322 @@ work_profile:
 
 ## Accepted outcome and non-goals
 
+**Selected: Direction 1 — demote `release` from a graph state to a
+terminal-approval boundary. Direction 2 (one workflow per profile) is
+rejected.**
+
+### Why Direction 2 is rejected
+
+The Captain-accepted work-profile receipt already forecloses it. The
+architecture obligation reads: *"Stop expressing profile differences as graph
+differences ... If a difference must survive, it belongs in what happens
+inside a stage or in which gates fire, not in which states exist."* Direction
+2 is the maximal case of expressing a profile difference as a graph
+difference — three separate graphs instead of one. It also costs a
+single-view status query across all work (`spacedock status --boot` and
+`--where` currently span one workflow) and turns promotion into a
+cross-workflow move, neither of which the Captain's obligation or this
+task's scope accepts paying for.
+
+### Mechanism (empirically verified against Spacedock 0.27.0-pre8, not assumed)
+
+Direction 1's original framing said "model release as a Production-only gate."
+Concretely: Spacedock already has the mechanism this needs, so nothing new is
+asked of the runtime — the same boundary the Captain already ruled out asking
+for (skip-stage) is not needed.
+
+`spacedock gate --help` documents that an approval whose **target stage is
+terminal** is not spent by `consume`: it stays `pending`, reports
+`route=approved-awaiting-merge`, and `spacedock merge guard <slug> --verdict
+passed|rejected` is "the sole terminal consumer." I built two throwaway
+fixtures under `/tmp` (not committed — code is not this stage's deliverable)
+mirroring `docs/dev/README.md`'s state graph and drove entities through the
+real CLI (`gate prepare` / `gate record --consume` / `status --set` /
+`merge guard`), not by inspecting docs:
+
+- **Fixture A — today's 6-state graph** (`backlog, ideation, implementation,
+  validation, release, done`): a `pilot-product-slice` entity approved and
+  consumed at `validation` lands at `status: release` — reproduced, see
+  Acceptance evidence. This is the observed production failure, now shown red
+  on demand instead of only inferred from one incident.
+- **Fixture B — candidate 5-state graph** (`release` removed, `done`
+  terminal): a `production` entity's validation-gate approval now targets
+  `done`, which is terminal, so `gate record --consume` reports
+  `application=advance/pending ... consumed=false target-stage=done
+  route=approved-awaiting-merge` and **status stays `validation`** — it does
+  not silently land anywhere. A separate, later `spacedock merge guard
+  prod-item --verdict passed` is the action that terminalizes it, writes
+  `verdict: PASSED`, and archives it. Full transcript in Acceptance evidence.
+
+This gives two distinct, separately timestamped rulings on the same entity
+without a dedicated `release` state: the validation gate's `resolution.decision:
+approve` (**"the code is verified"**, Captain-recorded at validation-approval
+time) and the `merge guard --verdict` write (**"this may be released"**,
+recorded later, by whoever is authorized to run that command). Nothing about
+this ruling separation depends on being Production-only — POC and Pilot
+already deliver through the same PR/merge-guard path per this workflow's Local
+Profile table, so `merge guard` firing for them too is not new exposure; what
+changes is only what content a human must have satisfied *before* they are
+willing to type `--verdict passed` for a Production item.
+
+**Landed change, concretely:**
+- `docs/dev/README.md` (and the `kc-dev-flow` adopter README template it is
+  vendored from) drops the `release` entry from `stages.states`; `validation`
+  keeps `gate: true`.
+- `kc-dev-flow/scripts/profile-contract-loader.py` `ROUTES["production"]`
+  drops the `"release"` key; `"validation"` now maps to `("verify", "done")`.
+  `pilot-product-slice` and `poc-exploration` entries are unaffected (they
+  never had a `release` key).
+- `profiles/production/verify.md`'s `## Required output` gains
+  `release.md`'s four bullets (rollout/rollback readiness, operational owner
+  and monitoring handoff, explicit Captain-or-release-owner authorization —
+  "do not merge, publish, migrate, or mutate production without the named
+  authority" carries over verbatim as the gate on invoking `merge guard`).
+  `profiles/production/release.md` is deleted, in both `kc-dev-flow/references/`
+  and its `docs/dev/_mods/` vendored copy.
+- `kc-dev-flow/scripts/profile-contract-loader.test.py` and
+  `scripts/kc-dev-flow-contract-test.py` (`profile_files["production"]`,
+  currently `("base.md", "shape.md", "build.md", "verify.md", "release.md")`)
+  lose the `release.md` member and any release-route assertion.
+
+### Non-goals
+
+- No Spacedock skip-stage capability — the mechanism above is existing,
+  documented 0.27.0-pre8 behavior (terminal-approval + `merge guard`), not a
+  new runtime ask.
+- No change to what work each profile performs, only which graph states its
+  route occupies (kernel.md's `poc-exploration` / `pilot-product-slice` /
+  `production` route table entries for `shape`/`build`/`verify(-deliver)` are
+  unchanged; only `production`'s trailing `release` route element and its
+  runtime `release` stage are removed).
+- POC's existing `ideation` skip (harmless per the severity table — no gate
+  record is ever created there because the FO jumps `status` directly from
+  `backlog` to `implementation`) is unchanged by this task. It remains a
+  correctly-functioning manual nudge, not a defect this task closes; closing
+  it would need its own graph change and is out of scope here.
+- Does not touch `poc-exploration` or `pilot-product-slice` ROUTES entries,
+  which already exclude `release` and are not the broken leg.
+
+### Adopter migration
+
+1. **Every committed Production v2 receipt goes stale the moment ROUTES
+   changes — including this work item's own receipt.** The loader recomputes
+   `expected_route = [logical for logical, _next in ROUTES[profile].values()]`;
+   for `production` that becomes `[shape, build, verify]` once `release` is
+   dropped, so any committed receipt still reading
+   `route: [shape, build, verify, release]` throws `stale route for
+   production: expected [...], got [...]` on next load — a fail-closed
+   refusal, not a silent pass. Migration path: identical to the documented
+   v1→v2 upgrade — `kc-dev-flow:choose-work-profile` re-records the receipt
+   mechanically under the *same* Captain selection (no new Captain decision
+   required, since the profile itself did not change, only its route
+   representation). This item's own `route: [shape, build, verify, release]`
+   above must be re-recorded in the same commit that lands the ROUTES change,
+   or `implementation` cannot even load its own stage contract.
+   `poc-exploration` and `pilot-product-slice` receipts carry no `release`
+   entry today and are unaffected.
+2. **An in-flight item sitting at `status: release` when the graph changes.**
+   Verified empirically (Fixture A's entity, after editing its README to the
+   5-state graph): `spacedock status --validate` still reports `VALID` — a
+   status value with no matching declared state is **not flagged** — but
+   `spacedock status --boot`'s dispatchable table silently excludes it (no row,
+   no NEXT, no error); it remains reachable only via `--where status=release`
+   /`--fields`, i.e. it goes quietly non-dispatchable rather than loudly
+   broken. This is a materially different (worse, because silent) failure mode
+   than today's loader `ContractError`. **Required migration step: before the
+   README states-graph edit lands, drain every item with
+   `status: release` to `done` under the *old* graph** (approve its pending
+   release content, run `merge guard --verdict passed|rejected` under
+   0.27.0-pre8's current release-state flow) **and confirm
+   `spacedock status --where status=release` returns empty** as a preflight
+   gate on the graph-edit commit. Do not land the states edit and the drain in
+   the same commit if any item is mid-release; drain first, edit second.
+3. **Pinned-tag adopters (repositories consuming a released `kc-dev-flow`
+   tag whose committed workflow README already contains a `release` state).**
+   This is a compatibility event, not an internal refactor: (a) the new
+   `kc-dev-flow` tag's `MIGRATION.md` gets a dated entry naming the ROUTES and
+   README-template change; (b) each adopter repo must edit its own vendored
+   `docs/dev/README.md` `states:` block to drop `release`, re-vendor
+   `profile-contract-loader.py`/`kernel.md` (the byte-parity contract test in
+   `scripts/kc-dev-flow-contract-test.py` already fails closed on drift
+   between `kc-dev-flow/scripts/*` and `docs/dev/_mods/*`, so a partial
+   re-vendor is caught, not silently accepted); (c) re-record every committed
+   Production receipt per migration step 1; (d) run migration step 2's
+   preflight drain before touching its own README. An adopter that does *not*
+   upgrade keeps working exactly as today (the old graph, the old ROUTES, the
+   same stranding risk this task exists to close) — this is opt-in per
+   adopter at their next `kc-dev-flow` tag bump, not a forced break.
+4. **Sibling coupling.** `spacedock-route-test-passes-nowhere`
+   (`2nwpze64kkr5qeg6d8tm4g4p`, still `backlog`) owns
+   `kc-dev-flow/scripts/profile-spacedock-route.test.py`, whose fixture models
+   the *old* 6-state graph and force-sets `status=done` directly (bypassing
+   `gate consume` — it does not exercise this defect at all, see Acceptance
+   evidence). That sibling item's fix and this task's `build` stage land the
+   same file; whichever lands second must rewrite the fixture to the 5-state
+   graph and replace the forced `--set status=done` with the real
+   `gate prepare` / `gate record --consume` / `merge guard` sequence used to
+   produce this task's RED evidence below — the sibling's own casing fix
+   (`verdict: PASSED`, confirmed uppercase in the Fixture B transcript) is
+   subsumed by that rewrite rather than done twice. Record which item actually
+   lands it once scheduling is known; do not let both touch it independently.
+
+## Reverse-recovery audit (`brownfield_capability_change`)
+
+This task proposes removing an existing capability (the `release` graph state
+and its dedicated stage contract), so the trigger fires.
+
+```yaml
+reverse_recovery:
+  trigger: "remove the `release` runtime state and `profiles/production/release.md` stage contract; replace with terminal-approval + merge-guard content on `validation`"
+  boundary: "kc-dev-flow profile routing — docs/dev/README.md stages graph, kc-dev-flow/scripts/profile-contract-loader.py ROUTES, kc-dev-flow/references/profiles/production/{verify,release}.md and their docs/dev/_mods vendored copies"
+  layers:
+    - surface: "`release` entry in docs/dev/README.md `stages.states` (and the kc-dev-flow adopter template it is vendored from)"
+      location: "docs/dev/README.md stages.states; kc-dev-flow README template"
+      completeness: WORKING
+      need: NO_OBSERVED_CONSUMER
+      evidence: "Functions exactly as declared (Fixture A: validation-approval consume lands there), but no consumer requires the authorization ruling to be a distinct *graph node* — Fixture B shows the same ruling reachable via the existing terminal-approval+merge-guard path with the state removed. Searched: profile-contract-loader.py ROUTES (only production references it), docs/dev/README.md prose (describes it, does not require it structurally), kernel.md (requires 'release owner retains release authority' as a ruling, not as a graph state)."
+      disproof_hook: "Fixture B transcript below: 5-state graph, no `release` state, terminal ruling still recorded via `merge guard --verdict`"
+    - surface: "`profiles/production/release.md` required-output content (rollback/forward-recovery readiness, operational owner, explicit authorization)"
+      location: "kc-dev-flow/references/profiles/production/release.md; docs/dev/_mods/profiles/production/release.md"
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "README Gate ownership table: 'Production release | Captain or declared release owner'; kernel.md: 'Captain or the declared release owner retains release authority.' The content is a live consumer requirement; only its packaging as a separate graph-node contract is being removed."
+      disproof_hook: "grep -n 'release owner' docs/dev/README.md ARCHITECTURE.md kc-dev-flow/references/kernel.md — all three cite the ruling, none cites the state"
+    - surface: "ROUTES['production']['release'] entry in profile-contract-loader.py"
+      location: "kc-dev-flow/scripts/profile-contract-loader.py:26-27 (ROUTES table)"
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: "Present, loads correctly, but its computed next_workflow_stage is never read by Spacedock's own gate consume (confirmed: consume advances by the README's declared graph order, not by this table) — this is the exact seam failure the task exists to close, evidenced by the production incident and Fixture A."
+      disproof_hook: "Fixture A transcript below"
+  decision: redesign
+```
+
+Removal authority: Captain, already granted in this item's approved scope
+(work-profile receipt architecture obligation explicitly names collapsing the
+`release` state as the accepted shape of a fix).
+
+## Project-context impact
+
+```yaml
+project_context:
+  impact: none
+  authority: ARCHITECTURE.md
+  claim_locator: "## kc-dev-flow profile-native loading"
+  surface: "\"One superset Spacedock graph serves all three routes\" and \"Backlog and done are state boundaries rather than worker stages\" — neither sentence names `release` or any specific state count."
+  stale_claim: none
+  approved_change: none
+  landed_change: none
+  planned_check: "After the states-graph edit lands, re-read ARCHITECTURE.md `## kc-dev-flow profile-native loading` and confirm it still describes one shared graph with backlog/done as boundaries — true whether the graph has 5 or 6 states, so the edit changes no described claim. planned_check: `grep -n 'superset\\|state boundaries' ARCHITECTURE.md` returns the same two sentences, unedited."
+  validation_evidence: pending
+```
+
 ## Acceptance evidence
 
+Both transcripts below are from throwaway `/tmp` fixtures run today against
+the installed `spacedock 0.27.0-pre8` binary (`/Users/kent/.local/bin/spacedock`),
+mirroring `docs/dev/README.md`'s state graph exactly. Nothing durable was
+written to the repo; the check's durable home is `build`, likely folded into
+(or replacing the fixture in) `kc-dev-flow/scripts/profile-spacedock-route.test.py`
+per the sibling-coupling note above.
+
+**RED today — Fixture A, current 6-state graph, `pilot-product-slice` entity,
+real gate lifecycle (`gate prepare` → `gate record --decision approve
+--consume` at backlog, then ideation, then `validation`; no forced `--set
+status=done` anywhere):**
+
+```
+$ spacedock gate record pilot-item --workflow-dir /tmp/sd-route-probe --decision approve --actor person:captain --consume
+recorded gate=gate:...:validation ... decision=approve
+gate=gate:...:validation application=advance/consumed condition=approved-pending eligible=true consumed=true target-stage=release
+$ grep '^status:' pilot-item.md
+status: release
+```
+
+`pilot-product-slice`'s declared route is `[ideation, implementation,
+validation]` (no `release`) — the entity is now at a stage outside its route,
+reached by the ordinary gate-consume path, exactly reproducing the
+`declared-receipts-need-a-reader` incident. This is the check named in the
+completion checklist ("drive a Pilot item ... assert no gate record exists at
+a stage outside their route"), shown failing on the current tree before any
+fix.
+
+**Candidate mechanism confirmed — Fixture B, 5-state graph (`release`
+removed), `production` entity, same real gate lifecycle to `validation`:**
+
+```
+$ spacedock gate record prod-item --workflow-dir /tmp/sd-route-probe-fixed --decision approve --actor person:captain --consume
+gate=gate:...:validation application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge
+$ grep '^status:' prod-item.md
+status: validation
+$ spacedock merge guard prod-item --workflow-dir /tmp/sd-route-probe-fixed --verdict passed
+finalized: prod-item -> done (verdict passed), archived.
+$ cat _archive/prod-item.md | grep -E '^(status|verdict|completed):'
+status: done
+verdict: PASSED
+completed: 2026-08-21T08:56:09Z
+```
+
+No stranding: the entity never sits at an excluded stage, and the release
+ruling (`merge guard --verdict`) is a distinct, separately timestamped
+decision from the validation gate's `resolution.decision: approve`.
+
+**Contamination avoided:** the existing
+`kc-dev-flow/scripts/profile-spacedock-route.test.py` was not reused as
+evidence — it forces `--set status=done` directly, which bypasses `gate
+consume` entirely and asserts nothing about this defect, and it hardcodes
+lowercase `verdict: passed`, which 0.27.0-pre8 does not write (confirmed
+`PASSED` above, matching the sibling item's independent finding).
+
 ## Measurement
+
+Two checks are owed at `build`, both named in the committed work-profile
+receipt's `testing` obligations and neither written durably yet (ideation's
+deliverable is the decision and its evidence, not the script):
+
+1. The RED check above, rewritten as a durable script (see sibling-coupling
+   migration note): drive a POC and a Pilot item through the real gate
+   lifecycle to `done` against the *post-fix* graph and assert no gate record
+   exists at a stage outside their declared route. Must flip from red (today,
+   demonstrated above) to green once the README/ROUTES change lands.
+2. A check that fails when `profile-contract-loader.py`'s computed
+   `next_workflow_stage` disagrees with the stage Spacedock's `gate consume`
+   actually advances to — so the two cannot silently diverge again the way
+   they did here. Candidate shape: for each profile/stage pair in ROUTES,
+   assert the loader's `next_workflow_stage` equals the runtime's
+   `target-stage` from a real `gate record --consume` run in a matching
+   fixture (the same fixtures built for this stage's evidence, retained as the
+   starting point).
+
+## Stage Report: ideation
+
+- DONE: Select ONE direction and record why the other was rejected.
+  Selected Direction 1 (demote `release` from a graph state to a
+  terminal-approval boundary); Direction 2 rejected by citing the receipt's
+  own architecture obligation, not just cost tradeoffs — see "Accepted
+  outcome and non-goals".
+- DONE: Acceptance evidence names a check RED on the current tree, shown failing today.
+  Ran the real `spacedock gate prepare`/`gate record --consume` lifecycle
+  (no forced `--set status=done`) against a `/tmp` fixture mirroring
+  `docs/dev/README.md`'s graph; a `pilot-product-slice` entity's validation
+  approval lands at `status: release`, outside its declared route — transcript
+  in "Acceptance evidence". Also empirically confirmed the candidate
+  mechanism (Fixture B: terminal-target approval + `merge guard --verdict`
+  gives a second, separately timestamped ruling with no `release` state).
+- DONE: Name the adopter migration concretely, including in-flight items and pinned-tag adopters.
+  Four numbered steps in "Adopter migration": stale-receipt re-record (this
+  item's own receipt included), in-flight `status: release` drain preflight
+  (verified `--validate` does not flag it and `--boot` silently drops it from
+  the dispatchable table — a worse, quieter failure than today's loader
+  error), pinned-tag adopter upgrade path (opt-in per tag bump, byte-parity
+  contract test catches partial re-vendor), and the sibling-item coupling
+  disposition for `spacedock-route-test-passes-nowhere`.
+
+### Summary
+
+Selected Direction 1: drop `release` as a Spacedock graph state and fold its
+required-output content into `verify.md` for Production only, relying on
+Spacedock 0.27.0-pre8's existing terminal-approval + `merge guard` mechanism
+(confirmed empirically, not assumed) to keep verification and release as two
+separately rendered rulings. Direction 2 is rejected against the receipt's own
+obligation. Reverse-recovery and project-context receipts recorded per shape
+trigger; multi-slice guard does not fire (single decision, not two slices).
