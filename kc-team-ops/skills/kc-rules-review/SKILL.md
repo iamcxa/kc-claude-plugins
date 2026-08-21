@@ -26,9 +26,9 @@ violated gets read as dead weight.
 - A rule file has grown and nobody knows which parts still earn their place.
 - A rule change just landed and downstream files may quote the old section names.
 
-**Do not use** for a single skill's behaviour in a single repo — `recce-team:reflection` owns that
-(one target skill, one repeated problem, one gated fix). Do not use for a memory inventory —
-`recce-team:memory-survey` owns that. This skill is the fleet-wide, whole-rule-set pass.
+**Do not use** for one skill's behaviour inside one repository, or for a bare inventory of stored
+memories. This is the whole-rule-set pass: it reads the rules that govern every session, and its
+unit of change is a rule, not a single correction.
 
 ## Step 1 — Measure
 
