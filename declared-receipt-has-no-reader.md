@@ -81,6 +81,17 @@ gates:
                 digest: sha256:ab0300e94b73d1602a0dfe53a47fa6769a1ae2aaf73a2e606dab3ee204ecddeb
                 request-digest: sha256:b4c1ebfe114b57507b00cf3c64bcd2ad059fe7ddd45b037ef834ede2757096a0
                 room-ref: ./declared-receipt-has-no-reader/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:q0z8h3xny0qxv0r5srter8tj:validation:2
+                briefing: briefing:q0z8h3xny0qxv0r5srter8tj:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-21T06:46:45.703114Z"
+                decision: approve
+                reason: 'Captain approved validation at 10edd0a4 after two correction rounds. Every falsifiable claim names a check seen RED across six mutants (flatten, null-leak, truncate-first, sorted-set, group-by-path, format-flip), each independently reproduced by the reviewer rather than accepted from the implementer. Production change across all three rounds remains the single 22/3-line reader in both byte-identical loader copies, with the 305-429 fail-closed range outside every hunk. Four prose and non-goal claims are explicitly named as standing on code inspection with no automated check, accepted rather than closed with a tautological presence-grep. Accepted residual unchanged: declared_receipts ships with no consumer.'
+              application:
+                target-stage: release
+                state: pending
         - id: gate:q0z8h3xny0qxv0r5srter8tj:release
           stage: release
           attempts:
