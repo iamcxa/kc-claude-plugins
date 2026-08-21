@@ -45,3 +45,21 @@ smallest maintainable slice.
 
 Stop when one implementation route is sufficient. Do not design for broad scale
 or production operations.
+
+## Journey statement
+
+The accepted journey is a step-by-step account of what a person does and what
+happens behind each step, in the order it happens. Three rules bind it:
+
+- **Mark every step OBSERVED or DESIGNED.** Observed means someone watched it run
+  on the real components. Designed means written and not yet exercised. A
+  demonstrated step and a designed step must not read alike.
+- **Name programs, not roles.** Say which process acts, and which file or stream
+  carries the fact. "The caller" and "the client" hide the seam that breaks.
+- **Describe the unhappy paths in the same terms as the happy one.** Abandonment,
+  no answer, death, timeout. A journey that describes only success hides the risk
+  surface it was written to expose.
+
+Declare alongside it the observable semantics this work may change — command
+grammar, stored formats, authority, runtime behaviour. A small diff that changes
+an undeclared semantic is a boundary breach, and a size signal cannot catch it.
