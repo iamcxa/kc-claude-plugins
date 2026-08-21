@@ -5,7 +5,7 @@ status: ideation
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-21T08:46:56Z
 completed:
 verdict:
 worktree:
