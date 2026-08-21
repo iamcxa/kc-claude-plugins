@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-1:revision-1",
+  "question": "Approve validation at 3ad3725a and advance to release, accepting the release-authorization residual as a named residual rather than a closed item?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6b4a4efbbea4f57d3d21aacc5d60032a0beb2e50/profile-routes-are-graph-differences.md",
+      "rev": "sha256:676a220f238bdc5cceff7f5eae6ea19188744d6e76de584258c2a96ec031506e",
+      "mediaType": "text/markdown",
+      "summary": "All four items independently reproduced, not read from the implementer's transcript. All six route-string copies were mutation-tested one at a time and each guarding check was seen to go red with its own distinct message. The release-authorization limits were re-probed against a fresh fixture and match the entity's claims exactly, and the entity frames the lost second ceremony as a live residual rather than closed. The contract test's sole failure is the pre-existing sibling casing bug, reproducing identically on the merge base."
+    }
+  ]
+}

@@ -55,6 +55,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:8x38b1qryjrmy5w4ffk1egy1:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-validation-1
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-1:revision-1
+                digest: sha256:f9ff09956c625a7b414885ee67a650a86a505647ee0d2fb0f4fc3c734f161f32
+                request-digest: sha256:3c4589787b233af4ff8e13494065147bafee1ef2219c569b65368d240c1ef461
+                room-ref: ./profile-routes-are-graph-differences/review/validation/briefing-1
 ---
 
 ## Problem
