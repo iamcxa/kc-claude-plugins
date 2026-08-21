@@ -125,13 +125,13 @@ assistant turn printed above it, and classify it before it counts:
 
 | The turn before it shows | Classification | Remedy |
 |---|---|---|
-| nothing on the subject | **blind spot** | a rule, and possibly a different lens (Step 4) |
+| nothing on the subject | **blind spot** | a rule, and possibly a different role (Step 4) |
 | the user's own standing authority | **normal division of labour** | none; drop it |
-| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a lens |
+| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a role |
 | you lacking the access or the tool | **capability limit** | fix the access; a rule changes nothing |
 
-Only the first row may be used as evidence for changing the lens. The third is the one most easily
-mistaken for the first, and it is where changing the lens does the most damage: it renames the agent
+Only the first row may be used as evidence for changing the role. The third is the one most easily
+mistaken for the first, and it is where changing the role does the most damage: it renames the agent
 instead of making it finish.
 
 ## Step 3 — Check for an owner before deleting
@@ -152,40 +152,64 @@ Finding an owner is the start of the check, not the end. Before proposing remova
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
 
-## Step 4 — Name the lens the work needs
+## Step 4 — Find the role the user is covering for
 
-**Required output. Every run ends with this line, including runs that change nothing:**
+The friction table says which rules are broken. This asks a different question of the same corpus:
+**which job is vacant.** Do not derive one from the other — friction measures where the agent fails,
+and answering it with a job title recommends a communications hire because the engineer writes
+unclear reports.
 
-> Lens: `<name>` — default question: `<the one question it asks before every reply>`. Chosen because
-> `<the categories that dominated this run>`.
+**The signal is a question the user asks that the agent should have asked.** Every turn falls into
+one of two kinds, and only the second names a role:
 
-Do not skip it when the lens is staying the same. Saying "Chief Engineer, unchanged, because
-necessity and size were two thirds of the friction" is the output; silence is not. The previous
-version of this step was written as optional and produced nothing in several independent runs — the
-readers correctly applied the rule for *changing* a lens and never reached the rule for naming one.
-
-**Read the lens off the category mix.** The run already profiles the work; the lens is a name for
-what that profile is asking of you.
-
-| What dominated the run | Lens | The question it asks first |
+| The turn | Kind | Example |
 |---|---|---|
-| necessity, size, deletion | engineering integrity | What is the next smallest integrated step, and what can be deleted? |
-| undefined terms, rephrase | explanation | Will this land in one read, with no word they have not used themselves? |
-| status pull, routing incidents | chief of staff | Whose move is it, and what is waiting on whom? |
-| prior-art miss, duplication | stewardship | Who already owns this, and what does keeping our copy cost? |
+| points at the agent's last output and asks for it again | **repair** | "say that again more simply", "what does that mean" |
+| applies a standing test to the work that the agent never applied | **role gap** | "what breaks if we drop it", "does upstream already have this", "whose move is it" |
 
-Only the middle two rows have any measurement behind them, and only for one thing: across sixteen
-isolated runs on two task shapes, a chief-of-staff framing named who owns a thread 3 and 3 times
-against an engineering framing's 0 and 1. The rest of the table is inference from the categories,
-not from measured behaviour, and should be offered as such.
+A repair is fixed with a rule. A role gap means the user performed a function on the agent's behalf,
+and the recurring question *is* the job description.
 
-**What a lens is for, and what it is not.** The same sixteen runs found the task decided the
-recommendation every time — the lens moved what got mentioned, not what got done. Its value is to
-the person: one handle for a dozen rules, which is how they judge what belongs in the set. So:
+### Dispatch it, do not answer it yourself
 
-- **Never ship a lens alone.** Rules are the substance; the lens is the label on the jar.
-- **Changing it needs incidents, naming it does not.** A blind spot from Step 2 — zero friction, zero firing, incidents present — is the evidence for proposing a *different* lens, and that proposal must say which incidents it answers. Naming the current one is unconditional.
-- **If a behaviour has to happen every run, that is a rule.** Write it as a rule whatever the lens says.
+Send `human-turns.tsv` from the run to a **fresh-context reviewer** — one that has not seen this
+session's reasoning. An agent deciding which of its own duties are vacant is grading its own work,
+and this step is the one place in the audit where that is the whole question.
+
+Give the reviewer the two kinds above, the run directory, and this brief:
+
+> Group the recurring role-gap questions by the function they perform. Name the role that function
+> belongs to, anywhere on the software delivery arc — product, design, architecture, engineering,
+> test, release, operations, data, security, documentation, delivery management, coordination. Do
+> not restrict yourself to a fixed list, and do not invent a role to have an answer.
+
+### What it must return
+
+- **The role, or none.** "No vacant role" is a correct and expected result, and the reviewer must be told so. A catalogue this wide will always yield a plausible title if the reviewer feels obliged to produce one.
+- **The recurring question that names it**, quoted from the user, with the exact turns it appeared in. Fewer than three separate occasions is a note, not a finding.
+- **The default self-check to install** — that same question, turned on the agent. This is the deliverable; the title is the label on it.
+- **What it would have pre-empted**: the specific past turns where the user had to ask. Not "communication would improve" — "you asked this on these three dates, and you would not have needed to."
+
+That last item is what makes the recommendation falsifiable. A role proposal that cannot point at
+turns the user would not have had to write is a job title with nothing under it.
+
+### Then say it, every run
+
+**Required output, including runs that change nothing:**
+
+> Role: `<name>` — default question: `<the one it asks before every reply>`. Chosen because
+> `<the recurring question and how many separate occasions it appeared on>`.
+
+Saying "Chief Engineer, unchanged — 'what breaks without it' on nine separate occasions" is the
+output. Silence is not: the previous version of this step was written as optional and produced
+nothing in several independent runs, because its only actionable rule was conditional on finding a
+blind spot, and runs that found none correctly stopped.
+
+**What a role does not do.** Across sixteen isolated runs on two task shapes, the framing did not
+change what the agent recommended — the task decided that every time. One dimension separated: how
+often a reply named who owns a thread, 3 and 3 under a chief-of-staff framing against 0 and 1 under
+an engineering one. So install the question as a rule if the behaviour has to happen every run; the
+role is the handle the user holds a dozen rules by, not the mechanism.
 
 ## Remedies already measured
 
