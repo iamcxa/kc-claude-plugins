@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:ideation:attempt-1:revision-1",
+  "question": "Approve Direction 1 and enter implementation, with the release-authorization residual named below as something build must answer rather than inherit?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/08d671cb6d844aaff8c2f15ead0aa8a7be08c234/profile-routes-are-graph-differences.md",
+      "rev": "sha256:979a906efa46d0ad1036e2d73ed7936efb38852140f3c6d8f0ccaac972fe87df",
+      "mediaType": "text/markdown",
+      "summary": "Direction 1 selected and Direction 2 rejected by citing the receipt's own architecture obligation. Both the defect and the candidate mechanism were driven through the real 0.27.0-pre8 CLI, not read from docs: Fixture A reproduces the production failure red on demand, Fixture B shows a terminal-target approval leaves status put and merge guard terminalizes, so nothing new is asked of the runtime. Every changed file is named. FO residual: after the demotion, Production's release authorization survives only as a prose obligation on whoever types merge guard --verdict, with no enforcement point."
+    }
+  ]
+}

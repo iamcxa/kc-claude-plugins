@@ -35,6 +35,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:8x38b1qryjrmy5w4ffk1egy1:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-ideation-1
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:ideation:attempt-1:revision-1
+                digest: sha256:7a04bf343bec13c50b9054e8109ce64bfd84696657049d70407e4920a421b1dd
+                request-digest: sha256:3808eb2e350c12f10715bf47683125d67a0b6a6e6765a71e1e2a1b9d75ad377c
+                room-ref: ./profile-routes-are-graph-differences/review/ideation/briefing-1
 ---
 
 ## Problem
