@@ -64,6 +64,10 @@ gates:
                 digest: sha256:29a72bc3154e8764e4c6977e3549992c582732bc1017ea125a197d7b423f7dcc
                 request-digest: sha256:16dd612dc3c290d931235d7d33e5e046a0a14f7010d9c209a392691a3713df92
                 room-ref: ./declared-receipts-need-a-reader/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-21T07:50:47.511073Z"
+                reason: 'Captain inserted an integration check before this gate closes: the file-level evidence proves the skill says the right sentence, not that an agent following it sees the field. Replacement briefing follows that probe.'
 ---
 
 ## Problem
