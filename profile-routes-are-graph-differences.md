@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: ideation
+status: implementation
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
@@ -54,7 +54,7 @@ gates:
                 reason: 'Captain approved Direction 1. The shape drove the real 0.27.0-pre8 CLI rather than reading docs: Fixture A reproduces the production failure red on demand through the full gate lifecycle with no forced status writes, and Fixture B shows a terminal-target approval leaves status put while merge guard terminalizes, so the fix asks nothing new of the runtime — a claim the FO independently corroborated against its own first-hand observations of #262 and #264 today. Direction 2 was rejected by citing the receipt''s own architecture obligation. Every changed file is named and the adopter migration is concrete. Approved with the FO residual carried forward as something implementation must answer with a mechanism: after the demotion, Production''s release authorization rests only on a prose obligation binding whoever types merge guard --verdict, which would collapse the two rulings the receipt''s architecture obligation requires be kept separate.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
