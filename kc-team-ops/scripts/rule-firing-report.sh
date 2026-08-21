@@ -86,7 +86,8 @@ while IFS= read -r f; do
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
        else "" end) as $t
     | select(($t|length) > 0)
-    | "\(.timestamp)\t\($r.type)\t\($t | gsub("\n"; " ") | .[0:600])"
+    | ($t | gsub("\n"; " ")) as $flat
+    | "\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" | sort > "$WORK/stream.txt"
 
@@ -106,6 +107,7 @@ friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too
 incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
 incident	user took it over	我(自己|先|去)?(做|改|弄|處理|修|部署|合)(好|完|了)|我已經(自己|先)|I fixed it|I did it myself|I went ahead and|I had to do it
 incident	loss or recovery	救回|覆蓋掉|掃掉|had to recover|overwrote|clobber
+codify	asked to make it a rule	以後(都|請|先|就)|寫回去|寫進.*claude|寫進規則|變成規則|下次(記得|不要)|記住這個|from now on|make (this|that) a rule
 TSV
 fi
 
@@ -157,13 +159,13 @@ done < "$PATTERNS"
 if [ "$INC" = 1 ]; then
   : > ./rule-review-incidents.txt
   while IFS=$'\t' read -r kind label re; do
-    [ "$kind" = "incident" ] || continue
+    case "$kind" in incident|codify) ;; *) continue ;; esac
     awk -F'\t' -v RE="$re" -v LABEL="$label" '
-      $2=="assistant" { prev=$3 }
-      $2=="user" && tolower($3) ~ tolower(RE) {
+      $2=="assistant" { prev=$4 }
+      $2=="user" && tolower($4) ~ tolower(RE) {
         print "--- " LABEL " @ " $1
         print "  BEFORE (agent): " (prev=="" ? "(nothing)" : substr(prev,1,300))
-        print "  THEN  (user):   " substr($3,1,300)
+        print "  THEN  (user):   " substr($4,1,300)
         print ""
       }' "$WORK/stream.txt" >> ./rule-review-incidents.txt
   done < "$PATTERNS"
@@ -172,6 +174,34 @@ fi
 printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \
   "      user never corrected you, because you never gave them anything to correct." \
   "      Read every hit. Normal division of labour looks identical to a blind spot here."
+
+printf '\n%s\n' "=== codification: rules you asked for ==="
+while IFS=$'\t' read -r kind label re; do
+  [ "$kind" = "codify" ] || continue
+  printf '%-26s %6s\n' "$label" "$(count_turns "$WORK/human.txt" "$re")"
+done < "$PATTERNS"
+printf '%s\n' "Each one has two ways to fail: never written into the rule file, or written and" \
+  "never firing. The second is harder to see and is why this audit usually gets started."
+
+printf '\n%s\n' "=== coverage: what this pass cannot see ==="
+awk -F'\t' '
+  $2=="assistant" { prev=$3+0; next }
+  $2=="user" && prev>0 {
+    b = prev<500 ? "under 500" : prev<1500 ? "500-1500" : prev<3000 ? "1500-3000" : "3000+"
+    n[b]++
+    if ($4 ~ /換句話說|白話|太長|簡單一點|是什麼|什麼意思|沒看懂|看不懂|rephrase|what do you mean/) d[b]++
+    prev=0
+  }
+  END {
+    printf "%-22s%11s%10s%8s\n", "my previous message", "your turns", "decoding", "rate"
+    split("under 500,500-1500,1500-3000,3000+", o, ",")
+    for (i=1;i<=4;i++) { b=o[i]; if (n[b]) printf "%-22s%11d%10d%7d%%\n", b, n[b], d[b], 100*d[b]/n[b] }
+  }' "$WORK/stream.txt"
+printf '%s\n' \
+  "Voiced friction is the only kind the columns above can count. When the user stops" \
+  "correcting and starts adapting to you, nothing is said and nothing is matched. Length" \
+  "is the one proxy that does not need the complaint to be spoken: if the decoding rate" \
+  "climbs with your message length, assume the unspoken cost climbs with it too."
 
 printf '\n%s\n' "=== evidence ==="
 cp "$WORK/human.txt" "./rule-review-human-turns.tsv"

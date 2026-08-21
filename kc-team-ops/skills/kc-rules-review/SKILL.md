@@ -37,7 +37,12 @@ kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 ```
 
 The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
-or `incident`.
+`incident`, or `codify`.
+
+`codify` rows catch the user asking for something to become standing behaviour — "from now on",
+「以後都」、「寫進規則」. Each one has two ways to fail, and the second is the reason this audit
+usually gets started: never written into the rule file at all, or written and never firing. Check
+both against the actual file before reporting either.
 Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
 a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
 itself the finding** — see Step 2.
@@ -52,6 +57,16 @@ turn to `rule-review-human-turns.tsv`; read the hits before you believe a number
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
 Never label Claude firing counts as Codex behavior.
+
+**Read the coverage table before the friction table.** The report ends with the decoding rate
+against the length of the agent's previous message. Voiced friction is the only kind the columns
+can count; when the user stops correcting and starts adapting, nothing is said and no pattern
+matches. Length is the one proxy that does not need the complaint to be spoken. Over a two-week
+window the rate has run 3% under 500 characters against 10% above 1500 — over two days it is noise,
+so give it a wide window or do not quote it.
+
+Say plainly in the report that the pass misses unvoiced friction, and that a clean friction table
+is not evidence of a comfortable user.
 
 ## Step 2 — Cross-tabulate
 
