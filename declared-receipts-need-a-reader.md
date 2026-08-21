@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-21T07:24:22Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-declared-receipts-need-a-reader
 issue:
 pr:
 mod-block:
