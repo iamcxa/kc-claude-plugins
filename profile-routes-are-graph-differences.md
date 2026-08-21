@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: backlog
+status: ideation
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
@@ -34,7 +34,7 @@ gates:
                 reason: 'Captain approved scheduling with the Production work profile, calling this an evident defect. It is an observed failure: the first Pilot item this workflow ran could not reach done and needed a recorded no-op transition to terminalize. Production because any fix touches the ROUTES table or the profile contracts, which external adopters consume at a pinned tag and which carry compatibility obligations. The Captain accepted that the accepted outcome may be a design decision rather than a diff, and had already ruled out asking Spacedock for a skip-stage capability.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
