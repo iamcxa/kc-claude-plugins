@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k69wjs5ttme3z11hph3sy45d:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation shape and enter implementation, on the condition that check 2 is satisfied by a one-time inspection recorded in the stage report and never committed as a standing presence-grep?",
+  "artifacts": [
+    {
+      "id": "artifact:k69wjs5ttme3z11hph3sy45d:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c7ccb7d01ff2927e9358b48a0e17dda1882d36fb/declared-receipts-need-a-reader.md",
+      "rev": "sha256:228e05535bb02c6098ef36cc02ad744cceb339e53bf5423a6c324704242ebdcd",
+      "mediaType": "text/markdown",
+      "summary": "The shape names the exact sentence pair replaced and the exact replacement text, and it corrected the FO's own line citation rather than copying it. Check 1 is verified RED on this branch today. FO condition: check 2 inspects the change's own prose, which is legitimate as a one-time validation observation but becomes a tautology if committed as a durable grep."
+    }
+  ]
+}

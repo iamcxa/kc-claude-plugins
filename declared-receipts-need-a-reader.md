@@ -35,6 +35,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:k69wjs5ttme3z11hph3sy45d:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:k69wjs5ttme3z11hph3sy45d-ideation-1
+              briefing:
+                id: briefing:k69wjs5ttme3z11hph3sy45d:ideation:attempt-1:revision-1
+                digest: sha256:7a2bc5c6d9a414b5244a7a99879279e458c427a96ae6270493286cc978339700
+                request-digest: sha256:f929090cd0081edfc02658bc368623065f9cca364948954f769b390d8255d088
+                room-ref: ./declared-receipts-need-a-reader/review/ideation/briefing-1
 ---
 
 ## Problem
