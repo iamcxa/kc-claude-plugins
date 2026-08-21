@@ -145,7 +145,7 @@ work_profile:
   selected: production
   recommended: production
   basis: "Any fix touches the ROUTES table or the profile stage contracts, which external repositories consume at a pinned release tag. Changing which stages a profile has is a compatibility event for every adopter whose workflow graph mirrors the current routes, so it carries migration, rollback and announcement obligations."
-  route: [shape, build, verify, release]
+  route: [shape, build, verify]
   obligations:
     architecture:
       - "Do not require the workflow runtime to skip a stage. The Captain ruled that the wrong ask: traversal that depends on data inside an entity body stops being a graph the runtime can reason about, and gates, invariants and mod-blocks all key off stages."
@@ -486,3 +486,7 @@ Spacedock 0.27.0-pre8's existing terminal-approval + `merge guard` mechanism
 separately rendered rulings. Direction 2 is rejected against the receipt's own
 obligation. Reverse-recovery and project-context receipts recorded per shape
 trigger; multi-slice guard does not fire (single decision, not two slices).
+
+### Dispatch Retries
+
+- Retry 1: implementation — agent-error (API ENOTFOUND, session terminated mid-run with no completion signal and no stage report); re-dispatched -retry. The prior worker's 15 uncommitted worktree changes were reviewed by the FO before the re-attempt and left in place: all fifteen are within the accepted outcome or a necessary consequence of it, including five route-table copies the accepted outcome's file list omitted. A patch backup is at `.context/recovery/8x38b1q-implementation-attempt1.patch`. Nothing in them is verified — the worker died before writing any report.
