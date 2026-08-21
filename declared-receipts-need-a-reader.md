@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-declared-receipts-need-a-reader
 issue:
-pr:
+pr: 264
 mod-block:
 gates:
     version: 1
