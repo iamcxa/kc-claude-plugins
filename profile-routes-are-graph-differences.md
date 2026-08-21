@@ -12,6 +12,18 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:8x38b1qryjrmy5w4ffk1egy1:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-backlog-1
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:backlog:attempt-1:revision-1
+                digest: sha256:2a61477e12e737f5b82ec15c384a84b1aab3d3bf5859c30a879f9659d7ddc1d1
+                request-digest: sha256:daee347373ac8139866e8c03b4eca2c5e4f0a1a3cf0eabb58e58f4abe3e7f2e1
+                room-ref: ./profile-routes-are-graph-differences/review/backlog/briefing-1
 ---
 
 ## Problem

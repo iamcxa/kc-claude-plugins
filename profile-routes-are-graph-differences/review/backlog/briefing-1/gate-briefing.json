@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:backlog:attempt-1:revision-1",
+  "question": "Schedule this task and select the Production work profile, accepting that its accepted outcome may be a design decision rather than a code change?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3cdef8d7ebf9f4682ba084b09fa63bf7d8f80db4/profile-routes-are-graph-differences.md",
+      "rev": "sha256:5eb8d41a05ff2aec9f501878a111417ef3514950dbc1bd989e331f00011f7e23",
+      "mediaType": "text/markdown",
+      "summary": "Observed failure, not a hypothesis: the first Pilot item this workflow ran could not reach done, and needed a recorded no-op transition to terminalize. The loader already computes next_workflow_stage correctly; nothing reads it. Asking Spacedock for a skip-stage capability is already ruled out. Two candidate directions with their costs are in the seed; neither is selected."
+    }
+  ]
+}
