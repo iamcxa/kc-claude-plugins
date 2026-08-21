@@ -85,6 +85,32 @@ produced and was not is what opens it.
 
 ## Work profile receipt
 
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: "Changes what one skill tells a working agent, not an output contract adopters read at a pinned tag. No runtime, no operational commitment, no rollback surface; the loader's emitted shape is unchanged by this task. A real slice with a real user (the dispatched agent), so not POC."
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - "Read the receipt names from the loader's already-parsed, hash-bound output; do not add a second parse of the conditional-references block alongside the existing one."
+      - "The skill may state that a stage declares a receipt behind a trigger the agent must evaluate; it may never state that a stage owes one, because `trigger` stays prose."
+    implementation:
+      - "Replace the instruction that sends the agent to parse the JSON block itself, rather than layering a second instruction beside it."
+      - "Keep the loader and both vendored copies untouched — this task changes skill prose only."
+    testing:
+      - "A check that fails when the documented invocation stops surfacing declared_receipts to the skill, and one that fails when the skill's instruction no longer references it."
+      - "No behavioural measurement of the prose's effect on agents; that instrument does not exist here."
+  scope_boundary: "Excludes evaluable triggers, any stage-exit receipt check, any change to the loader or the contracts, and any claim that the instruction changes agent behaviour."
+  promote_when:
+    - "The reader is asked to block or gate on a missing receipt, which would make it enforcement rather than visibility."
+    - "An adopter outside this repository is asked to depend on the skill's wording as a contract."
+  decision:
+    authority: person:captain
+    at: 2026-08-21T07:23:52Z
+```
+
 ## Accepted outcome and non-goals
 
 ## Acceptance evidence
