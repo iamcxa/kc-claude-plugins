@@ -1,13 +1,13 @@
 ---
 id: q0z8h3xny0qxv0r5srter8tj
 title: Conditional-reference receipt and trigger declarations are read by nothing
-status: release
+status: done
 source: adopter field report on kc-dev-flow 3.0.0, filed as issue #256 (2026-08-19); confirmed on origin/main and the current branch before filing
 product: kc-dev-flow
 sprint:
 started: 2026-08-20T13:52:18Z
-completed:
-verdict:
+completed: 2026-08-21T08:38:54Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-declared-receipt-has-no-reader
 issue: 256
 pr: pr-merge:262
@@ -128,7 +128,8 @@ gates:
                 reason: 'Captain approved release readiness at delivery revision 10edd0a4, second attempt after the first approval was superseded by cross-model findings. No rebase needed: origin/main..HEAD is exactly the three candidate commits and PR #262 is MERGEABLE/CLEAN at that head with checks green despite origin/main advancing independently. PR body rewritten to carry both correction rounds, the six mutants each falsifiable claim was seen RED against, the four claims standing on code inspection with no automated check, and both unchanged residuals. Still Draft, no version or marketplace edit. Mark-ready and merge remain the Captain''s actions.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-21T08:38:54Z
 ---
 
 ## Problem
