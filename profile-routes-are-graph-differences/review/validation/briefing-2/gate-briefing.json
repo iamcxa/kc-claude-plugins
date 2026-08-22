@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-2:revision-1",
+  "question": "Approve validation at d775a02f and advance to release, now that the falsified six-copy claim is closed and re-verified?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/8522bd7a143c3778154a8dac9a45a832871ad7ad/profile-routes-are-graph-differences.md",
+      "rev": "sha256:3010ec6bf7c793afb860d4fa89e7c25c1810f272603fe976b4d160c69d208796",
+      "mediaType": "text/markdown",
+      "summary": "The specific hole a cross-model interviewer found — both kernel copies corrupted identically still passing — is closed: the reviewer reproduced that exact mutation and the suite now fails with 'kernel route table omits the current Production route'. POC now terminalizes through merge guard with its live output captured. The branch/stack file intersection was recomputed independently with comm -12 rather than trusted, and comes to the same three files, whose merged regions preserve the newly-landed backlog-exit-bar and profile-selection semantics intact."
+    }
+  ]
+}

@@ -75,6 +75,12 @@ gates:
               application:
                 target-stage: release
                 state: consumed
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-validation-2
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-2:revision-1
+                digest: sha256:ba8541dbe8a50b7c90568696f16c16680524de43e32545cdefbc655c77f28cef
+                request-digest: sha256:bb9979e54d0a305ce22fdbb0138a2cc9c4a9923f4af41be53075be37e2ccefaf
+                room-ref: ./profile-routes-are-graph-differences/review/validation/briefing-2
         - id: gate:8x38b1qryjrmy5w4ffk1egy1:release
           stage: release
           attempts:
