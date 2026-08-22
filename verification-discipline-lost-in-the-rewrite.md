@@ -72,6 +72,12 @@ gates:
                 at: "2026-08-22T15:31:11.815284Z"
                 decision: revise
                 reason: 'Captain rejected in chat. Finding: the restored ''a check is evidence only once it has been seen to fail'' bullet does not close the failure it is offered as closing. The byte-parity false claim that passed a Captain gate satisfied the sentence as written — the reviewer did see the check go red, one vendored copy at a time — because tampering one copy makes the copies diverge and divergence is the only axis that check has, so the wrongness and the detected condition coincide and cannot be told apart. The landed sentence derives the must-flag case from the CHECK; issue #154 section 4, which this item cites as the evidence for keeping this clause, derives it from the CLAIM: ''a check was run whose result could not have falsified the claim it was offered as proof of''. Concrete ask: carry that operative framing into the bullet''s wording, in the compressed register already accepted, so the negative control must be able to falsify the claim rather than merely produce a red. Do not restore the surrounding #154 prose, do not touch Sites 2, 3 or 4, and do not add a standing check. Re-measure only the figures the added words change.'
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-validation-2
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:validation:attempt-2:revision-1
+                digest: sha256:51762192cbb7cc634dbe499c45dcca4adbe32d832d3a7f2d0e4ab6511a06a845
+                request-digest: sha256:9109ac81decc69b60c4ad21e3697d40754ee3f5d5c1549424bd52927f538cf0d
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/validation/briefing-2
 ---
 
 ## Problem

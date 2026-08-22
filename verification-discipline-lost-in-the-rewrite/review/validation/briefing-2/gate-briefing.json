@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:validation:attempt-2:revision-1",
+  "question": "The re-review confirms the amended wording does not stop the reviewer it was written to stop, and that issue #154 section 4's own framing would not have either. Under the restored rule's own trigger this is the second occurrence of one failure shape, so a third wording is excluded. Reject back to implementation to revert the amendment and bound the claim to what is true — or overrule and take a third wording?",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/7bc54f0e6d56b4e0031f6b93805c365637c0ea79/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:83caa59eafe420521fe71600d04d5de7e3182c4c47fda9c273eb2272c2865b2c",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 re-review, fresh dispatch, 4 done 0 skipped 0 failed. One blocking finding, which is the finding this round was dispatched to produce: the amended bullet is ambiguous at exactly the point the rejection turned on, and under the reading its own grammar licenses it re-certifies the byte-parity reviewer instead of stopping it, because the biconditional attaches to the chosen negative control, where it is degenerate, rather than to the check across the claim's falsity modes. Bounded observation alongside it: #154 section 4's literal framing is modal-existential over the check and the parity check narrowly clears it, so carrying section 4 faithfully was necessary and not sufficient. One minor finding: the new acceptance-evidence paragraph opens with an unbounded 'no mechanical check distinguishes them' that two cheap constructions falsify literally, though neither is evidence; its own closing sentence already carries the honest bound. Everything mechanical was re-derived rather than read and passes: byte-identical copies, contract test green, all three literal blocks diffing empty against fresh extracts, every moved figure recounted from the files, Sites 2 3 and 4 untouched, PR #279 updated in place at ad37d51f and still Draft."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:validation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}
