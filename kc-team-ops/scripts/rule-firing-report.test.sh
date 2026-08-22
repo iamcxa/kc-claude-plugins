@@ -59,6 +59,22 @@ if [ -s "$WORK/stderr.txt" ]; then
   echo "FAIL  clean run wrote to stderr:"; sed 's/^/        /' "$WORK/stderr.txt"; fail=1
 else
   echo "PASS  clean run wrote nothing to stderr"
+
+# The shipped incident patterns decide whether a turn is read as a blind spot, and a
+# loose one sends the audit looking for a vacancy that never happened. "掃掉" alone
+# scored a routine "file a ticket to clean this up" as destroyed work.
+P3="$WORK/home3/projects/proj"; mkdir -p "$P3"
+{ turn 2026-08-10T10:00:00Z user "開一張掃掉"
+  turn 2026-08-10T10:01:00Z user "我掃掉了另一個 session 三個未提交的檔案"; } > "$P3/d.jsonl"
+
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home3" \
+  --out "$WORK/runs3" >/dev/null 2>&1
+R3="$(ls -1dt "$WORK/runs3"/*/ 2>/dev/null | head -1)report.txt"
+loss=$(grep -E '^loss or recovery' "$R3" 2>/dev/null | awk '{print $NF}')
+if [ "${loss:-x}" = "1" ]; then
+  echo "PASS  loss pattern counted the real incident and not the ticket"
+else
+  echo "FAIL  loss or recovery = ${loss:-<none>}, want 1"; fail=1
 fi
 
 exit $fail
