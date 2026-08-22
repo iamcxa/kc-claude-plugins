@@ -44,6 +44,17 @@ gates:
                 digest: sha256:21f759bb1ec09cf57d4605a113d7e5b513989ec1f37b922780f3d87f4240d4f9
                 request-digest: sha256:b5f85460c746b930a00f09d2aaadd6275c801f56858616d88e551595abc588e8
                 room-ref: ./verification-discipline-lost-in-the-rewrite/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:9ydm2mmakce2r49v40q98377:ideation:1
+                briefing: briefing:9ydm2mmakce2r49v40q98377:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-22T10:30:02.121436Z"
+                decision: approve
+                reason: 'Captain approved the compressed restoration in chat, with one condition attached: each clause must survive a without-it audit before it lands. Direction accepted on the ideation evidence — four literal diffable blocks, baseline set to the wording e634d3e7 deleted rather than #156''s original, measured price of +413 words to the shared core and +19.6% to +22.8% across all eight profile-stage bundles, five claims carrying a falsifier seen to fail and five named as carrying none. The condition routes into implementation: a clause with no evidence that its absence cost something is dropped, and the drop is recorded against the accepted blocks.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Problem
