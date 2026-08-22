@@ -380,19 +380,25 @@ consume at a pinned tag and see nothing until they bump.
 
 ### Where it touches
 
-Diff base `origin/main` = `8ddd794d`, which equals this worktree's `HEAD`.
+Diff base `origin/main` = `9fee712c`. The FO fast-forwarded this worktree past
+`8ddd794d` before dispatching implementation because `556e08fc` and `9fee712c`
+merged in the interval and `9fee712c` edits both `kernel.md` copies (`##
+Authority` gains seven lines; `## Shared boundaries` and `## Communication`,
+this change's two insertion sites, are untouched — confirmed live on this tree
+before editing). Every figure below is re-measured at `9fee712c`, not adjusted
+by arithmetic on the old base.
 
 | Path | lines now | lines after |
 |---|---:|---:|
-| `kc-dev-flow/references/kernel.md` | 118 | 158 |
-| `docs/dev/_mods/kernel.md` | 118 | 158 |
-| `kc-dev-flow/MIGRATION.md` | 101 | ~117 |
+| `kc-dev-flow/references/kernel.md` | 124 | 165 |
+| `docs/dev/_mods/kernel.md` | 124 | 165 |
+| `kc-dev-flow/MIGRATION.md` | 101 | 119 |
 | `CLAUDE.md` | 103 | 103 |
 
-`lines now` counted in the current tree. `lines after` for both `kernel.md`
-copies is measured, not estimated: the candidate file was built and counted.
-`MIGRATION.md` is an estimate. `CLAUDE.md` changes two section names inside line
-91 and adds no line.
+`lines now` and `lines after` both counted on the landed tree at commit
+`053eddb0` (this change's own commit on
+`spacedock-ensign/verification-discipline-lost-in-the-rewrite`), not estimated.
+`CLAUDE.md` changes two section names inside line 91 and adds no line.
 
 Reconciled against the journey in both directions: every file in the table
 appears in the journey, and every file the journey depends on
@@ -401,16 +407,22 @@ appears in the journey, and every file the journey depends on
 
 ### Stop numbers
 
-Measured as the diff against `origin/main` = `8ddd794d`.
+Measured as the diff against `origin/main` = `9fee712c` (the base this
+worktree was fast-forwarded to before implementation; see `### Where it
+touches`). The thresholds themselves are unchanged — the Captain accepted them
+at ideation and this stage does not revisit them.
 
 - **changed files: 5.** Four above plus this work item. Stop and report at 6.
-- **changed lines: 100.** Measured today: 80 added to the two kernel copies,
-  about 16 to `MIGRATION.md`, 1 changed in `CLAUDE.md`. Stop and report at 140.
+- **changed lines: 101.** Measured on the landed commit
+  (`git diff --stat 9fee712c 053eddb0`): 41 added to each of the two kernel
+  copies (82 total), 18 added to `MIGRATION.md`, 1 changed in `CLAUDE.md`.
+  Stop and report at 140.
 - **runaway area: the two kernel prose blocks.** Compression is the thing most
   likely to grow back under review pressure. Stop and report if the two blocks
   together exceed 47 added lines — the measured size of the verbatim
   alternative, past which the compression decision has been reversed without a
-  ruling.
+  ruling. Landed: 28 lines (Site 1) + 11 lines (Site 2) = 39, under the stop
+  number.
 
 These are stop conditions, not budgets.
 
@@ -493,7 +505,7 @@ project_context:
   surface: "the rule's own wording and behaviour are unchanged; only the two cited section names move"
   stale_claim: "`kc-dev-flow/references/kernel.md` § Outcome discipline ... `docs/dev/README.md` § Proof Policy"
   approved_change: "`kc-dev-flow/references/kernel.md` § Shared boundaries ... `docs/dev/README.md` § Proof and delivery checks"
-  landed_change: pending
+  landed_change: "commit 053eddb0 on spacedock-ensign/verification-discipline-lost-in-the-rewrite; CLAUDE.md:91 now reads `kc-dev-flow/references/kernel.md` § Shared boundaries ... `docs/dev/README.md` § Proof and delivery checks"
   planned_check: "the citation resolver in `## Acceptance evidence`; it exits 1 on origin/main naming both citations and must exit 0 after"
   validation_evidence: pending
 ```
@@ -612,23 +624,28 @@ Compression saves 103 words, 20% of the verbatim block. One of the four cuts is
 mandatory regardless of form: the `dispatch_hazard_assignment` sentence names a
 mechanism that no longer exists.
 
-**What the shared core costs.** `kernel.md`: 118 lines / 6593 bytes / 986 words
-now; 158 / 9215 / 1399 after. `+413` words, `+41.9%`.
+**What the shared core costs, at diff base `9fee712c`.** `kernel.md`: 124 lines
+/ 7022 bytes / 1058 words now; 165 / 9645 / 1471 after (measured on the landed
+commit `053eddb0`). `+413` words, `+39.0%`. The word delta is unchanged from
+the figure recorded at ideation (`+413`) because the restored text is fixed
+bytes; only the base it lands on, and therefore the percentage, moved — lower,
+not higher, because the denominator grew.
 
 **What every stage loads.** Measured as the `## Local Profile` section of
-`docs/dev/README.md` plus `kernel.md` plus the selected profile base plus the
-selected stage contract.
+`docs/dev/README.md` (666 words, unaffected by this change or by the base
+move) plus `kernel.md` plus the selected profile base plus the selected stage
+contract, re-measured at `9fee712c` and on the landed commit.
 
 | Profile / stage | now | after | change |
 |---|---:|---:|---:|
-| `poc-exploration` / `build` | 1885 | 2298 | +21.9% |
-| `poc-exploration` / `prove` | 1838 | 2251 | +22.5% |
-| `pilot-product-slice` / `shape` | 2103 | 2516 | +19.6% |
-| `pilot-product-slice` / `build` | 1845 | 2258 | +22.4% |
-| `pilot-product-slice` / `verify-deliver` | 1810 | 2223 | +22.8% |
-| `production` / `shape` | 2083 | 2496 | +19.8% |
-| `production` / `build` | 1820 | 2233 | +22.7% |
-| `production` / `verify` | 1875 | 2288 | +22.0% |
+| `poc-exploration` / `build` | 2072 | 2485 | +19.9% |
+| `poc-exploration` / `prove` | 2025 | 2438 | +20.4% |
+| `pilot-product-slice` / `shape` | 2290 | 2703 | +18.0% |
+| `pilot-product-slice` / `build` | 2032 | 2445 | +20.3% |
+| `pilot-product-slice` / `verify-deliver` | 1997 | 2410 | +20.7% |
+| `production` / `shape` | 2270 | 2683 | +18.2% |
+| `production` / `build` | 2007 | 2420 | +20.6% |
+| `production` / `verify` | 2062 | 2475 | +20.0% |
 
 **Against `#249`'s own record — and a correction to how it is being cited.**
 `#249`'s PR body claims "required policy input fell from about 6,100 words to
@@ -636,20 +653,26 @@ selected stage contract.
 **83.5%–84.3% less input**." That 960–1,007 figure is **not reproducible from the
 tree.** At `e634d3e7` the closest reconstructions are 845–900 words without the
 `## Local Profile` section and 1,274–1,329 with it; neither brackets the quoted
-range. So the restoration is not measured against that number. It is measured
-before and after by one method, above.
+range. These `e634d3e7` figures are historical and unaffected by the base
+move. So the restoration is not measured against `#249`'s own number. It is
+measured before and after by one method, above.
 
 What the tree does show at `e634d3e7`: `kernel.md` was 597 words and the
-Local-Profile-plus-base-plus-build bundle was 1,274–1,329 words. Today, with no
-part of this change landed, `kernel.md` is 986 words (`+65%`) and that bundle is
-1,820–1,885 (`+43%` to `+48%`). The small core has already grown by roughly
-the same amount this restoration adds, across four commits — `#267`, `#271`,
-`#272`, `#276`. Bounded claim, checked by
+Local-Profile-plus-base-plus-build bundle was 1,274–1,329 words. Today, at diff
+base `9fee712c` with no part of this change landed, `kernel.md` is 1058 words
+(`+77%`) and that build-stage bundle is 2,007–2,072 (`+56%` to `+58%`,
+low-to-low and high-to-high). Both figures moved up from what was recorded at
+ideation (`986` words / `+65%`; `1,820–1,885` / `+43%` to `+48%`) because the
+base moved, not because anything about this restoration changed. The small
+core has already grown by roughly the same amount this restoration adds, now
+across five intervening commits — `#267`, `#271`, `#272`, `#276`, `#277`.
+Bounded claim, checked by
 `git log --format='%B' -1 <sha> | grep -in 'word\|load\|byte\|input'` over
-each: three of the four state no size accounting at all, and `#272` does — it
-records `kernel.md` dropping 47 words. So growth here has been weighed once in
-four changes, not never. That is the honest frame for the price: `+413` words is
-real, and it is about `+22%` on every route.
+each: four of the five state no size accounting at all (`#277`'s two hits are
+about decision input, not text size), and `#272` does — it records `kernel.md`
+dropping 47 words. So growth here has been weighed once in five changes, not
+never. That is the honest frame for the price: `+413` words is real, and it is
+about `+20%` on every route.
 
 **Why the cost is earned, and why it lands in the shared core.** The four
 clauses govern the instrument, and the instrument is what every profile uses;
@@ -701,3 +724,18 @@ fire this item's first `promote_when` clause.
   The three named commands touched the merge, the removal stat, and the retired mechanism — none touched the sentence in finding 1, which is exactly how it survived. Claim 4 is now a per-sentence coverage table: nine assertions, each with the command that covers it and the result it returned, including the `git show ... | grep` and `git log -S` pair above. Four assertions not previously covered were run for the first time and all hold: `gh pr view 249` mentions the removal 0 times, `git tag --contains e634d3e7` returns `kc-dev-flow-v3.0.0` as the only kc-dev-flow tag, the section count goes 1 -> 0 across the commit, and `git log -S` puts the absolutes-rule removal at `e634d3e7`. One assertion is now named as having no command at all — that the six unrestored clauses' subject matter is carried by the profile stage contracts, which is a reading judgment.
 - DONE: (FO review, finding 3) a miscount in the unchecked-claims list was corrected.
   Wrong: `git grep absolutes origin/main` finds them "in `CHANGELOG.md` and two retired plan documents". `git grep -l absolutes origin/main` returns four files — `kc-dev-flow/CHANGELOG.md` plus three under `docs/plans/`. Corrected to three, and the bullet now states the count as file names rather than a bare number.
+
+## Stage Report: implementation
+
+- DONE: Run the without-it audit per clause BEFORE writing any of them, and record it in the work item.
+  `## Without-it audit` (committed state-checkout `91bb198e`, before any code edit). All five clauses KEEP, each against a real occurrence: seen-to-fail and falsifier-kind cite issue #154 §4/§5 (four field defects a non-falsifying check missed, plus this entity's own parity-check defect); cheapest-instrument cites issue #143's second gap (19.4min build vs 58.3min validation, 3x inversion from a mandated adversarial reviewer); repeated-failure-shape cites #143's first gap (three same-class rejections, budget trigger never fired); the absolutes rule cites #156's own undefended "only" and this entity's own ideation self-correction. Zero drops, so no deviation-table or Site 4 change follows.
+- DONE: Apply the surviving accepted blocks as recorded, byte-for-byte, at the four named sites.
+  Sites 1/2/4 extracted from the entity by `sed` into `/tmp/site{1,2,4}.md` and inserted programmatically (never retyped); Site 3 is two exact substring swaps on `CLAUDE.md:91`. Hand diff against the landed spans: `diff /tmp/site1.md <(sed -n '129,156p' kernel.md)`, `diff /tmp/site2.md <(sed -n '117,127p' kernel.md)`, `diff /tmp/site4.md <(sed -n '103,119p' MIGRATION.md)` — all three empty. Both kernel copies `diff`-identical; `python3 scripts/kc-dev-flow-contract-test.py` exits 0 (`kc-dev-flow contract: PASS`). Re-tampered one copy after landing to re-earn the seen-to-fail proof on the changed tree: `printf 'X' >> docs/dev/_mods/kernel.md` -> exit 1 `self-adopted shared core differs from package source`; restored via `cp` from the sibling copy (an initial `git checkout --` reverted to the pre-restoration committed blob, caught immediately via `diff`, re-applied) -> exit 0. Committed as `053eddb0` on `spacedock-ensign/verification-discipline-lost-in-the-rewrite`: exactly the 4 named files, 101 insertions / 1 deletion.
+- DONE: If the audit changed the text, re-measure the load the same way the Measurement section did and update every figure it changed, including the per-route percentages.
+  The audit dropped nothing, but the FO fast-forwarded this worktree from the entity's declared base `8ddd794d` to `9fee712c` before dispatch (`556e08fc`, `9fee712c` merged in the interval; confirmed live that `## Shared boundaries` and `## Communication` both still resolve at `9fee712c`, so both insertion sites hold). Re-measured everything at the new base, not by arithmetic on the note: `kernel.md` 124/1058 lines/words now, 165/1471 after (+413 words, +39.0%, down from the stale +41.9% because the denominator grew); `## Local Profile` 666 words (unaffected); all eight profile-stage bundle rows recomputed (now 18.0%-20.7%, was 19.6%-22.8%); `## Where it touches` lines-now/after for all four files (kernel x2 124->165, MIGRATION.md 101->119 actual not estimate, CLAUDE.md 103->103); `### Stop numbers`' stated base and measured-today line (101 changed lines, 39 lines across the two prose blocks); the `#249`-record paragraph's two "today" figures (kernel `986 words +65%` -> `1058 words +77%`; bundle `1,820-1,885 +43%-48%` -> `2,007-2,072 +56%-58%`) and its intervening-commit count (four -> five, `#277` added and checked — no size accounting, matching the other three).
+- DONE: Run the citation resolver from acceptance evidence claim 2 and show it failing first: on the pre-change tree it must exit non-zero naming both dangling citations, and on the changed tree it must pass.
+  BEFORE (untouched tree, `/tmp/citation-resolver.py .`): `checked 2 citation(s): kc-dev-flow/references/kernel.md § Outcome discipline, docs/dev/README.md § Proof Policy` then `DANGLING kc-dev-flow/references/kernel.md § Outcome discipline` and `DANGLING docs/dev/README.md § Proof Policy`, exit 1. AFTER (post-commit tree): `checked 2 citation(s): kc-dev-flow/references/kernel.md § Shared boundaries, docs/dev/README.md § Proof and delivery checks` then `all citations resolve`, exit 0. Resolver lives only at `/tmp/citation-resolver.py`, outside the repo; not committed, not added to CI.
+
+### Summary
+
+Restored the four `## Verification discipline` clauses plus the absolutes rule at the accepted compressed wording, unamended — the without-it audit found real evidence for all five in issues #143 and #154 plus this entity's own record, so nothing was dropped. Applied byte-for-byte at the four sites via extract-and-insert (never retyped), verified by hand diff, contract-test pass, and a re-earned tamper/restore cycle on the landed tree. The FO's base move to `9fee712c` (two intervening merges, one touching `kernel.md` outside the two insertion sites) required re-measuring every figure in `## Measurement` and `## Where it touches` from scratch rather than adjusting the ideation numbers by arithmetic; all now reflect the landed commit `053eddb0`. The citation resolver, run by hand and never committed, failed naming both dangling citations before the change and passed after.
