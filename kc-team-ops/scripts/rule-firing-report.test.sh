@@ -77,4 +77,33 @@ else
   echo "FAIL  loss or recovery = ${loss:-<none>}, want 1"; fail=1
 fi
 
+# A marker inside a multi-line command must not be counted as the agent saying it.
+# The prose filter tags tool calls with a TOOL prefix; if the command is not flattened
+# first, only its opening line carries that tag and everything after it — the body of
+# a heredoc, a PR description — reads as conversation. That is the normal shape for a
+# rule about PR bodies, and the single-line cases the earlier tests used all passed.
+P4="$WORK/home4/projects/proj"; mkdir -p "$P4"
+python3 - "$P4/e.jsonl" <<'PYEOF'
+import json, sys
+cmd = "gh pr create --body \"$(cat <<EOF\n## MARKER-XYZ\n\nbody text\nEOF\n)\""
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": cmd}}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "text", "text": "ok"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf 'firing\tmarker\tMARKER-XYZ\n' > "$WORK/p4.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home4" \
+  --patterns "$WORK/p4.tsv" --out "$WORK/runs4" >/dev/null 2>&1
+R4="$(ls -1dt "$WORK/runs4"/*/ 2>/dev/null | head -1)report.txt"
+mk=$(grep -E '^marker' "$R4" 2>/dev/null | awk '{print $2}')
+if [ "${mk:-x}" = "0" ]; then
+  echo "PASS  marker inside a multi-line command scored zero prose hits"
+else
+  echo "FAIL  marker prose count = ${mk:-<none>}, want 0 (the heredoc body leaked)"; fail=1
+fi
+
 exit $fail

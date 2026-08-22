@@ -135,7 +135,12 @@ while IFS= read -r f; do
     | (.message.content // [])[]
     | if .type=="text" then .text
       elif .type=="tool_use" then
-        "TOOL \(.name) \(.input.file_path // .input.command // .input.pattern // "")"
+        # Flattened. Otherwise only the first line of a command carries the TOOL tag
+        # and every line after it reads as prose, so a marker living inside a heredoc
+        # — a PR body, a commit message — walks straight past the prose filter. That
+        # is the normal shape for a rule about PR descriptions, not an edge case.
+        (("TOOL \(.name) \(.input.file_path // .input.command // .input.pattern // "")")
+         | gsub("\n"; " "))
       else empty end
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
