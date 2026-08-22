@@ -1,7 +1,7 @@
 ---
 id: 9ydm2mmakce2r49v40q98377
 title: The 3.0 rewrite dropped four merged verification rules and no migration note said so
-status: backlog
+status: ideation
 source: found 2026-08-21 while answering the Captain's original question about issue #154, whose maintainer reply states these clauses had already shipped; they had, and then they were removed
 product: kc-dev-flow
 sprint:
@@ -34,7 +34,7 @@ gates:
                 reason: 'Captain approved the backlog gate in chat: Production profile, scope bounded to the four #156 clauses plus the #164 absolutes rule and a one-time migration record; standing enforcement excluded and the restoration form deferred to ideation. Direction accepted on verified evidence — kernel.md replaced 349->81 lines by #249, six recording surfaces searched with no removal note, three proof-stage contracts read in full with no re-siting.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
