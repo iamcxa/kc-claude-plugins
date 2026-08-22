@@ -63,6 +63,22 @@ itself the finding** — see Step 2.
 usually gets started: never written into the rule file at all, or written and never firing. Check
 both against the actual file before reporting either.
 
+### Enumerate the rule file before trusting any coverage
+
+The patterns file is hand-written, so the audit sees only the rules someone thought to declare.
+Open the rule file itself, list every rule in it, and split them:
+
+- **Measurable** — the rule names a literal string it makes you emit, so it can have a `firing` row.
+- **Unmeasurable** — the rule is real and has no observable marker. It cannot be given a firing row, and this pass cannot tell whether it runs.
+
+Report the second list by name, every run. On one real file, 3 of 19 rules were measurable; the
+other 16 — upstream-first, cost, escalation, e2e acceptance among them — were invisible to the audit
+and nothing said so. A report that covers a sixth of the rules and reads as complete is worse than a
+short one that says which fifth-sixths it skipped.
+
+This is also the only way to keep "the rule is absent" and "the rule is present and unmeasurable"
+apart. They look identical from the patterns file and they call for opposite actions.
+
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
 are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
@@ -209,6 +225,7 @@ candidates through the audit's own test before naming one:
 | The rule for that question | Firing | Verdict |
 |---|---|---|
 | absent from the rule file | — | **vacant** — nobody is doing this |
+| present, with no observable marker | unmeasurable | **unknown, and say so** — never read as vacant. The rule exists; this audit cannot see whether it runs, and recommending a role here appoints someone to a job that may already be done |
 | present, and never fires | zero | **vacant** — the rule is there and does not run, which is the highest-value finding this audit has |
 | present, fires, and the question stopped | high | **occupied** — the low question count is the rule working, not a gap |
 | present, fires, and the question keeps coming | high | **not a vacancy at all** — see Step 2's last row. The job is being done and disbelieved, which a job title cannot fix |
