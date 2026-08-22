@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: release
+status: implementation
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
@@ -10,8 +10,8 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-profile-routes-are-graph-differences
 issue:
-pr: 276
-mod-block: merge:pr-merge
+pr:
+mod-block:
 gates:
     version: 1
     records:
@@ -111,7 +111,7 @@ gates:
                 reason: 'Captain re-approved release readiness at the rebased delivery revision 7bbae216, superseding the attempt-1 approval that cited b3b0e2ed, a revision no longer on the branch. The branch was rebased a second time onto origin/main at ef808a91 after the four-deep stack #267/#268/#269/#271/#272 landed, carrying exactly one commit before each rebase and using the explicit --onto form both times. Both suites were re-run on the rebased revision and the result improved: kc-dev-flow-contract-test.py now passes outright because #268''s casing fix reached main, so this work''s six route-parity checks are reachable and green locally as well as in CI, with no other check disabled to reach them. The PR body''s two statements that the contract test''s sole failure was the casing bug and that the six checks were locally blocked have been corrected to the current outputs. The lost second review ceremony remains a named residual, not a closed item.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## Problem
