@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: implementation
+status: validation
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
