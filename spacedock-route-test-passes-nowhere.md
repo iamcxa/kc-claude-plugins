@@ -40,6 +40,21 @@ the skip that already hides the problem in CI.
 
 Reproduced on a tree without any unrelated local change: same failure, same symptom.
 
+**Second victim, added by `profile-routes-are-graph-differences`
+(`8x38b1qryjrmy5w4ffk1egy1`).** That item's owed proof —
+`kc-dev-flow/scripts/profile-contract-loader.test.py`'s "Live Spacedock route
+mechanism" section, which drives a real split-root Spacedock fixture through
+`gate prepare`/`gate record --consume`/`merge guard` for POC, Pilot, and
+Production — resolves the same `shutil.which("spacedock")` binary and prints
+`route mechanism SKIP (spacedock unavailable)` under the same CI condition
+described above, so its enforcement is likewise absent from the required
+check. Locally it was blocked by the same casing bug this item names (the
+fail-fast orchestrator in `kc-dev-flow-contract-test.py` aborted at
+`profile-spacedock-route.test.py` before reaching later checks) until #268
+landed the casing fix on `main`; it now runs and passes locally, same as the
+byte-identical parity assertions this item already names. The CI gap is
+unchanged and not fixed by this note.
+
 ## Work profile receipt
 
 ## Accepted outcome and non-goals
