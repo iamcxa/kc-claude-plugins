@@ -158,7 +158,11 @@ while IFS= read -r f; do
     | select((.isMeta // false) | not)
     | . as $r | (.message.content) as $c
     | (if ($c|type)=="string" then $c
-       elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
+       elif ($c|type)=="array" then ([$c[]
+         | if .type=="text" then .text
+           elif .type=="tool_use" then "[tool use: \(.name // "unknown")]"
+           else empty end
+       ] | join(" "))
        else "" end) as $t
     | select(($t|length) > 0)
     | ($t | gsub("[\t\r\n]"; " ")) as $flat
@@ -249,13 +253,18 @@ if [ "$FIRED" = 1 ]; then
     { printf -- '--- %s\n' "$label"
       grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
       printf '\n--- %s (tool commands, excluded from prose count)\n' "$label"
-      awk -v RE="$re" '
-        /^TOOL / && match(tolower($0), tolower(RE)) {
-          start=RSTART-160; if (start < 1) start=1
-          prefix=(start > 1 ? $1 " " $2 " ... " : "")
-          print prefix substr($0,start,380)
-          if (++n == 40) exit
-        }' "$WORK/assistant.txt"
+      # Count and select with the same grep ERE engine. Re-evaluating the pattern
+      # in awk can accept different syntax and leave a counted hit with no retained
+      # evidence. Keep bounded action context plus the exact text grep matched.
+      grep '^TOOL ' "$WORK/assistant.txt" 2>/dev/null \
+        | grep -iE -e "$re" 2>/dev/null > "$WORK/tool-hits.txt" || true
+      head -40 "$WORK/tool-hits.txt" | while IFS= read -r hit; do
+        prefix=$(printf '%s\n' "$hit" | cut -c1-220)
+        matched=$(printf '%s\n' "$hit" | grep -oiE -e "$re" 2>/dev/null \
+          | head -3 | paste -sd '|' -)
+        if [ "${#hit}" -gt 220 ]; then prefix="$prefix ..."; fi
+        printf '%s [matched: %s]\n' "$prefix" "$matched"
+      done
       printf '\n'; } >> "$RUNDIR/firing-hits.txt"
   done < "$PATTERNS"
   printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"

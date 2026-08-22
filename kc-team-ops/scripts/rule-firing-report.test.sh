@@ -150,4 +150,58 @@ else
   echo "FAIL  long incident reported=${reported:-<none>} retained=${retained:-0} visible=${visible:-0}, want 1/1/1"; fail=1
 fi
 
+# A tool-only assistant event is still the turn immediately before the user. Dropping
+# it silently reuses older prose and gives incident classification the wrong context.
+P6="$WORK/home6/projects/proj"; mkdir -p "$P6"
+python3 - "$P6/g.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "Older prose must not be reused"}]}},
+  {"type": "assistant", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": "deploy"}}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:02:00Z",
+   "message": {"content": [{"type": "text", "text": "我自己部署好了"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf 'incident\ttakeover after tool\t我自己部署好了\n' > "$WORK/p6.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home6" \
+  --patterns "$WORK/p6.tsv" --out "$WORK/runs6" >/dev/null 2>&1
+RUN6="$(ls -1dt "$WORK/runs6"/*/ 2>/dev/null | head -1)"
+before_tool=$(grep -A1 -- '--- takeover after tool' "${RUN6:-$WORK}incidents.txt" 2>/dev/null | tail -1)
+case "$before_tool" in
+  *"[tool use: Bash]"*) echo "PASS  tool-only assistant retained as immediate BEFORE" ;;
+  *) echo "FAIL  tool-only assistant lost; BEFORE=${before_tool:-<empty>}"; fail=1 ;;
+esac
+
+# Counts and retained samples must use the same regex engine. grep -E supports
+# backreferences on the CI platforms while awk ERE does not, so the old split could
+# report a tool hit and retain an empty section for it.
+P7="$WORK/home7/projects/proj"; mkdir -p "$P7"
+python3 - "$P7/h.jsonl" <<'PYEOF'
+import json, sys
+cmd = "gh pr create --body " + "x" * 700 + " MARKER-XX"
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": cmd}}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf '%s\t%s\t%s\n' firing 'backreference marker' 'MARKER-(X)\1' > "$WORK/p7.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home7" \
+  --patterns "$WORK/p7.tsv" --out "$WORK/runs7" >/dev/null 2>&1
+RUN7="$(ls -1dt "$WORK/runs7"/*/ 2>/dev/null | head -1)"
+reported7=$(grep -E '^backreference marker' "${RUN7:-$WORK}report.txt" 2>/dev/null)
+sample7=$(awk '/--- backreference marker \(tool commands/{keep=1; next} /^--- /{keep=0} keep' \
+  "${RUN7:-$WORK}firing-hits.txt" 2>/dev/null)
+if printf '%s\n' "$reported7" | grep -q '1 inside tool commands' \
+   && printf '%s\n' "$sample7" | grep -q 'MARKER-XX'; then
+  echo "PASS  counted tool regex retained a reviewable sample with the same engine"
+else
+  echo "FAIL  counted tool regex has no retained match; report=${reported7:-<none>} sample=${sample7:-<empty>}"; fail=1
+fi
+
 exit $fail
