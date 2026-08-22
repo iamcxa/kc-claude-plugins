@@ -11,7 +11,7 @@ verdict:
 worktree: .worktrees/spacedock-ensign-profile-routes-are-graph-differences
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 gates:
     version: 1
     records:
