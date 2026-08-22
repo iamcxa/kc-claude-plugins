@@ -4,6 +4,11 @@
 # firing is not a missing rule — it is a rule with no trigger.
 #
 # Claude Code session logs only. Codex/other harnesses are out of scope.
+#
+# Runs where the sessions are: macOS (BSD tools) and Linux with GNU coreutils.
+# BusyBox is not supported and says so on startup rather than reporting an empty
+# history — nobody keeps ~/.claude/projects on an Alpine container, so a second
+# code path for it would have no reader.
 set -uo pipefail
 
 SINCE="" ; HOME_DIR="${HOME}/.claude" ; PATTERNS="" ; KEEP=20
@@ -29,6 +34,25 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$SINCE" ] || { echo "--since YYYY-MM-DD is required" >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq not found" >&2; exit 2; }
+
+# Session selection needs `find -newermt`, which GNU and BSD find have and BusyBox
+# does not. Without this probe a BusyBox host reports "no sessions since <date>",
+# which reads as "you have no history" when it means "this find cannot filter by
+# date" — a missing capability disguised as an empty result.
+# Probe with the caller's own date rather than a fixed one: it tests the capability
+# and the date format in a single shot, and a fixed sentinel gets this wrong — BSD
+# find rejects 1970-01-01 outright while accepting every date this is ever given.
+_probe="$(mktemp -d)"; : > "$_probe/f"
+if ! find "$_probe" -newermt "$SINCE" >/dev/null 2>&1; then
+  rm -rf "$_probe"
+  echo "find cannot select by date with --since '$SINCE'." >&2
+  echo "Either the date is not one this find parses, or this find has no -newermt at" >&2
+  echo "all: GNU (Linux) and BSD (macOS) have it, BusyBox does not. Without the probe" >&2
+  echo "this reports 'no sessions', which reads as an empty history rather than a" >&2
+  echo "missing capability." >&2
+  exit 2
+fi
+rm -rf "$_probe"
 
 PROJ="$HOME_DIR/projects"
 [ -d "$PROJ" ] || { echo "no session logs at $PROJ" >&2; exit 2; }

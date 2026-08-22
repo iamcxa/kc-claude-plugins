@@ -39,7 +39,7 @@ P2="$WORK/home2/projects/proj"; mkdir -p "$P2"
 printf 'friction	anything	.
 ' > "$WORK/p2.tsv"
 cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home2" \
-  --patterns "$WORK/p2.tsv" --out "$WORK/runs2" >/dev/null 2>&1
+  --patterns "$WORK/p2.tsv" --out "$WORK/runs2" >/dev/null 2>"$WORK/stderr.txt"
 H="$(ls -1dt "$WORK/runs2"/*/ 2>/dev/null | head -1)human-turns.tsv"
 
 check() { # description, pattern, expected-count
@@ -50,5 +50,15 @@ check "dispatch prompt dropped"       'You are a read-only'      0
 check "'Respond with exactly' dropped" 'Respond with exactly'    0
 check "real correction kept"          'still ignoring'           1
 check "ordinary turn kept"            '沒有會怎樣'                1
+
+# A clean run must say nothing on stderr. Every defect that reached a user here
+# was a tool-dialect one — a flag this platform's head or awk does not have — and
+# each announced itself there while the script carried on and reported numbers
+# anyway. Asserting silence catches the whole class, including the next one.
+if [ -s "$WORK/stderr.txt" ]; then
+  echo "FAIL  clean run wrote to stderr:"; sed 's/^/        /' "$WORK/stderr.txt"; fail=1
+else
+  echo "PASS  clean run wrote nothing to stderr"
+fi
 
 exit $fail
