@@ -100,6 +100,33 @@ that four merged rules are gone and nothing recorded it.
 
 ## Work profile receipt
 
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: production
+  recommended: production
+  basis: "kernel.md is the shared core every profile loads. It is vendored byte-identical into each adopter and consumed at a pinned release tag, so restoring clauses changes what every adopter's every stage must obey and owes a MIGRATION entry -- the exact obligation whose omission is this task's subject. Doing this work under a profile with no release obligation would repeat the defect. No operational runtime is involved."
+  route: [shape, build, verify]
+  obligations:
+    architecture:
+      - "Restore into the shared core, not into one profile's stage contract. A clause sited under production/ is unreadable to POC and Pilot; that is exactly how `prefer the cheapest instrument that can fail` was lost in practice."
+      - "Respect 3.0's small-core decision. Restored text competes for the same loaded bytes every stage pays for, so the restoration form -- verbatim, compressed, or re-sited -- is the shape question this stage owes, not a paste."
+    implementation:
+      - "Restore the four clauses named in this task body, plus the absolutes rule merged by #164, which has a live broken consumer at this repository's CLAUDE.md."
+      - "Record the 3.0 removal once in MIGRATION.md, and repair the two citations in this repository's CLAUDE.md that point at sections which no longer exist."
+      - "kc-dev-flow/references/kernel.md and docs/dev/_mods/kernel.md move together; scripts/kc-dev-flow-contract-test.py enforces their byte-identity."
+    testing:
+      - "Every falsifiable claim names a check that has been seen to fail. A presence-grep over prose the same change authored proves nothing and is refused."
+      - "The byte-identity assertion is shown live -- tamper with one vendored copy, observe the named failure, restore -- rather than asserted from a passing suite."
+  scope_boundary: "Excludes restoring the whole former `## Outcome discipline` section, excludes the `an instruction that contradicts the governing contract loses` clause (no observed occurrence), and excludes any standing check that a kernel deletion must carry a MIGRATION entry."
+  promote_when:
+    - "The accepted outcome starts to require a standing enforcement mechanism rather than restored prose; that is new permanent enforcement and needs its own Captain-authorized task."
+    - "The restoration is found to require changing what a stage contract must emit, which moves the work from the shared core into the profile contracts."
+  decision:
+    authority: person:captain
+    at: 2026-08-22T09:52:39Z
+```
+
 ## Accepted outcome and non-goals
 
 ## Acceptance evidence
