@@ -740,6 +740,23 @@ item, which never loads that file, cannot read a rule about choosing cheap
 checks. Putting these clauses in a profile stage contract is how the last one
 was lost in practice.
 
+### Feedback Cycles
+
+- **Cycle 1 — `validation` rejected, routed to `implementation`.** Captain decision `revise`,
+  recorded against `briefing:9ydm2mmakce2r49v40q98377:validation:attempt-1:revision-1`
+  (`sha256:221d6b81`) at delivery revision `053eddb0`. One finding: the restored
+  `a check is evidence only once it has been seen to fail` bullet was satisfied by the very
+  incident it was offered as closing, because tampering one vendored copy makes the copies
+  diverge and divergence is the only axis that check has. Disposition: accepted, fix in place,
+  carrying issue `#154` section 4's framing into the bullet. Corrected at `ad37d51f`; PR #279
+  updated in place. Sites 2, 3 and 4 untouched; the without-it audit was not reopened.
+- **Recorder unavailable, recorded here instead.** `spacedock gate record --round validation/1`
+  refuses on this workflow: `gate record --round requires folder-form entity <slug>/index.md
+  because review artifacts accumulate beside the entity`. This workflow files flat `<slug>.md`
+  entities, so the neutral round recorder cannot address any entity it owns. The round is
+  therefore recorded in this FO-owned section, and the gap is reported to the Captain rather
+  than treated as a round failure.
+
 ## Stage Report: ideation
 
 - DONE: Name the exact restored words and their site: for each clause in scope, state the wording that will land and which section of kernel.md it lands in.
