@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:validation:attempt-1:revision-1",
+  "question": "Approve release readiness for the exact delivery revision 053eddb0 (Draft PR #279), given that the reviewer's one finding is that the fifth clause's without-it evidence is materially weaker than the other four — or reject with findings back to implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/924592e8698e5c3915d615030e14dac6266d234a/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:d52ce1f4992cc09648868adc436c99bcdaac954aafeffeb0fd65b57fe224c563",
+      "mediaType": "text/markdown",
+      "summary": "Checklist 5 done, 0 skipped, 0 failed, fresh reviewer. The Captain's ideation condition was a without-it audit per clause; the audit kept all five and the reviewer re-verified each against primary source, then filed the one finding: KEEP 5, the absolutes rule, rests on materially weaker evidence, because one of its two occurrences (#156's undefended 'only', bounded by #159/#161/#162 on 2026-08-04) predates the removal by #249 on 2026-08-18 and therefore shows the rule working while present, not its absence costing anything. FO checked those five merge timestamps and the finding holds. FO also weighed a coupling the finding does not: Site 3 repoints CLAUDE.md's citation at kernel.md's Shared boundaries, so dropping Site 2 would turn today's dangling citation into a false one. Reviewer re-derived the byte-for-byte landing at all four sites from fresh extracts, re-earned a tamper/restore seen-to-fail proof, and recounted every Measurement figure from scratch. FO additionally confirmed at the exact landed revision that the loader emits the restored section between Shared boundaries and Communication. PR #279: Draft, base main, exactly four files, MERGEABLE/CLEAN, head 053eddb0, both checks green."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}

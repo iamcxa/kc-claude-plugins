@@ -55,6 +55,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:9ydm2mmakce2r49v40q98377:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-validation-1
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:validation:attempt-1:revision-1
+                digest: sha256:221d6b81cf07c3bdb873fc1a13d039fcb7af42e908f4f301775edcf3ea315fea
+                request-digest: sha256:655aa6262f4c8d0b242c02e0345c2eb52547fbb758e8d099ed3b244d0f6afb9f
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/validation/briefing-1
 ---
 
 ## Problem
