@@ -135,7 +135,12 @@ while IFS= read -r f; do
     | (.message.content // [])[]
     | if .type=="text" then .text
       elif .type=="tool_use" then
-        "TOOL \(.name) \(.input.file_path // .input.command // .input.pattern // "")"
+        # Flattened. Otherwise only the first line of a command carries the TOOL tag
+        # and every line after it reads as prose, so a marker living inside a heredoc
+        # — a PR body, a commit message — walks straight past the prose filter. That
+        # is the normal shape for a rule about PR descriptions, not an edge case.
+        (("TOOL \(.name) \(.input.file_path // .input.command // .input.pattern // "") \(.input.content // "")")
+         | gsub("\n"; " "))
       else empty end
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" > "$WORK/assistant.txt"
@@ -173,12 +178,12 @@ if [ -z "$PATTERNS" ]; then
 friction	necessity challenge	會怎樣|必要的嗎|需要嗎|還需要|價值在哪|why do we need|is this necessary
 friction	rephrase demand	換句話說|太長|簡單一點|簡報|精簡|rephrase|too long
 friction	undefined term	是什麼|什麼意思|是指什麼|哪來的|what is this|what do you mean
-friction	status pull	還剩|可以收|下一步|回報|現況|what.s left|status\?
+friction	status pull	還剩|可以收|下一步是|下一步呢|回報進度|現況如何|what.s left|status\?
 friction	prior-art miss	上游|重複|既有|沒看|already exists|upstream
 friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
 incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
 incident	user took it over	我(自己|先|去)?(做|改|弄|處理|修|部署|合)(好|完|了)|我已經(自己|先)|I fixed it|I did it myself|I went ahead and|I had to do it
-incident	loss or recovery	救回|覆蓋掉|掃掉|had to recover|overwrote|clobber
+incident	loss or recovery	救回|覆蓋掉|(把.{0,16})?掃掉.{0,14}(檔案|工作|未提交|改動|worktree|session|branch)|把.{0,16}(掃|刪|清)掉|had to recover|overwrote|clobber
 firing	close-out block	可收線|Closable:
 codify	asked to make it a rule	以後(都|請|先|就)|寫回去|寫進.*claude|寫進規則|變成規則|下次(記得|不要)|記住這個|from now on|make (this|that) a rule
 TSV
@@ -213,12 +218,36 @@ FIRED=0
 while IFS=$'\t' read -r kind label re; do
   [ "$kind" = "firing" ] || continue
   FIRED=1
-  printf '%-26s %6s\n' "$label" "$(count_hits "$WORK/assistant.txt" "$re")"
+  grep -v '^TOOL ' "$WORK/assistant.txt" > "$WORK/prose.txt" 2>/dev/null
+  n_all=$(count_hits "$WORK/assistant.txt" "$re")
+  n_prose=$(count_hits "$WORK/prose.txt" "$re")
+  if [ "$n_all" != "$n_prose" ]; then
+    printf '%-26s %6s   (%s in prose, %s inside tool commands)\n' \
+      "$label" "$n_prose" "$n_prose" "$(( n_all - n_prose ))"
+  else
+    printf '%-26s %6s\n' "$label" "$n_prose"
+  fi
 done < "$PATTERNS"
 [ "$FIRED" = 1 ] || printf '%s\n' \
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
-  "      reading a rule aloud looks identical to one following it. Sample the hits."
+  "      reading a rule aloud looks identical to one following it. Sample the hits." \
+  "      Counts are prose only. A marker inside a shell command is the audit typing" \
+  "      about the rule — its own setup work — and is reported separately, never added."
+# The instruction to read the hits was unfollowable for this column: the stream it
+# counts lived in the work directory and was deleted on exit, so a finished run left
+# the number and no way to check it. Samples are kept instead of the whole stream —
+# a month of assistant output is half a million lines.
+if [ "$FIRED" = 1 ]; then
+  : > "$RUNDIR/firing-hits.txt"
+  while IFS=$'\t' read -r kind label re; do
+    [ "$kind" = "firing" ] || continue
+    { printf -- '--- %s\n' "$label"
+      grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
+      printf '\n'; } >> "$RUNDIR/firing-hits.txt"
+  done < "$PATTERNS"
+  printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"
+fi
 
 printf '\n%s\n' "=== incidents: work you did that the agent never offered ==="
 printf '%-26s %6s\n' "CATEGORY" "TURNS"
@@ -290,7 +319,13 @@ printf '%s\n' \
   printf '}}\n'
 } > "$RUNDIR/run.json"
 
-if [ -n "$PREV" ] && [ -f "$PREV/run.json" ]; then
+if [ -z "$PREV" ] || [ ! -f "$PREV/run.json" ]; then
+  printf '\n%s\n' "=== since your last run ==="
+  printf '%s\n' "No previous run under $OUT_ROOT, so there is nothing to compare against." \
+    "If you have run this before, it was under a different --out and those runs are not" \
+    "visible from here. This section is absent rather than empty for a reason: silence" \
+    "would read as 'nothing changed'."
+elif [ -f "$PREV/run.json" ]; then
   PSINCE=$(jq -r '.since' "$PREV/run.json" 2>/dev/null)
   PPAT=$(jq -r '.patterns' "$PREV/run.json" 2>/dev/null)
   PWHEN=$(jq -r '.ran_at' "$PREV/run.json" 2>/dev/null)
@@ -322,4 +357,4 @@ ls -1dt "$OUT_ROOT"/*/ 2>/dev/null | tail -n "+$((KEEP+1))" | while read -r d; d
 printf '\n%s\n' "=== evidence ==="
 cp "$WORK/human.txt" "$RUNDIR/human-turns.tsv"
 printf 'this run: %s\n' "$RUNDIR"
-printf '%s\n\n' "  report.txt, run.json, human-turns.tsv, incidents.txt — read the hits before trusting any count"
+printf '%s\n\n' "  report.txt, run.json, human-turns.tsv, incidents.txt, firing-hits.txt — read the hits before trusting any count"
