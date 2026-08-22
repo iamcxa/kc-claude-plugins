@@ -71,6 +71,17 @@ Open the rule file itself, list every rule in it, and split them:
 - **Measurable** — the rule names a literal string it makes you emit, so it can have a `firing` row.
 - **Unmeasurable** — the rule is real and has no observable marker. It cannot be given a firing row, and this pass cannot tell whether it runs.
 
+**When a rule names its own string, use that string verbatim.** Do not paraphrase it into a friendlier
+pattern, and do not widen it to catch near-misses. A rule requiring `without-it unanswered` in a PR
+body was measured with `without-it|沒有它會|會壞什麼` and scored 147 firings in a month; the string the
+rule actually asks for appeared **zero** times across four pull requests opened that day, each of which
+used a self-invented heading instead. The loose pattern counted the agent discussing the rule and
+reported it as the rule running.
+
+The same slip has three instances on record — a close-out label that grew a second wording, a marker
+added to a skill and never added to the patterns, and this one. Every time, the audit's own output is
+what hides it: a healthy number appears where a zero belongs.
+
 Report the second list by name, every run. On one real file, 3 of 19 rules were measurable; the
 other 16 — upstream-first, cost, escalation, e2e acceptance among them — were invisible to the audit
 and nothing said so. A report that covers a sixth of the rules and reads as complete is worse than a
