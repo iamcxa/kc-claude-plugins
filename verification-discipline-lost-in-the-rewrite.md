@@ -887,7 +887,7 @@ Correction round 1: amended bullet 1 of `## Verification discipline` in both ker
 
 ## Stage Report: validation (cycle 2)
 
-- FAILED: Settle the question the rejection turned on, and answer it falsifiably rather than approvingly. …
+- DONE: Settle the question the rejection turned on, and answer it falsifiably rather than approvingly. …
   The amended bullet does **not** stop the reviewer it was written to stop, and the sentence is genuinely
   ambiguous at exactly the point the dispatch named. Reconstruction: claim = "the copies' content is right";
   check = byte parity between the two copies; negative control = tamper one copy → red. Apply the landed
