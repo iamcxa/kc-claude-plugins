@@ -6,6 +6,9 @@ from __future__ import annotations
 import concurrent.futures
 import importlib.util
 import json
+import os
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -31,7 +34,7 @@ def write_fixture(root: Path) -> None:
     for profile, stages in {
         "poc-exploration": ("build", "prove"),
         "pilot-product-slice": ("shape", "build", "verify-deliver"),
-        "production": ("shape", "build", "verify", "release"),
+        "production": ("shape", "build", "verify"),
     }.items():
         profile_root = root / "profiles" / profile
         profile_root.mkdir(parents=True)
@@ -103,8 +106,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "production": {
             "ideation": ("shape", "implementation"),
             "implementation": ("build", "validation"),
-            "validation": ("verify", "release"),
-            "release": ("release", "done"),
+            "validation": ("verify", "done"),
         },
     }
     require(MODULE.ROUTES == expected_routes, "route topology drifted")
@@ -175,7 +177,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             root, "pilot-product-slice", "validation", "concurrent-pilot"
         ),
         "production": write_work_item(
-            root, "production", "release", "concurrent-production"
+            root, "production", "ideation", "concurrent-production"
         ),
     }
 
@@ -280,10 +282,10 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "stale profile route did not fail closed",
     )
 
-    missing = root / "profiles" / "production" / "release.md"
+    missing = root / "profiles" / "production" / "verify.md"
     missing.unlink()
-    production_release = write_work_item(
-        root, "production", "release", "missing-production-release"
+    production_validation = write_work_item(
+        root, "production", "validation", "missing-production-verify"
     )
     rejected = subprocess.run(
         [
@@ -292,7 +294,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             "--contracts-root",
             str(root),
             "--work-item",
-            str(production_release),
+            str(production_validation),
         ],
         text=True,
         capture_output=True,
@@ -301,6 +303,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         rejected.returncode == 2 and "cannot load selected contract" in rejected.stderr,
         "missing selected stage did not fail closed",
     )
+    missing.write_text("STAGE-production-verify\n", encoding="utf-8")
 
     # A stage that declares a conditional reference the adopter never vendored
     # must fail at load, not silently drop the capability the stage declares.
@@ -663,5 +666,343 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "text-format default output's header line did not carry "
         f"declared_receipts: {header_document.get('declared_receipts')!r}",
     )
+
+# --- Live Spacedock route mechanism: the production release-authorization
+# residual, and the two `build`-owed checks from the work-profile receipt's
+# testing obligations.
+#
+# 1. Drive a POC and a Pilot item through the REAL gate lifecycle
+#    (`gate prepare` / `gate record --consume`, no forced `--set status=done`)
+#    to `done` against the committed 5-state graph and assert no status was
+#    ever outside the declared route. Against the pre-fix 6-state graph (with
+#    `release`) this is RED: the Pilot item's validation-approval consume
+#    lands at `status: release`, outside `pilot-product-slice`'s declared
+#    route `[ideation, implementation, validation]` — reproducing the
+#    `declared-receipts-need-a-reader` incident. See the stage report for the
+#    captured RED transcript from that pre-fix run.
+# 2. At every real `gate record --consume`, assert the loader's computed
+#    `next_workflow_stage` for that (profile, workflow_stage) pair equals the
+#    runtime's own `target-stage`, so the two cannot silently diverge again.
+#    Pilot's route already diverges pre-fix (loader said `done`, the runtime
+#    said `release`) even though only `production`'s ROUTES entry changes in
+#    this fix — that divergence is exactly what stranded the incident item.
+# 3. The Production release-authorization mechanism: `merge guard --verdict`
+#    is refused with no pending terminal-target approval; a non-forced
+#    `status --set status=done` is refused while that approval is pending;
+#    only `merge guard --verdict passed` finalizes, recording a verdict and
+#    completed time distinct from the validation gate's own resolution time.
+#
+# Skips (does not fail) when no `spacedock` binary is available, matching
+# `profile-spacedock-route.test.py`'s convention — this is a live-CLI check,
+# not a property of the loader module alone.
+
+STATE_BRANCH = "spacedock-state/dev"
+
+# Mirrors docs/dev/README.md's committed `stages:` block exactly. Kept as a
+# literal string (not read from the README) so this test exercises the same
+# graph shape docs/dev/README.md declares without coupling to its file layout;
+# a drifted README is caught separately by scripts/kc-dev-flow-contract-test.py's
+# `expected_stage_order` assertion.
+WORKFLOW_STATES_BLOCK = """  states:
+    - name: backlog
+      initial: true
+      gate: true
+    - name: ideation
+      gate: true
+    - name: implementation
+    - name: validation
+      gate: true
+    - name: done
+      terminal: true
+"""
+
+
+def resolve_spacedock() -> Path | None:
+    configured = os.environ.get("SPACEDOCK_BIN")
+    located = configured or shutil.which("spacedock")
+    if not located:
+        return None
+    candidate = Path(located).expanduser()
+    if not candidate.is_file() or not os.access(candidate, os.X_OK):
+        return None
+    return candidate.resolve()
+
+
+def sd_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(cwd), *args], text=True, capture_output=True, check=True
+    )
+
+
+def seed_split_root_workflow(root: Path) -> tuple[Path, Path]:
+    """Real split-root Spacedock workflow: a bare origin, a repo with
+    docs/dev/README.md committed and pushed, and the state checkout as its
+    own linked-worktree Git toplevel on `spacedock-state/dev` — the shape
+    `gate record`'s state-publication step requires (an unlinked directory is
+    refused with "state checkout must be the exact Git toplevel")."""
+    remote = root / "remote.git"
+    repo = root / "repo"
+    state_seed = root / "state-seed"
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True)
+    subprocess.run(["git", "init", "-b", "main", str(repo)], check=True, capture_output=True)
+    sd_git(repo, "config", "user.name", "route-fixture")
+    sd_git(repo, "config", "user.email", "route-fixture@example.test")
+    sd_git(repo, "remote", "add", "origin", str(remote))
+    (repo / ".gitignore").write_text("docs/dev/.spacedock-state/\n", encoding="utf-8")
+    workflow = repo / "docs/dev"
+    workflow.mkdir(parents=True)
+    (workflow / "README.md").write_text(
+        "---\n"
+        "commissioned-by: spacedock@0.27.0\n"
+        "entity-type: task\n"
+        "entity-label: task\n"
+        "entity-label-plural: tasks\n"
+        "id-style: sd-b32\n"
+        "state: .spacedock-state\n"
+        "trunk: main\n"
+        "stages:\n"
+        "  defaults:\n"
+        "    worktree: false\n"
+        f"{WORKFLOW_STATES_BLOCK}"
+        "---\n\n# route fixture\n",
+        encoding="utf-8",
+    )
+    sd_git(repo, "add", ".gitignore", "docs/dev/README.md")
+    sd_git(repo, "commit", "-m", "seed product")
+    sd_git(repo, "push", "-u", "origin", "main")
+    sd_git(repo, "worktree", "add", "--detach", str(state_seed), "HEAD")
+    sd_git(state_seed, "switch", "--orphan", STATE_BRANCH)
+    subprocess.run(["git", "-C", str(state_seed), "rm", "-rf", "."], capture_output=True)
+    (state_seed / ".gitignore").unlink(missing_ok=True)
+    shutil.rmtree(state_seed / "docs", ignore_errors=True)
+    (state_seed / ".keep").write_text("", encoding="utf-8")
+    sd_git(state_seed, "add", ".keep")
+    sd_git(state_seed, "commit", "-m", "seed state")
+    sd_git(state_seed, "push", "-u", "origin", STATE_BRANCH)
+    sd_git(repo, "worktree", "remove", str(state_seed))
+    holder = workflow / ".spacedock-state"
+    sd_git(repo, "worktree", "add", str(holder), STATE_BRANCH)
+    sd_git(holder, "branch", "--set-upstream-to", f"origin/{STATE_BRANCH}")
+    return repo, workflow
+
+
+def sd_new_entity(
+    spacedock: Path, repo: Path, workflow: Path, slug: str, profile: str, route: list[str]
+) -> None:
+    body = (
+        "---\nstatus: backlog\n---\n\n"
+        f"# {slug}\n\n## Work profile receipt\n\n```yaml\nwork_profile:\n"
+        "  schema: kc-dev-flow-work-profile/v2\n"
+        f"  selected: {profile}\n"
+        f"  route: [{', '.join(route)}]\n```\n"
+    )
+    result = subprocess.run(
+        [
+            str(spacedock), "new", slug, "--workflow-dir", str(workflow),
+            "--id-seed", slug, "--id-actor", "fixture",
+        ],
+        cwd=repo, input=body, text=True, capture_output=True,
+    )
+    require(result.returncode == 0, f"spacedock new {slug} failed: {result.stdout}{result.stderr}")
+
+
+def sd_gate_consume(
+    spacedock: Path, repo: Path, workflow: Path, slug: str, artifact: Path, label: str
+) -> str:
+    """Prepare and record-approve-consume the gate at the entity's current
+    stage; returns the real runtime `target-stage`."""
+    prep = subprocess.run(
+        [
+            str(spacedock), "gate", "prepare", slug, "--workflow-dir", str(workflow),
+            "--question", f"{label}?", "--artifact", str(artifact.relative_to(repo)),
+            "--summary", label,
+        ],
+        cwd=repo, text=True, capture_output=True,
+    )
+    require(prep.returncode == 0, f"gate prepare {slug}/{label} failed: {prep.stdout}{prep.stderr}")
+    rec = subprocess.run(
+        [
+            str(spacedock), "gate", "record", slug, "--workflow-dir", str(workflow),
+            "--decision", "approve", "--actor", "person:captain", "--consume",
+        ],
+        cwd=repo, text=True, capture_output=True,
+    )
+    require(rec.returncode == 0, f"gate record {slug}/{label} failed: {rec.stdout}{rec.stderr}")
+    match = re.search(r"target-stage=(\S+)", rec.stdout)
+    require(match is not None, f"gate record {slug}/{label} did not report target-stage: {rec.stdout}")
+    return match.group(1)
+
+
+def sd_status(workflow: Path, slug: str) -> str:
+    text = (workflow / ".spacedock-state" / f"{slug}.md").read_text(encoding="utf-8")
+    match = re.search(r"^status:\s*(\S+)\s*$", text, re.MULTILINE)
+    require(match is not None, f"{slug} has no status field: {text}")
+    return match.group(1)
+
+
+def sd_set(spacedock: Path, repo: Path, workflow: Path, slug: str, field_value: str) -> None:
+    result = subprocess.run(
+        [str(spacedock), "status", "--workflow-dir", str(workflow), "--set", slug, field_value],
+        cwd=repo, text=True, capture_output=True,
+    )
+    require(result.returncode == 0, f"status --set {slug} {field_value} failed: {result.stdout}{result.stderr}")
+
+
+spacedock_binary = resolve_spacedock()
+if spacedock_binary is None:
+    print("profile contract loader test: route mechanism SKIP (spacedock unavailable)")
+else:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-route-mechanism-") as route_tmp:
+        route_root = Path(route_tmp)
+        route_repo, route_workflow = seed_split_root_workflow(route_root)
+        route_artifact = route_repo / "review.md"
+        route_artifact.write_text("route fixture review\n", encoding="utf-8")
+        sd_git(route_repo, "add", "review.md")
+        sd_git(route_repo, "commit", "-m", "add review artifact")
+
+        # POC: backlog's gate lands ideation regardless of profile (the
+        # runtime advances by declared graph order, not by ROUTES); the FO's
+        # manual nudge past ideation is POC's documented, harmless skip —
+        # unchanged by this task — because no gate record is ever created at
+        # POC's ideation visit.
+        sd_new_entity(spacedock_binary, route_repo, route_workflow, "poc-item", "poc-exploration", ["build", "prove"])
+        poc_target_backlog = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "poc-item", route_artifact, "backlog")
+        require(poc_target_backlog == "ideation", f"POC backlog gate target drifted: {poc_target_backlog}")
+        sd_set(spacedock_binary, route_repo, route_workflow, "poc-item", "status=implementation")
+        sd_set(spacedock_binary, route_repo, route_workflow, "poc-item", "status=validation")
+        poc_target_validation = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "poc-item", route_artifact, "validation")
+        require(
+            poc_target_validation == "done" == MODULE.ROUTES["poc-exploration"]["validation"][1],
+            f"POC validation did not terminalize at done: runtime={poc_target_validation}",
+        )
+        require(
+            sd_status(route_workflow, "poc-item") == "validation",
+            "POC validation-approval-consume should stay pending at validation (terminal-target approved-awaiting-merge)",
+        )
+        poc_finalize = subprocess.run(
+            [str(spacedock_binary), "merge", "guard", "poc-item", "--workflow-dir", str(route_workflow), "--verdict", "passed"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(poc_finalize.returncode == 0, f"POC merge guard finalize failed: {poc_finalize.stdout}{poc_finalize.stderr}")
+        require(
+            "done" in poc_finalize.stdout and "verdict passed" in poc_finalize.stdout,
+            f"POC did not terminalize via merge guard: {poc_finalize.stdout}",
+        )
+
+        # Pilot: real gate lifecycle end to end, no forced status writes.
+        # This is the Fixture A shape from the accepted outcome: assert every
+        # visited status stays inside pilot-product-slice's declared route,
+        # and assert the loader's next_workflow_stage never disagrees with
+        # the runtime's own target-stage.
+        sd_new_entity(spacedock_binary, route_repo, route_workflow, "pilot-item", "pilot-product-slice", ["shape", "build", "verify-deliver"])
+        pilot_route = MODULE.ROUTES["pilot-product-slice"]
+        pilot_target_backlog = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "pilot-item", route_artifact, "backlog")
+        require(pilot_target_backlog == "ideation", f"pilot backlog gate target drifted: {pilot_target_backlog}")
+        pilot_target_ideation = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "pilot-item", route_artifact, "ideation")
+        require(
+            pilot_target_ideation == pilot_route["ideation"][1] == "implementation",
+            f"loader/runtime disagree at pilot ideation: loader={pilot_route['ideation'][1]} runtime={pilot_target_ideation}",
+        )
+        require(sd_status(route_workflow, "pilot-item") in pilot_route, "pilot status left its declared route before validation")
+        sd_set(spacedock_binary, route_repo, route_workflow, "pilot-item", "status=validation")
+        pilot_target_validation = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "pilot-item", route_artifact, "validation")
+        require(
+            pilot_target_validation == pilot_route["validation"][1] == "done",
+            "loader/runtime disagree at pilot validation (the exact divergence that stranded "
+            f"declared-receipts-need-a-reader): loader={pilot_route['validation'][1]} runtime={pilot_target_validation}",
+        )
+        require(
+            sd_status(route_workflow, "pilot-item") == "validation",
+            f"pilot landed outside its declared route {list(pilot_route)} after validation-approval-consume: "
+            f"status={sd_status(route_workflow, 'pilot-item')!r} (this is the incident this task closes)",
+        )
+        sd_finalize = subprocess.run(
+            [str(spacedock_binary), "merge", "guard", "pilot-item", "--workflow-dir", str(route_workflow), "--verdict", "passed"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(sd_finalize.returncode == 0, f"pilot merge guard finalize failed: {sd_finalize.stdout}{sd_finalize.stderr}")
+        require(
+            "done" in sd_finalize.stdout and "verdict passed" in sd_finalize.stdout,
+            f"pilot did not terminalize via merge guard: {sd_finalize.stdout}",
+        )
+
+        # Production: the release-authorization residual. No graph state
+        # named `release` exists; the two rulings ("verified" / "may be
+        # released") are recorded as the validation gate's own resolution and
+        # a later, separate merge-guard verdict — and both refusals below are
+        # exercised, not asserted from prose.
+        sd_new_entity(spacedock_binary, route_repo, route_workflow, "prod-item", "production", ["shape", "build", "verify"])
+        prod_route = MODULE.ROUTES["production"]
+        sd_gate_consume(spacedock_binary, route_repo, route_workflow, "prod-item", route_artifact, "backlog")
+        sd_gate_consume(spacedock_binary, route_repo, route_workflow, "prod-item", route_artifact, "ideation")
+        sd_set(spacedock_binary, route_repo, route_workflow, "prod-item", "status=validation")
+
+        # Mechanism 1: merge guard refuses with no pending terminal approval —
+        # release cannot be authorized before verification has even started.
+        premature_guard = subprocess.run(
+            [str(spacedock_binary), "merge", "guard", "prod-item", "--workflow-dir", str(route_workflow), "--verdict", "passed"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(
+            premature_guard.returncode != 0 and "no binding pending terminal-target approval" in premature_guard.stderr,
+            f"merge guard did not refuse without a pending approval: rc={premature_guard.returncode} {premature_guard.stderr}",
+        )
+
+        prod_target_validation = sd_gate_consume(spacedock_binary, route_repo, route_workflow, "prod-item", route_artifact, "validation")
+        require(
+            prod_target_validation == prod_route["validation"][1] == "done",
+            f"loader/runtime disagree at production validation: loader={prod_route['validation'][1]} runtime={prod_target_validation}",
+        )
+        require(
+            "validation" not in prod_route or sd_status(route_workflow, "prod-item") == "validation",
+            "production's validation-approval-consume should stay pending (approved-awaiting-merge), not land at an excluded stage",
+        )
+
+        # Mechanism 2: a non-forced status --set cannot bypass the merge-guard
+        # ceremony while the terminal approval is pending — this is the
+        # "fails when authorization is absent" behavior the residual asked for.
+        bypass = subprocess.run(
+            [str(spacedock_binary), "status", "--workflow-dir", str(route_workflow), "--set", "prod-item", "status=done"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(
+            bypass.returncode != 0 and "merge guard prod-item is the sole terminal consumer" in bypass.stderr,
+            f"status --set status=done was not refused while a terminal approval was pending: rc={bypass.returncode} {bypass.stderr}",
+        )
+        require(
+            sd_status(route_workflow, "prod-item") == "validation",
+            "prod-item's status changed despite the refused bypass attempt",
+        )
+
+        pre_guard_prod_item = (route_workflow / ".spacedock-state" / "prod-item.md").read_text(encoding="utf-8")
+        validation_resolution_at = re.search(
+            r"stage: validation.*?at: \"([^\"]+)\"", pre_guard_prod_item, re.DOTALL,
+        )
+        require(validation_resolution_at is not None, "could not read the validation gate's own resolution timestamp")
+        # The "may be released" field does not exist yet: it is not written by
+        # the validation gate's own resolution, only by a later merge guard.
+        require(
+            "completed:" not in pre_guard_prod_item,
+            f"completed was already set before merge guard ran — the two rulings are not distinct steps: {pre_guard_prod_item}",
+        )
+
+        # The actual release ruling: merge guard --verdict is the only path
+        # to done, and it is the sole writer of `completed` — a distinct
+        # field, populated by a distinct, later step, from the validation
+        # gate's own resolution time above. Two separately rendered rulings,
+        # not one collapsed into the other.
+        release_guard = subprocess.run(
+            [str(spacedock_binary), "merge", "guard", "prod-item", "--workflow-dir", str(route_workflow), "--verdict", "passed"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(release_guard.returncode == 0, f"authorized merge guard finalize failed: {release_guard.stdout}{release_guard.stderr}")
+        archived_prod = (route_workflow / ".spacedock-state" / "_archive" / "prod-item.md").read_text(encoding="utf-8")
+        require("status: done" in archived_prod and "verdict: PASSED" in archived_prod, f"production item did not terminalize via merge guard: {archived_prod}")
+        require(
+            re.search(r"^completed:\s*$", archived_prod, re.MULTILINE) is None
+            and re.search(r"^completed: \S+", archived_prod, re.MULTILINE) is not None,
+            f"merge guard did not populate completed on finalize: {archived_prod}",
+        )
+        print("profile contract loader test: route mechanism PASS")
 
 print("profile contract loader test: PASS")

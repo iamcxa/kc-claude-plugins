@@ -42,12 +42,17 @@ project-global; different items may use different routes concurrently.
 |---|---|
 | `poc-exploration` | `build -> prove` |
 | `pilot-product-slice` | `shape -> build -> verify-deliver` |
-| `production` | `shape -> build -> verify -> release` |
+| `production` | `shape -> build -> verify` |
 
 `backlog` is queue state and `done` is terminal state; neither is a working
 stage. A workflow runtime may expose the union of stage names and skip stages
 outside the selected route. Skipping an inactive stage requires no synthetic
-review or receipt.
+review or receipt — but only when the skipped stage carries no authorization
+checkpoint a later stage does not also carry. A stage whose skip would remove
+the route's sole terminal-authorization checkpoint is not a candidate for this
+clause; fold that checkpoint into an adjacent working stage's contract
+instead, the way `production`'s route above folds release authorization into
+`verify` rather than skipping a dedicated `release` stage.
 
 Queue state still has an exit bar. An item leaves `backlog` only when its
 committed body states both:

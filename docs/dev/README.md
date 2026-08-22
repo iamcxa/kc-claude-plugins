@@ -23,8 +23,6 @@ stages:
       fresh: true
       feedback-to: implementation
       gate: true
-    - name: release
-      gate: true
     - name: done
       terminal: true
 ---
@@ -38,7 +36,7 @@ the working route and the contracts an agent loads:
 |---|---|
 | POC | `backlog -> implementation -> validation -> done` |
 | Pilot | `backlog -> ideation -> implementation -> validation -> done` |
-| Production | `backlog -> ideation -> implementation -> validation -> release -> done` |
+| Production | `backlog -> ideation -> implementation -> validation -> done` |
 
 Backlog and done are state boundaries, not worker stages. Skipped stages do not
 receive placeholder reviews or receipts.
@@ -209,14 +207,18 @@ It is a delivery event mod, not a profile contract, and remains unread until PR
 delivery is selected or a tracked PR needs reconciliation.
 
 POC and Pilot proceed to done after their selected delivery authority is met.
-Production proceeds to release.
-
-### `release` — Production only
-
-The profile loader rejects this stage for POC and Pilot. Production loads the
-selected release contract. Required checks, rollback or forward-recovery
-readiness, operational ownership, and explicit Captain or release-owner
-authorization must apply to the exact delivery revision.
+Production's validation gate approval targets the terminal `done` stage, so
+`gate consume` leaves it pending (`route=approved-awaiting-merge`) instead of
+landing anywhere: `spacedock merge guard <slug> --verdict passed|rejected` is
+the sole terminal consumer of that approval, and it refuses to finalize
+without one pending. This keeps two separately timestamped rulings on record
+without a dedicated `release` state — the validation gate's
+`resolution.decision: approve` ("the code is verified") and the merge-guard
+verdict ("this may be released") — and it is refused, not silently skipped,
+when the pending approval or the merge-guard verdict is absent. Required
+checks, rollback or forward-recovery readiness, operational ownership, and
+explicit Captain-or-release-owner authorization apply to the exact delivery
+revision per `production/verify.md`'s Required output.
 
 ### `done` — terminalize
 
@@ -235,7 +237,7 @@ When a PR is the selected delivery artifact, authenticated product PR
 | Stage routing and evidence presence | FO, applying the loader and declared checks |
 | Decidable technical condition | Named deterministic check |
 | Scope, profile, irreversible action, red residual | Captain |
-| Production release | Captain or declared release owner |
+| Production release (validation's terminal-target approval + `merge guard --verdict`) | Captain or declared release owner |
 | Delivery sequencing advice | Chief Engineer, advisory |
 | Contested or high-risk technical assurance | Science Officer, advisory |
 

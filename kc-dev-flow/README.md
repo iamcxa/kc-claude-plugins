@@ -12,7 +12,7 @@ falsify this direction.
 |---|---|---|
 | POC / Exploration | `build -> prove` | One real journey and its riskiest assumption are observed; cleanup and unproved limits are recorded. |
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
-| Production | `shape -> build -> verify -> release` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
+| Production | `shape -> build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
 ```mermaid
 flowchart TB
@@ -34,9 +34,8 @@ flowchart TB
     C -->|Production| R1["Shape<br/>operational boundaries"]
     R1 --> R2["Build<br/>operable lifecycle"]
     R2 --> R3["RoboRev exit observation<br/>thorough Medium+ · Spacedock adopters"]
-    R3 --> R4["Verify<br/>exact-revision obligations"]
-    R4 --> R5["Release<br/>rollout + recovery + authority"]
-    R5 --> D
+    R3 --> R4["Verify<br/>exact-revision obligations + rollout/rollback + release authority"]
+    R4 --> D
 ```
 
 Backlog and done are state boundaries, not working stages; a runtime may expose

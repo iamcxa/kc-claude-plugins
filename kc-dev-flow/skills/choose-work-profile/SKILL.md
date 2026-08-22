@@ -25,7 +25,7 @@ the accepted scope.
 |---|---|---|
 | `POC / Exploration` (`poc-exploration`) | `build -> prove` | A disposable experiment must prove one real journey and its riskiest assumption. |
 | `Pilot / Product slice` (`pilot-product-slice`) | `shape -> build -> verify-deliver` | Limited real use creates persistent value and likely iteration. |
-| `Production` (`production`) | `shape -> build -> verify -> release` | The scope accepts a production boundary or long-term operational commitment. |
+| `Production` (`production`) | `shape -> build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
 
 A POC label cannot downscope production credentials or data, destructive
 external mutation, irreversible migration, public compatibility, unattended

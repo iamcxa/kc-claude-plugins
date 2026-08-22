@@ -43,7 +43,20 @@ cheapest instruments that can fail.
 - required deterministic gate results;
 - findings from only the applicable security, privacy, reliability, data, or
   compatibility specialists;
-- provider feedback disposition and any material residual risk.
+- provider feedback disposition and any material residual risk;
+- rollout, rollback, or forward-recovery readiness for the exact delivery
+  revision;
+- operational owner and monitoring handoff;
+- explicit Captain-or-declared-release-owner authorization for the exact
+  delivery revision.
 
 One repair owner may close all findings before one final re-verification. Invoke
-Science Officer only for a material contested or high-risk judgment.
+Science Officer only for a material contested or high-risk judgment; Science
+Officer advice cannot substitute for release authorization.
+
+This gate's approval targets the terminal `done` stage: `gate record --consume`
+leaves it pending (`route=approved-awaiting-merge`) rather than landing
+anywhere, and `spacedock merge guard <slug> --verdict passed|rejected` is the
+sole terminal consumer — it refuses to finalize without that pending approval.
+Do not merge, publish, migrate, or mutate production without the named
+authority recorded in this gate's resolution before that approval exists.
