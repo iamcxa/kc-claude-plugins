@@ -147,6 +147,72 @@ work_profile:
     at: 2026-08-22T09:52:39Z
 ```
 
+## Without-it audit
+
+Run before writing any of the four accepted blocks, per the Captain's condition
+at the ideation gate. Each of the five in-scope clauses is checked against a
+real occurrence — a commit, a PR, an issue, or this entity's own stage report —
+where its absence cost something. A clause with no such evidence is dropped and
+recorded as a deviation from the accepted Site 1 / Site 2 blocks. Result: **zero
+drops.**
+
+- **A check is evidence only once it has been seen to fail** — KEEP. Issue
+  `#154` §4 names four real occurrences where a check could not have falsified
+  the claim it was offered as proof of: an exit code read from the wrong
+  element of a pipeline; a log filter anchored on a start marker that reported
+  "no output" while the sought lines were present, producing a wrong report to
+  a human that a provider had disabled a subscription when it had not; a
+  backup asserted as a rollback path without its size or contents ever
+  compared to the original; a delete verified by a `count(*)` taken from the
+  same connection that issued it while the process owning the resource still
+  held the old rows. This entity's own `## Which clauses have earned
+  restoration` section records a fifth, closer to home: a byte-parity check
+  between two vendored copies, mutation-tested one copy at a time, passed a
+  Captain gate while false — corrupting both copies identically passed the
+  whole suite. A cross-model interview found it after the gate.
+- **Name the falsifier's kind** — KEEP. Issue `#154` §5 names the class this
+  clause exists to catch: a consumer that duplicates a producer's derivation
+  formula, rather than consuming the producer's output, is silently correct
+  until the formula changes — found only by mutating the producer and
+  observing what breaks, never by an assertion over sampled inputs. The same
+  parity defect above is that class verbatim: a check that reddens on
+  divergence and never on content is a mutation-shaped check that was never
+  exercised as one.
+- **Prefer the cheapest instrument that can fail** — KEEP. Issue `#143`'s
+  second gap, measured on one task: 19.4 minutes of construction against 58.3
+  minutes of validation, a 3x inversion, because the governing stage
+  prescribed an adversarial reviewer for every validation regardless of
+  whether the defect class admitted a cheaper mechanical check. Once the
+  defect class was cut, acceptance became a grep and the ratio inverted back.
+  This is distinct from the siting evidence already recorded elsewhere in this
+  entity (`prefer the cheapest instrument that can fail` survives only at
+  `production/verify.md:8`, unreadable to POC and Pilot) — that shows the
+  clause misplaced; this shows the clause's absence costing measured time.
+- **When one failure shape repeats, change the work, not the wording** — KEEP.
+  Issue `#143`'s first gap: three consecutive validation rejections on the same
+  defect class, at 30%/47%/60% of the approved budget with acceptance criteria
+  unchanged throughout — the budget-based design-reset trigger never came
+  close to firing, because each round was individually cheap. A human ruling
+  was required to stop correcting instances and delete the wrong-shaped
+  deliverable. The session that is this entity's own source independently
+  invented an ad-hoc stopping rule mid-flight, for the identical reason.
+- **An absolute names its enforcement point or becomes a bounded claim** —
+  KEEP. The currently-dangling `CLAUDE.md:91` citation (verified live on this
+  tree before any edit — see `## Acceptance evidence`) proves the deletion left
+  a live consumer, but that alone is the citation breaking, not the rule's own
+  absence biting. Two occurrences of the rule's subject matter actually costing
+  something: `#156`'s own original text wrote "this is the **only** kind that
+  finds a consumer silently duplicating a producer's derivation," an
+  undefended absolute a later revision had to bound; and this entity's own
+  `## Stage Report: ideation` records a self-correction of exactly this
+  failure — a claim that a sentence was "the first addition since `#249` to
+  state its cost at all" was checked and found false, then rewritten to
+  "weighed once in four changes."
+
+No clause is dropped, so the four accepted blocks below land unamended: no
+deviation-table addition, and no change to the Site 4 `MIGRATION.md` block
+follows from this audit.
+
 ## Accepted outcome and non-goals
 
 `kernel.md` regains four instrument rules and the absolutes rule, compressed, at
