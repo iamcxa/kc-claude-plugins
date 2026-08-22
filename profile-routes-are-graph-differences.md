@@ -84,6 +84,17 @@ gates:
                 digest: sha256:a888c5a62d2512316dc544cb0607ac6eb173b8baccad439d122ddb195575baff
                 request-digest: sha256:c33d3e99e49705f28ae42ab8cd96c92f2e823e38dff8cf553dd1f278fd246e16
                 room-ref: ./profile-routes-are-graph-differences/review/release/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:release:1
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-22T01:24:26.984763Z"
+                decision: approve
+                reason: 'Captain approved release readiness at delivery revision b3b0e2ed and ruled the base stays main. The single commit was rebased with --onto after confirming the branch carried exactly one commit, and both suites were re-run on the rebased revision; the contract test''s sole failure remains the pre-existing sibling casing bug, with nothing hidden behind it. On the base question, delivery-branch-base.md''s trunk clause literally requires ''no shared file'' and this candidate does share kernel.md and choose-work-profile/SKILL.md with the open stack #267 -> #271 -> #272 -> #275. The FO compared the actual hunks: both sides insert near the same line of kernel.md but on unrelated subjects — this candidate bounds the runtime skip clause and rewrites the Production route table, while the stack inserts a backlog exit bar. Neither builds on, depends on, nor re-delivers the other, so the overlap is textual adjacency and the cost of trunk is a keep-both conflict for whoever merges second, against making an independent fix hostage to a four-deep stack. PR #276 is Draft, targets main, MERGEABLE/CLEAN with checks green. Mark-ready and merge remain the Captain''s actions.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
