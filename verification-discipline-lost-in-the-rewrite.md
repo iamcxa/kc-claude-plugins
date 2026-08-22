@@ -24,6 +24,17 @@ gates:
                 digest: sha256:fd06ba0dfce987aede3680ee83ae436a21e91e8abcfedd875b2261946801af4a
                 request-digest: sha256:7fad7f4e15bae2d97a410d589518e32c1d17c870167a659c6632ad5e1bbcaf9d
                 room-ref: ./verification-discipline-lost-in-the-rewrite/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:9ydm2mmakce2r49v40q98377:backlog:1
+                briefing: briefing:9ydm2mmakce2r49v40q98377:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-22T09:52:15.262904Z"
+                decision: approve
+                reason: 'Captain approved the backlog gate in chat: Production profile, scope bounded to the four #156 clauses plus the #164 absolutes rule and a one-time migration record; standing enforcement excluded and the restoration form deferred to ideation. Direction accepted on verified evidence — kernel.md replaced 349->81 lines by #249, six recording surfaces searched with no removal note, three proof-stage contracts read in full with no re-siting.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem
