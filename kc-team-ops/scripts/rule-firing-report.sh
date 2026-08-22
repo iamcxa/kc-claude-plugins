@@ -249,8 +249,13 @@ if [ "$FIRED" = 1 ]; then
     { printf -- '--- %s\n' "$label"
       grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
       printf '\n--- %s (tool commands, excluded from prose count)\n' "$label"
-      grep '^TOOL ' "$WORK/assistant.txt" 2>/dev/null \
-        | grep -iE -e "$re" 2>/dev/null | head -40 | cut -c1-400
+      awk -v RE="$re" '
+        /^TOOL / && match(tolower($0), tolower(RE)) {
+          start=RSTART-160; if (start < 1) start=1
+          prefix=(start > 1 ? $1 " " $2 " ... " : "")
+          print prefix substr($0,start,380)
+          if (++n == 40) exit
+        }' "$WORK/assistant.txt"
       printf '\n'; } >> "$RUNDIR/firing-hits.txt"
   done < "$PATTERNS"
   printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"

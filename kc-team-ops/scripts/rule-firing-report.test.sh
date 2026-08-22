@@ -95,7 +95,7 @@ fi
 P4="$WORK/home4/projects/proj"; mkdir -p "$P4"
 python3 - "$P4/e.jsonl" <<'PYEOF'
 import json, sys
-cmd = "gh pr create --body \"$(cat <<EOF\n## MARKER-XYZ\n\nbody text\nEOF\n)\""
+cmd = "gh pr create --body \"$(cat <<EOF\n" + "x" * 700 + "\n## MARKER-XYZ\n\nbody text\nEOF\n)\""
 rows = [
   {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
    "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": cmd}}]}},

@@ -149,9 +149,9 @@ and know that the three columns hand you three different qualities of evidence:
 - `incidents.txt` — the matched turns, each with the assistant turn before it. Curated.
 - `human-turns.tsv` — **every** human turn in the window, not the matched ones. Re-grep it yourself.
 - `firing-hits.txt` — up to forty prose hits and forty excluded tool-command hits per firing row,
-  each cut at 400 characters. Tool-command hits never enter the prose firing count; they are kept
-  for classification because a command marker can be audit setup or the governed action itself,
-  such as text inside a pull-request body.
+  each with bounded context near the matched marker. Tool-command hits never enter the prose firing
+  count; they are kept for classification because a command marker can be audit setup or the
+  governed action itself, such as text inside a pull-request body.
 
 The third file exists because this instruction was once unfollowable for the column it matters most
 to: the assistant stream lived in a work directory that was deleted on exit, so a finished run left
