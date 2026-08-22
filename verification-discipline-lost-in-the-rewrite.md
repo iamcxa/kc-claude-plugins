@@ -232,8 +232,7 @@ citation therefore resolves *and* is true.
 ### Site 4 — `MIGRATION.md`, one dated entry appended, following the `2026-08-21` precedent
 
 ```markdown
-## 2026-08-18 — the shared core's verification discipline was dropped, and this
-## note is late
+## 2026-08-18 — the shared core's verification discipline was dropped, and this note is late
 
 `e634d3e7` (`#249`) replaced `kernel.md` wholesale and removed its
 `## Verification discipline` section along with the absolutes rule in
@@ -251,8 +250,6 @@ An adopter that vendored `kernel.md` between `kc-dev-flow-v3.0.0` and the releas
 carrying this note has been running without those five rules.
 ```
 
-The heading is one line in the file; the two-line rendering above is this
-document's wrapping only.
 
 ### Accepted journey
 
@@ -540,10 +537,13 @@ What the tree does show at `e634d3e7`: `kernel.md` was 597 words and the
 Local-Profile-plus-base-plus-build bundle was 1,274–1,329 words. Today, with no
 part of this change landed, `kernel.md` is 986 words (`+65%`) and that bundle is
 1,820–1,885 (`+43%` to `+48%`). The small core has already grown by roughly
-twice what this restoration adds, through changes that were never weighed as
-load. That is the honest frame for the price: `+413` words is real, it is about
-`+22%` on every route, and it is the first addition since `#249` to state its
-cost at all.
+the same amount this restoration adds, across four commits — `#267`, `#271`,
+`#272`, `#276`. Bounded claim, checked by
+`git log --format='%B' -1 <sha> | grep -in 'word\|load\|byte\|input'` over
+each: three of the four state no size accounting at all, and `#272` does — it
+records `kernel.md` dropping 47 words. So growth here has been weighed once in
+four changes, not never. That is the honest frame for the price: `+413` words is
+real, and it is about `+22%` on every route.
 
 **Why the cost is earned, and why it lands in the shared core.** The four
 clauses govern the instrument, and the instrument is what every profile uses;
@@ -586,3 +586,7 @@ is rebuilt from measurements taken the same way before and after. Open for the
 Captain: the price is about +22% loaded words on every route, and a standing
 citation-integrity check is named as a candidate but not taken, since it would
 fire this item's first `promote_when` clause.
+
+- DONE: (post-report correction) the Measurement section's own absolute was checked and bounded.
+  Claimed "the first addition since #249 to state its cost at all"; `git log --format=%B -1` over the four intervening kernel commits (#267, #271, #272, #276) showed #272 records `kernel.md` dropping 47 words, so the sentence is now bounded to "weighed once in four changes". Site 4's MIGRATION heading is also recorded as the single line that will land, so every one of the four blocks is byte-diffable against the patch.
+
