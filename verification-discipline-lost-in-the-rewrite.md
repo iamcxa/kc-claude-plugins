@@ -759,6 +759,19 @@ was lost in practice.
   therefore recorded in this FO-owned section, and the gap is reported to the Captain rather
   than treated as a round failure.
 
+- **Cycle 2 — `validation` rejected again, routed to `implementation`.** Captain decision `revise`
+  on the First Officer's recommendation, recorded against
+  `briefing:9ydm2mmakce2r49v40q98377:validation:attempt-2:revision-1` (`sha256:51762192`) at
+  delivery revision `ad37d51f`. The fresh reviewer established that correction round 1's sentence
+  re-certifies the reviewer it was written to stop, because the biconditional attaches to the
+  chosen negative control rather than ranging over the check's domain, and that issue `#154`
+  section 4's own framing would not have stopped it either. That is the second occurrence of one
+  failure shape, so the clause being restored by this change excludes a third wording. Disposition:
+  revert `ad37d51f`, return Site 1 to the wording approved at the ideation gate, and bound the
+  claim to what is true. Reverted at `d55d6a4d`; PR #279 updated in place. The cycle-2 minor
+  finding — an unbounded "no mechanical check distinguishes them" — is subsumed by the revert.
+  The round recorder remains unusable for the reason recorded under cycle 1.
+
 ## Stage Report: ideation
 
 - DONE: Name the exact restored words and their site: for each clause in scope, state the wording that will land and which section of kernel.md it lands in.
