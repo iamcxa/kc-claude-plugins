@@ -35,7 +35,9 @@ unit of change is a rule, not a single correction.
 The window changes every number in this audit, and it is the user's call, not a default you pick
 for them. Ask it with the harness's question UI as the first action, offering two weeks, one month,
 two months, and a custom date — and say what each costs, because they find out otherwise only after
-waiting: a one-day window returns in seconds, two weeks across six hundred sessions takes minutes.
+waiting: a day returns in seconds, two weeks across six hundred sessions takes a few minutes, and a
+month across eleven hundred took eleven — long enough to exceed a ten-minute tool timeout and need
+backgrounding, which is worth saying before they choose it rather than after.
 
 Two facts belong in the question, because they change the answer:
 
@@ -54,14 +56,71 @@ kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
 `incident`, or `codify`.
 
-Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
-a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
-itself the finding** — see Step 2.
+Declare one `firing` row per rule that has an observable marker. A marker is a literal string the
+rule makes the agent **emit** — a required prefix, a field label, a heading. A file the rule makes
+you read counts only when the read is unique to that rule; `git status` is run for a hundred reasons
+and cannot be attributed to the rule that asks for it. **A rule with no possible marker cannot be
+measured, and that is itself the finding** — see Step 2.
 
 `codify` rows catch the user asking for something to become standing behaviour — "from now on",
 "remember this", "write it into the rules". Each one has two ways to fail, and the second is the reason this audit
 usually gets started: never written into the rule file at all, or written and never firing. Check
 both against the actual file before reporting either.
+
+### Match first, sample the hits, and read properly only when the sample fails
+
+Matching is free and reading is not, so start with the pattern — but a count may not be used until
+some of its hits have been opened. The trigger for falling back is **not** that the pattern found
+nothing. It never does. On real history one rule returned 147 against a true zero, because the
+pattern paraphrased the string the rule actually names; another returned 69 of which 30 were the
+agent typing the marker into a shell command; a third returned 295 that sampling suggests were
+genuine, and was still wrong to use, because a bare count has no denominator to be high or low
+against. Three different faults, three healthy-looking numbers, and a fallback triggered by silence
+would have caught none of them.
+
+1. Run the pattern. Cheap, whole corpus, every rule that has a candidate marker.
+2. **Open up to ten hits per row** from `firing-hits.txt` before the number is allowed anywhere.
+3. Mostly genuine → keep the count and carry on.
+4. Mostly the agent quoting the rule, discussing it, or typing it into a command → **discard the number** and measure that rule by reading instead.
+
+Reading means sampling replies at random from the window and judging each one complied, violated, or
+not applicable, with the offending words quoted. It gives a rate with a denominator rather than a
+bare count, and it works on rules that name no string at all — which is most of them. It costs
+roughly sixty thousand tokens per rule per twenty samples, so it is for the two or three rules with
+the highest friction, not for all of them.
+
+**Do not respond to an unmeasurable rule by inventing a marker for it.** That was tried: a rule was
+given the string `without-it unanswered`, the behaviour it asks for was performed under a
+self-invented heading instead, and the audit scored 147 against a true zero. Instrumenting a
+quality rule replaces the quality with the instrument.
+
+### Enumerate the rule file before trusting any coverage
+
+The patterns file is hand-written, so the audit sees only the rules someone thought to declare.
+Open the rule file itself, list every rule in it, and split them:
+
+- **Measurable** — the rule names a marker in the sense defined above: a string it makes the agent emit, or a file-read unique to it.
+- **Unmeasurable** — the rule is real and has no observable marker. It cannot be given a firing row, and this pass cannot tell whether it runs.
+
+**When a rule names its own string, use that string verbatim.** Do not paraphrase it into a friendlier
+pattern, and do not widen it to catch near-misses. A rule requiring `without-it unanswered` in a PR
+body was measured with `without-it|沒有它會|會壞什麼` and scored 147 firings in a month; the string the
+rule actually asks for appeared **zero** times across four pull requests opened that day, each of which
+used a self-invented heading instead. The loose pattern counted the agent discussing the rule and
+reported it as the rule running.
+
+The same slip has three instances on record — a close-out label that grew a second wording, a marker
+added to a skill and never added to the patterns, and this one. Every time, the audit's own output is
+what hides it: a healthy number appears where a zero belongs.
+
+Report the second list by name, every run. On the author's own file — this is a self-citation, not
+independent corroboration — 3 of 19 rules were strictly measurable, 3 more were arguable, and the
+rest, upstream-first and cost and escalation and e2e acceptance among them, were invisible to the
+audit while nothing said so. A report that covers a sixth of the rules and reads as complete is worse than a
+short one that says which fifth-sixths it skipped.
+
+This is also the only way to keep "the rule is absent" and "the rule is present and unmeasurable"
+apart. They look identical from the patterns file and they call for opposite actions.
 
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
@@ -75,8 +134,23 @@ When the previous run used the same window and the same patterns, the report end
 since it, and says so when nothing did. When either changed, it refuses to compare and says why:
 a delta against a different question is worse than no delta.
 
-Counts are for comparing runs, not for quoting as truth. Every matched human turn is written to
-`human-turns.tsv` in the run directory; read the hits before you believe a number.
+**Run the script or report that you could not.** Do not reconstruct the measurement by hand with
+your own jq and your own patterns when the script fails — a hand-built run leaves no record, no
+`run.json`, and a pattern set nobody can reproduce, so its numbers cannot be compared with the run
+before it or the one after. Three hand-built passes are three different questions answered once
+each. If the script will not run, say so, say what it printed, and stop; a missing audit is
+recoverable and an uncomparable one quietly is not.
+
+Counts are for comparing runs, not for quoting as truth. Read the hits before you believe a number,
+and know that the three columns hand you three different qualities of evidence:
+
+- `incidents.txt` — the matched turns, each with the assistant turn before it. Curated.
+- `human-turns.tsv` — **every** human turn in the window, not the matched ones. Re-grep it yourself.
+- `firing-hits.txt` — up to forty prose hits per firing row, each cut at 400 characters. Hits inside shell commands are excluded here and counted separately in the report, because a marker in a command is the audit typing about the rule rather than obeying it.
+
+The third file exists because this instruction was once unfollowable for the column it matters most
+to: the assistant stream lived in a work directory that was deleted on exit, so a finished run left
+a firing count and no way to check it.
 
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
@@ -100,6 +174,14 @@ is not evidence of a comfortable user.
 | high | zero | **Rule missing.** Add it — as a check, not a paragraph. |
 | low | zero | **Candidate for deletion** — but first ask which of the two zeros this is. |
 | low | high | **Working.** Leave it alone. |
+| high | high | **Runs but is not believed.** The rule fires and the user asks anyway, so the claim is not carrying what would settle it. Do not add a rule; make the existing one state its evidence. |
+
+The last row is the one that looks like every other row and is not. High friction reads as a gap and
+invites a new rule, but the rule is already running — measured on real history, a verification rule
+left 295 traces in a month while the user still asked "did you actually run this" 24 times. They were
+not asking whether verification happened; they were asking whether it was real. A second rule saying
+the same thing adds nothing. The fix is to make the claim carry the command that was run and what it
+printed, so there is nothing left to ask.
 
 **Two kinds of zero, and they get opposite treatment:**
 
@@ -118,14 +200,14 @@ assistant turn printed above it, and classify it before it counts:
 
 | The turn before it shows | Classification | Remedy |
 |---|---|---|
-| nothing on the subject | **blind spot** | a rule, and possibly a different seat |
+| nothing on the subject | **blind spot** | a rule, and possibly a different role (Step 4) |
 | the user's own standing authority | **normal division of labour** | none; drop it |
-| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a seat |
+| you offering to do it, then not | **follow-through failure** | a rule about finishing, not a role |
 | you lacking the access or the tool | **capability limit** | fix the access; a rule changes nothing |
 
-Only the first row may be used as evidence for changing a seat. The third is the one most easily
-mistaken for the first, and it is the one where a seat change does the most damage: it renames the
-agent instead of making it finish.
+Only the first row may be used as evidence for changing the role. The third is the one most easily
+mistaken for the first, and it is where changing the role does the most damage: it renames the agent
+instead of making it finish.
 
 ## Step 3 — Check for an owner before deleting
 
@@ -133,7 +215,7 @@ A rule that looks dead is often a **duplicate of a live capability that owns the
 elsewhere** — a plugin reference, a stage contract, a test that asserts the path. Grep the fleet
 for the concept before cutting.
 
-- Found an owner → **propose deleting the copy and name the owner**, through Step 4 like any other change. Do not delete it yourself; removal is the user's call.
+- Found an owner → **propose deleting the copy and name the owner**, through Step 5 like any other change. Do not delete it yourself; removal is the user's call.
 - Found no owner → the rule is the only home. Removing it drops the capability.
 
 Finding an owner is the start of the check, not the end. Before proposing removal, answer both:
@@ -145,31 +227,113 @@ Finding an owner is the start of the check, not the end. Before proposing remova
   file read in every session. Removing the copy narrows where the rule applies, and that narrowing
   is the real cost to put in front of the user.
 
-## Step 3.5 — Name the seat, then fill it
+## Step 4 — Find the role the user is covering for
 
-The audit's output is a named package: **one seat, and the rules that sit under it.** "It is my
-Chief Engineer, plus these rules." Always give the package a name, and never let the name do the
-work.
+The friction table says which rules are broken. This asks a different question of the same corpus:
+**which job is vacant.** Do not derive one from the other — friction measures where the agent fails,
+and answering it with a job title recommends a communications hire because the engineer writes
+unclear reports.
 
-**The seat is for the person, not the agent.** Measured across sixteen isolated runs and four seats
-on two task shapes, the seat did not change what the agent recommended — the task shape decided
-that every time. One dimension separated cleanly: how often the reply named who owns a thread,
-Chief Engineer at 0 and 1 mentions against Chief of Staff at 3 and 3. That is one dimension on one
-pair of fixtures — enough to say a seat can move what gets mentioned, not enough to say what else it
-does or does not move. The reason to name one anyway is the user's, not the agent's: a seat is one
-handle for a dozen rules, and that is how they decide what belongs in the set and what does not.
+**The signal is a question the user asks that the agent should have asked.** Every turn falls into
+one of two kinds, and only the second names a role:
 
-So:
+| The turn | Kind | Example |
+|---|---|---|
+| points at the agent's last output and asks for it again | **repair** | "say that again more simply", "what does that mean" |
+| applies a standing test to the work that the agent never applied | **role gap** | "what breaks if we drop it", "does upstream already have this", "whose move is it" |
 
-- **Always name the seat, and say what it means here** — the default question that seat asks before
-  every reply. That question is the only part of a seat this audit has measured at all.
-- **Never ship a seat alone.** The rules are the substance; the seat is the label on the jar. A seat
-  recommended without rules under it is the weakest change in the file, dressed as the biggest.
-- **Change the seat when incidents say to.** A blind spot from Step 2 — zero friction, zero firing,
-  incidents present — names a class of work the user is doing alone. That is the evidence for
-  proposing a different seat, and the proposal has to say which incidents it is answering.
-- **State the expected effect honestly.** A seat change moves what gets noticed. If a behaviour has
-  to change on every run, that is a rule, and it goes in as a rule regardless of the seat.
+A repair is fixed with a rule. A role gap means the user performed a function on the agent's behalf,
+and the recurring question *is* the job description.
+
+### Dispatch it, do not answer it yourself
+
+Send `human-turns.tsv` from the run to a **fresh-context reviewer** — one that has not seen this
+session's reasoning. An agent deciding which of its own duties are vacant is grading its own work,
+and this step is the one place in the audit where that is the whole question.
+
+Give the reviewer the two kinds above, the run directory, **Step 1's measurable/unmeasurable list**,
+and this brief. The list is not optional context. Dispatched without it, a reviewer reads a recurring
+"did you actually verify this" as a vacant test-and-acceptance role — and the rules covering it are
+already in the file, merely unmeasurable. That happened on this skill's own dogfood: the verdict was
+overturned afterwards only because the orchestrator held the list and the reviewer did not.
+
+Tell the reviewer, in the brief, that a question mapping to an unmeasurable rule is `unknown`, never
+`vacant`.
+
+> Group the recurring role-gap questions by the function they perform. Name the role that function
+> belongs to, anywhere on the software delivery arc — product, design, architecture, engineering,
+> test, release, operations, data, security, documentation, delivery management, coordination. Do
+> not restrict yourself to a fixed list, and do not invent a role to have an answer.
+
+### What it must return
+
+- **The role, or none.** "No vacant role" is a correct and expected result, and the reviewer must be told so. A catalogue this wide will always yield a plausible title if the reviewer feels obliged to produce one.
+- **The recurring question that names it**, quoted from the user, with the exact turns it appeared in. Fewer than three separate occasions is a note, not a finding.
+- **The default self-check to install** — that same question, turned on the agent. This is the deliverable; the title is the label on it.
+- **What it would have pre-empted**: the specific past turns where the user had to ask. Not "communication would improve" — "you asked this on these three dates, and you would not have needed to."
+
+That last item is what makes the recommendation falsifiable. A role proposal that cannot point at
+turns the user would not have had to write is a job title with nothing under it.
+
+### A recurring question is not yet a vacancy
+
+Count alone picks the wrong role, and the margin is usually too thin to carry a job title. Run the
+candidates through the audit's own test before naming one:
+
+| The rule for that question | Firing | Verdict |
+|---|---|---|
+| absent from the rule file | — | **vacant** — nobody is doing this |
+| present, with no observable marker | unmeasurable | **unknown, and say so** — never read as vacant. The rule exists; this audit cannot see whether it runs, and recommending a role here appoints someone to a job that may already be done |
+| present, and never fires | zero | **vacant** — the rule is there and does not run, which is the highest-value finding this audit has |
+| present, fires, and the question stopped | high | **occupied** — the low question count is the rule working, not a gap |
+| present, fires, and the question keeps coming | high | **not a vacancy at all** — see Step 2's last row. The job is being done and disbelieved, which a job title cannot fix |
+
+The third row is the one that gets missed. A question the user rarely asks looks like a small
+cluster; it is often a seat that is already filled. Read it as evidence the rule is doing its job,
+not as a role with weak support.
+
+The fourth row is the one that produces a wrong hire. A reviewer given only the question counts read
+24 recurring "did you verify this" as a vacant quality-assurance role; the firing column showed the
+rule running 295 times over the same month. Counted, it looked like nobody was doing the job. Counted
+against firing, the job was being done and not believed — and appointing someone to it would have
+changed nothing.
+
+This is Step 2's friction-against-firing applied to roles, and skipping it turns Step 4 into a
+counting exercise that contradicts the rest of the audit.
+
+### Say what it displaces
+
+Attention is finite: across sixteen isolated runs the framing moved what got mentioned, so
+mentioning one thing more means mentioning something else less. A role proposal has to name the
+attention it competes with, and the strongest competitor is whatever is currently *working*.
+
+A verification role, for instance, pulls attention toward proving the last step ran — and away from
+scope and the next integrated step, which is where a well-fed engineering role spends it. Say that
+in the proposal:
+
+> Installing this displaces `<the currently working attention>`, which is firing `<n>` times.
+> Watch that count on the next run; if it falls, the trade was real and you should decide whether
+> you want it.
+
+That makes the trade checkable on the next audit instead of a claim nobody revisits.
+
+### Then say it, every run
+
+**Required output, including runs that change nothing:**
+
+> Role: `<name>` — default question: `<the one it asks before every reply>`. Chosen because
+> `<the recurring question and how many separate occasions it appeared on>`.
+
+Saying "Chief Engineer, unchanged — 'what breaks without it' on nine separate occasions" is the
+output. Silence is not: the previous version of this step was written as optional and produced
+nothing in several independent runs, because its only actionable rule was conditional on finding a
+blind spot, and runs that found none correctly stopped.
+
+**What a role does not do.** Across sixteen isolated runs on two task shapes, the framing did not
+change what the agent recommended — the task decided that every time. One dimension separated: how
+often a reply named who owns a thread, 3 and 3 under a chief-of-staff framing against 0 and 1 under
+an engineering one. So install the question as a rule if the behaviour has to happen every run; the
+role is the handle the user holds a dozen rules by, not the mechanism.
 
 ## Remedies already measured
 
@@ -197,7 +361,7 @@ Five things make it work, and dropping any of them breaks it:
 - **Write the labels in the language the reply is in.** The block is read every turn by someone whose comprehension cost is the thing it exists to lower; an English label at the end of an otherwise Chinese answer taxes that every time. The template above is the English wording, not a requirement to use English.
 - **Enumerate the wordings, do not fix the language.** What breaks measurement is unbounded variation, not translation: a `firing` pattern is a regex, so `可收線|Closable` costs one alternation and covers both. Settle on one wording per language and add every one of them to the pattern — a synonym invented later is what silently zeroes the row.
 
-## Step 4 — Decide, one at a time
+## Step 5 — Decide, one at a time
 
 Put each change to the user as a single decision with: the evidence, your recommendation, **what
 gets worse under your recommendation**, what breaks if the choice is wrong, and the reversal cost.
@@ -208,7 +372,7 @@ Run the user's own necessity test on every rule you propose to add, including th
 tempted to slip in because they are obviously good. A rule that did not survive a decision does
 not belong in the file.
 
-## Step 5 — Apply, and find the orphans
+## Step 6 — Apply, and find the orphans
 
 1. Back up the current file with a dated name. Verify the copy is byte-identical before overwriting. A rule file outside version control has no other record.
 2. Swap, then verify: line count, section list, any `@` imports still present.
@@ -233,7 +397,7 @@ Split the ruleset before offering, because not all of it should travel:
 | Decision hygiene, conclusion-first | Plugin or skill routing |
 | Cost and measurement discipline | Anything naming one harness's files |
 
-Then run Step 5's orphan grep again against the repos you touched. Propagation creates new copies,
+Then run Step 6's orphan grep again against the repos you touched. Propagation creates new copies,
 and a copy is correct only until one side moves — say which file is authoritative.
 
 ### Prove Codex behavior before applying the user file
@@ -253,7 +417,7 @@ Run one isolated A/B before replacing `~/.codex/AGENTS.md`:
    governed action; baseline must lack it; both runs must still deliver the requested outcome.
 4. If the runs do not separate, the rule is not proven for Codex. Rewrite it as a lower-freedom
    checkpoint or leave it unsynced and report the gap.
-5. After a pass and the user's propagation decision, apply Step 5 to the real user file and restart
+5. After a pass and the user's propagation decision, apply Step 6 to the real user file and restart
    open Codex sessions. Never replace the live user file merely because the candidate text matches.
 
 ## Common mistakes
