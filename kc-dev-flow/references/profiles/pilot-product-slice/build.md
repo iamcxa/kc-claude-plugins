@@ -48,8 +48,9 @@ and recovery for bounded use.
 - focused tests for owned logic and seam behavior;
 - diagnostics and bounded retry/recovery required by the shape contract.
 
-Run scoped tests while iterating and the relevant integrated checks at exit. Do
-not add production lifecycle surfaces or a standing review loop.
+Stop here on crossing a stop number the shape contract declared. Run scoped
+tests while iterating and the relevant integrated checks at exit. Do not add
+production lifecycle surfaces or a standing review loop.
 
 ## Implementation exit observation
 

@@ -39,45 +39,53 @@ policy, rollout, and release boundary.
 
 ## Required output
 
-- accepted journey, constraints, non-goals, and exact owners;
+- accepted journey, constraints, non-goals, exact owners, and the observable
+  semantics this work may change;
 - applicable lifecycle and specialist-risk obligations;
 - rollback or forward-recovery policy;
 - falsifiable acceptance and release checks;
-- a file-level `where it touches` table.
+- a file-level `where it touches` table;
+- the stop numbers implementation halts on.
 
 Stop when the smallest operable route is decision-ready. Escalate scope,
 irreversibility, and accepted residual risk to the Captain.
 
 ## Journey statement
 
-The accepted journey is a step-by-step account of what a person does and what
-happens behind each step, in the order it happens. Three rules bind it:
+The accepted journey records each actor or runtime component's action and the
+resulting behaviour, in the order it happens. Three rules bind it:
 
 - **Mark every step OBSERVED or DESIGNED.** Observed means someone watched it run
-  on the real components. Designed means written and not yet exercised. A
-  demonstrated step and a designed step must not read alike.
-- **Name programs, not roles.** Say which process acts, and which file or stream
-  carries the fact. "The caller" and "the client" hide the seam that breaks.
+  on the real components. Designed means written and not yet exercised.
+- **Name the acting program, not a role.** Say which process acts and which file
+  or stream carries the fact.
 - **Describe the unhappy paths in the same terms as the happy one.** Abandonment,
-  no answer, death, timeout. A journey that describes only success hides the risk
-  surface it was written to expose.
+  no answer, death, timeout.
 
 Declare alongside it the observable semantics this work may change — command
-grammar, stored formats, authority, runtime behaviour. A small diff that changes
-an undeclared semantic is a boundary breach, and a size signal cannot catch it.
+grammar, stored formats, authority, runtime behaviour — or state that it changes
+none.
 
 ## Where it touches
 
 Name the files this work changes as a table of path, lines now, and lines after.
-It answers where, not how big, so the Captain reads the blast radius without
-reading the reasoning behind it.
 
-Build it from sites counted in the current tree — an opened file, a resolved
-reference — rather than from an impression of the work. A count carried over
-from a sibling work item or from a reviewer's remark is a lower bound until this
-item confirms it.
+`lines now` is counted in the current tree — an opened file, a resolved
+reference. `lines after` is this item's estimate. Mark a count inherited from a
+sibling item or a reviewer's remark unverified until checked against the current
+tree.
 
-The table is diagnostic and holds no gate; the shared core already fixes that
-LOC and file counts are diagnostic signals, never pass/fail gates. What it makes
-askable is a file that appears here and nowhere in the journey, or a file the
-journey depends on and this table omits.
+Reconcile the table against the journey in both directions: a file here and
+nowhere in the journey, or a file the journey depends on and the table omits,
+is the question it exists to raise.
+
+## Stop numbers
+
+Name the counts at which implementation stops and reports rather than
+continuing: changed files, changed lines, and one named area most likely to run
+away. Measure all three as the diff against the delivery base, and record that
+base — a file rewritten at its original length changes no line count the `where
+it touches` table can show, so the thresholds are read from the diff and the
+table only tells you where to expect them.
+
+They are stop conditions, not budgets.

@@ -49,8 +49,9 @@ Build the smallest operable slice and its accepted lifecycle behavior.
   during shape;
 - changed-file-to-obligation mapping.
 
-Use scoped iteration checks and one relevant exit suite. Return changed premises
-to their owner; do not start an unbounded reviewer loop.
+Stop here on crossing a stop number the shape contract declared. Use scoped
+iteration checks and one relevant exit suite. Return changed premises to their
+owner; do not start an unbounded reviewer loop.
 
 ## Implementation exit observation
 
