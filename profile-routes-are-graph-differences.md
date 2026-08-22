@@ -101,6 +101,17 @@ gates:
                 digest: sha256:222aa5ccc90eaa983580b740d1d1ca9f49a517a6a98fbe346345fa0c62d0ae14
                 request-digest: sha256:50819da469e4a0cfe734365042587d5ae2e5a70e4ce9ce60e450b0447b9de728
                 room-ref: ./profile-routes-are-graph-differences/review/release/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:release:2
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-22T07:05:50.083694Z"
+                decision: approve
+                reason: 'Captain re-approved release readiness at the rebased delivery revision 7bbae216, superseding the attempt-1 approval that cited b3b0e2ed, a revision no longer on the branch. The branch was rebased a second time onto origin/main at ef808a91 after the four-deep stack #267/#268/#269/#271/#272 landed, carrying exactly one commit before each rebase and using the explicit --onto form both times. Both suites were re-run on the rebased revision and the result improved: kc-dev-flow-contract-test.py now passes outright because #268''s casing fix reached main, so this work''s six route-parity checks are reachable and green locally as well as in CI, with no other check disabled to reach them. The PR body''s two statements that the contract test''s sole failure was the casing bug and that the six checks were locally blocked have been corrected to the current outputs. The lost second review ceremony remains a named residual, not a closed item.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
