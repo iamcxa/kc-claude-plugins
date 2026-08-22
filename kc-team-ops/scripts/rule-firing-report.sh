@@ -277,10 +277,13 @@ if [ "$INC" = 1 ]; then
     awk -F'\t' -v RE="$re" -v LABEL="$label" '
       $1!=sid { sid=$1; prev="" }
       $3=="assistant" { prev=$5; next }
-      $3=="user" && tolower($5) ~ tolower(RE) {
+      $3=="user" {
+        if (!match(tolower($5), tolower(RE))) next
+        start=RSTART-120; if (start < 1) start=1
+        user_context=(start > 1 ? "... " : "") substr($5,start,300)
         print "--- " LABEL " @ " $2
         print "  BEFORE (agent, same session): " (prev=="" ? "(nothing in this session)" : substr(prev,1,300))
-        print "  THEN  (user):   " substr($5,1,300)
+        print "  THEN  (user, matched context):   " user_context
         print ""
       }' "$WORK/stream.txt" >> "$RUNDIR/incidents.txt"
   done < "$PATTERNS"

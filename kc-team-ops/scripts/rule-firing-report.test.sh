@@ -143,10 +143,11 @@ cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/hom
 RUN5="$(ls -1dt "$WORK/runs5"/*/ 2>/dev/null | head -1)"
 reported=$(grep -E '^long incident' "${RUN5:-$WORK}report.txt" 2>/dev/null | awk '{print $NF}')
 retained=$(grep -cF -- '--- long incident @ ' "${RUN5:-$WORK}incidents.txt" 2>/dev/null || true)
-if [ "${reported:-x}" = "1" ] && [ "${retained:-0}" = "1" ]; then
-  echo "PASS  incident after character 600 counted and retained"
+visible=$(grep -cF -- 'TAIL-INCIDENT' "${RUN5:-$WORK}incidents.txt" 2>/dev/null || true)
+if [ "${reported:-x}" = "1" ] && [ "${retained:-0}" = "1" ] && [ "${visible:-0}" = "1" ]; then
+  echo "PASS  incident after character 600 counted and retained with matched context"
 else
-  echo "FAIL  long incident reported=${reported:-<none>} retained=${retained:-0}, want 1/1"; fail=1
+  echo "FAIL  long incident reported=${reported:-<none>} retained=${retained:-0} visible=${visible:-0}, want 1/1/1"; fail=1
 fi
 
 exit $fail
