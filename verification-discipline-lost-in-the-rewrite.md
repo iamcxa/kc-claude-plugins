@@ -35,6 +35,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:9ydm2mmakce2r49v40q98377:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-ideation-1
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:ideation:attempt-1:revision-1
+                digest: sha256:21f759bb1ec09cf57d4605a113d7e5b513989ec1f37b922780f3d87f4240d4f9
+                request-digest: sha256:b5f85460c746b930a00f09d2aaadd6275c801f56858616d88e551595abc588e8
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/ideation/briefing-1
 ---
 
 ## Problem

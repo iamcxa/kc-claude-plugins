@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:ideation:attempt-1:revision-1",
+  "question": "Approve the shaped restoration — five clauses compressed into two kernel.md sites plus a MIGRATION entry and a two-name citation repair, at a measured cost of +413 words to the shared core and about +22% to every profile-stage bundle — and enter implementation? Or reject and reshape?",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0703f28fe47170080bc510fba29f33d9c68e5b2d/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:1231695be96ce8315e2fdd107c360a518b8ca0a0b352be75119eea474215c018",
+      "mediaType": "text/markdown",
+      "summary": "Checklist 6 done, 0 skipped, 0 failed, plus one worker self-correction. Deliverable is four literal blocks a reviewer can diff against the eventual patch. Baseline is the wording e634d3e7 deleted rather than #156's original, because later merged revisions had already bounded an undefended absolute #156 carried; verified independently. Compression 413 words against 516 verbatim; kernel.md 986 -\u003e 1399 (+41.9%); all eight profile-stage bundles +19.6% to +22.8%. Five claims carry a falsifier seen to fail and five are named as having none. FO sent the report back once before this gate: the Site 4 MIGRATION block and one non-goal carried a false removal-point claim, and acceptance claim 4's own falsifier set did not cover it; both fixed at 7808fc22, claim 4 is now a nine-row per-sentence coverage table, and four assertions that had never been run were run. FO re-verified the corrections and eight underlying facts against the tree."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}
