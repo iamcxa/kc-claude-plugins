@@ -5,7 +5,7 @@ status: ideation
 source: found 2026-08-21 while answering the Captain's original question about issue #154, whose maintainer reply states these clauses had already shipped; they had, and then they were removed
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-22T09:54:50Z
 completed:
 verdict:
 worktree:
