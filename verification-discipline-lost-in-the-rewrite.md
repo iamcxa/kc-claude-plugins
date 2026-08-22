@@ -128,7 +128,18 @@ matter by hand.
   false: a byte-parity check between two vendored copies had been mutation-tested
   one copy at a time, which reddens on parity rather than on content, so
   corrupting both copies identically passed the whole suite. A cross-model
-  interview found it after the gate. Strongest case.
+  interview found it after the gate. Strongest case. **Bound:** restoring this
+  clause closes the four field defects issue `#154` §4 names; it does not close
+  the byte-parity incident's own class, where a check's detectable failure mode
+  is narrower than the claim it was offered for. Two attempts to close that
+  class by wording the clause differently both failed, recorded in full in
+  `## Acceptance evidence`: correction round 1 tied the required case to the
+  claim's falsity per the *chosen* negative control, which the single-tamper
+  control satisfies without ever ranging over the check's domain, so the
+  amended sentence re-certified the same reviewer it was written to stop; and
+  issue `#154` §4's own framing, checked directly, would not have stopped that
+  reviewer either. This is a limit on the clause, not a guarantee that the
+  parity check is fixed, and it stays open.
 - **Name the falsifier's kind.** `#156`'s own text says `mutation` is the only
   kind that finds "a consumer silently duplicating a producer's derivation
   instead of consuming its output." That sentence describes the parity defect
@@ -268,7 +279,7 @@ repository's review history still resolves against the shipped text.
 
 | Clause | Site in `kernel.md` | Deviation from `e634d3e7^` verbatim |
 |---|---|---|
-| A check is evidence only once it has been seen to fail | new `## Verification discipline`, bullet 1 | cut "A probe that returns a plausible result where it should have errored is worse than none, because its output reads as a conclusion."; added under correction round 1 (`#279`, validation rejection): "That case must be one the check fails on if and only if the claim under test is false — not any case that reddens the check by an unrelated route", carrying issue `#154` §4's "could not have falsified the claim it was offered as proof of" framing, absent from both `e634d3e7^` and `#156` |
+| A check is evidence only once it has been seen to fail | new `## Verification discipline`, bullet 1 | cut "A probe that returns a plausible result where it should have errored is worse than none, because its output reads as a conclusion." |
 | Name the falsifier's kind | new `## Verification discipline`, bullet 2 | none; verbatim |
 | Prefer the cheapest instrument that can fail | new `## Verification discipline`, bullet 3 | none; verbatim |
 | When one failure shape repeats, change the work, not the wording | new `## Verification discipline`, bullet 4 | cut the final sentence, which routes a repeated hazard through `dispatch_hazard_assignment` — a mechanism `git grep dispatch_hazard_assignment origin/main` finds nowhere, so restoring it verbatim ships a dangling reference |
@@ -291,11 +302,9 @@ the reviewer, the instruction — because an instrument that cannot fail reports
 the same way whether or not the thing it watches is broken.
 
 - **A check is evidence only once it has been seen to fail.** Run it against a
-  case it must flag before running it against the case in question. That case
-  must be one the check fails on if and only if the claim under test is false —
-  not any case that reddens the check by an unrelated route. Its silence carries
-  information only after you have heard it speak. This binds the check, not
-  only the artifact: a round that cannot say what would have reddened its own
+  case it must flag before running it against the case in question; its silence
+  carries information only after you have heard it speak. This binds the check,
+  not only the artifact: a round that cannot say what would have reddened its own
   instrument has measured nothing.
 - **Name the falsifier's kind.** `refusal` — drive the system and read its
   rejection. `mutation` — change the producer and observe what breaks; this is
@@ -315,16 +324,6 @@ the same way whether or not the thing it watches is broken.
   expensive rounds does not fire on cheap ones, so the trigger is repetition of
   shape, not spend.
 ```
-
-Correction round 1 (`#279`, validation rejection) amended bullet 1's second
-sentence. The landed wording as reviewed satisfied "run it against a case it
-must flag" using a check that reddens on divergence between two vendored
-copies — which a case where both copies are wrong identically does not flag,
-because divergence and correctness are conflated in that check. Issue `#154`
-§4 names the operative bar the original sentence dropped: "a check was run
-whose result could not have falsified the claim it was offered as proof of."
-The added sentence ties the required case to the claim's own falsity, not
-merely to the check's ability to redden.
 
 The preamble's first two words change from `Outcome discipline` to
 `Shared boundaries`, because the section it pointed at no longer exists and
@@ -433,17 +432,14 @@ by arithmetic on the old base.
 
 | Path | lines now | lines after |
 |---|---:|---:|
-| `kc-dev-flow/references/kernel.md` | 124 | 167 |
-| `docs/dev/_mods/kernel.md` | 124 | 167 |
+| `kc-dev-flow/references/kernel.md` | 124 | 165 |
+| `docs/dev/_mods/kernel.md` | 124 | 165 |
 | `kc-dev-flow/MIGRATION.md` | 101 | 119 |
 | `CLAUDE.md` | 103 | 103 |
 
-`lines now` and `lines after` both counted on the landed worktree carrying
-correction round 1, on top of commit `053eddb0` (this change's own commit on
+`lines now` and `lines after` both counted on the landed tree at commit
+`053eddb0` (this change's own commit on
 `spacedock-ensign/verification-discipline-lost-in-the-rewrite`), not estimated.
-`kernel.md`'s `after` count moved from 165 to 167 — correction round 1 added
-two lines to bullet 1 of `## Verification discipline`. `MIGRATION.md` and
-`CLAUDE.md` are untouched this round; Sites 2, 3, and 4 are out of scope.
 `CLAUDE.md` changes two section names inside line 91 and adds no line.
 
 Reconciled against the journey in both directions: every file in the table
@@ -459,18 +455,16 @@ touches`). The thresholds themselves are unchanged — the Captain accepted them
 at ideation and this stage does not revisit them.
 
 - **changed files: 5.** Four above plus this work item. Stop and report at 6.
-- **changed lines: 105.** Measured on the landed worktree, correction round 1
-  (`git diff --stat 9fee712c`, uncommitted at measurement time): 43 added to
-  each of the two kernel copies (86 total, up from 41 each / 82 total before
-  this round — correction round 1 added two lines to bullet 1), 18 added to
-  `MIGRATION.md`, 1 changed in `CLAUDE.md`, both unchanged this round.
+- **changed lines: 101.** Measured on the landed commit
+  (`git diff --stat 9fee712c 053eddb0`): 41 added to each of the two kernel
+  copies (82 total), 18 added to `MIGRATION.md`, 1 changed in `CLAUDE.md`.
   Stop and report at 140.
 - **runaway area: the two kernel prose blocks.** Compression is the thing most
   likely to grow back under review pressure. Stop and report if the two blocks
   together exceed 47 added lines — the measured size of the verbatim
   alternative, past which the compression decision has been reversed without a
-  ruling. Landed: 30 lines (Site 1, up from 28) + 11 lines (Site 2, unchanged)
-  = 41, under the stop number.
+  ruling. Landed: 28 lines (Site 1) + 11 lines (Site 2) = 39, under the stop
+  number.
 
 These are stop conditions, not budgets.
 
@@ -576,12 +570,21 @@ kernel in both copies — exit `0`, so the restoration does not break the gate i
 depends on.
 Named limit, also reproduced: appending the same byte to **both** copies leaves
 the suite at exit `0`. The check reddens on divergence, never on content.
-Re-earned on the corrected tree after correction round 1: same tamper (append
-one byte to `docs/dev/_mods/kernel.md`) → exit `1`, same message; restore via
-`cp` from the sibling copy → exit `0`. The named limit is unchanged by the
-wording amendment, because the check still only compares the two copies to
-each other, never to a wording standard — which is exactly why this bullet's
-own text needed the added sentence.
+Bound: restoring the **seen to fail** clause closes the four field defects
+issue `#154` §4 names (see `## Which clauses have earned restoration`); it
+does not close this incident's own class, where a check's detectable failure
+mode is narrower than the claim it is offered for. Two attempts to close that
+class by amending the clause's wording, rather than the check, both failed:
+`ad37d51f` tied the required case to the claim's falsity, but as a per-case
+biconditional over the *chosen* negative control, which the single-tamper
+control satisfies without ever ranging over the check's domain — it
+re-certified the same reviewer it was written to stop. And issue `#154` §4's
+own "could not have falsified the claim" framing, checked directly, would not
+have stopped that reviewer either, since one falsity mode (divergence)
+narrowly clears its modal-existential bar. The gap is that a parity check was
+offered as evidence for a content claim, and parity is the correct check for
+parity — no wording of this clause reaches that. It is a limit on this
+clause, not a guarantee about the parity check, and it stays open.
 
 **2. `CLAUDE.md`'s section citations resolve.**
 Check: a resolver that extracts every `` `<path>.md` § <Section> `` citation from
@@ -658,18 +661,6 @@ runaway stop number.
   check compares them; claim 1's limit is exactly why. A reviewer diffs the four
   recorded blocks against the hunks at validation. This is a human check, named
   as one.
-- **That correction round 1's amended bullet 1 wording is what actually
-  landed, distinct from the pre-correction wording.** No mechanical check
-  distinguishes them. `scripts/kc-dev-flow-contract-test.py` (claim 1) checks
-  only that the two vendored copies match each other, not what either says —
-  it passes identically on the pre-correction and the amended wording, so long
-  as both copies carry the same bytes. The citation resolver (claim 2) never
-  looks at `## Verification discipline`'s content. The loader pins (claim 3)
-  check three subtraction-rule phrases and the Production route-table row,
-  none of which this bullet contains. No check here reddens on the old wording
-  and passes on the new one; the discrimination that this wording change
-  closes the byte-parity false-claim gap is a human read of the two texts
-  against issue `#154` §4, not a standing check. None is proposed.
 - **That the restored words stay present after merge.** Nothing standing keeps
   them there; the same silent deletion could happen again. Excluded by this
   item's `scope_boundary`, and the general defect stays open in issue `#154`.
@@ -684,37 +675,34 @@ figures are produced the same way.
 | Form | lines | bytes | words |
 |---|---:|---:|---:|
 | Verbatim from `e634d3e7^` (4 clauses + section head + absolutes rule) | 47 | 3296 | 516 |
-| Compressed, as recorded above | 41 | 2774 | 444 |
+| Compressed, as recorded above | 40 | 2621 | 413 |
 
-Compression saves 72 words, 14.0% of the verbatim block — down from the 103
-words / 20% recorded before correction round 1, because the accepted wording
-now carries 31 more words tying the check's negative control to the claim
-under test, not to the verbatim baseline. One of the four cuts is mandatory
-regardless of form: the `dispatch_hazard_assignment` sentence names a
+Compression saves 103 words, 20% of the verbatim block. One of the four cuts is
+mandatory regardless of form: the `dispatch_hazard_assignment` sentence names a
 mechanism that no longer exists.
 
 **What the shared core costs, at diff base `9fee712c`.** `kernel.md`: 124 lines
-/ 7022 bytes / 1058 words now; 167 / 9798 / 1502 after (measured on the landed
-worktree, correction round 1). `+444` words, `+42.0%`. The word delta moved
-from the prior `+413` / `+39.0%` because correction round 1 added 31 words to
-bullet 1 of `## Verification discipline`; the base did not move again this
-round.
+/ 7022 bytes / 1058 words now; 165 / 9645 / 1471 after (measured on the landed
+commit `053eddb0`). `+413` words, `+39.0%`. The word delta is unchanged from
+the figure recorded at ideation (`+413`) because the restored text is fixed
+bytes; only the base it lands on, and therefore the percentage, moved — lower,
+not higher, because the denominator grew.
 
 **What every stage loads.** Measured as the `## Local Profile` section of
 `docs/dev/README.md` (666 words, unaffected by this change or by the base
 move) plus `kernel.md` plus the selected profile base plus the selected stage
-contract, re-measured at `9fee712c` and on the landed worktree.
+contract, re-measured at `9fee712c` and on the landed commit.
 
 | Profile / stage | now | after | change |
 |---|---:|---:|---:|
-| `poc-exploration` / `build` | 2072 | 2516 | +21.4% |
-| `poc-exploration` / `prove` | 2025 | 2469 | +21.9% |
-| `pilot-product-slice` / `shape` | 2290 | 2734 | +19.4% |
-| `pilot-product-slice` / `build` | 2032 | 2476 | +21.9% |
-| `pilot-product-slice` / `verify-deliver` | 1997 | 2441 | +22.2% |
-| `production` / `shape` | 2270 | 2714 | +19.6% |
-| `production` / `build` | 2007 | 2451 | +22.1% |
-| `production` / `verify` | 2062 | 2506 | +21.5% |
+| `poc-exploration` / `build` | 2072 | 2485 | +19.9% |
+| `poc-exploration` / `prove` | 2025 | 2438 | +20.4% |
+| `pilot-product-slice` / `shape` | 2290 | 2703 | +18.0% |
+| `pilot-product-slice` / `build` | 2032 | 2445 | +20.3% |
+| `pilot-product-slice` / `verify-deliver` | 1997 | 2410 | +20.7% |
+| `production` / `shape` | 2270 | 2683 | +18.2% |
+| `production` / `build` | 2007 | 2420 | +20.6% |
+| `production` / `verify` | 2062 | 2475 | +20.0% |
 
 **Against `#249`'s own record — and a correction to how it is being cited.**
 `#249`'s PR body claims "required policy input fell from about 6,100 words to
@@ -740,8 +728,8 @@ Bounded claim, checked by
 each: four of the five state no size accounting at all (`#277`'s two hits are
 about decision input, not text size), and `#272` does — it records `kernel.md`
 dropping 47 words. So growth here has been weighed once in five changes, not
-never. That is the honest frame for the price: `+444` words is real, and it is
-`+19.4%` to `+22.2%` across the eight routes.
+never. That is the honest frame for the price: `+413` words is real, and it is
+about `+20%` on every route.
 
 **Why the cost is earned, and why it lands in the shared core.** The four
 clauses govern the instrument, and the instrument is what every profile uses;
@@ -970,3 +958,16 @@ empty, every moved figure recounted from the files, Sites 2/3/4 untouched, PR #2
 "No mechanical check distinguishes them" that two cheap constructions falsify literally, though neither
 construction is evidence; its own closing sentence already carries the honest bound. Working tree left clean
 (`git status --porcelain` empty) after the old-wording experiment; no code was changed by this stage.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Revert the sentence `ad37d51f` added to bullet 1 of `## Verification discipline` in both kernel.md copies, returning the bullet to the wording approved at the ideation gate and landed at `053eddb0`. Prove it by diffing the restored bullet against `053eddb0`'s span rather than by retyping it; both copies stay byte-identical and `python3 scripts/kc-dev-flow-contract-test.py` must pass. Restore the Site 1 literal block and the per-clause deviation table in the work item so the accepted text and the landed text diff empty again.
+  Both `kc-dev-flow/references/kernel.md` and `docs/dev/_mods/kernel.md` restored to `053eddb0`'s exact bytes: `git show 053eddb0:<path>` written over the working copy, then `diff` against `git show 053eddb0:<path>` for each — empty. `diff kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md` empty. `python3 scripts/kc-dev-flow-contract-test.py`: PASS, exit 0. Re-earned the seen-to-fail proof: appended one byte to `docs/dev/_mods/kernel.md` -> exit 1 `self-adopted shared core differs from package source`; restored via `cp` from the sibling copy -> exit 0. Committed as `d55d6a4d` on `spacedock-ensign/verification-discipline-lost-in-the-rewrite`: exactly the two kernel copies, 6 insertions / 10 deletions. Pushed; PR #279 head now `d55d6a4d`, still `isDraft: true`, `state: OPEN` (`gh pr view 279`); `gh pr list --head <branch> --state all` returns exactly one PR. Site 1 (entity 298-325) diffs empty against `kc-dev-flow/references/kernel.md:129-156`; Site 2 (entity 335-345) diffs empty against `kc-dev-flow/references/kernel.md:117-127`. Deviation-table cell for bullet 1 reverted to its `053eddb0` wording (no correction-round-1 clause).
+- DONE: Bound the claim where the item makes it — in `## Acceptance evidence` and in `## Which clauses have earned restoration`. This bullet closes the four field defects issue #154 §4 names; it does NOT close the class where a check's detectable failure mode is narrower than the claim it is offered as proof of. Name the byte-parity incident as the worked example, record that two attempts to close it by wording both failed and why, and write the limit as a limit — not as an absolute and not as a guarantee. Confirm the acceptance-evidence paragraph about the amended wording is gone rather than leaving a bounded version of a paragraph about a sentence that no longer exists.
+  Added a "Bound:" paragraph to the "Seen to fail" bullet under `## Which clauses have earned restoration` and to claim 1's "Named limit" paragraph under `## Acceptance evidence`: both state the clause closes issue #154 §4's four field defects but not the byte-parity incident's own class (a check's detectable failure mode narrower than the claim offered), name both failed wording attempts (`ad37d51f`'s per-case biconditional over the chosen negative control, and #154 §4's own framing checked directly), and phrase the close as "a limit ... not a guarantee." The "That correction round 1's amended bullet 1 wording is what actually landed" bullet under "Claims with no check, named plainly" is deleted outright — `grep -n "correction round 1's amended"` on the pre-stage-report body returns nothing.
+- DONE: Re-measure by recounting from the files, never by reverting numbers from memory: kernel word and line counts, all eight profile-stage bundle rows, `## Where it touches`, the stop numbers' measured-today line, the two-restoration-forms table and the `#249`-comparison sentence all return to their `053eddb0` values. Push to the same branch so PR #279 updates in place; do not open a second PR, do not mark it ready, do not merge, and leave Sites 2, 3 and 4 untouched.
+  All recounted via `wc -l -w -c` on the restored files, not by reverting the prior cycle's numbers by hand: `kernel.md` 165 lines / 1471 words / 9645 bytes, matching both copies (`wc -l -w -c kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md`). `## Where it touches` table reverted to 124->165 for both kernel copies, MIGRATION.md and CLAUDE.md unchanged. Stop numbers reverted to 101 changed lines (`git diff --stat 9fee712c` on the tree after this commit reproduces exactly `4 files changed, 101 insertions(+), 1 deletion(-)`, matching the entity), runaway area 28+11=39. `## Measurement` two-restoration-forms table reverted to compressed row 40/2621/413; shared-core cost reverted to `+413` words `+39.0%`; all eight profile-stage bundle rows reverted to their `053eddb0` now/after/percentage values; closing `#249`-comparison sentence reverted to `+413` words / about `+20%`. Sites 2, 3, and 4 confirmed untouched this round: `git diff --name-only 053eddb0 d55d6a4d` returns only the two kernel copies. Pushed to the existing branch (`git push origin spacedock-ensign/verification-discipline-lost-in-the-rewrite`); PR #279 not marked ready, not merged, no second PR opened.
+
+### Summary
+
+Reverted `ad37d51f`'s wording amendment on the Captain's ruling that a second wording attempt would repeat the same failure shape the restored "when one failure shape repeats, change the work, not the wording" clause exists to catch. Both kernel.md copies restored to `053eddb0`'s exact bytes (verified by diff, not retyping), contract test green, seen-to-fail proof re-earned. The entity's Site 1 block, deviation table, and every figure the correction-round-1 words moved (kernel word/line counts, all eight bundle rows, `## Where it touches`, stop numbers, the two-restoration-forms table, the `#249`-comparison sentence) reverted to their `053eddb0` values by recounting the restored files, not by arithmetic. Added a bounded claim, in both `## Which clauses have earned restoration` and `## Acceptance evidence`, that the seen-to-fail clause closes issue #154 §4's four field defects but not the byte-parity incident's own class — a check whose detectable failure mode is narrower than the claim it is offered for — naming both failed wording attempts and why, phrased as a limit rather than a guarantee. Deleted the cycle-2 acceptance-evidence paragraph about the amended wording outright, per the ruling that it is subsumed by the revert rather than needing a bounded replacement. Pushed to the existing branch; PR #279 updated in place at `d55d6a4d`, still Draft, still targeting `main`. Sites 2, 3, and 4 untouched throughout.
