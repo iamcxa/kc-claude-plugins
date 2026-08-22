@@ -87,6 +87,22 @@ mechanical ones; I caught almost nothing about my own work unprompted.
 The friction I would report against Spacedock is not from this session, because I
 avoided it. That avoidance was frictionless and that is the finding.
 
+## Held, do not close
+
+**#275 `fix/kc-dev-flow-fo-owes-a-recommendation`** is open, conflicting, and
+must not be closed as stale. It is conflicting for the same reason two PRs in
+this session were: its base was `feat/kc-dev-flow-size-tripwire`, which squash-
+merged as #272, so it now carries three already-merged features as unsquashed
+commits. Of its eight commits, `efe9e4d7` and `b4ddfd91` are on `main` by
+patch-id, and `d4102a3b` was re-delivered narrowly as #277. **Two are on `main`
+by neither route** — `8ff3c7a1` (subtraction-rule wording) and `1d826bab`
+(closing a review's two blocking defects, across journey-slicing, kernel, and
+three profile stage files). Closing the PR drops that review's conclusions.
+
+The captain holds it pending a Spacedock behaviour change it depends on, not
+pending a rebase. When that lands, `git rebase --onto origin/main` drops the
+merged commits; expect `d4102a3b` to conflict with #277 and take #277's version.
+
 ## What's Next
 
 - The release PR must regenerate and merge before `kc-team-ops` bumps and the new
