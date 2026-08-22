@@ -1,7 +1,7 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: validation
+status: release
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
@@ -91,7 +91,7 @@ gates:
                 reason: 'Captain approved validation at d775a02f after correction round 1. The claim a cross-model interviewer falsified — that all six route-string copies had a check seen to fail — is closed and re-verified by that exact mutation: corrupting both kernel copies identically now fails with ''kernel route table omits the current Production route'', where the prior round''s one-copy mutation had only broken byte-parity. POC now terminalizes through merge guard with its live output captured. The branch/stack file intersection was recomputed independently with comm -12 and comes to the same three files, whose merged regions preserve the newly-landed backlog-exit-bar and profile-selection semantics intact and uncontradicted. The three recorded-not-fixed residuals stay named: release authorization as unenforced prose, the skip caveat as unmachine-checkable, and this fix''s own proof not running in CI.'
               application:
                 target-stage: release
-                state: pending
+                state: consumed
         - id: gate:8x38b1qryjrmy5w4ffk1egy1:release
           stage: release
           attempts:
