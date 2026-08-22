@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-22T09:54:50Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-verification-discipline-lost-in-the-rewrite
 issue: 154
 pr:
 mod-block:
