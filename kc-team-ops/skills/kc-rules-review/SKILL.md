@@ -35,7 +35,9 @@ unit of change is a rule, not a single correction.
 The window changes every number in this audit, and it is the user's call, not a default you pick
 for them. Ask it with the harness's question UI as the first action, offering two weeks, one month,
 two months, and a custom date — and say what each costs, because they find out otherwise only after
-waiting: a one-day window returns in seconds, two weeks across six hundred sessions takes minutes.
+waiting: a day returns in seconds, two weeks across six hundred sessions takes a few minutes, and a
+month across eleven hundred took eleven — long enough to exceed a ten-minute tool timeout and need
+backgrounding, which is worth saying before they choose it rather than after.
 
 Two facts belong in the question, because they change the answer:
 
@@ -54,9 +56,11 @@ kc-team-ops/scripts/rule-firing-report.sh --since YYYY-MM-DD --patterns your.tsv
 The patterns file is TSV: `kind<TAB>label<TAB>regex`, where `kind` is `friction`, `firing`,
 `incident`, or `codify`.
 
-Declare one `firing` row per rule that has an observable marker (a required prefix, a field name,
-a file the rule makes you read). **A rule with no possible marker cannot be measured, and that is
-itself the finding** — see Step 2.
+Declare one `firing` row per rule that has an observable marker. A marker is a literal string the
+rule makes the agent **emit** — a required prefix, a field label, a heading. A file the rule makes
+you read counts only when the read is unique to that rule; `git status` is run for a hundred reasons
+and cannot be attributed to the rule that asks for it. **A rule with no possible marker cannot be
+measured, and that is itself the finding** — see Step 2.
 
 `codify` rows catch the user asking for something to become standing behaviour — "from now on",
 "remember this", "write it into the rules". Each one has two ways to fail, and the second is the reason this audit
@@ -82,9 +86,10 @@ The same slip has three instances on record — a close-out label that grew a se
 added to a skill and never added to the patterns, and this one. Every time, the audit's own output is
 what hides it: a healthy number appears where a zero belongs.
 
-Report the second list by name, every run. On one real file, 3 of 19 rules were measurable; the
-other 16 — upstream-first, cost, escalation, e2e acceptance among them — were invisible to the audit
-and nothing said so. A report that covers a sixth of the rules and reads as complete is worse than a
+Report the second list by name, every run. On the author's own file — this is a self-citation, not
+independent corroboration — 3 of 19 rules were strictly measurable, 3 more were arguable, and the
+rest, upstream-first and cost and escalation and e2e acceptance among them, were invisible to the
+audit while nothing said so. A report that covers a sixth of the rules and reads as complete is worse than a
 short one that says which fifth-sixths it skipped.
 
 This is also the only way to keep "the rule is absent" and "the rule is present and unmeasurable"
@@ -109,8 +114,16 @@ before it or the one after. Three hand-built passes are three different question
 each. If the script will not run, say so, say what it printed, and stop; a missing audit is
 recoverable and an uncomparable one quietly is not.
 
-Counts are for comparing runs, not for quoting as truth. Every matched human turn is written to
-`human-turns.tsv` in the run directory; read the hits before you believe a number.
+Counts are for comparing runs, not for quoting as truth. Read the hits before you believe a number,
+and know that the three columns hand you three different qualities of evidence:
+
+- `incidents.txt` — the matched turns, each with the assistant turn before it. Curated.
+- `human-turns.tsv` — **every** human turn in the window, not the matched ones. Re-grep it yourself.
+- `firing-hits.txt` — up to forty lines per firing row, whole lines so they can be read in context.
+
+The third file exists because this instruction was once unfollowable for the column it matters most
+to: the assistant stream lived in a work directory that was deleted on exit, so a finished run left
+a firing count and no way to check it.
 
 The bundled report script reads Claude Code logs only. When `~/.codex/AGENTS.md` is the target,
 use those counts only as source-rule evidence; prove Codex firing with the isolated A/B route below.
@@ -211,7 +224,14 @@ Send `human-turns.tsv` from the run to a **fresh-context reviewer** — one that
 session's reasoning. An agent deciding which of its own duties are vacant is grading its own work,
 and this step is the one place in the audit where that is the whole question.
 
-Give the reviewer the two kinds above, the run directory, and this brief:
+Give the reviewer the two kinds above, the run directory, **Step 1's measurable/unmeasurable list**,
+and this brief. The list is not optional context. Dispatched without it, a reviewer reads a recurring
+"did you actually verify this" as a vacant test-and-acceptance role — and the rules covering it are
+already in the file, merely unmeasurable. That happened on this skill's own dogfood: the verdict was
+overturned afterwards only because the orchestrator held the list and the reviewer did not.
+
+Tell the reviewer, in the brief, that a question mapping to an unmeasurable rule is `unknown`, never
+`vacant`.
 
 > Group the recurring role-gap questions by the function they perform. Name the role that function
 > belongs to, anywhere on the software delivery arc — product, design, architecture, engineering,

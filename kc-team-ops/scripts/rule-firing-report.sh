@@ -173,7 +173,7 @@ if [ -z "$PATTERNS" ]; then
 friction	necessity challenge	會怎樣|必要的嗎|需要嗎|還需要|價值在哪|why do we need|is this necessary
 friction	rephrase demand	換句話說|太長|簡單一點|簡報|精簡|rephrase|too long
 friction	undefined term	是什麼|什麼意思|是指什麼|哪來的|what is this|what do you mean
-friction	status pull	還剩|可以收|下一步|回報|現況|what.s left|status\?
+friction	status pull	還剩|可以收|下一步是|下一步呢|回報進度|現況如何|what.s left|status\?
 friction	prior-art miss	上游|重複|既有|沒看|already exists|upstream
 friction	size complaint	[0-9]+ ?loc|註解|膨脹|冗余|冗餘|多餘|bloat|too many comments
 incident	cross-session relay	另外一個 ?agent|另一個 ?agent|另一個 session|平行 agent|其他 workspace|another session|the other agent
@@ -219,6 +219,20 @@ done < "$PATTERNS"
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
   "      reading a rule aloud looks identical to one following it. Sample the hits."
+# The instruction to read the hits was unfollowable for this column: the stream it
+# counts lived in the work directory and was deleted on exit, so a finished run left
+# the number and no way to check it. Samples are kept instead of the whole stream —
+# a month of assistant output is half a million lines.
+if [ "$FIRED" = 1 ]; then
+  : > "$RUNDIR/firing-hits.txt"
+  while IFS=$'\t' read -r kind label re; do
+    [ "$kind" = "firing" ] || continue
+    { printf -- '--- %s\n' "$label"
+      grep -iE -e "$re" "$WORK/assistant.txt" 2>/dev/null | head -40 | cut -c1-220
+      printf '\n'; } >> "$RUNDIR/firing-hits.txt"
+  done < "$PATTERNS"
+  printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"
+fi
 
 printf '\n%s\n' "=== incidents: work you did that the agent never offered ==="
 printf '%-26s %6s\n' "CATEGORY" "TURNS"
@@ -290,7 +304,13 @@ printf '%s\n' \
   printf '}}\n'
 } > "$RUNDIR/run.json"
 
-if [ -n "$PREV" ] && [ -f "$PREV/run.json" ]; then
+if [ -z "$PREV" ] || [ ! -f "$PREV/run.json" ]; then
+  printf '\n%s\n' "=== since your last run ==="
+  printf '%s\n' "No previous run under $OUT_ROOT, so there is nothing to compare against." \
+    "If you have run this before, it was under a different --out and those runs are not" \
+    "visible from here. This section is absent rather than empty for a reason: silence" \
+    "would read as 'nothing changed'."
+elif [ -f "$PREV/run.json" ]; then
   PSINCE=$(jq -r '.since' "$PREV/run.json" 2>/dev/null)
   PPAT=$(jq -r '.patterns' "$PREV/run.json" 2>/dev/null)
   PWHEN=$(jq -r '.ran_at' "$PREV/run.json" 2>/dev/null)
