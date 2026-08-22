@@ -884,3 +884,75 @@ Independently re-verified the without-it audit, the byte-for-byte landing at all
 ### Summary
 
 Correction round 1: amended bullet 1 of `## Verification discipline` in both kernel.md copies so the required negative-control case must falsify the claim under test, not merely redden the check by an unrelated route — closing the gap the validation gate's rejected finding named (the byte-parity check's own divergence-only limit satisfied the old wording without ever testing content correctness). Landed at `ad37d51f`, byte-identical copies, contract test green, seen-to-fail proof re-earned with the correct restore path (`cp`, not `git checkout --`, after hitting that exact pitfall once live). Re-measured every figure the ~31 added words move, by recounting rather than arithmetic, including two figures beyond the four named in the dispatch (the two-restoration-forms table and the `#249`-comparison closing sentence) because leaving them stale would reproduce the class of defect under correction. Acceptance evidence now states plainly that no mechanical check distinguishes the old and new bullet wording. Pushed to the existing branch; PR #279 updated in place, still Draft, still targeting `main`. Sites 2, 3, and 4 untouched, confirmed via diff scope.
+
+## Stage Report: validation (cycle 2)
+
+- FAILED: Settle the question the rejection turned on, and answer it falsifiably rather than approvingly. …
+  The amended bullet does **not** stop the reviewer it was written to stop, and the sentence is genuinely
+  ambiguous at exactly the point the dispatch named. Reconstruction: claim = "the copies' content is right";
+  check = byte parity between the two copies; negative control = tamper one copy → red. Apply the landed
+  sentence — "That case must be one the check fails on if and only if the claim under test is false — not any
+  case that reddens the check by an unrelated route." Under the reading the text licenses, "that case" is an
+  anaphor whose antecedent is the single negative control one sentence earlier; the trailing "not any case…"
+  is also a per-case constraint on selecting that control; and no quantifier ranges over the check's domain.
+  Per-case, the biconditional is satisfied by any control where red and false coincide — which the
+  single-tamper case does: the claim is false there (one copy corrupted) and the check is red. The
+  unrelated-route guard does not fire either, because divergence is not an unrelated route in that
+  constructed case; it *is* the claim's falsity as the reviewer produced it. So the reviewer clears the
+  amended bar and still reports the false claim as proven. Only the global reading — the check must fail
+  across the claim's falsity modes, so a both-copies-corrupted state disqualifies it — stops the incident,
+  and nothing in the bullet forces that reading. Worse, per-case the biconditional is degenerate: it holds
+  whenever (red ∧ false) or (green ∧ true), so relative to the pre-correction wording the amendment adds only
+  the unrelated-route guard and never reaches the "the check cannot detect this class at all" failure. A
+  careful agent follows the per-case reading, because a kernel reader has none of this rejection's context to
+  import. Candidate direction for implementation, not a spec: quantify over falsity — no way for the claim to
+  be false may leave the check silent.
+- DONE: (bounded observation, in scope of the above) issue `#154` §4's own framing would also not have
+  stopped it. "A check was run whose result could not have falsified the claim it was offered as proof of" is
+  modal-existential over the check; the parity check narrowly clears it, since one falsity mode (divergence)
+  does redden it. The bar that catches the incident is coverage of the claim's falsity modes, which is
+  stronger than §4's literal phrasing. Carrying §4 faithfully was necessary and not sufficient.
+- DONE: Verify the correction's mechanics independently, by re-deriving rather than by reading the implementer's account …
+  All pass. Both copies byte-identical (`diff` exit 0, 167/1502/9798 each); `python3
+  scripts/kc-dev-flow-contract-test.py` → `PASS`, exit 0. Site 1 (entity 273-302) vs `kernel.md:129-158`,
+  Site 2 (322-332) vs `kernel.md:117-127`, Site 4 (350-366) vs `MIGRATION.md:103-119` — all three `diff`
+  empty against my own fresh `sed` extracts. Deviation-table cell closed on both halves: the added sentence
+  is absent from `e634d3e7^` and from `#156` (`git show f228f76f:… | grep -c 'if and only if'` → `0`).
+  Recounted, not arithmetic-checked: kernel 124/1058/7022 at `9fee712c` → 167/1502/9798 at HEAD (+444 words,
+  +42.0%); all eight bundle rows rebuilt from independently word-counted components (`## Local Profile` body
+  666 + kernel + base + stage) reproduce 19.4%–22.2% and every now/after total exactly; compressed block
+  41/444/2774 and verbatim 516 words both reproduce (verbatim lines/bytes 48/3298 vs the recorded 47/3296 —
+  span-boundary noise in my reconstruction, word count exact); `git diff --shortstat 9fee712c HEAD` → 4
+  files, 105 insertions, 1 deletion; runaway area 30+11 = 41 < 47. Sites 2/3/4 untouched this round:
+  `git diff --name-only 053eddb0 ad37d51f` returns only the two kernel copies. PR #279 head `ad37d51f`,
+  `base: main`, `isDraft: true`, `state: OPEN`; `gh pr list --head <branch> --state all` returns exactly one
+  PR, so no second PR was opened.
+- DONE: Test the honesty of the new acceptance-evidence statement that no mechanical check distinguishes the old wording from the new one. …
+  The statement is wrong as opened, right as closed. I built two discriminators and ran both live with the
+  pre-correction wording restored to **both** copies (parity intact) and again on HEAD: (A) `grep -q 'if and
+  only if the claim under test is false'` — red on old, green on new; (B) a word floor `wc -w ≥ 1502` — 1471
+  on old (red), 1502 on new (green). So "No mechanical check distinguishes them" is falsified by
+  construction. Neither is evidence, which is why the paragraph's closing sentence ("No check *here* …") is
+  the true one: A is a presence-grep over prose this change itself authors, which this item's own ideation
+  report explicitly refuses; B is content-blind and passes on any 31-word addition of arbitrary text. I found
+  no third construction that reads the bullet's meaning rather than its bytes or its size. Confirmed
+  non-discrimination of the existing checks by running them, not by trusting the account:
+  `kc-dev-flow-contract-test.py` (which also carries the claim-3 loader pins) exits `0` on the old wording in
+  both copies, identically to new. The citation resolver's non-discrimination is **derived, not re-run** —
+  its only inputs are `CLAUDE.md`'s two citations and the cited headings, and `git diff 053eddb0 ad37d51f`
+  touches neither file nor any heading line. Ask: bound the opener to match the closer.
+
+### Summary
+
+One blocking finding, and it is the one this round existed to produce: the amended bullet 1 is ambiguous at
+the exact point the rejection turned on, and under the reading its own grammar licenses it re-certifies the
+byte-parity reviewer rather than stopping it — "that case" attaches the biconditional to the chosen negative
+control, where it is degenerate, instead of to the check across the claim's falsity modes. A bounded
+observation alongside it: issue `#154` §4's literal framing would not have stopped that reviewer either, so
+the fix needs coverage of falsity modes, not a faithful carry of §4. Everything mechanical passes and was
+re-derived rather than read — byte-identical copies, contract test green, all three literal blocks diffing
+empty, every moved figure recounted from the files, Sites 2/3/4 untouched, PR #279 updated in place at
+`ad37d51f` and still Draft. One minor finding: the new acceptance-evidence statement opens with an unbounded
+"No mechanical check distinguishes them" that two cheap constructions falsify literally, though neither
+construction is evidence; its own closing sentence already carries the honest bound. Working tree left clean
+(`git status --porcelain` empty) after the old-wording experiment; no code was changed by this stage.
