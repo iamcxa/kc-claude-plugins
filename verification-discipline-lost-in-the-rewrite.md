@@ -100,6 +100,12 @@ gates:
                 at: "2026-08-22T16:52:36.233456Z"
                 decision: revise
                 reason: 'Captain rejected in chat on the FO recommendation. One finding, first occurrence of its shape: the acceptance-evidence paragraph carries the unbounded absolute ''no wording of this clause reaches that'', with no enforcement point of the four kinds the restored Site 2 rule itself names, in the change that restores that very rule. Its sibling sentence in ''Which clauses have earned restoration'' is already correctly bounded to the two attempts actually made, so the correction is a copy rather than a new judgment. Concrete ask: bound that one sentence to the two attempts made, change nothing else, and do not touch any shipped file — the four delivered files are finished and byte-identical to the ideation-approved text. The FO will verify the corrected sentence by diff against its sibling rather than dispatching a ninth worker to re-review a one-sentence copy.'
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-validation-4
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:validation:attempt-4:revision-1
+                digest: sha256:6259f15dff3472ec0eb29016a288bdb1bfc5e26332bb819343ccf6de0f3ded74
+                request-digest: sha256:4d47b0154cac7273c328932810a5a6fb5d8dd29e57e7ee0e8b09b3ac145faa3c
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/validation/briefing-4
 ---
 
 ## Problem

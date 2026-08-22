@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:validation:attempt-4:revision-1",
+  "question": "Approve release readiness for the exact delivery revision d55d6a4d (Draft PR #279)? The shipped bytes are byte-identical to the text approved at the ideation gate, and the last open finding — an unbounded absolute in the work item's own prose — is corrected. Note that no fresh reviewer ran on that one-sentence correction; the First Officer verified it by diff and records the deviation.",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:validation:attempt-4:revision-1:item-1",
+      "uri": "git-root://state/46f8832d54ed8e211ea78e685891880886faea5d/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:d04bf455967a8644fbeb807557cc1f3b118c4a8aa269b66ef73603dd18940025",
+      "mediaType": "text/markdown",
+      "summary": "Correction round 3 changed one sentence in the work item and nothing else. FO-verified directly rather than by a ninth dispatched worker: the sentence now reads 'the two attempts made, amending the clause's wording rather than the check, did not reach that', matching the register of the already-bounded sibling sentence; the surrounding structural explanation is unchanged; git diff --stat 053eddb0 HEAD is empty in the code worktree so no shipped file moved; the worktree is clean at d55d6a4d; PR #279 is Draft on main with exactly the four Site files, MERGEABLE and CLEAN, and both checks green on the exact head. Cumulative evidence across three cycles, each re-derived by a fresh reviewer rather than read: the without-it audit kept all five clauses against named external occurrences in issues #143 and #154, with the absolutes rule flagged as the weakest and accepted by the Captain; the byte-for-byte landing at all four sites diffs empty against fresh extracts; a tamper-and-restore seen-to-fail proof was re-earned; every measured figure was recounted from the files; and the loader was confirmed at the exact landed revision to emit the restored section between Shared boundaries and Communication. Two wording attempts to close the byte-parity class both failed and were withdrawn; the item now states that limit as a limit rather than a guarantee, and it stays open."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:validation:attempt-4:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}
