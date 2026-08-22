@@ -15,7 +15,9 @@ profile.
   named sibling that will make it reachable.
 - A walking skeleton may cross temporary ownership boundaries, but it records
   every fake, stub, hardcode, fixed value, and skipped validation in one shortcut
-  inventory with the work item that removes each shortcut.
+  inventory. The inventory is the shape-stage form of the shared core's
+  scaffolding rule, so each entry names the work item that removes the shortcut
+  and the concrete condition that makes it removable.
 
 ## Shape receipt
 
@@ -30,7 +32,9 @@ journey_slices:
   shortcut_inventory:
     - shortcut: <temporary compromise>
       owner: <work item that removes it>
+      removal_condition: <observable condition that makes it removable>
 ```
 
-A body that declares more than two slices, unnamed scaffolding, or a walking
-skeleton without a shortcut inventory fails shape before implementation.
+A body that declares more than two slices, unnamed scaffolding, a walking
+skeleton without a shortcut inventory, or an inventory entry with no removal
+condition fails shape before implementation.
