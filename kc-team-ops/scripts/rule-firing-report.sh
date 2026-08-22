@@ -213,12 +213,22 @@ FIRED=0
 while IFS=$'\t' read -r kind label re; do
   [ "$kind" = "firing" ] || continue
   FIRED=1
-  printf '%-26s %6s\n' "$label" "$(count_hits "$WORK/assistant.txt" "$re")"
+  grep -v '^TOOL ' "$WORK/assistant.txt" > "$WORK/prose.txt" 2>/dev/null
+  n_all=$(count_hits "$WORK/assistant.txt" "$re")
+  n_prose=$(count_hits "$WORK/prose.txt" "$re")
+  if [ "$n_all" != "$n_prose" ]; then
+    printf '%-26s %6s   (%s in prose, %s inside tool commands)\n' \
+      "$label" "$n_prose" "$n_prose" "$(( n_all - n_prose ))"
+  else
+    printf '%-26s %6s\n' "$label" "$n_prose"
+  fi
 done < "$PATTERNS"
 [ "$FIRED" = 1 ] || printf '%s\n' \
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
-  "      reading a rule aloud looks identical to one following it. Sample the hits."
+  "      reading a rule aloud looks identical to one following it. Sample the hits." \
+  "      Counts are prose only. A marker inside a shell command is the audit typing" \
+  "      about the rule — its own setup work — and is reported separately, never added."
 # The instruction to read the hits was unfollowable for this column: the stream it
 # counts lived in the work directory and was deleted on exit, so a finished run left
 # the number and no way to check it. Samples are kept instead of the whole stream —
@@ -228,7 +238,7 @@ if [ "$FIRED" = 1 ]; then
   while IFS=$'\t' read -r kind label re; do
     [ "$kind" = "firing" ] || continue
     { printf -- '--- %s\n' "$label"
-      grep -iE -e "$re" "$WORK/assistant.txt" 2>/dev/null | head -40 | cut -c1-220
+      grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
       printf '\n'; } >> "$RUNDIR/firing-hits.txt"
   done < "$PATTERNS"
   printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"
@@ -342,4 +352,4 @@ ls -1dt "$OUT_ROOT"/*/ 2>/dev/null | tail -n "+$((KEEP+1))" | while read -r d; d
 printf '\n%s\n' "=== evidence ==="
 cp "$WORK/human.txt" "$RUNDIR/human-turns.tsv"
 printf 'this run: %s\n' "$RUNDIR"
-printf '%s\n\n' "  report.txt, run.json, human-turns.tsv, incidents.txt — read the hits before trusting any count"
+printf '%s\n\n' "  report.txt, run.json, human-turns.tsv, incidents.txt, firing-hits.txt — read the hits before trusting any count"

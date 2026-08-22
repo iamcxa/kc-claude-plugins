@@ -119,7 +119,7 @@ and know that the three columns hand you three different qualities of evidence:
 
 - `incidents.txt` — the matched turns, each with the assistant turn before it. Curated.
 - `human-turns.tsv` — **every** human turn in the window, not the matched ones. Re-grep it yourself.
-- `firing-hits.txt` — up to forty lines per firing row, whole lines so they can be read in context.
+- `firing-hits.txt` — up to forty prose hits per firing row, each cut at 400 characters. Hits inside shell commands are excluded here and counted separately in the report, because a marker in a command is the audit typing about the rule rather than obeying it.
 
 The third file exists because this instruction was once unfollowable for the column it matters most
 to: the assistant stream lived in a work directory that was deleted on exit, so a finished run left
