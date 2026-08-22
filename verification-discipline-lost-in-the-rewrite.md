@@ -254,7 +254,7 @@ repository's review history still resolves against the shipped text.
 
 | Clause | Site in `kernel.md` | Deviation from `e634d3e7^` verbatim |
 |---|---|---|
-| A check is evidence only once it has been seen to fail | new `## Verification discipline`, bullet 1 | cut "A probe that returns a plausible result where it should have errored is worse than none, because its output reads as a conclusion." |
+| A check is evidence only once it has been seen to fail | new `## Verification discipline`, bullet 1 | cut "A probe that returns a plausible result where it should have errored is worse than none, because its output reads as a conclusion."; added under correction round 1 (`#279`, validation rejection): "That case must be one the check fails on if and only if the claim under test is false — not any case that reddens the check by an unrelated route", carrying issue `#154` §4's "could not have falsified the claim it was offered as proof of" framing, absent from both `e634d3e7^` and `#156` |
 | Name the falsifier's kind | new `## Verification discipline`, bullet 2 | none; verbatim |
 | Prefer the cheapest instrument that can fail | new `## Verification discipline`, bullet 3 | none; verbatim |
 | When one failure shape repeats, change the work, not the wording | new `## Verification discipline`, bullet 4 | cut the final sentence, which routes a repeated hazard through `dispatch_hazard_assignment` — a mechanism `git grep dispatch_hazard_assignment origin/main` finds nowhere, so restoring it verbatim ships a dangling reference |
@@ -277,9 +277,11 @@ the reviewer, the instruction — because an instrument that cannot fail reports
 the same way whether or not the thing it watches is broken.
 
 - **A check is evidence only once it has been seen to fail.** Run it against a
-  case it must flag before running it against the case in question; its silence
-  carries information only after you have heard it speak. This binds the check,
-  not only the artifact: a round that cannot say what would have reddened its own
+  case it must flag before running it against the case in question. That case
+  must be one the check fails on if and only if the claim under test is false —
+  not any case that reddens the check by an unrelated route. Its silence carries
+  information only after you have heard it speak. This binds the check, not
+  only the artifact: a round that cannot say what would have reddened its own
   instrument has measured nothing.
 - **Name the falsifier's kind.** `refusal` — drive the system and read its
   rejection. `mutation` — change the producer and observe what breaks; this is
@@ -299,6 +301,16 @@ the same way whether or not the thing it watches is broken.
   expensive rounds does not fire on cheap ones, so the trigger is repetition of
   shape, not spend.
 ```
+
+Correction round 1 (`#279`, validation rejection) amended bullet 1's second
+sentence. The landed wording as reviewed satisfied "run it against a case it
+must flag" using a check that reddens on divergence between two vendored
+copies — which a case where both copies are wrong identically does not flag,
+because divergence and correctness are conflated in that check. Issue `#154`
+§4 names the operative bar the original sentence dropped: "a check was run
+whose result could not have falsified the claim it was offered as proof of."
+The added sentence ties the required case to the claim's own falsity, not
+merely to the check's ability to redden.
 
 The preamble's first two words change from `Outcome discipline` to
 `Shared boundaries`, because the section it pointed at no longer exists and
@@ -407,14 +419,17 @@ by arithmetic on the old base.
 
 | Path | lines now | lines after |
 |---|---:|---:|
-| `kc-dev-flow/references/kernel.md` | 124 | 165 |
-| `docs/dev/_mods/kernel.md` | 124 | 165 |
+| `kc-dev-flow/references/kernel.md` | 124 | 167 |
+| `docs/dev/_mods/kernel.md` | 124 | 167 |
 | `kc-dev-flow/MIGRATION.md` | 101 | 119 |
 | `CLAUDE.md` | 103 | 103 |
 
-`lines now` and `lines after` both counted on the landed tree at commit
-`053eddb0` (this change's own commit on
+`lines now` and `lines after` both counted on the landed worktree carrying
+correction round 1, on top of commit `053eddb0` (this change's own commit on
 `spacedock-ensign/verification-discipline-lost-in-the-rewrite`), not estimated.
+`kernel.md`'s `after` count moved from 165 to 167 — correction round 1 added
+two lines to bullet 1 of `## Verification discipline`. `MIGRATION.md` and
+`CLAUDE.md` are untouched this round; Sites 2, 3, and 4 are out of scope.
 `CLAUDE.md` changes two section names inside line 91 and adds no line.
 
 Reconciled against the journey in both directions: every file in the table
@@ -430,16 +445,18 @@ touches`). The thresholds themselves are unchanged — the Captain accepted them
 at ideation and this stage does not revisit them.
 
 - **changed files: 5.** Four above plus this work item. Stop and report at 6.
-- **changed lines: 101.** Measured on the landed commit
-  (`git diff --stat 9fee712c 053eddb0`): 41 added to each of the two kernel
-  copies (82 total), 18 added to `MIGRATION.md`, 1 changed in `CLAUDE.md`.
+- **changed lines: 105.** Measured on the landed worktree, correction round 1
+  (`git diff --stat 9fee712c`, uncommitted at measurement time): 43 added to
+  each of the two kernel copies (86 total, up from 41 each / 82 total before
+  this round — correction round 1 added two lines to bullet 1), 18 added to
+  `MIGRATION.md`, 1 changed in `CLAUDE.md`, both unchanged this round.
   Stop and report at 140.
 - **runaway area: the two kernel prose blocks.** Compression is the thing most
   likely to grow back under review pressure. Stop and report if the two blocks
   together exceed 47 added lines — the measured size of the verbatim
   alternative, past which the compression decision has been reversed without a
-  ruling. Landed: 28 lines (Site 1) + 11 lines (Site 2) = 39, under the stop
-  number.
+  ruling. Landed: 30 lines (Site 1, up from 28) + 11 lines (Site 2, unchanged)
+  = 41, under the stop number.
 
 These are stop conditions, not budgets.
 
@@ -545,6 +562,12 @@ kernel in both copies — exit `0`, so the restoration does not break the gate i
 depends on.
 Named limit, also reproduced: appending the same byte to **both** copies leaves
 the suite at exit `0`. The check reddens on divergence, never on content.
+Re-earned on the corrected tree after correction round 1: same tamper (append
+one byte to `docs/dev/_mods/kernel.md`) → exit `1`, same message; restore via
+`cp` from the sibling copy → exit `0`. The named limit is unchanged by the
+wording amendment, because the check still only compares the two copies to
+each other, never to a wording standard — which is exactly why this bullet's
+own text needed the added sentence.
 
 **2. `CLAUDE.md`'s section citations resolve.**
 Check: a resolver that extracts every `` `<path>.md` § <Section> `` citation from
@@ -621,6 +644,18 @@ runaway stop number.
   check compares them; claim 1's limit is exactly why. A reviewer diffs the four
   recorded blocks against the hunks at validation. This is a human check, named
   as one.
+- **That correction round 1's amended bullet 1 wording is what actually
+  landed, distinct from the pre-correction wording.** No mechanical check
+  distinguishes them. `scripts/kc-dev-flow-contract-test.py` (claim 1) checks
+  only that the two vendored copies match each other, not what either says —
+  it passes identically on the pre-correction and the amended wording, so long
+  as both copies carry the same bytes. The citation resolver (claim 2) never
+  looks at `## Verification discipline`'s content. The loader pins (claim 3)
+  check three subtraction-rule phrases and the Production route-table row,
+  none of which this bullet contains. No check here reddens on the old wording
+  and passes on the new one; the discrimination that this wording change
+  closes the byte-parity false-claim gap is a human read of the two texts
+  against issue `#154` §4, not a standing check. None is proposed.
 - **That the restored words stay present after merge.** Nothing standing keeps
   them there; the same silent deletion could happen again. Excluded by this
   item's `scope_boundary`, and the general defect stays open in issue `#154`.
@@ -635,34 +670,37 @@ figures are produced the same way.
 | Form | lines | bytes | words |
 |---|---:|---:|---:|
 | Verbatim from `e634d3e7^` (4 clauses + section head + absolutes rule) | 47 | 3296 | 516 |
-| Compressed, as recorded above | 40 | 2621 | 413 |
+| Compressed, as recorded above | 41 | 2774 | 444 |
 
-Compression saves 103 words, 20% of the verbatim block. One of the four cuts is
-mandatory regardless of form: the `dispatch_hazard_assignment` sentence names a
+Compression saves 72 words, 14.0% of the verbatim block — down from the 103
+words / 20% recorded before correction round 1, because the accepted wording
+now carries 31 more words tying the check's negative control to the claim
+under test, not to the verbatim baseline. One of the four cuts is mandatory
+regardless of form: the `dispatch_hazard_assignment` sentence names a
 mechanism that no longer exists.
 
 **What the shared core costs, at diff base `9fee712c`.** `kernel.md`: 124 lines
-/ 7022 bytes / 1058 words now; 165 / 9645 / 1471 after (measured on the landed
-commit `053eddb0`). `+413` words, `+39.0%`. The word delta is unchanged from
-the figure recorded at ideation (`+413`) because the restored text is fixed
-bytes; only the base it lands on, and therefore the percentage, moved — lower,
-not higher, because the denominator grew.
+/ 7022 bytes / 1058 words now; 167 / 9798 / 1502 after (measured on the landed
+worktree, correction round 1). `+444` words, `+42.0%`. The word delta moved
+from the prior `+413` / `+39.0%` because correction round 1 added 31 words to
+bullet 1 of `## Verification discipline`; the base did not move again this
+round.
 
 **What every stage loads.** Measured as the `## Local Profile` section of
 `docs/dev/README.md` (666 words, unaffected by this change or by the base
 move) plus `kernel.md` plus the selected profile base plus the selected stage
-contract, re-measured at `9fee712c` and on the landed commit.
+contract, re-measured at `9fee712c` and on the landed worktree.
 
 | Profile / stage | now | after | change |
 |---|---:|---:|---:|
-| `poc-exploration` / `build` | 2072 | 2485 | +19.9% |
-| `poc-exploration` / `prove` | 2025 | 2438 | +20.4% |
-| `pilot-product-slice` / `shape` | 2290 | 2703 | +18.0% |
-| `pilot-product-slice` / `build` | 2032 | 2445 | +20.3% |
-| `pilot-product-slice` / `verify-deliver` | 1997 | 2410 | +20.7% |
-| `production` / `shape` | 2270 | 2683 | +18.2% |
-| `production` / `build` | 2007 | 2420 | +20.6% |
-| `production` / `verify` | 2062 | 2475 | +20.0% |
+| `poc-exploration` / `build` | 2072 | 2516 | +21.4% |
+| `poc-exploration` / `prove` | 2025 | 2469 | +21.9% |
+| `pilot-product-slice` / `shape` | 2290 | 2734 | +19.4% |
+| `pilot-product-slice` / `build` | 2032 | 2476 | +21.9% |
+| `pilot-product-slice` / `verify-deliver` | 1997 | 2441 | +22.2% |
+| `production` / `shape` | 2270 | 2714 | +19.6% |
+| `production` / `build` | 2007 | 2451 | +22.1% |
+| `production` / `verify` | 2062 | 2506 | +21.5% |
 
 **Against `#249`'s own record — and a correction to how it is being cited.**
 `#249`'s PR body claims "required policy input fell from about 6,100 words to
@@ -688,8 +726,8 @@ Bounded claim, checked by
 each: four of the five state no size accounting at all (`#277`'s two hits are
 about decision input, not text size), and `#272` does — it records `kernel.md`
 dropping 47 words. So growth here has been weighed once in five changes, not
-never. That is the honest frame for the price: `+413` words is real, and it is
-about `+20%` on every route.
+never. That is the honest frame for the price: `+444` words is real, and it is
+`+19.4%` to `+22.2%` across the eight routes.
 
 **Why the cost is earned, and why it lands in the shared core.** The four
 clauses govern the instrument, and the instrument is what every profile uses;
@@ -814,3 +852,18 @@ marketplace file touched — release-please owns those.
 ### Summary
 
 Independently re-verified the without-it audit, the byte-for-byte landing at all four sites, one seen-to-fail proof, and every recomputed Measurement/Where-it-touches figure — all confirmed against primary source (issues, PR metadata, git blobs, live command output), none taken on the implementer's word. One finding: the absolutes-rule KEEP rests on materially weaker evidence than the other four — one of its two supporting occurrences predates the rule's removal and shows presence, not absence, costing something — though it likely survives on its remaining occurrence alone. Delivery targets `main`: PR #275, despite sharing `kernel.md` by name, is a stale squash-merge artifact whose live content is unrelated to this change's two insertion sites and whose already-landed content duplicates #269/#271/#272/#277; stacking onto it would have pulled already-merged work back into this review as if unmerged. Draft PR #279 opened, unready, base evidence recorded in `## Delivery`.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Amend the first bullet of `## Verification discipline` in both `kc-dev-flow/references/kernel.md` and `docs/dev/_mods/kernel.md`, which must stay byte-identical.
+  Added one sentence: "That case must be one the check fails on if and only if the claim under test is false — not any case that reddens the check by an unrelated route," carrying issue #154 §4's framing. `diff kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md` empty both before commit and after (`ad37d51f`). `python3 scripts/kc-dev-flow-contract-test.py`: PASS, exit 0. Re-earned the seen-to-fail proof on the amended tree: appended one byte to `docs/dev/_mods/kernel.md` -> exit 1 `self-adopted shared core differs from package source`; restored via `cp` from the sibling copy (not `git checkout --`, which on an uncommitted edit reverts past it to the pre-amendment blob — hit this exact mistake once mid-task, caught via `diff`, re-applied from the sibling copy per the prior cycle's own recorded pitfall). Committed as `ad37d51f` on `spacedock-ensign/verification-discipline-lost-in-the-rewrite`: exactly the two kernel copies, 10 insertions / 6 deletions. Pushed; PR #279 head now `ad37d51f`, still `isDraft: true`, `state: OPEN` (`gh pr view 279`).
+- DONE: Update the Site 1 literal block and the deviation table in the entity so the accepted text and the landed text still diff empty, and say the accepted wording changed under this authorized correction.
+  Site 1 block (entity lines 273-302) and the bullet-1 deviation-table cell both updated; `diff` against `sed -n '129,158p' kernel.md` (post-commit) is empty for Site 1, and against `sed -n '117,127p'` for Site 2 (unchanged, confirming it wasn't touched). Deviation table cell now states the correction-round addition explicitly. This report and the Site 1 prose both name the change as an authorized correction under `#279`.
+- DONE: Re-measure by recounting every figure the added words move: kernel word/line counts, all eight profile-stage bundle rows, `## Where it touches` after-counts, and the stop numbers' measured-today line.
+  All recounted via `wc`/`git diff --stat`/`git show`, never adjusted by arithmetic on the prior cycle's numbers: `kernel.md` 167 lines / 9798 bytes / 1502 words after (was 165/9645/1471), delta `+444` words `+42.0%` (was `+413`/`+39.0%`); all eight bundle rows recomputed from `cat`ted component files (18.0-20.7% range -> 19.4-22.2%); `## Where it touches` kernel `after` 165->167, MIGRATION.md and CLAUDE.md unchanged (out of scope this round, confirmed via `git diff 9fee712c --stat` showing only the two kernel files moved); stop numbers `changed lines` 101->105 (43+43+18+1, `git diff --stat 9fee712c`), runaway area Site1+Site2 39->41 lines (30+11, both under the 47 stop number). Also recomputed, beyond the four named items, the `## Measurement` two-restoration-forms table (compressed row 40/2621/413 -> 41/2774/444, re-derived by extracting the exact Site1+Site2 spans and diffing empty against the committed kernel.md) and the closing `#249`-comparison sentence (`+413` -> `+444`), since both are figures the added words move and leaving them stale would itself be the class of defect this correction fixes.
+- DONE: State in `## Acceptance evidence` which check would have reddened on the OLD wording but not the new one, or state plainly that no mechanical check distinguishes them.
+  Added an explicit "Claims with no check, named plainly" entry: none of the three existing checks (contract-test parity, citation resolver, loader pins) inspect this bullet's content, so none reddens on the old wording and passes on the new one — the discrimination is a human read against issue #154 §4, and no standing check is proposed for it. Also extended claim 1 with the re-earned tamper/restore run and a note that the check's named limit is unchanged by the wording amendment.
+
+### Summary
+
+Correction round 1: amended bullet 1 of `## Verification discipline` in both kernel.md copies so the required negative-control case must falsify the claim under test, not merely redden the check by an unrelated route — closing the gap the validation gate's rejected finding named (the byte-parity check's own divergence-only limit satisfied the old wording without ever testing content correctness). Landed at `ad37d51f`, byte-identical copies, contract test green, seen-to-fail proof re-earned with the correct restore path (`cp`, not `git checkout --`, after hitting that exact pitfall once live). Re-measured every figure the ~31 added words move, by recounting rather than arithmetic, including two figures beyond the four named in the dispatch (the two-restoration-forms table and the `#249`-comparison closing sentence) because leaving them stale would reproduce the class of defect under correction. Acceptance evidence now states plainly that no mechanical check distinguishes the old and new bullet wording. Pushed to the existing branch; PR #279 updated in place, still Draft, still targeting `main`. Sites 2, 3, and 4 untouched, confirmed via diff scope.
