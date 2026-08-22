@@ -1,7 +1,7 @@
 ---
 id: 9ydm2mmakce2r49v40q98377
 title: The 3.0 rewrite dropped four merged verification rules and no migration note said so
-status: ideation
+status: implementation
 source: found 2026-08-21 while answering the Captain's original question about issue #154, whose maintainer reply states these clauses had already shipped; they had, and then they were removed
 product: kc-dev-flow
 sprint:
@@ -54,7 +54,7 @@ gates:
                 reason: 'Captain approved the compressed restoration in chat, with one condition attached: each clause must survive a without-it audit before it lands. Direction accepted on the ideation evidence — four literal diffable blocks, baseline set to the wording e634d3e7 deleted rather than #156''s original, measured price of +413 words to the shared core and +19.6% to +22.8% across all eight profile-stage bundles, five claims carrying a falsifier seen to fail and five named as carrying none. The condition routes into implementation: a clause with no evidence that its absence cost something is dropped, and the drop is recorded against the accepted blocks.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
