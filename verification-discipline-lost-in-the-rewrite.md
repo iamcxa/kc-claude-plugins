@@ -1,7 +1,7 @@
 ---
 id: 9ydm2mmakce2r49v40q98377
 title: The 3.0 rewrite dropped four merged verification rules and no migration note said so
-status: validation
+status: implementation
 source: found 2026-08-21 while answering the Captain's original question about issue #154, whose maintainer reply states these clauses had already shipped; they had, and then they were removed
 product: kc-dev-flow
 sprint:
