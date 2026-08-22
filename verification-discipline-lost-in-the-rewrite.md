@@ -86,6 +86,12 @@ gates:
                 at: "2026-08-22T16:03:27.353515Z"
                 decision: revise
                 reason: 'Captain rejected in chat, on the FO recommendation. The re-review established that the amended wording re-certifies the byte-parity reviewer rather than stopping it, because the biconditional attaches to the chosen negative control where it is degenerate, and that issue #154 section 4''s own framing would not have stopped it either, being modal-existential over the check. That is a second occurrence of one failure shape — a wording written to close the parity class that does not close it — and the clause being restored in this same change excludes a third wording: at the second occurrence, restructure, and a stronger instruction does not count. Concrete ask: revert the ad37d51f sentence, return Site 1 to the wording approved at the ideation gate, and bound the claim to what is true — this bullet closes issue #154 section 4''s four field defects and does not close the parity class, which is carried by the absolutes rule at Site 2 and by a human diff. The minor finding is subsumed by the revert.'
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-validation-3
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:validation:attempt-3:revision-1
+                digest: sha256:b33f4d917da5528fb798b85b5fb00485d2f25980dcc8cc3296c9ec488f83322d
+                request-digest: sha256:0b2d1fe4e7677dda46b48cd74d6cde382aafcf60a50615b38115fb9cb659cefa
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/validation/briefing-3
 ---
 
 ## Problem

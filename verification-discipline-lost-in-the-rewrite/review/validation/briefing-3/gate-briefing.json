@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:validation:attempt-3:revision-1",
+  "question": "The revert is exact and the shipped diff is now byte-identical to the text approved at the ideation gate. One defect remains, and it is in the work item's own prose rather than in any shipped file: the acceptance-evidence paragraph carries the unbounded absolute 'no wording of this clause reaches that', which fails the very enforcement-point test this change restores, while its sibling section already states the same thing correctly bounded. Reject for a one-sentence correction, or approve and record it as a known limit?",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/dd318d106fa54fa7a5e5ee0c889d6c0be6c44eed/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:2ace9687ae080daa145fa83d055c9a0a7efacfda7cbcce1a55b4e5088fe8d1ec",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3 re-review, fresh dispatch, 3 done 0 skipped 0 failed. The revert was re-derived rather than read: the whole-tree diff between 053eddb0 and HEAD is empty, both kernel copies share one sha256, the contract test is green, and the diff against origin/main is the same 4 files 101 insertions 1 deletion as 053eddb0 — so Sites 2 3 and 4 are confirmed untouched by the same evidence that confirms Site 1, and nothing survives from either withdrawn wording attempt. The bounded claim's substance was checked against issue #154 directly and is true: section 4 names exactly those four field defects and its own proposed addition closes with 'Every instance above would have been caught by it'. One finding: the acceptance-evidence sentence 'no wording of this clause reaches that' is a universal factual claim with no enforcement point of the four kinds Site 2 itself names, and its structural argument is closer to 'I checked', which Site 2 excludes; the parallel sentence in 'Which clauses have earned restoration' is already bounded to the two attempts actually made. The reviewer classes this as a first occurrence of a different failure shape from the two wording rounds, so a targeted one-sentence reword is proportionate rather than a restructure. No third wording of bullet 1 was proposed or evaluated. PR #279 is at head d55d6a4d, base main, Draft, and the sole PR from this branch."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:validation:attempt-3:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}
