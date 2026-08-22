@@ -879,6 +879,15 @@ else:
             sd_status(route_workflow, "poc-item") == "validation",
             "POC validation-approval-consume should stay pending at validation (terminal-target approved-awaiting-merge)",
         )
+        poc_finalize = subprocess.run(
+            [str(spacedock_binary), "merge", "guard", "poc-item", "--workflow-dir", str(route_workflow), "--verdict", "passed"],
+            cwd=route_repo, text=True, capture_output=True,
+        )
+        require(poc_finalize.returncode == 0, f"POC merge guard finalize failed: {poc_finalize.stdout}{poc_finalize.stderr}")
+        require(
+            "done" in poc_finalize.stdout and "verdict passed" in poc_finalize.stdout,
+            f"POC did not terminalize via merge guard: {poc_finalize.stdout}",
+        )
 
         # Pilot: real gate lifecycle end to end, no forced status writes.
         # This is the Fixture A shape from the accepted outcome: assert every

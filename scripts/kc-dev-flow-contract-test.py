@@ -354,6 +354,10 @@ for phrase in [
 ]:
     require(phrase in " ".join(kernel.split()), f"kernel omits subtraction rule: {phrase}")
 require(
+    "| `production` | `shape -> build -> verify` |" in kernel,
+    "kernel route table omits the current Production route",
+)
+require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
