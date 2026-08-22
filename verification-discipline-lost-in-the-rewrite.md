@@ -12,6 +12,18 @@ worktree:
 issue: 154
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:9ydm2mmakce2r49v40q98377:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:9ydm2mmakce2r49v40q98377-backlog-1
+              briefing:
+                id: briefing:9ydm2mmakce2r49v40q98377:backlog:attempt-1:revision-1
+                digest: sha256:fd06ba0dfce987aede3680ee83ae436a21e91e8abcfedd875b2261946801af4a
+                request-digest: sha256:7fad7f4e15bae2d97a410d589518e32c1d17c870167a659c6632ad5e1bbcaf9d
+                room-ref: ./verification-discipline-lost-in-the-rewrite/review/backlog/briefing-1
 ---
 
 ## Problem

@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9ydm2mmakce2r49v40q98377:backlog:attempt-1:revision-1",
+  "question": "Approve entering ideation to restore the verification-discipline clauses the 3.0 rewrite dropped, under the Production profile, with scope bounded to the clauses that have named evidence plus the one-time migration record — or hold at backlog?",
+  "artifacts": [
+    {
+      "id": "artifact:9ydm2mmakce2r49v40q98377:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d8412294c45e62a023caf7e7b275745952cfc000/verification-discipline-lost-in-the-rewrite.md",
+      "rev": "sha256:6ccd09bccfe443bf67c3c4117135d73b00a581ef6512ca7713378f019e932c42",
+      "mediaType": "text/markdown",
+      "summary": "Committed seed reviewed at the initial stage. PR #249 replaced kernel.md wholesale (349 lines -\u003e 81; -345/+77), and five clauses merged by #156 plus the absolutes rule merged by #164 did not survive the replacement. Verified today across six recording surfaces (PR #249 body, its 8 sub-commit messages, its review thread which holds 0 reviews and 0 inline comments, MIGRATION.md, RATIONALE.md, CHANGELOG.md): none records the removal. All three proof-stage contracts were read in full and carry required-output lists only, so the rules did not re-site into the profiles; one phrase survives in production/verify.md's mission line, which POC and Pilot never load. Last session paid for the loss twice: a false byte-parity claim passed a Captain gate, and a stopping rule had to be hand-invented mid-flight."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:9ydm2mmakce2r49v40q98377:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/8ddd794d271b24c91d2bf4a9fa329ff533939485/docs/dev/_mods/kernel.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:2ba2a47e8af1ad156dd83b69130cc7307691850149d6f11f964204790932d49d"
+    }
+  ]
+}
