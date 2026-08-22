@@ -88,7 +88,7 @@ while IFS= read -r f; do
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join("\n"))
        else "" end) as $t
     | select(($t|length) > 0)
-    | "\(.timestamp)\t\($P)\t\($t | gsub("\n"; " "))"
+    | "\(.timestamp)\t\($P)\t\($t | gsub("[\t\r\n]"; " "))"
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" | sort > "$WORK/all-user.txt"
 
@@ -106,6 +106,10 @@ cat > "$WORK/drop.awk" <<'AWK'
 function agent_wrote(body) {
   if (body ~ /<system-reminder>|<task-notification>|<system_instruction>/) return 1
   if (body ~ /<command-name>|<local-command-stdout>|tool_use_id/) return 1
+  if (body ~ /^This session is being continued from a previous conversation/) return 1
+  if (body ~ /^#? ?Fresh read-only (review|final consistency review)/) return 1
+  if (body ~ /^# Round [0-9]+ (baseline|green|pressure)/) return 1
+  if (body ~ /^Disposition of your only blocker:/) return 1
   if (body ~ /^Review this change for security vulnerabilities/) return 1
   if (body ~ /^Respond with exactly/) return 1
   # Narrow on purpose: "You are still ignoring the comment rule" is a real correction,
@@ -157,8 +161,8 @@ while IFS= read -r f; do
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
        else "" end) as $t
     | select(($t|length) > 0)
-    | ($t | gsub("\n"; " ")) as $flat
-    | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
+    | ($t | gsub("[\t\r\n]"; " ")) as $flat
+    | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat)"
   ' "$f" 2>/dev/null
 # The session key is the first field and the timestamp the second, so a plain sort
 # already groups by session and orders within it. That grouping is the point: sorting
@@ -232,8 +236,8 @@ done < "$PATTERNS"
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
   "      reading a rule aloud looks identical to one following it. Sample the hits." \
-  "      Counts are prose only. A marker inside a shell command is the audit typing" \
-  "      about the rule — its own setup work — and is reported separately, never added."
+  "      Counts are prose only. A marker inside a tool command may be audit setup or" \
+  "      the governed action; it is sampled separately and never added automatically."
 # The instruction to read the hits was unfollowable for this column: the stream it
 # counts lived in the work directory and was deleted on exit, so a finished run left
 # the number and no way to check it. Samples are kept instead of the whole stream —
@@ -244,6 +248,9 @@ if [ "$FIRED" = 1 ]; then
     [ "$kind" = "firing" ] || continue
     { printf -- '--- %s\n' "$label"
       grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
+      printf '\n--- %s (tool commands, excluded from prose count)\n' "$label"
+      grep '^TOOL ' "$WORK/assistant.txt" 2>/dev/null \
+        | grep -iE -e "$re" 2>/dev/null | head -40 | cut -c1-400
       printf '\n'; } >> "$RUNDIR/firing-hits.txt"
   done < "$PATTERNS"
   printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"
@@ -272,6 +279,19 @@ if [ "$INC" = 1 ]; then
         print ""
       }' "$WORK/stream.txt" >> "$RUNDIR/incidents.txt"
   done < "$PATTERNS"
+  expected_pairs=0
+  while IFS=$'\t' read -r kind label re; do
+    case "$kind" in incident|codify) ;; *) continue ;; esac
+    n=$(count_turns "$WORK/human.txt" "$re")
+    expected_pairs=$((expected_pairs + n))
+  done < "$PATTERNS"
+  retained_pairs=$(grep -c '^--- ' "$RUNDIR/incidents.txt" 2>/dev/null || true)
+  retained_pairs=${retained_pairs:-0}
+  if [ "$retained_pairs" != "$expected_pairs" ]; then
+    echo "incident evidence mismatch: counted $expected_pairs turns but retained $retained_pairs pairs" >&2
+    exit 1
+  fi
+  printf 'retained incident/codification pairs: %s/%s\n' "$retained_pairs" "$expected_pairs"
   printf 'matched incidents with the turn before them: %s\n' "$RUNDIR/incidents.txt"
 fi
 printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \

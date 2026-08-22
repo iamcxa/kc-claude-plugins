@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# The incident report pairs a user turn with the assistant turn before it. With
-# several sessions running at once — the normal case here — a global sort by time
-# puts another session's reply in that slot, which turns a follow-through failure
-# into a blind spot: the exact two the classification table exists to separate.
+# Regression coverage for the evidence paths behind kc-rules-review: same-session
+# incident pairing, user-population filtering, full-turn incident retention, and
+# reviewable samples for markers excluded from prose firing counts.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
@@ -34,7 +33,12 @@ P2="$WORK/home2/projects/proj"; mkdir -p "$P2"
 { turn 2026-08-10T10:00:00Z user "You are a read-only reviewer. Do not edit files."
   turn 2026-08-10T10:01:00Z user "You are still ignoring the comment rule"
   turn 2026-08-10T10:02:00Z user "Respond with exactly: OK"
-  turn 2026-08-10T10:03:00Z user "這個檔案沒有會怎樣"; } > "$P2/c.jsonl"
+  turn 2026-08-10T10:03:00Z user "這個檔案沒有會怎樣"
+  turn 2026-08-10T10:04:00Z user "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion."
+  turn 2026-08-10T10:05:00Z user "# Fresh read-only review: inspect only these files"
+  turn 2026-08-10T10:06:00Z user "Fresh read-only final consistency review. Return APPROVE or REVISE."
+  turn 2026-08-10T10:07:00Z user "# Round 3 baseline pressure"
+  turn 2026-08-10T10:08:00Z user "Disposition of your only blocker: host verification confirms it."; } > "$P2/c.jsonl"
 
 printf 'friction	anything	.
 ' > "$WORK/p2.tsv"
@@ -48,6 +52,11 @@ check() { # description, pattern, expected-count
 }
 check "dispatch prompt dropped"       'You are a read-only'      0
 check "'Respond with exactly' dropped" 'Respond with exactly'    0
+check "continuation summary dropped"  'This session is being continued' 0
+check "headed fresh review dropped"   '# Fresh read-only review' 0
+check "plain fresh review dropped"    'Fresh read-only final'    0
+check "pressure prompt dropped"       '# Round 3 baseline pressure' 0
+check "review disposition dropped"    'Disposition of your only blocker' 0
 check "real correction kept"          'still ignoring'           1
 check "ordinary turn kept"            '沒有會怎樣'                1
 
@@ -105,6 +114,39 @@ if [ "${mk:-x}" = "0" ]; then
   echo "PASS  marker inside a multi-line command scored zero prose hits"
 else
   echo "FAIL  marker prose count = ${mk:-<none>}, want 0 (the heredoc body leaked)"; fail=1
+fi
+H4="$(ls -1dt "$WORK/runs4"/*/ 2>/dev/null | head -1)firing-hits.txt"
+if grep -Fq -- '--- marker (tool commands, excluded from prose count)' "$H4" 2>/dev/null \
+   && grep -F 'TOOL Bash ' "$H4" 2>/dev/null | grep -q 'MARKER-XYZ'; then
+  echo "PASS  excluded tool marker retained for sampling"
+else
+  echo "FAIL  excluded tool marker has no reviewable sample"; fail=1
+fi
+
+# Incident matching uses the full turn. Display excerpts may be clipped, but clipping
+# before the match makes the report claim more candidates than it preserves for review.
+P5="$WORK/home5/projects/proj"; mkdir -p "$P5"
+python3 - "$P5/f.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "I will recover the files now"}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "text", "text": "x" * 700 + " TAIL-INCIDENT"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf 'incident\tlong incident\tTAIL-INCIDENT\n' > "$WORK/p5.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home5" \
+  --patterns "$WORK/p5.tsv" --out "$WORK/runs5" >/dev/null 2>&1
+RUN5="$(ls -1dt "$WORK/runs5"/*/ 2>/dev/null | head -1)"
+reported=$(grep -E '^long incident' "${RUN5:-$WORK}report.txt" 2>/dev/null | awk '{print $NF}')
+retained=$(grep -cF -- '--- long incident @ ' "${RUN5:-$WORK}incidents.txt" 2>/dev/null || true)
+if [ "${reported:-x}" = "1" ] && [ "${retained:-0}" = "1" ]; then
+  echo "PASS  incident after character 600 counted and retained"
+else
+  echo "FAIL  long incident reported=${reported:-<none>} retained=${retained:-0}, want 1/1"; fail=1
 fi
 
 exit $fail
