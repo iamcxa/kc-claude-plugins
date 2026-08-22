@@ -81,6 +81,17 @@ gates:
                 digest: sha256:ba8541dbe8a50b7c90568696f16c16680524de43e32545cdefbc655c77f28cef
                 request-digest: sha256:bb9979e54d0a305ce22fdbb0138a2cc9c4a9923f4af41be53075be37e2ccefaf
                 room-ref: ./profile-routes-are-graph-differences/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:validation:2
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-22T08:06:07.432186Z"
+                decision: approve
+                reason: 'Captain approved validation at d775a02f after correction round 1. The claim a cross-model interviewer falsified — that all six route-string copies had a check seen to fail — is closed and re-verified by that exact mutation: corrupting both kernel copies identically now fails with ''kernel route table omits the current Production route'', where the prior round''s one-copy mutation had only broken byte-parity. POC now terminalizes through merge guard with its live output captured. The branch/stack file intersection was recomputed independently with comm -12 and comes to the same three files, whose merged regions preserve the newly-landed backlog-exit-bar and profile-selection semantics intact and uncontradicted. The three recorded-not-fixed residuals stay named: release authorization as unenforced prose, the skip caveat as unmachine-checkable, and this fix''s own proof not running in CI.'
+              application:
+                target-stage: release
+                state: pending
         - id: gate:8x38b1qryjrmy5w4ffk1egy1:release
           stage: release
           attempts:
