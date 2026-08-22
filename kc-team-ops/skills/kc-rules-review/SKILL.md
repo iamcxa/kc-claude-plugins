@@ -67,6 +67,30 @@ measured, and that is itself the finding** — see Step 2.
 usually gets started: never written into the rule file at all, or written and never firing. Check
 both against the actual file before reporting either.
 
+### Match first, sample the hits, and read properly only when the sample fails
+
+Matching is free and reading is not, so start with the pattern — but a count may not be used until
+some of its hits have been opened. The trigger for falling back is **not** that the pattern found
+nothing. It never does: on real history the same three rules returned 147, 69 and 295, and all three
+numbers were wrong while looking perfectly healthy. A rule that fell back only on silence would have
+fallen back on none of them.
+
+1. Run the pattern. Cheap, whole corpus, every rule that has a candidate marker.
+2. **Open up to ten hits per row** from `firing-hits.txt` before the number is allowed anywhere.
+3. Mostly genuine → keep the count and carry on.
+4. Mostly the agent quoting the rule, discussing it, or typing it into a command → **discard the number** and measure that rule by reading instead.
+
+Reading means sampling replies at random from the window and judging each one complied, violated, or
+not applicable, with the offending words quoted. It gives a rate with a denominator rather than a
+bare count, and it works on rules that name no string at all — which is most of them. It costs
+roughly sixty thousand tokens per rule per twenty samples, so it is for the two or three rules with
+the highest friction, not for all of them.
+
+**Do not respond to an unmeasurable rule by inventing a marker for it.** That was tried: a rule was
+given the string `without-it unanswered`, the behaviour it asks for was performed under a
+self-invented heading instead, and the audit scored 147 against a true zero. Instrumenting a
+quality rule replaces the quality with the instrument.
+
 ### Enumerate the rule file before trusting any coverage
 
 The patterns file is hand-written, so the audit sees only the rules someone thought to declare.

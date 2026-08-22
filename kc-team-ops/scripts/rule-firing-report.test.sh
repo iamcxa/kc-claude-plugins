@@ -59,6 +59,7 @@ if [ -s "$WORK/stderr.txt" ]; then
   echo "FAIL  clean run wrote to stderr:"; sed 's/^/        /' "$WORK/stderr.txt"; fail=1
 else
   echo "PASS  clean run wrote nothing to stderr"
+fi
 
 # The shipped incident patterns decide whether a turn is read as a blind spot, and a
 # loose one sends the audit looking for a vacancy that never happened. "掃掉" alone
