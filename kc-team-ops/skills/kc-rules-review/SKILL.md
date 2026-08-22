@@ -71,9 +71,12 @@ both against the actual file before reporting either.
 
 Matching is free and reading is not, so start with the pattern — but a count may not be used until
 some of its hits have been opened. The trigger for falling back is **not** that the pattern found
-nothing. It never does: on real history the same three rules returned 147, 69 and 295, and all three
-numbers were wrong while looking perfectly healthy. A rule that fell back only on silence would have
-fallen back on none of them.
+nothing. It never does. On real history one rule returned 147 against a true zero, because the
+pattern paraphrased the string the rule actually names; another returned 69 of which 30 were the
+agent typing the marker into a shell command; a third returned 295 that sampling suggests were
+genuine, and was still wrong to use, because a bare count has no denominator to be high or low
+against. Three different faults, three healthy-looking numbers, and a fallback triggered by silence
+would have caught none of them.
 
 1. Run the pattern. Cheap, whole corpus, every rule that has a candidate marker.
 2. **Open up to ten hits per row** from `firing-hits.txt` before the number is allowed anywhere.
@@ -96,7 +99,7 @@ quality rule replaces the quality with the instrument.
 The patterns file is hand-written, so the audit sees only the rules someone thought to declare.
 Open the rule file itself, list every rule in it, and split them:
 
-- **Measurable** — the rule names a literal string it makes you emit, so it can have a `firing` row.
+- **Measurable** — the rule names a marker in the sense defined above: a string it makes the agent emit, or a file-read unique to it.
 - **Unmeasurable** — the rule is real and has no observable marker. It cannot be given a firing row, and this pass cannot tell whether it runs.
 
 **When a rule names its own string, use that string verbatim.** Do not paraphrase it into a friendlier
