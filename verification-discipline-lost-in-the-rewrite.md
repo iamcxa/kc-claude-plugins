@@ -787,6 +787,27 @@ was lost in practice.
   finding — an unbounded "no mechanical check distinguishes them" — is subsumed by the revert.
   The round recorder remains unusable for the reason recorded under cycle 1.
 
+- **Cycle 3 — `validation` rejected on one sentence, routed to `implementation`.** Captain decision
+  `revise` on the First Officer's recommendation, recorded against
+  `briefing:9ydm2mmakce2r49v40q98377:validation:attempt-3:revision-1` (`sha256:b33f4d91`) at
+  delivery revision `d55d6a4d`. The fresh reviewer confirmed the revert was exact — the whole-tree
+  diff from `053eddb0` to HEAD is empty — and found one defect in the work item's own prose: the
+  acceptance-evidence sentence "no wording of this clause reaches that" is an unbounded absolute
+  with no enforcement point of the four kinds the restored Site 2 rule names, while its sibling
+  sentence was already bounded to the two attempts made. First occurrence of that shape, so a
+  one-sentence reword was proportionate. Corrected at state commit `abd1b027`; no shipped file
+  changed and PR #279 stayed at `d55d6a4d`.
+- **No fresh reviewer ran on the cycle-4 correction, by First Officer decision.** The claim under
+  review — whether one sentence now reads as a bounded report rather than a universal — is settled
+  by reading the diff, and the dispatch contract refuses a second agent re-reading a source a read
+  already settles. The First Officer verified it directly: the sentence now reads "the two attempts
+  made, amending the clause's wording rather than the check, did not reach that", the surrounding
+  explanation is unchanged, `git diff --stat 053eddb0 HEAD` is empty in the code worktree, the
+  worktree is clean at `d55d6a4d`, and PR #279 is Draft on `main` with the same four files and both
+  checks green. This is a deviation from the feedback flow's step 5, which reaches the gate only
+  from a reviewer verdict; it is recorded here rather than left implicit, and the Captain was told
+  at the gate.
+
 ## Stage Report: ideation
 
 - DONE: Name the exact restored words and their site: for each clause in scope, state the wording that will land and which section of kernel.md it lands in.
