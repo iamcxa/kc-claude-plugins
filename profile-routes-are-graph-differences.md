@@ -135,6 +135,17 @@ gates:
                 digest: sha256:8f20e4373aa65acfba40f48ce1919ac44616a1c60fca66cc0b193a5cecafd4f0
                 request-digest: sha256:0fec715069b9851a3611b58afc818f6de19bdb7da05c22472223547c53495e25
                 room-ref: ./profile-routes-are-graph-differences/review/release/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8x38b1qryjrmy5w4ffk1egy1:release:3
+                briefing: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-3:revision-1
+                by: person:captain
+                at: "2026-08-22T08:07:57.411908Z"
+                decision: approve
+                reason: 'Captain approved release readiness at delivery revision d775a02f. No rebase was needed or performed; the branch sits on origin/main at ef808a91 carrying its two commits. PR #276 is Draft, targets main, MERGEABLE/CLEAN with both checks green. The PR body records correction round 1 in full: the six-copy claim a cross-model interviewer falsified, why byte-parity had masqueraded as a content check, the exact mutation that now fails, POC''s terminalization through merge guard, and the independently recomputed file intersection against the stack that landed mid-flight. Three residuals remain stated as residuals rather than closed: release authorization as unenforced prose, the skip caveat as prose bounding prose, and this fix''s own live proof not running in CI, the last filed as a second victim on spacedock-route-test-passes-nowhere. Mark-ready and merge remain the Captain''s actions.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
