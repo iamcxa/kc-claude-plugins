@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-2:revision-1",
+  "question": "Re-approve release readiness at the rebased delivery revision 7bbae216, superseding the attempt-1 approval that cites a revision no longer on the branch?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:release:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/2b08d83002ba7b3bb5ce7ac18ffe27073944d4b9/profile-routes-are-graph-differences.md",
+      "rev": "sha256:242c7c5b23b04c18e366e44fc4dc27c58f611fe4739685a95d89cd68b89422ad",
+      "mediaType": "text/markdown",
+      "summary": "The four-deep stack landed, so the branch was rebased a second time onto origin/main at ef808a91, producing 7bbae216. Both suites were re-run on it and the result changed for the better: kc-dev-flow-contract-test.py now passes outright, because #268's casing fix is on main, so the six route-parity checks are reachable and green locally as well as in CI. The PR body has been corrected. The attempt-1 approval cites delivery revision b3b0e2ed, which no longer exists on the branch."
+    }
+  ]
+}

@@ -94,7 +94,13 @@ gates:
                 reason: 'Captain approved release readiness at delivery revision b3b0e2ed and ruled the base stays main. The single commit was rebased with --onto after confirming the branch carried exactly one commit, and both suites were re-run on the rebased revision; the contract test''s sole failure remains the pre-existing sibling casing bug, with nothing hidden behind it. On the base question, delivery-branch-base.md''s trunk clause literally requires ''no shared file'' and this candidate does share kernel.md and choose-work-profile/SKILL.md with the open stack #267 -> #271 -> #272 -> #275. The FO compared the actual hunks: both sides insert near the same line of kernel.md but on unrelated subjects — this candidate bounds the runtime skip clause and rewrites the Production route table, while the stack inserts a backlog exit bar. Neither builds on, depends on, nor re-delivers the other, so the overlap is textual adjacency and the cost of trunk is a keep-both conflict for whoever merges second, against making an independent fix hostage to a four-deep stack. PR #276 is Draft, targets main, MERGEABLE/CLEAN with checks green. Mark-ready and merge remain the Captain''s actions.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-release-2
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-2:revision-1
+                digest: sha256:222aa5ccc90eaa983580b740d1d1ca9f49a517a6a98fbe346345fa0c62d0ae14
+                request-digest: sha256:50819da469e4a0cfe734365042587d5ae2e5a70e4ce9ce60e450b0447b9de728
+                room-ref: ./profile-routes-are-graph-differences/review/release/briefing-2
 ---
 
 ## Problem
