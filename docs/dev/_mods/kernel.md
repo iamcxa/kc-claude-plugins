@@ -58,7 +58,9 @@ committed body states both:
   `poc-exploration`, the question the experiment answers and the observable
   result whose occurrence would abandon it.
 
-The Captain checks the bar at profile selection.
+The Captain checks the bar on every `backlog` exit, at profile selection.
+A reused profile receipt answers which route the item takes, never whether the
+bar is met, so reuse does not skip the check.
 `kc-dev-flow:choose-work-profile` asks for a missing part, and reports the item
 as not ready to leave `backlog` when it cannot ask.
 
@@ -78,7 +80,8 @@ as not ready to leave `backlog` when it cannot ask.
   report to the First Officer without continuing. Crossing passes and fails
   nothing; it reports what the work turned out to be. Work resumes on a Captain
   choice of exactly one of reduce scope, reshape with replacement thresholds, or
-  promote the profile.
+  promote the profile, recorded in the work item with the crossing it answers.
+  A resumed build with no recorded choice is an unauthorized continuation.
 - A local check proves only what it observed. Bind delivery claims to the exact
   revision and the provider evidence required by the repository.
 - Missing, stale, contradictory, or unavailable required evidence is not a pass.
@@ -92,8 +95,8 @@ as not ready to leave `backlog` when it cannot ask.
 - A guard meant to be temporary — a probe, refusal, validation, or required
   declaration — carries a removal condition from creation and takes the same
   justification to remove as to add. A guard whose removal condition cannot be
-  written is not temporary: record the enduring invariant it holds instead, and
-  keep it out of the scaffolding record.
+  written is not temporary: record the enduring invariant it holds in the work
+  item that adds it, and keep it out of the scaffolding record.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals

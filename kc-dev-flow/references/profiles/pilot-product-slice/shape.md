@@ -68,24 +68,23 @@ none.
 ## Where it touches
 
 Name the files this work changes as a table of path, lines now, and lines after.
-It answers where, not how big.
 
 `lines now` is counted in the current tree — an opened file, a resolved
 reference. `lines after` is this item's estimate. Mark a count inherited from a
 sibling item or a reviewer's remark unverified until checked against the current
 tree.
 
-The table is diagnostic and holds no gate; the shared core already fixes that
-LOC and file counts are diagnostic signals, never pass/fail gates. Reconcile it
-against the journey in both directions, and take the stop numbers below from
-it.
+Reconcile the table against the journey in both directions: a file here and
+nowhere in the journey, or a file the journey depends on and the table omits,
+is the question it exists to raise.
 
 ## Stop numbers
 
 Name the counts at which implementation stops and reports rather than
-continuing, each with its metric and the base it is measured against: changed
-files, changed lines, and one named area most likely to run away. Take them from
-the `where it touches` table.
+continuing: changed files, changed lines, and one named area most likely to run
+away. Measure all three as the diff against the delivery base, and record that
+base — a file rewritten at its original length changes no line count the `where
+it touches` table can show, so the thresholds are read from the diff and the
+table only tells you where to expect them.
 
-They are stop conditions, not budgets. The shared core fixes what a crossing
-does and who resumes the work.
+They are stop conditions, not budgets.

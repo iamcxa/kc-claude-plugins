@@ -34,6 +34,6 @@ journey_slices:
       removal_condition: <observable condition that makes it removable>
 ```
 
-A body that declares more than two slices, unnamed scaffolding, a walking
-skeleton without a shortcut inventory, or an inventory entry with no removal
-condition fails shape before implementation.
+The First Officer rejects at shape exit a body that declares more than two
+slices, unnamed scaffolding, a walking skeleton without a shortcut inventory, or
+an inventory entry with no removal condition.
