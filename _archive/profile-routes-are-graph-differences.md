@@ -1,13 +1,13 @@
 ---
 id: 8x38b1qryjrmy5w4ffk1egy1
 title: Profile routes are expressed as graph differences, so a POC or Pilot item cannot reach done
-status: release
+status: done
 source: hit in production 2026-08-20 by declared-receipts-need-a-reader (k69wjs5ttme3z11hph3sy45d), the first Pilot item this workflow has run; the Captain ruled that asking Spacedock to skip stages is the wrong ask
 product: kc-dev-flow
 sprint:
 started: 2026-08-21T08:46:56Z
-completed:
-verdict:
+completed: 2026-08-22T08:36:22Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-profile-routes-are-graph-differences
 issue:
 pr: pr-merge:276
@@ -145,7 +145,8 @@ gates:
                 reason: 'Captain approved release readiness at delivery revision d775a02f. No rebase was needed or performed; the branch sits on origin/main at ef808a91 carrying its two commits. PR #276 is Draft, targets main, MERGEABLE/CLEAN with both checks green. The PR body records correction round 1 in full: the six-copy claim a cross-model interviewer falsified, why byte-parity had masqueraded as a content check, the exact mutation that now fails, POC''s terminalization through merge guard, and the independently recomputed file intersection against the stack that landed mid-flight. Three residuals remain stated as residuals rather than closed: release authorization as unenforced prose, the skip caveat as prose bounding prose, and this fix''s own live proof not running in CI, the last filed as a second victim on spacedock-route-test-passes-nowhere. Mark-ready and merge remain the Captain''s actions.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-22T08:36:22Z
 ---
 
 ## Problem
