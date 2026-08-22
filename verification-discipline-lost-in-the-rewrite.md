@@ -739,3 +739,44 @@ fire this item's first `promote_when` clause.
 ### Summary
 
 Restored the four `## Verification discipline` clauses plus the absolutes rule at the accepted compressed wording, unamended — the without-it audit found real evidence for all five in issues #143 and #154 plus this entity's own record, so nothing was dropped. Applied byte-for-byte at the four sites via extract-and-insert (never retyped), verified by hand diff, contract-test pass, and a re-earned tamper/restore cycle on the landed tree. The FO's base move to `9fee712c` (two intervening merges, one touching `kernel.md` outside the two insertion sites) required re-measuring every figure in `## Measurement` and `## Where it touches` from scratch rather than adjusting the ideation numbers by arithmetic; all now reflect the landed commit `053eddb0`. The citation resolver, run by hand and never committed, failed naming both dangling citations before the change and passed after.
+
+## Delivery
+
+Base: `main`. `origin/main` = `9fee712c`; this branch carries exactly one
+commit on top of it (`053eddb0`, confirmed via `git log --oneline
+origin/main..HEAD`), so no rebase is needed to open against `main`.
+
+`delivery-branch-base.md`'s "prefer a stacked base" rule was checked against
+every open delivery artifact sharing a file with this change
+(`kc-dev-flow/references/kernel.md` and its adopted copy):
+
+- **PR #277**, "stop the FO's verdict boundary reading as a licence to
+  relay" — MERGED into `main` at `2026-08-22T10:18:27Z` as `9fee712c`, which
+  is this branch's own base. Not a stacking candidate; already landed, and
+  its only files were the two `kernel.md` copies.
+- **PR #275**, same title as #277, is OPEN with `mergeable: CONFLICTING`,
+  based on `feat/kc-dev-flow-size-tripwire` — the branch PR #272 ("let a
+  declared size threshold stop work and hand back") squash-merged from on
+  2026-08-22 (landed as `ef808a91`). #275's diff against `main` re-expands
+  content already landed separately: the phrase `size threshold` appears 4
+  times in `ef808a91`'s own `kernel.md` hunk and 6 times in #275's still-open
+  diff of the same file; #275's other visible hunks match bullets that landed
+  via #269 and #271. This is the squash-merge stacked-PR failure — the base
+  PR squash-merged, so the stacked PR's diff re-expanded to show everything
+  already on `main` as if still unmerged. #275 shares the file `kernel.md` by
+  name, not by content or dependency: its live hunks insert a queue-exit-bar
+  paragraph and two `## Shared boundaries` bullets at insertion points this
+  change does not touch; this change's two sites (new `## Verification
+  discipline`; last bullet of `## Shared boundaries`) neither build on,
+  depend on, nor re-deliver anything #275 adds. Stacking onto a conflicting,
+  stale-diffed PR based on an already-merged feature branch would pull
+  someone else's already-landed work back into this review as if unmerged —
+  exactly the cost `delivery-branch-base.md` names as the reason the rule
+  exists. Target: `main`.
+
+Residual, not this task's to resolve: PR #275 looks superseded by #269, #271,
+#272, and #277 and worth closing or retargeting by its owner. Flagged for the
+Captain; not acted on here.
+
+Draft PR opened; not marked ready, not merged. No version, `CHANGELOG`, or
+marketplace file touched — release-please owns those.
