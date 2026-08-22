@@ -597,8 +597,9 @@ own "could not have falsified the claim" framing, checked directly, would not
 have stopped that reviewer either, since one falsity mode (divergence)
 narrowly clears its modal-existential bar. The gap is that a parity check was
 offered as evidence for a content claim, and parity is the correct check for
-parity — no wording of this clause reaches that. It is a limit on this
-clause, not a guarantee about the parity check, and it stays open.
+parity — the two attempts made, amending the clause's wording rather than the
+check, did not reach that. It is a limit on this clause, not a guarantee
+about the parity check, and it stays open.
 
 **2. `CLAUDE.md`'s section citations resolve.**
 Check: a resolver that extracts every `` `<path>.md` § <Section> `` citation from
@@ -1011,3 +1012,18 @@ Reverted `ad37d51f`'s wording amendment on the Captain's ruling that a second wo
 ### Summary
 
 Re-derived: the revert is exact and complete — both kernel.md copies are byte-identical to each other and to their `053eddb0` span, the contract test is green, and the whole-tree diff against `053eddb0` is empty, so Sites 2-4 are confirmed untouched by the same evidence that confirms Site 1. PR #279 is updated in place at `d55d6a4d`, Draft, sole PR from the branch. The bounded claim's first half (closes issue #154 §4's four field defects, does not close the byte-parity incident's own class) is true and matches the issue's own text. Its second half is a finding: `## Acceptance evidence` claim 1 carries an unbounded absolute ("no wording of this clause reaches that") that fails the enforcement-point test the restored absolutes rule itself defines, while the parallel sentence in `## Which clauses have earned restoration` is already correctly bounded to "two attempts... both failed." Recommend correction round 3 reword the one sentence at `## Acceptance evidence` line ~586 to match the sibling section's bounded phrasing; no other defect found. No third wording of bullet 1 proposed or evaluated.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Reword only "no wording of this clause reaches that" in `## Acceptance evidence` claim 1, bounded to the two attempts actually made, matching the sibling sentence's register.
+  Old sentence: "The gap is that a parity check was offered as evidence for a content claim, and parity is the correct check for parity — no wording of this clause reaches that. It is a limit on this clause, not a guarantee about the parity check, and it stays open."
+  New sentence: "The gap is that a parity check was offered as evidence for a content claim, and parity is the correct check for parity — the two attempts made, amending the clause's wording rather than the check, did not reach that. It is a limit on this clause, not a guarantee about the parity check, and it stays open."
+  The surrounding structural explanation (the sentence before and after) is unchanged; the clause no longer reads as a universal claim about all possible wordings, only as a report on the two attempts the file already documents (`ad37d51f` and issue `#154` §4's own framing, both described two paragraphs above).
+- DONE: Touch no shipped file; move no figure.
+  `git diff --stat 053eddb0 HEAD` in the code worktree at `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-verification-discipline-lost-in-the-rewrite` returned empty before and remains empty — only the state checkout was edited.
+- DONE: Commit and push the state checkout only; leave PR #279 at head `d55d6a4d`.
+  No code-branch commands were run in this cycle; only `git -C docs/dev/.spacedock-state add/commit/push` on this entity path.
+
+### Summary
+
+One-sentence correction applied per the validation gate's cycle-3 finding: the unbounded absolute "no wording of this clause reaches that" now reads as a bounded report on the two attempts already documented in the same paragraph, matching the register of the sibling sentence in `## Which clauses have earned restoration`. No shipped file changed, no figure moved, and PR #279's code head is untouched.
