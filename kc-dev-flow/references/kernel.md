@@ -133,11 +133,9 @@ the reviewer, the instruction — because an instrument that cannot fail reports
 the same way whether or not the thing it watches is broken.
 
 - **A check is evidence only once it has been seen to fail.** Run it against a
-  case it must flag before running it against the case in question. That case
-  must be one the check fails on if and only if the claim under test is false —
-  not any case that reddens the check by an unrelated route. Its silence carries
-  information only after you have heard it speak. This binds the check, not
-  only the artifact: a round that cannot say what would have reddened its own
+  case it must flag before running it against the case in question; its silence
+  carries information only after you have heard it speak. This binds the check,
+  not only the artifact: a round that cannot say what would have reddened its own
   instrument has measured nothing.
 - **Name the falsifier's kind.** `refusal` — drive the system and read its
   rejection. `mutation` — change the producer and observe what breaks; this is
