@@ -204,4 +204,34 @@ else
   echo "FAIL  counted tool regex has no retained match; report=${reported7:-<none>} sample=${sample7:-<empty>}"; fail=1
 fi
 
+# Incident and codification counts also use grep ERE, so their retained pairs must
+# not reinterpret the same pattern in awk and reject a count grep already accepted.
+P8="$WORK/home8/projects/proj"; mkdir -p "$P8"
+python3 - "$P8/i.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "I will update the rule now"}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "text", "text": "please retain MARKER-XX"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+{ printf '%s\t%s\t%s\n' incident 'backreference incident' 'MARKER-(X)\1'
+  printf '%s\t%s\t%s\n' codify 'backreference codify' 'MARKER-(X)\1'; } > "$WORK/p8.tsv"
+if cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home8" \
+  --patterns "$WORK/p8.tsv" --out "$WORK/runs8" >/dev/null 2>&1; then
+  RUN8="$(ls -1dt "$WORK/runs8"/*/ 2>/dev/null | head -1)"
+  pairs8=$(grep -cF -- '--- backreference ' "${RUN8:-$WORK}incidents.txt" 2>/dev/null || true)
+  visible8=$(grep -cF -- 'MARKER-XX' "${RUN8:-$WORK}incidents.txt" 2>/dev/null || true)
+  if [ "${pairs8:-0}" = "2" ] && [ "${visible8:-0}" = "2" ]; then
+    echo "PASS  incident and codify regex retained every grep-counted pair"
+  else
+    echo "FAIL  incident/codify retained=${pairs8:-0} visible=${visible8:-0}, want 2/2"; fail=1
+  fi
+else
+  echo "FAIL  incident/codify grep regex was rejected by the evidence path"; fail=1
+fi
+
 exit $fail
