@@ -129,6 +129,12 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:8x38b1qryjrmy5w4ffk1egy1-release-3
+              briefing:
+                id: briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-3:revision-1
+                digest: sha256:8f20e4373aa65acfba40f48ce1919ac44616a1c60fca66cc0b193a5cecafd4f0
+                request-digest: sha256:0fec715069b9851a3611b58afc818f6de19bdb7da05c22472223547c53495e25
+                room-ref: ./profile-routes-are-graph-differences/review/release/briefing-3
 ---
 
 ## Problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8x38b1qryjrmy5w4ffk1egy1:release:attempt-3:revision-1",
+  "question": "Approve release readiness at d775a02f (Draft PR #276 to main), leaving mark-ready and merge as your decisions?",
+  "artifacts": [
+    {
+      "id": "artifact:8x38b1qryjrmy5w4ffk1egy1:release:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/b087c7baaf2e2f88b1677a65d8b91edf8cd5925b/profile-routes-are-graph-differences.md",
+      "rev": "sha256:e8383a73ce9b3695db2dc5ffa6a846af6e9001b517ca8c189347f689e16d5b94",
+      "mediaType": "text/markdown",
+      "summary": "No rebase needed and none performed: the branch already sits on origin/main at ef808a91 and carries its two commits. PR #276 is Draft, targets main, MERGEABLE/CLEAN at d775a02f with both checks green. The FO updated the PR body itself rather than dispatching a worker for a delivery-evidence edit: it now records the correction round, names the falsified six-copy claim and how it was closed, and keeps the three residuals stated as residuals."
+    }
+  ]
+}
