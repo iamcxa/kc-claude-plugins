@@ -39,6 +39,15 @@ _(none recorded)_
   The state branch can only be checked out in one worktree at a time, so a
   throwaway worktree cannot run `spacedock state init` while another holds it.
   The debrief had to be written from the worktree that already had the checkout.
+- **Both PRs were stacked against a written local policy that forbids it.**
+  `docs/dev/README.md` § Local Profile says base policy is trunk-only until the
+  vendored `pr-merge` copy accepts a sibling base, "so a stacked base would be
+  re-targeted and the PR would carry its parent's commits". That is exactly what
+  happened: after the lower PR merged, the upper one was re-targeted to `main`
+  and went conflicting on its parent's own commits. The upstream contract that
+  endorses stacking was read; the repository's local override was not. The
+  section opens with "Read only this section before resolving the selected item".
+  Kept rather than reverted — the result is correct and re-doing it buys new risk.
 - `commissioned-by: spacedock@0.25.0` — behind the installed engine.
 
 ## Issues — Spacedock
