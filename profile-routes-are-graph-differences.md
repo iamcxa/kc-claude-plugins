@@ -346,7 +346,11 @@ named:
    vendored copy — the `## Select before routing` route table's `production`
    row drops ` -> release`. Kept byte-identical (verified: `diff` reports no
    difference; `scripts/kc-dev-flow-contract-test.py` also enforces this by
-   byte-comparing the two files, not by trusting the author).
+   byte-comparing the two files, not by trusting the author) and, since
+   correction round 1 (Finding A), additionally content-checked: a `require()`
+   reads the route row's exact text and fails independently of the
+   byte-parity check — see "Does anything check that the six agree?" below for
+   why byte-parity alone was insufficient and how the gap was closed.
 2. `kc-dev-flow/README.md` — the routes-table row and the profile mermaid
    diagram (`R4["Verify..." ] --> D`, `R5["Release..."]` node and edge
    deleted).
@@ -374,25 +378,47 @@ in both `kc-dev-flow/references/` and its `docs/dev/_mods/` vendored copy.
 formerly `("base.md", "shape.md", "build.md", "verify.md", "release.md")`)
 lose the `release.md` member and any release-route assertion.
 
-**Does anything check that the six agree?** Yes, now all six — two
-(`kc-dev-flow/README.md`, `continue-dev-flow/SKILL.md`) had no enforcement
-point before this task and were fixed by hand with nothing that would catch
-future drift; both now carry a `require()` in
+**Does anything check that the six agree? Corrected in correction round 1
+(Finding A).** The claim below was false as first written: it asserted a
+content check (one that fails when the route *string itself* drifts, as
+opposed to the two copies merely drifting from each other) existed for the
+kernel.md pair. It did not. Byte-parity between `kc-dev-flow/references/kernel.md`
+and `docs/dev/_mods/kernel.md` only proves the two copies agree with *each
+other*; the validation round's mutation-testing changed one copy at a time,
+so it could never have exercised the case where both are edited identically —
+which is exactly what the FO's reproduction did, leaving
+`scripts/kc-dev-flow-contract-test.py` green on a corrupted Production route
+row. Two of the six copies shared a single guard that any consistent
+corruption passed.
+
+As of this correction, all 6 of 6 named copies carry a content check — one
+that reads the route string itself and fails on the exact wording, not merely
+on cross-copy disagreement. Two (`kc-dev-flow/README.md`,
+`continue-dev-flow/SKILL.md`) had no enforcement point at all before this
+task and were fixed by hand; both now carry a `require()` in
 `scripts/kc-dev-flow-contract-test.py` (a positive phrase check for the
-current route, a negative check that the removed `release` element is gone),
-mutation-tested by reverting each file alone to its pre-fix content and
-confirming the check fails on exactly that file. The other four already had
-an enforcement point, reused rather than duplicated: kernel.md and
-`profile-contract-loader.py` each get byte-parity checks against their
-`docs/dev/_mods/` copy (so there is structurally one source, not two data
-points to keep in sync); `profile-contract-loader.py`'s `ROUTES` table is
-additionally checked against `expected_routes` and, live, against the real
-loader's `next_workflow_stage` output; `choose-work-profile/SKILL.md` and
-`docs/dev/README.md` each already carried an existing positive/negative
-phrase pair. `kc-dev-flow/MIGRATION.md`'s new changelog entry is prose
-documentation of a change, not a copy of the route string in the sense above,
-and carries no separate enforcement point — a stale migration note is a
-documentation-quality residual, not a routing defect this task's mechanism
+current route, a negative check that the removed `release` element is gone).
+`choose-work-profile/SKILL.md` and `docs/dev/README.md` each already carried
+an existing positive/negative phrase pair. `profile-contract-loader.py`'s
+`ROUTES` table already carried a content check — structural equality against
+a hardcoded `expected_routes` dict, plus, live, agreement with the real
+loader's `next_workflow_stage` output — so it was never the byte-parity-only
+gap Finding A named; its `docs/dev/_mods/` twin is additionally
+byte-parity-checked, giving it both. `kernel.md`'s pair is the one that
+changed this round: it kept its pre-existing byte-parity check (still
+structurally one source, not two data points to keep in sync) and gained a
+new, separate content check —
+`require("| \`production\` | \`shape -> build -> verify\` |" in kernel, ...)`
+in `scripts/kc-dev-flow-contract-test.py` — proven by reproducing the FO's
+exact mutation (both copies edited identically to
+`` | `production` | `shape -> build -> verify -> deploy` | ``) and observing
+`kc-dev-flow contract: kernel route table omits the current Production route`,
+exit 1, then reverting to a clean `git status --porcelain`. Every one of the
+six now rests on a content check seen to fail on its own mutation; none rests
+on byte-parity alone. `kc-dev-flow/MIGRATION.md`'s new changelog entry is
+prose documentation of a change, not a copy of the route string in the sense
+above, and carries no separate enforcement point — a stale migration note is
+a documentation-quality residual, not a routing defect this task's mechanism
 depends on.
 
 ### The remaining skip clause: bounded, not removed
@@ -509,6 +535,23 @@ way as the route-table edit.
    (`verdict: PASSED`, confirmed uppercase in the Fixture B transcript) is
    subsumed by that rewrite rather than done twice. Record which item actually
    lands it once scheduling is known; do not let both touch it independently.
+5. **This item's own migration sequencing.** This item (`8x38b1qryjrmy5w4ffk1egy1`)
+   itself sat at `status: release` during its release gate's attempt-1
+   resolution (superseded, see gate history above) — the exact graph state
+   this change removes from `docs/dev/README.md`. Landing this diff and
+   terminalizing this item are not automatically ordered: if the merge of
+   this branch's README/ROUTES edit reaches a checkout while this entity's own
+   state checkout still reads `status: release` (e.g. a stale local
+   `.spacedock-state` clone, or a re-run of a prior stage), that copy hits
+   exactly migration step 2's silent-non-dispatchable failure — no row, no
+   NEXT, no error, reachable only via `--where status=release`. Required
+   order: this item must reach `done` via `merge guard --verdict` under the
+   *pre-change* graph (as this correction round's Finding B proves the
+   mechanism does, using `poc-item`) before any `.spacedock-state` checkout
+   that has pulled this branch's `docs/dev/README.md` change is treated as
+   authoritative. This is a one-time bootstrapping concern for this item
+   alone, not a recurring rule — ordinary future items never sit at `release`
+   under the new graph because the state no longer exists to sit at.
 
 ## Reverse-recovery audit (`brownfield_capability_change`)
 
@@ -638,6 +681,29 @@ deliverable is the decision and its evidence, not the script):
    starting point).
 
 ### Landed at `build`, both RED-then-GREEN
+
+**Corrected in correction round 1 (Finding B, downgraded from Codex's
+[P1]).** As first written this section proved POC only up to the gate
+target: `poc_target_validation == "done"` confirmed the loader's computed
+target, and `sd_status(...) == "validation"` confirmed the entity parked at
+the terminal-target-approval status — the same shape as Pilot's
+pre-merge-guard assertions. But Pilot's block goes one step further and
+Pilot's did not: it calls `spacedock merge guard pilot-item --verdict passed`
+and asserts the result actually reaches `done`. POC stopped one step short, so
+"a POC item can now reach done" was proven up to the gate target and no
+further. Closed this round: `kc-dev-flow/scripts/profile-contract-loader.test.py`
+now runs the identical `merge guard poc-item --workflow-dir ... --verdict
+passed` call immediately after the existing POC assertions, requires
+`returncode == 0`, and requires `"done" in stdout and "verdict passed" in
+stdout` — the same two assertions already used for pilot-item, applied to
+poc-item. Ran with a one-line temporary `print` on the captured stdout (added
+and reverted; `git diff` on the test file shows only the two new `require()`
+calls, no residual print) to confirm the actual CLI output, not just the
+require passing:
+`finalized: poc-item -> done (verdict passed), archived. State durability:
+pushed to the split-root origin.` The full suite still reports
+`profile contract loader test: route mechanism PASS` / `PASS` with this block
+included — the mechanism is exercised, not asserted from the print alone.
 
 Both checks above are now durable in
 `kc-dev-flow/scripts/profile-contract-loader.test.py`'s "Live Spacedock route
@@ -848,3 +914,20 @@ Independently reproduced every piece of evidence the implementer claimed rather 
 ### Summary
 
 Rebased the single commit onto current origin/main (`b3b0e2ed`), re-verified both owed checks pass on the rebased revision with the pre-existing sibling casing failure isolated and confirmed non-hiding. Found genuine file overlap with a 4-deep open PR stack on `kernel.md`/`choose-work-profile/SKILL.md`, evaluated it against the delivery-base reference's actual lineage test rather than a bare shared-file check, and targeted `main` with the overlap and reasoning recorded in the PR body for the FO/Captain to confirm or override. Opened Draft PR #276 with all four required content elements plus the delivery-base record; left unready pending review.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Finding A closed — the kernel route row gains a CONTENT check, proven by repeating the FO's exact mutation and reverting; entity's own six-copy claim corrected.
+  Added `require("| \`production\` | \`shape -> build -> verify\` |" in kernel, "kernel route table omits the current Production route")` to `scripts/kc-dev-flow-contract-test.py`, right after the existing subtraction-rule loop that already reads the `kernel` variable. Reproduced the FO's exact mutation (edited both `kc-dev-flow/references/kernel.md` and `docs/dev/_mods/kernel.md` to `` | `production` | `shape -> build -> verify -> deploy` | ``, keeping the two byte-identical, confirmed via `diff`): `python3 scripts/kc-dev-flow-contract-test.py` -> `kc-dev-flow contract: kernel route table omits the current Production route`, exit 1. Reverted both files from backups, confirmed `git status --porcelain -- kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md` empty, re-ran -> `kc-dev-flow contract: PASS`, exit 0. Rewrote the entity's "Does anything check that the six agree?" paragraph and the kernel.md line of "Landed change, concretely" to state the corrected count: all 6 of 6 named copies now carry a content check seen to fail on its own mutation (`profile-contract-loader.py`'s already did, via `expected_routes` structural equality — not a byte-parity-only gap; kernel.md's pair is the one that changed, gaining a new check on top of its pre-existing byte-parity check); none rests on byte-parity alone.
+- DONE: Finding B closed — `poc-item` driven to terminal through `merge guard --verdict passed` exactly as `pilot-item`, asserted to reach `done`.
+  Added a `merge guard poc-item --workflow-dir ... --verdict passed` call to `kc-dev-flow/scripts/profile-contract-loader.test.py` immediately after POC's existing validation-target assertions, with the same two `require()`s already used for pilot-item (`returncode == 0`; `"done" in stdout and "verdict passed" in stdout`). `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` -> `profile contract loader test: route mechanism PASS` / `PASS`, exit 0 (not SKIP — the real `spacedock` binary ran). Captured the actual CLI output via a one-line temporary `print` (added, run once, reverted; `git diff` on the test file now shows only the two new `require()` calls): `finalized: poc-item -> done (verdict passed), archived. State durability: pushed to the split-root origin.` Corrected the "Landed at `build`, both RED-then-GREEN" section to record that POC previously stopped at the gate target and now terminalizes identically to Pilot.
+- DONE: Finding C closed — for every file this branch and the landed stack both touched, read the merged result and confirm the stack's new backlog/ideation semantics survive intact.
+  Computed the exact intersection mechanically rather than trusting memory: `comm -12 <(git diff --name-only ef808a91 7bbae216 | sort) <(git diff --name-only a15ab033^ ef808a91 | sort)` (`a15ab033^` is the parent of #267, the stack's first commit; `ef808a91` is #272, the stack's tip and this branch's own base) returned exactly three files, matching the entity's own prior claim with no additions: `docs/dev/_mods/kernel.md`, `kc-dev-flow/references/kernel.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`. Compared each: (1) `kernel.md` (both copies, byte-identical) — read the merged region lines 38-100; the stack's `backlog` exit bar paragraph ("Queue state still has an exit bar...") and its `## Shared boundaries` additions (the size-threshold bullet from #272, the two scaffolding/removal-condition bullets from #271) are all present verbatim and immediately adjacent to this branch's edits (the route table row and the skip-clause caveat sentence); the two topics don't reference or contradict each other — the skip clause bounds which *stages* may be silently skipped, the exit bar governs leaving `backlog`, a queue state neither side's edit touches. (2) `choose-work-profile/SKILL.md` — read lines 18-55; the stack's new paragraph ("Check the shared core's `backlog` exit bar in the same read...") sits between this branch's corrected route table row (line 25, `shape -> build -> verify`, no longer `-> release`) and the pre-existing POC-downscope paragraph, reads coherently, and its "leave `backlog`" language is unaffected by whether Production's *working* route still has a `release` element. No third file in common; the stack's other touched files (`journey-slicing.md`, `pilot-product-slice/build.md`, `pilot-product-slice/shape.md`, `poc-exploration/base.md`, `production/build.md`, `production/shape.md`, `profile-spacedock-route.test.py`) are disjoint from this branch's diff.
+- DONE: Record without fixing — CI-skip of this fix's own proof added as a second victim to `spacedock-route-test-passes-nowhere`'s body; migration sequencing note added to this entity.
+  Appended a paragraph to `docs/dev/.spacedock-state/spacedock-route-test-passes-nowhere.md`'s Problem section naming `profile-contract-loader.test.py`'s "Live Spacedock route mechanism" section as a second victim of the same CI-skip (`shutil.which("spacedock")` finds nothing in `marketplace-parity.yml`) and the same local block (the fail-fast abort at the casing bug), now resolved locally by #268 but still CI-blind — did not touch that entity's frontmatter or otherwise change its `status: backlog`. Added an "Adopter migration" step 5 to this entity naming the sequencing hazard: this item itself sat at `status: release` during its own release-gate attempt-1 (superseded), the exact state this change removes, so a `.spacedock-state` checkout that has pulled this branch's README/ROUTES edit while still reading this entity at `status: release` hits migration step 2's silent-non-dispatchable failure; required order is this item reaching `done` via `merge guard` before such a checkout is treated as authoritative.
+- SKIPPED: Reopening release-authorization prose or the unenforceable skip caveat.
+  Both were explicitly named "closed — do not reopen" in the correction round instructions; left untouched.
+
+### Summary
+
+Closed Findings A, B, and C from correction round 1. A: added a content check on the kernel.md production route row (the entity's kernel.md pair previously rested on byte-parity alone, which cannot catch an identical corruption of both copies), reproduced the FO's exact both-copies mutation going red and reverting clean, and corrected the entity's overclaimed "all six agree" paragraph. B: drove `poc-item` through `merge guard --verdict passed` to `done` in the same landed test block that already does this for `pilot-item`, with the real CLI output captured as evidence. C: mechanically recomputed the file intersection between this branch and the #267/#268/#269/#271/#272 stack (three files, matching the entity's prior claim), and read each merged region to confirm the stack's backlog-exit-bar and shared-boundaries additions survive intact and don't contradict this branch's route-table and skip-clause wording. Recorded the CI-skip's second victim in the sibling entity and the one-time migration-sequencing hazard in this entity, without fixing either. Did not touch the standing constraints (`profile-contract-loader.py` byte-parity, no rebase, no version bump).
