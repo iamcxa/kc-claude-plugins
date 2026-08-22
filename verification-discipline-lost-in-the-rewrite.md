@@ -243,9 +243,10 @@ change carrying this note: a check is evidence only once it has been seen to
 fail; name the falsifier's kind; prefer the cheapest instrument that can fail;
 when one failure shape repeats, change the work, not the wording — plus the
 absolutes rule, now sited in `## Shared boundaries`. Not restored: `an
-instruction that contradicts the governing contract loses`, which had already
-left the kernel before `#249` and has no observed occurrence; and the six
-verification clauses whose subject matter the profile stage contracts now carry.
+instruction that contradicts the governing contract loses`, which `#249` removed
+from `## Authority model` in the same sweep, excluded here on one ground only —
+no observed occurrence; and the six verification clauses whose subject matter the
+profile stage contracts now carry.
 An adopter that vendored `kernel.md` between `kc-dev-flow-v3.0.0` and the release
 carrying this note has been running without those five rules.
 ```
@@ -341,8 +342,9 @@ data, compatibility) applies beyond the vendored-copy parity already gated.
 
 - The whole former `## Outcome discipline` section, and the six verification
   clauses whose subject matter the profile stage contracts now carry.
-- `an instruction that contradicts the governing contract loses` — absent from
-  the kernel already at `e634d3e7^`, no observed occurrence.
+- `an instruction that contradicts the governing contract loses` — present at
+  `e634d3e7^` in `## Authority model` and removed by `#249` like the other five,
+  so it is excluded on one ground only: no observed occurrence.
 - Any standing check that a kernel deletion must carry a `MIGRATION.md` entry.
 - Any standing citation-integrity check. The falsifier in
   `## Acceptance evidence` is run once, by hand, at validation. Making it
@@ -453,14 +455,31 @@ route-table row survived the insertion. The falsifying change: delete any of
 those three phrases while inserting, and the test exits `1` with
 `kernel omits subtraction rule`.
 
-**4. The historical claims in the `MIGRATION.md` entry are true.**
-Check: `git show f228f76f -- kc-dev-flow/references/kernel.md` for the merge,
-`git show e634d3e7 --stat` for the removal, and
-`git grep dispatch_hazard_assignment origin/main` for the retired mechanism.
-These grep history this change did not author; a wrong SHA or a wrong claim
-returns the wrong text or nothing. Already run: `f228f76f` shows the section
-added, `e634d3e7` shows `kernel.md` at 422 changed lines, and
-`dispatch_hazard_assignment` has no match on `origin/main`.
+**4. Every historical assertion the Site 4 `MIGRATION.md` block makes is true.**
+The falsifier set is per sentence, not per block. An earlier version of this
+claim named three commands that between them touched only part of the block, and
+a false sentence survived in the uncovered part — the correction is recorded in
+the stage report. Each assertion below now names the command that covers it. All
+grep history this change did not author, so a wrong SHA or a wrong claim returns
+the wrong text or nothing.
+
+| Assertion in the Site 4 block | Covering command | Result |
+|---|---|---|
+| `#249` removed the `## Verification discipline` section | `git show e634d3e7^:kc-dev-flow/references/kernel.md \| grep -c '^## Verification discipline'` vs the same on `origin/main` | `1` then `0` |
+| `#249` replaced `kernel.md` wholesale | `git show e634d3e7 --stat` | `kernel.md`, 422 changed lines |
+| the absolutes rule was removed from `## Outcome discipline` | `git log --oneline -S "An absolute names its enforcement point" -- kc-dev-flow/references/kernel.md` | two commits; `e634d3e7` is the removal |
+| the four named clauses were merged, then removed | `git show f228f76f -- kc-dev-flow/references/kernel.md` | shows the section added by `#156` |
+| `MIGRATION.md` did not record the removal | `grep -c 'Verification discipline' kc-dev-flow/MIGRATION.md` | `0` |
+| `#249`'s body did not record it either | `gh pr view 249 --json body -q .body \| grep -ic 'verification discipline\|absolute'` | `0` |
+| `an instruction that contradicts the governing contract loses` was removed by `#249`, not earlier | `git show e634d3e7^:kc-dev-flow/references/kernel.md \| grep -n 'contradicts the governing contract'` and `git log --oneline -S 'contradicts the governing contract' -- kc-dev-flow/references/kernel.md` | line 29 under `## Authority model`; two commits, `f228f76f` added and `e634d3e7` removed |
+| adopters were exposed from `kc-dev-flow-v3.0.0` onward | `git tag --contains e634d3e7 \| grep '^kc-dev-flow-'` | `kc-dev-flow-v3.0.0`, the only one |
+| the restored bullet keeps no reference to a retired mechanism | `git grep dispatch_hazard_assignment origin/main` | no match |
+
+One assertion in the block has **no** command behind it: that the six unrestored
+verification clauses have their "subject matter" carried by the profile stage
+contracts. That is a reading judgment about whether two differently worded texts
+cover the same ground, and no grep decides it. A reviewer settles it at
+validation, or the phrase is dropped from the block.
 
 **5. The compression is smaller than the verbatim alternative it replaces.**
 Check: build both candidate texts and count. Run — see `## Measurement`. The
@@ -477,8 +496,9 @@ runaway stop number.
   behaviour, and this change is measured the same way. No check here reaches
   worker behaviour.
 - **That the absolutes rule is enforced.** It is not. `absolutes.registry` and
-  its checker were deleted by `#249` and are not restored; `git grep absolutes
-  origin/main` finds them only in `CHANGELOG.md` and two retired plan documents.
+  its checker were deleted by `#249` and are not restored; `git grep -l absolutes
+  origin/main` returns four files — `kc-dev-flow/CHANGELOG.md` and three retired
+  plan documents under `docs/plans/` — and no runnable check.
   The rule returns as authoring discipline only — which its own text says, and
   which is stated here so the gate is not reading a stronger claim than the
   change makes.
@@ -589,4 +609,9 @@ fire this item's first `promote_when` clause.
 
 - DONE: (post-report correction) the Measurement section's own absolute was checked and bounded.
   Claimed "the first addition since #249 to state its cost at all"; `git log --format=%B -1` over the four intervening kernel commits (#267, #271, #272, #276) showed #272 records `kernel.md` dropping 47 words, so the sentence is now bounded to "weighed once in four changes". Site 4's MIGRATION heading is also recorded as the single line that will land, so every one of the four blocks is byte-diffable against the patch.
-
+- DONE: (FO review, finding 1) a false cause inside adopter-facing text was removed.
+  Wrong sentence, in both the Site 4 `MIGRATION.md` block and the second `### Non-goals` bullet: `an instruction that contradicts the governing contract loses` "had already left the kernel before `#249`". Falsified by `git show e634d3e7^:kc-dev-flow/references/kernel.md | grep -n "contradicts the governing contract"` -> hit at line 29 under `## Authority model`, and `git log --oneline -S "contradicts the governing contract" -- kc-dev-flow/references/kernel.md` -> `f228f76f` added, `e634d3e7` removed. My original search was scoped to the `## Verification discipline` span, which is why it missed a clause sited in `## Authority model` — the same sampling error the restored `name the falsifier's kind` clause exists to prevent. Bounded replacement: `#249` removed it in the same sweep, and it stays excluded on one ground only, no observed occurrence. The exclusion itself is unchanged.
+- DONE: (FO review, finding 2) acceptance claim 4's falsifier set did not cover the claim's own scope.
+  The three named commands touched the merge, the removal stat, and the retired mechanism — none touched the sentence in finding 1, which is exactly how it survived. Claim 4 is now a per-sentence coverage table: nine assertions, each with the command that covers it and the result it returned, including the `git show ... | grep` and `git log -S` pair above. Four assertions not previously covered were run for the first time and all hold: `gh pr view 249` mentions the removal 0 times, `git tag --contains e634d3e7` returns `kc-dev-flow-v3.0.0` as the only kc-dev-flow tag, the section count goes 1 -> 0 across the commit, and `git log -S` puts the absolutes-rule removal at `e634d3e7`. One assertion is now named as having no command at all — that the six unrestored clauses' subject matter is carried by the profile stage contracts, which is a reading judgment.
+- DONE: (FO review, finding 3) a miscount in the unchecked-claims list was corrected.
+  Wrong: `git grep absolutes origin/main` finds them "in `CHANGELOG.md` and two retired plan documents". `git grep -l absolutes origin/main` returns four files — `kc-dev-flow/CHANGELOG.md` plus three under `docs/plans/`. Corrected to three, and the bullet now states the count as file names rather than a bare number.
