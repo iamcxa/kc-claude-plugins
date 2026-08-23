@@ -99,3 +99,21 @@ release]` throws `stale route for production` on next load. An adopter that
 does not upgrade keeps working exactly as today (the old graph, the old
 ROUTES, the same stranding risk this change closes) — this is opt-in per
 adopter at their next `kc-dev-flow` tag bump, not a forced break.
+
+## 2026-08-18 — the shared core's verification discipline was dropped, and this note is late
+
+`e634d3e7` (`#249`) replaced `kernel.md` wholesale and removed its
+`## Verification discipline` section along with the absolutes rule in
+`## Outcome discipline`. That removal was collateral: neither this file nor
+`#249`'s body recorded it, so an adopter bumping across that tag lost merged
+rules with no signal. Four of those clauses are restored, compressed, by the
+change carrying this note: a check is evidence only once it has been seen to
+fail; name the falsifier's kind; prefer the cheapest instrument that can fail;
+when one failure shape repeats, change the work, not the wording — plus the
+absolutes rule, now sited in `## Shared boundaries`. Not restored: `an
+instruction that contradicts the governing contract loses`, which `#249` removed
+from `## Authority model` in the same sweep, excluded here on one ground only —
+no observed occurrence; and the six verification clauses whose subject matter the
+profile stage contracts now carry.
+An adopter that vendored `kernel.md` between `kc-dev-flow-v3.0.0` and the release
+carrying this note has been running without those five rules.

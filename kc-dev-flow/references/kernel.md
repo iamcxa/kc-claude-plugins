@@ -114,6 +114,47 @@ as not ready to leave `backlog` when it cannot ask.
   one. LOC and file counts are diagnostic signals, never pass/fail gates. When
   no scope drift is found, create no receipt or commentary.
 
+- **An absolute names its enforcement point or becomes a bounded claim.**
+  "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written
+  into a reference, a code comment, or a commit message, names the mechanism
+  that makes it true or is rewritten to what the artifact supports. An
+  enforcement point is a permission check, a schema constraint, an unreachable
+  branch, or a fail-closed check — not "I checked", and not its author. This is
+  an authoring discipline, not an assertion that an automatic gate exists.
+  Classify by falsifier, not by grammatical form: if contrary execution would
+  make the sentence false, it is factual and needs an enforcement point or
+  bounded wording; if contrary execution instead violates a duty assigned to a
+  named authority, it is a prohibition.
+
+## Verification discipline
+
+Shared boundaries govern the claim. These govern the **instrument** — the check,
+the reviewer, the instruction — because an instrument that cannot fail reports
+the same way whether or not the thing it watches is broken.
+
+- **A check is evidence only once it has been seen to fail.** Run it against a
+  case it must flag before running it against the case in question; its silence
+  carries information only after you have heard it speak. This binds the check,
+  not only the artifact: a round that cannot say what would have reddened its own
+  instrument has measured nothing.
+- **Name the falsifier's kind.** `refusal` — drive the system and read its
+  rejection. `mutation` — change the producer and observe what breaks; this is
+  the kind that reaches a consumer silently duplicating a producer's derivation
+  instead of consuming its output. `existence-disproof` — show that no value
+  satisfies both requirements, which no assertion over sampled inputs
+  establishes. Treating all three as "write an assertion" lets two appear covered
+  when they are not.
+- **Prefer the cheapest instrument that can fail.** Reserve an expensive one — an
+  adversarial reviewer, a fresh-context panel — for claims no cheap check can
+  settle. An expensive instrument whose output is a work order for a cheap one
+  was misapplied, and that cost is paid every round it repeats.
+- **When one failure shape repeats, change the work, not the wording.** At the
+  second occurrence, restructure so the reproducer is eliminated; a stronger
+  instruction, another case against the same reproducer, or an unchanged
+  deliverable shape do not count. Cheapness hides this: a tolerance sized for
+  expensive rounds does not fire on cheap ones, so the trigger is repetition of
+  shape, not spend.
+
 ## Communication
 
 Lead with the decision or result. Retain only evidence that changes confidence,
