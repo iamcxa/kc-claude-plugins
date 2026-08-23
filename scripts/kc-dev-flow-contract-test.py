@@ -351,6 +351,7 @@ for phrase in [
     "compare added files, dependencies, abstractions, tests, and comments",
     "A comment that earns its place still passes a necessity test",
     "cut restatement of adjacent code or prose translation of a signature",
+    "This is not a size target; do not delete for deletion's sake",
     "choose one explanatory home; the others state the invariant and point to that home",
     "reports both the blocks it cut and the candidates it kept, with the reason for each",
     "LOC and file counts are diagnostic signals, never pass/fail gates",
