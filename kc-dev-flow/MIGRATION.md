@@ -15,7 +15,7 @@ the installed package or silently run the 2.x workflow.
 | A v1 or prose profile choice may inform work without driving a loader. | A hash-bound `kc-dev-flow-work-profile/v2` receipt is required before the first working stage. |
 | Fresh EM or cross-model review may act as a general gate. | Named owners and deterministic checks hold scoped gates; Chief Engineer and Science Officer load only on their triggers. |
 | Work-control prose may combine review and delivery controls. | Build emits one proportional typed observation; delivery and local controls remain with their providers. |
-| Production release may share the normal terminal path. | Production has an explicit `release` stage; POC and Pilot skip it without placeholder work. |
+| Production release may share the normal terminal path. | Every profile terminalizes through the same states; Production adds a release-authorization boundary inside `validation` rather than a `release` stage. |
 
 ## Safe cutover
 

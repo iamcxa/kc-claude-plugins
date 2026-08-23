@@ -57,7 +57,7 @@ not the fallback.
 | `shape` / runtime `ideation` | Record `none` or `update`. Name the described surface or routed claim, the approved replacement when applicable, and the check that will validate the classification. |
 | `build` / runtime `implementation` | Apply the approved context change with the behavior. A selected route without `shape` performs the same classification before its first edit and may document only the already-approved change. If the stale claim extends beyond that scope, record it and return the slice to the task's approving authority for reclassification instead of inventing a replacement. |
 | `prove`, `verify-deliver`, or `verify` / runtime `validation` | Execute the recorded `planned_check` against fresh behavior or runtime evidence. For `update`, check the landed context claim against the delivered behavior. For `none`, confirm that the delivered behavior changes no claim in the bound authority, starting from the named surface and not limited to it. Presence of changed prose is not proof. Record the evidence or return the slice when the authority remains stale or contradicts delivery. |
-| `release` / `done` | No new analysis. For every classification, the existing receipt must contain fresh `validation_evidence`; for `update`, it must also point to the landed context change. |
+| `done` | No new analysis. For every classification, the existing receipt must contain fresh `validation_evidence`; for `update`, it must also point to the landed context change. |
 
 Repositories may store the receipt in the work item or stage report. This mod does not
 prescribe a filename, provider, or extra state store.

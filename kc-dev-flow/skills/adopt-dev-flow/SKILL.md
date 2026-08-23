@@ -36,10 +36,14 @@ repair the cheapest compatible seam.
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
-   POC `implementation -> validation`; Pilot adds `ideation`; Production adds
-   `release`. Backlog and done remain non-working states. Preserve an extra
-   local terminal state only through an explicit mapping; it does not silently
-   join every profile route.
+   POC `implementation -> validation`; Pilot and Production add `ideation`. No
+   profile adds a state the others skip, so a runtime that owns one stage graph
+   per workflow cannot strand an item outside its declared route. Production's
+   release authorization is a terminal-approval boundary inside `validation`,
+   not a state: its gate approval targets the terminal state and the delivery
+   provider's merge verdict is the sole terminal consumer. Backlog and done
+   remain non-working states. Preserve an extra local terminal state only
+   through an explicit mapping; it does not silently join every profile route.
 5. Make each working stage a small loader invocation or pointer. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes
