@@ -10,6 +10,18 @@ worktree:
 issue:
 pr:
 design:
+gates:
+    version: 1
+    records:
+        - id: gate:6zjg1gnq3dmtk2dsny8k4m3s:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:6zjg1gnq3dmtk2dsny8k4m3s-backlog-1
+              briefing:
+                id: briefing:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-1:revision-1
+                digest: sha256:eff8e8fbbb89753e7a6949b3eafe2a0b027761b595346e51a763cf906eb088a1
+                request-digest: sha256:095de7b96f5a07ccf7a6fbbd3ac0314be51f543ea3bccb69aabc8ed2e47d93d2
+                room-ref: ./monorepo-ci-test-strength/review/backlog/briefing-1
 ---
 
 ## Problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-1:revision-1",
+  "question": "Approve entering ideation with the scope re-measured against today's tree rather than the seed's month-old table — or hold at backlog? The seed's central claim has been overtaken in part: the e2e-pipeline half is done, and what is left is kc-nightwatch's 49 test files with no invocation path plus the question of which lane, if any, should become required.",
+  "artifacts": [
+    {
+      "id": "artifact:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ea41d4fb4602720b1ba136f203025c9db5728920/monorepo-ci-test-strength.md",
+      "rev": "sha256:9136e3bc833c524949a3e5482acb0a19bb5906bcd4e01f9897085e986cdf05c4",
+      "mediaType": "text/markdown",
+      "summary": "Committed seed reviewed at the initial stage, and re-measured today against origin/main by the First Officer. The seed was filed 2026-07-26 against origin/main at ccaf028 and its table has drifted: the repository now carries 15 workflow files, not 6; e2e-pipeline is named by 2 of them, not 0; npm test appears in workflows twice, not zero times. e2e-pipeline-tests.yml runs the whole suite on pull_request and on push to main, path-filtered to e2e-pipeline, and has been succeeding since 2026-08-19 — its own header records that wiring it found four gaps, three of which were author-machine assumptions. What has not moved: kc-nightwatch still has 49 test files, zero workflows naming it, and no package.json, so it has no invocation path at all; and branch protection on main still requires exactly one status context, version parity, read live from the API. The seed's value AC candidate — reintroduce a known-good defect and show CI goes red — is unaffected by the drift and is the right bar. Two adjacent backlog items look overtaken and are retirement candidates for the Captain rather than work: e2e-pipeline-suite-has-no-ci-job, whose subject is the job that now exists, and tracked-tests-hardcode-another-repo, whose named corpus defect the new workflow header records as fixed by a skip-with-reason plus an E2E_CORPUS_ROOT override."
+    }
+  ]
+}
