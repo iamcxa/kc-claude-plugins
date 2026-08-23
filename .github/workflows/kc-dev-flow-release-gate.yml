@@ -30,7 +30,9 @@ env:
 jobs:
   multi-profile:
     name: multi-profile route gate (live Spacedock)
-    if: true  # TEMP: prove the CI path runs; reverted before review
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.head_ref, 'release-please--branches--main')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
