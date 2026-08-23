@@ -111,8 +111,14 @@ as not ready to leave `backlog` when it cannot ask.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
-  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
-  no scope drift is found, create no receipt or commentary.
+  one. A comment that earns its place still passes a necessity test: keep each
+  fact a reader cannot re-derive, and cut restatement of adjacent code or prose
+  translation of a signature. This is not a size target; do not delete for
+  deletion's sake. When the same fact appears in more than one artifact, choose
+  one explanatory home; the others state the invariant and point to that home.
+  A comment pass reports both the blocks it cut and the candidates it kept, with
+  the reason for each. LOC and file counts are diagnostic signals, never
+  pass/fail gates. When no scope drift is found, create no receipt or commentary.
 
 - **An absolute names its enforcement point or becomes a bounded claim.**
   "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written
