@@ -407,7 +407,7 @@ Before → after:
 - Behavior: <what the user saw before and will see after>
 Role: <name / none / unknown / unchanged> — default question: <question / no new question>.
 Chosen because: <recurring question and separate occasions, or why the evidence cannot name a vacancy>
-Validation: <the fresh command or isolated A/B and its exact result>
+Validation: <for each arm: ran / not run; outcome delivered / failed; marker emitted / omitted>
 <Close-out block, when the status-pull remedy was selected or a governing rule requires it>
 ```
 
@@ -415,7 +415,8 @@ Surface every dispatched result in this report. In particular, `none` or `unknow
 reviewer is a result, not permission to omit the Role slot. Do not issue a completion claim while a
 reviewer result remains only in an internal message. If no rule changed, the Decision and
 Before → after slots still say why. The close-out block remains conditional: this skill does not
-install it merely by running an unrelated rules review.
+install it merely by running an unrelated rules review. Preserve the Validation distinctions: a
+baseline that ran and omitted a marker is evidence, not a baseline that did not run.
 
 ## Optional route — propagate across harnesses
 
