@@ -22,6 +22,10 @@ gates:
                 digest: sha256:eff8e8fbbb89753e7a6949b3eafe2a0b027761b595346e51a763cf906eb088a1
                 request-digest: sha256:095de7b96f5a07ccf7a6fbbd3ac0314be51f543ea3bccb69aabc8ed2e47d93d2
                 room-ref: ./monorepo-ci-test-strength/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-23T04:20:09.11807Z"
+                reason: The presented recommendation rested on kc-nightwatch's 49 unrunnable test files being the residual work. The Captain states kc-nightwatch is deprecated, which removes that residual and leaves a materially smaller question, so the open attempt is stale before decision and a successor will be prepared at the re-scoped shape.
 ---
 
 ## Problem
