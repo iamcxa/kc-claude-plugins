@@ -387,6 +387,36 @@ not belong in the file.
 Tell the user plainly that a rule file is read at session start, so open sessions keep the old
 rules until they restart.
 
+## Completion gate — required final report
+
+The script finishing, a rule being applied, or a dispatched reviewer returning does not complete
+the run. Complete it only after one user-facing report fills every slot below. Keep the evidence in
+the run artifacts, but never omit a slot because the user saw an earlier message or the result is
+`none`.
+
+```markdown
+Verdict: <what the evidence supports, including the coverage limit>
+Decision:
+- Evidence: <friction × firing, or the incident classification>
+- Recommendation or accepted change: <one decision>
+- Cost: <what gets worse>
+- Wrong-choice failure: <what breaks if this is wrong>
+- Reversal: <how to undo it and at what cost>
+Before → after:
+- Rule: <the exact semantic change, or "no change" and why>
+- Behavior: <what the user saw before and will see after>
+Role: <name / none / unknown / unchanged> — default question: <question / no new question>.
+Chosen because: <recurring question and separate occasions, or why the evidence cannot name a vacancy>
+Validation: <the fresh command or isolated A/B and its exact result>
+<Close-out block, when the status-pull remedy was selected or a governing rule requires it>
+```
+
+Surface every dispatched result in this report. In particular, `none` or `unknown` from the role
+reviewer is a result, not permission to omit the Role slot. Do not issue a completion claim while a
+reviewer result remains only in an internal message. If no rule changed, the Decision and
+Before → after slots still say why. The close-out block remains conditional: this skill does not
+install it merely by running an unrelated rules review.
+
 ## Optional route — propagate across harnesses
 
 **Offer this; never do it silently.** After a user-level `~/.claude/CLAUDE.md` change, ask whether
