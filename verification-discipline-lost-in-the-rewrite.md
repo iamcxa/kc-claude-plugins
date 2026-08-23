@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-verification-discipline-lost-in-the-rewrite
 issue: 154
-pr: "#279"
+pr: pr-merge:279
 mod-block:
 gates:
     version: 1
