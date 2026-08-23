@@ -1,13 +1,13 @@
 ---
 id: 9ydm2mmakce2r49v40q98377
 title: The 3.0 rewrite dropped four merged verification rules and no migration note said so
-status: validation
+status: done
 source: found 2026-08-21 while answering the Captain's original question about issue #154, whose maintainer reply states these clauses had already shipped; they had, and then they were removed
 product: kc-dev-flow
 sprint:
 started: 2026-08-22T09:54:50Z
-completed:
-verdict:
+completed: 2026-08-23T04:06:14Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-verification-discipline-lost-in-the-rewrite
 issue: 154
 pr: pr-merge:279
@@ -116,7 +116,8 @@ gates:
                 reason: 'Captain approved release readiness in chat for the exact delivery revision d55d6a4d, Draft PR #279. Direction and evidence accepted: shipped bytes byte-identical to the ideation-approved text, all four sites diffing empty against fresh extracts across three fresh-reviewer cycles, a re-earned tamper-and-restore seen-to-fail proof, every figure recounted from the files, the loader confirmed at the exact revision to emit the restored section, and the without-it audit keeping all five clauses on named external occurrences. Two residuals accepted and recorded: the byte-parity class is not closed and is stated as a limit rather than a guarantee after two withdrawn wording attempts, and nothing standing keeps the restored words in place. The Captain was told that no fresh reviewer ran on the final one-sentence correction and that the First Officer verified it by diff.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-23T04:06:14Z
 ---
 
 ## Problem
