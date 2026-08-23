@@ -32,6 +32,14 @@ gates:
                 digest: sha256:fa38827b3ef341dbd231454f2721ff4332a4e76d3ea376f0edee386345d7307e
                 request-digest: sha256:7c94d703fa888752dd842f5b9600b2760b6b4ce4a61c5604b810e62ad86004a6
                 room-ref: ./monorepo-ci-test-strength/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:6zjg1gnq3dmtk2dsny8k4m3s:backlog:2
+                briefing: briefing:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-23T04:30:21.702219Z"
+                decision: hold
+                reason: 'Captain paused the item in chat: the remaining scope does not earn a route, and kc-hyperfocus is itself paused and unpublished-in-practice, which removes the only suite the re-scoped item was to wire. What remains before this could be reopened: a plugin whose tests are unrun AND that is actively invested in. On today''s measurement no such plugin exists, so reopening needs a change in what the repository is investing in, not more measurement.'
 ---
 
 ## Problem
