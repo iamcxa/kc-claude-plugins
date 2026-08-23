@@ -88,7 +88,7 @@ while IFS= read -r f; do
        elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join("\n"))
        else "" end) as $t
     | select(($t|length) > 0)
-    | "\(.timestamp)\t\($P)\t\($t | gsub("\n"; " "))"
+    | "\(.timestamp)\t\($P)\t\($t | gsub("[\t\r\n]"; " "))"
   ' "$f" 2>/dev/null
 done < "$WORK/sessions.txt" | sort > "$WORK/all-user.txt"
 
@@ -106,6 +106,10 @@ cat > "$WORK/drop.awk" <<'AWK'
 function agent_wrote(body) {
   if (body ~ /<system-reminder>|<task-notification>|<system_instruction>/) return 1
   if (body ~ /<command-name>|<local-command-stdout>|tool_use_id/) return 1
+  if (body ~ /^This session is being continued from a previous conversation/) return 1
+  if (body ~ /^#? ?Fresh read-only (review|final consistency review)/) return 1
+  if (body ~ /^# Round [0-9]+ (baseline|green|pressure)/) return 1
+  if (body ~ /^Disposition of your only blocker:/) return 1
   if (body ~ /^Review this change for security vulnerabilities/) return 1
   if (body ~ /^Respond with exactly/) return 1
   # Narrow on purpose: "You are still ignoring the comment rule" is a real correction,
@@ -154,11 +158,15 @@ while IFS= read -r f; do
     | select((.isMeta // false) | not)
     | . as $r | (.message.content) as $c
     | (if ($c|type)=="string" then $c
-       elif ($c|type)=="array" then ([$c[] | select(.type=="text") | .text] | join(" "))
+       elif ($c|type)=="array" then ([$c[]
+         | if .type=="text" then .text
+           elif .type=="tool_use" then "[tool use: \(.name // "unknown")]"
+           else empty end
+       ] | join(" "))
        else "" end) as $t
     | select(($t|length) > 0)
-    | ($t | gsub("\n"; " ")) as $flat
-    | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat[0:600])"
+    | ($t | gsub("[\t\r\n]"; " ")) as $flat
+    | "\($SID)\t\(.timestamp)\t\($r.type)\t\($flat|length)\t\($flat)"
   ' "$f" 2>/dev/null
 # The session key is the first field and the timestamp the second, so a plain sort
 # already groups by session and orders within it. That grouping is the point: sorting
@@ -196,7 +204,7 @@ fi
 # many turns the user spent repairing you, so it counts turns; counting occurrences
 # there once produced a 122%-of-turns row. Firing asks how many times a marker was
 # emitted, so it counts occurrences and sees both markers on a shared line.
-count_turns() { local n; n=$(grep -ciE -e "$2" "$1" 2>/dev/null) || true; echo "$(( ${n:-0} ))"; }
+count_turns() { local n; n=$(cut -f3- "$1" | grep -ciE -e "$2" 2>/dev/null) || true; echo "$(( ${n:-0} ))"; }
 count_hits()  { local n; n=$(grep -oiE -e "$2" "$1" 2>/dev/null | wc -l) || true; echo "$(( ${n:-0} ))"; }
 
 printf '\n%s\n' "=== volume since $SINCE ==="
@@ -232,19 +240,42 @@ done < "$PATTERNS"
   "(none declared — add 'firing<TAB>label<TAB>regex' rows for each rule with an observable marker)"
 printf '%s\n' "note: a marker QUOTED without being obeyed still counts here — an agent" \
   "      reading a rule aloud looks identical to one following it. Sample the hits." \
-  "      Counts are prose only. A marker inside a shell command is the audit typing" \
-  "      about the rule — its own setup work — and is reported separately, never added."
+  "      Counts are prose only. A marker inside a tool command may be audit setup or" \
+  "      the governed action; it is sampled separately and never added automatically."
 # The instruction to read the hits was unfollowable for this column: the stream it
 # counts lived in the work directory and was deleted on exit, so a finished run left
 # the number and no way to check it. Samples are kept instead of the whole stream —
 # a month of assistant output is half a million lines.
 if [ "$FIRED" = 1 ]; then
-  : > "$RUNDIR/firing-hits.txt"
+  : > "$RUNDIR/firing-hits.txt" || { echo "cannot write firing evidence" >&2; exit 1; }
   while IFS=$'\t' read -r kind label re; do
     [ "$kind" = "firing" ] || continue
-    { printf -- '--- %s\n' "$label"
+    if ! { printf -- '--- %s\n' "$label"
       grep -iE -e "$re" "$WORK/prose.txt" 2>/dev/null | head -40 | cut -c1-400
-      printf '\n'; } >> "$RUNDIR/firing-hits.txt"
+      printf '\n--- %s (tool commands, excluded from prose count)\n' "$label"
+      # Count and select with the same grep ERE engine. Re-evaluating the pattern
+      # in awk can accept different syntax and leave a counted hit with no retained
+      # evidence. Stream instead of duplicating every full command in a temporary
+      # file, and make operational grep/write failures fail the run.
+      tool_status=0
+      grep -iE -e "$re" "$WORK/assistant.txt" 2>/dev/null | {
+        tool_seen=0
+        while IFS= read -r hit; do
+          case "$hit" in TOOL\ *) ;; *) continue ;; esac
+          [ "$tool_seen" -lt 40 ] || continue
+          tool_seen=$((tool_seen + 1))
+        prefix=$(printf '%s\n' "$hit" | cut -c1-220)
+        matched=$(printf '%s\n' "$hit" | grep -oiE -e "$re" 2>/dev/null \
+          | head -3 | paste -sd '|' -)
+        if [ "${#hit}" -gt 220 ]; then prefix="$prefix ..."; fi
+        printf '%s [matched: %s]\n' "$prefix" "$matched"
+        done
+      } || tool_status=$?
+      case "$tool_status" in 0|1) ;; *) echo "cannot select tool evidence for: $label" >&2; exit 1 ;; esac
+      printf '\n'; } >> "$RUNDIR/firing-hits.txt"; then
+      echo "cannot retain firing evidence for: $label" >&2
+      exit 1
+    fi
   done < "$PATTERNS"
   printf 'up to 40 hits per firing row: %s\n' "$RUNDIR/firing-hits.txt"
 fi
@@ -259,19 +290,53 @@ while IFS=$'\t' read -r kind label re; do
 done < "$PATTERNS"
 [ "$INC" = 1 ] || printf '%s\n' "(none declared)"
 if [ "$INC" = 1 ]; then
-  : > "$RUNDIR/incidents.txt"
+  : > "$RUNDIR/incidents.txt" || { echo "cannot write incident evidence" >&2; exit 1; }
+  # Give each filtered user turn its same-session predecessor once. Pattern matching
+  # happens below with grep, the same ERE engine used by count_turns.
+  awk -F'\t' '
+    $1!=sid { sid=$1; prev="" }
+    $3=="assistant" { prev=$5; next }
+    $3=="user" { print ++user "\t" $2 "\t" prev "\t" $5 }
+  ' "$WORK/stream.txt" > "$WORK/user-context.tsv"
   while IFS=$'\t' read -r kind label re; do
     case "$kind" in incident|codify) ;; *) continue ;; esac
-    awk -F'\t' -v RE="$re" -v LABEL="$label" '
-      $1!=sid { sid=$1; prev="" }
-      $3=="assistant" { prev=$5; next }
-      $3=="user" && tolower($5) ~ tolower(RE) {
+    match_status=0
+    cut -f4- "$WORK/user-context.tsv" | grep -iE -e "$re" 2>/dev/null \
+      > "$WORK/matched-user-text.txt" || match_status=$?
+    case "$match_status" in 0|1) ;; *) echo "cannot select incident evidence for: $label" >&2; exit 1 ;; esac
+    : > "$WORK/matched-user-evidence.tsv"
+    while IFS= read -r text; do
+      matched=$(printf '%s\n' "$text" | grep -oiE -e "$re" 2>/dev/null \
+        | head -3 | paste -sd '|' -)
+      printf '%s\t%s\n' "$text" "$matched"
+    done < "$WORK/matched-user-text.txt" > "$WORK/matched-user-evidence.tsv" \
+      || { echo "cannot prepare incident evidence for: $label" >&2; exit 1; }
+    if ! awk -F'\t' -v LABEL="$label" '
+      NR==FNR { matched[$1]=$2; next }
+      $4 in matched {
+        prefix=substr($4,1,220) ($4!="" && length($4)>220 ? " ..." : "")
         print "--- " LABEL " @ " $2
-        print "  BEFORE (agent, same session): " (prev=="" ? "(nothing in this session)" : substr(prev,1,300))
-        print "  THEN  (user):   " substr($5,1,300)
+        print "  BEFORE (agent, same session): " ($3=="" ? "(nothing in this session)" : substr($3,1,300))
+        print "  THEN  (user, matched context):   " prefix " [matched: " matched[$4] "]"
         print ""
-      }' "$WORK/stream.txt" >> "$RUNDIR/incidents.txt"
+      }' "$WORK/matched-user-evidence.tsv" "$WORK/user-context.tsv" >> "$RUNDIR/incidents.txt"; then
+      echo "cannot retain incident evidence for: $label" >&2
+      exit 1
+    fi
   done < "$PATTERNS"
+  expected_pairs=0
+  while IFS=$'\t' read -r kind label re; do
+    case "$kind" in incident|codify) ;; *) continue ;; esac
+    n=$(count_turns "$WORK/human.txt" "$re")
+    expected_pairs=$((expected_pairs + n))
+  done < "$PATTERNS"
+  retained_pairs=$(grep -c '^--- ' "$RUNDIR/incidents.txt" 2>/dev/null || true)
+  retained_pairs=${retained_pairs:-0}
+  if [ "$retained_pairs" != "$expected_pairs" ]; then
+    echo "incident evidence mismatch: counted $expected_pairs turns but retained $retained_pairs pairs" >&2
+    exit 1
+  fi
+  printf 'retained incident/codification pairs: %s/%s\n' "$retained_pairs" "$expected_pairs"
   printf 'matched incidents with the turn before them: %s\n' "$RUNDIR/incidents.txt"
 fi
 printf '%s\n' "note: these are CANDIDATES, not counts. A blind spot leaves no friction — the" \

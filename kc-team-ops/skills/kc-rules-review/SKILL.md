@@ -79,7 +79,9 @@ against. Three different faults, three healthy-looking numbers, and a fallback t
 would have caught none of them.
 
 1. Run the pattern. Cheap, whole corpus, every rule that has a candidate marker.
-2. **Open up to ten hits per row** from `firing-hits.txt` before the number is allowed anywhere.
+2. **Open up to ten prose hits per row** from `firing-hits.txt` before the number is allowed
+   anywhere. When the report shows tool-command hits, sample that retained section too: a tool hit
+   may be audit setup or the governed action itself, such as a pull-request body.
 3. Mostly genuine → keep the count and carry on.
 4. Mostly the agent quoting the rule, discussing it, or typing it into a command → **discard the number** and measure that rule by reading instead.
 
@@ -146,7 +148,10 @@ and know that the three columns hand you three different qualities of evidence:
 
 - `incidents.txt` — the matched turns, each with the assistant turn before it. Curated.
 - `human-turns.tsv` — **every** human turn in the window, not the matched ones. Re-grep it yourself.
-- `firing-hits.txt` — up to forty prose hits per firing row, each cut at 400 characters. Hits inside shell commands are excluded here and counted separately in the report, because a marker in a command is the audit typing about the rule rather than obeying it.
+- `firing-hits.txt` — up to forty prose hits and forty excluded tool-command hits per firing row.
+  Tool hits retain a bounded command prefix plus the exact matched text. They never enter the prose
+  firing count; they are kept for classification because a command marker can be audit setup or the
+  governed action itself, such as text inside a pull-request body.
 
 The third file exists because this instruction was once unfollowable for the column it matters most
 to: the assistant stream lived in a work directory that was deleted on exit, so a finished run left
@@ -381,6 +386,37 @@ not belong in the file.
 
 Tell the user plainly that a rule file is read at session start, so open sessions keep the old
 rules until they restart.
+
+## Completion gate — required final report
+
+The script finishing, a rule being applied, or a dispatched reviewer returning does not complete
+the run. Complete it only after one user-facing report fills every slot below. Keep the evidence in
+the run artifacts, but never omit a slot because the user saw an earlier message or the result is
+`none`.
+
+```markdown
+Verdict: <what the evidence supports, including the coverage limit>
+Decision:
+- Evidence: <friction × firing, or the incident classification>
+- Recommendation or accepted change: <one decision>
+- Cost: <what gets worse>
+- Wrong-choice failure: <what breaks if this is wrong>
+- Reversal: <how to undo it and at what cost>
+Before → after:
+- Rule: <the exact semantic change, or "no change" and why>
+- Behavior: <what the user saw before and will see after>
+Role: <name / none / unknown / unchanged> — default question: <question / no new question>.
+Chosen because: <recurring question and separate occasions, or why the evidence cannot name a vacancy>
+Validation: <for each arm: ran / not run; outcome delivered / failed; marker emitted / omitted>
+<Close-out block, when the status-pull remedy was selected or a governing rule requires it>
+```
+
+Surface every dispatched result in this report. In particular, `none` or `unknown` from the role
+reviewer is a result, not permission to omit the Role slot. Do not issue a completion claim while a
+reviewer result remains only in an internal message. If no rule changed, the Decision and
+Before → after slots still say why. The close-out block remains conditional: this skill does not
+install it merely by running an unrelated rules review. Preserve the Validation distinctions: a
+baseline that ran and omitted a marker is evidence, not a baseline that did not run.
 
 ## Optional route — propagate across harnesses
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# The incident report pairs a user turn with the assistant turn before it. With
-# several sessions running at once — the normal case here — a global sort by time
-# puts another session's reply in that slot, which turns a follow-through failure
-# into a blind spot: the exact two the classification table exists to separate.
+# Regression coverage for the evidence paths behind kc-rules-review: same-session
+# incident pairing, user-population filtering, full-turn incident retention, and
+# reviewable samples for markers excluded from prose firing counts.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
@@ -34,7 +33,12 @@ P2="$WORK/home2/projects/proj"; mkdir -p "$P2"
 { turn 2026-08-10T10:00:00Z user "You are a read-only reviewer. Do not edit files."
   turn 2026-08-10T10:01:00Z user "You are still ignoring the comment rule"
   turn 2026-08-10T10:02:00Z user "Respond with exactly: OK"
-  turn 2026-08-10T10:03:00Z user "這個檔案沒有會怎樣"; } > "$P2/c.jsonl"
+  turn 2026-08-10T10:03:00Z user "這個檔案沒有會怎樣"
+  turn 2026-08-10T10:04:00Z user "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion."
+  turn 2026-08-10T10:05:00Z user "# Fresh read-only review: inspect only these files"
+  turn 2026-08-10T10:06:00Z user "Fresh read-only final consistency review. Return APPROVE or REVISE."
+  turn 2026-08-10T10:07:00Z user "# Round 3 baseline pressure"
+  turn 2026-08-10T10:08:00Z user "Disposition of your only blocker: host verification confirms it."; } > "$P2/c.jsonl"
 
 printf 'friction	anything	.
 ' > "$WORK/p2.tsv"
@@ -48,6 +52,11 @@ check() { # description, pattern, expected-count
 }
 check "dispatch prompt dropped"       'You are a read-only'      0
 check "'Respond with exactly' dropped" 'Respond with exactly'    0
+check "continuation summary dropped"  'This session is being continued' 0
+check "headed fresh review dropped"   '# Fresh read-only review' 0
+check "plain fresh review dropped"    'Fresh read-only final'    0
+check "pressure prompt dropped"       '# Round 3 baseline pressure' 0
+check "review disposition dropped"    'Disposition of your only blocker' 0
 check "real correction kept"          'still ignoring'           1
 check "ordinary turn kept"            '沒有會怎樣'                1
 
@@ -86,7 +95,7 @@ fi
 P4="$WORK/home4/projects/proj"; mkdir -p "$P4"
 python3 - "$P4/e.jsonl" <<'PYEOF'
 import json, sys
-cmd = "gh pr create --body \"$(cat <<EOF\n## MARKER-XYZ\n\nbody text\nEOF\n)\""
+cmd = "gh pr create --body \"$(cat <<EOF\n" + "x" * 700 + "\n## MARKER-XYZ\n\nbody text\nEOF\n)\""
 rows = [
   {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
    "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": cmd}}]}},
@@ -105,6 +114,124 @@ if [ "${mk:-x}" = "0" ]; then
   echo "PASS  marker inside a multi-line command scored zero prose hits"
 else
   echo "FAIL  marker prose count = ${mk:-<none>}, want 0 (the heredoc body leaked)"; fail=1
+fi
+H4="$(ls -1dt "$WORK/runs4"/*/ 2>/dev/null | head -1)firing-hits.txt"
+if grep -Fq -- '--- marker (tool commands, excluded from prose count)' "$H4" 2>/dev/null \
+   && grep -F 'TOOL Bash ' "$H4" 2>/dev/null | grep -q 'MARKER-XYZ'; then
+  echo "PASS  excluded tool marker retained for sampling"
+else
+  echo "FAIL  excluded tool marker has no reviewable sample"; fail=1
+fi
+
+# Incident matching uses the full turn. Display excerpts may be clipped, but clipping
+# before the match makes the report claim more candidates than it preserves for review.
+P5="$WORK/home5/projects/proj"; mkdir -p "$P5"
+python3 - "$P5/f.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "I will recover the files now"}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "text", "text": "x" * 700 + " TAIL-INCIDENT"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf 'incident\tlong incident\tTAIL-INCIDENT\n' > "$WORK/p5.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home5" \
+  --patterns "$WORK/p5.tsv" --out "$WORK/runs5" >/dev/null 2>&1
+RUN5="$(ls -1dt "$WORK/runs5"/*/ 2>/dev/null | head -1)"
+reported=$(grep -E '^long incident' "${RUN5:-$WORK}report.txt" 2>/dev/null | awk '{print $NF}')
+retained=$(grep -cF -- '--- long incident @ ' "${RUN5:-$WORK}incidents.txt" 2>/dev/null || true)
+visible=$(grep -cF -- 'TAIL-INCIDENT' "${RUN5:-$WORK}incidents.txt" 2>/dev/null || true)
+if [ "${reported:-x}" = "1" ] && [ "${retained:-0}" = "1" ] && [ "${visible:-0}" = "1" ]; then
+  echo "PASS  incident after character 600 counted and retained with matched context"
+else
+  echo "FAIL  long incident reported=${reported:-<none>} retained=${retained:-0} visible=${visible:-0}, want 1/1/1"; fail=1
+fi
+
+# A tool-only assistant event is still the turn immediately before the user. Dropping
+# it silently reuses older prose and gives incident classification the wrong context.
+P6="$WORK/home6/projects/proj"; mkdir -p "$P6"
+python3 - "$P6/g.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "Older prose must not be reused"}]}},
+  {"type": "assistant", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": "deploy"}}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:02:00Z",
+   "message": {"content": [{"type": "text", "text": "我自己部署好了"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf 'incident\ttakeover after tool\t我自己部署好了\n' > "$WORK/p6.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home6" \
+  --patterns "$WORK/p6.tsv" --out "$WORK/runs6" >/dev/null 2>&1
+RUN6="$(ls -1dt "$WORK/runs6"/*/ 2>/dev/null | head -1)"
+before_tool=$(grep -A1 -- '--- takeover after tool' "${RUN6:-$WORK}incidents.txt" 2>/dev/null | tail -1)
+case "$before_tool" in
+  *"[tool use: Bash]"*) echo "PASS  tool-only assistant retained as immediate BEFORE" ;;
+  *) echo "FAIL  tool-only assistant lost; BEFORE=${before_tool:-<empty>}"; fail=1 ;;
+esac
+
+# Counts and retained samples must use the same regex engine. grep -E supports
+# backreferences on the CI platforms while awk ERE does not, so the old split could
+# report a tool hit and retain an empty section for it.
+P7="$WORK/home7/projects/proj"; mkdir -p "$P7"
+python3 - "$P7/h.jsonl" <<'PYEOF'
+import json, sys
+cmd = "gh pr create --body " + "x" * 700 + " MARKER-XX"
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": cmd}}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+printf '%s\t%s\t%s\n' firing 'backreference marker' 'MARKER-(X)\1' > "$WORK/p7.tsv"
+cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home7" \
+  --patterns "$WORK/p7.tsv" --out "$WORK/runs7" >/dev/null 2>&1
+RUN7="$(ls -1dt "$WORK/runs7"/*/ 2>/dev/null | head -1)"
+reported7=$(grep -E '^backreference marker' "${RUN7:-$WORK}report.txt" 2>/dev/null)
+sample7=$(awk '/--- backreference marker \(tool commands/{keep=1; next} /^--- /{keep=0} keep' \
+  "${RUN7:-$WORK}firing-hits.txt" 2>/dev/null)
+if printf '%s\n' "$reported7" | grep -q '1 inside tool commands' \
+   && printf '%s\n' "$sample7" | grep -q 'MARKER-XX'; then
+  echo "PASS  counted tool regex retained a reviewable sample with the same engine"
+else
+  echo "FAIL  counted tool regex has no retained match; report=${reported7:-<none>} sample=${sample7:-<empty>}"; fail=1
+fi
+
+# Incident and codification counts also use grep ERE, so their retained pairs must
+# not reinterpret the same pattern in awk and reject a count grep already accepted.
+P8="$WORK/home8/projects/proj"; mkdir -p "$P8"
+python3 - "$P8/i.jsonl" <<'PYEOF'
+import json, sys
+rows = [
+  {"type": "assistant", "timestamp": "2026-08-10T10:00:00Z",
+   "message": {"content": [{"type": "text", "text": "I will update the rule now"}]}},
+  {"type": "user", "timestamp": "2026-08-10T10:01:00Z",
+   "message": {"content": [{"type": "text", "text": "please retain MARKER-XX"}]}},
+]
+open(sys.argv[1], "w").write("".join(json.dumps(r) + "\n" for r in rows))
+PYEOF
+
+{ printf '%s\t%s\t%s\n' incident 'backreference incident' 'MARKER-(X)\1'
+  printf '%s\t%s\t%s\n' codify 'backreference codify' 'MARKER-(X)\1'; } > "$WORK/p8.tsv"
+if cd "$WORK" && "$HERE/rule-firing-report.sh" --since 2026-08-01 --home "$WORK/home8" \
+  --patterns "$WORK/p8.tsv" --out "$WORK/runs8" >/dev/null 2>&1; then
+  RUN8="$(ls -1dt "$WORK/runs8"/*/ 2>/dev/null | head -1)"
+  pairs8=$(grep -cF -- '--- backreference ' "${RUN8:-$WORK}incidents.txt" 2>/dev/null || true)
+  visible8=$(grep -cF -- 'MARKER-XX' "${RUN8:-$WORK}incidents.txt" 2>/dev/null || true)
+  if [ "${pairs8:-0}" = "2" ] && [ "${visible8:-0}" = "2" ]; then
+    echo "PASS  incident and codify regex retained every grep-counted pair"
+  else
+    echo "FAIL  incident/codify retained=${pairs8:-0} visible=${visible8:-0}, want 2/2"; fail=1
+  fi
+else
+  echo "FAIL  incident/codify grep regex was rejected by the evidence path"; fail=1
 fi
 
 exit $fail
