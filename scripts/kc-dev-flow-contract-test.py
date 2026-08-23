@@ -89,6 +89,7 @@ required = [
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-multi-profile-gate.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
     "scripts/kc-dev-flow-published-tag-smoke.test.py",
     "scripts/roborev-implementation-exit-contract.test.py",
@@ -346,6 +347,28 @@ require(
     == (ADOPTED / "kernel.md").read_bytes(),
     "self-adopted shared core differs from package source",
 )
+# `release` was a Production-only runtime state until it stranded a Pilot item
+# outside its declared route. Nothing else reads adoption prose, so the retired
+# state is guarded here rather than trusted to a reviewer.
+for relative in [
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/references/kernel.md",
+]:
+    normalized = " ".join(read(relative).split())
+    for retired in ["adds `release`", "explicit `release` stage", "`release` / `done`"]:
+        require(
+            retired not in normalized,
+            f"{relative} still instructs the retired `release` state: {retired}",
+        )
+
+release_gate = read(".github/workflows/kc-dev-flow-release-gate.yml")
+require(
+    "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate,
+    "the release gate workflow no longer runs the multi-profile route gate",
+)
+
 kernel = read("kc-dev-flow/references/kernel.md")
 for phrase in [
     "compare added files, dependencies, abstractions, tests, and comments",
