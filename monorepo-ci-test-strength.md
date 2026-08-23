@@ -26,6 +26,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-23T04:20:09.11807Z"
                 reason: The presented recommendation rested on kc-nightwatch's 49 unrunnable test files being the residual work. The Captain states kc-nightwatch is deprecated, which removes that residual and leaves a materially smaller question, so the open attempt is stale before decision and a successor will be prepared at the re-scoped shape.
+            - id: gate-attempt:6zjg1gnq3dmtk2dsny8k4m3s-backlog-2
+              briefing:
+                id: briefing:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-2:revision-1
+                digest: sha256:fa38827b3ef341dbd231454f2721ff4332a4e76d3ea376f0edee386345d7307e
+                request-digest: sha256:7c94d703fa888752dd842f5b9600b2760b6b4ce4a61c5604b810e62ad86004a6
+                room-ref: ./monorepo-ci-test-strength/review/backlog/briefing-2
 ---
 
 ## Problem

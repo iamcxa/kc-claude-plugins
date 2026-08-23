@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-2:revision-1",
+  "question": "The seed's alarm no longer holds: with kc-nightwatch deprecated, the only test files in this repository that no CI workflow executes are kc-hyperfocus's three lib tests. Approve entering the POC route to wire exactly those as a non-required path-filtered lane — or hold, on the ground that three files do not earn a route?",
+  "artifacts": [
+    {
+      "id": "artifact:6zjg1gnq3dmtk2dsny8k4m3s:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/34bc358c3dac14182461db073ab666adb08378d4/monorepo-ci-test-strength.md",
+      "rev": "sha256:c6a254bc703f8fb97c563ec014610cd2ce6f381cc317a3ce75dadd718db6d4eb",
+      "mediaType": "text/markdown",
+      "summary": "Successor attempt after the first was withdrawn on the Captain's ruling that kc-nightwatch is deprecated. Re-measured against origin/main today, per plugin, checking whether each test file is actually referenced by a workflow rather than whether a workflow names the plugin: e2e-pipeline 45 files, whole suite runs on pull_request and push since 2026-08-19; kc-pr-flow 20 files across eight workflows; kc-team-ops 1 file with its own workflow; kc-plugin-forge 1 file referenced by marketplace-parity; kc-dev-flow 3 files run by the contract test. Unrun: kc-hyperfocus's three TypeScript lib tests — context-lake, journal-search, journal — which no workflow references by name; its only workflow is path-filtered to verify-install.sh. kc-nightwatch's 49 files are out of scope by the Captain's ruling and are tracked separately. The seed's own value AC candidate stands and should be carried: reintroduce a known-good defect and show the lane goes red, because a lane that cannot be shown to fail is the tautology this workflow's proof policy refuses. Branch protection on main still requires exactly one status context, version parity, read live from the API; whether any lane should become required is standing enforcement, Captain-owned, and is proposed here as a non-goal rather than folded in."
+    }
+  ]
+}
