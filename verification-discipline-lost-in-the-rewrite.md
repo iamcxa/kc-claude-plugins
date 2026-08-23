@@ -106,6 +106,17 @@ gates:
                 digest: sha256:6259f15dff3472ec0eb29016a288bdb1bfc5e26332bb819343ccf6de0f3ded74
                 request-digest: sha256:4d47b0154cac7273c328932810a5a6fb5d8dd29e57e7ee0e8b09b3ac145faa3c
                 room-ref: ./verification-discipline-lost-in-the-rewrite/review/validation/briefing-4
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:9ydm2mmakce2r49v40q98377:validation:4
+                briefing: briefing:9ydm2mmakce2r49v40q98377:validation:attempt-4:revision-1
+                by: person:captain
+                at: "2026-08-23T03:25:39.547556Z"
+                decision: approve
+                reason: 'Captain approved release readiness in chat for the exact delivery revision d55d6a4d, Draft PR #279. Direction and evidence accepted: shipped bytes byte-identical to the ideation-approved text, all four sites diffing empty against fresh extracts across three fresh-reviewer cycles, a re-earned tamper-and-restore seen-to-fail proof, every figure recounted from the files, the loader confirmed at the exact revision to emit the restored section, and the without-it audit keeping all five clauses on named external occurrences. Two residuals accepted and recorded: the byte-parity class is not closed and is stated as a limit rather than a guarantee after two withdrawn wording attempts, and nothing standing keeps the restored words in place. The Captain was told that no fresh reviewer ran on the final one-sentence correction and that the First Officer verified it by diff.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
