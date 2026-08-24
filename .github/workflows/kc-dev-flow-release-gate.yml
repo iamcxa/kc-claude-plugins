@@ -4,7 +4,8 @@ name: kc-dev-flow release gate
 # and a Production item at the same time, each loading only its own contracts,
 # each reaching `done` through the shared terminal path, and each route staying
 # proportional in load. See scripts/kc-dev-flow-multi-profile-gate.py for the
-# exact claims.
+# exact claims. The adjacent ablation runner then removes each indispensable
+# guard in an isolated copy and requires every mutant to fail.
 #
 # The job always runs so it can be a required status check: a job skipped by a
 # job-level `if:` reports "pending / expected" forever and blocks every
@@ -91,3 +92,7 @@ jobs:
         run: |
           spacedock --version
           ./scripts/kc-dev-flow-multi-profile-gate.py --json
+
+      - name: Run the minimal-stack without-it ablations
+        if: steps.scope.outputs.run == 'true'
+        run: ./scripts/kc-dev-flow-minimal-stack-ablation.test.py

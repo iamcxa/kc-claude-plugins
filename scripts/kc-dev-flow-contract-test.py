@@ -89,6 +89,7 @@ required = [
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
     "scripts/kc-dev-flow-multi-profile-gate.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
     "scripts/kc-dev-flow-published-tag-smoke.test.py",
@@ -369,8 +370,9 @@ for relative in [
 
 release_gate = read(".github/workflows/kc-dev-flow-release-gate.yml")
 require(
-    "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate,
-    "the release gate workflow no longer runs the multi-profile route gate",
+    "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate
+    and "./scripts/kc-dev-flow-minimal-stack-ablation.test.py" in release_gate,
+    "the release gate workflow no longer runs the baseline and without-it checks",
 )
 # A job-level `if:` makes a required check report "pending / expected" forever
 # and blocks unrelated PRs; the release scoping belongs inside the job.

@@ -363,6 +363,12 @@ def main() -> int:
             )
             items[profile] = workflow / f"{slug}.md"
 
+        require(
+            set(items) == set(states),
+            "the fixture did not create one live item for every declared profile: "
+            f"expected {sorted(states)}, got {sorted(items)}",
+        )
+
         # The archive move at terminalization is a tracked-file operation, so
         # the fixture entities must exist in git before any route advances.
         run(["git", "add", "--all", "--", "."], "fixture entities stage", workflow)
