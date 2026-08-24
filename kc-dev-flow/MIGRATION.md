@@ -60,6 +60,29 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-08-24 — promotion asks whether a consumer must migrate
+
+`public compatibility` was one of the triggers that promote work to
+`production`. Every change to a published package satisfies it, so in a package
+repository the trigger fired on everything and sorted nothing: of thirteen
+receipts here, eight selected `production`, and five of those gave the same
+reason — published to consumers at a pinned tag — while stating in the same
+receipt that no runtime or external state was involved. The full Production
+validation bar then asked those items for rollout readiness, an operational
+owner, and a monitoring handoff that none of them had.
+
+The trigger is now **a compatibility break that makes a consumer act**: one an
+existing consumer cannot absorb by taking the new version, because it must run a
+migration, edit its own configuration, or rewrite records it owns. Publication is
+not the test. Re-deciding the same eight receipts under this rule leaves four at
+`production` — including the route-graph change, whose adopters had to drain
+entities and edit their own workflow graph — and moves four to
+`pilot-product-slice` with their release obligation intact.
+
+The rule is deliberately asymmetric. Where you cannot state that consumers
+upgrade without doing anything, the trigger counts as met: sending a migration
+out on a shorter route costs more than paying Production's bar once.
+
 ## 2026-08-24 — the `backlog` exit bar names the schedule
 
 The bar had two parts, what an item is and why it is worth doing, and both are

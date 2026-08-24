@@ -90,9 +90,13 @@ is not deferred to ideation because POC has no ideation stage.
 Promote POC to Pilot when accepted scope adds limited real users, persistent
 valuable state, reused shortcuts, beyond-session operation, or retry/recovery
 duty. Promote either lower profile to Production when production data or
-credentials, destructive external mutation, irreversible migration, public
-compatibility, unattended operation, broad exposure, SLO/support, or
-release/rollback ownership enters accepted scope.
+credentials, destructive external mutation, irreversible migration, a
+compatibility break that makes a consumer act, unattended operation, broad
+exposure, SLO/support, or release/rollback ownership enters accepted scope.
+That compatibility trigger is about the consumer's hands, not the publication:
+a change an existing consumer absorbs by taking the new version is ordinary
+Pilot delivery carrying a migration entry, while one that makes it edit its own
+configuration or rewrite its own records is Production.
 
 ## Distribution and adoption
 

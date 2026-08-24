@@ -389,6 +389,7 @@ require(
     "kernel route table omits the current Production route",
 )
 normalized_kernel = " ".join(kernel.split())
+normalized_kernel_trigger = normalized_kernel
 for phrase in [
     "An item leaves `backlog` only when its committed body states all three",
     "**What it is**",
@@ -401,6 +402,31 @@ for phrase in [
 require(
     "when it is scheduled" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
     "choose-work-profile no longer checks the scheduling part of the exit bar",
+)
+# `public compatibility` promoted on publication, which every change to this
+# package satisfies, so the trigger fired on all of them and sorted none. The
+# replacement asks whether a consumer must run a migration. Guarded in all four
+# places that state a promotion boundary, because a reader who finds the old
+# wording in any one of them gets the old rule.
+for relative in [
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md",
+    "kc-dev-flow/references/profiles/pilot-product-slice/base.md",
+]:
+    normalized = " ".join(read(relative).split())
+    require(
+        "public compatibility" not in normalized,
+        f"{relative} still promotes on publication rather than on a consumer migration",
+    )
+    require(
+        "compatibility break that makes a consumer act" in normalized,
+        f"{relative} omits the consumer-migration promotion trigger",
+    )
+require(
+    "it must run a migration" in normalized_kernel_trigger
+    and "Publishing to a public surface is not the test" in normalized_kernel_trigger,
+    "kernel no longer defines the consumer-migration trigger",
 )
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()

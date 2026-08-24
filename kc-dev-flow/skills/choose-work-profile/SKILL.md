@@ -28,8 +28,16 @@ the accepted scope.
 | `Production` (`production`) | `shape -> build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
 
 A POC label cannot downscope production credentials or data, destructive
-external mutation, irreversible migration, public compatibility, unattended
-operation, broad exposure, SLO/support duty, or release/rollback ownership.
+external mutation, irreversible migration, a compatibility break that makes a
+consumer act, unattended operation, broad exposure, SLO/support duty, or
+release/rollback ownership.
+
+The compatibility trigger asks whether a consumer must do something, not whether
+the change is published. Recommend Production when an existing consumer cannot
+upgrade by taking the new version — it has to run a migration, edit its own
+configuration, or rewrite records it owns. If you cannot state that consumers
+upgrade without acting, recommend Production; the error that costs more is the
+one that sends a migration out on a shorter route.
 
 Check the shared core's `backlog` exit bar in the same read. The work item must
 already state what it is, why it is worth doing, and when it is scheduled — an

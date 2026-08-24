@@ -21,5 +21,9 @@ accepting long-term production obligations.
 ## Promotion boundary
 
 Stop and request Production when accepted scope adds production data or
-credentials, broad exposure, public compatibility, irreversible migration,
-unattended recurring operation, SLO/support duty, or release/rollback ownership.
+credentials, broad exposure, a compatibility break that makes a consumer act,
+irreversible migration, unattended recurring operation, SLO/support duty, or
+release/rollback ownership. Publishing a change to consumers is not that
+trigger; requiring them to migrate is. A published change a consumer absorbs by
+taking the new version stays here and carries its release obligation — a
+migration entry and a version — as ordinary Pilot delivery.

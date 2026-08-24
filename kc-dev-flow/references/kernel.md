@@ -85,10 +85,16 @@ as not ready to leave `backlog` when it cannot ask.
 - Ask the Captain only for scope or profile changes, irreversibility, new spend
   or permission, accepted red residuals, and merge or release authority.
 - Never let a POC label authorize production credentials or data, destructive
-  external mutation, an irreversible migration, public compatibility, unattended
-  operation, or an operational support promise.
+  external mutation, an irreversible migration, a compatibility break that makes
+  a consumer act, unattended operation, or an operational support promise.
 - Promote when accepted scope crosses the selected profile's boundary. Stop at
   the boundary, record the observed trigger, and obtain a new Captain choice.
+- **A compatibility break that makes a consumer act** is one an existing
+  consumer cannot absorb by taking the new version: it must run a migration —
+  edit its own configuration, drain or rewrite existing records, or change a
+  file it owns. Publishing to a public surface is not the test; needing the
+  consumer's hands is. When you cannot state that a consumer upgrades without
+  doing anything, treat the trigger as met.
 - A size threshold the work item declared at shape may stop work in progress.
   Stop on crossing one, record the observed count against the threshold, and
   report to the First Officer without continuing. Crossing passes and fails
