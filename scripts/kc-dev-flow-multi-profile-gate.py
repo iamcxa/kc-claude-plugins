@@ -19,9 +19,10 @@ routing safe to ship:
    not pay for Production policy"; without it a POC contract can grow past
    Production's and the claim silently becomes false.
 
-Claims 1-2 are asserted against the packaged contracts and the self-adopted
-`docs/dev/_mods` copy. Claim 3 needs the real runtime, so it runs against the
-installed Spacedock binary.
+Claims 1, 2 and 4 read the packaged contracts; claim 3 needs the real runtime
+and runs against the installed Spacedock binary. The self-adopted
+`docs/dev/_mods` copy is not re-read here: kc-dev-flow-contract-test.py holds
+it byte-identical and exercises the loader over both roots.
 """
 
 from __future__ import annotations
@@ -40,7 +41,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
-ADOPTED = ROOT / "docs/dev/_mods"
 
 # The shared graph every profile routes through. It is written out, not derived
 # from the loader, so a profile that reintroduces a state of its own — the
@@ -108,18 +108,12 @@ def profile_states(loader) -> dict[str, list[str]]:
     return states
 
 
-def route_load(loader, contracts_root: Path, item: Path) -> int:
-    """Bytes a single stage load puts in front of the worker."""
-    contract = loader.load_contracts(contracts_root, item)
-    return sum(entry["bytes"] for entry in contract["loaded"])
-
-
 def reference_tree_bytes(contracts_root: Path) -> int:
     return sum(path.stat().st_size for path in contracts_root.rglob("*.md"))
 
 
 def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
-    """Every profile's whole-route load, ordered lightest first."""
+    """Every profile's whole-route load, with the POC claim asserted."""
     tree = reference_tree_bytes(contracts_root)
     require(tree > 0, f"no contracts found under {contracts_root}")
     totals: dict[str, int] = {}
@@ -130,12 +124,12 @@ def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
             total = 0
             for state in route:
                 item = scratch / f"{profile}-{state}.md"
-                item.write_text(entity_body(f"{profile}-{state}", profile, logical), encoding="utf-8")
                 item.write_text(
-                    item.read_text(encoding="utf-8").replace("status: backlog", f"status: {state}", 1),
+                    entity_body(f"{profile}-{state}", profile, logical, status=state),
                     encoding="utf-8",
                 )
-                stage_bytes = route_load(loader, contracts_root, item)
+                contract = loader.load_contracts(contracts_root, item)
+                stage_bytes = sum(entry["bytes"] for entry in contract["loaded"])
                 require(
                     stage_bytes <= tree * STAGE_LOAD_CEILING,
                     f"{profile} {state} loads {stage_bytes} bytes, over the "
@@ -172,11 +166,11 @@ def run(command: list[str], label: str, cwd: Path) -> str:
     return result.stdout + result.stderr
 
 
-def entity_body(slug: str, profile: str, route: list[str]) -> str:
+def entity_body(slug: str, profile: str, route: list[str], status: str = "backlog") -> str:
     return "\n".join(
         [
             "---",
-            "status: backlog",
+            f"status: {status}",
             f"title: {slug}",
             "---",
             "",
@@ -300,15 +294,13 @@ def terminalize(spacedock: str, workflow: Path, slug: str) -> None:
     )
 
 
-def resolve_spacedock(allow_skip: bool) -> str | None:
+def resolve_spacedock() -> str:
     configured = os.environ.get("SPACEDOCK_BIN")
     located = configured or shutil.which("spacedock")
-    if located is None:
-        if allow_skip:
-            return None
-        raise GateError(
-            "spacedock is required for the runtime claim; install it or pass --allow-skip-runtime"
-        )
+    require(
+        located is not None,
+        "spacedock is required: every claim past the contract layer is a runtime claim",
+    )
     path = Path(located).resolve()
     require(path.is_file(), f"spacedock executable does not exist: {path}")
     return str(path)
@@ -316,11 +308,6 @@ def resolve_spacedock(allow_skip: bool) -> str | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--allow-skip-runtime",
-        action="store_true",
-        help="report the runtime claim as skipped instead of failing when spacedock is absent",
-    )
     parser.add_argument("--json", action="store_true", help="emit a machine-readable receipt")
     args = parser.parse_args()
 
@@ -331,16 +318,16 @@ def main() -> int:
             [state for state in GRAPH_STATES if state in route] == route,
             f"{profile} declares states outside the shared graph: {route}",
         )
-    spacedock = resolve_spacedock(args.allow_skip_runtime)
-    contracts_roots = [PLUGIN / "references", ADOPTED]
-    route_bytes = {
-        str(root.relative_to(ROOT)): assert_proportional_load(loader, root)
-        for root in contracts_roots
-    }
+    spacedock = resolve_spacedock()
+    # One contracts root. The packaged tree and the self-adopted copy are held
+    # byte-identical by kc-dev-flow-contract-test.py, which also exercises the
+    # loader over both; measuring the same bytes twice here would add no claim.
+    contracts = PLUGIN / "references"
+    route_bytes = assert_proportional_load(loader, contracts)
     results: dict[str, object] = {
         "schema": "kc-dev-flow-multi-profile-gate/v1",
-        "contracts_roots": [str(root.relative_to(ROOT)) for root in contracts_roots],
-        "runtime": "skipped" if spacedock is None else "spacedock",
+        "contracts_root": str(contracts.relative_to(ROOT)),
+        "runtime": "spacedock",
         "profiles": sorted(states),
         "route_bytes": route_bytes,
     }
@@ -355,52 +342,35 @@ def main() -> int:
         run(["git", "config", "user.email", "gate@example.invalid"], "fixture git email", workflow)
         run(["git", "config", "user.name", "kc-dev-flow gate"], "fixture git name", workflow)
         run(["git", "add", "--", "README.md"], "fixture stage", workflow)
-        run(
-            ["git", "commit", "-qm", "fixture"],
-            "fixture commit",
-            workflow,
-        )
+        run(["git", "commit", "-qm", "fixture"], "fixture commit", workflow)
 
         items: dict[str, Path] = {}
         for profile in sorted(states):
             slug = profile.split("-")[0] + "-item"
             route = [logical for logical, _next in loader.ROUTES[profile].values()]
-            body = entity_body(slug, profile, route)
-            if spacedock is None:
-                path = workflow / f"{slug}.md"
-                path.write_text(body, encoding="utf-8")
-            else:
-                created = subprocess.run(
-                    [spacedock, "new", slug, "--workflow-dir", str(workflow)],
-                    cwd=workflow,
-                    input=body,
-                    text=True,
-                    capture_output=True,
-                )
-                require(
-                    created.returncode == 0,
-                    f"could not create {slug}:\n{created.stdout}{created.stderr}",
-                )
-                path = workflow / f"{slug}.md"
-            items[profile] = path
+            created = subprocess.run(
+                [spacedock, "new", slug, "--workflow-dir", str(workflow)],
+                cwd=workflow,
+                input=entity_body(slug, profile, route),
+                text=True,
+                capture_output=True,
+            )
+            require(
+                created.returncode == 0,
+                f"could not create {slug}:\n{created.stdout}{created.stderr}",
+            )
+            items[profile] = workflow / f"{slug}.md"
 
         # The archive move at terminalization is a tracked-file operation, so
         # the fixture entities must exist in git before any route advances.
         run(["git", "add", "--all", "--", "."], "fixture entities stage", workflow)
-        run(
-            ["git", "commit", "-qm", "entities"],
-            "fixture entities commit",
-            workflow,
-        )
+        run(["git", "commit", "-qm", "entities"], "fixture entities commit", workflow)
 
-        # Interleave the routes so the three items sit at different states at
-        # the same time. Loading is asserted for every live item at every step,
-        # which is what makes this a concurrency claim rather than three
-        # independent single-profile runs.
+        # Interleave the routes so the three items sit at different states in
+        # the same workflow, and assert each one where it lands. That is the
+        # concurrency claim: three live items, three routes, no borrowing.
         cursors = {profile: 0 for profile in items}
-        while any(
-            cursors[profile] < len(states[profile]) - 1 for profile in items
-        ):
+        while any(cursors[profile] < len(states[profile]) - 1 for profile in items):
             for profile, path in items.items():
                 route = states[profile]
                 if cursors[profile] >= len(route) - 1:
@@ -408,77 +378,55 @@ def main() -> int:
                 cursors[profile] += 1
                 target = route[cursors[profile]]
                 if target == "done":
-                    cursors[profile] = len(route) - 1
                     continue
-                if spacedock is None:
-                    text = path.read_text(encoding="utf-8")
-                    current = route[cursors[profile] - 1]
-                    path.write_text(
-                        text.replace(f"status: {current}", f"status: {target}", 1),
-                        encoding="utf-8",
-                    )
-                else:
-                    set_status(spacedock, workflow, path.stem, target)
-                for live_profile, live_path in items.items():
-                    live_state = states[live_profile][cursors[live_profile]]
-                    if live_state in ("backlog", "done"):
-                        continue
-                    for contracts_root in contracts_roots:
-                        assert_loads_own_route(
-                            loader, contracts_root, live_path, live_profile, live_state
-                        )
+                set_status(spacedock, workflow, path.stem, target)
+                assert_loads_own_route(loader, contracts, path, profile, target)
 
         # The shared graph is a runtime fact, not a comment: a state no profile
         # declares must be refused by the runtime, which is what makes
         # "no profile owns its own state" enforceable rather than aspirational.
-        if spacedock is not None:
-            probe = subprocess.run(
-                [
-                    spacedock, "status", "--workflow-dir", str(workflow),
-                    "--set", items["production"].stem, "status=release",
-                ],
-                cwd=workflow,
-                text=True,
-                capture_output=True,
-            )
-            require(
-                probe.returncode != 0,
-                "the runtime accepted a state the shared graph does not declare",
-            )
+        probe = subprocess.run(
+            [
+                spacedock, "status", "--workflow-dir", str(workflow),
+                "--set", items["production"].stem, "status=release",
+            ],
+            cwd=workflow,
+            text=True,
+            capture_output=True,
+        )
+        require(
+            probe.returncode != 0,
+            "the runtime accepted a state the shared graph does not declare",
+        )
 
         # Fail-closed: force the POC item onto Pilot's ideation state and prove
         # the loader refuses rather than borrowing another profile's stage.
         poc = items["poc-exploration"]
         original = poc.read_text(encoding="utf-8")
         poc.write_text(original.replace("status: validation", "status: ideation", 1), encoding="utf-8")
-        for contracts_root in contracts_roots:
-            assert_refuses(loader, contracts_root, poc, "ideation")
+        assert_refuses(loader, contracts, poc, "ideation")
         poc.write_text(original, encoding="utf-8")
 
-        if spacedock is None:
-            results["terminal"] = "skipped"
-        else:
-            for profile, path in items.items():
-                terminalize(spacedock, workflow, path.stem)
-            remaining = run(
-                [spacedock, "status", "--workflow-dir", str(workflow)],
-                "final status",
-                workflow,
+        for path in items.values():
+            terminalize(spacedock, workflow, path.stem)
+        remaining = run(
+            [spacedock, "status", "--workflow-dir", str(workflow)],
+            "final status",
+            workflow,
+        )
+        for path in items.values():
+            require(
+                path.stem not in remaining,
+                f"{path.stem} is still active after its route completed:\n{remaining}",
             )
-            for path in items.values():
-                require(
-                    path.stem not in remaining,
-                    f"{path.stem} is still active after its route completed:\n{remaining}",
-                )
-            results["terminal"] = "all profiles reached done"
+        results["terminal"] = "all profiles reached done"
 
     if args.json:
         print(json.dumps(results, indent=2, sort_keys=True))
     else:
         print(
             "kc-dev-flow multi-profile gate: PASS "
-            f"(runtime={results['runtime']}, terminal={results['terminal']}, "
-            f"route bytes={route_bytes[str(contracts_roots[0].relative_to(ROOT))]})"
+            f"(terminal={results['terminal']}, route bytes={route_bytes})"
         )
     return 0
 
