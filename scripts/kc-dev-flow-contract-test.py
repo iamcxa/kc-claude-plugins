@@ -640,6 +640,28 @@ frontmatter = workflow.split("---", 2)[1]
 expected_stage_order = ["backlog", "ideation", "implementation", "validation", "done"]
 actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)
 require(actual_stage_order == expected_stage_order, f"workflow stage graph drifted: {actual_stage_order}")
+
+# The literal above pins this repository's graph; these two derive the reason it
+# is that shape. #276's incident was a state — `release` — that sat between a
+# profile's last working state and the terminal one: Spacedock computed the
+# gate's target from graph order, so a Pilot approval targeted a stage outside
+# its route and the item had no way to reach `done`. A profile-only state is
+# therefore safe before a route's first state and fatal after its last.
+terminal_state = actual_stage_order[-1]
+for profile, stages in expected_routes.items():
+    route_states = [state for state in actual_stage_order if state in stages]
+    require(
+        route_states == [state for state in stages],
+        f"{profile} route states are missing from or out of order in the workflow graph: "
+        f"{route_states} vs {list(stages)}",
+    )
+    last = actual_stage_order.index(route_states[-1])
+    require(
+        actual_stage_order[last + 1] == terminal_state,
+        f"{profile} would strand: the graph puts "
+        f"{actual_stage_order[last + 1]!r} between its last working state "
+        f"{route_states[-1]!r} and {terminal_state!r}",
+    )
 for phrase in [
     "POC | `backlog -> implementation -> validation -> done`",
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",
