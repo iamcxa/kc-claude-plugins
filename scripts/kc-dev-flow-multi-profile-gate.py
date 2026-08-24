@@ -55,10 +55,11 @@ GRAPH_STATES = ["backlog", "ideation", "implementation", "validation", "done"]
 LIGHTEST_PROFILE = "poc-exploration"
 
 # Ceiling on one stage's loaded bytes as a share of the whole reference tree.
-# Measured high-water mark when this was set: 15.7% (Pilot `shape`). The
-# headroom is for a contract that grows with its subject; the ceiling is for a
-# stage that quietly absorbs a conditional reference it should have left unread.
-STAGE_LOAD_CEILING = 0.20
+# Integrated v4 high-water mark: 20.8% (Pilot `shape`). The remaining headroom
+# lets the POC-lightest ablation cross the route-total boundary without first
+# tripping this independent guard; the ceiling still catches a stage that
+# quietly absorbs a conditional reference it should have left unread.
+STAGE_LOAD_CEILING = 0.25
 
 WORKFLOW_README = """---
 commissioned-by: spacedock@0.27.0

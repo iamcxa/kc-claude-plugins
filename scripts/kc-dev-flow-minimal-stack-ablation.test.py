@@ -158,9 +158,19 @@ def route_totals(contracts: Path) -> dict[str, int]:
     return totals
 
 
+def load_gate(path: Path):
+    spec = importlib.util.spec_from_file_location("ablation_gate", path)
+    if spec is None or spec.loader is None:
+        raise AblationError(f"cannot import {path}")
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    return gate
+
+
 def make_poc_not_lightest(fixture: Path) -> None:
     contracts = fixture / "kc-dev-flow/references"
     totals = route_totals(contracts)
+    gate = load_gate(fixture / GATE)
     delta = totals["pilot-product-slice"] - totals["poc-exploration"]
     addition = delta // 2 + 1
     tree_after = (
@@ -170,7 +180,10 @@ def make_poc_not_lightest(fixture: Path) -> None:
     base = (contracts / "profiles/poc-exploration/base.md").stat().st_size
     for name in ("build.md", "prove.md"):
         path = contracts / "profiles/poc-exploration" / name
-        if kernel + base + path.stat().st_size + addition > tree_after * 0.20:
+        if (
+            kernel + base + path.stat().st_size + addition
+            > tree_after * gate.STAGE_LOAD_CEILING
+        ):
             raise AblationError(
                 "cannot isolate the POC-lightest mutant without crossing the stage ceiling"
             )
@@ -248,7 +261,7 @@ def main() -> int:
     run_gate_mutant(
         "oversized-stage-load",
         exceed_stage_ceiling,
-        "over the 20% share",
+        f"over the {load_gate(ROOT / GATE).STAGE_LOAD_CEILING:.0%} share",
     )
     run_gate_mutant(
         "poc-no-longer-lightest",
