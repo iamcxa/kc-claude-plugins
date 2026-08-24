@@ -94,6 +94,21 @@ def resolve_work_item(path: Path) -> dict[str, str]:
             f"stale route for {profile}: expected {expected_route}, got {receipt_route}"
         )
 
+    first_workflow_stage = next(iter(ROUTES[profile]))
+    if workflow_stage == first_workflow_stage:
+        sprint = _one_field(
+            frontmatter, r"^sprint:\s*([^\n#]+?)\s*$", "frontmatter sprint"
+        )
+        if not sprint:
+            raise ContractError("frontmatter sprint must name an iteration")
+        sprint_readiness = _one_field(
+            frontmatter,
+            r"^sprint-readiness:\s*([^\n#]+?)\s*$",
+            "frontmatter sprint-readiness",
+        )
+        if sprint_readiness != "ready":
+            raise ContractError("frontmatter sprint-readiness must be 'ready'")
+
     return {
         "path": path.as_posix(),
         "sha256": hashlib.sha256(raw).hexdigest(),

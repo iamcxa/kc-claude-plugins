@@ -172,6 +172,8 @@ def entity_body(slug: str, profile: str, route: list[str], status: str = "backlo
             "---",
             f"status: {status}",
             f"title: {slug}",
+            "sprint: kc-dev-flow/release-gate",
+            "sprint-readiness: ready",
             "---",
             "",
             f"# {slug}",

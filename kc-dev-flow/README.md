@@ -105,6 +105,11 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
 
+At a route's first working stage, the loader also requires one non-empty
+`sprint` and `sprint-readiness: ready` in work-item frontmatter. The iteration
+authority and Captain still decide whether that named iteration is accepted;
+the loader checks only the committed field values.
+
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds
 no ordinary-stage work.

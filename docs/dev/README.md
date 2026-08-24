@@ -147,11 +147,14 @@ python3 docs/dev/_mods/profile-contract-loader.py \
 ```
 
 The command validates and hash-binds that item's v2 receipt and current status,
-then emits the shared core, one selected base, and one selected stage. Its
-`next_workflow_stage` is the normal next state. Profiles are per item, so POC,
-Pilot, and Production items may run concurrently in this repository without a
-global profile switch. A refusal blocks only that item's dispatch until its
-receipt, state, or vendored adoption is corrected.
+then emits the shared core, one selected base, and one selected stage. At a
+route's first working stage it also requires one non-empty `sprint` and
+`sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
+authority for whether the named sprint is accepted. Its `next_workflow_stage`
+is the normal next state. Profiles are per item, so POC, Pilot, and Production
+items may run concurrently in this repository without a global profile switch.
+A refusal blocks only that item's dispatch until its receipt, state, scheduling
+fields, or vendored adoption is corrected.
 
 ## Stages
 

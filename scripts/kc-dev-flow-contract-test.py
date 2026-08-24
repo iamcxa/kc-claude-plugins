@@ -323,6 +323,8 @@ def write_profile_work_item(
             [
                 "---",
                 f"status: {workflow_stage}",
+                "sprint: kc-dev-flow/S2",
+                "sprint-readiness: ready",
                 "---",
                 "",
                 "## Work profile receipt",
