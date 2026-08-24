@@ -368,6 +368,12 @@ require(
     "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate,
     "the release gate workflow no longer runs the multi-profile route gate",
 )
+# A job-level `if:` makes a required check report "pending / expected" forever
+# and blocks unrelated PRs; the release scoping belongs inside the job.
+require(
+    not re.search(r"^    if:", release_gate, re.MULTILINE),
+    "the release gate job is skipped by a job-level if:, which a required check cannot survive",
+)
 
 kernel = read("kc-dev-flow/references/kernel.md")
 for phrase in [

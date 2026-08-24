@@ -13,6 +13,11 @@ routing safe to ship:
    with Production's release authorization applied as a terminal-approval
    boundary (`route=approved-awaiting-merge` then `merge guard --verdict`)
    rather than as a state the other profiles skip.
+4. Proportional load — a lighter profile's whole route loads strictly less
+   than a heavier one's, and no single stage load exceeds a declared share of
+   the reference tree. This is the only automated evidence behind "POC does
+   not pay for Production policy"; without it a POC contract can grow past
+   Production's and the claim silently becomes false.
 
 Claims 1-2 are asserted against the packaged contracts and the self-adopted
 `docs/dev/_mods` copy. Claim 3 needs the real runtime, so it runs against the
@@ -42,6 +47,16 @@ ADOPTED = ROOT / "docs/dev/_mods"
 # defect that stranded a Pilot item at `status: release` — has nowhere to put
 # it: the runtime refuses a state this graph does not declare.
 GRAPH_STATES = ["backlog", "ideation", "implementation", "validation", "done"]
+
+# Lightest route first. The order is the product claim: the smallest sufficient
+# route must stay the cheapest one to load.
+LOAD_ORDER = ["poc-exploration", "pilot-product-slice", "production"]
+
+# Ceiling on one stage's loaded bytes as a share of the whole reference tree.
+# Measured high-water mark when this was set: 15.7% (Pilot `shape`). The
+# headroom is for a contract that grows with its subject; the ceiling is for a
+# stage that quietly absorbs a conditional reference it should have left unread.
+STAGE_LOAD_CEILING = 0.20
 
 WORKFLOW_README = """---
 commissioned-by: spacedock@0.27.0
@@ -89,6 +104,50 @@ def profile_states(loader) -> dict[str, list[str]]:
     for profile, route in loader.ROUTES.items():
         states[profile] = ["backlog", *route.keys(), "done"]
     return states
+
+
+def route_load(loader, contracts_root: Path, item: Path) -> int:
+    """Bytes a single stage load puts in front of the worker."""
+    contract = loader.load_contracts(contracts_root, item)
+    return sum(entry["bytes"] for entry in contract["loaded"])
+
+
+def reference_tree_bytes(contracts_root: Path) -> int:
+    return sum(path.stat().st_size for path in contracts_root.rglob("*.md"))
+
+
+def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
+    """Every profile's whole-route load, ordered lightest first."""
+    tree = reference_tree_bytes(contracts_root)
+    require(tree > 0, f"no contracts found under {contracts_root}")
+    totals: dict[str, int] = {}
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-load-") as temporary:
+        scratch = Path(temporary)
+        for profile, route in loader.ROUTES.items():
+            logical = [stage for stage, _next in route.values()]
+            total = 0
+            for state in route:
+                item = scratch / f"{profile}-{state}.md"
+                item.write_text(entity_body(f"{profile}-{state}", profile, logical), encoding="utf-8")
+                item.write_text(
+                    item.read_text(encoding="utf-8").replace("status: backlog", f"status: {state}", 1),
+                    encoding="utf-8",
+                )
+                stage_bytes = route_load(loader, contracts_root, item)
+                require(
+                    stage_bytes <= tree * STAGE_LOAD_CEILING,
+                    f"{profile} {state} loads {stage_bytes} bytes, over the "
+                    f"{STAGE_LOAD_CEILING:.0%} share of the {tree}-byte reference tree",
+                )
+                total += stage_bytes
+            totals[profile] = total
+    ordered = [totals[profile] for profile in LOAD_ORDER if profile in totals]
+    require(
+        ordered == sorted(ordered) and len(set(ordered)) == len(ordered),
+        f"route load is not strictly ordered lightest-first under {contracts_root}: "
+        + ", ".join(f"{profile}={totals[profile]}" for profile in LOAD_ORDER if profile in totals),
+    )
+    return totals
 
 
 def load_loader():
@@ -271,11 +330,16 @@ def main() -> int:
         )
     spacedock = resolve_spacedock(args.allow_skip_runtime)
     contracts_roots = [PLUGIN / "references", ADOPTED]
+    route_bytes = {
+        str(root.relative_to(ROOT)): assert_proportional_load(loader, root)
+        for root in contracts_roots
+    }
     results: dict[str, object] = {
         "schema": "kc-dev-flow-multi-profile-gate/v1",
         "contracts_roots": [str(root.relative_to(ROOT)) for root in contracts_roots],
         "runtime": "skipped" if spacedock is None else "spacedock",
         "profiles": sorted(states),
+        "route_bytes": route_bytes,
     }
 
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-multi-profile-") as temporary:
@@ -410,7 +474,8 @@ def main() -> int:
     else:
         print(
             "kc-dev-flow multi-profile gate: PASS "
-            f"(runtime={results['runtime']}, terminal={results['terminal']})"
+            f"(runtime={results['runtime']}, terminal={results['terminal']}, "
+            f"route bytes={route_bytes[str(contracts_roots[0].relative_to(ROOT))]})"
         )
     return 0
 
