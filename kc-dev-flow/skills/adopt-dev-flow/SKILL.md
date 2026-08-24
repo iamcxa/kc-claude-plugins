@@ -35,6 +35,10 @@ repair the cheapest compatible seam.
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
+   Default the entity template to `sprint-readiness: defer`. Before an item
+   enters its first working stage, bind a non-empty `sprint` accepted by the
+   repository's iteration authority and set `sprint-readiness: ready`; do not
+   mark the unscheduled backlog ready during adoption.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot and Production add `ideation`. No
    profile adds a state the others skip, so a runtime that owns one stage graph

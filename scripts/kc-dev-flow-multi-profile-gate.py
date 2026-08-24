@@ -2,11 +2,11 @@
 """Live multi-profile route gate for kc-dev-flow.
 
 Drives one Spacedock workflow that holds a POC, a Pilot, and a Production work
-item at the same time, and asserts the three claims that make profile-native
+item at the same time, and asserts the four claims that make profile-native
 routing safe to ship:
 
-1. Concurrency — three items in one workflow, each at a different state, each
-   loading only its own profile's contracts.
+1. Concurrency — three items in one workflow advance on interleaved routes,
+   each loading only its own profile's contracts.
 2. Fail-closed routing — a state outside a selected route is refused by the
    loader instead of silently loading another profile's stage.
 3. One terminal path — every profile reaches `done` through the same states,
@@ -368,8 +368,29 @@ def main() -> int:
         run(["git", "add", "--all", "--", "."], "fixture entities stage", workflow)
         run(["git", "commit", "-qm", "entities"], "fixture entities commit", workflow)
 
-        # Interleave the routes so the three items sit at different states in
-        # the same workflow, and assert each one where it lands. That is the
+        # The documented drivable-set query must express the loader's exact
+        # readiness condition. Prove all ready items are selected, then prove a
+        # blank value is excluded rather than admitted by a broad `!= defer`.
+        query = [
+            spacedock, "status", "--workflow-dir", str(workflow),
+            "--where", "sprint=kc-dev-flow/release-gate",
+            "--where", "sprint-readiness=ready",
+        ]
+        drivable = run(query, "drivable-set query", workflow)
+        for path in items.values():
+            require(path.stem in drivable, f"ready item missing from drivable set: {path.stem}")
+        poc = items["poc-exploration"]
+        ready_body = poc.read_text(encoding="utf-8")
+        poc.write_text(
+            ready_body.replace("sprint-readiness: ready", "sprint-readiness:", 1),
+            encoding="utf-8",
+        )
+        without_blank = run(query, "blank-readiness query", workflow)
+        require(poc.stem not in without_blank, "blank readiness entered the drivable set")
+        poc.write_text(ready_body, encoding="utf-8")
+
+        # Interleave the routes instead of completing one item before starting
+        # the next, and assert every item after each advance. That is the
         # concurrency claim: three live items, three routes, no borrowing.
         cursors = {profile: 0 for profile in items}
         while any(cursors[profile] < len(states[profile]) - 1 for profile in items):

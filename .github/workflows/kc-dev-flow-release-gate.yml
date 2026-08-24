@@ -13,8 +13,9 @@ name: kc-dev-flow release gate
 # or on a manual dispatch. Every other PR pays checkout and one branch, and
 # reports success.
 #
-# Measured cost (run 32645943979, ubuntu-latest): 5 s wall-clock for the whole
-# job including the ~4 MB pinned Spacedock download and the gate run itself.
+# Measured ubuntu-latest cost: 5 s wall-clock for a gated run (32645943979),
+# and 7 s for an unrelated PR's always-report path (32698558322), including a
+# 3 s checkout. Dollar/month cost was not measured.
 
 on:
   pull_request:
@@ -27,7 +28,9 @@ permissions:
 env:
   # The runtime this gate's terminal claim is stated against. Bump deliberately:
   # a Spacedock that changes gate or merge-guard behavior should fail here first.
+  # The digest is GitHub's release-asset digest for the pinned Linux archive.
   SPACEDOCK_VERSION: v0.27.0-pre8
+  SPACEDOCK_SHA256: 4d839b4a75681ca7e205a2590e69536ca784129884149921ea61c71d200701ab
 
 jobs:
   multi-profile:
@@ -37,32 +40,33 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Decide whether this run carries kc-dev-flow
         id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
           HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          case "$HEAD_REF" in
-            release-please--branches--main*) ;;
-            *)
-              echo "run=false" >> "$GITHUB_OUTPUT"
-              echo "Not a Release PR; the gate runs at the release boundary."
-              exit 0
-              ;;
-          esac
+          if [ "$HEAD_REPO" != "$REPOSITORY" ] || [ "$HEAD_REF" != "release-please--branches--main" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Not the repository's Release PR; the gate runs at the release boundary."
+            exit 0
+          fi
           git fetch --no-tags --depth=1 origin "$BASE_REF"
-          if git diff --name-only "origin/$BASE_REF"...HEAD | grep -qE '^(kc-dev-flow/|docs/dev/_mods/|scripts/kc-dev-flow-)'; then
+          changed_files="$(git diff --name-only "origin/$BASE_REF"...HEAD)"
+          if grep -qE '^(kc-dev-flow/|docs/dev/_mods/|scripts/kc-dev-flow-)' <<< "$changed_files"; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -76,6 +80,7 @@ jobs:
           asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64_edge.tar.gz"
           curl -fsSL -o /tmp/spacedock.tar.gz \
             "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
+          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
           tar -xzf /tmp/spacedock.tar.gz -C /tmp
           mkdir -p "$HOME/.local/bin"
           install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"

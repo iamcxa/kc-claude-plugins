@@ -67,7 +67,7 @@ committed body states all three:
   ready`. `defer` keeps the item queued.
 
 The scheduling fields are named because a queue answered by query is the point:
-`--where sprint=X --where 'sprint-readiness != defer'` selects the drivable set
+`--where sprint=X --where sprint-readiness=ready` selects the drivable set
 without reading every queued item. The iteration authority still owns which
 iterations exist and where they are recorded; this bar owns only that a
 departing item names one.

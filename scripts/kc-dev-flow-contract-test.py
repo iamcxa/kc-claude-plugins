@@ -378,6 +378,19 @@ require(
     not re.search(r"^    if:", release_gate, re.MULTILINE),
     "the release gate job is skipped by a job-level if:, which a required check cannot survive",
 )
+for phrase in [
+    "persist-credentials: false",
+    "HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}",
+    'HEAD_REF" != "release-please--branches--main',
+    "SPACEDOCK_SHA256:",
+    "sha256sum -c -",
+    'changed_files="$(git diff --name-only',
+]:
+    require(phrase in release_gate, f"the release gate lost a trust-boundary guard: {phrase}")
+require(
+    "git diff --name-only \"origin/$BASE_REF\"...HEAD |" not in release_gate,
+    "the release gate can misclassify a git diff SIGPIPE/error as an unrelated release",
+)
 
 kernel = read("kc-dev-flow/references/kernel.md")
 for phrase in [
@@ -397,7 +410,7 @@ for phrase in [
     "**Why it is worth doing**",
     "**When it is scheduled**",
     "`sprint-readiness: ready`",
-    "--where sprint=X --where 'sprint-readiness != defer'",
+    "--where sprint=X --where sprint-readiness=ready",
 ]:
     require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
 require(
@@ -590,6 +603,7 @@ normalized_chooser = " ".join(chooser.split())
 normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
 normalized_science = " ".join(science.split())
+normalized_migration = " ".join(migration.split())
 
 for phrase in [
     "kc-dev-flow-work-profile/v2",
@@ -605,6 +619,18 @@ require(
     "chooser still documents the removed release route element",
 )
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
+for phrase in [
+    "Default the entity template to `sprint-readiness: defer`",
+    "do not mark the unscheduled backlog ready during adoption",
+]:
+    require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+for phrase in [
+    "Migrating from 3.x to 4.x",
+    "drain every entity at `status: release`",
+    "sprint-readiness=ready",
+    "do not mark the unscheduled queue ready as a bulk migration",
+]:
+    require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 
 for phrase in [
     "read that bounded section plus the frontmatter",
@@ -682,6 +708,11 @@ for phrase in [
 require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM")
 
 workflow = read("docs/dev/README.md")
+require(
+    "sprint-readiness: defer" in workflow
+    and "--where sprint-readiness=ready" in workflow,
+    "self-adoption template/query no longer default closed and select only ready items",
+)
 frontmatter = workflow.split("---", 2)[1]
 expected_stage_order = ["backlog", "ideation", "implementation", "validation", "done"]
 actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)

@@ -37,7 +37,7 @@ def _one_field(text: str, pattern: str, label: str) -> str:
     matches = re.findall(pattern, text, flags=re.MULTILINE)
     if len(matches) != 1:
         raise ContractError(f"work item must contain exactly one {label}")
-    return matches[0].strip().strip("\"'")
+    return matches[0].strip().strip("\"'").strip()
 
 
 def resolve_work_item(path: Path) -> dict[str, str]:
@@ -99,7 +99,11 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         sprint = _one_field(
             frontmatter, r"^sprint:\s*([^\n#]+?)\s*$", "frontmatter sprint"
         )
-        if not sprint:
+        if (
+            not sprint
+            or sprint.casefold() in {"null", "~", "true", "false"}
+            or sprint[0] in "[{&*!|>"
+        ):
             raise ContractError("frontmatter sprint must name an iteration")
         sprint_readiness = _one_field(
             frontmatter,

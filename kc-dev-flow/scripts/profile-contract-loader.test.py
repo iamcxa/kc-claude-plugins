@@ -123,6 +123,26 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             "frontmatter sprint", "an item with no scheduled sprint",
         ),
         (
+            "pilot-product-slice", "ideation", {"sprint": "null"},
+            "must name an iteration", "an item with a YAML null sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "~"},
+            "must name an iteration", "an item with a shorthand YAML null sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "false"},
+            "must name an iteration", "an item with a YAML boolean sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "[S2]"},
+            "must name an iteration", "an item with a YAML collection sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "'   '"},
+            "must name an iteration", "an item with a quoted blank sprint",
+        ),
+        (
             "production", "ideation", {"sprint_readiness": None},
             "frontmatter sprint-readiness", "an item with no sprint readiness",
         ),

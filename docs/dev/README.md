@@ -168,7 +168,7 @@ or iteration owner schedules it: leaving `backlog` needs a `sprint` naming a
 product sprint heading that already exists in `docs/dev/ROADMAP.md`, plus
 `sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
 then, so the drivable set is `spacedock status --workflow-dir docs/dev --where
-sprint=<heading> --where 'sprint-readiness != defer'`. Obtain and commit the v2
+sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the v2
 profile receipt before moving to the selected route's first working state.
 
 ### `ideation` — selected `shape`
@@ -292,7 +292,7 @@ status: backlog
 source:
 product:
 sprint:
-sprint-readiness:
+sprint-readiness: defer
 started:
 completed:
 verdict:

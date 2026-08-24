@@ -1,4 +1,32 @@
-# Migrating from 2.x
+# Migration
+
+## Migrating from 3.x to 4.x
+
+Version 4 removes the Production-only `release` state and makes scheduling a
+loader-enforced backlog exit requirement. Upgrade the adopter and installed
+plugin as one cutover, in this order:
+
+1. Under the old graph and loader, drain every entity at `status: release` to
+   `done`. `spacedock status --where status=release` must return empty before
+   the graph changes.
+2. Remove `release` from the adopter's workflow graph. Re-vendor the loader,
+   kernel, profile tree, and conditional references byte-for-byte, including
+   Production `verify.md` and deletion of Production `release.md`.
+3. Mechanically re-record each committed Production v2 receipt under its same
+   Captain selection so its route is `[shape, build, verify]`.
+4. Default the adopter's entity template to `sprint-readiness: defer`. Before
+   continuing any item already at its first working stage, give it a non-empty
+   `sprint` accepted by the iteration authority and set
+   `sprint-readiness: ready`. Backlog items need those values only when selected;
+   do not mark the unscheduled queue ready as a bulk migration.
+5. Prove the drivable set with `spacedock status --where sprint=X --where
+   sprint-readiness=ready`, run every adopted profile-stage loader combination,
+   and run the repository's normal gates before updating the installed plugin.
+
+An adopter that does not take v4 keeps its 3.x graph and loader behavior. Do not
+mix a v4 installed skill with a partially migrated 3.x workflow.
+
+## Migrating from 2.x
 
 The profile-native contract is a breaking upgrade. The installed skills and an
 adopter's vendored workflow must move in one coordinated cutover. A new
@@ -6,7 +34,7 @@ adopter's vendored workflow must move in one coordinated cutover. A new
 profile contracts, or v2 work-item receipt are absent; it does not fall back to
 the installed package or silently run the 2.x workflow.
 
-## Core differences
+### Core differences
 
 | 2.x adopter | Profile-native adopter |
 |---|---|
@@ -17,7 +45,7 @@ the installed package or silently run the 2.x workflow.
 | Work-control prose may combine review and delivery controls. | Build emits one proportional typed observation; delivery and local controls remain with their providers. |
 | Production release may share the normal terminal path. | Every profile terminalizes through the same states; Production adds a release-authorization boundary inside `validation` rather than a `release` stage. |
 
-## Safe cutover
+### Safe cutover
 
 1. Prepare the adopter refit before updating the installed plugin. Do not run
    ordinary continuation while one side is new and the other is still 2.x.
@@ -52,7 +80,7 @@ the installed package or silently run the 2.x workflow.
    absent, exercise runtime skips, and run the repository's normal gates. Merge
    the adopter refit before updating the installed plugin used for continuation.
 
-## Decisions that remain local
+### Decisions that remain local
 
 The upgrade does not decide whether an adopter keeps a mandatory EM or
 cross-model gate, how a custom terminal state closes, whether RoboRev is
@@ -94,9 +122,10 @@ a week, with `sprint` present on 25 of 67 items and `sprint-readiness` on none.
 A third part is now required. An item leaves `backlog` only when it also carries
 a `sprint` naming an iteration its repository's iteration authority has already
 accepted, and `sprint-readiness: ready`. The field names are fixed on purpose —
-the value is a queue that answers `--where sprint=X --where 'sprint-readiness !=
-defer'` instead of one that must be read item by item. Which iterations exist,
-and where they are recorded, stays with the adopter's iteration authority.
+the value is a queue that answers `--where sprint=X --where
+sprint-readiness=ready` instead of one that must be read item by item. Which
+iterations exist, and where they are recorded, stays with the adopter's
+iteration authority.
 
 An adopter upgrades by adding the two fields to its entity template and filling
 them when an item is next selected. Backfilling the whole queue is not required:
