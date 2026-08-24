@@ -355,6 +355,8 @@ for relative in [
     "kc-dev-flow/MIGRATION.md",
     "kc-dev-flow/README.md",
     "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/references/retained-document-policy.md",
+    "kc-dev-flow/references/project-context-maintenance.md",
 ]:
     normalized = " ".join(read(relative).split())
     for retired in ["adds `release`", "explicit `release` stage", "`release` / `done`"]:

@@ -13,9 +13,9 @@ routing safe to ship:
    with Production's release authorization applied as a terminal-approval
    boundary (`route=approved-awaiting-merge` then `merge guard --verdict`)
    rather than as a state the other profiles skip.
-4. Proportional load — a lighter profile's whole route loads strictly less
-   than a heavier one's, and no single stage load exceeds a declared share of
-   the reference tree. This is the only automated evidence behind "POC does
+4. Proportional load — the POC route loads strictly less than every other
+   profile's, and no single stage load exceeds a declared share of the
+   reference tree. This is the only automated evidence behind "POC does
    not pay for Production policy"; without it a POC contract can grow past
    Production's and the claim silently becomes false.
 
@@ -48,9 +48,11 @@ ADOPTED = ROOT / "docs/dev/_mods"
 # it: the runtime refuses a state this graph does not declare.
 GRAPH_STATES = ["backlog", "ideation", "implementation", "validation", "done"]
 
-# Lightest route first. The order is the product claim: the smallest sufficient
-# route must stay the cheapest one to load.
-LOAD_ORDER = ["poc-exploration", "pilot-product-slice", "production"]
+# The claim under test: POC is the smallest sufficient route, so it must stay
+# the cheapest to load. Pilot against Production is deliberately not asserted —
+# no contract states an order between them, and their current totals differ by
+# 1.4%, so asserting it would false-block a Release PR over an ordinary edit.
+LIGHTEST_PROFILE = "poc-exploration"
 
 # Ceiling on one stage's loaded bytes as a share of the whole reference tree.
 # Measured high-water mark when this was set: 15.7% (Pilot `shape`). The
@@ -141,12 +143,13 @@ def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
                 )
                 total += stage_bytes
             totals[profile] = total
-    ordered = [totals[profile] for profile in LOAD_ORDER if profile in totals]
-    require(
-        ordered == sorted(ordered) and len(set(ordered)) == len(ordered),
-        f"route load is not strictly ordered lightest-first under {contracts_root}: "
-        + ", ".join(f"{profile}={totals[profile]}" for profile in LOAD_ORDER if profile in totals),
-    )
+    lightest = totals[LIGHTEST_PROFILE]
+    for profile, total in totals.items():
+        require(
+            profile == LIGHTEST_PROFILE or lightest < total,
+            f"{LIGHTEST_PROFILE} no longer loads less than {profile} under "
+            f"{contracts_root}: {lightest} vs {total}",
+        )
     return totals
 
 
