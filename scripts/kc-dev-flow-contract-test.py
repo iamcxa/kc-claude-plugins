@@ -388,6 +388,20 @@ require(
     "| `production` | `shape -> build -> verify` |" in kernel,
     "kernel route table omits the current Production route",
 )
+normalized_kernel = " ".join(kernel.split())
+for phrase in [
+    "An item leaves `backlog` only when its committed body states all three",
+    "**What it is**",
+    "**Why it is worth doing**",
+    "**When it is scheduled**",
+    "`sprint-readiness: ready`",
+    "--where sprint=X --where 'sprint-readiness != defer'",
+]:
+    require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
+require(
+    "when it is scheduled" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
+    "choose-work-profile no longer checks the scheduling part of the exit bar",
+)
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),

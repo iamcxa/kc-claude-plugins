@@ -60,6 +60,25 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-08-24 — the `backlog` exit bar names the schedule
+
+The bar had two parts, what an item is and why it is worth doing, and both are
+about whether a queued item is legible. Neither answers which of the queued
+items to start, so selection stayed a manual read of the whole queue: this
+repository reached 64 queued items against one in flight, growing eight to ten
+a week, with `sprint` present on 25 of 67 items and `sprint-readiness` on none.
+
+A third part is now required. An item leaves `backlog` only when it also carries
+a `sprint` naming an iteration its repository's iteration authority has already
+accepted, and `sprint-readiness: ready`. The field names are fixed on purpose —
+the value is a queue that answers `--where sprint=X --where 'sprint-readiness !=
+defer'` instead of one that must be read item by item. Which iterations exist,
+and where they are recorded, stays with the adopter's iteration authority.
+
+An adopter upgrades by adding the two fields to its entity template and filling
+them when an item is next selected. Backfilling the whole queue is not required:
+an item that never leaves `backlog` never has to answer the bar.
+
 ## 2026-08-21 — `release` state removed from the Production route
 
 Profile differences must live in what happens inside a stage or in which

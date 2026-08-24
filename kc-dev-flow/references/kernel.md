@@ -55,13 +55,22 @@ instead, the way `production`'s route above folds release authorization into
 `verify` rather than skipping a dedicated `release` stage.
 
 Queue state still has an exit bar. An item leaves `backlog` only when its
-committed body states both:
+committed body states all three:
 
 - **What it is** — one sentence sufficient for Captain triage.
 - **Why it is worth doing** — for `pilot-product-slice` and `production`, the
   outcome it serves in the repository's existing project-context authority; for
   `poc-exploration`, the question the experiment answers and the observable
   result whose occurrence would abandon it.
+- **When it is scheduled** — a `sprint` field naming an iteration the
+  repository's iteration authority has already accepted, and `sprint-readiness:
+  ready`. `defer` keeps the item queued.
+
+The scheduling fields are named because a queue answered by query is the point:
+`--where sprint=X --where 'sprint-readiness != defer'` selects the drivable set
+without reading every queued item. The iteration authority still owns which
+iterations exist and where they are recorded; this bar owns only that a
+departing item names one.
 
 The Captain checks the bar on every `backlog` exit, at profile selection.
 A reused profile receipt answers which route the item takes, never whether the

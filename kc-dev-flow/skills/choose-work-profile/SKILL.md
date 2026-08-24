@@ -32,9 +32,12 @@ external mutation, irreversible migration, public compatibility, unattended
 operation, broad exposure, SLO/support duty, or release/rollback ownership.
 
 Check the shared core's `backlog` exit bar in the same read. The work item must
-already state what it is and why it is worth doing, in the form that core
-requires for the profile under consideration. A missing part is a missing fact:
-carry it into the question below rather than supplying it.
+already state what it is, why it is worth doing, and when it is scheduled — an
+accepted `sprint` and `sprint-readiness: ready` — in the form that core requires
+for the profile under consideration. A missing part is a missing fact: carry it
+into the question below rather than supplying it. Scheduling is the iteration
+owner's answer, not yours; an item with no accepted iteration is not ready to
+leave `backlog` however clear its problem statement is.
 
 Derive a recommendation from the task. Ask one clarifying question only when one
 missing fact — an incomplete exit bar included — could change the choice or
