@@ -389,7 +389,6 @@ require(
     "kernel route table omits the current Production route",
 )
 normalized_kernel = " ".join(kernel.split())
-normalized_kernel_trigger = normalized_kernel
 for phrase in [
     "An item leaves `backlog` only when its committed body states all three",
     "**What it is**",
@@ -423,10 +422,15 @@ for relative in [
         "compatibility break that makes a consumer act" in normalized,
         f"{relative} omits the consumer-migration promotion trigger",
     )
+# The kernel names the trigger; the skill that makes the call owns the test for
+# it. Kernel bytes are paid at every stage of every route, and this explanation
+# is only read when a profile is being chosen.
+normalized_choose = " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split())
 require(
-    "it must run a migration" in normalized_kernel_trigger
-    and "Publishing to a public surface is not the test" in normalized_kernel_trigger,
-    "kernel no longer defines the consumer-migration trigger",
+    "asks whether a consumer must do something, not whether the change is published"
+    in normalized_choose
+    and "it has to run a migration" in normalized_choose,
+    "choose-work-profile no longer states the consumer-migration test",
 )
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
