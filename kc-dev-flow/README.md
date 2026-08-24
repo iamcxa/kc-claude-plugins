@@ -16,7 +16,7 @@ falsify this direction.
 
 ```mermaid
 flowchart TB
-    A["Backlog<br/>capture the problem"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
+    A["Backlog<br/>state the problem, the value,<br/>and the accepted iteration"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
     B --> L["At each working stage, load<br/>shared core + selected base + selected stage"]
     L --> C{Selected profile}
 
@@ -37,6 +37,9 @@ flowchart TB
     R3 --> R4["Verify<br/>exact-revision obligations + rollout/rollback + release authority"]
     R4 --> D
 ```
+
+An item leaves `backlog` only when it states what it is, why it is worth doing,
+and the accepted iteration it is scheduled into.
 
 Backlog and done are state boundaries, not working stages; a runtime may expose
 the union of route states and skip inactive ones. The profile loader rejects a stage
