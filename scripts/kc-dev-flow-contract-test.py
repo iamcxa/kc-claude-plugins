@@ -89,6 +89,8 @@ required = [
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
+    "scripts/kc-dev-flow-multi-profile-gate.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
     "scripts/kc-dev-flow-published-tag-smoke.test.py",
     "scripts/roborev-implementation-exit-contract.test.py",
@@ -322,6 +324,8 @@ def write_profile_work_item(
             [
                 "---",
                 f"status: {workflow_stage}",
+                "sprint: kc-dev-flow/S2",
+                "sprint-readiness: ready",
                 "---",
                 "",
                 "## Work profile receipt",
@@ -346,6 +350,50 @@ require(
     == (ADOPTED / "kernel.md").read_bytes(),
     "self-adopted shared core differs from package source",
 )
+# `release` was a Production-only runtime state until it stranded a Pilot item
+# outside its declared route. Nothing else reads adoption prose, so the retired
+# state is guarded here rather than trusted to a reviewer.
+for relative in [
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/references/retained-document-policy.md",
+    "kc-dev-flow/references/project-context-maintenance.md",
+]:
+    normalized = " ".join(read(relative).split())
+    for retired in ["adds `release`", "explicit `release` stage", "`release` / `done`"]:
+        require(
+            retired not in normalized,
+            f"{relative} still instructs the retired `release` state: {retired}",
+        )
+
+release_gate = read(".github/workflows/kc-dev-flow-release-gate.yml")
+require(
+    "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate
+    and "./scripts/kc-dev-flow-minimal-stack-ablation.test.py" in release_gate,
+    "the release gate workflow no longer runs the baseline and without-it checks",
+)
+# A job-level `if:` makes a required check report "pending / expected" forever
+# and blocks unrelated PRs; the release scoping belongs inside the job.
+require(
+    not re.search(r"^    if:", release_gate, re.MULTILINE),
+    "the release gate job is skipped by a job-level if:, which a required check cannot survive",
+)
+for phrase in [
+    "persist-credentials: false",
+    "HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}",
+    'HEAD_REF" != "release-please--branches--main',
+    "SPACEDOCK_SHA256:",
+    "sha256sum -c -",
+    'changed_files="$(git diff --name-only',
+]:
+    require(phrase in release_gate, f"the release gate lost a trust-boundary guard: {phrase}")
+require(
+    "git diff --name-only \"origin/$BASE_REF\"...HEAD |" not in release_gate,
+    "the release gate can misclassify a git diff SIGPIPE/error as an unrelated release",
+)
+
 kernel = read("kc-dev-flow/references/kernel.md")
 for phrase in [
     "compare added files, dependencies, abstractions, tests, and comments",
@@ -361,6 +409,50 @@ for phrase in [
 require(
     "| `production` | `shape -> build -> verify` |" in kernel,
     "kernel route table omits the current Production route",
+)
+normalized_kernel = " ".join(kernel.split())
+for phrase in [
+    "An item leaves `backlog` only when its committed body states all three",
+    "**What it is**",
+    "**Why it is worth doing**",
+    "**When it is scheduled**",
+    "`sprint-readiness: ready`",
+    "--where sprint=X --where sprint-readiness=ready",
+]:
+    require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
+require(
+    "when it is scheduled" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
+    "choose-work-profile no longer checks the scheduling part of the exit bar",
+)
+# `public compatibility` promoted on publication, which every change to this
+# package satisfies, so the trigger fired on all of them and sorted none. The
+# replacement asks whether a consumer must run a migration. Guarded in all four
+# places that state a promotion boundary, because a reader who finds the old
+# wording in any one of them gets the old rule.
+for relative in [
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md",
+    "kc-dev-flow/references/profiles/pilot-product-slice/base.md",
+]:
+    normalized = " ".join(read(relative).split())
+    require(
+        "public compatibility" not in normalized,
+        f"{relative} still promotes on publication rather than on a consumer migration",
+    )
+    require(
+        "compatibility break that makes a consumer act" in normalized,
+        f"{relative} omits the consumer-migration promotion trigger",
+    )
+# The kernel names the trigger; the skill that makes the call owns the test for
+# it. Kernel bytes are paid at every stage of every route, and this explanation
+# is only read when a profile is being chosen.
+normalized_choose = " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split())
+require(
+    "asks whether a consumer must do something, not whether the change is published"
+    in normalized_choose
+    and "it has to run a migration" in normalized_choose,
+    "choose-work-profile no longer states the consumer-migration test",
 )
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
@@ -518,6 +610,7 @@ normalized_chooser = " ".join(chooser.split())
 normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
 normalized_science = " ".join(science.split())
+normalized_migration = " ".join(migration.split())
 
 for phrase in [
     "kc-dev-flow-work-profile/v2",
@@ -533,6 +626,18 @@ require(
     "chooser still documents the removed release route element",
 )
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
+for phrase in [
+    "Default the entity template to `sprint-readiness: defer`",
+    "do not mark the unscheduled backlog ready during adoption",
+]:
+    require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+for phrase in [
+    "Migrating from 3.x to 4.x",
+    "drain every entity at `status: release`",
+    "sprint-readiness=ready",
+    "do not mark the unscheduled queue ready as a bulk migration",
+]:
+    require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 
 for phrase in [
     "read that bounded section plus the frontmatter",
@@ -610,10 +715,37 @@ for phrase in [
 require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM")
 
 workflow = read("docs/dev/README.md")
+require(
+    "sprint-readiness: defer" in workflow
+    and "--where sprint-readiness=ready" in workflow,
+    "self-adoption template/query no longer default closed and select only ready items",
+)
 frontmatter = workflow.split("---", 2)[1]
 expected_stage_order = ["backlog", "ideation", "implementation", "validation", "done"]
 actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)
 require(actual_stage_order == expected_stage_order, f"workflow stage graph drifted: {actual_stage_order}")
+
+# The literal above pins this repository's graph; these two derive the reason it
+# is that shape. #276's incident was a state — `release` — that sat between a
+# profile's last working state and the terminal one: Spacedock computed the
+# gate's target from graph order, so a Pilot approval targeted a stage outside
+# its route and the item had no way to reach `done`. A profile-only state is
+# therefore safe before a route's first state and fatal after its last.
+terminal_state = actual_stage_order[-1]
+for profile, stages in expected_routes.items():
+    route_states = [state for state in actual_stage_order if state in stages]
+    require(
+        route_states == [state for state in stages],
+        f"{profile} route states are missing from or out of order in the workflow graph: "
+        f"{route_states} vs {list(stages)}",
+    )
+    last = actual_stage_order.index(route_states[-1])
+    require(
+        actual_stage_order[last + 1] == terminal_state,
+        f"{profile} would strand: the graph puts "
+        f"{actual_stage_order[last + 1]!r} between its last working state "
+        f"{route_states[-1]!r} and {terminal_state!r}",
+    )
 for phrase in [
     "POC | `backlog -> implementation -> validation -> done`",
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",

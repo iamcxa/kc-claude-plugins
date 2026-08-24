@@ -55,16 +55,22 @@ def write_work_item(
     *,
     schema: str = "kc-dev-flow-work-profile/v2",
     route: list[str] | None = None,
+    sprint: str | None = "kc-dev-flow/S2",
+    sprint_readiness: str | None = "ready",
 ) -> Path:
     if route is None:
         route = [logical for logical, _next in MODULE.ROUTES[profile].values()]
     path = root / "work-items" / f"{name}.md"
     path.parent.mkdir(exist_ok=True)
+    frontmatter = ["---", f"status: {workflow_stage}"]
+    if sprint is not None:
+        frontmatter.append(f"sprint: {sprint}")
+    if sprint_readiness is not None:
+        frontmatter.append(f"sprint-readiness: {sprint_readiness}")
     path.write_text(
         "\n".join(
-            [
-                "---",
-                f"status: {workflow_stage}",
+            frontmatter
+            + [
                 "---",
                 "",
                 "## Work profile receipt",
@@ -110,6 +116,61 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         },
     }
     require(MODULE.ROUTES == expected_routes, "route topology drifted")
+
+    scheduling_refusals = [
+        (
+            "pilot-product-slice", "ideation", {"sprint": None},
+            "frontmatter sprint", "an item with no scheduled sprint",
+        ),
+        (
+            "pilot-product-slice", "ideation", {"sprint": "null"},
+            "must name an iteration", "an item with a YAML null sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "~"},
+            "must name an iteration", "an item with a shorthand YAML null sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "false"},
+            "must name an iteration", "an item with a YAML boolean sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "[S2]"},
+            "must name an iteration", "an item with a YAML collection sprint",
+        ),
+        (
+            "production", "ideation", {"sprint": "'   '"},
+            "must name an iteration", "an item with a quoted blank sprint",
+        ),
+        (
+            "production", "ideation", {"sprint_readiness": None},
+            "frontmatter sprint-readiness", "an item with no sprint readiness",
+        ),
+        (
+            "poc-exploration", "implementation", {"sprint_readiness": "defer"},
+            "must be 'ready'", "an item that remains deferred",
+        ),
+    ]
+    for profile, stage, fields, error, description in scheduling_refusals:
+        work_item = write_work_item(
+            root, profile, stage, f"first-stage-{profile}", **fields
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(work_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2 and error in rejected.stderr,
+            f"first working stage accepted {description}",
+        )
 
     all_markers = {
         f"BASE-{profile}" for profile in expected_routes
@@ -790,7 +851,8 @@ def sd_new_entity(
     spacedock: Path, repo: Path, workflow: Path, slug: str, profile: str, route: list[str]
 ) -> None:
     body = (
-        "---\nstatus: backlog\n---\n\n"
+        "---\nstatus: backlog\nsprint: kc-dev-flow/S2\n"
+        "sprint-readiness: ready\n---\n\n"
         f"# {slug}\n\n## Work profile receipt\n\n```yaml\nwork_profile:\n"
         "  schema: kc-dev-flow-work-profile/v2\n"
         f"  selected: {profile}\n"

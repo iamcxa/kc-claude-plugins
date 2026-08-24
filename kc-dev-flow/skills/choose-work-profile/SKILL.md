@@ -28,13 +28,24 @@ the accepted scope.
 | `Production` (`production`) | `shape -> build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
 
 A POC label cannot downscope production credentials or data, destructive
-external mutation, irreversible migration, public compatibility, unattended
-operation, broad exposure, SLO/support duty, or release/rollback ownership.
+external mutation, irreversible migration, a compatibility break that makes a
+consumer act, unattended operation, broad exposure, SLO/support duty, or
+release/rollback ownership.
+
+The compatibility trigger asks whether a consumer must do something, not whether
+the change is published. Recommend Production when an existing consumer cannot
+upgrade by taking the new version — it has to run a migration, edit its own
+configuration, or rewrite records it owns. If you cannot state that consumers
+upgrade without acting, recommend Production; the error that costs more is the
+one that sends a migration out on a shorter route.
 
 Check the shared core's `backlog` exit bar in the same read. The work item must
-already state what it is and why it is worth doing, in the form that core
-requires for the profile under consideration. A missing part is a missing fact:
-carry it into the question below rather than supplying it.
+already state what it is, why it is worth doing, and when it is scheduled — an
+accepted `sprint` and `sprint-readiness: ready` — in the form that core requires
+for the profile under consideration. A missing part is a missing fact: carry it
+into the question below rather than supplying it. Scheduling is the iteration
+owner's answer, not yours; an item with no accepted iteration is not ready to
+leave `backlog` however clear its problem statement is.
 
 Derive a recommendation from the task. Ask one clarifying question only when one
 missing fact — an incomplete exit bar included — could change the choice or

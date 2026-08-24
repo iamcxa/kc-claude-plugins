@@ -148,11 +148,14 @@ python3 docs/dev/_mods/profile-contract-loader.py \
 ```
 
 The command validates and hash-binds that item's v2 receipt and current status,
-then emits the shared core, one selected base, and one selected stage. Its
-`next_workflow_stage` is the normal next state. Profiles are per item, so POC,
-Pilot, and Production items may run concurrently in this repository without a
-global profile switch. A refusal blocks only that item's dispatch until its
-receipt, state, or vendored adoption is corrected.
+then emits the shared core, one selected base, and one selected stage. At a
+route's first working stage it also requires one non-empty `sprint` and
+`sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
+authority for whether the named sprint is accepted. Its `next_workflow_stage`
+is the normal next state. Profiles are per item, so POC, Pilot, and Production
+items may run concurrently in this repository without a global profile switch.
+A refusal blocks only that item's dispatch until its receipt, state, scheduling
+fields, or vendored adoption is corrected.
 
 ## Stages
 
@@ -162,8 +165,12 @@ repository mechanics; it does not repeat the profile contract.
 ### `backlog` — queue and select
 
 Capture `title`, `source`, `product`, and one problem paragraph. Only the Captain
-or iteration owner schedules it. Obtain and commit the v2 profile receipt before
-moving to the selected route's first working state.
+or iteration owner schedules it: leaving `backlog` needs a `sprint` naming a
+product sprint heading that already exists in `docs/dev/ROADMAP.md`, plus
+`sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
+then, so the drivable set is `spacedock status --workflow-dir docs/dev --where
+sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the v2
+profile receipt before moving to the selected route's first working state.
 
 ### `ideation` — selected `shape`
 
@@ -286,6 +293,7 @@ status: backlog
 source:
 product:
 sprint:
+sprint-readiness: defer
 started:
 completed:
 verdict:

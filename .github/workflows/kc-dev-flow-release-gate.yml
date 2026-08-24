@@ -1,0 +1,98 @@
+name: kc-dev-flow release gate
+
+# Live multi-profile route gate: one Spacedock workflow holding a POC, a Pilot,
+# and a Production item at the same time, each loading only its own contracts,
+# each reaching `done` through the shared terminal path, and each route staying
+# proportional in load. See scripts/kc-dev-flow-multi-profile-gate.py for the
+# exact claims. The adjacent ablation runner then removes each indispensable
+# guard in an isolated copy and requires every mutant to fail.
+#
+# The job always runs so it can be a required status check: a job skipped by a
+# job-level `if:` reports "pending / expected" forever and blocks every
+# unrelated PR from merging. The gate work itself is scoped inside the job — it
+# executes only on a release-please Release PR whose diff carries kc-dev-flow,
+# or on a manual dispatch. Every other PR pays checkout and one branch, and
+# reports success.
+#
+# Measured ubuntu-latest cost: 13 s wall-clock for the baseline plus ablations
+# (32705393764), and 7 s for an unrelated PR's always-report path (32698558322),
+# including checkout. Dollar/month cost was not measured.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # The runtime this gate's terminal claim is stated against. Bump deliberately:
+  # a Spacedock that changes gate or merge-guard behavior should fail here first.
+  # The digest is GitHub's release-asset digest for the pinned Linux archive.
+  SPACEDOCK_VERSION: v0.27.0-pre8
+  SPACEDOCK_SHA256: 4d839b4a75681ca7e205a2590e69536ca784129884149921ea61c71d200701ab
+
+jobs:
+  multi-profile:
+    # Keep this context name stable if it becomes a required check.
+    name: multi-profile route gate (live Spacedock)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Decide whether this run carries kc-dev-flow
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$HEAD_REPO" != "$REPOSITORY" ] || [ "$HEAD_REF" != "release-please--branches--main" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Not the repository's Release PR; the gate runs at the release boundary."
+            exit 0
+          fi
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          changed_files="$(git diff --name-only "origin/$BASE_REF"...HEAD)"
+          if grep -qE '^(kc-dev-flow/|docs/dev/_mods/|scripts/kc-dev-flow-)' <<< "$changed_files"; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Release PR does not carry kc-dev-flow; nothing to gate."
+          fi
+
+      - name: Install pinned Spacedock
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64_edge.tar.gz"
+          curl -fsSL -o /tmp/spacedock.tar.gz \
+            "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
+          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/spacedock.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Run the multi-profile route gate
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          spacedock --version
+          ./scripts/kc-dev-flow-multi-profile-gate.py --json
+
+      - name: Run the minimal-stack without-it ablations
+        if: steps.scope.outputs.run == 'true'
+        run: ./scripts/kc-dev-flow-minimal-stack-ablation.test.py

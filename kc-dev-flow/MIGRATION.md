@@ -1,4 +1,32 @@
-# Migrating from 2.x
+# Migration
+
+## Migrating from 3.x to 4.x
+
+Version 4 removes the Production-only `release` state and makes scheduling a
+loader-enforced backlog exit requirement. Upgrade the adopter and installed
+plugin as one cutover, in this order:
+
+1. Under the old graph and loader, drain every entity at `status: release` to
+   `done`. `spacedock status --where status=release` must return empty before
+   the graph changes.
+2. Remove `release` from the adopter's workflow graph. Re-vendor the loader,
+   kernel, profile tree, and conditional references byte-for-byte, including
+   Production `verify.md` and deletion of Production `release.md`.
+3. Mechanically re-record each committed Production v2 receipt under its same
+   Captain selection so its route is `[shape, build, verify]`.
+4. Default the adopter's entity template to `sprint-readiness: defer`. Before
+   continuing any item already at its first working stage, give it a non-empty
+   `sprint` accepted by the iteration authority and set
+   `sprint-readiness: ready`. Backlog items need those values only when selected;
+   do not mark the unscheduled queue ready as a bulk migration.
+5. Prove the drivable set with `spacedock status --where sprint=X --where
+   sprint-readiness=ready`, run every adopted profile-stage loader combination,
+   and run the repository's normal gates before updating the installed plugin.
+
+An adopter that does not take v4 keeps its 3.x graph and loader behavior. Do not
+mix a v4 installed skill with a partially migrated 3.x workflow.
+
+## Migrating from 2.x
 
 The profile-native contract is a breaking upgrade. The installed skills and an
 adopter's vendored workflow must move in one coordinated cutover. A new
@@ -6,7 +34,7 @@ adopter's vendored workflow must move in one coordinated cutover. A new
 profile contracts, or v2 work-item receipt are absent; it does not fall back to
 the installed package or silently run the 2.x workflow.
 
-## Core differences
+### Core differences
 
 | 2.x adopter | Profile-native adopter |
 |---|---|
@@ -15,9 +43,9 @@ the installed package or silently run the 2.x workflow.
 | A v1 or prose profile choice may inform work without driving a loader. | A hash-bound `kc-dev-flow-work-profile/v2` receipt is required before the first working stage. |
 | Fresh EM or cross-model review may act as a general gate. | Named owners and deterministic checks hold scoped gates; Chief Engineer and Science Officer load only on their triggers. |
 | Work-control prose may combine review and delivery controls. | Build emits one proportional typed observation; delivery and local controls remain with their providers. |
-| Production release may share the normal terminal path. | Production has an explicit `release` stage; POC and Pilot skip it without placeholder work. |
+| Production release may share the normal terminal path. | Every profile terminalizes through the same states; Production adds a release-authorization boundary inside `validation` rather than a `release` stage. |
 
-## Safe cutover
+### Safe cutover
 
 1. Prepare the adopter refit before updating the installed plugin. Do not run
    ordinary continuation while one side is new and the other is still 2.x.
@@ -52,13 +80,56 @@ the installed package or silently run the 2.x workflow.
    absent, exercise runtime skips, and run the repository's normal gates. Merge
    the adopter refit before updating the installed plugin used for continuation.
 
-## Decisions that remain local
+### Decisions that remain local
 
 The upgrade does not decide whether an adopter keeps a mandatory EM or
 cross-model gate, how a custom terminal state closes, whether RoboRev is
 available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
+
+## 2026-08-24 — promotion asks whether a consumer must migrate
+
+`public compatibility` was one of the triggers that promote work to
+`production`. Every change to a published package satisfies it, so in a package
+repository the trigger fired on everything and sorted nothing: of thirteen
+receipts here, eight selected `production`, and five of those gave the same
+reason — published to consumers at a pinned tag — while stating in the same
+receipt that no runtime or external state was involved. The full Production
+validation bar then asked those items for rollout readiness, an operational
+owner, and a monitoring handoff that none of them had.
+
+The trigger is now **a compatibility break that makes a consumer act**: one an
+existing consumer cannot absorb by taking the new version, because it must run a
+migration, edit its own configuration, or rewrite records it owns. Publication is
+not the test. Re-deciding the same eight receipts under this rule leaves four at
+`production` — including the route-graph change, whose adopters had to drain
+entities and edit their own workflow graph — and moves four to
+`pilot-product-slice` with their release obligation intact.
+
+The rule is deliberately asymmetric. Where you cannot state that consumers
+upgrade without doing anything, the trigger counts as met: sending a migration
+out on a shorter route costs more than paying Production's bar once.
+
+## 2026-08-24 — the `backlog` exit bar names the schedule
+
+The bar had two parts, what an item is and why it is worth doing, and both are
+about whether a queued item is legible. Neither answers which of the queued
+items to start, so selection stayed a manual read of the whole queue: this
+repository reached 64 queued items against one in flight, growing eight to ten
+a week, with `sprint` present on 25 of 67 items and `sprint-readiness` on none.
+
+A third part is now required. An item leaves `backlog` only when it also carries
+a `sprint` naming an iteration its repository's iteration authority has already
+accepted, and `sprint-readiness: ready`. The field names are fixed on purpose —
+the value is a queue that answers `--where sprint=X --where
+sprint-readiness=ready` instead of one that must be read item by item. Which
+iterations exist, and where they are recorded, stays with the adopter's
+iteration authority.
+
+An adopter upgrades by adding the two fields to its entity template and filling
+them when an item is next selected. Backfilling the whole queue is not required:
+an item that never leaves `backlog` never has to answer the bar.
 
 ## 2026-08-21 — `release` state removed from the Production route
 
