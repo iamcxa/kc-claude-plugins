@@ -316,31 +316,43 @@ require(loader.ROUTES == expected_routes, "profile route topology drifted")
 
 
 def write_profile_work_item(
-    root: Path, profile: str, workflow_stage: str, logical_route: list[str]
+    root: Path,
+    profile: str,
+    workflow_stage: str,
+    logical_route: list[str],
+    *,
+    schema: str = "kc-dev-flow-work-profile/v3",
 ) -> Path:
     path = root / f"{profile}-{workflow_stage}.md"
-    path.write_text(
-        "\n".join(
+    receipt = [
+        "---",
+        f"status: {workflow_stage}",
+        "sprint: kc-dev-flow/S2",
+        "sprint-readiness: ready",
+        "---",
+        "",
+        "## Work profile receipt",
+        "",
+        "```yaml",
+        "work_profile:",
+        f"  schema: {schema}",
+        f"  selected: {profile}",
+        f"  recommended: {profile}",
+        f"  route: [{', '.join(logical_route)}]",
+        "  basis: contract fixture",
+    ]
+    if profile == "poc-exploration" and schema.endswith("/v3"):
+        receipt.extend(
             [
-                "---",
-                f"status: {workflow_stage}",
-                "sprint: kc-dev-flow/S2",
-                "sprint-readiness: ready",
-                "---",
-                "",
-                "## Work profile receipt",
-                "",
-                "```yaml",
-                "work_profile:",
-                "  schema: kc-dev-flow-work-profile/v2",
-                f"  selected: {profile}",
-                f"  recommended: {profile}",
-                f"  route: [{', '.join(logical_route)}]",
-                "  basis: contract fixture",
-                "```",
-                "",
+                "  poc_decision: Choose whether to fund the delivery slice",
+                "  poc_falsifier: The integrated probe loses the accepted state",
+                "  poc_budget: One local run and one review",
+                "  poc_stop_when: Stop after the first integrated result",
             ]
-        ),
+        )
+    receipt.extend(["```", ""])
+    path.write_text(
+        "\n".join(receipt),
         encoding="utf-8",
     )
     return path
@@ -520,7 +532,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                 )
                 require(
                     contract["schema"] == "kc-dev-flow-profile-contract/v2"
-                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v3",
                     f"work-item binding schema drifted: {contract}",
                 )
                 require(
@@ -531,6 +543,26 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                     ),
                     f"unselected profile path leaked: {profile} {workflow_stage}",
                 )
+
+        for profile, workflow_stage in (
+            ("pilot-product-slice", "ideation"),
+            ("production", "ideation"),
+        ):
+            logical_route = [
+                logical for logical, _next in expected_routes[profile].values()
+            ]
+            work_item = write_profile_work_item(
+                work_items,
+                profile,
+                workflow_stage,
+                logical_route,
+                schema="kc-dev-flow-work-profile/v2",
+            )
+            contract = loader.load_contracts(contracts_root, work_item)
+            require(
+                contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                f"compatible v2 receipt was not retained: {contracts_root} {profile}",
+            )
 
 skills = {
     "adopt-dev-flow": "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",

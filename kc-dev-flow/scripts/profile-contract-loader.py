@@ -28,6 +28,12 @@ ROUTES = {
     },
 }
 
+PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
+PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
+POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
+NULL_LIKE = {"null", "~"}
+PLACEHOLDER_WORDS = {"tbd", "todo"}
+
 
 class ContractError(RuntimeError):
     """A selected route cannot be loaded safely."""
@@ -38,6 +44,17 @@ def _one_field(text: str, pattern: str, label: str) -> str:
     if len(matches) != 1:
         raise ContractError(f"work item must contain exactly one {label}")
     return matches[0].strip().strip("\"'").strip()
+
+
+def is_placeholder_scalar(value: str) -> bool:
+    normalized = value.strip().strip("\"'").strip()
+    folded = normalized.casefold()
+    return (
+        not normalized
+        or folded in NULL_LIKE
+        or folded in PLACEHOLDER_WORDS
+        or re.fullmatch(r"<[^>\n]+>", normalized) is not None
+    )
 
 
 def resolve_work_item(path: Path) -> dict[str, str]:
@@ -74,11 +91,27 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         raise ContractError("Work profile receipt must contain one YAML work_profile")
     block = blocks[0]
     schema = _one_field(block, r"^  schema:\s*([^\n#]+?)\s*$", "profile schema")
-    if schema != "kc-dev-flow-work-profile/v2":
+    if schema not in {PROFILE_SCHEMA_V2, PROFILE_SCHEMA_V3}:
         raise ContractError(f"unsupported work profile schema: {schema}")
     profile = _one_field(block, r"^  selected:\s*([^\n#]+?)\s*$", "selected profile")
     if profile not in ROUTES:
         raise ContractError(f"unsupported profile: {profile}")
+    if schema == PROFILE_SCHEMA_V2 and profile == "poc-exploration":
+        raise ContractError(
+            "active v2 POC must finish on v3.x or be Captain re-recorded as v3"
+        )
+
+    poc_values: dict[str, str] = {}
+    if schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":
+        for field in POC_FIELDS:
+            value = _one_field(
+                block,
+                rf"^  {field}:\s*([^\n#]*?)\s*$",
+                field,
+            )
+            if is_placeholder_scalar(value):
+                raise ContractError(f"{field} must be a concrete scalar")
+            poc_values[field] = value
 
     route_text = _one_field(block, r"^  route:\s*([^\n#]+?)\s*$", "profile route")
     if not (route_text.startswith("[") and route_text.endswith("]")):
@@ -119,6 +152,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         "schema": schema,
         "profile": profile,
         "workflow_stage": workflow_stage,
+        **poc_values,
     }
 
 
