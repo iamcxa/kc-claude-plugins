@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: make POC a bounded decision route in one workflow"
-status: ideation
+status: implementation
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
 sprint: S4
@@ -55,7 +55,7 @@ gates:
                 reason: Captain approved the Production shape and required KC Dev Flow to remain the governing workflow.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
