@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: make POC a bounded decision route in one workflow"
-status: validation
+status: implementation
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
 sprint: S4
@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree:
 issue:
-pr: "#291"
+pr:
 mod-block:
 id: ahd8hehpz3g9r7vqmrz82z4x
 gates:
@@ -75,7 +75,7 @@ gates:
                 reason: Captain approved exact candidate 736306b64f54ffbdc28e8432276be2a938a93037 for Draft PR delivery.
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## Problem
@@ -227,7 +227,7 @@ Spacedock 0.27.0.
 
 ## Implementation evidence
 
-- Candidate revision: `736306b64f54ffbdc28e8432276be2a938a93037`.
+- Candidate revision: `343eca90af2296efba77100c21fbd950149e6342`.
 - Entry contract: packaged and adopted loaders require a v3 POC decision,
   falsifier, budget, and stop condition; active v2 POCs fail with the ordered
   migration message while Pilot and Production retain v2 compatibility.
@@ -247,7 +247,7 @@ Spacedock 0.27.0.
 - Subtraction result: no workflow, model/provider adapter, hosted canary,
   Spacedock graph, automatic scheduling/profile authority, or behavioral-gate
   laboratory file changed.
-- Shape stops at the candidate: 29 of 32 files, 3,090 of 3,300 changed lines,
+- Shape stops at the candidate: 27 of 32 files, 1,984 of 3,300 changed lines,
   and 649 of 650 close-guard implementation/test lines.
 
 ```yaml
@@ -258,16 +258,16 @@ project_context:
   surface: "profile receipt schema and POC route boundary"
   stale_claim: "all selected work items use a v2 receipt and POC has no deterministic close boundary"
   approved_change: "v3 POCs bind decision, falsifier, budget, and stop condition, then close as proceed, stop, or change without downstream profile authority"
-  landed_change: "ARCHITECTURE.md at candidate 736306b64f54ffbdc28e8432276be2a938a93037"
+  landed_change: "ARCHITECTURE.md at candidate 343eca90af2296efba77100c21fbd950149e6342"
   planned_check: "fresh contract and ablation tests plus exact comparison of ARCHITECTURE.md with the v3 loader and close guard"
-  validation_evidence: "contract PASS plus exact ARCHITECTURE.md, loader, close-guard, and continuation comparison at 736306b64f54ffbdc28e8432276be2a938a93037"
+  validation_evidence: pending
 ```
 
 ### Implementation-exit observation
 
 ```yaml
 review_convergence:
-  candidate_revision: 736306b64f54ffbdc28e8432276be2a938a93037
+  candidate_revision: 343eca90af2296efba77100c21fbd950149e6342
   capability: "RoboRev v0.62.0 CLI JSON commands, daemon, and Claude Code agent available"
   mode: daemon
   selected_profile: production
@@ -275,7 +275,7 @@ review_convergence:
   provider: roborev
   outcome: UNAVAILABLE
   reason: "unavailable: no exact-input job exists and the accepted scope excludes a new model call"
-  identity_sha256: 4bc6e98e3dc5e9ce72dece1b3508e59e3381bacac3ede16a91ccb1b30c51546f
+  identity_sha256: a4c72be95e4b3331e865b8a7e510c5db07d7c9cd12f2c8fb6d6cb2464d3e0dd0
   configuration_sha256: 3c2bae48809c3375a68610c9236487dc1ece33e933e343e19fab5e470f1d6a68
   agent: claude-code
   model: sonnet
@@ -294,7 +294,7 @@ the final architecture sync, and is not reused as evidence for this candidate.
 Per the observation contract, `UNAVAILABLE` does not replace fresh validation
 and grants no delivery authority.
 
-## Validation evidence
+## Validation evidence — superseded by rework
 
 Exact candidate: `736306b64f54ffbdc28e8432276be2a938a93037`.
 
@@ -349,3 +349,29 @@ together. The profile-effect comparison, hosted release canary, provider CI,
 and actual Release Please 4.0.0 proposal remain outside this feature PR's local
 claim. RoboRev is `UNAVAILABLE` for this exact candidate because no reusable job
 exists and the accepted slice forbids a new model call; request count is zero.
+
+## Rework — absorbed planning artifacts
+
+Captain direction on 2026-08-25 removed the 459-line Superpowers design and
+647-line implementation plan from the delivery diff after checking their
+contents block by block. The terminal approval for `736306b6` was superseded
+through `merge guard --rework`; current candidate is
+`343eca90af2296efba77100c21fbd950149e6342`.
+
+- Design decision, outcome, non-goals, empirical boundary, and rejected
+  Explore-workflow direction live in this entity and `kc-dev-flow/RATIONALE.md`.
+- Entry routing and v3 receipt rules live in the loader, kernel,
+  `choose-work-profile`, and their mutation tests.
+- POC work, outcome, gate, and handoff rules live in the POC profile contracts,
+  `continue-dev-flow`, close guard, and real Spacedock route tests.
+- Adoption, compatibility, rollback, and release boundaries live in
+  `adopt-dev-flow`, `MIGRATION.md`, README, and this entity.
+- File mapping, stop decisions, execution results, acceptance mapping, runtime,
+  and exact validation live in this entity, commits, and executable tests.
+- The profile-effect POC and hosted canary remain explicitly outside this item;
+  they require new entities and Captain choices rather than retained plans in
+  this delivery.
+
+The commit-qualified design (`6a68cab0`) and shape (`ca8f9f1`) references above
+remain historical provenance. They are not current-path document dependencies.
+No contract, runtime, or test references either removed path.
