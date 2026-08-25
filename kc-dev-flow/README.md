@@ -91,8 +91,9 @@ commitment this item asks the Captain to accept.
 
 The Captain selects a profile through the host's structured Ask UI when
 available, with plain chat as fallback. The authorized work-item actor commits a
-`kc-dev-flow-work-profile/v2` receipt before the first working stage. Selection
-is not deferred to ideation because POC has no ideation stage.
+`kc-dev-flow-work-profile/v3` receipt for every new choice before the first
+working stage. Selection is not deferred to ideation because POC has no ideation
+stage.
 
 Promote POC to Pilot when accepted scope adds limited real users, persistent
 valuable state, reused shortcuts, beyond-session operation, or retry/recovery

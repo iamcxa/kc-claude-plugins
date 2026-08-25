@@ -41,6 +41,9 @@ cheapest instruments that can fail.
 
 - exact-revision journey and lifecycle evidence;
 - required deterministic gate results;
+- review disposition: deterministic-only with reason, applicable named
+  specialist, or one bounded Science Officer question; model identity alone
+  neither triggers nor satisfies review;
 - findings from only the applicable security, privacy, reliability, data, or
   compatibility specialists;
 - provider feedback disposition and any material residual risk;

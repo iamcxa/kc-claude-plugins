@@ -670,6 +670,7 @@ science = read(skills["science-officer"])
 legacy = read(skills["science-officer-em"])
 adopter = read(skills["adopt-dev-flow"])
 migration = read("kc-dev-flow/MIGRATION.md")
+production_verify = read("kc-dev-flow/references/profiles/production/verify.md")
 rationale = read("kc-dev-flow/RATIONALE.md")
 normalized_adopter = " ".join(adopter.split())
 normalized_rationale = " ".join(rationale.split())
@@ -678,14 +679,16 @@ normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
 normalized_science = " ".join(science.split())
 normalized_migration = " ".join(migration.split())
+normalized_production_verify = " ".join(production_verify.split())
 
 for phrase in [
-    "kc-dev-flow-work-profile/v2",
+    "v2 Pilot or Production receipt",
+    "v1 POC",
+    "complete the v3 POC fields",
     "build -> prove",
     "shape -> build -> verify-deliver",
     "`shape -> build -> verify` | The scope accepts a production boundary",
     "structured Ask UI",
-    "do not ask the Captain to repeat the decision",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
 require(
@@ -705,6 +708,11 @@ for phrase in [
     "do not mark the unscheduled queue ready as a bulk migration",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
+require(
+    "review disposition" in normalized_production_verify
+    and "model identity" in normalized_production_verify,
+    "Production verification omits risk-selected review disposition",
+)
 
 for phrase in [
     "read that bounded section plus the frontmatter",

@@ -15,15 +15,18 @@ next commitment this item asks the Captain to accept?** Yes recommends POC. No
 compares Pilot and Production using the existing delivery-risk boundaries.
 
 Read the exact work item and its `## Work profile receipt`. Reuse an unchanged
-`kc-dev-flow-work-profile/v2` receipt. Treat it as stale when audience, lifespan,
-valuable state, mutation boundary, authority need, or operational commitment
-changes.
+supported receipt. A v2 Pilot or Production receipt remains supported; an active
+v2 POC must finish on its pinned 3.x pair or be Captain re-recorded as v3. Treat
+any receipt as stale when audience, lifespan, valuable state, mutation boundary,
+authority need, or operational commitment changes.
 
-An unchanged v1 receipt already records the Captain's profile choice. Return a
-mechanical v2 candidate with the same `selected`, current route, basis, and
-task-specific obligations; do not ask the Captain to repeat the decision. Ask
-again only when its basis is stale or the selected profile no longer contains
-the accepted scope.
+An unchanged v1 Pilot or Production receipt already records the Captain's
+profile choice. Return a mechanical v3 candidate with the same `selected`,
+current route, basis, and task-specific obligations. A v1 POC preserves its
+profile choice but cannot supply the new experiment contract mechanically: ask
+the Captain to complete the v3 POC fields without reopening the profile choice.
+Ask for a new selection only when its basis is stale or the selected profile no
+longer contains the accepted scope.
 
 | Choice | Route | Use when |
 |---|---|---|

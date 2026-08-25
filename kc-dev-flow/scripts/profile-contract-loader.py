@@ -72,7 +72,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         raise ContractError("work item frontmatter is unterminated")
     frontmatter = text[4:frontmatter_end]
     workflow_stage = _one_field(
-        frontmatter, r"^status:\s*([^\n#]+?)\s*$", "frontmatter status"
+        frontmatter, r"^status:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter status"
     )
 
     headings = list(re.finditer(r"^## Work profile receipt\s*$", text, re.MULTILINE))
@@ -90,10 +90,10 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     if len(blocks) != 1:
         raise ContractError("Work profile receipt must contain one YAML work_profile")
     block = blocks[0]
-    schema = _one_field(block, r"^  schema:\s*([^\n#]+?)\s*$", "profile schema")
+    schema = _one_field(block, r"^  schema:[ \t]*([^\n#]+?)[ \t]*$", "profile schema")
     if schema not in {PROFILE_SCHEMA_V2, PROFILE_SCHEMA_V3}:
         raise ContractError(f"unsupported work profile schema: {schema}")
-    profile = _one_field(block, r"^  selected:\s*([^\n#]+?)\s*$", "selected profile")
+    profile = _one_field(block, r"^  selected:[ \t]*([^\n#]+?)[ \t]*$", "selected profile")
     if profile not in ROUTES:
         raise ContractError(f"unsupported profile: {profile}")
     if schema == PROFILE_SCHEMA_V2 and profile == "poc-exploration":
@@ -106,14 +106,14 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         for field in POC_FIELDS:
             value = _one_field(
                 block,
-                rf"^  {field}:\s*([^\n#]*?)\s*$",
+                rf"^  {field}:[ \t]*([^\n#]*?)[ \t]*$",
                 field,
             )
             if is_placeholder_scalar(value):
                 raise ContractError(f"{field} must be a concrete scalar")
             poc_values[field] = value
 
-    route_text = _one_field(block, r"^  route:\s*([^\n#]+?)\s*$", "profile route")
+    route_text = _one_field(block, r"^  route:[ \t]*([^\n#]+?)[ \t]*$", "profile route")
     if not (route_text.startswith("[") and route_text.endswith("]")):
         raise ContractError("profile route must be an inline list")
     receipt_route = [
@@ -130,7 +130,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     first_workflow_stage = next(iter(ROUTES[profile]))
     if workflow_stage == first_workflow_stage:
         sprint = _one_field(
-            frontmatter, r"^sprint:\s*([^\n#]+?)\s*$", "frontmatter sprint"
+            frontmatter, r"^sprint:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter sprint"
         )
         if (
             not sprint
@@ -140,7 +140,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
             raise ContractError("frontmatter sprint must name an iteration")
         sprint_readiness = _one_field(
             frontmatter,
-            r"^sprint-readiness:\s*([^\n#]+?)\s*$",
+            r"^sprint-readiness:[ \t]*([^\n#]+?)[ \t]*$",
             "frontmatter sprint-readiness",
         )
         if sprint_readiness != "ready":

@@ -11,7 +11,6 @@ import re
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -21,22 +20,6 @@ LOADER_PATH = HERE / "profile-contract-loader.py"
 
 class CloseError(RuntimeError):
     pass
-
-
-@dataclass(frozen=True)
-class PocOutcome:
-    direction: str
-    evidence: str
-    strongest_limit: str
-    reversal_fact: str
-    cleanup: str
-
-
-@dataclass(frozen=True)
-class PocHandoff:
-    disposition: str
-    to: str
-    reason: str
 
 
 def load_profile_loader():
@@ -114,28 +97,24 @@ def one_field(block: str, field: str, *, concrete: bool = True) -> str:
     return value
 
 
-def parse_outcome(text: str) -> PocOutcome:
+def parse_outcome(text: str) -> str:
     block = one_yaml_section(text, "POC outcome", "poc_outcome")
     direction = one_field(block, "direction")
     if direction not in {"proceed", "stop", "change"}:
         raise CloseError("direction must be proceed, stop, or change")
-    return PocOutcome(
-        direction=direction,
-        evidence=one_field(block, "evidence"),
-        strongest_limit=one_field(block, "strongest_limit"),
-        reversal_fact=one_field(block, "reversal_fact"),
-        cleanup=one_field(block, "cleanup"),
-    )
+    for field in ("evidence", "strongest_limit", "reversal_fact", "cleanup"):
+        one_field(block, field)
+    return direction
 
 
-def parse_handoff(text: str, outcome: PocOutcome) -> PocHandoff:
+def parse_handoff(text: str, direction: str) -> tuple[str, str, str]:
     block = one_yaml_section(text, "POC handoff", "poc_handoff")
     disposition = one_field(block, "disposition")
     to = one_field(block, "to", concrete=False)
     reason = one_field(block, "reason", concrete=False)
-    if outcome.direction in {"stop", "change"}:
+    if direction in {"stop", "change"}:
         if disposition != "not_applicable":
-            raise CloseError(f"{outcome.direction} requires not_applicable")
+            raise CloseError(f"{direction} requires not_applicable")
         if to or reason:
             raise CloseError("not_applicable requires empty to and reason")
     elif disposition not in {"created", "deferred", "declined"}:
@@ -150,16 +129,16 @@ def parse_handoff(text: str, outcome: PocOutcome) -> PocHandoff:
             raise CloseError(f"{disposition} requires an empty to")
         if LOADER.is_placeholder_scalar(reason):
             raise CloseError(f"{disposition} requires a concrete reason")
-    return PocHandoff(disposition=disposition, to=to, reason=reason)
+    return disposition, to, reason
 
 
-def validate(path: Path, phase: str) -> tuple[str, PocOutcome, PocHandoff | None]:
+def validate(path: Path, phase: str) -> tuple[str, str, tuple[str, str, str] | None]:
     if phase not in {"prepare", "consume"}:
         raise CloseError(f"unsupported close phase: {phase}")
     text, item_id = read_work_item(path)
-    outcome = parse_outcome(text)
-    handoff = parse_handoff(text, outcome) if phase == "consume" else None
-    return item_id, outcome, handoff
+    direction = parse_outcome(text)
+    handoff = parse_handoff(text, direction) if phase == "consume" else None
+    return item_id, direction, handoff
 
 
 def invoke_spacedock(
@@ -225,17 +204,26 @@ def validate_delivery_body(path: Path, source_id: str) -> str:
     frontmatter_end = text.find("\n---\n", 4)
     if frontmatter_end < 0:
         raise CloseError("downstream body frontmatter is unterminated")
+    frontmatter = text[4:frontmatter_end]
     try:
-        source = LOADER._one_field(
-            text[4:frontmatter_end],
-            r"^source:\s*([^\n#]+?)\s*$",
-            "downstream source",
-        )
+        fields = {
+            name: LOADER._one_field(
+                frontmatter, rf"^{name}:[ \t]*([^\n#]+?)[ \t]*$", f"downstream {name}"
+            )
+            for name in ("source", "status")
+        }
     except LOADER.ContractError as exc:
         raise CloseError(str(exc)) from exc
     expected = f"poc:{source_id}"
-    if source != expected:
+    if fields["source"] != expected:
         raise CloseError(f"downstream source must be {expected}")
+    if fields["status"] != "backlog":
+        raise CloseError("downstream status must be backlog")
+    if re.search(
+        r"^(?:sprint:[ \t]*[^ \t#\n]|sprint-readiness:[ \t]*ready[ \t]*$)",
+        frontmatter, re.MULTILINE,
+    ):
+        raise CloseError("downstream body must stay deferred")
     return text
 
 
@@ -302,9 +290,9 @@ def main() -> int:
         return 0
 
     text, source_id = read_work_item(args.work_item)
-    outcome = parse_outcome(text)
+    direction = parse_outcome(text)
     if args.command == "create":
-        if outcome.direction != "proceed":
+        if direction != "proceed":
             raise CloseError("downstream creation requires direction proceed")
         existing = find_downstream(spacedock, workflow_dir, source_id)
         if existing is not None:
@@ -331,10 +319,10 @@ def main() -> int:
         return 0
 
     item_id, _outcome, handoff = validate(args.work_item, "consume")
-    assert handoff is not None
-    if handoff.disposition == "created":
+    disposition, to, _reason = handoff
+    if disposition == "created":
         downstream = find_downstream(spacedock, workflow_dir, item_id)
-        if downstream is None or downstream.get("id") != handoff.to:
+        if downstream is None or downstream.get("id") != to:
             raise CloseError(
                 "created handoff.to must resolve to the sole canonical downstream item"
             )

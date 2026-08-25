@@ -168,6 +168,19 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     root = Path(temporary)
     guard = load_guard()
 
+    for name, fields, expected in (
+        ("preadvanced", "status: implementation", "status must be backlog"),
+        ("prescheduled", "status: backlog\nsprint: test/S9", "must stay deferred"),
+        ("ready", "status: backlog\nsprint-readiness: ready", "must stay deferred"),
+    ):
+        body = write_item(root, f"---\nsource: poc:poc123exact\n{fields}\n---\n", name)
+        try:
+            guard.validate_delivery_body(body, "poc123exact")
+        except guard.CloseError as error:
+            require(expected in str(error), f"wrong {name} refusal: {error}")
+        else:
+            raise SystemExit(f"POC close guard accepted {name} downstream body")
+
     for field in (
         "direction",
         "evidence",

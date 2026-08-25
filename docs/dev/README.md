@@ -134,8 +134,9 @@ python3 scripts/dev-flow-work-context-check.py validate \
 Before the first working stage, re-read the exact work item's
 `kc-dev-flow-work-profile/v3` receipt for new choices. If missing or stale, invoke
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the authorized actor
-commits and re-reads it. An unchanged v1 receipt upgrades mechanically with the
-same Captain selection; it is migration evidence until the v3 result is committed.
+commits and re-reads it. An unchanged v1 Pilot or Production choice upgrades
+mechanically. A v1 POC keeps its choice but needs the Captain to complete the v3
+POC fields before dispatch.
 
 Use the host's structured Ask UI when available; plain chat is the fallback.
 Selection precedes acceptance-criteria expansion and stage dispatch.
@@ -170,7 +171,7 @@ or iteration owner schedules it: leaving `backlog` needs a `sprint` naming a
 product sprint heading that already exists in `docs/dev/ROADMAP.md`, plus
 `sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
 then, so the drivable set is `spacedock status --workflow-dir docs/dev --where
-sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the v2
+sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the supported
 profile receipt before moving to the selected route's first working state.
 
 ### `ideation` — selected `shape`

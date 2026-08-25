@@ -2,30 +2,21 @@
 
 ## Migrating from 3.x to 4.x
 
-The v4 cutover keeps one graph and three profile slugs but changes new receipts
-to `kc-dev-flow-work-profile/v3` and adds the POC close guard. In order:
+Version 4 keeps one graph and three profile slugs, changes new receipts to
+`kc-dev-flow-work-profile/v3`, adds the POC close guard, removes the
+Production-only `release` state, and makes scheduling a loader-enforced backlog
+exit requirement. Upgrade the adopter and installed plugin as one cutover, in
+this order:
 
 1. Inventory active receipts. Finish each active v2 POC on its pinned 3.x
    package/vendor pair, or have the Captain re-record it as v3 with decision,
-   falsifier, budget, and stop point.
-2. Vendor the loader, close guard, kernel, and profile tree atomically. Active
-   v2 Pilot and Production remain loadable; new choices use v3.
-3. Run every profile-stage load, guarded POC close path, package parity check,
-   and normal repository gate before updating the installed plugin.
-
-Rollback the installed plugin and the whole vendored pair together. Never run a
-v4 guard with a v3 loader or a v4 loader with v3 contracts.
-
-Version 4 removes the Production-only `release` state and makes scheduling a
-loader-enforced backlog exit requirement. Upgrade the adopter and installed
-plugin as one cutover, in this order:
-
-1. Under the old graph and loader, drain every entity at `status: release` to
-   `done`. `spacedock status --where status=release` must return empty before
-   the graph changes.
+   falsifier, budget, and stop point. Under the old graph and loader, drain every
+   entity at `status: release` to `done`; `spacedock status --where
+   status=release` must return empty before the graph changes.
 2. Remove `release` from the adopter's workflow graph. Re-vendor the loader,
-   kernel, profile tree, and conditional references byte-for-byte, including
-   Production `verify.md` and deletion of Production `release.md`.
+   close guard, kernel, profile tree, and conditional references byte-for-byte,
+   including Production `verify.md` and deletion of Production `release.md`.
+   Active v2 Pilot and Production receipts remain loadable; new choices use v3.
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
 4. Default the adopter's entity template to `sprint-readiness: defer`. Before
@@ -34,11 +25,14 @@ plugin as one cutover, in this order:
    `sprint-readiness: ready`. Backlog items need those values only when selected;
    do not mark the unscheduled queue ready as a bulk migration.
 5. Prove the drivable set with `spacedock status --where sprint=X --where
-   sprint-readiness=ready`, run every adopted profile-stage loader combination,
-   and run the repository's normal gates before updating the installed plugin.
+   sprint-readiness=ready`; run every profile-stage load, guarded POC close path,
+   package parity check, and normal repository gate before updating the installed
+   plugin.
 
-An adopter that does not take v4 keeps its 3.x graph and loader behavior. Do not
-mix a v4 installed skill with a partially migrated 3.x workflow.
+Rollback the installed plugin and the whole vendored contract set together. An
+adopter that does not take v4 keeps its 3.x graph and loader behavior. Do not mix
+a 4.x installed plugin, loader, or close guard with a partially migrated 3.x
+workflow or contract set; receipt schema v3 is part of the 4.x contract.
 
 ## Migrating from 2.x
 

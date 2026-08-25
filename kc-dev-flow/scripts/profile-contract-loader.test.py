@@ -372,6 +372,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         )
 
     invalid_values = (
+        "",
         "''",
         "'   '",
         "null",

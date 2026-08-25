@@ -28,8 +28,10 @@ Continue by the selected profile's smallest sufficient route.
    on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
    or stale before the first working stage, invoke
    `kc-dev-flow:choose-work-profile`; let the locally authorized actor commit
-   and re-read the Captain's choice. An unchanged v1 choice upgrades
-   mechanically without another Captain question.
+   and re-read the Captain's choice. An unchanged v1 Pilot or Production choice
+   upgrades mechanically. For a v1 POC, preserve the choice but use
+   `kc-dev-flow:choose-work-profile` to complete the v3 POC fields with the
+   Captain before dispatch.
 
 ## Load one route
 
