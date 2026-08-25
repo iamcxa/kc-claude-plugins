@@ -430,8 +430,9 @@ This skill never files anything itself.
 Title: kc-rules-review: <one-line defect>
 Skill version: <`version` from `.claude-plugin/plugin.json` in the plugin directory this skill was
   loaded from — `${CLAUDE_PLUGIN_ROOT}` under Claude Code, the install path otherwise>
-Local patch: <`git status --porcelain` of that same directory, or `not a checkout` when the install
-  is an rsync copy rather than a checkout>
+Local patch: <`git -C <that directory> status --porcelain -- .` — the pathspec is required, because
+  a symlinked install reports its whole containing repository without it; `not a checkout` when the
+  install is an rsync copy rather than a checkout>
 What it does: <observed behaviour>
 What it should do: <expected behaviour>
 Evidence: <the run directory, and which artifact in it shows the defect>
