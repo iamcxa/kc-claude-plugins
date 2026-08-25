@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-kc-rules-review-dogfood-defects
 issue:
-pr:
+pr: "#290"
 mod-block:
 id: kmg9zdxg2h2n2k0c7j86peq0
 gates:
