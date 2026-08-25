@@ -65,6 +65,17 @@ gates:
                 digest: sha256:e7acf1724d8cc809da557a1176ebf717a86fd2fada8754061b8675b15dbe616e
                 request-digest: sha256:9a1081ef3472496cba1167082e5df54218b9a4ca079918d87adfe2228510ddce
                 room-ref: ./single-workflow-poc-routing/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ahd8hehpz3g9r7vqmrz82z4x:validation:1
+                briefing: briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T08:53:01.957684Z"
+                decision: approve
+                reason: Captain approved exact candidate 736306b64f54ffbdc28e8432276be2a938a93037 for Draft PR delivery.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
