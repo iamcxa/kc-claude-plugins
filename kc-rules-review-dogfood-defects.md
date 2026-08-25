@@ -44,6 +44,17 @@ gates:
                 digest: sha256:c1a688c1ed382c6a957ac9ca6bc879a02f269e6b0d2c023df09483885d94a60d
                 request-digest: sha256:716ec1691dbbee918e6466a5e81b2ffa59df87772fa7a7bbbf46171e62231743
                 room-ref: ./kc-rules-review-dogfood-defects/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmg9zdxg2h2n2k0c7j86peq0:ideation:1
+                briefing: briefing:kmg9zdxg2h2n2k0c7j86peq0:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T07:25:25.993881Z"
+                decision: approve
+                reason: 'Captain approved the shape at the ideation gate: two slices, trunk-only, seniority experiment explicitly out of scope; slice 1 (the defect-reporting slot) branches from main now.'
+              application:
+                target-stage: implementation
+                state: pending
 sprint-readiness: ready
 ---
 
