@@ -227,7 +227,7 @@ Spacedock 0.27.0.
 - Subtraction result: no workflow, model/provider adapter, hosted canary,
   Spacedock graph, automatic scheduling/profile authority, or behavioral-gate
   laboratory file changed.
-- Shape stops at the candidate: 32 of 32 files, 3,090 of 3,300 changed lines,
+- Shape stops at the candidate: 29 of 32 files, 3,090 of 3,300 changed lines,
   and 649 of 650 close-guard implementation/test lines.
 
 ```yaml
@@ -240,7 +240,7 @@ project_context:
   approved_change: "v3 POCs bind decision, falsifier, budget, and stop condition, then close as proceed, stop, or change without downstream profile authority"
   landed_change: "ARCHITECTURE.md at candidate 736306b64f54ffbdc28e8432276be2a938a93037"
   planned_check: "fresh contract and ablation tests plus exact comparison of ARCHITECTURE.md with the v3 loader and close guard"
-  validation_evidence: pending
+  validation_evidence: "contract PASS plus exact ARCHITECTURE.md, loader, close-guard, and continuation comparison at 736306b64f54ffbdc28e8432276be2a938a93037"
 ```
 
 ### Implementation-exit observation
@@ -273,3 +273,59 @@ The earlier capability-stage list query addressed revision `9d7b4f13`, before
 the final architecture sync, and is not reused as evidence for this candidate.
 Per the observation contract, `UNAVAILABLE` does not replace fresh validation
 and grants no delivery authority.
+
+## Validation evidence
+
+Exact candidate: `736306b64f54ffbdc28e8432276be2a938a93037`.
+
+- `python3 scripts/kc-dev-flow-contract-test.py`: PASS. This includes loader,
+  close-guard, pinned Spacedock route, packaged/adopted parity, and migration
+  fixtures.
+- `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py`: PASS. The suite
+  rejected disabled POC entry validation and a removed close guard, as well as
+  every pre-existing route mutant.
+- `python3 scripts/kc-dev-flow-multi-profile-gate.py --json`: PASS. POC, Pilot,
+  and Production all reached done; POC remained the lightest route.
+- Release metadata: 34/34; skill frontmatter tests: 12/12; all 45 skill
+  directories valid; plugin, marketplace, Codex, and Hermes manifests remain
+  at matching `kc-dev-flow` version 3.0.0.
+- Existing-CI runtime, three runs each: corrected base median 27.23 seconds;
+  candidate median 31.65 seconds; comparable delta +4.42 seconds, below the
+  20-second stop. The uncorrected base fails early and was not used as a speed
+  baseline. No new CI job, PR trigger, or model call was added.
+- Exact raw Git scope: 29 changed files, 3,090 changed lines, and 649 close-guard
+  implementation/test lines. The earlier 32-file observation came from a
+  display-wrapper count; raw `git diff --name-only | wc -l` corrects it.
+- Project context: `ARCHITECTURE.md` now describes supported receipts, v3 POC
+  entry, its three outcomes, v2 compatibility, and independent downstream
+  authority; fresh contract and ablation runs agree with that claim.
+- Retained documents: README states the proportional-risk outcome and bounded
+  POC role; rationale limits the value claim; migration gives ordered v3-to-v4
+  cutover and rollback; no stale v2-only operator instruction remains.
+- Delivery state: no open PR uses `iamcxa/dev-flow-explore-router`; local policy
+  selects `main` as base. Release Please remains the version/tag owner and the
+  breaking commit should make its later release PR propose kc-dev-flow 4.0.0.
+
+Acceptance mapping:
+
+1. The unchanged multi-profile gate proves one graph routes all three profiles.
+2. POC base/README own bounded exploration and technical proof.
+3. Loader mutation fixtures reject each missing v3 POC entry field.
+4. The real Spacedock fixture reaches stop, change, and proceed outcomes.
+5. Prove contract and close guard separate supported evidence from handoff.
+6. Real routes cover created, deferred, declined, and not-applicable handoffs.
+7. Created items stay backlog, reject a preselected profile, and inherit the
+   repository's trunk-only delivery-base policy when later developed.
+8. No Spacedock graph, route slug, state owner, or terminal mechanism changed.
+9. Without-it and real-route tests reject missing outcome, orphan, and duplicate
+   handoffs; docs make no engine tamper-resistance claim.
+10. No workflow, paid path, secret, protected Environment, or release claim was
+    added.
+11. No behavioral-gate laboratory file or evidence was imported.
+
+Rollback remains the ordered pair: active v2 POCs finish on pinned 3.x or are
+Captain re-recorded; adopters re-vendor loader, close guard, and contracts
+together. The profile-effect comparison, hosted release canary, provider CI,
+and actual Release Please 4.0.0 proposal remain outside this feature PR's local
+claim. RoboRev is `UNAVAILABLE` for this exact candidate because no reusable job
+exists and the accepted slice forbids a new model call; request count is zero.
