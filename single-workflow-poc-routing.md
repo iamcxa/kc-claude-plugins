@@ -260,7 +260,7 @@ project_context:
   approved_change: "v3 POCs bind decision, falsifier, budget, and stop condition, then close as proceed, stop, or change without downstream profile authority"
   landed_change: "ARCHITECTURE.md at candidate 343eca90af2296efba77100c21fbd950149e6342"
   planned_check: "fresh contract and ablation tests plus exact comparison of ARCHITECTURE.md with the v3 loader and close guard"
-  validation_evidence: pending
+  validation_evidence: "contract PASS plus exact ARCHITECTURE.md, loader, close-guard, continuation, and retained-document subtraction comparison at 343eca90af2296efba77100c21fbd950149e6342"
 ```
 
 ### Implementation-exit observation
@@ -375,3 +375,29 @@ through `merge guard --rework`; current candidate is
 The commit-qualified design (`6a68cab0`) and shape (`ca8f9f1`) references above
 remain historical provenance. They are not current-path document dependencies.
 No contract, runtime, or test references either removed path.
+
+## Validation evidence — absorbed-plan head
+
+Exact candidate: `343eca90af2296efba77100c21fbd950149e6342`.
+
+- Contract test PASS; without-it ablation PASS with every declared mutant
+  rejected; POC, Pilot, and Production all reached done on the pinned Spacedock
+  runtime.
+- Release metadata 34/34; skill-frontmatter fixtures 12/12; all 45 skill
+  directories valid; plugin and marketplace versions remain at matching 3.0.0.
+- Existing contract-test runtime: corrected-base median 27.23 seconds;
+  candidate runs 29.03, 28.13, and 29.22 seconds, median 29.03 seconds;
+  comparable delta +1.80 seconds. No new CI job or model call exists.
+- Exact raw Git scope is 27 changed files, 1,984 changed lines, and 649
+  close-guard implementation/test lines, within every Captain stop.
+- Independent retained-document subtraction check found no current contract,
+  runtime, or test dependency on either removed path. Every operative block has
+  the second home recorded above; commit-qualified provenance remains
+  recoverable without shipping an execution plan or historical design record.
+- Project context remains aligned: `ARCHITECTURE.md` describes the v3 POC
+  boundary and mixed receipt compatibility implemented by the exact loader and
+  close guard.
+
+The behavioral profile-effect POC and hosted release canary remain explicitly
+unproved and outside this PR. RoboRev remains `UNAVAILABLE` with zero requests
+because the accepted slice excludes a new model call.
