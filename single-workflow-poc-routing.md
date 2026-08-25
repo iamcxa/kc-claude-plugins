@@ -56,6 +56,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:ahd8hehpz3g9r7vqmrz82z4x:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ahd8hehpz3g9r7vqmrz82z4x-validation-1
+              briefing:
+                id: briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-1:revision-1
+                digest: sha256:e7acf1724d8cc809da557a1176ebf717a86fd2fada8754061b8675b15dbe616e
+                request-digest: sha256:9a1081ef3472496cba1167082e5df54218b9a4ca079918d87adfe2228510ddce
+                room-ref: ./single-workflow-poc-routing/review/validation/briefing-1
 ---
 
 ## Problem

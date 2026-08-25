@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-1:revision-1",
+  "question": "Approve exact candidate 736306b64f54ffbdc28e8432276be2a938a93037 for Draft PR delivery?",
+  "artifacts": [
+    {
+      "id": "artifact:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7326e9214f1396491a43833159335991f761ae51/single-workflow-poc-routing.md",
+      "rev": "sha256:517e162a03b18fb36ba0e470646dea534ab9f4b34081d0ee2164b111b8190823",
+      "mediaType": "text/markdown",
+      "summary": "Production validation passed at 736306b6: contract, without-it ablation, all three profile routes, release metadata, version parity, retained-doc and project-context checks are green; measured existing-CI median delta is +4.42 seconds; RoboRev is UNAVAILABLE with zero requests because this accepted slice excludes model calls."
+    }
+  ]
+}
