@@ -168,8 +168,7 @@ def run(command: list[str], label: str, cwd: Path) -> str:
 
 
 def entity_body(slug: str, profile: str, route: list[str], status: str = "backlog") -> str:
-    return "\n".join(
-        [
+    lines = [
             "---",
             f"status: {status}",
             f"title: {slug}",
@@ -185,15 +184,23 @@ def entity_body(slug: str, profile: str, route: list[str], status: str = "backlo
             "",
             "```yaml",
             "work_profile:",
-            "  schema: kc-dev-flow-work-profile/v2",
+            "  schema: kc-dev-flow-work-profile/v3",
             f"  selected: {profile}",
             f"  recommended: {profile}",
             f"  route: [{', '.join(route)}]",
             "  basis: multi-profile gate fixture",
-            "```",
-            "",
-        ]
-    )
+    ]
+    if profile == "poc-exploration":
+        lines.extend(
+            [
+            "  poc_decision: Choose whether to fund the delivery slice",
+            "  poc_falsifier: The integrated probe loses the accepted state",
+            "  poc_budget: One local run and one review",
+            "  poc_stop_when: Stop after the first integrated result",
+            ]
+        )
+    lines.extend(["```", ""])
+    return "\n".join(lines)
 
 
 def set_status(spacedock: str, workflow: Path, slug: str, status: str) -> None:
@@ -218,7 +225,7 @@ def assert_loads_own_route(
     require(
         contract["next_workflow_stage"] == next_stage
         and contract["profile"] == profile
-        and contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+        and contract["receipt_schema"] == "kc-dev-flow-work-profile/v3",
         f"{item.name} at {status} bound the wrong route: {contract['profile']}"
         f" -> {contract['next_workflow_stage']}",
     )

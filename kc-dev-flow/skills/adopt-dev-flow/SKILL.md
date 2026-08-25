@@ -27,11 +27,12 @@ repair the cheapest compatible seam.
    `../../references/delivery-branch-base.md`,
    `../../references/pr-delivery.md`,
    `../../references/roborev-implementation-exit.md`, and
-   `../../scripts/profile-contract-loader.py` without local edits. The selected
+`../../scripts/profile-contract-loader.py` and
+`../../scripts/poc-close-guard.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
-3. Select a profile before the first working stage and store the v2 receipt in
+3. Select a profile before the first working stage and store the v3 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.

@@ -10,16 +10,23 @@ this skill has recommendation and question authority only.
 
 ## Resolve the choice
 
-Read the exact work item and its `## Work profile receipt`. Reuse an unchanged
-`kc-dev-flow-work-profile/v2` receipt. Treat it as stale when audience, lifespan,
-valuable state, mutation boundary, authority need, or operational commitment
-changes.
+Ask first: **Could credible negative evidence cancel or materially change the
+next commitment this item asks the Captain to accept?** Yes recommends POC. No
+compares Pilot and Production using the existing delivery-risk boundaries.
 
-An unchanged v1 receipt already records the Captain's profile choice. Return a
-mechanical v2 candidate with the same `selected`, current route, basis, and
-task-specific obligations; do not ask the Captain to repeat the decision. Ask
-again only when its basis is stale or the selected profile no longer contains
-the accepted scope.
+Read the exact work item and its `## Work profile receipt`. Reuse an unchanged
+supported receipt. A v2 Pilot or Production receipt remains supported; an active
+v2 POC must finish on its pinned 3.x pair or be Captain re-recorded as v3. Treat
+any receipt as stale when audience, lifespan, valuable state, mutation boundary,
+authority need, or operational commitment changes.
+
+An unchanged v1 Pilot or Production receipt already records the Captain's
+profile choice. Return a mechanical v3 candidate with the same `selected`,
+current route, basis, and task-specific obligations. A v1 POC preserves its
+profile choice but cannot supply the new experiment contract mechanically: ask
+the Captain to complete the v3 POC fields without reopening the profile choice.
+Ask for a new selection only when its basis is stale or the selected profile no
+longer contains the accepted scope.
 
 | Choice | Route | Use when |
 |---|---|---|
@@ -59,7 +66,7 @@ automatically and never supply the missing part.
 
 ```yaml
 work_profile:
-  schema: kc-dev-flow-work-profile/v2
+  schema: kc-dev-flow-work-profile/v3
   selected: poc-exploration | pilot-product-slice | production
   recommended: poc-exploration | pilot-product-slice | production
   basis: <audience, lifespan, state, mutation boundary, and commitment>
@@ -69,6 +76,11 @@ work_profile:
     implementation: [<task-specific obligations>]
     testing: [<task-specific obligations>]
   scope_boundary: <what this profile excludes>
+  # POC only; omit these fields for Pilot and Production.
+  poc_decision: <the next commitment this evidence decides>
+  poc_falsifier: <the cheapest credible negative evidence>
+  poc_budget: <explicit time, model, provider, or review ceiling>
+  poc_stop_when: <observable point at which work stops>
   promote_when: [<observable task-specific triggers>]
   decision:
     authority: <captain identity or bound authority>

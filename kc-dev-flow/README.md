@@ -1,5 +1,8 @@
 # KC Dev Flow
 
+Load development constraints in proportion to work risk, so agent behavior is
+just sufficient without losing verification or authority boundaries.
+
 KC Dev Flow supplies one minimal authority core and three profile-native delivery
 routes. A repository keeps its own tracker, iteration authority, workflow
 runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
@@ -10,7 +13,7 @@ falsify this direction.
 
 | Profile | Working route | Intended result |
 |---|---|---|
-| POC / Exploration | `build -> prove` | One real journey and its riskiest assumption are observed; cleanup and unproved limits are recorded. |
+| POC — bounded exploration or technical proof | `build -> prove` | Evidence supports `proceed`, `stop`, or `change`; cleanup and limits are recorded. |
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
 | Production | `shape -> build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
@@ -82,10 +85,15 @@ not another agent, review, or gate.
 
 ## Selection and promotion
 
+Explore is a use of POC, not a separate workflow, stage, or profile. Choose POC
+when credible negative evidence could cancel or materially change the next
+commitment this item asks the Captain to accept.
+
 The Captain selects a profile through the host's structured Ask UI when
 available, with plain chat as fallback. The authorized work-item actor commits a
-`kc-dev-flow-work-profile/v2` receipt before the first working stage. Selection
-is not deferred to ideation because POC has no ideation stage.
+`kc-dev-flow-work-profile/v3` receipt for every new choice before the first
+working stage. Selection is not deferred to ideation because POC has no ideation
+stage.
 
 Promote POC to Pilot when accepted scope adds limited real users, persistent
 valuable state, reused shortcuts, beyond-session operation, or retry/recovery

@@ -53,13 +53,21 @@ def write_work_item(
     workflow_stage: str,
     name: str,
     *,
-    schema: str = "kc-dev-flow-work-profile/v2",
+    schema: str = "kc-dev-flow-work-profile/v3",
     route: list[str] | None = None,
     sprint: str | None = "kc-dev-flow/S2",
     sprint_readiness: str | None = "ready",
+    poc_fields: dict[str, str] | None = None,
 ) -> Path:
     if route is None:
         route = [logical for logical, _next in MODULE.ROUTES[profile].values()]
+    if poc_fields is None and profile == "poc-exploration" and schema.endswith("/v3"):
+        poc_fields = {
+            "poc_decision": "Choose whether to fund the delivery slice",
+            "poc_falsifier": "The integrated probe loses the accepted state",
+            "poc_budget": "One local run and one review",
+            "poc_stop_when": "Stop after the first integrated result",
+        }
     path = root / "work-items" / f"{name}.md"
     path.parent.mkdir(exist_ok=True)
     frontmatter = ["---", f"status: {workflow_stage}"]
@@ -67,31 +75,32 @@ def write_work_item(
         frontmatter.append(f"sprint: {sprint}")
     if sprint_readiness is not None:
         frontmatter.append(f"sprint-readiness: {sprint_readiness}")
-    path.write_text(
-        "\n".join(
-            frontmatter
-            + [
-                "---",
-                "",
-                "## Work profile receipt",
-                "",
-                "```yaml",
-                "work_profile:",
-                f"  schema: {schema}",
-                f"  selected: {profile}",
-                f"  recommended: {profile}",
-                f"  route: [{', '.join(route)}]",
-                "  basis: fixture",
-                "```",
-                "",
-                "## Problem",
-                "",
-                "Fixture work item.",
-                "",
-            ]
-        ),
-        encoding="utf-8",
+    receipt = [
+        "---",
+        "",
+        "## Work profile receipt",
+        "",
+        "```yaml",
+        "work_profile:",
+        f"  schema: {schema}",
+        f"  selected: {profile}",
+        f"  recommended: {profile}",
+        f"  route: [{', '.join(route)}]",
+        "  basis: fixture",
+    ]
+    if poc_fields is not None:
+        receipt.extend(f"  {field}: {value}" for field, value in poc_fields.items())
+    receipt.extend(
+        [
+            "```",
+            "",
+            "## Problem",
+            "",
+            "Fixture work item.",
+            "",
+        ]
     )
+    path.write_text("\n".join(frontmatter + receipt), encoding="utf-8")
     return path
 
 
@@ -209,7 +218,7 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             )
             require(
                 document["work_item"] == work_item.resolve().as_posix()
-                and document["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                and document["receipt_schema"] == "kc-dev-flow-work-profile/v3",
                 f"work-item binding is missing: {document}",
             )
             paths = [item["path"] for item in document["loaded"]]
@@ -318,6 +327,163 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         rejected.returncode == 2 and "unsupported work profile schema" in rejected.stderr,
         "legacy receipt did not fail closed",
     )
+
+    required_poc_fields = (
+        "poc_decision",
+        "poc_falsifier",
+        "poc_budget",
+        "poc_stop_when",
+    )
+    valid_poc_fields = {
+        "poc_decision": "Choose whether to fund the delivery slice",
+        "poc_falsifier": "The integrated probe loses the accepted state",
+        "poc_budget": "One local run and one review",
+        "poc_stop_when": "Stop after the first integrated result",
+    }
+    for missing_field in required_poc_fields:
+        missing_fields = {
+            field: value
+            for field, value in valid_poc_fields.items()
+            if field != missing_field
+        }
+        missing_poc_field = write_work_item(
+            root,
+            "poc-exploration",
+            "implementation",
+            f"missing-{missing_field}",
+            poc_fields=missing_fields,
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(missing_poc_field),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2
+            and f"exactly one {missing_field}" in rejected.stderr,
+            f"v3 POC accepted a missing {missing_field}",
+        )
+
+    invalid_values = (
+        "",
+        "''",
+        "'   '",
+        "null",
+        "~",
+        "TBD",
+        "TODO",
+        "<the next commitment this evidence decides>",
+    )
+    for index, invalid_value in enumerate(invalid_values):
+        invalid_fields = dict(valid_poc_fields)
+        invalid_fields["poc_decision"] = invalid_value
+        invalid_poc_field = write_work_item(
+            root,
+            "poc-exploration",
+            "implementation",
+            f"invalid-poc-decision-{index}",
+            poc_fields=invalid_fields,
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(invalid_poc_field),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2
+            and "poc_decision must be a concrete scalar" in rejected.stderr,
+            f"v3 POC accepted placeholder {invalid_value!r}",
+        )
+
+    duplicate_poc_field = write_work_item(
+        root,
+        "poc-exploration",
+        "implementation",
+        "duplicate-poc-decision",
+    )
+    duplicate_text = duplicate_poc_field.read_text(encoding="utf-8")
+    duplicate_poc_field.write_text(
+        duplicate_text.replace(
+            "  poc_decision: Choose whether to fund the delivery slice",
+            "  poc_decision: First decision\n  poc_decision: Second decision",
+            1,
+        ),
+        encoding="utf-8",
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(duplicate_poc_field),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2
+        and "exactly one poc_decision" in rejected.stderr,
+        "v3 POC accepted duplicate poc_decision fields",
+    )
+
+    active_v2_poc = write_work_item(
+        root,
+        "poc-exploration",
+        "implementation",
+        "active-v2-poc",
+        schema="kc-dev-flow-work-profile/v2",
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(active_v2_poc),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2
+        and "active v2 POC must finish on v3.x or be Captain re-recorded as v3"
+        in rejected.stderr,
+        "active v2 POC did not fail closed",
+    )
+
+    for compatible_profile, compatible_stage in (
+        ("pilot-product-slice", "ideation"),
+        ("production", "ideation"),
+    ):
+        compatible_v2 = write_work_item(
+            root,
+            compatible_profile,
+            compatible_stage,
+            f"compatible-v2-{compatible_profile}",
+            schema="kc-dev-flow-work-profile/v2",
+        )
+        compatible = MODULE.load_contracts(root, compatible_v2)
+        require(
+            compatible["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+            f"compatible v2 {compatible_profile} receipt was not retained",
+        )
 
     stale_item = write_work_item(
         root,
@@ -876,7 +1042,8 @@ def sd_gate_consume(
     prep = subprocess.run(
         [
             str(spacedock), "gate", "prepare", slug, "--workflow-dir", str(workflow),
-            "--question", f"{label}?", "--artifact", str(artifact.relative_to(repo)),
+            "--question", f"{label}?", "--artifact",
+            str(artifact.relative_to(workflow / ".spacedock-state")),
             "--summary", label,
         ],
         cwd=repo, text=True, capture_output=True,
@@ -917,10 +1084,10 @@ else:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-route-mechanism-") as route_tmp:
         route_root = Path(route_tmp)
         route_repo, route_workflow = seed_split_root_workflow(route_root)
-        route_artifact = route_repo / "review.md"
+        route_artifact = route_workflow / ".spacedock-state" / "review.md"
         route_artifact.write_text("route fixture review\n", encoding="utf-8")
-        sd_git(route_repo, "add", "review.md")
-        sd_git(route_repo, "commit", "-m", "add review artifact")
+        sd_git(route_workflow / ".spacedock-state", "add", "review.md")
+        sd_git(route_workflow / ".spacedock-state", "commit", "-m", "add review artifact")
 
         # POC: backlog's gate lands ideation regardless of profile (the
         # runtime advances by declared graph order, not by ROUTES); the FO's

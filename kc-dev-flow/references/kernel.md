@@ -33,13 +33,14 @@ create a parallel tracker, roadmap, status mirror, or delivery record.
 
 ## Select before routing
 
-Before entering a working stage, re-read the work item's committed
-`kc-dev-flow-work-profile/v2` receipt. If it is absent or stale, use
+Before entering a working stage, re-read the committed receipt. New choices use
+`kc-dev-flow-work-profile/v3`; active v2 Pilot and Production remain loadable,
+while active v2 POC fails closed. If it is absent or stale, use
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the locally authorized
 actor records the decision. A recommendation is not a selection.
 
 The profile loader accepts the exact committed work-item file. It validates and
-hash-binds that item's v2 receipt and current status, then loads this core, that
+hash-binds that item's supported receipt and current status, then loads this core, that
 profile's base contract, and that profile's current stage contract. A stage
 outside the selected route fails closed. Profiles are per work item, never
 project-global; different items may use different routes concurrently.
@@ -49,6 +50,9 @@ project-global; different items may use different routes concurrently.
 | `poc-exploration` | `build -> prove` |
 | `pilot-product-slice` | `shape -> build -> verify-deliver` |
 | `production` | `shape -> build -> verify` |
+
+A v3 POC fixes one `poc_decision`, `poc_falsifier`, `poc_budget`, and
+`poc_stop_when` before implementation. Pilot and Production omit these fields.
 
 `backlog` is queue state and `done` is terminal state; neither is a working
 stage. A workflow runtime may expose the union of stage names and skip stages

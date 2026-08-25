@@ -54,6 +54,7 @@ README as a policy bundle.
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
 | Profile loader | `docs/dev/_mods/profile-contract-loader.py` |
+| POC close guard | `docs/dev/_mods/poc-close-guard.py` |
 | Contracts root | `docs/dev/_mods` |
 | Delivery | GitHub PR to `main`; required checks; release-please owns versions and tags |
 | Scope, profile, irreversibility, merge/release | Captain |
@@ -131,10 +132,11 @@ python3 scripts/dev-flow-work-context-check.py validate \
 ## Profile selection
 
 Before the first working stage, re-read the exact work item's
-`kc-dev-flow-work-profile/v2` receipt. If missing or stale, invoke
+`kc-dev-flow-work-profile/v3` receipt for new choices. If missing or stale, invoke
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the authorized actor
-commits and re-reads it. An unchanged v1 receipt upgrades mechanically with the
-same Captain selection; it is migration evidence until the v2 result is committed.
+commits and re-reads it. An unchanged v1 Pilot or Production choice upgrades
+mechanically. A v1 POC keeps its choice but needs the Captain to complete the v3
+POC fields before dispatch.
 
 Use the host's structured Ask UI when available; plain chat is the fallback.
 Selection precedes acceptance-criteria expansion and stage dispatch.
@@ -147,7 +149,7 @@ python3 docs/dev/_mods/profile-contract-loader.py \
   --work-item "$EXACT_COMMITTED_WORK_ITEM"
 ```
 
-The command validates and hash-binds that item's v2 receipt and current status,
+The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
 route's first working stage it also requires one non-empty `sprint` and
 `sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
@@ -169,7 +171,7 @@ or iteration owner schedules it: leaving `backlog` needs a `sprint` naming a
 product sprint heading that already exists in `docs/dev/ROADMAP.md`, plus
 `sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
 then, so the drivable set is `spacedock status --workflow-dir docs/dev --where
-sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the v2
+sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the supported
 profile receipt before moving to the selected route's first working state.
 
 ### `ideation` — selected `shape`

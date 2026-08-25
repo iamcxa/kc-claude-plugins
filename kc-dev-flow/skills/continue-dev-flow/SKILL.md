@@ -23,16 +23,21 @@ Continue by the selected profile's smallest sufficient route.
    scheduling is needed; do not inspect or invent execution state.
 4. Read the exact committed work item and current state from their declared
    authorities. Do not enumerate the state tree.
-5. Re-read `## Work profile receipt`. If v2 is missing or stale before the first
-   working stage, invoke `kc-dev-flow:choose-work-profile`; let the locally
-   authorized actor commit and re-read the Captain's choice. An unchanged v1
-   choice upgrades mechanically without another Captain question.
+5. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
+   and Production receipts remain loadable, while an active v2 POC must finish
+   on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
+   or stale before the first working stage, invoke
+   `kc-dev-flow:choose-work-profile`; let the locally authorized actor commit
+   and re-read the Captain's choice. An unchanged v1 Pilot or Production choice
+   upgrades mechanically. For a v1 POC, preserve the choice but use
+   `kc-dev-flow:choose-work-profile` to complete the v3 POC fields with the
+   Captain before dispatch.
 
 ## Load one route
 
 Invoke the repository-local profile loader declared in `## Local Profile` with
 the exact committed work-item file. The loader derives and validates that item's
-v2 receipt and current status, then binds their hash into the output. The output
+supported receipt and current status, then binds their hash into the output. The output
 is the active contract: shared core, selected profile base, and selected stage.
 Do not separately read the full kernel, another profile, another stage, or an
 installed-package fallback. Profile selection is per work item, never a
@@ -93,6 +98,14 @@ For a superset state graph, route as follows:
 contract. Skipped stages create no review or evidence obligation.
 
 ## Advance
+
+At POC validation, use the repository-local `poc-close-guard.py`. Record one
+`poc_outcome`, prepare the gate through the guard, and record approval without
+`--consume`. Then record one Captain-owned `poc_handoff`: stop/change use
+`not_applicable`; proceed uses created, deferred, or declined. A created item
+must resolve uniquely by `source: poc:<exact-source-id>` before guarded consume.
+Raw Spacedock remains bypassable; this is a fail-closed KC Dev Flow path, not an
+engine tamper-resistance claim.
 
 - Perform the selected stage mission and required output. Move to the loader's
   `next_workflow_stage` when its stated stop condition is met.

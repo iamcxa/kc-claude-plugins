@@ -77,6 +77,8 @@ required = [
     "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
@@ -258,6 +260,8 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
@@ -267,6 +271,10 @@ for relative in [
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
     "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
+    "POC close guard",
 )
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
@@ -316,31 +324,43 @@ require(loader.ROUTES == expected_routes, "profile route topology drifted")
 
 
 def write_profile_work_item(
-    root: Path, profile: str, workflow_stage: str, logical_route: list[str]
+    root: Path,
+    profile: str,
+    workflow_stage: str,
+    logical_route: list[str],
+    *,
+    schema: str = "kc-dev-flow-work-profile/v3",
 ) -> Path:
     path = root / f"{profile}-{workflow_stage}.md"
-    path.write_text(
-        "\n".join(
+    receipt = [
+        "---",
+        f"status: {workflow_stage}",
+        "sprint: kc-dev-flow/S2",
+        "sprint-readiness: ready",
+        "---",
+        "",
+        "## Work profile receipt",
+        "",
+        "```yaml",
+        "work_profile:",
+        f"  schema: {schema}",
+        f"  selected: {profile}",
+        f"  recommended: {profile}",
+        f"  route: [{', '.join(logical_route)}]",
+        "  basis: contract fixture",
+    ]
+    if profile == "poc-exploration" and schema.endswith("/v3"):
+        receipt.extend(
             [
-                "---",
-                f"status: {workflow_stage}",
-                "sprint: kc-dev-flow/S2",
-                "sprint-readiness: ready",
-                "---",
-                "",
-                "## Work profile receipt",
-                "",
-                "```yaml",
-                "work_profile:",
-                "  schema: kc-dev-flow-work-profile/v2",
-                f"  selected: {profile}",
-                f"  recommended: {profile}",
-                f"  route: [{', '.join(logical_route)}]",
-                "  basis: contract fixture",
-                "```",
-                "",
+                "  poc_decision: Choose whether to fund the delivery slice",
+                "  poc_falsifier: The integrated probe loses the accepted state",
+                "  poc_budget: One local run and one review",
+                "  poc_stop_when: Stop after the first integrated result",
             ]
-        ),
+        )
+    receipt.extend(["```", ""])
+    path.write_text(
+        "\n".join(receipt),
         encoding="utf-8",
     )
     return path
@@ -454,10 +474,37 @@ require(
     and "it has to run a migration" in normalized_choose,
     "choose-work-profile no longer states the consumer-migration test",
 )
+for relative, phrases in {
+    "kc-dev-flow/README.md": [
+        "Load development constraints in proportion to work risk",
+        "POC — bounded exploration or technical proof",
+    ],
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
+        "Could credible negative evidence cancel or materially change the next commitment",
+        "kc-dev-flow-work-profile/v3",
+        "poc_decision",
+        "poc_falsifier",
+        "poc_budget",
+        "poc_stop_when",
+    ],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "poc_outcome",
+        "poc_handoff",
+        "source: poc:<exact-source-id>",
+    ],
+}.items():
+    normalized = " ".join(read(relative).split())
+    for phrase in phrases:
+        require(phrase in normalized, f"{relative} omits the v4 POC contract: {phrase}")
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
+)
+require(
+    (PLUGIN / "scripts/poc-close-guard.py").read_bytes()
+    == (ADOPTED / "poc-close-guard.py").read_bytes(),
+    "self-adopted POC close guard differs from package source",
 )
 for reference in [
     "reverse-recovery-audit.md",
@@ -520,7 +567,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                 )
                 require(
                     contract["schema"] == "kc-dev-flow-profile-contract/v2"
-                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v3",
                     f"work-item binding schema drifted: {contract}",
                 )
                 require(
@@ -531,6 +578,26 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                     ),
                     f"unselected profile path leaked: {profile} {workflow_stage}",
                 )
+
+        for profile, workflow_stage in (
+            ("pilot-product-slice", "ideation"),
+            ("production", "ideation"),
+        ):
+            logical_route = [
+                logical for logical, _next in expected_routes[profile].values()
+            ]
+            work_item = write_profile_work_item(
+                work_items,
+                profile,
+                workflow_stage,
+                logical_route,
+                schema="kc-dev-flow-work-profile/v2",
+            )
+            contract = loader.load_contracts(contracts_root, work_item)
+            require(
+                contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                f"compatible v2 receipt was not retained: {contracts_root} {profile}",
+            )
 
 skills = {
     "adopt-dev-flow": "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
@@ -603,6 +670,7 @@ science = read(skills["science-officer"])
 legacy = read(skills["science-officer-em"])
 adopter = read(skills["adopt-dev-flow"])
 migration = read("kc-dev-flow/MIGRATION.md")
+production_verify = read("kc-dev-flow/references/profiles/production/verify.md")
 rationale = read("kc-dev-flow/RATIONALE.md")
 normalized_adopter = " ".join(adopter.split())
 normalized_rationale = " ".join(rationale.split())
@@ -611,14 +679,16 @@ normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
 normalized_science = " ".join(science.split())
 normalized_migration = " ".join(migration.split())
+normalized_production_verify = " ".join(production_verify.split())
 
 for phrase in [
-    "kc-dev-flow-work-profile/v2",
+    "v2 Pilot or Production receipt",
+    "v1 POC",
+    "complete the v3 POC fields",
     "build -> prove",
     "shape -> build -> verify-deliver",
     "`shape -> build -> verify` | The scope accepts a production boundary",
     "structured Ask UI",
-    "do not ask the Captain to repeat the decision",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
 require(
@@ -638,6 +708,11 @@ for phrase in [
     "do not mark the unscheduled queue ready as a bulk migration",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
+require(
+    "review disposition" in normalized_production_verify
+    and "model identity" in normalized_production_verify,
+    "Production verification omits risk-selected review disposition",
+)
 
 for phrase in [
     "read that bounded section plus the frontmatter",

@@ -207,6 +207,34 @@ def run_scheduling_mutant() -> None:
         )
 
 
+def run_poc_entry_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
+        replace_once(
+            fixture / LOADER,
+            '    if schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":\n',
+            '    if False and schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":\n',
+        )
+        reject(
+            "poc-entry-fields-disabled",
+            execute([sys.executable, str(fixture / LOADER_TEST)], fixture),
+            "v3 POC accepted a missing poc_decision",
+        )
+
+
+def run_missing_close_guard_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        (fixture / "kc-dev-flow/scripts/poc-close-guard.py").unlink()
+        reject(
+            "poc-close-guard-removed",
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            "missing kc-dev-flow/scripts/poc-close-guard.py",
+        )
+
+
 def run_release_state_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
@@ -269,6 +297,8 @@ def main() -> int:
         "poc-exploration no longer loads less than pilot-product-slice",
     )
     run_scheduling_mutant()
+    run_poc_entry_mutant()
+    run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")
     return 0

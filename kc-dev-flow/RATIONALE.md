@@ -92,6 +92,11 @@ The smaller route must still tell the truth.
 
 ## Evidence, not a victory lap
 
+POC now includes bounded exploration as well as technical proof. Its outcome is
+a supported `proceed`, `stop`, or `change` decision, not a delivery verdict.
+Finite local comparison can show a profile helped in evaluated scenarios; it
+cannot establish that the profile always improves development.
+
 The bounded evaluation recorded in [PR #249](https://github.com/iamcxa/kc-claude-plugins/pull/249)
 measured lower required policy input and shorter sampled wall time. The work
 record owns those measurements; this retained rationale owns the decision they
