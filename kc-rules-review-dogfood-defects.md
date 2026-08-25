@@ -24,6 +24,17 @@ gates:
                 digest: sha256:c285ade92fa8bca8a40e77c83ab2720fc4369094023a1616ac6ac6fc73ccb352
                 request-digest: sha256:3818b1150b4683132cfa9f3ee87cf1ebdd6c5d359e779ae866c632affbbf2202
                 room-ref: ./kc-rules-review-dogfood-defects/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmg9zdxg2h2n2k0c7j86peq0:backlog:1
+                briefing: briefing:kmg9zdxg2h2n2k0c7j86peq0:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T06:59:32.381202Z"
+                decision: approve
+                reason: 'Captain approved at the backlog gate: the direction — bring the remaining kc-rules-review defects back inside the stages — is accepted; sprint scheduling and the v2 profile receipt remain the Captain''s to supply before the route''s first working state.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem
