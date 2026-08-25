@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-2:revision-1",
+  "question": "Approve exact candidate 343eca90af2296efba77100c21fbd950149e6342 after removing absorbed planning artifacts?",
+  "artifacts": [
+    {
+      "id": "artifact:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/f797c8a4a1b3c04f8b9976de6bd96890a41fe813/single-workflow-poc-routing.md",
+      "rev": "sha256:845ada339e2e3755b34dc038a80fb935afe1b45606ceb690ae938578e4b87a41",
+      "mediaType": "text/markdown",
+      "summary": "Production revalidation passed at 343eca90: two absorbed Superpowers artifacts removed, final diff reduced to 27 files and 1,984 lines; contract, without-it, all three profile routes, release metadata, version parity, retained-document subtraction, and project-context checks are green; measured existing-CI median delta is +1.80 seconds; RoboRev remains UNAVAILABLE with zero requests because model calls are out of scope."
+    }
+  ]
+}

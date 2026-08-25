@@ -76,6 +76,12 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:ahd8hehpz3g9r7vqmrz82z4x-validation-2
+              briefing:
+                id: briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-2:revision-1
+                digest: sha256:347151298bc280d9fe38ea776968771db4279bf100c4517650123ffe4a8a7662
+                request-digest: sha256:df753d3ec0066d8019e7b9c50b15f7ce2076d4593711845f4813dacb183732a8
+                room-ref: ./single-workflow-poc-routing/review/validation/briefing-2
 ---
 
 ## Problem
