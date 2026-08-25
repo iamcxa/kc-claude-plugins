@@ -18,7 +18,7 @@ built, and verified.
 
 Continuation resolves authority and profile before loading workflow policy. It
 reads the workflow's small Local Profile, the exact work item, and its committed
-v2 profile receipt. A deterministic repository-local loader then emits three
+profile receipt. A deterministic repository-local loader then emits three
 policy artifacts: shared core, selected profile base, and selected current
 stage. The selected build contract contains that profile's typed exit
 observation. A selected stage may also contain a typed conditional-reference
@@ -31,7 +31,7 @@ One superset Spacedock graph serves all three routes. The loading boundary is:
 
 ```mermaid
 flowchart LR
-    W["Exact work item<br/>status + v2 receipt"] --> L[Profile loader]
+    W["Exact work item<br/>status + profile receipt"] --> L[Profile loader]
     K[Shared kernel] --> L
     P["Selected profile<br/>base + current stage"] --> L
     L --> C["Active policy<br/>core + base + stage"]
@@ -44,6 +44,13 @@ POC build may trigger reverse recovery for a proposed brownfield capability
 change. Pilot and Production shape may trigger reverse recovery and, only when
 one integrated slice is insufficient, the multi-slice guard. Selecting a
 profile, vendoring a reference, or seeing a link does not activate it.
+
+A v3 POC receipt also fixes one decision, falsifier, budget, and stop condition
+before entry. Its close guard records `proceed`, `stop`, or `change`; a
+`proceed` outcome may create or reuse one downstream item, but scheduling and
+profile selection remain separate Captain decisions. Pilot and Production may
+continue on v2 receipts; active v2 POCs finish on the pinned 3.x contract or are
+re-recorded before the v4 cutover.
 
 Spacedock `pr-merge` is an orthogonal delivery event mod. Any profile may use it
 when PR delivery is selected; no profile loads it as policy.
