@@ -107,10 +107,11 @@ function agent_wrote(body) {
   if (body ~ /<system-reminder>|<task-notification>|<system_instruction>/) return 1
   if (body ~ /<command-name>|<local-command-stdout>|tool_use_id/) return 1
   # A relay from a parallel session is the whole turn, so it is anchored rather than
-  # matched anywhere: a turn that merely names the tag is the user talking about the
+  # matched anywhere: a turn that merely names one of these forms is the user talking about the
   # audit and stays. One adopter's first run counted 553 of these as corrections and
   # over-reported every friction row by 38%.
-  if (body ~ /^[ \t]*<teammate-message/) return 1
+  if (body ~ /^[ \t]*<teammate[-_]message/) return 1
+  if (body ~ /^[ \t]*Another Claude session sent a message/) return 1
   if (body ~ /^This session is being continued from a previous conversation/) return 1
   if (body ~ /^#? ?Fresh read-only (review|final consistency review)/) return 1
   if (body ~ /^# Round [0-9]+ (baseline|green|pressure)/) return 1
