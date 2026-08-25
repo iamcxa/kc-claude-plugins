@@ -2,6 +2,20 @@
 
 ## Migrating from 3.x to 4.x
 
+The v4 cutover keeps one graph and three profile slugs but changes new receipts
+to `kc-dev-flow-work-profile/v3` and adds the POC close guard. In order:
+
+1. Inventory active receipts. Finish each active v2 POC on its pinned 3.x
+   package/vendor pair, or have the Captain re-record it as v3 with decision,
+   falsifier, budget, and stop point.
+2. Vendor the loader, close guard, kernel, and profile tree atomically. Active
+   v2 Pilot and Production remain loadable; new choices use v3.
+3. Run every profile-stage load, guarded POC close path, package parity check,
+   and normal repository gate before updating the installed plugin.
+
+Rollback the installed plugin and the whole vendored pair together. Never run a
+v4 guard with a v3 loader or a v4 loader with v3 contracts.
+
 Version 4 removes the Production-only `release` state and makes scheduling a
 loader-enforced backlog exit requirement. Upgrade the adopter and installed
 plugin as one cutover, in this order:

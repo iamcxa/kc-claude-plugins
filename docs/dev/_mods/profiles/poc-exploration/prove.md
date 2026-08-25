@@ -39,6 +39,10 @@ question.
 
 ## Required output
 
+Record one `poc_outcome`: direction `proceed`, `stop`, or `change`, exact
+evidence, strongest limit, reversal fact, and cleanup. Approval supports the
+conclusion; it grants no downstream creation or profile authority.
+
 - observed journey result and artifact revision;
 - result of the critical-risk check;
 - cleanup status;

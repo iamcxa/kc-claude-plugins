@@ -474,6 +474,28 @@ require(
     and "it has to run a migration" in normalized_choose,
     "choose-work-profile no longer states the consumer-migration test",
 )
+for relative, phrases in {
+    "kc-dev-flow/README.md": [
+        "Load development constraints in proportion to work risk",
+        "POC — bounded exploration or technical proof",
+    ],
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
+        "Could credible negative evidence cancel or materially change the next commitment",
+        "kc-dev-flow-work-profile/v3",
+        "poc_decision",
+        "poc_falsifier",
+        "poc_budget",
+        "poc_stop_when",
+    ],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "poc_outcome",
+        "poc_handoff",
+        "source: poc:<exact-source-id>",
+    ],
+}.items():
+    normalized = " ".join(read(relative).split())
+    for phrase in phrases:
+        require(phrase in normalized, f"{relative} omits the v4 POC contract: {phrase}")
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),

@@ -10,6 +10,10 @@ this skill has recommendation and question authority only.
 
 ## Resolve the choice
 
+Ask first: **Could credible negative evidence cancel or materially change the
+next commitment this item asks the Captain to accept?** Yes recommends POC. No
+compares Pilot and Production using the existing delivery-risk boundaries.
+
 Read the exact work item and its `## Work profile receipt`. Reuse an unchanged
 `kc-dev-flow-work-profile/v2` receipt. Treat it as stale when audience, lifespan,
 valuable state, mutation boundary, authority need, or operational commitment
@@ -59,7 +63,7 @@ automatically and never supply the missing part.
 
 ```yaml
 work_profile:
-  schema: kc-dev-flow-work-profile/v2
+  schema: kc-dev-flow-work-profile/v3
   selected: poc-exploration | pilot-product-slice | production
   recommended: poc-exploration | pilot-product-slice | production
   basis: <audience, lifespan, state, mutation boundary, and commitment>
@@ -69,6 +73,11 @@ work_profile:
     implementation: [<task-specific obligations>]
     testing: [<task-specific obligations>]
   scope_boundary: <what this profile excludes>
+  # POC only; omit these fields for Pilot and Production.
+  poc_decision: <the next commitment this evidence decides>
+  poc_falsifier: <the cheapest credible negative evidence>
+  poc_budget: <explicit time, model, provider, or review ceiling>
+  poc_stop_when: <observable point at which work stops>
   promote_when: [<observable task-specific triggers>]
   decision:
     authority: <captain identity or bound authority>

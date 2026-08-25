@@ -94,6 +94,14 @@ contract. Skipped stages create no review or evidence obligation.
 
 ## Advance
 
+At POC validation, use the repository-local `poc-close-guard.py`. Record one
+`poc_outcome`, prepare the gate through the guard, and record approval without
+`--consume`. Then record one Captain-owned `poc_handoff`: stop/change use
+`not_applicable`; proceed uses created, deferred, or declined. A created item
+must resolve uniquely by `source: poc:<exact-source-id>` before guarded consume.
+Raw Spacedock remains bypassable; this is a fail-closed KC Dev Flow path, not an
+engine tamper-resistance claim.
+
 - Perform the selected stage mission and required output. Move to the loader's
   `next_workflow_stage` when its stated stop condition is met.
 - Invoke `kc-dev-flow:chief-engineer` only for an unclear next step, a material

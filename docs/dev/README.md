@@ -54,6 +54,7 @@ README as a policy bundle.
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
 | Profile loader | `docs/dev/_mods/profile-contract-loader.py` |
+| POC close guard | `docs/dev/_mods/poc-close-guard.py` |
 | Contracts root | `docs/dev/_mods` |
 | Delivery | GitHub PR to `main`; required checks; release-please owns versions and tags |
 | Scope, profile, irreversibility, merge/release | Captain |
@@ -131,7 +132,7 @@ python3 scripts/dev-flow-work-context-check.py validate \
 ## Profile selection
 
 Before the first working stage, re-read the exact work item's
-`kc-dev-flow-work-profile/v2` receipt. If missing or stale, invoke
+`kc-dev-flow-work-profile/v3` receipt for new choices. If missing or stale, invoke
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the authorized actor
 commits and re-reads it. An unchanged v1 receipt upgrades mechanically with the
 same Captain selection; it is migration evidence until the v2 result is committed.
