@@ -204,3 +204,72 @@ Spacedock 0.27.0.
 - Captain choice: reshape approved 2026-08-25. Replace the 24-file stop with
   32 files (31 named files plus one variance); keep 3,300 changed lines and the
   650-line guard pair unchanged.
+
+## Implementation evidence
+
+- Candidate revision: `bea889900d681fc4ef2d48b8c7663d2b83315622`.
+- Entry contract: packaged and adopted loaders require a v3 POC decision,
+  falsifier, budget, and stop condition; active v2 POCs fail with the ordered
+  migration message while Pilot and Production retain v2 compatibility.
+- Close contract: the packaged and adopted close guards support prepare,
+  create, and consume; creation reuses the sole canonical downstream item and
+  refuses duplicate source matches or a preselected profile.
+- Runtime proof: the pinned Spacedock fixture exercises stop, change, created,
+  deferred, declined, failed-write retry, and duplicate-source refusal.
+- Documentation and migration: README, rationale, adoption, selection,
+  continuation, migration, kernel, POC stage contracts, and bound architecture
+  describe the same bounded route and v3 cutover.
+- Changed-file mapping: loader and loader tests satisfy entry and migration;
+  close guard and real-runtime tests satisfy outcome, idempotency, and recovery;
+  profile/kernel copies satisfy loaded behavior; skills and retained docs
+  satisfy adopter and operator guidance; contract, ablation, and multi-profile
+  scripts satisfy parity, without-it, and unchanged-route obligations.
+- Subtraction result: no workflow, model/provider adapter, hosted canary,
+  Spacedock graph, automatic scheduling/profile authority, or behavioral-gate
+  laboratory file changed.
+- Shape stops at the candidate: 31 of 32 files, 3,058 of 3,300 changed lines,
+  and 649 of 650 close-guard implementation/test lines.
+
+```yaml
+project_context:
+  impact: update
+  authority: "Root PRODUCT.md, ARCHITECTURE.md, and CLAUDE.md"
+  claim_locator: "ARCHITECTURE.md#kc-dev-flow-profile-native-loading"
+  surface: "profile receipt schema and POC route boundary"
+  stale_claim: "all selected work items use a v2 receipt and POC has no deterministic close boundary"
+  approved_change: "v3 POCs bind decision, falsifier, budget, and stop condition, then close as proceed, stop, or change without downstream profile authority"
+  landed_change: "ARCHITECTURE.md at candidate bea889900d681fc4ef2d48b8c7663d2b83315622"
+  planned_check: "fresh contract and ablation tests plus exact comparison of ARCHITECTURE.md with the v3 loader and close guard"
+  validation_evidence: pending
+```
+
+### Implementation-exit observation
+
+```yaml
+review_convergence:
+  candidate_revision: bea889900d681fc4ef2d48b8c7663d2b83315622
+  capability: "RoboRev v0.62.0 CLI JSON commands, daemon, and Claude Code agent available"
+  mode: daemon
+  selected_profile: production
+  implementation_family: openai
+  provider: roborev
+  outcome: UNAVAILABLE
+  reason: "unavailable: no exact-input job exists and the accepted scope excludes a new model call"
+  identity_sha256: 3222a778f1f05bfd2a90dfbf5c1ec5839a156f8df4463e90869d2dd701e9898e
+  configuration_sha256: 3c2bae48809c3375a68610c9236487dc1ece33e933e343e19fab5e470f1d6a68
+  agent: claude-code
+  model: sonnet
+  reasoning: thorough
+  minimum_severity: medium
+  panel: none
+  job_identity: none
+  member_states: "no job; claude-code capability probe passed"
+  request_count: 0
+  confirmation_count: 0
+  cost_coverage: "not applicable; no job launched"
+```
+
+The earlier capability-stage list query addressed revision `9d7b4f13`, before
+the final architecture sync, and is not reused as evidence for this candidate.
+Per the observation contract, `UNAVAILABLE` does not replace fresh validation
+and grants no delivery authority.
