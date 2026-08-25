@@ -173,4 +173,6 @@ Spacedock 0.27.0.
   test duplication while preserving the accepted prepare/create/consume,
   idempotency, and refusal behavior. Do not raise the threshold unless that
   smaller route cannot retain the accepted behavior.
-- Captain choice: pending.
+- Captain choice: reduce scope, approved 2026-08-25. Remove non-essential
+  wrapper structure and test duplication while retaining every accepted close
+  behavior; the 650-line stop condition remains unchanged.
