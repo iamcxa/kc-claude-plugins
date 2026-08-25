@@ -76,6 +76,35 @@ relays from parallel sessions entered the human population and inflated every fr
 row by roughly 38% (553 of 1449 turns). This machine's corpus carries that tag once, in
 a conversation about the defect, so no window size would have surfaced it here.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: "kc-team-ops ships publicly from this marketplace and at least one adopter already runs kc-rules-review against their own corpus, so the audit's output is real use with persistent value. The run keeps no service state and makes no external mutation, but the six items have already grown a follow-on each, so iteration is expected rather than disposable."
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - "Keep the human-population filter a single allowlist in the script, not a second shape-matching rule per relay tag."
+      - "Keep a defect-reporting slot an output contract of the existing Completion gate, adding no second tracker or transport."
+    implementation:
+      - "Anchor every relay filter at turn start so a turn that merely mentions the tag stays in the population."
+      - "Make the reporting body carry the operator's skill version and any local patch, because an adopter's uncommitted fix is the drift this item exists to catch."
+      - "Leave prose items that change the same paragraph unstacked; local base policy is trunk-only."
+    testing:
+      - "Prove each filter change RED before GREEN, with one assertion for the dropped case and one for the kept case."
+      - "Prefer a measurement the next audit run can reproduce from artifacts that already exist over a marker the skill prints about itself."
+  scope_boundary: "Excludes the operator's own rule files (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`), any change to the kc-rules-review scoring model, and any new standing CI lane or lint. The seniority question is an experiment that may correctly produce no diff."
+  promote_when:
+    - "A reporting slot starts accepting submissions from outside this machine, or gains any automatic transport to an issue tracker."
+    - "The script begins reading a corpus it does not own, or writes anywhere outside its run directory."
+  decision:
+    authority: person:captain
+    at: "2026-08-25T07:02:03Z"
+```
+
 ## Scope
 
 Six items, in delivery order.
