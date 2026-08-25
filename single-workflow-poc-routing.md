@@ -191,3 +191,16 @@ Spacedock 0.27.0.
 - Captain choice: reshape approved 2026-08-25. Replace the 1,200 changed-line
   stop with 3,300: 2,510 observed, about 500 named remaining lines, and 290
   lines of variance. Keep the 24-file and 650 close-guard limits unchanged.
+
+## Shape correction — delivery file count
+
+- Observed after Task 3 commit `8be5121`: 16 changed files.
+- The accepted Task 4 package/adopter parity, three routing skills, migration,
+  rationale, and two README surfaces require 15 additional named files.
+- Completing the already accepted output therefore requires 31 changed files;
+  the 24-file stop cannot hold without omitting a required contract surface.
+- State: stopped before Task 4 to avoid a knowingly partial documentation and
+  migration cutover.
+- Recommendation: replace the 24-file stop with 32 files (31 named files plus
+  one variance); keep 3,300 changed lines and the 650-line guard pair unchanged.
+- Captain choice: pending.
