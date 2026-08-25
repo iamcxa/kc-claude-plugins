@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-3:revision-1",
+  "question": "Approve exact candidate 654c8cfa after the two Claude blockers were repaired, all local and hosted gates passed, and the documented non-blocking residuals were bounded?",
+  "artifacts": [
+    {
+      "id": "artifact:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/55840e966289818231830fb4065b3ab5608c4761/single-workflow-poc-routing.md",
+      "rev": "sha256:a5d84c4808db07613ad1fa02106c454c764993cf1c11482b67134a1ef660c535",
+      "mediaType": "text/markdown",
+      "summary": "Production revalidation PASS at 654c8cfa: empty-field and downstream-scheduling defects fixed, guard/test remains 650 lines, Claude exact-diff Gate PASS, CI green; outcome-only approval binding and low parser/documentation edges are recorded follow-up candidates."
+    }
+  ]
+}

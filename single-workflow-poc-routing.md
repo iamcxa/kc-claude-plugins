@@ -86,6 +86,23 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-25T10:11:38.563023Z"
                 reason: Exact candidate 343eca90 was superseded by Claude-reviewed repair commit 654c8cfa.
+            - id: gate-attempt:ahd8hehpz3g9r7vqmrz82z4x-validation-3
+              briefing:
+                id: briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-3:revision-1
+                digest: sha256:0cd4be49c888db4314a80d4e027222a30925c4bbe3ac29d59968fe63ed16c2ae
+                request-digest: sha256:1e30b09187628ac6e02c8bb796739fe9faef4e6598a1fff89a29ef59dc1df1c1
+                room-ref: ./single-workflow-poc-routing/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ahd8hehpz3g9r7vqmrz82z4x:validation:3
+                briefing: briefing:ahd8hehpz3g9r7vqmrz82z4x:validation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-08-25T10:20:55.727684Z"
+                decision: approve
+                reason: Captain accepts the bounded approval-to-consume outcome-binding residual at exact candidate 654c8cfa; current Spacedock has no partial outcome-binding primitive, downstream scheduling and profile authority remain separately guarded.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
