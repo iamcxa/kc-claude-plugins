@@ -303,11 +303,26 @@ if (command === 'eval') {
     const key = JSON.parse(globalMatch[1]);
     if (Object.hasOwn(state.diagnosticGlobals, key)) {
       result = state.diagnosticGlobals[key];
+      if (
+        key.startsWith('__E2E_DIAGNOSTIC_PROJECTION_') &&
+        state.profileProjectionValue !== null
+      ) {
+        state.profileProjectionReads = (state.profileProjectionReads || 0) + 1;
+        result = Object.assign({}, result, {
+          values: Object.assign({}, result.values, {
+            profile_live:
+              state.profileProjectionValue === true &&
+              state.profileProjectionReads >= state.profileProjectionAppearAfter,
+          }),
+        });
+        if (state.switchPageOnProjection === true) state.tabId = 't-other';
+      }
       if (expression.includes('=== true')) result = result === true;
     } else if (key.startsWith('__E2E_DIAGNOSTIC_')) {
       result = expression.includes('=== true') ? false : undefined;
     }
   }
+  writeState(state);
   process.stdout.write(
     JSON.stringify({
       success: true,

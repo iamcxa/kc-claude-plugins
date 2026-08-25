@@ -50,6 +50,7 @@ function parseArgs(argv) {
     profile: '',
     receipt: '',
     diagnosticInitScripts: [],
+    profileLivenessProjections: [],
     headed: false,
     command: [],
   };
@@ -72,6 +73,8 @@ function parseArgs(argv) {
       options.receipt = argv[++index] || '';
     } else if (value === '--diagnostic-init-script') {
       options.diagnosticInitScripts.push(argv[++index] || '');
+    } else if (value === '--profile-liveness-projection') {
+      options.profileLivenessProjections.push(argv[++index] || '');
     } else if (value === '--headed') {
       options.headed = true;
     } else {
@@ -1680,6 +1683,111 @@ function profileStateDisclosure(profileMode) {
   };
 }
 
+function parseProfileLivenessDeclarations(values, scriptCount) {
+  const declarations = values.map(function(value) {
+    const match = String(value).match(/^(0|[1-9]\d*):([a-z][a-z0-9_]{0,63})$/);
+    if (!match) {
+      throw new Error(
+        'profile liveness projection must be <diagnostic-script-index>:<boolean-field>'
+      );
+    }
+    const declaration = { script_index: Number(match[1]), field: match[2] };
+    if (declaration.script_index >= scriptCount) {
+      throw new Error(
+        'profile liveness projection references missing diagnostic script ' +
+          declaration.script_index
+      );
+    }
+    return declaration;
+  });
+  const identities = declarations.map(function(declaration) {
+    return declaration.script_index + ':' + declaration.field;
+  });
+  if (new Set(identities).size !== identities.length) {
+    throw new Error('profile liveness projections must be unique');
+  }
+  return declarations;
+}
+
+function assertProfileLivenessBinding(receipt, declarations) {
+  const recorded = receipt.profile_liveness_declarations || [];
+  if (JSON.stringify(recorded) !== JSON.stringify(declarations)) {
+    throw new Error('profile liveness projection input changed');
+  }
+}
+
+function assertCapturedPage(options, pageIdentity) {
+  if (activePageIdentity(options).pageIdentity !== pageIdentity) {
+    throw new Error(
+      'browser lifecycle infrastructure failure: profile liveness page identity changed'
+    );
+  }
+}
+
+function observeProfileLiveness(options, receipt, pageIdentity) {
+  const declarations = options.profileLivenessDeclarations || [];
+  if (declarations.length === 0) return profileStateDisclosure(receipt.profile_mode);
+
+  const timeoutMs = options.profileLivenessTimeoutMs || 10000;
+  const deadline = Date.now() + timeoutMs;
+  let attempts = 0;
+  let unsatisfied = declarations;
+  for (;;) {
+    attempts += 1;
+    unsatisfied = [];
+    for (const declaration of declarations) {
+      const script = receipt.diagnostic_init_scripts[declaration.script_index];
+      assertCapturedPage(options, pageIdentity);
+      const projection = diagnosticEval(
+        options,
+        'globalThis[' + JSON.stringify(script.projection_key) + ']()',
+        'agent-browser profile liveness evidence'
+      );
+      assertCapturedPage(options, pageIdentity);
+      const validated = validateDiagnosticProjection(
+        projection,
+        declaration.script_index
+      );
+      if (!validated.keys.includes(declaration.field)) {
+        throw new Error(
+          'profile liveness field is not in diagnostic projection ' +
+            declaration.script_index +
+            ': ' +
+            declaration.field
+        );
+      }
+      if (validated.values[declaration.field] !== true) {
+        unsatisfied.push(declaration);
+      }
+    }
+    if (unsatisfied.length === 0 || Date.now() >= deadline) break;
+    sleepSync(100);
+  }
+  return {
+    status: unsatisfied.length === 0 ? 'observed' : 'not-observed',
+    source: 'caller-declared-diagnostic-projection',
+    page_identity: pageIdentity,
+    declarations,
+    attempts,
+    waited_ms_budget: timeoutMs,
+    unsatisfied,
+  };
+}
+
+function assertProfileLivenessObserved(observation) {
+  if (observation.status !== 'not-observed' || !observation.declarations) return;
+  throw new Error(
+    'browser lifecycle infrastructure failure: declared profile liveness was not ' +
+      'observed after navigation (' +
+      observation.unsatisfied
+        .map(function(declaration) {
+          return declaration.script_index + ':' + declaration.field;
+        })
+        .join(', ') +
+      ')'
+  );
+}
+
 function assertInitProbeObserved(options, expression) {
   const data = parseAgentBrowserPayload(
     runAgentBrowser(options, ['eval', expression, '--json']),
@@ -1712,6 +1820,25 @@ function failLifecycleReceipt(receiptPath, receipt, error, postEvidence) {
     });
   }
   writeLifecycleReceipt(receiptPath, failed);
+}
+
+function failLaterNavigationReceipt(receiptPath, receipt, error, pre, post) {
+  if (!receipt) return;
+  writeLifecycleReceipt(
+    receiptPath,
+    Object.assign({}, receipt, {
+      status: 'failed',
+      failure_class: 'infrastructure',
+      error: error.message,
+      failed_at: new Date().toISOString(),
+      last_navigation: {
+        status: 'failed',
+        pre: pre || null,
+        post: post || null,
+        failed_at: new Date().toISOString(),
+      },
+    })
+  );
 }
 
 function performOwnedOpen(options) {
@@ -1834,6 +1961,7 @@ function performOwnedOpen(options) {
     ) {
       return diagnosticPublicProvenance(script, index, 'registered');
     });
+    receipt.profile_liveness_declarations = options.profileLivenessDeclarations;
     writeLifecycleReceipt(options.receiptPath, receipt);
   } else {
     if (!receipt.first_navigation) {
@@ -1847,6 +1975,7 @@ function performOwnedOpen(options) {
     ) {
       throw new Error('diagnostic init-script input count changed');
     }
+    assertProfileLivenessBinding(receipt, options.profileLivenessDeclarations);
     probeExpression = receipt.first_navigation.probe_expression || '';
     pre = captureNavigationEvidence(
       Object.assign({}, options, {
@@ -1926,10 +2055,22 @@ function performOwnedOpen(options) {
       })
     );
     assertStableNavigationIdentity(pre, post);
+    try {
+      post.profile_state = observeProfileLiveness(
+        options,
+        receipt,
+        post.page_identity
+      );
+      assertProfileLivenessObserved(post.profile_state);
+    } catch (error) {
+      failLaterNavigationReceipt(options.receiptPath, receipt, error, pre, post);
+      throw error;
+    }
     receipt.last_navigation = {
       status: 'verified',
       pre,
       post,
+      profile_state: post.profile_state,
       verified_at: new Date().toISOString(),
     };
     writeLifecycleReceipt(options.receiptPath, receipt);
@@ -1964,6 +2105,12 @@ function performOwnedOpen(options) {
     if (diagnosticManifest?.scripts?.length) {
       observeDiagnosticProjections(options, receipt, diagnosticManifest);
     }
+    post.profile_state = observeProfileLiveness(
+      options,
+      receipt,
+      post.page_identity
+    );
+    assertProfileLivenessObserved(post.profile_state);
     runAgentBrowser(options, ['network', 'har', 'stop', files.harPath]);
     harStarted = false;
     const har = inspectFirstNavigationHar(files.harPath);
@@ -1974,7 +2121,7 @@ function performOwnedOpen(options) {
       post,
       init_script: 'observed',
       har,
-      profile_state: profileStateDisclosure(receipt.profile_mode),
+      profile_state: post.profile_state,
       verified_at: new Date().toISOString(),
     };
     receipt.diagnostic_cleanup = cleanupDiagnosticLifecycle(options.receiptPath);
@@ -2543,6 +2690,11 @@ function main(argv) {
   const options = parseArgs(argv);
   try {
     assertNoRetiredLivenessFlag(argv);
+    if (options.command.includes('--profile-liveness-projection')) {
+      throw new Error(
+        '--profile-liveness-projection must precede the browser command; refusing a misplaced no-op'
+      );
+    }
   } catch (error) {
     process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
     return 2;
@@ -2592,6 +2744,15 @@ function main(argv) {
       process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
       return 2;
     }
+  }
+  try {
+    options.profileLivenessDeclarations = parseProfileLivenessDeclarations(
+      options.profileLivenessProjections,
+      options.diagnosticInitScripts.length
+    );
+  } catch (error) {
+    process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+    return 2;
   }
   if (options.command[0] === 'prepare-flow-managed-profile') {
     if (options.authMode !== 'flow-managed') {
@@ -2932,6 +3093,17 @@ function main(argv) {
       return 2;
     }
   }
+  if (existingReceipt) {
+    try {
+      assertProfileLivenessBinding(
+        existingReceipt,
+        options.profileLivenessDeclarations
+      );
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
   if (
     existingReceipt &&
     !isOwnedClose &&
@@ -3012,6 +3184,9 @@ function main(argv) {
         receiptPath,
         runId: options.runId,
         diagnosticScripts: options.diagnosticScripts,
+        profileLivenessDeclarations: options.profileLivenessDeclarations,
+        profileLivenessTimeoutMs:
+          process.env.E2E_RUNTIME_TEST_MODE === '1' ? 1000 : 10000,
       });
       if (options.authMode === 'flow-managed') {
         const record = readFlowManagedState({

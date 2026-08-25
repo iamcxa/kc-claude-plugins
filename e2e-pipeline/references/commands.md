@@ -24,11 +24,17 @@ diagnostic_runtime_args=()
 for recorder_path in "${diagnostic_init_scripts[@]}"; do
   diagnostic_runtime_args+=(--diagnostic-init-script "$recorder_path")
 done
+profile_liveness_projections=() # optional entries: <script-index>:<boolean-field>
+profile_liveness_runtime_args=()
+for projection in "${profile_liveness_projections[@]}"; do
+  profile_liveness_runtime_args+=(--profile-liveness-projection "$projection")
+done
 
 e2e_browser() {
   node "$BROWSER_RUNTIME" --run-id "$BROWSER_RUN_ID" --app "$APP" \
     --receipt "$BROWSER_RECEIPT" \
-    "${diagnostic_runtime_args[@]}" "$@"
+    "${diagnostic_runtime_args[@]}" \
+    "${profile_liveness_runtime_args[@]}" "$@"
 }
 ```
 
@@ -67,6 +73,31 @@ and projection output are local evidence. Never upload or commit browser
 profiles, cookies, tokens, storage dumps, raw HAR, or screenshots containing
 credentials.
 
+When a run depends on profile state, make one diagnostic projection field a
+caller-owned positive predicate and declare it on every runtime invocation. For
+example, a recorder can publish `profile_live: true` only when a known storage
+key has the expected application-specific shape, or when an authenticated-only
+DOM affordance is present (the DOM form also covers HttpOnly-cookie sessions):
+
+```js
+publishDiagnosticProjection(
+  { profile_live: { type: 'boolean' } },
+  () => ({
+    profile_live:
+      document.querySelector('[data-testid="account-menu"]') !== null,
+  })
+);
+```
+
+With that recorder at diagnostic script index 0, add
+`--profile-liveness-projection 0:profile_live`. Compiled flows accept matching
+newline-delimited entries through `E2E_PROFILE_LIVENESS_PROJECTIONS` and forward
+them on every owned browser invocation. The runtime polls each declared field
+for up to 10 seconds after every navigation, requires the value to be exactly
+`true`, and binds each sample to the captured page identity. A declared field
+that stays false, changes page, is missing, or cannot be read fails the lifecycle
+receipt instead of allowing navigation to become `verified`.
+
 ### What `first_navigation.status: verified` does and does not cover
 
 It covers navigation continuity — daemon, browser, page and profile identity held
@@ -97,10 +128,10 @@ can be lost on the way to the page. `persistent-path` hands the browser the
 requested directory itself. That is a fact about which modes have a copy step,
 not a prediction about any agent-browser version.
 
-**`status` is `not-observed` on every run today, and that is the point.** Nothing
-in the runtime measures the page's profile state. Reading a green `verified` as
-evidence that a pre-authenticated profile is live is the mistake this field exists
-to stop; it tells you the answer is unknown instead of letting you assume it.
+Without a declaration, `status` remains `not-observed`; a green `verified` is not
+profile evidence. With a satisfied caller-declared projection, `status` is
+`observed` and records the declaration, captured page identity, bounded poll
+budget, and attempt count without storing the projection value.
 
 **A receipt with no `profile_state` at all was verified by an older runtime.** The
 field is written at the pending-to-verified transition, so a session already in
@@ -112,12 +143,10 @@ written. Destroying evidence to add a derived field is the wrong trade. Read
 `profile_mode` on such a receipt instead: `verified-snapshot` means a copy step
 existed, and the same caution applies.
 
-If your run depends on a pre-authenticated profile, assert it yourself in the flow
-— an authenticated-only element, or a request that only succeeds when
-authenticated. A runtime-level detector is **not** available: one was built and
-reverted, because distinguishing state the profile carried from state the page
-minted on load needs the observation bound to the captured page, a predicate
-stronger than non-null, and a bounded poll. Tracked in #149.
+If your run depends on a pre-authenticated profile, declare the positive runtime
+projection above and keep the authenticated expectation in the flow as product
+evidence. The runtime projection establishes profile liveness; the flow
+expectation establishes application behavior.
 
 ### Flow-managed authentication
 

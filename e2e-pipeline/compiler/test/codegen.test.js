@@ -95,11 +95,27 @@ test('compiled browser runtime passes newline-delimited diagnostic scripts only 
   assert.match(runtime, /--diagnostic-init-script "\$_diagnostic_script"/);
   assert.match(
     runtime,
-    /node "\$E2E_BROWSER_RUNTIME"[\s\S]+?"\$\{_E2E_DIAGNOSTIC_ARGS\[@\]\}"/
+    /node "\$E2E_BROWSER_RUNTIME"[\s\S]+?\$\{_E2E_DIAGNOSTIC_ARGS\[@\]\+/
   );
   assert.doesNotMatch(
     runtime,
     /agent-browser[^\n]*--(?:diagnostic-)?init-script/
+  );
+});
+
+test('compiled browser runtime forwards profile liveness on every owned invocation', function() {
+  const runtime = generateBrowserRuntime({ default: 'example-app' });
+
+  assert.match(runtime, /E2E_PROFILE_LIVENESS_PROJECTIONS/);
+  assert.match(runtime, /--profile-liveness-projection "\$_profile_liveness"/);
+  assert.match(
+    runtime,
+    /node "\$E2E_BROWSER_RUNTIME"[\s\S]+?\$\{_E2E_PROFILE_LIVENESS_ARGS\[@\]\+[\s\S]+?"\$@"/
+  );
+  assert.equal(
+    (runtime.match(/\$\{_E2E_PROFILE_LIVENESS_ARGS\[@\]\+/g) || []).length,
+    1,
+    'one unconditional runtime call must carry the liveness contract for every command'
   );
 });
 
@@ -174,17 +190,20 @@ describe('generate() — shell header', function() {
 //   4. Runtime-owned diagnostic hooks — the browser wrapper converts the
 //      optional newline-delimited E2E_DIAGNOSTIC_INIT_SCRIPTS environment value
 //      into repeated runtime-only --diagnostic-init-script arguments.
+//   5. Caller-declared profile liveness — the same wrapper converts optional
+//      E2E_PROFILE_LIVENESS_PROJECTIONS into runtime-only arguments on its one
+//      unconditional invocation path.
 describe('PR-38 legacy output parity', function() {
   test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
       {
         name: 'legacy-empty',
-        expected: 'dc4361356d159cc89959df603ebb4654ae795edef1f7cf1e4c01db18043752e4',
+        expected: '80e93c6090e4638f81fb9530fc28c13a8c910aa24be55b3b3f68d314e76c3607',
         resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
       },
       {
         name: 'legacy-single-site',
-        expected: 'a63e7001e59f9dc30855ef43009f286e7c8a1857e09eefc1d80ace24c44f4f50',
+        expected: '88ab266de82619fea08f7872e881e651be7b0707b4a5fe4cd4c557fb3a1de694',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -216,7 +235,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: '4e2bf1cb048844aa3ed6c13511f278268b30b5a4d7316565d21b7bf137d72fb9',
+        expected: '069e9c6d418258a5e56d4b3a717cf6bc9840da8d07897b43a0552ea882d0043e',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',

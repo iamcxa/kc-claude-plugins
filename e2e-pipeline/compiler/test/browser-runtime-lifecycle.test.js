@@ -27,7 +27,10 @@ function setup(t, options) {
       copyLineage: true,
       dropDiagnosticIndex: -1,
       profileMode: 'persistent',
+      profileProjectionAppearAfter: 1,
+      profileProjectionValue: null,
       resetOnNavigation: '',
+      switchPageOnProjection: false,
     },
     options || {}
   );
@@ -108,11 +111,15 @@ function setup(t, options) {
         initScripts: [],
         launchHash: 12345,
         profileMode: settings.profileMode,
+        profileProjectionAppearAfter: settings.profileProjectionAppearAfter,
+        profileProjectionReads: 0,
+        profileProjectionValue: settings.profileProjectionValue,
         requests: [],
         resetOnNavigation: settings.resetOnNavigation,
         reused: false,
         snapshotId,
         socketDir,
+        switchPageOnProjection: settings.switchPageOnProjection,
         tabId: 't1',
         url: 'about:blank',
       },
@@ -151,7 +158,7 @@ function setup(t, options) {
   };
 }
 
-function runOpen(fixture, url, diagnosticInitScripts) {
+function runOpen(fixture, url, diagnosticInitScripts, livenessArgs) {
   const diagnosticArgs = (diagnosticInitScripts || []).flatMap(function(
     scriptPath
   ) {
@@ -172,11 +179,20 @@ function runOpen(fixture, url, diagnosticInitScripts) {
       '--receipt',
       fixture.receipt,
       ...diagnosticArgs,
+      ...(livenessArgs || []),
       'open',
       url,
     ],
     { encoding: 'utf8', env: fixture.env }
   );
+}
+
+function setProfileProjection(fixture, value, appearAfter) {
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  state.profileProjectionValue = value;
+  state.profileProjectionAppearAfter = appearAfter || 1;
+  state.profileProjectionReads = 0;
+  fs.writeFileSync(fixture.statePath, JSON.stringify(state, null, 2) + '\n');
 }
 
 function runClose(fixture, diagnosticInitScripts) {
@@ -688,6 +704,155 @@ test('the disclosure never claims an observation the runtime did not take', func
     observed.push(receipt.first_navigation.profile_state.status);
   }
   assert.deepEqual(observed, ['not-observed', 'not-observed']);
+});
+
+test('verified requires a caller-declared positive projection on the captured page', function(t) {
+  const fixture = setup(t, {
+    profileMode: 'snapshot',
+    profileProjectionValue: true,
+  });
+  const recorder = path.join(fixture.root, 'profile-state.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({profile_live:{type:'boolean'}},()=>({profile_live:false}));\n"
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/account',
+    [recorder],
+    ['--profile-liveness-projection', '0:profile_live']
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(receipt.first_navigation.profile_state.status, 'observed');
+  assert.equal(receipt.first_navigation.profile_state.page_identity, 't1');
+  assert.deepEqual(receipt.first_navigation.profile_state.declarations, [
+    { script_index: 0, field: 'profile_live' },
+  ]);
+});
+
+test('false is not a positive observation and fails closed after a bounded poll', function(t) {
+  const fixture = setup(t, {
+    profileMode: 'snapshot',
+    profileProjectionValue: false,
+  });
+  const recorder = path.join(fixture.root, 'inert-profile.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({profile_live:{type:'boolean'}},()=>({profile_live:false}));\n"
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/logged-out',
+    [recorder],
+    ['--profile-liveness-projection', '0:profile_live']
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /declared profile liveness/i);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'failed');
+  assert.equal(receipt.first_navigation.post.profile_state.status, 'not-observed');
+  assert.ok(receipt.first_navigation.post.profile_state.attempts > 1);
+  assert.ok(receipt.first_navigation.post.profile_state.waited_ms_budget > 0);
+});
+
+test('polling tolerates SPA rehydration before the positive projection appears', function(t) {
+  const fixture = setup(t, {
+    profileMode: 'snapshot',
+    profileProjectionValue: true,
+    profileProjectionAppearAfter: 4,
+  });
+  const recorder = path.join(fixture.root, 'http-only-dom-affordance.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({profile_live:{type:'boolean'}},()=>({profile_live:false}));\n"
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/rehydrating',
+    [recorder],
+    ['--profile-liveness-projection', '0:profile_live']
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.profile_state.status, 'observed');
+  assert.ok(receipt.first_navigation.profile_state.attempts > 1);
+});
+
+test('a positive projection from a different active page cannot verify navigation', function(t) {
+  const fixture = setup(t, {
+    profileMode: 'snapshot',
+    profileProjectionValue: true,
+    switchPageOnProjection: true,
+  });
+  const recorder = path.join(fixture.root, 'wrong-page.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({profile_live:{type:'boolean'}},()=>({profile_live:true}));\n"
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/captured-page',
+    [recorder],
+    ['--profile-liveness-projection', '0:profile_live']
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /page identity/i);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.notEqual(receipt.first_navigation.status, 'verified');
+});
+
+test('a declared projection remains enforced on later navigations', function(t) {
+  const fixture = setup(t, {
+    profileMode: 'snapshot',
+    profileProjectionValue: true,
+  });
+  const recorder = path.join(fixture.root, 'session-state.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({profile_live:{type:'boolean'}},()=>({profile_live:true}));\n"
+  );
+  const args = ['--profile-liveness-projection', '0:profile_live'];
+  assert.equal(
+    runOpen(fixture, 'https://application.example.test/one', [recorder], args).status,
+    0
+  );
+  setProfileProjection(fixture, false);
+
+  const second = runOpen(
+    fixture,
+    'https://application.example.test/two',
+    [recorder],
+    args
+  );
+
+  assert.notEqual(second.status, 0);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(receipt.last_navigation.status, 'failed');
+  assert.equal(receipt.last_navigation.post.profile_state.status, 'not-observed');
+});
+
+test('a misplaced liveness projection is refused instead of silently ignored', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  const result = runOpen(fixture, 'https://application.example.test/no-op', [], [
+    'open',
+    '--profile-liveness-projection',
+    '0:profile_live',
+  ]);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /must precede the browser command|misplaced no-op/i);
+  assert.equal(fs.existsSync(fixture.receipt), false);
 });
 
 test('BOUNDED: a legacy receipt is left alone rather than retrofitted by a read-only command', function(t) {
