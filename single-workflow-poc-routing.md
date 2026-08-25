@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: make POC a bounded decision route in one workflow"
-status: backlog
+status: ideation
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
 sprint: S4
@@ -35,7 +35,7 @@ gates:
                 reason: Captain selected Production after approving kc-dev-flow/S4.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
