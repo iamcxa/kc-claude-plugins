@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmg9zdxg2h2n2k0c7j86peq0:validation:attempt-1:revision-1",
+  "question": "Approve validation for slice 1 and authorize a Draft PR from the trunk-based branch to main?",
+  "artifacts": [
+    {
+      "id": "artifact:kmg9zdxg2h2n2k0c7j86peq0:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bd1d659fa963aa29cb179ef5bf6513f90b9814fa/kc-rules-review-dogfood-defects.md",
+      "rev": "sha256:54ed63ea0d6e9e27b094d87e9ba88b4adf6ffe0f88cb1a1fbec68e04edff8c4e",
+      "mediaType": "text/markdown",
+      "summary": "Slice 1 verified at tip bd747da2 against origin/main 99b6747b: 27 insertions, 0 deletions, one file. Both implementation claims re-derived independently, the pathspec repair measured real on a symlink install (2 leaked paths to 0, reproduced 7 to 0 on an unrelated pre-existing install), and three repo gates plus the sanitize classes are green. AC2 satisfied and its falsifier directly disproved; AC1, AC3 and AC4 are post-landing or gated on the deliberately unbuilt slice 2. Nothing pushed."
+    }
+  ]
+}

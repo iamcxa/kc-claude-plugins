@@ -55,6 +55,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kmg9zdxg2h2n2k0c7j86peq0:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kmg9zdxg2h2n2k0c7j86peq0-validation-1
+              briefing:
+                id: briefing:kmg9zdxg2h2n2k0c7j86peq0:validation:attempt-1:revision-1
+                digest: sha256:013c80365a188bb48df4de6b37bff430a6b67a14c36b389a699f1eafd30f3d7f
+                request-digest: sha256:6e238188a2caada595a7a6690ebf8e9c0c445e5fbfa882d8691da65530b16537
+                room-ref: ./kc-rules-review-dogfood-defects/review/validation/briefing-1
 sprint-readiness: ready
 ---
 
