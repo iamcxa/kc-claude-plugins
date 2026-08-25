@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: make POC a bounded decision route in one workflow"
-status: implementation
+status: validation
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
 sprint: S4
