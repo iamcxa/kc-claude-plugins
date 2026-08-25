@@ -357,6 +357,26 @@ explicit human confirmation.
 Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
 Status Update publication, and LLM-authored unattended payloads.
 
+### Sprint S4 — close POC at a decision boundary
+
+Captain direction: begin immediately without broadening the remaining S3
+projection work.
+
+1. `single-workflow-poc-routing`
+
+Exit: one installed workflow routes bounded exploration and technical proof
+through POC; every new POC fixes its decision, falsifier, budget, and stop
+condition before implementation; `proceed`, `stop`, and `change` close through
+an evidence gate that remains distinct from downstream task authority; and a
+created downstream handoff is retry-safe before the source POC reaches `done`.
+The v2/v3 receipt cutover, adopter action, rollback, and release evidence are
+explicit, while the Spacedock graph and existing route slugs remain unchanged.
+
+Out of scope: an Explore workflow or stage, a Spacedock engine change,
+cross-entity transactions, automatic downstream profile selection, model calls
+or a new CI job for the contract slice, and reuse of the behavioral-gate
+laboratory branch.
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine
