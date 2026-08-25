@@ -408,6 +408,7 @@ Before → after:
 Role: <name / none / unknown / unchanged> — default question: <question / no new question>.
 Chosen because: <recurring question and separate occasions, or why the evidence cannot name a vacancy>
 Validation: <for each arm: ran / not run; outcome delivered / failed; marker emitted / omitted>
+Skill defect: <none, or one entry per defect: what it does, what it should do, run directory>
 <Close-out block, when the status-pull remedy was selected or a governing rule requires it>
 ```
 
@@ -417,6 +418,31 @@ reviewer result remains only in an internal message. If no rule changed, the Dec
 Before → after slots still say why. The close-out block remains conditional: this skill does not
 install it merely by running an unrelated rules review. Preserve the Validation distinctions: a
 baseline that ran and omitted a marker is evidence, not a baseline that did not run.
+
+### Skill defect slot — a defect in this skill, not in the rules it audits
+
+Fill it with `none` or one entry per defect. `none` is an answer; the slot is never omitted. A
+defect an adopter found and patched in their own copy is the case this exists to catch, so when the
+slot is non-`none`, hand the user an issue-ready body and let them file it with `gh issue create`.
+This skill never files anything itself.
+
+````markdown
+Title: kc-rules-review: <one-line defect>
+Skill version: <`version` from `.claude-plugin/plugin.json` in the plugin directory this skill was
+  loaded from — `${CLAUDE_PLUGIN_ROOT}` under Claude Code, the install path otherwise>
+Local patch: <`git status --porcelain` of that same directory, or `not a checkout` when the install
+  is an rsync copy rather than a checkout>
+What it does: <observed behaviour>
+What it should do: <expected behaviour>
+Evidence: <the run directory, and which artifact in it shows the defect>
+````
+
+Both facts come from the install, never from `run.json` — the script emits neither and is not being
+changed to. Record `not a checkout` rather than dropping the line: a silently missing patch field is
+exactly the drift the slot exists to surface.
+
+If the user declines to file, the defect stays in this report alongside the run artifacts, so the
+next run shows it unfiled rather than losing it.
 
 ## Optional route — propagate across harnesses
 
