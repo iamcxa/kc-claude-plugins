@@ -1,12 +1,12 @@
 ---
 title: Six defects from one dogfood run and one adopter run, delivered outside the stages
-status: validation
+status: done
 source: kc-rules-review dogfood run 2026-08-25 (501 sessions, 1224 human turns) plus an adopter's independent run; filed after the workflow's second-PR trigger fired and was walked past
 product: kc-team-ops
 sprint: S1
 started: 2026-08-25T07:11:35Z
-completed:
-verdict:
+completed: 2026-08-25T09:05:49Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-kc-rules-review-dogfood-defects
 issue:
 pr: pr-merge:290
@@ -74,8 +74,9 @@ gates:
                 reason: 'Captain approved validation for slice 1: 27 insertions / 0 deletions on a trunk-based branch, both implementation claims re-derived independently, the pathspec repair measured on two symlink installs, three repo gates and the sanitize classes green; AC2 satisfied and its falsifier disproved, the remaining ACs post-landing or gated on the deliberately unbuilt slice 2.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 sprint-readiness: ready
+archived: 2026-08-25T09:05:49Z
 ---
 
 ## Problem
