@@ -1,13 +1,13 @@
 ---
 title: "kc-dev-flow: make POC a bounded decision route in one workflow"
-status: validation
+status: done
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
 sprint: S4
 sprint-readiness: ready
 started:
-completed:
-verdict:
+completed: 2026-08-25T10:45:07Z
+verdict: PASSED
 worktree:
 issue:
 pr: pr-merge:291
@@ -102,7 +102,8 @@ gates:
                 reason: Captain accepts the bounded approval-to-consume outcome-binding residual at exact candidate 654c8cfa; current Spacedock has no partial outcome-binding primitive, downstream scheduling and profile authority remain separately guarded.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-25T10:45:07Z
 ---
 
 ## Problem
