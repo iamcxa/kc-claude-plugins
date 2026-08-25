@@ -4,7 +4,7 @@ status: ideation
 source: kc-rules-review dogfood run 2026-08-25 (501 sessions, 1224 human turns) plus an adopter's independent run; filed after the workflow's second-PR trigger fired and was walked past
 product: kc-team-ops
 sprint: S1
-started:
+started: 2026-08-25T07:11:35Z
 completed:
 verdict:
 worktree:
