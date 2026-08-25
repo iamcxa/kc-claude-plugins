@@ -160,3 +160,17 @@ Spacedock 0.27.0.
   Spacedock graph, model/provider surface, or behavioral-gate laboratory file.
 - Stop numbers: more than 24 changed files, 1,200 changed lines, or 650 combined
   close-guard implementation/test lines stops implementation for Captain review.
+
+## Implementation stop — close guard size
+
+- Observed at implementation head `45f302c` plus the uncommitted Task 2 work:
+  `poc-close-guard.py` is 403 lines and `poc-close-guard.test.py` is 288 lines,
+  691 combined.
+- Crossing: 41 lines above the Captain-approved 650-line stop condition.
+- State: stopped before Task 2 commit; the focused guard test is GREEN, but no
+  completion or scope claim is made.
+- Recommendation: reduce scope by removing non-essential wrapper structure and
+  test duplication while preserving the accepted prepare/create/consume,
+  idempotency, and refusal behavior. Do not raise the threshold unless that
+  smaller route cannot retain the accepted behavior.
+- Captain choice: pending.
