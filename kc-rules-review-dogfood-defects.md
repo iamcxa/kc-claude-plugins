@@ -35,6 +35,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kmg9zdxg2h2n2k0c7j86peq0:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kmg9zdxg2h2n2k0c7j86peq0-ideation-1
+              briefing:
+                id: briefing:kmg9zdxg2h2n2k0c7j86peq0:ideation:attempt-1:revision-1
+                digest: sha256:c1a688c1ed382c6a957ac9ca6bc879a02f269e6b0d2c023df09483885d94a60d
+                request-digest: sha256:716ec1691dbbee918e6466a5e81b2ffa59df87772fa7a7bbbf46171e62231743
+                room-ref: ./kc-rules-review-dogfood-defects/review/ideation/briefing-1
 sprint-readiness: ready
 ---
 

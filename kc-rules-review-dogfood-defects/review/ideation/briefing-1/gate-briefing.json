@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmg9zdxg2h2n2k0c7j86peq0:ideation:attempt-1:revision-1",
+  "question": "Approve this shape and enter implementation on slice 1 (the skill-defect reporting slot), branching from main now?",
+  "artifacts": [
+    {
+      "id": "artifact:kmg9zdxg2h2n2k0c7j86peq0:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/487d813c7691462610ebfa73eec432c1c7bfeae2/kc-rules-review-dogfood-defects.md",
+      "rev": "sha256:b78ed6b54e781c64e4013b3b864cb4f19831c14d6e3cd394f1d24f6742d45c84",
+      "mediaType": "text/markdown",
+      "summary": "Ideation resolved the entity's own six-vs-five arithmetic, checked two inherited dependency claims against the actual PR diffs and corrected one, and defined four acceptance checks that read artifacts the work already produces rather than a marker the skill prints about itself. Two slices, trunk-only, nothing stacks; the seniority experiment is explicitly left out of the shape."
+    }
+  ]
+}
