@@ -13,6 +13,29 @@ issue:
 pr:
 mod-block:
 id: ahd8hehpz3g9r7vqmrz82z4x
+gates:
+    version: 1
+    records:
+        - id: gate:ahd8hehpz3g9r7vqmrz82z4x:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ahd8hehpz3g9r7vqmrz82z4x-backlog-1
+              briefing:
+                id: briefing:ahd8hehpz3g9r7vqmrz82z4x:backlog:attempt-1:revision-1
+                digest: sha256:7c89ab7d8e20bb5a8c02e8d500290a3deec8daacc17129496f82f3796de025b5
+                request-digest: sha256:1e7a007b69d1aba761c80aa5af0485f20027170c5069dfc5ddd153401f0c0b2f
+                room-ref: ./single-workflow-poc-routing/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ahd8hehpz3g9r7vqmrz82z4x:backlog:1
+                briefing: briefing:ahd8hehpz3g9r7vqmrz82z4x:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T07:30:35.122184Z"
+                decision: approve
+                reason: Captain selected Production after approving kc-dev-flow/S4.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Problem

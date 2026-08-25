@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ahd8hehpz3g9r7vqmrz82z4x:backlog:attempt-1:revision-1",
+  "question": "Approve the S4 Production seed and move it to ideation to finalize the ordered v3 cutover and bounded close-guard plan?",
+  "artifacts": [
+    {
+      "id": "artifact:ahd8hehpz3g9r7vqmrz82z4x:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c08f1e79a4df077c4cbc0ab700576daabf9fef1f/single-workflow-poc-routing.md",
+      "rev": "sha256:94b9b5bad3d644e60f9872c7a70a7f0f36adc6b1bf803858596059ba6d18dfe9",
+      "mediaType": "text/markdown",
+      "summary": "Captain approved the single-workflow POC routing design after Claude PASS and selected the Production route for the v3 contract migration."
+    }
+  ]
+}
