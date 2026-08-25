@@ -189,6 +189,9 @@ someone sees. It stays a separate backlog entity.
 Every step is marked OBSERVED (someone watched it run) or DESIGNED (written, not yet
 exercised), and names the acting program rather than a role.
 
+One journey — a defect a run exposes reaches resolution inside the stages — with two
+legs, one per slice.
+
 ### Journey A — a skill defect reaches this repository
 
 1. **OBSERVED** — the adopter's session runs `rule-firing-report.sh`, which writes
@@ -268,7 +271,11 @@ ceremony and is removed, which is this entity's own stated falsifier.
 Reading `version` from the installed plugin's `plugin.json` and running `git status`
 against the install directory reproduces, by hand, the two fields the filed issue
 carries. Falsified if either field can only be produced by adding an emitter to
-`rule-firing-report.sh`, which the scope boundary forbids.
+`rule-firing-report.sh` — barred by the work profile's testing obligation ("prefer a
+measurement the next audit run can reproduce from artifacts that already exist over a
+marker the skill prints about itself") and its architecture obligation keeping the
+slot an output contract of the existing Completion gate. The `scope_boundary` field
+does not reach it.
 
 **AC3 — `unknown` is followed by an answered decision (slice 2).** In the session
 corpus the next audit run already reads, a turn where the session reports `unknown`
