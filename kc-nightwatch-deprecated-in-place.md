@@ -2,7 +2,7 @@
 id: z74a3zvpbdhekrdsmy5dgnm9
 title: kc-nightwatch is deprecated in intent and fully published in fact
 status: backlog
-source: Captain ruling 2026-08-23 — "very close to A, but for now we use B": deprecate in place rather than retire, with retirement the intended destination
+source: 'Captain ruling 2026-08-23 — "very close to A, but for now we use B": deprecate in place rather than retire, with retirement the intended destination'
 product: kc-nightwatch
 sprint:
 started:
