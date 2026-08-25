@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ahd8hehpz3g9r7vqmrz82z4x:ideation:attempt-1:revision-1",
+  "question": "Approve the committed Production shape at ca8f9f1 and advance this S4 item to implementation under KC Dev Flow?",
+  "artifacts": [
+    {
+      "id": "artifact:ahd8hehpz3g9r7vqmrz82z4x:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b350a17741e48f8a8f13dc785c962fb69fb173a3/single-workflow-poc-routing.md",
+      "rev": "sha256:f087964e0f5734318ad0a32ad70744da061790ac2b2bbf06129973d319d5eb3b",
+      "mediaType": "text/markdown",
+      "summary": "Captain-approved single-workflow POC routing shape: 24-file boundary, v3 POC entry validation, one close guard, unchanged graph, and deterministic release evidence."
+    }
+  ]
+}

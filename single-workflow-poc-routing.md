@@ -36,6 +36,26 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ahd8hehpz3g9r7vqmrz82z4x:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ahd8hehpz3g9r7vqmrz82z4x-ideation-1
+              briefing:
+                id: briefing:ahd8hehpz3g9r7vqmrz82z4x:ideation:attempt-1:revision-1
+                digest: sha256:cc1413a64f7d90333eb2b2232e1216d9365764455654b7450c7b1b440506d782
+                request-digest: sha256:9e7d0fcbbcf9e7e60c16dd84fea9d826a751987eeecceb4c985ced8684e5b78b
+                room-ref: ./single-workflow-poc-routing/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ahd8hehpz3g9r7vqmrz82z4x:ideation:1
+                briefing: briefing:ahd8hehpz3g9r7vqmrz82z4x:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T07:48:10.414226Z"
+                decision: approve
+                reason: Captain approved the Production shape and required KC Dev Flow to remain the governing workflow.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Problem
