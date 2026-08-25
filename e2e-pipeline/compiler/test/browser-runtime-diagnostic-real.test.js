@@ -274,14 +274,6 @@ test(
     const address = server.address();
     const url = 'http://127.0.0.1:' + address.port + '/profile-inert';
 
-    t.after(async function() {
-      await new Promise(function(resolve) {
-        server.close(resolve);
-      });
-      fs.rmSync(profile, { recursive: true, force: true });
-      fs.rmSync(root, { recursive: true, force: true });
-    });
-
     const baseArgs = [
       '--run-id', runId,
       '--app', app,
@@ -290,6 +282,15 @@ test(
       '--diagnostic-init-script', recorder,
       '--profile-liveness-projection', '0:profile_live',
     ];
+
+    t.after(async function() {
+      await new Promise(function(resolve) {
+        server.close(resolve);
+      });
+      await runRuntime([...baseArgs, 'close'], environment);
+      fs.rmSync(profile, { recursive: true, force: true });
+      fs.rmSync(root, { recursive: true, force: true });
+    });
     const opened = await runRuntime([...baseArgs, 'open', url], environment);
     assert.notEqual(opened.status, 0);
     assert.match(opened.stderr, /declared profile liveness/i);
