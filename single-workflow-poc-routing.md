@@ -82,6 +82,10 @@ gates:
                 digest: sha256:347151298bc280d9fe38ea776968771db4279bf100c4517650123ffe4a8a7662
                 request-digest: sha256:df753d3ec0066d8019e7b9c50b15f7ce2076d4593711845f4813dacb183732a8
                 room-ref: ./single-workflow-poc-routing/review/validation/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-25T10:11:38.563023Z"
+                reason: Exact candidate 343eca90 was superseded by Claude-reviewed repair commit 654c8cfa.
 ---
 
 ## Problem
@@ -421,3 +425,46 @@ because the accepted slice excludes a new model call.
 - Captain choice: `reduce scope`, approved 2026-08-25. Keep the 650-line limit,
   consolidate duplicated test and parser structure, retain both behavioral
   fixes, and do not add a RoboRev request.
+
+## Validation evidence — repair head
+
+Exact candidate: `654c8cfa8dba465004768c8ee5fdcf1010f49700`.
+
+- The loader now refuses a bare-empty POC field without matching across the next
+  line. The close guard requires a new downstream item to remain `backlog`, with
+  no sprint and no `sprint-readiness: ready`; each regression was observed RED
+  before the repair and GREEN after it.
+- The guard/test pair is 349/301 lines, exactly 650 combined. The Captain's
+  reduce-scope choice removed outcome/handoff data classes and duplicated test
+  structure without dropping a supported close behavior.
+- The 3.x-to-4.x migration is one ordered cutover. New choices use v3; unchanged
+  v2 Pilot and Production receipts remain loadable; v1 POC migration asks the
+  Captain for the four experiment fields instead of inventing them.
+- Production verification now records one review disposition. This slice used
+  an exact-diff Claude specialist review; Chief Engineer sequencing was not
+  applicable and no bounded Science Officer claim was triggered. Model identity
+  supplied no authority.
+- Local exact-head evidence: contract PASS; without-it ablation PASS with every
+  declared mutant rejected; all three profile routes reached done; release
+  metadata 34/34; skill frontmatter 12/12; version parity, Ruff, and diff checks
+  PASS.
+- Hosted exact-head evidence: live Spacedock route gate, version parity, and
+  GitGuardian all PASS on PR #291. The PR remains Draft and cleanly mergeable.
+- Fresh safe-mode Claude exact-diff re-review returned `Gate: PASS`. It found no
+  omitted required review and retained the 650-line pair as necessary executable
+  scope. Its non-blocking residuals are: the existing Spacedock approval does not
+  separately freeze only the POC outcome while allowing a later handoff edit;
+  POC terminalization and exact YAML skeletons could be stated more explicitly;
+  and three parser/reuse edge cases remain low severity. These do not broaden
+  this slice; the outcome-only binding needs a Spacedock or portable gate-binding
+  decision before code, and the smaller documentation/parser points remain
+  follow-up candidates rather than hidden PASS claims.
+- RoboRev v0.62.0 and its daemon are healthy, but this branch has no existing
+  exact-head job. The accepted scope and Captain's reduce-scope choice authorize
+  no new RoboRev request, so the typed implementation-exit observation remains
+  `UNAVAILABLE` with request count zero. The direct Claude review is provider
+  feedback at validation, not a rewritten RoboRev receipt.
+- Rollout is the documented atomic adopter re-vendor plus later Release Please
+  4.0.0 proposal. Rollback pins the installed plugin and vendored contract set to
+  3.x together. Repository maintainers own package operation; this contract adds
+  no hosted service or monitoring surface.
