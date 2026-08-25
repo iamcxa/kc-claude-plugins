@@ -449,3 +449,30 @@ The acceptance checks deliberately avoid the completion report as evidence, sinc
 report is the artifact being changed. AC3 leans on the audit's own paired-turn
 mechanism — the same device #285 installs — so the next run can falsify the
 unknown-terminal rule from the corpus it already reads.
+
+## Implementation evidence — RoboRev implementation-exit observation
+
+```yaml
+observation:
+  schema: kc-dev-flow-observation/v1
+  capability: review_convergence
+  mode: observe
+  provider: roborev
+  trigger: implementation_exit
+  profile: pilot-product-slice
+  implementation_family: anthropic
+  reviewer: {agent: codex, model: gpt-5.6-terra, reasoning: medium, minimum_severity: medium, panel: none}
+  candidate: {base: 99b6747b4521b878cb2b0cb3f34d1c5049a0cd67, tip: b4c30264f3050015ee4d6549257dd1886031e827}
+  config_sha: e816dfd221a307eee460f0404e4870d464ec7b66
+  identity: sha256:e49c0d76df1e54f6f23004d08d52144b71a50b85bb5838802af56d599d3476de
+  capability_probe:
+    cli: "roborev v0.62.0; review, list --json, show --json present"
+    execution_state: "daemon running 132h, health OK, workers 4"
+    agent_auth: "roborev check-agents — codex OK; claude-code OK; cursor/gemini/kilo/pi FAIL (unused)"
+    local_bridge: not_required
+  reuse_check: "roborev list --json from the candidate worktree returned null — no queued, running, or completed exact-input job"
+  claim:
+    claimant: spacedock-ensign-kc-rules-review-dogfood-defects-implementation
+    observed_state_revision: 0b6ac91b95b5f539c982c11dd85a67481b68459e
+    state: claimed
+```
