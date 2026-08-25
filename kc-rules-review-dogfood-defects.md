@@ -1,6 +1,6 @@
 ---
 title: Six defects from one dogfood run and one adopter run, delivered outside the stages
-status: implementation
+status: validation
 source: kc-rules-review dogfood run 2026-08-25 (501 sessions, 1224 human turns) plus an adopter's independent run; filed after the workflow's second-PR trigger fired and was walked past
 product: kc-team-ops
 sprint: S1
