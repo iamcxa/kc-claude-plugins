@@ -201,6 +201,6 @@ Spacedock 0.27.0.
   the 24-file stop cannot hold without omitting a required contract surface.
 - State: stopped before Task 4 to avoid a knowingly partial documentation and
   migration cutover.
-- Recommendation: replace the 24-file stop with 32 files (31 named files plus
-  one variance); keep 3,300 changed lines and the 650-line guard pair unchanged.
-- Captain choice: pending.
+- Captain choice: reshape approved 2026-08-25. Replace the 24-file stop with
+  32 files (31 named files plus one variance); keep 3,300 changed lines and the
+  650-line guard pair unchanged.
