@@ -493,3 +493,47 @@ observation_confirmation_claim:
   observed_state_revision: b77bfcea0bbf292fac1622fd6d2de81976ec3b5b
   state: claimed
 ```
+
+```yaml
+observation_confirmation_result:
+  job: {id: 244, uuid: be9c280d-96cd-471a-acfc-7f99c6a40b5b, status: done, verdict_bool: 1}
+  exact_input_match: "job.git_ref bd747da2…, agent codex, model and requested_model gpt-5.6-terra, reasoning medium, min_severity medium, panel none, member_count 0 — all equal the confirmation identity"
+  correlation: "one new job (244) against the pre-request snapshot [243]"
+  output: SEVERITY_THRESHOLD_MET
+  receipt: PASS(reason: passed)
+  request_count: 1
+  confirmation_count: 1
+  cost_coverage: {total_usd: 1.83, jobs_with_cost: 4, jobs_total: 7, complete: false}
+  authority: "observation only — not validation, not delivery authority"
+```
+
+## Stage Report: implementation
+
+- DONE: Slice 1 only: the Completion gate gains a required skill-defect slot plus an issue-ready body the operator files; `none` is an answer and cannot be omitted. Do not touch Step 4's `unknown` rule — that is slice 2, and it waits for PR #285.
+  `b4c30264` adds `Skill defect:` to the gate template and a `### Skill defect slot` subsection; `git diff -U2` shows the only other touched hunk is the insertion point, and `SKILL.md:265` (the Step 4 `unknown` instruction) and the Role slot at 408 are byte-identical to `origin/main`.
+- DONE: The filed-issue body carries the operator's skill version and local-patch state, both read from the installed plugin (`plugin.json` version, `git status` of the install directory) rather than emitted by `rule-firing-report.sh`.
+  AC2 reproduced by hand with no script change: `jq -r .version ~/.claude/plugins/local/kc-team-ops/.claude-plugin/plugin.json` → `1.5.0`; `git -C ~/.claude/plugins/local/kc-team-ops status --porcelain` → exit 128 `not a git repository` → the body's `not a checkout` value. The rsync install on this machine is the unhappy path Journey A step 7 names, so it is the live case, not a hypothetical. `rule-firing-report.sh` is unchanged (0 files).
+- DONE: Stop numbers hold: 1 changed file (`kc-team-ops/skills/kc-rules-review/SKILL.md`), ~29 added lines. Halt and report if the slot starts growing into a separate defect-report template file.
+  `git diff --stat` against `origin/main`: 1 file changed, 27 insertions, 0 deletions across b4c30264 and bd747da2; 476 → 503 lines. The issue-ready body is a fenced block inside `SKILL.md`, so the runaway (a companion template file) did not start.
+- DONE: Branch from `main`, not from #285 or #286 — local base policy is trunk-only and the shape verified there is no overlap with either open PR.
+  `git merge-base --is-ancestor 99b6747b origin/main` passes and `origin/main` is `99b6747b`; `git log origin/main..HEAD` is exactly `b4c30264` and `bd747da2`, so the branch carries no commit from either open PR.
+- DONE: Implementation-exit observation declared by the pilot build contract.
+  `## Implementation evidence — RoboRev implementation-exit observation` above: job 243 on `b4c30264` returned `FAIL(reason: findings)` with one Medium finding; repaired in `bd747da2`; the single authorized changed-tip confirmation, job 244 on `bd747da2`, returned `SEVERITY_THRESHOLD_MET` → `PASS(reason: passed)`. Request count 1, confirmation count 1 — both caps exactly met, neither exceeded.
+
+### Summary
+
+Slice 1 only. The kc-rules-review Completion gate now carries a `Skill defect:` slot
+that cannot be omitted and, when non-`none`, a fenced issue-ready body the operator
+files with `gh issue create`; the skill files nothing itself. Step 4's `unknown` rule
+and the Role slot are untouched, so slice 2's base is unchanged.
+
+The load-bearing decision was to keep both new facts readable from the install rather
+than emitted by the script, which AC2 asks for. Reproduced by hand: version `1.5.0`
+from the installed `plugin.json`, and `not a checkout` for the rsync install — which
+is this machine's actual layout, so Journey A's step-7 unhappy path is the live case.
+
+The RoboRev observation caught a real defect the by-hand check could not: on the
+symlink install layout that `CLAUDE.md` documents (`~/plugins/<plugin>` pointing into
+a source checkout), a bare `git status --porcelain` reports the whole repository.
+Measured from `kc-team-ops/`: unscoped returns two files outside the plugin, `-- .`
+returns none. The body now requires the pathspec. The confirmation run passed.
