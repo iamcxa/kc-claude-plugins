@@ -188,7 +188,6 @@ Spacedock 0.27.0.
   647-line implementation plan but left only 94 lines for implementation.
 - State: stopped before Task 3. Task 1 and Task 2 commits remain separately
   reviewable; the close-guard limit remains satisfied at 649 lines.
-- Recommendation: reshape with a 3,600 changed-line stop, derived from the
-  current 2,510-line exact diff plus the named remaining contract/test/document
-  deltas and bounded headroom. Keep the 24-file and 650 close-guard limits.
-- Captain choice: pending.
+- Captain choice: reshape approved 2026-08-25. Replace the 1,200 changed-line
+  stop with 3,300: 2,510 observed, about 500 named remaining lines, and 290
+  lines of variance. Keep the 24-file and 650 close-guard limits unchanged.
