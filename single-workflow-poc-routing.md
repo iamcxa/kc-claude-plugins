@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree:
 issue:
-pr:
+pr: "#291"
 mod-block:
 id: ahd8hehpz3g9r7vqmrz82z4x
 gates:
