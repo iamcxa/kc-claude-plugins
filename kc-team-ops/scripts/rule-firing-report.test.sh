@@ -38,7 +38,9 @@ P2="$WORK/home2/projects/proj"; mkdir -p "$P2"
   turn 2026-08-10T10:05:00Z user "# Fresh read-only review: inspect only these files"
   turn 2026-08-10T10:06:00Z user "Fresh read-only final consistency review. Return APPROVE or REVISE."
   turn 2026-08-10T10:07:00Z user "# Round 3 baseline pressure"
-  turn 2026-08-10T10:08:00Z user "Disposition of your only blocker: host verification confirms it."; } > "$P2/c.jsonl"
+  turn 2026-08-10T10:08:00Z user "Disposition of your only blocker: host verification confirms it."
+  turn 2026-08-10T10:09:00Z user "<teammate-message>PR is CLEAN now, the conflict was rebased away.</teammate-message>"
+  turn 2026-08-10T10:10:00Z user "另一個 agent 注意到 <teammate-message> 的問題，這條要留著"; } > "$P2/c.jsonl"
 
 printf 'friction	anything	.
 ' > "$WORK/p2.tsv"
@@ -57,6 +59,8 @@ check "headed fresh review dropped"   '# Fresh read-only review' 0
 check "plain fresh review dropped"    'Fresh read-only final'    0
 check "pressure prompt dropped"       '# Round 3 baseline pressure' 0
 check "review disposition dropped"    'Disposition of your only blocker' 0
+check "teammate relay dropped"        'conflict was rebased'     0
+check "turn mentioning the tag kept"  '這條要留著'                1
 check "real correction kept"          'still ignoring'           1
 check "ordinary turn kept"            '沒有會怎樣'                1
 
