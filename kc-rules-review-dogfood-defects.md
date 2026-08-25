@@ -7,7 +7,7 @@ sprint: S1
 started: 2026-08-25T07:11:35Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-kc-rules-review-dogfood-defects
 issue:
 pr:
 mod-block:
