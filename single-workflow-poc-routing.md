@@ -31,6 +31,44 @@ merge, and release authority.
 
 ## Work profile receipt
 
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: production
+  recommended: production
+  basis: >-
+    This delivers an ongoing published workflow contract to existing adopters.
+    The Spacedock graph and route slugs stay stable, but consumers must re-vendor
+    the loader and contracts, and an active v2 POC must finish on the pinned old
+    pair or be Captain re-recorded before the v4 cutover. That consumer action,
+    coordinated migration, rollback, release evidence, and exact adopted-copy
+    parity require Production rather than Pilot. The separate profile-effect
+    comparison remains a later POC and is not part of this delivery item.
+  route: [shape, build, verify]
+  obligations:
+    architecture:
+      - Keep one workflow, the existing superset graph, and the existing profile route slugs.
+      - Separate the evidence gate, POC outcome, and post-approval handoff without requiring a Spacedock engine change.
+      - Define the v2/v3 cutover, recovery order, and Captain authority boundaries before implementation.
+    implementation:
+      - Add only the v3 receipt fields, deterministic entry checks, and one bounded POC close guard required by the approved design.
+      - Update packaged and self-adopted contracts, profile choice, continuation, adoption, migration, and user-facing guidance together.
+      - Do not copy the behavioral-gate laboratory branch or add model, provider, sandbox, attestation, or new CI-job machinery.
+    testing:
+      - Mutation-prove each required POC field and deterministic placeholder refusal without adding POC placeholders to Pilot or Production.
+      - Exercise stop, change, created, deferred, declined, failed-write retry, and duplicate-source refusal on the pinned Spacedock runtime.
+      - Prove package/adopter parity, v2/v3 migration behavior, unchanged multi-profile routing, rollback readiness, and measured incremental CI runtime.
+  scope_boundary: >-
+    No Explore workflow or stage, Spacedock engine change, cross-entity
+    transaction, automatic downstream task/profile authority, model call, new CI
+    job, hosted release canary, or reuse of the 14,568-line laboratory branch.
+  promote_when:
+    - No higher profile exists; stop for new Captain scope if implementation requires a Spacedock primitive or any excluded provider, model, hosted, or automatic authority surface.
+  decision:
+    authority: Kent (Captain)
+    at: 2026-08-25T07:28:09Z
+```
+
 ## Accepted outcome and non-goals
 
 Accepted outcome: one adopted workflow routes bounded exploration and technical
