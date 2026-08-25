@@ -64,6 +64,17 @@ gates:
                 digest: sha256:013c80365a188bb48df4de6b37bff430a6b67a14c36b389a699f1eafd30f3d7f
                 request-digest: sha256:6e238188a2caada595a7a6690ebf8e9c0c445e5fbfa882d8691da65530b16537
                 room-ref: ./kc-rules-review-dogfood-defects/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmg9zdxg2h2n2k0c7j86peq0:validation:1
+                briefing: briefing:kmg9zdxg2h2n2k0c7j86peq0:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-25T07:49:32.027648Z"
+                decision: approve
+                reason: 'Captain approved validation for slice 1: 27 insertions / 0 deletions on a trunk-based branch, both implementation claims re-derived independently, the pathspec repair measured on two symlink installs, three repo gates and the sanitize classes green; AC2 satisfied and its falsifier disproved, the remaining ACs post-landing or gated on the deliberately unbuilt slice 2.'
+              application:
+                target-stage: done
+                state: pending
 sprint-readiness: ready
 ---
 
