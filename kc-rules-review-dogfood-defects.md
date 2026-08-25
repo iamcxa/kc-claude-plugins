@@ -476,3 +476,20 @@ observation:
     observed_state_revision: 0b6ac91b95b5f539c982c11dd85a67481b68459e
     state: claimed
 ```
+
+```yaml
+observation_request_1:
+  job: {id: 243, uuid: a9105d9c-b91d-49bc-b3c7-e1e287a8fc3a, status: done, closed: false, verdict_bool: 0}
+  exact_input_match: "job.git_ref, agent, model, requested_model, reasoning, min_severity all equal the recorded identity; panel none (single agent, member_count 0)"
+  correlation: "one new job against the pre-request snapshot (roborev list --json was null)"
+  receipt: FAIL(reason: findings)
+  finding: "Medium — SKILL.md skill-defect body: a bare `git status --porcelain` in a symlinked install reports the whole containing repository. Repaired in bd747da2; measured from kc-team-ops/, unscoped returns 2 files outside the plugin and `-- .` returns none."
+  request_count: 1
+observation_confirmation_claim:
+  candidate: {base: 99b6747b4521b878cb2b0cb3f34d1c5049a0cd67, tip: bd747da25979a9c129faaeb719931ef029b4af31}
+  config_sha: e816dfd221a307eee460f0404e4870d464ec7b66
+  identity: sha256:f1ea202ac2359e31d7e70f5049449b0ec0a213b4e59f0e56fef95c759f07c1fc
+  claimant: spacedock-ensign-kc-rules-review-dogfood-defects-implementation
+  observed_state_revision: b77bfcea0bbf292fac1622fd6d2de81976ec3b5b
+  state: claimed
+```
