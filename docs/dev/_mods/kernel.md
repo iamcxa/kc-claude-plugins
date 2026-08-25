@@ -40,7 +40,7 @@ while active v2 POC fails closed. If it is absent or stale, use
 actor records the decision. A recommendation is not a selection.
 
 The profile loader accepts the exact committed work-item file. It validates and
-hash-binds that item's v2 receipt and current status, then loads this core, that
+hash-binds that item's supported receipt and current status, then loads this core, that
 profile's base contract, and that profile's current stage contract. A stage
 outside the selected route fails closed. Profiles are per work item, never
 project-global; different items may use different routes concurrently.

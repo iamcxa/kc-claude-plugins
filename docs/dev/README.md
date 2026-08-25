@@ -135,7 +135,7 @@ Before the first working stage, re-read the exact work item's
 `kc-dev-flow-work-profile/v3` receipt for new choices. If missing or stale, invoke
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the authorized actor
 commits and re-reads it. An unchanged v1 receipt upgrades mechanically with the
-same Captain selection; it is migration evidence until the v2 result is committed.
+same Captain selection; it is migration evidence until the v3 result is committed.
 
 Use the host's structured Ask UI when available; plain chat is the fallback.
 Selection precedes acceptance-criteria expansion and stage dispatch.
@@ -148,7 +148,7 @@ python3 docs/dev/_mods/profile-contract-loader.py \
   --work-item "$EXACT_COMMITTED_WORK_ITEM"
 ```
 
-The command validates and hash-binds that item's v2 receipt and current status,
+The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
 route's first working stage it also requires one non-empty `sprint` and
 `sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
