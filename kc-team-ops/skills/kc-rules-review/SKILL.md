@@ -115,6 +115,14 @@ The same slip has three instances on record — a close-out label that grew a se
 added to a skill and never added to the patterns, and this one. Every time, the audit's own output is
 what hides it: a healthy number appears where a zero belongs.
 
+**Fix the unit before you count, or the fraction cannot be compared with the next run.** One
+bullet, or one bolded lead-in that carries its own rule, is one unit; a heading is not a unit unless
+it holds exactly one rule. Two passes over the same unchanged file reported "3 of 19" and "4 of 29"
+— not because the file moved, but because a section holding four separate safeguards was one unit in
+one pass and four in the other. State the unit you used in the report. Do not add a flag to the
+script for this: the number is yours, not the script's, and a self-attested count written into
+`run.json` would compare no better than a stated one.
+
 Report the second list by name, every run. On the author's own file — this is a self-citation, not
 independent corroboration — 3 of 19 rules were strictly measurable, 3 more were arguable, and the
 rest, upstream-first and cost and escalation and e2e acceptance among them, were invisible to the
@@ -127,6 +135,17 @@ apart. They look identical from the patterns file and they call for opposite act
 `incident` rows collect a different thing: turns where the user did work you never offered —
 relaying what another session is doing, routing around you, repairing something you broke. These
 are candidates, never counts. Normal division of labour reads identically, so every hit gets read.
+
+**An `incident` row is also the only way to see the turn you sent before the user's.** That is what
+makes it worth reaching for outside its stated purpose: **once a friction category is one of your
+top findings, re-declare that same regex as an `incident` row and read the pairs before you
+diagnose it.** A bare human turn is enough to count with and not enough to diagnose with.
+
+Two diagnoses on one dogfood run were reachable no other way. An undefined-noun category read as
+the user asking domain questions; paired, the questions landed on labels the agent had coined in
+the reply immediately before. A necessity-test category read as a rule the user did not believe;
+paired, all 17 arrived straight after the agent announced finished work, and the rule had never
+run unprompted. Counting alone got both backwards.
 
 Each run is kept under `~/.claude/kc-team-ops/rules-review/<timestamp>/` — the report, the matched
 human turns, the incident pairs, and a `run.json` of every count. Nothing is overwritten, so a
@@ -200,7 +219,7 @@ that subject can mean no rule was ever violated because none was ever offered �
 that work alone. The friction column is structurally blind to this: the user never corrected you,
 because you gave them nothing to correct.
 
-**An incident is a candidate, not a verdict.** Read each one in `rule-review-incidents.txt` with the
+**An incident is a candidate, not a verdict.** Read each one in `incidents.txt` with the
 assistant turn printed above it, and classify it before it counts:
 
 | The turn before it shows | Classification | Remedy |
@@ -253,7 +272,16 @@ and the recurring question *is* the job description.
 ### Dispatch it, do not answer it yourself
 
 Send `human-turns.tsv` from the run to a **fresh-context reviewer** — one that has not seen this
-session's reasoning. An agent deciding which of its own duties are vacant is grading its own work,
+session's reasoning — **together with the `incidents.txt` pairs for every cluster you expect the
+reviewer to rule on**. Bare human turns are not diagnosable, and the reviewer cannot re-derive the
+missing half.
+
+Measured head to head on one corpus, same model, same brief, differing only in what was sent: given
+the bare turns, the reviewer called a necessity-test cluster *"the job is done and disbelieved"* —
+Step 2's last row, whose remedy is to make the existing claim carry its evidence. Given the same
+turns plus the 17 pairs, it called the same cluster *"0 of 17 — the agent never asked it about its
+own artifact; vacant at that trigger"*, whose remedy is the opposite: move the trigger. One reviewer
+was not worse than the other. It could not see the half that decided the answer. An agent deciding which of its own duties are vacant is grading its own work,
 and this step is the one place in the audit where that is the whole question.
 
 Give the reviewer the two kinds above, the run directory, **Step 1's measurable/unmeasurable list**,
@@ -377,12 +405,30 @@ Run the user's own necessity test on every rule you propose to add, including th
 tempted to slip in because they are obviously good. A rule that did not survive a decision does
 not belong in the file.
 
+**Say, in the decision, whether the next run can check this change.** The skill forbids inventing a
+marker for a quality rule, which leaves most changes unfalsifiable — say so plainly rather than
+letting the user assume a follow-up will grade it. When two candidate changes both have evidence,
+prefer the one whose effect is **measurable after the fact from an artifact the work already
+produces** — git history, a PR body, a diff — because that needs no marker and cannot be satisfied
+by emitting a string.
+
+On one run this separated two changes cleanly. A rule about the agent's own coined vocabulary is
+honest and unverifiable: nothing counts a word that was never defined. A rule about comments added
+per diff is verifiable, because comment lines live in the diff and `git log` can count them for a
+window that has already passed. Both had evidence; only one can be wrong out loud.
+
 ## Step 6 — Apply, and find the orphans
 
-1. Back up the current file with a dated name. Verify the copy is byte-identical before overwriting. A rule file outside version control has no other record.
-2. Swap, then verify: line count, section list, any `@` imports still present.
-3. **Grep for orphaned references.** Every removed or renamed section may be quoted by a skill, an agent definition, or a reference doc. Report what still points at the old wording — including drift that predates this change.
-4. Reconcile memories. A memory that now duplicates a rule should usually be **rewritten to keep only the evidence**, not deleted; the rule states what to do, the memory records what it cost to learn. Memory deletion needs the user's approval and must name the surviving source of truth.
+1. **Read the clauses your new rule will sit next to.** A rule added to fix one measured failure can
+   contradict one already in the file, and nothing downstream reads prose to catch it. On one run a
+   new comment rule required the agent to delete its own lines, two bullets below a standing clause
+   reading "**Do not delete those yourself** — mis-deleting costs more than mis-keeping". The fix
+   was one sentence naming the boundary; the cost of missing it was a rule file that argues with
+   itself.
+2. Back up the current file with a dated name. Verify the copy is byte-identical before overwriting. A rule file outside version control has no other record.
+3. Swap, then verify: line count, section list, any `@` imports still present.
+4. **Grep for orphaned references.** Every removed or renamed section may be quoted by a skill, an agent definition, or a reference doc. Report what still points at the old wording — including drift that predates this change.
+5. Reconcile memories. A memory that now duplicates a rule should usually be **rewritten to keep only the evidence**, not deleted; the rule states what to do, the memory records what it cost to learn. Memory deletion needs the user's approval and must name the surviving source of truth.
 
 Tell the user plainly that a rule file is read at session start, so open sessions keep the old
 rules until they restart.
@@ -461,7 +507,7 @@ Run one isolated A/B before replacing `~/.codex/AGENTS.md`:
 | Mistake | What to do instead |
 |---|---|
 | Treating high friction as a missing rule | Check firing first. The rule is usually already there. |
-| Quoting the script's counts as fact | Read `rule-review-human-turns.tsv`. Regexes over-match. |
+| Quoting the script's counts as fact | Read `human-turns.tsv`. Regexes over-match. |
 | Deleting a zero-firing rule immediately | Ask which kind of zero, then grep for an owner. |
 | Bundling several rule changes into one question | One decision per turn. |
 | Adding an obviously-good rule without a decision | It has to earn its place like every other rule. |
