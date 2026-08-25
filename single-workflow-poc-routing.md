@@ -207,7 +207,7 @@ Spacedock 0.27.0.
 
 ## Implementation evidence
 
-- Candidate revision: `bea889900d681fc4ef2d48b8c7663d2b83315622`.
+- Candidate revision: `736306b64f54ffbdc28e8432276be2a938a93037`.
 - Entry contract: packaged and adopted loaders require a v3 POC decision,
   falsifier, budget, and stop condition; active v2 POCs fail with the ordered
   migration message while Pilot and Production retain v2 compatibility.
@@ -227,7 +227,7 @@ Spacedock 0.27.0.
 - Subtraction result: no workflow, model/provider adapter, hosted canary,
   Spacedock graph, automatic scheduling/profile authority, or behavioral-gate
   laboratory file changed.
-- Shape stops at the candidate: 31 of 32 files, 3,058 of 3,300 changed lines,
+- Shape stops at the candidate: 32 of 32 files, 3,090 of 3,300 changed lines,
   and 649 of 650 close-guard implementation/test lines.
 
 ```yaml
@@ -238,7 +238,7 @@ project_context:
   surface: "profile receipt schema and POC route boundary"
   stale_claim: "all selected work items use a v2 receipt and POC has no deterministic close boundary"
   approved_change: "v3 POCs bind decision, falsifier, budget, and stop condition, then close as proceed, stop, or change without downstream profile authority"
-  landed_change: "ARCHITECTURE.md at candidate bea889900d681fc4ef2d48b8c7663d2b83315622"
+  landed_change: "ARCHITECTURE.md at candidate 736306b64f54ffbdc28e8432276be2a938a93037"
   planned_check: "fresh contract and ablation tests plus exact comparison of ARCHITECTURE.md with the v3 loader and close guard"
   validation_evidence: pending
 ```
@@ -247,7 +247,7 @@ project_context:
 
 ```yaml
 review_convergence:
-  candidate_revision: bea889900d681fc4ef2d48b8c7663d2b83315622
+  candidate_revision: 736306b64f54ffbdc28e8432276be2a938a93037
   capability: "RoboRev v0.62.0 CLI JSON commands, daemon, and Claude Code agent available"
   mode: daemon
   selected_profile: production
@@ -255,7 +255,7 @@ review_convergence:
   provider: roborev
   outcome: UNAVAILABLE
   reason: "unavailable: no exact-input job exists and the accepted scope excludes a new model call"
-  identity_sha256: 3222a778f1f05bfd2a90dfbf5c1ec5839a156f8df4463e90869d2dd701e9898e
+  identity_sha256: 4bc6e98e3dc5e9ce72dece1b3508e59e3381bacac3ede16a91ccb1b30c51546f
   configuration_sha256: 3c2bae48809c3375a68610c9236487dc1ece33e933e343e19fab5e470f1d6a68
   agent: claude-code
   model: sonnet
