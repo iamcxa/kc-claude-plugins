@@ -176,3 +176,19 @@ Spacedock 0.27.0.
 - Captain choice: reduce scope, approved 2026-08-25. Remove non-essential
   wrapper structure and test duplication while retaining every accepted close
   behavior; the 650-line stop condition remains unchanged.
+
+## Implementation stop — total delivery diff
+
+- Observed after Task 2 commit `e514078`: 13 changed files and 2,510 changed
+  lines against `origin/main` (2,456 additions and 54 deletions).
+- Crossing: 1,310 lines above the approved 1,200-line stop condition.
+- Detection error: the first observable crossing was 1,446 changed lines after
+  Task 1; implementation should have stopped there, before Task 2.
+- Cause: the threshold included the already accepted 459-line design and
+  647-line implementation plan but left only 94 lines for implementation.
+- State: stopped before Task 3. Task 1 and Task 2 commits remain separately
+  reviewable; the close-guard limit remains satisfied at 649 lines.
+- Recommendation: reshape with a 3,600 changed-line stop, derived from the
+  current 2,510-line exact diff plus the named remaining contract/test/document
+  deltas and bounded headroom. Keep the 24-file and 650 close-guard limits.
+- Captain choice: pending.
