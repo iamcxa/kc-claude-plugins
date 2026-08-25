@@ -3,7 +3,7 @@ title: Six defects from one dogfood run and one adopter run, delivered outside t
 status: ideation
 source: kc-rules-review dogfood run 2026-08-25 (501 sessions, 1224 human turns) plus an adopter's independent run; filed after the workflow's second-PR trigger fired and was walked past
 product: kc-team-ops
-sprint:
+sprint: S1
 started:
 completed:
 verdict:
@@ -35,7 +35,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
-sprint-readiness: defer
+sprint-readiness: ready
 ---
 
 ## Problem
