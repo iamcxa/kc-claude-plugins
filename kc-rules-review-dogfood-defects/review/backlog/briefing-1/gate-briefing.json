@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmg9zdxg2h2n2k0c7j86peq0:backlog:attempt-1:revision-1",
+  "question": "Approve this backlog seed and move it to ideation, where the six items get converged into a delivery order and acceptance criteria?",
+  "artifacts": [
+    {
+      "id": "artifact:kmg9zdxg2h2n2k0c7j86peq0:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a12c2e949e53d44db5c19f2ea4bc81c5fad01f36/kc-rules-review-dogfood-defects.md",
+      "rev": "sha256:4a5165b42154759dfe3578cfe137bcf4f1b2f38b0494448039841652df5a6d70",
+      "mediaType": "text/markdown",
+      "summary": "One kc-rules-review dogfood run (501 sessions, 1224 human turns) plus one adopter run produced six skill/script defects. Two are already carried by open draft PRs #285 and #286; four are not started. The workflow's second-PR trigger fired and was walked past, so this entity is the correction that brings the remaining work inside the stages."
+    }
+  ]
+}

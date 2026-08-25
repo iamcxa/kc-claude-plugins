@@ -12,6 +12,18 @@ issue:
 pr:
 mod-block:
 id: kmg9zdxg2h2n2k0c7j86peq0
+gates:
+    version: 1
+    records:
+        - id: gate:kmg9zdxg2h2n2k0c7j86peq0:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kmg9zdxg2h2n2k0c7j86peq0-backlog-1
+              briefing:
+                id: briefing:kmg9zdxg2h2n2k0c7j86peq0:backlog:attempt-1:revision-1
+                digest: sha256:c285ade92fa8bca8a40e77c83ab2720fc4369094023a1616ac6ac6fc73ccb352
+                request-digest: sha256:3818b1150b4683132cfa9f3ee87cf1ebdd6c5d359e779ae866c632affbbf2202
+                room-ref: ./kc-rules-review-dogfood-defects/review/backlog/briefing-1
 ---
 
 ## Problem
