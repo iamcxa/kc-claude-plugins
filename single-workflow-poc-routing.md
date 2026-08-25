@@ -3,8 +3,8 @@ title: "kc-dev-flow: make POC a bounded decision route in one workflow"
 status: backlog
 source: "Captain-approved design 6a68cab0 after Claude PASS, 2026-08-25"
 product: kc-dev-flow
-sprint:
-sprint-readiness: defer
+sprint: S4
+sprint-readiness: ready
 started:
 completed:
 verdict:
