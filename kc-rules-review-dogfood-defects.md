@@ -35,6 +35,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+sprint-readiness: defer
 ---
 
 ## Problem
