@@ -537,3 +537,37 @@ symlink install layout that `CLAUDE.md` documents (`~/plugins/<plugin>` pointing
 a source checkout), a bare `git status --porcelain` reports the whole repository.
 Measured from `kc-team-ops/`: unscoped returns two files outside the plugin, `-- .`
 returns none. The body now requires the pathspec. The confirmation run passed.
+
+## Stage Report: validation
+
+- DONE: Re-verify the two implementation claims independently at the exact tip: the diff is 1 file / 27 insertions / 0 deletions against `origin/main`, and Step 4's `unknown` instruction plus the Role slot line are byte-identical to `origin/main` so slice 2's base is unchanged.
+  Tip `bd747da2`, base `origin/main` = `99b6747b`, working tree clean. `git diff --numstat origin/main...HEAD` → `27	0	kc-team-ops/skills/kc-rules-review/SKILL.md`. Zero deletions is the enforcement point: every `origin/main` line survives by construction. Confirmed at the two named anchors by `shasum` of the single line — `SKILL.md:265` (`unknown`, never `vacant`) `775c67b6…` on both sides, Role slot `SKILL.md:408` `afda8ff1…` on both sides — and `diff` over lines 240-300 (the whole Step 4 section) returns IDENTICAL. The only shift is old 414 → new 415, content unchanged, caused by the inserted `Skill defect:` template line at 409.
+- DONE: Exercise the issue-ready body's two commands as written against both documented install layouts — the rsync copy under `~/.claude/plugins/local/kc-team-ops` and a symlink install pointing into a source checkout — and report what each returns, including whether the pathspec repair actually changes the symlink result.
+  Rsync copy (`~/.claude/plugins/local/kc-team-ops`): `jq -r .version …/.claude-plugin/plugin.json` → `1.5.0`; `git … status --porcelain -- .` → `fatal: not a git repository`, exit 128 — the body's `not a checkout` value, and the exit code is identical with and without the pathspec, so the repair is a no-op on this layout. Symlink install (`/tmp/kc-rules-review-validation/symlink-install` → the montpellier-v1 workspace's `kc-team-ops/`): version `1.6.0`; scoped `-- .` → empty, exit 0; unscoped → `?? e2e-pipeline/scripts/measure-prose-load.sh` and `?? scripts/deliver.sh`, exit 0. **The pathspec repair changes the symlink result: 2 leaked paths → 0.** Reproduced on a naturally-occurring symlink install that predates this work, `~/plugins/e2e-pipeline` → a source checkout: unscoped 7 paths outside the plugin, scoped 0. Nothing was written into any workspace; the temp symlink is read-only and under `/tmp`.
+- DONE: Run the kc-rules-review script test suite and any repo gate that this diff can break (`scripts/skill-frontmatter-lint.sh` at minimum, since SKILL.md changed), and report each as `N/N passed` or the exact failure.
+  `kc-team-ops/scripts/rule-firing-report.test.sh` → **18/18 passed**, 0 FAIL, exit 0 (the suite prints one line per assertion and no total; 18 is the counted `^PASS` lines). This is 18 and not the implementation report's 20 because that count came from PR #286's branch, which adds the two `<teammate-message>` assertions; this branch is trunk-based and does not carry #286. `scripts/skill-frontmatter-lint.sh` → **45/45 SKILL.md files valid**, exit 0. `scripts/version-parity-check.sh` (required check) → exit 0, 7/7 plugins consistent, plugin-directory ↔ marketplace enumeration 1:1. Sanitize-check rule classes applied to the 27 added lines with the literal/regex seeds from `kc-plugin-forge-sanitize-check` — BLOCK clean, REJECT clean, WARN clean.
+- DONE: State whether AC1-AC4 from `## Shape — acceptance checks` are satisfiable, unmet, or not-yet-checkable at this stage, and name which artifact each would be read from. Do not treat the completion report's own text as evidence.
+  **AC1 — not-yet-checkable.** Artifact: a GitHub issue on `iamcxa/kc-claude-plugins`, read via `gh issue list --repo iamcxa/kc-claude-plugins --search kc-rules-review --state all` plus the issue body. Run now: empty. It becomes checkable only after the next real defect passes through a run; it is a post-landing observation, not something this diff can satisfy. **AC2 — satisfied.** Artifacts: the installed plugin's `.claude-plugin/plugin.json` and `git status` of the install directory, both exercised above on both layouts. Its falsifier ("either field can only be produced by adding an emitter to `rule-firing-report.sh`") is directly disproved — both fields were produced by hand and `rule-firing-report.sh` appears in 0 files of the diff. **AC3 — not-yet-checkable, and correctly so.** It reads the session corpus of a future run for an `unknown` followed by an operator answer; slice 2 is deliberately unbuilt here (Step 4 verified byte-identical above) and the paired-turn `incident` device it relies on ships in unmerged PR #285. **AC4 — not-yet-checkable.** Artifacts: the run directory of a run where subagent dispatch was unavailable (absence of a reviewer result) plus that run's corpus turn naming the prohibition; gated on the same unbuilt slice 2.
+- DONE: Do NOT push the branch or create a PR. Draft creation needs the Captain's explicit approval and the First Officer routes it.
+  No `git push` and no `gh pr create` was run. `git log origin/main..HEAD` is still exactly `b4c30264` and `bd747da2`; the branch exists only locally.
+
+### Summary
+
+Both implementation claims hold at the exact tip and were re-derived rather than
+inherited: 27 insertions / 0 deletions, and the two slice-2 anchors byte-identical by
+`shasum`, with the whole Step 4 section identical by `diff`.
+
+The pathspec repair is real, not defensive. On a symlink install the unscoped form
+returned 2 paths outside the plugin and the scoped form returned none; an independent,
+pre-existing symlink install on this machine reproduced it at 7 → 0. On the rsync
+layout the pathspec is a no-op — both forms exit 128 — so the repair costs nothing
+where it is not needed.
+
+Two residuals. First, the body's `${CLAUDE_PLUGIN_ROOT}` path was not exercised: that
+variable is bound only inside plugin skill/agent context and is unset in a shell, so
+the commands were run against literal install paths instead. Its meaning is
+repo-documented (`e2e-pipeline/CLAUDE.md`, 230 uses across the tree) and points at the
+directory containing `.claude-plugin/`, which is the directory the body reads.
+Second, an incidental observation that argues for the slot rather than against it: the
+rsync install reports `1.5.0` while the tree is `1.6.0`, so the version field surfaced
+a stale local install on its first real use.
