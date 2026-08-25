@@ -120,3 +120,23 @@ behavioral-gate branch.
 
 No model call or new CI job belongs to this contract slice. Measure any added
 runtime in existing CI jobs before release; do not claim an unmeasured cost.
+
+## Shape outcome
+
+Captain-approved shape: commit `ca8f9f1`,
+`docs/superpowers/plans/2026-08-25-kc-dev-flow-single-workflow-poc-routing.md`.
+Every journey step is DESIGNED until the implementation tests exercise it on
+Spacedock 0.27.0.
+
+- Architecture: retain one graph and three route slugs; add v3 POC entry
+  validation plus one close guard that delegates mutations to Spacedock.
+- Authority: Superpowers may organize workers only inside `implementation`;
+  KC Dev Flow remains the profile, state, gate, and Captain authority.
+- Recovery: upgrade and rollback the loader, close guard, and vendored contracts
+  as one pair; active v2 POCs finish on 3.x or receive a new Captain v3 receipt.
+- Release checks: deterministic contract, ablation, live multi-profile, package
+  parity, migration, and measured existing-CI runtime evidence at the exact head.
+- Where it touches: 24 named files in the committed plan; no workflow file,
+  Spacedock graph, model/provider surface, or behavioral-gate laboratory file.
+- Stop numbers: more than 24 changed files, 1,200 changed lines, or 650 combined
+  close-guard implementation/test lines stops implementation for Captain review.
