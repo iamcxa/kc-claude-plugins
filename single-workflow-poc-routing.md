@@ -407,3 +407,17 @@ Exact candidate: `343eca90af2296efba77100c21fbd950149e6342`.
 The behavioral profile-effect POC and hosted release canary remain explicitly
 unproved and outside this PR. RoboRev remains `UNAVAILABLE` with zero requests
 because the accepted slice excludes a new model call.
+
+## Validation repair stop — cross-model findings
+
+- Exact-diff Claude review at `343eca90` found two blocking defects: the loader
+  accepted a bare-empty POC field by matching across a newline, and the close
+  guard accepted a downstream body that preselected working state and schedule.
+- Local reproduction confirmed both findings. The first loader regression went
+  RED then GREEN; the second close-guard regression is RED.
+- Adding the initial regressions and status refusal raised the close-guard
+  implementation/test pair from 649 to 687 lines, crossing the 650-line stop by
+  37 lines.
+- Captain choice: `reduce scope`, approved 2026-08-25. Keep the 650-line limit,
+  consolidate duplicated test and parser structure, retain both behavioral
+  fixes, and do not add a RoboRev request.
