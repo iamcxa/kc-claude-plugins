@@ -77,6 +77,8 @@ required = [
     "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
@@ -258,6 +260,8 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
@@ -267,6 +271,10 @@ for relative in [
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
     "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
+    "POC close guard",
 )
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
@@ -470,6 +478,11 @@ require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
+)
+require(
+    (PLUGIN / "scripts/poc-close-guard.py").read_bytes()
+    == (ADOPTED / "poc-close-guard.py").read_bytes(),
+    "self-adopted POC close guard differs from package source",
 )
 for reference in [
     "reverse-recovery-audit.md",
