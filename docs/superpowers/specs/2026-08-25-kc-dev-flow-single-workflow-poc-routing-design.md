@@ -2,7 +2,7 @@
 
 - **Date**: 2026-08-25
 - **Plugin**: `kc-dev-flow`
-- **Status**: Draft for Captain review
+- **Status**: Accepted by the Captain after Claude PASS
 - **Target release**: the unreleased 4.x contract
 - **Implementation branch**: `iamcxa/dev-flow-explore-router`
 - **Laboratory branch retained**: `iamcxa/dev-flow-behavioral-gate-design`
