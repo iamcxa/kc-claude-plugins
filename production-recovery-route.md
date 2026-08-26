@@ -133,13 +133,15 @@ Deliver through one Captain-reviewed PR to `main`. This authority-changing item 
 
 ## Implementation scope adjustment
 
-Captain approved one replacement threshold after validation exposed four stale
+Captain approved one replacement threshold after validation exposed stale
 route-string assertions in the same repository contract test. Implementation
 may now change at most 10 product files while remaining at or below 475 gross
 changed lines and 200 gross loader-test lines. The sole added path is
-`scripts/kc-dev-flow-contract-test.py`, limited to replacing those four stale
-assertions with checks that independently require the full Production route and
-the eligible recovery clause. No other scope, mechanism, or authority changed.
+`scripts/kc-dev-flow-contract-test.py`, limited to replacing that exact failure
+shape wherever the full gate exposes it, including kernel, chooser,
+continuation, package, and self-adopted route claims. Each replacement must
+independently require the full Production route and the eligible recovery
+clause. No other scope, mechanism, or authority changed.
 
 ## Stage Report: ideation
 
