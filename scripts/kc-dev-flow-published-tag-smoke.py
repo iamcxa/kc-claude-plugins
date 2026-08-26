@@ -11,8 +11,9 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -294,6 +295,59 @@ def tree_digest(root: Path) -> str:
     ).hexdigest()
 
 
+def tracked_package_snapshot(
+    checkout: Path, revision: str, destination: Path, timeout: int
+) -> None:
+    if re.fullmatch(r"[0-9a-f]{40,64}", revision) is None:
+        raise SmokeError(f"tracked snapshot revision is invalid: {revision!r}")
+    if destination.exists():
+        raise SmokeError(f"tracked snapshot destination already exists: {destination}")
+    archive_path = destination.parent / f".{destination.name}.tar"
+    if archive_path.exists():
+        raise SmokeError(f"tracked snapshot archive already exists: {archive_path}")
+
+    try:
+        run(
+            [
+                "git",
+                "archive",
+                "--format=tar",
+                f"--output={archive_path}",
+                revision,
+                "--",
+                ".claude-plugin",
+                "kc-dev-flow",
+            ],
+            cwd=checkout,
+            timeout=timeout,
+        )
+        with tarfile.open(archive_path, "r:") as archive:
+            members = archive.getmembers()
+            for member in members:
+                path = PurePosixPath(member.name)
+                if (
+                    path.is_absolute()
+                    or ".." in path.parts
+                    or not path.parts
+                    or path.parts[0] not in {".claude-plugin", "kc-dev-flow"}
+                    or not (member.isdir() or member.isfile())
+                ):
+                    raise SmokeError(
+                        f"tracked snapshot contains unsafe archive member: {member.name}"
+                    )
+            destination.mkdir()
+            archive.extractall(destination, members=members)
+        if not (destination / ".claude-plugin").is_dir() or not (
+            destination / "kc-dev-flow"
+        ).is_dir():
+            raise SmokeError("tracked snapshot is missing required package roots")
+    except Exception:
+        shutil.rmtree(destination, ignore_errors=True)
+        raise
+    finally:
+        archive_path.unlink(missing_ok=True)
+
+
 def package_identity(checkout: Path) -> tuple[str, str, str]:
     marketplace_data = json.loads(
         (checkout / ".claude-plugin/marketplace.json").read_text(encoding="utf-8")
@@ -487,10 +541,10 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
     revision = run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
     if re.fullmatch(r"[0-9a-f]{40,64}", revision) is None:
         raise SmokeError(f"candidate revision is invalid: {revision!r}")
-    if run(["git", "status", "--porcelain"], cwd=checkout).stdout.strip():
-        raise SmokeError("candidate checkout must be clean")
-
-    marketplace, version, source_digest = package_identity(checkout)
+    if run(
+        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=checkout
+    ).stdout.strip():
+        raise SmokeError("candidate checkout must have no tracked changes")
 
     operator_env = os.environ.copy()
     operator_home = Path(operator_env.get("HOME", ""))
@@ -499,6 +553,9 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
 
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-candidate-") as candidate_tmp:
         candidate_root = Path(candidate_tmp)
+        snapshot = candidate_root / "snapshot"
+        tracked_package_snapshot(checkout, revision, snapshot, timeout)
+        marketplace, version, source_digest = package_identity(snapshot)
         runtime_root = candidate_root / "runtime"
         runtime_root.mkdir()
         runtime_note = "There is no repository workflow context. Invoke installed skills directly and do not search outside this directory.\n"
@@ -508,7 +565,7 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
         mcp_config.write_text('{"mcpServers": {}}\n', encoding="utf-8")
 
         claude_plugin = install_verified_plugin(
-            checkout,
+            snapshot,
             "claude",
             candidate_root,
             marketplace,
@@ -567,7 +624,7 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
         if not auth_file.is_file():
             raise SmokeError("Codex auth.json is unavailable; run codex login first")
         codex_plugin = install_verified_plugin(
-            checkout,
+            snapshot,
             "codex",
             candidate_root,
             marketplace,
@@ -652,7 +709,9 @@ def run_published_smoke(
         if observed_tag != tag:
             raise SmokeError(f"checkout resolved {observed_tag!r}, expected {tag!r}")
 
-        marketplace, version, source_digest = package_identity(checkout)
+        snapshot = published_root / "snapshot"
+        tracked_package_snapshot(checkout, revision, snapshot, timeout)
+        marketplace, version, source_digest = package_identity(snapshot)
         expected_version = tag.removeprefix("kc-dev-flow-v")
         if version != expected_version:
             raise SmokeError(
@@ -663,11 +722,13 @@ def run_published_smoke(
                 f"published version differs from candidate receipt: {version} != {receipt['version']}"
             )
         if source_digest != receipt["tree_sha256"]:
-            raise SmokeError("published source tree differs from candidate receipt")
+            raise SmokeError(
+                "published source tree differs from candidate receipt: tracked snapshot drift"
+            )
 
         for host in ["claude", "codex"]:
             install_verified_plugin(
-                checkout,
+                snapshot,
                 host,
                 published_root,
                 marketplace,
