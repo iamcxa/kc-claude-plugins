@@ -345,3 +345,20 @@ The complete gate now enforces both Production routes instead of preserving stal
 ### Summary
 
 Exact candidate `e03fb1b` passes the complete gate, live recovery journey, five route-boundary mutation controls, and the single task-owned without-it. Technical validation recommends PASS, while Captain UAT remains the final verification decision and the divergent delivery target, absent provider feedback, and carried RoboRev UNKNOWN remain explicit.
+
+## Stage Report: validation (cycle 4)
+
+- DONE: Freshly bind rebased candidate b6092e6, feature base aebe6a0, merge target origin/main f7a3f01, accepted spec/scope adjustment, ten-file feature diff, twelve-file PR diff, and carried RoboRev UNKNOWN; make no product edits.
+  Candidate `b6092e69a956a7afac39c52dd1951cef440ac2c8`, feature base `aebe6a08db33cfd809ca4d10004c0c2c8ddcd939`, and fetched target `f7a3f018e9756c44b354c3a24326594b084b044b` bind the accepted spec SHA-256 `21a2a9b0...`; the clean product tree has 10 feature files/467 gross lines/199 loader-test lines and 12 PR files, while RoboRev remains `UNKNOWN(state_unknown)` with no retry.
+- DONE: Rerun the complete candidate gate after rebase: kc-dev-flow contract gate, direct loader test, RoboRev contract, loader/kernel parity, diff-check, five route-boundary negative controls, and real Spacedock recovery journey.
+  The full gate, direct loader test, RoboRev contract, both byte-parity checks, and diff-check passed; the committed helper rejected missing-full and missing-recovery mutations at all five boundaries (10/10), and Spacedock 0.27.0 reported route mechanism PASS, so deleting either route or breaking the live skip/build/verify journey fails its owner.
+- DONE: Freshly rerun the task-owned without-it in a temporary isolated copy using the complete b6092e6 loader test against the aebe6a0 loader; require the expected stale short-Production-route failure and remove the copy.
+  The temp copy bound candidate test object `89cf4f1...` to base-loader object `0c82313...` and failed only at `stale route for production: expected ['shape', 'build', 'verify'], got ['build', 'verify']`; the registered copy and parent directory were removed, leaving no harness or product change.
+- DONE: Record exact-candidate delegated E2E UAT evidence for backlog gate -> ideation empty skip/no artifact -> implementation build -> validation verify, plus default-full compatibility, rollback readiness, no current PR/provider feedback, and RoboRev UNKNOWN residual.
+  The real split-root journey approved backlog, emitted an empty ideation skip without a review artifact, then loaded build and verify; legacy/full-route fixtures passed, rollback is the accepted landing-commit revert plus Captain-controlled full-route re-recording for active recovery items, `gh pr list` returned no PR, and Captain UAT plus RoboRev UNKNOWN remain explicit residuals.
+- DONE: Return PASS only if all ACs remain supported after rebase and branch is 0 behind origin/main; append one validation Stage Report and sync only state. Do not create PR, prepare/approve gate, merge, release, or self-approve UAT.
+  Technical verdict is PASS at `b6092e6`: AC-1 through AC-5 remain falsifiably supported, the branch is 0 behind/7 ahead `origin/main`, and this report changes only state; Captain UAT/validation approval, PR, merge, and release remain untouched.
+
+### Summary
+
+Rebased candidate `b6092e6` passes the complete deterministic gate, five semantic route boundaries, exact Spacedock recovery journey, and corrected isolated without-it. Technical validation recommends PASS; Captain UAT and validation approval remain the final authority, with no PR/provider feedback and the carried RoboRev UNKNOWN still visible.
