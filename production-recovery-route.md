@@ -169,3 +169,20 @@ The revised design removes duplicated recovery identity and generic negative-con
 ### Summary
 
 The corrected spec now covers both package and self-adopted live claims without expanding the recovery mechanism. Rollback retains Captain authority, and implementation remains unstarted.
+
+## Stage Report: implementation
+
+- DONE: Implement the additive v3 Production recovery receipt with only recovery_failure, recovery_falsifier, recovery_rollback, and review_risks; preserve legacy v2/v3 full-route behavior and byte-identical adopter loader/kernel copies.
+  Commit `a97f157` adds only the four recovery fields; legacy route fixtures stay green, while either vendored copy drifting makes the two `cmp -s` checks fail.
+- DONE: Make a valid recovery at ideation emit a fail-closed skip to implementation, then load build and verify normally; reject malformed, non-Production, unsupported-stage, or changed-premise recovery.
+  `profile-contract-loader.test.py` rejects the refusal matrix, changes the bound hash on premise edits, and would fail if the real Spacedock fixture loaded shape or created an ideation review artifact.
+- DONE: Update choose-work-profile, continue-dev-flow, package README/kernel, and self-adopted docs/dev/README.md so recovery selection, exact-diff rechecks, Captain fallback authority, and risk-triggered RoboRev agree.
+  `scripts/kc-dev-flow-contract-test.py` passes against the package/adopter contracts; removing parity or a supported profile-stage mapping makes it fail.
+- DONE: Add focused tests for legacy routes, eligible recovery, refusal cases, real Spacedock transition/no ideation artifact, and review_risks none versus named risk; do not run or add the validation-owned full without-it here.
+  The focused loader test reports route mechanism PASS and overall PASS; changing the short route, risk grammar, skip output, or build/verify loads breaks a named assertion.
+- DONE: Run scoped implementation checks, enforce the design stop conditions, commit only the approved nine-file product slice, and append one implementation Stage Report with exact evidence and residuals.
+  Exact diff is 9 files and 440 gross lines, with 199 gross loader-test lines; `git diff --check d38799a`, parity, contract, and focused checks pass with no schema, engine, CI, UAT, or auto-merge change.
+
+### Summary
+
+Production keeps the full route by default and now accepts an explicit fail-closed recovery skip whose risks control optional review. Fresh validation still owes the task-owned full without-it; implementation intentionally did not run or add it.
