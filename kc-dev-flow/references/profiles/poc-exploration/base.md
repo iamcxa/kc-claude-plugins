@@ -1,4 +1,4 @@
-# POC / Exploration Base
+# POC — Bounded Exploration or Technical Proof
 
 ## Outcome
 
@@ -6,6 +6,9 @@ Prove one real, demoable journey and its riskiest assumption with the shortest
 safe mechanism. The result may be disposable.
 
 ## Working rules
+
+Fix the next decision, cheapest credible falsifier, explicit budget, and
+observable stop point in the v3 receipt before build.
 
 - Use shell, a CLI, an off-the-shelf tool, a library, or existing repository code
   when it reaches the outcome safely. Do not add a framework for hypothetical

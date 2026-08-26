@@ -1,5 +1,8 @@
 # KC Dev Flow
 
+Load development constraints in proportion to work risk, so agent behavior is
+just sufficient without losing verification or authority boundaries.
+
 KC Dev Flow supplies one minimal authority core and three profile-native delivery
 routes. A repository keeps its own tracker, iteration authority, workflow
 runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
@@ -10,13 +13,13 @@ falsify this direction.
 
 | Profile | Working route | Intended result |
 |---|---|---|
-| POC / Exploration | `build -> prove` | One real journey and its riskiest assumption are observed; cleanup and unproved limits are recorded. |
+| POC — bounded exploration or technical proof | `build -> prove` | Evidence supports `proceed`, `stop`, or `change`; cleanup and limits are recorded. |
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
 | Production | `shape -> build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
 ```mermaid
 flowchart TB
-    A["Backlog<br/>capture the problem"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
+    A["Backlog<br/>state the problem, the value,<br/>and the accepted iteration"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
     B --> L["At each working stage, load<br/>shared core + selected base + selected stage"]
     L --> C{Selected profile}
 
@@ -37,6 +40,9 @@ flowchart TB
     R3 --> R4["Verify<br/>exact-revision obligations + rollout/rollback + release authority"]
     R4 --> D
 ```
+
+An item leaves `backlog` only when it states what it is, why it is worth doing,
+and the accepted iteration it is scheduled into.
 
 Backlog and done are state boundaries, not working stages; a runtime may expose
 the union of route states and skip inactive ones. The profile loader rejects a stage
@@ -79,17 +85,26 @@ not another agent, review, or gate.
 
 ## Selection and promotion
 
+Explore is a use of POC, not a separate workflow, stage, or profile. Choose POC
+when credible negative evidence could cancel or materially change the next
+commitment this item asks the Captain to accept.
+
 The Captain selects a profile through the host's structured Ask UI when
 available, with plain chat as fallback. The authorized work-item actor commits a
-`kc-dev-flow-work-profile/v2` receipt before the first working stage. Selection
-is not deferred to ideation because POC has no ideation stage.
+`kc-dev-flow-work-profile/v3` receipt for every new choice before the first
+working stage. Selection is not deferred to ideation because POC has no ideation
+stage.
 
 Promote POC to Pilot when accepted scope adds limited real users, persistent
 valuable state, reused shortcuts, beyond-session operation, or retry/recovery
 duty. Promote either lower profile to Production when production data or
-credentials, destructive external mutation, irreversible migration, public
-compatibility, unattended operation, broad exposure, SLO/support, or
-release/rollback ownership enters accepted scope.
+credentials, destructive external mutation, irreversible migration, a
+compatibility break that makes a consumer act, unattended operation, broad
+exposure, SLO/support, or release/rollback ownership enters accepted scope.
+That compatibility trigger is about the consumer's hands, not the publication:
+a change an existing consumer absorbs by taking the new version is ordinary
+Pilot delivery carrying a migration entry, while one that makes it edit its own
+configuration or rewrite its own records is Production.
 
 ## Distribution and adoption
 
@@ -97,6 +112,11 @@ release/rollback ownership enters accepted scope.
 For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
+
+At a route's first working stage, the loader also requires one non-empty
+`sprint` and `sprint-readiness: ready` in work-item frontmatter. The iteration
+authority and Captain still decide whether that named iteration is accepted;
+the loader checks only the committed field values.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

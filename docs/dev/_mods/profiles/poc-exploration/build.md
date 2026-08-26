@@ -4,7 +4,9 @@ Working perspective: incubation engineer.
 
 ## Mission
 
-Build the smallest end-to-end path that can answer the experiment's question.
+Build the smallest end-to-end path that can answer the declared falsifier.
+Stop at the declared budget or stop point; add no recurring evaluation or
+production hardening.
 
 ## Conditional references
 

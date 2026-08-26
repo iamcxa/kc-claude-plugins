@@ -77,6 +77,8 @@ required = [
     "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
     "kc-dev-flow/scripts/pr-review-handoff.test.py",
@@ -91,6 +93,8 @@ required = [
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
+    "scripts/kc-dev-flow-multi-profile-gate.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
     "scripts/kc-dev-flow-published-tag-smoke.test.py",
     "scripts/roborev-implementation-exit-contract.test.py",
@@ -258,6 +262,8 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
@@ -268,6 +274,10 @@ for relative in [
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
     "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
+    "POC close guard",
 )
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
@@ -321,29 +331,43 @@ require(loader.ROUTES == expected_routes, "profile route topology drifted")
 
 
 def write_profile_work_item(
-    root: Path, profile: str, workflow_stage: str, logical_route: list[str]
+    root: Path,
+    profile: str,
+    workflow_stage: str,
+    logical_route: list[str],
+    *,
+    schema: str = "kc-dev-flow-work-profile/v3",
 ) -> Path:
     path = root / f"{profile}-{workflow_stage}.md"
-    path.write_text(
-        "\n".join(
+    receipt = [
+        "---",
+        f"status: {workflow_stage}",
+        "sprint: kc-dev-flow/S2",
+        "sprint-readiness: ready",
+        "---",
+        "",
+        "## Work profile receipt",
+        "",
+        "```yaml",
+        "work_profile:",
+        f"  schema: {schema}",
+        f"  selected: {profile}",
+        f"  recommended: {profile}",
+        f"  route: [{', '.join(logical_route)}]",
+        "  basis: contract fixture",
+    ]
+    if profile == "poc-exploration" and schema.endswith("/v3"):
+        receipt.extend(
             [
-                "---",
-                f"status: {workflow_stage}",
-                "---",
-                "",
-                "## Work profile receipt",
-                "",
-                "```yaml",
-                "work_profile:",
-                "  schema: kc-dev-flow-work-profile/v2",
-                f"  selected: {profile}",
-                f"  recommended: {profile}",
-                f"  route: [{', '.join(logical_route)}]",
-                "  basis: contract fixture",
-                "```",
-                "",
+                "  poc_decision: Choose whether to fund the delivery slice",
+                "  poc_falsifier: The integrated probe loses the accepted state",
+                "  poc_budget: One local run and one review",
+                "  poc_stop_when: Stop after the first integrated result",
             ]
-        ),
+        )
+    receipt.extend(["```", ""])
+    path.write_text(
+        "\n".join(receipt),
         encoding="utf-8",
     )
     return path
@@ -353,9 +377,58 @@ require(
     == (ADOPTED / "kernel.md").read_bytes(),
     "self-adopted shared core differs from package source",
 )
+# `release` was a Production-only runtime state until it stranded a Pilot item
+# outside its declared route. Nothing else reads adoption prose, so the retired
+# state is guarded here rather than trusted to a reviewer.
+for relative in [
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/references/retained-document-policy.md",
+    "kc-dev-flow/references/project-context-maintenance.md",
+]:
+    normalized = " ".join(read(relative).split())
+    for retired in ["adds `release`", "explicit `release` stage", "`release` / `done`"]:
+        require(
+            retired not in normalized,
+            f"{relative} still instructs the retired `release` state: {retired}",
+        )
+
+release_gate = read(".github/workflows/kc-dev-flow-release-gate.yml")
+require(
+    "./scripts/kc-dev-flow-multi-profile-gate.py" in release_gate
+    and "./scripts/kc-dev-flow-minimal-stack-ablation.test.py" in release_gate,
+    "the release gate workflow no longer runs the baseline and without-it checks",
+)
+# A job-level `if:` makes a required check report "pending / expected" forever
+# and blocks unrelated PRs; the release scoping belongs inside the job.
+require(
+    not re.search(r"^    if:", release_gate, re.MULTILINE),
+    "the release gate job is skipped by a job-level if:, which a required check cannot survive",
+)
+for phrase in [
+    "persist-credentials: false",
+    "HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}",
+    'HEAD_REF" != "release-please--branches--main',
+    "SPACEDOCK_SHA256:",
+    "sha256sum -c -",
+    'changed_files="$(git diff --name-only',
+]:
+    require(phrase in release_gate, f"the release gate lost a trust-boundary guard: {phrase}")
+require(
+    "git diff --name-only \"origin/$BASE_REF\"...HEAD |" not in release_gate,
+    "the release gate can misclassify a git diff SIGPIPE/error as an unrelated release",
+)
+
 kernel = read("kc-dev-flow/references/kernel.md")
 for phrase in [
     "compare added files, dependencies, abstractions, tests, and comments",
+    "A comment that earns its place still passes a necessity test",
+    "cut restatement of adjacent code or prose translation of a signature",
+    "This is not a size target; do not delete for deletion's sake",
+    "choose one explanatory home; the others state the invariant and point to that home",
+    "reports both the blocks it cut and the candidates it kept, with the reason for each",
     "LOC and file counts are diagnostic signals, never pass/fail gates",
     "create no receipt or commentary",
 ]:
@@ -364,10 +437,81 @@ require(
     "| `production` | `shape -> build -> verify` |" in kernel,
     "kernel route table omits the current Production route",
 )
+normalized_kernel = " ".join(kernel.split())
+for phrase in [
+    "An item leaves `backlog` only when its committed body states all three",
+    "**What it is**",
+    "**Why it is worth doing**",
+    "**When it is scheduled**",
+    "`sprint-readiness: ready`",
+    "--where sprint=X --where sprint-readiness=ready",
+]:
+    require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
+require(
+    "when it is scheduled" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
+    "choose-work-profile no longer checks the scheduling part of the exit bar",
+)
+# `public compatibility` promoted on publication, which every change to this
+# package satisfies, so the trigger fired on all of them and sorted none. The
+# replacement asks whether a consumer must run a migration. Guarded in all four
+# places that state a promotion boundary, because a reader who finds the old
+# wording in any one of them gets the old rule.
+for relative in [
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/README.md",
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md",
+    "kc-dev-flow/references/profiles/pilot-product-slice/base.md",
+]:
+    normalized = " ".join(read(relative).split())
+    require(
+        "public compatibility" not in normalized,
+        f"{relative} still promotes on publication rather than on a consumer migration",
+    )
+    require(
+        "compatibility break that makes a consumer act" in normalized,
+        f"{relative} omits the consumer-migration promotion trigger",
+    )
+# The kernel names the trigger; the skill that makes the call owns the test for
+# it. Kernel bytes are paid at every stage of every route, and this explanation
+# is only read when a profile is being chosen.
+normalized_choose = " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split())
+require(
+    "asks whether a consumer must do something, not whether the change is published"
+    in normalized_choose
+    and "it has to run a migration" in normalized_choose,
+    "choose-work-profile no longer states the consumer-migration test",
+)
+for relative, phrases in {
+    "kc-dev-flow/README.md": [
+        "Load development constraints in proportion to work risk",
+        "POC — bounded exploration or technical proof",
+    ],
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
+        "Could credible negative evidence cancel or materially change the next commitment",
+        "kc-dev-flow-work-profile/v3",
+        "poc_decision",
+        "poc_falsifier",
+        "poc_budget",
+        "poc_stop_when",
+    ],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "poc_outcome",
+        "poc_handoff",
+        "source: poc:<exact-source-id>",
+    ],
+}.items():
+    normalized = " ".join(read(relative).split())
+    for phrase in phrases:
+        require(phrase in normalized, f"{relative} omits the v4 POC contract: {phrase}")
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
+)
+require(
+    (PLUGIN / "scripts/poc-close-guard.py").read_bytes()
+    == (ADOPTED / "poc-close-guard.py").read_bytes(),
+    "self-adopted POC close guard differs from package source",
 )
 for reference in [
     "reverse-recovery-audit.md",
@@ -430,7 +574,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                 )
                 require(
                     contract["schema"] == "kc-dev-flow-profile-contract/v2"
-                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v3",
                     f"work-item binding schema drifted: {contract}",
                 )
                 require(
@@ -441,6 +585,26 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
                     ),
                     f"unselected profile path leaked: {profile} {workflow_stage}",
                 )
+
+        for profile, workflow_stage in (
+            ("pilot-product-slice", "ideation"),
+            ("production", "ideation"),
+        ):
+            logical_route = [
+                logical for logical, _next in expected_routes[profile].values()
+            ]
+            work_item = write_profile_work_item(
+                work_items,
+                profile,
+                workflow_stage,
+                logical_route,
+                schema="kc-dev-flow-work-profile/v2",
+            )
+            contract = loader.load_contracts(contracts_root, work_item)
+            require(
+                contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                f"compatible v2 receipt was not retained: {contracts_root} {profile}",
+            )
 
 skills = {
     "adopt-dev-flow": "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
@@ -513,6 +677,7 @@ science = read(skills["science-officer"])
 legacy = read(skills["science-officer-em"])
 adopter = read(skills["adopt-dev-flow"])
 migration = read("kc-dev-flow/MIGRATION.md")
+production_verify = read("kc-dev-flow/references/profiles/production/verify.md")
 rationale = read("kc-dev-flow/RATIONALE.md")
 normalized_adopter = " ".join(adopter.split())
 normalized_rationale = " ".join(rationale.split())
@@ -520,14 +685,17 @@ normalized_chooser = " ".join(chooser.split())
 normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
 normalized_science = " ".join(science.split())
+normalized_migration = " ".join(migration.split())
+normalized_production_verify = " ".join(production_verify.split())
 
 for phrase in [
-    "kc-dev-flow-work-profile/v2",
+    "v2 Pilot or Production receipt",
+    "v1 POC",
+    "complete the v3 POC fields",
     "build -> prove",
     "shape -> build -> verify-deliver",
     "`shape -> build -> verify` | The scope accepts a production boundary",
     "structured Ask UI",
-    "do not ask the Captain to repeat the decision",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
 require(
@@ -535,6 +703,23 @@ require(
     "chooser still documents the removed release route element",
 )
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
+for phrase in [
+    "Default the entity template to `sprint-readiness: defer`",
+    "do not mark the unscheduled backlog ready during adoption",
+]:
+    require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+for phrase in [
+    "Migrating from 3.x to 4.x",
+    "drain every entity at `status: release`",
+    "sprint-readiness=ready",
+    "do not mark the unscheduled queue ready as a bulk migration",
+]:
+    require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
+require(
+    "review disposition" in normalized_production_verify
+    and "model identity" in normalized_production_verify,
+    "Production verification omits risk-selected review disposition",
+)
 
 for phrase in [
     "read that bounded section plus the frontmatter",
@@ -612,10 +797,37 @@ for phrase in [
 require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM")
 
 workflow = read("docs/dev/README.md")
+require(
+    "sprint-readiness: defer" in workflow
+    and "--where sprint-readiness=ready" in workflow,
+    "self-adoption template/query no longer default closed and select only ready items",
+)
 frontmatter = workflow.split("---", 2)[1]
 expected_stage_order = ["backlog", "ideation", "implementation", "validation", "done"]
 actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)
 require(actual_stage_order == expected_stage_order, f"workflow stage graph drifted: {actual_stage_order}")
+
+# The literal above pins this repository's graph; these two derive the reason it
+# is that shape. #276's incident was a state — `release` — that sat between a
+# profile's last working state and the terminal one: Spacedock computed the
+# gate's target from graph order, so a Pilot approval targeted a stage outside
+# its route and the item had no way to reach `done`. A profile-only state is
+# therefore safe before a route's first state and fatal after its last.
+terminal_state = actual_stage_order[-1]
+for profile, stages in expected_routes.items():
+    route_states = [state for state in actual_stage_order if state in stages]
+    require(
+        route_states == [state for state in stages],
+        f"{profile} route states are missing from or out of order in the workflow graph: "
+        f"{route_states} vs {list(stages)}",
+    )
+    last = actual_stage_order.index(route_states[-1])
+    require(
+        actual_stage_order[last + 1] == terminal_state,
+        f"{profile} would strand: the graph puts "
+        f"{actual_stage_order[last + 1]!r} between its last working state "
+        f"{route_states[-1]!r} and {terminal_state!r}",
+    )
 for phrase in [
     "POC | `backlog -> implementation -> validation -> done`",
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",

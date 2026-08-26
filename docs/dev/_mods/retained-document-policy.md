@@ -126,7 +126,7 @@ longer exists, or was written for a reader who no longer arrives.
 | `shape` / runtime `ideation` | When the task adds or removes a retained document, name which rule the change is under and what the per-section overlap check will cover. |
 | `build` / runtime `implementation` | Apply Rules 1–3 and 6–8 to every retained document the task touches. A selected route without `shape` performs the addition/removal classification before its first edit. For an addition or deletion, execute Rule 4. For a deletion, also execute Rule 5 and record where each block landed. |
 | `prove`, `verify-deliver`, or `verify` / runtime `validation` | Spot-check the checks. Take claims from the changed documents and run the check each one names; a claim whose named check does not run, or does not distinguish true from false, is a finding. For an addition or deletion, repeat Rule 4 independently. For a deletion, also attempt Rule 5 independently — try to find a block the implementer missed. |
-| `release` / `done` | None. |
+| `done` | None. |
 
 No receipt, bound project-context authority, prescribed filename, or diagram tool is
 required. The stage worker applies the policy and the validator checks it.

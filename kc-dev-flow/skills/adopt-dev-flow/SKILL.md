@@ -27,19 +27,28 @@ repair the cheapest compatible seam.
    `../../references/delivery-branch-base.md`,
    `../../references/pr-delivery.md`,
    `../../references/roborev-implementation-exit.md`, and
-   `../../scripts/profile-contract-loader.py` without local edits. The selected
+`../../scripts/profile-contract-loader.py` and
+`../../scripts/poc-close-guard.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
-3. Select a profile before the first working stage and store the v2 receipt in
+3. Select a profile before the first working stage and store the v3 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
+   Default the entity template to `sprint-readiness: defer`. Before an item
+   enters its first working stage, bind a non-empty `sprint` accepted by the
+   repository's iteration authority and set `sprint-readiness: ready`; do not
+   mark the unscheduled backlog ready during adoption.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
-   POC `implementation -> validation`; Pilot adds `ideation`; Production adds
-   `release`. Backlog and done remain non-working states. Preserve an extra
-   local terminal state only through an explicit mapping; it does not silently
-   join every profile route.
+   POC `implementation -> validation`; Pilot and Production add `ideation`. No
+   profile adds a state the others skip, so a runtime that owns one stage graph
+   per workflow cannot strand an item outside its declared route. Production's
+   release authorization is a terminal-approval boundary inside `validation`,
+   not a state: its gate approval targets the terminal state and the delivery
+   provider's merge verdict is the sole terminal consumer. Backlog and done
+   remain non-working states. Preserve an extra local terminal state only
+   through an explicit mapping; it does not silently join every profile route.
 5. Make each working stage a small loader invocation or pointer. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes

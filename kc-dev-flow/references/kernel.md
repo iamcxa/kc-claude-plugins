@@ -33,13 +33,14 @@ create a parallel tracker, roadmap, status mirror, or delivery record.
 
 ## Select before routing
 
-Before entering a working stage, re-read the work item's committed
-`kc-dev-flow-work-profile/v2` receipt. If it is absent or stale, use
+Before entering a working stage, re-read the committed receipt. New choices use
+`kc-dev-flow-work-profile/v3`; active v2 Pilot and Production remain loadable,
+while active v2 POC fails closed. If it is absent or stale, use
 `kc-dev-flow:choose-work-profile`; the Captain chooses and the locally authorized
 actor records the decision. A recommendation is not a selection.
 
 The profile loader accepts the exact committed work-item file. It validates and
-hash-binds that item's v2 receipt and current status, then loads this core, that
+hash-binds that item's supported receipt and current status, then loads this core, that
 profile's base contract, and that profile's current stage contract. A stage
 outside the selected route fails closed. Profiles are per work item, never
 project-global; different items may use different routes concurrently.
@@ -49,6 +50,9 @@ project-global; different items may use different routes concurrently.
 | `poc-exploration` | `build -> prove` |
 | `pilot-product-slice` | `shape -> build -> verify-deliver` |
 | `production` | `shape -> build -> verify` |
+
+A v3 POC fixes one `poc_decision`, `poc_falsifier`, `poc_budget`, and
+`poc_stop_when` before implementation. Pilot and Production omit these fields.
 
 `backlog` is queue state and `done` is terminal state; neither is a working
 stage. A workflow runtime may expose the union of stage names and skip stages
@@ -61,13 +65,22 @@ instead, the way `production`'s route above folds release authorization into
 `verify` rather than skipping a dedicated `release` stage.
 
 Queue state still has an exit bar. An item leaves `backlog` only when its
-committed body states both:
+committed body states all three:
 
 - **What it is** — one sentence sufficient for Captain triage.
 - **Why it is worth doing** — for `pilot-product-slice` and `production`, the
   outcome it serves in the repository's existing project-context authority; for
   `poc-exploration`, the question the experiment answers and the observable
   result whose occurrence would abandon it.
+- **When it is scheduled** — a `sprint` field naming an iteration the
+  repository's iteration authority has already accepted, and `sprint-readiness:
+  ready`. `defer` keeps the item queued.
+
+The scheduling fields are named because a queue answered by query is the point:
+`--where sprint=X --where sprint-readiness=ready` selects the drivable set
+without reading every queued item. The iteration authority still owns which
+iterations exist and where they are recorded; this bar owns only that a
+departing item names one.
 
 The Captain checks the bar on every `backlog` exit, at profile selection.
 A reused profile receipt answers which route the item takes, never whether the
@@ -82,8 +95,8 @@ as not ready to leave `backlog` when it cannot ask.
 - Ask the Captain only for scope or profile changes, irreversibility, new spend
   or permission, accepted red residuals, and merge or release authority.
 - Never let a POC label authorize production credentials or data, destructive
-  external mutation, an irreversible migration, public compatibility, unattended
-  operation, or an operational support promise.
+  external mutation, an irreversible migration, a compatibility break that makes
+  a consumer act, unattended operation, or an operational support promise.
 - Promote when accepted scope crosses the selected profile's boundary. Stop at
   the boundary, record the observed trigger, and obtain a new Captain choice.
 - A size threshold the work item declared at shape may stop work in progress.
@@ -111,8 +124,14 @@ as not ready to leave `backlog` when it cannot ask.
 - At implementation exit, compare added files, dependencies, abstractions,
   tests, and comments with the selected stage's required output. Remove unmapped
   surfaces and take a materially smaller equivalent route when the diff reveals
-  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
-  no scope drift is found, create no receipt or commentary.
+  one. A comment that earns its place still passes a necessity test: keep each
+  fact a reader cannot re-derive, and cut restatement of adjacent code or prose
+  translation of a signature. This is not a size target; do not delete for
+  deletion's sake. When the same fact appears in more than one artifact, choose
+  one explanatory home; the others state the invariant and point to that home.
+  A comment pass reports both the blocks it cut and the candidates it kept, with
+  the reason for each. LOC and file counts are diagnostic signals, never
+  pass/fail gates. When no scope drift is found, create no receipt or commentary.
 
 - **An absolute names its enforcement point or becomes a bounded claim.**
   "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written

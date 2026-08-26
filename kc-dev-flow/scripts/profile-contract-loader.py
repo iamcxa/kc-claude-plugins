@@ -28,6 +28,12 @@ ROUTES = {
     },
 }
 
+PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
+PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
+POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
+NULL_LIKE = {"null", "~"}
+PLACEHOLDER_WORDS = {"tbd", "todo"}
+
 
 class ContractError(RuntimeError):
     """A selected route cannot be loaded safely."""
@@ -37,7 +43,18 @@ def _one_field(text: str, pattern: str, label: str) -> str:
     matches = re.findall(pattern, text, flags=re.MULTILINE)
     if len(matches) != 1:
         raise ContractError(f"work item must contain exactly one {label}")
-    return matches[0].strip().strip("\"'")
+    return matches[0].strip().strip("\"'").strip()
+
+
+def is_placeholder_scalar(value: str) -> bool:
+    normalized = value.strip().strip("\"'").strip()
+    folded = normalized.casefold()
+    return (
+        not normalized
+        or folded in NULL_LIKE
+        or folded in PLACEHOLDER_WORDS
+        or re.fullmatch(r"<[^>\n]+>", normalized) is not None
+    )
 
 
 def resolve_work_item(path: Path) -> dict[str, str]:
@@ -55,7 +72,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         raise ContractError("work item frontmatter is unterminated")
     frontmatter = text[4:frontmatter_end]
     workflow_stage = _one_field(
-        frontmatter, r"^status:\s*([^\n#]+?)\s*$", "frontmatter status"
+        frontmatter, r"^status:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter status"
     )
 
     headings = list(re.finditer(r"^## Work profile receipt\s*$", text, re.MULTILINE))
@@ -73,14 +90,30 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     if len(blocks) != 1:
         raise ContractError("Work profile receipt must contain one YAML work_profile")
     block = blocks[0]
-    schema = _one_field(block, r"^  schema:\s*([^\n#]+?)\s*$", "profile schema")
-    if schema != "kc-dev-flow-work-profile/v2":
+    schema = _one_field(block, r"^  schema:[ \t]*([^\n#]+?)[ \t]*$", "profile schema")
+    if schema not in {PROFILE_SCHEMA_V2, PROFILE_SCHEMA_V3}:
         raise ContractError(f"unsupported work profile schema: {schema}")
-    profile = _one_field(block, r"^  selected:\s*([^\n#]+?)\s*$", "selected profile")
+    profile = _one_field(block, r"^  selected:[ \t]*([^\n#]+?)[ \t]*$", "selected profile")
     if profile not in ROUTES:
         raise ContractError(f"unsupported profile: {profile}")
+    if schema == PROFILE_SCHEMA_V2 and profile == "poc-exploration":
+        raise ContractError(
+            "active v2 POC must finish on v3.x or be Captain re-recorded as v3"
+        )
 
-    route_text = _one_field(block, r"^  route:\s*([^\n#]+?)\s*$", "profile route")
+    poc_values: dict[str, str] = {}
+    if schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":
+        for field in POC_FIELDS:
+            value = _one_field(
+                block,
+                rf"^  {field}:[ \t]*([^\n#]*?)[ \t]*$",
+                field,
+            )
+            if is_placeholder_scalar(value):
+                raise ContractError(f"{field} must be a concrete scalar")
+            poc_values[field] = value
+
+    route_text = _one_field(block, r"^  route:[ \t]*([^\n#]+?)[ \t]*$", "profile route")
     if not (route_text.startswith("[") and route_text.endswith("]")):
         raise ContractError("profile route must be an inline list")
     receipt_route = [
@@ -94,12 +127,32 @@ def resolve_work_item(path: Path) -> dict[str, str]:
             f"stale route for {profile}: expected {expected_route}, got {receipt_route}"
         )
 
+    first_workflow_stage = next(iter(ROUTES[profile]))
+    if workflow_stage == first_workflow_stage:
+        sprint = _one_field(
+            frontmatter, r"^sprint:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter sprint"
+        )
+        if (
+            not sprint
+            or sprint.casefold() in {"null", "~", "true", "false"}
+            or sprint[0] in "[{&*!|>"
+        ):
+            raise ContractError("frontmatter sprint must name an iteration")
+        sprint_readiness = _one_field(
+            frontmatter,
+            r"^sprint-readiness:[ \t]*([^\n#]+?)[ \t]*$",
+            "frontmatter sprint-readiness",
+        )
+        if sprint_readiness != "ready":
+            raise ContractError("frontmatter sprint-readiness must be 'ready'")
+
     return {
         "path": path.as_posix(),
         "sha256": hashlib.sha256(raw).hexdigest(),
         "schema": schema,
         "profile": profile,
         "workflow_stage": workflow_stage,
+        **poc_values,
     }
 
 

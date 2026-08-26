@@ -357,6 +357,46 @@ explicit human confirmation.
 Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
 Status Update publication, and LLM-authored unattended payloads.
 
+### Sprint S4 — close POC at a decision boundary
+
+Captain direction: begin immediately without broadening the remaining S3
+projection work.
+
+1. `single-workflow-poc-routing`
+
+Exit: one installed workflow routes bounded exploration and technical proof
+through POC; every new POC fixes its decision, falsifier, budget, and stop
+condition before implementation; `proceed`, `stop`, and `change` close through
+an evidence gate that remains distinct from downstream task authority; and a
+created downstream handoff is retry-safe before the source POC reaches `done`.
+The v2/v3 receipt cutover, adopter action, rollback, and release evidence are
+explicit, while the Spacedock graph and existing route slugs remain unchanged.
+
+Out of scope: an Explore workflow or stage, a Spacedock engine change,
+cross-entity transactions, automatic downstream profile selection, model calls
+or a new CI job for the contract slice, and reuse of the behavioral-gate
+laboratory branch.
+
+## `kc-team-ops`
+
+### Sprint S1 — make the rules audit trustworthy off this machine
+
+Opened 2026-08-25 on captain direction, after one dogfood run of
+`kc-rules-review` (501 sessions, 1224 human turns) and one adopter's independent
+run produced six defects in the skill and its script. The adopter found the one
+defect no local run could reach: parallel-session relays entered the human
+population and inflated every friction row by roughly 38%. This machine's corpus
+carries that tag once, so no window size would have surfaced it here.
+
+Captain-approved order:
+
+1. `kc-rules-review-dogfood-defects`
+
+Exit: the relay filter and the five dogfood prose fixes have landed; a skill
+defect an adopter finds has a path back into this repository instead of dying in
+their local patch; the role step can no longer end at a silent `unknown`; and the
+seniority question has a recorded answer even when that answer changes nothing.
+
 ## `repo-platform`
 
 ### Sprint S1 — reduce the runtime reading surface
