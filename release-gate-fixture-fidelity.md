@@ -8,7 +8,7 @@ sprint-readiness: ready
 started: 2026-08-26T04:30:41Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-release-gate-fixture-fidelity
 issue:
 pr:
 mod-block:
