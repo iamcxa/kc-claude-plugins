@@ -825,6 +825,67 @@ Read relevant CLAUDE.md/AGENTS.md sections, identify applicable skills by dynami
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/compliance-audit.md
 
+<!-- minimum-stack-review-pass:start -->
+## Step 5.4: Minimum-stack / without-it pass (review-only POC)
+
+Run this one small review-only pass when the caller explicitly asks for a
+`minimum-stack` or `without-it` review. It is an observer inside
+`kc-pr-review`, not a delivery gate and not a profile route.
+
+1. Start from the Step 2.1 `CURRENT_BASE_SHA` and `CURRENT_HEAD_SHA`, and use
+   their exact diff (not file count, PR prose, or a previous head) to list the
+   added behavioural responsibilities. Cite each candidate with its changed
+   path and hunk/line range.
+2. Select the **largest added responsibility** by new behavioural obligation and
+   failure blast radius, rather than by lines or files. If two candidates are
+   genuinely tied, name both, explain the tie, and make the conservative
+   `unknown` result instead of inventing a ranking.
+3. Derive what would fail **without-it**: state the observable outcome that the
+   selected responsibility prevents or enables, and cite the exact diff locus.
+   Do not convert a restatement of implementation mechanics into an outcome.
+4. If Step 2.2 accepted a v2 handoff, use it only as optional bounded context:
+   resolve the typed work item and its anchors read-only, then bind the selected
+   responsibility to the explicit **served AC** it actually helps satisfy. The
+   binding must quote the work item's acceptance text and explain the
+   responsibility-to-AC relationship. A handoff pointer, changed-file entry,
+   or evidence reference alone is not an AC binding.
+5. Classify that binding exactly once:
+   - `proven` — the served AC and without-it claim have a cited existing test,
+     CI check, mutation, or runtime evidence reference that can fail, and the
+     current review has read the corresponding result or directly exercised it.
+   - `unknown` — the AC is absent/unmapped, the relationship is unclear, the
+     evidence is missing or unrun, or the handoff is stale or malformed.
+   - `unnecessary` — the exact diff shows the responsibility does not serve an
+     explicit AC, or the cited AC remains satisfied without it. Name the basis;
+     this is a subtraction observation, never approval.
+
+Render the following conversation-facing section in the draft, before the
+normal findings tables:
+
+```text
+### Minimum-stack / without-it (review-only POC)
+Exact diff: <CURRENT_BASE_SHA>...<CURRENT_HEAD_SHA>
+Handoff: <accepted optional context | not accepted as evidence>
+Largest added responsibility: <responsibility; path:hunk>
+Served AC: <quoted AC, or unmapped>
+Without it: <observable outcome; path:hunk>
+Status: <proven | unknown | unnecessary>
+Evidence: <falsifiable reference/result, or why unknown>
+Review effect: observer only — not approval
+```
+
+If the handoff is stale or malformed, record `Handoff: not accepted as
+evidence`, continue the normal review without it, and make any unresolved
+minimum-stack claim `unknown`; never turn `unknown` into approval. This pass
+cannot post, change Ready, merge, execute, or mutate workflow state. It cannot
+alter the review event, confirmation, posting, or any normal-review verdict.
+
+Dogfood #289 / Issue #149 with a read-only invocation: inspect the current
+exact PR head and any supplied v2 handoff, emit the section, and do not post or
+change that PR. Treat its issue's suggested shape as context, not an invented
+served AC; an unmapped binding is `unknown`.
+<!-- minimum-stack-review-pass:end -->
+
 ## Step 5.5: Cross-Model Reconciliation (zero model calls)
 
 Runs **only when Step 4-Codex produced `CODEX`-source findings**. If Codex did not run, Step 5.5 and
