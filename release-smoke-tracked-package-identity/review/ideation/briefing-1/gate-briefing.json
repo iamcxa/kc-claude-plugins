@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8hyzngaw0frz3f0rzp2fvpxm:ideation:attempt-1:revision-1",
+  "question": "Approve the exact-revision git-archive design and advance this Production task into implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:8hyzngaw0frz3f0rzp2fvpxm:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f3e8b1170042946c8932f583810b173c37e3f531/release-smoke-tracked-package-identity.md",
+      "rev": "sha256:d2b7ebf336e6a5a7a46630996dbe1d27ace8c0d9305d7d3a737a7276c9741bfe",
+      "mediaType": "text/markdown",
+      "summary": "Ideation selected one temporary git archive of .claude-plugin plus kc-dev-flow at the exact candidate revision, reused for candidate digest and installation and compared with the published tracked tree. The design preserves receipt schema, genuine mismatch refusal, and immutable v2.5.0 incident evidence; rollback reinstates the release block. Implementation is one two-file slice and stops beyond 180 gross changed lines or 120 fixture/runtime-scaffolding lines. The separate Release Please PR #258 ablation-fixture failure remains out of scope."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:8hyzngaw0frz3f0rzp2fvpxm:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/844edfa75a021cc6c013186bb88fba81f598f912/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:178c7bf6d470e05f024817a385062142c6b42bbc93581c0594ef4a57dd82fcb6"
+    }
+  ]
+}
