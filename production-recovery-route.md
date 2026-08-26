@@ -27,6 +27,17 @@ gates:
                 digest: sha256:961bbed0d4b713fb3fa268a47854856cecba773ba5e41db22e3c5655cafafde7
                 request-digest: sha256:541807e04fb832e47616caf1195f4ba2f71eafc14b5e4b3c1d37dd39bf92e0dc
                 room-ref: ./production-recovery-route/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:za5drqh93q5522c6kstrxrsx:backlog:1
+                briefing: briefing:za5drqh93q5522c6kstrxrsx:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T06:16:11.487243Z"
+                decision: approve
+                reason: Captain approved the S5 Production recovery direction to enter ideation and produce the formal design spec.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
