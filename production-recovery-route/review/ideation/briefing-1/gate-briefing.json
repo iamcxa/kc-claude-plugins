@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:za5drqh93q5522c6kstrxrsx:ideation:attempt-1:revision-1",
+  "question": "Approve this Production recovery design for implementation, or revise it to the minimum route?",
+  "artifacts": [
+    {
+      "id": "artifact:za5drqh93q5522c6kstrxrsx:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://main/dc7a1c8cb1e36682fe23bf085d34b597b4474402/docs/superpowers/specs/2026-08-26-kc-dev-flow-proportional-production-delivery-design.md",
+      "rev": "sha256:73990bd37028a617732bbe97b495ec7438ffc068ce04d29254f6aaaf190bb8f0",
+      "mediaType": "text/markdown",
+      "summary": "The spec defines all three S5 interfaces and a first recovery slice, but the proposed recovery receipt and implementation surface are materially larger than the Captain requested."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/d8f6ab1741fa6eddc094949a21fd12f58c6abe5f/production-recovery-route.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:3946583bf64b168418d3a176e5cbc7d4cacd1175a526e54ba647c60a86d2265b"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:ideation:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/dc7a1c8cb1e36682fe23bf085d34b597b4474402/docs/dev/ROADMAP.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:3c45e4ed81fa112d872ae18ba0763ddc03c023c6765efdddf60959427ae8a2dd"
+    }
+  ]
+}

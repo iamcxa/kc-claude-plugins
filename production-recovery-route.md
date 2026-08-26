@@ -38,6 +38,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:za5drqh93q5522c6kstrxrsx:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:za5drqh93q5522c6kstrxrsx-ideation-1
+              briefing:
+                id: briefing:za5drqh93q5522c6kstrxrsx:ideation:attempt-1:revision-1
+                digest: sha256:158618a1d9e6faacdea3cd8e455446d2f80caeda56f6806099b7682f1976e88f
+                request-digest: sha256:a34c17f877575cf77f6e85ad597d9c449a93e9989506b1878a06083a129a108f
+                room-ref: ./production-recovery-route/review/ideation/briefing-1
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
