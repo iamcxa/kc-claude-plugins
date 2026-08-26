@@ -58,6 +58,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:8hyzngaw0frz3f0rzp2fvpxm:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:8hyzngaw0frz3f0rzp2fvpxm-validation-1
+              briefing:
+                id: briefing:8hyzngaw0frz3f0rzp2fvpxm:validation:attempt-1:revision-1
+                digest: sha256:dbd160b673370d5655b6cd8fab520ee73f9db06ea4ab3a3f721b2a5cc69a9698
+                request-digest: sha256:3df03a3bfd1abe5d50de249c2ba55244003f53fa88af9e7054b35acc6992cb4f
+                room-ref: ./release-smoke-tracked-package-identity/review/validation/briefing-1
 ---
 
 The `kc-dev-flow-v2.5.0` candidate smoke hashed and locally installed the ambient `kc-dev-flow/` directory. Two ignored Python bytecode files created before receipt generation entered that digest even though the clean release tag contained the exact same tracked Git subtree. Published mode then correctly refused the preserved receipt after release, producing a false artifact-drift signal and requiring a Captain-approved recovery.

@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8hyzngaw0frz3f0rzp2fvpxm:validation:attempt-1:revision-1",
+  "question": "Approve exact candidate 278095b as verified and authorize pushing its task branch plus creating a Draft PR; merge and release remain separately unauthorized?",
+  "artifacts": [
+    {
+      "id": "artifact:8hyzngaw0frz3f0rzp2fvpxm:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e5dcf25e11735112ddbd08aa84ec28cb270b8dac/release-smoke-tracked-package-identity.md",
+      "rev": "sha256:81734f63b526d840ff19101038739d0a86a4020c9d736fdd35c1b52f2926ef0a",
+      "mediaType": "text/markdown",
+      "summary": "Fresh Production validation passed at exact tip 278095b with all AC-1 through AC-4 falsifiers exercised, no material residual, and no product changes after validation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:8hyzngaw0frz3f0rzp2fvpxm:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/278095b3015a25bb7140e7dd2b09482d96fc412a/scripts/kc-dev-flow-published-tag-smoke.py",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:f19354c8dba932d20ac809cd6b67a150e8742230b91acf0c801bf6ecb585f0eb"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:8hyzngaw0frz3f0rzp2fvpxm:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/278095b3015a25bb7140e7dd2b09482d96fc412a/scripts/kc-dev-flow-published-tag-smoke.test.py",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:cf49cbf70a9953f0fc5b077161daa7353a6d232656c697e2a6d9f7dd3cd8c3ee"
+    }
+  ]
+}
