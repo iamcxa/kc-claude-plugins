@@ -250,3 +250,20 @@ diagnostic: >-
 ### Summary
 
 The candidate-bound observation claimed single-flight ownership and spent its one request without producing a correlatable RoboRev job. The honest result is UNKNOWN, carried into fresh validation without retry, product change, or authority effect.
+
+## Stage Report: validation
+
+- DONE: Freshly bind candidate a97f157, implementation base d38799a, current merge target origin/main, accepted spec/ACs, exact nine-file diff, and the carried RoboRev UNKNOWN; make no product edits.
+  Candidate `a97f157e53f53755d0bfbea1808577fed72a1e07`, base `d38799af4d980498bfc51380c33e11266cedbafa`, fetched target `f7a3f018e9756c44b354c3a24326594b084b044b`, merge-base `e20d13b5b1fb06921db58b6a0f132401dfc1fe9d`, accepted spec SHA-256 `21a2a9b0…`, and 9 files/419 insertions/21 deletions were observed with a clean product tree; RoboRev remains `UNKNOWN(state_unknown)`.
+- FAILED: Run the complete relevant candidate gate from a clean exact-tip worktree: scripts/kc-dev-flow-contract-test.py, loader/kernel package-adopter parity, and git diff --check; require the real Spacedock recovery journey to pass.
+  The direct complete loader test, real recovery journey, byte-identical loader/kernel parity, and `git diff --check` passed, but `scripts/kc-dev-flow-contract-test.py` exited 1 because `scripts/roborev-implementation-exit-contract.test.py` still requires the superseded Local Profile phrase `Typed RoboRev observation at every profile's implementation exit`; changing that stale assertion to the accepted risk-triggered contract is the falsifying repair.
+- SKIPPED: Run one task-owned full without-it in a temporary isolated copy: execute the complete candidate profile-contract-loader.test.py against the d38799a loader and require a nonzero failure at the recovery capability, not an unrelated setup failure; delete no repository data and add no reusable harness.
+  Validation stopped fail-closed when the candidate full gate was non-green; the unexecuted temporary copy was removed, so no without-it result or reusable harness exists.
+- DONE: Record exact-candidate E2E UAT evidence for backlog gate -> ideation skip with no ideation artifact -> implementation build -> validation verify, plus compatibility/default-full, rollback readiness, provider-feedback absence before PR, and material residuals.
+  Candidate `profile-contract-loader.test.py` passed its real Spacedock skip/no-artifact/build/verify journey and legacy full-route fixtures; rollback is the recorded task reversal plus Captain-controlled full-route re-recording, no PR exists for provider feedback, and the red repository gate, unrun without-it, RoboRev UNKNOWN, divergent target, and missing Captain UAT remain material.
+- FAILED: Return PASS only if every AC is falsifiably supported at the exact candidate; append one validation Stage Report and commit/sync only state. Do not create a PR, advance the gate, merge, release, or self-approve Captain UAT.
+  Verdict is FAIL because the complete repository gate is red and the required without-it was not run; only this state report is committed, with no PR, gate advance, merge, release, or UAT approval.
+
+### Summary
+
+Exact-candidate recovery behavior and parity passed, but the required repository gate found a stale RoboRev Local Profile assertion and validation therefore fails. The work returns to implementation for one focused contract-test repair before fresh validation; RoboRev UNKNOWN and Captain-owned UAT remain visible and non-authoritative.
