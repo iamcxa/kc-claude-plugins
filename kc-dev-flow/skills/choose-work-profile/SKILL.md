@@ -32,7 +32,12 @@ longer contains the accepted scope.
 |---|---|---|
 | `POC / Exploration` (`poc-exploration`) | `build -> prove` | A disposable experiment must prove one real journey and its riskiest assumption. |
 | `Pilot / Product slice` (`pilot-product-slice`) | `shape -> build -> verify-deliver` | Limited real use creates persistent value and likely iteration. |
-| `Production` (`production`) | `shape -> build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
+| `Production` (`production`) | `shape -> build -> verify` by default; eligible recovery uses `build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
+
+After selecting Production, ask one coupled route question only when an exact
+known failure has a concrete falsifier and rollback. The Captain may keep the
+full route or record recovery with `recovery_failure`, `recovery_falsifier`,
+`recovery_rollback`, and `review_risks`; uncertainty keeps the full route.
 
 A POC label cannot downscope production credentials or data, destructive
 external mutation, irreversible migration, a compatibility break that makes a
@@ -81,6 +86,11 @@ work_profile:
   poc_falsifier: <the cheapest credible negative evidence>
   poc_budget: <explicit time, model, provider, or review ceiling>
   poc_stop_when: <observable point at which work stops>
+  # Eligible Production recovery only; omit on the full route.
+  recovery_failure: <exact bounded failure>
+  recovery_falsifier: <repository-owned command or observable scenario>
+  recovery_rollback: <task-specific reversal action>
+  review_risks: [none | named closed risks]
   promote_when: [<observable task-specific triggers>]
   decision:
     authority: <captain identity or bound authority>
@@ -90,7 +100,8 @@ work_profile:
 The locally authorized actor re-reads the entity, records the receipt in the
 existing work item, syncs it through the existing safe transaction, and re-reads
 the committed result. Do not write a sidecar or start a working stage before
-that re-read.
+that re-read. Returning a recovery item to the full route requires a new Captain
+decision unless its recorded rollback explicitly grants that exact rewrite.
 
 ## Promotion
 

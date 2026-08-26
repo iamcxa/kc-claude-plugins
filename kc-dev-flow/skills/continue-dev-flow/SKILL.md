@@ -82,6 +82,14 @@ python3 <profile-loader> \
 
 Use `--format json` only when a machine consumer needs the structured envelope.
 
+At Production `ideation`, `skip_to_workflow_stage: implementation` loads no
+contract and authorizes only that existing state transition: re-read the same
+hash-bound item, create no ideation worker, briefing, report, or gate, then load
+`build` normally. Before the skip, implementation exit, and validation, recheck
+the recovery falsifier, exact diff against `scope_boundary`, rollback, and risk
+list. False or uncertain evidence returns `RECOVERY_FULL_ROUTE_REQUIRED`; only
+the Captain or an explicit `recovery_rollback` may re-record the full route.
+
 A loader refusal means the item's current stage is outside its selected route,
 its receipt is stale, or the adoption is incomplete. Resolve that exact
 condition; do not substitute another item's profile or general workflow prose.
@@ -92,7 +100,7 @@ For a superset state graph, route as follows:
 |---|---|
 | POC | `backlog -> implementation -> validation -> done` |
 | Pilot | `backlog -> ideation -> implementation -> validation -> done` |
-| Production | `backlog -> ideation -> implementation -> validation -> done` |
+| Production | `backlog -> ideation -> implementation -> validation -> done`; eligible recovery skips the ideation dispatch |
 
 `backlog` selects and queues; `done` terminalizes. They dispatch no working
 contract. Skipped stages create no review or evidence obligation.
@@ -136,6 +144,8 @@ contract it names — `../../references/roborev-implementation-exit.md` — as t
 method. Take the reviewer mapping, state holder, prerequisite, and durability
 command from `## Local Profile`, select the reviewer complementary to the actual
 implementation provider family, and pass the emitted profile controls explicitly.
+For Production recovery, this trigger also requires a named `review_risks`
+entry; `[none]` leaves it false, so the Production label alone invokes nothing.
 An absent declaration leaves the trigger false and performs no RoboRev probe or
 invocation. An unknown implementation family or unavailable provider produces an
 honest non-gating `UNAVAILABLE` result; do not guess or use ambient defaults.

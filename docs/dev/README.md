@@ -36,7 +36,7 @@ the working route and the contracts an agent loads:
 |---|---|
 | POC | `backlog -> implementation -> validation -> done` |
 | Pilot | `backlog -> ideation -> implementation -> validation -> done` |
-| Production | `backlog -> ideation -> implementation -> validation -> done` |
+| Production | `backlog -> ideation -> implementation -> validation -> done`; eligible recovery skips the ideation dispatch |
 
 Backlog and done are state boundaries, not worker stages. Skipped stages do not
 receive placeholder reviews or receipts.
@@ -61,7 +61,7 @@ README as a policy bundle.
 | Orchestration | First Officer |
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
-| Optional observation | Typed RoboRev observation at every profile's implementation exit; the vendored `docs/dev/_mods/roborev-implementation-exit.md` supplies the method |
+| Optional observation | Typed RoboRev observation at implementation exit; Production recovery requires a named risk, and `[none]` invokes nothing |
 | RoboRev local bindings | Reviewer complementary to the implementation family (`.roborev.toml` is the repository fallback); state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
 | Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md`; `docs/dev/_mods/roborev-implementation-exit.md` |
 | Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. **Local base policy: trunk-only, pending a refit.** The vendored `pr-merge` copy resolves its base as the configured trunk and rebases onto it, so a stacked base would be re-targeted and the PR would carry its parent's commits. Until that copy accepts a sibling base, do not stack here; the refit requirement is to make it preserve the selected base. |
@@ -88,6 +88,8 @@ the actual implementation provider family: OpenAI uses Claude Code `sonnet`;
 Anthropic uses Codex `gpt-5.6-terra`. An unknown family is `UNAVAILABLE`, not a
 guess. Pass every value explicitly; `.roborev.toml` is only the committed
 repository fallback and installs no hook or panel.
+For Production recovery, a named `review_risks` entry is also required to
+activate it; the Production label and `[none]` are insufficient.
 
 | Profile | Reasoning | Minimum severity | Timeout | Request / confirmation cap |
 |---|---|---|---:|---:|
@@ -154,7 +156,9 @@ then emits the shared core, one selected base, and one selected stage. At a
 route's first working stage it also requires one non-empty `sprint` and
 `sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
 authority for whether the named sprint is accepted. Its `next_workflow_stage`
-is the normal next state. Profiles are per item, so POC, Pilot, and Production
+is the normal next state. An eligible Production recovery instead emits
+`skip_to_workflow_stage: implementation` with no loaded ideation contract.
+Profiles are per item, so POC, Pilot, and Production
 items may run concurrently in this repository without a global profile switch.
 A refusal blocks only that item's dispatch until its receipt, state, scheduling
 fields, or vendored adoption is corrected.
@@ -176,7 +180,9 @@ profile receipt before moving to the selected route's first working state.
 
 ### `ideation` — selected `shape`
 
-Active only for Pilot and Production. Load the selected `shape` contract. Record
+Active only for Pilot and full-route Production. An eligible recovery creates no
+worker, briefing, report, or gate here; re-read its hash-bound receipt, apply the
+implementation skip, and load `build`. Otherwise load the selected `shape` contract. Record
 the accepted outcome and task-specific acceptance evidence in the work item.
 Its conditional references load only when their predicates fire: reverse
 recovery for a proposed addition, replacement, removal, or missing claim in
@@ -198,7 +204,10 @@ RoboRev observation loads
 [`_mods/roborev-implementation-exit.md`](./_mods/roborev-implementation-exit.md)
 as the build stage's `implementation_exit_observation_declared` reference.
 Its receipt is observation, not validation or delivery authority. POC ends after
-one request; Pilot and Production allow one changed-tip confirmation.
+one request; Pilot and full-route Production allow one changed-tip confirmation.
+Recovery allows that observation only for a named accepted risk. Recheck its
+falsifier, exact diff, rollback, and risks before exit and validation; uncertainty
+returns `RECOVERY_FULL_ROUTE_REQUIRED` to the Captain-owned full-route decision.
 
 ### `validation` — selected `prove`, `verify-deliver`, or `verify`
 
