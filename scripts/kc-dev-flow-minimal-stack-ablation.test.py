@@ -57,6 +57,13 @@ def copy_repository_fixture(destination: Path) -> None:
             target.symlink_to(os.readlink(source))
         else:
             shutil.copy2(source, target)
+    subprocess.run(["git", "init"], cwd=destination, check=True, capture_output=True)
+    subprocess.run(["git", "add", "-A"], cwd=destination, check=True)
+    subprocess.run(
+        ["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.test",
+         "commit", "-m", "seed fixture"],
+        cwd=destination, check=True, capture_output=True,
+    )
 
 
 def execute(command: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
