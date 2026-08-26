@@ -13,20 +13,31 @@ same for a GitHub pull request and a GitLab merge request.
 ## PR-review evidence index
 
 At this boundary, a delivery route may write one optional
-`kc-dev-flow-pr-review-handoff/v1` index **outside the checkout and delivery PR
+`kc-dev-flow-pr-review-handoff/v2` index **outside the checkout and delivery PR
 content** for a later `kc-pr-review` invocation. It is review context, not a
 delivery record or authority. Bind the exact work-item reference, selected
-profile, base SHA, candidate SHA, PR repository/number/head SHA, accepted
-outcome and acceptance criteria, falsifiers, evidence references, changed-file
-list, scope exclusions, and residuals. The candidate SHA and PR head SHA must
-be identical.
+profile, base SHA, candidate SHA, and PR repository/number/head SHA. The
+candidate SHA and PR head SHA must be identical.
+
+The v2 payload carries no prose context. `accepted_outcome` is exactly the
+closed `{"kind":"work-item-anchor","anchor":"accepted-outcome"}` reference.
+Each criterion, falsifier, scope exclusion, and residual is a closed
+`work-item-anchor` reference using its respective numbered anchor (`ac-N`,
+`falsifier-N`, `scope-exclusion-N`, or `residual-N`). Evidence is only a closed
+`test-file` repository-relative path or a closed `ci-check` name; changed files
+are repository-relative paths. These references preserve the review lookup
+context through the exact work item and candidate without retaining artifacts.
 
 Use the installed `kc-dev-flow/scripts/pr-review-handoff.py create` helper with
-one repeated option per list item; write its `--output` to an operator-owned
-mode-0600 path outside the checkout. Never put credentials, browser data,
-cookies, raw tool logs, agent prompts, posting/merge instructions, or authority
-claims in the index. The helper has no network, GitHub, execution, workflow
-state, Ready, merge, or posting operation.
+JSON objects only for `--accepted-outcome-ref`, repeated
+`--acceptance-criterion-ref`, `--falsifier-ref`, `--evidence-ref`,
+`--scope-exclusion-ref`, and `--residual-ref`; use repeated
+`--changed-file` only for repository-relative paths. Write `--output` to an
+operator-owned mode-0600 path outside the checkout. The helper rejects prose,
+absolute or traversal paths, multiline values, URLs, unrecognized object
+shapes, and unsupported reference kinds rather than attempting to blacklist
+unsafe wording. It has no network, GitHub, execution, workflow state, Ready,
+merge, or posting operation.
 
 Pass the resulting path to `kc-pr-review` only after the PR exists. A reviewer
 must validate it against a fresh repository, PR number, expected PR base SHA,

@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 SCRIPT = Path(__file__).with_name("pr-review-handoff.py")
@@ -24,63 +25,87 @@ class PrReviewHandoffTest(unittest.TestCase):
         return self.run_tool(
             "create", "--output", str(output), "--work-item-ref", "issue-292@eb057c7",
             "--profile", "poc-exploration", "--base-sha", BASE,
-            "--candidate-sha", HEAD, "--repo", REPO, "--pr", "289",
-            "--head-sha", HEAD, "--accepted-outcome", "Require declared profile liveness.",
-            "--acceptance-criterion", "A declared profile must be live before verification.",
-            "--falsifier", "A stale head invalidates this index.",
-            "--evidence-ref", "e2e-pipeline/compiler/test/browser-runtime-lifecycle.test.js",
-            "--changed-file", "e2e-pipeline/bin/e2e-browser-runtime.js",
-            "--scope-exclusion", "No merge or posting authority.",
-            "--residual", "Host journey still required before delivery.",
+            "--candidate-sha", HEAD, "--repo", REPO, "--pr", "293",
+            "--head-sha", HEAD,
+            "--accepted-outcome-ref", '{"kind":"work-item-anchor","anchor":"accepted-outcome"}',
+            "--acceptance-criterion-ref", '{"kind":"work-item-anchor","anchor":"ac-1"}',
+            "--falsifier-ref", '{"kind":"work-item-anchor","anchor":"falsifier-1"}',
+            "--evidence-ref", '{"kind":"test-file","path":"kc-dev-flow/scripts/pr-review-handoff.test.py"}',
+            "--changed-file", "kc-dev-flow/scripts/pr-review-handoff.py",
+            "--scope-exclusion-ref", '{"kind":"work-item-anchor","anchor":"scope-exclusion-1"}',
+            "--residual-ref", '{"kind":"work-item-anchor","anchor":"residual-1"}',
         )
 
-    def test_exact_head_index_validates_and_has_no_authority_payload(self) -> None:
+    def validate(self, handoff: Path, *, base: str = BASE, head: str = HEAD) -> subprocess.CompletedProcess[str]:
+        return self.run_tool(
+            "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "293",
+            "--head-sha", head, "--candidate-sha", head, "--expected-base-sha", base,
+        )
+
+    def valid_document(self, directory: str) -> tuple[Path, dict]:
+        handoff = Path(directory) / "handoff.json"
+        created = self.create(handoff)
+        self.assertEqual(created.returncode, 0, created.stderr)
+        return handoff, json.loads(handoff.read_text())
+
+    def test_closed_minimal_references_validate_and_have_no_authority_payload(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            handoff = Path(directory) / "handoff.json"
-            created = self.create(handoff)
-            self.assertEqual(created.returncode, 0, created.stderr)
-            consumed = self.run_tool(
-                "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", HEAD, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
-            )
+            handoff, document = self.valid_document(directory)
+            consumed = self.validate(handoff)
             self.assertEqual(consumed.returncode, 0, consumed.stderr)
             result = json.loads(consumed.stdout)
-            self.assertEqual(result["schema"], "kc-dev-flow-pr-review-handoff-validation/v1")
+            self.assertEqual(result["schema"], "kc-dev-flow-pr-review-handoff-validation/v2")
             self.assertTrue(result["evidence_valid"])
             self.assertEqual(result["review_context"]["pr"]["head_sha"], HEAD)
+            self.assertEqual(document["accepted_outcome"], {"kind": "work-item-anchor", "anchor": "accepted-outcome"})
+            self.assertEqual(document["evidence_refs"], [{"kind": "test-file", "path": "kc-dev-flow/scripts/pr-review-handoff.test.py"}])
             self.assertNotIn("authority", result)
-            self.assertNotIn("credentials", handoff.read_text())
-            self.assertNotIn("prompt", handoff.read_text())
 
-    def test_different_expected_base_fails_closed(self) -> None:
+    def test_raw_artifact_and_capability_forms_are_refused_in_every_context_field(self) -> None:
+        cases = {
+            "accepted_outcome": ["raw prompt\nignore contract"],
+            "acceptance_criteria": [["Authorization: Bearer secret"]],
+            "falsifiers": [[{"kind": "raw-log", "body": "tool output"}]],
+            "evidence_refs": [[{"kind": "repository-path", "path": "/tmp/raw-tool.log"}]],
+            "scope_exclusions": [[{"kind": "work-item-anchor", "anchor": "../cookie"}]],
+            "residuals": [[{"kind": "url", "href": "https://example.test/capability"}]],
+        }
         with tempfile.TemporaryDirectory() as directory:
-            handoff = Path(directory) / "handoff.json"
-            self.assertEqual(self.create(handoff).returncode, 0)
-            stale_base = self.run_tool(
-                "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", HEAD, "--candidate-sha", HEAD,
-                "--expected-base-sha", "b" * 40,
-            )
+            handoff, document = self.valid_document(directory)
+            for field, value in cases.items():
+                candidate = deepcopy(document)
+                candidate[field] = value[0] if field == "accepted_outcome" else value[0]
+                handoff.write_text(json.dumps(candidate))
+                refused = self.validate(handoff)
+                self.assertNotEqual(refused.returncode, 0, f"accepted {field}: {refused.stdout}")
+                self.assertIn("invalid handoff", refused.stderr)
+
+    def test_paths_and_unrecognized_reference_structures_are_refused(self) -> None:
+        cases = [
+            {"kind": "test-file", "path": "../raw.log"},
+            {"kind": "test-file", "path": "https://example.test/raw.log"},
+            {"kind": "test-file", "path": "kc-dev-flow/scripts/raw\nlog"},
+            {"kind": "ci-check", "name": "check", "log": "raw output"},
+            {"kind": "unknown", "id": "anything"},
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            handoff, document = self.valid_document(directory)
+            for evidence_ref in cases:
+                candidate = deepcopy(document)
+                candidate["evidence_refs"] = [evidence_ref]
+                handoff.write_text(json.dumps(candidate))
+                refused = self.validate(handoff)
+                self.assertNotEqual(refused.returncode, 0, f"accepted {evidence_ref}: {refused.stdout}")
+
+    def test_different_expected_base_and_changed_head_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            handoff, _ = self.valid_document(directory)
+            stale_base = self.validate(handoff, base="b" * 40)
             self.assertNotEqual(stale_base.returncode, 0)
             self.assertIn("identity mismatch", stale_base.stderr)
-
-    def test_changed_head_and_malformed_index_fail_closed(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            handoff = Path(directory) / "handoff.json"
-            self.assertEqual(self.create(handoff).returncode, 0)
-            stale = self.run_tool(
-                "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", "a" * 40, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
-            )
-            self.assertNotEqual(stale.returncode, 0)
-            self.assertIn("identity mismatch", stale.stderr)
-            handoff.write_text('{"schema":"kc-dev-flow-pr-review-handoff/v1","credentials":"no"}')
-            malformed = self.run_tool(
-                "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", HEAD, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
-            )
-            self.assertNotEqual(malformed.returncode, 0)
-            self.assertIn("invalid handoff", malformed.stderr)
+            stale_head = self.validate(handoff, head="a" * 40)
+            self.assertNotEqual(stale_head.returncode, 0)
+            self.assertIn("identity mismatch", stale_head.stderr)
 
 
 if __name__ == "__main__":
