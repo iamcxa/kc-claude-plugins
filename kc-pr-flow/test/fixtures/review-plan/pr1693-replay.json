@@ -1,0 +1,23 @@
+{
+  "schema": "kc-pr-flow.review-plan-replay/v1",
+  "case_id": "pr1693-post-fix-shape",
+  "repository": "datarecce/recce-cloud-infra",
+  "pr_number": 1693,
+  "commits": [
+    {"name": "base", "files": {"src/parser.py": "def parse(value):\n    return value\n"}},
+    {"name": "reviewed", "files": {"src/parser.py": "def parse(value):\n    return value.strip()\n"}},
+    {"name": "fixed", "files": {
+      "src/parser.py": "def parse(value):\n    return value.strip() or None\n",
+      "tests/test_parser.py": "from src.parser import parse\n\ndef test_empty():\n    assert parse(' ') is None\n"
+    }}
+  ],
+  "known_findings": [
+    {"claim_key": "empty-input-contract", "path": "src/parser.py", "side": "RIGHT"}
+  ],
+  "expected": {
+    "mode": "resolve",
+    "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],
+    "required_capabilities": ["correctness", "test-coverage"],
+    "event_ceiling": "APPROVE"
+  }
+}

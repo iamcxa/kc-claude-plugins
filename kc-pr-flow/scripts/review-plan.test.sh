@@ -7,7 +7,7 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PLAN="$HERE/review-plan.sh"
 RUNTIME="$HERE/review-runtime.sh"
-TEST_ROOT="$(mktemp -d)"
+TEST_ROOT="$(cd "$(mktemp -d)" && pwd -P)"
 cleanup() {
   chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true
   rm -rf "$TEST_ROOT"
@@ -19,7 +19,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case receipt-contract]\n' "$0" >&2
+    printf 'usage: %s [--case receipt-contract|mode-router|trust-boundary|worktree-safety]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -178,6 +178,190 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
     else
       fail 'review-plan.sh exists after RED implementation'
     fi
+  fi
+fi
+
+make_replay_receipt() {
+  local fixture_repo="$1" repository="$2" pr_number="$3" base_sha="$4" reviewed_sha="$5"
+  local config_hash="$6" event_file="$7" receipt_file="$8" review_key content_sha run_id pointer
+  local candidate_id candidate task_correctness task_coverage result_correctness result_coverage finding_id finding behavior
+  local started correctness_started coverage_started observed correctness_finished coverage_finished synthesized finished
+
+  review_key="$(sha256_text "$repository|$pr_number|$base_sha|$reviewed_sha|$config_hash")"
+  content_sha="$(git -C "$fixture_repo" show "$reviewed_sha:src/parser.py" | review_runtime_sha256)"
+  run_id='run-pr1693-replay'
+  pointer="$(jq -S -c -n --arg key "$review_key" --arg repo "$repository" --arg base "$base_sha" \
+    --arg head "$reviewed_sha" --arg hash "$content_sha" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$key,repository:$repo,
+      base_sha:$base,head_sha:$head,object_sha:$head,path:"src/parser.py",side:"RIGHT",line:1,
+      locator:"parser-anchor",content_sha256:$hash}')"
+  candidate_id="$(review_runtime_candidate_id "$run_id" correctness-1 1 "$content_sha")"
+  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" \
+    --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
+      lane_id:"correctness-1",ordinal:1,path:"src/parser.py",side:"RIGHT",
+      anchor_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      category:"correctness",claim_key:"empty-input-contract",evidence:$evidence}')"
+  task_correctness="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$reviewed_sha" --arg config "$config_hash" --argjson pr "$pr_number" \
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"correctness-1",
+      capability:"correctness",repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
+  task_coverage="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$reviewed_sha" --arg config "$config_hash" --argjson pr "$pr_number" \
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"test-coverage-1",
+      capability:"test-coverage",repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
+  result_correctness="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg id "$candidate_id" \
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"correctness-1",
+      capability:"correctness",terminal_status:"succeeded",candidates:[$id],usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
+  result_coverage="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" \
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"test-coverage-1",
+      capability:"test-coverage",terminal_status:"succeeded",candidates:[],usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
+  finding_id="$(review_runtime_finding_id "$review_key" "src/parser.py|RIGHT|$content_sha|correctness|empty-input-contract")"
+  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" \
+    --arg merge "src/parser.py|RIGHT|$content_sha|correctness|empty-input-contract" --arg candidate "$candidate_id" \
+    --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
+      path:"src/parser.py",side:"RIGHT",anchor_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      category:"correctness",claim_key:"empty-input-contract",candidate_ids:[$candidate],evidence:$evidence}')"
+  behavior="$(jq -S -c -n --arg hash "$content_sha" \
+    '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
+      github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
+  started="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 1 '2026-08-26T00:00:00Z' run.started '{}')"
+  correctness_started="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 2 '2026-08-26T00:00:00Z' lane.started "$(jq -S -c -n --argjson value "$task_correctness" '{review_task:$value}')")"
+  coverage_started="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 3 '2026-08-26T00:00:00Z' lane.started "$(jq -S -c -n --argjson value "$task_coverage" '{review_task:$value}')")"
+  observed="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 4 '2026-08-26T00:00:00Z' finding.observed "$(jq -S -c -n --argjson value "$candidate" '{candidate:$value}')")"
+  correctness_finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 5 '2026-08-26T00:00:00Z' lane.finished "$(jq -S -c -n --argjson value "$result_correctness" '{lane_result:$value}')")"
+  coverage_finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 6 '2026-08-26T00:00:00Z' lane.finished "$(jq -S -c -n --argjson value "$result_coverage" '{lane_result:$value}')")"
+  synthesized="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 7 '2026-08-26T00:00:00Z' synthesis.finished "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')")"
+  finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 8 '2026-08-26T00:00:00Z' run.finished "$(jq -S -c -n --argjson value "$behavior" '{behavior_hashes:$value}')")"
+  printf '%s\n' "$started" "$correctness_started" "$coverage_started" "$observed" "$correctness_finished" "$coverage_finished" "$synthesized" "$finished" >"$event_file"
+  bash "$PLAN" receipt --event-file "$event_file" >"$receipt_file"
+  printf '%s\n' "$finding_id"
+}
+
+make_replay_repo() {
+  local fixture_repo="$1" fixture="$2"
+  mkdir -p "$fixture_repo"
+  git -C "$fixture_repo" init -q
+  git -C "$fixture_repo" config user.name 'Router Test'
+  git -C "$fixture_repo" config user.email 'router@example.invalid'
+  while IFS=$'\t' read -r name _; do
+    while IFS=$'\t' read -r path value; do
+      mkdir -p "$fixture_repo/$(dirname "$path")"
+      printf '%s' "$value" >"$fixture_repo/$path"
+    done < <(jq -r --arg name "$name" '.commits[] | select(.name == $name) | .files | to_entries[] | [.key,.value] | @tsv' "$fixture")
+    git -C "$fixture_repo" add .
+    git -C "$fixture_repo" commit -qm "$name"
+    printf '%s=%s\n' "$name" "$(git -C "$fixture_repo" rev-parse HEAD)"
+  done < <(jq -r '.commits[] | [.name, (.files | tojson)] | @tsv' "$fixture")
+}
+
+if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
+  # shellcheck source=/dev/null
+  . "$RUNTIME"
+  fixture="$HERE/../test/fixtures/review-plan/pr1693-replay.json"
+  router_repo="$TEST_ROOT/router-repo"
+  replay_lines="$(make_replay_repo "$router_repo" "$fixture")"
+  base_sha="$(awk -F= '$1 == "base" { print $2 }' <<<"$replay_lines")"
+  reviewed_sha="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$replay_lines")"
+  fixed_sha="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$replay_lines")"
+  repo_id="$(jq -r '.repository' "$fixture")"
+  config_hash='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+  router_events="$TEST_ROOT/router-events.jsonl"
+  router_receipt="$TEST_ROOT/router-receipt.json"
+  finding_id="$(make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_events" "$router_receipt")"
+
+  if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ]; then
+    decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'PR1693 shape selects resolve' 'resolve' "$(jq -r '.mode' <<<"$decision")"
+    assert_eq 'resolve inherits finding IDs' "$finding_id" "$(jq -r '.inherited_finding_ids | join(",")' <<<"$decision")"
+    assert_eq 'router is advisory ceiling' 'APPROVE' "$(jq -r '.event_ceiling' <<<"$decision")"
+    assert_eq 'decision keys are closed' 'event_ceiling,fallback,identity,inherited_finding_ids,mode,reason_codes,required_capabilities,review_range,schema' "$(jq -r 'keys | sort | join(",")' <<<"$decision")"
+    assert_eq 'replay reasons are sorted' 'ancestor_append,known_finding_delta,trusted_predecessor' "$(jq -r '.reason_codes | join(",")' <<<"$decision")"
+    assert_eq 'replay capabilities are inherited' 'correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
+    # One path canonicalization protects the router's small-read latency: Git
+    # helpers consume the already validated path rather than spawning Python
+    # before every object, ancestry, diff, and show read.
+    # shellcheck source=/dev/null
+    . "$PLAN"
+    original_real_worktree="$(declare -f review_plan_real_worktree)"
+    eval "$(declare -f review_plan_real_worktree | sed '1s/review_plan_real_worktree/review_plan_real_worktree_original/')"
+    worktree_check_ledger="$TEST_ROOT/worktree-check-ledger"
+    : >"$worktree_check_ledger"
+    review_plan_real_worktree() {
+      printf 'check\n' >>"$worktree_check_ledger"
+      review_plan_real_worktree_original "$@"
+    }
+    direct_decision_file="$TEST_ROOT/direct-decision.json"
+    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" >"$direct_decision_file"
+    direct_decision="$(<"$direct_decision_file")"
+    assert_eq 'decision canonicalizes worktree once' '1' "$(wc -l <"$worktree_check_ledger" | tr -d ' ')"
+    assert_eq 'single-canonicalization direct decision resolves' 'resolve' "$(jq -r '.mode' <<<"$direct_decision")"
+    eval "$original_real_worktree"
+    mkdir -p "$router_repo/docs"
+    printf 'unrelated follow-up\n' >"$router_repo/docs/extra.md"
+    git -C "$router_repo" add docs/extra.md
+    git -C "$router_repo" commit -qm expanded
+    expanded_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    expanded_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$expanded_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'new unrelated ancestor path selects delta' 'delta' "$(jq -r '.mode' <<<"$expanded_decision")"
+    assert_eq 'expanded delta caps only current coverage' 'COMMENT' "$(jq -r '.event_ceiling' <<<"$expanded_decision")"
+    flag_off="$(bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'flag off preserves initial flow' 'initial' "$(jq -r '.mode' <<<"$flag_off")"
+    assert_eq 'flag off adds no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$flag_off")"
+  fi
+
+  if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'trust-boundary' ]; then
+    missing="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo")"
+    assert_eq 'missing predecessor uses initial review' 'initial' "$(jq -r '.mode' <<<"$missing")"
+    assert_eq 'missing predecessor has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$missing")"
+    changed_base="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$reviewed_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'changed base uses initial review' 'initial' "$(jq -r '.mode' <<<"$changed_base")"
+    changed_config="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "${config_hash/a/b}" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'changed config uses initial review' 'initial' "$(jq -r '.mode' <<<"$changed_config")"
+    mutated_receipt="$TEST_ROOT/mutated-receipt.json"
+    jq -S -c '.known_findings[0].evidence_sha256=("1" * 64) | .content_sha256=("0" * 64)' "$router_receipt" >"$mutated_receipt"
+    mutated_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$mutated_receipt")"
+    assert_eq 'mutated finding evidence uses initial review' 'initial' "$(jq -r '.mode' <<<"$mutated_decision")"
+    assert_eq 'mutated finding evidence has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$mutated_decision")"
+    inherited_gap="$TEST_ROOT/inherited-gap.json"
+    jq -S -c '.coverage_gap_refs=["coverage-gap"] | .content_sha256=("0" * 64)' "$router_receipt" >"$inherited_gap"
+    gap_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$inherited_gap")"
+    assert_eq 'untrusted inherited gap uses initial review' 'initial' "$(jq -r '.mode' <<<"$gap_decision")"
+    assert_eq 'untrusted inherited gap has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$gap_decision")"
+    git -C "$router_repo" checkout -q --orphan rewritten
+    git -C "$router_repo" rm -qr --cached .
+    printf 'def parse(value):\n    return None\n' >"$router_repo/src/parser.py"
+    git -C "$router_repo" add src/parser.py
+    git -C "$router_repo" commit -qm rewritten
+    rewritten_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    non_ancestor="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$rewritten_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'rewritten history uses initial review' 'initial' "$(jq -r '.mode' <<<"$non_ancestor")"
+    assert_eq 'rewritten history has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$non_ancestor")"
+  fi
+
+  if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
+    unsafe_file="$TEST_ROOT/not-a-directory"
+    unsafe_missing="$TEST_ROOT/missing"
+    unsafe_link="$TEST_ROOT/repo-link"
+    unsafe_parent="$TEST_ROOT/parent-link"
+    printf 'not a directory\n' >"$unsafe_file"
+    ln -s "$router_repo" "$unsafe_link"
+    ln -s "$TEST_ROOT" "$unsafe_parent"
+    mkdir -p "$TEST_ROOT/git-stub"
+    git_ledger="$TEST_ROOT/git-ledger"
+    : >"$git_ledger"
+    printf '#!/bin/sh\nprintf "git\\n" >>"%s"\nexit 97\n' "$git_ledger" >"$TEST_ROOT/git-stub/git"
+    chmod +x "$TEST_ROOT/git-stub/git"
+    for unsafe in "$unsafe_file" "$unsafe_missing" "$unsafe_link" "$unsafe_parent/router-repo"; do
+      unsafe_decision="$(PATH="$TEST_ROOT/git-stub:$PATH" KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$unsafe" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+      assert_eq 'unsafe worktree uses initial review' 'initial' "$(jq -r '.mode' <<<"$unsafe_decision")"
+      assert_eq 'unsafe worktree has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$unsafe_decision")"
+    done
+    assert_eq 'unsafe worktrees never invoke git' '' "$(cat "$git_ledger")"
+    # shellcheck source=/dev/null
+    . "$PLAN"
+    assert_eq 'real worktree is canonical absolute path' "$router_repo" "$(review_plan_real_worktree "$router_repo")"
   fi
 fi
 
