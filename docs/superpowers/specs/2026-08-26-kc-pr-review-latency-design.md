@@ -3,7 +3,7 @@
 - **Date:** 2026-08-26
 - **Plugin:** `kc-pr-flow`
 - **Target skill:** `kc-pr-flow/skills/kc-pr-review/SKILL.md`
-- **Status:** Proposed; awaiting Captain approval
+- **Status:** Approved for phased implementation
 - **Primary outcome:** A post-fix review reaches the existing confirmation gate in at most four
   minutes on the promotion corpus, without losing any expected must-fix finding
 
