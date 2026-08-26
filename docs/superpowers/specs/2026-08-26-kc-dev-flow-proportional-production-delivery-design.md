@@ -245,19 +245,22 @@ not implement UAT or auto-merge.
 | `kc-dev-flow/references/kernel.md` | 184 | 197 | State the full default and bounded short route. |
 | `docs/dev/_mods/kernel.md` | 184 | 197 | Keep the adopter's vendored kernel byte-identical. |
 | `kc-dev-flow/README.md` | 159 | 170 | Describe the full default and explicit recovery variant. |
+| `docs/dev/README.md` | 320 | 332 | Update the self-adopted Production route and recovery-specific RoboRev activation claims. |
 
-The implementation stops and reports when the diff against `5707a6f` reaches
-9 changed files, 451 changed lines, or 201 changed lines in
+The implementation stops and reports when the diff against `5707a6f` exceeds
+9 changed files, 475 changed lines, or 200 changed lines in
 `profile-contract-loader.test.py`. It also stops immediately if correctness
 requires a receipt schema version change, a new executable, reverse-delta
 harness, or persistent ledger, a Spacedock engine change, a new CI job, or edits
 to either later S5 interface. These are stop conditions, not budgets.
 
 Rollback is one feature-commit revert plus restoration of the byte-identical
-adopter copies. Because legacy full routes remain accepted and no stored record
-is migrated, rollback requires no receipt rewrite. Any recovery item active at
-rollback is mechanically restored to the full Production route before the older
-loader is used.
+adopter copies. Legacy full-route receipts need no rewrite. If any recovery item
+is active, the old-loader transition stops before that loader is used and waits
+for Captain-authorized re-recording of `route: [shape, build, verify]`, unless
+the item's already recorded `recovery_rollback` explicitly grants that exact
+rewrite and state transition. Full-route compatibility alone grants no fallback
+authority.
 
 ## Prove the recovery slice
 
@@ -338,10 +341,11 @@ structural reads of the loader, kernel, Production contracts, continuation
 skill, migration guide, validation runbook, and PR-merge mod. The boundary was
 this repository at `5707a6f`; external adopter-specific controls were not read.
 
-- **Recovery route:** README, kernel, chooser, continuation, and loader currently
-  own the live full-route claim. This spec owns the new eligibility rationale
-  and invalidation contract; implementation replaces the affected live claims
-  rather than leaving duplicate variants.
+- **Recovery route:** the package README, self-adopted workflow README, kernel,
+  chooser, continuation, and loader currently own the live full-route claim.
+  This spec owns the new eligibility rationale and invalidation contract;
+  implementation replaces the affected live claims rather than leaving
+  duplicate variants.
 - **UAT:** the roadmap owns scheduling and profile verification contracts own
   current profile-specific exits. This spec owns the shared authority and
   invalidation interface until the later UAT item places concise runtime rules
