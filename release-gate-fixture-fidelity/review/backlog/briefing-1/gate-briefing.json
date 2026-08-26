@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:cmdbanvhg3enbwaf26ma6wzk:backlog:attempt-1:revision-1",
+  "question": "Approve this Production two-test fixture repair to enter ideation without changing runtime flow, CI triggers, or the Spacedock pin?",
+  "artifacts": [
+    {
+      "id": "artifact:cmdbanvhg3enbwaf26ma6wzk:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1ef64c5a165b25dbd589c98e2cb1f0f8b91f264b/release-gate-fixture-fidelity.md",
+      "rev": "sha256:52c38a352bea0ac8a2d4d39acbf750517fce8fe85e9ed5ea04d724d89b3e3e76",
+      "mediaType": "text/markdown",
+      "summary": "Repair the PR #258 release-state ablation fixture by committing its copied Git repository and passing its committed gate artifact by absolute path; exact pre8 diagnosis already showed these two changes restore 10/10 expected mutant refusals."
+    }
+  ]
+}
