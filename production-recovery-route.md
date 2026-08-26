@@ -1,6 +1,6 @@
 ---
 title: Make Production recovery proportional
-status: ideation
+status: implementation
 source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should retain exact proof without repeating resolved shape work"
 product: kc-dev-flow
 sprint: S5
@@ -71,7 +71,7 @@ gates:
                 reason: Captain approved the revised minimal Production recovery design at commit d38799a after independent re-review passed.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
