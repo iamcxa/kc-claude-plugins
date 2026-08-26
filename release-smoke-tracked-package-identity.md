@@ -6,7 +6,7 @@ source: "kc-dev-flow-v2.5.0 post-publication incident: candidate receipt include
 product: kc-dev-flow
 sprint: S3
 sprint-readiness: ready
-started:
+started: 2026-08-26T02:40:07Z
 completed:
 verdict:
 worktree:
