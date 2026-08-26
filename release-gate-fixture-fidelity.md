@@ -285,3 +285,5 @@ Commit d339ba2 removes both false preconditions without changing production code
 ### Summary
 
 Validation passes locally at exact candidate d339ba2: the two-file fixture repair preserves baseline behavior and rejects all ten mutants for their intended evidence on pinned Spacedock 0.27.0-pre8. Product files were not changed during validation; hosted PR, provider CI, and the Release Please rerun remain separate delivery proof.
+
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr_number":295,"layer":"single","head":"d339ba2e982d71742d4223fead69e5a31fd4744a","fingerprint":"sha256:a7bf6f78a2488cf49141b0bc8215b4ce5d9ca8f1ca72fd3ed68192d062d12e51","dispositions":[]}
