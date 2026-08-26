@@ -311,3 +311,20 @@ The Local Profile again satisfies its enforcement contract while retaining risk-
 ### Summary
 
 The repaired candidate's live recovery journey and full without-it both prove the recovery behavior, but the complete repository gate still rejects the accepted route documentation through stale exact-row assertions. Validation therefore fails and returns one bounded test-contract correction to implementation; Captain UAT remains pending and non-delegable.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Modify only scripts/kc-dev-flow-contract-test.py as the newly authorized tenth product path.
+  Commit `e03fb1b` changes only the contract test; the accepted implementation remains otherwise unchanged from `456ea29`.
+- DONE: Replace the four stale exact-route string assertions for kernel, continue-dev-flow, docs/dev/README.md, and kc-dev-flow/README.md with semantic assertions that separately require the unchanged full Production route and the eligible recovery clause.
+  One shared row helper now checks the full default and recovery clause independently at those four boundaries; the same approved failure shape also replaced the chooser literal found by the first full-gate rerun.
+- DONE: Prove each revised assertion can fail for missing full-route default and missing recovery behavior; do not loosen unrelated contract coverage or change product documents again.
+  An in-memory extraction of the committed helper rejected 10/10 mutations across five route rows: one missing-full and one missing-recovery mutation per boundary.
+- DONE: Run the complete kc-dev-flow contract gate, direct loader test, RoboRev contract test, parity checks, and diff-check; keep the diff at or below 10 files, 475 gross lines, and 200 gross loader-test lines.
+  The full gate reports PASS; direct loader/real Spacedock and RoboRev contracts pass, both package/adopter pairs are byte-identical, diff-check is clean, and the slice is 10 files/467 gross lines with 199 loader-test lines.
+- DONE: Commit the bounded repair, append one implementation repair Stage Report, and sync only state; do not retry RoboRev or alter UAT/merge/release authority.
+  Product repair is `e03fb1b`; RoboRev remains `UNKNOWN(state_unknown)` with no retry, while fresh validation still owns its rerun and Captain UAT decision.
+
+### Summary
+
+The complete gate now enforces both Production routes instead of preserving stale exact rows. This bounded test-only repair stays below every approved stop line and returns `e03fb1b` to fresh validation.
