@@ -47,6 +47,17 @@ gates:
                 digest: sha256:9ea4c714b93f4c9691b7c9de1fed7c9c4e709bc395b1bfc7b79c73bddc1ad8c7
                 request-digest: sha256:9b907b4fb8c69b919bdd493c8bab75376ab3265105dda86ba356ad292e9aa9a9
                 room-ref: ./release-smoke-tracked-package-identity/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8hyzngaw0frz3f0rzp2fvpxm:ideation:1
+                briefing: briefing:8hyzngaw0frz3f0rzp2fvpxm:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T02:51:02.218331Z"
+                decision: approve
+                reason: Captain approved the exact-revision git-archive design and asked to continue into implementation.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The `kc-dev-flow-v2.5.0` candidate smoke hashed and locally installed the ambient `kc-dev-flow/` directory. Two ignored Python bytecode files created before receipt generation entered that digest even though the clean release tag contained the exact same tracked Git subtree. Published mode then correctly refused the preserved receipt after release, producing a false artifact-drift signal and requiring a Captain-approved recovery.
