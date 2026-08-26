@@ -265,3 +265,16 @@ RoboRev job 266 completed at the exact product tip with verdict PASS and output 
 ### Summary
 
 Candidate and published release smoke now derive digest and installation from the same exact-revision tracked package snapshot, leaving ignored and untracked worktree bytes untouched and excluded. The two task-owned files are committed at `278095b`; receipt schemas, mismatch refusals, provider behavior, and v2.5.0 evidence remain unchanged.
+
+## Stage Report: validation
+
+- DONE: Independently bind base 844edfa75a021cc6c013186bb88fba81f598f912 and candidate 278095b3015a25bb7140e7dd2b09482d96fc412a, inspect the exact two-file diff, and map AC-1 through AC-4 to falsifiers.
+  Candidate `278095b` is one commit atop base `844edfa`; the 2-file/180-line diff stays within scope. AC-1 fails on ignored-byte influence or tracked-byte insensitivity; AC-2 on non-snapshot digest/install input or parity drift; AC-3 on loss of ambient divergence or snapshot equality; AC-4 on an accepted mismatch or published host/model invocation.
+- DONE: Run the focused and contract suites plus Python compilation and git diff check, including the ignored-file old-mechanism negative control, tracked-byte positive control, candidate/published parity, mismatch refusals, and zero model invocation.
+  Focused smoke and `kc-dev-flow-contract-test.py` passed; `py_compile` and exact-range `git diff --check` exited 0. The focused suite would fail if the two incident bytecode files stopped changing the ambient walk, a tracked byte stopped changing snapshot identity, either mode bypassed `snapshot`, a mismatch passed, or published mode invoked a host; an independent archive listing also matched all 53 tracked package files.
+- DONE: Record review disposition, material residuals, rollback or forward-recovery readiness, operational ownership, provider-feedback state, and whether the exact candidate is ready for Captain release authorization; write the validation Stage Report without modifying product files.
+  Deterministic-only review is sufficient because Git archive, byte identity, install readback, mismatch refusal, and archive-traversal safety are directly exercised; no material residual remains in scope. Revert `278095b` plus reinstate the release block is rollback, snapshot-helper repair is forward recovery, and the release owner owns receipt/install-drift monitoring. RoboRev job 266 is corroborating PASS evidence only; no PR exists for this head, so no PR provider feedback is pending. Exact candidate `278095b` is ready for Captain release authorization, which has not yet been granted; CI cost is unchanged and was not remeasured.
+
+### Summary
+
+Fresh Production validation passed at exact candidate `278095b` against base `844edfa` with no product-file changes or material residuals. The candidate is ready for the Captain's release-authorization gate; publication, merge, and terminalization remain deliberately unperformed.
