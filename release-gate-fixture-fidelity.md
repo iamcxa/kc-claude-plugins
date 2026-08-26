@@ -1,6 +1,6 @@
 ---
 title: Restore release-gate ablation fixture fidelity
-status: implementation
+status: validation
 source: "Release Please PR #258 run 32929119727: release-state-restored rejected for missing review.md before reaching would-strand evidence"
 product: kc-dev-flow
 sprint: S3
