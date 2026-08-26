@@ -10,6 +10,43 @@ reference therefore loads even when a provider mod owns the ceremony itself, and
 it stays forge-neutral: the rule is target-branch mechanics, which behave the
 same for a GitHub pull request and a GitLab merge request.
 
+## PR-review evidence index
+
+At this boundary, a delivery route may write one optional
+`kc-dev-flow-pr-review-handoff/v2` index **outside the checkout and delivery PR
+content** for a later `kc-pr-review` invocation. It is review context, not a
+delivery record or authority. Bind the exact typed GitHub Issue work item
+(`{"kind":"github-issue","repository":"OWNER/REPO","number":N}`), selected
+profile, base SHA, candidate SHA, and PR repository/number/head SHA. The
+candidate SHA and PR head SHA must be identical.
+
+The v2 payload carries no prose context. `accepted_outcome` is exactly the
+closed `{"kind":"work-item-anchor","anchor":"accepted-outcome"}` reference.
+Each criterion, falsifier, scope exclusion, and residual is a closed
+`work-item-anchor` reference using its respective numbered anchor (`ac-N`,
+`falsifier-N`, `scope-exclusion-N`, or `residual-N`). Evidence is only a closed
+`test-file` repository-relative path or a closed `ci-check` name; changed files
+are repository-relative paths. These references preserve the review lookup
+context through the exact work item and candidate without retaining artifacts.
+
+Use the installed `kc-dev-flow/scripts/pr-review-handoff.py create` helper with
+JSON objects only for `--work-item-ref`, `--accepted-outcome-ref`, repeated
+`--acceptance-criterion-ref`, `--falsifier-ref`, `--evidence-ref`,
+`--scope-exclusion-ref`, and `--residual-ref`; use repeated
+`--changed-file` only for repository-relative paths. Write `--output` to an
+operator-owned mode-0600 path outside the checkout. The helper rejects prose,
+absolute or traversal paths, multiline values, URLs, unrecognized object
+shapes, and unsupported reference kinds rather than attempting to blacklist
+unsafe wording. It has no network, GitHub, execution, workflow state, Ready,
+merge, or posting operation.
+
+Pass the resulting path to `kc-pr-review` only after the PR exists. A reviewer
+must validate it against a fresh repository, PR number, expected PR base SHA,
+head SHA, and candidate SHA through the same helper before treating it as
+context. A missing, malformed, base-mismatched, or otherwise identity-drifted
+index is not evidence and cannot alter the review event,
+confirmation, posting, merge, Ready, or workflow state.
+
 ## Prefer a stacked base
 
 Choose the base before creating the branch, not after the work is done.

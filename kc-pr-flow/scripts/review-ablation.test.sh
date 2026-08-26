@@ -371,11 +371,18 @@ print("true" if a!=b else "false")' "$dir/A/arm-manifest.json" "$dir/B/arm-manif
   dir="$TEST_ROOT/arm-nosuch"
   mkdir -p "$dir"
   cp -R "$BASELINE" "$dir/tree"
-  python3 - "$dir/tree/skills/kc-pr-review/SKILL.md" <<'PY'
+  python3 - "$dir/tree/skills/kc-pr-review/SKILL.md" "$HERE/review-ablation-spans.tsv" <<'PY'
 import sys, pathlib
 p = pathlib.Path(sys.argv[1])
+table = pathlib.Path(sys.argv[2])
 body = p.read_text(encoding="utf-8")
-line = body.split("\n")[974]
+for raw in table.read_text(encoding="utf-8").splitlines():
+    if raw.startswith("S1\t"):
+        start = int(raw.split("\t")[2])
+        break
+else:
+    raise SystemExit("S1 is missing from the span table")
+line = body.split("\n")[start -1]
 p.write_text(body + "\n" + line + "\n", encoding="utf-8")
 PY
   assert_rejects 'B1 ablation target not uniquely present' 'expected exactly 1' \
