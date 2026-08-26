@@ -163,6 +163,22 @@ continuation, package, and self-adopted route claims. Each replacement must
 independently require the full Production route and the eligible recovery
 clause. No other scope, mechanism, or authority changed.
 
+## Rework scope adjustment
+
+Captain replaced the host-complementary RoboRev mapping with one repository and
+package policy: every supported host uses agent `codex`, model
+`gpt-5.6-terra`, reasoning `medium`, and panel `none`. The implementation host
+family remains recorded provenance but no longer selects the reviewer;
+profile-owned minimum severity and request caps remain unchanged.
+
+This rework also closes the two confirmed Terra findings: recovery evidence
+scalars must reject YAML structural and block forms, and the loader must emit a
+machine-readable implementation-exit observation decision so recovery
+`review_risks: [none]` suppresses RoboRev while named risks activate it. The
+replacement stop lines are 18 feature files, 650 gross changed lines, and 235
+gross loader-test lines. No new workflow, CI job, schema version, release
+authority, or reusable review service is authorized.
+
 ## Stage Report: ideation
 
 - DONE: Write and commit one formal S5 design spec covering Production recovery, Captain-owned UAT for all profiles, and per-item auto-merge, with exact authority and invalidation boundaries.
