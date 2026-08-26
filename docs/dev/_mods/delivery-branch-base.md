@@ -15,7 +15,8 @@ same for a GitHub pull request and a GitLab merge request.
 At this boundary, a delivery route may write one optional
 `kc-dev-flow-pr-review-handoff/v2` index **outside the checkout and delivery PR
 content** for a later `kc-pr-review` invocation. It is review context, not a
-delivery record or authority. Bind the exact work-item reference, selected
+delivery record or authority. Bind the exact typed GitHub Issue work item
+(`{"kind":"github-issue","repository":"OWNER/REPO","number":N}`), selected
 profile, base SHA, candidate SHA, and PR repository/number/head SHA. The
 candidate SHA and PR head SHA must be identical.
 
@@ -29,7 +30,7 @@ are repository-relative paths. These references preserve the review lookup
 context through the exact work item and candidate without retaining artifacts.
 
 Use the installed `kc-dev-flow/scripts/pr-review-handoff.py create` helper with
-JSON objects only for `--accepted-outcome-ref`, repeated
+JSON objects only for `--work-item-ref`, `--accepted-outcome-ref`, repeated
 `--acceptance-criterion-ref`, `--falsifier-ref`, `--evidence-ref`,
 `--scope-exclusion-ref`, and `--residual-ref`; use repeated
 `--changed-file` only for repository-relative paths. Write `--output` to an

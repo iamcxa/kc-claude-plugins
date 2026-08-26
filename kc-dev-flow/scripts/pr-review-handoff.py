@@ -57,6 +57,18 @@ def repository_path(value: Any, name: str) -> str:
     return path
 
 
+def github_issue_ref(value: Any, name: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != {"kind", "repository", "number"} or value.get("kind") != "github-issue":
+        fail(f"invalid {name}")
+    repository = text(value["repository"], f"{name}.repository", limit=256)
+    if not REPOSITORY.fullmatch(repository):
+        fail(f"invalid {name}.repository")
+    number = value["number"]
+    if not isinstance(number, int) or isinstance(number, bool) or number <= 0:
+        fail(f"invalid {name}.number")
+    return {"kind": "github-issue", "repository": repository, "number": number}
+
+
 def work_item_anchor(value: Any, name: str) -> dict[str, str]:
     if not isinstance(value, dict) or set(value) != {"kind", "anchor"} or value.get("kind") != "work-item-anchor":
         fail(f"invalid {name}")
@@ -103,7 +115,7 @@ def validate_handoff(document: Any) -> dict[str, Any]:
         fail("invalid handoff shape")
     if document.get("schema") != SCHEMA:
         fail("invalid handoff schema")
-    work_item_ref = text(document["work_item_ref"], "work_item_ref", limit=256)
+    work_item_ref = github_issue_ref(document["work_item_ref"], "work_item_ref")
     selected_profile = text(document["selected_profile"], "selected_profile", limit=64)
     if not PROFILE.fullmatch(selected_profile):
         fail("invalid selected_profile")
@@ -209,7 +221,7 @@ def parser() -> argparse.ArgumentParser:
     commands = result.add_subparsers(dest="command", required=True)
     create_parser = commands.add_parser("create")
     create_parser.add_argument("--output", required=True)
-    create_parser.add_argument("--work-item-ref", required=True)
+    create_parser.add_argument("--work-item-ref", required=True, type=json_value)
     create_parser.add_argument("--profile", required=True)
     create_parser.add_argument("--base-sha", required=True)
     create_parser.add_argument("--candidate-sha", required=True)

@@ -13,6 +13,7 @@ SCRIPT = Path(__file__).with_name("pr-review-handoff.py")
 REPO = "iamcxa/kc-claude-plugins"
 BASE = "99b6747b4521b878cb2b0cb3f34d1c5049a0cd67"
 HEAD = "722efe6508627bd4abac7f27a4260cd883b5ebec"
+WORK_ITEM = {"kind": "github-issue", "repository": REPO, "number": 292}
 
 
 class PrReviewHandoffTest(unittest.TestCase):
@@ -23,7 +24,7 @@ class PrReviewHandoffTest(unittest.TestCase):
 
     def create(self, output: Path) -> subprocess.CompletedProcess[str]:
         return self.run_tool(
-            "create", "--output", str(output), "--work-item-ref", "issue-292@eb057c7",
+            "create", "--output", str(output), "--work-item-ref", json.dumps(WORK_ITEM),
             "--profile", "poc-exploration", "--base-sha", BASE,
             "--candidate-sha", HEAD, "--repo", REPO, "--pr", "293",
             "--head-sha", HEAD,
@@ -58,8 +59,28 @@ class PrReviewHandoffTest(unittest.TestCase):
             self.assertTrue(result["evidence_valid"])
             self.assertEqual(result["review_context"]["pr"]["head_sha"], HEAD)
             self.assertEqual(document["accepted_outcome"], {"kind": "work-item-anchor", "anchor": "accepted-outcome"})
+            self.assertEqual(document["work_item_ref"], WORK_ITEM)
             self.assertEqual(document["evidence_refs"], [{"kind": "test-file", "path": "kc-dev-flow/scripts/pr-review-handoff.test.py"}])
             self.assertNotIn("authority", result)
+
+    def test_only_typed_github_issue_work_items_are_accepted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            for work_item_ref in (
+                "issue-292@eb057c7",
+                "Authorization: Bearer capability-like-value",
+                {"kind": "github-issue", "repository": REPO, "number": 292, "body": "raw prompt"},
+            ):
+                refused = self.run_tool(
+                    "create", "--output", str(Path(directory) / "handoff.json"),
+                    "--work-item-ref", json.dumps(work_item_ref), "--profile", "poc-exploration",
+                    "--base-sha", BASE, "--candidate-sha", HEAD, "--repo", REPO, "--pr", "293",
+                    "--head-sha", HEAD,
+                    "--accepted-outcome-ref", '{"kind":"work-item-anchor","anchor":"accepted-outcome"}',
+                )
+                self.assertNotEqual(refused.returncode, 0, f"accepted {work_item_ref}: {refused.stdout}")
+
+            created = self.create(Path(directory) / "valid-handoff.json")
+            self.assertEqual(created.returncode, 0, created.stderr)
 
     def test_raw_artifact_and_capability_forms_are_refused_in_every_context_field(self) -> None:
         cases = {

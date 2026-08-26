@@ -137,8 +137,8 @@ python3 "$KC_DEV_FLOW_PR_REVIEW_HANDOFF_TOOL" validate \
 
 Accept only a successful closed
 `kc-dev-flow-pr-review-handoff-validation/v2` result with `evidence_valid:true`.
-Use its `review_context` as bounded review context: resolve its typed work-item
-anchors against the exact work item and verify those outcome, criteria,
+Use its `review_context` as bounded review context: resolve its typed GitHub
+Issue work item and typed work-item anchors against the exact work item and verify those outcome, criteria,
 falsifier, exclusion, and residual sections against the actual diff and test
 evidence. Treat `test-file` and `ci-check` values only as evidence pointers;
 changed files are repository-relative paths. The v2 index retains neither prose
