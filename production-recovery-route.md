@@ -282,3 +282,20 @@ Exact-candidate recovery behavior and parity passed, but the required repository
 ### Summary
 
 The Local Profile again satisfies its enforcement contract while retaining risk-triggered recovery semantics. Fresh validation can now rerun the full gate and the deferred without-it against `456ea29`.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Freshly bind repaired candidate 456ea29, implementation base d38799a, current origin/main, accepted spec/ACs, exact nine-file diff, prior validation failure, and carried RoboRev UNKNOWN; make no product edits.
+  Candidate `456ea299a4bcc1c3a5635a07564e15d6c2be1148`, base `d38799af4d980498bfc51380c33e11266cedbafa`, fetched target `f7a3f018e9756c44b354c3a24326594b084b044b`, merge-base `e20d13b5b1fb06921db58b6a0f132401dfc1fe9d`, spec SHA-256 `21a2a9b0…`, and 9 files/419 insertions/21 deletions were observed in a clean product tree; prior FAIL and RoboRev `UNKNOWN(state_unknown)` remain bound.
+- FAILED: Run the complete relevant candidate gate from the clean exact-tip worktree: scripts/kc-dev-flow-contract-test.py, direct loader test, RoboRev contract test, loader/kernel parity, and git diff --check; require the real Spacedock recovery journey to pass.
+  Direct loader/E2E, RoboRev contract, loader/kernel parity, and `git diff --check` passed, but `scripts/kc-dev-flow-contract-test.py` exited 1 because its kernel assertion still requires the pre-recovery exact table row; removing the accepted recovery clause makes that stale assertion pass, so the repository gate is not a valid green candidate gate.
+- DONE: Run one task-owned full without-it in a temporary isolated copy: execute the complete candidate profile-contract-loader.test.py against the d38799a loader and require a nonzero failure at the missing recovery capability, not an unrelated setup failure; remove the temporary copy and add no harness.
+  The candidate test with the `d38799a` loader exited nonzero at `stale route for production: expected ['shape', 'build', 'verify'], got ['build', 'verify']`; this is the missing recovery capability, and the explicit temporary worktree was removed with no harness or product change.
+- DONE: Record exact-candidate delegated E2E UAT evidence for backlog gate -> ideation skip with no ideation artifact -> implementation build -> validation verify, plus compatibility/default-full, rollback readiness, current provider-feedback state, and material residuals.
+  Candidate `profile-contract-loader.test.py` reported route mechanism PASS after the real Spacedock backlog gate, empty ideation skip/no artifact, build, and verify journey; legacy/default full routes passed, rollback stays Captain-controlled, no PR/provider feedback exists, and the red repository gate, four same-shape stale route assertions, RoboRev UNKNOWN, divergent target, and unapproved Captain UAT remain material.
+- FAILED: Return PASS only if every AC is falsifiably supported at 456ea29; append one final validation Stage Report and commit/sync only state. Do not create a PR, prepare/approve the gate, merge, release, or self-approve Captain UAT.
+  Verdict is FAIL because the complete repository gate is red at exact candidate `456ea29`; only this state report is committed, with no product edit, PR, gate advance, merge, release, or UAT approval.
+
+### Summary
+
+The repaired candidate's live recovery journey and full without-it both prove the recovery behavior, but the complete repository gate still rejects the accepted route documentation through stale exact-row assertions. Validation therefore fails and returns one bounded test-contract correction to implementation; Captain UAT remains pending and non-delegable.
