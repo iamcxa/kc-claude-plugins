@@ -226,3 +226,42 @@ Ideation accepts one temporary tracked-package snapshot shared by candidate and 
 - claimant: `spacedock-ensign-release-smoke-tracked-package-identity-implementation`
 - observed-state-revision: `ab06f28a67f89e505228ebde06585522b1fb917b`
 - state: `claimed`
+
+## Implementation evidence
+
+```yaml
+review_convergence:
+  schema: kc-dev-flow-observation/v1
+  capability: review_convergence
+  mode: observe
+  selected_profile: production
+  provider: roborev
+  outcome: PASS
+  reason: passed
+  exact_base: 844edfa75a021cc6c013186bb88fba81f598f912
+  exact_tip: 278095b3015a25bb7140e7dd2b09482d96fc412a
+  implementation_provider_family: openai
+  reviewer: {agent: claude-code, model: sonnet, reasoning: thorough, minimum_severity: medium, panel: none}
+  identity_hash: b1e86e9dbf100f2c84d2ae71ae30023c46baf1a12e5ecd4c1f92a436d6b193c3
+  config_object_sha: e816dfd221a307eee460f0404e4870d464ec7b66
+  job_identity: {id: 266, uuid: c0b65a8c-90a6-4717-9be4-38f38e2f2ca6}
+  member_states: []
+  request_count: 1
+  confirmation_count: 0
+  cost_coverage: {approximate_total_usd: 0.5685936, jobs_with_cost: 1, jobs_total: 1, complete: true}
+```
+
+RoboRev job 266 completed at the exact product tip with verdict PASS and output `SEVERITY_THRESHOLD_MET`; this observation is evidence only and does not replace fresh validation or delivery authority.
+
+## Stage Report: implementation
+
+- DONE: Replace ambient package walking with one exact-revision tracked snapshot shared by candidate and published digest plus installation.
+  Commit `278095b` routes candidate and published identity plus both installers through one safely extracted `git archive`; bypassing the snapshot would fail the shared-source assertions.
+- DONE: Add the v2.5.0 ignored-file regression, tracked-byte positive control, candidate/published parity, and retained mismatch/no-model negatives.
+  The focused test recreates both `*.cpython-314.pyc` paths, proves the old ambient digest diverges, proves tracked-byte changes alter snapshot identity, and would fail if either mode installs outside `snapshot` or published mode invokes a host.
+- DONE: Run the focused and contract suites, report the exact diff against the 2-file/180-line/120-scaffolding stop numbers, and commit only task-owned files.
+  Exact tip `278095b` passes the focused smoke, contract suite, Python compilation, and `git diff --check`; the diff is 2 files, 180 gross lines, and 99 gross test/FakeSmokeRuntime scaffolding lines.
+
+### Summary
+
+Candidate and published release smoke now derive digest and installation from the same exact-revision tracked package snapshot, leaving ignored and untracked worktree bytes untouched and excluded. The two task-owned files are committed at `278095b`; receipt schemas, mismatch refusals, provider behavior, and v2.5.0 evidence remain unchanged.
