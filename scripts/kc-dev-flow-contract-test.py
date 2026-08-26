@@ -22,6 +22,13 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit(f"kc-dev-flow contract: {message}")
 
 
+def require_production_route(text: str, label: str, full: str) -> None:
+    rows = [line for line in text.splitlines() if line.startswith(f"| {label} |") and (full in line or "eligible recovery" in line)]
+    require(len(rows) == 1, f"{label} Production route row is missing or ambiguous")
+    require(full in rows[0], f"{label} route omits the full Production default")
+    require("eligible recovery" in rows[0], f"{label} route omits eligible recovery")
+
+
 def run(command: list[str], label: str) -> None:
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
     require(
@@ -433,10 +440,7 @@ for phrase in [
     "create no receipt or commentary",
 ]:
     require(phrase in " ".join(kernel.split()), f"kernel omits subtraction rule: {phrase}")
-require(
-    "| `production` | `shape -> build -> verify` |" in kernel,
-    "kernel route table omits the current Production route",
-)
+require_production_route(kernel, "`production`", "`shape -> build -> verify`")
 normalized_kernel = " ".join(kernel.split())
 for phrase in [
     "An item leaves `backlog` only when its committed body states all three",
@@ -694,10 +698,10 @@ for phrase in [
     "complete the v3 POC fields",
     "build -> prove",
     "shape -> build -> verify-deliver",
-    "`shape -> build -> verify` | The scope accepts a production boundary",
     "structured Ask UI",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
+require_production_route(chooser, "`Production` (`production`)", "`shape -> build -> verify`")
 require(
     "shape -> build -> verify -> release" not in normalized_chooser,
     "chooser still documents the removed release route element",
@@ -740,11 +744,7 @@ for phrase in [
     "`receipt: null` creates no receipt",
 ]:
     require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
-require(
-    "Production | `backlog -> ideation -> implementation -> validation -> done`"
-    in continue_skill,
-    "continuation route table omits the current Production route",
-)
+require_production_route(continue_skill, "Production", "`backlog -> ideation -> implementation -> validation -> done`")
 require(
     "-> release ->" not in continue_skill,
     "continuation route table still documents the removed release stage",
@@ -831,7 +831,6 @@ for profile, stages in expected_routes.items():
 for phrase in [
     "POC | `backlog -> implementation -> validation -> done`",
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",
-    "Production | `backlog -> ideation -> implementation -> validation -> done`",
     "profile-contract-loader.py",
     "Profiles are per item",
     "No agent is a general gatekeeper",
@@ -841,14 +840,12 @@ for phrase in [
     "Work-item records and unrelated Markdown changes activate neither",
 ]:
     require(phrase in workflow, f"self-adoption is missing: {phrase}")
+require_production_route(workflow, "Production", "`backlog -> ideation -> implementation -> validation -> done`")
 
 package_readme = read("kc-dev-flow/README.md")
 normalized_package_readme = " ".join(package_readme.split())
 root_readme = read("README.md")
-require(
-    "| Production | `shape -> build -> verify` |" in package_readme,
-    "package README route table omits the current Production route",
-)
+require_production_route(package_readme, "Production", "`shape -> build -> verify`")
 require(
     "shape -> build -> verify -> release" not in normalized_package_readme
     and 'R5["Release' not in package_readme,
