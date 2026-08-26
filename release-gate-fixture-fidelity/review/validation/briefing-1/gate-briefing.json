@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-1:revision-1",
+  "question": "Approve exact candidate d339ba2 for Draft PR delivery?",
+  "artifacts": [
+    {
+      "id": "artifact:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/43c54cd1267ec5110cc286699a6f91ab2084acbb/release-gate-fixture-fidelity/review/validation/review.md",
+      "rev": "sha256:13e9b0c1e22a7f7114639ce9c58de25ea0a20c32d5cc758ca887368c3e09c7f5",
+      "mediaType": "text/markdown",
+      "summary": "Fresh validation passed on pinned Spacedock pre8: baseline PASS and 10/10 mutants rejected for intended evidence. RoboRev remains UNKNOWN and provider CI is pending; merge and release are not authorized."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/43c54cd1267ec5110cc286699a6f91ab2084acbb/release-gate-fixture-fidelity.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:a359534467692e727ce4bc65506282f391cef7f76cafa285c0a119f4192f1e02"
+    }
+  ]
+}

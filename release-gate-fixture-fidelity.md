@@ -58,6 +58,26 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:cmdbanvhg3enbwaf26ma6wzk:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:cmdbanvhg3enbwaf26ma6wzk-validation-1
+              briefing:
+                id: briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-1:revision-1
+                digest: sha256:7524f0d23c14be6987a6a312d85855fe610260ab6ad0807001110319dd85dd54
+                request-digest: sha256:e5b5487e9f8f3bb2db4343446df0a9c16a25c75d8b6cc386eb9ebbb4bd13e229
+                room-ref: ./release-gate-fixture-fidelity/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:cmdbanvhg3enbwaf26ma6wzk:validation:1
+                briefing: briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T05:17:05.434417Z"
+                decision: approve
+                reason: Captain approved exact candidate d339ba2 for Draft PR delivery after fresh pinned-pre8 validation.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
