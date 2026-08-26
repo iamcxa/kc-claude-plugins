@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1",
+  "question": "Approve the revised minimal Production recovery design for implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://main/d38799af4d980498bfc51380c33e11266cedbafa/docs/superpowers/specs/2026-08-26-kc-dev-flow-proportional-production-delivery-design.md",
+      "rev": "sha256:21a2a9b03d650cddc4a84e632603497f48ff35cac83280ae8b120bec7d1a41be",
+      "mediaType": "text/markdown",
+      "summary": "The revised design keeps the full Production route as default and adds an explicit build-to-verify recovery route using four new fields, validation-owned full without-it evidence, risk-triggered review, and Captain-controlled fallback. The first slice is limited to 9 files with no new state, CI job, executable, UAT, auto-merge, or release authority."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://state/6d88dd6b08c728c4ee9106efbcd88d1856c33cf3/production-recovery-route.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:7c14eeb02fad945d1babfc4bb709ca429ee0090a47d2499f920a25b05cbcfd62"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1:item-3",
+      "uri": "git-root://main/d38799af4d980498bfc51380c33e11266cedbafa/docs/dev/ROADMAP.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:3c45e4ed81fa112d872ae18ba0763ddc03c023c6765efdddf60959427ae8a2dd"
+    }
+  ]
+}

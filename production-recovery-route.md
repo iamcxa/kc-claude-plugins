@@ -55,6 +55,23 @@ gates:
                 at: "2026-08-26T06:40:49.712967Z"
                 decision: revise
                 reason: Reduce the recovery receipt to route plus failure, falsifier, rollback, and review risks; remove duplicated shape/scope hashes and generic reverse-delta machinery; shrink the first slice materially below 16 files and 901 lines.
+            - id: gate-attempt:za5drqh93q5522c6kstrxrsx-ideation-2
+              briefing:
+                id: briefing:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1
+                digest: sha256:2ba7e63286438a3413aaeb2463477c3170d49d80d653227aae5b01d6f8937668
+                request-digest: sha256:2d8e50e0c212537f869998e4c5440f14eabdcf91461ea66cad267cfd88795e30
+                room-ref: ./production-recovery-route/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:za5drqh93q5522c6kstrxrsx:ideation:2
+                briefing: briefing:za5drqh93q5522c6kstrxrsx:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-26T07:02:33.085169Z"
+                decision: approve
+                reason: Captain approved the revised minimal Production recovery design at commit d38799a after independent re-review passed.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
