@@ -147,3 +147,37 @@ The accepted shape is one reversible two-file fixture repair on exact PR #258 co
 ### Summary
 
 Commit d339ba2 removes both false preconditions without changing production code, CI, dependencies, or the pinned runtime. The exact pre8 path now distinguishes the intended release-state guard from missing fixture evidence and preserves all ten mutant refusals.
+
+## Implementation evidence
+
+```json
+{
+  "schema": "kc-dev-flow-implementation-evidence/v1",
+  "review_convergence_claim": {
+    "state": "claimed",
+    "identity": "sha256:9a65f00d28bf4141a990d9b4da1191f1f6cf6ac56f7373c3a0955da625a692e1",
+    "claimant": "codex-worker:spacedock-ensign-release-gate-fixture-fidelity-implementation",
+    "observed_state_revision": "d431a7b6b7995fc23243c0601a4a4f2e1384aa53",
+    "exact_input": {
+      "repository": "github.com/iamcxa/kc-claude-plugins",
+      "base": "e20d13b5b1cf06921db58b6a0f132401dfc1fe9d",
+      "tip": "d339ba2e982d71742d4223fead69e5a31fd4744a",
+      "provider_version": "v0.62.0",
+      "json_contract": ["list --json", "show --json"],
+      "configuration": "e816dfd221a307eee460f0404e4870d464ec7b66",
+      "profile": "production",
+      "implementation_family": "openai",
+      "agent": "claude-code",
+      "model": "sonnet",
+      "reasoning": "thorough",
+      "minimum_severity": "medium",
+      "live_batch_timeout_seconds": 1200,
+      "request_cap": 1,
+      "repair_confirmation_cap": 1,
+      "panel": "none",
+      "member_identities": ["claude-code:sonnet"],
+      "member_count": 1
+    }
+  }
+}
+```
