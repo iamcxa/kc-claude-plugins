@@ -5,8 +5,10 @@
 Version 4 keeps one graph and three profile slugs, changes new receipts to
 `kc-dev-flow-work-profile/v3`, adds the POC close guard, removes the
 Production-only `release` state, and makes scheduling a loader-enforced backlog
-exit requirement. Upgrade the adopter and installed plugin as one cutover, in
-this order:
+exit requirement. It also removes the packaged GitHub Project projection: the
+planning provider is replaceable, while admitted SD snapshots and active
+execution remain stable. Upgrade the adopter and installed plugin as one
+cutover, in this order:
 
 1. Inventory active receipts. Finish each active v2 POC on its pinned 3.x
    package/vendor pair, or have the Captain re-record it as v3 with decision,
@@ -20,14 +22,36 @@ this order:
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
 4. Default the adopter's entity template to `sprint-readiness: defer`. Before
-   continuing any item already at its first working stage, give it a non-empty
-   `sprint` accepted by the iteration authority and set
-   `sprint-readiness: ready`. Backlog items need those values only when selected;
-   do not mark the unscheduled queue ready as a bulk migration.
+   continuing any item already at its first working stage, resolve its accepted
+   planning window and outcome from `source`, have the Captain approve that
+   snapshot, record non-empty `planning-window`, `planning-outcome`, and shared
+   `sprint` values, and set `sprint-readiness: ready`. Backlog items need those
+   values only when selected; do not mark the unscheduled queue ready as a bulk
+   migration.
 5. Prove the drivable set with `spacedock status --where sprint=X --where
-   sprint-readiness=ready`; run every profile-stage load, guarded POC close path,
-   package parity check, and normal repository gate before updating the installed
-   plugin.
+   sprint-readiness=ready`, then run one read-only engage reconcile against the
+   provider's current Ready set. Run every profile-stage load, guarded POC close
+   path, package parity check, and normal repository gate before updating the
+   installed plugin.
+
+### Retire the planning projection
+
+Remove the installed projector workflow, configuration, and
+`.github/scripts/project-spacedock-state.py` with the package upgrade. Do not
+delete provider items or repository secrets without separate
+destructive-cleanup authorization.
+
+Keep admitted Spacedock snapshots, their current `source` links, execution
+history, and pull requests unchanged. If the repository changes planning
+provider, migrate only open planning items that have not been admitted to SD.
+An already-admitted active task keeps its existing planning item and provider
+until completion, so keep the old provider and its read-only reader available
+during the drain; new admissions use the replacement provider. Each item retains
+one planning-item authority even while providers differ across snapshots. Do
+not backfill mutable provider state into Roadmap or active tasks, and do not
+replace the retired projector with an importer, polling loop, or bidirectional
+sync. Reconcile remains read-only; every difference needs Captain admission
+before an authorized actor commits a replacement snapshot.
 
 Rollback the installed plugin and the whole vendored contract set together. An
 adopter that does not take v4 keeps its 3.x graph and loader behavior. Do not mix
@@ -119,7 +143,7 @@ The rule is deliberately asymmetric. Where you cannot state that consumers
 upgrade without doing anything, the trigger counts as met: sending a migration
 out on a shorter route costs more than paying Production's bar once.
 
-## 2026-08-24 — the `backlog` exit bar names the schedule
+## 2026-08-24 — the `backlog` exit bar names the admitted snapshot
 
 The bar had two parts, what an item is and why it is worth doing, and both are
 about whether a queued item is legible. Neither answers which of the queued
@@ -128,14 +152,14 @@ repository reached 64 queued items against one in flight, growing eight to ten
 a week, with `sprint` present on 25 of 67 items and `sprint-readiness` on none.
 
 A third part is now required. An item leaves `backlog` only when it also carries
-a `sprint` naming an iteration its repository's iteration authority has already
-accepted, and `sprint-readiness: ready`. The field names are fixed on purpose —
-the value is a queue that answers `--where sprint=X --where
+the planning provider's accepted `planning-window` and `planning-outcome`, a
+shared SD `sprint` execution group, and `sprint-readiness: ready`. The SD field
+names are fixed on purpose — the queue answers `--where sprint=X --where
 sprint-readiness=ready` instead of one that must be read item by item. Which
-iterations exist, and where they are recorded, stays with the adopter's
-iteration authority.
+windows and outcomes exist stays with the planning provider; the Captain admits
+the resulting snapshot.
 
-An adopter upgrades by adding the two fields to its entity template and filling
+An adopter upgrades by adding the four fields to its entity template and filling
 them when an item is next selected. Backfilling the whole queue is not required:
 an item that never leaves `backlog` never has to answer the bar.
 

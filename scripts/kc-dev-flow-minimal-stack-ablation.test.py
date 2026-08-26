@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -51,6 +52,9 @@ def copy_repository_fixture(destination: Path) -> None:
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
+        # The candidate may delete a tracked path; its fixture must not resurrect it.
+        if not source.exists() and not source.is_symlink():
+            continue
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         if source.is_symlink():
@@ -185,6 +189,20 @@ def make_poc_not_lightest(fixture: Path) -> None:
     )
     kernel = (contracts / "kernel.md").stat().st_size
     base = (contracts / "profiles/poc-exploration/base.md").stat().st_size
+    stage_after = max(
+        kernel
+        + base
+        + (contracts / "profiles/poc-exploration" / name).stat().st_size
+        + addition
+        for name in ("build.md", "prove.md")
+    )
+    required_tree = math.ceil(stage_after / gate.STAGE_LOAD_CEILING)
+    padding = max(0, required_tree - tree_after)
+    if padding:
+        # Keep this mutant scoped to the route-total guard when shared-core
+        # growth consumes the independent stage-ceiling headroom.
+        (contracts / "poc-lightest-mutant-padding.md").write_bytes(b"X" * padding)
+        tree_after += padding
     for name in ("build.md", "prove.md"):
         path = contracts / "profiles/poc-exploration" / name
         if (

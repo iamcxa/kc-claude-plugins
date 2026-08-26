@@ -188,8 +188,8 @@ def git(repo: Path, *arguments: str) -> str:
 
 def initialize_snapshot_fixture(repo: Path) -> str:
     plugin = repo / "kc-dev-flow"
-    assets = plugin / "skills/setup-github-project-projection/assets"
-    assets.mkdir(parents=True)
+    fixture_reference = plugin / "references/snapshot-fixture.md"
+    fixture_reference.parent.mkdir(parents=True)
     (repo / ".claude-plugin").mkdir()
     (repo / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
     marketplace = {"name": "fixture", "plugins": [{"name": "kc-dev-flow", "version": "2.5.0"}]}
@@ -198,8 +198,7 @@ def initialize_snapshot_fixture(repo: Path) -> str:
         manifest = plugin / f".{host}-plugin/plugin.json"
         manifest.parent.mkdir(parents=True)
         manifest.write_text('{"version":"2.5.0"}\n', encoding="utf-8")
-    (assets / "install-projection.py").write_text("print('v1')\n", encoding="utf-8")
-    (assets / "project-spacedock-state.py").write_text("print('v1')\n", encoding="utf-8")
+    fixture_reference.write_text("tracked fixture bytes v1\n", encoding="utf-8")
     git(repo, "init", "-q")
     git(repo, "config", "user.email", "smoke@example.test")
     git(repo, "config", "user.name", "Smoke Test")
@@ -218,9 +217,9 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-snapshot-test-") as tempora
     clean_identity = smoke.package_identity(clean_snapshot)
     clean_ambient_digest = smoke.tree_digest(fixture_repo / "kc-dev-flow")
 
-    pycache = fixture_repo / "kc-dev-flow/skills/setup-github-project-projection/assets/__pycache__"
+    pycache = fixture_repo / "kc-dev-flow/references/__pycache__"
     pycache.mkdir()
-    ignored_paths = [pycache / f"{name}.cpython-314.pyc" for name in ["install-projection", "project-spacedock-state"]]
+    ignored_paths = [pycache / f"snapshot-fixture-{name}.cpython-314.pyc" for name in ["first", "second"]]
     for path in ignored_paths:
         path.write_bytes(b"v2.5.0 incident bytecode")
     untracked = fixture_repo / "kc-dev-flow/untracked.txt"
@@ -236,8 +235,8 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-snapshot-test-") as tempora
         "ignored v2.5.0 files changed tracked identity or the snapshot mutated the worktree",
     )
 
-    tracked = fixture_repo / "kc-dev-flow/skills/setup-github-project-projection/assets/install-projection.py"
-    tracked.write_text("print('v2')\n", encoding="utf-8")
+    tracked = fixture_repo / "kc-dev-flow/references/snapshot-fixture.md"
+    tracked.write_text("tracked fixture bytes v2\n", encoding="utf-8")
     git(fixture_repo, "add", tracked.relative_to(fixture_repo).as_posix())
     git(fixture_repo, "commit", "-qm", "tracked change")
     changed_snapshot = fixture_root / "changed"

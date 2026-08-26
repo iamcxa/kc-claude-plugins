@@ -46,11 +46,22 @@ receive placeholder reviews or receipts.
 Read only this section before resolving the selected item. Do not read this full
 README as a policy bundle.
 
+GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.
+Its Iteration field is the planning window, its GitHub Milestone is the planning
+outcome, and Status `Ready` selects candidates. Spacedock tasks are execution
+records, and `source` links the accepted planning item. At every engage, compare
+the provider's current Ready set with the committed SD snapshot. A difference
+requires Captain admission and never writes either side automatically.
+
 | Role | Bound local authority |
 |---|---|
 | Project context | Root `PRODUCT.md`, `ARCHITECTURE.md`, and `CLAUDE.md` |
-| Work items | Spacedock entities under `docs/dev/` |
-| Iteration | Captain-owned product sprint headings in `docs/dev/ROADMAP.md` |
+| Planning items | GitHub Issues plus Project #4, as the current replaceable provider |
+| Planning window | Project #4 Iteration field |
+| Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
+| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; normalize only Status `Ready` items and their issue source, Iteration, Milestone, accepted outcome, and non-goals |
+| Work items | Spacedock execution records under `docs/dev/` |
+| Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
 | Profile loader | `docs/dev/_mods/profile-contract-loader.py` |
@@ -153,14 +164,14 @@ python3 docs/dev/_mods/profile-contract-loader.py \
 The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
 route's first working stage it also requires one non-empty `sprint` and
-`sprint-readiness: ready`; `docs/dev/ROADMAP.md` and the Captain remain the
-authority for whether the named sprint is accepted. Its `next_workflow_stage`
-is the normal next state. An eligible Production recovery instead emits
-`skip_to_workflow_stage: implementation` with no loaded ideation contract.
-Profiles are per item, so POC, Pilot, and Production
-items may run concurrently in this repository without a global profile switch.
-A refusal blocks only that item's dispatch until its receipt, state, scheduling
-fields, or vendored adoption is corrected.
+`sprint-readiness: ready`; the planning provider owns the accepted Iteration and
+Milestone, while the Captain admits the resulting SD snapshot. Its
+`next_workflow_stage` is the normal next state. An eligible Production recovery
+instead emits `skip_to_workflow_stage: implementation` with no loaded ideation
+contract. Profiles are per item, so POC, Pilot, and Production items may run
+concurrently in this repository without a global profile switch. A refusal
+blocks only that item's dispatch until its receipt, state, scheduling fields, or
+vendored adoption is corrected.
 
 ## Stages
 
@@ -170,19 +181,34 @@ repository mechanics; it does not repeat the profile contract.
 ### `backlog` — queue and select
 
 Capture `title`, `source`, `product`, and one problem paragraph. Only the Captain
-or iteration owner schedules it: leaving `backlog` needs a `sprint` naming a
-product sprint heading that already exists in `docs/dev/ROADMAP.md`, plus
+admits it: leaving `backlog` needs the accepted provider `planning-window` and
+`planning-outcome`, a shared SD `sprint` execution-group value, and
 `sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
-then, so the drivable set is `spacedock status --workflow-dir docs/dev --where
-sprint=<heading> --where sprint-readiness=ready`. Obtain and commit the supported
-profile receipt before moving to the selected route's first working state.
+then, so the admitted snapshot is `spacedock status --workflow-dir docs/dev
+--where sprint=<group> --where sprint-readiness=ready`. Obtain and commit the
+supported profile receipt before moving to the selected route's first working
+state.
+
+### Engage reconcile
+
+Before reading execution state or dispatching new work, run the read-only
+planning reader for the snapshot's `planning-window` and `planning-outcome`.
+Compare the current Status `Ready` set with every committed SD entity sharing
+its `sprint`: source membership, window, outcome, accepted outcome, and
+non-goals. Report added, removed, changed, and moved items. With no difference,
+continue. With any difference, stop before new dispatch or state mutation until
+the Captain admits the delta and an authorized actor commits the replacement
+snapshot. Do not cancel a running worker. This is reconcile, not projection or
+sync: neither side is written automatically.
 
 ### `ideation` — selected `shape`
 
 Active only for Pilot and full-route Production. An eligible recovery creates no
 worker, briefing, report, or gate here; re-read its hash-bound receipt, apply the
-implementation skip, and load `build`. Otherwise load the selected `shape` contract. Record
-the accepted outcome and task-specific acceptance evidence in the work item.
+implementation skip, and load `build`. Otherwise load the selected `shape`
+contract. Copy the planning item's accepted outcome and non-goals into the work
+item as an admission snapshot. It is not a second accepted-goal authority.
+Record task-specific acceptance evidence as execution evidence.
 Its conditional references load only when their predicates fire: reverse
 recovery for a proposed addition, replacement, removal, or missing claim in
 existing code; the multi-slice guard when one integrated slice is insufficient.
@@ -302,6 +328,8 @@ title:
 status: backlog
 source:
 product:
+planning-window:
+planning-outcome:
 sprint:
 sprint-readiness: defer
 started:
@@ -317,7 +345,7 @@ mod-block:
 
 ## Work profile receipt
 
-## Accepted outcome and non-goals
+## Admission snapshot: accepted outcome and non-goals (copied from `source`)
 
 ## Acceptance evidence
 

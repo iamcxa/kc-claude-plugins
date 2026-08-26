@@ -1,18 +1,27 @@
-# Roadmap — `docs/dev`
+# Roadmap — legacy and local SD execution groups
 
-Sprint boundaries and sequencing only. This file never tracks task state; that is
-`spacedock status --workflow-dir docs/dev`. Owner: captain, or the sprint commander
-writing on the captain's direction.
+Roadmap headings are legacy or local SD execution-group identifiers, not planning windows or outcomes.
+The planning provider owns time, accepted outcomes, Ready membership, priority,
+and planning status. This file never tracks task state; that is `spacedock status
+--workflow-dir docs/dev`. Owner: captain, or a named operator writing on the
+captain's direction.
 
 Sprint numbers are product-local ordinals with no cross-product chronology or
 rank. Use the qualified identity `<product>/S<number>` outside a product section;
 for example, `kc-pr-flow/S5` and `e2e-pipeline/S1` may run concurrently without
 sharing a sprint boundary.
 
-A number is allocated only by a product sprint heading in this file, written by
-the ROADMAP owner named above and accepted into `main`. Mentions and proposals
-elsewhere do not reserve it; the first accepted heading for a product/number pair
-wins. Bare `Sprint N` or `SN` references written before this contract's
+One heading may register the shared `sprint` value of an admitted SD snapshot;
+the tasks themselves hold the exact planning links. The heading does not select
+or sequence provider work. It does not store task state, acceptance criteria,
+evidence, or provider-specific cycle metadata. Legacy sections remain until
+their work is closed or migrated.
+A RETIRED heading remains registered only for existing execution records and forbids new admissions by Captain authority.
+
+A local execution-group number is allocated only by a product sprint heading in
+this file, written by the owner named above and accepted into `main`. Mentions
+and proposals elsewhere do not reserve it; the first accepted heading for a
+product/number pair wins. Bare `Sprint N` or `SN` references written before this contract's
 2026-07-30 adoption resolve to `kc-pr-flow/SN`, because `kc-pr-flow` was the only
 scheduled product. After adoption, a bare reference outside a product section is
 a defect.
@@ -322,45 +331,13 @@ validation or delivery authority. All four items have exact-revision validation
 and delivery evidence, and the product diff retains no generalized evaluation
 platform. Hold the S2 Release PR until all four items exit.
 
-### Sprint S3 — GitHub projection dogfood
+### Sprint S3 — RETIRED for new admissions
 
-Captain direction: begin immediately alongside the remaining `kc-dev-flow/S2`
-validation work. S3 does not change S2 scope, ordering, or release hold.
-
-Captain-approved sequence:
-
-1. `spacedock-github-project-projection` (`qa`)
-2. `spacedock-projection-issue-fidelity` (`q0`), after Project #1 dogfood exposed repository Issue noise and a mutable receipt-only lookup
-3. `spacedock-project-status-updates` (`16`), after the projection result and Draft identity contracts are stable
-
-End value: a repository can install a one-way, idempotent projection of one
-selected Spacedock workflow into one selected GitHub Project without making
-GitHub lifecycle authority or requiring LLM-generated runtime facts. The first
-dogfood maps `kc-claude-plugins/docs/dev` into user `kc-plugins` Project #4;
-deleted Project #1 remains only the historical proof target.
-
-Projection exit: a disposable proof establishes the selected trigger and
-authentication topology; a ten-entity Project #4 dry-run is reviewed before an
-approved bounded subset is applied; an identical rerun performs zero mutations;
-a view grouped by exact SD stage is usable; and every successful reconcile emits
-a versioned deterministic result. Projector-owned Draft items expose
-the Spacedock entity body, use the workflow's short entity ID in the title, keep
-structured lifecycle metadata in Project fields, and retain stable matching when
-the rendered body changes. Explicitly bound human Issues remain human-owned; a
-removed receipt fails closed without creating a second Draft.
-
-Status-update exit: the sibling derives facts and metrics from state plus the
-projection result, classifies delivery, scope, and definition deltas, produces
-reviewable drafts, refuses stale or foreign baselines, and publishes only after
-explicit human confirmation.
-
-Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
-Status Update publication, and LLM-authored unattended payloads.
+Existing S3 execution records remain owned by Spacedock until closure.
 
 ### Sprint S4 — close POC at a decision boundary
 
-Captain direction: begin immediately without broadening the remaining S3
-projection work.
+Captain direction: begin immediately.
 
 1. `single-workflow-poc-routing`
 
@@ -396,6 +373,10 @@ and merge authorization never becomes release authorization.
 
 Out of scope: repository-default auto-merge, automatic release, agent-owned UAT
 approval, reduced Production evidence, or a generalized evaluation framework.
+
+### Sprint S6 — provider-neutral planning
+
+- [Issue #297](https://github.com/iamcxa/kc-claude-plugins/issues/297)
 
 ## `kc-team-ops`
 

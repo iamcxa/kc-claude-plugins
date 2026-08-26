@@ -43,6 +43,39 @@ That led to three per-item routes:
 One repository can carry all three. The promise belongs to the work item, not
 to the repository's identity.
 
+## Planning must remain replaceable
+
+Planning and execution answer different questions. The planning provider owns
+the discussion, the decision to proceed, priority, and human-facing status for
+each item. Its planning window owns time, and its planning outcome owns the
+accepted result. After the Captain admits one Ready item set, the committed
+Spacedock entity set is the snapshot; Spacedock owns stages and execution
+evidence, while the delivery provider owns pull requests and required checks.
+The SD task's `what` and `why` preserve the admission snapshot; they do not
+become another accepted-goal authority.
+
+A projector makes those authorities look convenient by mirroring state, but it
+also turns a provider change into a data migration and creates another status
+record to reconcile. KC Dev Flow instead uses an admission snapshot plus a
+read-only engage reconcile. `source`, `planning-window`, and `planning-outcome`
+bind each task to its planning selection; `sprint` groups the resulting SD
+entities for execution. At every engage, a repository-local reader compares the
+provider's current Ready set with that committed snapshot. A clean comparison
+continues. A difference stops before new dispatch or mutation until the Captain
+admits the delta and an authorized actor commits the replacement snapshot.
+Because reconcile writes neither side, it is not synchronization.
+
+That boundary lets a repository replace GitHub Projects with Linear, or the
+reverse, without rewriting active Spacedock snapshots, execution history, or
+delivery evidence. Only open planning items not yet admitted to SD move. Active
+items keep their existing planning item and provider until completion, so the
+old provider and its read-only reader stay available during the drain; new
+admissions use the replacement provider. Providers may differ across snapshots,
+but each item retains one planning-item authority. `sprint` remains an SD
+execution grouping rather than a provider Cycle or Milestone authority, and no
+projector, importer, polling loop, or bidirectional sync is part of the portable
+package.
+
 ## Optional prose is still loaded prose
 
 The old design often said that a rule was optional. That did not make reading it

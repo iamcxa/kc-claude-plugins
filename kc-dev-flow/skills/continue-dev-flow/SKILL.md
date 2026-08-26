@@ -19,11 +19,31 @@ Continue by the selected profile's smallest sufficient route.
    source branch and stack, rather than branching from the trunk or waiting for
    it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
    applies whoever owns the delivery ceremony.
-3. Read iteration authority. If it contains no committed item, report that
-   scheduling is needed; do not inspect or invent execution state.
-4. Read the exact committed work item and current state from their declared
-   authorities. Do not enumerate the state tree.
-5. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
+3. Read the exact committed Spacedock work item only far enough to resolve its
+   `source`, `planning-window`, `planning-outcome`, and `sprint`. Do not read
+   current execution state yet, and do not treat the task body as a second
+   planning authority.
+4. Follow the exact work item's `source` to the accepted planning item and
+   invoke the repository-local read-only planning reader. Read the item for the
+   problem, decision, success condition, priority, and human-facing status, and
+   obtain the provider's current Ready set for the recorded planning window and
+   outcome. If `source` is not a resolvable planning link, report `planning
+   source unavailable` and stop before reading execution state. If the reader or
+   its inputs are unavailable, report `planning reconcile unavailable` and stop
+   at the same boundary. Do not promote the admission snapshot into planning
+   authority or invent, migrate, or rewrite its planning item.
+5. Compare that current Ready set with the committed SD entity set for the same
+   `sprint`. Compare source identity and membership, `planning-window`,
+   `planning-outcome`, accepted goal, and non-goals; classify each difference as
+   added, removed, changed, or moved.
+6. If the comparison finds an added, removed, changed, or moved item, report the
+   delta and stop before new dispatch or state mutation. The Captain must admit
+   the delta before an authorized actor commits a replacement snapshot. No
+   difference writes the provider or SD automatically. Do not cancel a running
+   worker. The stop applies to new dispatch and later state changes.
+7. Then read current execution state from its declared authority. Do not
+   enumerate the state tree or use provider status to advance execution.
+8. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
    and Production receipts remain loadable, while an active v2 POC must finish
    on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
    or stale before the first working stage, invoke
@@ -32,6 +52,18 @@ Continue by the selected profile's smallest sufficient route.
    upgrades mechanically. For a v1 POC, preserve the choice but use
    `kc-dev-flow:choose-work-profile` to complete the v3 POC fields with the
    Captain before dispatch.
+
+If the repository changes planning provider, migrate only open planning items
+that have not been admitted to SD. An already-admitted active SD task with a
+resolvable planning link keeps its existing planning item and provider until
+completion; the old provider must remain available for it. The legacy non-link
+refusal above is not a migration and creates no planning item. New admissions
+use the new provider. During this drain, each active item still has one
+planning-item authority. Keep the active SD snapshot and its source, window,
+outcome, and execution group unchanged. Reconcile each snapshot through the
+reader for its own provider. Do not project SD state back to the provider,
+import provider state into SD, poll either side, or rewrite an active snapshot
+onto the replacement provider.
 
 ## Load one route
 
