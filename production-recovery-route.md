@@ -126,3 +126,16 @@ Deliver through one Captain-reviewed PR to `main`. This authority-changing item 
 ### Summary
 
 The design preserves one workflow, three profiles, the superset graph, v3 compatibility, and existing Captain and release authority while making eligible Production recovery `build -> verify`. Only the recovery interface enters the first implementation boundary; UAT and auto-merge retain separate ownership and no implementation began in ideation.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Replace the ten-field recovery block with route plus failure, falsifier, rollback, and review risks; reuse the existing work-item hash, scope boundary, decision authority, and exact-diff checks.
+  Commit `0b5bfd6` keeps only `recovery_failure`, `recovery_falsifier`, `recovery_rollback`, and `review_risks`, with existing `scope_boundary`, `decision`, loader hash, and stage diff ownership.
+- DONE: Remove the generic reverse-delta harness design; make one task-owned full without-it a validation obligation and keep implementation focused red-green only.
+  The corrected spec adds no executable, receipt command, patch algorithm, or ablation harness; validation records the task-owned full without-it and build owns focused red-green.
+- DONE: Recut the first slice materially below 16 files and 901 lines, preserve all S5 authority boundaries, update the Stage Report, and commit only the corrected spec.
+  The slice now maps 8 files and stops at 9 files/451 changed lines/201 loader-test lines; Captain UAT, per-item auto-merge, manual release authority, v3 compatibility, and fail-closed routing remain intact.
+
+### Summary
+
+The revised design removes duplicated recovery identity and generic negative-control machinery while preserving the accepted `build -> verify` behavior and risk-triggered review. Only the corrected retained spec changed; implementation remains unstarted.
