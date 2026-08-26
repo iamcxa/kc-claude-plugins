@@ -96,3 +96,16 @@ An exact known Production failure can skip redundant shape work while retaining 
 ## Delivery boundary
 
 Deliver through one Captain-reviewed PR to `main`. This authority-changing item keeps manual merge; release remains separately authorized.
+
+## Stage Report: ideation
+
+- DONE: Write and commit one formal S5 design spec covering Production recovery, Captain-owned UAT for all profiles, and per-item auto-merge, with exact authority and invalidation boundaries.
+  Commit `dc7a1c8` adds `docs/superpowers/specs/2026-08-26-kc-dev-flow-proportional-production-delivery-design.md`; changed head/base, scope, evidence, and authority cases each have a named non-green outcome.
+- DONE: Define the first implementation slice only: additive v3 recovery routing, legacy full-route compatibility, risk-triggered review, one fresh full without-it, file touch points, and stop numbers.
+  The spec limits implementation to recovery, maps 16 expected files from base `5707a6f`, stops at 17 files/901 changed lines/281 loader-test lines, and would fail on a schema bump, engine change, new CI job, or later-interface edit.
+- DONE: Record the brownfield reverse-recovery receipt and retained-document checks; self-review the spec for placeholders, contradictions, ambiguous defaults, and duplicated live claims.
+  The spec records the four-layer `reverse_recovery` receipt, two-strategy per-section overlap check, intentional typed metavariables, and explicit defaults of full route, risk-triggered review, Captain UAT, manual merge, and manual release.
+
+### Summary
+
+The design preserves one workflow, three profiles, the superset graph, v3 compatibility, and existing Captain and release authority while making eligible Production recovery `build -> verify`. Only the recovery interface enters the first implementation boundary; UAT and auto-merge retain separate ownership and no implementation began in ideation.
