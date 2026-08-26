@@ -415,3 +415,24 @@ Rebased candidate `b6092e6` passes the complete deterministic gate, five semanti
 ### Summary
 
 The fixed Terra reviewer policy, scalar refusals, and loader-owned observation decision now pass the complete authorized contract and mutation gates within all stop lines. The clean candidate returns to fresh validation with RoboRev UNKNOWN and Captain UAT explicitly unresolved.
+
+## Stage Report: validation (cycle 5)
+
+- DONE: Freshly bind exact candidate 2b8abff65a5c50df2ef6ae48a77cb79ddbda6e0e, feature parent 3f5e71baa85687e61299397975cba31123f18228, and merge target origin/main 2e8595f0a1fa4448bc14a56baedd18214824158e; make no product edits.
+  A final fetch bound HEAD and merge-base to those objects with `0 behind / 8 ahead` and a clean product tree; the implementation slice from accepted design commit `caba8e3` is 18 files/625 gross lines (not the dispatch's stale 635 description) with 224 loader-test lines, below the 650/235 stop lines.
+- DONE: Verify the approved 18-file and 650/235 stop lines, complete kc-dev-flow contract gate, direct loader test, Terra mapping contract, all package/adopter parity checks, diff-check, ten route mutations, and the real Spacedock recovery journey.
+  The repository gate, direct loader/E2E, and RoboRev contract all exited 0; four package/adopter pairs are byte-identical, diff-check is clean, and the committed route helper rejected 10/10 missing-full or missing-recovery mutations, so either missing route clause fails its owner.
+- DONE: Prove fixed reviewer selection for both Claude-host and GPT-host inputs: agent codex, model gpt-5.6-terra, reasoning medium, panel none; host family remains provenance only. Prove profile minimum severity and request caps did not change.
+  The RoboRev contract passed independently with `CLAUDECODE` and `CODEX_THREAD_ID` host inputs while requiring the same repository mapping; profile controls remain POC high/1/0, Pilot medium/1/1, and Production medium/1/1, and the pre-rework Production diff changes only reasoning from thorough to medium.
+- DONE: Prove malformed recovery scalars including [], {}, and | fail closed. Prove implementation_exit_observation_declared is true for the full route and named recovery risks, and false for recovery review_risks: [none].
+  The direct candidate loader test rejects all three structural forms for each required recovery scalar and asserts full/named-risk `true` plus recovery `[none]` `false`; accepting any form or flipping any decision makes that test fail.
+- DONE: Run the single task-owned without-it in an isolated temporary copy: execute the complete candidate loader test against the exact pre-feature loader and require a feature-specific failure, confirm exact objects and absolute paths, then remove the copy.
+  Candidate test object `ff9f432...` with exact `3f5e71b` loader object `c9a4913...` exited 1 at `accepted structural-recovery_failure-91`; the registered copy was then removed and the product worktree remained clean.
+- DONE: Record exact-candidate delegated E2E UAT evidence for backlog gate -> ideation empty skip/no artifact -> implementation build -> validation verify, plus default-full compatibility, rollback readiness, Draft PR/provider state, and the carried RoboRev job 276 noncanonical UNKNOWN residual.
+  Spacedock 0.27.0 exercised that exact recovery journey and legacy full-route fixtures; rollback is the eventual landing-commit revert plus Captain re-recording active short-route items to full. Draft PR #299 remains at stale head `b6092e6` with old-head green checks and no reviews/comments, while job 276's `e20d13b..b6092e6` range is noncanonical and the official observation remains `UNKNOWN(state_unknown)`, not gate PASS.
+- DONE: Return PASS only if every acceptance criterion is supported and the branch remains 0 behind origin/main. Append one validation Stage Report and sync only state. Do not edit product, push the product branch, update the Draft PR, prepare/approve a gate, merge, release, or self-approve Captain UAT.
+  Technical verdict is PASS at exact candidate `2b8abff`: AC-1 through AC-5 and every replacement threshold have executable positive and negative evidence with the branch 0 behind; this report changes only state, and Captain UAT/validation approval, exact-head Draft update, Ready, merge, and release remain untouched.
+
+### Summary
+
+Exact candidate `2b8abff` passes the complete deterministic gate, fixed Terra mapping under both host families, fail-closed scalar and observation controls, ten route mutations, the real recovery journey, and one fresh without-it. Technical validation recommends PASS; Captain UAT remains the final validation decision, and Draft PR #299 plus RoboRev job 276 remain explicitly noncanonical to this candidate.
