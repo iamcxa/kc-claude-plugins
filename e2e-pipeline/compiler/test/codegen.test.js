@@ -174,6 +174,15 @@ describe('generate() — shell header', function() {
 //   4. Runtime-owned diagnostic hooks — the browser wrapper converts the
 //      optional newline-delimited E2E_DIAGNOSTIC_INIT_SCRIPTS environment value
 //      into repeated runtime-only --diagnostic-init-script arguments.
+//   5. Issue #190 — an optional variable's default is now nested in its own
+//      double quotes inside the ${N:-...} word, because that word re-enables
+//      quote processing and process substitution and so cannot be made inert by
+//      escaping characters. Verified per flow by diffing old vs new output:
+//      legacy-empty is byte-identical (no variables); legacy-single-site changed
+//      exactly one line (BASE_URL=); legacy-cross-site changed exactly two
+//      (OFFICE_BASE_URL=, APP_BASE_URL=) — one line per optional variable and
+//      nothing else. The required-variable ${N:?...} word changed the same way
+//      but is not exercised by this corpus.
 describe('PR-38 legacy output parity', function() {
   test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
@@ -184,7 +193,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-single-site',
-        expected: 'a63e7001e59f9dc30855ef43009f286e7c8a1857e09eefc1d80ace24c44f4f50',
+        expected: '9e4711a33a50d2a44f1d9cf69d4af9e0ba28894c370d86a0aa4bf20495c9d1ad',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -216,7 +225,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: '4e2bf1cb048844aa3ed6c13511f278268b30b5a4d7316565d21b7bf137d72fb9',
+        expected: 'bc86083d471cac0748feceae05f9f58be2c2d7a5d003d5633752179fcdb4da0d',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',
@@ -847,7 +856,7 @@ describe('generateVariables() — single optional variable (has default)', funct
   test("assignment uses :- pattern with env fallback and default value", function() {
     const result = generateVariables({ base_url: 'http://localhost:3000' }, 'test-flow');
     assert.ok(
-      result.includes('BASE_URL="${1:-${E2E_BASE_URL:-http://localhost:3000}}"'),
+      result.includes('BASE_URL="${1:-${E2E_BASE_URL:-"http://localhost:3000"}}"'),
       'Expected :- pattern with env+default. Got: ' + result
     );
   });
@@ -878,7 +887,7 @@ describe('generateVariables() — single required variable (null default)', func
   test("assignment uses :? pattern with usage message", function() {
     const result = generateVariables({ base_url: null }, 'test-flow');
     assert.ok(
-      result.includes('BASE_URL="${1:?Usage: test-flow.sh <base_url>}"'),
+      result.includes('BASE_URL="${1:?Usage: "test-flow.sh <base_url>"}"'),
       'Expected :? pattern for required var. Got: ' + result
     );
   });

@@ -81,6 +81,22 @@ function doubleQuote(str) {
   return '"' + escapeDoubleQuoted(str) + '"';
 }
 
+/**
+ * Render str safe for embedding in a `#` comment line.
+ *
+ * A `#` comment ends at the first newline, so an embedded CR/LF in a flow- or
+ * mapping-sourced string turns the remainder into executable script text.
+ * Neither singleQuote() nor escapeDoubleQuoted() closes that: comments are not
+ * quoted, and neither helper touches line terminators. Collapsing the
+ * terminators to their two-character escape keeps the comment readable and on
+ * one line.
+ */
+function commentSafe(str) {
+  return String(str)
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n');
+}
+
 /** Produce a path component that cannot traverse outside an artifact directory. */
 function artifactFileComponent(str) {
   if (/^[A-Za-z0-9._-]*$/.test(str)) return str;
@@ -125,7 +141,10 @@ function generateVariables(variables, flowName) {
     usageParts.push(isRequired ? '<' + name + '>' : '[' + name + ']');
   }
 
-  var usageLine = '# Usage: ' + flowName + '.sh ' + usageParts.join(' ');
+  // commentSafe() wraps the WHOLE comment, not just flowName: parser.js does not
+  // charset-validate flow `variables:` keys, and usageParts carries each key
+  // verbatim, so a newline in a key would end the comment here too.
+  var usageLine = commentSafe('# Usage: ' + flowName + '.sh ' + usageParts.join(' '));
   var lines = [usageLine, '# Parameters:'];
 
   // Build assignment lines in same pass
@@ -141,18 +160,30 @@ function generateVariables(variables, flowName) {
     var pos = j + 1;
 
     if (isReq) {
-      // Required: collect all usage params for the :? message
-      var reqUsage = flowName + '.sh ' + usageParts.join(' ');
-      lines.push('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')');
-      assignments.push(bashName + '="${' + pos + ':?Usage: ' + reqUsage + '}"');
+      // Required: collect all usage params for the :? message.
+      // The ${N:?word} word is expanded when the parameter is unset, and it is
+      // NOT an ordinary double-quoted string even inside "...": it ends at the
+      // first unquoted `}`, it re-enables quote processing (a lone `'` opens a
+      // literal), and it still performs process substitution (`<(cmd)` RUNS cmd).
+      // Escaping metacharacter-by-metacharacter therefore cannot close it — the
+      // word is nested in its own double quotes so bash parses it as a quoted
+      // string instead of as expansion grammar. Portable on bash 3.2 and 5.x;
+      // backslash-escaping `}` is NOT (3.2 keeps the backslash, 5.x drops it).
+      var reqUsage = escapeDoubleQuoted(flowName + '.sh ' + usageParts.join(' '));
+      lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')'));
+      assignments.push(bashName + '="${' + pos + ':?Usage: "' + reqUsage + '"}"');
     } else {
       var defaultStr = String(varValue);
       if (defaultStr === '') {
-        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')');
+        lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')'));
         assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-}}"');
       } else {
-        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + defaultStr + ')');
-        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-' + defaultStr + '}}"');
+        lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + defaultStr + ')'));
+        // The ${N:-default} word is expanded when the parameter is unset, so a
+        // mapping base_url (or any flow variable default) must be inert data.
+        // Same grammar problem as the :? word above — nest it in its own double
+        // quotes rather than enumerating metacharacters.
+        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-"' + escapeDoubleQuoted(defaultStr) + '"}}"');
       }
     }
   }
@@ -225,12 +256,12 @@ function generateHeader(meta) {
   ];
 
   if (meta) {
-    lines.push('# DO NOT EDIT -- regenerate with: e2e-compile ' + meta.flowName);
-    lines.push('# Source: ' + meta.flowPath);
+    lines.push('# DO NOT EDIT -- regenerate with: e2e-compile ' + commentSafe(meta.flowName));
+    lines.push('# Source: ' + commentSafe(meta.flowPath));
     if (Array.isArray(meta.mappingPaths)) {
-      meta.mappingPaths.forEach(function(p) { lines.push('# Mapping: ' + p); });
+      meta.mappingPaths.forEach(function(p) { lines.push('# Mapping: ' + commentSafe(p)); });
     } else if (meta.mappingPath) {
-      lines.push('# Mapping: ' + meta.mappingPath);
+      lines.push('# Mapping: ' + commentSafe(meta.mappingPath));
     }
     lines.push('# Generated: ' + meta.timestamp);
     lines.push('# SHA-256: ' + meta.hash);
@@ -1260,7 +1291,13 @@ function generateCleanupTrap(steps, finallySteps, summary) {
         var header = op.headers[hKey];
         lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
         lines.push('    if _FINALIZER_HEADER=$(_curl_config_escape "${' + header.runtime_ref.env + '-}"); then');
-        lines.push('      if ! printf ' + singleQuote('header = "' + hKey + ': ' + header.scheme + ' %s"\n') +
+        // The header NAME is spliced into a printf FORMAT operand, and
+        // parser.js validates it against a pattern that explicitly permits `%`
+        // — `X-%s` would relocate the token argument into the name position and
+        // leave the value empty. Doubling `%` makes it a literal percent.
+        // header.scheme needs no such treatment: HTTP_AUTH_SCHEME_PATTERN
+        // (parser.js) excludes `%`.
+        lines.push('      if ! printf ' + singleQuote('header = "' + hKey.replace(/%/g, '%%') + ': ' + header.scheme + ' %s"\n') +
           ' "$_FINALIZER_HEADER" >> "$_FINALIZER_CONFIG"; then');
         lines.push('        _FINALIZER_OK=false');
         lines.push('        _FINALIZER_FAILURE=' + singleQuote('finalizer credential artifact write failed'));
@@ -1408,7 +1445,16 @@ function generateCleanupTrap(steps, finallySteps, summary) {
  * Returns: string (multi-line bash block)
  */
 function generateJUnitEmitter(flowName) {
-  var escapedFlow = xmlAttrEscape(flowName);
+  // xmlAttrEscape() makes the name safe for XML, not for bash: it leaves an
+  // apostrophe intact, which closes the printf format's single-quoted literal.
+  // Every format string carrying it is wrapped with singleQuote() below.
+  //
+  // The name also lands inside a printf FORMAT operand, where a `%` is a
+  // conversion specifier: `flow%s%s-X` would consume two of the value arguments
+  // and shift every later one, corrupting the JUnit attributes. Doubling `%`
+  // makes it a literal percent. (The metrics emitter avoids this by putting the
+  // name in an argument slot instead; this emitter cannot, the name is inlined.)
+  var escapedFlow = xmlAttrEscape(flowName).replace(/%/g, '%%');
   var lines = [
     '_emit_junit() {',
     '  local _out="$1"',
@@ -1428,7 +1474,7 @@ function generateJUnitEmitter(flowName) {
     '  {',
     '    printf \'<?xml version="1.0" encoding="UTF-8"?>\\n\'',
     '    printf \'<testsuites>\\n\'',
-    '    printf \'  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n\' \\',
+    '    printf ' + singleQuote('  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n') + ' \\',
     '      "$_total" "$_failures" "$_skipped" "$_duration" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
     '    for _i in "${!_STEP_NAMES[@]}"; do',
     '      local _sname="${_STEP_XML_NAMES[$_i]}"',
@@ -1438,16 +1484,16 @@ function generateJUnitEmitter(flowName) {
     '      local _sfail_xml',
     '      _sfail_xml=$(_xml_attr_escape "$_sfail")',
     '      if [ "$_sresult" = "not_automated" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped message="not automated"/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped message="not automated"/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      elif [ "$_sresult" = "skip" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      elif [ "$_sresult" = "fail" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><failure message="%s"/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><failure message="%s"/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime" "$_sfail_xml"',
     '      else',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"/>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"/>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      fi',
     '    done',
@@ -1578,6 +1624,9 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
     ].join('\n');
   }
 
+  // The summary echoes are double-quoted and must keep expanding the runtime
+  // counters, so only the flow-sourced name is escaped — not the whole line.
+  var safeFlowName = escapeDoubleQuoted(flowName);
   var lines = [];
   lines.push('# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)');
   lines.push('if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
@@ -1593,15 +1642,15 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
     '_automated_total=$(( ' + totalSteps + ' - ' + skipped + ' - _not_automated ))',
     'if [ "$_HAD_RETRIES" = "true" ]; then',
     '  if [ "$_not_automated" -gt 0 ]; then',
-    '    echo "PASS (FLAKY): ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '    echo "PASS (FLAKY): ' + safeFlowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
     '  else',
-    '    echo "PASS (FLAKY): ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '    echo "PASS (FLAKY): ' + safeFlowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
     '  fi',
     'else',
     '  if [ "$_not_automated" -gt 0 ]; then',
-    '    echo "PASS: ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '    echo "PASS: ' + safeFlowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
     '  else',
-    '    echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '    echo "PASS: ' + safeFlowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
     '  fi',
     'fi',
     'exit 0'
@@ -1916,7 +1965,10 @@ function generateAction(step, stepIndex, totalSteps) {
     }
 
     default: {
-      lines.push('# Unknown action type: ' + step.type);
+      // Unreachable through compiler.js (resolver.js hands over a closed type
+      // set), but generate() is exported, so a caller-supplied type reaches this
+      // comment — where an embedded newline terminates it.
+      lines.push('# Unknown action type: ' + commentSafe(step.type));
       break;
     }
   }

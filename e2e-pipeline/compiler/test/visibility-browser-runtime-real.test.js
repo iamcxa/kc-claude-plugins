@@ -116,7 +116,8 @@ test('generated real-browser fixture binds its app and navigates before visibili
   const visibility = "_poll_visibility '.ghost' 'retained-zero-rect' visible";
 
   assert.match(script, /local _browser_app='vis-contract'/);
-  assert.match(script, /BASE_URL="\$\{1:-\$\{E2E_BASE_URL:-http:\/\/127\.0\.0\.1:3000\}\}"/);
+  // #190: the ${N:-...} word nests its payload in its own double quotes.
+  assert.match(script, /BASE_URL="\$\{1:-\$\{E2E_BASE_URL:-"http:\/\/127\.0\.0\.1:3000"\}\}"/);
   assert.ok(script.indexOf(navigation) !== -1, script);
   assert.ok(script.indexOf(visibility) !== -1, script);
   assert.ok(script.indexOf(navigation) < script.indexOf(visibility), script);
