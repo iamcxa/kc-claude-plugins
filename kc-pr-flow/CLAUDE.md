@@ -54,8 +54,10 @@ malformed structure, unsafe constructs, breakout payloads, and size caps.
 
 `KC_PR_FLOW_DELTA_FAST_PATH=on` is default-off routing for trusted appended
 post-fix work. `review-plan.sh` is read-only and advisory: it can select
-`initial`, `delta`, or `resolve`, preserve inherited finding IDs, and lower an
-event ceiling for a coverage gap; it cannot decide a review, confirm, or post.
+`initial`, `delta`, or `resolve`, preserve inherited finding IDs, and bind a
+current coverage ceiling; it cannot decide a review, confirm, or post. A
+predecessor receipt that claims a coverage gap is currently untrusted and uses
+the unchanged `initial` flow with no synthetic ceiling.
 `initial` remains the unchanged full flow, including every missing or untrusted
 predecessor case. See `reference/review-runtime.md` and
 `reference/review-triage.md` before changing this seam.

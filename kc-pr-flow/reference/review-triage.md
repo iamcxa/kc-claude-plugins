@@ -13,11 +13,13 @@ confirmation, or posting.
 | `delta` | Review `review_range.from_exclusive..to_inclusive`, every unseen changed path, and inherited finding IDs. Add every newly required capability and require a terminal result for each. |
 | `resolve` | Review the same exact unseen range with one focused correctness lane. Verify inherited findings and affected tests/contracts in parallel; inherit known finding IDs until current-head evidence resolves them. |
 
-Apply the existing size tier after this route decision. Do not change initial-mode
-tiers. During Phase 1, the unconditional security, supply-chain, and Actions
-specialist rules still apply to every mode. An `event_ceiling` only reduces
-authority: a current coverage gap must cap at `COMMENT`; it never creates a
-clean result.
+Mode precedence is binding: only `initial` applies the existing base-agent tier
+unchanged. `resolve` replaces that base tier with its one focused correctness
+lane plus targeted verification. `delta` replaces the base tier with the
+returned required-capability lanes. In every mode, keep the existing independent
+activation rules: security remains always-on; supply-chain, Actions, and the
+break-point probe remain conditional. An `event_ceiling` only reduces authority:
+a current coverage gap must cap at `COMMENT`; it never creates a clean result.
 
 ## Step 4: Triage — Agent Selection
 
@@ -140,6 +142,11 @@ Break-point probe (Step 4.5p) prevents approving a fix based on unit tests alone
 
 ### 4e. Select agent tier
 
+This section applies only when `REVIEW_MODE = initial`. Preserve its existing
+inputs, size thresholds, tier result, and cost model byte-for-byte for that
+mode. `resolve` and `delta` do not select Lite/Standard/Full base-agent tiers:
+their binding lane shape is defined by the post-fix route above.
+
 Use **filtered** line count (after noise removal) for tier selection:
 
 | Tier | Condition | Agents | Est. cost (base) |
@@ -181,6 +188,18 @@ Proceeding with Lite review. Say "full review" to override.
 ```
 
 ### 4f. Dispatch selected agents
+
+Dispatch by `REVIEW_MODE` before the legacy base-agent list:
+
+| Mode | Base review dispatch |
+|---|---|
+| `initial` | Use the existing Lite/Standard/Full base-agent dispatch below unchanged. |
+| `resolve` | Replace the base-agent tier with one focused correctness reviewer; run inherited-finding verification and affected test/contract verification in parallel. |
+| `delta` | Replace the base-agent tier with one lane per returned required capability; review every unseen changed path and inherited finding, then require every returned capability to terminally complete. |
+
+The table replaces only base-agent dispatch. Apply the existing always-on
+security reviewer and each existing conditional specialist, Codex, probe, and
+arbitration rule independently; no fast-path mode suppresses an activated rule.
 
 Lite tier base agents (always dispatched): `pr-review-toolkit:code-reviewer`, `pr-review-toolkit:comment-analyzer`, `pr-review-toolkit:silent-failure-hunter`. Standard and Full add `pr-review-toolkit:type-design-analyzer` and `pr-review-toolkit:pr-test-analyzer`.
 

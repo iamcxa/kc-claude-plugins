@@ -261,6 +261,65 @@ review_plan_input_identity_valid() {
   ' >/dev/null 2>&1
 }
 
+# This shared adapter boundary validates a closed decision before a skill reads
+# any field from it. It is deliberately mechanical: routing cannot decide a
+# finding, verdict, or posting authority.
+review_plan_validate_decision() {
+  local decision="$1" repository="$2" pr_number="$3" base_sha="$4" head_sha="$5" config_hash="$6"
+  local expected_review_key
+  [ "$#" -eq 6 ] || return 2
+  review_plan_source_runtime || return
+  review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 3
+  review_runtime_json_has_unique_members "$decision" >/dev/null 2>&1 || return 3
+  expected_review_key="$(printf '%s|%s|%s|%s|%s' "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" |
+    review_runtime_sha256)" || return
+  jq -e -n \
+    --argjson decision "$decision" --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" --arg config_hash "$config_hash" \
+    --arg review_key "$expected_review_key" '
+      def exact_keys($required): type == "object" and (keys | sort) == ($required | sort);
+      def sha256: type == "string" and test("^[0-9a-f]{64}$");
+      def sha1: type == "string" and test("^[0-9a-f]{40}$");
+      def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+      def sorted_unique_sha256:
+        type == "array" and all(.[]; sha256) and . == (sort | unique);
+      def sorted_unique_tokens:
+        type == "array" and all(.[]; token) and . == (sort | unique);
+      def identity:
+        exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key"]) and
+        .repository == $repository and .pr_number == $pr_number and .base_sha == $base_sha and
+        .head_sha == $head_sha and .config_hash == $config_hash and .review_key == $review_key;
+      def review_range:
+        exact_keys(["from_exclusive","to_inclusive"]) and .to_inclusive == $head_sha and
+        (.from_exclusive == null or (.from_exclusive | sha1));
+      def fallback:
+        exact_keys(["final_verdict_authority","requires_existing_initial_review","router_advisory"]) and
+        .router_advisory == true and
+        (.requires_existing_initial_review | type == "boolean") and
+        .final_verdict_authority == "existing-review-runtime";
+      ($decision | exact_keys(["event_ceiling","fallback","identity","inherited_finding_ids","mode","reason_codes","required_capabilities","review_range","schema"])) and
+      $decision.schema == "kc-pr-flow.review-plan-decision/v1" and
+      ($decision.identity | identity) and
+      ($decision.mode == "initial" or $decision.mode == "delta" or $decision.mode == "resolve") and
+      ($decision.reason_codes | type == "array" and length > 0 and all(token) and . == (sort | unique)) and
+      ($decision.review_range | review_range) and
+      ($decision.inherited_finding_ids | sorted_unique_sha256) and
+      ($decision.required_capabilities | sorted_unique_tokens) and
+      ($decision.event_ceiling == null or $decision.event_ceiling == "APPROVE" or $decision.event_ceiling == "COMMENT") and
+      ($decision.fallback | fallback) and
+      (if $decision.mode == "initial" then
+        $decision.review_range.from_exclusive == null and
+        $decision.inherited_finding_ids == [] and
+        $decision.required_capabilities == [] and
+        $decision.event_ceiling == null and
+        $decision.fallback.requires_existing_initial_review == true
+      else
+        ($decision.review_range.from_exclusive | sha1) and
+        $decision.fallback.requires_existing_initial_review == false
+      end)
+    ' >/dev/null 2>&1
+}
+
 review_plan_build_decision() {
   local repository="$1" pr_number="$2" base_sha="$3" head_sha="$4" config_hash="$5"
   local mode="$6" reason_codes="$7" from_exclusive="$8" inherited_finding_ids="$9"

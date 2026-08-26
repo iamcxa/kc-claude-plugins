@@ -30,14 +30,14 @@ only these advisory schemas:
 ```json
 {
   "schema": "kc-pr-flow.review-plan-decision/v1",
-  "identity": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40-hex>", "head_sha": "<40-hex>", "config_hash": "<64-hex>"},
+  "identity": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40-hex>", "head_sha": "<40-hex>", "config_hash": "<64-hex>", "review_key": "<64-hex>"},
   "mode": "resolve",
   "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],
   "review_range": {"from_exclusive": "<40-hex>", "to_inclusive": "<40-hex>"},
   "inherited_finding_ids": ["<64-hex>"],
   "required_capabilities": ["correctness"],
   "event_ceiling": "APPROVE",
-  "fallback": "initial"
+  "fallback": {"router_advisory": true, "requires_existing_initial_review": false, "final_verdict_authority": "existing-review-runtime"}
 }
 ```
 
@@ -45,8 +45,10 @@ A receipt is trusted only after the predecessor event file is a private regular
 file snapshot that replays successfully, the receipt exactly binds that replay,
 repository/PR/base/configuration match, predecessor head is an ancestor of the
 current head, and every inherited finding has a stable ID and evidence hash.
-Required coverage gaps stay inherited. Any missing, malformed, unsafe, stale,
-hash-mismatched, replay-invalid, or non-ancestor input selects `initial`.
+The current receipt validator accepts only `coverage_gap_refs:[]`; a receipt
+claiming a gap is untrusted and selects `initial` with no synthetic ceiling.
+Any missing, malformed, unsafe, stale, hash-mismatched, replay-invalid, or
+non-ancestor input does the same.
 
 ```bash
 bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl
@@ -58,8 +60,8 @@ bash scripts/review-plan.sh decide --repo owner/repo --pr 42 --base BASE --head 
 | Router result | Required adapter behavior |
 |---|---|
 | valid `resolve` / `delta` | Keep the exact returned range, inherited IDs, required capabilities, and authority ceiling. |
-| `initial` | Run the existing full initial flow with no synthetic `COMMENT` ceiling. |
-| nonzero, partial stdout, invalid JSON, or invalid schema | Discard stdout and run that same unchanged `initial` flow. |
+| `initial` | The closed fallback object requires the existing full initial flow with no synthetic `COMMENT` ceiling. |
+| nonzero, partial stdout, invalid JSON, invalid schema, or invalid closed shape | Discard stdout and run that same unchanged `initial` flow. |
 | current required coverage gap | Keep review visible and cap at `COMMENT`; blocker evidence may still use the existing `REQUEST_CHANGES` path. |
 
 The router cannot dispatch a reviewer, assert semantic correctness or security,

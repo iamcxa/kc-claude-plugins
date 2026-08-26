@@ -126,7 +126,7 @@ base/head/configuration identity, a private predecessor event snapshot, and its
 terminal delta receipt. Missing predecessor inputs are normal: the
 planner returns `mode == "initial"`, and `initial` enters the existing full flow
 unchanged. See `reference/review-runtime.md` for the receipt/decision contract
-and `bash scripts/review-plan.sh --help` for the maintained command interface.
+and complete CLI invocation.
 
 ```bash
 REVIEW_MODE=initial
@@ -136,8 +136,9 @@ if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
     --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$REVIEWED_HEAD_SHA" \
     --config-hash "$CONFIG_HASH" --repo-worktree "$REPO_WORKTREE" \
     --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
-     jq -e '.schema == "kc-pr-flow.review-plan-decision/v1"' \
-       >/dev/null 2>&1 <<<"$CANDIDATE_PLAN_JSON"; then
+     . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" &&
+     review_plan_validate_decision "$CANDIDATE_PLAN_JSON" "$REPO" "$PR_NUMBER" \
+       "$BASE_SHA" "$REVIEWED_HEAD_SHA" "$CONFIG_HASH"; then
     PLAN_JSON="$CANDIDATE_PLAN_JSON"
     REVIEW_MODE="$(jq -r '.mode' <<<"$PLAN_JSON")"
     PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
@@ -157,9 +158,11 @@ already-default `REVIEW_MODE=initial`.
   affected-test verification run in parallel.
 - `delta` reviews every unseen changed path and inherited finding; every newly
   required capability must terminally complete.
-- The current unconditional specialist rules remain unchanged in Phase 1.
-  `event_ceiling` can only reduce authority; a real coverage gap caps at
-  `COMMENT` through the existing decision path.
+- Existing specialist and probe activation remains unchanged in Phase 1:
+  security remains always-on, while supply-chain, Actions, and break-point
+  probe activation remains conditional. `event_ceiling` can only reduce
+  authority; a real current coverage gap caps at `COMMENT` through the existing
+  decision path.
 - Step 2.1 still rechecks the live head before a clean draft and before posting.
   The user still receives the full Step 6 draft and explicitly confirms at Step
   6c before Step 7 can post.

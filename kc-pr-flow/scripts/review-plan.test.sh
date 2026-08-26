@@ -41,6 +41,9 @@ assert_file_contains() {
 assert_file_not_contains() {
   if grep -Fq "$2" "$1"; then fail "$3 (unexpected [$2] in $1)"; else pass; fi
 }
+assert_match() {
+  if grep -Eq "$2" <<<"$3"; then pass; else fail "$1 (expected [$2], got [$3])"; fi
+}
 
 sha256_text() {
   if command -v shasum >/dev/null 2>&1; then
@@ -274,21 +277,59 @@ skill_router_snippet() {
 }
 
 skill_router_trace() {
-  local stub_mode="$1" script plugin_root snippet output
+  local stub_mode="$1" script plugin_root snippet output decision review_key
   plugin_root="$TEST_ROOT/skill-router-$stub_mode"
   mkdir -p "$plugin_root/scripts"
+  review_key="$(sha256_text 'acme/widgets|1693|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb|cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc')"
+  decision="$(jq -S -c -n --arg key "$review_key" '
+    {schema:"kc-pr-flow.review-plan-decision/v1",
+      identity:{repository:"acme/widgets",pr_number:1693,
+        base_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        head_sha:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        config_hash:"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        review_key:$key},
+      mode:"resolve",
+      reason_codes:["ancestor_append","known_finding_delta","trusted_predecessor"],
+      review_range:{from_exclusive:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",to_inclusive:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      inherited_finding_ids:["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"],
+      required_capabilities:["correctness"],
+      event_ceiling:"APPROVE",
+      fallback:{router_advisory:true,requires_existing_initial_review:false,final_verdict_authority:"existing-review-runtime"}}')"
   case "$stub_mode" in
+    valid-exit-0) ;;
     valid-prefix-exit-9)
-      printf '%s\n' '#!/usr/bin/env bash' "printf '%s\\n' '{\"schema\":\"kc-pr-flow.review-plan-decision/v1\"}'" 'exit 9' >"$plugin_root/scripts/review-plan.sh"
+      decision='{"schema":"kc-pr-flow.review-plan-decision/v1"}'
       ;;
     malformed-exit-0)
-      printf '%s\n' '#!/usr/bin/env bash' "printf '%s\\n' 'not-json'" >"$plugin_root/scripts/review-plan.sh"
+      decision='not-json'
+      ;;
+    schema-only-exit-0)
+      decision='{"schema":"kc-pr-flow.review-plan-decision/v1"}'
+      ;;
+    extra-member-exit-0)
+      decision="$(jq -S -c '. + {unexpected:true}' <<<"$decision")"
+      ;;
+    wrong-type-exit-0)
+      decision="$(jq -S -c '.identity.pr_number="1693"' <<<"$decision")"
       ;;
     *)
       fail "unknown skill router stub mode: $stub_mode"
       return
       ;;
   esac
+  printf '%s\n' "$decision" >"$plugin_root/scripts/review-plan.sh.decision"
+  {
+    printf '%s\n' '#!/usr/bin/env bash'
+    printf 'source %q\n' "$PLAN"
+    printf '%s\n' 'if [ "${1:-}" = decide ]; then'
+    printf '%s\n' '  cat "$(dirname "$0")/review-plan.sh.decision"'
+    if [ "$stub_mode" = 'valid-prefix-exit-9' ]; then
+      printf '%s\n' '  exit 9'
+    else
+      printf '%s\n' '  exit 0'
+    fi
+    printf '%s\n' 'fi'
+  } >"$plugin_root/scripts/review-plan.sh"
   chmod +x "$plugin_root/scripts/review-plan.sh"
   snippet="$(skill_router_snippet)"
   if [ -z "$snippet" ]; then
@@ -321,18 +362,28 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'mode == "initial"' 'skill documents unchanged initial mode'
   assert_file_contains "$SKILL" 'coverage gap.*COMMENT' 'skill constrains coverage gaps to COMMENT'
   assert_file_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
+  assert_file_contains "$SKILL" 'review_plan_validate_decision' 'skill validates the complete closed planner decision'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted' 'human_confirmed'; do
     assert_file_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
   done
 
-  flag_off_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=off skill_router_trace valid-prefix-exit-9)"
+  flag_off_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=off skill_router_trace valid-exit-0)"
+  valid_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-exit-0)"
   failed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-prefix-exit-9)"
   malformed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace malformed-exit-0)"
+  schema_only_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace schema-only-exit-0)"
+  extra_member_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace extra-member-exit-0)"
+  wrong_type_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace wrong-type-exit-0)"
+  assert_match 'complete valid router decision is accepted' '^mode=resolve\|plan=\{.*\}\|ceiling=APPROVE\|reason=ancestor_append,known_finding_delta,trusted_predecessor$' "$valid_router_trace"
   assert_eq 'failed router preserves byte-identical initial trace' "$flag_off_trace" "$failed_router_trace"
   assert_eq 'malformed router preserves byte-identical initial trace' "$flag_off_trace" "$malformed_router_trace"
+  assert_eq 'schema-only router preserves byte-identical initial trace' "$flag_off_trace" "$schema_only_router_trace"
+  assert_eq 'extra-member router preserves byte-identical initial trace' "$flag_off_trace" "$extra_member_router_trace"
+  assert_eq 'wrong-type router preserves byte-identical initial trace' "$flag_off_trace" "$wrong_type_router_trace"
   assert_eq 'failed router leaves plan state unset' 'mode=initial|plan=unset|ceiling=unset|reason=unset' "$failed_router_trace"
+  assert_eq 'skill router traces preserve planner path' "$HERE/review-plan.sh" "$PLAN"
 fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
