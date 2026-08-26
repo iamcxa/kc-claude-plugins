@@ -50,6 +50,27 @@ again before posting. `scripts/review-architecture-diagrams-validate.sh` is fail
 only the documented two-diagram grammar; `review-architecture-diagrams-validator.test.sh` covers
 malformed structure, unsafe constructs, breakout payloads, and size caps.
 
+### Trusted post-fix planning (Phase 1)
+
+`KC_PR_FLOW_DELTA_FAST_PATH=on` is default-off routing for trusted appended
+post-fix work. `review-plan.sh` is read-only and advisory: it can select
+`initial`, `delta`, or `resolve`, preserve inherited finding IDs, and lower an
+event ceiling for a coverage gap; it cannot decide a review, confirm, or post.
+`initial` remains the unchanged full flow, including every missing or untrusted
+predecessor case. See `reference/review-runtime.md` and
+`reference/review-triage.md` before changing this seam.
+
+Maintainer checks:
+
+```bash
+bash scripts/review-plan.test.sh
+bash scripts/review-latency-benchmark.test.sh
+```
+
+Phase 2 shared inventory, Phase 3 typed collation, Phase 4 recipe extraction,
+Phase 5 specialist routing, and Phase 6 tails remain unimplemented and
+promotion-gated. Do not claim this Phase 1 route has promoted later phases.
+
 ### Typed Review Runtime
 
 `kc-pr-review` has one post-collation observer seam before its existing confirmation gate. It is off

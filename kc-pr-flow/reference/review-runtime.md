@@ -10,6 +10,62 @@ Each receipt-runtime file consumer first creates one private mode-0600 snapshot 
 
 The runtime has no network, model, GitHub, posting, authorization, resume, or garbage-collection authority. In typed mode its derived decision is authoritative only for interactive coverage, approval eligibility, event precedence, and confirmation input. The existing `kc-pr-review` flow remains authoritative for review analysis, rendering, mandatory human confirmation, and posting.
 
+## Phase 1 trusted post-fix planning
+
+`scripts/review-plan.sh` is a separate read-only router for the default-off
+post-fix route. It consumes a closed terminal runtime event file and produces
+only these advisory schemas:
+
+```json
+{
+  "schema": "kc-pr-flow.review-delta-receipt/v1",
+  "predecessor": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40-hex>", "head_sha": "<40-hex>", "config_hash": "<64-hex>", "review_key": "<64-hex>", "run_id": "run-safe-token", "receipt_id": "<64-hex>"},
+  "known_findings": [{"finding_id": "<64-hex>", "claim_key": "safe-token", "evidence_sha256": "<64-hex>", "path": "relative/path", "side": "RIGHT", "resolution_state": "unresolved"}],
+  "required_capabilities": ["correctness"],
+  "coverage_gap_refs": [],
+  "content_sha256": "<64-hex>"
+}
+```
+
+```json
+{
+  "schema": "kc-pr-flow.review-plan-decision/v1",
+  "identity": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40-hex>", "head_sha": "<40-hex>", "config_hash": "<64-hex>"},
+  "mode": "resolve",
+  "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],
+  "review_range": {"from_exclusive": "<40-hex>", "to_inclusive": "<40-hex>"},
+  "inherited_finding_ids": ["<64-hex>"],
+  "required_capabilities": ["correctness"],
+  "event_ceiling": "APPROVE",
+  "fallback": "initial"
+}
+```
+
+A receipt is trusted only after the predecessor event file is a private regular
+file snapshot that replays successfully, the receipt exactly binds that replay,
+repository/PR/base/configuration match, predecessor head is an ancestor of the
+current head, and every inherited finding has a stable ID and evidence hash.
+Required coverage gaps stay inherited. Any missing, malformed, unsafe, stale,
+hash-mismatched, replay-invalid, or non-ancestor input selects `initial`.
+
+```bash
+bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl
+bash scripts/review-plan.sh decide --repo owner/repo --pr 42 --base BASE --head HEAD \
+  --config-hash CONFIG_HASH --repo-worktree REPO_DIR \
+  --predecessor-events terminal-events.jsonl --delta-receipt receipt.json
+```
+
+| Router result | Required adapter behavior |
+|---|---|
+| valid `resolve` / `delta` | Keep the exact returned range, inherited IDs, required capabilities, and authority ceiling. |
+| `initial` | Run the existing full initial flow with no synthetic `COMMENT` ceiling. |
+| nonzero, partial stdout, invalid JSON, or invalid schema | Discard stdout and run that same unchanged `initial` flow. |
+| current required coverage gap | Keep review visible and cap at `COMMENT`; blocker evidence may still use the existing `REQUEST_CHANGES` path. |
+
+The router cannot dispatch a reviewer, assert semantic correctness or security,
+choose the review event, alter confidence, authorize a human confirmation, or
+post a review. `event_ceiling` is only a maximum authority bound.
+
 ## Exact-head identity
 
 A review is bound to these caller-supplied values:

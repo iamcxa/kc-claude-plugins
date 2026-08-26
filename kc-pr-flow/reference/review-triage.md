@@ -1,5 +1,24 @@
 # Review Triage
 
+## Post-fix route before size tiering
+
+When `KC_PR_FLOW_DELTA_FAST_PATH=on`, run `review-plan.sh decide` after the
+Step 2.1 exact-head snapshot and before this triage. It selects work only from a
+trusted predecessor receipt; it cannot decide a finding, final event, human
+confirmation, or posting.
+
+| `REVIEW_MODE` | Diff and lane shape before size tiering |
+|---|---|
+| `initial` | Keep the existing full PR diff, tier selection, and lane topology unchanged. Missing or untrusted predecessor input is normal and selects this mode. |
+| `delta` | Review `review_range.from_exclusive..to_inclusive`, every unseen changed path, and inherited finding IDs. Add every newly required capability and require a terminal result for each. |
+| `resolve` | Review the same exact unseen range with one focused correctness lane. Verify inherited findings and affected tests/contracts in parallel; inherit known finding IDs until current-head evidence resolves them. |
+
+Apply the existing size tier after this route decision. Do not change initial-mode
+tiers. During Phase 1, the unconditional security, supply-chain, and Actions
+specialist rules still apply to every mode. An `event_ceiling` only reduces
+authority: a current coverage gap must cap at `COMMENT`; it never creates a
+clean result.
+
 ## Step 4: Triage — Agent Selection
 
 Use PR metadata from Step 2 to determine which review agents to dispatch. This saves context by avoiding unnecessary agents on small PRs.

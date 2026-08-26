@@ -7,6 +7,8 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PLAN="$HERE/review-plan.sh"
 RUNTIME="$HERE/review-runtime.sh"
+SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
+REFERENCE="$HERE/../reference/review-runtime.md"
 TEST_ROOT="$(cd "$(mktemp -d)" && pwd -P)"
 cleanup() {
   chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true
@@ -19,7 +21,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case receipt-contract|mode-router|trust-boundary|worktree-safety]\n' "$0" >&2
+    printf 'usage: %s [--case receipt-contract|mode-router|trust-boundary|worktree-safety|skill-wiring]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -32,6 +34,12 @@ assert_eq() {
 }
 assert_not_zero() {
   if [ "$2" -ne 0 ]; then pass; else fail "$1 (expected nonzero status)"; fi
+}
+assert_file_contains() {
+  if grep -Eq "$2" "$1"; then pass; else fail "$3 (missing [$2] in $1)"; fi
+}
+assert_file_not_contains() {
+  if grep -Fq "$2" "$1"; then fail "$3 (unexpected [$2] in $1)"; else pass; fi
 }
 
 sha256_text() {
@@ -255,6 +263,77 @@ make_replay_repo() {
     printf '%s=%s\n' "$name" "$(git -C "$fixture_repo" rev-parse HEAD)"
   done < <(jq -r '.commits[] | [.name, (.files | tojson)] | @tsv' "$fixture")
 }
+
+skill_router_snippet() {
+  awk '
+    /^### Step 2\.2: Trusted Post-Fix Route$/ { in_section=1; next }
+    in_section && /^```bash$/ { in_code=1; next }
+    in_code && /^```$/ { exit }
+    in_code { print }
+  ' "$SKILL"
+}
+
+skill_router_trace() {
+  local stub_mode="$1" script plugin_root snippet output
+  plugin_root="$TEST_ROOT/skill-router-$stub_mode"
+  mkdir -p "$plugin_root/scripts"
+  case "$stub_mode" in
+    valid-prefix-exit-9)
+      printf '%s\n' '#!/usr/bin/env bash' "printf '%s\\n' '{\"schema\":\"kc-pr-flow.review-plan-decision/v1\"}'" 'exit 9' >"$plugin_root/scripts/review-plan.sh"
+      ;;
+    malformed-exit-0)
+      printf '%s\n' '#!/usr/bin/env bash' "printf '%s\\n' 'not-json'" >"$plugin_root/scripts/review-plan.sh"
+      ;;
+    *)
+      fail "unknown skill router stub mode: $stub_mode"
+      return
+      ;;
+  esac
+  chmod +x "$plugin_root/scripts/review-plan.sh"
+  snippet="$(skill_router_snippet)"
+  if [ -z "$snippet" ]; then
+    fail 'skill router snippet is extractable'
+    return
+  fi
+  script="$TEST_ROOT/skill-router-$stub_mode.sh"
+  {
+    printf '%s\n' 'set -u'
+    printf '%s\n' 'REPO=acme/widgets'
+    printf '%s\n' 'PR_NUMBER=1693'
+    printf '%s\n' 'BASE_SHA=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    printf '%s\n' 'REVIEWED_HEAD_SHA=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    printf '%s\n' 'CONFIG_HASH=cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    printf '%s\n' 'REPO_WORKTREE=/tmp/repo'
+    printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
+    printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+    printf 'CLAUDE_PLUGIN_ROOT=%q\n' "$plugin_root"
+    printf 'KC_PR_FLOW_DELTA_FAST_PATH=%q\n' "${KC_PR_FLOW_DELTA_FAST_PATH:-off}"
+    printf '%s\n' "$snippet"
+    printf '%s\n' 'printf "mode=%s|plan=%s|ceiling=%s|reason=%s\n" "$REVIEW_MODE" "${PLAN_JSON-unset}" "${PLAN_EVENT_CEILING-unset}" "${PLAN_REASON-unset}"'
+  } >"$script"
+  output="$(bash "$script")"
+  printf '%s' "$output"
+}
+
+if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
+  assert_file_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on' 'skill documents the default-off fast-path flag'
+  assert_file_contains "$SKILL" 'review-plan\.sh" decide' 'skill invokes the route planner'
+  assert_file_contains "$SKILL" 'mode == "initial"' 'skill documents unchanged initial mode'
+  assert_file_contains "$SKILL" 'coverage gap.*COMMENT' 'skill constrains coverage gaps to COMMENT'
+  assert_file_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
+  assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
+  assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
+  for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted' 'human_confirmed'; do
+    assert_file_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
+  done
+
+  flag_off_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=off skill_router_trace valid-prefix-exit-9)"
+  failed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-prefix-exit-9)"
+  malformed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace malformed-exit-0)"
+  assert_eq 'failed router preserves byte-identical initial trace' "$flag_off_trace" "$failed_router_trace"
+  assert_eq 'malformed router preserves byte-identical initial trace' "$flag_off_trace" "$malformed_router_trace"
+  assert_eq 'failed router leaves plan state unset' 'mode=initial|plan=unset|ceiling=unset|reason=unset' "$failed_router_trace"
+fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
   # shellcheck source=/dev/null

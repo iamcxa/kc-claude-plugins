@@ -118,7 +118,53 @@ Merge the results into Step 5/6 before any APPROVE or clean COMMENT.
 
 This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
 
-### Step 2.2: Optional kc-dev-flow handoff
+### Step 2.2: Trusted Post-Fix Route
+
+This route is default-off: set `KC_PR_FLOW_DELTA_FAST_PATH=on` only for this
+fresh invocation. It is available only when the caller has the exact Step 2.1
+base/head/configuration identity, a private predecessor event snapshot, and its
+terminal delta receipt. Missing predecessor inputs are normal: the
+planner returns `mode == "initial"`, and `initial` enters the existing full flow
+unchanged. See `reference/review-runtime.md` for the receipt/decision contract
+and `bash scripts/review-plan.sh --help` for the maintained command interface.
+
+```bash
+REVIEW_MODE=initial
+unset PLAN_JSON PLAN_EVENT_CEILING PLAN_REASON CANDIDATE_PLAN_JSON
+if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
+  if CANDIDATE_PLAN_JSON="$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+    --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$REVIEWED_HEAD_SHA" \
+    --config-hash "$CONFIG_HASH" --repo-worktree "$REPO_WORKTREE" \
+    --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
+     jq -e '.schema == "kc-pr-flow.review-plan-decision/v1"' \
+       >/dev/null 2>&1 <<<"$CANDIDATE_PLAN_JSON"; then
+    PLAN_JSON="$CANDIDATE_PLAN_JSON"
+    REVIEW_MODE="$(jq -r '.mode' <<<"$PLAN_JSON")"
+    PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
+    PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
+  fi
+  unset CANDIDATE_PLAN_JSON
+fi
+```
+
+If the helper exits nonzero, emits partial output, or emits invalid JSON/schema,
+discard all of its stdout and continue the pre-existing `initial` flow. Do not
+create `PLAN_JSON`, do not add a `COMMENT` ceiling, and do not alter any
+initial-review instruction, lane, or authority. The only retained value is the
+already-default `REVIEW_MODE=initial`.
+
+- `resolve` dispatches one focused correctness reviewer; known-finding and
+  affected-test verification run in parallel.
+- `delta` reviews every unseen changed path and inherited finding; every newly
+  required capability must terminally complete.
+- The current unconditional specialist rules remain unchanged in Phase 1.
+  `event_ceiling` can only reduce authority; a real coverage gap caps at
+  `COMMENT` through the existing decision path.
+- Step 2.1 still rechecks the live head before a clean draft and before posting.
+  The user still receives the full Step 6 draft and explicitly confirms at Step
+  6c before Step 7 can post.
+
+### Step 2.3: Optional kc-dev-flow handoff
 
 When the caller supplies an external handoff path and the installed
 `kc-dev-flow/scripts/pr-review-handoff.py` helper is available, first complete
