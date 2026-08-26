@@ -15,6 +15,18 @@ mod-block:
 design: required
 lane: main
 id: za5drqh93q5522c6kstrxrsx
+gates:
+    version: 1
+    records:
+        - id: gate:za5drqh93q5522c6kstrxrsx:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:za5drqh93q5522c6kstrxrsx-backlog-1
+              briefing:
+                id: briefing:za5drqh93q5522c6kstrxrsx:backlog:attempt-1:revision-1
+                digest: sha256:961bbed0d4b713fb3fa268a47854856cecba773ba5e41db22e3c5655cafafde7
+                request-digest: sha256:541807e04fb832e47616caf1195f4ba2f71eafc14b5e4b3c1d37dd39bf92e0dc
+                room-ref: ./production-recovery-route/review/backlog/briefing-1
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.

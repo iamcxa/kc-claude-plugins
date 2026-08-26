@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:za5drqh93q5522c6kstrxrsx:backlog:attempt-1:revision-1",
+  "question": "Approve the S5 Production recovery contract to enter ideation and produce the formal design spec?",
+  "artifacts": [
+    {
+      "id": "artifact:za5drqh93q5522c6kstrxrsx:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b449edee4e58c6f104755973a60d3815d49aba5d/production-recovery-route.md",
+      "rev": "sha256:c6b305a80f1196d7b0156ce00e8a020baf9f90f600d9d0dbd0464cd79df14530",
+      "mediaType": "text/markdown",
+      "summary": "Design an additive v3 Production recovery route with one fresh full without-it, risk-triggered review, legacy full-route compatibility, and no UAT or auto-merge implementation in this first slice."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/5707a6fe617f5f9f687672228a13bfb9079102e5/docs/dev/ROADMAP.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:3c45e4ed81fa112d872ae18ba0763ddc03c023c6765efdddf60959427ae8a2dd"
+    }
+  ]
+}
