@@ -398,3 +398,20 @@ Exact candidate `e03fb1b` passes the complete gate, live recovery journey, five 
 ### Summary
 
 Rebased candidate `b6092e6` passes the complete deterministic gate, five semantic route boundaries, exact Spacedock recovery journey, and corrected isolated without-it. Technical validation recommends PASS; Captain UAT and validation approval remain the final authority, with no PR/provider feedback and the carried RoboRev UNKNOWN still visible.
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Replace host-complementary RoboRev selection with one fixed implementation-exit reviewer across package, adopter, local config, adoption/continuation rules, validation guidance, and contracts.
+  The repaired candidate fixes agent `codex`, model `gpt-5.6-terra`, reasoning `medium`, and panel `none`; host and implementation family remain provenance only, while profile severity and request/confirmation caps remain profile-owned. The focused RoboRev mapping contract passes.
+- DONE: Reject YAML structural and block forms for every required recovery scalar, while preserving byte-identical package/adopter loaders.
+  Focused RED accepted a structural value before the repair; GREEN now rejects `[]`, `{}`, and `|` for each required recovery field. The complete loader test passes and the two loader copies are byte-identical.
+- DONE: Emit and consume the mechanical `implementation_exit_observation_declared` build decision instead of inferring RoboRev activation from prose.
+  Loader tests prove full Production routes and named recovery risks emit `true`, while recovery `[none]` emits `false`; `continue-dev-flow` consumes that field and the full repository contract passes.
+- DONE: Stay within the authorized slice and run all required positive, negative, parity, and hygiene gates.
+  The exact feature diff from `caba8e3` is 18 files/635 gross lines with 224 gross loader-test lines. RoboRev and kc-dev-flow contracts pass, five route boundaries reject 10/10 missing-route mutations, four package/adopter pairs are byte-identical, and `git diff --check` is clean; no CI, workflow, schema, UAT, auto-merge, release, or other profile build mechanism was added.
+- DONE: Commit the repair and sync only this implementation report without pushing product or changing authority.
+  Product tip `2b8abff65a5c50df2ef6ae48a77cb79ddbda6e0e` includes repair commit `2b8abff`; RoboRev job 276 remains the spent-request `UNKNOWN(state_unknown)` and was not retried. Fresh validation still owns without-it, exact-candidate UAT evidence, and the Captain's final UAT decision.
+
+### Summary
+
+The fixed Terra reviewer policy, scalar refusals, and loader-owned observation decision now pass the complete authorized contract and mutation gates within all stop lines. The clean candidate returns to fresh validation with RoboRev UNKNOWN and Captain UAT explicitly unresolved.
