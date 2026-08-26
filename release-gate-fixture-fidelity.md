@@ -130,3 +130,20 @@ Deliver as one Draft PR to `main`, then let Release Please update and rerun PR #
 ### Summary
 
 The accepted shape is one reversible two-file fixture repair on exact PR #258 code, with the intended `would strand` evidence preserved and no production behavior change. The temporary pre8 exercise removed both false preconditions and restored the complete 10/10 mutant refusal proof within the declared stop numbers.
+
+## Stage Report: implementation
+
+- DONE: Reproduce the two false preconditions from PR #258 evidence, then change only the two accepted test files.
+  The unmodified pre8 run failed first on missing `repo/review.md`; the absolute-path-only run then failed on missing `candidate.json`, before commit d339ba2 changed only the two allowed test files.
+- DONE: Initialize each copied repository fixture with deterministic Git identity and a committed HEAD before candidate smoke.
+  `scripts/kc-dev-flow-minimal-stack-ablation.test.py:60-66` initializes Git, stages the copied fixture, and commits it as `fixture <fixture@example.test>`; removing this makes the published-tag smoke lose `candidate.json`.
+- DONE: Pass the committed review artifact to Spacedock as an absolute resolved path.
+  `kc-dev-flow/scripts/profile-contract-loader.test.py:1046` passes `artifact.resolve()`; restoring the relative path makes pre8 search for the nonexistent `repo/review.md`.
+- DONE: Run focused loader/contract tests, Python compilation, and the exact Spacedock 0.27.0-pre8 ablation: baseline PASS, 10/10 named mutants rejected, release-state-restored reaches would-strand.
+  Loader and contract tests passed with pre8, both changed files compiled, and the live ablation exited 0 with baseline PASS plus 10/10 refusals; its `reject(..., "would strand")` check would fail on any earlier reason.
+- DONE: Map each changed line to AC-1 through AC-3, enforce the 2-file/25-line/20-Git-line stop numbers, remove unnecessary additions, write the Stage Report, and commit only the two scoped files.
+  AC-1 and AC-2 map to Git fixture lines 60-66 and absolute artifact line 1046; AC-3 maps to the unchanged evidence-matching ablation path. Final scope is 2 files, 9 gross changed lines, and 7 Git-fixture lines in commit d339ba2.
+
+### Summary
+
+Commit d339ba2 removes both false preconditions without changing production code, CI, dependencies, or the pinned runtime. The exact pre8 path now distinguishes the intended release-state guard from missing fixture evidence and preserves all ten mutant refusals.
