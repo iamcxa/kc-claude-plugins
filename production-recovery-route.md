@@ -328,3 +328,20 @@ The repaired candidate's live recovery journey and full without-it both prove th
 ### Summary
 
 The complete gate now enforces both Production routes instead of preserving stale exact rows. This bounded test-only repair stays below every approved stop line and returns `e03fb1b` to fresh validation.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Freshly bind candidate e03fb1b, implementation base d38799a, current origin/main, accepted spec plus scope adjustment, exact ten-file diff, prior validation failures, and carried RoboRev UNKNOWN; make no product edits.
+  Candidate `e03fb1b23148c5e7a92bbf42105a3146d6366b1f`, base `d38799af4d980498bfc51380c33e11266cedbafa`, fetched target `f7a3f018e9756c44b354c3a24326594b084b044b`, merge-base `e20d13b5b1cf06921db58b6a0f132401dfc1fe9d`, spec SHA-256 `21a2a9b0...`, prior two validation failures, and RoboRev `UNKNOWN(state_unknown)` were bound in a clean product tree; the exact slice is 10 files/467 gross lines with 199 gross loader-test lines.
+- DONE: Run the complete candidate gate: scripts/kc-dev-flow-contract-test.py, direct full loader test, RoboRev contract test, loader/kernel parity, and git diff --check; require all five semantic route boundaries and the real Spacedock recovery journey to pass.
+  The full gate, direct loader/E2E, RoboRev contract, both byte-parity checks, and diff-check passed; the committed route helper rejected missing-full and missing-recovery mutations at kernel, chooser, continuation, self-adopted workflow, and package README boundaries (10/10 controls), so deleting either route claim makes the owning check fail.
+- DONE: Freshly rerun one task-owned full without-it in a temporary isolated copy: execute the complete candidate profile-contract-loader.test.py against the d38799a loader and require the missing recovery capability to fail for the named stale Production route, not setup; remove the temporary copy.
+  The candidate test with the `d38799a` loader failed at `stale route for production: expected ['shape', 'build', 'verify'], got ['build', 'verify']`; the registered temporary worktree and its parent directory were then removed, and no reusable harness or product change remains.
+- DONE: Record exact-candidate delegated E2E UAT evidence for backlog gate -> ideation empty skip/no artifact -> implementation build -> validation verify, plus legacy/default-full compatibility, rollback readiness, current provider-feedback state, and material residuals.
+  Spacedock 0.27.0 live route mechanism PASS exercised the real backlog approval, empty ideation skip with no review artifact, build, and verify loads; legacy/default-full fixtures passed, rollback is one feature revert plus Captain-controlled full-route re-recording, no PR/provider feedback exists, and Captain UAT, RoboRev UNKNOWN, and the 1-behind/7-ahead divergent target remain material residuals.
+- DONE: Return PASS only if every AC and replacement threshold is falsifiably supported at e03fb1b; append one final validation Stage Report and commit/sync only state. Do not create a PR, prepare/approve the gate, merge, release, or self-approve Captain UAT.
+  Technical verdict is PASS at exact candidate `e03fb1b`: AC-1 through AC-5 and the 10-file/475-line/200-loader-test thresholds are supported by executable positive and negative evidence; this report changes only state and leaves Captain UAT, validation-gate approval, PR, merge, and release untouched.
+
+### Summary
+
+Exact candidate `e03fb1b` passes the complete gate, live recovery journey, five route-boundary mutation controls, and the single task-owned without-it. Technical validation recommends PASS, while Captain UAT remains the final verification decision and the divergent delivery target, absent provider feedback, and carried RoboRev UNKNOWN remain explicit.
