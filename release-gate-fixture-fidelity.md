@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-release-gate-fixture-fidelity
 issue:
-pr:
+pr: 295
 mod-block:
 design: required
 lane: main
