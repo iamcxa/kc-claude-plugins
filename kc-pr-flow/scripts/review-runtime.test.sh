@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -836,6 +836,246 @@ run_interactive_decision_tests() {
     assert_eq "$forbidden_command remains outside runtime authority" "2" "$?"
   done
 }
+
+rehash_timing_state() { # $1=timing state after a semantic mutation
+  local without_hash content_sha256
+  without_hash="$(jq -S -c 'del(.content_sha256)' <<<"$1")" || return
+  content_sha256="$(sha256_text "$without_hash")" || return
+  jq -S -c --arg content_sha256 "$content_sha256" \
+    '. + {content_sha256:$content_sha256}' <<<"$without_hash"
+}
+
+run_review_timing_tests() {
+  local timing_state timing_receipt lane_durations timing output rc phase
+  local incomplete_state mutated_state swap_replacement swap_probe
+  local unsafe_link unsafe_fifo unsafe_output_link unsafe_output_fifo unsafe_lane_link unsafe_lane_fifo
+  local stub_dir call_ledger stub_command original_path
+
+  timing_state="$TEST_INPUT_ROOT/review-timing-state.json"
+  timing_receipt="$TEST_INPUT_ROOT/review-timing-receipt.json"
+  lane_durations="$TEST_INPUT_ROOT/review-lane-durations.json"
+  printf '%s\n' \
+    '[{"lane_id":"correctness-1","duration_ms":999999,"provider_family":"openai"},{"lane_id":"security-1","duration_ms":17,"provider_family":null}]' \
+    >"$lane_durations"
+
+  stub_dir="$TEST_INPUT_ROOT/review-timing-stubs"
+  call_ledger="$TEST_INPUT_ROOT/review-timing-call-ledger"
+  mkdir -p "$stub_dir"
+  : >"$call_ledger"
+  for stub_command in gh curl wget nc ssh codex claude agy; do
+    printf '%s\n' \
+      '#!/bin/sh' \
+      'printf "%s\n" "$(basename "$0") $*" >>"$REVIEW_TIMING_CALL_LEDGER"' \
+      'exit 97' >"$stub_dir/$stub_command"
+    chmod +x "$stub_dir/$stub_command"
+  done
+  export REVIEW_TIMING_CALL_LEDGER="$call_ledger"
+  original_path="$PATH"
+  PATH="$stub_dir:$PATH"
+  export PATH
+
+  output="$(bash "$RUNTIME" timing-start \
+    --review-key "$EXPECTED_REVIEW_KEY" --mode resolve --output "$timing_state" 2>&1)"
+  rc=$?
+  assert_eq "timing-start command exists" "0" "$rc"
+  assert_eq "timing state uses the closed schema" "kc-pr-flow.review-timing-state/v1" \
+    "$(jq -r '.schema // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "timing state is mode 0600" "600" "$(file_mode "$timing_state" 2>/dev/null)"
+  assert_eq "timing state begins with ordered empty marks" "[]" \
+    "$(jq -c '.marks // empty' "$timing_state" 2>/dev/null)"
+  assert_match "timing state has runtime monotonic nanoseconds" '^[0-9]+$' \
+    "$(jq -r '.start_ns // empty' "$timing_state" 2>/dev/null)"
+
+  incomplete_state="$TEST_INPUT_ROOT/review-timing-incomplete.json"
+  cp "$timing_state" "$incomplete_state"
+  bash "$RUNTIME" timing-mark --timing-file "$incomplete_state" \
+    --phase identity_and_plan >/dev/null 2>&1
+  bash "$RUNTIME" timing-finish --timing-file "$incomplete_state" \
+    --lane-durations-file "$lane_durations" \
+    --output "$TEST_INPUT_ROOT/review-timing-incomplete-receipt.json" >/dev/null 2>&1
+  assert_eq "finish before all required marks fails closed" "3" "$?"
+
+  bash "$RUNTIME" timing-mark --timing-file "$incomplete_state" \
+    --phase identity_and_plan >/dev/null 2>&1
+  assert_eq "duplicate timing mark is rejected" "3" "$?"
+  bash "$RUNTIME" timing-mark --timing-file "$incomplete_state" \
+    --phase required_lanes_critical_path >/dev/null 2>&1
+  assert_eq "a forward timing mark may advance to a later phase" "0" "$?"
+  bash "$RUNTIME" timing-mark --timing-file "$incomplete_state" \
+    --phase inventory >/dev/null 2>&1
+  assert_eq "backward timing mark is rejected" "3" "$?"
+  bash "$RUNTIME" timing-mark --timing-file "$incomplete_state" \
+    --phase unsupported_phase >/dev/null 2>&1
+  assert_eq "unsupported timing phase is rejected" "2" "$?"
+
+  for phase in identity_and_plan inventory required_lanes_critical_path \
+    targeted_verification_critical_path collation_and_draft confirmation_ready; do
+    bash "$RUNTIME" timing-mark \
+      --timing-file "$timing_state" --phase "$phase" >/dev/null 2>&1
+    assert_eq "runtime records timing phase $phase" "0" "$?"
+  done
+  timing="$(bash "$RUNTIME" timing-finish \
+    --timing-file "$timing_state" --lane-durations-file "$lane_durations" \
+    --output "$timing_receipt" 2>&1)"
+  rc=$?
+  assert_eq "timing-finish command exists" "0" "$rc"
+  assert_eq "terminal timing schema" "kc-pr-flow.review-timing/v1" \
+    "$(jq -r '.schema // empty' <<<"$timing" 2>/dev/null)"
+  assert_eq "timing is runtime measured" "review-runtime" \
+    "$(jq -r '.measured_by // empty' <<<"$timing" 2>/dev/null)"
+  assert_eq "terminal timing receipt is mode 0600" "600" \
+    "$(file_mode "$timing_receipt" 2>/dev/null)"
+  assert_eq "terminal timing receipt has exact closed keys" \
+    "durations_ms,lane_durations_ms,measured_by,mode,review_key,schema" \
+    "$(jq -r 'keys | sort | join(",")' <<<"$timing" 2>/dev/null)"
+  assert_eq "duration map has the closed promotion fields" \
+    "collation_and_draft,confirmation_wait,external_ci_wait,identity_and_plan,inventory,post_mutation,required_lanes_critical_path,review_to_confirmation_ready,targeted_verification_critical_path" \
+    "$(jq -r '.durations_ms | keys | sort | join(",")' <<<"$timing" 2>/dev/null)"
+  assert_match "critical path is runtime-derived" '^[0-9]+$' \
+    "$(jq -r '.durations_ms.required_lanes_critical_path // empty' <<<"$timing" 2>/dev/null)"
+  assert_eq "critical path is not a sum of caller lane durations" "false" \
+    "$(jq -r '(.durations_ms.required_lanes_critical_path == ([.lane_durations_ms[].duration_ms] | add))' <<<"$timing" 2>/dev/null)"
+  assert_match "review-to-confirmation-ready is runtime-derived" '^[0-9]+$' \
+    "$(jq -r '.durations_ms.review_to_confirmation_ready // empty' <<<"$timing" 2>/dev/null)"
+  assert_eq "external waits and post time are not caller attributed" \
+    "[null,null,null]" \
+    "$(jq -c '[.durations_ms.confirmation_wait,.durations_ms.external_ci_wait,.durations_ms.post_mutation]' <<<"$timing" 2>/dev/null)"
+  assert_eq "lane observations retain only their closed fields" \
+    "duration_ms,lane_id,provider_family" \
+    "$(jq -r '.lane_durations_ms[0] | keys | sort | join(",")' <<<"$timing" 2>/dev/null)"
+  unsafe_link="$TEST_INPUT_ROOT/review-timing-state-link.json"
+  ln -s "$timing_state" "$unsafe_link"
+  bash "$RUNTIME" timing-mark --timing-file "$unsafe_link" \
+    --phase confirmation_ready >/dev/null 2>&1
+  assert_eq "timing-mark rejects a symlink state" "2" "$?"
+  unsafe_fifo="$TEST_INPUT_ROOT/review-timing-state.fifo"
+  mkfifo "$unsafe_fifo"
+  bash "$RUNTIME" timing-mark --timing-file "$unsafe_fifo" \
+    --phase confirmation_ready >/dev/null 2>&1
+  assert_eq "timing-mark rejects a FIFO state without blocking" "2" "$?"
+
+  unsafe_output_link="$TEST_INPUT_ROOT/review-timing-output-link.json"
+  ln -s "$timing_receipt" "$unsafe_output_link"
+  bash "$RUNTIME" timing-start --review-key "$EXPECTED_REVIEW_KEY" \
+    --mode delta --output "$unsafe_output_link" >/dev/null 2>&1
+  assert_eq "timing-start rejects a symlink output" "2" "$?"
+  unsafe_output_fifo="$TEST_INPUT_ROOT/review-timing-output.fifo"
+  mkfifo "$unsafe_output_fifo"
+  bash "$RUNTIME" timing-start --review-key "$EXPECTED_REVIEW_KEY" \
+    --mode delta --output "$unsafe_output_fifo" >/dev/null 2>&1
+  assert_eq "timing-start rejects a FIFO output without blocking" "2" "$?"
+
+  unsafe_lane_link="$TEST_INPUT_ROOT/review-timing-lanes-link.json"
+  ln -s "$lane_durations" "$unsafe_lane_link"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$unsafe_lane_link" \
+    --output "$TEST_INPUT_ROOT/review-timing-lanes-link-receipt.json" >/dev/null 2>&1
+  assert_eq "timing-finish rejects a symlink lane input" "2" "$?"
+  unsafe_lane_fifo="$TEST_INPUT_ROOT/review-timing-lanes.fifo"
+  mkfifo "$unsafe_lane_fifo"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$unsafe_lane_fifo" \
+    --output "$TEST_INPUT_ROOT/review-timing-lanes-fifo-receipt.json" >/dev/null 2>&1
+  assert_eq "timing-finish rejects a FIFO lane input without blocking" "2" "$?"
+
+  mutated_state="$(rehash_timing_state "$(jq -c '.extra="caller"' "$timing_state")")"
+  printf '%s\n' "$mutated_state" >"$TEST_INPUT_ROOT/review-timing-extra.json"
+  bash "$RUNTIME" timing-finish \
+    --timing-file "$TEST_INPUT_ROOT/review-timing-extra.json" \
+    --lane-durations-file "$lane_durations" \
+    --output "$TEST_INPUT_ROOT/review-timing-extra-receipt.json" >/dev/null 2>&1
+  assert_eq "extra timing state fields fail closed" "3" "$?"
+
+  mutated_state="$(rehash_timing_state "$(jq -c '.start_ns=-1' "$timing_state")")"
+  printf '%s\n' "$mutated_state" >"$TEST_INPUT_ROOT/review-timing-negative.json"
+  bash "$RUNTIME" timing-finish \
+    --timing-file "$TEST_INPUT_ROOT/review-timing-negative.json" \
+    --lane-durations-file "$lane_durations" \
+    --output "$TEST_INPUT_ROOT/review-timing-negative-receipt.json" >/dev/null 2>&1
+  assert_eq "negative runtime nanoseconds fail closed" "3" "$?"
+
+  mutated_state="$(rehash_timing_state "$(jq -c '.start_ns=9007199254740992' "$timing_state")")"
+  printf '%s\n' "$mutated_state" >"$TEST_INPUT_ROOT/review-timing-unsafe-integer.json"
+  bash "$RUNTIME" timing-finish \
+    --timing-file "$TEST_INPUT_ROOT/review-timing-unsafe-integer.json" \
+    --lane-durations-file "$lane_durations" \
+    --output "$TEST_INPUT_ROOT/review-timing-unsafe-receipt.json" >/dev/null 2>&1
+  assert_eq "jq-unsafe runtime nanoseconds fail closed" "3" "$?"
+
+  mutated_state="$(jq -c '.start_ns += 1' "$timing_state")"
+  printf '%s\n' "$mutated_state" >"$TEST_INPUT_ROOT/review-timing-hash-drift.json"
+  bash "$RUNTIME" timing-finish \
+    --timing-file "$TEST_INPUT_ROOT/review-timing-hash-drift.json" \
+    --lane-durations-file "$lane_durations" \
+    --output "$TEST_INPUT_ROOT/review-timing-hash-drift-receipt.json" >/dev/null 2>&1
+  assert_eq "timing state content-hash drift fails closed" "3" "$?"
+
+  printf '%s\n' \
+    '[{"lane_id":"security-1","duration_ms":17,"provider_family":null,"total_duration_ms":17}]' \
+    >"$TEST_INPUT_ROOT/review-timing-caller-total.json"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$TEST_INPUT_ROOT/review-timing-caller-total.json" \
+    --output "$TEST_INPUT_ROOT/review-timing-caller-total-receipt.json" >/dev/null 2>&1
+  assert_eq "caller-supplied total in lane observations fails closed" "3" "$?"
+  printf '%s\n' \
+    '[{"lane_id":"security-1","duration_ms":-1,"provider_family":null}]' \
+    >"$TEST_INPUT_ROOT/review-timing-negative-lane.json"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$TEST_INPUT_ROOT/review-timing-negative-lane.json" \
+    --output "$TEST_INPUT_ROOT/review-timing-negative-lane-receipt.json" >/dev/null 2>&1
+  assert_eq "negative lane duration fails closed" "3" "$?"
+  printf '%s\n' \
+    '[{"lane_id":"security-1","duration_ms":9007199254740992,"provider_family":null}]' \
+    >"$TEST_INPUT_ROOT/review-timing-unsafe-lane.json"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$TEST_INPUT_ROOT/review-timing-unsafe-lane.json" \
+    --output "$TEST_INPUT_ROOT/review-timing-unsafe-lane-receipt.json" >/dev/null 2>&1
+  assert_eq "jq-unsafe lane duration fails closed" "3" "$?"
+  bash "$RUNTIME" timing-finish --timing-file "$timing_state" \
+    --lane-durations-file "$lane_durations" --total-duration-ms 17 \
+    --output "$TEST_INPUT_ROOT/review-timing-caller-total-option.json" >/dev/null 2>&1
+  assert_eq "caller-supplied total CLI option is rejected" "2" "$?"
+
+  swap_replacement="$TEST_INPUT_ROOT/review-timing-swap-replacement.json"
+  swap_probe="$TEST_INPUT_ROOT/review-timing-swap-probe"
+  mutated_state="$(rehash_timing_state "$(jq -c '.review_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$incomplete_state")")"
+  printf '%s\n' "$mutated_state" >"$swap_replacement"
+  (
+    export T4_SWAP_SOURCE="$incomplete_state" T4_SWAP_REPLACEMENT="$swap_replacement" \
+      T4_SWAP_PROBE="$swap_probe"
+    original_snapshot_function="$(declare -f review_runtime_snapshot_regular_file)"
+    eval "${original_snapshot_function/review_runtime_snapshot_regular_file/review_runtime_snapshot_regular_file_original}"
+    review_runtime_snapshot_regular_file() {
+      review_runtime_snapshot_regular_file_original "$@"
+      local snapshot_rc=$?
+      if [ "$snapshot_rc" -eq 0 ] && [ "$1" = "$T4_SWAP_SOURCE" ] && [ ! -e "$T4_SWAP_PROBE" ]; then
+        : >"$T4_SWAP_PROBE"
+        cp "$T4_SWAP_REPLACEMENT" "$T4_SWAP_SOURCE"
+      fi
+      return "$snapshot_rc"
+    }
+    review_runtime_timing_mark "$incomplete_state" confirmation_ready >/dev/null 2>&1
+  )
+  assert_eq "timing-mark detects a changed state before atomic replacement" "74" "$?"
+  assert_eq "state swap cannot replace the changed review key with stale derived state" \
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" \
+    "$(jq -r '.review_key' "$incomplete_state" 2>/dev/null)"
+  assert_eq "timing commands perform no network, model, authorization, post, or merge call" \
+    "" "$(cat "$call_ledger")"
+  PATH="$original_path"
+  export PATH
+}
+
+if [ "$CASE_FILTER" = 'review-timing' ]; then
+  run_review_timing_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_review_timing_tests
+fi
 
 if [ "$CASE_FILTER" = 'merge-readiness' ]; then
   run_interactive_decision_tests merge-positive-only

@@ -134,6 +134,44 @@ Reservation and quarantine locks are owned `mkdir` locks with one `owner.pid`. A
 
 Only rejected append input creates content-addressed metadata-only quarantine. The sole mode-0400 `metadata.json` contains exactly `reason_code`, rejected `input_sha256`, `byte_count`, and `quarantined_at`; rejected bytes, links, excerpts, and raw values are never retained. The containing directory is mode `0500`. Read-only `validate`, `replay`, `show`, and `observe` operations do not quarantine an already-invalid receipt. Complete matching publication is idempotent; incomplete or conflicting artifacts fail closed. The default metadata-record limit is 4 MiB and can be lowered with `KC_PR_FLOW_MAX_QUARANTINE_BYTES`.
 
+## Review timing receipt
+
+The runtime can record one local `kc-pr-flow.review-timing-state/v1` and close it
+as `kc-pr-flow.review-timing/v1`. This path is measurement-only: it has no
+network, model, confirmation, authorization, or posting authority. The caller
+supplies the exact review key, review mode, phase boundaries, and closed lane
+observations; it cannot supply a total duration or a clock value.
+
+`timing-start` records Python's monotonic nanosecond clock in a new mode-0600
+state file. `timing-mark` safe-snapshots and validates that state, records a new
+runtime clock value, then takes a second safe snapshot and refuses a change
+visible before atomic replacement. The state is closed and content-hashed. Marks are unique and may
+only advance through this order:
+
+```text
+identity_and_plan
+inventory
+required_lanes_critical_path
+targeted_verification_critical_path
+collation_and_draft
+confirmation_ready
+```
+
+Each of the first five marks closes the phase with that name. Its duration is
+the elapsed time since `timing-start` or the preceding mark. The terminal
+`confirmation_ready` mark closes the promotion interval;
+`review_to_confirmation_ready` is the elapsed time from start through that
+mark. This total is derived directly from the two runtime timestamps, not by
+summing phase or lane observations.
+
+`timing-finish` requires the complete ordered mark set. It safe-snapshots a
+closed JSON array of unique lane observations with exactly `lane_id`,
+nonnegative jq-safe `duration_ms`, and `provider_family` as a safe token or
+null. Lane durations remain attribution data only; they never determine a
+parallel phase's critical-path duration. The terminal receipt keeps
+`confirmation_wait`, `external_ci_wait`, and `post_mutation` null because this
+runtime does not observe those later waits or mutations.
+
 ## Event envelope and lifecycle
 
 Each line is a `kc-pr-flow.review-event/v1` object. Required envelope fields are schema, event and run identities, exact-head identity, sequence, UTC occurrence time, event type, canonical payload and payload hash, and full-record integrity hash.
@@ -232,6 +270,9 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `replay --event-file FILE` | Validate a complete authoritative log, enforce chronological relationships, and rebuild the deterministic `review-projection/v1`. |
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
+| `timing-start --review-key HASH --mode initial\|delta\|resolve --output FILE` | Create one new mode-0600 content-hashed monotonic timing state. Existing, linked, or non-regular output targets are refused. |
+| `timing-mark --timing-file FILE --phase NAME` | Safe-snapshot and validate timing state, append one forward phase mark with the runtime clock, recheck the source, and atomically replace the state only when both snapshots match. |
+| `timing-finish --timing-file FILE --lane-durations-file FILE --output FILE` | Require all phase marks, validate closed lane observations, and write plus print one mode-0600 `ReviewTiming/v1` receipt. It accepts no caller total. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
 | `rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Replay one complete terminal receipt, verify exact identity and evidence, and emit one closed `InteractiveCollationDecision/v1`. It never appends or performs recovery or remote behavior. |
 | `decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Validate closed exact-head CI/test/head observations, invoke `rehydrate-interactive` once from the supplied producer sources and identity, and emit one advisory `MergeReadinessDecision/v1`. It accepts no caller decision and performs no network, post, authorization, or merge operation. |

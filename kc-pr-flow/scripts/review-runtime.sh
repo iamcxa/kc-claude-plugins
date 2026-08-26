@@ -272,6 +272,310 @@ review_runtime_remove_private_snapshot_dir() {
   rmdir "$snapshot_dir" 2>/dev/null || true
 }
 
+review_runtime_monotonic_ns() {
+  python3 -c 'import time; print(time.monotonic_ns())'
+}
+
+review_runtime_write_new_private_json() (
+  local payload="$1" output_file="$2" label="$3"
+  local output_dir temp_file=''
+  output_dir="$(dirname "$output_file")" || return 74
+  if ! review_runtime_real_directory "$output_dir"; then
+    printf 'review-runtime: unsafe %s parent directory\n' "$label" >&2
+    return 2
+  fi
+  if [ -e "$output_file" ] || [ -L "$output_file" ]; then
+    printf 'review-runtime: %s output already exists or is unsafe: %s\n' \
+      "$label" "$output_file" >&2
+    return 2
+  fi
+  umask 077
+  temp_file="$(mktemp "$output_dir/.review-timing.XXXXXX")" || return 74
+  trap '[ -z "$temp_file" ] || rm -f "$temp_file"' EXIT
+  if ! printf '%s\n' "$payload" >"$temp_file" || ! chmod 0600 "$temp_file"; then
+    return 74
+  fi
+  if [ -e "$output_file" ] || [ -L "$output_file" ] || ! mv "$temp_file" "$output_file"; then
+    return 74
+  fi
+  temp_file=''
+)
+
+review_runtime_replace_private_json() (
+  local payload="$1" output_file="$2" expected_snapshot="$3"
+  local output_dir temp_file='' snapshot_dir='' current_snapshot=''
+  output_dir="$(dirname "$output_file")" || return 74
+  if ! review_runtime_real_directory "$output_dir"; then
+    printf 'review-runtime: unsafe timing state parent directory\n' >&2
+    return 2
+  fi
+  umask 077
+  temp_file="$(mktemp "$output_dir/.review-timing.XXXXXX")" || return 74
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || {
+    rm -f "$temp_file"
+    return 74
+  }
+  current_snapshot="$snapshot_dir/current-timing-state.json"
+  trap 'rm -f "$temp_file"; review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$current_snapshot"' EXIT
+  if ! printf '%s\n' "$payload" >"$temp_file" || ! chmod 0600 "$temp_file"; then
+    return 74
+  fi
+  review_runtime_snapshot_regular_file \
+    "$output_file" "$current_snapshot" 'timing state' 1048576 || return
+  if ! cmp -s "$expected_snapshot" "$current_snapshot"; then
+    printf 'review-runtime: timing state changed before replacement\n' >&2
+    return 74
+  fi
+  if [ -L "$output_file" ] || [ ! -f "$output_file" ] || ! mv -f "$temp_file" "$output_file"; then
+    return 74
+  fi
+  temp_file=''
+)
+
+review_runtime_timing_phase_index() {
+  case "$1" in
+    identity_and_plan) printf '0\n' ;;
+    inventory) printf '1\n' ;;
+    required_lanes_critical_path) printf '2\n' ;;
+    targeted_verification_critical_path) printf '3\n' ;;
+    collation_and_draft) printf '4\n' ;;
+    confirmation_ready) printf '5\n' ;;
+    *) return 1 ;;
+  esac
+}
+
+review_runtime_timing_state_hash() {
+  local canonical
+  canonical="$(jq -S -c 'del(.content_sha256)' "$1")" || return
+  printf '%s' "$canonical" | review_runtime_sha256
+}
+
+review_runtime_timing_state_valid() {
+  local state_file="$1" state_json duplicate_rc expected_hash actual_hash
+  state_json="$(cat "$state_file")" || return 1
+  review_runtime_json_has_unique_members "$state_json"
+  duplicate_rc=$?
+  [ "$duplicate_rc" -eq 0 ] || return 1
+  jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def safe_int:
+      type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    def phase:
+      . == "identity_and_plan" or
+      . == "inventory" or
+      . == "required_lanes_critical_path" or
+      . == "targeted_verification_critical_path" or
+      . == "collation_and_draft" or
+      . == "confirmation_ready";
+    def phase_index:
+      if . == "identity_and_plan" then 0
+      elif . == "inventory" then 1
+      elif . == "required_lanes_critical_path" then 2
+      elif . == "targeted_verification_critical_path" then 3
+      elif . == "collation_and_draft" then 4
+      elif . == "confirmation_ready" then 5
+      else -1 end;
+    type == "object" and
+    exact_keys(["content_sha256","marks","mode","review_key","schema","start_ns"]) and
+    .schema == "kc-pr-flow.review-timing-state/v1" and
+    (.review_key | sha256) and
+    (.mode == "initial" or .mode == "delta" or .mode == "resolve") and
+    (.start_ns | safe_int) and
+    (.content_sha256 | sha256) and
+    (.marks | type == "array" and all(
+      type == "object" and exact_keys(["monotonic_ns","phase"]) and
+      (.phase | phase) and (.monotonic_ns | safe_int)
+    )) and
+    ([.marks[].phase] | unique | length) == (.marks | length) and
+    ([.marks[].phase | phase_index] as $indices |
+      all(range(1; $indices | length); $indices[.] > $indices[. - 1])) and
+    ([.start_ns] + [.marks[].monotonic_ns]) as $times |
+    all(range(1; $times | length); $times[.] >= $times[. - 1])
+  ' "$state_file" >/dev/null 2>&1 || return 1
+  expected_hash="$(jq -r '.content_sha256' "$state_file")" || return 1
+  actual_hash="$(review_runtime_timing_state_hash "$state_file")" || return 1
+  [ "$actual_hash" = "$expected_hash" ]
+}
+
+review_runtime_timing_with_hash() {
+  local without_hash="$1" content_sha256
+  content_sha256="$(printf '%s' "$without_hash" | review_runtime_sha256)" || return
+  printf '%s' "$without_hash" | jq -S -c \
+    --arg content_sha256 "$content_sha256" '. + {content_sha256:$content_sha256}'
+}
+
+review_runtime_timing_start() (
+  local review_key="$1" mode="$2" output_file="$3"
+  local start_ns without_hash state
+  review_runtime_require_jq || return
+  review_runtime_require_python || return
+  [[ "$review_key" =~ ^[0-9a-f]{64}$ ]] || {
+    printf 'review-runtime: invalid timing review key\n' >&2
+    return 2
+  }
+  case "$mode" in
+    initial | delta | resolve) ;;
+    *)
+      printf 'review-runtime: invalid timing mode\n' >&2
+      return 2
+      ;;
+  esac
+  [ -n "$output_file" ] || return 2
+  start_ns="$(review_runtime_monotonic_ns)" || return
+  review_runtime_positive_safe_integer "$start_ns" || {
+    printf 'review-runtime: runtime monotonic clock is outside the safe range\n' >&2
+    return 73
+  }
+  without_hash="$(jq -S -c -n --arg review_key "$review_key" --arg mode "$mode" \
+    --argjson start_ns "$start_ns" '
+      {schema:"kc-pr-flow.review-timing-state/v1",review_key:$review_key,
+       mode:$mode,start_ns:$start_ns,marks:[]}
+    ')" || return
+  state="$(review_runtime_timing_with_hash "$without_hash")" || return
+  review_runtime_write_new_private_json "$state" "$output_file" 'timing state' || return
+  printf '%s\n' "$state"
+)
+
+review_runtime_timing_mark() (
+  local timing_file="$1" phase="$2"
+  local snapshot_dir='' state_snapshot='' now_ns last_ns last_phase last_index phase_index
+  local without_hash state
+  review_runtime_require_jq || return
+  review_runtime_require_python || return
+  phase_index="$(review_runtime_timing_phase_index "$phase")" || {
+    printf 'review-runtime: unsupported timing phase: %s\n' "$phase" >&2
+    return 2
+  }
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  state_snapshot="$snapshot_dir/timing-state.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$timing_file" "$state_snapshot" 'timing state' 1048576 || return
+  review_runtime_timing_state_valid "$state_snapshot" || {
+    printf 'review-runtime: invalid timing state\n' >&2
+    return 3
+  }
+  last_phase="$(jq -r '.marks[-1].phase // empty' "$state_snapshot")" || return
+  if [ -n "$last_phase" ]; then
+    last_index="$(review_runtime_timing_phase_index "$last_phase")" || return 3
+    if [ "$phase_index" -le "$last_index" ]; then
+      printf 'review-runtime: duplicate or backward timing phase\n' >&2
+      return 3
+    fi
+    last_ns="$(jq -r '.marks[-1].monotonic_ns' "$state_snapshot")" || return
+  else
+    last_ns="$(jq -r '.start_ns' "$state_snapshot")" || return
+  fi
+  now_ns="$(review_runtime_monotonic_ns)" || return
+  review_runtime_positive_safe_integer "$now_ns" || return 73
+  if [ "$now_ns" -lt "$last_ns" ]; then
+    printf 'review-runtime: monotonic clock moved backward\n' >&2
+    return 3
+  fi
+  without_hash="$(jq -S -c --arg phase "$phase" --argjson now_ns "$now_ns" \
+    'del(.content_sha256) | .marks += [{phase:$phase,monotonic_ns:$now_ns}]' \
+    "$state_snapshot")" || return
+  state="$(review_runtime_timing_with_hash "$without_hash")" || return
+  review_runtime_replace_private_json "$state" "$timing_file" "$state_snapshot" || return
+  printf '%s\n' "$state"
+)
+
+review_runtime_lane_durations_valid() {
+  local lane_file="$1" lane_json duplicate_rc
+  lane_json="$(cat "$lane_file")" || return 1
+  review_runtime_json_has_unique_members "$lane_json"
+  duplicate_rc=$?
+  [ "$duplicate_rc" -eq 0 ] || return 1
+  jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    def safe_int:
+      type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    type == "array" and all(
+      type == "object" and
+      exact_keys(["duration_ms","lane_id","provider_family"]) and
+      (.lane_id | token) and (.duration_ms | safe_int) and
+      (.provider_family == null or (.provider_family | token))
+    ) and ([.[].lane_id] | unique | length) == length
+  ' "$lane_file" >/dev/null 2>&1
+}
+
+review_runtime_timing_finish() (
+  local timing_file="$1" lane_durations_file="$2" output_file="$3"
+  local snapshot_dir='' state_snapshot='' lanes_snapshot=''
+  local phases start_ns identity_ns inventory_ns required_ns targeted_ns collation_ns ready_ns
+  local identity_ms inventory_ms required_ms targeted_ms collation_ms total_ms receipt
+  review_runtime_require_jq || return
+  review_runtime_require_python || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  state_snapshot="$snapshot_dir/timing-state.json"
+  lanes_snapshot="$snapshot_dir/lane-durations.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot" "$lanes_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$timing_file" "$state_snapshot" 'timing state' 1048576 || return
+  review_runtime_snapshot_regular_file \
+    "$lane_durations_file" "$lanes_snapshot" 'lane durations' 1048576 || return
+  review_runtime_timing_state_valid "$state_snapshot" || {
+    printf 'review-runtime: invalid timing state\n' >&2
+    return 3
+  }
+  review_runtime_lane_durations_valid "$lanes_snapshot" || {
+    printf 'review-runtime: invalid lane duration observations\n' >&2
+    return 3
+  }
+  phases="$(jq -r '[.marks[].phase] | join(",")' "$state_snapshot")" || return
+  if [ "$phases" != 'identity_and_plan,inventory,required_lanes_critical_path,targeted_verification_critical_path,collation_and_draft,confirmation_ready' ]; then
+    printf 'review-runtime: timing state is not confirmation-ready\n' >&2
+    return 3
+  fi
+  start_ns="$(jq -r '.start_ns' "$state_snapshot")" || return
+  identity_ns="$(jq -r '.marks[0].monotonic_ns' "$state_snapshot")" || return
+  inventory_ns="$(jq -r '.marks[1].monotonic_ns' "$state_snapshot")" || return
+  required_ns="$(jq -r '.marks[2].monotonic_ns' "$state_snapshot")" || return
+  targeted_ns="$(jq -r '.marks[3].monotonic_ns' "$state_snapshot")" || return
+  collation_ns="$(jq -r '.marks[4].monotonic_ns' "$state_snapshot")" || return
+  ready_ns="$(jq -r '.marks[5].monotonic_ns' "$state_snapshot")" || return
+  identity_ms=$(((identity_ns - start_ns) / 1000000))
+  inventory_ms=$(((inventory_ns - identity_ns) / 1000000))
+  required_ms=$(((required_ns - inventory_ns) / 1000000))
+  targeted_ms=$(((targeted_ns - required_ns) / 1000000))
+  collation_ms=$(((collation_ns - targeted_ns) / 1000000))
+  total_ms=$(((ready_ns - start_ns) / 1000000))
+  receipt="$(jq -S -c -n \
+    --arg review_key "$(jq -r '.review_key' "$state_snapshot")" \
+    --arg mode "$(jq -r '.mode' "$state_snapshot")" \
+    --argjson identity_ms "$identity_ms" --argjson inventory_ms "$inventory_ms" \
+    --argjson required_ms "$required_ms" --argjson targeted_ms "$targeted_ms" \
+    --argjson collation_ms "$collation_ms" --argjson total_ms "$total_ms" \
+    --slurpfile lanes "$lanes_snapshot" '
+      {
+        schema:"kc-pr-flow.review-timing/v1",
+        review_key:$review_key,
+        mode:$mode,
+        durations_ms:{
+          identity_and_plan:$identity_ms,
+          inventory:$inventory_ms,
+          required_lanes_critical_path:$required_ms,
+          targeted_verification_critical_path:$targeted_ms,
+          collation_and_draft:$collation_ms,
+          confirmation_wait:null,
+          external_ci_wait:null,
+          post_mutation:null,
+          review_to_confirmation_ready:$total_ms
+        },
+        lane_durations_ms:($lanes[0] | sort_by(.lane_id)),
+        measured_by:"review-runtime"
+      }
+    ')" || return
+  review_runtime_write_new_private_json "$receipt" "$output_file" 'timing receipt' || return
+  printf '%s\n' "$receipt"
+)
+
 review_runtime_state_root() {
   printf '%s\n' "${KC_PR_FLOW_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/kc-pr-flow}"
 }
@@ -3241,8 +3545,94 @@ review_runtime_main_compare_usage() {
   review_runtime_compare_usage "$left_json" "$right_json"
 }
 
+review_runtime_main_timing_start() {
+  local review_key='' mode='' output_file=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --review-key | --mode | --output)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --review-key) review_key="$2" ;;
+          --mode) mode="$2" ;;
+          --output) output_file="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown timing-start option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$review_key" ] || [ -z "$mode" ] || [ -z "$output_file" ]; then
+    printf 'review-runtime: timing-start requires review key, mode, and output\n' >&2
+    return 2
+  fi
+  review_runtime_timing_start "$review_key" "$mode" "$output_file"
+}
+
+review_runtime_main_timing_mark() {
+  local timing_file='' phase=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --timing-file | --phase)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --timing-file) timing_file="$2" ;;
+          --phase) phase="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown timing-mark option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$timing_file" ] || [ -z "$phase" ]; then
+    printf 'review-runtime: timing-mark requires timing file and phase\n' >&2
+    return 2
+  fi
+  review_runtime_timing_mark "$timing_file" "$phase"
+}
+
+review_runtime_main_timing_finish() {
+  local timing_file='' lane_durations_file='' output_file=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --timing-file | --lane-durations-file | --output)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --timing-file) timing_file="$2" ;;
+          --lane-durations-file) lane_durations_file="$2" ;;
+          --output) output_file="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown timing-finish option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$timing_file" ] || [ -z "$lane_durations_file" ] || [ -z "$output_file" ]; then
+    printf 'review-runtime: timing-finish requires timing state, lane durations, and output\n' >&2
+    return 2
+  fi
+  review_runtime_timing_finish "$timing_file" "$lane_durations_file" "$output_file"
+}
+
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|timing-start --review-key HASH --mode initial|delta|resolve --output FILE|timing-mark --timing-file FILE --phase NAME|timing-finish --timing-file FILE --lane-durations-file FILE --output FILE|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -3288,6 +3678,9 @@ review_runtime_main() {
     start) review_runtime_main_start "$@" ;;
     config-hash) review_runtime_main_config_hash "$@" ;;
     review-key) review_runtime_main_review_key "$@" ;;
+    timing-start) review_runtime_main_timing_start "$@" ;;
+    timing-mark) review_runtime_main_timing_mark "$@" ;;
+    timing-finish) review_runtime_main_timing_finish "$@" ;;
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
     observe) review_runtime_main_observe "$@" ;;
     rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
