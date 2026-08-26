@@ -181,3 +181,70 @@ Commit d339ba2 removes both false preconditions without changing production code
   }
 }
 ```
+
+```json
+{
+  "schema": "kc-dev-flow-observation/v1",
+  "capability": "review_convergence",
+  "mode": "observe",
+  "provider": "roborev",
+  "trigger": "implementation_exit",
+  "candidate_revision": "d339ba2e982d71742d4223fead69e5a31fd4744a",
+  "base_revision": "e20d13b5b1cf06921db58b6a0f132401dfc1fe9d",
+  "selected_profile": "production",
+  "implementation_family": "openai",
+  "outcome": "UNKNOWN",
+  "reason": "state_unknown",
+  "identity_hash": "sha256:9a65f00d28bf4141a990d9b4da1191f1f6cf6ac56f7373c3a0955da625a692e1",
+  "configuration_object_sha": "e816dfd221a307eee460f0404e4870d464ec7b66",
+  "reviewer": {
+    "agent": "claude-code",
+    "model": "sonnet",
+    "reasoning": "thorough",
+    "minimum_severity": "medium",
+    "panel": "none"
+  },
+  "capability_evidence": {
+    "cli_contract": "PASS: roborev v0.62.0 with review, list --json, and show --json",
+    "execution_state": "PASS: daemon healthy",
+    "agent_authentication": "PASS: claude-code check-agents produced output",
+    "local_command_bridge": "not_required"
+  },
+  "job": {
+    "id": 272,
+    "uuid": "930f4415-d01b-4370-ab6b-7e6af3e7962e",
+    "git_ref": "e20d13b5b1cf06921db58b6a0f132401dfc1fe9d..d339ba2e982d71742d4223fead69e5a31fd4744a",
+    "status": "running",
+    "correlation": "ambiguous",
+    "missing_json_identity_fields": [
+      "repository_identity",
+      "configuration",
+      "selected_profile",
+      "implementation_family",
+      "provider_version",
+      "json_contract",
+      "live_batch_timeout_seconds",
+      "request_cap",
+      "repair_confirmation_cap",
+      "panel",
+      "member_identities",
+      "member_count"
+    ]
+  },
+  "member_states": [],
+  "member_population_complete": false,
+  "live_batch_timeout_seconds": 1200,
+  "request_count": 1,
+  "request_cap": 1,
+  "confirmation_count": 0,
+  "repair_confirmation_cap": 1,
+  "cost_coverage": {
+    "approximate_total_usd": 0,
+    "jobs_with_cost": 0,
+    "jobs_total": 0,
+    "complete": false,
+    "exact_ceiling": null
+  },
+  "authority": "observation_only"
+}
+```
