@@ -429,6 +429,76 @@ skill_router_trace() {
   printf '%s' "$output"
 }
 
+skill_router_live_identity_mismatch_trace() {
+  local mismatch="$1" fixture plugin_root router_repo replay_lines base_sha reviewed_sha fixed_sha
+  local repository config_hash receipt_repository receipt_pr receipt_base receipt_config
+  local events receipt receipt_json receipt_rc inherited_finding_ids required_capabilities decision script snippet output
+  fixture="$HERE/../test/fixtures/review-plan/pr1693-replay.json"
+  plugin_root="$TEST_ROOT/skill-router-live-$mismatch"
+  router_repo="$plugin_root/repo"
+  mkdir -p "$plugin_root/scripts"
+  # shellcheck source=/dev/null
+  . "$PLAN"
+  review_plan_source_runtime || return
+  replay_lines="$(make_replay_repo "$router_repo" "$fixture")"
+  base_sha="$(awk -F= '$1 == "base" { print $2 }' <<<"$replay_lines")"
+  reviewed_sha="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$replay_lines")"
+  fixed_sha="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$replay_lines")"
+  repository="$(jq -r '.repository' "$fixture")"
+  config_hash='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+  receipt_repository="$repository"
+  receipt_pr=1693
+  receipt_base="$base_sha"
+  receipt_config="$config_hash"
+  case "$mismatch" in
+    repository) receipt_repository='other/widgets' ;;
+    pr_number) receipt_pr=1694 ;;
+    base_sha) receipt_base="$reviewed_sha" ;;
+    config_hash) receipt_config='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' ;;
+    *) fail "unknown live identity mismatch: $mismatch"; return ;;
+  esac
+  events="$plugin_root/predecessor-events.jsonl"
+  receipt="$plugin_root/delta-receipt.json"
+  make_replay_receipt "$router_repo" "$receipt_repository" "$receipt_pr" "$receipt_base" "$reviewed_sha" \
+    "$receipt_config" "$events" "$receipt" >/dev/null
+  receipt_json="$(cat "$receipt")"
+  review_plan_validate_receipt "$receipt_json" "$events"
+  receipt_rc=$?
+  inherited_finding_ids="$(jq -S -c '[.known_findings[].finding_id] | sort | unique' <<<"$receipt_json")"
+  required_capabilities="$(jq -S -c '.required_capabilities | sort | unique' <<<"$receipt_json")"
+  decision="$(review_plan_build_decision "$repository" 1693 "$base_sha" "$fixed_sha" "$config_hash" resolve \
+    '["trusted_predecessor","ancestor_append","known_finding_delta"]' "\"$reviewed_sha\"" \
+    "$inherited_finding_ids" "$required_capabilities" '"APPROVE"' false)"
+  printf '%s\n' "$decision" >"$plugin_root/scripts/review-plan.sh.decision"
+  {
+    printf '%s\n' '#!/usr/bin/env bash'
+    printf 'source %q\n' "$PLAN"
+    printf '%s\n' 'if [ "${1:-}" = decide ]; then'
+    printf '%s\n' '  cat "$(dirname "$0")/review-plan.sh.decision"'
+    printf '%s\n' 'fi'
+  } >"$plugin_root/scripts/review-plan.sh"
+  chmod +x "$plugin_root/scripts/review-plan.sh"
+  snippet="$(skill_router_snippet)"
+  script="$plugin_root/trace.sh"
+  {
+    printf '%s\n' 'set -eu'
+    printf 'REPO=%q\n' "$repository"
+    printf '%s\n' 'PR_NUMBER=1693'
+    printf 'BASE_SHA=%q\n' "$base_sha"
+    printf 'REVIEWED_HEAD_SHA=%q\n' "$fixed_sha"
+    printf 'CONFIG_HASH=%q\n' "$config_hash"
+    printf 'REPO_WORKTREE=%q\n' "$router_repo"
+    printf 'PREDECESSOR_EVENTS=%q\n' "$events"
+    printf 'DELTA_RECEIPT=%q\n' "$receipt"
+    printf 'CLAUDE_PLUGIN_ROOT=%q\n' "$plugin_root"
+    printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on'
+    printf '%s\n' "$snippet"
+    printf '%s\n' 'printf "mode=%s|plan=%s|ceiling=%s|reason=%s\\n" "$REVIEW_MODE" "${PLAN_JSON-unset}" "${PLAN_EVENT_CEILING-unset}" "${PLAN_REASON-unset}"'
+  } >"$script"
+  output="$(bash "$script")"
+  printf 'receipt_rc=%s\n%s' "$receipt_rc" "$output"
+}
+
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on' 'skill documents the default-off fast-path flag'
   assert_file_contains "$SKILL" 'review-plan\.sh" decide' 'skill invokes the route planner'
@@ -473,6 +543,13 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   done
   assert_eq 'failed router leaves plan state unset' 'mode=initial|plan=unset|ceiling=unset|reason=unset' "$failed_router_trace"
   assert_eq 'skill router traces preserve planner path' "$HERE/review-plan.sh" "$PLAN"
+  for identity_field in repository pr_number base_sha config_hash; do
+    live_output="$(skill_router_live_identity_mismatch_trace "$identity_field")"
+    live_receipt_rc="$(sed -n '1s/^receipt_rc=//p' <<<"$live_output")"
+    live_trace="$(sed '1d' <<<"$live_output")"
+    assert_eq "$identity_field mismatch keeps receipt/event replay valid" '0' "$live_receipt_rc"
+    assert_eq "$identity_field mismatch preserves byte-identical initial trace under set -e" "$flag_off_trace" "$live_trace"
+  done
 fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then

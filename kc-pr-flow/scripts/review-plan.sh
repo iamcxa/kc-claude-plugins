@@ -333,6 +333,14 @@ review_plan_validate_decision() {
 
   receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || return
   review_plan_validate_receipt "$receipt_source" "$predecessor_events" || return 3
+  jq -e -n \
+    --argjson receipt "$receipt_source" --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg config_hash "$config_hash" '
+      $receipt.predecessor.repository == $repository and
+      $receipt.predecessor.pr_number == $pr_number and
+      $receipt.predecessor.base_sha == $base_sha and
+      $receipt.predecessor.config_hash == $config_hash
+    ' >/dev/null 2>&1 || return 3
   canonical="$(review_plan_real_worktree "$worktree")" || return
   predecessor_head="$(jq -r '.predecessor.head_sha' <<<"$receipt_source")" || return
   review_plan_git_identity_valid "$canonical" "$predecessor_head" || return
@@ -346,8 +354,7 @@ review_plan_validate_decision() {
     expected_capabilities="$(jq -S -c '. + ["correctness"] | sort | unique' <<<"$receipt_capabilities")" || return
   fi
   jq -e -n \
-    --argjson decision "$decision" --arg repository "$repository" --argjson pr_number "$pr_number" \
-    --arg base_sha "$base_sha" --arg config_hash "$config_hash" --arg predecessor_head "$predecessor_head" \
+    --argjson decision "$decision" --arg predecessor_head "$predecessor_head" \
     --argjson inherited_finding_ids "$inherited_finding_ids" --argjson expected_capabilities "$expected_capabilities" '
       ($decision.review_range.from_exclusive == $predecessor_head) and
       ($decision.inherited_finding_ids == $inherited_finding_ids) and
