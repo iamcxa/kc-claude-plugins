@@ -98,6 +98,17 @@ gates:
                 digest: sha256:cd8f08b0b3093db0835463ab0d649eaaebbbf7399e59bf52af6f506a83c3e274
                 request-digest: sha256:e1346fbe35e2109cfc203b5e3317e0b74eb1d4f45dd719536af361662de40eda
                 room-ref: ./production-recovery-route/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:za5drqh93q5522c6kstrxrsx:validation:2
+                briefing: briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-26T09:25:33.362576Z"
+                decision: approve
+                reason: Captain approved exact candidate 2b8abff after delegated Terra medium UAT loaded the Production recovery build contract, observed RED to GREEN with one isolated fixture change, performed no shape work, launched no RoboRev request, and left the product candidate clean.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
