@@ -139,3 +139,16 @@ The design preserves one workflow, three profiles, the superset graph, v3 compat
 ### Summary
 
 The revised design removes duplicated recovery identity and generic negative-control machinery while preserving the accepted `build -> verify` behavior and risk-triggered review. Only the corrected retained spec changed; implementation remains unstarted.
+
+## Stage Report: ideation (cycle 3)
+
+- DONE: Add docs/dev/README.md to the first-slice touch table because the self-adopted route and RoboRev activation claims must change with the package contract.
+  Commit `d38799a` adds the 320-line self-adopted workflow README with an estimated 332 lines and binds both its route and recovery-specific RoboRev claims.
+- DONE: Reword rollback so an active recovery item stops before the old loader and waits for Captain-authorized re-recording of the full route; do not grant mechanical fallback authority.
+  Rollback now stops before old-loader use and requires Captain authorization unless the existing `recovery_rollback` explicitly grants that exact rewrite and state transition.
+- DONE: Recalculate the file and changed-line stop conditions, preserve all other cycle-2 minimality decisions, update the Stage Report, and commit only the corrected spec.
+  The nine-file slice stops above 9 files, 475 changed lines, or 200 loader-test lines; the four fields, task-owned without-it, review trigger, and later S5 boundaries are unchanged.
+
+### Summary
+
+The corrected spec now covers both package and self-adopted live claims without expanding the recovery mechanism. Rollback retains Captain authority, and implementation remains unstarted.
