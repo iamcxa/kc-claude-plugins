@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-2:revision-1",
+  "question": "Approve exact candidate 2b8abff for Captain UAT and Draft PR update?",
+  "artifacts": [
+    {
+      "id": "artifact:za5drqh93q5522c6kstrxrsx:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/c05c01379e43018fc2b4c0d0e39c220ce77605f2/production-recovery-route/review/validation/review-5.md",
+      "rev": "sha256:338250089420fe2b24679ef25544a50126bda4e8cb75db0da7ee79d937f14429",
+      "mediaType": "text/markdown",
+      "summary": "Technical validation passed at exact candidate 2b8abff; approval authorizes rebuilding Draft PR #299 at that head, not Ready, merge, or release."
+    }
+  ]
+}

@@ -92,6 +92,12 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:za5drqh93q5522c6kstrxrsx-validation-2
+              briefing:
+                id: briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-2:revision-1
+                digest: sha256:cd8f08b0b3093db0835463ab0d649eaaebbbf7399e59bf52af6f506a83c3e274
+                request-digest: sha256:e1346fbe35e2109cfc203b5e3317e0b74eb1d4f45dd719536af361662de40eda
+                room-ref: ./production-recovery-route/review/validation/briefing-2
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
