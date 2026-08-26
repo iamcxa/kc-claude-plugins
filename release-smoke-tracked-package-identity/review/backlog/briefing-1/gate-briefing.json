@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8hyzngaw0frz3f0rzp2fvpxm:backlog:attempt-1:revision-1",
+  "question": "Approve Production ideation for the tracked-snapshot release-smoke correction before kc-dev-flow 4.0.0?",
+  "artifacts": [
+    {
+      "id": "artifact:8hyzngaw0frz3f0rzp2fvpxm:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/31b0c230c35c8a5f8767e9789323b7dc102da96b/release-smoke-tracked-package-identity.md",
+      "rev": "sha256:b57de4814209d9bbb7779fdce6918a0da8e6df48478260804fbbd090f1a1ce09",
+      "mediaType": "text/markdown",
+      "summary": "The current release smoke derives candidate identity from the ambient plugin directory, so ignored bytecode contaminated the v2.5.0 receipt. This item will design one exact tracked-Git snapshot boundary for both candidate digest and installation, preserve genuine mismatch refusal and the incident record, and exclude republishing, model calls, cleanup, retries, provider changes, and a new artifact ledger. Ideation must prove the smallest reusable snapshot mechanism, rollback path, and regression evidence before implementation."
+    }
+  ]
+}
