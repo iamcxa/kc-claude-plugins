@@ -138,11 +138,16 @@ if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
     --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
      . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" &&
      review_plan_validate_decision "$CANDIDATE_PLAN_JSON" "$REPO" "$PR_NUMBER" \
-       "$BASE_SHA" "$REVIEWED_HEAD_SHA" "$CONFIG_HASH"; then
-    PLAN_JSON="$CANDIDATE_PLAN_JSON"
-    REVIEW_MODE="$(jq -r '.mode' <<<"$PLAN_JSON")"
-    PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
-    PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
+       "$BASE_SHA" "$REVIEWED_HEAD_SHA" "$CONFIG_HASH" \
+       "$PREDECESSOR_EVENTS" "$DELTA_RECEIPT" "$REPO_WORKTREE"; then
+    CANDIDATE_REVIEW_MODE="$(jq -r '.mode' <<<"$CANDIDATE_PLAN_JSON")"
+    if [ "$CANDIDATE_REVIEW_MODE" != initial ]; then
+      PLAN_JSON="$CANDIDATE_PLAN_JSON"
+      REVIEW_MODE="$CANDIDATE_REVIEW_MODE"
+      PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
+      PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
+    fi
+    unset CANDIDATE_REVIEW_MODE
   fi
   unset CANDIDATE_PLAN_JSON
 fi

@@ -266,8 +266,10 @@ review_plan_input_identity_valid() {
 # finding, verdict, or posting authority.
 review_plan_validate_decision() {
   local decision="$1" repository="$2" pr_number="$3" base_sha="$4" head_sha="$5" config_hash="$6"
-  local expected_review_key
-  [ "$#" -eq 6 ] || return 2
+  local predecessor_events="$7" delta_receipt="$8" worktree="$9"
+  local expected_review_key mode receipt_source canonical predecessor_head inherited_finding_ids
+  local receipt_capabilities expected_capabilities
+  [ "$#" -eq 9 ] || return 2
   review_plan_source_runtime || return
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 3
   review_runtime_json_has_unique_members "$decision" >/dev/null 2>&1 || return 3
@@ -297,6 +299,11 @@ review_plan_validate_decision() {
         .router_advisory == true and
         (.requires_existing_initial_review | type == "boolean") and
         .final_verdict_authority == "existing-review-runtime";
+      def initial_reason:
+        . == ["base_changed"] or . == ["config_changed"] or
+        . == ["feature_disabled"] or . == ["identity_mismatch"] or
+        . == ["invalid_predecessor"] or . == ["missing_predecessor"] or
+        . == ["non_ancestor"] or . == ["unknown_delta"];
       ($decision | exact_keys(["event_ceiling","fallback","identity","inherited_finding_ids","mode","reason_codes","required_capabilities","review_range","schema"])) and
       $decision.schema == "kc-pr-flow.review-plan-decision/v1" and
       ($decision.identity | identity) and
@@ -312,11 +319,46 @@ review_plan_validate_decision() {
         $decision.inherited_finding_ids == [] and
         $decision.required_capabilities == [] and
         $decision.event_ceiling == null and
-        $decision.fallback.requires_existing_initial_review == true
+        $decision.fallback.requires_existing_initial_review == true and
+        ($decision.reason_codes | initial_reason)
       else
         ($decision.review_range.from_exclusive | sha1) and
+        $decision.review_range.from_exclusive != $head_sha and
         $decision.fallback.requires_existing_initial_review == false
       end)
+    ' >/dev/null 2>&1 || return
+
+  mode="$(jq -r '.mode' <<<"$decision")" || return
+  [ "$mode" = 'initial' ] && return 0
+
+  receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || return
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" || return 3
+  canonical="$(review_plan_real_worktree "$worktree")" || return
+  predecessor_head="$(jq -r '.predecessor.head_sha' <<<"$receipt_source")" || return
+  review_plan_git_identity_valid "$canonical" "$predecessor_head" || return
+  review_plan_git_identity_valid "$canonical" "$head_sha" || return
+  review_plan_ancestor "$canonical" "$predecessor_head" "$head_sha" || return
+  [ "$predecessor_head" != "$head_sha" ] || return 3
+  inherited_finding_ids="$(jq -S -c '[.known_findings[].finding_id] | sort | unique' <<<"$receipt_source")" || return
+  receipt_capabilities="$(jq -S -c '.required_capabilities | sort | unique' <<<"$receipt_source")" || return
+  expected_capabilities="$receipt_capabilities"
+  if [ "$mode" = 'delta' ]; then
+    expected_capabilities="$(jq -S -c '. + ["correctness"] | sort | unique' <<<"$receipt_capabilities")" || return
+  fi
+  jq -e -n \
+    --argjson decision "$decision" --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg config_hash "$config_hash" --arg predecessor_head "$predecessor_head" \
+    --argjson inherited_finding_ids "$inherited_finding_ids" --argjson expected_capabilities "$expected_capabilities" '
+      ($decision.review_range.from_exclusive == $predecessor_head) and
+      ($decision.inherited_finding_ids == $inherited_finding_ids) and
+      ($decision.required_capabilities == $expected_capabilities) and
+      (if $decision.mode == "resolve" then
+        $decision.reason_codes == ["ancestor_append","known_finding_delta","trusted_predecessor"] and
+        $decision.event_ceiling == "APPROVE"
+      elif $decision.mode == "delta" then
+        $decision.reason_codes == ["ancestor_append","expanded_delta","trusted_predecessor"] and
+        $decision.event_ceiling == "COMMENT"
+      else false end)
     ' >/dev/null 2>&1
 }
 

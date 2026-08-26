@@ -277,7 +277,7 @@ skill_router_snippet() {
 }
 
 skill_router_trace() {
-  local stub_mode="$1" script plugin_root snippet output decision review_key
+  local stub_mode="$1" script plugin_root snippet output decision review_key receipt
   plugin_root="$TEST_ROOT/skill-router-$stub_mode"
   mkdir -p "$plugin_root/scripts"
   review_key="$(sha256_text 'acme/widgets|1693|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb|cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc')"
@@ -297,6 +297,22 @@ skill_router_trace() {
       fallback:{router_advisory:true,requires_existing_initial_review:false,final_verdict_authority:"existing-review-runtime"}}')"
   case "$stub_mode" in
     valid-exit-0) ;;
+    valid-delta-exit-0)
+      decision="$(jq -S -c '
+        .mode="delta" |
+        .reason_codes=["ancestor_append","expanded_delta","trusted_predecessor"] |
+        .event_ceiling="COMMENT"' <<<"$decision")"
+      ;;
+    valid-initial-exit-0)
+      decision="$(jq -S -c '
+        .mode="initial" |
+        .reason_codes=["missing_predecessor"] |
+        .review_range.from_exclusive=null |
+        .inherited_finding_ids=[] |
+        .required_capabilities=[] |
+        .event_ceiling=null |
+        .fallback.requires_existing_initial_review=true' <<<"$decision")"
+      ;;
     valid-prefix-exit-9)
       decision='{"schema":"kc-pr-flow.review-plan-decision/v1"}'
       ;;
@@ -312,15 +328,72 @@ skill_router_trace() {
     wrong-type-exit-0)
       decision="$(jq -S -c '.identity.pr_number="1693"' <<<"$decision")"
       ;;
+    delta-empty-range-exit-0)
+      decision="$(jq -S -c '
+        .mode="delta" |
+        .reason_codes=["ancestor_append","expanded_delta","trusted_predecessor"] |
+        .review_range.from_exclusive=.identity.head_sha |
+        .event_ceiling="COMMENT"' <<<"$decision")"
+      ;;
+    delta-empty-capabilities-exit-0)
+      decision="$(jq -S -c '
+        .mode="delta" |
+        .reason_codes=["ancestor_append","expanded_delta","trusted_predecessor"] |
+        .required_capabilities=[] |
+        .event_ceiling="COMMENT"' <<<"$decision")"
+      ;;
+    delta-approve-ceiling-exit-0)
+      decision="$(jq -S -c '
+        .mode="delta" |
+        .reason_codes=["ancestor_append","expanded_delta","trusted_predecessor"]' <<<"$decision")"
+      ;;
+    delta-null-ceiling-exit-0)
+      decision="$(jq -S -c '
+        .mode="delta" |
+        .reason_codes=["ancestor_append","expanded_delta","trusted_predecessor"] |
+        .event_ceiling=null' <<<"$decision")"
+      ;;
+    resolve-empty-range-exit-0)
+      decision="$(jq -S -c '.review_range.from_exclusive=.identity.head_sha' <<<"$decision")"
+      ;;
+    resolve-comment-ceiling-exit-0)
+      decision="$(jq -S -c '.event_ceiling="COMMENT"' <<<"$decision")"
+      ;;
+    resolve-wrong-capabilities-exit-0)
+      decision="$(jq -S -c '.required_capabilities=[]' <<<"$decision")"
+      ;;
+    initial-wrong-reason-exit-0)
+      decision="$(jq -S -c '
+        .mode="initial" |
+        .reason_codes=["not_a_producer_reason"] |
+        .review_range.from_exclusive=null |
+        .inherited_finding_ids=[] |
+        .required_capabilities=[] |
+        .event_ceiling=null |
+        .fallback.requires_existing_initial_review=true' <<<"$decision")"
+      ;;
     *)
       fail "unknown skill router stub mode: $stub_mode"
       return
       ;;
   esac
   printf '%s\n' "$decision" >"$plugin_root/scripts/review-plan.sh.decision"
+  receipt="$(jq -S -c -n '
+    {predecessor:{repository:"acme/widgets",pr_number:1693,
+      base_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      head_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      config_hash:"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+     known_findings:[{finding_id:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}],
+     required_capabilities:["correctness"]}')"
+  printf '%s\n' "$receipt" >"$plugin_root/scripts/review-plan.sh.receipt"
   {
     printf '%s\n' '#!/usr/bin/env bash'
     printf 'source %q\n' "$PLAN"
+    printf 'review_plan_snapshot_receipt() { cat %q; }\n' "$plugin_root/scripts/review-plan.sh.receipt"
+    printf '%s\n' 'review_plan_validate_receipt() { return 0; }'
+    printf '%s\n' 'review_plan_real_worktree() { printf "%s\\n" "$1"; }'
+    printf '%s\n' 'review_plan_git_identity_valid() { return 0; }'
+    printf '%s\n' 'review_plan_ancestor() { return 0; }'
     printf '%s\n' 'if [ "${1:-}" = decide ]; then'
     printf '%s\n' '  cat "$(dirname "$0")/review-plan.sh.decision"'
     if [ "$stub_mode" = 'valid-prefix-exit-9' ]; then
@@ -338,7 +411,7 @@ skill_router_trace() {
   fi
   script="$TEST_ROOT/skill-router-$stub_mode.sh"
   {
-    printf '%s\n' 'set -u'
+    printf '%s\n' 'set -eu'
     printf '%s\n' 'REPO=acme/widgets'
     printf '%s\n' 'PR_NUMBER=1693'
     printf '%s\n' 'BASE_SHA=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -371,17 +444,33 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
 
   flag_off_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=off skill_router_trace valid-exit-0)"
   valid_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-exit-0)"
+  valid_delta_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-delta-exit-0)"
+  valid_initial_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-initial-exit-0)"
   failed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-prefix-exit-9)"
   malformed_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace malformed-exit-0)"
   schema_only_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace schema-only-exit-0)"
   extra_member_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace extra-member-exit-0)"
   wrong_type_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace wrong-type-exit-0)"
   assert_match 'complete valid router decision is accepted' '^mode=resolve\|plan=\{.*\}\|ceiling=APPROVE\|reason=ancestor_append,known_finding_delta,trusted_predecessor$' "$valid_router_trace"
+  assert_match 'complete valid delta decision is accepted' '^mode=delta\|plan=\{.*\}\|ceiling=COMMENT\|reason=ancestor_append,expanded_delta,trusted_predecessor$' "$valid_delta_router_trace"
+  assert_eq 'producer initial retains byte-identical existing flow' "$flag_off_trace" "$valid_initial_router_trace"
   assert_eq 'failed router preserves byte-identical initial trace' "$flag_off_trace" "$failed_router_trace"
   assert_eq 'malformed router preserves byte-identical initial trace' "$flag_off_trace" "$malformed_router_trace"
   assert_eq 'schema-only router preserves byte-identical initial trace' "$flag_off_trace" "$schema_only_router_trace"
   assert_eq 'extra-member router preserves byte-identical initial trace' "$flag_off_trace" "$extra_member_router_trace"
   assert_eq 'wrong-type router preserves byte-identical initial trace' "$flag_off_trace" "$wrong_type_router_trace"
+  for semantic_mode in \
+    delta-empty-range-exit-0 \
+    delta-empty-capabilities-exit-0 \
+    delta-approve-ceiling-exit-0 \
+    delta-null-ceiling-exit-0 \
+    resolve-empty-range-exit-0 \
+    resolve-comment-ceiling-exit-0 \
+    resolve-wrong-capabilities-exit-0 \
+    initial-wrong-reason-exit-0; do
+    semantic_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace "$semantic_mode")"
+    assert_eq "$semantic_mode preserves byte-identical initial trace under set -e" "$flag_off_trace" "$semantic_trace"
+  done
   assert_eq 'failed router leaves plan state unset' 'mode=initial|plan=unset|ceiling=unset|reason=unset' "$failed_router_trace"
   assert_eq 'skill router traces preserve planner path' "$HERE/review-plan.sh" "$PLAN"
 fi
