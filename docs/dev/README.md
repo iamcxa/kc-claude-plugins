@@ -61,7 +61,7 @@ README as a policy bundle.
 | Orchestration | First Officer |
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
-| Optional observation | Typed RoboRev observation at implementation exit; Production recovery requires a named risk, and `[none]` invokes nothing |
+| Optional observation | Typed RoboRev observation at every profile's implementation exit where its trigger is active; Production recovery requires a named risk, and `[none]` invokes nothing |
 | RoboRev local bindings | Reviewer complementary to the implementation family (`.roborev.toml` is the repository fallback); state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
 | Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md`; `docs/dev/_mods/roborev-implementation-exit.md` |
 | Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. **Local base policy: trunk-only, pending a refit.** The vendored `pr-merge` copy resolves its base as the configured trunk and rebases onto it, so a stacked base would be re-targeted and the PR would carry its parent's commits. Until that copy accepts a sibling base, do not stack here; the refit requirement is to make it preserve the selected base. |
