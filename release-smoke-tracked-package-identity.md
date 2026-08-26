@@ -5,6 +5,7 @@ status: backlog
 source: "kc-dev-flow-v2.5.0 post-publication incident: candidate receipt included two ignored __pycache__ files, Captain-approved next-release blocker on 2026-08-15"
 product: kc-dev-flow
 sprint: S3
+sprint-readiness: ready
 started:
 completed:
 verdict:
@@ -17,6 +18,43 @@ lane: main
 ---
 
 The `kc-dev-flow-v2.5.0` candidate smoke hashed and locally installed the ambient `kc-dev-flow/` directory. Two ignored Python bytecode files created before receipt generation entered that digest even though the clean release tag contained the exact same tracked Git subtree. Published mode then correctly refused the preserved receipt after release, producing a false artifact-drift signal and requiring a Captain-approved recovery.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: production
+  recommended: production
+  basis: >-
+    This changes the identity, installation, rollback, and published-release
+    evidence for an existing public plugin. A false candidate receipt can block
+    release closeout for every adopter, while a weak fix can admit untracked
+    bytes into the package boundary; that compatibility and release ownership
+    requires Production.
+  route: [shape, build, verify]
+  obligations:
+    architecture:
+      - Derive candidate digest and installation from one exact tracked Git snapshot.
+      - Keep candidate and published modes on the same package-byte boundary.
+      - Preserve the v2.5.0 failed receipt as immutable incident evidence.
+    implementation:
+      - Exclude ignored and untracked worktree files without cleaning or mutating the worktree.
+      - Keep genuine revision, version, digest, and installed-tree mismatches fail closed.
+      - Reuse the existing release-smoke mechanism without adding another artifact ledger.
+    testing:
+      - Reproduce ignored bytecode contamination and prove it cannot change candidate identity.
+      - Prove a tracked-byte change still changes both digest and installed candidate tree.
+      - Compare the exact candidate revision with a clean tag-equivalent checkout and retain mismatch negatives.
+  scope_boundary: >-
+    No v2.5.0 republish, model call, worktree cleanup, silent receipt rewrite,
+    retry loop, provider change, or generalized packaging framework.
+  promote_when:
+    - No higher profile exists; stop for new Captain scope if the fix needs release publication, provider mutation, a new ledger, or a compatibility exception.
+  decision:
+    authority: Kent (Captain)
+    at: 2026-08-26T00:36:37Z
+```
 
 ## Intended outcome
 
