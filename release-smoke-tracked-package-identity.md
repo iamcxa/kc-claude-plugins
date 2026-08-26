@@ -219,3 +219,10 @@ Implementation stops and reports if the diff against `844edfa75a021cc6c013186bb8
 ### Summary
 
 Ideation accepts one temporary tracked-package snapshot shared by candidate and published digest plus installation. The two-file slice preserves receipt schemas, mismatch refusal, the v2.5.0 incident, and no-model published closeout while excluding ambient ignored and untracked bytes without cleaning the worktree.
+
+### RoboRev observation claim
+
+- identity: `b1e86e9dbf100f2c84d2ae71ae30023c46baf1a12e5ecd4c1f92a436d6b193c3`
+- claimant: `spacedock-ensign-release-smoke-tracked-package-identity-implementation`
+- observed-state-revision: `ab06f28a67f89e505228ebde06585522b1fb917b`
+- state: `claimed`
