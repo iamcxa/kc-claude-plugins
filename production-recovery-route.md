@@ -72,6 +72,26 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:za5drqh93q5522c6kstrxrsx:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:za5drqh93q5522c6kstrxrsx-validation-1
+              briefing:
+                id: briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1
+                digest: sha256:65c8b1f1f39d15b334ab7ac3203585608f7972ae463d4af0dce2280ce7d4c0fa
+                request-digest: sha256:9065e228a543900b43d5eb9aa814b63adfd4d2bc1ce6152403afed1d680103a2
+                room-ref: ./production-recovery-route/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:za5drqh93q5522c6kstrxrsx:validation:1
+                briefing: briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T08:27:03.881908Z"
+                decision: approve
+                reason: Captain approved delegated exact-candidate E2E UAT and Production validation for b6092e6, retaining RoboRev UNKNOWN(state_unknown) as a visible non-gating residual.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.

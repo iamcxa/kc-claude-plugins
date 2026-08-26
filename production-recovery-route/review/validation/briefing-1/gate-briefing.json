@@ -1,0 +1,38 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1",
+  "question": "Approve delegated exact-candidate E2E UAT and Production validation for b6092e6, with RoboRev UNKNOWN retained as a non-gating residual?",
+  "artifacts": [
+    {
+      "id": "artifact:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f3917f98c21e5a28ce2dc5bc53403bd3514a2edb/production-recovery-route.md",
+      "rev": "sha256:611f9f2bfee4678bb989f0fab146c8aeb0bf5b766f0fbbd1e6a50c97f40db161",
+      "mediaType": "text/markdown",
+      "summary": "Candidate b6092e6 is 0 behind origin/main f7a3f01. The complete contract gate, real Spacedock backlog-to-skip-to-build-to-verify journey, 10/10 route mutations, parity, diff-check, and one isolated without-it all passed. The feature remains within 10 files/467 gross lines/199 loader-test lines; the PR also carries the approved ROADMAP and retained spec. No PR/provider feedback exists yet. RoboRev spent its single request without a correlatable job and remains UNKNOWN(state_unknown); it was not retried and deterministic validation does not treat it as PASS."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/b6092e69a956a7afac39c52dd1951cef440ac2c8/docs/superpowers/specs/2026-08-26-kc-dev-flow-proportional-production-delivery-design.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:21a2a9b03d650cddc4a84e632603497f48ff35cac83280ae8b120bec7d1a41be"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/b6092e69a956a7afac39c52dd1951cef440ac2c8/kc-dev-flow/scripts/profile-contract-loader.test.py",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:3d012f7ab0cc1cb8cd83451255aac1c0a5b5de681a651e6fa50a86cb6beaf37c"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:za5drqh93q5522c6kstrxrsx:validation:attempt-1:revision-1:item-4",
+      "uri": "git-root://main/b6092e69a956a7afac39c52dd1951cef440ac2c8/scripts/kc-dev-flow-contract-test.py",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:6d21e1504b54bb2fefe9c32c61db5815f8f17ca8ee42352fb8b5697a2c8f5f2c"
+    }
+  ]
+}
