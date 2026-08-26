@@ -811,10 +811,11 @@ def sd_gate_consume(
 ) -> str:
     """Prepare and record-approve-consume the gate at the entity's current
     stage; returns the real runtime `target-stage`."""
+    artifact_argument = str(artifact)
     prep = subprocess.run(
         [
             str(spacedock), "gate", "prepare", slug, "--workflow-dir", str(workflow),
-            "--question", f"{label}?", "--artifact", str(artifact.relative_to(repo)),
+            "--question", f"{label}?", "--artifact", artifact_argument,
             "--summary", label,
         ],
         cwd=repo, text=True, capture_output=True,
