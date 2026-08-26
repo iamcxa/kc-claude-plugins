@@ -114,6 +114,11 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
     if [ -r "$PLAN" ]; then
       # shellcheck source=/dev/null
       . "$PLAN"
+      source_probe="$(bash -c 'before_flags=$-; before_umask=$(umask); before_pwd=$PWD; source "$1"; printf "%s|%s|%s|%s|%s|%s" "$before_flags" "$-" "$before_umask" "$(umask)" "$before_pwd" "$PWD"' _ "$PLAN")"
+      IFS='|' read -r before_flags after_flags before_umask after_umask before_pwd after_pwd <<<"$source_probe"
+      assert_eq 'sourcing preserves caller shell options' "$before_flags" "$after_flags"
+      assert_eq 'sourcing preserves caller umask' "$before_umask" "$after_umask"
+      assert_eq 'sourcing preserves caller working directory' "$before_pwd" "$after_pwd"
       receipt_out="$(PATH="$STUB_DIR:$PATH" bash "$PLAN" receipt --event-file "$EVENT_FILE" 2>/dev/null)"
       receipt_rc=$?
       assert_eq 'receipt command succeeds for complete replay' '0' "$receipt_rc"
@@ -123,14 +128,14 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_eq 'all terminal findings remain unresolved' 'unresolved' "$(jq -r '[.known_findings[].resolution_state] | unique | join(",")' <<<"$receipt_out")"
       assert_eq 'finding IDs come from replay' "$(jq -r '.findings | map(.finding_id) | sort | join(",")' <<<"$projection")" "$(jq -r '.known_findings | map(.finding_id) | sort | join(",")' <<<"$receipt_out")"
       validator_err="$TEST_ROOT/validator.err"
-      review_plan_validate_receipt "$receipt_out" "$projection" 2>"$validator_err"
+      review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" 2>"$validator_err"
       validator_rc=$?
       assert_eq 'receipt validates against fresh projection' '0' "$validator_rc"
       assert_eq 'no transport or model stub was called' '' "$(cat "$CALL_LEDGER")"
 
       assert_receipt_rejected() {
         local description="$1" candidate_receipt="$2" rejected_rc
-        review_plan_validate_receipt "$candidate_receipt" "$projection" >/dev/null 2>&1
+        review_plan_validate_receipt "$candidate_receipt" "$EVENT_FILE" >/dev/null 2>&1
         rejected_rc=$?
         assert_not_zero "$description" "$rejected_rc"
       }
@@ -140,6 +145,8 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_receipt_rejected 'extra top-level member is rejected' "$(jq -S -c '.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'extra predecessor member is rejected' "$(jq -S -c '.predecessor.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'missing evidence hash is rejected' "$(jq -S -c 'del(.known_findings[0].evidence_sha256)' <<<"$receipt_out")"
+      duplicate_receipt_raw='{"schema":"kc-pr-flow.review-delta-receipt/v1","schema":"kc-pr-flow.review-delta-receipt/v1"}'
+      assert_receipt_rejected 'raw duplicate receipt member is rejected' "$duplicate_receipt_raw"
 
       symlink_events="$TEST_ROOT/events-link.jsonl"
       ln -s "$EVENT_FILE" "$symlink_events"
@@ -161,6 +168,8 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
         "$EVENT_FILE" >"$duplicate_events"
       review_plan_build_receipt "$duplicate_events" >/dev/null 2>&1
       assert_not_zero 'duplicate JSON member input is rejected' "$?"
+      review_plan_validate_receipt "$receipt_out" "$duplicate_events" >/dev/null 2>&1
+      assert_not_zero 'raw duplicate event-derived input is rejected by validator' "$?"
 
       oversized_events="$TEST_ROOT/oversized-events.jsonl"
       cp "$EVENT_FILE" "$oversized_events"

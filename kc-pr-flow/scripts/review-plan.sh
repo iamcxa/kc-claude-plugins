@@ -44,23 +44,23 @@ review_plan_build_receipt() (
 )
 
 review_plan_validate_receipt() (
-  local receipt="$1" projection receipt_hash projection_hash expected_review_key expected_receipt_id expected_content_sha256
+  local receipt='' event_file='' projection receipt_hash projection_hash expected_review_key expected_receipt_id expected_content_sha256
   local receipt_source projection_source
   [ "$#" -eq 2 ] || return 2
-  projection="$2"
+  receipt="$1"
+  event_file="$2"
   receipt_source="$receipt"
-  projection_source="$projection"
 
   # Reject duplicate members before jq parses either value. A path argument is
   # accepted only when it is an ordinary file; callers normally pass JSON text.
   if [ -f "$receipt" ] && [ ! -L "$receipt" ]; then
     receipt_source="$(cat "$receipt")" || return 3
   fi
-  if [ -f "$projection" ] && [ ! -L "$projection" ]; then
-    projection_source="$(cat "$projection")" || return 3
-  fi
   review_runtime_json_has_unique_members "$receipt_source" >/dev/null 2>&1 || return 3
-  review_runtime_json_has_unique_members "$projection_source" >/dev/null 2>&1 || return 3
+  # Freshness is part of this public boundary: callers provide only the event
+  # file, and the projection is always rebuilt through review-runtime replay.
+  projection="$(review_runtime_replay "$event_file")" || return 3
+  projection_source="$projection"
   receipt_hash="$(printf '%s' "$receipt_source" | jq -S -c . 2>/dev/null)" || return 3
   projection_hash="$(printf '%s' "$projection_source" | jq -S -c . 2>/dev/null | review_runtime_sha256)" || return 3
   expected_review_key="$(printf '%s|%s|%s|%s|%s' \
