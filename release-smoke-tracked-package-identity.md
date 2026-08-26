@@ -9,7 +9,7 @@ sprint-readiness: ready
 started: 2026-08-26T02:40:07Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-release-smoke-tracked-package-identity
 issue:
 pr:
 mod-block:
