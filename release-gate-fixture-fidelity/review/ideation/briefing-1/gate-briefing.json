@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:cmdbanvhg3enbwaf26ma6wzk:ideation:attempt-1:revision-1",
+  "question": "Approve this two-file fixture repair to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:cmdbanvhg3enbwaf26ma6wzk:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5e543dab7571ef4185242c7a5a27a1cd87b86dba/release-gate-fixture-fidelity/review/ideation/review.md",
+      "rev": "sha256:fa83de6ec9b5a8ab5eab29c1643950221568c219e154eb8a28d3aa48e3689381",
+      "mediaType": "text/markdown",
+      "summary": "Repair only the copied Git fixture and absolute review-artifact path; preserve the runtime flow, CI workflow, Spacedock pin, and release metadata."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:cmdbanvhg3enbwaf26ma6wzk:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/5e543dab7571ef4185242c7a5a27a1cd87b86dba/release-gate-fixture-fidelity.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:7624fa86b3cdce427c2217b3e1bd9db279258ffd83e2d21d9623909386e58ad1"
+    }
+  ]
+}

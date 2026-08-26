@@ -38,6 +38,26 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:cmdbanvhg3enbwaf26ma6wzk:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:cmdbanvhg3enbwaf26ma6wzk-ideation-1
+              briefing:
+                id: briefing:cmdbanvhg3enbwaf26ma6wzk:ideation:attempt-1:revision-1
+                digest: sha256:cf2ab982d9efa819dd3b734b928c6d5cae65f3d361b63210ecb6a45902195998
+                request-digest: sha256:694c7f9453a3f96e56fb672f8bda20870788ad335ad152182e0aaac1347057f4
+                room-ref: ./release-gate-fixture-fidelity/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:cmdbanvhg3enbwaf26ma6wzk:ideation:1
+                briefing: briefing:cmdbanvhg3enbwaf26ma6wzk:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T04:40:41.835538Z"
+                decision: approve
+                reason: Captain approved the bounded two-test fixture repair after ideation review.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
