@@ -55,7 +55,10 @@
 - Create: `kc-pr-flow/scripts/review-plan.test.sh`
 
 **Interfaces:**
-- Consumes: `review_runtime_replay EVENT_FILE -> kc-pr-flow.review-projection/v1`, `review_runtime_sha256`, and `review_runtime_snapshot_regular_file` from `kc-pr-flow/scripts/review-runtime.sh:8-31,193-223,1823-1975`.
+- Consumes: `review_runtime_sha256` from `kc-pr-flow/scripts/review-runtime.sh:8-17`,
+  `review_runtime_snapshot_regular_file` from `kc-pr-flow/scripts/review-runtime.sh:193-223`, and
+  `review_runtime_replay EVENT_FILE -> kc-pr-flow.review-projection/v1` from
+  `kc-pr-flow/scripts/review-runtime.sh:1823-1975`.
 - Produces: `review_plan_build_receipt EVENT_FILE -> kc-pr-flow.review-delta-receipt/v1`, `review_plan_validate_receipt RECEIPT PROJECTION -> 0|nonzero`, and CLI `review-plan.sh receipt --event-file FILE`.
 - Authority: read-only local projection. It cannot call `gh`, network tools, model CLIs, `review-post.sh`, or any runtime append/start command.
 
@@ -258,7 +261,7 @@ Cover these table cases exactly:
 
 | Case | Expected mode | Expected ceiling |
 |---|---|---|
-| flag off | `initial` | `COMMENT` |
+| flag off | router not invoked; existing `initial` flow | existing authority unchanged |
 | missing receipt/events | `initial` | `COMMENT` |
 | exact known path plus mechanically adjacent test | `resolve` | inherited ceiling |
 | new unrelated path on ancestor append | `delta` | `COMMENT` until new required coverage completes |
@@ -269,36 +272,85 @@ Cover these table cases exactly:
 
 Assert the output has only `schema`, `identity`, `mode`, `reason_codes`, `review_range`, `inherited_finding_ids`, `required_capabilities`, `event_ceiling`, and `fallback`.
 
+Add `--case worktree-safety`. Build one real repository, a symlink to it, a regular file, a missing
+path, and a path whose parent component is a symlink. Put a ledger-writing `git` stub first on
+`PATH`, call each public decision path with every unsafe worktree, and assert every case selects
+`initial`/`COMMENT` without one ledger entry. Then call the helper directly on the real directory
+and assert it returns that directory's canonical absolute path. The runtime safe-I/O helper is a
+regular-file snapshot boundary only; do not cite or call it as directory validation.
+
 - [ ] **Step 3: Run RED**
 
 ```bash
 bash kc-pr-flow/scripts/review-plan.test.sh --case mode-router
 bash kc-pr-flow/scripts/review-plan.test.sh --case trust-boundary
+bash kc-pr-flow/scripts/review-plan.test.sh --case worktree-safety
 ```
 
 Expected: FAIL because `decide` is not implemented.
 
 - [ ] **Step 4: Implement conservative Git and path classification**
 
-Implement these functions with no network access:
+Implement one directory gate and route every Git invocation through it:
 
 ```bash
+review_plan_real_worktree() {
+  python3 - "$1" <<'PY'
+import os
+import stat
+import sys
+
+raw = sys.argv[1]
+if not os.path.isabs(raw) or os.path.normpath(raw) != raw:
+    raise SystemExit(2)
+candidate = raw
+try:
+    mode = os.lstat(candidate).st_mode
+except OSError:
+    raise SystemExit(2)
+cursor = os.sep
+for component in candidate.split(os.sep)[1:]:
+    cursor = os.path.join(cursor, component)
+    try:
+        if stat.S_ISLNK(os.lstat(cursor).st_mode):
+            raise SystemExit(2)
+    except OSError:
+        raise SystemExit(2)
+if not stat.S_ISDIR(mode) or os.path.realpath(candidate) != candidate:
+    raise SystemExit(2)
+print(candidate)
+PY
+}
+
+review_plan_git() {
+  local worktree="$1" canonical
+  shift
+  canonical="$(review_plan_real_worktree "$worktree")" || return 2
+  command git -C "$canonical" "$@"
+}
+
 review_plan_git_identity_valid() {
   local worktree="$1" head="$2"
-  [ -d "$worktree/.git" ] || git -C "$worktree" rev-parse --git-dir >/dev/null 2>&1 || return 1
-  [ "$(git -C "$worktree" cat-file -t "$head" 2>/dev/null)" = commit ]
+  review_plan_git "$worktree" rev-parse --git-dir >/dev/null 2>&1 || return 1
+  [ "$(review_plan_git "$worktree" cat-file -t "$head" 2>/dev/null)" = commit ]
 }
 
 review_plan_ancestor() {
-  git -C "$1" merge-base --is-ancestor "$2" "$3"
+  review_plan_git "$1" merge-base --is-ancestor "$2" "$3"
 }
 
 review_plan_changed_paths() {
-  git -C "$1" diff --name-status --find-renames=50% "$2..$3"
+  review_plan_git "$1" diff --name-status --find-renames=50% "$2..$3"
 }
 ```
 
-Classify `resolve` only when every changed path is either a known-finding path or a test/fixture that mechanically names/imports one known-finding module. Accept adjacency only when the test lives under `test`, `tests`, `__tests__`, or `fixtures` and `git show HEAD:path` contains the known module basename or import path as a fixed string. Rename, copy, binary, submodule, unsafe path, ambiguous import, or unknown status cannot select `resolve`.
+Call `review_plan_real_worktree` immediately before every `rev-parse`, `cat-file`, `merge-base`,
+`diff`, `show`, or other Git operation; no direct `git -C` call may exist outside
+`review_plan_git`. The helper rejects a final symlink, a symlinked parent path, a non-directory, or
+an unresolved path before Git receives it. A validation failure selects `initial`/`COMMENT` and
+never tries a similarity fallback.
+
+Classify `resolve` only when every changed path is either a known-finding path or a test/fixture that mechanically names/imports one known-finding module. Accept adjacency only when the test lives under `test`, `tests`, `__tests__`, or `fixtures` and `review_plan_git "$worktree" show "$head:$path"` contains the known module basename or import path as a fixed string. Rename, copy, binary, submodule, unsafe path, ambiguous import, or unknown status cannot select `resolve`.
 
 For a trusted ancestor with any extra safe path, select `delta`, add `expanded_delta`, include `correctness` plus the predecessor required capabilities, and set `event_ceiling:COMMENT` until current-run coverage completes. Phase 1 does not implement shared inventory or risk-triggered specialists; current full-review security and specialist rules still apply after routing.
 
@@ -309,6 +361,7 @@ Build the decision with typed `jq --arg/--argjson`, sorted unique arrays, and `r
 ```bash
 bash kc-pr-flow/scripts/review-plan.test.sh --case mode-router
 bash kc-pr-flow/scripts/review-plan.test.sh --case trust-boundary
+bash kc-pr-flow/scripts/review-plan.test.sh --case worktree-safety
 bash kc-pr-flow/scripts/review-plan.test.sh
 bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision
 ```
@@ -370,21 +423,27 @@ Immediately after `SKILL.md` Step 2.1, add a concise `Step 2.2: Trusted Post-Fix
 
 ```bash
 REVIEW_MODE=initial
+unset PLAN_JSON PLAN_EVENT_CEILING PLAN_REASON CANDIDATE_PLAN_JSON
 if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
-  if ! PLAN_JSON="$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+  if CANDIDATE_PLAN_JSON="$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
     --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$REVIEWED_HEAD_SHA" \
     --config-hash "$CONFIG_HASH" --repo-worktree "$REPO_WORKTREE" \
-    --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")"; then
-    REVIEW_MODE=initial
-    PLAN_EVENT_CEILING=COMMENT
-    PLAN_REASON=router_failed
-  else
+    --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
+     jq -e '.schema == "kc-pr-flow.review-plan-decision/v1"' \
+       >/dev/null 2>&1 <<<"$CANDIDATE_PLAN_JSON"; then
+    PLAN_JSON="$CANDIDATE_PLAN_JSON"
     REVIEW_MODE="$(jq -r '.mode' <<<"$PLAN_JSON")"
     PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
     PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
   fi
+  unset CANDIDATE_PLAN_JSON
 fi
 ```
+
+If the router exits nonzero, emits partial output, or emits invalid JSON/schema, discard all of its
+stdout and continue the pre-existing `initial` flow. Do not create `PLAN_JSON`, do not add a
+`COMMENT` ceiling, and do not alter any existing initial-review instruction, lane, or authority.
+The only value retained from the snippet is the already-default `REVIEW_MODE=initial`.
 
 The prose must state:
 
@@ -397,6 +456,11 @@ The prose must state:
 - the user still receives the full Step 6 draft and explicitly confirms at Step 6c.
 
 Do not copy schema validators or shell helpers into `SKILL.md`; point to `reference/review-runtime.md` and `review-plan.sh --help`.
+
+Extend `--case skill-wiring` with a router stub that prints a valid JSON prefix and exits 9. Assert
+the existing initial-flow trace is byte-identical to the flag-off trace and that `PLAN_JSON`,
+`PLAN_EVENT_CEILING`, and `PLAN_REASON` are unset. Repeat with exit 0 plus malformed JSON. This is
+the rollback contract: helper failure adds neither a synthetic decision nor a lower event ceiling.
 
 - [ ] **Step 4: Document the runtime contract and maintainer commands**
 
@@ -611,7 +675,21 @@ Create JSONL cases for: known fix only, fix plus test, unrelated new path, force
       "fallback": "initial"
     },
     "finding_ids": ["cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+    "capability_coverage": [
+      {"capability": "correctness", "status": "complete", "gap_ref": null},
+      {"capability": "test-coverage", "status": "complete", "gap_ref": null}
+    ],
     "capability_gap_refs": [],
+    "event_evidence": {
+      "effective": {
+        "schema": "kc-pr-flow.review-event-evidence/v1",
+        "review_key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event": "APPROVE",
+        "coverage_gap_refs": [],
+        "source_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "posted": null
+    },
     "adjudicated_posted": 1,
     "adjudicated_false_positive": 0,
     "behavior_hashes": {"event_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "options_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
@@ -641,6 +719,11 @@ Create JSONL cases for: known fix only, fix plus test, unrelated new path, force
 
 The fixture must use this full closed shape on every line. Recompute each case's canonical review
 key and hashes from its own identity and evidence instead of copying the illustrative repeated hex.
+For a treatment whose plan mode is `initial`, set `timing:null`; it remains a Q1-Q5 fallback case
+and is never latency-eligible. For `delta` and `resolve`, `timing` is required. The fixture builder
+derives `event_evidence.effective` from the bound typed decision artifact and, when a review was
+posted, derives `event_evidence.posted` from the bound posting receipt; `source_sha256` is that safe
+snapshot's canonical SHA-256, not a caller-authored event claim.
 
 - [ ] **Step 2: Write failing ordered-gate tests**
 
@@ -652,16 +735,52 @@ assert_eq "good corpus promotes" "promote" "$(jq -r '.verdict' <<<"$report")"
 assert_eq "target is four minutes" "240000" "$(jq -r '.latency.target_ms' <<<"$report")"
 ```
 
+Q2 passes only when every required capability has a unique `complete` coverage entry and there are
+no gap refs, or when every incomplete required capability has a unique gap entry and the bound
+effective event—and the posted event when present—is `COMMENT` or `REQUEST_CHANGES`. The latter
+also requires `plan.event_ceiling == COMMENT`; an `APPROVE` at any effective/posted layer fails Q2.
+
 Mutate one dimension at a time and require the first failed gate:
 
 | Mutation | Failed gate |
 |---|---|
 | arbitrary review key or stale head | Q1 `identity` |
-| required capability gap | Q2 `required_coverage` |
+| omit a required capability with no gap receipt | Q2 `required_coverage` |
+| required capability gap plus effective `APPROVE` | Q2 `required_coverage` |
 | remove one expected must-fix | Q3 `must_fix_recall` |
 | add adjudicated false positive | Q4 `precision` |
 | event/options become less conservative | Q5 `behavior_parity` |
 | set one eligible run to `240001` ms | Q6 `latency` |
+
+Add these positive and boundary assertions:
+
+```bash
+assert_eq "initial fallbacks are excluded from latency" "2" \
+  "$(jq -r '.latency.excluded_initial_runs' <<<"$report")"
+assert_eq "only delta and resolve are eligible" "7" \
+  "$(jq -r '.latency.eligible_runs' <<<"$report")"
+
+gap_comment="$(mutate_case unavailable-required-lane \
+  '.treatment.plan.event_ceiling="COMMENT" |
+   .treatment.event_evidence.effective.event="COMMENT" |
+   .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs')"
+assert_eq "gaps capped to COMMENT pass Q2" "true" \
+  "$(score_gate "$gap_comment" required_coverage)"
+
+gap_request_changes="$(mutate_case unavailable-required-lane \
+  '.treatment.plan.event_ceiling="COMMENT" |
+   .treatment.event_evidence.effective.event="REQUEST_CHANGES" |
+   .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs')"
+assert_eq "gaps capped to REQUEST_CHANGES pass Q2" "true" \
+  "$(score_gate "$gap_request_changes" required_coverage)"
+```
+
+Also prove Q2 fails for a gap with plan ceiling `APPROVE`, effective event `APPROVE`, missing gap
+references, missing/invalid `source_sha256`, or posted `APPROVE`. Prove an initial fallback with
+`timing:null` can pass Q1-Q5 and does not change Q6 counts or maximum; an initial fallback carrying
+a timing object is rejected instead of improving latency. Reject duplicate capability entries,
+duplicate/orphan gap refs, a `complete` entry with non-null `gap_ref`, a `gap` entry with null
+`gap_ref`, and extra keys before gate scoring.
 
 Reject symlink/FIFO/oversized corpus, duplicate JSON members, unsafe numbers, self-resealed hashes,
 and any timing whose `measured_by` is not `review-runtime`. Assert corpus bytes are unchanged after
@@ -683,33 +802,99 @@ pair and derive gates rather than trusting caller verdicts:
 ```bash
 phase1_promotion() {
   jq -S -c -s '
+    def event_at_or_below_comment:
+      . == "COMMENT" or . == "REQUEST_CHANGES";
+    def hash64: type == "string" and test("^[0-9a-f]{64}$");
+    def event_evidence_valid($gaps):
+      .treatment.event_evidence as $e |
+      ($e | keys | sort == ["effective","posted"]) and
+      ($e.effective | keys | sort ==
+        ["coverage_gap_refs","event","review_key","schema","source_sha256"]) and
+      ($e.effective.schema == "kc-pr-flow.review-event-evidence/v1") and
+      ($e.effective.review_key == .exact_head.review_key) and
+      ($e.effective.source_sha256 | hash64) and
+      ($e.effective.source_sha256 == .treatment.behavior_hashes.event_sha256) and
+      (($gaps - $e.effective.coverage_gap_refs) | length == 0) and
+      ($e.effective.event | event_at_or_below_comment) and
+      ($e.posted == null or
+        (($e.posted | keys | sort ==
+          ["event","review_key","schema","source_sha256"]) and
+         ($e.posted.schema == "kc-pr-flow.posted-review-evidence/v1") and
+         ($e.posted.review_key == .exact_head.review_key) and
+         ($e.posted.source_sha256 | hash64) and
+         ($e.posted.event | event_at_or_below_comment)));
+    def coverage_entry_valid($refs):
+      (keys | sort == ["capability","gap_ref","status"]) and
+      (.capability | type == "string" and length > 0) and
+      (if .status == "complete" then .gap_ref == null
+       elif .status == "gap" then
+         .gap_ref as $gap_ref |
+         ($gap_ref | type == "string" and length > 0) and
+         ($refs | index($gap_ref)) != null
+       else false
+       end);
+    def capability_coverage_shape:
+      .treatment as $t |
+      ($t.capability_gap_refs | type == "array" and sort == . and unique == .) and
+      ($t.capability_coverage | type == "array" and
+        all(.[]; coverage_entry_valid($t.capability_gap_refs))) and
+      ([$t.capability_coverage[].capability] | unique | length) ==
+        ($t.capability_coverage | length) and
+      ([$t.capability_coverage[] | select(.status == "gap") | .gap_ref] | sort) ==
+        $t.capability_gap_refs;
+    def required_coverage_safe:
+      .expected.required_capabilities as $required |
+      .treatment.capability_gap_refs as $gaps |
+      [.treatment.capability_coverage[] | select(.status == "complete") | .capability] as $completed |
+      [.treatment.capability_coverage[] |
+        . as $entry |
+        select($entry.status == "gap" and ($gaps | index($entry.gap_ref)) != null) |
+        $entry.capability] as $documented_gap_caps |
+      ($required - $completed) as $missing |
+      if ($missing | length) == 0 and ($gaps | length) == 0 then true
+      else (($missing - $documented_gap_caps) | length) == 0 and
+        (($gaps | length) > 0) and
+        (.treatment.plan.event_ceiling == "COMMENT") and event_evidence_valid($gaps)
+      end;
+    def latency_eligible:
+      .treatment.plan.mode == "delta" or .treatment.plan.mode == "resolve";
     def recall($expected; $observed):
       (($expected - $observed) | length) == 0;
     def precision_not_worse:
       .treatment.adjudicated_false_positive <= .control.adjudicated_false_positive;
     sort_by(.pair_id) as $pairs |
-    ($pairs | all(.identity_valid)) as $q1 |
-    ($pairs | all(.treatment.capability_gap_refs | length == 0)) as $q2 |
+    [$pairs[] | select(latency_eligible)] as $eligible |
+    ($pairs | all(._derived.identity_valid)) as $q1 |
+    ($pairs | all(capability_coverage_shape and required_coverage_safe)) as $q2 |
     ($pairs | all(recall(.expected.must_fix_finding_ids; .treatment.finding_ids))) as $q3 |
     ($pairs | all(precision_not_worse)) as $q4 |
-    ($pairs | all(.behavior_parity == true)) as $q5 |
-    ($pairs | all(.treatment.timing.durations_ms.review_to_confirmation_ready <= 240000)) as $q6 |
+    ($pairs | all(._derived.behavior_parity)) as $q5 |
+    (($eligible | length) > 0 and
+      ($eligible | all(.treatment.timing.durations_ms.review_to_confirmation_ready <= 240000))) as $q6 |
     {
       schema:"kc-pr-flow.review-latency-promotion/v1",
       phase:"review-plan",
       quality_gates:{identity:$q1,required_coverage:$q2,must_fix_recall:$q3,
         precision:$q4,behavior_parity:$q5},
-      latency:{target_ms:240000,eligible_runs:($pairs|length),
-        passing_runs:([$pairs[] | select(.treatment.timing.durations_ms.review_to_confirmation_ready <= 240000)]|length),
-        max_ms:([$pairs[].treatment.timing.durations_ms.review_to_confirmation_ready]|max)},
+      latency:{target_ms:240000,eligible_runs:($eligible|length),
+        excluded_initial_runs:([$pairs[] | select(.treatment.plan.mode == "initial")]|length),
+        passing_runs:([$eligible[] | select(.treatment.timing.durations_ms.review_to_confirmation_ready <= 240000)]|length),
+        max_ms:([$eligible[].treatment.timing.durations_ms.review_to_confirmation_ready]|max // null)},
       verdict:(if $q1 and $q2 and $q3 and $q4 and $q5 and $q6 then "promote" else "do_not_promote" end)
     }'
 }
 ```
 
-Do not use fixture-provided `identity_valid` or `behavior_parity` booleans literally. Recompute the
-review key, schema hashes, coverage set, event ceiling ordering, and behavior-hash equality inside
-the validator; the skeleton only shows gate ordering.
+The external pair schema does not permit `_derived`. Before calling `phase1_promotion`,
+`review_latency_validate_pair` recomputes the review key with `review_runtime_sha256`, validates
+schema/content hashes and event-ceiling ordering, compares control/treatment behavior hashes, and
+adds only the in-memory `_derived:{identity_valid,behavior_parity}` object. Never accept those
+booleans from corpus JSON; a corpus member containing `_derived` fails closed as an extra key.
+Before scoring, validate the entire closed
+pair schema and enforce `timing == null` for `initial`, a valid bound `ReviewTiming/v1` for `delta`
+or `resolve`, and equality among exact-head, plan, timing, event-evidence, and behavior receipt
+identities. Q1-Q5 evaluate every pair. Q6 and all latency aggregates evaluate only `delta` and
+`resolve`; no initial fallback may carry a fabricated sub-four-minute measurement.
 
 - [ ] **Step 5: Run GREEN and deterministic scorer checks**
 
@@ -739,7 +924,7 @@ git commit -m "test(kc-pr-flow): gate delta review latency promotion"
 - Create: `.github/workflows/review-plan-tests.yml`
 - Modify: `.github/workflows/review-runtime-tests.yml:7-22,40-48`
 - Modify: `.github/workflows/review-evaluation-tests.yml:6-41,50-85`
-- Modify: `scripts/review-ci-routing.test.py:11-17,68-109`
+- Modify: `scripts/review-ci-routing.test.py:11-17,58-66,68-109`
 
 **Interfaces:**
 - Produces: one `plan` CI owner for `review-plan.sh`, its test, and replay fixture; existing `runtime` owns timing commands; existing `evaluation` owns latency scoring.

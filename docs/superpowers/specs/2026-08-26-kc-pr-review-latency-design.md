@@ -57,6 +57,9 @@ Promotion is ordered. A later gate cannot repair an earlier failure.
 | Q6 Latency | Exact-head snapshot to confirmation-ready draft | At most 240 seconds per eligible post-fix promotion run |
 | Q7 Cost | Reported comparable provider usage | Record only; no promotion claim until provider/scope match |
 
+For Q6, an eligible post-fix treatment is exactly `delta` or `resolve`. An `initial` fallback still
+participates in Q1-Q5 but has no fast-path timing receipt and is excluded from every latency count.
+
 If Q1-Q5 pass but Q6 fails, the phase is safe but not promoted as a latency improvement. If Q1-Q5
 fail, the phase is rolled back regardless of its speed.
 
@@ -174,8 +177,11 @@ bash kc-pr-flow/scripts/review-plan.sh decide \
   [--predecessor-events FILE] [--delta-receipt FILE]
 ```
 
-Inputs are safe-snapshotted using the existing `review-runtime-safe-io.py` boundary. The script
-accepts no PR body, diff prose, agent prompt, event choice, or caller-authored clean/secure claim.
+Receipt and event-file inputs are safe-snapshotted using the existing
+`review-runtime-safe-io.py` regular-file boundary. It does not validate directories. A dedicated
+worktree gate rejects non-directories and any symlinked path before every local Git command. The
+script accepts no PR body, diff prose, agent prompt, event choice, or caller-authored clean/secure
+claim.
 
 ### 5.3 Schemas
 
