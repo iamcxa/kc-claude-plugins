@@ -1,6 +1,6 @@
 ---
 title: Make Production recovery proportional
-status: implementation
+status: validation
 source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should retain exact proof without repeating resolved shape work"
 product: kc-dev-flow
 sprint: S5
