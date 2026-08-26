@@ -8,7 +8,7 @@ sprint-readiness: ready
 started: 2026-08-26T06:17:44Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-production-recovery-route
 issue:
 pr:
 mod-block:
