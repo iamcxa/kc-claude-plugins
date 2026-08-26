@@ -217,7 +217,26 @@ review_plan_ancestor() {
 }
 
 review_plan_changed_paths() {
-  review_plan_git "$1" diff --name-status --find-renames=50% "$2..$3"
+  review_plan_git "$1" diff --name-status --find-renames=50% --find-copies=50% --find-copies-harder "$2..$3"
+}
+
+review_plan_changed_object_is_safe() {
+  local worktree="$1" base_sha="$2" head_sha="$3" path="$4"
+  local tree_entry entry_path extra mode type object numstat added removed numstat_path
+  tree_entry="$(review_plan_git "$worktree" ls-tree "$head_sha" -- "$path")" || return 1
+  [ -n "$tree_entry" ] || return 1
+  IFS=$'\t' read -r tree_entry entry_path extra <<<"$tree_entry"
+  [ -z "$extra" ] && [ "$entry_path" = "$path" ] || return 1
+  read -r mode type object <<<"$tree_entry"
+  case "$mode:$type" in
+    100644:blob|100755:blob) ;;
+    *) return 1 ;;
+  esac
+  numstat="$(review_plan_git "$worktree" diff --numstat "$base_sha..$head_sha" -- "$path")" || return 1
+  [ -n "$numstat" ] || return 1
+  IFS=$'\t' read -r added removed numstat_path extra <<<"$numstat"
+  [ -z "$extra" ] && [ "$numstat_path" = "$path" ] || return 1
+  [ "$added" != '-' ] && [ "$removed" != '-' ]
 }
 
 review_plan_safe_path() {
@@ -272,13 +291,18 @@ review_plan_initial_decision() {
   review_plan_build_decision "$1" "$2" "$3" "$4" "$5" initial "[\"$6\"]" null '[]' '[]' null true
 }
 
-review_plan_receipt_source() {
-  if [ -f "$1" ] && [ ! -L "$1" ]; then
-    cat "$1"
+review_plan_snapshot_receipt() (
+  local receipt="$1" snapshot_dir='' snapshot_file=''
+  if [ -e "$receipt" ] || [ -L "$receipt" ]; then
+    snapshot_dir="$(review_runtime_private_snapshot_dir)" || return
+    snapshot_file="$snapshot_dir/receipt.json"
+    trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$snapshot_file"' EXIT
+    review_runtime_snapshot_regular_file "$receipt" "$snapshot_file" 'delta receipt' "${KC_PR_FLOW_MAX_RECEIPT_BYTES:-1048576}" || return
+    cat "$snapshot_file"
   else
-    printf '%s' "$1"
+    printf '%s' "$receipt"
   fi
-}
+)
 
 review_plan_known_path() {
   jq -e --arg path "$2" '.known_findings | any(.path == $path)' <<<"$1" >/dev/null 2>&1
@@ -318,11 +342,14 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" missing_predecessor
     return
   fi
-  review_plan_validate_receipt "$delta_receipt" "$predecessor_events" || {
+  receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   }
-  receipt_source="$(review_plan_receipt_source "$delta_receipt")" || return 3
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" || {
+    review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
+    return
+  }
   predecessor_repository="$(jq -r '.predecessor.repository' <<<"$receipt_source")" || return 3
   predecessor_pr="$(jq -r '.predecessor.pr_number' <<<"$receipt_source")" || return 3
   predecessor_base="$(jq -r '.predecessor.base_sha' <<<"$receipt_source")" || return 3
@@ -365,6 +392,7 @@ review_plan_decide() {
     esac
     review_plan_safe_path "$path" || { unknown=1; break; }
     [ -z "$extra" ] || { unknown=1; break; }
+    review_plan_changed_object_is_safe "$canonical" "$predecessor_head" "$head_sha" "$path" || { unknown=1; break; }
     if review_plan_known_path "$receipt_source" "$path"; then
       known=1
     elif review_plan_mechanical_adjacency "$canonical" "$head_sha" "$path" "$receipt_source"; then

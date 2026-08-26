@@ -309,6 +309,22 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     flag_off="$(bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'flag off preserves initial flow' 'initial' "$(jq -r '.mode' <<<"$flag_off")"
     assert_eq 'flag off adds no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$flag_off")"
+    replacement_receipt="$TEST_ROOT/replacement-receipt.json"
+    jq -S -c '.known_findings[0].path="docs/replaced.md" | .content_sha256=("0" * 64)' "$router_receipt" >"$replacement_receipt"
+    original_validate_receipt="$(declare -f review_plan_validate_receipt)"
+    eval "$(declare -f review_plan_validate_receipt | sed '1s/review_plan_validate_receipt/review_plan_validate_receipt_original/')"
+    review_plan_validate_receipt() {
+      local result
+      review_plan_validate_receipt_original "$@"
+      result=$?
+      cp "$replacement_receipt" "$router_receipt"
+      return "$result"
+    }
+    replacement_decision_file="$TEST_ROOT/replacement-decision.json"
+    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" >"$replacement_decision_file"
+    replacement_decision="$(<"$replacement_decision_file")"
+    assert_eq 'receipt replacement after validation preserves snapshot route' 'resolve' "$(jq -r '.mode' <<<"$replacement_decision")"
+    eval "$original_validate_receipt"
   fi
 
   if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'trust-boundary' ]; then
@@ -329,6 +345,46 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     gap_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$inherited_gap")"
     assert_eq 'untrusted inherited gap uses initial review' 'initial' "$(jq -r '.mode' <<<"$gap_decision")"
     assert_eq 'untrusted inherited gap has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$gap_decision")"
+    assert_changed_object_not_resolve() {
+      local description="$1" candidate_head="$2" object_decision
+      object_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$candidate_head" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+      if [ "$(jq -r '.mode' <<<"$object_decision")" = 'resolve' ]; then
+        fail "$description (must not select resolve)"
+      else
+        pass
+      fi
+    }
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    printf '\000binary parser\n' >"$router_repo/src/parser.py"
+    git -C "$router_repo" add src/parser.py
+    git -C "$router_repo" commit -qm binary-known-path
+    binary_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    assert_changed_object_not_resolve 'binary known path is not resolve' "$binary_sha"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    rm "$router_repo/src/parser.py"
+    ln -s parser-target "$router_repo/src/parser.py"
+    git -C "$router_repo" add src/parser.py
+    git -C "$router_repo" commit -qm symlink-known-path
+    symlink_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    assert_changed_object_not_resolve 'symlink blob is not resolve' "$symlink_sha"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    git -C "$router_repo" rm -q src/parser.py
+    git -C "$router_repo" update-index --add --cacheinfo "160000,$reviewed_sha,src/parser.py"
+    git -C "$router_repo" commit -qm gitlink-known-path
+    gitlink_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    assert_changed_object_not_resolve 'gitlink is not resolve' "$gitlink_sha"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    cp "$router_repo/src/parser.py" "$router_repo/src/parser-copy.py"
+    git -C "$router_repo" add src/parser-copy.py
+    git -C "$router_repo" commit -qm copied-parser
+    copy_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    assert_changed_object_not_resolve 'copy status is not resolve' "$copy_sha"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    printf 'unsafe object\n' >"$router_repo/src/unsafe\\object.py"
+    git -C "$router_repo" add 'src/unsafe\object.py'
+    git -C "$router_repo" commit -qm unsafe-object-path
+    unsafe_object_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    assert_changed_object_not_resolve 'unsafe changed object path is not resolve' "$unsafe_object_sha"
     git -C "$router_repo" checkout -q --orphan rewritten
     git -C "$router_repo" rm -qr --cached .
     printf 'def parse(value):\n    return None\n' >"$router_repo/src/parser.py"
