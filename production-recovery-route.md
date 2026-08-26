@@ -186,3 +186,15 @@ The corrected spec now covers both package and self-adopted live claims without 
 ### Summary
 
 Production keeps the full route by default and now accepts an explicit fail-closed recovery skip whose risks control optional review. Fresh validation still owes the task-owned full without-it; implementation intentionally did not run or add it.
+
+### RoboRev implementation-exit claim
+
+```yaml
+identity: 2271f2071b6f8de4b6314c1826a31ceb4fed43ae2c81e4a940f9ccc4b76fc83e
+configuration_sha256: db38e0744902a028bdea1e69b26a5af28f5a849412284f6699124ec201517bb8
+base: d38799af4d980498bfc51380c33e11266cedbafa
+tip: a97f157e53f53755d0bfbea1808577fed72a1e07
+claimant: codex:01a03ce1-7c69-76e2-b818-49f4098fddd2
+observed_state_revision: 35d5268353b1b0f6744e9cc5d024c168952b04b7
+state: claimed
+```
