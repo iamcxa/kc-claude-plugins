@@ -1,7 +1,7 @@
 ---
 id: 8hyzngaw0frz3f0rzp2fvpxm
 title: Derive release-smoke identity from the tracked package, not ignored worktree files
-status: implementation
+status: validation
 source: "kc-dev-flow-v2.5.0 post-publication incident: candidate receipt included two ignored __pycache__ files, Captain-approved next-release blocker on 2026-08-15"
 product: kc-dev-flow
 sprint: S3
