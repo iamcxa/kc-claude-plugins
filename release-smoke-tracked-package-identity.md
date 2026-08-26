@@ -295,6 +295,8 @@ Candidate and published release smoke now derive digest and installation from th
 - DONE: Record review disposition, material residuals, rollback or forward-recovery readiness, operational ownership, provider-feedback state, and whether the exact candidate is ready for Captain release authorization; write the validation Stage Report without modifying product files.
   Deterministic-only review is sufficient because Git archive, byte identity, install readback, mismatch refusal, and archive-traversal safety are directly exercised; no material residual remains in scope. Revert `278095b` plus reinstate the release block is rollback, snapshot-helper repair is forward recovery, and the release owner owns receipt/install-drift monitoring. RoboRev job 266 is corroborating PASS evidence only; no PR exists for this head, so no PR provider feedback is pending. Exact candidate `278095b` is ready for Captain release authorization, which has not yet been granted; CI cost is unchanged and was not remeasured.
 
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":294,"layer":"single","head":"278095b3015a25bb7140e7dd2b09482d96fc412a","fingerprint":"sha256:36149a2eeccdefbe3cbd50367d47ed00142a8025b340b925eae9e7f79badccd7","dispositions":[]}
+
 ### Summary
 
 Fresh Production validation passed at exact candidate `278095b` against base `844edfa` with no product-file changes or material residuals. The candidate is ready for the Captain's release-authorization gate; publication, merge, and terminalization remain deliberately unperformed.
