@@ -1,6 +1,6 @@
 ---
 title: Make Production recovery proportional
-status: validation
+status: implementation
 source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should retain exact proof without repeating resolved shape work"
 product: kc-dev-flow
 sprint: S5
@@ -130,6 +130,16 @@ An exact known Production failure can skip redundant shape work while retaining 
 ## Delivery boundary
 
 Deliver through one Captain-reviewed PR to `main`. This authority-changing item keeps manual merge; release remains separately authorized.
+
+## Implementation scope adjustment
+
+Captain approved one replacement threshold after validation exposed four stale
+route-string assertions in the same repository contract test. Implementation
+may now change at most 10 product files while remaining at or below 475 gross
+changed lines and 200 gross loader-test lines. The sole added path is
+`scripts/kc-dev-flow-contract-test.py`, limited to replacing those four stale
+assertions with checks that independently require the full Production route and
+the eligible recovery clause. No other scope, mechanism, or authority changed.
 
 ## Stage Report: ideation
 
