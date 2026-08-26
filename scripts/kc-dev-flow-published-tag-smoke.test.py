@@ -8,6 +8,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 from pathlib import Path
 from unittest import mock
@@ -179,6 +180,91 @@ require(smoke.codex_result(codex_output) == report(REVISION), "Codex extraction 
 expect_error(lambda: smoke.codex_result("{}"), "no final", "empty Codex output")
 
 
+def git(repo: Path, *arguments: str) -> str:
+    return subprocess.run(
+        ["git", *arguments], cwd=repo, check=True, capture_output=True, text=True
+    ).stdout.strip()
+
+
+def initialize_snapshot_fixture(repo: Path) -> str:
+    plugin = repo / "kc-dev-flow"
+    assets = plugin / "skills/setup-github-project-projection/assets"
+    assets.mkdir(parents=True)
+    (repo / ".claude-plugin").mkdir()
+    (repo / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
+    marketplace = {"name": "fixture", "plugins": [{"name": "kc-dev-flow", "version": "2.5.0"}]}
+    (repo / ".claude-plugin/marketplace.json").write_text(json.dumps(marketplace), encoding="utf-8")
+    for host in ["claude", "codex"]:
+        manifest = plugin / f".{host}-plugin/plugin.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text('{"version":"2.5.0"}\n', encoding="utf-8")
+    (assets / "install-projection.py").write_text("print('v1')\n", encoding="utf-8")
+    (assets / "project-spacedock-state.py").write_text("print('v1')\n", encoding="utf-8")
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "smoke@example.test")
+    git(repo, "config", "user.name", "Smoke Test")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "fixture")
+    return git(repo, "rev-parse", "HEAD")
+
+
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-snapshot-test-") as temporary:
+    fixture_root = Path(temporary)
+    fixture_repo = fixture_root / "repo"
+    fixture_repo.mkdir()
+    clean_revision = initialize_snapshot_fixture(fixture_repo)
+    clean_snapshot = fixture_root / "clean"
+    smoke.tracked_package_snapshot(fixture_repo, clean_revision, clean_snapshot, 30)
+    clean_identity = smoke.package_identity(clean_snapshot)
+    clean_ambient_digest = smoke.tree_digest(fixture_repo / "kc-dev-flow")
+
+    pycache = fixture_repo / "kc-dev-flow/skills/setup-github-project-projection/assets/__pycache__"
+    pycache.mkdir()
+    ignored_paths = [pycache / f"{name}.cpython-314.pyc" for name in ["install-projection", "project-spacedock-state"]]
+    for path in ignored_paths:
+        path.write_bytes(b"v2.5.0 incident bytecode")
+    untracked = fixture_repo / "kc-dev-flow/untracked.txt"
+    untracked.write_text("ambient only\n", encoding="utf-8")
+
+    contaminated_snapshot = fixture_root / "contaminated"
+    smoke.tracked_package_snapshot(fixture_repo, clean_revision, contaminated_snapshot, 30)
+    require(
+        smoke.tree_digest(fixture_repo / "kc-dev-flow") != clean_ambient_digest
+        and smoke.package_identity(contaminated_snapshot) == clean_identity
+        and all(path.is_file() for path in ignored_paths)
+        and untracked.is_file(),
+        "ignored v2.5.0 files changed tracked identity or the snapshot mutated the worktree",
+    )
+
+    tracked = fixture_repo / "kc-dev-flow/skills/setup-github-project-projection/assets/install-projection.py"
+    tracked.write_text("print('v2')\n", encoding="utf-8")
+    git(fixture_repo, "add", tracked.relative_to(fixture_repo).as_posix())
+    git(fixture_repo, "commit", "-qm", "tracked change")
+    changed_snapshot = fixture_root / "changed"
+    changed_revision = git(fixture_repo, "rev-parse", "HEAD")
+    smoke.tracked_package_snapshot(fixture_repo, changed_revision, changed_snapshot, 30)
+    require(
+        smoke.package_identity(changed_snapshot)[2] != clean_identity[2],
+        "a committed tracked package byte did not change snapshot identity",
+    )
+
+    malicious_source = fixture_root / "malicious"
+    malicious_source.write_text("escape\n", encoding="utf-8")
+
+    def write_unsafe_archive(command, **_kwargs):
+        output = Path(next(value for value in command if value.startswith("--output="))[9:])
+        with tarfile.open(output, "w") as archive:
+            archive.add(malicious_source, arcname="../escaped")
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    with mock.patch.object(smoke, "run", write_unsafe_archive):
+        expect_error(
+            lambda: smoke.tracked_package_snapshot(fixture_repo, clean_revision, fixture_root / "unsafe", 30),
+            "unsafe",
+            "unsafe archive member",
+        )
+
+
 class FakeSmokeRuntime:
     candidate_revision = "c" * 40
     published_revision = "d" * 40
@@ -231,10 +317,13 @@ class FakeSmokeRuntime:
             ) + "\n"
         elif command[:3] == ["git", "status", "--porcelain"]:
             pass
+        elif command[:3] == ["git", "archive", "--format=tar"]:
+            archived = command.copy()
+            archived[4] = "HEAD"
+            subprocess.run(archived, cwd=cwd, check=True, capture_output=True, text=True)
         elif command[:2] == ["git", "clone"]:
             checkout = Path(command[-1])
-            shutil.copytree(ROOT / ".claude-plugin", checkout / ".claude-plugin")
-            shutil.copytree(ROOT / "kc-dev-flow", checkout / "kc-dev-flow")
+            subprocess.run(["git", "clone", "-q", "--no-hardlinks", str(ROOT), str(checkout)], check=True)
         elif command[:3] == ["git", "describe", "--tags"]:
             stdout = self.observed_tag + "\n"
         elif command[:4] == ["claude", "plugin", "marketplace", "add"]:
@@ -320,7 +409,8 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-smoke-test-") as temporary:
         not candidate_error
         and candidate_result == candidate_receipt
         and candidate_runtime.host_invocations == ["claude", "codex"]
-        and candidate_receipt["reports"] == {"claude": "PASS", "codex": "PASS"},
+        and candidate_receipt["reports"] == {"claude": "PASS", "codex": "PASS"}
+        and {path.name for path in candidate_runtime.sources.values()} == {"snapshot"},
         f"candidate mode did not close both hosts: {candidate_error!r}",
     )
     schema = candidate_runtime.host_schemas["claude"]
@@ -381,7 +471,8 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-smoke-test-") as temporary:
     require(
         not published_error
         and not published_runtime.host_invocations
-        and published_result["installed"] == {"claude": "PASS", "codex": "PASS"},
+        and published_result["installed"] == {"claude": "PASS", "codex": "PASS"}
+        and {path.name for path in published_runtime.sources.values()} == {"snapshot"},
         f"published mode did not bind identity without models: {published_error!r}",
     )
 
