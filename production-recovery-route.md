@@ -1,6 +1,6 @@
 ---
 title: Make Production recovery proportional
-status: validation
+status: implementation
 source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should retain exact proof without repeating resolved shape work"
 product: kc-dev-flow
 sprint: S5
@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-production-recovery-route
 issue:
-pr: "#299"
+pr:
 mod-block:
 design: required
 lane: main
@@ -91,7 +91,7 @@ gates:
                 reason: Captain approved delegated exact-candidate E2E UAT and Production validation for b6092e6, retaining RoboRev UNKNOWN(state_unknown) as a visible non-gating residual.
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
