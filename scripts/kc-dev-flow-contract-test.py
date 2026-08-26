@@ -78,6 +78,8 @@ required = [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+    "kc-dev-flow/scripts/pr-review-handoff.py",
+    "kc-dev-flow/scripts/pr-review-handoff.test.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
@@ -257,6 +259,7 @@ for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+    "kc-dev-flow/scripts/pr-review-handoff.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
 ]:
@@ -269,6 +272,10 @@ run(
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
     "profile Spacedock route",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/pr-review-handoff.test.py"],
+    "PR review handoff",
 )
 run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
 run(

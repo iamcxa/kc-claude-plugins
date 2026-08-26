@@ -10,6 +10,30 @@ reference therefore loads even when a provider mod owns the ceremony itself, and
 it stays forge-neutral: the rule is target-branch mechanics, which behave the
 same for a GitHub pull request and a GitLab merge request.
 
+## PR-review evidence index
+
+At this boundary, a delivery route may write one optional
+`kc-dev-flow-pr-review-handoff/v1` index **outside the checkout and delivery PR
+content** for a later `kc-pr-review` invocation. It is review context, not a
+delivery record or authority. Bind the exact work-item reference, selected
+profile, base SHA, candidate SHA, PR repository/number/head SHA, accepted
+outcome and acceptance criteria, falsifiers, evidence references, changed-file
+list, scope exclusions, and residuals. The candidate SHA and PR head SHA must
+be identical.
+
+Use the installed `kc-dev-flow/scripts/pr-review-handoff.py create` helper with
+one repeated option per list item; write its `--output` to an operator-owned
+mode-0600 path outside the checkout. Never put credentials, browser data,
+cookies, raw tool logs, agent prompts, posting/merge instructions, or authority
+claims in the index. The helper has no network, GitHub, execution, workflow
+state, Ready, merge, or posting operation.
+
+Pass the resulting path to `kc-pr-review` only after the PR exists. A reviewer
+must validate it against a fresh repository, PR number, head SHA, and candidate
+SHA through the same helper before treating it as context. A missing, malformed,
+or identity-drifted index is not evidence and cannot alter the review event,
+confirmation, posting, merge, Ready, or workflow state.
+
 ## Prefer a stacked base
 
 Choose the base before creating the branch, not after the work is done.
