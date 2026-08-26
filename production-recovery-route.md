@@ -267,3 +267,18 @@ The candidate-bound observation claimed single-flight ownership and spent its on
 ### Summary
 
 Exact-candidate recovery behavior and parity passed, but the required repository gate found a stale RoboRev Local Profile assertion and validation therefore fails. The work returns to implementation for one focused contract-test repair before fresh validation; RoboRev UNKNOWN and Captain-owned UAT remain visible and non-authoritative.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Repair only the stale Local Profile assertion within the already approved docs/dev/README.md path; keep the exact required phrase while stating that the observation runs only where its trigger is active and Production recovery [none] invokes nothing.
+  Commit `456ea29` restores the enforced phrase and immediately limits execution to an active trigger; the same row preserves named-risk activation and `[none]` non-activation for recovery.
+- DONE: Run scripts/roborev-implementation-exit-contract.test.py and the complete scripts/kc-dev-flow-contract-test.py, plus diff-check and all prior parity/focused checks.
+  Both named contract tests pass, as do the focused loader's real Spacedock journey, loader/kernel byte parity, and `git diff --check d38799a`; removing the phrase or parity makes its owning check fail.
+- DONE: Keep the product diff at the same nine files and below 475/200 stop lines; do not change the test contract, schema, engine, CI, UAT, auto-merge, or release behavior.
+  The exact slice remains 9 files and 440 gross lines with 199 gross loader-test lines; only one existing README line changed after `a97f157`.
+- DONE: Amend or add one bounded repair commit, append the implementation repair Stage Report, and sync only the state report.
+  Product repair is isolated in `456ea29`; RoboRev remains the spent-request `UNKNOWN(state_unknown)` and was not retried, and no stage or authority was advanced.
+
+### Summary
+
+The Local Profile again satisfies its enforcement contract while retaining risk-triggered recovery semantics. Fresh validation can now rerun the full gate and the deferred without-it against `456ea29`.
