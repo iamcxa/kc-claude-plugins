@@ -1,6 +1,6 @@
 ---
 title: Restore release-gate ablation fixture fidelity
-status: ideation
+status: implementation
 source: "Release Please PR #258 run 32929119727: release-state-restored rejected for missing review.md before reaching would-strand evidence"
 product: kc-dev-flow
 sprint: S3
@@ -57,7 +57,7 @@ gates:
                 reason: Captain approved the bounded two-test fixture repair after ideation review.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
