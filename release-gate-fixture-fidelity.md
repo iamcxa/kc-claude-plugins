@@ -248,3 +248,20 @@ Commit d339ba2 removes both false preconditions without changing production code
   "authority": "observation_only"
 }
 ```
+
+## Stage Report: validation
+
+- DONE: Bind exact base e20d13b5b1cf06921db58b6a0f132401dfc1fe9d and candidate d339ba2; inspect the exact two-file diff and map AC-1 through AC-3 to falsifiers.
+  HEAD is d339ba2e982d71742d4223fead69e5a31fd4744a with sole parent e20d13b5b1cf06921db58b6a0f132401dfc1fe9d; AC-1 fails on any non-`would strand` refusal, AC-2 on any extra file or missing committed/absolute-path precondition, and AC-3 on baseline failure, a surviving mutant, or wrong-reason evidence.
+- DONE: Independently run focused profile-loader and kc-dev-flow contract tests plus Python compilation at the exact candidate.
+  With `/Users/kent/.local/bin/spacedock.bak-0.27.0-pre8`, `profile-contract-loader.test.py` reported route mechanism PASS and overall PASS, `kc-dev-flow-contract-test.py` reported PASS, and `py_compile` passed for both changed files; removing either fixture repair makes these paths fail before the intended guard.
+- DONE: Independently run the live Spacedock 0.27.0-pre8 ablation; require baseline PASS, all ten named mutants rejected, and release-state-restored evidence containing would strand.
+  The live runner exited 0 with baseline PASS, all ten named mutants REJECTED, and `release-state-restored: REJECTED`; its unchanged `reject(..., "would strand")` matcher fails closed if that mutant stops on missing file, receipt, Git, or other evidence.
+- DONE: Verify no runtime, CI workflow, dependency pin, release metadata, documentation, or third-file change; confirm rollback is the one candidate commit.
+  `git diff --name-only` contains only the two accepted test files, `git diff --check` is clean, the candidate range contains one commit, and rollback is a revert of d339ba2; the candidate worktree remained clean.
+- DONE: Disposition RoboRev UNKNOWN(state_unknown) as non-authoritative provider evidence, record material residuals, write the validation Stage Report, and do not modify or commit product files.
+  Job 272 remains UNKNOWN(state_unknown) and was not queried or reinterpreted; no GitHub PR exists, so provider CI and PR feedback remain unproven, and Draft PR creation plus Release Please PR #258 rerun remain delivery residuals outside validation.
+
+### Summary
+
+Validation passes locally at exact candidate d339ba2: the two-file fixture repair preserves baseline behavior and rejects all ten mutants for their intended evidence on pinned Spacedock 0.27.0-pre8. Product files were not changed during validation; hosted PR, provider CI, and the Release Please rerun remain separate delivery proof.
