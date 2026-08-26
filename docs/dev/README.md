@@ -62,7 +62,7 @@ README as a policy bundle.
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
 | Optional observation | Typed RoboRev observation at every profile's implementation exit where its trigger is active; Production recovery requires a named risk, and `[none]` invokes nothing |
-| RoboRev local bindings | Reviewer complementary to the implementation family (`.roborev.toml` is the repository fallback); state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
+| RoboRev local bindings | Fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, `panel: none`; implementation family is provenance only; `.roborev.toml` is the repository fallback; state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
 | Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md`; `docs/dev/_mods/roborev-implementation-exit.md` |
 | Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. **Local base policy: trunk-only, pending a refit.** The vendored `pr-merge` copy resolves its base as the configured trunk and rebases onto it, so a stacked base would be re-targeted and the PR would carry its parent's commits. Until that copy accepts a sibling base, do not stack here; the refit requirement is to make it preserve the selected base. |
 | Workflow scope | This repository's own plugin development is in scope, not exempt. The countable trigger is a **second pull request for the same piece of work**: one PR may be a small task, a second says it is not — stop there and take the work through the stages. Entering means reading this Local Profile section first, before the selected item; a session that runs the stages while skipping this table still misses the local base policy and the bound authorities below. Recorded 2026-08-22 after four plugin PRs merged with no entity, no stage report and no gate, and the largest defect among them survived to `main` because nothing had asked what would falsify it. |
@@ -83,11 +83,10 @@ receipt. Work-item records and unrelated Markdown changes activate neither.
 
 The selected profile's `build.md` supplies one typed `review_convergence`
 observation in `observe` mode, which appears only in the implementation-stage
-loader result. The runbook selects a complementary reviewer mapping from
-the actual implementation provider family: OpenAI uses Claude Code `sonnet`;
-Anthropic uses Codex `gpt-5.6-terra`. An unknown family is `UNAVAILABLE`, not a
-guess. Pass every value explicitly; `.roborev.toml` is only the committed
-repository fallback and installs no hook or panel.
+loader result. The runbook fixes agent `codex`, model `gpt-5.6-terra`, reasoning
+`medium`, and `panel: none`; the actual host and implementation family is
+provenance only. Pass every value explicitly; `.roborev.toml` is only the
+committed repository fallback and installs no hook or panel.
 For Production recovery, a named `review_risks` entry is also required to
 activate it; the Production label and `[none]` are insufficient.
 
@@ -95,7 +94,7 @@ activate it; the Production label and `[none]` are insufficient.
 |---|---|---|---:|---:|
 | POC | `medium` | `high` | 10 minutes | `1 / 0` |
 | Pilot | `medium` | `medium` | 15 minutes | `1 / 1` |
-| Production | `thorough` | `medium` | 20 minutes | `1 / 1` |
+| Production | `medium` | `medium` | 20 minutes | `1 / 1` |
 
 All use `panel: none`. The result is observation, not validation or delivery
 authority. Missing CLI, daemon/local mode, mapped agent, authentication, or host

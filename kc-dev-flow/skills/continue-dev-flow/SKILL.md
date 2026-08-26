@@ -62,10 +62,10 @@ merge request, or forge equivalent — no matter who owns the ceremony; it is fa
 only for a route that delivers without one. `pr_delivery_selected` is narrower:
 true only when no local delivery provider owns the PR ceremony, so the portable
 one applies. A repository whose provider mod owns the ceremony has the first
-trigger true and the second false. `implementation_exit_observation_declared` is
-true only at a build stage whose emitted typed observation names a provider and
-whose repository meets that provider's recorded precondition; it is the method
-for that observation, not an extra review. RoboRev's precondition is a
+trigger true and the second false. Read
+`implementation_exit_observation_declared` from the loader output; true loads
+the declared build observation and false performs no provider work. RoboRev's
+repository precondition is a
 Spacedock-registered state holder, so a repository without one leaves the trigger
 false and never loads the contract. A newly true trigger loads its reference
 before the stage verdict. Record a named receipt in the existing work item;
@@ -136,19 +136,16 @@ that changes the decision, and next action.
 
 ## Optional observations
 
-At implementation exit, inspect only the typed observation in the selected
-`build` contract returned by the loader. When it declares `review_convergence`
-in `observe` mode, that same `build` contract's
-`implementation_exit_observation_declared` trigger is true, so read the provider
+At implementation exit, inspect the loader's
+`implementation_exit_observation_declared` field. When the loader output is true,
+read the selected build contract's `review_convergence` observation and provider
 contract it names — `../../references/roborev-implementation-exit.md` — as the
-method. Take the reviewer mapping, state holder, prerequisite, and durability
-command from `## Local Profile`, select the reviewer complementary to the actual
-implementation provider family, and pass the emitted profile controls explicitly.
-For Production recovery, this trigger also requires a named `review_risks`
-entry; `[none]` leaves it false, so the Production label alone invokes nothing.
-An absent declaration leaves the trigger false and performs no RoboRev probe or
-invocation. An unknown implementation family or unavailable provider produces an
-honest non-gating `UNAVAILABLE` result; do not guess or use ambient defaults.
+method. Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, and
+`panel: none`; the actual host and implementation family is provenance only.
+Pass the selected profile's minimum severity and caps explicitly. A full route
+or named recovery risk emits true; recovery `[none]` emits false. A false or
+absent declaration performs no RoboRev probe or invocation. An unavailable
+fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
 
 The provider contract is vendored and loaded like any other conditional
 reference, so an adopter that vendors the profile tree gets this capability

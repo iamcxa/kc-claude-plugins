@@ -65,6 +65,7 @@ def is_placeholder_scalar(value: str) -> bool:
     folded = normalized.casefold()
     return (
         not normalized
+        or normalized in {"[]", "{}", "|"}
         or folded in NULL_LIKE
         or folded in PLACEHOLDER_WORDS
         or re.fullmatch(r"<[^>\n]+>", normalized) is not None
@@ -351,6 +352,10 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
     }
     if "recovery_failure" in receipt:
         result["review_risks"] = receipt["review_risks"]
+    if logical_stage == "build":
+        result["implementation_exit_observation_declared"] = (
+            receipt.get("review_risks") != ["none"]
+        )
     return result
 
 
@@ -369,7 +374,11 @@ def render_text(contract: dict[str, object]) -> str:
             "declared_receipts",
         )
     }
-    for key in ("skip_to_workflow_stage", "review_risks"):
+    for key in (
+        "skip_to_workflow_stage",
+        "review_risks",
+        "implementation_exit_observation_declared",
+    ):
         if key in contract:
             header[key] = contract[key]
     chunks = [json.dumps(header, sort_keys=True)]

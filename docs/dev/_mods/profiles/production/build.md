@@ -62,7 +62,7 @@ owner; do not start an unbounded reviewer loop.
   "mode": "observe",
   "provider": "roborev",
   "trigger": "implementation_exit",
-  "reasoning": "thorough",
+  "reasoning": "medium",
   "minimum_severity": "medium",
   "panel": "none",
   "live_batch_timeout_seconds": 1200,

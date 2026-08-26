@@ -211,6 +211,13 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         ("mixed-none-review-risk", mixed_none),
     ):
         expect_recovery_refusal(refusal_name, fields=refusal_fields)
+    for field in MODULE.RECOVERY_FIELDS:
+        for structural in ("[]", "{}", "|"):
+            structural_fields = dict(recovery_fields)
+            structural_fields[field] = structural
+            expect_recovery_refusal(
+                f"structural-{field}-{ord(structural[0])}", fields=structural_fields
+            )
     expect_recovery_refusal(
         "v2-production-recovery", schema="kc-dev-flow-work-profile/v2"
     )
@@ -253,9 +260,22 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
             and loaded_recovery["review_risks"] == ["behavior"],
             f"recovery did not load {stage} normally: {loaded_recovery}",
         )
+        if stage == "implementation":
+            require(
+                loaded_recovery["implementation_exit_observation_declared"] is True,
+                "named recovery risk did not declare implementation observation",
+            )
     require(
         recovery["review_risks"] == ["none"],
         f"risk-free recovery did not preserve the sole none marker: {recovery}",
+    )
+    none_build = write_work_item(
+        root, "production", "implementation", "none-risk-recovery-build",
+        route=["build", "verify"], recovery_fields=recovery_fields,
+    )
+    require(
+        MODULE.load_contracts(root, none_build)["implementation_exit_observation_declared"] is False,
+        "risk-free recovery build declared an implementation observation",
     )
 
     scheduling_refusals = [
@@ -348,6 +368,11 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
                 and document["next_workflow_stage"] == next_stage,
                 f"wrong route result: {document}",
             )
+            if logical_stage == "build":
+                require(
+                    document["implementation_exit_observation_declared"] is True,
+                    f"full {profile} build omitted implementation observation",
+                )
             require(
                 document["work_item"] == work_item.resolve().as_posix()
                 and document["receipt_schema"] == "kc-dev-flow-work-profile/v3",

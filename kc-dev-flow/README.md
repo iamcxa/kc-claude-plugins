@@ -37,7 +37,7 @@ flowchart TB
     C -->|Production| R1["Shape<br/>operational boundaries"]
     C -->|Eligible Production recovery| R2
     R1 --> R2["Build<br/>operable lifecycle"]
-    R2 --> R3["Risk-triggered RoboRev exit observation<br/>thorough Medium+ · Spacedock adopters"]
+    R2 --> R3["Risk-triggered RoboRev exit observation<br/>medium · Medium+ · Spacedock adopters"]
     R3 --> R4["Verify<br/>exact-revision obligations + rollout/rollback + release authority"]
     R4 --> D
 ```

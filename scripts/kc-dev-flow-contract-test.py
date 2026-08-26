@@ -63,7 +63,7 @@ profile_files = {
 profile_observation_limits = {
     "poc-exploration": ("medium", "high", 600, 0),
     "pilot-product-slice": ("medium", "medium", 900, 1),
-    "production": ("thorough", "medium", 1200, 1),
+    "production": ("medium", "medium", 1200, 1),
 }
 
 required = [
