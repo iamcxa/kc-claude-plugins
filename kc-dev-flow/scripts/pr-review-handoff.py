@@ -132,11 +132,13 @@ def consume(args: argparse.Namespace) -> int:
     try:
         raw = Path(args.handoff).read_text(encoding="utf-8")
         document = validate_handoff(json.loads(raw))
+        expected_base_sha = sha(args.expected_base_sha, "expected_base_sha")
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
         print(f"invalid handoff: {error}", file=sys.stderr)
         return 3
     if (document["pr"]["repository"] != args.repo or document["pr"]["number"] != args.pr
-            or document["pr"]["head_sha"] != args.head_sha or document["candidate_sha"] != args.candidate_sha):
+            or document["pr"]["head_sha"] != args.head_sha or document["candidate_sha"] != args.candidate_sha
+            or document["base_sha"] != expected_base_sha):
         print("identity mismatch: handoff is not evidence for this exact candidate", file=sys.stderr)
         return 3
     context = {key: document[key] for key in (
@@ -168,6 +170,7 @@ def parser() -> argparse.ArgumentParser:
     validate_parser.add_argument("--pr", required=True, type=int)
     validate_parser.add_argument("--head-sha", required=True)
     validate_parser.add_argument("--candidate-sha", required=True)
+    validate_parser.add_argument("--expected-base-sha", required=True)
     return result
 
 

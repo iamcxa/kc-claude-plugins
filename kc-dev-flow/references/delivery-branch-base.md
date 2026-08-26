@@ -29,9 +29,10 @@ claims in the index. The helper has no network, GitHub, execution, workflow
 state, Ready, merge, or posting operation.
 
 Pass the resulting path to `kc-pr-review` only after the PR exists. A reviewer
-must validate it against a fresh repository, PR number, head SHA, and candidate
-SHA through the same helper before treating it as context. A missing, malformed,
-or identity-drifted index is not evidence and cannot alter the review event,
+must validate it against a fresh repository, PR number, expected PR base SHA,
+head SHA, and candidate SHA through the same helper before treating it as
+context. A missing, malformed, base-mismatched, or otherwise identity-drifted
+index is not evidence and cannot alter the review event,
 confirmation, posting, merge, Ready, or workflow state.
 
 ## Prefer a stacked base

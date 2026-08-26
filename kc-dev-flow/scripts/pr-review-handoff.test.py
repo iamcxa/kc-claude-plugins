@@ -41,7 +41,7 @@ class PrReviewHandoffTest(unittest.TestCase):
             self.assertEqual(created.returncode, 0, created.stderr)
             consumed = self.run_tool(
                 "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", HEAD, "--candidate-sha", HEAD,
+                "--head-sha", HEAD, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
             )
             self.assertEqual(consumed.returncode, 0, consumed.stderr)
             result = json.loads(consumed.stdout)
@@ -52,20 +52,32 @@ class PrReviewHandoffTest(unittest.TestCase):
             self.assertNotIn("credentials", handoff.read_text())
             self.assertNotIn("prompt", handoff.read_text())
 
+    def test_different_expected_base_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            handoff = Path(directory) / "handoff.json"
+            self.assertEqual(self.create(handoff).returncode, 0)
+            stale_base = self.run_tool(
+                "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
+                "--head-sha", HEAD, "--candidate-sha", HEAD,
+                "--expected-base-sha", "b" * 40,
+            )
+            self.assertNotEqual(stale_base.returncode, 0)
+            self.assertIn("identity mismatch", stale_base.stderr)
+
     def test_changed_head_and_malformed_index_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             handoff = Path(directory) / "handoff.json"
             self.assertEqual(self.create(handoff).returncode, 0)
             stale = self.run_tool(
                 "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", "a" * 40, "--candidate-sha", HEAD,
+                "--head-sha", "a" * 40, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
             )
             self.assertNotEqual(stale.returncode, 0)
             self.assertIn("identity mismatch", stale.stderr)
             handoff.write_text('{"schema":"kc-dev-flow-pr-review-handoff/v1","credentials":"no"}')
             malformed = self.run_tool(
                 "validate", "--handoff", str(handoff), "--repo", REPO, "--pr", "289",
-                "--head-sha", HEAD, "--candidate-sha", HEAD,
+                "--head-sha", HEAD, "--candidate-sha", HEAD, "--expected-base-sha", BASE,
             )
             self.assertNotEqual(malformed.returncode, 0)
             self.assertIn("invalid handoff", malformed.stderr)
