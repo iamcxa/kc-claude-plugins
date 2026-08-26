@@ -5,7 +5,7 @@ source: "Release Please PR #258 run 32929119727: release-state-restored rejected
 product: kc-dev-flow
 sprint: S3
 sprint-readiness: ready
-started:
+started: 2026-08-26T04:30:41Z
 completed:
 verdict:
 worktree:
