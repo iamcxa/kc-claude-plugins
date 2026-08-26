@@ -1,7 +1,7 @@
 ---
 id: 8hyzngaw0frz3f0rzp2fvpxm
 title: Derive release-smoke identity from the tracked package, not ignored worktree files
-status: backlog
+status: ideation
 source: "kc-dev-flow-v2.5.0 post-publication incident: candidate receipt included two ignored __pycache__ files, Captain-approved next-release blocker on 2026-08-15"
 product: kc-dev-flow
 sprint: S3
@@ -37,7 +37,7 @@ gates:
                 reason: Captain approved the tracked-snapshot release-smoke direction and asked to continue into Production ideation.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 The `kc-dev-flow-v2.5.0` candidate smoke hashed and locally installed the ambient `kc-dev-flow/` directory. Two ignored Python bytecode files created before receipt generation entered that digest even though the clean release tag contained the exact same tracked Git subtree. Published mode then correctly refused the preserved receipt after release, producing a false artifact-drift signal and requiring a Captain-approved recovery.
