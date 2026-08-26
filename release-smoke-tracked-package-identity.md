@@ -11,7 +11,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-release-smoke-tracked-package-identity
 issue:
-pr: "#294"
+pr: pr-merge:294
 mod-block:
 design: required
 lane: main
