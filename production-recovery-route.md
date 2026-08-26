@@ -5,7 +5,7 @@ source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should
 product: kc-dev-flow
 sprint: S5
 sprint-readiness: ready
-started:
+started: 2026-08-26T06:17:44Z
 completed:
 verdict:
 worktree:
