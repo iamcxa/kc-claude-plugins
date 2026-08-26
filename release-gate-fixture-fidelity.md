@@ -27,6 +27,17 @@ gates:
                 digest: sha256:59b48d09b5f81f971fb0cf80355bfc375e7d0bfbbbbe99563195447492ecd00c
                 request-digest: sha256:0201d507687663edd4c0fbe386a35d1035c2646f0857bcbbf7cab1130100ce16
                 room-ref: ./release-gate-fixture-fidelity/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:cmdbanvhg3enbwaf26ma6wzk:backlog:1
+                briefing: briefing:cmdbanvhg3enbwaf26ma6wzk:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-26T04:29:07.204115Z"
+                decision: approve
+                reason: Captain approved the Production two-test fixture repair to enter ideation without changing runtime flow, CI triggers, or the Spacedock pin.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
