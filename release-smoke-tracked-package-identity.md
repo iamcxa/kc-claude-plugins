@@ -104,3 +104,98 @@ Falsified by: the correction weakens mismatch refusal, silently rewrites receipt
 ## Delivery boundary
 
 This is a Production-profile release-safety fix and must merge before the next `kc-dev-flow` release candidate. It does not require or authorize republishing `kc-dev-flow-v2.5.0`; that release retains its explicit failed receipt plus Captain-approved recovery addendum.
+
+## Ideation: accepted Production shape
+
+Delivery base: `origin/main` at `844edfa75a021cc6c013186bb88fba81f598f912`.
+
+### Accepted journey and observable semantics
+
+1. **OBSERVED — current candidate boundary.** `run_candidate_smoke` resolves `HEAD`, but `git status --porcelain` hides ignored files; `tree_digest` then walks ambient `kc-dev-flow/`, and both installers receive that same ambient checkout. At the delivery base, adding the incident's two ignored `.pyc` paths changed the walk digest from `6f5a6e6d696dec8711a0af91d3c629a8d5820e8ebfff4f9b3b3fc3f0ac8a3d32` to `df5139c5f03706e24f416022ada99adb43c854c6f03ad3961e4d639c7238f3c1` while the Git revision stayed fixed.
+2. **DESIGNED — candidate snapshot.** Candidate mode resolves exact `HEAD`, refuses tracked worktree changes with `git status --porcelain --untracked-files=no`, then runs `git archive --format=tar <revision> -- .claude-plugin kc-dev-flow` and safely extracts it under the existing temporary root. Ignored and untracked bytes remain untouched in the developer worktree and cannot enter the snapshot.
+3. **DESIGNED — one measured and installed source.** `package_identity`, Claude installation, and Codex installation all receive that one extracted snapshot path. The existing post-install digest checks remain the readback proof; no second manifest or ledger is introduced.
+4. **DESIGNED — published parity.** Published mode still clones and verifies the exact tag, then materializes the same two pathspecs with the same snapshot helper before digesting and installing. A source mismatch is reported as tracked-snapshot drift, distinct from the mechanically excluded ambient contamination class.
+5. **DESIGNED — unhappy paths.** Archive failure, unsafe archive members, tracked dirt, manifest/version disagreement, tag mismatch, candidate-receipt mismatch, or either installed-tree mismatch stops before a receipt or success result. No cleanup, retry, receipt rewrite, republish, provider mutation, or model invocation is added.
+
+The CLI grammar and candidate/published receipt schemas do not change. Candidate mode's only intentional observable change is that ignored and untracked files no longer block or affect a run; tracked modifications still fail closed, and a committed tracked package-byte change produces a new snapshot digest and installed tree.
+
+### Selected mechanism, ownership, and boundary
+
+The selected mechanism is one temporary **tracked-package snapshot**: the `.claude-plugin` marketplace metadata and `kc-dev-flow` plugin tree emitted by `git archive` for an exact revision. The release-smoke script owns snapshot creation and deletion through its existing temporary-directory lifecycle; Git owns revision/path selection; Claude and Codex installers consume the extracted directory; `tree_digest` remains the source/install readback contract; the release owner retains receipt and publication authority.
+
+This is recovery of the existing release-smoke seam, not a packaging framework. The v2.5.0 failed receipt, recovery receipt, incident verdict, and clean-tag evidence remain immutable. Release Please pull request #258's ablation-fixture failure, continuous integration jobs, documentation, provider behavior, worktree cleanup, additional ledgers, and v2.5.0 publication are non-goals.
+
+Rollback is a revert of the implementation commit before any later release candidate receipt is accepted. Reverting restores the known ambient-walk defect, so release ownership must reinstate the next-release block; it must not rewrite either v2.5.0 receipt or reinterpret the recorded failure. Forward recovery is preferred if a later installer exposes an archive-compatibility issue: repair the single snapshot helper while keeping receipt schemas and mismatch refusal unchanged.
+
+```yaml
+reverse_recovery:
+  trigger: "replace ambient candidate identity and installation input with tracked-revision input"
+  boundary: "candidate and published paths in scripts/kc-dev-flow-published-tag-smoke.py at base 844edfa75a021cc6c013186bb88fba81f598f912"
+  layers:
+    - surface: "candidate entry and revision fence"
+      location: "scripts/kc-dev-flow-published-tag-smoke.py:479-493"
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: "ignored files bypass status but enter package_identity(ROOT)"
+      disproof_hook: "repeat the two-.pyc probe and require ambient and archived digests to remain equal"
+    - surface: "package identity walk"
+      location: "scripts/kc-dev-flow-published-tag-smoke.py:278-312"
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: "rglob hashes every ambient file; the base probe changed the digest at fixed revision"
+      disproof_hook: "run the focused regression with the old ROOT input and require it to pass"
+    - surface: "Claude and Codex candidate installation"
+      location: "scripts/kc-dev-flow-published-tag-smoke.py:315-378,510-519,569-579"
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: "both installers consume the same ambient checkout that was hashed"
+      disproof_hook: "assert either candidate installer source is the repository root rather than the extracted snapshot"
+    - surface: "candidate receipt contract"
+      location: "scripts/kc-dev-flow-published-tag-smoke.py:449-476,606-617"
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "closed v1 receipt preserves exact revision, version, digest, and dual-host PASS"
+      disproof_hook: "existing extra-field, wrong-revision, wrong-version, wrong-digest, and wrong-report negatives"
+    - surface: "published tag binding and install readback"
+      location: "scripts/kc-dev-flow-published-tag-smoke.py:620-688"
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "it correctly rejected v2.5.0 source drift and retains tag/version/source/install refusal without models"
+      disproof_hook: "existing tag, version, source, Claude-tree, Codex-tree, and no-host-invocation negatives"
+  decision: recover
+```
+
+`multi_slice_required`, `retained_document_change`, and `project_context_claim_may_change` remain false: the accepted route is one script plus its existing focused test, with no retained-document or project-context claim change.
+
+### Acceptance and release checks
+
+| Criterion | Falsifiable test | File-level touch point |
+|---|---|---|
+| AC-1 | In a temporary Git fixture, record the clean snapshot digest and fake-installed Claude/Codex trees; add the two ignored incident `.pyc` files plus one untracked file and require all three identities unchanged. Commit one tracked plugin-byte change and require the snapshot digest and both installed trees to change. Reusing ambient `ROOT` must fail this test. | `scripts/kc-dev-flow-published-tag-smoke.py`; `scripts/kc-dev-flow-published-tag-smoke.test.py` |
+| AC-2 | Run candidate and tag-equivalent published paths against the same committed package paths; require both snapshot helper calls, equal digests, equal isolated installed trees, no developer-worktree mutation, and refusal of tracked dirt. Bypassing the helper for either digest or install must fail. | Same two files |
+| AC-3 | Preserve the exact two `skills/setup-github-project-projection/assets/__pycache__/*.cpython-314.pyc` fixture paths; assert the old ambient walk diverges while the new snapshot equals the clean checkout. Removing either old-mechanism divergence or new-mechanism equality must fail. | Focused test only |
+| AC-4 | Retain all existing receipt, tag, version, source, Claude-tree, and Codex-tree negatives; assert published mode records zero host/model invocations and its source-mismatch diagnostic names tracked-snapshot drift. Weakening any refusal or invoking a host must fail. | Same two files |
+
+Release checks are `python3 scripts/kc-dev-flow-published-tag-smoke.test.py`, the existing `scripts/kc-dev-flow-contract-test.py` caller, Python compilation, and `git diff --check`. They are local no-model checks; no continuous-integration trigger or provider-cost change is proposed, so per-pull-request cost is unchanged and not remeasured here.
+
+### Where it touches and stop numbers
+
+| Path | Lines now | Lines after | Purpose |
+|---|---:|---:|---|
+| `scripts/kc-dev-flow-published-tag-smoke.py` | 760 | about 800 | Add one safe exact-revision snapshot helper and route both modes' identity/install inputs through it. |
+| `scripts/kc-dev-flow-published-tag-smoke.test.py` | 432 | about 550 | Add the incident regression, tracked-change positive control, shared-source assertions, and preserve mismatch/no-model negatives. |
+
+Implementation stops and reports if the diff against `844edfa75a021cc6c013186bb88fba81f598f912` exceeds **2 changed files**, **180 gross changed lines**, or **120 gross changed lines in snapshot-fixture/FakeSmokeRuntime scaffolding**, the named runaway area. It also stops immediately if a receipt schema, documentation, Release Please fixture, continuous-integration workflow, provider call, or third production file becomes necessary.
+
+## Stage Report: ideation
+
+- DONE: Select one exact tracked-Git snapshot mechanism shared by candidate digest and installation, and show why the ambient directory walk fails.
+  Selected exact-revision `git archive` for `.claude-plugin` plus `kc-dev-flow`; a fixed-base two-file probe changed only the ambient-walk digest (`6f5a6e6d...` to `df5139c5...`).
+- DONE: Classify the existing release-smoke layers with a reverse-recovery receipt, preserving the v2.5.0 incident and defining rollback without a new ledger.
+  The bounded receipt chooses `recover`; working receipt/tag/readback refusal stays, broken candidate identity/install input is replaced, and rollback reinstates the release block without rewriting v2.5.0 evidence.
+- DONE: Map AC-1 through AC-4 to falsifiable tests, file-level touch points, and stop numbers for one minimal integrated slice.
+  All criteria map to the existing smoke script and focused test; implementation halts beyond 2 files, 180 gross lines, or 120 fixture/runtime-scaffolding lines.
+
+### Summary
+
+Ideation accepts one temporary tracked-package snapshot shared by candidate and published digest plus installation. The two-file slice preserves receipt schemas, mismatch refusal, the v2.5.0 incident, and no-model published closeout while excluding ambient ignored and untracked bytes without cleaning the worktree.
