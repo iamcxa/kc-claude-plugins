@@ -5,13 +5,16 @@ from __future__ import annotations
 
 import datetime
 import errno
+import fcntl
 import json
 import os
 import re
 import secrets
+import signal
 import stat
 import sys
-from typing import Any, Dict, List, Optional, Tuple
+import time
+from typing import Any, Dict, List, Tuple
 
 
 MAX_SAFE_INTEGER = 9007199254740991
@@ -595,245 +598,63 @@ def validate_bound_parent(parent_path: str, parent_fd: int) -> int:
         return 74
 
 
-def open_lock_directory(
-    parent_fd: int,
-    lock_name: str,
-    expected_identity: Optional[Tuple[int, int]] = None,
-) -> Tuple[int, int]:
+def timing_lock_hold(parent_path: str, parent_fd: int) -> int:
+    if validate_bound_parent(parent_path, parent_fd) != 0:
+        return 75
     nofollow = getattr(os, "O_NOFOLLOW", None)
     cloexec = getattr(os, "O_CLOEXEC", None)
     directory = getattr(os, "O_DIRECTORY", None)
     if nofollow is None or cloexec is None or directory is None:
-        return 69, -1
+        return 69
+    lock_fd = -1
+    running = {"value": True}
+
+    def stop(_signum: int, _frame: Any) -> None:
+        running["value"] = False
+
     try:
-        classified = os.stat(lock_name, dir_fd=parent_fd, follow_symlinks=False)
-        if not stat.S_ISDIR(classified.st_mode):
-            return 75, -1
         lock_fd = os.open(
-            lock_name,
-            os.O_RDONLY | directory | nofollow | cloexec,
-            dir_fd=parent_fd,
+            ".", os.O_RDONLY | directory | nofollow | cloexec, dir_fd=parent_fd
         )
-        bound = os.fstat(lock_fd)
-        if (classified.st_dev, classified.st_ino) != (bound.st_dev, bound.st_ino):
-            os.close(lock_fd)
-            return 75, -1
-        if expected_identity is not None and (bound.st_dev, bound.st_ino) != expected_identity:
-            os.close(lock_fd)
-            return 75, -1
-        return 0, lock_fd
-    except OSError:
-        return 75, -1
-
-
-def read_lock_owner(lock_fd: int) -> Tuple[int, str]:
-    nofollow = getattr(os, "O_NOFOLLOW", 0)
-    cloexec = getattr(os, "O_CLOEXEC", 0)
-    owner_fd = -1
+        bound = os.fstat(parent_fd)
+        lock_bound = os.fstat(lock_fd)
+        if (bound.st_dev, bound.st_ino) != (lock_bound.st_dev, lock_bound.st_ino):
+            return 75
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (BlockingIOError, OSError):
+        return 75
     try:
-        if os.listdir(lock_fd) != ["owner.pid"]:
-            return 75, ""
-        owner_fd = os.open(
-            "owner.pid", os.O_RDONLY | nofollow | cloexec, dir_fd=lock_fd
+        signal.signal(signal.SIGTERM, stop)
+        signal.signal(signal.SIGINT, stop)
+        print(
+            "READY %d %d %d %d"
+            % (os.getpid(), os.getppid(), bound.st_dev, bound.st_ino),
+            flush=True,
         )
-        owner_stat = os.fstat(owner_fd)
-        if not stat.S_ISREG(owner_stat.st_mode) or owner_stat.st_size > 32:
-            return 75, ""
-        payload = os.read(owner_fd, 33)
-        if stat_identity(os.fstat(owner_fd)) != stat_identity(owner_stat):
-            return 75, ""
-        try:
-            owner = payload.decode("ascii").strip()
-        except UnicodeDecodeError:
-            return 75, ""
-        if re.fullmatch(r"[1-9][0-9]*", owner) is None:
-            return 75, ""
-        return 0, owner
-    except OSError:
-        return 75, ""
-    finally:
-        if owner_fd >= 0:
+        while running["value"]:
+            time.sleep(0.1)
             try:
-                os.close(owner_fd)
-            except OSError:
-                pass
-
-
-def process_is_live(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)
-        return True
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    except OSError:
-        return True
-
-
-def cleanup_exact_lock(
-    parent_fd: int, expected_identity: Tuple[int, int], expected_owner: str
-) -> int:
-    try:
-        entries = os.listdir(parent_fd)
-    except OSError:
-        return 74
-    for entry in entries:
-        try:
-            candidate = os.stat(entry, dir_fd=parent_fd, follow_symlinks=False)
-        except OSError:
-            continue
-        if (candidate.st_dev, candidate.st_ino) != expected_identity:
-            continue
-        rc, lock_fd = open_lock_directory(parent_fd, entry, expected_identity)
-        if rc != 0:
-            return 74
-        try:
-            contents = os.listdir(lock_fd)
-            if contents == ["owner.pid"]:
-                rc, actual_owner = read_lock_owner(lock_fd)
-                if rc != 0 or actual_owner != expected_owner:
-                    return 74
-                os.unlink("owner.pid", dir_fd=lock_fd)
-            elif contents:
-                return 74
-        except OSError:
-            return 74
-        finally:
-            try:
-                os.close(lock_fd)
-            except OSError:
-                pass
-        try:
-            final = os.stat(entry, dir_fd=parent_fd, follow_symlinks=False)
-            if (final.st_dev, final.st_ino) != expected_identity:
-                return 74
-            os.rmdir(entry, dir_fd=parent_fd)
-            return 0
-        except OSError:
-            return 74
-    return 74
-
-
-def timing_lock_acquire(
-    parent_path: str, parent_fd: int, lock_name: str, owner_pid: str
-) -> int:
-    if (
-        lock_name in ("", ".", "..")
-        or "/" in lock_name
-        or re.fullmatch(r"[1-9][0-9]*", owner_pid) is None
-    ):
-        return 75
-    if validate_bound_parent(parent_path, parent_fd) != 0:
-        return 75
-    for attempt in range(2):
-        try:
-            os.mkdir(lock_name, 0o700, dir_fd=parent_fd)
-        except FileExistsError:
-            if attempt != 0:
-                return 75
-            rc, lock_fd = open_lock_directory(parent_fd, lock_name)
-            if rc != 0:
-                return 75
-            try:
-                rc, stale_owner = read_lock_owner(lock_fd)
-                if rc != 0 or process_is_live(int(stale_owner, 10)):
-                    return 75
-                stale_stat = os.fstat(lock_fd)
-                stale_identity = (stale_stat.st_dev, stale_stat.st_ino)
-            except OSError:
-                return 75
-            finally:
-                try:
-                    os.close(lock_fd)
-                except OSError:
-                    pass
-            if cleanup_exact_lock(parent_fd, stale_identity, stale_owner) != 0:
-                return 75
-            continue
-        except OSError:
-            return 75
-
-        try:
-            created = os.stat(lock_name, dir_fd=parent_fd, follow_symlinks=False)
-            if not stat.S_ISDIR(created.st_mode):
-                return 75
-            created_identity = (created.st_dev, created.st_ino)
-        except OSError:
-            return 75
-        rc, lock_fd = open_lock_directory(parent_fd, lock_name, created_identity)
-        if rc != 0:
-            cleanup_exact_lock(parent_fd, created_identity, owner_pid)
-            return 75
-        try:
-            os.fchmod(lock_fd, 0o700)
-            owner_fd = os.open(
-                "owner.pid",
-                os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
-                0o600,
-                dir_fd=lock_fd,
-            )
-            try:
-                os.fchmod(owner_fd, 0o600)
-                os.write(owner_fd, (owner_pid + "\n").encode("ascii"))
-                os.fsync(owner_fd)
-            finally:
-                os.close(owner_fd)
-            lock_stat = os.fstat(lock_fd)
-            os.fsync(lock_fd)
-            print("%s:%d:%d" % (owner_pid, lock_stat.st_dev, lock_stat.st_ino))
-            return 0
-        except OSError:
-            cleanup_exact_lock(parent_fd, created_identity, owner_pid)
-            return 75
-        finally:
-            try:
-                os.close(lock_fd)
-            except OSError:
-                pass
-    return 75
-
-
-def timing_lock_release(parent_fd: int, lock_name: str, token: str) -> int:
-    match = re.fullmatch(r"([1-9][0-9]*):([0-9]+):([0-9]+)", token)
-    if match is None or lock_name in ("", ".", "..") or "/" in lock_name:
-        return 74
-    expected_pid, expected_dev, expected_ino = match.groups()
-    rc, lock_fd = open_lock_directory(parent_fd, lock_name)
-    if rc != 0:
-        return 74
-    try:
-        lock_stat = os.fstat(lock_fd)
-        if (lock_stat.st_dev, lock_stat.st_ino) != (
-            int(expected_dev, 10),
-            int(expected_ino, 10),
-        ):
-            return 74
-        rc, actual_pid = read_lock_owner(lock_fd)
-        if rc != 0 or actual_pid != expected_pid:
-            return 74
-        os.unlink("owner.pid", dir_fd=lock_fd)
-    except OSError:
-        return 74
-    finally:
-        try:
-            os.close(lock_fd)
-        except OSError:
-            pass
-    try:
-        os.rmdir(lock_name, dir_fd=parent_fd)
-        os.fsync(parent_fd)
+                os.write(sys.stdout.fileno(), b"\n")
+            except BrokenPipeError:
+                break
         return 0
     except OSError:
-        return 74
+        return 75
+    finally:
+        try:
+            if lock_fd >= 0:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        except OSError:
+            pass
+        if lock_fd >= 0:
+            try:
+                os.close(lock_fd)
+            except OSError:
+                pass
 
 
-def timing_lock_command(argv: List[str], release: bool) -> int:
-    required = {"--parent-fd", "--lock-name"}
-    if release:
-        required.add("--token")
-    else:
-        required.update({"--parent-path", "--owner-pid"})
+def timing_lock_hold_command(argv: List[str]) -> int:
+    required = {"--parent-path", "--parent-fd"}
     if len(argv) != len(required) * 2:
         return 73
     values = {}  # type: Dict[str, str]
@@ -848,14 +669,7 @@ def timing_lock_command(argv: List[str], release: bool) -> int:
         parent_fd = parse_descriptor(values["--parent-fd"])
     except ValueError:
         return 73
-    if release:
-        return timing_lock_release(parent_fd, values["--lock-name"], values["--token"])
-    return timing_lock_acquire(
-        values["--parent-path"],
-        parent_fd,
-        values["--lock-name"],
-        values["--owner-pid"],
-    )
+    return timing_lock_hold(values["--parent-path"], parent_fd)
 
 
 def private_json_command(argv: List[str], replace: bool) -> int:
@@ -909,10 +723,8 @@ def main(argv: List[str]) -> int:
         return private_json_command(argv[1:], False)
     if argv[:1] == ["replace-private-json"]:
         return private_json_command(argv[1:], True)
-    if argv[:1] == ["timing-lock-acquire"]:
-        return timing_lock_command(argv[1:], False)
-    if argv[:1] == ["timing-lock-release"]:
-        return timing_lock_command(argv[1:], True)
+    if argv[:1] == ["timing-lock-hold"]:
+        return timing_lock_hold_command(argv[1:])
     print(
         "usage: review-runtime-safe-io.py unique-json | unique-json-lines | "
         "rfc3339-utc VALUE | "
@@ -921,8 +733,7 @@ def main(argv: List[str]) -> int:
         "private-parent-identity --destination DEST | "
         "publish-private-json --destination DEST --parent-identity DEV:INO | "
         "replace-private-json --destination DEST --expected SNAPSHOT "
-        "--parent-identity DEV:INO | timing-lock-acquire ... | "
-        "timing-lock-release ...",
+        "--parent-identity DEV:INO | timing-lock-hold ...",
         file=sys.stderr,
     )
     return 2

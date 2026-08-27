@@ -170,7 +170,11 @@ observations; it cannot supply a total duration or a clock value.
 `timing-start` records Python's monotonic nanosecond clock in a new mode-0600
 state file. `timing-mark` safe-snapshots and validates that state, records a new
 runtime clock value, then takes a second safe snapshot and refuses a change
-visible before atomic replacement. The state is closed and content-hashed. Marks are unique and may
+visible before atomic replacement. A directly piped Python holder keeps a
+nonblocking kernel lock on the bound timing-parent descriptor for the whole
+mark operation. A competing mark in that parent returns temporary status 75;
+process death releases the lock without a lock pathname or stale artifact. The
+state is closed and content-hashed. Marks are unique and may
 only advance through this order:
 
 ```text
@@ -296,7 +300,7 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `timing-start --review-key HASH --mode initial\|delta\|resolve --output FILE` | Create one new mode-0600 content-hashed monotonic timing state. Existing, linked, or non-regular output targets are refused. |
-| `timing-mark --timing-file FILE --phase NAME` | Safe-snapshot and validate timing state, append one forward phase mark with the runtime clock, recheck the source, and atomically replace the state only when both snapshots match. |
+| `timing-mark --timing-file FILE --phase NAME` | Hold a kernel lock on the bound timing parent, safe-snapshot and validate timing state, append one forward phase mark with the runtime clock, recheck the source, and atomically replace the state only when both snapshots match. |
 | `timing-finish --timing-file FILE --lane-durations-file FILE --output FILE` | Require all phase marks, validate closed lane observations, and write plus print one mode-0600 `ReviewTiming/v1` receipt. It accepts no caller total. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
 | `rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Replay one complete terminal receipt, verify exact identity and evidence, and emit one closed `InteractiveCollationDecision/v1`. It never appends or performs recovery or remote behavior. |

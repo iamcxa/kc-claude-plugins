@@ -848,11 +848,27 @@ rehash_timing_state() { # $1=timing state after a semantic mutation
 run_timing_publication_tests() {
   local start_target start_ready start_release start_writer start_payload start_rc
   local mark_target mark_ready mark_release mark_writer mark_payload mark_rc
-  local timing_lock before_hash stale_lock malformed_lock
   local path_parent path_parent_moved path_target path_payload path_rc
-  local lock_parent lock_parent_moved lock_target lock_payload lock_rc lock_name copied_pid
-  local mode_target mode_observation mode_lock
-  local acquire_parent acquire_swap_rc
+  local holder_parent holder_rc
+  local serial_parent serial_a serial_b serial_c serial_ready serial_release serial_pid serial_rc
+  local other_parent other_state crash_ready crash_release crash_pid_file crash_worker crash_holder
+
+  holder_parent="$TEST_INPUT_ROOT/timing-holder-contract"
+  mkdir "$holder_parent"
+  (
+    exec 9<"$holder_parent"
+    if declare -F review_runtime_start_bound_timing_holder >/dev/null 2>&1; then
+      review_runtime_start_bound_timing_holder "$holder_parent" 9
+      holder_rc=$?
+      review_runtime_release_bound_timing_holder
+      exit "$holder_rc"
+    fi
+    exit 127
+  )
+  holder_rc=$?
+  assert_eq "kernel timing holder reaches READY through a direct child pipe" "0" "$holder_rc"
+  assert_eq "kernel timing holder creates no pathname lock artifact" "0" \
+    "$(find "$holder_parent" -mindepth 1 | wc -l | tr -d ' ')"
 
   start_target="$TEST_INPUT_ROOT/timing-publication-start.json"
   start_ready="$TEST_INPUT_ROOT/timing-publication-start.ready"
@@ -933,141 +949,57 @@ run_timing_publication_tests() {
     "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" \
     "$(jq -r '.review_key' "$mark_target")"
 
-  lock_parent="$TEST_INPUT_ROOT/timing-lock-parent"
-  lock_parent_moved="$TEST_INPUT_ROOT/timing-lock-parent-bound"
-  lock_target="$lock_parent/state.json"
-  lock_name=".$(basename "$lock_target").timing.lock"
-  lock_payload="$(rehash_timing_state "$(jq -c \
-    '.review_key="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' \
-    "$mark_target")")"
-  mkdir "$lock_parent"
-  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$lock_target" >/dev/null
-  review_runtime_timing_mark "$lock_target" identity_and_plan >/dev/null
+  serial_parent="$TEST_INPUT_ROOT/timing-holder-serial"
+  other_parent="$TEST_INPUT_ROOT/timing-holder-independent"
+  mkdir "$serial_parent" "$other_parent"
+  serial_a="$serial_parent/a.json"
+  serial_b="$serial_parent/b.json"
+  serial_c="$serial_parent/c.json"
+  other_state="$other_parent/state.json"
+  for state_file in "$serial_a" "$serial_b" "$serial_c" "$other_state"; do
+    review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$state_file" >/dev/null
+  done
+  serial_ready="$TEST_INPUT_ROOT/timing-holder-serial.ready"
+  serial_release="$TEST_INPUT_ROOT/timing-holder-serial.release"
   (
     review_runtime_timing_publication_barrier() {
-      copied_pid="$(cat "$lock_parent/$lock_name/owner.pid")"
-      mv "$lock_parent" "$lock_parent_moved"
-      mkdir "$lock_parent"
-      printf '%s\n' "$lock_payload" >"$lock_target"
-      mkdir "$lock_parent/$lock_name"
-      printf '%s\n' "$copied_pid" >"$lock_parent/$lock_name/owner.pid"
+      : >"$serial_ready"
+      while [ ! -e "$serial_release" ]; do sleep 0.01; done
     }
-    review_runtime_timing_mark "$lock_target" required_lanes_critical_path >/dev/null 2>&1
-  )
-  lock_rc=$?
-  assert_eq "timing-mark rejects a parent replacement carrying a copied lock PID" "74" "$lock_rc"
-  assert_eq "timing-mark preserves replacement-parent state" \
-    "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" \
-    "$(jq -r '.review_key' "$lock_target")"
-  assert_eq "timing-mark preserves the competing replacement lock" "true" \
-    "$([ -d "$lock_parent/$lock_name" ] && printf true || printf false)"
-  assert_eq "timing-mark cleans the exact acquired lock through its bound parent" "false" \
-    "$([ -e "$lock_parent_moved/$lock_name" ] && printf true || printf false)"
-  if [ -d "$lock_parent/$lock_name" ]; then
-    rm -f "$lock_parent/$lock_name/owner.pid"
-    rmdir "$lock_parent/$lock_name"
-  fi
+    review_runtime_timing_mark "$serial_a" identity_and_plan >/dev/null
+  ) &
+  serial_pid=$!
+  while [ ! -e "$serial_ready" ] && kill -0 "$serial_pid" 2>/dev/null; do sleep 0.01; done
+  review_runtime_timing_mark "$serial_b" identity_and_plan >/dev/null 2>&1
+  assert_eq "same-parent timing writer fails closed while kernel holder is live" "75" "$?"
+  review_runtime_timing_mark "$other_state" identity_and_plan >/dev/null 2>&1
+  assert_eq "different-parent timing writer proceeds independently" "0" "$?"
+  : >"$serial_release"
+  wait "$serial_pid"
+  serial_rc=$?
+  assert_eq "serialized timing writer completes after release" "0" "$serial_rc"
 
-  mode_target="$TEST_INPUT_ROOT/timing-lock-mode.json"
-  mode_observation="$TEST_INPUT_ROOT/timing-lock-mode.txt"
-  mode_lock="$(dirname "$mode_target")/.$(basename "$mode_target").timing.lock"
-  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$mode_target" >/dev/null
+  crash_ready="$TEST_INPUT_ROOT/timing-holder-crash.ready"
+  crash_release="$TEST_INPUT_ROOT/timing-holder-crash.release"
+  crash_pid_file="$TEST_INPUT_ROOT/timing-holder-crash.pid"
   (
-    umask 022
     review_runtime_timing_publication_barrier() {
-      file_mode "$mode_lock" >"$mode_observation"
+      printf '%s\n' "$REVIEW_RUNTIME_TIMING_HOLDER_PID" >"$crash_pid_file"
+      : >"$crash_ready"
+      while [ ! -e "$crash_release" ]; do sleep 0.01; done
     }
-    review_runtime_timing_mark "$mode_target" identity_and_plan >/dev/null
-  )
-  assert_eq "timing lock mode is private under ambient umask 022" "700" \
-    "$(cat "$mode_observation")"
-
-  acquire_parent="$TEST_INPUT_ROOT/timing-lock-acquire-swap"
-  mkdir "$acquire_parent"
-  python3 - "$SAFE_IO" "$acquire_parent" <<'PY'
-import importlib.util
-import os
-import sys
-
-helper_path, parent = sys.argv[1:]
-spec = importlib.util.spec_from_file_location("timing_lock_acquire_swap", helper_path)
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-parent_fd = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
-lock_name = ".state.json.timing.lock"
-saved_name = ".created-lock-saved"
-owner_pid = str(os.getpid())
-real_open = module.open_lock_directory
-swapped = {"done": False}
-
-def swap_before_bind(fd, name, *args):
-    if not swapped["done"] and name == lock_name:
-        swapped["done"] = True
-        os.rename(name, saved_name, src_dir_fd=fd, dst_dir_fd=fd)
-        os.mkdir(name, 0o700, dir_fd=fd)
-        replacement_fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=fd)
-        try:
-            owner_fd = os.open(
-                "owner.pid", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600,
-                dir_fd=replacement_fd,
-            )
-            os.write(owner_fd, (owner_pid + "\n").encode("ascii"))
-            os.close(owner_fd)
-        finally:
-            os.close(replacement_fd)
-    return real_open(fd, name, *args)
-
-module.open_lock_directory = swap_before_bind
-try:
-    rc = module.timing_lock_acquire(parent, parent_fd, lock_name, owner_pid)
-    try:
-        replacement_fd = os.open(lock_name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=parent_fd)
-        try:
-            owner_fd = os.open("owner.pid", os.O_RDONLY, dir_fd=replacement_fd)
-            replacement_owner = os.read(owner_fd, 64).decode("ascii").strip()
-            os.close(owner_fd)
-        finally:
-            os.close(replacement_fd)
-        replacement_survives = replacement_owner == owner_pid
-    except OSError:
-        replacement_survives = False
-    created_is_cleaned = not os.path.exists(os.path.join(parent, saved_name))
-finally:
-    os.close(parent_fd)
-raise SystemExit(0 if rc == 75 and replacement_survives and created_is_cleaned else 1)
-PY
-  acquire_swap_rc=$?
-  assert_eq "creation-to-bind swap preserves copied-PID replacement and cleans created inode" \
-    "0" "$acquire_swap_rc"
-
-  timing_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
-  before_hash="$(sha256_text "$(cat "$mark_target")")"
-  mkdir "$timing_lock"
-  printf '%s\n' "$$" >"$timing_lock/owner.pid"
-  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
-  assert_eq "a live timing writer lock fails closed" "75" "$?"
-  assert_eq "a live timing writer lock preserves state" "$before_hash" \
-    "$(sha256_text "$(cat "$mark_target")")"
-  rm -f "$timing_lock/owner.pid"
-  rmdir "$timing_lock"
-
-  stale_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
-  mkdir "$stale_lock"
-  printf '%s\n' '999999' >"$stale_lock/owner.pid"
-  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
-  assert_eq "a stale timing writer lock is reclaimed once" "0" "$?"
-  assert_eq "a reclaimed timing writer lock is cleaned" "false" \
-    "$([ -e "$stale_lock" ] && printf true || printf false)"
-
-  malformed_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
-  mkdir "$malformed_lock"
-  printf '%s\n' 'not-a-pid' >"$malformed_lock/owner.pid"
-  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
-  assert_eq "a malformed timing writer lock fails closed" "75" "$?"
-  assert_eq "a malformed timing writer lock is not reclaimed" "true" \
-    "$([ -d "$malformed_lock" ] && printf true || printf false)"
-  rm -f "$malformed_lock/owner.pid"
-  rmdir "$malformed_lock"
+    review_runtime_timing_mark "$serial_c" identity_and_plan >/dev/null 2>&1
+  ) &
+  crash_worker=$!
+  while [ ! -e "$crash_ready" ] && kill -0 "$crash_worker" 2>/dev/null; do sleep 0.01; done
+  crash_holder="$(cat "$crash_pid_file")"
+  kill -KILL "$crash_holder"
+  while kill -0 "$crash_holder" 2>/dev/null; do sleep 0.01; done
+  review_runtime_timing_mark "$serial_b" identity_and_plan >/dev/null 2>&1
+  assert_eq "holder crash releases the kernel lock" "0" "$?"
+  : >"$crash_release"
+  wait "$crash_worker" 2>/dev/null
+  assert_eq "writer whose holder crashed fails closed before publication" "75" "$?"
 
   assert_eq "timing publication leaves no private temp file" "0" \
     "$(find "$TEST_INPUT_ROOT" -name '.review-timing.*' | wc -l | tr -d ' ')"
