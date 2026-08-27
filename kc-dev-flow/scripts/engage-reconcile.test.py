@@ -178,7 +178,9 @@ expect_error(
     run([sentinel_non_goal], [sentinel_non_goal]),
     "snapshot item 0 has invalid non-goals",
 )
-for structural_sentinel in ("[]", "{}", "|", ">", "&", "*", "!", "<>"):
+for structural_sentinel in (
+    "[]", "[ ]", "{}", "{ }", "|", ">", "&", "*", "!", "<>",
+):
     expect_error(
         f"structural sentinel {structural_sentinel}",
         run([item(structural_sentinel)], [item(structural_sentinel)]),

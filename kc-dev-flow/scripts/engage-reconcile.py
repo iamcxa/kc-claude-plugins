@@ -18,7 +18,7 @@ TEXT_SENTINELS = {
     "null", "none", "unknown", "tbd", "todo", "~", "true", "false",
     "[]", "{}", "|", ">", "&", "*", "!", "<>",
 }
-PLACEHOLDER_PATTERN = re.compile(r"<[^<>]+>")
+PLACEHOLDER_PATTERN = re.compile(r"(?:<[^<>]+>|\[\s*\]|\{\s*\})")
 
 
 class ReconcileError(RuntimeError):
