@@ -544,7 +544,7 @@ review_latency_score() (
   while IFS= read -r line || [ -n "$line" ]; do
     [ -n "$line" ] || return 3
     validated="$(review_latency_validate_pair "$line")" || {
-      printf 'review-latency-benchmark: invalid promotion pair\n' >&2
+      printf 'review-latency-benchmark: invalid structural pair\n' >&2
       return 3
     }
     printf '%s\n' "$validated" >>"$validated_file" || return 74

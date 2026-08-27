@@ -80,7 +80,7 @@ assert_eq "report identifies structural evidence" "synthetic-structural" \
   "$(jq -r '.evidence_tier' <<<"$report")"
 assert_eq "ordered gate schema" "identity,required_coverage,must_fix_recall,precision,behavior_parity,latency" \
   "$(jq -r '.gate_order | join(",")' <<<"$report")"
-assert_eq "no failed gate on promotion" "" "$(jq -r '.first_failed_gate // ""' <<<"$report")"
+assert_eq "no failed structural gate" "" "$(jq -r '.first_failed_gate // ""' <<<"$report")"
 assert_eq "target is four minutes" "240000" "$(jq -r '.latency.target_ms' <<<"$report")"
 assert_eq "initial fallbacks are excluded from latency" "2" \
   "$(jq -r '.latency.excluded_initial_runs' <<<"$report")"
@@ -88,7 +88,7 @@ assert_eq "only delta and resolve are eligible" "7" \
   "$(jq -r '.latency.eligible_runs' <<<"$report")"
 assert_eq "all eligible fixture runs pass latency" "7" \
   "$(jq -r '.latency.passing_runs' <<<"$report")"
-assert_eq "producer receipt permits terminal gap above four milliseconds" true \
+assert_eq "structural timing receipt permits modeled terminal gap above four milliseconds" true \
   "$(jq -s -r '[.[] | select(.treatment.timing != null) |
     .treatment.timing.durations_ms as $d |
     $d.review_to_confirmation_ready - ($d.identity_and_plan + $d.inventory +
@@ -184,12 +184,12 @@ assert_eq "same-context predecessor receipt self-reseal fails Q1 first" identity
   "$(first_failed "$mutated")"
 
 sed -n '1p' "$FIXTURE" >"$TEST_ROOT/subset.jsonl"
-assert_eq "favorable subset cannot promote" do_not_promote \
+assert_eq "favorable subset has structural do-not-promote verdict" do_not_promote \
   "$(score_file "$TEST_ROOT/subset.jsonl" | jq -r '.verdict')"
 assert_eq "favorable subset fails corpus identity first" identity \
   "$(first_failed "$TEST_ROOT/subset.jsonl")"
 jq -c 'select(.pair_id != "security-finding")' "$FIXTURE" >"$TEST_ROOT/omitted-class.jsonl"
-assert_eq "omitted required class cannot promote" identity "$(first_failed "$TEST_ROOT/omitted-class.jsonl")"
+assert_eq "omitted required class fails structural identity" identity "$(first_failed "$TEST_ROOT/omitted-class.jsonl")"
 
 mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="COMMENT" | .treatment.event_evidence.effective.event="COMMENT" | .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs' "$mutated"
 assert_eq "gaps capped to COMMENT pass Q2" true "$(gate_value "$mutated" required_coverage)"
@@ -265,16 +265,16 @@ expect_rejected "unsafe numbers are rejected" "$TEST_ROOT/unsafe-number.jsonl"
 printf '%s\n' "${first_line/\"pr_number\":1693/\"pr_number\":1693.0}" >"$TEST_ROOT/unsafe-float.jsonl"
 expect_rejected "floating-point numbers are rejected" "$TEST_ROOT/unsafe-float.jsonl"
 mutate_case known-fix-only '.treatment.event_evidence.effective.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" | .treatment.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
-assert_eq "self-resealed treatment behavior cannot promote" behavior_parity "$(first_failed "$mutated")"
+assert_eq "self-resealed treatment behavior fails structural parity" behavior_parity "$(first_failed "$mutated")"
 mutate_case known-fix-only '.control.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
   .treatment.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
   .treatment.event_evidence.effective.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
-assert_eq "both-arm self-reseal cannot promote" behavior_parity "$(first_failed "$mutated")"
+assert_eq "both-arm self-reseal fails structural parity" behavior_parity "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.behavior_sources.posted.payload.finding_ids=[] |
   .treatment.behavior_sources.posted.payload_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
   .treatment.behavior_sources.posted.idempotency_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
   .treatment.event_evidence.posted.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
-assert_eq "arbitrary posted source cannot promote" behavior_parity "$(first_failed "$mutated")"
+assert_eq "arbitrary posted source fails structural parity" behavior_parity "$(first_failed "$mutated")"
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
