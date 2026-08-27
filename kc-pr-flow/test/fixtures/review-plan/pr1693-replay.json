@@ -26,6 +26,80 @@
       "side": "RIGHT"
     }
   ],
+  "signal_replays": [
+    {
+      "name": "security-policy-correctness",
+      "fixture": {
+        "commits": [
+          {"name": "base", "files": {
+            "src/security/policy.py": "def allowed():\n    return None\n"
+          }},
+          {"name": "reviewed", "files": {
+            "src/security/policy.py": "def allowed():\n    return False\n"
+          }},
+          {"name": "fixed", "files": {
+            "src/security/policy.py": "def allowed():\n    return True\n"
+          }}
+        ],
+        "known_findings": [
+          {
+            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "category": "correctness",
+            "claim_key": "policy-result",
+            "evidence": {"kind": "git_blob", "line": 2, "locator": "policy-anchor"},
+            "path": "src/security/policy.py",
+            "side": "RIGHT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "uv-lock-correctness",
+      "fixture": {
+        "commits": [
+          {"name": "base", "files": {"uv.lock": "version = 1\n"}},
+          {"name": "reviewed", "files": {"uv.lock": "version = 2\n"}},
+          {"name": "fixed", "files": {"uv.lock": "version = 3\n"}}
+        ],
+        "known_findings": [
+          {
+            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "category": "correctness",
+            "claim_key": "lock-version",
+            "evidence": {"kind": "git_blob", "line": 1, "locator": "lock-anchor"},
+            "path": "uv.lock",
+            "side": "RIGHT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mapped-security",
+      "fixture": {
+        "commits": [
+          {"name": "base", "files": {
+            "src/auth/policy.py": "def authorized():\n    return None\n"
+          }},
+          {"name": "reviewed", "files": {
+            "src/auth/policy.py": "def authorized():\n    return False\n"
+          }},
+          {"name": "fixed", "files": {
+            "src/auth/policy.py": "def authorized():\n    return True\n"
+          }}
+        ],
+        "known_findings": [
+          {
+            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "category": "security",
+            "claim_key": "authorization-result",
+            "evidence": {"kind": "git_blob", "line": 2, "locator": "authorization-anchor"},
+            "path": "src/auth/policy.py",
+            "side": "RIGHT"
+          }
+        ]
+      }
+    }
+  ],
   "expected": {
     "mode": "resolve",
     "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],

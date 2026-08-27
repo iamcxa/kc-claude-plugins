@@ -216,39 +216,108 @@ review_plan_validate_receipt() (
     ' >/dev/null 2>&1
 )
 
-review_plan_real_worktree() {
-  python3 - "$1" <<'PY'
+review_plan_worktree_adapter() {
+  python3 - "$@" <<'PY'
+import json
 import os
 import stat
 import sys
 
-raw = sys.argv[1]
-if not os.path.isabs(raw) or os.path.normpath(raw) != raw:
-    raise SystemExit(2)
-candidate = raw
-try:
-    mode = os.lstat(candidate).st_mode
-except OSError:
-    raise SystemExit(2)
-cursor = os.sep
-for component in candidate.split(os.sep)[1:]:
-    cursor = os.path.join(cursor, component)
+
+def open_directory(path):
+    if not isinstance(path, str) or not os.path.isabs(path) or os.path.normpath(path) != path:
+        raise OSError
+    flags = os.O_RDONLY | os.O_DIRECTORY
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise OSError
+    descriptor = os.open(os.sep, flags)
     try:
-        if stat.S_ISLNK(os.lstat(cursor).st_mode):
-            raise SystemExit(2)
-    except OSError:
-        raise SystemExit(2)
-if not stat.S_ISDIR(mode) or os.path.realpath(candidate) != candidate:
+        for component in path.split(os.sep)[1:]:
+            next_descriptor = os.open(component, flags | nofollow, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = next_descriptor
+        if not stat.S_ISDIR(os.fstat(descriptor).st_mode):
+            raise OSError
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def closed_binding(value):
+    if not isinstance(value, dict) or set(value) != {"device", "inode", "path"}:
+        raise ValueError
+    if not isinstance(value["path"], str):
+        raise ValueError
+    for key in ("device", "inode"):
+        if not isinstance(value[key], int) or isinstance(value[key], bool) or value[key] < 0:
+            raise ValueError
+    return value
+
+
+def after_open_test_barrier():
+    ready = os.environ.get("KC_PR_FLOW_TEST_GIT_OPEN_READY_FD")
+    proceed = os.environ.get("KC_PR_FLOW_TEST_GIT_OPEN_PROCEED_FD")
+    if ready is None and proceed is None:
+        return
+    if ready is None or proceed is None or not ready.isdigit() or not proceed.isdigit():
+        raise OSError
+    ready_fd = int(ready)
+    proceed_fd = int(proceed)
+    if ready_fd < 3 or proceed_fd < 3:
+        raise OSError
+    os.write(ready_fd, b"opened\n")
+    if not os.read(proceed_fd, 1):
+        raise OSError
+
+
+try:
+    operation = sys.argv[1]
+    if operation == "bind" and len(sys.argv) == 3:
+        path = sys.argv[2]
+        descriptor = open_directory(path)
+        try:
+            identity = os.fstat(descriptor)
+            print(json.dumps(
+                {"device": identity.st_dev, "inode": identity.st_ino, "path": path},
+                sort_keys=True,
+                separators=(",", ":"),
+            ))
+        finally:
+            os.close(descriptor)
+    elif operation == "git" and len(sys.argv) >= 4:
+        binding = closed_binding(json.loads(sys.argv[2]))
+        descriptor = open_directory(binding["path"])
+        identity = os.fstat(descriptor)
+        if (identity.st_dev, identity.st_ino) != (binding["device"], binding["inode"]):
+            os.close(descriptor)
+            raise OSError
+        after_open_test_barrier()
+        os.fchdir(descriptor)
+        os.close(descriptor)
+        os.execvp("git", ["git"] + sys.argv[3:])
+    else:
+        raise ValueError
+except (IndexError, KeyError, OSError, TypeError, ValueError, json.JSONDecodeError):
     raise SystemExit(2)
-print(candidate)
 PY
 }
 
+review_plan_worktree_binding() {
+  review_plan_worktree_adapter bind "$1"
+}
+
+review_plan_real_worktree() {
+  local binding
+  binding="$(review_plan_worktree_binding "$1")" || return 2
+  jq -r '.path' <<<"$binding"
+}
+
 review_plan_git() {
-  local worktree="$1" canonical
+  local binding="$1"
   shift
-  canonical="$(review_plan_real_worktree "$worktree")" || return 2
-  command git -C "$canonical" "$@"
+  review_plan_worktree_adapter git "$binding" "$@"
 }
 
 review_plan_git_identity_valid() {
@@ -266,7 +335,7 @@ review_plan_changed_paths() {
 }
 
 review_plan_changed_diff() {
-  review_plan_git "$1" diff --unified=0 --no-ext-diff --no-renames --no-color "$2..$3"
+  review_plan_git "$1" diff --unified=0 --no-ext-diff --no-textconv --no-renames --no-color "$2..$3"
 }
 
 review_plan_changed_object_is_safe() {
@@ -349,20 +418,34 @@ def boundary_path(path):
 
 
 DEPENDENCY_FILES = {
-    "package.json", "package-lock.json", "yarn.lock", "pnpm-lock.yaml",
+    "package.json", "package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "pnpm-lock.yaml",
+    "pnpm-workspace.yaml", "bun.lock", "bun.lockb", "deno.lock", "uv.lock",
     "requirements.txt", "requirements-dev.txt", "pyproject.toml", "poetry.lock",
-    "pipfile", "pipfile.lock", "cargo.toml", "cargo.lock", "go.mod", "go.sum",
-    "gemfile", "gemfile.lock",
+    "pipfile", "pipfile.lock", "setup.py", "setup.cfg", "cargo.toml", "cargo.lock",
+    "go.mod", "go.sum", "gemfile", "gemfile.lock", "composer.json", "composer.lock",
+    "mix.exs", "mix.lock", "pubspec.yaml", "pubspec.lock", "gradle.lockfile",
 }
 SECURITY_PATH = re.compile(
-    r"(?:^|/)(?:auth|authorization|rls|middleware|webhook|permission|rbac|vault|secret|token|credential|\.env)[^/]*(?:/|$)",
+    r"(?:^|/)(?:security|secure|policy|policies|auth|authentication|authorization|oauth|oidc|iam|"
+    r"acl|rls|middleware|webhook|permission|permissions|rbac|vault|secret|secrets|token|credential|\.env)"
+    r"[^/]*(?:/|$)",
     re.IGNORECASE,
 )
 SECURITY_BODY = re.compile(
     r"(?:auth(?:entication|orization)?|authori[sz]ation|permission|rbac|rls|secret|token|credential|password|"
-    r"webhook|middleware|bypass|subprocess|shell\s*=|eval\s*\(|exec\s*\()",
+    r"security|polic(?:y|ies)|webhook|middleware|bypass|subprocess|shell\s*=|eval\s*\(|exec\s*\()",
     re.IGNORECASE,
 )
+SIGNAL_CATEGORIES = {
+    "security": {"security"},
+    "supply-chain": {"dependency", "dependencies", "supply-chain"},
+    "github-actions": {"github-actions", "workflow"},
+}
+SIGNAL_CAPABILITIES = {
+    "security": "security",
+    "supply-chain": "supply-chain",
+    "github-actions": "github-actions",
+}
 
 
 def signal_capabilities(path, body):
@@ -371,11 +454,27 @@ def signal_capabilities(path, body):
     name = lower_path.rsplit("/", 1)[-1]
     if SECURITY_PATH.search(path) or SECURITY_BODY.search(body):
         capabilities.add("security")
-    if name in DEPENDENCY_FILES:
+    if (
+        name in DEPENDENCY_FILES
+        or re.fullmatch(r"requirements(?:[-_.][a-z0-9_.-]+)?\.txt", name)
+        or name.endswith(".lock")
+    ):
         capabilities.add("supply-chain")
-    if re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", lower_path):
+    workflow_tree = lower_path.startswith(".github/workflows/")
+    if workflow_tree and re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", lower_path) is None:
+        raise ParseError
+    if workflow_tree or lower_path.startswith(".github/actions/") or name in {"action.yml", "action.yaml"}:
         capabilities.add("github-actions")
     return capabilities
+
+
+def mapped_signal_capabilities(finding, receipt_capabilities):
+    mapped = set()
+    category = finding.get("category")
+    for signal, categories in SIGNAL_CATEGORIES.items():
+        if category in categories or SIGNAL_CAPABILITIES[signal] in receipt_capabilities:
+            mapped.add(signal)
+    return mapped
 
 
 def module_token(path):
@@ -410,6 +509,13 @@ try:
     findings = receipt.get("known_findings")
     if not isinstance(findings, list) or not findings:
         raise ParseError
+    receipt_capabilities = receipt.get("required_capabilities")
+    if (
+        not isinstance(receipt_capabilities, list)
+        or any(not isinstance(capability, str) for capability in receipt_capabilities)
+    ):
+        raise ParseError
+    receipt_capabilities = set(receipt_capabilities)
     parsed_paths = set()
     capabilities = set()
     unmapped = False
@@ -507,8 +613,13 @@ try:
                 unmapped = True
             hunk_capabilities = signal_capabilities(path, body)
             if hunk_capabilities:
-                capabilities.update(hunk_capabilities)
-                unmapped = True
+                mapped_capabilities = set()
+                if len(mapped) == 1:
+                    mapped_capabilities = mapped_signal_capabilities(findings[next(iter(mapped))], receipt_capabilities)
+                missing_capabilities = hunk_capabilities - mapped_capabilities
+                if missing_capabilities:
+                    capabilities.update(missing_capabilities)
+                    unmapped = True
             file_hunks += 1
             hunk_count += 1
         if file_hunks == 0:
@@ -570,7 +681,7 @@ review_plan_validate_decision() {
   local decision="$1" repository="$2" pr_number="$3" base_sha="$4" head_sha="$5" config_hash="$6"
   local predecessor_events="$7" delta_receipt="$8" worktree="$9"
   local expected_review_key mode receipt_source predecessor_head inherited_finding_ids
-  local receipt_capabilities expected_capabilities route route_mode route_capabilities
+  local receipt_capabilities expected_capabilities route route_mode route_capabilities worktree_binding
   [ "$#" -eq 9 ] || return 2
   review_plan_source_runtime || return
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 3
@@ -632,6 +743,9 @@ review_plan_validate_decision() {
 
   mode="$(jq -r '.mode' <<<"$decision")" || return
   [ "$mode" = 'initial' ] && return 0
+
+  worktree_binding="$(review_plan_worktree_binding "$worktree")" || return
+  worktree="$worktree_binding"
 
   receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || return
   review_plan_validate_receipt "$receipt_source" "$predecessor_events" || return 3
@@ -722,7 +836,7 @@ review_plan_decide() {
   local repository="$1" pr_number="$2" base_sha="$3" head_sha="$4" config_hash="$5"
   local worktree="$6" predecessor_events="$7" delta_receipt="$8" receipt_source predecessor_repository predecessor_pr
   local predecessor_base predecessor_head predecessor_config route route_mode route_capabilities
-  local inherited_finding_ids required_capabilities
+  local inherited_finding_ids required_capabilities worktree_binding
 
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 2
   if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" != 'on' ]; then
@@ -733,6 +847,11 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" missing_predecessor
     return
   fi
+  worktree_binding="$(review_plan_worktree_binding "$worktree")" || {
+    review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
+    return
+  }
+  worktree="$worktree_binding"
   receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return

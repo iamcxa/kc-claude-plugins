@@ -542,7 +542,7 @@ skill_router_trace() {
     printf 'source %q\n' "$PLAN"
     printf 'review_plan_snapshot_receipt() { cat %q; }\n' "$plugin_root/scripts/review-plan.sh.receipt"
     printf '%s\n' 'review_plan_validate_receipt() { return 0; }'
-    printf '%s\n' 'review_plan_real_worktree() { printf "%s\\n" "$1"; }'
+    printf '%s\n' 'review_plan_worktree_binding() { printf "%s\\n" '\''{"device":1,"inode":1,"path":"/tmp/repo"}'\''; }'
     printf '%s\n' 'review_plan_git_identity_valid() { return 0; }'
     printf '%s\n' 'review_plan_ancestor() { return 0; }'
     printf 'review_plan_route_delta() { jq -S -c '\''{classification:.mode,required_capabilities:[]}'\'' %q; }\n' \
@@ -768,32 +768,29 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'replay capabilities are inherited' 'correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
     # shellcheck source=/dev/null
     . "$PLAN"
-    original_real_worktree="$(declare -f review_plan_real_worktree)"
-    original_review_plan_git="$(declare -f review_plan_git)"
-    eval "$(declare -f review_plan_real_worktree | sed '1s/review_plan_real_worktree/review_plan_real_worktree_original/')"
-    eval "$(declare -f review_plan_git | sed '1s/review_plan_git/review_plan_git_original/')"
-    worktree_check_ledger="$TEST_ROOT/worktree-check-ledger"
+    original_worktree_adapter="$(declare -f review_plan_worktree_adapter)"
+    eval "$(declare -f review_plan_worktree_adapter | sed '1s/review_plan_worktree_adapter/review_plan_worktree_adapter_original/')"
+    worktree_bind_ledger="$TEST_ROOT/worktree-bind-ledger"
     git_call_ledger="$TEST_ROOT/git-call-ledger"
-    : >"$worktree_check_ledger"
+    : >"$worktree_bind_ledger"
     : >"$git_call_ledger"
-    review_plan_real_worktree() {
-      printf 'check\n' >>"$worktree_check_ledger"
-      review_plan_real_worktree_original "$@"
-    }
-    review_plan_git() {
-      printf 'git\n' >>"$git_call_ledger"
-      review_plan_git_original "$@"
+    review_plan_worktree_adapter() {
+      if [ "$1" = 'bind' ]; then
+        printf 'bind\n' >>"$worktree_bind_ledger"
+      elif [ "$1" = 'git' ]; then
+        printf 'git\n' >>"$git_call_ledger"
+      fi
+      review_plan_worktree_adapter_original "$@"
     }
     direct_decision_file="$TEST_ROOT/direct-decision.json"
     KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" >"$direct_decision_file"
     direct_decision="$(<"$direct_decision_file")"
-    worktree_check_count="$(wc -l <"$worktree_check_ledger" | tr -d ' ')"
+    worktree_bind_count="$(wc -l <"$worktree_bind_ledger" | tr -d ' ')"
     git_call_count="$(wc -l <"$git_call_ledger" | tr -d ' ')"
-    assert_eq 'every Git invocation revalidates the worktree' "$git_call_count" "$worktree_check_count"
-    if [ "$git_call_count" -gt 1 ]; then pass; else fail 'router exercises more than one freshly gated Git invocation'; fi
-    assert_eq 'per-operation worktree validation still resolves mapped hunks' 'resolve' "$(jq -r '.mode' <<<"$direct_decision")"
-    eval "$original_real_worktree"
-    eval "$original_review_plan_git"
+    assert_eq 'decision binds the worktree identity once' '1' "$worktree_bind_count"
+    if [ "$git_call_count" -gt 1 ]; then pass; else fail 'router exercises more than one fd-gated Git invocation'; fi
+    assert_eq 'per-operation fd validation still resolves mapped hunks' 'resolve' "$(jq -r '.mode' <<<"$direct_decision")"
+    eval "$original_worktree_adapter"
 
     decide_candidate() {
       KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 \
@@ -801,6 +798,44 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
         --repo-worktree "$router_repo" --predecessor-events "$router_events" \
         --delta-receipt "$router_receipt"
     }
+
+    decide_signal_replay() {
+      local name="$1" signal_fixture signal_repo signal_lines signal_base signal_reviewed signal_fixed
+      local signal_events signal_receipt
+      signal_fixture="$TEST_ROOT/$name-fixture.json"
+      signal_repo="$TEST_ROOT/$name-repo"
+      signal_events="$TEST_ROOT/$name-events.jsonl"
+      signal_receipt="$TEST_ROOT/$name-receipt.json"
+      jq -S --arg name "$name" '.signal_replays[] | select(.name == $name) | .fixture' \
+        "$fixture" >"$signal_fixture"
+      signal_lines="$(make_replay_repo "$signal_repo" "$signal_fixture")"
+      signal_base="$(awk -F= '$1 == "base" { print $2 }' <<<"$signal_lines")"
+      signal_reviewed="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$signal_lines")"
+      signal_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$signal_lines")"
+      make_replay_receipt "$signal_repo" "$repo_id" 1693 "$signal_base" "$signal_reviewed" "$config_hash" \
+        "$signal_events" "$signal_receipt" "$signal_fixture" >/dev/null
+      KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 \
+        --base "$signal_base" --head "$signal_fixed" --config-hash "$config_hash" \
+        --repo-worktree "$signal_repo" --predecessor-events "$signal_events" \
+        --delta-receipt "$signal_receipt"
+    }
+
+    security_policy_decision="$(decide_signal_replay security-policy-correctness)"
+    assert_eq 'security and policy paths cannot borrow a correctness mapping' 'delta' \
+      "$(jq -r '.mode' <<<"$security_policy_decision")"
+    assert_eq 'security and policy paths require security coverage' 'security' \
+      "$(jq -r '.required_capabilities | map(select(. == "security")) | join(",")' <<<"$security_policy_decision")"
+
+    uv_lock_decision="$(decide_signal_replay uv-lock-correctness)"
+    assert_eq 'uv.lock cannot borrow a correctness mapping' 'delta' "$(jq -r '.mode' <<<"$uv_lock_decision")"
+    assert_eq 'uv.lock requires supply-chain coverage' 'supply-chain' \
+      "$(jq -r '.required_capabilities | map(select(. == "supply-chain")) | join(",")' <<<"$uv_lock_decision")"
+
+    mapped_security_decision="$(decide_signal_replay mapped-security)"
+    assert_eq 'same-hunk security finding maps a security signal' 'resolve' \
+      "$(jq -r '.mode' <<<"$mapped_security_decision")"
+    assert_eq 'mapped security retains the inherited ceiling' 'APPROVE' \
+      "$(jq -r '.event_ceiling' <<<"$mapped_security_decision")"
 
     git -C "$router_repo" checkout -q "$fixed_sha"
     printf '\ndef unrelated_append():\n    return "ordinary"\n' >>"$router_repo/src/parser.py"
@@ -858,6 +893,62 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     review_plan_validate_decision "$workflow_decision" "$repo_id" 1693 "$base_sha" "$workflow_sha" \
       "$config_hash" "$router_events" "$router_receipt" "$router_repo"
     assert_eq 'workflow delta validates against fresh hunk routing' '0' "$?"
+
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    mkdir -p "$router_repo/.github/workflows"
+    printf '{"unknown":"workflow-shape"}\n' >"$router_repo/.github/workflows/ci.json"
+    git -C "$router_repo" add .github/workflows/ci.json
+    git -C "$router_repo" commit -qm unclassifiable-workflow-signal
+    unclassifiable_workflow_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    unclassifiable_workflow_decision="$(decide_candidate "$unclassifiable_workflow_sha")"
+    assert_eq 'unclassifiable workflow surface uses initial review' 'initial' \
+      "$(jq -r '.mode' <<<"$unclassifiable_workflow_decision")"
+
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    mkdir -p "$router_repo/.github/actions/policy-check"
+    printf 'name: policy check\nruns:\n  using: composite\n  steps: []\n' \
+      >"$router_repo/.github/actions/policy-check/action.yml"
+    git -C "$router_repo" add .github/actions/policy-check/action.yml
+    git -C "$router_repo" commit -qm composite-action-signal
+    composite_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    composite_decision="$(decide_candidate "$composite_sha")"
+    assert_eq 'composite action signal uses expanded delta' 'delta' "$(jq -r '.mode' <<<"$composite_decision")"
+    assert_eq 'composite action signal requires GitHub Actions coverage' 'github-actions' \
+      "$(jq -r '.required_capabilities | map(select(. == "github-actions")) | join(",")' <<<"$composite_decision")"
+
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    mkdir -p "$router_repo/security"
+    printf 'version = 1\n' >"$router_repo/security/uv.lock"
+    git -C "$router_repo" add security/uv.lock
+    git -C "$router_repo" commit -qm mixed-security-dependency-signals
+    mixed_signal_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    mixed_signal_decision="$(decide_candidate "$mixed_signal_sha")"
+    assert_eq 'mixed safe signals use expanded delta' 'delta' "$(jq -r '.mode' <<<"$mixed_signal_decision")"
+    assert_eq 'mixed signals require every corresponding capability' 'security,supply-chain' \
+      "$(jq -r '[.required_capabilities[] | select(. == "security" or . == "supply-chain")] | join(",")' \
+        <<<"$mixed_signal_decision")"
+
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    ext_diff_ledger="$TEST_ROOT/ext-diff-ledger"
+    textconv_ledger="$TEST_ROOT/textconv-ledger"
+    ext_diff_driver="$TEST_ROOT/ext-diff-driver"
+    textconv_driver="$TEST_ROOT/textconv-driver"
+    : >"$ext_diff_ledger"
+    : >"$textconv_ledger"
+    printf '#!/bin/sh\nprintf "ext-diff\\n" >>"%s"\nexit 97\n' "$ext_diff_ledger" >"$ext_diff_driver"
+    printf '#!/bin/sh\nprintf "textconv\\n" >>"%s"\ncat "$1"\n' "$textconv_ledger" >"$textconv_driver"
+    chmod +x "$ext_diff_driver" "$textconv_driver"
+    printf 'src/parser.py diff=review-plan-ledger\n' >"$router_repo/.gitattributes"
+    git -C "$router_repo" config diff.review-plan-ledger.command "$ext_diff_driver"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_changed_diff "$router_binding" "$reviewed_sha" "$fixed_sha" >/dev/null 2>&1
+    assert_eq 'content diff disables external diff commands' '' "$(cat "$ext_diff_ledger")"
+    git -C "$router_repo" config --unset diff.review-plan-ledger.command
+    git -C "$router_repo" config diff.review-plan-ledger.textconv "$textconv_driver"
+    review_plan_changed_diff "$router_binding" "$reviewed_sha" "$fixed_sha" >/dev/null 2>&1
+    assert_eq 'content diff disables textconv commands' '' "$(cat "$textconv_ledger")"
+    git -C "$router_repo" config --unset diff.review-plan-ledger.textconv
+    rm "$router_repo/.gitattributes"
 
     git -C "$router_repo" checkout -q "$fixed_sha"
     original_changed_diff="$(declare -f review_plan_changed_diff 2>/dev/null || true)"
@@ -994,37 +1085,59 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     . "$PLAN"
     assert_eq 'real worktree is canonical absolute path' "$router_repo" "$(review_plan_real_worktree "$router_repo")"
 
-    race_repo="$TEST_ROOT/race-repo"
-    race_lines="$(make_replay_repo "$race_repo" "$fixture")"
-    race_base="$(awk -F= '$1 == "base" { print $2 }' <<<"$race_lines")"
-    race_reviewed="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$race_lines")"
-    race_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$race_lines")"
-    race_events="$TEST_ROOT/race-events.jsonl"
-    race_receipt="$TEST_ROOT/race-receipt.json"
-    make_replay_receipt "$race_repo" "$repo_id" 1693 "$race_base" "$race_reviewed" "$config_hash" \
-      "$race_events" "$race_receipt" "$fixture" >/dev/null
-    original_review_plan_git="$(declare -f review_plan_git)"
-    eval "$(declare -f review_plan_git | sed '1s/review_plan_git/review_plan_git_before_race/')"
-    race_ledger="$TEST_ROOT/race-git-ledger"
-    : >"$race_ledger"
-    review_plan_git() {
-      local rc count
-      review_plan_git_before_race "$@"
-      rc=$?
-      printf 'git\n' >>"$race_ledger"
-      count="$(wc -l <"$race_ledger" | tr -d ' ')"
-      if [ "$count" -eq 1 ]; then
+    real_git="$(command -v git)"
+    run_open_fd_race() {
+      local replacement_kind="$1" race_repo race_lines race_base race_reviewed race_fixed
+      local race_events race_receipt race_ready race_proceed race_stub replacement_ledger
+      local swapper_pid race_decision
+      race_repo="$TEST_ROOT/race-$replacement_kind-repo"
+      race_lines="$(make_replay_repo "$race_repo" "$fixture")"
+      race_base="$(awk -F= '$1 == "base" { print $2 }' <<<"$race_lines")"
+      race_reviewed="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$race_lines")"
+      race_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$race_lines")"
+      race_events="$TEST_ROOT/race-$replacement_kind-events.jsonl"
+      race_receipt="$TEST_ROOT/race-$replacement_kind-receipt.json"
+      make_replay_receipt "$race_repo" "$repo_id" 1693 "$race_base" "$race_reviewed" "$config_hash" \
+        "$race_events" "$race_receipt" "$fixture" >/dev/null
+      cp -R "$race_repo" "$race_repo-replacement"
+
+      race_ready="$TEST_ROOT/race-$replacement_kind-ready"
+      race_proceed="$TEST_ROOT/race-$replacement_kind-proceed"
+      mkfifo "$race_ready" "$race_proceed"
+      replacement_ledger="$TEST_ROOT/race-$replacement_kind-ledger"
+      : >"$replacement_ledger"
+      race_stub="$TEST_ROOT/race-$replacement_kind-git-stub"
+      mkdir -p "$race_stub"
+      printf '#!/bin/sh\nif [ "$(pwd -P)" != "%s" ]; then printf "replacement\\n" >>"%s"; fi\nexec "%s" "$@"\n' \
+        "$race_repo-held" "$replacement_ledger" "$real_git" >"$race_stub/git"
+      chmod +x "$race_stub/git"
+
+      (
+        IFS= read -r _ <"$race_ready"
         mv "$race_repo" "$race_repo-held"
-        ln -s "$race_repo-held" "$race_repo"
-      fi
-      return "$rc"
+        if [ "$replacement_kind" = 'symlink' ]; then
+          ln -s "$race_repo-replacement" "$race_repo"
+        else
+          mv "$race_repo-replacement" "$race_repo"
+        fi
+        printf 'continue\n' >"$race_proceed"
+      ) &
+      swapper_pid=$!
+      exec 8<>"$race_ready"
+      exec 9<>"$race_proceed"
+      race_decision="$(PATH="$race_stub:$PATH" KC_PR_FLOW_TEST_GIT_OPEN_READY_FD=8 \
+        KC_PR_FLOW_TEST_GIT_OPEN_PROCEED_FD=9 KC_PR_FLOW_DELTA_FAST_PATH=on \
+        review_plan_decide "$repo_id" 1693 "$race_base" "$race_fixed" "$config_hash" \
+          "$race_repo" "$race_events" "$race_receipt")"
+      exec 8>&-
+      exec 9>&-
+      wait "$swapper_pid"
+      assert_eq "$replacement_kind replacement after fd validation fails closed" 'initial' \
+        "$(jq -r '.mode' <<<"$race_decision")"
+      assert_eq "$replacement_kind replacement repository is never read" '' "$(cat "$replacement_ledger")"
     }
-    race_decision_file="$TEST_ROOT/race-decision.json"
-    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$race_base" "$race_fixed" "$config_hash" \
-      "$race_repo" "$race_events" "$race_receipt" >"$race_decision_file"
-    race_decision="$(<"$race_decision_file")"
-    assert_eq 'path replacement between Git reads fails closed' 'initial' "$(jq -r '.mode' <<<"$race_decision")"
-    eval "$original_review_plan_git"
+    run_open_fd_race directory
+    run_open_fd_race symlink
   fi
 fi
 
