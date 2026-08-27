@@ -872,7 +872,12 @@ artifacts, independently adjudicated expected findings, exact identities, provid
 the runtime event/timing receipts. Expected findings may not be derived from either arm's emitted
 findings. Timing must begin at the actual first exact-head snapshot, use `timing-mark` at real phase
 boundaries, and end at the actual confirmation-ready draft; caller-selected timestamps or desired
-totals are invalid. No such collection or paid run is authorized by this design revision.
+totals are invalid. Before any promote-capable path can be enabled, the timing state must also bind
+to the same run event stream through its run ID plus terminal event hash/sequence, or remain behind
+a runtime-owned opaque handle that corpus builders cannot mint or edit. A self-hashed caller file is
+not that binding. This Phase 1 scorer has no timing-based promotion branch: actual collection,
+binding implementation, and any paid run all require separate authorization before `promote` can be
+enabled.
 
 ### 11.2 Arms
 
@@ -897,11 +902,11 @@ philosophy rather than replace it:
   "schema": "kc-pr-flow.review-latency-promotion/v1",
   "phase": "review-plan",
   "quality_gates": {
-    "identity": "pass",
-    "required_coverage": "pass",
-    "must_fix_recall": "pass",
-    "precision": "pass",
-    "behavior_parity": "pass"
+    "identity": true,
+    "required_coverage": true,
+    "must_fix_recall": true,
+    "precision": true,
+    "behavior_parity": true
   },
   "latency": {
     "target_ms": 240000,

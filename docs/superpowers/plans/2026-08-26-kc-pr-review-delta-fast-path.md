@@ -126,10 +126,11 @@ assert_eq "finding IDs come from replay" \
 
 Add negative assertions for symlink/FIFO/oversized input, incomplete runtime lifecycle, duplicate JSON members, arbitrary `receipt_id`, changed `content_sha256`, changed `finding_id`, extra top-level/member keys, and missing evidence hashes. Stub `gh`, `curl`, `wget`, `ssh`, `codex`, and `agy` to exit 97 and assert the call ledger remains empty.
 
-Add three predecessor-completeness negatives by replaying otherwise valid events with one lane
-terminal changed to `failed`, one changed to `unavailable`, and one non-empty
+Add predecessor-completeness negatives for zero lanes, empty derived `required_capabilities`, one
+lane terminal changed to `failed`, one changed to `unavailable`, and one non-empty
 `uncertain_candidate_ids` array. Both `receipt` production and receipt validation must reject each
-case; none may produce a delta receipt with an `APPROVE`-capable route.
+case; none may produce a delta receipt with an `APPROVE`-capable route. Zero lanes must not pass by
+vacuous `all([])`.
 
 - [ ] **Step 2: Run RED and record the expected failure**
 
@@ -190,6 +191,7 @@ review_plan_build_receipt() (
       required_capabilities:(.lanes | map(.capability) | sort | unique),
       coverage_gap_refs:[]
     }' <<<"$projection")" || return 3
+  jq -e '.required_capabilities | length > 0' >/dev/null <<<"$canonical" || return 3
   content_sha256="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
   jq -S -c --arg hash "$content_sha256" '. + {content_sha256:$hash}' <<<"$canonical"
 )
@@ -206,10 +208,13 @@ content_sha256 = sha256(canonical receipt without content_sha256)
 
 Validate safe tokens, 40/64-hex fields, normalized relative paths, `LEFT|RIGHT|FILE`, sorted unique
 arrays, `resolution_state == unresolved`, the replay-derived `anchor_sha256`, `category`, and closed
-evidence pointer, every lane's `result.terminal_status == succeeded`, empty
-`uncertain_candidate_ids`, and equality against the fresh replay projection. A non-`git_blob`
-evidence pointer may remain inherited for `delta`, but cannot authorize a `resolve` hunk. Never
-trust a matching self-hash without checking projection-derived fields.
+evidence pointer, `.lanes | length > 0`, every lane's
+`result.terminal_status == succeeded`, empty `uncertain_candidate_ids`, receipt
+`required_capabilities | length > 0`, and equality against the fresh replay projection. The
+producer and validator must both reject zero lanes and empty required capabilities; do not rely on
+vacuous `all([])`. A non-`git_blob` evidence pointer may remain inherited for `delta`, but cannot
+authorize a `resolve` hunk. Never trust a matching self-hash without checking projection-derived
+fields.
 
 - [ ] **Step 4: Implement the receipt CLI and source-safety gate**
 
@@ -419,9 +424,10 @@ including multiple hunks in one known file. For each hunk, derive its old coordi
 treat a zero-length insertion as anchored at its old line. A hunk maps to a known finding only when
 the receipt carries replay-derived `git_blob` evidence for the predecessor head, the paths match,
 and the evidence line lies in that old interval. A contract/test/fixture hunk may map only when the
-path is mechanically classified as such and that **same hunk body** contains exactly one
-fixed-string reference to the finding's claim key, evidence locator, or normalized module path.
-File-level import presence never authorizes a different hunk.
+path is mechanically classified as such and that **same hunk body** references exactly one known
+finding through its claim key, evidence locator, or normalized module path. Occurrence count is
+irrelevant: repeated tokens for that one finding remain one mapping, while tokens resolving to two
+or more known findings are ambiguous. File-level import presence never authorizes a different hunk.
 
 Classify security, dependency, and workflow signals per hunk/path before selecting `resolve`. A
 signal is mapped only when the same hunk already maps to a predecessor finding or required
@@ -516,44 +522,108 @@ Immediately after `SKILL.md` Step 2.1, add a concise `Step 2.2: Trusted Post-Fix
 
 ```bash
 REVIEW_MODE=initial
+FAST_PATH_ENGAGED=0
 unset PLAN_JSON PLAN_EVENT_CEILING PLAN_REASON CANDIDATE_PLAN_JSON
-if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
-  if CANDIDATE_PLAN_JSON="$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
-    --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$REVIEWED_HEAD_SHA" \
-    --config-hash "$CONFIG_HASH" --repo-worktree "$REPO_WORKTREE" \
-    --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
-     jq -e '.schema == "kc-pr-flow.review-plan-decision/v1"' \
-       >/dev/null 2>&1 <<<"$CANDIDATE_PLAN_JSON"; then
-    PLAN_JSON="$CANDIDATE_PLAN_JSON"
-    REVIEW_MODE="$(jq -r '.mode' <<<"$PLAN_JSON")"
-    PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
-    PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
-  fi
-  unset CANDIDATE_PLAN_JSON
+
+# Immutable inputs for the initial decision and every authority-boundary rerun.
+PLAN_INPUT_REPO="$REPO"
+PLAN_INPUT_PR_NUMBER="$PR_NUMBER"
+PLAN_INPUT_BASE_SHA="$BASE_SHA"
+PLAN_INPUT_HEAD_SHA="$REVIEWED_HEAD_SHA"
+PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
+PLAN_INPUT_WORKTREE="$REPO_WORKTREE"
+PLAN_INPUT_PREDECESSOR_EVENTS="$PREDECESSOR_EVENTS"
+PLAN_INPUT_DELTA_RECEIPT="$DELTA_RECEIPT"
+
+review_plan_decide_fresh() {
+  bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+    --repo "$PLAN_INPUT_REPO" --pr "$PLAN_INPUT_PR_NUMBER" \
+    --base "$PLAN_INPUT_BASE_SHA" --head "$PLAN_INPUT_HEAD_SHA" \
+    --config-hash "$PLAN_INPUT_CONFIG_HASH" --repo-worktree "$PLAN_INPUT_WORKTREE" \
+    --predecessor-events "$PLAN_INPUT_PREDECESSOR_EVENTS" \
+    --delta-receipt "$PLAN_INPUT_DELTA_RECEIPT"
+}
+
+review_plan_canonical_for_inputs() {
+  jq -S -c -e \
+    --arg repository "$PLAN_INPUT_REPO" \
+    --argjson pr_number "$PLAN_INPUT_PR_NUMBER" \
+    --arg base_sha "$PLAN_INPUT_BASE_SHA" \
+    --arg head_sha "$PLAN_INPUT_HEAD_SHA" \
+    --arg config_hash "$PLAN_INPUT_CONFIG_HASH" '
+      . as $plan |
+      select(
+        $plan.schema == "kc-pr-flow.review-plan-decision/v1" and
+        $plan.identity.repository == $repository and
+        $plan.identity.pr_number == $pr_number and
+        $plan.identity.base_sha == $base_sha and
+        $plan.identity.head_sha == $head_sha and
+        $plan.identity.config_hash == $config_hash and
+        ($plan.mode == "initial" or $plan.mode == "delta" or $plan.mode == "resolve")
+      ) |
+      $plan
+    '
+}
+
+if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
+   CANDIDATE_PLAN_JSON="$(review_plan_decide_fresh)" &&
+   CANDIDATE_PLAN_JSON="$(printf '%s' "$CANDIDATE_PLAN_JSON" |
+     review_plan_canonical_for_inputs)"; then
+  REVIEW_MODE="$(jq -r '.mode' <<<"$CANDIDATE_PLAN_JSON")"
+  case "$REVIEW_MODE" in
+    delta|resolve)
+      PLAN_JSON="$CANDIDATE_PLAN_JSON"
+      PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
+      PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
+      FAST_PATH_ENGAGED=1
+      ;;
+    initial) ;;
+  esac
 fi
+unset CANDIDATE_PLAN_JSON
+
+review_plan_event_allowed() {
+  local requested_event="$1" fresh_plan fresh_mode stored_plan ceiling
+  case "$requested_event" in APPROVE|COMMENT|REQUEST_CHANGES) ;; *) return 1 ;; esac
+
+  # Flag-off is the only path that skips a fresh decision.
+  [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] || return 0
+
+  fresh_plan="$(review_plan_decide_fresh)" || return 1
+  fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
+  fresh_mode="$(jq -r '.mode' <<<"$fresh_plan")" || return 1
+
+  # Legacy authority survives under flag-on only when no fast path ever engaged and
+  # a fresh decision over the original inputs still selects initial.
+  if [ "${FAST_PATH_ENGAGED:-0}" -eq 0 ]; then
+    if [ "${REVIEW_MODE:-initial}" = initial ] && [ "$fresh_mode" = initial ]; then
+      return 0
+    fi
+    return 1
+  fi
+
+  # Once engaged, missing, stale, mutated, or identity-mismatched plan state blocks.
+  [ "${PLAN_JSON+x}" = x ] || return 1
+  stored_plan="$(printf '%s' "$PLAN_JSON" | review_plan_canonical_for_inputs)" || return 1
+  [ "$fresh_plan" = "$stored_plan" ] || return 1
+  case "$fresh_mode" in delta|resolve) ;; *) return 1 ;; esac
+  ceiling="$(jq -r '.event_ceiling' <<<"$fresh_plan")" || return 1
+  case "$ceiling:$requested_event" in
+    APPROVE:APPROVE|APPROVE:COMMENT|APPROVE:REQUEST_CHANGES|\
+    COMMENT:COMMENT|COMMENT:REQUEST_CHANGES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 ```
 
-If the router exits nonzero, emits partial output, or emits invalid JSON/schema, discard all of its
-stdout and continue the pre-existing `initial` flow. Do not create `PLAN_JSON`, do not add a
-`COMMENT` ceiling, and do not alter any existing initial-review instruction, lane, or authority.
-The only value retained from the snippet is the already-default `REVIEW_MODE=initial`.
-
-Persist a non-`initial` plan in a private mode-`0600` file. At each authority boundary, rerun the
-existing `review-plan.sh decide` command with the original identity, predecessor inputs, receipt,
-and worktree, safe-snapshot its complete output, and require canonical byte equality with the stored
-plan. Then apply this exact mechanical policy in the existing skill seam:
-
-```text
-ceiling APPROVE: allow APPROVE, COMMENT, or REQUEST_CHANGES
-ceiling COMMENT: allow COMMENT or REQUEST_CHANGES; reject APPROVE
-initial/no plan: check is not used; preserve existing initial authority
-```
-
-Run the equality and event check before presenting the legacy or typed effective event at Step 6c,
-after every human edit, before creating an autonomous gate, when constructing the confirmed post
-gate, and immediately before calling either posting path. A validation or ceiling failure before
-confirmation restarts through `initial`; after confirmation it blocks posting and requires a fresh
-plan. This adds no new CLI/schema/posting surface and cannot confirm, authorize, or post.
+Call `review_plan_event_allowed "$EFFECTIVE_EVENT"` before presenting the legacy or typed effective
+event at Step 6c, after every human edit, before creating an autonomous gate, when constructing the
+confirmed post gate, and immediately before either posting path. A nonzero result blocks that seam;
+before confirmation the caller may start a new explicit `initial` review, while after confirmation
+it requires a fresh review plan. A router failure is only provisional `initial`: it preserves legacy
+authority under flag-on only if the function's fresh rerun also returns `mode=initial`. Once
+`FAST_PATH_ENGAGED=1`, missing, stale, mutated, or identity-mismatched plan state always fails closed.
+This is the exact Task 9 harness target and adds no CLI, schema, or surface.
 
 The prose must state:
 
@@ -1193,11 +1263,13 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
 - Produces: a delta receipt only when every projected lane succeeded and uncertainty is empty; each
   known finding carries replay-derived anchor/category/evidence metadata.
 
-- [ ] Write failed, unavailable, uncertain-candidate, missing-anchor, and mutated-evidence tests;
-  verify each fails before implementation.
-- [ ] Require `.lanes | all(.result.terminal_status == "succeeded")` and
-  `.uncertain_candidate_ids == []` in producer and validator; copy and exactly compare
-  `anchor_sha256`, `category`, and the closed evidence pointer.
+- [ ] Write zero-lane, empty-required-capabilities, failed, unavailable, uncertain-candidate,
+  missing-anchor, and mutated-evidence tests; verify each fails before implementation.
+- [ ] Require `.lanes | length > 0`,
+  `.lanes | all(.result.terminal_status == "succeeded")`,
+  `.uncertain_candidate_ids == []`, and receipt `required_capabilities | length > 0` in both
+  producer and validator; copy and exactly compare `anchor_sha256`, `category`, and the closed
+  evidence pointer.
 - [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case receipt-contract` and the full plan
   suite; require all cases green.
 - [ ] Commit only the three named paths with
@@ -1242,10 +1314,13 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
   owner and is not modified.
 
 - [ ] Add RED end-to-end harnesses showing the current legacy and typed paths can escalate a
-  `COMMENT` plan to `APPROVE`; include autonomous and stale-plan post cases.
-- [ ] Implement the private plan file, existing-`decide` rerun/canonical comparison, and event case
-  check described in revised Task 3, then invoke it at every listed seam. Never clamp silently to a
-  more favorable event; reject invalid authority.
+  `COMMENT` plan to `APPROVE`; exercise the exact `review_plan_event_allowed` snippet for flag-off,
+  fresh `initial`, no-engagement `delta`, engaged `COMMENT`, missing/mutated/stale/identity-mismatched
+  plan, autonomous gate, and immediate-pre-post cases.
+- [ ] Implement the immutable input snapshot, in-memory `PLAN_JSON`, existing-`decide`
+  rerun/canonical comparison, and event case check from revised Task 3 at every listed seam. Never
+  clamp silently to a more favorable event; reject invalid authority. Under flag-on, only a fresh
+  rerun that still returns `mode=initial` may preserve legacy authority when no fast path engaged.
 - [ ] Rename every four-field trace assertion from byte-identical flow to planner-state parity.
 - [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case skill-wiring`, `--case event-ceiling`,
   the full plan suite, `bash kc-pr-flow/scripts/review-runtime.test.sh --case
@@ -1290,8 +1365,10 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
   do not invent a per-PR number.
 - [ ] Lock the resulting exact head and obtain a fresh full-branch review against the accepted
   design and this amendment, without handing the reviewer the implementation justification.
-- [ ] Keep the feature default-off and report `do_not_promote` unless that review is clean. Actual
-  promotion remains a new Captain decision even after the repair passes.
+- [ ] Keep the feature default-off and report `do_not_promote` unconditionally for this Phase 1
+  repair. A clean fresh review is necessary but not sufficient: enabling the flag or any promotion
+  still requires a separate Captain decision plus the separately authorized actual evidence
+  contract.
 
 ## Deferred promotion-gated phases
 
