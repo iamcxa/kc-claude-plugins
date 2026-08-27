@@ -64,8 +64,10 @@ notify() { # notify <title> <subtitle> [open-target]
   local title="$1" sub="$2" target="${3:-}" via tn
   via=$(cfg_get '.notify_via // "terminal-notifier"')
   if [[ "$via" == "terminal-notifier" ]] && tn=$(command -v terminal-notifier); then
-    # The only channel here whose banner opens the review on click.
-    local args=(-title "$title" -message "$sub")
+    # The only channel here whose banner opens the review on click. -ignoreDnD is
+    # deliberate: this notification exists because the user asked to be told, and a
+    # review that lands during Do Not Disturb is exactly the one they would miss.
+    local args=(-title "$title" -message "$sub" -ignoreDnD)
     [[ -n "$target" ]] && args+=(-open "$target")
     "$tn" "${args[@]}" >/dev/null 2>&1 || true
   else

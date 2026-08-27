@@ -67,7 +67,7 @@ by accident.
 - **The seen key is claimed before the backend call**, so a crash mid-create cannot produce two reviews for one PR. A failed create retries on later ticks up to three attempts, then holds until you press retry.
 - **The seen key is `repo#number`**, so a PR is reviewed once; a new push does not re-trigger.
 - **Completion comes from the backend, never from silence.** A backend that cannot determine a job's state exits non-zero, which the listener reads as *still running* — an unreachable API can therefore never fabricate a completion.
-- **Notifications go through `terminal-notifier` when it is installed** — its banner opens the review on click — and fall back to `osascript`, which cannot carry a click action. Which channel is permitted to post is per-machine, so the menu toggles between them.
+- **Notifications go through `terminal-notifier` when it is installed** — its banner opens the review on click, and it is sent with `-ignoreDnD` so a review landing during Do Not Disturb is not the one you miss. The fallback is `osascript`, which carries no click action and obeys Focus. Which channel is permitted to post is per-machine, so the menu toggles between them; if neither appears, the app needs permission in System Settings → Notifications, and Do Not Disturb needs it under Focus → Allowed Notifications.
 - **`|` in a PR title is rewritten** before it reaches a menu line, where a literal pipe would truncate the row.
 
 ## Backends
