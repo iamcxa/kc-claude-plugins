@@ -16,8 +16,9 @@ cutover, in this order:
    entity at `status: release` to `done`; `spacedock status --where
    status=release` must return empty before the graph changes.
 2. Remove `release` from the adopter's workflow graph. Re-vendor the loader,
-   close guard, kernel, profile tree, and conditional references byte-for-byte,
-   including Production `verify.md` and deletion of Production `release.md`.
+   engage comparator, close guard, kernel, profile tree, and conditional
+   references byte-for-byte, including Production `verify.md` and deletion
+   of Production `release.md`.
    Active v2 Pilot and Production receipts remain loadable; new choices use v3.
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
@@ -30,9 +31,16 @@ cutover, in this order:
    migration.
 5. Prove the drivable set with `spacedock status --where sprint=X --where
    sprint-readiness=ready`, then run one read-only engage reconcile against the
-   provider's current Ready set. Run every profile-stage load, guarded POC close
-   path, package parity check, and normal repository gate before updating the
-   installed plugin.
+   provider's current Ready set plus every still-Ready snapshot source outside
+   the original window/outcome. Refuse a snapshot whose items do not all share
+   the engaged item's exact window and outcome. Invoke the vendored comparator
+   with that exact source, window, and outcome. Only exit `0` with one parsed
+   `status: clean` result and empty delta arrays continues. A delta, truncated
+   result, invalid input, or any other output must stop before dispatch. Run
+   every profile-stage load,
+   guarded POC close path, package
+   parity check, and normal repository gate before updating the installed
+   plugin.
 
 ### Retire the planning projection
 

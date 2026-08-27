@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = Path("scripts/kc-dev-flow-multi-profile-gate.py")
 LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
+RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
+RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
+ADOPTED_RECONCILE = Path("scripts/kc-dev-flow/engage-reconcile.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
 
 
@@ -49,6 +52,7 @@ def copy_repository_fixture(destination: Path) -> None:
     }
     # The runner must be able to prove itself before its first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
+    tracked.add(os.fsencode(ADOPTED_RECONCILE))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
@@ -248,6 +252,57 @@ def run_poc_entry_mutant() -> None:
         )
 
 
+def run_reconcile_exit_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
+        replace_once(
+            fixture / RECONCILE,
+            '    return 1 if result["status"] == "delta" else 0\n',
+            "    return 0\n",
+        )
+        reject(
+            "reconcile-delta-exit-disabled",
+            execute([sys.executable, str(fixture / RECONCILE_TEST)], fixture),
+            "membership delta returned 0",
+        )
+
+
+def run_reconcile_wiring_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+        replace_once(
+            continuation,
+            "6. Invoke the repository-local read-only engage comparator.\n",
+            "6. Continue without invoking the engage comparator.\n",
+        )
+        reject(
+            "reconcile-wiring-removed",
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            "continuation authority resolution omits",
+        )
+
+
+def run_reconcile_clean_output_wiring_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+        replace_once(
+            continuation,
+            "   Exit `0` continues only when stdout parses as one JSON object with\n"
+            "   `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.\n",
+            "   Exit `0` continues without validating stdout.\n",
+        )
+        reject(
+            "reconcile-clean-output-wiring-removed",
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            "continuation planning disambiguation omits: stdout parses as one JSON object with `status: clean`",
+        )
+
+
 def run_missing_close_guard_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
@@ -323,6 +378,9 @@ def main() -> int:
     )
     run_scheduling_mutant()
     run_poc_entry_mutant()
+    run_reconcile_exit_mutant()
+    run_reconcile_wiring_mutant()
+    run_reconcile_clean_output_wiring_mutant()
     run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")

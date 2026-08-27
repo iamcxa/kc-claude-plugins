@@ -26,8 +26,10 @@ Continue by the selected profile's smallest sufficient route.
 4. Follow the exact work item's `source` to the accepted planning item and
    invoke the repository-local read-only planning reader. Read the item for the
    problem, decision, success condition, priority, and human-facing status, and
-   obtain the provider's current Ready set for the recorded planning window and
-   outcome. If `source` is not a resolvable planning link, report `planning
+   obtain the union of the provider's current Ready set for the recorded
+   planning window/outcome and every currently Ready snapshot source even when
+   its current window or outcome moved. Refuse a truncated provider result. If
+   `source` is not a resolvable planning link, report `planning
    source unavailable` and stop before reading execution state. If the reader or
    its inputs are unavailable, report `planning reconcile unavailable` and stop
    at the same boundary. Do not promote the admission snapshot into planning
@@ -35,8 +37,29 @@ Continue by the selected profile's smallest sufficient route.
 5. Compare that current Ready set with the committed SD entity set for the same
    `sprint`. Compare source identity and membership, `planning-window`,
    `planning-outcome`, accepted goal, and non-goals; classify each difference as
-   added, removed, changed, or moved.
-6. If the comparison finds an added, removed, changed, or moved item, report the
+   added, removed, changed, or moved. Normalize both sets into ephemeral JSON
+   lists whose items contain `source`, `planning-window`,
+   `planning-outcome`, `accepted-goal`, and string-list `non-goals`. Do
+   not commit or reuse those files. Refuse the snapshot unless every item
+   shares the exact window and outcome read from the engaged item.
+6. Invoke the repository-local read-only engage comparator.
+
+   ```bash
+   python3 <planning-comparator> \
+     --snapshot <ephemeral-snapshot-json> \
+     --current <ephemeral-current-json> \
+     --expected-source <exact-work-item-source> \
+     --expected-window <exact-work-item-planning-window> \
+     --expected-outcome <exact-work-item-planning-outcome>
+   ```
+
+   Exit `0` continues only when stdout parses as one JSON object with
+   `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.
+   Any other exit-`0` output reports `planning reconcile unavailable` and stops
+   before new dispatch or state mutation. Exit `1` reports the classified delta
+   and stops at that boundary. Exit `2` reports
+   `planning reconcile unavailable` and stops at the same boundary. If the
+   comparison finds an added, removed, changed, or moved item, report the
    delta and stop before new dispatch or state mutation. The Captain must admit
    the delta before an authorized actor commits a replacement snapshot. No
    difference writes the provider or SD automatically. Do not cancel a running

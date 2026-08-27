@@ -116,13 +116,23 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
 
+`scripts/engage-reconcile.py` is the read-only compare mechanism. It checks
+ephemeral normalized admission and current Ready sets against the
+caller-supplied expected source, window, and outcome, then compares accepted
+goal and non-goals. A completed comparison returns `0` with a JSON
+`status: clean` result, `1` with added/removed/changed/moved identities, or `2`
+for invalid input. It invokes no provider or execution runtime. The
+[design rationale](./RATIONALE.md) owns the planning/execution explanation.
+
 At a route's first working stage, the loader also requires one non-empty
 `sprint` and `sprint-readiness: ready` in work-item frontmatter. The planning
 provider owns the accepted window and outcome; `sprint` only groups the SD
 entity snapshot. The Captain admits the snapshot, and the loader checks only
 the committed field values. At every engage, the adopter's read-only planning
-reader compares the provider's current Ready set with that snapshot. Any delta
-stops before new dispatch or mutation until the Captain admits it.
+reader normalizes the provider's current Ready set and the admitted snapshot;
+that current set also includes every still-Ready snapshot source outside the
+original window/outcome. The vendored comparator classifies their difference.
+Any delta stops before new dispatch or mutation until the Captain admits it.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

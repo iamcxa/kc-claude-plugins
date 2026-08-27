@@ -59,7 +59,8 @@ requires Captain admission and never writes either side automatically.
 | Planning items | GitHub Issues plus Project #4, as the current replaceable provider |
 | Planning window | Project #4 Iteration field |
 | Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
-| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; normalize only Status `Ready` items and their issue source, Iteration, Milestone, accepted outcome, and non-goals |
+| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals |
+| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
@@ -192,12 +193,19 @@ state.
 ### Engage reconcile
 
 Before reading execution state or dispatching new work, run the read-only
-planning reader for the snapshot's `planning-window` and `planning-outcome`.
-Compare the current Status `Ready` set with every committed SD entity sharing
-its `sprint`: source membership, window, outcome, accepted outcome, and
-non-goals. Report added, removed, changed, and moved items. With no difference,
-continue. With any difference, stop before new dispatch or state mutation until
-the Captain admits the delta and an authorized actor commits the replacement
+planning reader for the union of the snapshot's `planning-window`/
+`planning-outcome` Ready set and every currently Ready snapshot source
+outside those bounds. Refuse a truncated result. Compare that union with every
+committed SD entity sharing its `sprint`: source membership, window, outcome,
+accepted outcome, and non-goals. Normalize both sets into ephemeral JSON lists
+and refuse the snapshot unless every item shares the engaged item's exact
+window and outcome. Run the bound planning comparator with `--expected-source`,
+`--expected-window`, and `--expected-outcome` set to the exact engaged work
+item values. Exit `0` continues only when stdout parses as one JSON object with
+`status: clean` and empty delta arrays. Any other output stops before new
+dispatch or state mutation: exit `1` reports added, removed, changed, and moved
+items; exit `2` or an invalid exit-`0` payload reports unavailable input. The
+Captain admits every delta before an authorized actor commits the replacement
 snapshot. Do not cancel a running worker. This is reconcile, not projection or
 sync: neither side is written automatically.
 
