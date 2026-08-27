@@ -30,6 +30,14 @@ sha256_file() {
   fi
 }
 
+sha256_text() {
+  if command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 | awk '{print $1}'
+  else
+    sha256sum | awk '{print $1}'
+  fi
+}
+
 mutate_case() { # $1=pair id, $2=jq filter, $3=output
   local pair_id="$1" filter="$2" output="$3"
   jq -c --arg pair_id "$pair_id" \
@@ -78,6 +86,12 @@ assert_eq "only delta and resolve are eligible" "7" \
   "$(jq -r '.latency.eligible_runs' <<<"$report")"
 assert_eq "all eligible fixture runs pass latency" "7" \
   "$(jq -r '.latency.passing_runs' <<<"$report")"
+assert_eq "producer receipt permits terminal gap above four milliseconds" true \
+  "$(jq -s -r '[.[] | select(.treatment.timing != null) |
+    .treatment.timing.durations_ms as $d |
+    $d.review_to_confirmation_ready - ($d.identity_and_plan + $d.inventory +
+      $d.required_lanes_critical_path + $d.targeted_verification_critical_path +
+      $d.collation_and_draft) > 4] | all' "$FIXTURE")"
 source_probe="$(bash -c '
   set -u
   umask 027
@@ -130,6 +144,11 @@ assert_eq "240001 milliseconds fails Q6 first" latency "$(first_failed "$mutated
 mutate_case known-fix-only '.treatment.timing.durations_ms.review_to_confirmation_ready=1' "$mutated"
 assert_eq "falsely tiny caller total fails Q6 first" latency "$(first_failed "$mutated")"
 mutate_case known-fix-only '(.treatment.timing.durations_ms |=
+  (.identity_and_plan=0 | .inventory=0 | .required_lanes_critical_path=0 |
+   .targeted_verification_critical_path=0 | .collation_and_draft=0 |
+   .review_to_confirmation_ready=0))' "$mutated"
+assert_eq "coherent zero timing self-reseal fails Q6 first" latency "$(first_failed "$mutated")"
+mutate_case known-fix-only '(.treatment.timing.durations_ms |=
   (.identity_and_plan=1 | .inventory=1 | .required_lanes_critical_path=1 |
    .targeted_verification_critical_path=1 | .collation_and_draft=1))' "$mutated"
 assert_eq "inconsistent producer arithmetic fails Q6 first" latency "$(first_failed "$mutated")"
@@ -148,6 +167,19 @@ mutate_case known-fix-only '.treatment.plan.inherited_finding_ids=[]' "$mutated"
 assert_eq "empty inherited must-fix set fails Q1 first" identity "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.plan.review_range.from_exclusive=.exact_head.head_sha' "$mutated"
 assert_eq "range beginning at current head fails Q1 first" identity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.predecessor_evidence.receipt.known_findings[0].path="src/attacker.txt" |
+  .treatment.predecessor_evidence.receipt.known_findings[0].evidence_sha256=
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$TEST_ROOT/predecessor-reseal-stage.jsonl"
+receipt_without_hash="$(jq -S -c 'select(.pair_id == "known-fix-only") |
+  .treatment.predecessor_evidence.receipt | del(.content_sha256)' \
+  "$TEST_ROOT/predecessor-reseal-stage.jsonl")"
+receipt_hash="$(printf '%s' "$receipt_without_hash" | sha256_text)"
+jq -c --arg pair_id known-fix-only --arg receipt_hash "$receipt_hash" '
+  if .pair_id == $pair_id then
+    .treatment.predecessor_evidence.receipt.content_sha256=$receipt_hash
+  else . end' "$TEST_ROOT/predecessor-reseal-stage.jsonl" >"$mutated"
+assert_eq "same-context predecessor receipt self-reseal fails Q1 first" identity \
+  "$(first_failed "$mutated")"
 
 sed -n '1p' "$FIXTURE" >"$TEST_ROOT/subset.jsonl"
 assert_eq "favorable subset cannot promote" do_not_promote \

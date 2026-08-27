@@ -79,7 +79,10 @@ candidate, finding, and posted-count bindings. Behavior decisions and posting
 receipts are recomputed and checked against the repository-pinned per-class
 provenance map, so caller self-resealing is not evidence. Q1-Q5 cover every
 pair; only `delta` and `resolve` receipts enter the 240-second latency gate,
-where the five runtime phase-floor durations must trail the total by 0–4 ms.
+where the five runtime phase-floor durations may not exceed the later
+confirmation-ready total. The full predecessor and timing receipt hashes are
+independently pinned per class; terminal transition time is intentionally
+unbounded below the 240-second total target.
 An `initial` fallback must carry `timing:null` and can never improve the latency
 result. The scorer has no model, network, confirmation, or posting authority.
 

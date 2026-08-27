@@ -75,6 +75,22 @@ review_latency_expected_provenance() {
   esac
 }
 
+review_latency_expected_runtime_provenance() {
+  # Independent producer trust anchors for the full receipts. Keep these out
+  # of whole-line validation so timing mutations remain owned by Q6.
+  case "$1" in
+    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"5b4b2681c75dc5836104069183ca8ba3658213be95ce89346482591c0eda5034"}' ;;
+    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"72921867a902db5af01bddab46c5436e0babc5b07e9c6c111d502466a777ceb1"}' ;;
+    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"9ea59e505952b4fde77a1b45e84bf127c9d3cb6ae30bbe2396136f25f535553d"}' ;;
+    force-push | corrupt-receipt) printf '%s\n' '{"predecessor_receipt_sha256":null,"timing_sha256":null}' ;;
+    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"fecdb17f5aa7a2349e679e7cc7dfed5aa10664def0504adc6fc11eae133c56ec"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"ba14450be7e0c4cc1a2cf21635fc82708adb609746d89437dbd0c33069c1d76b"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"5bb964f775575512faf197ec343d9d3d9846e2122b30b280fdaea50859f8a2aa"}' ;;
+    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"87227a17338d13ef9dab5e813e48aa43019d594189c13526883c139f9c41fc40"}' ;;
+    *) return 1 ;;
+  esac
+}
+
 review_latency_precision_valid() {
   local pair="$1" line quoted_line pointer_hash quote_hash candidate_hash finding_id content_hash
   local valid=true
@@ -117,10 +133,11 @@ review_latency_precision_valid() {
 
 review_latency_validate_pair() {
   local pair="$1" expected_review_key identity_valid behavior_parity timing_valid precision_valid
-  local repository pr_number base_sha head_sha config_hash pair_id provenance expected_hash
+  local repository pr_number base_sha head_sha config_hash pair_id provenance runtime_provenance expected_hash
   local control_effective_hash control_options_hash treatment_effective_hash treatment_options_hash
   local posted_source_hash posted_payload_hash posted_idempotency_key
-  local predecessor_projection_hash predecessor_receipt_hash predecessor_receipt_id
+  local predecessor_projection_hash predecessor_receipt_hash predecessor_full_receipt_hash predecessor_receipt_id
+  local timing_hash
   local predecessor_review_key ancestry_hash predecessor_valid=true
   review_latency_source_runtime || return
   review_runtime_json_has_unique_members "$pair" >/dev/null 2>&1 || return 3
@@ -328,6 +345,7 @@ review_latency_validate_pair() {
   if [ "$(jq -r '.treatment.plan.mode' <<<"$pair")" != initial ]; then
     predecessor_projection_hash="$(review_latency_hash_json "$pair" '.treatment.predecessor_evidence.projection')" || return 3
     predecessor_receipt_hash="$(review_latency_hash_json "$pair" '.treatment.predecessor_evidence.receipt | del(.content_sha256)')" || return 3
+    predecessor_full_receipt_hash="$(review_latency_hash_json "$pair" '.treatment.predecessor_evidence.receipt')" || return 3
     predecessor_review_key="$(printf '%s|%s|%s|%s|%s' \
       "$(jq -r '.treatment.predecessor_evidence.projection.repository' <<<"$pair")" \
       "$(jq -r '.treatment.predecessor_evidence.projection.pr_number' <<<"$pair")" \
@@ -367,9 +385,12 @@ review_latency_validate_pair() {
   fi
 
   provenance="$(review_latency_expected_provenance "$pair_id")" || return 3
+  runtime_provenance="$(review_latency_expected_runtime_provenance "$pair_id")" || return 3
   expected_hash="$(review_latency_hash_json "$pair" '.expected')" || return 3
   identity_valid="$(jq -r --arg expected_review_key "$expected_review_key" --arg expected_hash "$expected_hash" \
     --argjson provenance "$provenance" --arg predecessor_projection_hash "${predecessor_projection_hash:-}" \
+    --arg predecessor_full_receipt_hash "${predecessor_full_receipt_hash:-}" \
+    --argjson runtime_provenance "$runtime_provenance" \
     --argjson predecessor_valid "$predecessor_valid" '
     (.exact_head.review_key == $expected_review_key) and
     (.exact_head.review_key == $provenance.review_key) and ($expected_hash == $provenance.expected_sha256) and
@@ -381,8 +402,12 @@ review_latency_validate_pair() {
     (.treatment.event_evidence.posted == null or .treatment.event_evidence.posted.review_key == .exact_head.review_key) and
     (if .treatment.timing == null then .treatment.plan.mode == "initial"
      else .treatment.timing.review_key == .exact_head.review_key and .treatment.timing.mode == .treatment.plan.mode end) and
-    (if .treatment.plan.mode == "initial" then $provenance.predecessor_projection_sha256 == null
-     else $predecessor_valid and $predecessor_projection_hash == $provenance.predecessor_projection_sha256 end)
+    (if .treatment.plan.mode == "initial" then
+       $provenance.predecessor_projection_sha256 == null and
+       $runtime_provenance.predecessor_receipt_sha256 == null
+     else $predecessor_valid and
+       $predecessor_projection_hash == $provenance.predecessor_projection_sha256 and
+       $predecessor_full_receipt_hash == $runtime_provenance.predecessor_receipt_sha256 end)
   ' <<<"$pair")" || return 3
 
   behavior_parity="$(jq -r --arg control_effective_hash "$control_effective_hash" \
@@ -418,13 +443,17 @@ review_latency_validate_pair() {
   ' <<<"$pair")" || return 3
 
   if review_latency_precision_valid "$pair"; then precision_valid=true; else precision_valid=false; fi
-  timing_valid="$(jq -r '
+  timing_hash=''
+  if [ "$(jq -r '.treatment.timing == null' <<<"$pair")" = false ]; then
+    timing_hash="$(review_latency_hash_json "$pair" '.treatment.timing')" || return 3
+  fi
+  timing_valid="$(jq -r --arg timing_hash "$timing_hash" --argjson runtime_provenance "$runtime_provenance" '
     if .treatment.timing == null then true else
       .treatment.timing.durations_ms as $d |
       ($d.identity_and_plan + $d.inventory + $d.required_lanes_critical_path +
        $d.targeted_verification_critical_path + $d.collation_and_draft) as $sum |
-      ($d.review_to_confirmation_ready - $sum) as $remainder |
-      $remainder >= 0 and $remainder <= 4
+      ($d.review_to_confirmation_ready >= $sum) and
+      ($timing_hash == $runtime_provenance.timing_sha256)
     end
   ' <<<"$pair")" || return 3
 
