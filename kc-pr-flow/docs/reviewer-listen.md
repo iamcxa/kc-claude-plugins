@@ -92,9 +92,18 @@ Two facts shape its credentials:
   if [ "${CONDUCTOR_IS_LOCAL:-1}" = "0" ]; then
     claude plugin marketplace add iamcxa/kc-claude-plugins
     claude plugin install kc-pr-flow@kc-claude-plugins
-    exit 0
+  else
+    # whatever preflight only makes sense on a developer's Mac — copied env
+    # files, certificates, anything a cloud checkout cannot have
   fi
+  # dependency installs stay shared: a cloud session is not necessarily a review
   ```
+
+  Branch rather than exit: a cloud workspace is not only ever used for reviews, so
+  skipping the dependency installs would break every other cloud session on that
+  repository. What the guard must skip is the preflight a cloud checkout cannot
+  satisfy — a hard check for a copied `.env` file will otherwise fail the whole
+  setup script.
 
   Installing from inside the running session does *not* work: it lands in the CLI, not in that session's skill registry.
 
