@@ -11,6 +11,7 @@ on:
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
+      - "kc-pr-flow/reference/review-runtime.md"
       - ".github/workflows/review-runtime-tests.yml"
   push:
     branches: [main]
@@ -19,6 +20,7 @@ on:
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
+      - "kc-pr-flow/reference/review-runtime.md"
       - ".github/workflows/review-runtime-tests.yml"
 
 permissions:

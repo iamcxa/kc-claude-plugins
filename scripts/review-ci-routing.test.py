@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = {
+    "plan": ROOT / ".github/workflows/review-plan-tests.yml",
     "runtime": ROOT / ".github/workflows/review-runtime-tests.yml",
     "shadow": ROOT / ".github/workflows/review-shadow-tests.yml",
     "post": ROOT / ".github/workflows/review-post-tests.yml",
@@ -66,18 +67,26 @@ for name, text in texts.items():
     routes[name] = pull_paths
 
 expected_routes = {
-    "kc-pr-flow/scripts/review-runtime.sh": {"runtime", "shadow", "post", "evaluation"},
-    "kc-pr-flow/scripts/review-runtime-safe-io.py": {"runtime", "shadow", "post", "evaluation"},
+    "kc-pr-flow/scripts/review-plan.sh": {"plan"},
+    "kc-pr-flow/scripts/review-plan.test.sh": {"plan"},
+    "kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json": {"plan"},
+    ".github/workflows/review-plan-tests.yml": {"plan"},
+    "kc-pr-flow/scripts/review-runtime.sh": {"plan", "runtime", "shadow", "post", "evaluation"},
+    "kc-pr-flow/scripts/review-runtime-safe-io.py": {"plan", "runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime"},
     "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl": {"runtime"},
     "kc-pr-flow/scripts/review-shadow.test.sh": {"shadow"},
     "kc-pr-flow/scripts/review-post.sh": {"post"},
     "kc-pr-flow/test/fixtures/review-post/reviews.json": {"post"},
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-latency-benchmark.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-latency-benchmark.test.sh": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
-    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"shadow", "evaluation", "cross_model"},
-    "kc-pr-flow/reference/review-triage.md": {"evaluation"},
+    "kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl": {"evaluation"},
+    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"plan", "shadow", "evaluation", "cross_model"},
+    "kc-pr-flow/reference/review-triage.md": {"plan", "evaluation"},
+    "kc-pr-flow/reference/review-runtime.md": {"plan", "runtime"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
     "kc-pr-flow/reference/gh-api-patterns.md": set(),
     "PRODUCT.md": set(),
@@ -98,12 +107,14 @@ for path, expected in expected_routes.items():
     require(actual == expected, f"{path}: expected {sorted(expected)}, got {sorted(actual)}")
 
 expected_commands = {
+    "plan": ["bash kc-pr-flow/scripts/review-plan.test.sh"],
     "runtime": ["bash kc-pr-flow/scripts/review-runtime.test.sh"],
     "shadow": ["bash kc-pr-flow/scripts/review-shadow.test.sh"],
     "post": ["bash kc-pr-flow/scripts/review-post.test.sh"],
     "evaluation": [
         "bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh",
         "bash kc-pr-flow/scripts/review-ablation.test.sh",
+        "bash kc-pr-flow/scripts/review-latency-benchmark.test.sh",
     ],
     "cross_model": ["bash kc-pr-flow/scripts/cross-model.test.sh"],
 }
