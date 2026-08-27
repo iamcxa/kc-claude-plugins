@@ -283,6 +283,28 @@ review_runtime_timing_publication_barrier() {
   :
 }
 
+review_runtime_acquire_bound_timing_lock() {
+  local parent_path="$1" parent_fd="$2" lock_name="$3"
+  local helper owner_pid token rc
+  helper="$(review_runtime_safe_io_helper)" || return 75
+  owner_pid="$(sh -c 'printf "%s\n" "$PPID"')" || return 75
+  token="$(python3 "$helper" timing-lock-acquire \
+    --parent-path "$parent_path" --parent-fd "$parent_fd" \
+    --lock-name "$lock_name" --owner-pid "$owner_pid" 2>/dev/null)"
+  rc=$?
+  [ "$rc" -eq 0 ] || return 75
+  printf '%s\n' "$token"
+}
+
+review_runtime_release_bound_timing_lock() {
+  local parent_fd="$1" lock_name="$2" token="$3" helper
+  [ -n "$token" ] || return 0
+  helper="$(review_runtime_safe_io_helper)" || return 74
+  python3 "$helper" timing-lock-release \
+    --parent-fd "$parent_fd" --lock-name "$lock_name" \
+    --token "$token" >/dev/null 2>&1
+}
+
 review_runtime_write_new_private_json() (
   local payload="$1" output_file="$2" label="$3"
   local output_dir helper parent_identity rc
@@ -441,7 +463,7 @@ review_runtime_timing_start() (
 review_runtime_timing_mark() (
   local timing_file="$1" phase="$2"
   local snapshot_dir='' state_snapshot='' now_ns last_ns last_phase last_index phase_index
-  local without_hash state timing_dir timing_lock lock_owner_pid=''
+  local without_hash state timing_dir timing_lock_name timing_lock_token=''
   review_runtime_require_jq || return
   review_runtime_require_python || return
   phase_index="$(review_runtime_timing_phase_index "$phase")" || {
@@ -453,11 +475,14 @@ review_runtime_timing_mark() (
     printf 'review-runtime: unsafe timing state parent directory\n' >&2
     return 2
   }
-  timing_lock="$timing_dir/.$(basename "$timing_file").timing.lock"
-  REVIEW_RUNTIME_LOCK_OWNER_PID=''
-  review_runtime_acquire_owned_lock "$timing_lock" || return 75
-  lock_owner_pid="$REVIEW_RUNTIME_LOCK_OWNER_PID"
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"; review_runtime_release_owned_lock "$timing_lock" "$lock_owner_pid"' EXIT
+  timing_lock_name=".$(basename "$timing_file").timing.lock"
+  exec 9<"$timing_dir" || return 74
+  timing_lock_token="$(review_runtime_acquire_bound_timing_lock \
+    "$timing_dir" 9 "$timing_lock_name")" || {
+    exec 9<&-
+    return 75
+  }
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"; review_runtime_release_bound_timing_lock 9 "$timing_lock_name" "$timing_lock_token"; exec 9<&-' EXIT
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   state_snapshot="$snapshot_dir/timing-state.json"
   review_runtime_snapshot_regular_file \

@@ -850,6 +850,8 @@ run_timing_publication_tests() {
   local mark_target mark_ready mark_release mark_writer mark_payload mark_rc
   local timing_lock before_hash stale_lock malformed_lock
   local path_parent path_parent_moved path_target path_payload path_rc
+  local lock_parent lock_parent_moved lock_target lock_payload lock_rc lock_name copied_pid
+  local mode_target mode_observation mode_lock
 
   start_target="$TEST_INPUT_ROOT/timing-publication-start.json"
   start_ready="$TEST_INPUT_ROOT/timing-publication-start.ready"
@@ -929,6 +931,55 @@ run_timing_publication_tests() {
   assert_eq "timing-mark preserves the competing writer's state" \
     "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" \
     "$(jq -r '.review_key' "$mark_target")"
+
+  lock_parent="$TEST_INPUT_ROOT/timing-lock-parent"
+  lock_parent_moved="$TEST_INPUT_ROOT/timing-lock-parent-bound"
+  lock_target="$lock_parent/state.json"
+  lock_name=".$(basename "$lock_target").timing.lock"
+  lock_payload="$(rehash_timing_state "$(jq -c \
+    '.review_key="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' \
+    "$mark_target")")"
+  mkdir "$lock_parent"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$lock_target" >/dev/null
+  review_runtime_timing_mark "$lock_target" identity_and_plan >/dev/null
+  (
+    review_runtime_timing_publication_barrier() {
+      copied_pid="$(cat "$lock_parent/$lock_name/owner.pid")"
+      mv "$lock_parent" "$lock_parent_moved"
+      mkdir "$lock_parent"
+      printf '%s\n' "$lock_payload" >"$lock_target"
+      mkdir "$lock_parent/$lock_name"
+      printf '%s\n' "$copied_pid" >"$lock_parent/$lock_name/owner.pid"
+    }
+    review_runtime_timing_mark "$lock_target" required_lanes_critical_path >/dev/null 2>&1
+  )
+  lock_rc=$?
+  assert_eq "timing-mark rejects a parent replacement carrying a copied lock PID" "74" "$lock_rc"
+  assert_eq "timing-mark preserves replacement-parent state" \
+    "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" \
+    "$(jq -r '.review_key' "$lock_target")"
+  assert_eq "timing-mark preserves the competing replacement lock" "true" \
+    "$([ -d "$lock_parent/$lock_name" ] && printf true || printf false)"
+  assert_eq "timing-mark cleans the exact acquired lock through its bound parent" "false" \
+    "$([ -e "$lock_parent_moved/$lock_name" ] && printf true || printf false)"
+  if [ -d "$lock_parent/$lock_name" ]; then
+    rm -f "$lock_parent/$lock_name/owner.pid"
+    rmdir "$lock_parent/$lock_name"
+  fi
+
+  mode_target="$TEST_INPUT_ROOT/timing-lock-mode.json"
+  mode_observation="$TEST_INPUT_ROOT/timing-lock-mode.txt"
+  mode_lock="$(dirname "$mode_target")/.$(basename "$mode_target").timing.lock"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$mode_target" >/dev/null
+  (
+    umask 022
+    review_runtime_timing_publication_barrier() {
+      file_mode "$mode_lock" >"$mode_observation"
+    }
+    review_runtime_timing_mark "$mode_target" identity_and_plan >/dev/null
+  )
+  assert_eq "timing lock mode is private under ambient umask 022" "700" \
+    "$(cat "$mode_observation")"
 
   timing_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
   before_hash="$(sha256_text "$(cat "$mark_target")")"
