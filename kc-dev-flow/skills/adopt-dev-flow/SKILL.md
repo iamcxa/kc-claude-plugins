@@ -61,8 +61,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    entity set is the admitted snapshot.
 4. At every engage, the engage reconcile is read-only: invoke the reader and
    normalize the provider's current Ready set and committed SD snapshot into
-   ephemeral comparator inputs. Bind the exact engaged `source` when invoking
-   the vendored comparator; exit `0` continues, exit `1` reports the
+   ephemeral comparator inputs. Refuse a snapshot whose items do not all share
+   the engaged item's exact `planning-window` and `planning-outcome`. Bind that
+   exact source, window, and outcome when invoking the vendored comparator;
+   exit `0` continues, exit `1` reports the
    classified delta and stops, and exit `2` reports unavailable input and
    stops.
    Report added, removed, changed, and moved items and stop before new dispatch

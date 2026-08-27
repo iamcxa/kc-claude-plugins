@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import cast
@@ -14,6 +15,7 @@ MOVEMENT_FIELDS = ("planning-window", "planning-outcome")
 CONTENT_FIELDS = ("accepted-goal", "non-goals")
 REQUIRED_FIELDS = ("source", *MOVEMENT_FIELDS, *CONTENT_FIELDS)
 TEXT_SENTINELS = {"null", "none", "unknown", "tbd", "todo", "~", "true", "false"}
+PLACEHOLDER_PATTERN = re.compile(r"(?:<[^<>]+>|\[[^\[\]]+\]|\{[^{}]+\})")
 
 
 class ReconcileError(RuntimeError):
@@ -26,7 +28,7 @@ def valid_text(value: object) -> bool:
     stripped = value.strip()
     return (
         stripped.casefold() not in TEXT_SENTINELS
-        and stripped[0] not in "<[{&*!|>"
+        and PLACEHOLDER_PATTERN.fullmatch(stripped) is None
     )
 
 
@@ -49,6 +51,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--snapshot", type=Path, required=True)
     parser.add_argument("--current", type=Path, required=True)
     parser.add_argument("--expected-source", required=True)
+    parser.add_argument("--expected-window", required=True)
+    parser.add_argument("--expected-outcome", required=True)
     return parser.parse_args()
 
 
@@ -114,6 +118,23 @@ def main() -> int:
             raise ReconcileError(
                 f"snapshot does not contain expected source: {args.expected_source}"
             )
+        if not valid_text(args.expected_window) or not valid_text(args.expected_outcome):
+            raise ReconcileError("expected planning scope is invalid")
+        expected_scope = (args.expected_window, args.expected_outcome)
+        engaged_scope = tuple(
+            cast(str, snapshot[args.expected_source][field])
+            for field in MOVEMENT_FIELDS
+        )
+        if engaged_scope != expected_scope:
+            raise ReconcileError(
+                "snapshot engaged source does not match expected planning scope"
+            )
+        for source, item in snapshot.items():
+            item_scope = tuple(cast(str, item[field]) for field in MOVEMENT_FIELDS)
+            if item_scope != expected_scope:
+                raise ReconcileError(
+                    f"snapshot source is outside expected planning scope: {source}"
+                )
         added = sorted(current.keys() - snapshot.keys())
         removed = sorted(snapshot.keys() - current.keys())
         shared = snapshot.keys() & current.keys()

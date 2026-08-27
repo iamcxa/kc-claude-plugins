@@ -477,6 +477,8 @@ for phrase in [
     "No reconcile result writes either side automatically",
     "the read-only engage comparator",
     "exact engaged source",
+    "exact engaged source, window, and outcome",
+    "do not all share that planning scope",
     "A delta exit refuses new dispatch or state mutation",
     "added, removed, changed, or moved",
     "Captain admits the delta",
@@ -759,6 +761,8 @@ for phrase in [
     "every currently Ready snapshot source",
     "Compare the adopted loader, engage comparator",
     "engage reconcile is read-only",
+    "exact source, window, and outcome",
+    "do not all share",
     "Captain admits every delta",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
@@ -814,6 +818,9 @@ for phrase in [
     "every currently Ready snapshot source",
     "Refuse a truncated provider result",
     "--expected-source <exact-work-item-source>",
+    "--expected-window <exact-work-item-planning-window>",
+    "--expected-outcome <exact-work-item-planning-outcome>",
+    "every item shares the exact window and outcome",
     "Exit `1` reports the classified delta",
     "Exit `2` reports `planning reconcile unavailable`",
 ]:
@@ -937,6 +944,9 @@ for phrase in [
     "| Planning comparator | `docs/dev/_mods/engage-reconcile.py` |",
     ".totalCount != (.items | length)",
     "--expected-source",
+    "--expected-window",
+    "--expected-outcome",
+    "every item shares the engaged item's exact window and outcome",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [

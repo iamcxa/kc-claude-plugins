@@ -40,14 +40,17 @@ Continue by the selected profile's smallest sufficient route.
    added, removed, changed, or moved. Normalize both sets into ephemeral JSON
    lists whose items contain `source`, `planning-window`,
    `planning-outcome`, `accepted-goal`, and string-list `non-goals`. Do
-   not commit or reuse those files.
+   not commit or reuse those files. Refuse the snapshot unless every item
+   shares the exact window and outcome read from the engaged item.
 6. Invoke the repository-local read-only engage comparator.
 
    ```bash
    python3 <planning-comparator> \
      --snapshot <ephemeral-snapshot-json> \
      --current <ephemeral-current-json> \
-     --expected-source <exact-work-item-source>
+     --expected-source <exact-work-item-source> \
+     --expected-window <exact-work-item-planning-window> \
+     --expected-outcome <exact-work-item-planning-outcome>
    ```
 
    Exit `0` continues. Exit `1` reports the classified delta and stops

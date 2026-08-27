@@ -112,7 +112,9 @@ The scheduling fields are named because a queue answered by query is the point:
 `--where sprint=X --where sprint-readiness=ready` selects the admitted snapshot
 without reading every queued item. The planning provider still owns which
 windows and outcomes exist; the `sprint` value only groups the SD execution
-records materialized from that accepted selection.
+records materialized from that accepted selection. At engage, the comparator
+must bind the exact engaged source, window, and outcome and reject a snapshot
+whose members do not all share that planning scope.
 
 The Captain checks the bar on every `backlog` exit, at profile selection.
 A reused profile receipt answers which route the item takes, never whether the

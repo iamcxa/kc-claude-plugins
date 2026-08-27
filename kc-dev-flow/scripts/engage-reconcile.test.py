@@ -12,6 +12,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 COMPARATOR = HERE / "engage-reconcile.py"
+DEFAULT_WINDOW = "2026-W35"
+DEFAULT_OUTCOME = "provider-neutral execution"
 
 
 def require(condition: bool, message: str) -> None:
@@ -22,15 +24,19 @@ def require(condition: bool, message: str) -> None:
 def item(source: str) -> dict[str, object]:
     return {
         "source": source,
-        "planning-window": "2026-W35",
-        "planning-outcome": "provider-neutral execution",
+        "planning-window": DEFAULT_WINDOW,
+        "planning-outcome": DEFAULT_OUTCOME,
         "accepted-goal": "Dispatch only the admitted Ready set",
         "non-goals": ["provider write-back", "polling"],
     }
 
 
 def invoke(
-    snapshot: Path, current: Path, expected_source: str
+    snapshot: Path,
+    current: Path,
+    expected_source: str,
+    expected_window: str = DEFAULT_WINDOW,
+    expected_outcome: str = DEFAULT_OUTCOME,
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
@@ -42,6 +48,10 @@ def invoke(
             str(current),
             "--expected-source",
             expected_source,
+            "--expected-window",
+            expected_window,
+            "--expected-outcome",
+            expected_outcome,
         ],
         text=True,
         capture_output=True,
@@ -49,7 +59,11 @@ def invoke(
 
 
 def run_text(
-    snapshot: str, current: str, expected_source: str
+    snapshot: str,
+    current: str,
+    expected_source: str,
+    expected_window: str = DEFAULT_WINDOW,
+    expected_outcome: str = DEFAULT_OUTCOME,
 ) -> subprocess.CompletedProcess[str]:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
         root = Path(temporary)
@@ -57,17 +71,31 @@ def run_text(
         current_path = root / "current.json"
         snapshot_path.write_text(snapshot, encoding="utf-8")
         current_path.write_text(current, encoding="utf-8")
-        return invoke(snapshot_path, current_path, expected_source)
+        return invoke(
+            snapshot_path,
+            current_path,
+            expected_source,
+            expected_window,
+            expected_outcome,
+        )
 
 
 def run(
     snapshot: list[dict[str, object]],
     current: list[dict[str, object]],
     expected_source: str | None = None,
+    expected_window: str = DEFAULT_WINDOW,
+    expected_outcome: str = DEFAULT_OUTCOME,
 ) -> subprocess.CompletedProcess[str]:
     if expected_source is None:
         expected_source = str(snapshot[0]["source"]) if snapshot else "issue:missing"
-    return run_text(json.dumps(snapshot), json.dumps(current), expected_source)
+    return run_text(
+        json.dumps(snapshot),
+        json.dumps(current),
+        expected_source,
+        expected_window,
+        expected_outcome,
+    )
 
 
 def run_alias(document: str, expected_source: str) -> subprocess.CompletedProcess[str]:
@@ -135,6 +163,53 @@ expect_error(
     run([item("<issue>")], [item("<issue>")]),
     "snapshot item 0 has invalid source",
 )
+for sentinel_field in ("source", "planning-window", "planning-outcome", "accepted-goal"):
+    sentinel_item = item("issue:sentinel")
+    sentinel_item[sentinel_field] = "TBD"
+    expect_error(
+        f"sentinel {sentinel_field}",
+        run([sentinel_item], [sentinel_item]),
+        f"snapshot item 0 has invalid {sentinel_field}",
+    )
+sentinel_non_goal = item("issue:sentinel-non-goal")
+sentinel_non_goal["non-goals"] = ["TBD"]
+expect_error(
+    "sentinel non-goal",
+    run([sentinel_non_goal], [sentinel_non_goal]),
+    "snapshot item 0 has invalid non-goals",
+)
+
+punctuated_item = item("issue:punctuation")
+punctuated_item["planning-outcome"] = "[MVP] provider-neutral execution"
+punctuated_item["accepted-goal"] = ">99% successful dispatch"
+punctuated_item["non-goals"] = ["*No* provider writes"]
+require(
+    run(
+        [punctuated_item],
+        [punctuated_item],
+        expected_outcome="[MVP] provider-neutral execution",
+    ).returncode
+    == 0,
+    "valid leading punctuation was rejected",
+)
+
+wrong_scope = item("issue:wrong-scope")
+wrong_scope["planning-window"] = "2026-W36"
+expect_error(
+    "engaged source scope mismatch",
+    run([wrong_scope], [wrong_scope]),
+    "snapshot engaged source does not match expected planning scope",
+)
+mixed_scope = item("issue:mixed-scope")
+mixed_scope["planning-outcome"] = "different outcome"
+expect_error(
+    "mixed snapshot scope",
+    run(
+        [item("issue:scope-anchor"), mixed_scope],
+        [item("issue:scope-anchor"), mixed_scope],
+    ),
+    "snapshot source is outside expected planning scope: issue:mixed-scope",
+)
 expect_error(
     "malformed JSON",
     run_text("[", json.dumps([item("issue:1")]), "issue:1"),
@@ -149,6 +224,19 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
         invoke(root / "missing.json", current_path, "issue:1"),
         "cannot read snapshot",
     )
+
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
+    root = Path(temporary)
+    snapshot_path = root / "snapshot.json"
+    current_path = root / "current.json"
+    snapshot_bytes = json.dumps([item("issue:read-only")]).encode()
+    current_bytes = bytes(snapshot_bytes)
+    snapshot_path.write_bytes(snapshot_bytes)
+    current_path.write_bytes(current_bytes)
+    completed = invoke(snapshot_path, current_path, "issue:read-only")
+    require(completed.returncode == 0, "read-only probe did not compare cleanly")
+    require(snapshot_path.read_bytes() == snapshot_bytes, "snapshot input was modified")
+    require(current_path.read_bytes() == current_bytes, "current input was modified")
 
 expect_json(
     "membership delta",

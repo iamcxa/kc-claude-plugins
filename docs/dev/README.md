@@ -198,8 +198,10 @@ planning reader for the union of the snapshot's `planning-window`/
 outside those bounds. Refuse a truncated result. Compare that union with every
 committed SD entity sharing its `sprint`: source membership, window, outcome,
 accepted outcome, and non-goals. Normalize both sets into ephemeral JSON lists
-and run the bound planning comparator with `--expected-source` set to the
-exact engaged work item's `source`. Exit `0` continues; exit `1` reports
+and refuse the snapshot unless every item shares the engaged item's exact
+window and outcome. Run the bound planning comparator with `--expected-source`,
+`--expected-window`, and `--expected-outcome` set to the exact engaged work
+item values. Exit `0` continues; exit `1` reports
 added, removed, changed, and moved items and stops before new dispatch or state
 mutation; exit `2` reports unavailable input and stops. The Captain admits
 every delta before an authorized actor commits the replacement snapshot. Do not
