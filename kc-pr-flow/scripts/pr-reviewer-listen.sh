@@ -17,7 +17,9 @@ GH="${GH:-gh}"
 JQ="${JQ:-jq}"
 OPEN=/usr/bin/open
 
-SELF="${BASH_SOURCE[0]}"
+# Menu callbacks re-enter through whatever the menu-bar host launched, which may be
+# a wrapper that sets the environment this run depends on.
+SELF="${PR_LISTEN_SELF:-${BASH_SOURCE[0]}}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$SCRIPT_DIR/backends"
 PROMPT_TMPL="${PR_LISTEN_PROMPT:-$SCRIPT_DIR/../reference/reviewer-dispatch-prompt.md}"
