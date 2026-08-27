@@ -57,8 +57,8 @@ Non-goals:
 - No automatic Conductor Cloud dispatch.
 - No multi-Issue or multi-agent package.
 - No new hand-maintained JSON manifest.
-- No GitHub and Spacedock status synchronization.
-- No new Spacedock stage or serialized `sprint` field rename.
+- No GitHub/Spacedock status synchronization.
+- No new SD stage or serialized `sprint` field rename.
 - No change to POC, Pilot, or Production lifecycle depth.
 - Admission grants no commit, pull-request, merge, release, or publication authority.
 
