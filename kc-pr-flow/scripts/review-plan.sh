@@ -333,6 +333,7 @@ def operational_repository(binding):
             os.write(descriptor, b"ref: refs/heads/detached\n")
         finally:
             os.close(descriptor)
+        metadata_test_barrier(git_dir)
         environment = safe_git_environment()
         environment.update({
             "GIT_ALTERNATE_OBJECT_DIRECTORIES": "",
@@ -347,6 +348,12 @@ def operational_repository(binding):
             "--work-tree=" + binding["worktree"]["path"],
             "-c", "core.commitGraph=false",
             "-c", "core.multiPackIndex=false",
+            "-c", "core.quotePath=true",
+            "-c", "diff.algorithm=myers",
+            "-c", "diff.external=",
+            "-c", "diff.indentHeuristic=false",
+            "-c", "diff.mnemonicPrefix=false",
+            "-c", "diff.noprefix=false",
         ]
         yield arguments, environment
 
@@ -371,7 +378,7 @@ def run_git(arguments, binding=None):
         )
 
 
-def read_blob(binding, object_id, limit):
+def read_object(binding, object_id, expected_type, limit):
     with operational_repository(binding) as (prefix, environment):
         process = subprocess.Popen(
             prefix + ["cat-file", "--batch"],
@@ -387,7 +394,8 @@ def read_blob(binding, object_id, limit):
             if len(header) > 256 or not header.endswith(b"\n"):
                 raise OSError
             fields = header.decode("ascii").strip().split()
-            if len(fields) != 3 or fields[0] != object_id or fields[1] != "blob" or not fields[2].isdigit():
+            if (len(fields) != 3 or fields[0] != object_id or fields[1] != expected_type
+                    or not fields[2].isdigit()):
                 raise OSError
             object_size = int(fields[2])
             if object_size > limit:
@@ -411,6 +419,50 @@ def read_blob(binding, object_id, limit):
                 process.kill()
             process.wait()
             raise
+
+
+def commit_parents(data, object_id_length):
+    header, separator, _ = data.partition(b"\n\n")
+    if not separator or b"\x00" in header:
+        raise OSError
+    tree_count = 0
+    parents = []
+    for line in header.split(b"\n"):
+        if line.startswith(b"tree "):
+            tree_count += 1
+            value = line[5:]
+            if len(value) != object_id_length or any(ch not in b"0123456789abcdef" for ch in value):
+                raise OSError
+        elif line.startswith(b"parent "):
+            value = line[7:]
+            if len(value) != object_id_length or any(ch not in b"0123456789abcdef" for ch in value):
+                raise OSError
+            parents.append(value.decode("ascii"))
+        elif line.startswith((b"tree", b"parent")):
+            raise OSError
+    if tree_count != 1:
+        raise OSError
+    return parents
+
+
+def raw_is_ancestor(binding, ancestor, descendant, traversal_limit, commit_limit):
+    pending = [descendant]
+    visited = set()
+    while pending:
+        current = pending.pop()
+        if current in visited:
+            continue
+        if len(visited) >= traversal_limit:
+            raise OSError
+        visited.add(current)
+        data = read_object(binding, current, "commit", commit_limit)
+        if current == ancestor:
+            return True
+        parents = commit_parents(data, len(current))
+        if ancestor in parents:
+            return True
+        pending.extend(parent for parent in parents if parent not in visited)
+    return False
 
 
 def discover_repository(root_descriptor, expected_root):
@@ -533,6 +585,22 @@ def after_open_test_barrier():
         raise OSError
 
 
+def metadata_test_barrier(git_dir):
+    ready = os.environ.get("KC_PR_FLOW_TEST_METADATA_READY_FD")
+    proceed = os.environ.get("KC_PR_FLOW_TEST_METADATA_PROCEED_FD")
+    if ready is None and proceed is None:
+        return
+    if ready is None or proceed is None or not ready.isdigit() or not proceed.isdigit():
+        raise OSError
+    ready_fd = int(ready)
+    proceed_fd = int(proceed)
+    if ready_fd < 3 or proceed_fd < 3:
+        raise OSError
+    os.write(ready_fd, (git_dir + "\n").encode("utf-8"))
+    if not os.read(proceed_fd, 1):
+        raise OSError
+
+
 try:
     operation = sys.argv[1]
     if operation == "bind" and len(sys.argv) == 3:
@@ -581,13 +649,36 @@ try:
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         os.fchdir(descriptors[0])
-        data = read_blob(binding, object_id, int(limit))
+        data = read_object(binding, object_id, "blob", int(limit))
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
         if b"\x00" in data:
             raise OSError
         data.decode("utf-8")
+    elif operation == "ancestor" and len(sys.argv) == 7:
+        binding = closed_binding(json.loads(sys.argv[2]))
+        ancestor = sys.argv[3]
+        descendant = sys.argv[4]
+        traversal_limit = sys.argv[5]
+        commit_limit = sys.argv[6]
+        for object_id in (ancestor, descendant):
+            if len(object_id) not in (40, 64) or any(ch not in "0123456789abcdef" for ch in object_id):
+                raise ValueError
+        if (not traversal_limit.isdigit() or int(traversal_limit) < 1 or int(traversal_limit) > 100000
+                or not commit_limit.isdigit() or int(commit_limit) < 1 or int(commit_limit) > 4194304):
+            raise ValueError
+        descriptors = validate_binding(binding)
+        after_open_test_barrier()
+        close_descriptors(descriptors)
+        descriptors = validate_binding(binding)
+        close_descriptors(descriptors)
+        is_ancestor = raw_is_ancestor(
+            binding, ancestor, descendant, int(traversal_limit), int(commit_limit)
+        )
+        descriptors = validate_binding(binding)
+        close_descriptors(descriptors)
+        raise SystemExit(0 if is_ancestor else 1)
     else:
         raise ValueError
 except (IndexError, KeyError, OSError, TypeError, UnicodeError, ValueError, json.JSONDecodeError):
@@ -626,15 +717,24 @@ review_plan_git_identity_valid() {
 }
 
 review_plan_ancestor() {
-  review_plan_git "$1" merge-base --is-ancestor "$2" "$3"
+  local traversal_limit commit_limit
+  traversal_limit="${KC_PR_FLOW_MAX_PLAN_ANCESTRY_COMMITS:-10000}"
+  commit_limit="${KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES:-1048576}"
+  [[ "$traversal_limit" =~ ^[1-9][0-9]*$ ]] || return 2
+  [[ "$commit_limit" =~ ^[1-9][0-9]*$ ]] || return 2
+  [ "$traversal_limit" -le 100000 ] && [ "$commit_limit" -le 4194304 ] || return 2
+  review_plan_worktree_adapter ancestor "$1" "$2" "$3" "$traversal_limit" "$commit_limit"
 }
 
 review_plan_changed_paths() {
-  review_plan_git "$1" diff --name-status --find-renames=50% --find-copies=50% --find-copies-harder "$2..$3"
+  review_plan_git "$1" diff --name-status --no-ext-diff --no-textconv --no-color \
+    --diff-algorithm=myers --no-indent-heuristic --find-renames=50% --find-copies=50% \
+    --find-copies-harder "$2..$3"
 }
 
 review_plan_changed_diff() {
-  review_plan_git "$1" diff --unified=0 --no-ext-diff --no-textconv --no-renames --no-color "$2..$3"
+  review_plan_git "$1" diff --unified=0 --no-ext-diff --no-textconv --no-renames --no-color \
+    --diff-algorithm=myers --no-indent-heuristic --src-prefix=a/ --dst-prefix=b/ "$2..$3"
 }
 
 review_plan_changed_object_is_safe() {

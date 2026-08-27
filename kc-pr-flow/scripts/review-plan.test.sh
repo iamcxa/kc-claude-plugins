@@ -1441,6 +1441,89 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'in-place shallow metadata cannot hide real ancestry' '0' "$?"
     rm "$router_repo/.git/shallow"
 
+    merge_child="$(printf 'merge child\n' | git -C "$router_repo" commit-tree "$empty_tree" \
+      -p "$graft_root_one" -p "$graft_root_two")"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$merge_child"
+    assert_eq 'raw traversal follows the first merge parent' '0' "$?"
+    review_plan_ancestor "$router_binding" "$graft_root_two" "$merge_child"
+    assert_eq 'raw traversal follows the second merge parent' '0' "$?"
+    review_plan_ancestor "$router_binding" "$merge_child" "$graft_root_one"
+    assert_not_zero 'raw traversal does not reverse a merge edge' "$?"
+    KC_PR_FLOW_MAX_PLAN_ANCESTRY_COMMITS=1 \
+      review_plan_ancestor "$router_binding" "$base_sha" "$merge_child"
+    assert_not_zero 'raw traversal limit fails closed' "$?"
+
+    metadata_watch_parent="$TEST_ROOT/metadata-watch"
+    mkdir -m 700 "$metadata_watch_parent"
+    for metadata_attempt in 1 2 3 4 5; do
+      metadata_ready="$TEST_ROOT/metadata-ready-$metadata_attempt"
+      metadata_proceed="$TEST_ROOT/metadata-proceed-$metadata_attempt"
+      mkfifo "$metadata_ready" "$metadata_proceed"
+      (
+        IFS= read -r injected_git_dir <"$metadata_ready"
+        mkdir -p "$injected_git_dir/info"
+        printf '%s %s\n' "$graft_root_two" "$graft_root_one" >"$injected_git_dir/info/grafts"
+        printf '%s\n' "$graft_root_two" >"$injected_git_dir/shallow"
+        printf '[core]\n\tworktree = %s\n' "$poison_repo" >"$injected_git_dir/config"
+        printf '%s\n' "$poison_repo/.git" >"$injected_git_dir/commondir"
+        printf 'continue\n' >"$metadata_proceed"
+      ) &
+      metadata_watcher=$!
+      exec 8<>"$metadata_ready"
+      exec 9<>"$metadata_proceed"
+      metadata_output="$(TMPDIR="$metadata_watch_parent" KC_PR_FLOW_TEST_METADATA_READY_FD=8 \
+        KC_PR_FLOW_TEST_METADATA_PROCEED_FD=9 \
+        review_plan_ancestor "$router_binding" "$graft_root_one" "$graft_root_two" 2>/dev/null)"
+      metadata_status=$?
+      exec 8>&-
+      exec 9>&-
+      wait "$metadata_watcher"
+      assert_not_zero "TMPDIR metadata watcher attempt $metadata_attempt cannot manufacture ancestry" \
+        "$metadata_status"
+      assert_eq "TMPDIR metadata watcher attempt $metadata_attempt releases no output" '' "$metadata_output"
+    done
+
+    run_injected_metadata_command() {
+      local description="$1" expected_status="$2" expected_output="$3"
+      shift 3
+      metadata_attempt=$((metadata_attempt + 1))
+      metadata_ready="$TEST_ROOT/metadata-ready-$metadata_attempt"
+      metadata_proceed="$TEST_ROOT/metadata-proceed-$metadata_attempt"
+      mkfifo "$metadata_ready" "$metadata_proceed"
+      (
+        IFS= read -r injected_git_dir <"$metadata_ready"
+        mkdir -p "$injected_git_dir/info"
+        printf '%s %s\n' "$graft_root_two" "$graft_root_one" >"$injected_git_dir/info/grafts"
+        printf '%s\n' "$graft_root_two" >"$injected_git_dir/shallow"
+        printf '[core]\n\tworktree = %s\n[diff]\n\tnoprefix = true\n' \
+          "$poison_repo" >"$injected_git_dir/config"
+        printf '%s\n' "$poison_repo/.git" >"$injected_git_dir/commondir"
+        printf 'continue\n' >"$metadata_proceed"
+      ) &
+      metadata_watcher=$!
+      exec 8<>"$metadata_ready"
+      exec 9<>"$metadata_proceed"
+      metadata_output="$(TMPDIR="$metadata_watch_parent" KC_PR_FLOW_TEST_METADATA_READY_FD=8 \
+        KC_PR_FLOW_TEST_METADATA_PROCEED_FD=9 "$@" 2>/dev/null)"
+      metadata_status=$?
+      exec 8>&-
+      exec 9>&-
+      wait "$metadata_watcher"
+      assert_eq "$description status is stable under injected metadata" "$expected_status" "$metadata_status"
+      assert_eq "$description output is stable under injected metadata" "$expected_output" "$metadata_output"
+    }
+
+    metadata_paths="$(review_plan_changed_paths "$router_binding" "$reviewed_sha" "$fixed_sha")"
+    metadata_diff="$(review_plan_changed_diff "$router_binding" "$reviewed_sha" "$fixed_sha")"
+    metadata_blob="$(review_plan_git "$router_binding" rev-parse "$fixed_sha:src/parser.py")"
+    run_injected_metadata_command changed-paths 0 "$metadata_paths" \
+      review_plan_changed_paths "$router_binding" "$reviewed_sha" "$fixed_sha"
+    run_injected_metadata_command changed-diff 0 "$metadata_diff" \
+      review_plan_changed_diff "$router_binding" "$reviewed_sha" "$fixed_sha"
+    run_injected_metadata_command blob-read 0 '' \
+      review_plan_blob_is_safe "$router_binding" "$metadata_blob"
+
     real_git="$(command -v git)"
     run_open_fd_race() {
       local replacement_kind="$1" race_repo race_lines race_base race_reviewed race_fixed
@@ -1540,6 +1623,9 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     common_swap_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$common_swap_lines")"
     git -C "$common_swap_main" worktree add -q "$common_swap_linked" "$common_swap_fixed"
     common_swap_binding="$(review_plan_worktree_binding "$common_swap_linked")"
+    common_swap_base="$(awk -F= '$1 == "base" { print $2 }' <<<"$common_swap_lines")"
+    review_plan_ancestor "$common_swap_binding" "$common_swap_base" "$common_swap_fixed"
+    assert_eq 'raw traversal preserves linked-worktree ancestry' '0' "$?"
     common_swap_path="$(jq -r '.common_dir.path' <<<"$common_swap_binding")"
     mv "$common_swap_path" "$common_swap_path-held"
     cp -R "$poison_repo/.git" "$common_swap_path"
