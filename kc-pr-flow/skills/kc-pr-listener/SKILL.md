@@ -64,6 +64,7 @@ with the backend's reason and an `attempts` count.
 | Symptom | Cause to check first |
 |---------|----------------------|
 | No menu-bar icon at all | SwiftBar was never granted a plugin folder. Open SwiftBar, set it to the folder the installer printed. |
+| Icon gone after a reboot | The host is not launched at login. Toggle **Start at login** in the menu; if the row reads `unknown`, macOS refused Automation permission for System Events and the menu-bar app needs it granted. |
 | Icon shows `off` | `master` is false. Click **Resume listening**. |
 | Icon shows `!` | `last_error` in state — usually `gh` auth expired. |
 | Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Clear one with the row's **retry**. |

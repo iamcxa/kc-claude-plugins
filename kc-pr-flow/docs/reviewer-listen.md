@@ -60,6 +60,7 @@ by accident.
 - **Finished reviews** — the last six completed reviews. This section exists because a reviewed PR *disappears* from the request list: GitHub drops it from review-requested the moment a review is submitted.
 - **Listening repos** — every repo that has appeared, click to toggle. New repos start **on**, so a request in a new repo needs no configuration.
 - **Pause / Resume listening** — polling and completion checks continue; only dispatch stops.
+- **Start at login** — toggles whether the menu-bar host is launched at login. The host's own preference is not scriptable, so this drives the login-item list, which needs Automation permission for System Events; the row reads `unknown` if that is refused. Use one mechanism or the other, not both.
 
 ## Behaviour worth knowing
 

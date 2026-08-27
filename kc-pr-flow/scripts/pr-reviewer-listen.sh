@@ -175,6 +175,27 @@ poll() {
   done < <("$JQ" -r '.open[] | [.repository.nameWithOwner, (.number|tostring), .url, (.isDraft|tostring)] | @tsv' "$STATE" 2>/dev/null)
 }
 
+# The menu-bar host's own "start at login" setting is not scriptable, so autostart
+# is driven through the login-item list instead. Reading or changing it needs
+# Automation permission for System Events, which macOS prompts for on first use and
+# which the menu reports as "unknown" if refused.
+HOST_APP="${PR_LISTEN_HOST_APP:-/Applications/SwiftBar.app}"
+
+login_state() { # on | off | unknown
+  local names
+  names=$(/usr/bin/osascript -e 'tell application "System Events" to get the name of every login item' 2>/dev/null) \
+    || { echo unknown; return; }
+  if grep -qF "$(basename "$HOST_APP" .app)" <<<"$names"; then echo on; else echo off; fi
+}
+
+login_toggle() {
+  if [[ "$(login_state)" == "on" ]]; then
+    /usr/bin/osascript -e "tell application \"System Events\" to delete login item \"$(basename "$HOST_APP" .app)\"" >/dev/null 2>&1
+  else
+    /usr/bin/osascript -e "tell application \"System Events\" to make login item at end with properties {path:\"$HOST_APP\", hidden:false}" >/dev/null 2>&1
+  fi
+}
+
 menu_label() { printf '%s' "${1//|/／}"; }   # a literal pipe would end the SwiftBar line
 
 render() {
@@ -249,6 +270,7 @@ render() {
   echo "Refresh now | refresh=true"
   echo "Backend: $(cfg_get '.backend // "conductor"') · notify via $(cfg_get '.notify_via // "terminal-notifier"') | bash=\"$SELF\" param1=toggle-notify terminal=false refresh=true"
   echo "Open log | bash=\"$SELF\" param1=log terminal=false"
+  echo "Start at login: $(login_state) | bash=\"$SELF\" param1=toggle-login terminal=false refresh=true"
   echo "Last poll: $last | color=#888888"
 }
 
@@ -261,6 +283,7 @@ case "${1:-}" in
   forget)        st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;
+  toggle-login)  login_toggle; exit 0 ;;
   poll-only)     check_completions; poll; exit $? ;;
 esac
 
