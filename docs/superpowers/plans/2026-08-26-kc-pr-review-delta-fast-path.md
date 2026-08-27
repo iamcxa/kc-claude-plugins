@@ -2,9 +2,16 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build Phase 1's exact-head `initial`/`delta`/`resolve` router, trusted predecessor receipt, default-off skill wiring, and promotion evidence for a four-minute post-fix path with 100% known-finding recall.
+**Goal:** Build and repair Phase 1's exact-head `initial`/`delta`/`resolve` router, trusted
+predecessor receipt, default-off skill wiring, and structural scorer without claiming latency
+promotion before independent actual-run evidence exists.
 
-**Architecture:** A new source-safe Bash helper replays the existing typed review runtime to mint and verify a closed delta receipt, then inspects local Git ancestry and the unseen range to emit an advisory review plan. The existing runtime adds local monotonic timing receipts; a separate scorer promotes the feature only after ordered identity, coverage, recall, precision, behavior, and latency gates pass. Posting stays entirely in `review-post.sh` and keeps its current exact-head and human-authorization contracts.
+**Architecture:** A source-safe Bash helper replays the existing typed review runtime to mint and
+verify a closed delta receipt, then inspects local Git ancestry and every unseen hunk to emit an
+advisory review plan. The existing runtime records local monotonic timing, the skill revalidates
+that plan and mechanically constrains events at existing confirmation/posting seams, and the committed synthetic
+scorer remains structural with a fixed `do_not_promote` verdict. Posting stays entirely in
+`review-post.sh` and keeps its current exact-head and human-authorization contracts.
 
 **Tech Stack:** Bash 3.2, `jq`, Python 3.8+ safe-I/O helper, local Git, JSON/JSONL fixtures, GitHub Actions, ShellCheck v0.9.0.
 
@@ -16,27 +23,64 @@
 - `KC_PR_FLOW_DELTA_FAST_PATH=on` is the only enabling value; unset or any other value keeps the current full-review route.
 - `ReviewDeltaReceipt/v1`, `ReviewPlanDecision/v1`, and `ReviewTiming/v1` use closed key sets and canonical `jq -S -c` hashing.
 - A predecessor is trusted only after `review-runtime.sh replay` succeeds and identity, review key, receipt content hash, base, config, and ancestry all match.
+- Every projected Phase 1 lane is treated as required and must finish `succeeded`; any `failed`,
+  `unavailable`, or non-empty `uncertain_candidate_ids` state prevents receipt issuance/validation
+  and selects `initial`.
 - Missing, malformed, unsafe, stale, non-ancestor, rewritten, changed-base, config-incompatible, or unknown state selects `initial`.
+- `resolve` requires every changed hunk and every security/dependency/workflow signal to map to one
+  replay-derived known finding, contract, or test boundary. Safe unmapped work selects `delta`;
+  ambiguous or unsafe work selects `initial`.
 - A required coverage gap caps authority at `COMMENT`; no script may emit a semantic correctness, security, goal-achievement, or final review verdict.
+- For any non-`initial` plan, the plan ceiling is revalidated before legacy/typed confirmation,
+  after event edits, for autonomous gates, and immediately before posting. `COMMENT` never permits
+  `APPROVE`.
 - Known predecessor must-fix findings remain inherited until current-head evidence resolves them; silence is not resolution.
 - Preserve Step 2.1 exact-head checks, Step 6a quote-the-line verification, Step 6c human confirmation, and Step 7 closed posting authority.
 - `review-post.sh` remains the only posting/reconcile/network authority and is not modified by this plan.
 - Feature commits do not edit plugin versions; release-please owns versioning.
 - Stage explicit paths; never use `git add .`.
 - Run CI's ShellCheck v0.9.0 against every changed review shell file before the final task commit.
+- The committed synthetic corpus is structural evidence only and must emit `do_not_promote`.
+  Actual independently adjudicated control/treatment artifacts and runtime-observed timing require
+  separate Captain authorization; this plan performs no paid run.
+
+## Captain-approved revision (2026-08-27)
+
+The Captain approved this exact amendment after the full-branch review. It changes neither the
+Phase 1 seam nor the counted surface set; it strengthens lifecycle obligations and withdraws the
+unsupported synthetic promotion claim.
+
+| Surface | Pre-revision obligation | Revised obligation |
+|---|---|---|
+| `review-plan.sh` plus delta receipt/plan schemas | Receipt replay and changed-path route | Same surface; successful/uncertainty-free receipt, per-hunk/signal route, and per-Git-operation worktree gate |
+| `review-runtime.sh` plus timing schema | Local monotonic timing | Same surface; only timing recorded at actual workflow boundaries is promotion-capable |
+| `kc-pr-review/SKILL.md` confirmation/post seam | Store `PLAN_EVENT_CEILING` | Same seam; mechanically enforce the ceiling through legacy, typed, autonomous, and post paths |
+| `review-latency-benchmark.sh` plus committed corpus | Synthetic Q1-Q6 promotion fixture | Same surface; structural Q1-Q6 tests with fixed `do_not_promote` |
+| Existing plan/runtime/evaluation CI workflows | Phase 1 behavioral ownership | Same triggers/jobs; no new hosted or paid execution |
+
+The revised outcome is a safe, default-off, **unpromoted** Phase 1 foundation. The four-minute and
+100% must-fix targets remain future promotion criteria. Phases 2-6, specialist reduction, posting
+ownership, human confirmation, actual evidence collection, and paid model/provider runs remain
+non-goals. Rollback remains setting `KC_PR_FLOW_DELTA_FAST_PATH` to anything except `on`; receipts
+remain readable and do not gain authority.
+
+The revision is falsified if a same-file unrelated/security hunk selects `resolve`; a failed,
+unavailable, or uncertain predecessor is trusted; `APPROVE` crosses a `COMMENT` ceiling; a Git
+operation lacks an immediately preceding worktree validation; the synthetic corpus promotes; or a
+four-field router trace is called byte-identical end-to-end behavior.
 
 ## File map
 
 | File | Responsibility |
 |---|---|
-| `kc-pr-flow/scripts/review-plan.sh` | Source-safe receipt producer/validator and exact-head mode router; no model, network, event, confirmation, or posting authority |
-| `kc-pr-flow/scripts/review-plan.test.sh` | Bash 3.2 contract tests for receipt trust, routing, rollback, source safety, and PR #1693 replay |
+| `kc-pr-flow/scripts/review-plan.sh` | Source-safe receipt producer/validator and per-hunk exact-head router; no model, network, confirmation, or posting authority |
+| `kc-pr-flow/scripts/review-plan.test.sh` | Bash 3.2 contract tests for receipt trust, hunk/signal routing, ceiling enforcement, rollback, source safety, and PR #1693 replay |
 | `kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json` | Sanitized immutable lineage, findings, changed-path classes, and expected Phase 1 decision |
 | `kc-pr-flow/scripts/review-runtime.sh` | Existing receipt authority plus bounded local monotonic timing commands |
 | `kc-pr-flow/scripts/review-runtime.test.sh` | Timing schema, identity, monotonicity, file-safety, and no-network tests |
-| `kc-pr-flow/scripts/review-latency-benchmark.sh` | Source-safe ordered Phase 1 promotion scorer; consumes bound control/treatment evidence only |
-| `kc-pr-flow/scripts/review-latency-benchmark.test.sh` | Gate ordering, 100% recall, precision parity, 240-second ceiling, and mutation-resistance tests |
-| `kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl` | Sanitized control/treatment pairs for Phase 1 promotion scoring |
+| `kc-pr-flow/scripts/review-latency-benchmark.sh` | Source-safe ordered Phase 1 structural scorer; cannot promote synthetic evidence |
+| `kc-pr-flow/scripts/review-latency-benchmark.test.sh` | Gate ordering, simulated recall/precision/latency, mutation resistance, and fixed `do_not_promote` tests |
+| `kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl` | Synthetic structural control/treatment shapes; never actual promotion evidence |
 | `kc-pr-flow/skills/kc-pr-review/SKILL.md` | Minimal default-off routing invocation before current triage; preserves all judgment and posting gates |
 | `kc-pr-flow/reference/review-triage.md` | Mode semantics, focused-lane obligations, fallback, timing boundary, and user-visible triage output |
 | `kc-pr-flow/reference/review-runtime.md` | Delta receipt, plan decision, timing schema, CLI, failure policy, and authority boundary |
@@ -82,6 +126,11 @@ assert_eq "finding IDs come from replay" \
 
 Add negative assertions for symlink/FIFO/oversized input, incomplete runtime lifecycle, duplicate JSON members, arbitrary `receipt_id`, changed `content_sha256`, changed `finding_id`, extra top-level/member keys, and missing evidence hashes. Stub `gh`, `curl`, `wget`, `ssh`, `codex`, and `agy` to exit 97 and assert the call ledger remains empty.
 
+Add three predecessor-completeness negatives by replaying otherwise valid events with one lane
+terminal changed to `failed`, one changed to `unavailable`, and one non-empty
+`uncertain_candidate_ids` array. Both `receipt` production and receipt validation must reject each
+case; none may produce a delta receipt with an `APPROVE`-capable route.
+
 - [ ] **Step 2: Run RED and record the expected failure**
 
 Run:
@@ -114,7 +163,11 @@ review_plan_content_sha256() {
 review_plan_build_receipt() (
   local event_file="$1" projection projection_hash receipt_id canonical content_sha256
   projection="$(review_runtime_replay "$event_file")" || return 3
-  jq -e '.lifecycle.complete == true' >/dev/null <<<"$projection" || return 3
+  jq -e '
+    .lifecycle.complete == true and
+    .uncertain_candidate_ids == [] and
+    (.lanes | length > 0 and all(.[]; .result.terminal_status == "succeeded"))
+  ' >/dev/null <<<"$projection" || return 3
   projection_hash="$(printf '%s' "$projection" | jq -S -c . | review_runtime_sha256)" || return
   receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$projection")|$projection_hash" |
     review_runtime_sha256)" || return
@@ -130,7 +183,7 @@ review_plan_build_receipt() (
         receipt_id:$receipt_id
       },
       known_findings:(.findings | map({
-        finding_id,claim_key,
+        finding_id,claim_key,anchor_sha256,category,evidence,
         evidence_sha256:.evidence.content_sha256,
         path,side,resolution_state:"unresolved"
       }) | sort_by(.finding_id)),
@@ -151,7 +204,12 @@ receipt_id = sha256(run_id|review_key|projection_content_sha256)
 content_sha256 = sha256(canonical receipt without content_sha256)
 ```
 
-Validate safe tokens, 40/64-hex fields, normalized relative paths, `LEFT|RIGHT|FILE`, sorted unique arrays, `resolution_state == unresolved`, and equality against the fresh replay projection. Never trust a matching self-hash without checking projection-derived fields.
+Validate safe tokens, 40/64-hex fields, normalized relative paths, `LEFT|RIGHT|FILE`, sorted unique
+arrays, `resolution_state == unresolved`, the replay-derived `anchor_sha256`, `category`, and closed
+evidence pointer, every lane's `result.terminal_status == succeeded`, empty
+`uncertain_candidate_ids`, and equality against the fresh replay projection. A non-`git_blob`
+evidence pointer may remain inherited for `delta`, but cannot authorize a `resolve` hunk. Never
+trust a matching self-hash without checking projection-derived fields.
 
 - [ ] **Step 4: Implement the receipt CLI and source-safety gate**
 
@@ -208,7 +266,9 @@ git commit -m "feat(kc-pr-flow): add trusted review delta receipt"
 **Interfaces:**
 - Consumes: Task 1 `review_plan_validate_receipt`, exact `--repo/--pr/--base/--head/--config-hash`, safe local `--repo-worktree`, `--predecessor-events`, and `--delta-receipt`.
 - Produces: `review_plan_decide REPO PR BASE HEAD CONFIG WORKTREE EVENTS RECEIPT -> kc-pr-flow.review-plan-decision/v1` and CLI `review-plan.sh decide ...`.
-- Reason-code enum: `feature_disabled`, `missing_predecessor`, `invalid_predecessor`, `identity_mismatch`, `base_changed`, `config_changed`, `non_ancestor`, `ancestor_append`, `known_finding_delta`, `expanded_delta`, `unknown_delta`, `inherited_coverage_gap`.
+- Reason-code enum: `feature_disabled`, `missing_predecessor`, `invalid_predecessor`,
+  `identity_mismatch`, `base_changed`, `config_changed`, `non_ancestor`, `ancestor_append`,
+  `known_finding_delta`, `expanded_delta`, and `unknown_delta`.
 
 - [ ] **Step 1: Add the sanitized PR #1693 replay fixture**
 
@@ -264,10 +324,12 @@ Cover these table cases exactly:
 | flag off | router not invoked; existing `initial` flow | existing authority unchanged |
 | missing receipt/events | `initial` | `COMMENT` |
 | exact known path plus mechanically adjacent test | `resolve` | inherited ceiling |
+| same known path plus unrelated second hunk | `delta` | `COMMENT` |
+| same known path plus security-shaped append | `delta` or `initial` | never above `COMMENT` |
 | new unrelated path on ancestor append | `delta` | `COMMENT` until new required coverage completes |
 | force-push/non-ancestor | `initial` | `COMMENT` |
 | changed base or config | `initial` | `COMMENT` |
-| inherited required gap | `delta` | `COMMENT` |
+| failed/unavailable/uncertain predecessor | `initial` | existing initial authority only |
 | unsafe worktree/symlink | `initial` | `COMMENT` |
 
 Assert the output has only `schema`, `identity`, `mode`, `reason_codes`, `review_range`, `inherited_finding_ids`, `required_capabilities`, `event_ceiling`, and `fallback`.
@@ -344,13 +406,30 @@ review_plan_changed_paths() {
 }
 ```
 
-Call `review_plan_real_worktree` immediately before every `rev-parse`, `cat-file`, `merge-base`,
-`diff`, `show`, or other Git operation; no direct `git -C` call may exist outside
-`review_plan_git`. The helper rejects a final symlink, a symlinked parent path, a non-directory, or
-an unresolved path before Git receives it. A validation failure selects `initial`/`COMMENT` and
-never tries a similarity fallback.
+Call `review_plan_real_worktree` inside `review_plan_git` immediately before every `rev-parse`,
+`cat-file`, `merge-base`, `diff`, `ls-tree`, `show`, or other Git operation; no direct `git -C` call
+may exist outside `review_plan_git`, and no canonical path cached by the decision function may
+bypass the gate. The helper rejects a final symlink, symlinked parent, non-directory, unresolved
+path, or replacement before Git receives it. Add a deterministic test hook between two Git reads,
+replace the validated directory with another repository, and require `initial` with no mixed
+identity result.
 
-Classify `resolve` only when every changed path is either a known-finding path or a test/fixture that mechanically names/imports one known-finding module. Accept adjacency only when the test lives under `test`, `tests`, `__tests__`, or `fixtures` and `review_plan_git "$worktree" show "$head:$path"` contains the known module basename or import path as a fixed string. Rename, copy, binary, submodule, unsafe path, ambiguous import, or unknown status cannot select `resolve`.
+Obtain the unseen diff with `--unified=0 --no-ext-diff --no-renames` and parse every ordinary hunk,
+including multiple hunks in one known file. For each hunk, derive its old coordinate interval;
+treat a zero-length insertion as anchored at its old line. A hunk maps to a known finding only when
+the receipt carries replay-derived `git_blob` evidence for the predecessor head, the paths match,
+and the evidence line lies in that old interval. A contract/test/fixture hunk may map only when the
+path is mechanically classified as such and that **same hunk body** contains exactly one
+fixed-string reference to the finding's claim key, evidence locator, or normalized module path.
+File-level import presence never authorizes a different hunk.
+
+Classify security, dependency, and workflow signals per hunk/path before selecting `resolve`. A
+signal is mapped only when the same hunk already maps to a predecessor finding or required
+capability of the corresponding class. A safe ordinary hunk or signal with no mapping selects
+`delta`/`COMMENT`; an ambiguous mapping, malformed/combined diff, rename, copy, binary, submodule,
+unsafe path, unknown status, or unclassifiable signal selects `initial`. The unrelated append and
+`unrelated_authorization_bypass` security-shaped append from the full-branch review must never
+select `resolve` even when another hunk in that file fixes the known finding.
 
 For a trusted ancestor with any extra safe path, select `delta`, add `expanded_delta`, include `correctness` plus the predecessor required capabilities, and set `event_ceiling:COMMENT` until current-run coverage completes. Phase 1 does not implement shared inventory or risk-triggered specialists; current full-review security and specialist rules still apply after routing.
 
@@ -367,6 +446,9 @@ bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision
 ```
 
 Expected: all pass. Mutating any one identity field, receipt hash, finding evidence hash, ancestry edge, or fixture path either selects `initial`/`COMMENT` or rejects input; it never preserves `resolve`.
+
+Also require the same-known-file unrelated hunk, security-shaped append, failed lane, unavailable
+lane, uncertain candidate, and worktree replacement cases to fail closed as specified above.
 
 - [ ] **Step 6: Commit the router and replay**
 
@@ -390,7 +472,11 @@ git commit -m "feat(kc-pr-flow): route trusted post-fix reviews"
 
 **Interfaces:**
 - Consumes: Task 2 `review-plan.sh decide` and `ReviewPlanDecision/v1`.
-- Produces: one documented pre-triage routing seam. `initial` enters the current flow byte-for-byte; `delta` reviews the unseen range and all newly required capabilities; `resolve` dispatches one focused correctness lane and targeted verification while inheriting known finding IDs.
+- Produces: one documented pre-triage routing seam plus mechanical ceiling checks within the
+  existing confirmation/post seams. `initial`
+  preserves the current **planner state**; `delta` reviews the unseen range and all newly required
+  capabilities; `resolve` dispatches one focused correctness lane and targeted verification while
+  inheriting known finding IDs.
 - Preserves: current goal-achievement judgment, quote gate, tests/probe where activated, draft structure, two head checks, Step 6c confirmation, and Step 7 posting receipt.
 
 - [ ] **Step 1: Write failing skill/reference contract assertions**
@@ -402,12 +488,19 @@ assert_file_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on'
 assert_file_contains "$SKILL" 'review-plan.sh decide'
 assert_file_contains "$SKILL" 'mode == "initial"'
 assert_file_contains "$SKILL" 'coverage gap.*COMMENT'
+assert_file_contains "$SKILL" 'PLAN_EVENT_CEILING'
 assert_file_contains "$SKILL" 'Step 6c'
 assert_file_contains "$REFERENCE" 'kc-pr-flow.review-delta-receipt/v1'
 assert_file_contains "$REFERENCE" 'kc-pr-flow.review-plan-decision/v1'
 ```
 
 Also assert `review-plan.sh` contains none of `gh pr review`, `review-post.sh post`, `authorization.granted`, or `human_confirmed`.
+
+Add legacy, typed, autonomous, and immediate-pre-post harnesses. For each, feed a validated
+`delta` plan with `event_ceiling:COMMENT`; assert `COMMENT` and `REQUEST_CHANGES` survive and
+`APPROVE` is rejected before confirmation/gate construction/posting. A missing, stale, mutated, or
+identity-mismatched plan after the fast path engages must fail closed rather than fall back to an
+unbounded legacy event.
 
 - [ ] **Step 2: Run RED**
 
@@ -445,22 +538,42 @@ stdout and continue the pre-existing `initial` flow. Do not create `PLAN_JSON`, 
 `COMMENT` ceiling, and do not alter any existing initial-review instruction, lane, or authority.
 The only value retained from the snippet is the already-default `REVIEW_MODE=initial`.
 
+Persist a non-`initial` plan in a private mode-`0600` file. At each authority boundary, rerun the
+existing `review-plan.sh decide` command with the original identity, predecessor inputs, receipt,
+and worktree, safe-snapshot its complete output, and require canonical byte equality with the stored
+plan. Then apply this exact mechanical policy in the existing skill seam:
+
+```text
+ceiling APPROVE: allow APPROVE, COMMENT, or REQUEST_CHANGES
+ceiling COMMENT: allow COMMENT or REQUEST_CHANGES; reject APPROVE
+initial/no plan: check is not used; preserve existing initial authority
+```
+
+Run the equality and event check before presenting the legacy or typed effective event at Step 6c,
+after every human edit, before creating an autonomous gate, when constructing the confirmed post
+gate, and immediately before calling either posting path. A validation or ceiling failure before
+confirmation restarts through `initial`; after confirmation it blocks posting and requires a fresh
+plan. This adds no new CLI/schema/posting surface and cannot confirm, authorize, or post.
+
 The prose must state:
 
 - missing predecessor inputs are normal and select `initial`;
 - `resolve` dispatches one focused correctness reviewer and runs known-finding plus affected-test verification in parallel;
 - `delta` reviews every unseen changed path and inherited finding, and new required coverage must terminally complete;
 - current unconditional specialist rules remain unchanged in Phase 1;
-- `event_ceiling` can only reduce authority;
+- `event_ceiling` can only reduce authority and is mechanically enforced at every confirmation and
+  posting boundary above;
 - before a clean draft and before posting, Step 2.1 still rechecks the live head;
 - the user still receives the full Step 6 draft and explicitly confirms at Step 6c.
 
 Do not copy schema validators or shell helpers into `SKILL.md`; point to `reference/review-runtime.md` and `review-plan.sh --help`.
 
 Extend `--case skill-wiring` with a router stub that prints a valid JSON prefix and exits 9. Assert
-the existing initial-flow trace is byte-identical to the flag-off trace and that `PLAN_JSON`,
+the existing planner-state trace (`mode`, serialized plan, ceiling, and reason only) matches the
+flag-off trace and that `PLAN_JSON`,
 `PLAN_EVENT_CEILING`, and `PLAN_REASON` are unset. Repeat with exit 0 plus malformed JSON. This is
 the rollback contract: helper failure adds neither a synthetic decision nor a lower event ceiling.
+Name these assertions `planner-state parity`; do not call them byte-identical existing-flow tests.
 
 - [ ] **Step 4: Document the runtime contract and maintainer commands**
 
@@ -477,12 +590,14 @@ State that Phase 2 shared inventory, Phase 3 typed collation, Phase 4 recipe ext
 
 ```bash
 bash kc-pr-flow/scripts/review-plan.test.sh --case skill-wiring
+bash kc-pr-flow/scripts/review-plan.test.sh --case event-ceiling
 bash kc-pr-flow/scripts/review-plan.test.sh
 bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision
 bash kc-pr-flow/scripts/review-post.test.sh
 ```
 
-Expected: skill contract passes and the entire once-only posting suite remains unchanged and green.
+Expected: skill contract and all ceiling paths pass, `COMMENT` cannot produce an `APPROVE` gate or
+post request, and the entire once-only posting suite remains unchanged and green.
 
 - [ ] **Step 6: Commit the independently reviewable skill wiring**
 
@@ -612,7 +727,7 @@ git commit -m "feat(kc-pr-flow): record review critical-path timing"
 
 ---
 
-### Task 5: Ordered Phase 1 promotion scorer
+### Task 5: Ordered Phase 1 structural scorer
 
 **Files:**
 - Create: `kc-pr-flow/scripts/review-latency-benchmark.sh`
@@ -621,18 +736,25 @@ git commit -m "feat(kc-pr-flow): record review critical-path timing"
 - Modify: `kc-pr-flow/CLAUDE.md:134-152`
 
 **Interfaces:**
-- Consumes: closed sanitized control/treatment pairs, `ReviewPlanDecision/v1`, expected finding IDs, capability coverage, behavior hashes, adjudicated precision counts, and Task 4 `ReviewTiming/v1`.
-- Produces: `kc-pr-flow.review-latency-promotion/v1` with ordered Q1-Q6 results and `promote|do_not_promote`.
+- Consumes: closed synthetic control/treatment shapes, `ReviewPlanDecision/v1`, expected finding IDs,
+  capability coverage, behavior hashes, simulated adjudication counts, and Task 4-shaped
+  timing objects inside `ReviewLatencyPair/v1` that cannot claim runtime measurement.
+- Produces: `kc-pr-flow.review-latency-promotion/v1` with ordered structural Q1-Q6 results and a
+  fixed `do_not_promote` verdict for the committed corpus.
 - CLI: `review-latency-benchmark.sh score --corpus FILE`.
 
-- [ ] **Step 1: Write the immutable promotion fixture**
+- [ ] **Step 1: Write the immutable structural fixture**
 
-Create JSONL cases for: known fix only, fix plus test, unrelated new path, force-push, corrupt receipt, security finding, unavailable required lane, cross-layer no dispute, and new material dispute. Each line uses this closed shape:
+Create JSONL cases for: known fix only, fix plus test, unrelated new path, force-push, corrupt
+receipt, security finding, unavailable required lane, cross-layer no dispute, and new material
+dispute. Each line uses the closed shape below plus
+`"evidence_tier":"synthetic-structural"`. The scorer accepts no other tier in this task:
 
 ```json
 {
   "schema": "kc-pr-flow.review-latency-pair/v1",
   "pair_id": "known-fix-only",
+  "evidence_tier": "synthetic-structural",
   "exact_head": {
     "repository": "acme/widgets",
     "pr_number": 1693,
@@ -694,7 +816,7 @@ Create JSONL cases for: known fix only, fix plus test, unrelated new path, force
     "adjudicated_false_positive": 0,
     "behavior_hashes": {"event_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "options_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
     "timing": {
-      "schema": "kc-pr-flow.review-timing/v1",
+      "fixture_kind": "synthetic-structural",
       "review_key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       "mode": "resolve",
       "durations_ms": {
@@ -710,8 +832,7 @@ Create JSONL cases for: known fix only, fix plus test, unrelated new path, force
       },
       "lane_durations_ms": [
         {"lane_id": "correctness-1", "duration_ms": 103000, "provider_family": "openai"}
-      ],
-      "measured_by": "review-runtime"
+      ]
     }
   }
 }
@@ -720,7 +841,9 @@ Create JSONL cases for: known fix only, fix plus test, unrelated new path, force
 The fixture must use this full closed shape on every line. Recompute each case's canonical review
 key and hashes from its own identity and evidence instead of copying the illustrative repeated hex.
 For a treatment whose plan mode is `initial`, set `timing:null`; it remains a Q1-Q5 fallback case
-and is never latency-eligible. For `delta` and `resolve`, `timing` is required. The fixture builder
+and is never latency-eligible. For `delta` and `resolve`, the structural timing shape is required;
+it has no receipt schema or `measured_by` field and never calls itself `ReviewTiming/v1` or
+`review-runtime` evidence. The fixture builder
 derives `event_evidence.effective` from the bound typed decision artifact and, when a review was
 posted, derives `event_evidence.posted` from the bound posting receipt; `source_sha256` is that safe
 snapshot's canonical SHA-256, not a caller-authored event claim.
@@ -731,7 +854,10 @@ Follow `review-runtime-benchmark.test.sh:79-205` and assert:
 
 ```bash
 report="$(bash "$BENCHMARK" score --corpus "$FIXTURE")"
-assert_eq "good corpus promotes" "promote" "$(jq -r '.verdict' <<<"$report")"
+assert_eq "structural corpus never promotes" "do_not_promote" \
+  "$(jq -r '.verdict' <<<"$report")"
+assert_eq "structural gates still exercise Q1-Q6" "true" \
+  "$(jq -r '[.quality_gates[]] + [.latency.structural_pass] | all' <<<"$report")"
 assert_eq "target is four minutes" "240000" "$(jq -r '.latency.target_ms' <<<"$report")"
 ```
 
@@ -783,7 +909,8 @@ duplicate/orphan gap refs, a `complete` entry with non-null `gap_ref`, a `gap` e
 `gap_ref`, and extra keys before gate scoring.
 
 Reject symlink/FIFO/oversized corpus, duplicate JSON members, unsafe numbers, self-resealed hashes,
-and any timing whose `measured_by` is not `review-runtime`. Assert corpus bytes are unchanged after
+and any structural timing whose closed `fixture_kind` is not `synthetic-structural` or that adds a
+receipt `schema` / `measured_by` claim. Assert corpus bytes are unchanged after
 scoring and reversed input order yields the same report bytes.
 
 - [ ] **Step 3: Run RED**
@@ -879,22 +1006,30 @@ phase1_promotion() {
       latency:{target_ms:240000,eligible_runs:($eligible|length),
         excluded_initial_runs:([$pairs[] | select(.treatment.plan.mode == "initial")]|length),
         passing_runs:([$eligible[] | select(.treatment.timing.durations_ms.review_to_confirmation_ready <= 240000)]|length),
-        max_ms:([$eligible[].treatment.timing.durations_ms.review_to_confirmation_ready]|max // null)},
-      verdict:(if $q1 and $q2 and $q3 and $q4 and $q5 and $q6 then "promote" else "do_not_promote" end)
+        max_ms:([$eligible[].treatment.timing.durations_ms.review_to_confirmation_ready]|max // null),
+        structural_pass:$q6},
+      evidence_tier:"synthetic-structural",
+      verdict:"do_not_promote"
     }'
 }
 ```
+
+The report may expose whether simulated Q1-Q6 passed, but that field is named `structural_pass` and
+does not influence `verdict`. Reject any corpus line whose `evidence_tier` is missing, changed, or
+self-resealed. Do not add an `actual` tier in this task: doing so requires a separately approved
+source-manifest contract and independently collected evidence.
 
 The external pair schema does not permit `_derived`. Before calling `phase1_promotion`,
 `review_latency_validate_pair` recomputes the review key with `review_runtime_sha256`, validates
 schema/content hashes and event-ceiling ordering, compares control/treatment behavior hashes, and
 adds only the in-memory `_derived:{identity_valid,behavior_parity}` object. Never accept those
 booleans from corpus JSON; a corpus member containing `_derived` fails closed as an extra key.
-Before scoring, validate the entire closed
-pair schema and enforce `timing == null` for `initial`, a valid bound `ReviewTiming/v1` for `delta`
-or `resolve`, and equality among exact-head, plan, timing, event-evidence, and behavior receipt
-identities. Q1-Q5 evaluate every pair. Q6 and all latency aggregates evaluate only `delta` and
-`resolve`; no initial fallback may carry a fabricated sub-four-minute measurement.
+Before scoring, validate the entire closed pair schema and enforce `timing == null` for `initial`,
+a valid bound structural timing member of `ReviewLatencyPair/v1` for `delta` or `resolve`, and
+equality among
+exact-head, plan, timing shape, event-evidence, and behavior receipt identities. Q1-Q5 evaluate
+every pair. Structural Q6 and its aggregates evaluate only `delta` and `resolve`; none of these
+durations is represented as a measured review or used for promotion.
 
 - [ ] **Step 5: Run GREEN and deterministic scorer checks**
 
@@ -904,16 +1039,17 @@ bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh --case interactive-gate
 bash kc-pr-flow/scripts/review-plan.test.sh
 ```
 
-Expected: all pass; any Q1-Q5 failure prevents promotion even when latency is one millisecond.
+Expected: all pass; mutations still identify the first structural gate failure, and an entirely
+favorable synthetic corpus still returns `do_not_promote` even when latency is one millisecond.
 
-- [ ] **Step 6: Commit promotion evidence as its own unit**
+- [ ] **Step 6: Commit structural scoring evidence as its own unit**
 
 ```bash
 git add kc-pr-flow/scripts/review-latency-benchmark.sh \
   kc-pr-flow/scripts/review-latency-benchmark.test.sh \
   kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl \
   kc-pr-flow/CLAUDE.md
-git commit -m "test(kc-pr-flow): gate delta review latency promotion"
+git commit -m "test(kc-pr-flow): keep synthetic latency evidence structural"
 ```
 
 ---
@@ -992,6 +1128,8 @@ bash scripts/version-parity-check.sh
 
 Expected: all pass. Do not run the paid `review-ablation.sh` acceptance experiment without a
 separate budget authorization; its unit test remains part of the existing evaluation workflow.
+The structural corpus report must be `do_not_promote`; a favorable synthetic `promote` result fails
+this task even when every individual Q1-Q6 simulation is green.
 
 - [ ] **Step 5: Run pinned syntax and ShellCheck gates**
 
@@ -1038,6 +1176,123 @@ git add .github/workflows/review-plan-tests.yml \
 git commit -m "ci(kc-pr-flow): gate the delta review fast path"
 ```
 
+## Post-review repair execution order
+
+Tasks 7-11 are the current execution authority after the 2026-08-27 full-branch review. They repair
+the already-implemented Tasks 1-6 without adding a surface or changing the accepted seam.
+
+### Task 7: Make predecessor trust terminal and uncertainty complete
+
+**Files:**
+- Modify: `kc-pr-flow/scripts/review-plan.sh`
+- Modify: `kc-pr-flow/scripts/review-plan.test.sh`
+- Modify: `kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json`
+
+**Interfaces:**
+- Consumes: fresh `review-runtime.sh replay` projection.
+- Produces: a delta receipt only when every projected lane succeeded and uncertainty is empty; each
+  known finding carries replay-derived anchor/category/evidence metadata.
+
+- [ ] Write failed, unavailable, uncertain-candidate, missing-anchor, and mutated-evidence tests;
+  verify each fails before implementation.
+- [ ] Require `.lanes | all(.result.terminal_status == "succeeded")` and
+  `.uncertain_candidate_ids == []` in producer and validator; copy and exactly compare
+  `anchor_sha256`, `category`, and the closed evidence pointer.
+- [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case receipt-contract` and the full plan
+  suite; require all cases green.
+- [ ] Commit only the three named paths with
+  `fix(kc-pr-flow): require complete predecessor evidence`.
+
+### Task 8: Route every hunk and revalidate every Git operation
+
+**Files:**
+- Modify: `kc-pr-flow/scripts/review-plan.sh`
+- Modify: `kc-pr-flow/scripts/review-plan.test.sh`
+- Modify: `kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json`
+
+**Interfaces:**
+- Consumes: Task 7 receipt evidence and `git diff --unified=0`.
+- Produces: `resolve` only for fully mapped hunks/signals; safe unmapped work becomes
+  `delta`/`COMMENT`; ambiguity becomes `initial`.
+
+- [ ] Add RED cases for two hunks in one known file, an unrelated ordinary append, an
+  `unrelated_authorization_bypass` append, contract/test hunks lacking a same-hunk reference,
+  dependency/workflow signals, malformed diff, and path replacement between Git reads.
+- [ ] Parse each zero-context hunk and implement the exact mapping/signaling rules in revised Task 2;
+  do not use file membership as a hunk proxy.
+- [ ] Move `review_plan_real_worktree` into `review_plan_git` so it runs immediately before every
+  Git invocation; remove cached-canonical bypasses.
+- [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case mode-router`, `--case
+  trust-boundary`, `--case worktree-safety`, and the full suite; require the adversarial cases to
+  select only the revised modes/ceilings.
+- [ ] Commit only the three named paths with
+  `fix(kc-pr-flow): fail closed on unmapped review hunks`.
+
+### Task 9: Carry the event ceiling through confirmation and posting
+
+**Files:**
+- Modify: `kc-pr-flow/scripts/review-plan.test.sh`
+- Modify: `kc-pr-flow/skills/kc-pr-review/SKILL.md`
+- Modify: `kc-pr-flow/reference/review-triage.md`
+- Modify: `kc-pr-flow/reference/review-runtime.md`
+
+**Interfaces:**
+- Produces: rerun-and-compare plan validation plus mechanical event checks at legacy, typed,
+  autonomous, confirmed-gate, and immediate-pre-post seams. `review-post.sh` remains the posting
+  owner and is not modified.
+
+- [ ] Add RED end-to-end harnesses showing the current legacy and typed paths can escalate a
+  `COMMENT` plan to `APPROVE`; include autonomous and stale-plan post cases.
+- [ ] Implement the private plan file, existing-`decide` rerun/canonical comparison, and event case
+  check described in revised Task 3, then invoke it at every listed seam. Never clamp silently to a
+  more favorable event; reject invalid authority.
+- [ ] Rename every four-field trace assertion from byte-identical flow to planner-state parity.
+- [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case skill-wiring`, `--case event-ceiling`,
+  the full plan suite, `bash kc-pr-flow/scripts/review-runtime.test.sh --case
+  interactive-decision`, and `bash kc-pr-flow/scripts/review-post.test.sh`.
+- [ ] Commit only the four named paths with
+  `fix(kc-pr-flow): enforce delta plan event ceilings`.
+
+### Task 10: Make synthetic evidence structurally non-promotable
+
+**Files:**
+- Modify: `kc-pr-flow/scripts/review-latency-benchmark.sh`
+- Modify: `kc-pr-flow/scripts/review-latency-benchmark.test.sh`
+- Modify: `kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl`
+- Modify: `kc-pr-flow/CLAUDE.md`
+
+**Interfaces:**
+- Produces: ordered structural Q1-Q6 reporting with `evidence_tier:synthetic-structural` and an
+  unconditional `do_not_promote` verdict.
+
+- [ ] Change the favorable-corpus expectation to `do_not_promote`; keep gate-mutation tests that
+  name the first structural failure and verify this RED state before implementation.
+- [ ] Reject any missing/changed evidence tier and remove synthetic timing/provenance language that
+  implies an observed review run. Keep fixture generators explicitly structural.
+- [ ] Run `bash kc-pr-flow/scripts/review-latency-benchmark.test.sh`, `bash
+  kc-pr-flow/scripts/review-runtime-benchmark.test.sh --case interactive-gates`, and the full plan
+  suite; require the committed corpus verdict to be `do_not_promote`.
+- [ ] Do not collect actual artifacts or run `review-ablation.sh`; both need separate authorization.
+- [ ] Commit only the four named paths with
+  `test(kc-pr-flow): keep synthetic latency evidence structural`.
+
+### Task 11: Re-run safe proof and obtain a fresh exact-head review
+
+**Files:**
+- Modify only documentation already in the Phase 1 file map if implementation truth changed.
+
+- [ ] Revalidate the worktree root, branch, clean ownership, and exact head before each verification
+  batch.
+- [ ] Run `review-plan.test.sh`, `review-latency-benchmark.test.sh`, focused timing, full
+  `review-runtime.test.sh`, `review-runtime-benchmark.test.sh`, CI routing, `git diff --check`, Bash
+  syntax, and pinned ShellCheck v0.9.0. Run `review-post.test.sh` because Task 9 touches its callers.
+- [ ] Record that hosted Phase 1 CI cost remains unmeasured unless current provider evidence exists;
+  do not invent a per-PR number.
+- [ ] Lock the resulting exact head and obtain a fresh full-branch review against the accepted
+  design and this amendment, without handing the reviewer the implementation justification.
+- [ ] Keep the feature default-off and report `do_not_promote` unless that review is clean. Actual
+  promotion remains a new Captain decision even after the repair passes.
+
 ## Deferred promotion-gated phases
 
 This implementation plan ends after Phase 1. Do not add these to a Phase 1 task or commit:
@@ -1049,5 +1304,5 @@ This implementation plan ends after Phase 1. Do not add these to a Phase 1 task 
   security reviewer.
 - Phase 6: nonblocking learning and indexed posting state, only if measured timing warrants it.
 
-Each deferred phase needs its own plan after Phase 1 promotion evidence passes the earlier quality
-gates and the Captain accepts the next rollout boundary.
+Each deferred phase needs its own plan after separately authorized actual Phase 1 evidence passes
+the earlier quality gates and the Captain accepts the next rollout boundary.

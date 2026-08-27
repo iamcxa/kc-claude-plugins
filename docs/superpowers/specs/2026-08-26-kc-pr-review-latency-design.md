@@ -3,9 +3,84 @@
 - **Date:** 2026-08-26
 - **Plugin:** `kc-pr-flow`
 - **Target skill:** `kc-pr-flow/skills/kc-pr-review/SKILL.md`
-- **Status:** Approved for phased implementation
-- **Primary outcome:** A post-fix review reaches the existing confirmation gate in at most four
-  minutes on the promotion corpus, without losing any expected must-fix finding
+- **Status:** Approved for phased implementation; Captain-approved Phase 1 revision recorded
+  2026-08-27; latency promotion deferred
+- **Promotion target:** A post-fix review reaches the existing confirmation gate in at most four
+  minutes on independently adjudicated actual control/treatment evidence, without losing any
+  expected must-fix finding. The current synthetic corpus does not prove this target.
+
+## 0. Captain-approved Phase 1 revision (2026-08-27)
+
+This section records the exact revision approved after the full-branch review. It supersedes any
+older statement in this design or its implementation plan that permits path-level `resolve`, trusts
+failed or uncertain predecessor coverage, treats `event_ceiling` as prose-only, validates the
+worktree once per decision, or treats synthetic fixtures as promotion evidence.
+
+### 0.1 Seam and surface mapping
+
+The accepted seam remains immediately after the existing exact-head snapshot and before triage.
+No Phase 1 surface is added, removed, relocated, or given a new authority owner.
+
+| Accepted surface | Before revision | After revision |
+|---|---|---|
+| `review-plan.sh` and `ReviewDeltaReceipt/v1` / `ReviewPlanDecision/v1` | Trusted predecessor and path-level route | Same router and schemas; stronger predecessor, per-hunk/signal, worktree, and ceiling obligations |
+| `review-runtime.sh` and `ReviewTiming/v1` | Local timing receipt | Same timing surface; only timing observed at actual workflow boundaries can support promotion |
+| `kc-pr-review/SKILL.md` confirmation/post seam | Reads advisory plan ceiling | Same seam and authority owner; legacy, typed, autonomous, and post events must remain within the ceiling |
+| `review-latency-benchmark.sh` and `phase1-promotion.jsonl` | Ordered scorer and synthetic corpus | Same scorer/corpus surface; synthetic data is structural evidence and is fixed to `do_not_promote` |
+| Existing plan/runtime/evaluation CI owners | Phase 1 path ownership | Same jobs, triggers, and ownership; no new paid or hosted run is authorized |
+
+### 0.2 Approved outcome delta
+
+1. `resolve` is allowed only when **every changed hunk** and every mechanically detected security,
+   dependency, or workflow signal maps to a replay-derived known finding, its explicit contract
+   boundary, or its test/fixture boundary. A safe but unmapped hunk selects `delta`; an ambiguous,
+   unsupported, or unsafe hunk selects `initial`.
+2. A delta receipt is trusted only when every projected lane treated as required in Phase 1 has
+   `terminal_status:"succeeded"` and `uncertain_candidate_ids` is empty. Failed, unavailable, or
+   uncertain predecessor state cannot issue or validate an approve-capable receipt and selects
+   `initial`.
+3. `PLAN_EVENT_CEILING` is mechanically revalidated before legacy or typed confirmation, after any
+   event edit, when building an autonomous gate, and immediately before posting. A `COMMENT`
+   ceiling permits only `COMMENT` or `REQUEST_CHANGES`; it can never authorize `APPROVE`.
+4. The non-symlink real-worktree gate runs inside the Git adapter immediately before every Git
+   operation. A replacement or validation failure between reads selects `initial` or blocks the
+   later authority step.
+5. The committed synthetic corpus tests schema, gate ordering, mutation resistance, and reporting
+   only. Its expected verdict is `do_not_promote`. A real promotion decision requires separately
+   authorized, preserved and sanitized actual control/treatment artifacts, expected findings
+   adjudicated independently of both arms, and timing observed from actual `timing-start` /
+   `timing-mark` workflow boundaries.
+6. Default-off tests prove **planner-state parity** only: mode, serialized plan, ceiling, and reason.
+   They do not claim byte-identical draft, options, confirmation, or posting behavior.
+
+### 0.3 Non-goals, falsifiers, and rollback
+
+This revision does not implement Phases 2-6, reduce current specialist obligations, change the
+human confirmation owner, change GitHub posting ownership, run paid model/provider experiments, or
+claim the four-minute target. It also does not authorize actual control/treatment collection.
+
+Any of the following falsifies the revised Phase 1 contract: a same-file unrelated or
+security-shaped hunk selects `resolve`; a failed, unavailable, or uncertain predecessor issues a
+trusted receipt; `APPROVE` survives a `COMMENT` ceiling through any confirmation/posting path; a Git
+operation runs without a fresh worktree gate; a synthetic corpus emits `promote`; or a planner-only
+test is described as end-to-end byte parity.
+
+Rollback remains `KC_PR_FLOW_DELTA_FAST_PATH` unset or not `on`. That restores the existing initial
+route without deleting evidence. Until actual promotion evidence is separately approved and passes
+Q1-Q6, Phase 1 stays default-off and unpromoted.
+
+### 0.4 Required repair tasks and tests
+
+1. Strengthen receipt production/validation and add failed, unavailable, and uncertain predecessor
+   cases.
+2. Replace path equality with zero-context per-hunk mapping, bind replay-derived finding anchors,
+   classify security/dependency/workflow signals, and add same-file unrelated/security negatives.
+3. Restore per-Git-operation worktree validation and add a path-replacement race harness.
+4. Enforce the plan ceiling across legacy, typed, autonomous, confirmation, and posting boundaries;
+   add end-to-end `COMMENT`-cannot-`APPROVE` cases.
+5. Relabel planner-state assertions, make the synthetic scorer return `do_not_promote`, run all safe
+   Phase 1 suites, and obtain a fresh exact-head full-branch review. No paid run is part of this
+   repair.
 
 ## 1. Problem
 
@@ -42,6 +117,9 @@ separate evidence supports changing it.
    behavior remain mandatory.
 5. Any uncertain identity, ancestry, receipt, required capability, or evidence state fails closed
    to a full review or a `COMMENT` ceiling. It never becomes an inferred clean result.
+
+Outcomes 2 and 3 are promotion criteria, not claims about the current synthetic corpus. They remain
+unproven until the separately authorized actual-evidence protocol in section 11 is completed.
 
 ### 2.2 Quality metrics
 
@@ -100,11 +178,13 @@ A predecessor is trusted only when all of the following are mechanically verifie
 - Base SHA and effective review configuration remain compatible.
 - Every known finding has a stable ID and evidence hash.
 - The receipt came from private runtime state or an equivalently safe regular-file snapshot.
-- Required capability coverage at the predecessor head was complete, or its gaps remain inherited
-  and continue to cap the event at `COMMENT`.
+- Every projected Phase 1 lane is treated as required and has terminal status `succeeded`.
+- `uncertain_candidate_ids` is empty.
 
 Failure of any predicate selects `initial`. A force-push or rewritten history always selects
-`initial`; no similarity heuristic may override the ancestry result.
+`initial`; no similarity heuristic may override the ancestry result. Phase 1 does not mint a
+trusted receipt that inherits legitimate gaps: failed, unavailable, or uncertain predecessor state
+must be reviewed again through `initial`.
 
 ### 3.3 Timing fields
 
@@ -205,7 +285,22 @@ state:
     {
       "finding_id": "<64-hex>",
       "claim_key": "<safe-token>",
+      "anchor_sha256": "<64-hex>",
+      "category": "<safe-token>",
       "evidence_sha256": "<64-hex>",
+      "evidence": {
+        "schema": "kc-pr-flow.evidence-pointer/v1",
+        "kind": "git_blob",
+        "review_key": "<64-hex>",
+        "repository": "owner/repo",
+        "base_sha": "<40-hex>",
+        "head_sha": "<40-hex>",
+        "object_sha": "<40-hex>",
+        "path": "relative/path",
+        "line": 17,
+        "locator": "<bounded locator>",
+        "content_sha256": "<64-hex>"
+      },
       "path": "relative/path",
       "side": "RIGHT",
       "resolution_state": "unresolved"
@@ -216,6 +311,11 @@ state:
   "content_sha256": "<64-hex>"
 }
 ```
+
+The receipt copies `anchor_sha256`, `category`, and the closed evidence pointer from replay; callers
+cannot add resolution scope. Only replayed `git_blob` evidence bound to the predecessor head and a
+specific path/line can directly authorize a known-finding hunk for `resolve`. Other evidence stays
+inherited but cannot narrow the route below `delta`.
 
 `ReviewPlanDecision/v1` is closed and advisory:
 
@@ -241,7 +341,12 @@ state:
 
 `event_ceiling` is a maximum authority bound, not a recommended event. An inherited or newly
 detected required coverage gap changes it to `COMMENT`. Confirmed blocker evidence can still select
-`REQUEST_CHANGES` through the existing typed decision path.
+`REQUEST_CHANGES` through the existing typed decision path. For every non-`initial` plan, a
+safe-snapshotted and identity-revalidated plan must reject an event above its ceiling before legacy
+or typed confirmation, after any event edit, when an autonomous gate is built, when a confirmed
+post gate is built, and immediately before the posting owner is invoked. `COMMENT` allows
+`COMMENT` or `REQUEST_CHANGES`, never `APPROVE`; `APPROVE` allows all three existing events. The
+validator is read-only and cannot confirm, authorize, or post.
 
 ### 5.4 Routing predicates
 
@@ -249,13 +354,20 @@ detected required coverage gap changes it to `COMMENT`. Confirmed blocker eviden
 
 - a trusted predecessor;
 - ancestor-only history growth;
-- every changed hunk maps to a known-finding path, its directly imported/consumed contract, or a
-  test/fixture for that surface;
-- no unknown file class or new security/dependency/workflow signal;
+- a zero-context diff whose every hunk maps unambiguously to exactly one replay-derived known
+  finding: either its predecessor evidence line is inside that hunk's old coordinate range, or the
+  hunk itself is in a mechanically classified contract/test/fixture and contains a fixed-string
+  reference to that finding's claim key, evidence locator, or normalized module path;
+- every mechanically detected security, dependency, or workflow signal maps on that same hunk to a
+  predecessor finding or required capability of the corresponding class;
+- no unknown file class, malformed hunk, ambiguous mapping, or unmapped signal;
 - no inherited required coverage gap.
 
 `delta` requires a trusted predecessor and ancestor-only growth but permits additional affected
-surfaces. Those surfaces add capabilities; they never inherit a clean verdict from the predecessor.
+surfaces. A safe, parseable but unmapped hunk or signal selects `delta`, adds the corresponding
+capabilities, and receives a `COMMENT` ceiling; it never inherits a clean verdict from the
+predecessor. Unsupported status, binary/gitlink/rename/copy ambiguity, unsafe path, malformed diff,
+or an unclassifiable signal selects `initial`.
 
 All other cases select `initial`. Ambiguity selects `initial` rather than guessing.
 
@@ -733,7 +845,8 @@ and pending-post evidence for safe reconciliation.
 
 ### 11.1 Corpus
 
-The post-fix corpus contains at least these fixed classes:
+The committed post-fix corpus contains at least these fixed classes as **synthetic structural
+fixtures**:
 
 1. Known blocker fixed by one appended commit, no new surface.
 2. Known blocker fixed plus adjacent regression test.
@@ -747,24 +860,37 @@ The post-fix corpus contains at least these fixed classes:
    the dispute visible and caps authority rather than hiding it.
 
 Each case binds immutable base/head SHAs, expected must-fix finding IDs, required capabilities, and
-the maximum permitted event. PR #1693 supplies the first real-world replay shape; sanitized fixtures
-make the suite stable and public-safe.
+the maximum permitted event. PR #1693 supplies only a sanitized replay shape; fixture construction
+does not preserve an actual review run. These cases may prove parser shape, ordered gate behavior,
+mutation resistance, and conservative fallback, but they cannot prove recall, precision, provider
+comparability, or elapsed review time. The structural scorer therefore emits `do_not_promote` even
+when every simulated Q1-Q6 value passes.
+
+Actual promotion is a separate, Captain-authorized evidence collection. Before deriving scorer
+pins, it must preserve a source manifest for sanitized actual control and treatment review
+artifacts, independently adjudicated expected findings, exact identities, provider/model scope, and
+the runtime event/timing receipts. Expected findings may not be derived from either arm's emitted
+findings. Timing must begin at the actual first exact-head snapshot, use `timing-mark` at real phase
+boundaries, and end at the actual confirmation-ready draft; caller-selected timestamps or desired
+totals are invalid. No such collection or paid run is authorized by this design revision.
 
 ### 11.2 Arms
 
 | Arm | Meaning |
 |---|---|
-| Control | Current full `kc-pr-review` behavior at the pinned head |
+| Control | Preserved actual full `kc-pr-review` behavior at the pinned head |
 | Shadow | New phase computes receipts but cannot alter dispatch, draft, event, or posting |
-| Treatment | Promoted phase owns its bounded interface behind the feature flag |
+| Treatment | Preserved actual fast-path run behind the feature flag |
 
 Run control and treatment with the same model/provider family and comparable scope when making
-token claims. Latency remains valid when independently measured by the runtime, but provider delays
-and unavailable lanes must stay visible in the report.
+token claims. Expected findings require an adjudicator independent of both arms. Latency is valid
+only when the runtime observed the actual workflow boundaries; provider delays and unavailable lanes
+must stay visible in the report.
 
 ### 11.3 Promotion report
 
-Extend the existing ordered G1-G5 benchmark philosophy rather than replace it:
+For a future separately authorized actual-evidence run, extend the existing ordered G1-G5 benchmark
+philosophy rather than replace it:
 
 ```json
 {
@@ -791,6 +917,11 @@ The scorer emits `do_not_promote` on any earlier quality failure, regardless of 
 times out without complete required evidence may complete as `COMMENT`, but it cannot count as a
 successful four-minute `APPROVE`-eligible run.
 
+For the current committed synthetic corpus, `do_not_promote` is unconditional and expected; passing
+Q1-Q6 fields are structural self-tests, not a promotion verdict. Enabling `promote` requires a new
+approved task that adds and validates the actual source manifest and independently collected
+artifacts above.
+
 ### 11.4 Full verification command set
 
 ```bash
@@ -806,6 +937,10 @@ bash kc-pr-flow/scripts/review-latency-benchmark.test.sh
 bash scripts/skill-frontmatter-lint.sh
 bash scripts/version-parity-check.sh
 ```
+
+The current structural scorer check additionally asserts that
+`phase1-promotion.jsonl` returns `do_not_promote`. It must not be replaced by a favorable synthetic
+`promote` expectation.
 
 The paid `review-ablation.sh` experiment is not silently added to this command set. Any semantic
 instruction cut that needs it must present the current measured budget and obtain explicit approval
@@ -831,12 +966,13 @@ The following remain true in every phase:
 
 ## 13. Expected rollout effect
 
-Phase 1 should produce most of the post-fix latency gain by replacing a repeated full panel with a
-trusted focused route. Phases 2-4 remove repeated local work and instruction load while preserving
-the judgment topology. Phase 5 removes specialist lanes only where exact-head shadow evidence proves
-that conservative routing preserves recall. Phase 6 is conditional and is not built unless timing
-attribution shows its tails are material.
+Phase 1 is expected to produce most of the post-fix latency gain by replacing a repeated full panel
+with a trusted focused route, but that latency effect is not currently proven. Phases 2-4 remove
+repeated local work and instruction load while preserving the judgment topology. Phase 5 removes
+specialist lanes only where exact-head shadow evidence proves that conservative routing preserves
+recall. Phase 6 is conditional and is not built unless timing attribution shows its tails are
+material.
 
-The target is deliberately asymmetric: post-fix review earns an at-most-four-minute path with 100%
-known-finding recall; initial review keeps its current coverage until independent evidence supports
-a narrower topology.
+The target is deliberately asymmetric: post-fix review may earn an at-most-four-minute path with
+100% known-finding recall only after actual independent evidence; initial review keeps its current
+coverage until independent evidence supports a narrower topology.
