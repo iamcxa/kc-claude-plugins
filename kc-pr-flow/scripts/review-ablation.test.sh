@@ -399,14 +399,20 @@ PY
   dir="$TEST_ROOT/arm-drift"
   mkdir -p "$dir"
   cp -R "$BASELINE" "$dir/tree"
-  python3 - "$dir/tree/reference/review-triage.md" <<'PY'
+  python3 - "$dir/tree/reference/review-triage.md" "$HERE/review-ablation-spans.tsv" <<'PY'
 import sys, pathlib
 p = pathlib.Path(sys.argv[1])
+table = pathlib.Path(sys.argv[2])
 body = p.read_text(encoding="utf-8").split("\n")
-# Reword one line INSIDE S10's range, leaving the line count untouched. The
-# range still resolves to real content, so it is the sha256 comparison — not
-# the empty-span guard — that has to catch this.
-body[223] = body[223] + " (reworded since the table was enumerated)"
+for raw in table.read_text(encoding="utf-8").splitlines():
+    if raw.startswith("S10\t"):
+        start = int(raw.split("\t")[2])
+        break
+else:
+    raise SystemExit("S10 is missing from the span table")
+# Reword one line INSIDE S10's range, leaving the line count untouched. Resolve
+# the line through the table so re-enumerating moved spans keeps this test valid.
+body[start - 1] = body[start - 1] + " (reworded since the table was enumerated)"
 p.write_text("\n".join(body), encoding="utf-8")
 PY
   assert_rejects 'B3 span sha256 disagrees with its pin' 'does not match its pin' \
