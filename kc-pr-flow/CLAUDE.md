@@ -69,6 +69,15 @@ bash scripts/review-plan.test.sh
 bash scripts/review-latency-benchmark.test.sh
 ```
 
+`review-latency-benchmark.sh` is the Phase 1 promotion authority for evidence,
+not for review judgment. It safe-snapshots the immutable sanitized corpus,
+recomputes exact-head identity, rejects caller-derived verdicts and totals, and
+evaluates Q1 identity through Q6 latency in fixed order. Q1-Q5 cover every
+pair; only `delta` and `resolve` receipts produced by `review-runtime` enter the
+240-second latency gate. An `initial` fallback must carry `timing:null` and can
+never improve the latency result. The scorer has no model, network,
+confirmation, or posting authority.
+
 Phase 2 shared inventory, Phase 3 typed collation, Phase 4 recipe extraction,
 Phase 5 specialist routing, and Phase 6 tails remain unimplemented and
 promotion-gated. Do not claim this Phase 1 route has promoted later phases.

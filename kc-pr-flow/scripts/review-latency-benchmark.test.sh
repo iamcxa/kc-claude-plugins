@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+
+set -u
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BENCHMARK="$HERE/review-latency-benchmark.sh"
+FIXTURE="$HERE/../test/fixtures/review-plan/phase1-promotion.jsonl"
+TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/review-latency-benchmark-test.XXXXXX")"
+trap 'rm -rf "$TEST_ROOT"' EXIT
+
+PASS=0
+FAIL=0
+
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+    printf 'PASS: %s\n' "$label"
+  else
+    FAIL=$((FAIL + 1))
+    printf 'FAIL: %s\n  expected: %s\n  actual:   %s\n' "$label" "$expected" "$actual"
+  fi
+}
+
+sha256_file() {
+  if command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    sha256sum "$1" | awk '{print $1}'
+  fi
+}
+
+mutate_case() { # $1=pair id, $2=jq filter, $3=output
+  local pair_id="$1" filter="$2" output="$3"
+  jq -c --arg pair_id "$pair_id" \
+    "if .pair_id == \$pair_id then ($filter) else . end" "$FIXTURE" >"$output"
+}
+
+score_file() {
+  bash "$BENCHMARK" score --corpus "$1" 2>/dev/null
+}
+
+first_failed() {
+  score_file "$1" | jq -r '.first_failed_gate // ""'
+}
+
+gate_value() { # $1=file $2=gate key
+  score_file "$1" | jq -r --arg key "$2" '.gates[$key]'
+}
+
+expect_rejected() {
+  local label="$1" corpus="$2"
+  if bash "$BENCHMARK" score --corpus "$corpus" >/dev/null 2>&1; then
+    assert_eq "$label" rejected accepted
+  else
+    assert_eq "$label" rejected rejected
+  fi
+}
+
+if [ ! -x "$BENCHMARK" ]; then
+  printf 'FAIL: scorer does not exist or is not executable: %s\n' "$BENCHMARK"
+  exit 1
+fi
+if [ ! -f "$FIXTURE" ]; then
+  printf 'FAIL: fixture does not exist: %s\n' "$FIXTURE"
+  exit 1
+fi
+
+report="$(score_file "$FIXTURE")"
+assert_eq "good corpus promotes" "promote" "$(jq -r '.verdict' <<<"$report")"
+assert_eq "ordered gate schema" "identity,required_coverage,must_fix_recall,precision,behavior_parity,latency" \
+  "$(jq -r '.gate_order | join(",")' <<<"$report")"
+assert_eq "no failed gate on promotion" "" "$(jq -r '.first_failed_gate // ""' <<<"$report")"
+assert_eq "target is four minutes" "240000" "$(jq -r '.latency.target_ms' <<<"$report")"
+assert_eq "initial fallbacks are excluded from latency" "2" \
+  "$(jq -r '.latency.excluded_initial_runs' <<<"$report")"
+assert_eq "only delta and resolve are eligible" "7" \
+  "$(jq -r '.latency.eligible_runs' <<<"$report")"
+assert_eq "all eligible fixture runs pass latency" "7" \
+  "$(jq -r '.latency.passing_runs' <<<"$report")"
+source_probe="$(bash -c '
+  set -u
+  umask 027
+  before_pwd="$PWD"; before_flags="$-"; before_umask="$(umask)"
+  . "$1"
+  if [ "$before_pwd" = "$PWD" ] && [ "$before_flags" = "$-" ] &&
+    [ "$before_umask" = "$(umask)" ]; then
+    printf "true\n"
+  else
+    printf "false\n"
+  fi
+' _ "$BENCHMARK")"
+assert_eq "sourcing preserves cwd flags and umask" true "$source_probe"
+
+stub_dir="$TEST_ROOT/stubs"
+call_ledger="$TEST_ROOT/calls"
+mkdir -p "$stub_dir"
+: >"$call_ledger"
+for stub_command in gh curl wget nc ssh codex claude agy review-post.sh; do
+  # The generated stub expands these variables at runtime.
+  # shellcheck disable=SC2016
+  printf '%s\n' '#!/bin/sh' \
+    'printf "%s\n" "$(basename "$0") $*" >>"$REVIEW_LATENCY_CALL_LEDGER"' \
+    'exit 97' >"$stub_dir/$stub_command"
+  chmod +x "$stub_dir/$stub_command"
+done
+REVIEW_LATENCY_CALL_LEDGER="$call_ledger" PATH="$stub_dir:$PATH" \
+  bash "$BENCHMARK" score --corpus "$FIXTURE" >/dev/null
+assert_eq "scoring makes no network or model call" "" "$(cat "$call_ledger")"
+
+mutated="$TEST_ROOT/mutated.jsonl"
+mutate_case known-fix-only '.treatment.plan.identity.review_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "arbitrary review key fails Q1 first" identity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.plan.identity.head_sha="ffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "stale head fails Q1 first" identity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.capability_coverage |= map(select(.capability != "test-coverage"))' "$mutated"
+assert_eq "missing required capability fails Q2 first" required_coverage "$(first_failed "$mutated")"
+mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="APPROVE" | .treatment.event_evidence.effective.event="APPROVE"' "$mutated"
+assert_eq "gap plus effective APPROVE fails Q2 first" required_coverage "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.finding_ids=[]' "$mutated"
+assert_eq "lost must-fix fails Q3 first" must_fix_recall "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.adjudicated_false_positive=1' "$mutated"
+assert_eq "new false positive fails Q4 first" precision "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.behavior_hashes.options_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "less conservative options fail Q5 first" behavior_parity "$(first_failed "$mutated")"
+mutate_case new-material-dispute '.treatment.event_evidence.effective.event="APPROVE"' "$mutated"
+assert_eq "less conservative event fails Q5 first" behavior_parity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.timing.durations_ms.review_to_confirmation_ready=240001' "$mutated"
+assert_eq "240001 milliseconds fails Q6 first" latency "$(first_failed "$mutated")"
+
+mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="COMMENT" | .treatment.event_evidence.effective.event="COMMENT" | .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs' "$mutated"
+assert_eq "gaps capped to COMMENT pass Q2" true "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="COMMENT" | .treatment.event_evidence.effective.event="REQUEST_CHANGES" | .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs' "$mutated"
+assert_eq "gaps capped to REQUEST_CHANGES pass Q2" true "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="APPROVE"' "$mutated"
+assert_eq "gap with APPROVE ceiling fails Q2" false "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.event_evidence.effective.event="APPROVE"' "$mutated"
+assert_eq "gap with effective APPROVE fails Q2" false "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.event_evidence.effective.coverage_gap_refs=[]' "$mutated"
+assert_eq "gap missing evidence reference fails Q2" false "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane 'del(.treatment.event_evidence.effective.source_sha256)' "$mutated"
+assert_eq "gap missing source hash fails Q2" false "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.event_evidence.effective.source_sha256="invalid"' "$mutated"
+assert_eq "gap invalid source hash fails Q2" false "$(gate_value "$mutated" required_coverage)"
+mutate_case unavailable-required-lane '.treatment.event_evidence.posted={schema:"kc-pr-flow.posted-review-evidence/v1",review_key:.exact_head.review_key,event:"APPROVE",source_sha256:.treatment.behavior_hashes.event_sha256}' "$mutated"
+assert_eq "gap with posted APPROVE fails Q2" false "$(gate_value "$mutated" required_coverage)"
+
+# The whole corpus proves initial cases participate in Q1-Q5 while staying out of Q6.
+assert_eq "initial fallback passes Q1" true "$(jq -r '.gates.identity' <<<"$report")"
+assert_eq "initial fallback passes Q5" true "$(jq -r '.gates.behavior_parity' <<<"$report")"
+mutate_case force-push '.treatment.timing=null' "$mutated"
+assert_eq "initial timing null remains accepted" promote "$(score_file "$mutated" | jq -r '.verdict')"
+timing_template="$(jq -c 'select(.pair_id == "known-fix-only") | .treatment.timing' "$FIXTURE")"
+jq -c --arg pair_id force-push --argjson timing "$timing_template" \
+  'if .pair_id == $pair_id then .treatment.timing=$timing else . end' "$FIXTURE" >"$mutated"
+expect_rejected "initial fallback carrying timing is rejected" "$mutated"
+
+mutate_case known-fix-only '.treatment.capability_coverage += [.treatment.capability_coverage[0]]' "$mutated"
+expect_rejected "duplicate capability entries are rejected" "$mutated"
+mutate_case known-fix-only '.treatment.capability_gap_refs=["orphan-gap"]' "$mutated"
+expect_rejected "orphan gap references are rejected" "$mutated"
+mutate_case unavailable-required-lane '.treatment.capability_gap_refs += [.treatment.capability_gap_refs[0]]' "$mutated"
+expect_rejected "duplicate gap references are rejected" "$mutated"
+mutate_case known-fix-only '.treatment.capability_coverage[0].gap_ref="not-null"' "$mutated"
+expect_rejected "complete entry with a gap is rejected" "$mutated"
+mutate_case unavailable-required-lane '.treatment.capability_coverage[] |= if .status == "gap" then .gap_ref=null else . end' "$mutated"
+expect_rejected "gap entry without a reference is rejected" "$mutated"
+mutate_case known-fix-only '.caller_verdict="promote"' "$mutated"
+expect_rejected "caller verdict is rejected as an extra key" "$mutated"
+mutate_case known-fix-only '._derived={identity_valid:true,behavior_parity:true}' "$mutated"
+expect_rejected "caller derived booleans are rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.durations_ms.caller_total=1' "$mutated"
+expect_rejected "caller total is rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.measured_by="caller"' "$mutated"
+expect_rejected "non-runtime timing is rejected" "$mutated"
+jq -c 'if .pair_id == "fix-plus-test" then .pair_id="known-fix-only" else . end' \
+  "$FIXTURE" >"$mutated"
+expect_rejected "duplicate pair identifiers are rejected" "$mutated"
+
+before="$(sha256_file "$FIXTURE")"
+score_file "$FIXTURE" >/dev/null
+assert_eq "corpus bytes are unchanged after scoring" "$before" "$(sha256_file "$FIXTURE")"
+jq -c -s 'reverse[]' "$FIXTURE" >"$TEST_ROOT/reversed.jsonl"
+assert_eq "reversed corpus yields identical report bytes" "$report" "$(score_file "$TEST_ROOT/reversed.jsonl")"
+
+ln -s "$FIXTURE" "$TEST_ROOT/corpus-link.jsonl"
+expect_rejected "symlink corpus is rejected" "$TEST_ROOT/corpus-link.jsonl"
+mkfifo "$TEST_ROOT/corpus.fifo"
+expect_rejected "FIFO corpus is rejected without blocking" "$TEST_ROOT/corpus.fifo"
+dd if=/dev/zero of="$TEST_ROOT/oversized.jsonl" bs=1048576 count=17 >/dev/null 2>&1
+expect_rejected "oversized corpus is rejected" "$TEST_ROOT/oversized.jsonl"
+first_line="$(sed -n '1p' "$FIXTURE")"
+printf '%s\n' "${first_line/\"pair_id\":/\"pair_id\":\"duplicate\",\"pair_id\":}" >"$TEST_ROOT/duplicate.jsonl"
+expect_rejected "duplicate JSON members are rejected" "$TEST_ROOT/duplicate.jsonl"
+printf '%s\n' "${first_line/\"pr_number\":1693/\"pr_number\":9007199254740992}" >"$TEST_ROOT/unsafe-number.jsonl"
+expect_rejected "unsafe numbers are rejected" "$TEST_ROOT/unsafe-number.jsonl"
+printf '%s\n' "${first_line/\"pr_number\":1693/\"pr_number\":1693.0}" >"$TEST_ROOT/unsafe-float.jsonl"
+expect_rejected "floating-point numbers are rejected" "$TEST_ROOT/unsafe-float.jsonl"
+mutate_case known-fix-only '.treatment.event_evidence.effective.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" | .treatment.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "self-resealed treatment behavior cannot promote" behavior_parity "$(first_failed "$mutated")"
+
+printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+[ "$FAIL" -eq 0 ]
