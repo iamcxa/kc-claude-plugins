@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-production-recovery-route
 issue:
-pr: 299
+pr: pr-merge:299
 mod-block:
 design: required
 lane: main
