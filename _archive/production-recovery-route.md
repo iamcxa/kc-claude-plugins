@@ -1,13 +1,13 @@
 ---
 title: Make Production recovery proportional
-status: validation
+status: done
 source: "Captain-approved kc-dev-flow/S5 design: known Production repairs should retain exact proof without repeating resolved shape work"
 product: kc-dev-flow
 sprint: S5
 sprint-readiness: ready
 started: 2026-08-26T06:17:44Z
-completed:
-verdict:
+completed: 2026-08-27T02:04:14Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-production-recovery-route
 issue:
 pr: pr-merge:299
@@ -108,7 +108,8 @@ gates:
                 reason: Captain approved exact candidate 2b8abff after delegated Terra medium UAT loaded the Production recovery build contract, observed RED to GREEN with one isolated fixture change, performed no shape work, launched no RoboRev request, and left the product candidate clean.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-27T02:04:15Z
 ---
 
 Add a fail-closed Production recovery route for exact, bounded, reversible failures while preserving the existing full route as the default.
