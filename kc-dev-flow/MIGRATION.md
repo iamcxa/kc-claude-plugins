@@ -34,8 +34,10 @@ cutover, in this order:
    provider's current Ready set plus every still-Ready snapshot source outside
    the original window/outcome. Refuse a snapshot whose items do not all share
    the engaged item's exact window and outcome. Invoke the vendored comparator
-   with that exact source, window, and outcome. A delta, truncated result, or
-   invalid input must stop before dispatch. Run every profile-stage load,
+   with that exact source, window, and outcome. Only exit `0` with one parsed
+   `status: clean` result and empty delta arrays continues. A delta, truncated
+   result, invalid input, or any other output must stop before dispatch. Run
+   every profile-stage load,
    guarded POC close path, package
    parity check, and normal repository gate before updating the installed
    plugin.

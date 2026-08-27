@@ -116,12 +116,13 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
 
-`scripts/engage-reconcile.py` is the read-only compare mechanism. It consumes
-ephemeral normalized admission and current Ready sets, binds the exact engaged
-source, and compares source, window, outcome, accepted goal, and non-goals. It
-returns `0` when those fields match, `1` with
-added/removed/changed/moved identities, and `2` for invalid input. It
-invokes no provider or execution runtime.
+`scripts/engage-reconcile.py` is the read-only compare mechanism. It checks
+ephemeral normalized admission and current Ready sets against the
+caller-supplied expected source, window, and outcome, then compares accepted
+goal and non-goals. A completed comparison returns `0` with a JSON
+`status: clean` result, `1` with added/removed/changed/moved identities, or `2`
+for invalid input. It invokes no provider or execution runtime. The
+[design rationale](./RATIONALE.md) owns the planning/execution explanation.
 
 At a route's first working stage, the loader also requires one non-empty
 `sprint` and `sprint-readiness: ready` in work-item frontmatter. The planning

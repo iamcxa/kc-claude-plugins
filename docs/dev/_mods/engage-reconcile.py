@@ -16,7 +16,7 @@ CONTENT_FIELDS = ("accepted-goal", "non-goals")
 REQUIRED_FIELDS = ("source", *MOVEMENT_FIELDS, *CONTENT_FIELDS)
 TEXT_SENTINELS = {
     "null", "none", "unknown", "tbd", "todo", "~", "true", "false",
-    "[]", "{}", "|", ">", "&", "*", "!", "<>",
+    "|", ">", "&", "*", "!", "<>",
 }
 PLACEHOLDER_PATTERN = re.compile(r"(?:<[^<>]+>|\[\s*\]|\{\s*\})")
 
@@ -115,23 +115,11 @@ def main() -> int:
             raise ReconcileError("snapshot and current must be different files")
         snapshot = by_source(snapshot_items, "snapshot")
         current = by_source(current_items, "current")
-        if not snapshot:
-            raise ReconcileError("snapshot must contain the engaged source")
         if args.expected_source not in snapshot:
             raise ReconcileError(
                 f"snapshot does not contain expected source: {args.expected_source}"
             )
-        if not valid_text(args.expected_window) or not valid_text(args.expected_outcome):
-            raise ReconcileError("expected planning scope is invalid")
         expected_scope = (args.expected_window, args.expected_outcome)
-        engaged_scope = tuple(
-            cast(str, snapshot[args.expected_source][field])
-            for field in MOVEMENT_FIELDS
-        )
-        if engaged_scope != expected_scope:
-            raise ReconcileError(
-                "snapshot engaged source does not match expected planning scope"
-            )
         for source, item in snapshot.items():
             item_scope = tuple(cast(str, item[field]) for field in MOVEMENT_FIELDS)
             if item_scope != expected_scope:

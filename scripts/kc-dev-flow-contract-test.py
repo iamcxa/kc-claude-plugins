@@ -477,9 +477,10 @@ for phrase in [
     "No reconcile result writes either side automatically",
     "the read-only engage comparator",
     "exact engaged source",
-    "exact engaged source, window, and outcome",
+    "supplied expected source, window, and outcome",
     "do not all share that planning scope",
-    "A delta exit refuses new dispatch or state mutation",
+    "The First Officer must refuse new dispatch or state mutation",
+    "parsed `status: clean` result",
     "added, removed, changed, or moved",
     "Captain admits the delta",
 ]:
@@ -764,6 +765,7 @@ for phrase in [
     "exact source, window, and outcome",
     "do not all share",
     "Captain admits every delta",
+    "parsed `status: clean` result",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 for phrase in [
@@ -771,6 +773,7 @@ for phrase in [
     "drain every entity at `status: release`",
     "sprint-readiness=ready",
     "do not mark the unscheduled queue ready as a bulk migration",
+    "parsed `status: clean` result",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 require(
@@ -823,6 +826,7 @@ for phrase in [
     "every item shares the exact window and outcome",
     "Exit `1` reports the classified delta",
     "Exit `2` reports `planning reconcile unavailable`",
+    "stdout parses as one JSON object with `status: clean`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
 for phrase in [
@@ -862,6 +866,8 @@ for phrase in [
     "directional evidence",
     "What would prove this wrong",
     "Load the work, not the ceremony",
+    "The First Officer supplies the source, window, and outcome read from the exact work item",
+    "The First Officer continues only on one parsed `status: clean` result",
 ]:
     require(phrase in normalized_rationale, f"rationale omits: {phrase}")
 require(
@@ -947,6 +953,7 @@ for phrase in [
     "--expected-window",
     "--expected-outcome",
     "every item shares the engaged item's exact window and outcome",
+    "stdout parses as one JSON object with `status: clean`",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [
@@ -1027,6 +1034,15 @@ require(
 )
 require("](./MIGRATION.md)" in package_readme, "package README omits migration guide")
 require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
+require(
+    "checks ephemeral normalized admission and current Ready sets against the caller-supplied expected source, window, and outcome"
+    in normalized_package_readme,
+    "package README overclaims comparator provenance binding",
+)
+require(
+    "binds the exact engaged source" not in normalized_package_readme,
+    "package README still overclaims comparator provenance binding",
+)
 require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",

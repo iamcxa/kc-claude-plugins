@@ -44,13 +44,16 @@ not another accepted-goal authority. SD owns execution and evidence.
 
 At every engage, use the repository-local read-only planning reader to re-read
 the current Ready set for the snapshot's planning window/outcome plus every
-currently Ready snapshot source outside those bounds. Pass its source
-identities, window, outcome, accepted goal, and non-goals with the committed SD
-entity set and exact engaged source to the read-only engage comparator. Classify
-every difference as added, removed, changed, or moved. Exit `0` continues. A
-delta exit refuses new dispatch or state mutation; invalid input reports
-reconcile unavailable. The Captain admits the delta before an authorized actor
-commits a replacement snapshot. Do not cancel a running worker.
+currently Ready snapshot source outside those bounds. The First Officer passes
+its source identities, window, outcome, accepted goal, and non-goals with the
+committed SD entity set and the exact engaged source, window, and outcome read
+from that work item to the read-only engage comparator. Classify every difference
+as added, removed, changed, or moved. The First Officer may continue only when
+the comparator exits `0` and stdout is one parsed `status: clean` result. The
+First Officer must refuse new dispatch or state mutation on exit `1`, exit `2`,
+or any other output; invalid input reports reconcile unavailable. The Captain
+admits the delta before an authorized actor commits a replacement snapshot. Do
+not cancel a running worker.
 
 Do not add an SD-to-planning-provider projector, importer, polling loop, or
 bidirectional sync. No reconcile result writes either side automatically.
@@ -113,8 +116,8 @@ The scheduling fields are named because a queue answered by query is the point:
 without reading every queued item. The planning provider still owns which
 windows and outcomes exist; the `sprint` value only groups the SD execution
 records materialized from that accepted selection. At engage, the comparator
-must bind the exact engaged source, window, and outcome and reject a snapshot
-whose members do not all share that planning scope.
+must check the snapshot against the supplied expected source, window, and outcome
+and reject a snapshot whose members do not all share that planning scope.
 
 The Captain checks the bar on every `backlog` exit, at profile selection.
 A reused profile receipt answers which route the item takes, never whether the

@@ -61,11 +61,13 @@ read-only engage reconcile. `source`, `planning-window`, and `planning-outcome`
 bind each task to its planning selection; `sprint` groups the resulting SD
 entities for execution. At every engage, a repository-local reader normalizes
 the provider's current Ready set, including every still-Ready snapshot source
-outside the original window/outcome, and the committed snapshot. The vendored
-read-only comparator binds the exact engaged source, compares the five planning
-fields, and classifies every delta before new dispatch or mutation. The Captain
-admits that delta before an authorized actor commits the replacement snapshot.
-Because reconcile writes neither side, it is not synchronization.
+outside the original window/outcome, and the committed snapshot. The First
+Officer supplies the source, window, and outcome read from the exact work item;
+the vendored read-only comparator checks the normalized snapshot against those
+expected values and classifies every delta. The First Officer continues only on
+one parsed `status: clean` result. The Captain admits a delta before an
+authorized actor commits the replacement snapshot. Because reconcile writes
+neither side, it is not synchronization.
 
 That boundary lets a repository replace GitHub Projects with Linear, or the
 reverse, without rewriting active Spacedock snapshots, execution history, or

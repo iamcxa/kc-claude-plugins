@@ -146,7 +146,7 @@ expect_json(
 expect_error(
     "empty snapshot",
     run([], []),
-    "snapshot must contain the engaged source",
+    "snapshot does not contain expected source: issue:missing",
 )
 expect_error(
     "partial snapshot",
@@ -206,14 +206,14 @@ wrong_scope["planning-window"] = "2026-W36"
 expect_error(
     "engaged source scope mismatch",
     run([wrong_scope], [wrong_scope]),
-    "snapshot engaged source does not match expected planning scope",
+    "snapshot source is outside expected planning scope: issue:wrong-scope",
 )
 wrong_outcome = item("issue:wrong-outcome")
 wrong_outcome["planning-outcome"] = "different outcome"
 expect_error(
     "engaged source outcome mismatch",
     run([wrong_outcome], [wrong_outcome]),
-    "snapshot engaged source does not match expected planning scope",
+    "snapshot source is outside expected planning scope: issue:wrong-outcome",
 )
 mixed_scope = item("issue:mixed-scope")
 mixed_scope["planning-outcome"] = "different outcome"

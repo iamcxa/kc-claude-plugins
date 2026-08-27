@@ -63,10 +63,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    normalize the provider's current Ready set and committed SD snapshot into
    ephemeral comparator inputs. Refuse a snapshot whose items do not all share
    the engaged item's exact `planning-window` and `planning-outcome`. Bind that
-   exact source, window, and outcome when invoking the vendored comparator;
-   exit `0` continues, exit `1` reports the
-   classified delta and stops, and exit `2` reports unavailable input and
-   stops.
+   exact source, window, and outcome when invoking the vendored comparator.
+   Only exit `0` with one parsed `status: clean` result and empty delta arrays
+   continues. Any other output stops: exit `1` reports the classified delta,
+   while exit `2` or an invalid exit-`0` payload reports unavailable input.
    Report added, removed, changed, and moved items and stop before new dispatch
    or state mutation when any difference exists. The Captain admits every delta
    before an authorized actor commits a replacement snapshot. Never mutate

@@ -53,8 +53,11 @@ Continue by the selected profile's smallest sufficient route.
      --expected-outcome <exact-work-item-planning-outcome>
    ```
 
-   Exit `0` continues. Exit `1` reports the classified delta and stops
-   before new dispatch or state mutation. Exit `2` reports
+   Exit `0` continues only when stdout parses as one JSON object with
+   `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.
+   Any other exit-`0` output reports `planning reconcile unavailable` and stops
+   before new dispatch or state mutation. Exit `1` reports the classified delta
+   and stops at that boundary. Exit `2` reports
    `planning reconcile unavailable` and stops at the same boundary. If the
    comparison finds an added, removed, changed, or moved item, report the
    delta and stop before new dispatch or state mutation. The Captain must admit
