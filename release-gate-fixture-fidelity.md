@@ -302,3 +302,22 @@ PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-pl
 ### Summary
 
 The rebase drops the now-redundant loader-test hunk and retains only the seven-line Git fixture precondition in 0e9d613. Fresh local proof is green on pinned Spacedock 0.27.0-pre8; product push, PR update, validation, and delivery remain First Officer work.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Freshly bind exact candidate 0e9d613dc417f0467662cfd03a15a91d00d3508e, feature parent and merge target 31207d6ff45a5c0ddecd5b2f9f7d3dfd6961be0f, and stale PR remote head d339ba2. Product tree is read-only.
+  Fresh fetch left `origin/main` at 31207d6, candidate `HEAD` and sole parent match the assigned objects, `origin/main...HEAD` is 0 behind/1 ahead, and read-only PR #295 observation still reports remote head d339ba2 and `CONFLICTING`.
+- DONE: Prove the final diff is exactly scripts/kc-dev-flow-minimal-stack-ablation.test.py with seven additions and no other semantic, workflow, CI, dependency, pin, metadata, documentation, or authority change. Confirm origin/main owns the absorbed absolute artifact-path repair.
+  `git diff --numstat origin/main...HEAD` is exactly `7 0 scripts/kc-dev-flow-minimal-stack-ablation.test.py`; `git diff --check` is clean, while origin/main's loader test passes the absolute `route_artifact` created beneath its absolute temporary workflow path.
+- DONE: Independently run focused profile loader, complete kc-dev-flow contract gate, Python compilation, diff-check, and the full pinned Spacedock 0.27.0-pre8 minimal-stack ablation. Require baseline PASS, all 10 named mutants rejected for expected evidence, and release-state-restored reaching would strand.
+  Loader route mechanism and overall suite passed, the complete contract gate passed, both involved Python files compiled, and pinned pre8 exited 0 with baseline PASS plus every named mutant REJECTED; the unchanged release-state matcher fails unless output contains `would strand`.
+- DONE: Run one task-owned without-it in an isolated temporary worktree by executing the candidate test with the exact origin/main version of the changed fixture script. Require the missing committed-Git precondition to make the release-gate proof fail for the expected candidate-smoke evidence, confirm exact objects and paths, and remove the worktree.
+  Detached `/tmp/kc-dev-flow-without-it-vD4uTG` had candidate HEAD 0e9d613 and restored blob `bcce97b1052fc8e23fccbc6d13e79a56fab11a44`, identical to 31207d6's script; pre8 exited 1 because release-state-restored reached published-tag candidate smoke without `candidate.json`, then the temporary worktree was restored and removed.
+- DONE: Record exact-candidate delegated UAT evidence for the PR #258 failure: the baseline and 10-mutant journey must prove the prior missing review.md and candidate.json errors no longer mask would strand. Carry RoboRev UNKNOWN(state_unknown) without retry.
+  Delegated UAT at 0e9d613 observed baseline PASS and 10/10 expected refusals, including release-state-restored accepted only on `would strand`; the without-it control reproduced missing `candidate.json`, so neither that error nor the earlier relative `review.md` error can satisfy the candidate. RoboRev remains UNKNOWN(state_unknown) and was not retried.
+- DONE: Return PASS only if the branch remains 0 behind origin/main and every acceptance criterion is supported. Append one validation cycle 2 Stage Report and sync only state. Do not push product, update PR #295, approve the Captain gate, merge, modify PR #258, or release.
+  PASS: after fresh fetch the branch is 0 behind/1 ahead, the candidate worktree is clean, and only this state report is committed; product, both PRs, Captain authority, merge, and release remain untouched.
+
+### Summary
+
+Validation cycle 2 passes at exact candidate 0e9d613 against merge target 31207d6. The seven-line Git initialization is both sufficient and necessary: the full pre8 journey reaches `would strand`, while exact without-it fails earlier at candidate smoke because `candidate.json` is absent.
