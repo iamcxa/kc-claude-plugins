@@ -10,10 +10,8 @@ import json
 import os
 import re
 import secrets
-import signal
 import stat
 import sys
-import time
 from typing import Any, Dict, List, Tuple
 
 
@@ -446,7 +444,13 @@ def replace_private(
     if rc != 0:
         return rc
     temp_name = ""
+    locked = False
     try:
+        try:
+            fcntl.flock(parent_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            locked = True
+        except (BlockingIOError, OSError):
+            return 75
         rc, current = read_bound_regular(parent_fd, name, limit)
         if rc != 0 or current != expected_content:
             return 74
@@ -466,6 +470,11 @@ def replace_private(
         if temp_name:
             try:
                 os.unlink(temp_name, dir_fd=parent_fd)
+            except OSError:
+                pass
+        if locked:
+            try:
+                fcntl.flock(parent_fd, fcntl.LOCK_UN)
             except OSError:
                 pass
         try:
@@ -579,99 +588,6 @@ def parent_identity_command(argv: List[str]) -> int:
             pass
 
 
-def parse_descriptor(value: str) -> int:
-    if re.fullmatch(r"[3-9]|[1-9][0-9]+", value) is None:
-        raise ValueError
-    return int(value, 10)
-
-
-def validate_bound_parent(parent_path: str, parent_fd: int) -> int:
-    try:
-        path_stat = os.lstat(parent_path)
-        bound = os.fstat(parent_fd)
-        if not stat.S_ISDIR(path_stat.st_mode) or not stat.S_ISDIR(bound.st_mode):
-            return 74
-        if (path_stat.st_dev, path_stat.st_ino) != (bound.st_dev, bound.st_ino):
-            return 74
-        return 0
-    except OSError:
-        return 74
-
-
-def timing_lock_hold(parent_path: str, parent_fd: int) -> int:
-    if validate_bound_parent(parent_path, parent_fd) != 0:
-        return 75
-    nofollow = getattr(os, "O_NOFOLLOW", None)
-    cloexec = getattr(os, "O_CLOEXEC", None)
-    directory = getattr(os, "O_DIRECTORY", None)
-    if nofollow is None or cloexec is None or directory is None:
-        return 69
-    lock_fd = -1
-    running = {"value": True}
-
-    def stop(_signum: int, _frame: Any) -> None:
-        running["value"] = False
-
-    try:
-        lock_fd = os.open(
-            ".", os.O_RDONLY | directory | nofollow | cloexec, dir_fd=parent_fd
-        )
-        bound = os.fstat(parent_fd)
-        lock_bound = os.fstat(lock_fd)
-        if (bound.st_dev, bound.st_ino) != (lock_bound.st_dev, lock_bound.st_ino):
-            return 75
-        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except (BlockingIOError, OSError):
-        return 75
-    try:
-        signal.signal(signal.SIGTERM, stop)
-        signal.signal(signal.SIGINT, stop)
-        print(
-            "READY %d %d %d %d"
-            % (os.getpid(), os.getppid(), bound.st_dev, bound.st_ino),
-            flush=True,
-        )
-        while running["value"]:
-            time.sleep(0.1)
-            try:
-                os.write(sys.stdout.fileno(), b"\n")
-            except BrokenPipeError:
-                break
-        return 0
-    except OSError:
-        return 75
-    finally:
-        try:
-            if lock_fd >= 0:
-                fcntl.flock(lock_fd, fcntl.LOCK_UN)
-        except OSError:
-            pass
-        if lock_fd >= 0:
-            try:
-                os.close(lock_fd)
-            except OSError:
-                pass
-
-
-def timing_lock_hold_command(argv: List[str]) -> int:
-    required = {"--parent-path", "--parent-fd"}
-    if len(argv) != len(required) * 2:
-        return 73
-    values = {}  # type: Dict[str, str]
-    for index in range(0, len(argv), 2):
-        option = argv[index]
-        if option not in required or option in values:
-            return 73
-        values[option] = argv[index + 1]
-    if set(values) != required:
-        return 73
-    try:
-        parent_fd = parse_descriptor(values["--parent-fd"])
-    except ValueError:
-        return 73
-    return timing_lock_hold(values["--parent-path"], parent_fd)
-
-
 def private_json_command(argv: List[str], replace: bool) -> int:
     expected_options = (
         {"--destination", "--expected", "--parent-identity"}
@@ -723,8 +639,6 @@ def main(argv: List[str]) -> int:
         return private_json_command(argv[1:], False)
     if argv[:1] == ["replace-private-json"]:
         return private_json_command(argv[1:], True)
-    if argv[:1] == ["timing-lock-hold"]:
-        return timing_lock_hold_command(argv[1:])
     print(
         "usage: review-runtime-safe-io.py unique-json | unique-json-lines | "
         "rfc3339-utc VALUE | "
@@ -733,7 +647,7 @@ def main(argv: List[str]) -> int:
         "private-parent-identity --destination DEST | "
         "publish-private-json --destination DEST --parent-identity DEV:INO | "
         "replace-private-json --destination DEST --expected SNAPSHOT "
-        "--parent-identity DEV:INO | timing-lock-hold ...",
+        "--parent-identity DEV:INO",
         file=sys.stderr,
     )
     return 2

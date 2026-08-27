@@ -849,26 +849,12 @@ run_timing_publication_tests() {
   local start_target start_ready start_release start_writer start_payload start_rc
   local mark_target mark_ready mark_release mark_writer mark_payload mark_rc
   local path_parent path_parent_moved path_target path_payload path_rc
-  local holder_parent holder_rc
-  local serial_parent serial_a serial_b serial_c serial_ready serial_release serial_pid serial_rc
-  local other_parent other_state crash_ready crash_release crash_pid_file crash_worker crash_holder
-
-  holder_parent="$TEST_INPUT_ROOT/timing-holder-contract"
-  mkdir "$holder_parent"
-  (
-    exec 9<"$holder_parent"
-    if declare -F review_runtime_start_bound_timing_holder >/dev/null 2>&1; then
-      review_runtime_start_bound_timing_holder "$holder_parent" 9
-      holder_rc=$?
-      review_runtime_release_bound_timing_holder
-      exit "$holder_rc"
-    fi
-    exit 127
-  )
-  holder_rc=$?
-  assert_eq "kernel timing holder reaches READY through a direct child pipe" "0" "$holder_rc"
-  assert_eq "kernel timing holder creates no pathname lock artifact" "0" \
-    "$(find "$holder_parent" -mindepth 1 | wc -l | tr -d ' ')"
+  local mark_path_parent mark_path_parent_moved mark_path_target mark_path_payload
+  local serial_parent serial_state serial_ready_a serial_ready_b serial_release
+  local serial_rc_a serial_rc_b serial_pid_a serial_pid_b serial_ready_count serial_results
+  local other_parent other_parent_two other_state other_state_two other_ready_a other_ready_b other_release
+  local other_rc_a other_rc_b other_pid_a other_pid_b other_ready_count
+  local crash_parent crash_state crash_ready crash_holder
 
   start_target="$TEST_INPUT_ROOT/timing-publication-start.json"
   start_ready="$TEST_INPUT_ROOT/timing-publication-start.ready"
@@ -949,57 +935,145 @@ run_timing_publication_tests() {
     "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" \
     "$(jq -r '.review_key' "$mark_target")"
 
-  serial_parent="$TEST_INPUT_ROOT/timing-holder-serial"
-  other_parent="$TEST_INPUT_ROOT/timing-holder-independent"
-  mkdir "$serial_parent" "$other_parent"
-  serial_a="$serial_parent/a.json"
-  serial_b="$serial_parent/b.json"
-  serial_c="$serial_parent/c.json"
-  other_state="$other_parent/state.json"
-  for state_file in "$serial_a" "$serial_b" "$serial_c" "$other_state"; do
-    review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$state_file" >/dev/null
-  done
-  serial_ready="$TEST_INPUT_ROOT/timing-holder-serial.ready"
-  serial_release="$TEST_INPUT_ROOT/timing-holder-serial.release"
+  mark_path_parent="$TEST_INPUT_ROOT/timing-mark-parent"
+  mark_path_parent_moved="$TEST_INPUT_ROOT/timing-mark-parent-bound"
+  mark_path_target="$mark_path_parent/state.json"
+  mkdir "$mark_path_parent"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$mark_path_target" >/dev/null
+  mark_path_payload="$(rehash_timing_state "$(jq -c \
+    '.review_key="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' \
+    "$mark_path_target")")"
   (
     review_runtime_timing_publication_barrier() {
-      : >"$serial_ready"
+      mv "$mark_path_parent" "$mark_path_parent_moved"
+      mkdir "$mark_path_parent"
+      printf '%s\n' "$mark_path_payload" >"$mark_path_target"
+    }
+    review_runtime_timing_mark "$mark_path_target" identity_and_plan >/dev/null 2>&1
+  )
+  mark_rc=$?
+  assert_eq "timing-mark rejects a replaced parent directory" "74" "$mark_rc"
+  assert_eq "timing-mark preserves state in the replacement parent" \
+    "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" \
+    "$(jq -r '.review_key' "$mark_path_target")"
+
+  serial_parent="$TEST_INPUT_ROOT/timing-cas-serial"
+  mkdir "$serial_parent"
+  serial_state="$serial_parent/state.json"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$serial_state" >/dev/null
+  serial_ready_a="$TEST_INPUT_ROOT/timing-cas-serial-a.ready"
+  serial_ready_b="$TEST_INPUT_ROOT/timing-cas-serial-b.ready"
+  serial_release="$TEST_INPUT_ROOT/timing-cas-serial.release"
+  serial_rc_a="$TEST_INPUT_ROOT/timing-cas-serial-a.rc"
+  serial_rc_b="$TEST_INPUT_ROOT/timing-cas-serial-b.rc"
+  (
+    review_runtime_timing_publication_barrier() {
+      : >"$serial_ready_a"
       while [ ! -e "$serial_release" ]; do sleep 0.01; done
     }
-    review_runtime_timing_mark "$serial_a" identity_and_plan >/dev/null
+    review_runtime_timing_mark "$serial_state" identity_and_plan >/dev/null 2>&1
+    printf '%s\n' "$?" >"$serial_rc_a"
   ) &
-  serial_pid=$!
-  while [ ! -e "$serial_ready" ] && kill -0 "$serial_pid" 2>/dev/null; do sleep 0.01; done
-  review_runtime_timing_mark "$serial_b" identity_and_plan >/dev/null 2>&1
-  assert_eq "same-parent timing writer fails closed while kernel holder is live" "75" "$?"
-  review_runtime_timing_mark "$other_state" identity_and_plan >/dev/null 2>&1
-  assert_eq "different-parent timing writer proceeds independently" "0" "$?"
-  : >"$serial_release"
-  wait "$serial_pid"
-  serial_rc=$?
-  assert_eq "serialized timing writer completes after release" "0" "$serial_rc"
-
-  crash_ready="$TEST_INPUT_ROOT/timing-holder-crash.ready"
-  crash_release="$TEST_INPUT_ROOT/timing-holder-crash.release"
-  crash_pid_file="$TEST_INPUT_ROOT/timing-holder-crash.pid"
+  serial_pid_a=$!
   (
     review_runtime_timing_publication_barrier() {
-      printf '%s\n' "$REVIEW_RUNTIME_TIMING_HOLDER_PID" >"$crash_pid_file"
-      : >"$crash_ready"
-      while [ ! -e "$crash_release" ]; do sleep 0.01; done
+      : >"$serial_ready_b"
+      while [ ! -e "$serial_release" ]; do sleep 0.01; done
     }
-    review_runtime_timing_mark "$serial_c" identity_and_plan >/dev/null 2>&1
+    review_runtime_timing_mark "$serial_state" identity_and_plan >/dev/null 2>&1
+    printf '%s\n' "$?" >"$serial_rc_b"
   ) &
-  crash_worker=$!
-  while [ ! -e "$crash_ready" ] && kill -0 "$crash_worker" 2>/dev/null; do sleep 0.01; done
-  crash_holder="$(cat "$crash_pid_file")"
+  serial_pid_b=$!
+  wait_count=0
+  while { [ ! -e "$serial_ready_a" ] || [ ! -e "$serial_ready_b" ]; } &&
+    [ "$wait_count" -lt 200 ]; do
+    wait_count=$((wait_count + 1))
+    sleep 0.01
+  done
+  serial_ready_count=0
+  [ -e "$serial_ready_a" ] && serial_ready_count=$((serial_ready_count + 1))
+  [ -e "$serial_ready_b" ] && serial_ready_count=$((serial_ready_count + 1))
+  : >"$serial_release"
+  wait "$serial_pid_a" "$serial_pid_b"
+  assert_eq "same-state timing writers both derive before publication" "2" "$serial_ready_count"
+  serial_results="$(sort "$serial_rc_a" "$serial_rc_b" | tr '\n' ' ' | sed 's/ $//')"
+  case "$serial_results" in
+    '0 74' | '0 75') pass "same-state timing writers publish once and fail one closed" ;;
+    *) fail "same-state timing writers publish once and fail one closed (got $serial_results)" ;;
+  esac
+  assert_eq "same-state timing race leaves one complete valid mark" "1" \
+    "$(review_runtime_timing_state_valid "$serial_state" && jq -r '.marks | length' "$serial_state")"
+
+  other_parent="$TEST_INPUT_ROOT/timing-cas-independent"
+  other_parent_two="$TEST_INPUT_ROOT/timing-cas-independent-two"
+  mkdir "$other_parent" "$other_parent_two"
+  other_state="$other_parent/a.json"
+  other_state_two="$other_parent_two/b.json"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$other_state" >/dev/null
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$other_state_two" >/dev/null
+  other_ready_a="$TEST_INPUT_ROOT/timing-cas-independent-a.ready"
+  other_ready_b="$TEST_INPUT_ROOT/timing-cas-independent-b.ready"
+  other_release="$TEST_INPUT_ROOT/timing-cas-independent.release"
+  other_rc_a="$TEST_INPUT_ROOT/timing-cas-independent-a.rc"
+  other_rc_b="$TEST_INPUT_ROOT/timing-cas-independent-b.rc"
+  (
+    review_runtime_timing_publication_barrier() {
+      : >"$other_ready_a"
+      while [ ! -e "$other_release" ]; do sleep 0.01; done
+    }
+    review_runtime_timing_mark "$other_state" identity_and_plan >/dev/null 2>&1
+    printf '%s\n' "$?" >"$other_rc_a"
+  ) &
+  other_pid_a=$!
+  (
+    review_runtime_timing_publication_barrier() {
+      : >"$other_ready_b"
+      while [ ! -e "$other_release" ]; do sleep 0.01; done
+    }
+    review_runtime_timing_mark "$other_state_two" identity_and_plan >/dev/null 2>&1
+    printf '%s\n' "$?" >"$other_rc_b"
+  ) &
+  other_pid_b=$!
+  wait_count=0
+  while { [ ! -e "$other_ready_a" ] || [ ! -e "$other_ready_b" ]; } &&
+    [ "$wait_count" -lt 200 ]; do
+    wait_count=$((wait_count + 1))
+    sleep 0.01
+  done
+  other_ready_count=0
+  [ -e "$other_ready_a" ] && other_ready_count=$((other_ready_count + 1))
+  [ -e "$other_ready_b" ] && other_ready_count=$((other_ready_count + 1))
+  : >"$other_release"
+  wait "$other_pid_a" "$other_pid_b"
+  assert_eq "different-parent timing writers both reach publication" "2" "$other_ready_count"
+  assert_eq "different-parent timing publications both complete" "0 0" \
+    "$(sort "$other_rc_a" "$other_rc_b" | tr '\n' ' ' | sed 's/ $//')"
+
+  crash_parent="$TEST_INPUT_ROOT/timing-cas-crash"
+  mkdir "$crash_parent"
+  crash_state="$crash_parent/state.json"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$crash_state" >/dev/null
+  crash_ready="$TEST_INPUT_ROOT/timing-cas-crash.ready"
+  python3 - "$crash_parent" "$crash_ready" <<'PY' &
+import fcntl
+import os
+import sys
+import time
+
+fd = os.open(sys.argv[1], os.O_RDONLY | os.O_DIRECTORY)
+fcntl.flock(fd, fcntl.LOCK_EX)
+with open(sys.argv[2], "w", encoding="utf-8"):
+    pass
+time.sleep(60)
+PY
+  crash_holder=$!
+  while [ ! -e "$crash_ready" ] && kill -0 "$crash_holder" 2>/dev/null; do sleep 0.01; done
   kill -KILL "$crash_holder"
-  while kill -0 "$crash_holder" 2>/dev/null; do sleep 0.01; done
-  review_runtime_timing_mark "$serial_b" identity_and_plan >/dev/null 2>&1
-  assert_eq "holder crash releases the kernel lock" "0" "$?"
-  : >"$crash_release"
-  wait "$crash_worker" 2>/dev/null
-  assert_eq "writer whose holder crashed fails closed before publication" "75" "$?"
+  wait "$crash_holder" 2>/dev/null
+  review_runtime_timing_mark "$crash_state" identity_and_plan >/dev/null 2>&1
+  assert_eq "crashed publication process leaves the kernel lock available" "0" "$?"
+  assert_eq "publication locking creates no lock pathname artifact" "1" \
+    "$(find "$crash_parent" -mindepth 1 -maxdepth 1 | wc -l | tr -d ' ')"
 
   assert_eq "timing publication leaves no private temp file" "0" \
     "$(find "$TEST_INPUT_ROOT" -name '.review-timing.*' | wc -l | tr -d ' ')"

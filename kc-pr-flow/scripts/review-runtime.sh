@@ -283,50 +283,6 @@ review_runtime_timing_publication_barrier() {
   :
 }
 
-review_runtime_start_bound_timing_holder() {
-  local parent_path="$1" parent_fd="$2" helper
-  local ready holder_pid holder_parent_pid holder_dev holder_ino extra wrapper_pid
-  helper="$(review_runtime_safe_io_helper)" || return 75
-  exec 8< <(python3 "$helper" timing-lock-hold \
-    --parent-path "$parent_path" --parent-fd "$parent_fd" 2>/dev/null)
-  wrapper_pid=$!
-  if ! IFS=' ' read -r ready holder_pid holder_parent_pid holder_dev holder_ino extra <&8 ||
-    [ "$ready" != 'READY' ] || [ -n "$extra" ] ||
-    ! [[ "$holder_pid" =~ ^[1-9][0-9]*$ ]] ||
-    ! [[ "$holder_parent_pid" =~ ^[1-9][0-9]*$ ]] ||
-    { [ "$holder_pid" != "$wrapper_pid" ] && [ "$holder_parent_pid" != "$wrapper_pid" ]; } ||
-    ! [[ "$holder_dev" =~ ^[0-9]+$ ]] || ! [[ "$holder_ino" =~ ^[0-9]+$ ]] ||
-    ! kill -0 "$wrapper_pid" 2>/dev/null || ! kill -0 "$holder_pid" 2>/dev/null; then
-    kill "$wrapper_pid" 2>/dev/null || true
-    wait "$wrapper_pid" 2>/dev/null || true
-    exec 8<&-
-    return 75
-  fi
-  REVIEW_RUNTIME_TIMING_HOLDER_PID="$holder_pid"
-  REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID="$wrapper_pid"
-}
-
-review_runtime_timing_holder_is_live() {
-  [[ "${REVIEW_RUNTIME_TIMING_HOLDER_PID:-}" =~ ^[1-9][0-9]*$ ]] || return 1
-  [[ "${REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID:-}" =~ ^[1-9][0-9]*$ ]] || return 1
-  kill -0 "$REVIEW_RUNTIME_TIMING_HOLDER_PID" 2>/dev/null &&
-    kill -0 "$REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID" 2>/dev/null
-}
-
-review_runtime_release_bound_timing_holder() {
-  local holder_pid="${REVIEW_RUNTIME_TIMING_HOLDER_PID:-}"
-  local wrapper_pid="${REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID:-}"
-  if [[ "$holder_pid" =~ ^[1-9][0-9]*$ ]]; then
-    kill -TERM "$holder_pid" 2>/dev/null || true
-  fi
-  if [[ "$wrapper_pid" =~ ^[1-9][0-9]*$ ]]; then
-    wait "$wrapper_pid" 2>/dev/null || true
-  fi
-  REVIEW_RUNTIME_TIMING_HOLDER_PID=''
-  REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID=''
-  exec 8<&-
-}
-
 review_runtime_write_new_private_json() (
   local payload="$1" output_file="$2" label="$3"
   local output_dir helper parent_identity rc
@@ -365,16 +321,12 @@ review_runtime_replace_private_json() (
   parent_identity="$(python3 "$helper" private-parent-identity \
     --destination "$output_file" 2>/dev/null)" || return
   review_runtime_timing_publication_barrier replace "$output_file" || return 74
-  if [ -n "${REVIEW_RUNTIME_TIMING_HOLDER_PID:-}" ] &&
-    ! review_runtime_timing_holder_is_live; then
-    return 75
-  fi
   printf '%s\n' "$payload" | python3 "$helper" replace-private-json \
     --destination "$output_file" --expected "$expected_snapshot" \
     --parent-identity "$parent_identity" >/dev/null 2>&1
   rc=$?
   case "$rc" in
-    0 | 2 | 69 | 73 | 74) return "$rc" ;;
+    0 | 2 | 69 | 73 | 74 | 75) return "$rc" ;;
     *) return 74 ;;
   esac
 )
@@ -501,19 +453,11 @@ review_runtime_timing_mark() (
     printf 'review-runtime: unsafe timing state parent directory\n' >&2
     return 2
   }
-  exec 9<"$timing_dir" || return 74
-  REVIEW_RUNTIME_TIMING_HOLDER_PID=''
-  REVIEW_RUNTIME_TIMING_HOLDER_WRAPPER_PID=''
-  review_runtime_start_bound_timing_holder "$timing_dir" 9 || {
-    exec 9<&-
-    return 75
-  }
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"; review_runtime_release_bound_timing_holder; exec 9<&-' EXIT
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"' EXIT
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   state_snapshot="$snapshot_dir/timing-state.json"
   review_runtime_snapshot_regular_file \
     "$timing_file" "$state_snapshot" 'timing state' 1048576 || return
-  review_runtime_timing_holder_is_live || return 75
   review_runtime_timing_state_valid "$state_snapshot" || {
     printf 'review-runtime: invalid timing state\n' >&2
     return 3
