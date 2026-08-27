@@ -12,8 +12,12 @@ review_plan_content_sha256() {
   jq -S -c 'del(.content_sha256)' | review_runtime_sha256
 }
 
+review_plan_required_capabilities() {
+  jq -S -c '[.lanes[].capability] | sort | unique'
+}
+
 review_plan_build_receipt() (
-  local event_file="$1" projection projection_hash receipt_id canonical content_sha256
+  local event_file="$1" projection projection_hash receipt_id required_capabilities canonical content_sha256
   [ "$#" -eq 1 ] || return 2
   projection="$(review_runtime_replay "$event_file")" || return 3
   jq -e '
@@ -22,10 +26,16 @@ review_plan_build_receipt() (
     (.lanes | all(.result.terminal_status == "succeeded")) and
     .uncertain_candidate_ids == []
   ' >/dev/null <<<"$projection" || return 3
+  required_capabilities="$(printf '%s' "$projection" | review_plan_required_capabilities)" || return 3
+  jq -e '
+    type == "array" and length > 0 and
+    all(type == "string" and test("^[a-z][a-z0-9._-]{0,63}$")) and
+    . == (sort | unique)
+  ' >/dev/null <<<"$required_capabilities" || return 3
   projection_hash="$(printf '%s' "$projection" | jq -S -c . | review_runtime_sha256)" || return
   receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$projection")|$projection_hash" |
     review_runtime_sha256)" || return
-  canonical="$(jq -S -c --arg receipt_id "$receipt_id" '
+  canonical="$(jq -S -c --arg receipt_id "$receipt_id" --argjson required_capabilities "$required_capabilities" '
     .run as $run |
     {
       schema:"kc-pr-flow.review-delta-receipt/v1",
@@ -41,7 +51,7 @@ review_plan_build_receipt() (
         evidence_sha256:.evidence.content_sha256,
         path,side,resolution_state:"unresolved"
       }) | sort_by(.finding_id)),
-      required_capabilities:(.lanes | map(.capability) | sort | unique),
+      required_capabilities:$required_capabilities,
       coverage_gap_refs:[]
     }' <<<"$projection")" || return 3
   jq -e '.required_capabilities | length > 0' >/dev/null <<<"$canonical" || return 3
