@@ -491,6 +491,89 @@ make_replay_receipt() {
   printf '%s\n' "$finding_id"
 }
 
+make_capability_replay_events() {
+  local fixture_repo="$1" repository="$2" pr_number="$3" base_sha="$4" reviewed_sha="$5"
+  local config_hash="$6" event_file="$7" capabilities="$8" fixture="$9"
+  local finding_meta path side anchor_sha256 category claim_key evidence_kind evidence_line evidence_locator
+  local review_key object_sha content_sha run_id pointer merge_key candidate_id candidate finding behavior finding_id
+  local capability lane_id task result candidate_ids sequence
+
+  finding_meta="$(jq -e -S -c '.known_findings[0]' "$fixture")" || return 2
+  path="$(jq -r '.path' <<<"$finding_meta")" || return
+  side="$(jq -r '.side' <<<"$finding_meta")" || return
+  anchor_sha256="$(jq -r '.anchor_sha256' <<<"$finding_meta")" || return
+  category="$(jq -r '.category' <<<"$finding_meta")" || return
+  claim_key="$(jq -r '.claim_key' <<<"$finding_meta")" || return
+  evidence_kind="$(jq -r '.evidence.kind' <<<"$finding_meta")" || return
+  evidence_line="$(jq -r '.evidence.line' <<<"$finding_meta")" || return
+  evidence_locator="$(jq -r '.evidence.locator' <<<"$finding_meta")" || return
+  if [ "$side" = 'LEFT' ]; then object_sha="$base_sha"; else object_sha="$reviewed_sha"; fi
+  review_key="$(sha256_text "$repository|$pr_number|$base_sha|$reviewed_sha|$config_hash")"
+  content_sha="$(git -C "$fixture_repo" show "$object_sha:$path" | review_runtime_sha256)" || return
+  run_id='run-pr1693-capability-replay'
+  pointer="$(jq -S -c -n --arg key "$review_key" --arg repo "$repository" --arg base "$base_sha" \
+    --arg head "$reviewed_sha" --arg object "$object_sha" --arg path "$path" --arg side "$side" \
+    --arg kind "$evidence_kind" --arg locator "$evidence_locator" --arg hash "$content_sha" \
+    --argjson line "$evidence_line" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:$kind,review_key:$key,repository:$repo,
+      base_sha:$base,head_sha:$head,object_sha:$object,path:$path,side:$side,line:$line,
+      locator:$locator,content_sha256:$hash}')"
+  candidate_id="$(review_runtime_candidate_id "$run_id" correctness-1 1 "$content_sha")"
+  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" \
+    --arg path "$path" --arg side "$side" --arg anchor "$anchor_sha256" \
+    --arg category "$category" --arg claim "$claim_key" --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
+      lane_id:"correctness-1",ordinal:1,path:$path,side:$side,anchor_sha256:$anchor,
+      category:$category,claim_key:$claim,evidence:$evidence}')"
+  merge_key="$path|$side|$content_sha|$category|$claim_key"
+  finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")"
+  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" \
+    --arg merge "$merge_key" --arg candidate "$candidate_id" --arg path "$path" --arg side "$side" \
+    --arg anchor "$anchor_sha256" --arg category "$category" --arg claim "$claim_key" \
+    --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
+      path:$path,side:$side,anchor_sha256:$anchor,category:$category,claim_key:$claim,
+      candidate_ids:[$candidate],evidence:$evidence}')"
+  behavior="$(jq -S -c -n --arg hash "$content_sha" \
+    '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
+      github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
+  : >"$event_file"
+  sequence=1
+  review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' run.started '{}' >>"$event_file"
+  sequence=$((sequence + 1))
+  for capability in $(printf '%s' "$capabilities" | tr ',' ' '); do
+    lane_id="$capability-1"
+    task="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
+      --arg base "$base_sha" --arg head "$reviewed_sha" --arg config "$config_hash" --arg lane "$lane_id" \
+      --arg capability "$capability" --argjson pr "$pr_number" \
+      '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:$lane,
+        capability:$capability,repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
+    review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' lane.started "$(jq -S -c -n --argjson value "$task" '{review_task:$value}')" >>"$event_file"
+    sequence=$((sequence + 1))
+  done
+  review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' finding.observed "$(jq -S -c -n --argjson value "$candidate" '{candidate:$value}')" >>"$event_file"
+  sequence=$((sequence + 1))
+  for capability in $(printf '%s' "$capabilities" | tr ',' ' '); do
+    lane_id="$capability-1"
+    if [ "$capability" = 'correctness' ]; then
+      candidate_ids="$(jq -S -c -n --arg id "$candidate_id" '[$id]')"
+    else
+      candidate_ids='[]'
+    fi
+    result="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg lane "$lane_id" \
+      --arg capability "$capability" --argjson candidates "$candidate_ids" \
+      '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:$lane,
+        capability:$capability,terminal_status:"succeeded",candidates:$candidates,
+        usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
+    review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' lane.finished "$(jq -S -c -n --argjson value "$result" '{lane_result:$value}')" >>"$event_file"
+    sequence=$((sequence + 1))
+  done
+  review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' synthesis.finished "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')" >>"$event_file"
+  sequence=$((sequence + 1))
+  review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" "$sequence" '2026-08-26T00:00:00Z' run.finished "$(jq -S -c -n --argjson value "$behavior" '{behavior_hashes:$value}')" >>"$event_file"
+  printf '%s\n' "$finding_id"
+}
+
 make_replay_repo() {
   local fixture_repo="$1" fixture="$2"
   mkdir -p "$fixture_repo"
@@ -888,6 +971,101 @@ skill_router_trace() {
   printf '%s' "$output"
 }
 
+skill_config_snapshot_trace() {
+  local mode="$1" plugin_root source_config snapshot_ledger script snippet output rc decision decision_file initial_decision initial_decision_file review_key
+  plugin_root="$TEST_ROOT/skill-config-snapshot-$mode"
+  mkdir -p "$plugin_root/scripts"
+  source_config="$plugin_root/original-config.json"
+  printf '%s' '{"original":true}' >"$source_config"
+  review_key="$(sha256_text 'acme/widgets|1693|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb|cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc')"
+  decision="$(jq -S -c -n --arg key "$review_key" '
+    {schema:"kc-pr-flow.review-plan-decision/v1",
+     identity:{repository:"acme/widgets",pr_number:1693,
+       base_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       head_sha:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       config_hash:"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+       review_key:$key},
+     mode:"resolve",reason_codes:["ancestor_append","known_finding_delta","trusted_predecessor"],
+     review_range:{from_exclusive:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",to_inclusive:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+     inherited_finding_ids:["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"],
+     required_capabilities:["correctness"],event_ceiling:"APPROVE",
+     fallback:{router_advisory:true,requires_existing_initial_review:false,final_verdict_authority:"existing-review-runtime"}}')"
+  decision_file="$plugin_root/decision.json"
+  printf '%s\n' "$decision" >"$decision_file"
+  initial_decision="$(jq -S -c '
+    .mode="initial" | .reason_codes=["missing_predecessor"] | .review_range.from_exclusive=null |
+    .inherited_finding_ids=[] | .required_capabilities=[] | .event_ceiling=null |
+    .fallback.requires_existing_initial_review=true
+  ' <<<"$decision")"
+  initial_decision_file="$plugin_root/initial-decision.json"
+  printf '%s\n' "$initial_decision" >"$initial_decision_file"
+  snapshot_ledger="$plugin_root/config-ledger"
+  : >"$snapshot_ledger"
+  cat >"$plugin_root/scripts/review-runtime.sh" <<'RUNTIME'
+review_runtime_private_snapshot_dir() { mktemp -d "${TMPDIR:-/tmp}/task18-config.XXXXXX"; }
+review_runtime_snapshot_regular_file() { cp "$1" "$2"; }
+RUNTIME
+  {
+    printf '%s\n' '#!/usr/bin/env bash'
+    printf '%s\n' 'if [ "${1:-}" = decide ]; then'
+    printf '%s\n' '  shift'
+    printf '%s\n' '  config_file='"''"
+    printf '%s\n' '  predecessor_events='"''"
+    printf '%s\n' '  delta_receipt='"''"
+    printf '%s\n' '  while [ "$#" -gt 0 ]; do'
+    printf '%s\n' '    case "$1" in --config-file) config_file="$2" ;; --predecessor-events) predecessor_events="$2" ;; --delta-receipt) delta_receipt="$2" ;; esac; shift 2'
+    printf '%s\n' '  done'
+    printf '  printf "%%s|%%s\\n" "$config_file" "$(cat "$config_file")" >>%q\n' "$snapshot_ledger"
+    printf '  if [ -z "$predecessor_events" ] || [ -z "$delta_receipt" ]; then cat %q; else cat %q; fi\n' "$initial_decision_file" "$decision_file"
+    printf '%s\n' 'fi'
+    printf '%s\n' 'review_plan_validate_decision() { return 0; }'
+  } >"$plugin_root/scripts/review-plan.sh"
+  chmod +x "$plugin_root/scripts/review-plan.sh"
+  snippet="$(skill_router_snippet)"
+  script="$plugin_root/run.sh"
+  {
+    printf '%s\n' 'set -eu'
+    printf '%s\n' 'REPO=acme/widgets'
+    printf '%s\n' 'PR_NUMBER=1693'
+    printf '%s\n' 'BASE_SHA=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    printf '%s\n' 'REVIEWED_HEAD_SHA=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    printf '%s\n' 'CONFIG_HASH=cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    printf '%s\n' 'REPO_WORKTREE=/tmp/repo'
+    printf 'REVIEW_CONFIG_FILE=%q\n' "$source_config"
+    printf 'CLAUDE_PLUGIN_ROOT=%q\n' "$plugin_root"
+    case "$mode" in
+      default-off-bad-tmpdir)
+        printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=off'
+        printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
+        printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+        printf '%s\n' 'TMPDIR=/definitely/missing'
+        ;;
+      missing-predecessor-bad-tmpdir)
+        printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on'
+        printf '%s\n' 'unset PREDECESSOR_EVENTS DELTA_RECEIPT'
+        printf '%s\n' 'TMPDIR=/definitely/missing'
+        ;;
+      immutable-rerun)
+        printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on'
+        printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
+        printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+        printf 'SOURCE_CONFIG=%q\n' "$source_config"
+        ;;
+      *) return 2 ;;
+    esac
+    printf '%s\n' "$snippet"
+    printf '%s\n' 'printf "initial:mode=%s|fast=%s\n" "$REVIEW_MODE" "$FAST_PATH_ENGAGED"'
+    if [ "$mode" = immutable-rerun ]; then
+      printf '%s\n' 'printf "%s" "{\"original\":false}" >"$SOURCE_CONFIG"'
+      printf '%s\n' 'review_plan_event_allowed COMMENT'
+      printf '%s\n' 'printf "rerun:rc=%s\n" "$?"'
+    fi
+  } >"$script"
+  output="$(bash "$script" 2>/dev/null)"
+  rc=$?
+  printf 'rc=%s\n%s\nledger:%s' "$rc" "$output" "$(tr '\n' ';' <"$snapshot_ledger")"
+}
+
 skill_router_live_identity_mismatch_trace() {
   local mismatch="$1" fixture plugin_root router_repo replay_lines base_sha reviewed_sha fixed_sha
   local repository config_hash receipt_repository receipt_pr receipt_base receipt_config router_config receipt_config_file
@@ -972,14 +1150,32 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'coverage gap.*COMMENT' 'skill constrains coverage gaps to COMMENT'
   assert_file_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
   assert_file_contains "$SKILL" 'review_plan_validate_decision' 'skill validates the complete closed planner decision'
-  assert_file_contains "$SKILL" 'PLAN_INPUT_CONFIG_FILE' 'skill retains one immutable config snapshot input'
-  assert_file_contains "$SKILL" 'review_runtime_snapshot_regular_file "\$REVIEW_CONFIG_FILE"' 'skill snapshots the source config before routing'
-  assert_file_contains "$SKILL" 'config-file "\$PLAN_INPUT_CONFIG_FILE"' 'skill passes the exact config snapshot to every planner invocation'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted' 'human_confirmed'; do
     assert_file_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
   done
+
+  default_off_bad_tmpdir="$(skill_config_snapshot_trace default-off-bad-tmpdir)"
+  assert_match 'default-off ignores unusable config snapshot prerequisites' '^rc=0$' \
+    "$(sed -n '1p' <<<"$default_off_bad_tmpdir")"
+  assert_eq 'default-off keeps the initial flow when the snapshot cannot run' 'initial:mode=initial|fast=0' \
+    "$(sed -n '2p' <<<"$default_off_bad_tmpdir")"
+  missing_predecessor_bad_tmpdir="$(skill_config_snapshot_trace missing-predecessor-bad-tmpdir)"
+  assert_match 'missing predecessor ignores unusable config snapshot prerequisites' '^rc=0$' \
+    "$(sed -n '1p' <<<"$missing_predecessor_bad_tmpdir")"
+  assert_eq 'missing predecessor keeps the initial flow when the snapshot cannot run' 'initial:mode=initial|fast=0' \
+    "$(sed -n '2p' <<<"$missing_predecessor_bad_tmpdir")"
+  immutable_snapshot_trace="$(skill_config_snapshot_trace immutable-rerun)"
+  assert_match 'skill snapshot fixture engages the positive route' '^rc=0$' \
+    "$(sed -n '1p' <<<"$immutable_snapshot_trace")"
+  assert_eq 'skill snapshot fixture starts from resolve' 'initial:mode=resolve|fast=1' \
+    "$(sed -n '2p' <<<"$immutable_snapshot_trace")"
+  assert_eq 'skill snapshot fixture reruns at the authority boundary' 'rerun:rc=0' \
+    "$(sed -n '3p' <<<"$immutable_snapshot_trace")"
+  assert_match 'skill uses one immutable snapshot at initial decision and authority rerun' \
+    '^ledger:(/.*task18-config\.[^|]+)\|\{"original":true\};\1\|\{"original":true\};$' \
+    "$(sed -n '4p' <<<"$immutable_snapshot_trace")"
 
   flag_off_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=off skill_router_trace valid-exit-0)"
   valid_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace valid-exit-0)"
@@ -1152,9 +1348,31 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'replay reasons are sorted' 'ancestor_append,known_finding_delta,trusted_predecessor' "$(jq -r '.reason_codes | join(",")' <<<"$decision")"
     assert_eq 'replay capabilities are inherited' 'correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
     six_lane_config="$TEST_ROOT/router-six-lane-config.json"
-    printf '%s' "$(review_runtime_config_canonical lite mixed false false false false correctness,github-actions,security,supply-chain,test-coverage,type-safety)" >"$six_lane_config"
-    incomplete_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$six_lane_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
-    assert_eq 'six configured capabilities cannot enter delta from a two-lane predecessor' 'initial' "$(jq -r '.mode' <<<"$incomplete_decision")"
+    six_capabilities='correctness,github-actions,security,supply-chain,test-coverage,type-safety'
+    printf '%s' "$(review_runtime_config_canonical lite mixed false false false false "$six_capabilities")" >"$six_lane_config"
+    six_lane_hash="$(review_runtime_config_hash lite mixed false false false false "$six_capabilities")"
+    six_lane_events="$TEST_ROOT/router-six-lane-events.jsonl"
+    six_lane_receipt="$TEST_ROOT/router-six-lane-receipt.json"
+    six_lane_finding="$(make_capability_replay_events "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$six_lane_hash" "$six_lane_events" "$six_capabilities" "$fixture")"
+    bash "$PLAN" receipt --event-file "$six_lane_events" --config-file "$six_lane_config" >"$six_lane_receipt"
+    assert_eq 'full matching six-lane predecessor mints an actual receipt' '0' "$?"
+    review_plan_validate_receipt "$(cat "$six_lane_receipt")" "$six_lane_events" "$six_lane_config" >/dev/null 2>&1
+    assert_eq 'full matching six-lane receipt validates against its actual event stream' '0' "$?"
+    six_lane_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$six_lane_hash" --config-file "$six_lane_config" --repo-worktree "$router_repo" --predecessor-events "$six_lane_events" --delta-receipt "$six_lane_receipt")"
+    assert_eq 'full matching six-lane predecessor selects resolve' 'resolve' "$(jq -r '.mode' <<<"$six_lane_decision")"
+    assert_eq 'full matching six-lane predecessor inherits its finding' "$six_lane_finding" "$(jq -r '.inherited_finding_ids | join(",")' <<<"$six_lane_decision")"
+    one_lane_events="$TEST_ROOT/router-one-lane-under-six-config-events.jsonl"
+    one_lane_receipt="$TEST_ROOT/router-one-lane-under-six-config-receipt.json"
+    make_capability_replay_events "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$six_lane_hash" "$one_lane_events" correctness "$fixture" >/dev/null
+    (
+      # Deliberately mint the replay-derived fixture receipt without config validation;
+      # the production decide path below must reject its incomplete predecessor lanes.
+      review_plan_validate_config() { return 0; }
+      review_plan_build_receipt "$one_lane_events" "$six_lane_config"
+    ) >"$one_lane_receipt"
+    assert_eq 'one-lane fixture receipt is structurally mintable for capability-completeness rejection' '0' "$?"
+    hash_consistent_incomplete_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$six_lane_hash" --config-file "$six_lane_config" --repo-worktree "$router_repo" --predecessor-events "$one_lane_events" --delta-receipt "$one_lane_receipt")"
+    assert_eq 'self-consistent six-cap config with one replayed lane stays initial' 'initial' "$(jq -r '.mode' <<<"$hash_consistent_incomplete_decision")"
     # shellcheck source=/dev/null
     . "$PLAN"
     original_worktree_adapter="$(declare -f review_plan_worktree_adapter)"

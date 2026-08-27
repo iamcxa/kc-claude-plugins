@@ -143,12 +143,18 @@ PLAN_INPUT_WORKTREE="$REPO_WORKTREE"
 PLAN_INPUT_PREDECESSOR_EVENTS="${PREDECESSOR_EVENTS-}"
 PLAN_INPUT_DELTA_RECEIPT="${DELTA_RECEIPT-}"
 PLAN_INPUT_CONFIG_FILE=''
-if [ -n "${REVIEW_CONFIG_FILE-}" ]; then
-  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-runtime.sh" || return 1
-  PLAN_CONFIG_SNAPSHOT_DIR="$(review_runtime_private_snapshot_dir)" || return 1
-  PLAN_INPUT_CONFIG_FILE="$PLAN_CONFIG_SNAPSHOT_DIR/review-config.json"
-  review_runtime_snapshot_regular_file "$REVIEW_CONFIG_FILE" "$PLAN_INPUT_CONFIG_FILE" \
-    'review config' "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || PLAN_INPUT_CONFIG_FILE=''
+if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
+   [ -n "$PLAN_INPUT_PREDECESSOR_EVENTS" ] &&
+   [ -n "$PLAN_INPUT_DELTA_RECEIPT" ] &&
+   [ -n "${REVIEW_CONFIG_FILE-}" ] &&
+   . "${CLAUDE_PLUGIN_ROOT}/scripts/review-runtime.sh"; then
+  if PLAN_CONFIG_SNAPSHOT_DIR="$(review_runtime_private_snapshot_dir)"; then
+    PLAN_INPUT_CONFIG_FILE="$PLAN_CONFIG_SNAPSHOT_DIR/review-config.json"
+    if ! review_runtime_snapshot_regular_file "$REVIEW_CONFIG_FILE" "$PLAN_INPUT_CONFIG_FILE" \
+      'review config' "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}"; then
+      PLAN_INPUT_CONFIG_FILE=''
+    fi
+  fi
 fi
 readonly PLAN_INPUT_REPO PLAN_INPUT_PR_NUMBER PLAN_INPUT_BASE_SHA PLAN_INPUT_HEAD_SHA
 readonly PLAN_INPUT_CONFIG_HASH PLAN_INPUT_WORKTREE PLAN_INPUT_PREDECESSOR_EVENTS
