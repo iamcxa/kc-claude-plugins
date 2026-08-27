@@ -219,8 +219,11 @@ review_plan_validate_receipt() (
 review_plan_worktree_adapter() {
   python3 - "$@" <<'PY'
 import json
+import hashlib
 import os
+import shutil
 import stat
+import subprocess
 import sys
 
 
@@ -245,15 +248,190 @@ def open_directory(path):
         raise
 
 
-def closed_binding(value):
-    if not isinstance(value, dict) or set(value) != {"device", "inode", "path"}:
+def directory_identity(path):
+    descriptor = open_directory(path)
+    try:
+        identity = os.fstat(descriptor)
+        return {
+            "ctime_ns": identity.st_ctime_ns,
+            "device": identity.st_dev,
+            "inode": identity.st_ino,
+            "mtime_ns": identity.st_mtime_ns,
+            "path": path,
+        }
+    finally:
+        os.close(descriptor)
+
+
+def git_entry_identity(root_descriptor):
+    identity = os.stat(".git", dir_fd=root_descriptor, follow_symlinks=False)
+    if stat.S_ISDIR(identity.st_mode):
+        digest = None
+        kind = "directory"
+    elif stat.S_ISREG(identity.st_mode):
+        flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0)
+        nofollow = getattr(os, "O_NOFOLLOW", None)
+        if nofollow is None:
+            raise OSError
+        descriptor = os.open(".git", flags | nofollow, dir_fd=root_descriptor)
+        try:
+            data = os.read(descriptor, 4097)
+            if len(data) > 4096 or os.read(descriptor, 1):
+                raise OSError
+            digest = hashlib.sha256(data).hexdigest()
+        finally:
+            os.close(descriptor)
+        kind = "file"
+    else:
+        raise OSError
+    return {
+        "content_sha256": digest,
+        "ctime_ns": identity.st_ctime_ns,
+        "device": identity.st_dev,
+        "inode": identity.st_ino,
+        "kind": kind,
+        "mtime_ns": identity.st_mtime_ns,
+        "size": identity.st_size,
+    }
+
+
+def safe_git_environment():
+    return {
+        "GIT_CONFIG_COUNT": "0",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_SYSTEM": os.devnull,
+        "GIT_NO_LAZY_FETCH": "1",
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_OPTIONAL_LOCKS": "0",
+        "GIT_TERMINAL_PROMPT": "0",
+        "HOME": os.devnull,
+        "LANG": "C",
+        "LC_ALL": "C",
+        "PATH": os.defpath,
+        "XDG_CONFIG_HOME": os.devnull,
+    }
+
+
+def git_binary():
+    candidate = shutil.which("git", path=os.defpath)
+    if candidate is None or not os.path.isabs(candidate):
+        raise OSError
+    return candidate
+
+
+def run_git(arguments):
+    return subprocess.run(
+        [git_binary(), "--no-replace-objects"] + arguments,
+        check=False,
+        env=safe_git_environment(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+
+def discover_repository(root_descriptor, expected_root):
+    os.fchdir(root_descriptor)
+
+    def discover(arguments):
+        result = run_git(["rev-parse"] + arguments)
+        if result.returncode != 0:
+            raise OSError
+        try:
+            value = result.stdout.decode("utf-8").rstrip("\n")
+        except UnicodeError:
+            raise OSError
+        if not value or "\n" in value or not os.path.isabs(value) or os.path.normpath(value) != value:
+            raise OSError
+        return value
+
+    root = discover(["--show-toplevel"])
+    if root != expected_root:
+        raise OSError
+    return {
+        "git_dir": discover(["--absolute-git-dir"]),
+        "common_dir": discover(["--path-format=absolute", "--git-common-dir"]),
+        "object_dir": discover(["--path-format=absolute", "--git-path", "objects"]),
+    }
+
+
+def closed_directory_identity(value):
+    required = {"ctime_ns", "device", "inode", "mtime_ns", "path"}
+    if not isinstance(value, dict) or set(value) != required:
         raise ValueError
     if not isinstance(value["path"], str):
         raise ValueError
-    for key in ("device", "inode"):
+    for key in ("ctime_ns", "device", "inode", "mtime_ns"):
         if not isinstance(value[key], int) or isinstance(value[key], bool) or value[key] < 0:
             raise ValueError
     return value
+
+
+def closed_git_entry(value):
+    required = {"content_sha256", "ctime_ns", "device", "inode", "kind", "mtime_ns", "size"}
+    if not isinstance(value, dict) or set(value) != required:
+        raise ValueError
+    if value["kind"] not in ("directory", "file"):
+        raise ValueError
+    digest = value["content_sha256"]
+    if (value["kind"] == "directory" and digest is not None) or (
+        value["kind"] == "file" and (not isinstance(digest, str) or len(digest) != 64)
+    ):
+        raise ValueError
+    for key in ("ctime_ns", "device", "inode", "mtime_ns", "size"):
+        if not isinstance(value[key], int) or isinstance(value[key], bool) or value[key] < 0:
+            raise ValueError
+    return value
+
+
+def closed_binding(value):
+    required = {"common_dir", "git_dir", "git_entry", "object_dir", "worktree"}
+    if not isinstance(value, dict) or set(value) != required:
+        raise ValueError
+    for key in ("common_dir", "git_dir", "object_dir", "worktree"):
+        closed_directory_identity(value[key])
+    closed_git_entry(value["git_entry"])
+    return value
+
+
+def alternates_absent(object_dir):
+    try:
+        os.lstat(os.path.join(object_dir, "info", "alternates"))
+    except FileNotFoundError:
+        return
+    raise OSError
+
+
+def validate_binding(binding):
+    descriptors = []
+    try:
+        for key in ("worktree", "git_dir", "common_dir", "object_dir"):
+            expected = binding[key]
+            descriptor = open_directory(expected["path"])
+            descriptors.append(descriptor)
+            identity = os.fstat(descriptor)
+            actual = {
+                "ctime_ns": identity.st_ctime_ns,
+                "device": identity.st_dev,
+                "inode": identity.st_ino,
+                "mtime_ns": identity.st_mtime_ns,
+                "path": expected["path"],
+            }
+            if actual != expected:
+                raise OSError
+        if git_entry_identity(descriptors[0]) != binding["git_entry"]:
+            raise OSError
+        alternates_absent(binding["object_dir"]["path"])
+        return descriptors
+    except BaseException:
+        for descriptor in descriptors:
+            os.close(descriptor)
+        raise
+
+
+def close_descriptors(descriptors):
+    for descriptor in descriptors:
+        os.close(descriptor)
 
 
 def after_open_test_barrier():
@@ -278,28 +456,65 @@ try:
         path = sys.argv[2]
         descriptor = open_directory(path)
         try:
-            identity = os.fstat(descriptor)
-            print(json.dumps(
-                {"device": identity.st_dev, "inode": identity.st_ino, "path": path},
-                sort_keys=True,
-                separators=(",", ":"),
-            ))
+            worktree = directory_identity(path)
+            git_entry = git_entry_identity(descriptor)
+            repository = discover_repository(descriptor, path)
+            binding = {
+                "common_dir": directory_identity(repository["common_dir"]),
+                "git_dir": directory_identity(repository["git_dir"]),
+                "git_entry": git_entry,
+                "object_dir": directory_identity(repository["object_dir"]),
+                "worktree": worktree,
+            }
+            alternates_absent(repository["object_dir"])
+            if git_entry_identity(descriptor) != git_entry:
+                raise OSError
+            print(json.dumps(binding, sort_keys=True, separators=(",", ":")))
         finally:
             os.close(descriptor)
     elif operation == "git" and len(sys.argv) >= 4:
         binding = closed_binding(json.loads(sys.argv[2]))
-        descriptor = open_directory(binding["path"])
-        identity = os.fstat(descriptor)
-        if (identity.st_dev, identity.st_ino) != (binding["device"], binding["inode"]):
-            os.close(descriptor)
-            raise OSError
+        descriptors = validate_binding(binding)
         after_open_test_barrier()
-        os.fchdir(descriptor)
-        os.close(descriptor)
-        os.execvp("git", ["git"] + sys.argv[3:])
+        close_descriptors(descriptors)
+        descriptors = validate_binding(binding)
+        os.fchdir(descriptors[0])
+        result = run_git(sys.argv[3:])
+        close_descriptors(descriptors)
+        descriptors = validate_binding(binding)
+        close_descriptors(descriptors)
+        os.write(1, result.stdout)
+        os.write(2, result.stderr)
+        raise SystemExit(result.returncode)
+    elif operation == "blob-safe" and len(sys.argv) == 5:
+        binding = closed_binding(json.loads(sys.argv[2]))
+        object_id = sys.argv[3]
+        limit = sys.argv[4]
+        if (len(object_id) not in (40, 64) or any(ch not in "0123456789abcdef" for ch in object_id)
+                or not limit.isdigit() or int(limit) < 1 or int(limit) > 16777216):
+            raise ValueError
+        descriptors = validate_binding(binding)
+        after_open_test_barrier()
+        close_descriptors(descriptors)
+        descriptors = validate_binding(binding)
+        os.fchdir(descriptors[0])
+        size_result = run_git(["cat-file", "-s", object_id])
+        try:
+            object_size = int(size_result.stdout.decode("ascii").strip())
+        except (UnicodeError, ValueError):
+            raise OSError
+        if size_result.returncode != 0 or object_size < 0 or object_size > int(limit):
+            raise OSError
+        result = run_git(["cat-file", "blob", object_id])
+        close_descriptors(descriptors)
+        descriptors = validate_binding(binding)
+        close_descriptors(descriptors)
+        if result.returncode != 0 or len(result.stdout) != object_size or b"\x00" in result.stdout:
+            raise OSError
+        result.stdout.decode("utf-8")
     else:
         raise ValueError
-except (IndexError, KeyError, OSError, TypeError, ValueError, json.JSONDecodeError):
+except (IndexError, KeyError, OSError, TypeError, UnicodeError, ValueError, json.JSONDecodeError):
     raise SystemExit(2)
 PY
 }
@@ -311,13 +526,21 @@ review_plan_worktree_binding() {
 review_plan_real_worktree() {
   local binding
   binding="$(review_plan_worktree_binding "$1")" || return 2
-  jq -r '.path' <<<"$binding"
+  jq -r '.worktree.path' <<<"$binding"
 }
 
 review_plan_git() {
   local binding="$1"
   shift
   review_plan_worktree_adapter git "$binding" "$@"
+}
+
+review_plan_blob_is_safe() {
+  local binding="$1" object="$2" max_blob_bytes
+  max_blob_bytes="${KC_PR_FLOW_MAX_PLAN_BLOB_BYTES:-4194304}"
+  [[ "$max_blob_bytes" =~ ^[1-9][0-9]*$ ]] || return 1
+  [ "$max_blob_bytes" -le 16777216 ] || return 1
+  review_plan_worktree_adapter blob-safe "$binding" "$object" "$max_blob_bytes"
 }
 
 review_plan_git_identity_valid() {
@@ -340,7 +563,7 @@ review_plan_changed_diff() {
 
 review_plan_changed_object_is_safe() {
   local worktree="$1" base_sha="$2" head_sha="$3" path="$4"
-  local tree_entry entry_path extra mode type object numstat added removed numstat_path
+  local tree_entry entry_path extra mode type object base_entry base_path base_extra base_mode base_type base_object
   tree_entry="$(review_plan_git "$worktree" ls-tree "$head_sha" -- "$path")" || return 1
   [ -n "$tree_entry" ] || return 1
   IFS=$'\t' read -r tree_entry entry_path extra <<<"$tree_entry"
@@ -350,11 +573,18 @@ review_plan_changed_object_is_safe() {
     100644:blob|100755:blob) ;;
     *) return 1 ;;
   esac
-  numstat="$(review_plan_git "$worktree" diff --numstat "$base_sha..$head_sha" -- "$path")" || return 1
-  [ -n "$numstat" ] || return 1
-  IFS=$'\t' read -r added removed numstat_path extra <<<"$numstat"
-  [ -z "$extra" ] && [ "$numstat_path" = "$path" ] || return 1
-  [ "$added" != '-' ] && [ "$removed" != '-' ]
+  review_plan_blob_is_safe "$worktree" "$object" || return 1
+  base_entry="$(review_plan_git "$worktree" ls-tree "$base_sha" -- "$path")" || return 1
+  if [ -n "$base_entry" ]; then
+    IFS=$'\t' read -r base_entry base_path base_extra <<<"$base_entry"
+    [ -z "$base_extra" ] && [ "$base_path" = "$path" ] || return 1
+    read -r base_mode base_type base_object <<<"$base_entry"
+    case "$base_mode:$base_type" in
+      100644:blob|100755:blob) ;;
+      *) return 1 ;;
+    esac
+    review_plan_blob_is_safe "$worktree" "$base_object" || return 1
+  fi
 }
 
 review_plan_safe_path() {

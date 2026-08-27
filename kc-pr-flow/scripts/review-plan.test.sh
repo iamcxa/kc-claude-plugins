@@ -1259,6 +1259,34 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     git -C "$router_repo" commit -qm binary-known-path
     binary_sha="$(git -C "$router_repo" rev-parse HEAD)"
     assert_changed_object_not_resolve 'binary known path is not resolve' "$binary_sha"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    forced_text_attributes="$TEST_ROOT/forced-text-attributes"
+    printf 'src/parser.py diff\n' >"$forced_text_attributes"
+    GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.attributesFile \
+      GIT_CONFIG_VALUE_0="$forced_text_attributes" \
+      review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$binary_sha" src/parser.py
+    assert_not_zero 'global attributes cannot force a binary blob into text routing' "$?"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    printf 'src/parser.py diff\n' >"$router_repo/.gitattributes"
+    printf '\000binary parser\n' >"$router_repo/src/parser.py"
+    git -C "$router_repo" add .gitattributes src/parser.py
+    git -C "$router_repo" commit -qm in-tree-forced-text-binary
+    forced_text_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$forced_text_sha" src/parser.py
+    assert_not_zero 'in-tree attributes cannot force a binary blob into text routing' "$?"
+    assert_changed_object_not_resolve 'in-tree forced-text binary known path is not resolve' "$forced_text_sha"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    printf '\377invalid utf8\n' >"$router_repo/src/parser.py"
+    git -C "$router_repo" add src/parser.py
+    git -C "$router_repo" commit -qm invalid-utf8-known-path
+    invalid_utf8_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$invalid_utf8_sha" src/parser.py
+    assert_not_zero 'invalid UTF-8 blob is not text routing input' "$?"
+    KC_PR_FLOW_MAX_PLAN_BLOB_BYTES=1 \
+      review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$invalid_utf8_sha" src/parser.py
+    assert_not_zero 'blob size ceiling is enforced independently of diff statistics' "$?"
     git -C "$router_repo" checkout -q "$fixed_sha"
     rm "$router_repo/src/parser.py"
     ln -s parser-target "$router_repo/src/parser.py"
@@ -1318,6 +1346,51 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     . "$PLAN"
     assert_eq 'real worktree is canonical absolute path' "$router_repo" "$(review_plan_real_worktree "$router_repo")"
 
+    poison_repo="$TEST_ROOT/poison-repo"
+    make_replay_repo "$poison_repo" "$fixture" >/dev/null
+    printf '\nforeign object\n' >>"$poison_repo/src/parser.py"
+    git -C "$poison_repo" add src/parser.py
+    git -C "$poison_repo" commit -qm foreign-object
+    poison_head="$(git -C "$poison_repo" rev-parse HEAD)"
+    injected_attributes="$TEST_ROOT/injected-attributes"
+    printf 'src/parser.py diff\n' >"$injected_attributes"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    inherited_git_dir_root="$(GIT_DIR="$poison_repo/.git" GIT_WORK_TREE="$poison_repo" \
+      GIT_COMMON_DIR="$poison_repo/.git" GIT_NAMESPACE=foreign \
+      review_plan_git "$router_binding" rev-parse --show-toplevel 2>/dev/null)"
+    assert_eq 'inherited repository selectors cannot redirect a bound Git operation' \
+      "$router_repo" "$inherited_git_dir_root"
+    inherited_object_type="$(GIT_OBJECT_DIRECTORY="$poison_repo/.git/objects" \
+      GIT_ALTERNATE_OBJECT_DIRECTORIES="$poison_repo/.git/objects" \
+      review_plan_git "$router_binding" cat-file -t "$fixed_sha" 2>/dev/null)"
+    assert_eq 'inherited object selectors cannot replace the bound object store' commit "$inherited_object_type"
+    GIT_ALTERNATE_OBJECT_DIRECTORIES="$poison_repo/.git/objects" \
+      review_plan_git "$router_binding" cat-file -e "$poison_head^{commit}" >/dev/null 2>&1
+    assert_not_zero 'inherited alternates cannot expose foreign objects' "$?"
+    mkdir -p "$router_repo/.git/objects/info"
+    printf '%s\n' "$poison_repo/.git/objects" >"$router_repo/.git/objects/info/alternates"
+    review_plan_git "$router_binding" cat-file -e "$poison_head^{commit}" >/dev/null 2>&1
+    assert_not_zero 'repository alternates added after binding fail closed' "$?"
+    rm "$router_repo/.git/objects/info/alternates"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+
+    replacement_sha="$(git -C "$router_repo" rev-parse "$fixed_sha^")"
+    git -C "$router_repo" replace "$fixed_sha" "$replacement_sha"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    replaced_type="$(review_plan_git "$router_binding" cat-file -t "$fixed_sha" 2>/dev/null)"
+    replaced_parent="$(review_plan_git "$router_binding" rev-parse "$fixed_sha^" 2>/dev/null)"
+    git -C "$router_repo" replace -d "$fixed_sha" >/dev/null
+    assert_eq 'replace refs cannot change the bound commit type' commit "$replaced_type"
+    assert_eq 'replace refs are disabled for bound Git operations' "$reviewed_sha" "$replaced_parent"
+
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    injected_config_root="$(GIT_CONFIG_COUNT=2 \
+      GIT_CONFIG_KEY_0=core.worktree GIT_CONFIG_VALUE_0="$poison_repo" \
+      GIT_CONFIG_KEY_1=core.attributesFile GIT_CONFIG_VALUE_1="$injected_attributes" \
+      review_plan_git "$router_binding" rev-parse --show-toplevel 2>/dev/null)"
+    assert_eq 'inherited config injection cannot redirect a bound Git operation' \
+      "$router_repo" "$injected_config_root"
+
     real_git="$(command -v git)"
     run_open_fd_race() {
       local replacement_kind="$1" race_repo race_lines race_base race_reviewed race_fixed
@@ -1371,6 +1444,34 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     }
     run_open_fd_race directory
     run_open_fd_race symlink
+
+    git_entry_race_repo="$TEST_ROOT/git-entry-race-repo"
+    git_entry_race_lines="$(make_replay_repo "$git_entry_race_repo" "$fixture")"
+    git_entry_race_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$git_entry_race_lines")"
+    git_entry_replacement="$TEST_ROOT/git-entry-replacement"
+    make_replay_repo "$git_entry_replacement" "$fixture" >/dev/null
+    git_entry_binding="$(review_plan_worktree_binding "$git_entry_race_repo")"
+    git_entry_ready="$TEST_ROOT/git-entry-ready"
+    git_entry_proceed="$TEST_ROOT/git-entry-proceed"
+    mkfifo "$git_entry_ready" "$git_entry_proceed"
+    (
+      IFS= read -r _ <"$git_entry_ready"
+      mv "$git_entry_race_repo/.git" "$git_entry_race_repo/.git-held"
+      cp -R "$git_entry_replacement/.git" "$git_entry_race_repo/.git"
+      printf 'continue\n' >"$git_entry_proceed"
+    ) &
+    git_entry_swapper=$!
+    exec 8<>"$git_entry_ready"
+    exec 9<>"$git_entry_proceed"
+    git_entry_output="$(KC_PR_FLOW_TEST_GIT_OPEN_READY_FD=8 \
+      KC_PR_FLOW_TEST_GIT_OPEN_PROCEED_FD=9 \
+      review_plan_git "$git_entry_binding" rev-parse "$git_entry_race_fixed" 2>/dev/null)"
+    git_entry_status=$?
+    exec 8>&-
+    exec 9>&-
+    wait "$git_entry_swapper"
+    assert_not_zero '.git replacement after binding fails closed' "$git_entry_status"
+    assert_eq '.git replacement releases no mixed-identity output' '' "$git_entry_output"
   fi
 fi
 

@@ -411,15 +411,21 @@ review_plan_changed_paths() {
 }
 ```
 
-Call `review_plan_real_worktree` inside `review_plan_git` immediately before every `rev-parse`,
-`cat-file`, `merge-base`, `diff`, `ls-tree`, `show`, or other Git operation; no direct `git -C` call
-may exist outside `review_plan_git`, and no canonical path cached by the decision function may
-bypass the gate. The helper rejects a final symlink, symlinked parent, non-directory, unresolved
-path, or replacement before Git receives it. Add a deterministic test hook between two Git reads,
-replace the validated directory with another repository, and require `initial` with no mixed
-identity result.
+Bind the opened worktree plus its `.git` entry, Git directory, common directory, and object
+directory before routing. Revalidate every bound identity immediately before and after every
+`rev-parse`, `cat-file`, `merge-base`, `diff`, `ls-tree`, `show`, or other Git operation. Run a
+fixed system Git with an allowlisted environment, no inherited repository/object/config selectors,
+no object alternates, and replacement objects disabled. No direct `git -C` call may exist outside
+the adapter. The helper rejects a final symlink, symlinked parent, non-directory, unresolved path,
+metadata/object replacement, or identity change without releasing Git output. Add deterministic
+test hooks that replace either the opened worktree or its `.git` entry and require `initial` with no
+mixed-identity result.
 
-Obtain the unseen diff with `--unified=0 --no-ext-diff --no-renames` and parse every ordinary hunk,
+Before parsing, read each existing base/head blob directly from the bound object store and require
+the independent byte policy: regular blob mode, at most 4 MiB by default and 16 MiB hard maximum,
+no NUL byte, and strict UTF-8 decoding. Git attributes, diff drivers, and numeric diff statistics
+must not decide whether an object is text. Obtain the unseen diff with
+`--unified=0 --no-ext-diff --no-textconv --no-renames` and parse every ordinary hunk,
 including multiple hunks in one known file. For each hunk, derive its old coordinate interval;
 treat a zero-length insertion as anchored at its old line. A hunk maps to a known finding only when
 the receipt carries replay-derived `git_blob` evidence for the predecessor head, the paths match,
