@@ -45,10 +45,11 @@ not another accepted-goal authority. SD owns execution and evidence.
 At every engage, use the repository-local read-only planning reader to re-read
 the current Ready set for the snapshot's planning window and outcome. Compare
 its source identities, window, outcome, accepted goal, and non-goals with the
-committed SD entity set. Classify every difference as added, removed, changed,
-or moved. With no difference, continue. With a difference, report it and stop
-before new dispatch or state mutation. The Captain admits the delta before an
-authorized actor commits a replacement snapshot. Do not cancel a running worker.
+committed SD entity set through the read-only engage comparator. Classify every
+difference as added, removed, changed, or moved. Exit `0` continues. A delta
+exit refuses new dispatch or state mutation; invalid input reports reconcile
+unavailable. The Captain admits the delta before an authorized actor commits a
+replacement snapshot. Do not cancel a running worker.
 
 Do not add an SD-to-planning-provider projector, importer, polling loop, or
 bidirectional sync. No reconcile result writes either side automatically.

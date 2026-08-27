@@ -23,7 +23,8 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
 
 1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
    authorities plus the repository-local profile loader and contracts root.
-   Bind the planning provider plus a repository-local read-only planning reader.
+   Bind the planning provider plus a repository-local read-only planning reader
+   and the vendored repository-local read-only engage comparator.
    The reader must normalize the provider's current Ready items for one planning
    window and outcome into source identity, accepted goal, and non-goals without
    writing either system. A new Spacedock task stores those bindings in `source`,
@@ -40,6 +41,7 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    `../../references/pr-delivery.md`,
    `../../references/roborev-implementation-exit.md`, and
 `../../scripts/profile-contract-loader.py` and
+`../../scripts/engage-reconcile.py`,
 `../../scripts/poc-close-guard.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
@@ -56,7 +58,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    for every Ready planning item in that window and outcome. The committed SD
    entity set is the admitted snapshot.
 4. At every engage, the engage reconcile is read-only: invoke the reader and
-   compare the provider's current Ready set with the committed SD snapshot.
+   normalize the provider's current Ready set and committed SD snapshot into
+   ephemeral comparator inputs. Invoke the vendored comparator; exit `0`
+   continues, exit `1` reports the classified delta and stops, and exit `2`
+   reports unavailable input and stops.
    Report added, removed, changed, and moved items and stop before new dispatch
    or state mutation when any difference exists. The Captain admits every delta
    before an authorized actor commits a replacement snapshot. Never mutate

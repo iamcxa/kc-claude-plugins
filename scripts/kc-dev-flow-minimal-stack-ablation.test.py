@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = Path("scripts/kc-dev-flow-multi-profile-gate.py")
 LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
+RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
+RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
 
 
@@ -248,6 +250,22 @@ def run_poc_entry_mutant() -> None:
         )
 
 
+def run_reconcile_exit_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
+        replace_once(
+            fixture / RECONCILE,
+            '    return 1 if result["status"] == "delta" else 0\n',
+            "    return 0\n",
+        )
+        reject(
+            "reconcile-delta-exit-disabled",
+            execute([sys.executable, str(fixture / RECONCILE_TEST)], fixture),
+            "membership delta returned 0",
+        )
+
+
 def run_missing_close_guard_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
@@ -323,6 +341,7 @@ def main() -> int:
     )
     run_scheduling_mutant()
     run_poc_entry_mutant()
+    run_reconcile_exit_mutant()
     run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")

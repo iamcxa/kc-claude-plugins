@@ -84,6 +84,8 @@ required = [
     "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/engage-reconcile.py",
+    "kc-dev-flow/scripts/engage-reconcile.test.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -270,6 +272,8 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/engage-reconcile.py",
+    "kc-dev-flow/scripts/engage-reconcile.test.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -282,6 +286,10 @@ for relative in [
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
     "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/engage-reconcile.test.py"],
+    "engage reconcile",
 )
 run(
     [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
@@ -467,6 +475,8 @@ for phrase in [
     "SD owns execution and evidence",
     "SD-to-planning-provider projector",
     "No reconcile result writes either side automatically",
+    "the read-only engage comparator",
+    "A delta exit refuses new dispatch or state mutation",
     "added, removed, changed, or moved",
     "Captain admits the delta",
 ]:
@@ -540,6 +550,11 @@ require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
+)
+require(
+    (PLUGIN / "scripts/engage-reconcile.py").read_bytes()
+    == (ADOPTED / "engage-reconcile.py").read_bytes(),
+    "self-adopted engage comparator differs from package source",
 )
 require(
     (PLUGIN / "scripts/poc-close-guard.py").read_bytes()
@@ -739,6 +754,7 @@ for phrase in [
     "Default the entity template to `sprint-readiness: defer`",
     "do not mark the unscheduled backlog ready during adoption",
     "repository-local read-only planning reader",
+    "repository-local read-only engage comparator",
     "engage reconcile is read-only",
     "Captain admits every delta",
 ]:
@@ -772,6 +788,7 @@ continuation_authority_order = [
     "Read the exact committed Spacedock work item only far enough to resolve its `source`, `planning-window`, `planning-outcome`, and `sprint`.",
     "Follow the exact work item's `source` to the accepted planning item and invoke the repository-local read-only planning reader.",
     "Compare that current Ready set with the committed SD entity set for the same `sprint`.",
+    "Invoke the repository-local read-only engage comparator.",
     "If the comparison finds an added, removed, changed, or moved item, report the delta and stop before new dispatch or state mutation.",
     "Then read current execution state from its declared authority.",
 ]
@@ -791,6 +808,8 @@ for phrase in [
     "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
     "Do not cancel a running worker.",
     "No difference writes the provider or SD automatically.",
+    "Exit `1` reports the classified delta",
+    "Exit `2` reports `planning reconcile unavailable`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
 for phrase in [
@@ -909,6 +928,7 @@ for phrase in [
     "`source` links the accepted planning item.",
     "At every engage, compare the provider's current Ready set with the committed SD snapshot.",
     "A difference requires Captain admission and never writes either side automatically.",
+    "| Planning comparator | `docs/dev/_mods/engage-reconcile.py` |",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [

@@ -35,8 +35,22 @@ Continue by the selected profile's smallest sufficient route.
 5. Compare that current Ready set with the committed SD entity set for the same
    `sprint`. Compare source identity and membership, `planning-window`,
    `planning-outcome`, accepted goal, and non-goals; classify each difference as
-   added, removed, changed, or moved.
-6. If the comparison finds an added, removed, changed, or moved item, report the
+   added, removed, changed, or moved. Normalize both sets into ephemeral JSON
+   lists whose items contain `source`, `planning-window`,
+   `planning-outcome`, `accepted-goal`, and string-list `non-goals`. Do
+   not commit or reuse those files.
+6. Invoke the repository-local read-only engage comparator.
+
+   ```bash
+   python3 <planning-comparator> \
+     --snapshot <ephemeral-snapshot-json> \
+     --current <ephemeral-current-json>
+   ```
+
+   Exit `0` continues. Exit `1` reports the classified delta and stops
+   before new dispatch or state mutation. Exit `2` reports
+   `planning reconcile unavailable` and stops at the same boundary. If the
+   comparison finds an added, removed, changed, or moved item, report the
    delta and stop before new dispatch or state mutation. The Captain must admit
    the delta before an authorized actor commits a replacement snapshot. No
    difference writes the provider or SD automatically. Do not cancel a running
