@@ -433,8 +433,16 @@ for phrase in [
     "without the retained implementation",
     "the accepted goal, a named falsifier, a safety boundary, or a required lifecycle obligation",
     "CI, review, and delivery authorization do not substitute for either condition",
+    "Before terminalization, the First Officer confirms both conditions",
+    "existing evidence produced across the selected route",
+    "Goal sufficiency binds to the exact candidate",
+    "minimal necessity names the candidate change removed by its without-it observation",
 ]:
     require(phrase in normalized_kernel, f"kernel omits completion invariant: {phrase}")
+require(
+    "state owner refuses terminalization" not in normalized_kernel,
+    "kernel overclaims an automatic completion refusal instead of assigning the First Officer duty",
+)
 for phrase in [
     "compare added files, dependencies, abstractions, tests, and comments",
     "A comment that earns its place still passes a necessity test",

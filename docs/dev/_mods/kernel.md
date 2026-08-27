@@ -166,8 +166,10 @@ as not ready to leave `backlog` when it cannot ask.
 ## Completion invariant
 
 A work item is complete only when both conditions hold for the same exact candidate.
-The selected route's final working stage supplies the evidence, and the existing
-state owner refuses terminalization until that stage's required output is satisfied.
+Before terminalization, the First Officer confirms both conditions from existing
+evidence produced across the selected route. Goal sufficiency binds to the exact
+candidate; minimal necessity names the candidate change removed by its without-it
+observation.
 
 - **Goal sufficiency** — observable evidence shows that the candidate reaches the
   planning item's accepted goal at the selected profile's proportional depth.
