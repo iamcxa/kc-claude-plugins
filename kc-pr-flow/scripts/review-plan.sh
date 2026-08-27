@@ -958,11 +958,11 @@ review_plan_main_decide() {
       *) printf 'review-plan: unknown decide option: %s\n' "$1" >&2; return 2 ;;
     esac
   done
-  [ -n "$repository" ] && [ -n "$pr_number" ] && [ -n "$base_sha" ] && [ -n "$head_sha" ] &&
-    [ -n "$config_hash" ] && [ -n "$worktree" ] || {
+  if [ -z "$repository" ] || [ -z "$pr_number" ] || [ -z "$base_sha" ] || [ -z "$head_sha" ] ||
+    [ -z "$config_hash" ] || [ -z "$worktree" ]; then
     printf 'review-plan: --repo, --pr, --base, --head, --config-hash, and --repo-worktree are required\n' >&2
     return 2
-  }
+  fi
   review_plan_decide "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$worktree" \
     "$predecessor_events" "$delta_receipt"
 }
