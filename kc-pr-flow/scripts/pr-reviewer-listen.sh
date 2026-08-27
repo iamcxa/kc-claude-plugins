@@ -39,7 +39,7 @@ log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
 
 init_files() {
   mkdir -p "$CFG_DIR" "$(dirname "$LOG")"
-  [[ -s "$CONFIG" ]] || printf '%s\n' '{"master":true,"backend":"conductor","notify_via":"swiftbar","repos":{}}' >"$CONFIG"
+  [[ -s "$CONFIG" ]] || printf '%s\n' '{"master":true,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
   [[ -s "$STATE"  ]] || printf '%s\n' '{"seen":{},"open":[],"last_poll":null,"last_error":null}' >"$STATE"
 }
 
@@ -60,27 +60,17 @@ backend_path() {
   printf '%s/%s.sh' "$BACKEND_DIR" "$b"
 }
 
-urlenc() { "$JQ" -rn --arg s "$1" '$s|@uri'; }
-
 notify() { # notify <title> <subtitle> [open-target]
-  local title="$1" sub="$2" target="${3:-}" via url tn
-  via=$(cfg_get '.notify_via // "swiftbar"')
-  case "$via" in
-    terminal-notifier)
-      tn=$(command -v terminal-notifier) || return 0
-      local args=(-title "$title" -message "$sub")
-      [[ -n "$target" ]] && args+=(-open "$target")
-      "$tn" "${args[@]}" >/dev/null 2>&1 || true ;;
-    osascript)
-      /usr/bin/osascript -e "display notification \"$sub\" with title \"$title\"" 2>/dev/null || true ;;
-    *)
-      # SwiftBar addresses a notification to a loaded plugin by filename, so this
-      # must be the file the host launched, not the listener behind it.
-      url="swiftbar://notify?plugin=$(urlenc "$(basename "$SELF")")"
-      url+="&title=$(urlenc "$title")&subtitle=$(urlenc "$sub")"
-      [[ -n "$target" ]] && url+="&href=$(urlenc "$target")"
-      "$OPEN" -g "$url" 2>/dev/null || true ;;
-  esac
+  local title="$1" sub="$2" target="${3:-}" via tn
+  via=$(cfg_get '.notify_via // "terminal-notifier"')
+  if [[ "$via" == "terminal-notifier" ]] && tn=$(command -v terminal-notifier); then
+    # The only channel here whose banner opens the review on click.
+    local args=(-title "$title" -message "$sub")
+    [[ -n "$target" ]] && args+=(-open "$target")
+    "$tn" "${args[@]}" >/dev/null 2>&1 || true
+  else
+    /usr/bin/osascript -e "display notification \"$sub\" with title \"$title\"" 2>/dev/null || true
+  fi
 }
 
 mark_error() {
@@ -255,7 +245,7 @@ render() {
     echo "Resume listening | bash=\"$SELF\" param1=toggle-master terminal=false refresh=true"
   fi
   echo "Refresh now | refresh=true"
-  echo "Backend: $(cfg_get '.backend // "conductor"') · notify via $(cfg_get '.notify_via // "swiftbar"') | bash=\"$SELF\" param1=toggle-notify terminal=false refresh=true"
+  echo "Backend: $(cfg_get '.backend // "conductor"') · notify via $(cfg_get '.notify_via // "terminal-notifier"') | bash=\"$SELF\" param1=toggle-notify terminal=false refresh=true"
   echo "Open log | bash=\"$SELF\" param1=log terminal=false"
   echo "Last poll: $last | color=#888888"
 }
@@ -265,7 +255,7 @@ init_files
 case "${1:-}" in
   toggle-master) cfg_edit '.master = (.master | not)'; exit 0 ;;
   toggle-repo)   cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
-  toggle-notify) cfg_edit '.notify_via = ({"swiftbar":"terminal-notifier","terminal-notifier":"osascript","osascript":"swiftbar"}[(.notify_via // "swiftbar")] // "swiftbar")'; exit 0 ;;
+  toggle-notify) cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
   forget)        st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;

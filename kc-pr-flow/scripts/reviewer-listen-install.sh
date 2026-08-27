@@ -2,7 +2,7 @@
 # Install the PR review listener into the menu bar. Idempotent: safe to re-run on
 # a new machine, after a SwiftBar reinstall, or to change the backend.
 #
-#   reviewer-listen-install.sh [--backend conductor|<name>] [--notify swiftbar|osascript]
+#   reviewer-listen-install.sh [--backend conductor|<name>] [--notify terminal-notifier|osascript]
 
 set -uo pipefail
 
@@ -14,10 +14,10 @@ STATE="$CFG_DIR/reviewer-listen.state.json"
 LEGACY="$CFG_DIR/reviewer-listen.json"
 
 BACKEND=conductor
-# terminal-notifier posts a banner under its own notification permission and
-# opens the target on click; prefer it when it is present.
-NOTIFY=swiftbar
-command -v terminal-notifier >/dev/null 2>&1 && NOTIFY=terminal-notifier
+# terminal-notifier posts under its own notification permission and opens the
+# review on click; osascript is the fallback and cannot carry a click action.
+NOTIFY=terminal-notifier
+command -v terminal-notifier >/dev/null 2>&1 || NOTIFY=osascript
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --backend) BACKEND="${2:?}"; shift 2 ;;

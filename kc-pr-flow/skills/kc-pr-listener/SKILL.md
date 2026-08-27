@@ -68,7 +68,7 @@ with the backend's reason and an `attempts` count.
 | Icon shows `!` | `last_error` in state — usually `gh` auth expired. |
 | Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Clear one with the row's **retry**. |
 | A row is `❌` with "no project" | The repo has no project in that token's organization; a second organization needs its own token file. |
-| Review finished but no notification | Switch the notification channel from the menu (`swiftbar` ⇄ `osascript`); one of the two may lack permission to post on this Mac. |
+| Review finished but no notification | Switch the notification channel from the menu (`terminal-notifier` ⇄ `osascript`); either may lack permission to post on this Mac, and only `terminal-notifier` carries a click action. |
 | A finished PR vanished from the list | Expected. GitHub drops a PR from review-requested once a review is submitted; look under **Finished reviews**. |
 
 ## add-backend
