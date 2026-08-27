@@ -414,9 +414,11 @@ review_plan_changed_paths() {
 Bind the opened worktree plus its `.git` entry, Git directory, common directory, and object
 directory before routing. Revalidate every bound identity immediately before and after every
 `rev-parse`, `cat-file`, `merge-base`, `diff`, `ls-tree`, `show`, or other Git operation. Run a
-fixed system Git with an allowlisted environment, no inherited repository/object/config selectors,
-no object alternates, and replacement objects disabled. No direct `git -C` call may exist outside
-the adapter. The helper rejects a final symlink, symlinked parent, non-directory, unresolved path,
+fixed system Git with an allowlisted environment. Operational commands use a private,
+configuration-free Git directory, the explicitly bound worktree and object directory, exact object
+IDs, no refs, no shallow/graft metadata, no inherited or repository-local config, no object
+alternates, and replacement objects disabled. No direct `git -C` call may exist outside the
+adapter. The helper rejects a final symlink, symlinked parent, non-directory, unresolved path,
 metadata/object replacement, or identity change without releasing Git output. Add deterministic
 test hooks that replace either the opened worktree or its `.git` entry and require `initial` with no
 mixed-identity result.

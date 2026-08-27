@@ -366,8 +366,10 @@ validator is read-only and cannot confirm, authorize, or post.
 `delta` requires a trusted predecessor and ancestor-only growth but permits additional affected
 surfaces. A safe, parseable but unmapped hunk or signal selects `delta`, adds the corresponding
 capabilities, and receives a `COMMENT` ceiling; it never inherits a clean verdict from the
-predecessor. Text eligibility comes from bounded, NUL-free, strict UTF-8 base/head blob bytes read
-from the bound object store, never from Git attributes or diff statistics. Unsupported status,
+predecessor. Operational object commands use a private config/ref/graft/shallow-free Git metadata
+view over the bound worktree and object directory. Text eligibility comes from bounded, NUL-free,
+strict UTF-8 base/head blob bytes read from the bound object store, never from Git attributes or
+diff statistics. Unsupported status,
 binary/gitlink/rename/copy ambiguity, unsafe path, malformed diff,
 or an unclassifiable signal selects `initial`.
 

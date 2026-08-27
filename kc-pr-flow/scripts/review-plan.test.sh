@@ -1287,9 +1287,26 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     router_binding="$(review_plan_worktree_binding "$router_repo")"
     review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$invalid_utf8_sha" src/parser.py
     assert_not_zero 'invalid UTF-8 blob is not text routing input' "$?"
-    KC_PR_FLOW_MAX_PLAN_BLOB_BYTES=1 \
-      review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$invalid_utf8_sha" src/parser.py
-    assert_not_zero 'blob size ceiling is enforced independently of diff statistics' "$?"
+    git -C "$router_repo" checkout -q "$fixed_sha"
+    printf 'ab\n' >"$router_repo/src/parser.py"
+    git -C "$router_repo" add src/parser.py
+    git -C "$router_repo" commit -qm valid-utf8-size-boundary
+    sized_utf8_sha="$(git -C "$router_repo" rev-parse HEAD)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    sized_utf8_object="$(review_plan_git "$router_binding" rev-parse "$sized_utf8_sha:src/parser.py")"
+    KC_PR_FLOW_MAX_PLAN_BLOB_BYTES=2 \
+      review_plan_changed_object_is_safe "$router_binding" "$fixed_sha" "$sized_utf8_sha" src/parser.py
+    assert_not_zero 'valid UTF-8 committed blob over the size ceiling is rejected' "$?"
+    KC_PR_FLOW_MAX_PLAN_BLOB_BYTES=3 review_plan_blob_is_safe "$router_binding" "$sized_utf8_object"
+    assert_eq 'exact-limit batch framing accepts the complete blob' '0' "$?"
+    KC_PR_FLOW_MAX_PLAN_BLOB_BYTES=2 review_plan_blob_is_safe "$router_binding" "$sized_utf8_object"
+    assert_not_zero 'one-byte-under batch framing rejects the complete blob' "$?"
+    empty_object="$(printf '' | git -C "$router_repo" hash-object -w --stdin)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_blob_is_safe "$router_binding" "$empty_object"
+    assert_eq 'bounded batch framing accepts an empty blob' '0' "$?"
+    review_plan_blob_is_safe "$router_binding" ffffffffffffffffffffffffffffffffffffffff
+    assert_not_zero 'bounded batch framing rejects a missing blob' "$?"
     git -C "$router_repo" checkout -q "$fixed_sha"
     rm "$router_repo/src/parser.py"
     ln -s parser-target "$router_repo/src/parser.py"
@@ -1394,6 +1411,36 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'inherited config injection cannot redirect a bound Git operation' \
       "$router_repo" "$injected_config_root"
 
+    config_backup="$TEST_ROOT/router-config-backup"
+    cp "$router_repo/.git/config" "$config_backup"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    printf '\n[core]\n\tworktree = %s\n' "$poison_repo" >>"$router_repo/.git/config"
+    local_config_root="$(review_plan_git "$router_binding" rev-parse --show-toplevel 2>/dev/null)"
+    assert_eq 'in-place local config cannot redirect a bound Git operation' "$router_repo" "$local_config_root"
+    cp "$config_backup" "$router_repo/.git/config"
+
+    mkdir -p "$router_repo/.git/info"
+    empty_tree="$(git -C "$router_repo" mktree </dev/null)"
+    graft_root_one="$(printf 'root one\n' | git -C "$router_repo" commit-tree "$empty_tree")"
+    graft_root_two="$(printf 'root two\n' | git -C "$router_repo" commit-tree "$empty_tree")"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$graft_root_two"
+    assert_not_zero 'unrelated roots start outside the ancestor relation' "$?"
+    printf '%s %s\n' "$graft_root_two" "$graft_root_one" >"$router_repo/.git/info/grafts"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$graft_root_two"
+    assert_not_zero 'in-place graft metadata cannot manufacture ancestry' "$?"
+    rm "$router_repo/.git/info/grafts"
+
+    shallow_child="$(printf 'shallow child\n' | git -C "$router_repo" commit-tree "$empty_tree" -p "$graft_root_one")"
+    : >"$router_repo/.git/shallow"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$shallow_child"
+    assert_eq 'real parent starts inside the ancestor relation' '0' "$?"
+    printf '%s\n' "$shallow_child" >"$router_repo/.git/shallow"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$shallow_child"
+    assert_eq 'in-place shallow metadata cannot hide real ancestry' '0' "$?"
+    rm "$router_repo/.git/shallow"
+
     real_git="$(command -v git)"
     run_open_fd_race() {
       local replacement_kind="$1" race_repo race_lines race_base race_reviewed race_fixed
@@ -1475,6 +1522,31 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     wait "$git_entry_swapper"
     assert_not_zero '.git replacement after binding fails closed' "$git_entry_status"
     assert_eq '.git replacement releases no mixed-identity output' '' "$git_entry_output"
+
+    object_swap_repo="$TEST_ROOT/object-swap-repo"
+    make_replay_repo "$object_swap_repo" "$fixture" >/dev/null
+    object_swap_binding="$(review_plan_worktree_binding "$object_swap_repo")"
+    object_swap_path="$(jq -r '.object_dir.path' <<<"$object_swap_binding")"
+    mv "$object_swap_path" "$object_swap_path-held"
+    cp -R "$poison_repo/.git/objects" "$object_swap_path"
+    object_swap_output="$(review_plan_git "$object_swap_binding" rev-parse "$fixed_sha" 2>/dev/null)"
+    object_swap_status=$?
+    assert_not_zero 'bound object-directory replacement fails closed' "$object_swap_status"
+    assert_eq 'bound object-directory replacement releases no output' '' "$object_swap_output"
+
+    common_swap_main="$TEST_ROOT/common-swap-main"
+    common_swap_linked="$TEST_ROOT/common-swap-linked"
+    common_swap_lines="$(make_replay_repo "$common_swap_main" "$fixture")"
+    common_swap_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$common_swap_lines")"
+    git -C "$common_swap_main" worktree add -q "$common_swap_linked" "$common_swap_fixed"
+    common_swap_binding="$(review_plan_worktree_binding "$common_swap_linked")"
+    common_swap_path="$(jq -r '.common_dir.path' <<<"$common_swap_binding")"
+    mv "$common_swap_path" "$common_swap_path-held"
+    cp -R "$poison_repo/.git" "$common_swap_path"
+    common_swap_output="$(review_plan_git "$common_swap_binding" rev-parse "$common_swap_fixed" 2>/dev/null)"
+    common_swap_status=$?
+    assert_not_zero 'bound common-directory replacement fails closed' "$common_swap_status"
+    assert_eq 'bound common-directory replacement releases no output' '' "$common_swap_output"
   fi
 fi
 

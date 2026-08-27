@@ -218,6 +218,7 @@ review_plan_validate_receipt() (
 
 review_plan_worktree_adapter() {
   python3 - "$@" <<'PY'
+import contextlib
 import json
 import hashlib
 import os
@@ -225,6 +226,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import tempfile
 
 
 def open_directory(path):
@@ -320,55 +322,95 @@ def git_binary():
     return candidate
 
 
-def run_git(arguments):
-    return subprocess.run(
-        [git_binary(), "--no-replace-objects"] + arguments,
-        check=False,
-        env=safe_git_environment(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+@contextlib.contextmanager
+def operational_repository(binding):
+    with tempfile.TemporaryDirectory(prefix="kc-pr-flow-git-") as git_dir:
+        os.makedirs(os.path.join(git_dir, "refs", "heads"), mode=0o700)
+        os.makedirs(os.path.join(git_dir, "refs", "tags"), mode=0o700)
+        head_path = os.path.join(git_dir, "HEAD")
+        descriptor = os.open(head_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        try:
+            os.write(descriptor, b"ref: refs/heads/detached\n")
+        finally:
+            os.close(descriptor)
+        environment = safe_git_environment()
+        environment.update({
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES": "",
+            "GIT_DIR": git_dir,
+            "GIT_OBJECT_DIRECTORY": binding["object_dir"]["path"],
+            "GIT_WORK_TREE": binding["worktree"]["path"],
+        })
+        arguments = [
+            git_binary(),
+            "--no-replace-objects",
+            "--git-dir=" + git_dir,
+            "--work-tree=" + binding["worktree"]["path"],
+            "-c", "core.commitGraph=false",
+            "-c", "core.multiPackIndex=false",
+        ]
+        yield arguments, environment
 
 
-def read_blob(object_id, limit):
-    process = subprocess.Popen(
-        [git_binary(), "--no-replace-objects", "cat-file", "--batch"],
-        env=safe_git_environment(),
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    try:
-        process.stdin.write((object_id + "\n").encode("ascii"))
-        process.stdin.close()
-        header = process.stdout.readline(257)
-        if len(header) > 256 or not header.endswith(b"\n"):
-            raise OSError
-        fields = header.decode("ascii").strip().split()
-        if len(fields) != 3 or fields[0] != object_id or fields[1] != "blob" or not fields[2].isdigit():
-            raise OSError
-        object_size = int(fields[2])
-        if object_size > limit:
-            raise OSError
-        chunks = []
-        remaining = object_size
-        while remaining:
-            chunk = process.stdout.read(min(remaining, 65536))
-            if not chunk:
+def run_git(arguments, binding=None):
+    if binding is None:
+        command = [git_binary(), "--no-replace-objects"] + arguments
+        return subprocess.run(
+            command,
+            check=False,
+            env=safe_git_environment(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    with operational_repository(binding) as (prefix, environment):
+        return subprocess.run(
+            prefix + arguments,
+            check=False,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+
+def read_blob(binding, object_id, limit):
+    with operational_repository(binding) as (prefix, environment):
+        process = subprocess.Popen(
+            prefix + ["cat-file", "--batch"],
+            env=environment,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        try:
+            process.stdin.write((object_id + "\n").encode("ascii"))
+            process.stdin.close()
+            header = process.stdout.readline(257)
+            if len(header) > 256 or not header.endswith(b"\n"):
                 raise OSError
-            chunks.append(chunk)
-            remaining -= len(chunk)
-        if process.stdout.read(1) != b"\n" or process.stdout.read(1) != b"":
-            raise OSError
-        error = process.stderr.read()
-        if process.wait() != 0 or error:
-            raise OSError
-        return b"".join(chunks)
-    except BaseException:
-        if process.poll() is None:
-            process.kill()
-        process.wait()
-        raise
+            fields = header.decode("ascii").strip().split()
+            if len(fields) != 3 or fields[0] != object_id or fields[1] != "blob" or not fields[2].isdigit():
+                raise OSError
+            object_size = int(fields[2])
+            if object_size > limit:
+                raise OSError
+            chunks = []
+            remaining = object_size
+            while remaining:
+                chunk = process.stdout.read(min(remaining, 65536))
+                if not chunk:
+                    raise OSError
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            if process.stdout.read(1) != b"\n" or process.stdout.read(1) != b"":
+                raise OSError
+            error = process.stderr.read()
+            if process.wait() != 0 or error:
+                raise OSError
+            return b"".join(chunks)
+        except BaseException:
+            if process.poll() is None:
+                process.kill()
+            process.wait()
+            raise
 
 
 def discover_repository(root_descriptor, expected_root):
@@ -520,7 +562,7 @@ try:
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         os.fchdir(descriptors[0])
-        result = run_git(sys.argv[3:])
+        result = run_git(sys.argv[3:], binding)
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
@@ -539,7 +581,7 @@ try:
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         os.fchdir(descriptors[0])
-        data = read_blob(object_id, int(limit))
+        data = read_blob(binding, object_id, int(limit))
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
