@@ -1,24 +1,36 @@
 ---
 name: adopt-dev-flow
-description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving its existing tracker, iteration authority, workflow runtime, and delivery provider.
+description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving its existing planning provider, local execution grouping, workflow runtime, and delivery provider.
 ---
 
 # Adopt Dev Flow
 
 Bind the existing repository to one shared core and profile-native routes. Do not
-replace a working tracker, roadmap, workflow runtime, or delivery provider.
+replace a working planning provider, workflow runtime, or delivery provider.
 
 ## Audit
 
 Read `../../references/kernel.md` and the existing repository authorities. Map
-project context, work items, iteration, execution state, delivery, scope, and
-observation. Classify the relevant seams as working, broken, stubbed, or missing;
-repair the cheapest compatible seam.
+project context, planning items, planning windows, planning outcomes, local SD
+execution groups, execution state, delivery, scope, and observation. Confirm
+that the planning provider owns discussion, acceptance, priority, human-facing
+status, time windows, and accepted outcomes; and Spacedock owns the admitted
+snapshot, execution record, and evidence. Each item has one planning-item
+authority and one execution-record authority. Classify the relevant seams as
+working, broken, stubbed, or missing; repair the cheapest compatible seam.
 
 ## Adopt
 
 1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
    authorities plus the repository-local profile loader and contracts root.
+   Bind the planning provider plus a repository-local read-only planning reader.
+   The reader must normalize the provider's current Ready items for one planning
+   window and outcome into source identity, accepted goal, and non-goals without
+   writing either system. A new Spacedock task stores those bindings in `source`,
+   `planning-window`, and `planning-outcome`; every task in the admitted set
+   shares one `sprint` execution-group value. Its required `what` and `why` are
+   an admission snapshot and execution evidence, not a second accepted-goal
+   authority. Do not mirror live provider status into a Roadmap or SD record.
 2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
    `../../references/reverse-recovery-audit.md`,
    `../../references/journey-slicing.md`, and
@@ -37,10 +49,19 @@ repair the cheapest compatible seam.
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
    Default the entity template to `sprint-readiness: defer`. Before an item
-   enters its first working stage, bind a non-empty `sprint` accepted by the
-   repository's iteration authority and set `sprint-readiness: ready`; do not
-   mark the unscheduled backlog ready during adoption.
-4. Map the logical routes to the runtime. A runtime with one superset graph uses:
+   enters its first working stage, bind non-empty `planning-window` and
+   `planning-outcome` values from the accepted planning item, assign the shared
+   non-empty `sprint` execution group, and set `sprint-readiness: ready`; do not
+   mark the unscheduled backlog ready during adoption. Materialize one SD task
+   for every Ready planning item in that window and outcome. The committed SD
+   entity set is the admitted snapshot.
+4. At every engage, the engage reconcile is read-only: invoke the reader and
+   compare the provider's current Ready set with the committed SD snapshot.
+   Report added, removed, changed, and moved items and stop before new dispatch
+   or state mutation when any difference exists. The Captain admits every delta
+   before an authorized actor commits a replacement snapshot. Never mutate
+   either side automatically or cancel a running worker.
+5. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot and Production add `ideation`. No
    profile adds a state the others skip, so a runtime that owns one stage graph
    per workflow cannot strand an item outside its declared route. Production's
@@ -49,7 +70,7 @@ repair the cheapest compatible seam.
    provider's merge verdict is the sole terminal consumer. Backlog and done
    remain non-working states. Preserve an extra local terminal state only
    through an explicit mapping; it does not silently join every profile route.
-5. Make each working stage a small loader invocation or pointer. Load a
+6. Make each working stage a small loader invocation or pointer. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes
    and `project_context_claim_may_change` to a possible changed claim in the
@@ -57,7 +78,7 @@ repair the cheapest compatible seam.
    implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
-6. Derive the two delivery triggers from the audited delivery authority rather
+7. Derive the two delivery triggers from the audited delivery authority rather
    than asking. Set `delivery_artifact_review` true when that authority delivers
    through a pull request, merge request, or forge equivalent — a forge remote
    plus an existing delivery-artifact history is sufficient evidence — no matter
@@ -150,8 +171,18 @@ Preserve the surviving `retained-document-policy.md` and
 conditional references; do not fold either into the shared core or load it for
 an unrelated work record.
 
+Changing the planning provider is item-scoped. Migrate only open planning items
+that have not been admitted to Spacedock. An already-admitted active task keeps
+its existing planning item and provider until completion; the old provider must
+remain available for those items. New admissions use the replacement provider.
+During the drain, providers may differ across snapshots, but each item retains
+one planning-item authority. Keep active Spacedock snapshots, their planning
+bindings, execution history, and delivery artifacts unchanged. Reconcile each
+snapshot through its own provider's reader. Do not install an SD projector,
+provider importer, polling loop, or bidirectional sync.
+
 ## Boundary
 
-Audit and upgrade findings do not create or schedule work. The Captain or named
-iteration owner admits the change. Missing authority or an unsafe mutation path
+Audit and upgrade findings do not create or schedule work. The Captain admits
+the change. Missing authority or an unsafe mutation path
 returns `UNKNOWN` and leaves existing state unchanged.

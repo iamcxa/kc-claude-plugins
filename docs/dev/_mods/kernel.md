@@ -27,9 +27,31 @@ truthfulness; the selected profile owns lifecycle depth, stage work, and proof.
 - **Named owners and deterministic checks** hold scoped gates. There is no
   general-purpose agent gatekeeper.
 
-Keep one project-context authority, one work-item authority, one iteration
-authority, one execution-state authority, and one delivery authority. Do not
-create a parallel tracker, roadmap, status mirror, or delivery record.
+Keep one project-context authority, one planning authority per item, one
+planning-window authority, one planning-outcome authority, one execution-record
+authority, and one delivery authority.
+Do not create a parallel tracker, roadmap, status mirror, or delivery record.
+
+## Planning and execution
+
+The planning item owns discussion, the accepted goal, priority, and human-facing
+status. Within that provider, the planning window owns time and the planning
+outcome owns the accepted result. At admission, every SD task records `source`,
+`planning-window`, `planning-outcome`, and the shared `sprint` execution group.
+The SD entity set is the admission snapshot; `sprint` is an execution grouping,
+not a planning authority. Each task's `what` and `why` are an admission snapshot,
+not another accepted-goal authority. SD owns execution and evidence.
+
+At every engage, use the repository-local read-only planning reader to re-read
+the current Ready set for the snapshot's planning window and outcome. Compare
+its source identities, window, outcome, accepted goal, and non-goals with the
+committed SD entity set. Classify every difference as added, removed, changed,
+or moved. With no difference, continue. With a difference, report it and stop
+before new dispatch or state mutation. The Captain admits the delta before an
+authorized actor commits a replacement snapshot. Do not cancel a running worker.
+
+Do not add an SD-to-planning-provider projector, importer, polling loop, or
+bidirectional sync. No reconcile result writes either side automatically.
 
 ## Select before routing
 
@@ -79,15 +101,16 @@ committed body states all three:
   outcome it serves in the repository's existing project-context authority; for
   `poc-exploration`, the question the experiment answers and the observable
   result whose occurrence would abandon it.
-- **When it is scheduled** — a `sprint` field naming an iteration the
-  repository's iteration authority has already accepted, and `sprint-readiness:
-  ready`. `defer` keeps the item queued.
+- **When it is scheduled** — non-empty `planning-window` and `planning-outcome`
+  fields resolved from the accepted planning item, a shared `sprint` field
+  naming the SD execution snapshot, and `sprint-readiness: ready`. `defer` keeps
+  the item queued.
 
 The scheduling fields are named because a queue answered by query is the point:
-`--where sprint=X --where sprint-readiness=ready` selects the drivable set
-without reading every queued item. The iteration authority still owns which
-iterations exist and where they are recorded; this bar owns only that a
-departing item names one.
+`--where sprint=X --where sprint-readiness=ready` selects the admitted snapshot
+without reading every queued item. The planning provider still owns which
+windows and outcomes exist; the `sprint` value only groups the SD execution
+records materialized from that accepted selection.
 
 The Captain checks the bar on every `backlog` exit, at profile selection.
 A reused profile receipt answers which route the item takes, never whether the

@@ -4,8 +4,8 @@ Load development constraints in proportion to work risk, so agent behavior is
 just sufficient without losing verification or authority boundaries.
 
 KC Dev Flow supplies one minimal authority core and three profile-native delivery
-routes. A repository keeps its own tracker, iteration authority, workflow
-runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
+routes. A repository keeps its own planning provider, planning windows and
+outcomes, workflow runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
 the observed pain, trade-offs, directional evidence, and conditions that would
 falsify this direction.
 
@@ -85,8 +85,6 @@ not another agent, review, or gate.
 - `science-officer-em` — legacy report-envelope compatibility only.
 - `adopt-dev-flow` — bind or upgrade a brownfield repository without replacing
   its existing authorities.
-- `setup-github-project-projection` — install a deterministic one-way Spacedock
-  projection without making GitHub lifecycle authority.
 
 ## Selection and promotion
 
@@ -119,9 +117,12 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 implementation-exit observation.
 
 At a route's first working stage, the loader also requires one non-empty
-`sprint` and `sprint-readiness: ready` in work-item frontmatter. The iteration
-authority and Captain still decide whether that named iteration is accepted;
-the loader checks only the committed field values.
+`sprint` and `sprint-readiness: ready` in work-item frontmatter. The planning
+provider owns the accepted window and outcome; `sprint` only groups the SD
+entity snapshot. The Captain admits the snapshot, and the loader checks only
+the committed field values. At every engage, the adopter's read-only planning
+reader compares the provider's current Ready set with that snapshot. Any delta
+stops before new dispatch or mutation until the Captain admits it.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

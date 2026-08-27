@@ -98,7 +98,6 @@ required = [
     "kc-dev-flow/skills/science-officer/agents/openai.yaml",
     "kc-dev-flow/skills/science-officer-em/SKILL.md",
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
-    "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
     "scripts/kc-dev-flow-multi-profile-gate.py",
@@ -120,6 +119,8 @@ for retired in [
     "kc-dev-flow/scripts/improvement-intake.py",
     "kc-dev-flow/scripts/improvement-intake.test.py",
     "kc-dev-flow/skills/promote-dev-flow/SKILL.md",
+    "kc-dev-flow/skills/setup-github-project-projection",
+    "kc-dev-flow/scripts/project-spacedock-state.test.py",
 ]:
     require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
 
@@ -307,11 +308,6 @@ run(
     [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
     "portable PR delivery",
 )
-run(
-    [sys.executable, "kc-dev-flow/scripts/project-spacedock-state.test.py"],
-    "Spacedock projection",
-)
-
 loader_path = PLUGIN / "scripts/profile-contract-loader.py"
 spec = importlib.util.spec_from_file_location("profile_contract_loader", loader_path)
 require(spec is not None and spec.loader is not None, "cannot import profile loader")
@@ -442,6 +438,22 @@ for phrase in [
     require(phrase in " ".join(kernel.split()), f"kernel omits subtraction rule: {phrase}")
 require_production_route(kernel, "`production`", "`shape -> build -> verify`")
 normalized_kernel = " ".join(kernel.split())
+for phrase in [
+    "one planning authority per item",
+    "one execution-record authority",
+    "planning item owns discussion, the accepted goal, priority, and human-facing status",
+    "planning window owns time",
+    "planning outcome owns the accepted result",
+    "SD entity set is the admission snapshot",
+    "`sprint` is an execution grouping, not a planning authority",
+    "`what` and `why` are an admission snapshot, not another accepted-goal authority",
+    "SD owns execution and evidence",
+    "SD-to-planning-provider projector",
+    "No reconcile result writes either side automatically",
+    "added, removed, changed, or moved",
+    "Captain admits the delta",
+]:
+    require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
 for phrase in [
     "An item leaves `backlog` only when its committed body states all three",
     "**What it is**",
@@ -656,7 +668,6 @@ require(
         "continue-dev-flow",
         "science-officer",
         "science-officer-em",
-        "setup-github-project-projection",
     },
     "Hermes portable package does not expose the complete direct skills set",
 )
@@ -710,6 +721,9 @@ require("before a work item enters its first working stage" in normalized_choose
 for phrase in [
     "Default the entity template to `sprint-readiness: defer`",
     "do not mark the unscheduled backlog ready during adoption",
+    "repository-local read-only planning reader",
+    "engage reconcile is read-only",
+    "Captain admits every delta",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 for phrase in [
@@ -737,6 +751,31 @@ for phrase in [
     "A link is not activation",
 ]:
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
+continuation_authority_order = [
+    "Read the exact committed Spacedock work item only far enough to resolve its `source`, `planning-window`, `planning-outcome`, and `sprint`.",
+    "Follow the exact work item's `source` to the accepted planning item and invoke the repository-local read-only planning reader.",
+    "Compare that current Ready set with the committed SD entity set for the same `sprint`.",
+    "If the comparison finds an added, removed, changed, or moved item, report the delta and stop before new dispatch or state mutation.",
+    "Then read current execution state from its declared authority.",
+]
+continuation_authority_positions = []
+for phrase in continuation_authority_order:
+    require(phrase in normalized_continue, f"continuation authority resolution omits: {phrase}")
+    continuation_authority_positions.append(normalized_continue.index(phrase))
+require(
+    continuation_authority_positions == sorted(continuation_authority_positions)
+    and len(set(continuation_authority_positions)) == len(continuation_authority_positions),
+    "continuation must resolve the snapshot, reconcile provider state read-only, then read execution state",
+)
+for phrase in [
+    "If `source` is not a resolvable planning link, report `planning source unavailable`",
+    "stop before reading execution state",
+    "Do not promote the admission snapshot into planning authority",
+    "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
+    "Do not cancel a running worker.",
+    "No difference writes the provider or SD automatically.",
+]:
+    require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
 for phrase in [
     "retained_document_change",
     "project_context_claim_may_change",
@@ -796,7 +835,77 @@ for phrase in [
     require(phrase in normalized_science, f"Science Officer is missing: {phrase}")
 require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM")
 
+for retired in [
+    ".github/workflows/spacedock-project-sync.yml",
+    ".github/spacedock-project.json",
+    ".github/scripts/project-spacedock-state.py",
+]:
+    require(not (ROOT / retired).exists(), f"self-adoption still installs projector control: {retired}")
+
+roadmap = read("docs/dev/ROADMAP.md")
+normalized_roadmap = " ".join(roadmap.split())
+kc_dev_flow_roadmap = roadmap.split("## `kc-dev-flow`", 1)[1].split("\n## ", 1)[0]
+kc_dev_flow_lines = kc_dev_flow_roadmap.splitlines()
+for active_projection_plan in [
+    "### Sprint S3 — GitHub projection dogfood",
+    "Captain direction: begin immediately alongside the remaining `kc-dev-flow/S2`",
+    "Projection exit: a disposable proof establishes",
+    "Status-update exit: the sibling derives facts and metrics",
+    "remaining S3 projection work",
+]:
+    require(
+        active_projection_plan not in roadmap,
+        f"Roadmap retains the active S3 projection plan: {active_projection_plan}",
+    )
+require(
+    "### Sprint S3 — RETIRED for new admissions" in kc_dev_flow_lines,
+    "Roadmap omits the exact retired kc-dev-flow/S3 heading",
+)
+issue_297_url = "https://github.com/iamcxa/kc-claude-plugins/issues/297"
+s6_heading = "### Sprint S6 — provider-neutral planning"
+require(s6_heading in kc_dev_flow_lines, "Roadmap omits the exact kc-dev-flow/S6 heading")
+require(
+    roadmap.count(issue_297_url) == 1,
+    f"Roadmap must link Issue #297 exactly once, found {roadmap.count(issue_297_url)}",
+)
+s6_body = re.split(
+    r"\n#{2,3} ", kc_dev_flow_roadmap.split(s6_heading, 1)[1], maxsplit=1
+)[0].strip()
+require(
+    s6_body == f"- [Issue #297]({issue_297_url})",
+    "kc-dev-flow/S6 must contain only the Issue #297 link",
+)
+require(
+    "`spacedock-project-status-updates` remains at `implementation`" not in roadmap,
+    "Roadmap copies mutable Spacedock execution state into retired S3",
+)
+require(
+    "A RETIRED heading remains registered only for existing execution records and forbids new admissions by Captain authority."
+    in roadmap,
+    "Roadmap omits the RETIRED-heading authority boundary",
+)
+
 workflow = read("docs/dev/README.md")
+normalized_workflow = " ".join(workflow.split())
+for phrase in [
+    "GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.",
+    "`source` links the accepted planning item.",
+    "At every engage, compare the provider's current Ready set with the committed SD snapshot.",
+    "A difference requires Captain admission and never writes either side automatically.",
+]:
+    require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
+for phrase in [
+    "Copy the planning item's accepted outcome and non-goals into the work item as an admission snapshot.",
+    "It is not a second accepted-goal authority.",
+    "Record task-specific acceptance evidence as execution evidence.",
+    "## Admission snapshot: accepted outcome and non-goals (copied from `source`)",
+]:
+    require(phrase in normalized_workflow, f"self-adoption misstates the admission snapshot: {phrase}")
+for phrase in [
+    "Roadmap headings are legacy or local SD execution-group identifiers, not planning windows or outcomes.",
+    "It does not store task state, acceptance criteria, evidence, or provider-specific cycle metadata.",
+]:
+    require(phrase in normalized_roadmap, f"Roadmap is not thin enough for provider-neutral planning: {phrase}")
 require(
     "sprint-readiness: defer" in workflow
     and "--where sprint-readiness=ready" in workflow,
