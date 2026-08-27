@@ -380,10 +380,12 @@ All other cases select `initial`. Ambiguity selects `initial` rather than guessi
   `REQUEST_CHANGES`; never `APPROVE`.
 - Router crash or timeout at route entry, before any fast path engages -> ignore partial output and
   start the existing `initial` flow.
-- Fresh rerun failure at a confirmation/posting boundary while the flag is `on` or the run has
-  already engaged `delta`/`resolve` -> fail closed at that boundary. Recovery is a new explicit
-  `initial` review invocation from a fresh exact-head snapshot; the current flow may not discard its
-  plan or flag state to recover broader legacy authority.
+- At a confirmation/posting boundary with the flag still `on`, rerun `decide`; failure or mismatch
+  fails closed. After `delta`/`resolve` has engaged, a later `off` or unexported flag does not rerun
+  `decide`: validate the stored plan digest and enforce its stored ceiling, failing closed if either
+  is unavailable or invalid. Recovery is a new explicit `initial` review invocation from a fresh
+  exact-head snapshot; the current flow may not discard its plan or flag state to recover broader
+  legacy authority.
 
 ### 5.6 Acceptance
 

@@ -654,7 +654,8 @@ The prose must state:
 - before a clean draft and before posting, Step 2.1 still rechecks the live head;
 - the user still receives the full Step 6 draft and explicitly confirms at Step 6c.
 
-Do not copy schema validators or shell helpers into `SKILL.md`; point to `reference/review-runtime.md` and `review-plan.sh --help`.
+Beyond the exact Step 2.2 snippet above, do not copy additional schema validators or shell helpers
+into `SKILL.md`; point to `reference/review-runtime.md` and `review-plan.sh --help`.
 
 Extend `--case skill-wiring` with a router stub that prints a valid JSON prefix and exits 9. Assert
 the existing planner-state trace (`mode`, serialized plan, ceiling, and reason only) matches the
