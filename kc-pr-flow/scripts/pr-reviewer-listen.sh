@@ -63,21 +63,28 @@ migrate_config() {
 # silently undo it. A held lock is also a total outage — nothing polls, nothing
 # completes, and the menu looks merely idle — so a lock nobody released expires.
 lock_acquire() { # 0 = acquired, 1 = someone else holds it
-  local age
+  local owner
   if [[ -d "$LOCKDIR" ]]; then
-    age=$(( $(date -u +%s) - $(stat -f %m "$LOCKDIR" 2>/dev/null || echo 0) ))
-    if (( age > LOCK_STALE_SECONDS )); then
-      rmdir "$LOCKDIR" 2>/dev/null && log "removed a lock left behind for ${age}s"
+    owner=$(cat "$LOCKDIR/pid" 2>/dev/null)
+    # Age alone cannot distinguish a dead owner from a slow one, and evicting a
+    # live owner is worse than waiting: its EXIT trap would then release the new
+    # owner's lock. Only a process that no longer exists gets reaped.
+    if [[ -n "$owner" ]] && kill -0 "$owner" 2>/dev/null; then
+      return 1
     fi
+    rm -rf "$LOCKDIR" 2>/dev/null && log "reaped a lock whose owner (${owner:-unknown}) is gone"
   fi
   mkdir "$LOCKDIR" 2>/dev/null || return 1
-  trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
+  printf '%s\n' "$$" >"$LOCKDIR/pid"
+  # Release only what we still own.
+  trap '[[ "$(cat "$LOCKDIR/pid" 2>/dev/null)" == "$$" ]] && rm -rf "$LOCKDIR" 2>/dev/null' EXIT
 }
 
-# A menu click is a person waiting, so wait for the tick rather than doing nothing.
+# A menu click is a person waiting. Toggles are idempotent single-field writes, so
+# after waiting they apply anyway; work that dispatches must not.
 lock_wait() {
   local i
-  for i in 1 2 3 4 5 6 7 8 9 10; do
+  for i in $(seq 1 20); do
     lock_acquire && return 0
     sleep 0.3
   done
@@ -133,15 +140,19 @@ dispatch() { # dispatch <repo> <pr-number> <pr-url> <head-branch> <head-sha>
 
   # Substituted in the shell, not through sed: a branch name may contain the
   # delimiter or an ampersand, which sed would treat as syntax.
-  local tmpl
-  tmpl=$(<"$PROMPT_TMPL") || { mark_error "$key" "cannot read the dispatch prompt"; return 1; }
-  tmpl=${tmpl//__PR_URL__/$url}
-  tmpl=${tmpl//__REPO__/$repo}
-  tmpl=${tmpl//__BRANCH__/$branch}
-  tmpl=${tmpl//__HEAD_SHA__/$sha}
+  # One pass over the template: chained replacements would let an inserted value
+  # (a branch legally named after a later placeholder) be substituted again.
   msg=$(mktemp -t prreview)
-  if ! printf '%s\n' "$tmpl" >"$msg"; then
-    rm -f "$msg"; mark_error "$key" "cannot write the dispatch prompt"; return 1
+  if ! "$JQ" -rn --rawfile t "$PROMPT_TMPL" \
+        --arg url "$url" --arg repo "$repo" --arg branch "$branch" --arg sha "$sha" \
+        '$t | [splits("(__PR_URL__|__REPO__|__BRANCH__|__HEAD_SHA__)"; "g")] as $parts
+         | ($t | [match("(__PR_URL__|__REPO__|__BRANCH__|__HEAD_SHA__)"; "g").string]) as $keys
+         | reduce range(0; ($parts|length)) as $i ("";
+             . + $parts[$i]
+               + (if $i < ($keys|length)
+                  then {"__PR_URL__":$url,"__REPO__":$repo,"__BRANCH__":$branch,"__HEAD_SHA__":$sha}[$keys[$i]]
+                  else "" end))' >"$msg" 2>>"$LOG"; then
+    rm -f "$msg"; mark_error "$key" "cannot render the dispatch prompt"; return 1
   fi
   out=$("$be" create "$repo" "$num" "$url" "$branch" "$msg" "$sha" 2>&1)
   local rc=$?
@@ -149,6 +160,14 @@ dispatch() { # dispatch <repo> <pr-number> <pr-url> <head-branch> <head-sha>
 
   job=$(sed -n 's/^job_id=//p' <<<"$out" | head -1)
   target=$(sed -n 's/^open=//p' <<<"$out" | head -1)
+  if [[ $rc -eq 3 ]]; then
+    # The backend already produced a side effect it could not finish. Retrying
+    # would create a second one, so this waits for a person.
+    st_edit --arg k "$key" --arg e "$(tail -2 <<<"$out" | tr '\n' ' ' | cut -c1-200)" \
+      '.seen[$k] += {status:"unconfirmed", error:$e, ts:(now|todate)}'
+    notify "Review needs a look" "$key — $(tail -1 <<<"$out" | cut -c1-90)" "$url"
+    log "dispatch $key UNCONFIRMED: $out"; return 1
+  fi
   if [[ $rc -ne 0 || -z "$job" ]]; then
     mark_error "$key" "$(tail -2 <<<"$out" | tr '\n' ' ' | cut -c1-200)"
     log "dispatch $key FAILED: $out"; return 1
@@ -171,10 +190,15 @@ check_completions() {
 
   # A create whose result was never written stays "dispatching", where completion
   # never looks and polling refuses to re-run it. Reopen it for a retry.
+  # Ambiguous, not failed: the backend may well have created the review. Retrying
+  # from age alone would duplicate it, so this waits for a person.
   while IFS= read -r key; do
     [[ -z "$key" ]] && continue
-    mark_error "$key" "the dispatch never confirmed a job; retrying"
-    log "reopened stalled dispatch $key"
+    st_edit --arg k "$key" --arg e "the dispatch never confirmed a job — check the backend before retrying" \
+      '.seen[$k] += {status:"unconfirmed", error:$e, ts:(now|todate)}'
+    notify "Review needs a look" "$key — dispatch never confirmed" \
+           "$(st_get --arg k "$key" '.seen[$k].url // empty')"
+    log "unconfirmed dispatch $key"
   done < <("$JQ" -r --argjson max "$DISPATCH_STALE_SECONDS" \
             '.seen | to_entries[] | select(.value.status == "dispatching")
              | select(.value.ts != null) | select((now - (.value.ts|fromdate)) > $max) | .key' \
@@ -189,7 +213,17 @@ check_completions() {
         st_edit --arg k "$key" '.seen[$k] += {status:"reviewed", finished:(now|todate)}'
         notify "Review ready" "$key — review finished, go read it" \
                "$(st_get --arg k "$key" '.seen[$k].open // empty')"
-        log "completed $key" ;;
+        log "completed $key"
+        # The review skill covers whatever head it finds, so if the head moved after
+        # dispatch this record names the wrong commit. Drop it and let GitHub — which
+        # records the commit each review actually covered — answer next tick.
+        local dispatched current
+        dispatched=$(st_get --arg k "$key" '.seen[$k].head_sha // empty')
+        current=$("$GH" pr view "${key#*#}" --repo "${key%#*}" --json headRefOid --jq .headRefOid 2>>"$LOG")
+        if [[ -n "$dispatched" && -n "$current" && "$dispatched" != "$current" ]]; then
+          st_edit --arg k "$key" 'del(.seen[$k])'
+          log "head moved during $key; deferring to GitHub's record"
+        fi ;;
       error)
         reason=$(tr '\n' ' ' <"$errf" | cut -c1-160)
         mark_error "$key" "${reason:-the backend reported this job cannot finish}"
@@ -234,6 +268,11 @@ poll() {
 
   local me head branch sha seen_sha
   me=$("$GH" api user --jq .login 2>>"$LOG")
+  # An empty login would make "has this account reviewed it" trivially false.
+  if [[ -z "$me" ]]; then
+    st_edit --arg e "could not resolve the GitHub identity" '.last_error = $e'
+    return 1
+  fi
 
   while IFS=$'\t' read -r repo num url draft; do
     [[ -z "$repo" ]] && continue
@@ -340,6 +379,10 @@ render() {
       case "$status" in
         reviewed|running)
           echo "-- $([[ $status == reviewed ]] && echo ✅ || echo ⏳) #$num $title | bash=\"$SELF\" param1=open param2=\"$target\" terminal=false" ;;
+        unconfirmed)
+          echo "-- ⚠️ #$num $title | href=$url color=orange"
+          echo "-- -- $(menu_label "$(st_get --arg k "$key" '.seen[$k].error // ""')")"
+          echo "-- -- retry after checking the backend | bash=\"$SELF\" param1=forget param2=\"$key\" terminal=false refresh=true" ;;
         error)
           echo "-- ❌ #$num $title | href=$url color=red"
           echo "-- -- $(menu_label "$(st_get --arg k "$key" '.seen[$k].error // ""')")"
@@ -396,7 +439,8 @@ case "${1:-}" in
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;
   toggle-login)  login_toggle; exit 0 ;;
-  poll-only)     lock_wait; check_completions; poll; exit $? ;;
+  poll-only)     lock_wait || { log "poll-only skipped: a tick holds the lock"; exit 0; }
+                 check_completions; poll; exit $? ;;
 esac
 
 if lock_acquire; then

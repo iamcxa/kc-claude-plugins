@@ -23,8 +23,11 @@ open=<URI or absolute path the user can open to watch the review>
 because `status` receives nothing else. `head-sha` is the commit the review was
 requested for; a branch can move between the decision and this call. `open` is what a menu click
 and a notification click resolve to — a URI scheme, an editor URL, or a directory
-path all qualify. On failure, exit non-zero and print a one-line reason to stderr;
-the listener records it and retries on a later tick.
+path all qualify. On failure, exit non-zero and print a one-line reason to stderr; the listener
+records it and retries on a later tick — **except exit code 3**, which means a side
+effect was already produced and could not be finished. A retry would duplicate it,
+so the listener holds that pull request for a person instead of trying again. Use 3
+whenever the remote thing exists but you cannot return a usable handle for it.
 
 ## status
 

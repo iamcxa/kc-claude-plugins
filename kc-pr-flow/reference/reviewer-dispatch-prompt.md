@@ -2,12 +2,11 @@ You are reviewing a pull request that the repository owner was asked to review.
 
 PR: __PR_URL__
 Repo: __REPO__
-Head branch: __BRANCH__
-Head commit: __HEAD_SHA__
+Head branch: __BRANCH__ (checked out here)
+Requested for commit: __HEAD_SHA__
 
-The workspace is checked out on that branch. Confirm HEAD is __HEAD_SHA__ before you
-start; if the branch has moved on, check that commit out and review it, because that
-is the commit this review was requested for.
+If the head has moved on since then, review the current head — that is what the
+review skill does by design — and say so in your first line, naming both commits.
 
 Run the review skill against it: `/kc-pr-review __PR_URL__`
 

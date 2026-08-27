@@ -91,7 +91,11 @@ cmd_create() {
     [[ -n "$sess" ]] && break
     sleep 2
   done
-  [[ -n "$sess" ]] || die "workspace $wsid was created but never produced a session — reconcile it before retrying"
+  if [[ -z "$sess" ]]; then
+    # Exit 3: the workspace exists. A retry would create a second one.
+    printf 'workspace %s was created but never produced a session — reconcile it before retrying\n' "$wsid" >&2
+    exit 3
+  fi
 
   # job_id is opaque to the listener, so the repo travels with it: `status` needs
   # the same organization token that `create` used.
