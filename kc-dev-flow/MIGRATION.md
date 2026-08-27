@@ -31,10 +31,12 @@ cutover, in this order:
    migration.
 5. Prove the drivable set with `spacedock status --where sprint=X --where
    sprint-readiness=ready`, then run one read-only engage reconcile against the
-   provider's current Ready set through the vendored comparator. A delta or
-   invalid input must stop before dispatch. Run every profile-stage load,
-   guarded POC close path, package parity check, and normal repository gate
-   before updating the installed plugin.
+   provider's current Ready set plus every still-Ready snapshot source outside
+   the original window/outcome. Invoke the vendored comparator with the exact
+   engaged source. A delta, truncated result, or invalid input must stop before
+   dispatch. Run every profile-stage load, guarded POC close path, package
+   parity check, and normal repository gate before updating the installed
+   plugin.
 
 ### Retire the planning projection
 

@@ -266,6 +266,23 @@ def run_reconcile_exit_mutant() -> None:
         )
 
 
+def run_reconcile_wiring_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+        replace_once(
+            continuation,
+            "6. Invoke the repository-local read-only engage comparator.\n",
+            "6. Continue without invoking the engage comparator.\n",
+        )
+        reject(
+            "reconcile-wiring-removed",
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            "continuation authority resolution omits",
+        )
+
+
 def run_missing_close_guard_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
@@ -342,6 +359,7 @@ def main() -> int:
     run_scheduling_mutant()
     run_poc_entry_mutant()
     run_reconcile_exit_mutant()
+    run_reconcile_wiring_mutant()
     run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")

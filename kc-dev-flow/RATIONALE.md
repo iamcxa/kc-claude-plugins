@@ -60,11 +60,12 @@ record to reconcile. KC Dev Flow instead uses an admission snapshot plus a
 read-only engage reconcile. `source`, `planning-window`, and `planning-outcome`
 bind each task to its planning selection; `sprint` groups the resulting SD
 entities for execution. At every engage, a repository-local reader normalizes
-the provider's current Ready set and committed snapshot. The vendored read-only
-comparator returns clean only when they match and classifies every delta before
-new dispatch or mutation. The Captain admits that delta before an authorized
-actor commits the replacement snapshot. Because reconcile writes neither side,
-it is not synchronization.
+the provider's current Ready set, including every still-Ready snapshot source
+outside the original window/outcome, and the committed snapshot. The vendored
+read-only comparator binds the exact engaged source, compares the five planning
+fields, and classifies every delta before new dispatch or mutation. The Captain
+admits that delta before an authorized actor commits the replacement snapshot.
+Because reconcile writes neither side, it is not synchronization.
 
 That boundary lets a repository replace GitHub Projects with Linear, or the
 reverse, without rewriting active Spacedock snapshots, execution history, or

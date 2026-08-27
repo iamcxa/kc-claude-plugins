@@ -29,31 +29,52 @@ def item(source: str) -> dict[str, object]:
     }
 
 
-def run_text(snapshot: str, current: str) -> subprocess.CompletedProcess[str]:
+def invoke(
+    snapshot: Path, current: Path, expected_source: str
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(COMPARATOR),
+            "--snapshot",
+            str(snapshot),
+            "--current",
+            str(current),
+            "--expected-source",
+            expected_source,
+        ],
+        text=True,
+        capture_output=True,
+    )
+
+
+def run_text(
+    snapshot: str, current: str, expected_source: str
+) -> subprocess.CompletedProcess[str]:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
         root = Path(temporary)
         snapshot_path = root / "snapshot.json"
         current_path = root / "current.json"
         snapshot_path.write_text(snapshot, encoding="utf-8")
         current_path.write_text(current, encoding="utf-8")
-        return subprocess.run(
-            [
-                sys.executable,
-                str(COMPARATOR),
-                "--snapshot",
-                str(snapshot_path),
-                "--current",
-                str(current_path),
-            ],
-            text=True,
-            capture_output=True,
-        )
+        return invoke(snapshot_path, current_path, expected_source)
 
 
 def run(
-    snapshot: list[dict[str, object]], current: list[dict[str, object]]
+    snapshot: list[dict[str, object]],
+    current: list[dict[str, object]],
+    expected_source: str | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    return run_text(json.dumps(snapshot), json.dumps(current))
+    if expected_source is None:
+        expected_source = str(snapshot[0]["source"]) if snapshot else "issue:missing"
+    return run_text(json.dumps(snapshot), json.dumps(current), expected_source)
+
+
+def run_alias(document: str, expected_source: str) -> subprocess.CompletedProcess[str]:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
+        path = Path(temporary) / "both.json"
+        path.write_text(document, encoding="utf-8")
+        return invoke(path, path, expected_source)
 
 
 def expect_json(
@@ -94,6 +115,41 @@ expect_json(
         "status": "clean",
     },
 )
+expect_error(
+    "empty snapshot",
+    run([], []),
+    "snapshot must contain the engaged source",
+)
+expect_error(
+    "partial snapshot",
+    run([item("issue:1")], [item("issue:1")], expected_source="issue:missing"),
+    "snapshot does not contain expected source: issue:missing",
+)
+expect_error(
+    "aliased inputs",
+    run_alias(json.dumps([item("issue:1")]), "issue:1"),
+    "snapshot and current must be different files",
+)
+expect_error(
+    "placeholder source",
+    run([item("<issue>")], [item("<issue>")]),
+    "snapshot item 0 has invalid source",
+)
+expect_error(
+    "malformed JSON",
+    run_text("[", json.dumps([item("issue:1")]), "issue:1"),
+    "cannot read snapshot",
+)
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-reconcile-") as temporary:
+    root = Path(temporary)
+    current_path = root / "current.json"
+    current_path.write_text(json.dumps([item("issue:1")]), encoding="utf-8")
+    expect_error(
+        "missing snapshot path",
+        invoke(root / "missing.json", current_path, "issue:1"),
+        "cannot read snapshot",
+    )
+
 expect_json(
     "membership delta",
     run([item("issue:1")], [item("issue:2")]),
@@ -103,6 +159,18 @@ expect_json(
         "changed": [],
         "moved": [],
         "removed": ["issue:1"],
+        "status": "delta",
+    },
+)
+expect_json(
+    "empty current set",
+    run([item("issue:10")], []),
+    1,
+    {
+        "added": [],
+        "changed": [],
+        "moved": [],
+        "removed": ["issue:10"],
         "status": "delta",
     },
 )
@@ -119,6 +187,38 @@ expect_json(
         "added": [],
         "changed": ["issue:3"],
         "moved": ["issue:3"],
+        "removed": [],
+        "status": "delta",
+    },
+)
+
+outcome_snapshot = item("issue:31")
+outcome_current = item("issue:31")
+outcome_current["planning-outcome"] = "revised provider-neutral execution"
+expect_json(
+    "planning outcome move",
+    run([outcome_snapshot], [outcome_current]),
+    1,
+    {
+        "added": [],
+        "changed": [],
+        "moved": ["issue:31"],
+        "removed": [],
+        "status": "delta",
+    },
+)
+
+non_goals_snapshot = item("issue:32")
+non_goals_current = item("issue:32")
+non_goals_current["non-goals"] = ["polling"]
+expect_json(
+    "non-goal change",
+    run([non_goals_snapshot], [non_goals_current]),
+    1,
+    {
+        "added": [],
+        "changed": ["issue:32"],
+        "moved": [],
         "removed": [],
         "status": "delta",
     },
@@ -160,7 +260,7 @@ duplicate_key_snapshot = json.dumps([item("issue:8")]).replace(
 )
 expect_error(
     "duplicate JSON key",
-    run_text(duplicate_key_snapshot, json.dumps([item("issue:9")])),
+    run_text(duplicate_key_snapshot, json.dumps([item("issue:9")]), "issue:9"),
     "duplicate field: source",
 )
 

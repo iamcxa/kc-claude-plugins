@@ -117,9 +117,11 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 implementation-exit observation.
 
 `scripts/engage-reconcile.py` is the read-only compare mechanism. It consumes
-ephemeral normalized admission and current Ready sets, returns `0` only when
-they match, `1` with added/removed/changed/moved identities, and `2` for
-invalid input. It invokes no provider or execution runtime.
+ephemeral normalized admission and current Ready sets, binds the exact engaged
+source, and compares source, window, outcome, accepted goal, and non-goals. It
+returns `0` when those fields match, `1` with
+added/removed/changed/moved identities, and `2` for invalid input. It
+invokes no provider or execution runtime.
 
 At a route's first working stage, the loader also requires one non-empty
 `sprint` and `sprint-readiness: ready` in work-item frontmatter. The planning
@@ -127,8 +129,9 @@ provider owns the accepted window and outcome; `sprint` only groups the SD
 entity snapshot. The Captain admits the snapshot, and the loader checks only
 the committed field values. At every engage, the adopter's read-only planning
 reader normalizes the provider's current Ready set and the admitted snapshot;
-the vendored comparator classifies their difference. Any delta stops before new
-dispatch or mutation until the Captain admits it.
+that current set also includes every still-Ready snapshot source outside the
+original window/outcome. The vendored comparator classifies their difference.
+Any delta stops before new dispatch or mutation until the Captain admits it.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

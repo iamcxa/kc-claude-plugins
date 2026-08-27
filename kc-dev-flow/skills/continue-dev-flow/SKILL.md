@@ -26,8 +26,10 @@ Continue by the selected profile's smallest sufficient route.
 4. Follow the exact work item's `source` to the accepted planning item and
    invoke the repository-local read-only planning reader. Read the item for the
    problem, decision, success condition, priority, and human-facing status, and
-   obtain the provider's current Ready set for the recorded planning window and
-   outcome. If `source` is not a resolvable planning link, report `planning
+   obtain the union of the provider's current Ready set for the recorded
+   planning window/outcome and every currently Ready snapshot source even when
+   its current window or outcome moved. Refuse a truncated provider result. If
+   `source` is not a resolvable planning link, report `planning
    source unavailable` and stop before reading execution state. If the reader or
    its inputs are unavailable, report `planning reconcile unavailable` and stop
    at the same boundary. Do not promote the admission snapshot into planning
@@ -44,7 +46,8 @@ Continue by the selected profile's smallest sufficient route.
    ```bash
    python3 <planning-comparator> \
      --snapshot <ephemeral-snapshot-json> \
-     --current <ephemeral-current-json>
+     --current <ephemeral-current-json> \
+     --expected-source <exact-work-item-source>
    ```
 
    Exit `0` continues. Exit `1` reports the classified delta and stops

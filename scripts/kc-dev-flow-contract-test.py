@@ -476,6 +476,7 @@ for phrase in [
     "SD-to-planning-provider projector",
     "No reconcile result writes either side automatically",
     "the read-only engage comparator",
+    "exact engaged source",
     "A delta exit refuses new dispatch or state mutation",
     "added, removed, changed, or moved",
     "Captain admits the delta",
@@ -755,6 +756,8 @@ for phrase in [
     "do not mark the unscheduled backlog ready during adoption",
     "repository-local read-only planning reader",
     "repository-local read-only engage comparator",
+    "every currently Ready snapshot source",
+    "Compare the adopted loader, engage comparator",
     "engage reconcile is read-only",
     "Captain admits every delta",
 ]:
@@ -808,6 +811,9 @@ for phrase in [
     "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
     "Do not cancel a running worker.",
     "No difference writes the provider or SD automatically.",
+    "every currently Ready snapshot source",
+    "Refuse a truncated provider result",
+    "--expected-source <exact-work-item-source>",
     "Exit `1` reports the classified delta",
     "Exit `2` reports `planning reconcile unavailable`",
 ]:
@@ -929,6 +935,8 @@ for phrase in [
     "At every engage, compare the provider's current Ready set with the committed SD snapshot.",
     "A difference requires Captain admission and never writes either side automatically.",
     "| Planning comparator | `docs/dev/_mods/engage-reconcile.py` |",
+    ".totalCount != (.items | length)",
+    "--expected-source",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [

@@ -25,9 +25,11 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    authorities plus the repository-local profile loader and contracts root.
    Bind the planning provider plus a repository-local read-only planning reader
    and the vendored repository-local read-only engage comparator.
-   The reader must normalize the provider's current Ready items for one planning
-   window and outcome into source identity, accepted goal, and non-goals without
-   writing either system. A new Spacedock task stores those bindings in `source`,
+   The reader must normalize the union of current Ready items for one planning
+   window/outcome and every currently Ready snapshot source even when it moved.
+   It must refuse a truncated result and expose source identity, accepted goal,
+   and non-goals without writing either system. A new Spacedock task stores
+   those bindings in `source`,
    `planning-window`, and `planning-outcome`; every task in the admitted set
    shares one `sprint` execution-group value. Its required `what` and `why` are
    an admission snapshot and execution evidence, not a second accepted-goal
@@ -39,10 +41,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    `../../references/project-context-maintenance.md`,
    `../../references/delivery-branch-base.md`,
    `../../references/pr-delivery.md`,
-   `../../references/roborev-implementation-exit.md`, and
-`../../scripts/profile-contract-loader.py` and
-`../../scripts/engage-reconcile.py`,
-`../../scripts/poc-close-guard.py` without local edits. The selected
+   `../../references/roborev-implementation-exit.md`,
+   `../../scripts/profile-contract-loader.py`,
+   `../../scripts/engage-reconcile.py`, and
+   `../../scripts/poc-close-guard.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
@@ -59,9 +61,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    entity set is the admitted snapshot.
 4. At every engage, the engage reconcile is read-only: invoke the reader and
    normalize the provider's current Ready set and committed SD snapshot into
-   ephemeral comparator inputs. Invoke the vendored comparator; exit `0`
-   continues, exit `1` reports the classified delta and stops, and exit `2`
-   reports unavailable input and stops.
+   ephemeral comparator inputs. Bind the exact engaged `source` when invoking
+   the vendored comparator; exit `0` continues, exit `1` reports the
+   classified delta and stops, and exit `2` reports unavailable input and
+   stops.
    Report added, removed, changed, and moved items and stop before new dispatch
    or state mutation when any difference exists. The Captain admits every delta
    before an authorized actor commits a replacement snapshot. Never mutate
@@ -136,11 +139,12 @@ review stages.
 
 ## Upgrade
 
-Compare the adopted loader, core, and selected profile files with this source.
-Present changed authority, route, and proof semantics for acceptance. Replace
-accepted canonical files mechanically; do not create locally edited hybrids.
-Re-run every profile-stage loader combination and prove that unselected profile
-and stage markers are absent.
+Compare the adopted loader, engage comparator, core, and selected profile files
+with this source. Present changed authority, route, and proof semantics for
+acceptance. Replace accepted canonical files mechanically; do not create
+locally edited hybrids. Against the adopted comparator, run one clean, one
+delta, and one invalid-input invocation; then re-run every profile-stage loader
+combination and prove that unselected profile and stage markers are absent.
 
 A reference that exists in this source and not in the adopter is a missing
 capability, not an intentional omission. Compare the source reference set with
