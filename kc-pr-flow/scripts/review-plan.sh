@@ -330,6 +330,47 @@ def run_git(arguments):
     )
 
 
+def read_blob(object_id, limit):
+    process = subprocess.Popen(
+        [git_binary(), "--no-replace-objects", "cat-file", "--batch"],
+        env=safe_git_environment(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        process.stdin.write((object_id + "\n").encode("ascii"))
+        process.stdin.close()
+        header = process.stdout.readline(257)
+        if len(header) > 256 or not header.endswith(b"\n"):
+            raise OSError
+        fields = header.decode("ascii").strip().split()
+        if len(fields) != 3 or fields[0] != object_id or fields[1] != "blob" or not fields[2].isdigit():
+            raise OSError
+        object_size = int(fields[2])
+        if object_size > limit:
+            raise OSError
+        chunks = []
+        remaining = object_size
+        while remaining:
+            chunk = process.stdout.read(min(remaining, 65536))
+            if not chunk:
+                raise OSError
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        if process.stdout.read(1) != b"\n" or process.stdout.read(1) != b"":
+            raise OSError
+        error = process.stderr.read()
+        if process.wait() != 0 or error:
+            raise OSError
+        return b"".join(chunks)
+    except BaseException:
+        if process.poll() is None:
+            process.kill()
+        process.wait()
+        raise
+
+
 def discover_repository(root_descriptor, expected_root):
     os.fchdir(root_descriptor)
 
@@ -498,20 +539,13 @@ try:
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         os.fchdir(descriptors[0])
-        size_result = run_git(["cat-file", "-s", object_id])
-        try:
-            object_size = int(size_result.stdout.decode("ascii").strip())
-        except (UnicodeError, ValueError):
-            raise OSError
-        if size_result.returncode != 0 or object_size < 0 or object_size > int(limit):
-            raise OSError
-        result = run_git(["cat-file", "blob", object_id])
+        data = read_blob(object_id, int(limit))
         close_descriptors(descriptors)
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
-        if result.returncode != 0 or len(result.stdout) != object_size or b"\x00" in result.stdout:
+        if b"\x00" in data:
             raise OSError
-        result.stdout.decode("utf-8")
+        data.decode("utf-8")
     else:
         raise ValueError
 except (IndexError, KeyError, OSError, TypeError, UnicodeError, ValueError, json.JSONDecodeError):

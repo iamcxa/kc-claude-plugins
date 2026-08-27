@@ -1260,6 +1260,9 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     binary_sha="$(git -C "$router_repo" rev-parse HEAD)"
     assert_changed_object_not_resolve 'binary known path is not resolve' "$binary_sha"
     router_binding="$(review_plan_worktree_binding "$router_repo")"
+    fixed_parser_object="$(review_plan_git "$router_binding" rev-parse "$fixed_sha:src/parser.py")"
+    review_plan_blob_is_safe "$router_binding" "$fixed_parser_object"
+    assert_eq 'bounded batch reader preserves safe UTF-8 blob acceptance' '0' "$?"
     forced_text_attributes="$TEST_ROOT/forced-text-attributes"
     printf 'src/parser.py diff\n' >"$forced_text_attributes"
     GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.attributesFile \
