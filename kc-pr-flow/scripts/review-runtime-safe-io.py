@@ -8,6 +8,7 @@ import errno
 import json
 import os
 import re
+import secrets
 import stat
 import sys
 from typing import Any, Dict, List, Tuple
@@ -250,6 +251,268 @@ def snapshot_stdin(destination: str, limit: int) -> int:
     return publish_snapshot(destination, content, nofollow, cloexec)
 
 
+def read_stdin_bounded(limit: int) -> Tuple[int, bytes]:
+    try:
+        chunks = []  # type: List[bytes]
+        remaining = limit + 1
+        while remaining > 0:
+            chunk = sys.stdin.buffer.read(min(remaining, 1024 * 1024))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        content = b"".join(chunks)
+    except OSError:
+        return 74, b""
+    if len(content) > limit:
+        return 73, b""
+    return 0, content
+
+
+def open_parent_directory(
+    destination: str, expected_identity: str = ""
+) -> Tuple[int, int, str]:
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    cloexec = getattr(os, "O_CLOEXEC", None)
+    directory = getattr(os, "O_DIRECTORY", None)
+    if nofollow is None or cloexec is None or directory is None:
+        return 69, -1, ""
+    parent = os.path.dirname(destination) or "."
+    name = os.path.basename(destination)
+    if name in ("", ".", "..") or "/" in name:
+        return 2, -1, ""
+    try:
+        before = os.lstat(parent)
+        if not stat.S_ISDIR(before.st_mode):
+            return 2, -1, ""
+        parent_fd = os.open(parent, os.O_RDONLY | directory | nofollow | cloexec)
+        bound = os.fstat(parent_fd)
+        if not stat.S_ISDIR(bound.st_mode):
+            os.close(parent_fd)
+            return 74, -1, ""
+        if (before.st_dev, before.st_ino) != (bound.st_dev, bound.st_ino):
+            os.close(parent_fd)
+            return 74, -1, ""
+        actual_identity = "%d:%d" % (bound.st_dev, bound.st_ino)
+        if expected_identity and actual_identity != expected_identity:
+            os.close(parent_fd)
+            return 74, -1, ""
+        return 0, parent_fd, name
+    except OSError as error:
+        if error.errno in (errno.EACCES, errno.ENOENT, errno.ENOTDIR, errno.ELOOP):
+            return 2, -1, ""
+        return 74, -1, ""
+
+
+def create_private_temp(parent_fd: int, content: bytes) -> Tuple[int, str]:
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    for _ in range(32):
+        name = ".review-timing.%s.%s" % (os.getpid(), secrets.token_hex(8))
+        try:
+            fd = os.open(
+                name,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | nofollow | cloexec,
+                0o600,
+                dir_fd=parent_fd,
+            )
+        except FileExistsError:
+            continue
+        except OSError:
+            return 74, ""
+        try:
+            os.fchmod(fd, 0o600)
+            written = 0
+            while written < len(content):
+                count = os.write(fd, content[written:])
+                if count <= 0:
+                    return 74, name
+                written += count
+            os.fsync(fd)
+        except OSError:
+            return 74, name
+        finally:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+        return 0, name
+    return 74, ""
+
+
+def read_bound_regular(parent_fd: int, name: str, limit: int) -> Tuple[int, bytes]:
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    flags = os.O_RDONLY | nofollow | cloexec
+    if hasattr(os, "O_NONBLOCK"):
+        flags |= os.O_NONBLOCK
+    fd = -1
+    try:
+        classified = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        if not stat.S_ISREG(classified.st_mode):
+            return 74, b""
+        fd = os.open(name, flags, dir_fd=parent_fd)
+        before = os.fstat(fd)
+        if stat_identity(classified) != stat_identity(before):
+            return 74, b""
+        chunks = []  # type: List[bytes]
+        remaining = limit + 1
+        while remaining > 0:
+            chunk = os.read(fd, min(remaining, 1024 * 1024))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        content = b"".join(chunks)
+        if len(content) > limit:
+            return 73, b""
+        after = os.fstat(fd)
+        if stat_identity(before) != stat_identity(after):
+            return 74, b""
+        return 0, content
+    except OSError:
+        return 74, b""
+    finally:
+        if fd >= 0:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
+def publish_private(destination: str, parent_identity: str, content: bytes) -> int:
+    rc, parent_fd, name = open_parent_directory(destination, parent_identity)
+    if rc != 0:
+        return rc
+    temp_name = ""
+    published = False
+    try:
+        rc, temp_name = create_private_temp(parent_fd, content)
+        if rc != 0:
+            return rc
+        try:
+            os.link(
+                temp_name,
+                name,
+                src_dir_fd=parent_fd,
+                dst_dir_fd=parent_fd,
+                follow_symlinks=False,
+            )
+        except OSError:
+            return 74
+        published = True
+        os.fsync(parent_fd)
+        published = False
+        return 0
+    except OSError:
+        return 74
+    finally:
+        if published and temp_name:
+            try:
+                temporary = os.stat(temp_name, dir_fd=parent_fd, follow_symlinks=False)
+                destination_stat = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+                if (temporary.st_dev, temporary.st_ino) == (
+                    destination_stat.st_dev,
+                    destination_stat.st_ino,
+                ):
+                    os.unlink(name, dir_fd=parent_fd)
+            except OSError:
+                pass
+        if temp_name:
+            try:
+                os.unlink(temp_name, dir_fd=parent_fd)
+            except OSError:
+                pass
+        try:
+            os.close(parent_fd)
+        except OSError:
+            pass
+
+
+def replace_private(
+    destination: str,
+    expected: str,
+    parent_identity: str,
+    content: bytes,
+    limit: int,
+) -> int:
+    expected_rc, expected_content = snapshot_bytes(expected, limit)
+    if expected_rc != 0:
+        return expected_rc
+    rc, parent_fd, name = open_parent_directory(destination, parent_identity)
+    if rc != 0:
+        return rc
+    temp_name = ""
+    try:
+        rc, current = read_bound_regular(parent_fd, name, limit)
+        if rc != 0 or current != expected_content:
+            return 74
+        rc, temp_name = create_private_temp(parent_fd, content)
+        if rc != 0:
+            return rc
+        rc, current = read_bound_regular(parent_fd, name, limit)
+        if rc != 0 or current != expected_content:
+            return 74
+        os.replace(temp_name, name, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
+        temp_name = ""
+        os.fsync(parent_fd)
+        return 0
+    except OSError:
+        return 74
+    finally:
+        if temp_name:
+            try:
+                os.unlink(temp_name, dir_fd=parent_fd)
+            except OSError:
+                pass
+        try:
+            os.close(parent_fd)
+        except OSError:
+            pass
+
+
+def snapshot_bytes(source: str, limit: int) -> Tuple[int, bytes]:
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    cloexec = getattr(os, "O_CLOEXEC", None)
+    if nofollow is None or cloexec is None:
+        return 69, b""
+    fd = -1
+    try:
+        classified = os.lstat(source)
+        if not stat.S_ISREG(classified.st_mode):
+            return 2, b""
+        flags = os.O_RDONLY | nofollow | cloexec
+        if hasattr(os, "O_NONBLOCK"):
+            flags |= os.O_NONBLOCK
+        fd = os.open(source, flags)
+        before = os.fstat(fd)
+        if stat_identity(classified) != stat_identity(before):
+            return 74, b""
+        chunks = []  # type: List[bytes]
+        remaining = limit + 1
+        while remaining > 0:
+            chunk = os.read(fd, min(remaining, 1024 * 1024))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        content = b"".join(chunks)
+        if len(content) > limit:
+            return 73, b""
+        after = os.fstat(fd)
+        if stat_identity(before) != stat_identity(after):
+            return 74, b""
+        return 0, content
+    except OSError:
+        return 74, b""
+    finally:
+        if fd >= 0:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+
+
 def snapshot_command(argv: List[str]) -> int:
     if len(argv) != 6:
         return 73
@@ -294,6 +557,59 @@ def snapshot_stdin_command(argv: List[str]) -> int:
     return snapshot_stdin(values["--destination"], limit)
 
 
+def parent_identity_command(argv: List[str]) -> int:
+    if len(argv) != 2 or argv[0] != "--destination":
+        return 73
+    rc, parent_fd, _ = open_parent_directory(argv[1])
+    if rc != 0:
+        return rc
+    try:
+        bound = os.fstat(parent_fd)
+        print("%d:%d" % (bound.st_dev, bound.st_ino))
+        return 0
+    except OSError:
+        return 74
+    finally:
+        try:
+            os.close(parent_fd)
+        except OSError:
+            pass
+
+
+def private_json_command(argv: List[str], replace: bool) -> int:
+    expected_options = (
+        {"--destination", "--expected", "--parent-identity"}
+        if replace
+        else {"--destination", "--parent-identity"}
+    )
+    if len(argv) != len(expected_options) * 2:
+        return 73
+    values = {}  # type: Dict[str, str]
+    index = 0
+    while index < len(argv):
+        option = argv[index]
+        if option not in expected_options or option in values or index + 1 >= len(argv):
+            return 73
+        values[option] = argv[index + 1]
+        index += 2
+    if set(values) != expected_options:
+        return 73
+    rc, content = read_stdin_bounded(1048576)
+    if rc != 0:
+        return rc
+    if replace:
+        return replace_private(
+            values["--destination"],
+            values["--expected"],
+            values["--parent-identity"],
+            content,
+            1048576,
+        )
+    return publish_private(
+        values["--destination"], values["--parent-identity"], content
+    )
+
+
 def main(argv: List[str]) -> int:
     if argv == ["unique-json"]:
         return unique_json()
@@ -305,11 +621,21 @@ def main(argv: List[str]) -> int:
         return snapshot_command(argv[1:])
     if argv[:1] == ["snapshot-stdin"]:
         return snapshot_stdin_command(argv[1:])
+    if argv[:1] == ["private-parent-identity"]:
+        return parent_identity_command(argv[1:])
+    if argv[:1] == ["publish-private-json"]:
+        return private_json_command(argv[1:], False)
+    if argv[:1] == ["replace-private-json"]:
+        return private_json_command(argv[1:], True)
     print(
         "usage: review-runtime-safe-io.py unique-json | unique-json-lines | "
         "rfc3339-utc VALUE | "
         "snapshot --source SOURCE --destination DEST --limit-bytes LIMIT | "
-        "snapshot-stdin --destination DEST --limit-bytes LIMIT",
+        "snapshot-stdin --destination DEST --limit-bytes LIMIT | "
+        "private-parent-identity --destination DEST | "
+        "publish-private-json --destination DEST --parent-identity DEV:INO | "
+        "replace-private-json --destination DEST --expected SNAPSHOT "
+        "--parent-identity DEV:INO",
         file=sys.stderr,
     )
     return 2

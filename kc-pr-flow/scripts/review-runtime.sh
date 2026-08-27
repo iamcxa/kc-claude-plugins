@@ -276,9 +276,16 @@ review_runtime_monotonic_ns() {
   python3 -c 'import time; print(time.monotonic_ns())'
 }
 
+# Test seam for a competing writer at the publication boundary. Production
+# callers leave this as a no-op; the descriptor helper still owns the check
+# and publication operation.
+review_runtime_timing_publication_barrier() {
+  :
+}
+
 review_runtime_write_new_private_json() (
   local payload="$1" output_file="$2" label="$3"
-  local output_dir temp_file=''
+  local output_dir helper parent_identity rc
   output_dir="$(dirname "$output_file")" || return 74
   if ! review_runtime_real_directory "$output_dir"; then
     printf 'review-runtime: unsafe %s parent directory\n' "$label" >&2
@@ -289,47 +296,39 @@ review_runtime_write_new_private_json() (
       "$label" "$output_file" >&2
     return 2
   fi
-  umask 077
-  temp_file="$(mktemp "$output_dir/.review-timing.XXXXXX")" || return 74
-  trap '[ -z "$temp_file" ] || rm -f "$temp_file"' EXIT
-  if ! printf '%s\n' "$payload" >"$temp_file" || ! chmod 0600 "$temp_file"; then
-    return 74
-  fi
-  if [ -e "$output_file" ] || [ -L "$output_file" ] || ! mv "$temp_file" "$output_file"; then
-    return 74
-  fi
-  temp_file=''
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  parent_identity="$(python3 "$helper" private-parent-identity \
+    --destination "$output_file" 2>/dev/null)" || return
+  review_runtime_timing_publication_barrier new "$output_file" || return 74
+  printf '%s\n' "$payload" | python3 "$helper" publish-private-json \
+    --destination "$output_file" --parent-identity "$parent_identity" >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0 | 2 | 69 | 73 | 74) return "$rc" ;;
+    *) return 74 ;;
+  esac
 )
 
 review_runtime_replace_private_json() (
   local payload="$1" output_file="$2" expected_snapshot="$3"
-  local output_dir temp_file='' snapshot_dir='' current_snapshot=''
+  local output_dir helper parent_identity rc
   output_dir="$(dirname "$output_file")" || return 74
   if ! review_runtime_real_directory "$output_dir"; then
     printf 'review-runtime: unsafe timing state parent directory\n' >&2
     return 2
   fi
-  umask 077
-  temp_file="$(mktemp "$output_dir/.review-timing.XXXXXX")" || return 74
-  snapshot_dir="$(review_runtime_private_snapshot_dir)" || {
-    rm -f "$temp_file"
-    return 74
-  }
-  current_snapshot="$snapshot_dir/current-timing-state.json"
-  trap 'rm -f "$temp_file"; review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$current_snapshot"' EXIT
-  if ! printf '%s\n' "$payload" >"$temp_file" || ! chmod 0600 "$temp_file"; then
-    return 74
-  fi
-  review_runtime_snapshot_regular_file \
-    "$output_file" "$current_snapshot" 'timing state' 1048576 || return
-  if ! cmp -s "$expected_snapshot" "$current_snapshot"; then
-    printf 'review-runtime: timing state changed before replacement\n' >&2
-    return 74
-  fi
-  if [ -L "$output_file" ] || [ ! -f "$output_file" ] || ! mv -f "$temp_file" "$output_file"; then
-    return 74
-  fi
-  temp_file=''
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  parent_identity="$(python3 "$helper" private-parent-identity \
+    --destination "$output_file" 2>/dev/null)" || return
+  review_runtime_timing_publication_barrier replace "$output_file" || return 74
+  printf '%s\n' "$payload" | python3 "$helper" replace-private-json \
+    --destination "$output_file" --expected "$expected_snapshot" \
+    --parent-identity "$parent_identity" >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0 | 2 | 69 | 73 | 74) return "$rc" ;;
+    *) return 74 ;;
+  esac
 )
 
 review_runtime_timing_phase_index() {
@@ -442,16 +441,25 @@ review_runtime_timing_start() (
 review_runtime_timing_mark() (
   local timing_file="$1" phase="$2"
   local snapshot_dir='' state_snapshot='' now_ns last_ns last_phase last_index phase_index
-  local without_hash state
+  local without_hash state timing_dir timing_lock lock_owner_pid=''
   review_runtime_require_jq || return
   review_runtime_require_python || return
   phase_index="$(review_runtime_timing_phase_index "$phase")" || {
     printf 'review-runtime: unsupported timing phase: %s\n' "$phase" >&2
     return 2
   }
+  timing_dir="$(dirname "$timing_file")" || return 74
+  review_runtime_real_directory "$timing_dir" || {
+    printf 'review-runtime: unsafe timing state parent directory\n' >&2
+    return 2
+  }
+  timing_lock="$timing_dir/.$(basename "$timing_file").timing.lock"
+  REVIEW_RUNTIME_LOCK_OWNER_PID=''
+  review_runtime_acquire_owned_lock "$timing_lock" || return 75
+  lock_owner_pid="$REVIEW_RUNTIME_LOCK_OWNER_PID"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"; review_runtime_release_owned_lock "$timing_lock" "$lock_owner_pid"' EXIT
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   state_snapshot="$snapshot_dir/timing-state.json"
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state_snapshot"' EXIT
   review_runtime_snapshot_regular_file \
     "$timing_file" "$state_snapshot" 'timing state' 1048576 || return
   review_runtime_timing_state_valid "$state_snapshot" || {

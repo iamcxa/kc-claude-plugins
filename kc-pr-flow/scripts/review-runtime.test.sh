@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing|timing-publication]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -845,6 +845,124 @@ rehash_timing_state() { # $1=timing state after a semantic mutation
     '. + {content_sha256:$content_sha256}' <<<"$without_hash"
 }
 
+run_timing_publication_tests() {
+  local start_target start_ready start_release start_writer start_payload start_rc
+  local mark_target mark_ready mark_release mark_writer mark_payload mark_rc
+  local timing_lock before_hash stale_lock malformed_lock
+  local path_parent path_parent_moved path_target path_payload path_rc
+
+  start_target="$TEST_INPUT_ROOT/timing-publication-start.json"
+  start_ready="$TEST_INPUT_ROOT/timing-publication-start.ready"
+  start_release="$TEST_INPUT_ROOT/timing-publication-start.release"
+  start_payload='{"writer":"competing-start"}'
+  (
+    wait_count=0
+    while [ ! -e "$start_ready" ] && [ "$wait_count" -lt 200 ]; do
+      wait_count=$((wait_count + 1))
+      sleep 0.01
+    done
+    [ -e "$start_ready" ] || exit 98
+    printf '%s\n' "$start_payload" >"$start_target"
+    : >"$start_release"
+  ) &
+  start_writer=$!
+  (
+    review_runtime_timing_publication_barrier() {
+      : >"$start_ready"
+      while [ ! -e "$start_release" ]; do sleep 0.01; done
+    }
+    review_runtime_timing_start "$EXPECTED_REVIEW_KEY" delta "$start_target" >/dev/null 2>&1
+  )
+  start_rc=$?
+  wait "$start_writer"
+  assert_eq "timing-start fails closed when a writer wins the final publication race" "74" "$start_rc"
+  assert_eq "timing-start preserves the competing writer's file" "$start_payload" \
+    "$(cat "$start_target")"
+
+  path_parent="$TEST_INPUT_ROOT/timing-publication-parent"
+  path_parent_moved="$TEST_INPUT_ROOT/timing-publication-parent-bound"
+  path_target="$path_parent/state.json"
+  path_payload='{"writer":"replacement-parent"}'
+  mkdir "$path_parent"
+  (
+    review_runtime_timing_publication_barrier() {
+      mv "$path_parent" "$path_parent_moved"
+      mkdir "$path_parent"
+      printf '%s\n' "$path_payload" >"$path_target"
+    }
+    review_runtime_timing_start "$EXPECTED_REVIEW_KEY" delta "$path_target" >/dev/null 2>&1
+  )
+  path_rc=$?
+  assert_eq "timing-start rejects a replaced parent directory" "74" "$path_rc"
+  assert_eq "timing-start preserves a file in the replacement parent" "$path_payload" \
+    "$(cat "$path_target")"
+
+  mark_target="$TEST_INPUT_ROOT/timing-publication-mark.json"
+  review_runtime_timing_start "$EXPECTED_REVIEW_KEY" resolve "$mark_target" >/dev/null
+  review_runtime_timing_mark "$mark_target" identity_and_plan >/dev/null
+  mark_ready="$TEST_INPUT_ROOT/timing-publication-mark.ready"
+  mark_release="$TEST_INPUT_ROOT/timing-publication-mark.release"
+  mark_payload="$(rehash_timing_state "$(jq -c \
+    '.review_key="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"' \
+    "$mark_target")")"
+  (
+    wait_count=0
+    while [ ! -e "$mark_ready" ] && [ "$wait_count" -lt 200 ]; do
+      wait_count=$((wait_count + 1))
+      sleep 0.01
+    done
+    [ -e "$mark_ready" ] || exit 98
+    printf '%s\n' "$mark_payload" >"$mark_target"
+    : >"$mark_release"
+  ) &
+  mark_writer=$!
+  (
+    review_runtime_timing_publication_barrier() {
+      : >"$mark_ready"
+      while [ ! -e "$mark_release" ]; do sleep 0.01; done
+    }
+    review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
+  )
+  mark_rc=$?
+  wait "$mark_writer"
+  assert_eq "timing-mark fails closed when state changes in the final replacement window" "74" "$mark_rc"
+  assert_eq "timing-mark preserves the competing writer's state" \
+    "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" \
+    "$(jq -r '.review_key' "$mark_target")"
+
+  timing_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
+  before_hash="$(sha256_text "$(cat "$mark_target")")"
+  mkdir "$timing_lock"
+  printf '%s\n' "$$" >"$timing_lock/owner.pid"
+  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
+  assert_eq "a live timing writer lock fails closed" "75" "$?"
+  assert_eq "a live timing writer lock preserves state" "$before_hash" \
+    "$(sha256_text "$(cat "$mark_target")")"
+  rm -f "$timing_lock/owner.pid"
+  rmdir "$timing_lock"
+
+  stale_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
+  mkdir "$stale_lock"
+  printf '%s\n' '999999' >"$stale_lock/owner.pid"
+  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
+  assert_eq "a stale timing writer lock is reclaimed once" "0" "$?"
+  assert_eq "a reclaimed timing writer lock is cleaned" "false" \
+    "$([ -e "$stale_lock" ] && printf true || printf false)"
+
+  malformed_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
+  mkdir "$malformed_lock"
+  printf '%s\n' 'not-a-pid' >"$malformed_lock/owner.pid"
+  review_runtime_timing_mark "$mark_target" required_lanes_critical_path >/dev/null 2>&1
+  assert_eq "a malformed timing writer lock fails closed" "75" "$?"
+  assert_eq "a malformed timing writer lock is not reclaimed" "true" \
+    "$([ -d "$malformed_lock" ] && printf true || printf false)"
+  rm -f "$malformed_lock/owner.pid"
+  rmdir "$malformed_lock"
+
+  assert_eq "timing publication leaves no private temp file" "0" \
+    "$(find "$TEST_INPUT_ROOT" -name '.review-timing.*' | wc -l | tr -d ' ')"
+}
+
 run_review_timing_tests() {
   local timing_state timing_receipt lane_durations timing output rc phase
   local incomplete_state mutated_state swap_replacement swap_probe
@@ -1060,6 +1178,8 @@ run_review_timing_tests() {
   assert_eq "state swap cannot replace the changed review key with stale derived state" \
     "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" \
     "$(jq -r '.review_key' "$incomplete_state" 2>/dev/null)"
+
+  run_timing_publication_tests
   assert_eq "timing commands perform no network, model, authorization, post, or merge call" \
     "" "$(cat "$call_ledger")"
   PATH="$original_path"
@@ -1068,6 +1188,13 @@ run_review_timing_tests() {
 
 if [ "$CASE_FILTER" = 'review-timing' ]; then
   run_review_timing_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'timing-publication' ]; then
+  run_timing_publication_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
   [ "$FAIL" -eq 0 ]
   exit $?
