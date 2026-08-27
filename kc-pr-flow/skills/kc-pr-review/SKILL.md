@@ -140,8 +140,8 @@ PLAN_INPUT_BASE_SHA="$BASE_SHA"
 PLAN_INPUT_HEAD_SHA="$REVIEWED_HEAD_SHA"
 PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
 PLAN_INPUT_WORKTREE="$REPO_WORKTREE"
-PLAN_INPUT_PREDECESSOR_EVENTS="$PREDECESSOR_EVENTS"
-PLAN_INPUT_DELTA_RECEIPT="$DELTA_RECEIPT"
+PLAN_INPUT_PREDECESSOR_EVENTS="${PREDECESSOR_EVENTS-}"
+PLAN_INPUT_DELTA_RECEIPT="${DELTA_RECEIPT-}"
 readonly PLAN_INPUT_REPO PLAN_INPUT_PR_NUMBER PLAN_INPUT_BASE_SHA PLAN_INPUT_HEAD_SHA
 readonly PLAN_INPUT_CONFIG_HASH PLAN_INPUT_WORKTREE PLAN_INPUT_PREDECESSOR_EVENTS
 readonly PLAN_INPUT_DELTA_RECEIPT
@@ -1776,6 +1776,12 @@ review_interactive_prepare_confirmation() {
   fi
 
   if ! review_interactive_identity_valid "$expected_identity_json"; then
+    if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+      review_plan_event_allowed COMMENT || return 3
+    elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+      [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+      return 3
+    fi
     jq -S -c -n \
       '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
         confirmation_required:true,effective_event:"COMMENT",

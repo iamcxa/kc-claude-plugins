@@ -471,8 +471,9 @@ event_plan_decision() {
 
 event_ceiling_case_status() {
   local sequence="$1" flag_after="$2" mutation="$3" seam="$4" requested_event="$5"
+  local entry_flag="${6:-on}" optional_inputs="${7:-defined}"
   local plugin_root router_snippet interactive_snippet entry_plan rerun_plan script output
-  plugin_root="$TEST_ROOT/event-ceiling-$sequence-$flag_after-$mutation-$seam-$requested_event"
+  plugin_root="$TEST_ROOT/event-ceiling-$sequence-$entry_flag-$flag_after-$optional_inputs-$mutation-$seam-$requested_event"
   mkdir -p "$plugin_root/scripts"
   case "$sequence" in
     initial)
@@ -524,10 +525,23 @@ MOCK
     printf '%s\n' 'REVIEWED_HEAD_SHA=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
     printf '%s\n' 'CONFIG_HASH=cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
     printf '%s\n' 'REPO_WORKTREE=/tmp/repo'
-    printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
-    printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+    case "$optional_inputs" in
+      defined)
+        printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
+        printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+        ;;
+      unset)
+        printf '%s\n' 'unset PREDECESSOR_EVENTS DELTA_RECEIPT'
+        ;;
+      *) return 2 ;;
+    esac
     printf 'CLAUDE_PLUGIN_ROOT=%q\n' "$plugin_root"
-    printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on'
+    case "$entry_flag" in
+      on) printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on' ;;
+      off) printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=off' ;;
+      unset) printf '%s\n' 'unset KC_PR_FLOW_DELTA_FAST_PATH' ;;
+      *) return 2 ;;
+    esac
     printf '%s\n' "$router_snippet"
     case "$flag_after" in
       on) printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on' ;;
@@ -545,6 +559,7 @@ MOCK
     printf '%s\n' "$interactive_snippet"
     printf '%s\n' 'identity='\''{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":1693,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"}'\'''
     printf '%s\n' 'status=0'
+    printf '%s\n' 'result='\'''\'''
     case "$seam" in
       direct)
         printf 'review_plan_event_allowed %q >/dev/null 2>&1 || status=$?\n' "$requested_event"
@@ -555,6 +570,9 @@ MOCK
         ;;
       typed-present)
         printf 'review_interactive_prepare_confirmation typed COMMENT "$identity" null %q >/dev/null 2>&1 || status=$?\n' "$plugin_root/scripts/typed-approve.sh"
+        ;;
+      typed-invalid-identity)
+        printf '%s\n' 'result="$(review_interactive_prepare_confirmation typed COMMENT null null true)" || status=$?'
         ;;
       confirmed)
         printf '%s\n' 'confirmation="$(review_interactive_prepare_confirmation legacy COMMENT null null true)" || status=$?'
@@ -574,9 +592,13 @@ MOCK
         ;;
       *) return 2 ;;
     esac
-    printf '%s\n' 'printf "%s\n" "$status"'
+    if [ "$seam" = typed-invalid-identity ]; then
+      printf '%s\n' 'printf "%s|%s\n" "$status" "$result"'
+    else
+      printf '%s\n' 'printf "%s\n" "$status"'
+    fi
   } >"$script"
-  output="$(bash "$script" 2>/dev/null)"
+  output="$("$BASH" "$script" 2>/dev/null)"
   printf '%s' "$output"
 }
 
@@ -860,7 +882,9 @@ fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'event-ceiling' ]; then
   assert_eq 'flag-off before engagement preserves legacy APPROVE' '0' \
-    "$(event_ceiling_case_status initial off none direct APPROVE)"
+    "$(event_ceiling_case_status initial off none direct APPROVE off unset)"
+  assert_eq 'flag-on missing optional inputs preserves fresh initial legacy APPROVE' '0' \
+    "$(event_ceiling_case_status initial on none direct APPROVE on unset)"
   assert_eq 'fresh initial under flag-on preserves legacy APPROVE' '0' \
     "$(event_ceiling_case_status initial on none direct APPROVE)"
   assert_not_zero 'no-engagement delta rerun blocks legacy authority' \
@@ -895,6 +919,23 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'event-ceiling' ]; then
     "$(event_ceiling_case_status delta on none autonomous APPROVE)"
   assert_not_zero 'autonomous immediate-pre-post gate rechecks COMMENT ceiling' \
     "$(event_ceiling_case_status delta on none autonomous-pre-post APPROVE)"
+
+  for invalid_plan_case in missing mutated identity stale; do
+    case "$invalid_plan_case" in
+      stale)
+        invalid_plan_trace="$(event_ceiling_case_status delta-then-stale on none typed-invalid-identity COMMENT)"
+        ;;
+      *)
+        invalid_plan_trace="$(event_ceiling_case_status delta on "$invalid_plan_case" typed-invalid-identity COMMENT)"
+        ;;
+    esac
+    invalid_plan_status="${invalid_plan_trace%%|*}"
+    invalid_plan_payload="${invalid_plan_trace#*|}"
+    assert_not_zero "typed invalid identity with $invalid_plan_case plan fails closed at presentation" \
+      "$invalid_plan_status"
+    assert_eq "typed invalid identity with $invalid_plan_case plan emits no confirmation" '' \
+      "$invalid_plan_payload"
+  done
 fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
