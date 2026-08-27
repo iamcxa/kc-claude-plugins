@@ -80,12 +80,15 @@ runtime-benchmark, latency-benchmark, and ablation-contract jobs.
 `review-latency-benchmark.sh` is a Phase 1 structural scorer, not a promotion
 authority. It safe-snapshots the immutable synthetic corpus, requires each of
 the fixed nine case classes exactly once, and evaluates Q1 identity through Q6
-latency in fixed order. Every corpus pair and non-null timing member has the
-closed `evidence_tier:"synthetic-structural"`; missing or changed tiers fail
+latency in fixed order. Every corpus pair has the closed
+`evidence_tier:"synthetic-structural"`; every non-null timing member instead
+has the closed `fixture_kind:"synthetic-structural"` shape and carries no
+runtime receipt schema or producer claim. Missing or changed provenance fails
 validation. Q1 binds the modeled exact head to closed structural bindings. Q4
 recomputes `ReviewCandidate/v2` quote, evidence, candidate, finding, and
-posted-count bindings. Q1-Q5 cover every pair; only `delta` and `resolve`
-members enter the 240-second structural latency gate.
+posted-count bindings, and pins the control finding-set hash plus adjudication
+counters. Q1-Q5 cover every pair; only `delta` and `resolve` members enter the
+240-second structural latency gate.
 
 An `initial` fallback must carry `timing:null` and can never improve the
 structural latency result. Structural timing and receipt hashes model fixture

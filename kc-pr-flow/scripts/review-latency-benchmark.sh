@@ -75,24 +75,42 @@ review_latency_expected_structural_bindings() {
   esac
 }
 
-review_latency_expected_structural_receipts() {
-  # Pinned structural receipt hashes. Keep these out of whole-line validation
+review_latency_expected_structural_hashes() {
+  # Pinned structural artifact hashes. Keep these out of whole-line validation
   # so timing mutations remain owned by Q6; they do not attest an actual run.
   case "$1" in
-    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"1fcaf0db59b87175d95b1824a94c8e3075db9b2ef04c57a489047a6378ec5d03"}' ;;
-    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"8a2f1065b42acddb5f7adf37718623a4e7ec693599805d5dbe10c996ab51c884"}' ;;
-    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"57abe3fede2289e7c5eefd4411ee38aea69b5e1cdebaa20028e267e23ee3327e"}' ;;
+    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"1cd2d0fa871e84164ab049334406d2c292fe7bc40ab25a0b67cb88abf73c79c1"}' ;;
+    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"741ef21dfbaf78f6501c92e202bd105b7dafb9ec936c96c09d4f6b9a8cd37112"}' ;;
+    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"36522ff0ded99d7e75ec7f1f1c3609b4d6e0199a885cfd3bb3b5c8076d052b21"}' ;;
     force-push | corrupt-receipt) printf '%s\n' '{"predecessor_receipt_sha256":null,"timing_sha256":null}' ;;
-    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"294c60c5d974c676c95d32aacbea593ba701210e80a877892d52e0edd36e3d56"}' ;;
-    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"b3486bf03d8c47d004cc87d8d38eff39d474e44f2c0020927e31df17a15a7292"}' ;;
-    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"98c84feeec436f12b361b2f2cd4c4522010aaaabc1fd9257c49cdbd3dfaa2b8a"}' ;;
-    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"77f5f393f39dac604851c8dd0ccf4052e23c2ea371c845321e16a17f428c7fca"}' ;;
+    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"b0a229d0bbce8e19820697a534ae3c6fdd59d6299542b36e9dcd6659c0060aaf"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"20c6490f2418a2989ac923aef158b7e615038a096670d2fe747ddf9fda212a39"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"34989c8612e9a0e20de4c88049af7373d9029461cc4ae22db75919d657acefeb"}' ;;
+    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"12046d74c3006c370a87e972b70c183e99bee1632ab9b27e38c3b1a5952d0d7b"}' ;;
+    *) return 1 ;;
+  esac
+}
+
+review_latency_expected_control_bindings() {
+  # The control arm has no validated-finding objects, so bind its canonical
+  # finding set and adjudication counters independently of caller-supplied data.
+  case "$1" in
+    known-fix-only) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"c6cb87947fd87d24c6b79a60683cc423253a9536a724a13a3af2e7d06f8c65be"}' ;;
+    fix-plus-test) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"ee44b0b230d202a061af49533908b76731f21d27899c105b841849b77be4472b"}' ;;
+    unrelated-new-path) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"d4cd563b365675c45eb02e3db8066d269643093f2884b3f82e20e9487c3b3439"}' ;;
+    force-push) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"59bbab21ba9f6fab054dbe75cb24b0ed6bf4cc003df974e47359d7eb208938b2"}' ;;
+    corrupt-receipt) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"e79e1f4d0639a95afde4c71929046d4cebc0d68fb97fe318c82f93ff62976832"}' ;;
+    security-finding) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"3407ff83d543008f88c1096135a9959db393b37bc5d61afe20ac28f2841661f2"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"abc018aabe8a8d609971274a407d4a5319d51f1ecc06cc94660fee36c1046356"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"c790b6a519916608ae8c635d195d3bdd42a2f40675cd7b887c17126fdb631ef7"}' ;;
+    new-material-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"506adcae2a93a164447e8b4f29a2075f39de322b504af4274a5226f3057c2903"}' ;;
     *) return 1 ;;
   esac
 }
 
 review_latency_precision_valid() {
-  local pair="$1" line quoted_line pointer_hash quote_hash candidate_hash finding_id content_hash
+  local pair="$1" control_bindings="$2" line quoted_line pointer_hash quote_hash candidate_hash finding_id content_hash
+  local control_finding_ids_hash
   local valid=true
   while IFS= read -r line || [ -n "$line" ]; do
     pointer_hash="$(review_latency_hash_json "$line" '.candidate.evidence.pointer | del(.content_sha256)')" || return 1
@@ -121,7 +139,12 @@ review_latency_precision_valid() {
     ' >/dev/null 2>&1 || valid=false
   done < <(jq -S -c '.treatment.validated_findings[]' <<<"$pair")
   [ "$valid" = true ] || return 1
-  jq -e '
+  control_finding_ids_hash="$(review_latency_hash_json "$pair" '.control.finding_ids')" || return 1
+  jq -e --arg control_finding_ids_hash "$control_finding_ids_hash" \
+    --argjson control_bindings "$control_bindings" '
+    ($control_finding_ids_hash == $control_bindings.finding_ids_sha256) and
+    (.control.adjudicated_posted == $control_bindings.adjudicated_posted) and
+    (.control.adjudicated_false_positive == $control_bindings.adjudicated_false_positive) and
     ([.treatment.validated_findings[].finding_id] | sort) == .treatment.finding_ids and
     ([.treatment.validated_findings[] | select(.posted == true)] | length) ==
       .treatment.adjudicated_posted and
@@ -133,7 +156,7 @@ review_latency_precision_valid() {
 
 review_latency_validate_pair() {
   local pair="$1" expected_review_key identity_valid behavior_parity timing_valid precision_valid
-  local repository pr_number base_sha head_sha config_hash pair_id structural_bindings structural_receipts expected_hash
+  local repository pr_number base_sha head_sha config_hash pair_id structural_bindings structural_hashes control_bindings expected_hash
   local control_effective_hash control_options_hash treatment_effective_hash treatment_options_hash
   local posted_source_hash posted_payload_hash posted_idempotency_key
   local predecessor_projection_hash predecessor_receipt_hash predecessor_full_receipt_hash predecessor_receipt_id
@@ -281,9 +304,9 @@ review_latency_validate_pair() {
       (.adjudication == "true_positive" or .adjudication == "false_positive") and
       (.candidate | candidate) and (.content_sha256 | type == "string") and
       (.finding_id | type == "string") and (.posted | type == "boolean");
-    def timing: exact_keys(["durations_ms","evidence_tier","lane_durations_ms","mode","review_key","schema"]) and
-      .schema == "kc-pr-flow.review-timing/v1" and (.review_key | sha256) and
-      (.mode == "delta" or .mode == "resolve") and .evidence_tier == "synthetic-structural" and
+    def timing: exact_keys(["durations_ms","fixture_kind","lane_durations_ms","mode","review_key"]) and
+      .fixture_kind == "synthetic-structural" and (.review_key | sha256) and
+      (.mode == "delta" or .mode == "resolve") and
       (.durations_ms | exact_keys(["collation_and_draft","confirmation_wait","external_ci_wait",
         "identity_and_plan","inventory","post_mutation","required_lanes_critical_path",
         "review_to_confirmation_ready","targeted_verification_critical_path"])) and
@@ -386,12 +409,13 @@ review_latency_validate_pair() {
   fi
 
   structural_bindings="$(review_latency_expected_structural_bindings "$pair_id")" || return 3
-  structural_receipts="$(review_latency_expected_structural_receipts "$pair_id")" || return 3
+  structural_hashes="$(review_latency_expected_structural_hashes "$pair_id")" || return 3
+  control_bindings="$(review_latency_expected_control_bindings "$pair_id")" || return 3
   expected_hash="$(review_latency_hash_json "$pair" '.expected')" || return 3
   identity_valid="$(jq -r --arg expected_review_key "$expected_review_key" --arg expected_hash "$expected_hash" \
     --argjson structural_bindings "$structural_bindings" --arg predecessor_projection_hash "${predecessor_projection_hash:-}" \
     --arg predecessor_full_receipt_hash "${predecessor_full_receipt_hash:-}" \
-    --argjson structural_receipts "$structural_receipts" \
+    --argjson structural_hashes "$structural_hashes" \
     --argjson predecessor_valid "$predecessor_valid" '
     (.exact_head.review_key == $expected_review_key) and
     (.exact_head.review_key == $structural_bindings.review_key) and ($expected_hash == $structural_bindings.expected_sha256) and
@@ -405,10 +429,10 @@ review_latency_validate_pair() {
      else .treatment.timing.review_key == .exact_head.review_key and .treatment.timing.mode == .treatment.plan.mode end) and
     (if .treatment.plan.mode == "initial" then
        $structural_bindings.predecessor_projection_sha256 == null and
-       $structural_receipts.predecessor_receipt_sha256 == null
+       $structural_hashes.predecessor_receipt_sha256 == null
      else $predecessor_valid and
        $predecessor_projection_hash == $structural_bindings.predecessor_projection_sha256 and
-       $predecessor_full_receipt_hash == $structural_receipts.predecessor_receipt_sha256 end)
+       $predecessor_full_receipt_hash == $structural_hashes.predecessor_receipt_sha256 end)
   ' <<<"$pair")" || return 3
 
   behavior_parity="$(jq -r --arg control_effective_hash "$control_effective_hash" \
@@ -443,18 +467,18 @@ review_latency_validate_pair() {
          ((.treatment.event_evidence.posted.event | rank) <= (.treatment.plan.event_ceiling | rank)))))
   ' <<<"$pair")" || return 3
 
-  if review_latency_precision_valid "$pair"; then precision_valid=true; else precision_valid=false; fi
+  if review_latency_precision_valid "$pair" "$control_bindings"; then precision_valid=true; else precision_valid=false; fi
   timing_hash=''
   if [ "$(jq -r '.treatment.timing == null' <<<"$pair")" = false ]; then
     timing_hash="$(review_latency_hash_json "$pair" '.treatment.timing')" || return 3
   fi
-  timing_valid="$(jq -r --arg timing_hash "$timing_hash" --argjson structural_receipts "$structural_receipts" '
+  timing_valid="$(jq -r --arg timing_hash "$timing_hash" --argjson structural_hashes "$structural_hashes" '
     if .treatment.timing == null then true else
       .treatment.timing.durations_ms as $d |
       ($d.identity_and_plan + $d.inventory + $d.required_lanes_critical_path +
        $d.targeted_verification_critical_path + $d.collation_and_draft) as $sum |
       ($d.review_to_confirmation_ready >= $sum) and
-      ($timing_hash == $structural_receipts.timing_sha256)
+      ($timing_hash == $structural_hashes.timing_sha256)
     end
   ' <<<"$pair")" || return 3
 

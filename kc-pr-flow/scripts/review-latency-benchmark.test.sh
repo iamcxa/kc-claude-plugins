@@ -88,12 +88,17 @@ assert_eq "only delta and resolve are eligible" "7" \
   "$(jq -r '.latency.eligible_runs' <<<"$report")"
 assert_eq "all eligible fixture runs pass latency" "7" \
   "$(jq -r '.latency.passing_runs' <<<"$report")"
-assert_eq "structural timing receipt permits modeled terminal gap above four milliseconds" true \
+assert_eq "structural timing fixture permits modeled terminal gap above four milliseconds" true \
   "$(jq -s -r '[.[] | select(.treatment.timing != null) |
     .treatment.timing.durations_ms as $d |
     $d.review_to_confirmation_ready - ($d.identity_and_plan + $d.inventory +
       $d.required_lanes_critical_path + $d.targeted_verification_critical_path +
       $d.collation_and_draft) > 4] | all' "$FIXTURE")"
+assert_eq "structural timing uses the closed fixture provenance shape" true \
+  "$(jq -s -r '[.[] | select(.treatment.timing != null) | .treatment.timing |
+    .fixture_kind == "synthetic-structural" and
+    (has("schema") | not) and (has("evidence_tier") | not) and
+    (has("measured_by") | not)] | all' "$FIXTURE")"
 source_probe="$(bash -c '
   set -u
   umask 027
@@ -135,8 +140,24 @@ mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="APPROVE" |
 assert_eq "gap plus effective APPROVE fails Q2 first" required_coverage "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.finding_ids=[]' "$mutated"
 assert_eq "lost must-fix fails Q3 first" must_fix_recall "$(first_failed "$mutated")"
+extra_finding="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 mutate_case known-fix-only '.treatment.adjudicated_false_positive=1' "$mutated"
 assert_eq "new false positive fails Q4 first" precision "$(first_failed "$mutated")"
+mutate_case known-fix-only ".control.finding_ids += [\"$extra_finding\"] |
+  .control.finding_ids |= sort |
+  .control.adjudicated_posted=2 |
+  .control.adjudicated_false_positive=1 |
+  .treatment.validated_findings[0].adjudication=\"false_positive\" |
+  .treatment.adjudicated_false_positive=1" "$TEST_ROOT/paired-inflation-stage.jsonl"
+finding_without_hash="$(jq -S -c 'select(.pair_id == "known-fix-only") |
+  .treatment.validated_findings[0] | del(.content_sha256)' \
+  "$TEST_ROOT/paired-inflation-stage.jsonl")"
+finding_hash="$(printf '%s' "$finding_without_hash" | sha256_text)"
+jq -c --arg pair_id known-fix-only --arg finding_hash "$finding_hash" '
+  if .pair_id == $pair_id then
+    .treatment.validated_findings[0].content_sha256=$finding_hash
+  else . end' "$TEST_ROOT/paired-inflation-stage.jsonl" >"$mutated"
+assert_eq "paired control and treatment inflation fails Q4 first" precision "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.behavior_hashes.options_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
 assert_eq "less conservative options fail Q5 first" behavior_parity "$(first_failed "$mutated")"
 mutate_case new-material-dispute '.treatment.event_evidence.effective.event="APPROVE"' "$mutated"
@@ -155,7 +176,6 @@ mutate_case known-fix-only '(.treatment.timing.durations_ms |=
    .targeted_verification_critical_path=1 | .collation_and_draft=1))' "$mutated"
 assert_eq "inconsistent producer arithmetic fails Q6 first" latency "$(first_failed "$mutated")"
 
-extra_finding="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 mutate_case known-fix-only ".treatment.finding_ids += [\"$extra_finding\"] | .treatment.finding_ids |= sort" "$mutated"
 assert_eq "unaccounted treatment finding fails Q4 first" precision "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.adjudicated_posted=0' "$mutated"
@@ -240,7 +260,15 @@ expect_rejected "missing evidence tier is rejected" "$mutated"
 mutate_case known-fix-only '.evidence_tier="actual"' "$mutated"
 expect_rejected "changed evidence tier is rejected" "$mutated"
 mutate_case known-fix-only '.treatment.timing.evidence_tier="actual"' "$mutated"
-expect_rejected "non-structural timing tier is rejected" "$mutated"
+expect_rejected "timing evidence tier claim is rejected" "$mutated"
+mutate_case known-fix-only 'del(.treatment.timing.fixture_kind)' "$mutated"
+expect_rejected "missing structural timing fixture kind is rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.fixture_kind="actual"' "$mutated"
+expect_rejected "non-structural timing fixture kind is rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.schema="kc-pr-flow.review-timing/v1"' "$mutated"
+expect_rejected "runtime timing schema claim is rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.measured_by="review-runtime"' "$mutated"
+expect_rejected "runtime timing producer claim is rejected" "$mutated"
 jq -c 'if .pair_id == "fix-plus-test" then .pair_id="known-fix-only" else . end' \
   "$FIXTURE" >"$mutated"
 expect_rejected "duplicate pair identifiers are rejected" "$mutated"
