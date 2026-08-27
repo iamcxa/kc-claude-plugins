@@ -16,7 +16,12 @@ review_plan_build_receipt() (
   local event_file="$1" projection projection_hash receipt_id canonical content_sha256
   [ "$#" -eq 1 ] || return 2
   projection="$(review_runtime_replay "$event_file")" || return 3
-  jq -e '.lifecycle.complete == true' >/dev/null <<<"$projection" || return 3
+  jq -e '
+    .lifecycle.complete == true and
+    (.lanes | length > 0) and
+    (.lanes | all(.result.terminal_status == "succeeded")) and
+    .uncertain_candidate_ids == []
+  ' >/dev/null <<<"$projection" || return 3
   projection_hash="$(printf '%s' "$projection" | jq -S -c . | review_runtime_sha256)" || return
   receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$projection")|$projection_hash" |
     review_runtime_sha256)" || return
@@ -32,13 +37,14 @@ review_plan_build_receipt() (
         receipt_id:$receipt_id
       },
       known_findings:(.findings | map({
-        finding_id,claim_key,
+        finding_id,claim_key,anchor_sha256,category,evidence,
         evidence_sha256:.evidence.content_sha256,
         path,side,resolution_state:"unresolved"
       }) | sort_by(.finding_id)),
       required_capabilities:(.lanes | map(.capability) | sort | unique),
       coverage_gap_refs:[]
     }' <<<"$projection")" || return 3
+  jq -e '.required_capabilities | length > 0' >/dev/null <<<"$canonical" || return 3
   content_sha256="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
   jq -S -c --arg hash "$content_sha256" '. + {content_sha256:$hash}' <<<"$canonical"
 )
@@ -97,6 +103,34 @@ review_plan_validate_receipt() (
         (contains("//") | not) and
         (test("(^|/)\\.\\.?(/|$)|[[:cntrl:]\\\\]") | not);
       def repository: type == "string" and test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$");
+      def evidence_pointer:
+        type == "object" and .schema == "kc-pr-flow.evidence-pointer/v1" and
+        (.kind == "git_blob" or .kind == "pr_body" or .kind == "issue" or
+          .kind == "review_comment" or .kind == "command" or .kind == "test") and
+        (.repository | type == "string" and length > 0 and (test("[[:cntrl:]]") | not)) and
+        (.review_key | sha256) and (.base_sha | sha1) and (.head_sha | sha1) and
+        (.object_sha | sha1) and (.content_sha256 | sha256) and
+        if .kind == "git_blob" then
+          exact_keys(["base_sha","content_sha256","head_sha","kind","line","locator","object_sha","path","repository","review_key","schema","side"]) and
+          (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
+          (.line == null or (.line | positive_integer)) and
+          (.locator == null or (.locator | token)) and
+          (if .side == "LEFT" then .object_sha == .base_sha else .object_sha == .head_sha end)
+        elif .kind == "pr_body" then
+          exact_keys(["base_sha","content_sha256","head_sha","kind","locator","object_sha","pr_number","repository","review_key","schema"]) and
+          (.pr_number | positive_integer) and (.locator | token)
+        elif .kind == "issue" then
+          exact_keys(["base_sha","content_sha256","head_sha","issue_number","kind","locator","object_sha","repository","review_key","schema"]) and
+          (.issue_number | positive_integer) and (.locator | token)
+        elif .kind == "review_comment" then
+          exact_keys(["base_sha","comment_id","content_sha256","head_sha","kind","line","locator","object_sha","path","pr_number","repository","review_key","schema","side"]) and
+          (.pr_number | positive_integer) and (.comment_id | positive_integer) and
+          (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
+          (.line == null or (.line | positive_integer)) and (.locator | token)
+        else
+          exact_keys(["base_sha","content_sha256","head_sha","kind","locator","object_sha","path","repository","review_key","schema"]) and
+          (.path | safe_path) and (.locator | token)
+        end;
       def identity:
         exact_keys(["base_sha","config_hash","head_sha","pr_number","receipt_id","repository","review_key","run_id"]) and
         (.repository | repository) and (.pr_number | positive_integer) and
@@ -111,9 +145,9 @@ review_plan_validate_receipt() (
       def projection_finding:
         type == "object" and
         ([.finding_id,.review_key,.anchor_sha256,.evidence.content_sha256] | all(sha256)) and
-        (.claim_key | token) and (.path | safe_path) and
+        (.claim_key | token) and (.category | token) and (.path | safe_path) and
         (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-        (.evidence | type == "object");
+        (.evidence | evidence_pointer);
       def projection_lane:
         type == "object" and
         exact_keys(["capability","lane_id","result","task"]) and
@@ -123,21 +157,24 @@ review_plan_validate_receipt() (
         .schema == "kc-pr-flow.review-projection/v1" and
         (.run | projection_run) and
         (.lanes | type == "array" and length > 0 and all(projection_lane) and
+          all(.result.terminal_status == "succeeded") and
           ([.[].capability] | . == (sort | unique))) and
         (.findings | type == "array" and all(projection_finding) and
           ([.[].finding_id] | . == (sort | unique))) and
-        (.uncertain_candidate_ids | type == "array" and all(sha256) and
-          (unique | length) == length) and
+        (.uncertain_candidate_ids == []) and
         (.lifecycle | type == "object" and .complete == true) and
         (.behavior_hashes | type == "object") and
         (.candidates | type == "array") and
         (.usage_observations | type == "array");
       def receipt_finding:
         type == "object" and
-        exact_keys(["claim_key","evidence_sha256","finding_id","path","resolution_state","side"]) and
-        (.finding_id | sha256) and (.claim_key | token) and
+        exact_keys(["anchor_sha256","category","claim_key","evidence","evidence_sha256","finding_id","path","resolution_state","side"]) and
+        (.finding_id | sha256) and (.anchor_sha256 | sha256) and
+        (.category | token) and (.claim_key | token) and
         (.evidence_sha256 | sha256) and (.path | safe_path) and
         (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
+        (.evidence | evidence_pointer) and
+        .evidence_sha256 == .evidence.content_sha256 and
         .resolution_state == "unresolved";
       ($projection | projection) and
       ($receipt | exact_keys(["content_sha256","coverage_gap_refs","known_findings","predecessor","required_capabilities","schema"])) and
@@ -146,7 +183,7 @@ review_plan_validate_receipt() (
       ($receipt.predecessor | identity) and
       ($receipt.known_findings | type == "array" and all(receipt_finding) and
         ([.[].finding_id] | . == (sort | unique))) and
-      ($receipt.required_capabilities | type == "array" and all(token) and
+      ($receipt.required_capabilities | type == "array" and length > 0 and all(token) and
         . == (sort | unique)) and
       ($receipt.coverage_gap_refs | type == "array" and all(token) and
         . == (sort | unique)) and
@@ -161,7 +198,8 @@ review_plan_validate_receipt() (
         $projection.run.run_id]) and
       ($receipt.coverage_gap_refs == []) and
       ($receipt.known_findings == ($projection.findings | map({
-        finding_id,claim_key,evidence_sha256:.evidence.content_sha256,
+        finding_id,claim_key,anchor_sha256,category,evidence,
+        evidence_sha256:.evidence.content_sha256,
         path,side,resolution_state:"unresolved"
       }) | sort_by(.finding_id))) and
       ($receipt.required_capabilities == ($projection.lanes | map(.capability) | sort | unique))

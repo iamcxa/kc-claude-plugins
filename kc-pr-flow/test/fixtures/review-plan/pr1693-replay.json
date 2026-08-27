@@ -12,7 +12,14 @@
     }}
   ],
   "known_findings": [
-    {"claim_key": "empty-input-contract", "path": "src/parser.py", "side": "RIGHT"}
+    {
+      "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "category": "correctness",
+      "claim_key": "empty-input-contract",
+      "evidence": {"kind": "git_blob", "line": 1, "locator": "parser-anchor"},
+      "path": "src/parser.py",
+      "side": "RIGHT"
+    }
   ],
   "expected": {
     "mode": "resolve",

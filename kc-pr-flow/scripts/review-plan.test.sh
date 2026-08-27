@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Contract tests for the trusted review delta receipt boundary.
-# shellcheck disable=SC2016,SC2030,SC2031,SC2317 # Intentional generated stubs, subshells, and test overrides.
+# shellcheck disable=SC2016,SC2030,SC2031,SC2317,SC2329 # Intentional generated stubs, subshells, and test overrides.
 
 set -uo pipefail
 
@@ -138,6 +138,18 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_eq 'receipt keys are closed' 'content_sha256,coverage_gap_refs,known_findings,predecessor,required_capabilities,schema' "$(jq -r 'keys | sort | join(",")' <<<"$receipt_out")"
       assert_eq 'all terminal findings remain unresolved' 'unresolved' "$(jq -r '[.known_findings[].resolution_state] | unique | join(",")' <<<"$receipt_out")"
       assert_eq 'finding IDs come from replay' "$(jq -r '.findings | map(.finding_id) | sort | join(",")' <<<"$projection")" "$(jq -r '.known_findings | map(.finding_id) | sort | join(",")' <<<"$receipt_out")"
+      assert_eq 'receipt finding keys are closed' \
+        'anchor_sha256,category,claim_key,evidence,evidence_sha256,finding_id,path,resolution_state,side' \
+        "$(jq -r '.known_findings[0] | keys | sort | join(",")' <<<"$receipt_out")"
+      assert_eq 'finding anchor comes from replay' \
+        "$(jq -S -c '.findings[0].anchor_sha256' <<<"$projection")" \
+        "$(jq -S -c '.known_findings[0].anchor_sha256' <<<"$receipt_out")"
+      assert_eq 'finding category comes from replay' \
+        "$(jq -S -c '.findings[0].category' <<<"$projection")" \
+        "$(jq -S -c '.known_findings[0].category' <<<"$receipt_out")"
+      assert_eq 'closed evidence pointer comes from replay' \
+        "$(jq -S -c '.findings[0].evidence' <<<"$projection")" \
+        "$(jq -S -c '.known_findings[0].evidence' <<<"$receipt_out")"
       validator_err="$TEST_ROOT/validator.err"
       review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" 2>"$validator_err"
       validator_rc=$?
@@ -156,6 +168,90 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_receipt_rejected 'extra top-level member is rejected' "$(jq -S -c '.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'extra predecessor member is rejected' "$(jq -S -c '.predecessor.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'missing evidence hash is rejected' "$(jq -S -c 'del(.known_findings[0].evidence_sha256)' <<<"$receipt_out")"
+
+      rehash_receipt() {
+        local candidate="$1" canonical hash
+        canonical="$(jq -S -c 'del(.content_sha256)' <<<"$candidate")" || return
+        hash="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
+        jq -S -c --arg hash "$hash" '.content_sha256=$hash' <<<"$candidate"
+      }
+
+      missing_anchor_receipt="$(rehash_receipt "$(jq -S -c 'del(.known_findings[0].anchor_sha256)' <<<"$receipt_out")")"
+      assert_receipt_rejected 'missing replay-derived anchor is rejected' "$missing_anchor_receipt"
+
+      mutated_evidence_receipt="$(rehash_receipt "$(jq -S -c \
+        '.known_findings[0].evidence.content_sha256=("1"*64) |
+         .known_findings[0].evidence_sha256=("1"*64)' <<<"$receipt_out")")"
+      assert_receipt_rejected 'mutated replay-derived evidence is rejected' "$mutated_evidence_receipt"
+
+      legacy_receipt_from_events() {
+        local events="$1" replay replay_hash replay_receipt_id canonical hash
+        replay="$(review_runtime_replay "$events")" || return
+        replay_hash="$(printf '%s' "$replay" | jq -S -c . | review_runtime_sha256)" || return
+        replay_receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$replay")|$replay_hash" |
+          review_runtime_sha256)" || return
+        canonical="$(jq -S -c --arg receipt_id "$replay_receipt_id" '
+          .run as $run |
+          {
+            schema:"kc-pr-flow.review-delta-receipt/v1",
+            predecessor:{repository:$run.repository,pr_number:$run.pr_number,
+              base_sha:$run.base_sha,head_sha:$run.head_sha,config_hash:$run.config_hash,
+              review_key:$run.review_key,run_id:$run.run_id,receipt_id:$receipt_id},
+            known_findings:(.findings | map({finding_id,claim_key,
+              evidence_sha256:.evidence.content_sha256,path,side,resolution_state:"unresolved"}) |
+              sort_by(.finding_id)),
+            required_capabilities:(.lanes | map(.capability) | sort | unique),
+            coverage_gap_refs:[]
+          }' <<<"$replay")" || return
+        hash="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
+        jq -S -c --arg hash "$hash" '. + {content_sha256:$hash}' <<<"$canonical"
+      }
+
+      assert_predecessor_state_rejected() {
+        local description="$1" events="$2" candidate rc
+        review_plan_build_receipt "$events" >/dev/null 2>&1
+        rc=$?
+        assert_not_zero "$description is rejected by receipt producer" "$rc"
+        candidate="$(legacy_receipt_from_events "$events")" || {
+          fail "$description fixture replays"
+          return
+        }
+        review_plan_validate_receipt "$candidate" "$events" >/dev/null 2>&1
+        rc=$?
+        assert_not_zero "$description is rejected by receipt validator" "$rc"
+      }
+
+      zero_lane_projection="$(jq -S -c '.lanes=[] | .lifecycle.complete=true' <<<"$projection")"
+      (
+        review_runtime_replay() { printf '%s\n' "$zero_lane_projection"; }
+        review_plan_build_receipt "$EVENT_FILE" >/dev/null 2>&1
+      )
+      zero_lane_rc=$?
+      assert_not_zero 'zero-lane predecessor is rejected by receipt producer' "$zero_lane_rc"
+      assert_not_zero 'empty derived required capabilities are rejected by receipt producer' "$zero_lane_rc"
+
+      failed_events="$TEST_ROOT/failed-events.jsonl"
+      failed_task="$(jq -S -c '.lane_id="test-coverage-1" | .capability="test-coverage"' <<<"$TASK")"
+      failed_started="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 2 "$OCCURRED_AT" lane.started "$(jq -S -c -n --argjson value "$failed_task" '{review_task:$value}')")"
+      failed_result="$(jq -S -c '.lane_id="test-coverage-1" | .capability="test-coverage" |
+        .terminal_status="failed" | .candidates=[]' <<<"$RESULT")"
+      failed_finished="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 3 "$OCCURRED_AT" lane.finished "$(jq -S -c -n --argjson value "$failed_result" '{lane_result:$value}')")"
+      empty_synthesized="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 4 "$OCCURRED_AT" synthesis.finished '{"findings":[],"uncertain_candidate_ids":[]}')"
+      short_finished="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 5 "$OCCURRED_AT" run.finished "$(jq -S -c -n --argjson value "$BEHAVIOR" '{behavior_hashes:$value}')")"
+      printf '%s\n' "$START" "$failed_started" "$failed_finished" "$empty_synthesized" "$short_finished" >"$failed_events"
+      assert_predecessor_state_rejected 'failed predecessor lane' "$failed_events"
+
+      unavailable_events="$TEST_ROOT/unavailable-events.jsonl"
+      unavailable_result="$(jq -S -c '.terminal_status="unavailable"' <<<"$failed_result")"
+      unavailable_finished="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 3 "$OCCURRED_AT" lane.finished "$(jq -S -c -n --argjson value "$unavailable_result" '{lane_result:$value}')")"
+      printf '%s\n' "$START" "$failed_started" "$unavailable_finished" "$empty_synthesized" "$short_finished" >"$unavailable_events"
+      assert_predecessor_state_rejected 'unavailable predecessor lane' "$unavailable_events"
+
+      uncertain_events="$TEST_ROOT/uncertain-events.jsonl"
+      uncertain_synthesized="$(review_runtime_build_event "$RUN_ID" "$REVIEW_KEY" "$REPOSITORY" "$PR_NUMBER" "$HEAD_SHA" "$HEAD_SHA" "$CONFIG_HASH" 5 "$OCCURRED_AT" synthesis.finished "$(jq -S -c -n --arg candidate "$CANDIDATE_ID" '{findings:[],uncertain_candidate_ids:[$candidate]}')")"
+      printf '%s\n' "$START" "$LANE_START" "$OBSERVED" "$LANE_FINISHED" "$uncertain_synthesized" "$FINISHED" >"$uncertain_events"
+      assert_predecessor_state_rejected 'uncertain predecessor candidate' "$uncertain_events"
+
       duplicate_receipt_raw='{"schema":"kc-pr-flow.review-delta-receipt/v1","schema":"kc-pr-flow.review-delta-receipt/v1"}'
       assert_receipt_rejected 'raw duplicate receipt member is rejected' "$duplicate_receipt_raw"
 
