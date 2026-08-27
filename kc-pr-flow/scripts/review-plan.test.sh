@@ -531,7 +531,10 @@ event_ceiling_case_status() {
   {
     printf '%s\n' '#!/usr/bin/env bash'
     printf 'source %q\n' "$PLAN"
-    printf '%s\n' 'review_plan_validate_decision() { return 0; }'
+    printf '%s\n' 'review_plan_validate_decision() {'
+    printf '%s\n' '  review_plan_source_runtime || return'
+    printf '%s\n' '  review_runtime_json_has_unique_members "$1" >/dev/null 2>&1'
+    printf '%s\n' '}'
     printf '%s\n' 'if [ "${1:-}" = decide ]; then'
     printf '%s\n' '  count_file="$(dirname "$0")/count"'
     printf '%s\n' '  count=0; [ ! -f "$count_file" ] || count="$(cat "$count_file")"'
