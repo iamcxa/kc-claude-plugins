@@ -14,8 +14,11 @@ from typing import cast
 MOVEMENT_FIELDS = ("planning-window", "planning-outcome")
 CONTENT_FIELDS = ("accepted-goal", "non-goals")
 REQUIRED_FIELDS = ("source", *MOVEMENT_FIELDS, *CONTENT_FIELDS)
-TEXT_SENTINELS = {"null", "none", "unknown", "tbd", "todo", "~", "true", "false"}
-PLACEHOLDER_PATTERN = re.compile(r"(?:<[^<>]+>|\[[^\[\]]+\]|\{[^{}]+\})")
+TEXT_SENTINELS = {
+    "null", "none", "unknown", "tbd", "todo", "~", "true", "false",
+    "[]", "{}", "|", ">", "&", "*", "!", "<>",
+}
+PLACEHOLDER_PATTERN = re.compile(r"<[^<>]+>")
 
 
 class ReconcileError(RuntimeError):

@@ -178,16 +178,22 @@ expect_error(
     run([sentinel_non_goal], [sentinel_non_goal]),
     "snapshot item 0 has invalid non-goals",
 )
+for structural_sentinel in ("[]", "{}", "|", ">", "&", "*", "!", "<>"):
+    expect_error(
+        f"structural sentinel {structural_sentinel}",
+        run([item(structural_sentinel)], [item(structural_sentinel)]),
+        "snapshot item 0 has invalid source",
+    )
 
 punctuated_item = item("issue:punctuation")
-punctuated_item["planning-outcome"] = "[MVP] provider-neutral execution"
+punctuated_item["planning-outcome"] = "[MVP]"
 punctuated_item["accepted-goal"] = ">99% successful dispatch"
-punctuated_item["non-goals"] = ["*No* provider writes"]
+punctuated_item["non-goals"] = ["{Phase 1}", "*No* provider writes"]
 require(
     run(
         [punctuated_item],
         [punctuated_item],
-        expected_outcome="[MVP] provider-neutral execution",
+        expected_outcome="[MVP]",
     ).returncode
     == 0,
     "valid leading punctuation was rejected",
@@ -198,6 +204,13 @@ wrong_scope["planning-window"] = "2026-W36"
 expect_error(
     "engaged source scope mismatch",
     run([wrong_scope], [wrong_scope]),
+    "snapshot engaged source does not match expected planning scope",
+)
+wrong_outcome = item("issue:wrong-outcome")
+wrong_outcome["planning-outcome"] = "different outcome"
+expect_error(
+    "engaged source outcome mismatch",
+    run([wrong_outcome], [wrong_outcome]),
     "snapshot engaged source does not match expected planning scope",
 )
 mixed_scope = item("issue:mixed-scope")
