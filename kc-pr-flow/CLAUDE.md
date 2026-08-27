@@ -69,6 +69,14 @@ bash scripts/review-plan.test.sh
 bash scripts/review-latency-benchmark.test.sh
 ```
 
+**Phase 1 CI fan-out and cost.** Hosted incremental cost is not measured; do
+not infer it from job timeouts. A matching plan path adds one `review-plan`
+behavioral job, and a matching latency path adds one `review-latency-benchmark`
+job inside the existing evaluation workflow. The shared runtime dependencies
+route to `plan`, `runtime`, `shadow`, `post`, and `evaluation` as enforced by
+`scripts/review-ci-routing.test.py`; the evaluation workflow then runs its
+runtime-benchmark, latency-benchmark, and ablation-contract jobs.
+
 `review-latency-benchmark.sh` is the Phase 1 promotion authority for evidence,
 not for review judgment. It safe-snapshots the immutable sanitized corpus,
 requires each of the fixed nine case classes exactly once, and evaluates Q1
