@@ -1,6 +1,6 @@
 ---
 title: Restore release-gate ablation fixture fidelity
-status: validation
+status: implementation
 source: "Release Please PR #258 run 32929119727: release-state-restored rejected for missing review.md before reaching would-strand evidence"
 product: kc-dev-flow
 sprint: S3
@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-release-gate-fixture-fidelity
 issue:
-pr: 295
+pr:
 mod-block:
 design: required
 lane: main
@@ -77,7 +77,7 @@ gates:
                 reason: Captain approved exact candidate d339ba2 for Draft PR delivery after fresh pinned-pre8 validation.
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
