@@ -378,7 +378,12 @@ All other cases select `initial`. Ambiguity selects `initial` rather than guessi
 - Unknown path classification or unbounded generated diff -> `initial`.
 - Incomplete required capability after dispatch -> confirmation may proceed only with `COMMENT` or
   `REQUEST_CHANGES`; never `APPROVE`.
-- Router crash or timeout -> ignore its partial output and run the existing initial flow.
+- Router crash or timeout at route entry, before any fast path engages -> ignore partial output and
+  start the existing `initial` flow.
+- Fresh rerun failure at a confirmation/posting boundary while the flag is `on` or the run has
+  already engaged `delta`/`resolve` -> fail closed at that boundary. Recovery is a new explicit
+  `initial` review invocation from a fresh exact-head snapshot; the current flow may not discard its
+  plan or flag state to recover broader legacy authority.
 
 ### 5.6 Acceptance
 

@@ -565,6 +565,10 @@ review_plan_canonical_for_inputs() {
     '
 }
 
+review_plan_sha256() {
+  python3 -c 'import hashlib, sys; print(hashlib.sha256(sys.stdin.buffer.read()).hexdigest())'
+}
+
 if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
    CANDIDATE_PLAN_JSON="$(review_plan_decide_fresh)" &&
    CANDIDATE_PLAN_JSON="$(printf '%s' "$CANDIDATE_PLAN_JSON" |
@@ -573,6 +577,7 @@ if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
   case "$REVIEW_MODE" in
     delta|resolve)
       PLAN_JSON="$CANDIDATE_PLAN_JSON"
+      PLAN_JSON_SHA256="$(printf '%s' "$PLAN_JSON" | review_plan_sha256)"
       PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
       PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
       FAST_PATH_ENGAGED=1
@@ -581,33 +586,44 @@ if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
   esac
 fi
 unset CANDIDATE_PLAN_JSON
+readonly FAST_PATH_ENGAGED
+if [ "$FAST_PATH_ENGAGED" -eq 1 ]; then
+  readonly PLAN_JSON_SHA256
+fi
 
 review_plan_event_allowed() {
-  local requested_event="$1" fresh_plan fresh_mode stored_plan ceiling
+  local requested_event="$1" fresh_plan fresh_mode stored_plan stored_hash ceiling engaged
   case "$requested_event" in APPROVE|COMMENT|REQUEST_CHANGES) ;; *) return 1 ;; esac
 
-  # Flag-off is the only path that skips a fresh decision.
-  [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] || return 0
+  engaged="${FAST_PATH_ENGAGED:-0}"
+  case "$engaged" in 0|1) ;; *) return 1 ;; esac
 
-  fresh_plan="$(review_plan_decide_fresh)" || return 1
-  fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
-  fresh_mode="$(jq -r '.mode' <<<"$fresh_plan")" || return 1
-
-  # Legacy authority survives under flag-on only when no fast path ever engaged and
-  # a fresh decision over the original inputs still selects initial.
-  if [ "${FAST_PATH_ENGAGED:-0}" -eq 0 ]; then
+  # Flag-off preserves legacy authority only before any fast path engaged.
+  if [ "$engaged" -eq 0 ]; then
+    [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] || return 0
+    fresh_plan="$(review_plan_decide_fresh)" || return 1
+    fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
+    fresh_mode="$(jq -r '.mode' <<<"$fresh_plan")" || return 1
     if [ "${REVIEW_MODE:-initial}" = initial ] && [ "$fresh_mode" = initial ]; then
       return 0
     fi
     return 1
   fi
 
-  # Once engaged, missing, stale, mutated, or identity-mismatched plan state blocks.
-  [ "${PLAN_JSON+x}" = x ] || return 1
+  # Once engaged, validate the stored plan and its immutable digest even if the flag disappears.
+  [ "${PLAN_JSON+x}" = x ] && [ "${PLAN_JSON_SHA256+x}" = x ] || return 1
   stored_plan="$(printf '%s' "$PLAN_JSON" | review_plan_canonical_for_inputs)" || return 1
-  [ "$fresh_plan" = "$stored_plan" ] || return 1
-  case "$fresh_mode" in delta|resolve) ;; *) return 1 ;; esac
-  ceiling="$(jq -r '.event_ceiling' <<<"$fresh_plan")" || return 1
+  stored_hash="$(printf '%s' "$stored_plan" | review_plan_sha256)" || return 1
+  [ "$stored_hash" = "$PLAN_JSON_SHA256" ] || return 1
+  case "$(jq -r '.mode' <<<"$stored_plan")" in delta|resolve) ;; *) return 1 ;; esac
+
+  if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
+    fresh_plan="$(review_plan_decide_fresh)" || return 1
+    fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
+    [ "$fresh_plan" = "$stored_plan" ] || return 1
+  fi
+
+  ceiling="$(jq -r '.event_ceiling' <<<"$stored_plan")" || return 1
   case "$ceiling:$requested_event" in
     APPROVE:APPROVE|APPROVE:COMMENT|APPROVE:REQUEST_CHANGES|\
     COMMENT:COMMENT|COMMENT:REQUEST_CHANGES) return 0 ;;
@@ -623,6 +639,8 @@ before confirmation the caller may start a new explicit `initial` review, while 
 it requires a fresh review plan. A router failure is only provisional `initial`: it preserves legacy
 authority under flag-on only if the function's fresh rerun also returns `mode=initial`. Once
 `FAST_PATH_ENGAGED=1`, missing, stale, mutated, or identity-mismatched plan state always fails closed.
+If the flag is later `off` or unexported, the engaged run still validates the stored plan digest and
+enforces its ceiling; flag loss can never turn a stored `COMMENT` ceiling into legacy `APPROVE`.
 This is the exact Task 9 harness target and adds no CLI, schema, or surface.
 
 The prose must state:
@@ -1314,13 +1332,17 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
   owner and is not modified.
 
 - [ ] Add RED end-to-end harnesses showing the current legacy and typed paths can escalate a
-  `COMMENT` plan to `APPROVE`; exercise the exact `review_plan_event_allowed` snippet for flag-off,
-  fresh `initial`, no-engagement `delta`, engaged `COMMENT`, missing/mutated/stale/identity-mismatched
-  plan, autonomous gate, and immediate-pre-post cases.
+  `COMMENT` plan to `APPROVE`; exercise the exact `review_plan_event_allowed` snippet and pin these
+  expectations: flag-off before engagement preserves legacy; fresh `initial` under flag-on
+  preserves legacy; no-engagement `delta` blocks; flag loss or unexport after engagement still
+  enforces the stored `COMMENT` ceiling (or fails closed); missing/mutated/stale/identity-mismatched
+  plan blocks; autonomous and immediate-pre-post paths use the same gate.
 - [ ] Implement the immutable input snapshot, in-memory `PLAN_JSON`, existing-`decide`
   rerun/canonical comparison, and event case check from revised Task 3 at every listed seam. Never
   clamp silently to a more favorable event; reject invalid authority. Under flag-on, only a fresh
   rerun that still returns `mode=initial` may preserve legacy authority when no fast path engaged.
+  After engagement, make the engagement marker and stored plan digest immutable; flag loss uses the
+  stored valid ceiling and cannot restore legacy authority.
 - [ ] Rename every four-field trace assertion from byte-identical flow to planner-state parity.
 - [ ] Run `bash kc-pr-flow/scripts/review-plan.test.sh --case skill-wiring`, `--case event-ceiling`,
   the full plan suite, `bash kc-pr-flow/scripts/review-runtime.test.sh --case
