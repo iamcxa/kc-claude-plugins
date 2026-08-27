@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-2:revision-1",
+  "question": "Approve exact candidate 0e9d613 for Captain UAT and PR #295 update?",
+  "artifacts": [
+    {
+      "id": "artifact:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/b60d2e0970e6e4b59f616e9d994c916337402781/release-gate-fixture-fidelity/review/validation/review-2.md",
+      "rev": "sha256:c1d6038a8a86decbbca2430f51035f871152b83ee60399040181650a93923e55",
+      "mediaType": "text/markdown",
+      "summary": "Fresh validation passed at rebased one-file candidate 0e9d613; approval authorizes rebuilding PR #295, not merge or release."
+    }
+  ]
+}

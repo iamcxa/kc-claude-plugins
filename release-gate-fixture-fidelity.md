@@ -78,6 +78,12 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:cmdbanvhg3enbwaf26ma6wzk-validation-2
+              briefing:
+                id: briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-2:revision-1
+                digest: sha256:1d5176f64b26518721fce3e8fb9b3bf7ce6e6f25de61ddd58b4d54d79d81fb3f
+                request-digest: sha256:b72fcfca7acc0a0b3e649d892b5c8c0a677ddd33f52e750c73700735261ffc26
+                room-ref: ./release-gate-fixture-fidelity/review/validation/briefing-2
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
