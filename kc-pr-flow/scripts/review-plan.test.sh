@@ -65,7 +65,14 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
     . "$RUNTIME"
     REPOSITORY='acme/widgets'
     PR_NUMBER=42
-    CONFIG_HASH='cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    CONFIG_FILE="$TEST_ROOT/security-config.json"
+    jq -S -c -n '
+      {schema:"kc-pr-flow.review-config/v1",
+       modes:{agent_tier:"lite",pr_archetype:"mixed",full_pass:false,probe_required:false,
+              cross_model:false,noise_filter:false},
+       capabilities:["security"]}
+    ' | tr -d '\n' >"$CONFIG_FILE"
+    CONFIG_HASH="$(printf '%s' "$(cat "$CONFIG_FILE")" | review_runtime_sha256)"
     OCCURRED_AT='2026-07-22T00:00:00Z'
     EVENT_FILE="$TEST_ROOT/terminal-events.jsonl"
     FIXTURE_REPO="$TEST_ROOT/repo"
@@ -134,7 +141,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_eq 'sourcing preserves caller shell options' "$before_flags" "$after_flags"
       assert_eq 'sourcing preserves caller umask' "$before_umask" "$after_umask"
       assert_eq 'sourcing preserves caller working directory' "$before_pwd" "$after_pwd"
-      receipt_out="$(PATH="$STUB_DIR:$PATH" bash "$PLAN" receipt --event-file "$EVENT_FILE" 2>/dev/null)"
+      receipt_out="$(PATH="$STUB_DIR:$PATH" bash "$PLAN" receipt --event-file "$EVENT_FILE" --config-file "$CONFIG_FILE" 2>/dev/null)"
       receipt_rc=$?
       assert_eq 'receipt command succeeds for complete replay' '0' "$receipt_rc"
       projection="$(review_runtime_replay "$EVENT_FILE")"
@@ -155,14 +162,94 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
         "$(jq -S -c '.findings[0].evidence' <<<"$projection")" \
         "$(jq -S -c '.known_findings[0].evidence' <<<"$receipt_out")"
       validator_err="$TEST_ROOT/validator.err"
-      review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" 2>"$validator_err"
+      review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" "$CONFIG_FILE" 2>"$validator_err"
       validator_rc=$?
       assert_eq 'receipt validates against fresh projection' '0' "$validator_rc"
+      MISMATCH_CONFIG_FILE="$TEST_ROOT/six-capability-config.json"
+      jq -S -c -n '
+        {schema:"kc-pr-flow.review-config/v1",
+         modes:{agent_tier:"lite",pr_archetype:"mixed",full_pass:false,probe_required:false,
+                cross_model:false,noise_filter:false},
+         capabilities:["correctness","github-actions","security","supply-chain","test-coverage","type-safety"]}
+      ' | tr -d '\n' >"$MISMATCH_CONFIG_FILE"
+      mismatch_config_hash="$(printf '%s' "$(cat "$MISMATCH_CONFIG_FILE")" | review_runtime_sha256)"
+      mismatch_projection="$(jq -S -c --arg hash "$mismatch_config_hash" '.run.config_hash=$hash' <<<"$projection")"
+      (
+        review_runtime_replay() { printf '%s\n' "$mismatch_projection"; }
+        review_plan_build_receipt "$EVENT_FILE" "$MISMATCH_CONFIG_FILE" >/dev/null 2>&1
+      )
+      assert_not_zero 'six configured capabilities with one replayed lane is rejected by receipt producer' "$?"
+      (
+        review_runtime_replay() { printf '%s\n' "$mismatch_projection"; }
+        review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" "$MISMATCH_CONFIG_FILE" >/dev/null 2>&1
+      )
+      assert_not_zero 'six configured capabilities with one replayed lane is rejected by receipt validator' "$?"
+
+      assert_config_rejected() {
+        local description="$1" config_candidate="$2" rc
+        review_plan_build_receipt "$EVENT_FILE" "$config_candidate" >/dev/null 2>&1
+        rc=$?
+        assert_not_zero "$description is rejected by receipt producer" "$rc"
+        review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" "$config_candidate" >/dev/null 2>&1
+        rc=$?
+        assert_not_zero "$description is rejected by receipt validator" "$rc"
+      }
+      assert_config_rejected 'missing config' "$TEST_ROOT/missing-config.json"
+      config_link="$TEST_ROOT/config-link.json"
+      ln -s "$CONFIG_FILE" "$config_link"
+      assert_config_rejected 'symlink config' "$config_link"
+      config_fifo="$TEST_ROOT/config.fifo"
+      mkfifo "$config_fifo"
+      assert_config_rejected 'FIFO config' "$config_fifo"
+      KC_PR_FLOW_MAX_CONFIG_BYTES=1 review_plan_build_receipt "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
+      assert_not_zero 'oversized config is rejected by receipt producer' "$?"
+      KC_PR_FLOW_MAX_CONFIG_BYTES=1 review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
+      assert_not_zero 'oversized config is rejected by receipt validator' "$?"
+      duplicate_config="$TEST_ROOT/duplicate-config.json"
+      sed 's/{"capabilities"/{"schema":"kc-pr-flow.review-config\/v1","capabilities"/' "$CONFIG_FILE" >"$duplicate_config"
+      assert_config_rejected 'raw duplicate config member' "$duplicate_config"
+      extra_config="$TEST_ROOT/extra-config.json"
+      jq -S -c '.extra=true' "$CONFIG_FILE" >"$extra_config"
+      assert_config_rejected 'extra config member' "$extra_config"
+      noncanonical_config="$TEST_ROOT/noncanonical-config.json"
+      jq . "$CONFIG_FILE" >"$noncanonical_config"
+      assert_config_rejected 'noncanonical config bytes' "$noncanonical_config"
+      newline_config="$TEST_ROOT/newline-config.json"
+      cp "$CONFIG_FILE" "$newline_config"
+      printf '\n' >>"$newline_config"
+      assert_config_rejected 'canonical config with a trailing newline' "$newline_config"
+      hash_mismatch_config="$TEST_ROOT/hash-mismatch-config.json"
+      printf '%s' "$(review_runtime_config_canonical standard mixed false false false false security)" >"$hash_mismatch_config"
+      assert_config_rejected 'config hash mismatch' "$hash_mismatch_config"
+
+      six_projection="$(jq -S -c --arg hash "$mismatch_config_hash" '
+        .run.config_hash=$hash |
+        .lanes = (["correctness","github-actions","security","supply-chain","test-coverage","type-safety"] |
+          map({capability:.,lane_id:(. + "-1"),task:{},result:{terminal_status:"succeeded"}}))
+      ' <<<"$projection")"
+      (
+        review_runtime_replay() { printf '%s\n' "$six_projection"; }
+        review_plan_build_receipt "$EVENT_FILE" "$MISMATCH_CONFIG_FILE" >/dev/null
+      )
+      assert_eq 'full matching six-lane predecessor mints a receipt' '0' "$?"
+      wrong_member_projection="$(jq -S -c '
+        .lanes |= map(if .capability == "type-safety" then .capability="privacy" else . end)
+      ' <<<"$six_projection")"
+      (
+        review_runtime_replay() { printf '%s\n' "$wrong_member_projection"; }
+        review_plan_build_receipt "$EVENT_FILE" "$MISMATCH_CONFIG_FILE" >/dev/null 2>&1
+      )
+      assert_not_zero 'same capability count with wrong member is rejected by receipt producer' "$?"
+      (
+        review_runtime_replay() { printf '%s\n' "$wrong_member_projection"; }
+        review_plan_validate_receipt "$receipt_out" "$EVENT_FILE" "$MISMATCH_CONFIG_FILE" >/dev/null 2>&1
+      )
+      assert_not_zero 'same capability count with wrong member is rejected by receipt validator' "$?"
       assert_eq 'no transport or model stub was called' '' "$(cat "$CALL_LEDGER")"
 
       assert_receipt_rejected() {
         local description="$1" candidate_receipt="$2" rejected_rc
-        review_plan_validate_receipt "$candidate_receipt" "$EVENT_FILE" >/dev/null 2>&1
+        review_plan_validate_receipt "$candidate_receipt" "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
         rejected_rc=$?
         assert_not_zero "$description" "$rejected_rc"
       }
@@ -218,14 +305,14 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
 
       assert_predecessor_state_rejected() {
         local description="$1" events="$2" candidate rc
-        review_plan_build_receipt "$events" >/dev/null 2>&1
+        review_plan_build_receipt "$events" "$CONFIG_FILE" >/dev/null 2>&1
         rc=$?
         assert_not_zero "$description is rejected by receipt producer" "$rc"
         candidate="$(receipt_from_events "$events")" || {
           fail "$description fixture replays"
           return
         }
-        review_plan_validate_receipt "$candidate" "$events" >/dev/null 2>&1
+        review_plan_validate_receipt "$candidate" "$events" "$CONFIG_FILE" >/dev/null 2>&1
         rc=$?
         assert_not_zero "$description is rejected by receipt validator" "$rc"
       }
@@ -233,25 +320,25 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       zero_lane_projection="$(jq -S -c '.lanes=[] | .lifecycle.complete=true' <<<"$projection")"
       (
         review_runtime_replay() { printf '%s\n' "$zero_lane_projection"; }
-        review_plan_build_receipt "$EVENT_FILE" >/dev/null 2>&1
+        review_plan_build_receipt "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
       )
       assert_not_zero 'zero-lane predecessor is rejected by receipt producer' "$?"
 
       zero_lane_receipt="$(receipt_from_projection "$zero_lane_projection")"
       (
         review_runtime_replay() { printf '%s\n' "$zero_lane_projection"; }
-        review_plan_validate_receipt "$zero_lane_receipt" "$EVENT_FILE" >/dev/null 2>&1
+        review_plan_validate_receipt "$zero_lane_receipt" "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
       )
       assert_not_zero 'zero-lane fresh replay is rejected by receipt validator' "$?"
 
       (
         review_plan_required_capabilities() { printf '%s\n' '[]'; }
-        review_plan_build_receipt "$EVENT_FILE" >/dev/null 2>&1
+        review_plan_build_receipt "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
       )
       assert_not_zero 'empty derived required capabilities are rejected by receipt producer' "$?"
 
       empty_capabilities_receipt="$(rehash_receipt "$(jq -S -c '.required_capabilities=[]' <<<"$receipt_out")")"
-      review_plan_validate_receipt "$empty_capabilities_receipt" "$EVENT_FILE" >/dev/null 2>&1
+      review_plan_validate_receipt "$empty_capabilities_receipt" "$EVENT_FILE" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'empty receipt required capabilities are rejected by receipt validator' "$?"
 
       failed_events="$TEST_ROOT/failed-events.jsonl"
@@ -281,30 +368,30 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
 
       symlink_events="$TEST_ROOT/events-link.jsonl"
       ln -s "$EVENT_FILE" "$symlink_events"
-      PATH="$STUB_DIR:$PATH" bash "$PLAN" receipt --event-file "$symlink_events" >/dev/null 2>&1
+      PATH="$STUB_DIR:$PATH" bash "$PLAN" receipt --event-file "$symlink_events" --config-file "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'symlink event input is rejected' "$?"
 
       fifo_events="$TEST_ROOT/events.fifo"
       mkfifo "$fifo_events"
-      review_plan_build_receipt "$fifo_events" >/dev/null 2>&1
+      review_plan_build_receipt "$fifo_events" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'FIFO event input is rejected' "$?"
 
       incomplete_events="$TEST_ROOT/incomplete-events.jsonl"
       sed '$d' "$EVENT_FILE" >"$incomplete_events"
-      review_plan_build_receipt "$incomplete_events" >/dev/null 2>&1
+      review_plan_build_receipt "$incomplete_events" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'incomplete runtime lifecycle is rejected' "$?"
 
       duplicate_events="$TEST_ROOT/duplicate-events.jsonl"
       awk 'NR == 1 { sub(/^\{/, "{\"schema\":\"kc-pr-flow.review-event/v1\","); } { print }' \
         "$EVENT_FILE" >"$duplicate_events"
-      review_plan_build_receipt "$duplicate_events" >/dev/null 2>&1
+      review_plan_build_receipt "$duplicate_events" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'duplicate JSON member input is rejected' "$?"
-      review_plan_validate_receipt "$receipt_out" "$duplicate_events" >/dev/null 2>&1
+      review_plan_validate_receipt "$receipt_out" "$duplicate_events" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'raw duplicate event-derived input is rejected by validator' "$?"
 
       oversized_events="$TEST_ROOT/oversized-events.jsonl"
       cp "$EVENT_FILE" "$oversized_events"
-      KC_PR_FLOW_MAX_EVENTS_BYTES=1 review_plan_build_receipt "$oversized_events" >/dev/null 2>&1
+      KC_PR_FLOW_MAX_EVENTS_BYTES=1 review_plan_build_receipt "$oversized_events" "$CONFIG_FILE" >/dev/null 2>&1
       assert_not_zero 'oversized event input is rejected' "$?"
     else
       fail 'review-plan.sh exists after RED implementation'
@@ -314,7 +401,7 @@ fi
 
 make_replay_receipt() {
   local fixture_repo="$1" repository="$2" pr_number="$3" base_sha="$4" reviewed_sha="$5"
-  local config_hash="$6" event_file="$7" receipt_file="$8" fixture="$9"
+  local config_hash="$6" config_file="$7" event_file="$8" receipt_file="$9" fixture="${10}"
   local finding_meta path side anchor_sha256 category claim_key evidence_kind evidence_line evidence_locator
   local review_key object_sha content_sha run_id pointer merge_key
   local candidate_id candidate task_correctness task_coverage result_correctness result_coverage finding_id finding behavior
@@ -400,7 +487,7 @@ make_replay_receipt() {
   synthesized="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 7 '2026-08-26T00:00:00Z' synthesis.finished "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')")"
   finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$reviewed_sha" "$config_hash" 8 '2026-08-26T00:00:00Z' run.finished "$(jq -S -c -n --argjson value "$behavior" '{behavior_hashes:$value}')")"
   printf '%s\n' "$started" "$correctness_started" "$coverage_started" "$observed" "$correctness_finished" "$coverage_finished" "$synthesized" "$finished" >"$event_file"
-  bash "$PLAN" receipt --event-file "$event_file" >"$receipt_file"
+  bash "$PLAN" receipt --event-file "$event_file" --config-file "$config_file" >"$receipt_file"
   printf '%s\n' "$finding_id"
 }
 
@@ -803,7 +890,7 @@ skill_router_trace() {
 
 skill_router_live_identity_mismatch_trace() {
   local mismatch="$1" fixture plugin_root router_repo replay_lines base_sha reviewed_sha fixed_sha
-  local repository config_hash receipt_repository receipt_pr receipt_base receipt_config
+  local repository config_hash receipt_repository receipt_pr receipt_base receipt_config router_config receipt_config_file
   local events receipt receipt_json receipt_rc inherited_finding_ids required_capabilities decision script snippet output
   fixture="$HERE/../test/fixtures/review-plan/pr1693-replay.json"
   plugin_root="$TEST_ROOT/skill-router-live-$mismatch"
@@ -817,24 +904,31 @@ skill_router_live_identity_mismatch_trace() {
   reviewed_sha="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$replay_lines")"
   fixed_sha="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$replay_lines")"
   repository="$(jq -r '.repository' "$fixture")"
-  config_hash='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+  router_config="$plugin_root/router-config.json"
+  printf '%s' "$(review_runtime_config_canonical lite mixed false false false false correctness,test-coverage)" >"$router_config"
+  config_hash="$(review_runtime_config_hash lite mixed false false false false correctness,test-coverage)"
   receipt_repository="$repository"
   receipt_pr=1693
   receipt_base="$base_sha"
   receipt_config="$config_hash"
+  receipt_config_file="$router_config"
   case "$mismatch" in
     repository) receipt_repository='other/widgets' ;;
     pr_number) receipt_pr=1694 ;;
     base_sha) receipt_base="$reviewed_sha" ;;
-    config_hash) receipt_config='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' ;;
+    config_hash)
+      receipt_config_file="$plugin_root/changed-config.json"
+      review_runtime_config_canonical standard mixed false false false false correctness,test-coverage >"$receipt_config_file"
+      receipt_config="$(review_runtime_config_hash standard mixed false false false false correctness,test-coverage)"
+      ;;
     *) fail "unknown live identity mismatch: $mismatch"; return ;;
   esac
   events="$plugin_root/predecessor-events.jsonl"
   receipt="$plugin_root/delta-receipt.json"
   make_replay_receipt "$router_repo" "$receipt_repository" "$receipt_pr" "$receipt_base" "$reviewed_sha" \
-    "$receipt_config" "$events" "$receipt" "$fixture" >/dev/null
+    "$receipt_config" "$receipt_config_file" "$events" "$receipt" "$fixture" >/dev/null
   receipt_json="$(cat "$receipt")"
-  review_plan_validate_receipt "$receipt_json" "$events"
+  review_plan_validate_receipt "$receipt_json" "$events" "$receipt_config_file"
   receipt_rc=$?
   inherited_finding_ids="$(jq -S -c '[.known_findings[].finding_id] | sort | unique' <<<"$receipt_json")"
   required_capabilities="$(jq -S -c '.required_capabilities | sort | unique' <<<"$receipt_json")"
@@ -878,6 +972,9 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'coverage gap.*COMMENT' 'skill constrains coverage gaps to COMMENT'
   assert_file_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
   assert_file_contains "$SKILL" 'review_plan_validate_decision' 'skill validates the complete closed planner decision'
+  assert_file_contains "$SKILL" 'PLAN_INPUT_CONFIG_FILE' 'skill retains one immutable config snapshot input'
+  assert_file_contains "$SKILL" 'review_runtime_snapshot_regular_file "\$REVIEW_CONFIG_FILE"' 'skill snapshots the source config before routing'
+  assert_file_contains "$SKILL" 'config-file "\$PLAN_INPUT_CONFIG_FILE"' 'skill passes the exact config snapshot to every planner invocation'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted' 'human_confirmed'; do
@@ -1003,10 +1100,12 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
   reviewed_sha="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$replay_lines")"
   fixed_sha="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$replay_lines")"
   repo_id="$(jq -r '.repository' "$fixture")"
-  config_hash='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+  router_config="$TEST_ROOT/router-config.json"
+  printf '%s' "$(review_runtime_config_canonical lite mixed false false false false correctness,test-coverage)" >"$router_config"
+  config_hash="$(review_runtime_config_hash lite mixed false false false false correctness,test-coverage)"
   router_events="$TEST_ROOT/router-events.jsonl"
   router_receipt="$TEST_ROOT/router-receipt.json"
-  finding_id="$(make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_events" "$router_receipt" "$fixture")"
+  finding_id="$(make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_config" "$router_events" "$router_receipt" "$fixture")"
 
   if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ]; then
     fixture_finding="$(jq -S -c '.known_findings[0]' "$fixture")"
@@ -1018,7 +1117,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
 
     invalid_metadata_fixture="$TEST_ROOT/pr1693-invalid-metadata.json"
     jq -S '.known_findings[0].unexpected=true' "$fixture" >"$invalid_metadata_fixture"
-    make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" \
+    make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_config" \
       "$TEST_ROOT/invalid-metadata-events.jsonl" "$TEST_ROOT/invalid-metadata-receipt.json" \
       "$invalid_metadata_fixture" >/dev/null 2>&1
     assert_not_zero 'PR1693 fixture finding metadata rejects extra members' "$?"
@@ -1033,7 +1132,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     ' "$fixture" >"$mutated_metadata_fixture"
     mutated_metadata_events="$TEST_ROOT/mutated-metadata-events.jsonl"
     mutated_metadata_receipt="$TEST_ROOT/mutated-metadata-receipt.json"
-    make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" \
+    make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_config" \
       "$mutated_metadata_events" "$mutated_metadata_receipt" "$mutated_metadata_fixture" >/dev/null
     assert_eq 'mutated fixture receipt validates against fresh replay' '0' "$?"
     mutated_fixture_finding="$(jq -S -c '.known_findings[0]' "$mutated_metadata_fixture")"
@@ -1042,16 +1141,20 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
       evidence:{kind:.evidence.kind,line:.evidence.line,locator:.evidence.locator},path,side
     }' "$mutated_metadata_receipt")"
     assert_eq 'mutated fixture metadata changes generated receipt' "$mutated_fixture_finding" "$mutated_receipt_finding"
-    review_plan_validate_receipt "$(cat "$mutated_metadata_receipt")" "$mutated_metadata_events" >/dev/null 2>&1
+    review_plan_validate_receipt "$(cat "$mutated_metadata_receipt")" "$mutated_metadata_events" "$router_config" >/dev/null 2>&1
     assert_eq 'mutated fixture receipt remains replay-valid' '0' "$?"
 
-    decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'PR1693 shape selects resolve' 'resolve' "$(jq -r '.mode' <<<"$decision")"
     assert_eq 'resolve inherits finding IDs' "$finding_id" "$(jq -r '.inherited_finding_ids | join(",")' <<<"$decision")"
     assert_eq 'router is advisory ceiling' 'APPROVE' "$(jq -r '.event_ceiling' <<<"$decision")"
     assert_eq 'decision keys are closed' 'event_ceiling,fallback,identity,inherited_finding_ids,mode,reason_codes,required_capabilities,review_range,schema' "$(jq -r 'keys | sort | join(",")' <<<"$decision")"
     assert_eq 'replay reasons are sorted' 'ancestor_append,known_finding_delta,trusted_predecessor' "$(jq -r '.reason_codes | join(",")' <<<"$decision")"
     assert_eq 'replay capabilities are inherited' 'correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
+    six_lane_config="$TEST_ROOT/router-six-lane-config.json"
+    printf '%s' "$(review_runtime_config_canonical lite mixed false false false false correctness,github-actions,security,supply-chain,test-coverage,type-safety)" >"$six_lane_config"
+    incomplete_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$six_lane_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    assert_eq 'six configured capabilities cannot enter delta from a two-lane predecessor' 'initial' "$(jq -r '.mode' <<<"$incomplete_decision")"
     # shellcheck source=/dev/null
     . "$PLAN"
     original_worktree_adapter="$(declare -f review_plan_worktree_adapter)"
@@ -1069,7 +1172,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
       review_plan_worktree_adapter_original "$@"
     }
     direct_decision_file="$TEST_ROOT/direct-decision.json"
-    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" >"$direct_decision_file"
+    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" "$router_config" >"$direct_decision_file"
     direct_decision="$(<"$direct_decision_file")"
     worktree_bind_count="$(wc -l <"$worktree_bind_ledger" | tr -d ' ')"
     git_call_count="$(wc -l <"$git_call_ledger" | tr -d ' ')"
@@ -1080,7 +1183,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
 
     decide_candidate() {
       KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 \
-        --base "$base_sha" --head "$1" --config-hash "$config_hash" \
+        --base "$base_sha" --head "$1" --config-hash "$config_hash" --config-file "$router_config" \
         --repo-worktree "$router_repo" --predecessor-events "$router_events" \
         --delta-receipt "$router_receipt"
     }
@@ -1098,10 +1201,10 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
       signal_base="$(awk -F= '$1 == "base" { print $2 }' <<<"$signal_lines")"
       signal_reviewed="$(awk -F= '$1 == "reviewed" { print $2 }' <<<"$signal_lines")"
       signal_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$signal_lines")"
-      make_replay_receipt "$signal_repo" "$repo_id" 1693 "$signal_base" "$signal_reviewed" "$config_hash" \
+      make_replay_receipt "$signal_repo" "$repo_id" 1693 "$signal_base" "$signal_reviewed" "$config_hash" "$router_config" \
         "$signal_events" "$signal_receipt" "$signal_fixture" >/dev/null
       KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 \
-        --base "$signal_base" --head "$signal_fixed" --config-hash "$config_hash" \
+        --base "$signal_base" --head "$signal_fixed" --config-hash "$config_hash" --config-file "$router_config" \
         --repo-worktree "$signal_repo" --predecessor-events "$signal_events" \
         --delta-receipt "$signal_receipt"
     }
@@ -1142,7 +1245,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'security-shaped append requires security coverage' 'security' \
       "$(jq -r '.required_capabilities | map(select(. == "security")) | join(",")' <<<"$security_hunk_decision")"
     review_plan_validate_decision "$security_hunk_decision" "$repo_id" 1693 "$base_sha" "$security_hunk_sha" \
-      "$config_hash" "$router_events" "$router_receipt" "$router_repo"
+      "$config_hash" "$router_events" "$router_receipt" "$router_repo" "$router_config"
     assert_eq 'security delta validates against fresh hunk routing' '0' "$?"
 
     git -C "$router_repo" checkout -q "$fixed_sha"
@@ -1163,7 +1266,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'dependency signal requires supply-chain coverage' 'supply-chain' \
       "$(jq -r '.required_capabilities | map(select(. == "supply-chain")) | join(",")' <<<"$dependency_decision")"
     review_plan_validate_decision "$dependency_decision" "$repo_id" 1693 "$base_sha" "$dependency_sha" \
-      "$config_hash" "$router_events" "$router_receipt" "$router_repo"
+      "$config_hash" "$router_events" "$router_receipt" "$router_repo" "$router_config"
     assert_eq 'dependency delta validates against fresh hunk routing' '0' "$?"
 
     git -C "$router_repo" checkout -q "$fixed_sha"
@@ -1177,7 +1280,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'workflow signal requires GitHub Actions coverage' 'github-actions' \
       "$(jq -r '.required_capabilities | map(select(. == "github-actions")) | join(",")' <<<"$workflow_decision")"
     review_plan_validate_decision "$workflow_decision" "$repo_id" 1693 "$base_sha" "$workflow_sha" \
-      "$config_hash" "$router_events" "$router_receipt" "$router_repo"
+      "$config_hash" "$router_events" "$router_receipt" "$router_repo" "$router_config"
     assert_eq 'workflow delta validates against fresh hunk routing' '0' "$?"
 
     git -C "$router_repo" checkout -q "$fixed_sha"
@@ -1244,7 +1347,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     }
     malformed_diff_decision_file="$TEST_ROOT/malformed-diff-decision.json"
     KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" \
-      "$router_repo" "$router_events" "$router_receipt" >"$malformed_diff_decision_file"
+      "$router_repo" "$router_events" "$router_receipt" "$router_config" >"$malformed_diff_decision_file"
     malformed_diff_decision="$(<"$malformed_diff_decision_file")"
     assert_eq 'malformed zero-context diff falls back to initial' 'initial' "$(jq -r '.mode' <<<"$malformed_diff_decision")"
     if [ -n "$original_changed_diff" ]; then eval "$original_changed_diff"; else unset -f review_plan_changed_diff; fi
@@ -1255,10 +1358,10 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     git -C "$router_repo" add docs/extra.md
     git -C "$router_repo" commit -qm expanded
     expanded_sha="$(git -C "$router_repo" rev-parse HEAD)"
-    expanded_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$expanded_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    expanded_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$expanded_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'new unrelated ancestor path selects delta' 'delta' "$(jq -r '.mode' <<<"$expanded_decision")"
     assert_eq 'expanded delta caps only current coverage' 'COMMENT' "$(jq -r '.event_ceiling' <<<"$expanded_decision")"
-    flag_off="$(bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    flag_off="$(bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'flag off preserves initial flow' 'initial' "$(jq -r '.mode' <<<"$flag_off")"
     assert_eq 'flag off adds no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$flag_off")"
     replacement_receipt="$TEST_ROOT/replacement-receipt.json"
@@ -1273,7 +1376,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
       return "$result"
     }
     replacement_decision_file="$TEST_ROOT/replacement-decision.json"
-    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" >"$replacement_decision_file"
+    KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" "$router_repo" "$router_events" "$router_receipt" "$router_config" >"$replacement_decision_file"
     replacement_decision="$(<"$replacement_decision_file")"
     assert_eq 'receipt replacement after validation preserves snapshot route' 'resolve' "$(jq -r '.mode' <<<"$replacement_decision")"
     eval "$original_validate_receipt"
@@ -1283,23 +1386,23 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     missing="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo")"
     assert_eq 'missing predecessor uses initial review' 'initial' "$(jq -r '.mode' <<<"$missing")"
     assert_eq 'missing predecessor has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$missing")"
-    changed_base="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$reviewed_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    changed_base="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$reviewed_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'changed base uses initial review' 'initial' "$(jq -r '.mode' <<<"$changed_base")"
-    changed_config="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "${config_hash/a/b}" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    changed_config="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "${config_hash/a/b}" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'changed config uses initial review' 'initial' "$(jq -r '.mode' <<<"$changed_config")"
     mutated_receipt="$TEST_ROOT/mutated-receipt.json"
     jq -S -c '.known_findings[0].evidence_sha256=("1" * 64) | .content_sha256=("0" * 64)' "$router_receipt" >"$mutated_receipt"
-    mutated_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$mutated_receipt")"
+    mutated_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$mutated_receipt")"
     assert_eq 'mutated finding evidence uses initial review' 'initial' "$(jq -r '.mode' <<<"$mutated_decision")"
     assert_eq 'mutated finding evidence has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$mutated_decision")"
     inherited_gap="$TEST_ROOT/inherited-gap.json"
     jq -S -c '.coverage_gap_refs=["coverage-gap"] | .content_sha256=("0" * 64)' "$router_receipt" >"$inherited_gap"
-    gap_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$inherited_gap")"
+    gap_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$inherited_gap")"
     assert_eq 'untrusted inherited gap uses initial review' 'initial' "$(jq -r '.mode' <<<"$gap_decision")"
     assert_eq 'untrusted inherited gap has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$gap_decision")"
     assert_changed_object_not_resolve() {
       local description="$1" candidate_head="$2" object_decision
-      object_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$candidate_head" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+      object_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$candidate_head" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
       if [ "$(jq -r '.mode' <<<"$object_decision")" = 'resolve' ]; then
         fail "$description (must not select resolve)"
       else
@@ -1391,7 +1494,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     git -C "$router_repo" add src/parser.py
     git -C "$router_repo" commit -qm rewritten
     rewritten_sha="$(git -C "$router_repo" rev-parse HEAD)"
-    non_ancestor="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$rewritten_sha" --config-hash "$config_hash" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+    non_ancestor="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$rewritten_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
     assert_eq 'rewritten history uses initial review' 'initial' "$(jq -r '.mode' <<<"$non_ancestor")"
     assert_eq 'rewritten history has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$non_ancestor")"
   fi
@@ -1410,7 +1513,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     printf '#!/bin/sh\nprintf "git\\n" >>"%s"\nexit 97\n' "$git_ledger" >"$TEST_ROOT/git-stub/git"
     chmod +x "$TEST_ROOT/git-stub/git"
     for unsafe in "$unsafe_file" "$unsafe_missing" "$unsafe_link" "$unsafe_parent/router-repo"; do
-      unsafe_decision="$(PATH="$TEST_ROOT/git-stub:$PATH" KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --repo-worktree "$unsafe" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
+      unsafe_decision="$(PATH="$TEST_ROOT/git-stub:$PATH" KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$unsafe" --predecessor-events "$router_events" --delta-receipt "$router_receipt")"
       assert_eq 'unsafe worktree uses initial review' 'initial' "$(jq -r '.mode' <<<"$unsafe_decision")"
       assert_eq 'unsafe worktree has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$unsafe_decision")"
     done
@@ -1791,7 +1894,7 @@ PY
       race_fixed="$(awk -F= '$1 == "fixed" { print $2 }' <<<"$race_lines")"
       race_events="$TEST_ROOT/race-$replacement_kind-events.jsonl"
       race_receipt="$TEST_ROOT/race-$replacement_kind-receipt.json"
-      make_replay_receipt "$race_repo" "$repo_id" 1693 "$race_base" "$race_reviewed" "$config_hash" \
+      make_replay_receipt "$race_repo" "$repo_id" 1693 "$race_base" "$race_reviewed" "$config_hash" "$router_config" \
         "$race_events" "$race_receipt" "$fixture" >/dev/null
       cp -R "$race_repo" "$race_repo-replacement"
 

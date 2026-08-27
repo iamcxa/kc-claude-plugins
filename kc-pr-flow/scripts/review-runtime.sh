@@ -758,6 +758,41 @@ review_runtime_config_hash() {
   printf '%s' "$canonical" | review_runtime_sha256
 }
 
+# Accept only the exact canonical v1 bytes. Callers that consume a saved config
+# snapshot use this after their descriptor-bound safe-I/O boundary so duplicate
+# members are refused before jq can collapse them.
+review_runtime_config_canonical_snapshot() {
+  local raw="$1" values agent_tier pr_archetype full_pass probe_required cross_model noise_filter capabilities
+  local canonical
+  [ "$#" -eq 1 ] || return 2
+  review_runtime_json_has_unique_members "$raw" >/dev/null 2>&1 || return 3
+  values="$(jq -r -e '
+    def exact_keys($required): type == "object" and (keys | sort) == ($required | sort);
+    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    select(
+      exact_keys(["capabilities","modes","schema"]) and
+      .schema == "kc-pr-flow.review-config/v1" and
+      (.modes | exact_keys(["agent_tier","cross_model","full_pass","noise_filter","pr_archetype","probe_required"])) and
+      (.modes.agent_tier | type == "string") and
+      (.modes.pr_archetype | type == "string") and
+      (.modes.full_pass | type == "boolean") and
+      (.modes.probe_required | type == "boolean") and
+      (.modes.cross_model | type == "boolean") and
+      (.modes.noise_filter | type == "boolean") and
+      (.capabilities | type == "array" and all(token) and . == (sort | unique))
+    ) |
+    [.modes.agent_tier,.modes.pr_archetype,.modes.full_pass,.modes.probe_required,
+     .modes.cross_model,.modes.noise_filter,(.capabilities | join(","))] | @tsv
+  ' <<<"$raw")" || return 3
+  IFS=$'\t' read -r agent_tier pr_archetype full_pass probe_required cross_model noise_filter capabilities <<EOF
+$values
+EOF
+  canonical="$(review_runtime_config_canonical "$agent_tier" "$pr_archetype" "$full_pass" \
+    "$probe_required" "$cross_model" "$noise_filter" "$capabilities")" || return 3
+  [ "$raw" = "$canonical" ] || return 3
+  printf '%s\n' "$canonical"
+}
+
 review_runtime_repository_identity_valid() {
   [ -n "$1" ] || return 1
   ! printf '%s' "$1" | LC_ALL=C grep '[[:cntrl:]]' >/dev/null 2>&1

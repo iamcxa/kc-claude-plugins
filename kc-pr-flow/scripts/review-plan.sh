@@ -16,9 +16,35 @@ review_plan_required_capabilities() {
   jq -S -c '[.lanes[].capability] | sort | unique'
 }
 
+review_plan_snapshot_config() (
+  local config_file="$1" snapshot_dir='' snapshot_file='' raw canonical snapshot_bytes
+  [ "$#" -eq 1 ] && [ -n "$config_file" ] || return 3
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return
+  snapshot_file="$snapshot_dir/review-config.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$snapshot_file"' EXIT
+  review_runtime_snapshot_regular_file "$config_file" "$snapshot_file" 'review config' \
+    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  raw="$(cat "$snapshot_file")" || return
+  canonical="$(review_runtime_config_canonical_snapshot "$raw")" || return
+  snapshot_bytes="$(wc -c <"$snapshot_file" | tr -d ' ')" || return
+  [ "$snapshot_bytes" -eq "${#canonical}" ] || return 3
+  printf '%s\n' "$canonical"
+)
+
+review_plan_validate_config() (
+  local config_file="$1" expected_hash="$2" expected_capabilities="$3" canonical actual_hash actual_capabilities
+  [ "$#" -eq 3 ] || return 2
+  canonical="$(review_plan_snapshot_config "$config_file")" || return 3
+  actual_hash="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
+  [ "$actual_hash" = "$expected_hash" ] || return 3
+  actual_capabilities="$(jq -S -c '.capabilities' <<<"$canonical")" || return 3
+  [ "$actual_capabilities" = "$expected_capabilities" ] || return 3
+  printf '%s\n' "$canonical"
+)
+
 review_plan_build_receipt() (
-  local event_file="$1" projection projection_hash receipt_id required_capabilities canonical content_sha256
-  [ "$#" -eq 1 ] || return 2
+  local event_file="$1" config_file="$2" projection projection_hash receipt_id required_capabilities canonical content_sha256
+  [ "$#" -eq 2 ] || return 2
   projection="$(review_runtime_replay "$event_file")" || return 3
   jq -e '
     .lifecycle.complete == true and
@@ -32,6 +58,8 @@ review_plan_build_receipt() (
     all(type == "string" and test("^[a-z][a-z0-9._-]{0,63}$")) and
     . == (sort | unique)
   ' >/dev/null <<<"$required_capabilities" || return 3
+  review_plan_validate_config "$config_file" "$(jq -r '.run.config_hash' <<<"$projection")" \
+    "$required_capabilities" >/dev/null || return 3
   projection_hash="$(printf '%s' "$projection" | jq -S -c . | review_runtime_sha256)" || return
   receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$projection")|$projection_hash" |
     review_runtime_sha256)" || return
@@ -61,10 +89,11 @@ review_plan_build_receipt() (
 
 review_plan_validate_receipt() (
   local receipt='' event_file='' projection receipt_hash projection_hash expected_review_key expected_receipt_id expected_content_sha256
-  local receipt_source projection_source
-  [ "$#" -eq 2 ] || return 2
+  local config_file='' receipt_source projection_source expected_capabilities
+  [ "$#" -eq 3 ] || return 2
   receipt="$1"
   event_file="$2"
+  config_file="$3"
   receipt_source="$receipt"
 
   # Reject duplicate members before jq parses either value. A path argument is
@@ -77,6 +106,9 @@ review_plan_validate_receipt() (
   # file, and the projection is always rebuilt through review-runtime replay.
   projection="$(review_runtime_replay "$event_file")" || return 3
   projection_source="$projection"
+  expected_capabilities="$(printf '%s' "$projection_source" | review_plan_required_capabilities)" || return 3
+  review_plan_validate_config "$config_file" "$(jq -r '.run.config_hash' <<<"$projection_source")" \
+    "$expected_capabilities" >/dev/null || return 3
   receipt_hash="$(printf '%s' "$receipt_source" | jq -S -c . 2>/dev/null)" || return 3
   projection_hash="$(printf '%s' "$projection_source" | jq -S -c . 2>/dev/null | review_runtime_sha256)" || return 3
   expected_review_key="$(printf '%s|%s|%s|%s|%s' \
@@ -1176,10 +1208,10 @@ review_plan_input_identity_valid() {
 # finding, verdict, or posting authority.
 review_plan_validate_decision() {
   local decision="$1" repository="$2" pr_number="$3" base_sha="$4" head_sha="$5" config_hash="$6"
-  local predecessor_events="$7" delta_receipt="$8" worktree="$9"
+  local predecessor_events="$7" delta_receipt="$8" worktree="$9" config_file="${10}"
   local expected_review_key mode receipt_source predecessor_head inherited_finding_ids
   local receipt_capabilities expected_capabilities route route_mode route_capabilities worktree_binding
-  [ "$#" -eq 9 ] || return 2
+  [ "$#" -eq 10 ] || return 2
   review_plan_source_runtime || return
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 3
   review_runtime_json_has_unique_members "$decision" >/dev/null 2>&1 || return 3
@@ -1245,7 +1277,7 @@ review_plan_validate_decision() {
   worktree="$worktree_binding"
 
   receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || return
-  review_plan_validate_receipt "$receipt_source" "$predecessor_events" || return 3
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" || return 3
   jq -e -n \
     --argjson receipt "$receipt_source" --arg repository "$repository" --argjson pr_number "$pr_number" \
     --arg base_sha "$base_sha" --arg config_hash "$config_hash" '
@@ -1331,7 +1363,7 @@ review_plan_snapshot_receipt() (
 
 review_plan_decide() {
   local repository="$1" pr_number="$2" base_sha="$3" head_sha="$4" config_hash="$5"
-  local worktree="$6" predecessor_events="$7" delta_receipt="$8" receipt_source predecessor_repository predecessor_pr
+  local worktree="$6" predecessor_events="$7" delta_receipt="$8" config_file="$9" receipt_source predecessor_repository predecessor_pr
   local predecessor_base predecessor_head predecessor_config route route_mode route_capabilities
   local inherited_finding_ids required_capabilities worktree_binding
 
@@ -1344,6 +1376,10 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" missing_predecessor
     return
   fi
+  if [ -z "$config_file" ]; then
+    review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
+    return
+  fi
   worktree_binding="$(review_plan_worktree_binding "$worktree")" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
@@ -1353,7 +1389,7 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   }
-  review_plan_validate_receipt "$receipt_source" "$predecessor_events" || {
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   }
@@ -1410,17 +1446,17 @@ review_plan_decide() {
 }
 
 review_plan_usage() {
-  printf 'usage: %s receipt --event-file FILE\n' "${0##*/}" >&2
+  printf 'usage: %s receipt --event-file FILE --config-file FILE\n' "${0##*/}" >&2
   printf '       %s decide ...\n' "${0##*/}" >&2
 }
 
 review_plan_main_receipt() {
-  local event_file=''
+  local event_file='' config_file=''
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --event-file)
-        [ "$#" -ge 2 ] || { printf 'review-plan: missing value for --event-file\n' >&2; return 2; }
-        event_file="$2"
+      --event-file|--config-file)
+        [ "$#" -ge 2 ] || { printf 'review-plan: missing value for %s\n' "$1" >&2; return 2; }
+        if [ "$1" = '--event-file' ]; then event_file="$2"; else config_file="$2"; fi
         shift 2
         ;;
       *)
@@ -1429,16 +1465,19 @@ review_plan_main_receipt() {
         ;;
     esac
   done
-  [ -n "$event_file" ] || { printf 'review-plan: --event-file is required\n' >&2; return 2; }
-  review_plan_build_receipt "$event_file"
+  if [ -z "$event_file" ] || [ -z "$config_file" ]; then
+    printf 'review-plan: --event-file and --config-file are required\n' >&2
+    return 2
+  fi
+  review_plan_build_receipt "$event_file" "$config_file"
 }
 
 review_plan_main_decide() {
   local repository='' pr_number='' base_sha='' head_sha='' config_hash='' worktree=''
-  local predecessor_events='' delta_receipt=''
+  local predecessor_events='' delta_receipt='' config_file=''
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --repo|--pr|--base|--head|--config-hash|--repo-worktree|--predecessor-events|--delta-receipt)
+      --repo|--pr|--base|--head|--config-hash|--config-file|--repo-worktree|--predecessor-events|--delta-receipt)
         [ "$#" -ge 2 ] || { printf 'review-plan: missing value for %s\n' "$1" >&2; return 2; }
         case "$1" in
           --repo) repository="$2" ;;
@@ -1446,6 +1485,7 @@ review_plan_main_decide() {
           --base) base_sha="$2" ;;
           --head) head_sha="$2" ;;
           --config-hash) config_hash="$2" ;;
+          --config-file) config_file="$2" ;;
           --repo-worktree) worktree="$2" ;;
           --predecessor-events) predecessor_events="$2" ;;
           --delta-receipt) delta_receipt="$2" ;;
@@ -1461,7 +1501,7 @@ review_plan_main_decide() {
     return 2
   fi
   review_plan_decide "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$worktree" \
-    "$predecessor_events" "$delta_receipt"
+    "$predecessor_events" "$delta_receipt" "$config_file"
 }
 
 review_plan_main() {

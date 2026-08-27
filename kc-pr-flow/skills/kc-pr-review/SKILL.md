@@ -142,15 +142,24 @@ PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
 PLAN_INPUT_WORKTREE="$REPO_WORKTREE"
 PLAN_INPUT_PREDECESSOR_EVENTS="${PREDECESSOR_EVENTS-}"
 PLAN_INPUT_DELTA_RECEIPT="${DELTA_RECEIPT-}"
+PLAN_INPUT_CONFIG_FILE=''
+if [ -n "${REVIEW_CONFIG_FILE-}" ]; then
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-runtime.sh" || return 1
+  PLAN_CONFIG_SNAPSHOT_DIR="$(review_runtime_private_snapshot_dir)" || return 1
+  PLAN_INPUT_CONFIG_FILE="$PLAN_CONFIG_SNAPSHOT_DIR/review-config.json"
+  review_runtime_snapshot_regular_file "$REVIEW_CONFIG_FILE" "$PLAN_INPUT_CONFIG_FILE" \
+    'review config' "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || PLAN_INPUT_CONFIG_FILE=''
+fi
 readonly PLAN_INPUT_REPO PLAN_INPUT_PR_NUMBER PLAN_INPUT_BASE_SHA PLAN_INPUT_HEAD_SHA
 readonly PLAN_INPUT_CONFIG_HASH PLAN_INPUT_WORKTREE PLAN_INPUT_PREDECESSOR_EVENTS
-readonly PLAN_INPUT_DELTA_RECEIPT
+readonly PLAN_INPUT_DELTA_RECEIPT PLAN_INPUT_CONFIG_FILE
 
 review_plan_decide_fresh() {
   bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
     --repo "$PLAN_INPUT_REPO" --pr "$PLAN_INPUT_PR_NUMBER" \
     --base "$PLAN_INPUT_BASE_SHA" --head "$PLAN_INPUT_HEAD_SHA" \
-    --config-hash "$PLAN_INPUT_CONFIG_HASH" --repo-worktree "$PLAN_INPUT_WORKTREE" \
+    --config-hash "$PLAN_INPUT_CONFIG_HASH" --config-file "$PLAN_INPUT_CONFIG_FILE" \
+    --repo-worktree "$PLAN_INPUT_WORKTREE" \
     --predecessor-events "$PLAN_INPUT_PREDECESSOR_EVENTS" \
     --delta-receipt "$PLAN_INPUT_DELTA_RECEIPT"
 }
@@ -163,7 +172,7 @@ review_plan_canonical_for_inputs() {
   review_plan_validate_decision "$raw_candidate" "$PLAN_INPUT_REPO" \
     "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
     "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_PREDECESSOR_EVENTS" \
-    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" || return 1
+    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" "$PLAN_INPUT_CONFIG_FILE" || return 1
   candidate="$(printf '%s' "$raw_candidate" | jq -S -c -e \
     --arg repository "$PLAN_INPUT_REPO" \
     --argjson pr_number "$PLAN_INPUT_PR_NUMBER" \

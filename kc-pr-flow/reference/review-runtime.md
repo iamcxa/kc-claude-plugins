@@ -129,7 +129,7 @@ The canonical configuration schema is `kc-pr-flow.review-config/v1`. It contains
 | `cross_model` | boolean | `false` |
 | `noise_filter` | boolean | `false` |
 
-`config-hash` serializes the normalized object with `jq -S -c` and hashes those compact bytes without a trailing newline. Prompts, diffs, rendered review content, comments, and provider output are not configuration inputs.
+`config-hash` serializes the normalized object with `jq -S -c` and hashes those compact bytes without a trailing newline. Prompts, diffs, rendered review content, comments, and provider output are not configuration inputs. The delta receipt boundary consumes one safe canonical config snapshot, recomputes this hash, and requires its sorted unique capabilities to equal the unique replayed lane capabilities before producing, validating, or trusting a predecessor; invalid or mismatched input falls back to `initial`.
 
 Every execution receives a fresh `run-*` ID. A successor may reference a predecessor and one of `manual_rerun`, `config_change`, `head_appended`, `head_rewritten`, or `recovery_fork`; the relationship does not change either run's immutable exact-head identity.
 

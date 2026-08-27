@@ -52,6 +52,11 @@ No Phase 1 surface is added, removed, relocated, or given a new authority owner.
    `timing-mark` workflow boundaries.
 6. Default-off tests prove **planner-state parity** only: mode, serialized plan, ceiling, and reason.
    They do not claim byte-identical draft, options, confirmation, or posting behavior.
+7. A predecessor is complete only when a safe, closed canonical
+   `kc-pr-flow.review-config/v1` snapshot recomputes to its `config_hash` and its capability set
+   exactly equals the unique replayed lane capability set. Receipt production, receipt validation,
+   and current decision validation all require the same snapshot; missing, malformed, unsafe,
+   duplicate-key, noncanonical, hash-mismatched, or capability-mismatched input selects `initial`.
 
 ### 0.3 Non-goals, falsifiers, and rollback
 
@@ -61,7 +66,8 @@ claim the four-minute target. It also does not authorize actual control/treatmen
 
 Any of the following falsifies the revised Phase 1 contract: a same-file unrelated or
 security-shaped hunk selects `resolve`; a failed, unavailable, or uncertain predecessor issues a
-trusted receipt; `APPROVE` survives a `COMMENT` ceiling through any confirmation/posting path; a Git
+trusted receipt; a six-capability configuration with one replayed succeeded lane issues a receipt
+or selects non-`initial`; `APPROVE` survives a `COMMENT` ceiling through any confirmation/posting path; a Git
 operation runs without a fresh worktree gate; a synthetic corpus emits `promote`; or a planner-only
 test is described as end-to-end byte parity.
 
@@ -253,11 +259,11 @@ the verified lineage and explains every decision with machine-readable reason co
 ```text
 bash kc-pr-flow/scripts/review-plan.sh decide \
   --repo OWNER/REPO --pr N --base BASE_SHA --head HEAD_SHA \
-  --config-hash HASH --repo-worktree DIR \
+  --config-hash HASH --config-file CONFIG_JSON --repo-worktree DIR \
   [--predecessor-events FILE] [--delta-receipt FILE]
 ```
 
-Receipt and event-file inputs are safe-snapshotted using the existing
+Receipt, event-file, and canonical configuration inputs are safe-snapshotted using the existing
 `review-runtime-safe-io.py` regular-file boundary. It does not validate directories. A dedicated
 worktree gate rejects non-directories and any symlinked path before every local Git command. The
 script accepts no PR body, diff prose, agent prompt, event choice, or caller-authored clean/secure

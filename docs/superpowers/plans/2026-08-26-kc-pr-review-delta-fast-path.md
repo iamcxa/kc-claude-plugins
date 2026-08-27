@@ -69,6 +69,26 @@ unavailable, or uncertain predecessor is trusted; `APPROVE` crosses a `COMMENT` 
 operation lacks an immediately preceding worktree validation; the synthetic corpus promotes; or a
 four-field router trace is called byte-identical end-to-end behavior.
 
+## Captain-approved Task 18 amendment (2026-08-28)
+
+The receipt boundary now also binds completeness to one immutable canonical
+`kc-pr-flow.review-config/v1` snapshot. This is an interface change within the existing
+`review-plan.sh` / receipt / skill seam, not a new runtime, CI, or posting surface.
+
+- `receipt --event-file FILE --config-file FILE` and `decide ... --config-file FILE` both require
+  the safe canonical snapshot. The producer, receipt validator, and decision validator recompute
+  its canonical hash and require it to equal the run/config identity.
+- Its sorted, unique capability set must exactly equal the unique replayed lane capabilities.
+  Missing, unsafe, malformed, duplicate-key, oversized, noncanonical, hash-mismatched, or
+  capability-mismatched snapshots cannot mint or trust a receipt and select `initial`.
+- The skill snapshots the one config file with its other immutable inputs and supplies that exact
+  snapshot to initial routing and every authority-boundary rerun. A complete matching predecessor
+  preserves its existing `delta` or `resolve` decision.
+
+This amendment is falsified if a six-capability configuration with one succeeded replayed lane
+issues a receipt or selects a non-`initial` decision. The fast path remains default-off; no network,
+model, confirmation, posting, rollout, or promotion authority changes.
+
 ## File map
 
 | File | Responsibility |
@@ -1418,6 +1438,35 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
   repair. A clean fresh review is necessary but not sufficient: enabling the flag or any promotion
   still requires a separate Captain decision plus the separately authorized actual evidence
   contract.
+
+### Task 18: Bind receipt completeness to canonical review configuration
+
+**Files:**
+- Modify: `docs/superpowers/plans/2026-08-26-kc-pr-review-delta-fast-path.md`
+- Modify: `docs/superpowers/specs/2026-08-26-kc-pr-review-latency-design.md`
+- Modify: `kc-pr-flow/reference/review-runtime.md`
+- Modify: `kc-pr-flow/scripts/review-plan.sh`
+- Modify: `kc-pr-flow/scripts/review-plan.test.sh`
+- Modify: `kc-pr-flow/skills/kc-pr-review/SKILL.md`
+
+**Interfaces:**
+- Consumes: one safe canonical `kc-pr-flow.review-config/v1` snapshot, the exact run
+  `config_hash`, and the replay-derived unique lane capability set.
+- Produces: a receipt only when the snapshot canonically hashes to the run identity and its
+  capability set exactly equals replay; a missing or invalid snapshot leaves routing at `initial`.
+
+- [ ] Write the six-configured/one-replayed-lane RED first. Verify producer rejection, receipt
+  validator rejection, and `decide` `initial`, then cover full matching lanes, wrong member,
+  hash mismatch, missing/symlink/FIFO/oversize/duplicate-key/extra-key/noncanonical snapshots,
+  and raw duplicate members before `jq` canonicalization.
+- [ ] Reuse the runtime configuration canonicalization rule; do not accept a caller-supplied hash
+  or capability list. Add the safe config snapshot to receipt and decision CLI parsing and to each
+  internal receipt/decision validator.
+- [ ] Make the skill preserve the same immutable config snapshot for its first route and every
+  authority-boundary rerun. Preserve default-off and missing-predecessor `initial` behavior.
+- [ ] Run focused receipt, trust-boundary, mode-router, and skill-wiring cases, then the full plan
+  suite, Bash 5/macOS Bash 3.2 syntax, ShellCheck v0.11 and v0.9 when available, JSON validation,
+  and `git diff --check`.
 
 ## Deferred promotion-gated phases
 
