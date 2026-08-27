@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-import fnmatch
 from pathlib import Path
+import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,8 +53,30 @@ def selected_workflows(path: str, routes: dict[str, list[str]]) -> set[str]:
     return {
         name
         for name, patterns in routes.items()
-        if any(fnmatch.fnmatchcase(path, pattern) for pattern in patterns)
+        if any(github_path_matches(path, pattern) for pattern in patterns)
     }
+
+
+def github_path_matches(path: str, pattern: str) -> bool:
+    """Match the slash-sensitive subset of GitHub Actions path globs we use."""
+    fragments: list[str] = []
+    index = 0
+    while index < len(pattern):
+        character = pattern[index]
+        if character == "*":
+            if index + 1 < len(pattern) and pattern[index + 1] == "*":
+                fragments.append(".*")
+                index += 2
+            else:
+                fragments.append("[^/]*")
+                index += 1
+        elif character == "?":
+            fragments.append("[^/]")
+            index += 1
+        else:
+            fragments.append(re.escape(character))
+            index += 1
+    return re.fullmatch("".join(fragments), path) is not None
 
 
 PHASE1_PATH_OWNERS = {
@@ -75,9 +97,9 @@ PHASE1_SHARED_DEPENDENCY_ALLOWLIST = {
 
 
 def phase1_path_class(path: str) -> str | None:
-    if fnmatch.fnmatchcase(path, "kc-pr-flow/scripts/review-plan*.sh"):
+    if github_path_matches(path, "kc-pr-flow/scripts/review-plan*.sh"):
         return "review-plan script"
-    if fnmatch.fnmatchcase(path, "kc-pr-flow/scripts/review-latency-benchmark*.sh"):
+    if github_path_matches(path, "kc-pr-flow/scripts/review-latency-benchmark*.sh"):
         return "review-latency script"
     if path.startswith("kc-pr-flow/test/fixtures/review-plan/"):
         return "review-plan fixture"
@@ -128,14 +150,32 @@ def validate_phase1_static_ownership() -> None:
     push_paths = event_paths(text, "push")
     require(pull_paths == push_paths, "static contracts: pull and push routing differ")
     require(
-        "kc-pr-flow/test/fixtures/review-plan/*" in pull_paths,
+        "kc-pr-flow/test/fixtures/review-plan/**" in pull_paths,
         "static contracts: review-plan fixtures are not routed",
     )
     for path in PHASE1_PATH_OWNERS:
         require(
-            any(fnmatch.fnmatchcase(path, pattern) for pattern in pull_paths),
+            any(github_path_matches(path, pattern) for pattern in pull_paths),
             f"{path}: missing static-contract owner",
         )
+
+
+def validate_github_path_glob_mutations() -> None:
+    nested_fixture = "kc-pr-flow/test/fixtures/review-plan/nested/case.json"
+    fixture_pattern = "kc-pr-flow/test/fixtures/review-plan/*"
+    recursive_fixture_pattern = "kc-pr-flow/test/fixtures/review-plan/**"
+    require(
+        not github_path_matches(nested_fixture, fixture_pattern),
+        "GitHub Actions * must not cross a path separator",
+    )
+    require(
+        github_path_matches(nested_fixture, recursive_fixture_pattern),
+        "GitHub Actions ** must include a nested fixture",
+    )
+    require(
+        not github_path_matches("kc-pr-flow/test/fixtures/review-post/reviews.json", recursive_fixture_pattern),
+        "review-plan fixture trigger must not select unrelated fixtures",
+    )
 
 
 texts = {name: path.read_text(encoding="utf-8") for name, path in WORKFLOWS.items()}
@@ -184,10 +224,12 @@ for path, expected in expected_routes.items():
 
 validate_phase1_inventory(routes)
 validate_phase1_static_ownership()
+validate_github_path_glob_mutations()
 
 for unknown_phase1_path in (
     "kc-pr-flow/scripts/review-plan-helper.sh",
     "kc-pr-flow/test/fixtures/review-plan/unclassified-case.json",
+    "kc-pr-flow/test/fixtures/review-plan/nested/unclassified-case.json",
 ):
     assert_phase1_path_rejected(unknown_phase1_path)
 
