@@ -49,8 +49,11 @@ paused, because an install script must not dispatch an unattended review.
 | `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.state.json` | **derived**: seen PRs, job ids, open targets, last poll |
 | `~/.claude/audit/pr-reviewer-listen.log` | dispatch log |
 
-Config and state are split so state can be deleted without losing intent, and so
-config can be kept in a dotfiles repo. Neither lives inside this repository, so
+Config and state are split so config can be kept in a dotfiles repo and state can be
+rebuilt. Delete state only when nothing is in flight: a completed review is
+recoverable from GitHub, but a review still running is only known here, so wiping
+that record can start a second one. A rebuilt config comes back paused, like a fresh
+install. Neither lives inside this repository, so
 nothing about your organizations, repositories, or branches can be committed here
 by accident.
 

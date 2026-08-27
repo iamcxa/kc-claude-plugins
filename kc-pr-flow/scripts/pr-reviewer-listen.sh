@@ -32,7 +32,7 @@ LOG="${PR_LISTEN_LOG:-$HOME/.claude/audit/pr-reviewer-listen.log}"
 
 MAX_DISPATCH_PER_TICK=1
 MAX_ATTEMPTS=3
-LOCK_STALE_SECONDS=600
+LOCK_CLAIM_GRACE_SECONDS=10
 DISPATCH_STALE_SECONDS=300
 
 log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
@@ -41,7 +41,7 @@ log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
 
 init_files() {
   mkdir -p "$CFG_DIR" "$(dirname "$LOG")"
-  [[ -s "$CONFIG" ]] || printf '%s\n' '{"listening":true,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
+  [[ -s "$CONFIG" ]] || printf '%s\n' '{"listening":false,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
   [[ -s "$STATE"  ]] || printf '%s\n' '{"seen":{},"open":[],"last_poll":null,"last_error":null}' >"$STATE"
 }
 
@@ -71,6 +71,12 @@ lock_acquire() { # 0 = acquired, 1 = someone else holds it
     # owner's lock. Only a process that no longer exists gets reaped.
     if [[ -n "$owner" ]] && kill -0 "$owner" 2>/dev/null; then
       return 1
+    fi
+    # No pid yet means the owner is between mkdir and its own first write.
+    if [[ -z "$owner" ]]; then
+      local age
+      age=$(( $(date -u +%s) - $(stat -f %m "$LOCKDIR" 2>/dev/null || echo 0) ))
+      (( age < LOCK_CLAIM_GRACE_SECONDS )) && return 1
     fi
     rm -rf "$LOCKDIR" 2>/dev/null && log "reaped a lock whose owner (${owner:-unknown}) is gone"
   fi
@@ -221,8 +227,13 @@ check_completions() {
         dispatched=$(st_get --arg k "$key" '.seen[$k].head_sha // empty')
         current=$("$GH" pr view "${key#*#}" --repo "${key%#*}" --json headRefOid --jq .headRefOid 2>>"$LOG")
         if [[ -n "$dispatched" && -n "$current" && "$dispatched" != "$current" ]]; then
-          st_edit --arg k "$key" 'del(.seen[$k])'
-          log "head moved during $key; deferring to GitHub's record"
+          # Dropping the record here would dispatch again whenever the finished
+          # session posted nothing, so this holds for a person instead.
+          st_edit --arg k "$key" --arg e "the head moved while this review ran — confirm which commit it covered" \
+            '.seen[$k] += {status:"unconfirmed", error:$e, ts:(now|todate)}'
+          notify "Review needs a look" "$key — the head moved while it ran" \
+                 "$(st_get --arg k "$key" '.seen[$k].url // empty')"
+          log "head moved during $key; holding as unconfirmed"
         fi ;;
       error)
         reason=$(tr '\n' ' ' <"$errf" | cut -c1-160)
@@ -435,7 +446,8 @@ case "${1:-}" in
   toggle-listening) lock_wait; cfg_edit '.listening = (.listening | not)'; exit 0 ;;
   toggle-repo)   lock_wait; cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
   toggle-notify) lock_wait; cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
-  forget)        lock_wait; st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
+  forget)        lock_wait || { log "retry not applied: a tick holds the lock — click again"; exit 0; }
+                 st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;
   toggle-login)  login_toggle; exit 0 ;;
