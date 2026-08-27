@@ -4,21 +4,14 @@ PR: __PR_URL__
 Repo: __REPO__
 Head branch: __BRANCH__ (already checked out in this workspace)
 
-Steps:
+Run the review skill against it: `/kc-pr-review __PR_URL__`
 
-1. Install the review toolkit, then confirm the skill is loadable:
-
-   claude plugin marketplace add iamcxa/kc-claude-plugins
-   claude plugin install kc-pr-flow@kc-claude-plugins
-
-2. Run the review skill against this PR: `/kc-pr-review __PR_URL__`
-
-   If the skill is not available after step 1, say so explicitly at the top of
-   your final message, then fall back to a manual differential review: read the
-   diff, read the repository AGENTS.md and CLAUDE.md for project conventions,
-   and report findings grouped by severity with file and symbol references.
-
-3. Post the review to the PR as inline review comments plus a summary.
+If that skill is not available to you, do not try to install it — say so on the
+first line of your final message and fall back to a manual differential review:
+read the diff, read the repository AGENTS.md and CLAUDE.md for project
+conventions, and report findings grouped by severity with file and symbol
+references. A missing skill is a finding about the environment, not something to
+work around silently.
 
 Hard constraints:
 

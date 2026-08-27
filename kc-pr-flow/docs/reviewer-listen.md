@@ -86,26 +86,15 @@ is the session-scoped deep link, so a click lands on the review itself.
 Two facts shape its credentials:
 
 - **A token is scoped to one organization** and the CLI takes no organization argument. The keychain token from `conductor auth login` serves its own organization; a repo in another organization needs `scripts/backends/conductor-token.sh <github-org>`, which reads the token from a hidden prompt, verifies it before writing, and stores it 0600 at `orgs/<org>.env`. Absent a file, the keychain token stands — so the common single-organization case needs no file at all.
-- **A cloud sandbox has none of your local plugins.** For the dispatched session to run the review skill rather than improvise, the plugin has to be installed before the agent starts — that means the repository's Conductor setup script, guarded on `CONDUCTOR_IS_LOCAL` so the local path is unaffected:
-
-  ```bash
-  if [ "${CONDUCTOR_IS_LOCAL:-1}" = "0" ]; then
-    claude plugin marketplace add iamcxa/kc-claude-plugins
-    claude plugin install kc-pr-flow@kc-claude-plugins
-  else
-    # whatever preflight only makes sense on a developer's Mac — copied env
-    # files, certificates, anything a cloud checkout cannot have
-  fi
-  # dependency installs stay shared: a cloud session is not necessarily a review
-  ```
-
-  Branch rather than exit: a cloud workspace is not only ever used for reviews, so
-  skipping the dependency installs would break every other cloud session on that
-  repository. What the guard must skip is the preflight a cloud checkout cannot
-  satisfy — a hard check for a copied `.env` file will otherwise fail the whole
-  setup script.
-
-  Installing from inside the running session does *not* work: it lands in the CLI, not in that session's skill registry.
+- **The review skill has to be present before the session starts.** Installing from
+  inside a running session does *not* work — it lands in the CLI, not in that
+  session's skill registry. Whatever provisions the cloud environment must carry the
+  plugin already. Verified on this fleet: a freshly created cloud workspace reports
+  `kc-pr-flow@kc-claude-plugins` installed at user scope and lists
+  `kc-pr-flow:kc-pr-review` among its available skills, with the repository's
+  dependencies already built. The dispatch prompt therefore installs nothing; if the
+  skill is missing it says so on its first line, so a broken environment surfaces as
+  a finding instead of a quietly improvised review.
 
 ## Prerequisites
 
