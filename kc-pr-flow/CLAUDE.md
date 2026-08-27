@@ -71,12 +71,17 @@ bash scripts/review-latency-benchmark.test.sh
 
 `review-latency-benchmark.sh` is the Phase 1 promotion authority for evidence,
 not for review judgment. It safe-snapshots the immutable sanitized corpus,
-recomputes exact-head identity, rejects caller-derived verdicts and totals, and
-evaluates Q1 identity through Q6 latency in fixed order. Q1-Q5 cover every
-pair; only `delta` and `resolve` receipts produced by `review-runtime` enter the
-240-second latency gate. An `initial` fallback must carry `timing:null` and can
-never improve the latency result. The scorer has no model, network,
-confirmation, or posting authority.
+requires each of the fixed nine case classes exactly once, and evaluates Q1
+identity through Q6 latency in fixed order. Q1 binds the exact head to a closed
+predecessor projection, full delta receipt, ancestry claim, review range, and
+inherited findings. Q4 recomputes `ReviewCandidate/v2` quote, evidence,
+candidate, finding, and posted-count bindings. Behavior decisions and posting
+receipts are recomputed and checked against the repository-pinned per-class
+provenance map, so caller self-resealing is not evidence. Q1-Q5 cover every
+pair; only `delta` and `resolve` receipts enter the 240-second latency gate,
+where the five runtime phase-floor durations must trail the total by 0–4 ms.
+An `initial` fallback must carry `timing:null` and can never improve the latency
+result. The scorer has no model, network, confirmation, or posting authority.
 
 Phase 2 shared inventory, Phase 3 typed collation, Phase 4 recipe extraction,
 Phase 5 specialist routing, and Phase 6 tails remain unimplemented and

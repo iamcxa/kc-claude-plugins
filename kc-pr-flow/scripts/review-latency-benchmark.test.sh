@@ -127,6 +127,35 @@ mutate_case new-material-dispute '.treatment.event_evidence.effective.event="APP
 assert_eq "less conservative event fails Q5 first" behavior_parity "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.timing.durations_ms.review_to_confirmation_ready=240001' "$mutated"
 assert_eq "240001 milliseconds fails Q6 first" latency "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.timing.durations_ms.review_to_confirmation_ready=1' "$mutated"
+assert_eq "falsely tiny caller total fails Q6 first" latency "$(first_failed "$mutated")"
+mutate_case known-fix-only '(.treatment.timing.durations_ms |=
+  (.identity_and_plan=1 | .inventory=1 | .required_lanes_critical_path=1 |
+   .targeted_verification_critical_path=1 | .collation_and_draft=1))' "$mutated"
+assert_eq "inconsistent producer arithmetic fails Q6 first" latency "$(first_failed "$mutated")"
+
+extra_finding="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+mutate_case known-fix-only ".treatment.finding_ids += [\"$extra_finding\"] | .treatment.finding_ids |= sort" "$mutated"
+assert_eq "unaccounted treatment finding fails Q4 first" precision "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.adjudicated_posted=0' "$mutated"
+assert_eq "posted count mismatch fails Q4 first" precision "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.validated_findings[0].candidate.evidence.quote_verified=false' "$mutated"
+assert_eq "unquoted actionable finding fails Q4 first" precision "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.validated_findings[0].candidate.evidence.quoted_line_sha256="invalid"' "$mutated"
+assert_eq "invalid actionable evidence fails Q4 first" precision "$(first_failed "$mutated")"
+
+mutate_case known-fix-only '.treatment.plan.inherited_finding_ids=[]' "$mutated"
+assert_eq "empty inherited must-fix set fails Q1 first" identity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.plan.review_range.from_exclusive=.exact_head.head_sha' "$mutated"
+assert_eq "range beginning at current head fails Q1 first" identity "$(first_failed "$mutated")"
+
+sed -n '1p' "$FIXTURE" >"$TEST_ROOT/subset.jsonl"
+assert_eq "favorable subset cannot promote" do_not_promote \
+  "$(score_file "$TEST_ROOT/subset.jsonl" | jq -r '.verdict')"
+assert_eq "favorable subset fails corpus identity first" identity \
+  "$(first_failed "$TEST_ROOT/subset.jsonl")"
+jq -c 'select(.pair_id != "security-finding")' "$FIXTURE" >"$TEST_ROOT/omitted-class.jsonl"
+assert_eq "omitted required class cannot promote" identity "$(first_failed "$TEST_ROOT/omitted-class.jsonl")"
 
 mutate_case unavailable-required-lane '.treatment.plan.event_ceiling="COMMENT" | .treatment.event_evidence.effective.event="COMMENT" | .treatment.event_evidence.effective.coverage_gap_refs=.treatment.capability_gap_refs' "$mutated"
 assert_eq "gaps capped to COMMENT pass Q2" true "$(gate_value "$mutated" required_coverage)"
@@ -198,6 +227,15 @@ printf '%s\n' "${first_line/\"pr_number\":1693/\"pr_number\":1693.0}" >"$TEST_RO
 expect_rejected "floating-point numbers are rejected" "$TEST_ROOT/unsafe-float.jsonl"
 mutate_case known-fix-only '.treatment.event_evidence.effective.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" | .treatment.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
 assert_eq "self-resealed treatment behavior cannot promote" behavior_parity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.control.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
+  .treatment.behavior_hashes.event_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
+  .treatment.event_evidence.effective.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "both-arm self-reseal cannot promote" behavior_parity "$(first_failed "$mutated")"
+mutate_case known-fix-only '.treatment.behavior_sources.posted.payload.finding_ids=[] |
+  .treatment.behavior_sources.posted.payload_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
+  .treatment.behavior_sources.posted.idempotency_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" |
+  .treatment.event_evidence.posted.source_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
+assert_eq "arbitrary posted source cannot promote" behavior_parity "$(first_failed "$mutated")"
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
