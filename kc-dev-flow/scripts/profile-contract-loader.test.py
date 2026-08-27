@@ -58,6 +58,7 @@ def write_work_item(
     sprint: str | None = "kc-dev-flow/S2",
     sprint_readiness: str | None = "ready",
     poc_fields: dict[str, str] | None = None,
+    recovery_fields: dict[str, str] | None = None,
 ) -> Path:
     if route is None:
         route = [logical for logical, _next in MODULE.ROUTES[profile].values()]
@@ -90,6 +91,10 @@ def write_work_item(
     ]
     if poc_fields is not None:
         receipt.extend(f"  {field}: {value}" for field, value in poc_fields.items())
+    if recovery_fields is not None:
+        receipt.extend(
+            f"  {field}: {value}" for field, value in recovery_fields.items()
+        )
     receipt.extend(
         [
             "```",
@@ -125,6 +130,153 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         },
     }
     require(MODULE.ROUTES == expected_routes, "route topology drifted")
+
+    recovery_fields = {
+        "recovery_failure": "The focused fixture still selects shape",
+        "recovery_falsifier": "python3 focused-recovery.test.py",
+        "recovery_rollback": "revert the recovery commit",
+        "review_risks": "[none]",
+    }
+    recovery_item = write_work_item(
+        root,
+        "production",
+        "ideation",
+        "eligible-production-recovery",
+        route=["build", "verify"],
+        recovery_fields=recovery_fields,
+    )
+    recovery = MODULE.load_contracts(root, recovery_item)
+    require(
+        recovery["skip_to_workflow_stage"] == "implementation"
+        and recovery["loaded"] == [],
+        f"eligible recovery did not skip ideation without a contract: {recovery}",
+    )
+    extra_recovery_fields = dict(recovery_fields)
+    extra_recovery_fields["recovery_scope"] = "duplicate scope identity"
+    extra_recovery_item = write_work_item(
+        root,
+        "production",
+        "ideation",
+        "extra-production-recovery-field",
+        route=["build", "verify"],
+        recovery_fields=extra_recovery_fields,
+    )
+    try:
+        MODULE.load_contracts(root, extra_recovery_item)
+    except MODULE.ContractError:
+        pass
+    else:
+        raise SystemExit(
+            "profile contract loader test: recovery accepted an extra recovery field"
+        )
+
+    def expect_recovery_refusal(
+        name: str,
+        *,
+        profile: str = "production",
+        workflow_stage: str = "ideation",
+        schema: str = "kc-dev-flow-work-profile/v3",
+        fields: dict[str, str] | None = None,
+    ) -> None:
+        item = write_work_item(
+            root,
+            profile,
+            workflow_stage,
+            name,
+            schema=schema,
+            route=["build", "verify"],
+            recovery_fields=recovery_fields if fields is None else fields,
+        )
+        try:
+            MODULE.load_contracts(root, item)
+        except MODULE.ContractError:
+            return
+        raise SystemExit(f"profile contract loader test: accepted {name}")
+
+    missing_failure = dict(recovery_fields)
+    del missing_failure["recovery_failure"]
+    placeholder_falsifier = dict(recovery_fields)
+    placeholder_falsifier["recovery_falsifier"] = "<command>"
+    empty_risks = dict(recovery_fields)
+    empty_risks["review_risks"] = "[]"
+    unknown_risk = dict(recovery_fields)
+    unknown_risk["review_risks"] = "[unknown]"
+    mixed_none = dict(recovery_fields)
+    mixed_none["review_risks"] = "[none, behavior]"
+    for refusal_name, refusal_fields in (
+        ("missing-recovery-failure", missing_failure),
+        ("placeholder-recovery-falsifier", placeholder_falsifier),
+        ("empty-review-risks", empty_risks),
+        ("unknown-review-risk", unknown_risk),
+        ("mixed-none-review-risk", mixed_none),
+    ):
+        expect_recovery_refusal(refusal_name, fields=refusal_fields)
+    for field in MODULE.RECOVERY_FIELDS:
+        for structural in ("[]", "{}", "|"):
+            structural_fields = dict(recovery_fields)
+            structural_fields[field] = structural
+            expect_recovery_refusal(
+                f"structural-{field}-{ord(structural[0])}", fields=structural_fields
+            )
+    expect_recovery_refusal(
+        "v2-production-recovery", schema="kc-dev-flow-work-profile/v2"
+    )
+    expect_recovery_refusal(
+        "pilot-recovery", profile="pilot-product-slice"
+    )
+    expect_recovery_refusal(
+        "unsupported-recovery-stage", workflow_stage="backlog"
+    )
+
+    first_recovery_sha = recovery["work_item_sha256"]
+    recovery_item.write_text(
+        recovery_item.read_text(encoding="utf-8") + "Changed premise.\n",
+        encoding="utf-8",
+    )
+    changed_recovery = MODULE.load_contracts(root, recovery_item)
+    require(
+        changed_recovery["work_item_sha256"] != first_recovery_sha,
+        "changed recovery premise did not invalidate the prior loader hash",
+    )
+
+    for stage, logical, next_stage in (
+        ("implementation", "build", "validation"),
+        ("validation", "verify", "done"),
+    ):
+        stage_fields = dict(recovery_fields)
+        stage_fields["review_risks"] = "[behavior]"
+        stage_item = write_work_item(
+            root,
+            "production",
+            stage,
+            f"recovery-{stage}",
+            route=["build", "verify"],
+            recovery_fields=stage_fields,
+        )
+        loaded_recovery = MODULE.load_contracts(root, stage_item)
+        require(
+            loaded_recovery["logical_stage"] == logical
+            and loaded_recovery["next_workflow_stage"] == next_stage
+            and loaded_recovery["review_risks"] == ["behavior"],
+            f"recovery did not load {stage} normally: {loaded_recovery}",
+        )
+        if stage == "implementation":
+            require(
+                loaded_recovery["implementation_exit_observation_declared"] is True,
+                "named recovery risk did not declare implementation observation",
+            )
+    require(
+        recovery["review_risks"] == ["none"],
+        f"risk-free recovery did not preserve the sole none marker: {recovery}",
+    )
+    none_build = write_work_item(
+        root, "production", "implementation", "none-risk-recovery-build",
+        route=["build", "verify"], recovery_fields=recovery_fields,
+    )
+    require(
+        MODULE.load_contracts(root, none_build)["implementation_exit_observation_declared"] is False,
+        "risk-free recovery build declared an implementation observation",
+    )
 
     scheduling_refusals = [
         (
@@ -216,6 +368,11 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
                 and document["next_workflow_stage"] == next_stage,
                 f"wrong route result: {document}",
             )
+            if logical_stage == "build":
+                require(
+                    document["implementation_exit_observation_declared"] is True,
+                    f"full {profile} build omitted implementation observation",
+                )
             require(
                 document["work_item"] == work_item.resolve().as_posix()
                 and document["receipt_schema"] == "kc-dev-flow-work-profile/v3",
@@ -1014,15 +1171,26 @@ def seed_split_root_workflow(root: Path) -> tuple[Path, Path]:
 
 
 def sd_new_entity(
-    spacedock: Path, repo: Path, workflow: Path, slug: str, profile: str, route: list[str]
+    spacedock: Path,
+    repo: Path,
+    workflow: Path,
+    slug: str,
+    profile: str,
+    route: list[str],
+    recovery_fields: dict[str, str] | None = None,
 ) -> None:
+    schema = "kc-dev-flow-work-profile/v3" if recovery_fields else "kc-dev-flow-work-profile/v2"
+    recovery_lines = "".join(
+        f"  {field}: {value}\n" for field, value in (recovery_fields or {}).items()
+    )
     body = (
         "---\nstatus: backlog\nsprint: kc-dev-flow/S2\n"
         "sprint-readiness: ready\n---\n\n"
         f"# {slug}\n\n## Work profile receipt\n\n```yaml\nwork_profile:\n"
-        "  schema: kc-dev-flow-work-profile/v2\n"
+        f"  schema: {schema}\n"
         f"  selected: {profile}\n"
-        f"  route: [{', '.join(route)}]\n```\n"
+        f"  route: [{', '.join(route)}]\n"
+        f"{recovery_lines}```\n"
     )
     result = subprocess.run(
         [
@@ -1154,6 +1322,56 @@ else:
             "done" in sd_finalize.stdout and "verdict passed" in sd_finalize.stdout,
             f"pilot did not terminalize via merge guard: {sd_finalize.stdout}",
         )
+
+        live_recovery_fields = {
+            "recovery_failure": "the route fixture still selects shape",
+            "recovery_falsifier": "python3 focused-recovery.test.py",
+            "recovery_rollback": "revert the recovery fixture commit",
+            "review_risks": "[none]",
+        }
+        sd_new_entity(
+            spacedock_binary,
+            route_repo,
+            route_workflow,
+            "recovery-item",
+            "production",
+            ["build", "verify"],
+            live_recovery_fields,
+        )
+        recovery_target_backlog = sd_gate_consume(
+            spacedock_binary,
+            route_repo,
+            route_workflow,
+            "recovery-item",
+            route_artifact,
+            "backlog",
+        )
+        require(
+            recovery_target_backlog == "ideation",
+            f"recovery backlog gate target drifted: {recovery_target_backlog}",
+        )
+        live_contracts = route_repo / "contracts"
+        live_contracts.mkdir()
+        write_fixture(live_contracts)
+        live_recovery_item = (
+            route_workflow / ".spacedock-state" / "recovery-item.md"
+        )
+        ideation_result = MODULE.load_contracts(live_contracts, live_recovery_item)
+        require(
+            ideation_result["skip_to_workflow_stage"] == "implementation"
+            and ideation_result["loaded"] == [],
+            f"live recovery did not emit an empty ideation skip: {ideation_result}",
+        )
+        require(
+            not (route_workflow / ".spacedock-state" / "recovery-item" / "review" / "ideation").exists(),
+            "recovery created an ideation review artifact",
+        )
+        sd_set(spacedock_binary, route_repo, route_workflow, "recovery-item", "status=implementation")
+        live_build = MODULE.load_contracts(live_contracts, live_recovery_item)
+        require(live_build["logical_stage"] == "build", f"live recovery did not load build: {live_build}")
+        sd_set(spacedock_binary, route_repo, route_workflow, "recovery-item", "status=validation")
+        live_verify = MODULE.load_contracts(live_contracts, live_recovery_item)
+        require(live_verify["logical_stage"] == "verify", f"live recovery did not load verify: {live_verify}")
 
         # Production: the release-authorization residual. No graph state
         # named `release` exists; the two rulings ("verified" / "may be

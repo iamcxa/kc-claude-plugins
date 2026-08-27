@@ -35,9 +35,10 @@ Residual: <material unproved limit or none>
   release surfaces.
 
 Measure diff coverage only when it changes confidence in owned behavior. Run an
-adversarial probe only for a claimed guard. Use a specialist or complementary
-model only when the selected risk calls for it; Science Officer remains
-risk-triggered and advisory.
+adversarial probe only for a claimed guard. RoboRev evidence uses fixed reviewer
+Codex `gpt-5.6-terra`, reasoning `medium`, and `panel: none`; actual host and
+implementation family are provenance only.
+Science Officer remains risk-triggered and advisory.
 
 When an accepted claim originated in a consumer or external runtime, re-observe
 that reported scenario in the originating runtime or a justified equivalent.

@@ -22,17 +22,19 @@ implementation exit. Ordinary fresh validation is unchanged either way.
 The typed observation and repository Local Profile together name:
 
 - the repository-local contract path and selected build-contract configuration;
-- the selected profile and complementary reviewer mapping for the actual
-  implementation provider family;
+- the selected profile and fixed reviewer: agent `codex`, model
+  `gpt-5.6-terra`, reasoning `medium`, and `panel: none`;
+- the actual host and implementation family as provenance only;
 - `agent`, `model`, `reasoning`, `minimum severity`, and `panel: none`;
 - the exact implementation-exit boundary and `observe` mode;
 - the live-batch timeout, explicit-request cap, and repair-confirmation cap;
 - any authorized local-command bridge.
 
 An absent typed declaration performs no RoboRev detection, configuration read,
-provider query, or invocation. An unknown implementation family, absent mapped
-reviewer, or missing field is `UNAVAILABLE(reason: unavailable)`; ambient global
-defaults do not fill it. File presence alone does not activate this contract.
+provider query, or invocation. An absent fixed reviewer or missing field is
+`UNAVAILABLE(reason: unavailable)`; ambient global defaults do not fill it.
+File presence alone does not activate this contract. The actual host and
+implementation family is provenance only and never selects the reviewer.
 
 RoboRev reads repository configuration from its precedence chain, and exact
 commit/range reviews may read the default branch's copy. Resolve the typed

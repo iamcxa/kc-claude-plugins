@@ -31,6 +31,20 @@ ROUTES = {
 PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
 PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
 POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
+RECOVERY_FIELDS = (
+    "recovery_failure",
+    "recovery_falsifier",
+    "recovery_rollback",
+)
+RECOVERY_RISKS = {
+    "behavior",
+    "contract-schema",
+    "state-concurrency",
+    "security-privacy",
+    "runtime-platform",
+    "delivery",
+    "none",
+}
 NULL_LIKE = {"null", "~"}
 PLACEHOLDER_WORDS = {"tbd", "todo"}
 
@@ -51,6 +65,7 @@ def is_placeholder_scalar(value: str) -> bool:
     folded = normalized.casefold()
     return (
         not normalized
+        or normalized in {"[]", "{}", "|"}
         or folded in NULL_LIKE
         or folded in PLACEHOLDER_WORDS
         or re.fullmatch(r"<[^>\n]+>", normalized) is not None
@@ -122,7 +137,49 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         if stage.strip()
     ]
     expected_route = [logical for logical, _next in ROUTES[profile].values()]
-    if receipt_route != expected_route:
+    recovery_route = ["build", "verify"]
+    is_recovery = receipt_route == recovery_route
+    recovery_values: dict[str, object] = {}
+    if is_recovery:
+        if schema != PROFILE_SCHEMA_V3 or profile != "production":
+            raise ContractError("Production recovery requires a v3 production receipt")
+        recovery_keys = set(
+            re.findall(r"^  (recovery_[a-z0-9_]+|review_risks):", block, re.MULTILINE)
+        )
+        expected_recovery_keys = {*RECOVERY_FIELDS, "review_risks"}
+        if recovery_keys != expected_recovery_keys:
+            raise ContractError(
+                "Production recovery permits only recovery_failure, "
+                "recovery_falsifier, recovery_rollback, and review_risks"
+            )
+        for field in RECOVERY_FIELDS:
+            value = _one_field(
+                block,
+                rf"^  {field}:[ \t]*([^\n#]*?)[ \t]*$",
+                field,
+            )
+            if is_placeholder_scalar(value):
+                raise ContractError(f"{field} must be a concrete scalar")
+            recovery_values[field] = value
+        risks_text = _one_field(
+            block, r"^  review_risks:[ \t]*([^\n#]*?)[ \t]*$", "review_risks"
+        )
+        if not (risks_text.startswith("[") and risks_text.endswith("]")):
+            raise ContractError("review_risks must be an inline list")
+        review_risks = [
+            risk.strip().strip("\"'")
+            for risk in risks_text[1:-1].split(",")
+            if risk.strip()
+        ]
+        if (
+            not review_risks
+            or len(review_risks) != len(set(review_risks))
+            or any(risk not in RECOVERY_RISKS for risk in review_risks)
+            or ("none" in review_risks and review_risks != ["none"])
+        ):
+            raise ContractError("review_risks must contain named risks or only none")
+        recovery_values["review_risks"] = review_risks
+    elif receipt_route != expected_route:
         raise ContractError(
             f"stale route for {profile}: expected {expected_route}, got {receipt_route}"
         )
@@ -153,6 +210,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         "profile": profile,
         "workflow_stage": workflow_stage,
         **poc_values,
+        **recovery_values,
     }
 
 
@@ -231,6 +289,21 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
     profile = receipt["profile"]
     workflow_stage = receipt["workflow_stage"]
     route = ROUTES[profile]
+    if "recovery_failure" in receipt and workflow_stage == "ideation":
+        return {
+            "schema": "kc-dev-flow-profile-contract/v2",
+            "work_item": receipt["path"],
+            "work_item_sha256": receipt["sha256"],
+            "receipt_schema": receipt["schema"],
+            "profile": profile,
+            "workflow_stage": workflow_stage,
+            "logical_stage": None,
+            "next_workflow_stage": "implementation",
+            "skip_to_workflow_stage": "implementation",
+            "review_risks": receipt["review_risks"],
+            "declared_receipts": [],
+            "loaded": [],
+        }
     if workflow_stage not in route:
         allowed = ", ".join(route)
         raise ContractError(
@@ -265,7 +338,7 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
             }
         )
 
-    return {
+    result = {
         "schema": "kc-dev-flow-profile-contract/v2",
         "work_item": receipt["path"],
         "work_item_sha256": receipt["sha256"],
@@ -277,6 +350,13 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
         "declared_receipts": declared_receipts,
         "loaded": loaded,
     }
+    if "recovery_failure" in receipt:
+        result["review_risks"] = receipt["review_risks"]
+    if logical_stage == "build":
+        result["implementation_exit_observation_declared"] = (
+            receipt.get("review_risks") != ["none"]
+        )
+    return result
 
 
 def render_text(contract: dict[str, object]) -> str:
@@ -294,6 +374,13 @@ def render_text(contract: dict[str, object]) -> str:
             "declared_receipts",
         )
     }
+    for key in (
+        "skip_to_workflow_stage",
+        "review_risks",
+        "implementation_exit_observation_declared",
+    ):
+        if key in contract:
+            header[key] = contract[key]
     chunks = [json.dumps(header, sort_keys=True)]
     for item in contract["loaded"]:
         chunks.append(

@@ -83,13 +83,13 @@ repair the cheapest compatible seam.
    is a declared boundary — do not treat it as a missing binding, a refit
    requirement, or a recurring `UNAVAILABLE`.
 
-   In scope, the repository owns four bindings: the reviewer mapping for the
-   implementation provider family, the registered state holder, its clean-holder
-   prerequisite, and the durability command. Derive the reviewer mapping from the
-   repository's dominant implementation agent, propose the complementary reviewer
-   and its model, and record the confirmed pair; resolve the other three from the
-   repository's own state authority rather than copying another repository's
-   paths. Then probe once — provider CLI present, mapped reviewer available and
+   In scope, the repository owns four bindings: the fixed reviewer policy, the
+   registered state holder, its clean-holder prerequisite, and the durability
+   command. Record agent `codex`, model `gpt-5.6-terra`, reasoning `medium`, and
+   `panel: none`; the actual host and implementation family are provenance only.
+   Resolve the other three bindings from the repository's own state authority
+   rather than copying another repository's paths. Then probe once — provider
+   CLI present, fixed reviewer available and
    authenticated, state holder resolvable — and report each binding as bound or
    unbound. An absent CLI, agent, or authentication is an environment result and
    stays an honest non-gating `UNAVAILABLE`. A binding never recorded is an

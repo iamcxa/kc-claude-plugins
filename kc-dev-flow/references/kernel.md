@@ -49,10 +49,12 @@ project-global; different items may use different routes concurrently.
 |---|---|
 | `poc-exploration` | `build -> prove` |
 | `pilot-product-slice` | `shape -> build -> verify-deliver` |
-| `production` | `shape -> build -> verify` |
+| `production` | `shape -> build -> verify`; eligible recovery `build -> verify` |
 
 A v3 POC fixes one `poc_decision`, `poc_falsifier`, `poc_budget`, and
-`poc_stop_when` before implementation. Pilot and Production omit these fields.
+`poc_stop_when` before implementation. A short Production route requires only
+concrete `recovery_failure`, `recovery_falsifier`, `recovery_rollback`, and a
+closed non-empty `review_risks`; other Pilot and Production receipts omit them.
 
 `backlog` is queue state and `done` is terminal state; neither is a working
 stage. A workflow runtime may expose the union of stage names and skip stages
@@ -63,6 +65,11 @@ the route's sole terminal-authorization checkpoint is not a candidate for this
 clause; fold that checkpoint into an adjacent working stage's contract
 instead, the way `production`'s route above folds release authorization into
 `verify` rather than skipping a dedicated `release` stage.
+
+An eligible Production recovery at `ideation` emits an implementation skip and
+loads no shape contract. Changed or uncertain premises stop with
+`RECOVERY_FULL_ROUTE_REQUIRED`; only the Captain or the recorded rollback may
+restore the full route.
 
 Queue state still has an exit bar. An item leaves `backlog` only when its
 committed body states all three:

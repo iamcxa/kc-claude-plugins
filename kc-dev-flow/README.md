@@ -15,7 +15,7 @@ falsify this direction.
 |---|---|---|
 | POC — bounded exploration or technical proof | `build -> prove` | Evidence supports `proceed`, `stop`, or `change`; cleanup and limits are recorded. |
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
-| Production | `shape -> build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
+| Production | `shape -> build -> verify`; eligible recovery `build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
 ```mermaid
 flowchart TB
@@ -35,8 +35,9 @@ flowchart TB
     T4 --> D
 
     C -->|Production| R1["Shape<br/>operational boundaries"]
+    C -->|Eligible Production recovery| R2
     R1 --> R2["Build<br/>operable lifecycle"]
-    R2 --> R3["RoboRev exit observation<br/>thorough Medium+ · Spacedock adopters"]
+    R2 --> R3["Risk-triggered RoboRev exit observation<br/>medium · Medium+ · Spacedock adopters"]
     R3 --> R4["Verify<br/>exact-revision obligations + rollout/rollback + release authority"]
     R4 --> D
 ```
@@ -51,6 +52,10 @@ because both ship in the package. The receipt belongs to the work item rather
 than the repository: one project can run POC, Pilot, and Production items
 concurrently, and each loader result hash-binds the exact item that selected its
 route.
+
+Recovery is an explicit v3 Production receipt for one known failure. Its four
+fields make the ideation skip fail closed; changed premises require Captain
+fallback to the full route, while `[none]` does not activate RoboRev.
 
 Each stage contract names a one-line **working perspective** — a cognitive cue,
 not another agent, review, or gate.

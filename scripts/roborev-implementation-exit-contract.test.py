@@ -717,6 +717,8 @@ for phrase in [
     "no provider re-query, enqueue, or retry",
     "at most one changed-tip confirmation",
     "RoboRev is observation, not authority",
+    "fixed reviewer",
+    "implementation family is provenance only",
 ]:
     require(phrase in normalized_reference, f"provider reference is missing: {phrase}")
 require(not authority_errors(reference_text), "provider reference weakens authority: " + ", ".join(authority_errors(reference_text)))
@@ -738,11 +740,16 @@ require(
     "performs no RoboRev probe or invocation" in normalized_continue_skill,
     "omitted declaration is not a zero-provider-work path",
 )
+require(
+    "loader output is true" in normalized_continue_skill
+    and "Codex `gpt-5.6-terra`" in normalized_continue_skill,
+    "continue skill does not consume the loader decision with the fixed reviewer",
+)
 
 repo_config = (ROOT / ".roborev.toml").read_text(encoding="utf-8")
 for phrase in [
-    'review_agent = "claude-code"',
-    'review_model = "sonnet"',
+    'review_agent = "codex"',
+    'review_model = "gpt-5.6-terra"',
     'review_reasoning = "medium"',
     'review_min_severity = "high"',
 ]:
@@ -754,13 +761,13 @@ local_profile = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
 for phrase in [
     "Typed RoboRev observation at every profile's implementation exit",
     "`build.md` supplies one typed `review_convergence`",
-    "OpenAI uses Claude Code `sonnet`",
-    "Anthropic uses Codex `gpt-5.6-terra`",
+    "Fixed reviewer Codex `gpt-5.6-terra`",
+    "implementation family is provenance only",
     "`.roborev.toml`",
     "`panel: none`",
     "| POC | `medium` | `high` | 10 minutes | `1 / 0` |",
     "| Pilot | `medium` | `medium` | 15 minutes | `1 / 1` |",
-    "| Production | `thorough` | `medium` | 20 minutes | `1 / 1` |",
+    "| Production | `medium` | `medium` | 20 minutes | `1 / 1` |",
 ]:
     require(phrase in local_profile, f"Local Profile is missing ownership/cap: {phrase}")
 

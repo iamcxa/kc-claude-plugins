@@ -377,6 +377,26 @@ cross-entity transactions, automatic downstream profile selection, model calls
 or a new CI job for the contract slice, and reuse of the behavioral-gate
 laboratory branch.
 
+### Sprint S5 — make Production recovery and delivery proportional
+
+End value: a known, bounded Production failure can take the shortest route that
+retains exact-revision proof; every profile ends verification with Captain-owned
+UAT; and a work item explicitly authorized in advance can merge when its exact
+delivery evidence is green without asking for a second merge decision.
+
+| # | id | scope |
+|---|----|-------|
+| 1 | `production-recovery-route` | Let an eligible Production item use `build -> verify`; keep one fresh full without-it and fail closed on uncertainty or scope drift. |
+| 2 | `profile-uat-boundary` | End every profile's verification with Captain UAT, using attended operation or delegated exact-candidate E2E evidence. |
+| 3 | `work-item-auto-merge` | Honor explicit per-item auto-merge only after UAT, exact head/base, required CI, feedback, and mergeability are green. |
+
+Exit: existing v3 receipts remain full-route and manual by default; no new
+profile, workflow, stage, or CI job is added; delegated UAT never self-approves;
+and merge authorization never becomes release authorization.
+
+Out of scope: repository-default auto-merge, automatic release, agent-owned UAT
+approval, reduced Production evidence, or a generalized evaluation framework.
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine
