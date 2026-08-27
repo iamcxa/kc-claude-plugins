@@ -20,7 +20,7 @@ OPEN=/usr/bin/open
 SELF="${BASH_SOURCE[0]}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$SCRIPT_DIR/backends"
-PROMPT_TMPL="$SCRIPT_DIR/../reference/reviewer-dispatch-prompt.md"
+PROMPT_TMPL="${PR_LISTEN_PROMPT:-$SCRIPT_DIR/../reference/reviewer-dispatch-prompt.md}"
 
 CFG_DIR="${PR_LISTEN_CFG_DIR:-$HOME/.claude/kc-plugins-config/pr-flow}"
 CONFIG="$CFG_DIR/reviewer-listen.config.json"
