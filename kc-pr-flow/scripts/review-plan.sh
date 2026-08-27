@@ -222,6 +222,7 @@ import contextlib
 import json
 import hashlib
 import os
+import select
 import shutil
 import stat
 import subprocess
@@ -379,11 +380,65 @@ def run_git(arguments, binding=None):
         )
 
 
-def read_batch_object(process, object_id, expected_type, limit):
-    process.stdin.write((object_id + "\n").encode("ascii"))
-    process.stdin.flush()
-    header = process.stdout.readline(257)
-    if len(header) > 256 or not header.endswith(b"\n"):
+def wait_for_pipe(descriptor, readable, deadline):
+    while True:
+        timeout = None
+        if deadline is not None:
+            timeout = deadline - time.monotonic()
+            if timeout <= 0:
+                raise OSError
+        try:
+            ready_read, ready_write, _ = select.select(
+                [descriptor] if readable else [],
+                [] if readable else [descriptor],
+                [],
+                timeout,
+            )
+        except (ValueError, select.error) as error:
+            raise OSError from error
+        if ready_read or ready_write:
+            return
+        if deadline is not None:
+            raise OSError
+
+
+def write_pipe(descriptor, data, deadline):
+    offset = 0
+    while offset < len(data):
+        wait_for_pipe(descriptor, False, deadline)
+        try:
+            written = os.write(descriptor, data[offset:])
+        except (BrokenPipeError, OSError) as error:
+            raise OSError from error
+        if written <= 0:
+            raise OSError
+        offset += written
+
+
+def read_pipe(descriptor, buffer, deadline):
+    wait_for_pipe(descriptor, True, deadline)
+    try:
+        chunk = os.read(descriptor, 65536)
+    except OSError as error:
+        raise OSError from error
+    if not chunk:
+        raise OSError
+    buffer.extend(chunk)
+
+
+def read_batch_object(process, object_id, expected_type, limit, deadline=None):
+    write_pipe(process.stdin.fileno(), (object_id + "\n").encode("ascii"), deadline)
+    buffer = bytearray()
+    while b"\n" not in buffer:
+        if len(buffer) >= 256:
+            raise OSError
+        read_pipe(process.stdout.fileno(), buffer, deadline)
+    newline = buffer.index(b"\n")
+    if newline >= 256:
+        raise OSError
+    header = bytes(buffer[:newline + 1])
+    del buffer[:newline + 1]
+    if not header.endswith(b"\n"):
         raise OSError
     fields = header.decode("ascii").strip().split()
     if (len(fields) != 3 or fields[0] != object_id or fields[1] != expected_type
@@ -392,17 +447,23 @@ def read_batch_object(process, object_id, expected_type, limit):
     object_size = int(fields[2])
     if object_size > limit:
         raise OSError
-    chunks = []
-    remaining = object_size
-    while remaining:
-        chunk = process.stdout.read(min(remaining, 65536))
-        if not chunk:
-            raise OSError
-        chunks.append(chunk)
-        remaining -= len(chunk)
-    if process.stdout.read(1) != b"\n":
+    while len(buffer) < object_size + 1:
+        read_pipe(process.stdout.fileno(), buffer, deadline)
+    data = bytes(buffer[:object_size])
+    delimiter = bytes(buffer[object_size:object_size + 1])
+    if delimiter != b"\n":
         raise OSError
-    return b"".join(chunks)
+    return data
+
+
+def terminate_batch_process(process):
+    if process.poll() is None:
+        process.kill()
+    process.wait()
+    error = process.stderr.read()
+    for stream in (process.stdin, process.stdout, process.stderr):
+        stream.close()
+    return error
 
 
 @contextlib.contextmanager
@@ -414,21 +475,17 @@ def batch_object_reader(binding):
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            bufsize=0,
         )
         try:
-            yield lambda object_id, expected_type, limit: read_batch_object(
-                process, object_id, expected_type, limit
+            yield lambda object_id, expected_type, limit, deadline=None: read_batch_object(
+                process, object_id, expected_type, limit, deadline
             )
-            process.stdin.close()
-            if process.stdout.read(1) != b"":
-                raise OSError
-            error = process.stderr.read()
-            if process.wait() != 0 or error:
+            if terminate_batch_process(process):
                 raise OSError
         except BaseException:
-            if process.poll() is None:
-                process.kill()
-            process.wait()
+            if not process.stdin.closed:
+                terminate_batch_process(process)
             raise
 
 
@@ -466,8 +523,8 @@ def raw_is_ancestor(binding, ancestor, descendant, traversal_limit, commit_limit
     if not test_delay.isdigit() or int(test_delay) > 5000:
         raise OSError
     delay_seconds = int(test_delay) / 1000
+    deadline = time.monotonic() + wall_seconds
     with batch_object_reader(binding) as read:
-        deadline = time.monotonic() + wall_seconds
         pending = [descendant]
         visited = set()
         while pending:
@@ -483,7 +540,7 @@ def raw_is_ancestor(binding, ancestor, descendant, traversal_limit, commit_limit
             if len(visited) >= traversal_limit:
                 raise OSError
             visited.add(current)
-            data = read(current, "commit", commit_limit)
+            data = read(current, "commit", commit_limit, deadline)
             if current == ancestor:
                 return True
             parents = commit_parents(data, len(current))

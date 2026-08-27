@@ -1547,6 +1547,137 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
       fail "ancestry wall-clock exhaustion fails promptly (got ${ancestry_deadline_ms}ms)"
     fi
 
+    python3 - "$PLAN" <<'PY'
+import os
+import pathlib
+import sys
+import threading
+import time
+
+source = pathlib.Path(sys.argv[1]).read_text()
+embedded = source.split("python3 - \"$@\" <<'PY'\n", 1)[1].split("\nPY\n}", 1)[0]
+definitions = embedded.split("\ntry:\n", 1)[0]
+namespace = {}
+exec(compile(definitions, "review-plan-adapter", "exec"), namespace)
+read_batch_object = namespace["read_batch_object"]
+object_id = "a" * 40
+
+
+class FakeProcess:
+    def __init__(self):
+        request_read, request_write = os.pipe()
+        response_read, response_write = os.pipe()
+        self.stdin = os.fdopen(request_write, "wb", buffering=0)
+        self.stdout = os.fdopen(response_read, "rb", buffering=0)
+        self.request_read = request_read
+        self.response_write = response_write
+
+    def close(self):
+        self.stdin.close()
+        self.stdout.close()
+        os.close(self.request_read)
+        os.close(self.response_write)
+
+
+def exercise(payload, expected=None):
+    process = FakeProcess()
+
+    def write_response():
+        os.read(process.request_read, 41)
+        os.write(process.response_write, payload)
+
+    writer = threading.Thread(target=write_response, daemon=True)
+    writer.start()
+    started = time.monotonic()
+    try:
+        result = read_batch_object(process, object_id, "commit", 1024, started + 0.2)
+    except OSError:
+        result = None
+    elapsed = time.monotonic() - started
+    process.close()
+    if elapsed >= 1:
+        raise AssertionError(f"deadline-aware batch read took {elapsed:.3f}s")
+    if result != expected:
+        raise AssertionError((result, expected))
+
+
+exercise(f"{object_id} commit 10".encode("ascii"))
+exercise(f"{object_id} commit 10\nabc".encode("ascii"))
+exercise(f"{object_id} commit 3\nabc\n".encode("ascii"), b"abc")
+PY
+    assert_eq 'batch framing deadlines cover partial headers, partial bodies, and normal reads' '0' "$?"
+
+    stalled_object=ffffffffffffffffffffffffffffffffffffffff
+    stalled_path="$router_repo/.git/objects/${stalled_object:0:2}/${stalled_object:2}"
+    mkdir -p "$(dirname "$stalled_path")"
+    mkfifo "$stalled_path"
+    stalled_binding="$(review_plan_worktree_binding "$router_repo")"
+    stalled_output="$TEST_ROOT/stalled-ancestry-output"
+    latency_start="$(monotonic_ms)"
+    KC_PR_FLOW_MAX_PLAN_ANCESTRY_SECONDS=1 \
+      review_plan_ancestor "$stalled_binding" "$graft_root_one" "$stalled_object" \
+      >"$stalled_output" 2>/dev/null &
+    stalled_adapter_pid=$!
+    sleep 0.1
+    stalled_cat_file_pid="$(python3 - "$stalled_adapter_pid" <<'PY'
+import subprocess
+import sys
+
+root = int(sys.argv[1])
+rows = subprocess.check_output(["ps", "-axo", "pid=,ppid=,command="], text=True).splitlines()
+children = {}
+commands = {}
+for row in rows:
+    fields = row.strip().split(None, 2)
+    if len(fields) < 2:
+        continue
+    pid, parent = map(int, fields[:2])
+    children.setdefault(parent, []).append(pid)
+    commands[pid] = fields[2] if len(fields) == 3 else ""
+pending = [root]
+descendants = []
+while pending:
+    current = pending.pop()
+    for child in children.get(current, []):
+        descendants.append(child)
+        pending.append(child)
+matches = [pid for pid in descendants if "cat-file --batch" in commands.get(pid, "")]
+print(matches[0] if matches else "")
+PY
+)"
+    wait "$stalled_adapter_pid"
+    stalled_status=$?
+    stalled_ms=$(( $(monotonic_ms) - latency_start ))
+    assert_eq 'FIFO-backed object returns the ancestry adapter error status' '2' "$stalled_status"
+    assert_eq 'FIFO-backed object releases no authority output' '' "$(cat "$stalled_output")"
+    if [ "$stalled_ms" -le 2000 ]; then pass; else
+      fail "FIFO-backed object respects the 1s ancestry ceiling (got ${stalled_ms}ms)"
+    fi
+    if [ -n "$stalled_cat_file_pid" ]; then pass; else
+      fail 'FIFO-backed object starts one persistent cat-file reader'
+    fi
+    if [ -n "$stalled_cat_file_pid" ] && kill -0 "$stalled_cat_file_pid" 2>/dev/null; then
+      fail 'FIFO-backed ancestry leaves a live or zombie cat-file child'
+    else
+      pass
+    fi
+    rm "$stalled_path"
+
+    original_deadline_adapter="$(declare -f review_plan_worktree_adapter)"
+    eval "$(declare -f review_plan_worktree_adapter | sed '1s/review_plan_worktree_adapter/review_plan_worktree_adapter_without_deadline_error/')"
+    review_plan_worktree_adapter() {
+      if [ "$1" = 'ancestor' ]; then
+        return 2
+      fi
+      review_plan_worktree_adapter_without_deadline_error "$@"
+    }
+    stalled_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide \
+      "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" \
+      "$router_repo" "$router_events" "$router_receipt")"
+    assert_eq 'ancestry adapter errors select the unchanged initial planner' 'initial' \
+      "$(jq -r '.mode' <<<"$stalled_decision")"
+    eval "$original_deadline_adapter"
+
     commit_blob="$(printf 'not a commit\n' | git -C "$router_repo" hash-object -w --stdin)"
     router_binding="$(review_plan_worktree_binding "$router_repo")"
     review_plan_ancestor "$router_binding" "$graft_root_one" "$commit_blob"
