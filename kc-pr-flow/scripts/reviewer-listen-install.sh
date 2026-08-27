@@ -51,7 +51,7 @@ mkdir -p "$CFG_DIR"
 
 if [[ -s "$LEGACY" && ! -s "$CONFIG" ]]; then
   # Earlier builds kept intent and derived state in one file.
-  jq '{master:false, backend:"'"$BACKEND"'", notify_via:(.notify_via // "'"$NOTIFY"'"), repos:(.repos // {})}' "$LEGACY" >"$CONFIG"
+  jq '{listening:false, backend:"'"$BACKEND"'", notify_via:(.notify_via // "'"$NOTIFY"'"), repos:(.repos // {})}' "$LEGACY" >"$CONFIG"
   jq '{seen:(.seen // {}), open:[], last_poll:null, last_error:null}' "$LEGACY" >"$STATE"
   mv "$LEGACY" "$LEGACY.migrated"
   say "Migrated the previous single-file config into config + state."
@@ -60,7 +60,7 @@ fi
 # A fresh install starts paused: resuming is one click, and nobody wants an
 # unattended review dispatched by an install script.
 [[ -s "$CONFIG" ]] || jq -n --arg b "$BACKEND" --arg n "$NOTIFY" \
-  '{master:false, backend:$b, notify_via:$n, repos:{}}' >"$CONFIG"
+  '{listening:false, backend:$b, notify_via:$n, repos:{}}' >"$CONFIG"
 [[ -s "$STATE" ]] || jq -n '{seen:{}, open:[], last_poll:null, last_error:null}' >"$STATE"
 
 tmp="$CONFIG.tmp.$$"

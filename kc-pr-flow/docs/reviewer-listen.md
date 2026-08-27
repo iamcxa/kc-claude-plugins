@@ -45,7 +45,7 @@ paused, because an install script must not dispatch an unattended review.
 | `scripts/backends/conformance.sh` | contract check for a new backend |
 | `scripts/backends/conductor-token.sh` | hidden-input token entry for a second organization |
 | `reference/reviewer-dispatch-prompt.md` | opening message for a dispatched review |
-| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | **intent**: master switch, backend, notification channel, per-repo switches |
+| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | **intent**: the listening switch, backend, notification channel, per-repo switches |
 | `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.state.json` | **derived**: seen PRs, job ids, open targets, last poll |
 | `~/.claude/audit/pr-reviewer-listen.log` | dispatch log |
 

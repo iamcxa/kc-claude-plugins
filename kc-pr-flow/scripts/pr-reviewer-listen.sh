@@ -39,7 +39,7 @@ log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
 
 init_files() {
   mkdir -p "$CFG_DIR" "$(dirname "$LOG")"
-  [[ -s "$CONFIG" ]] || printf '%s\n' '{"master":true,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
+  [[ -s "$CONFIG" ]] || printf '%s\n' '{"listening":true,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
   [[ -s "$STATE"  ]] || printf '%s\n' '{"seen":{},"open":[],"last_poll":null,"last_error":null}' >"$STATE"
 }
 
@@ -48,6 +48,13 @@ edit_json() { # edit_json <file> [jq-args...]
   local tmp="$f.tmp.$$"
   if "$JQ" "$@" "$f" >"$tmp" 2>>"$LOG"; then mv "$tmp" "$f"
   else rm -f "$tmp"; log "edit failed on $f: $*"; return 1; fi
+}
+
+# An earlier build named the listening switch `master`, which reads as a branch in
+# a repository context. Rename in place so a config keeps working untouched.
+migrate_config() {
+  [[ "$(cfg_get 'has("master")')" == "true" ]] || return 0
+  cfg_edit '.listening = (.listening // .master) | del(.master)'
 }
 
 cfg_edit() { edit_json "$CONFIG" "$@"; }
@@ -123,12 +130,13 @@ dispatch() { # dispatch <repo> <pr-number> <pr-url>
 # review-requested the moment a review is submitted. Ask the backend instead.
 
 check_completions() {
-  local be key job verdict
+  local be key job verdict errf reason
   be=$(backend_path)
   [[ -x "$be" ]] || return 0
+  errf=$(mktemp)
   while IFS=$'\t' read -r key job; do
     [[ -z "$job" ]] && continue
-    verdict=$("$be" status "$job" 2>/dev/null) || continue
+    verdict=$("$be" status "$job" 2>"$errf") || continue
     case "$verdict" in
       done)
         st_edit --arg k "$key" '.seen[$k] += {status:"reviewed", finished:(now|todate)}'
@@ -136,9 +144,14 @@ check_completions() {
                "$(st_get --arg k "$key" '.seen[$k].open // empty')"
         log "completed $key" ;;
       error)
-        mark_error "$key" "backend reported the job cannot finish" ;;
+        reason=$(tr '\n' ' ' <"$errf" | cut -c1-160)
+        mark_error "$key" "${reason:-the backend reported this job cannot finish}"
+        notify "Review failed" "$key — ${reason:-the backend gave no reason}" \
+               "$(st_get --arg k "$key" '.seen[$k].url // empty')"
+        log "failed $key: $reason" ;;
     esac
   done < <("$JQ" -r '.seen | to_entries[] | select(.value.status == "running") | select(.value.job_id) | [.key, .value.job_id] | @tsv' "$STATE" 2>/dev/null)
+  rm -f "$errf"
 }
 
 poll() {
@@ -158,7 +171,7 @@ poll() {
     cfg_edit --arg r "$repo" 'if (.repos | has($r)) then . else .repos[$r] = {enabled:true} end'
   done < <("$JQ" -r '.open[].repository.nameWithOwner' "$STATE" 2>/dev/null)
 
-  [[ "$(cfg_get '.master')" == "true" ]] || return 0
+  [[ "$(cfg_get '.listening')" == "true" ]] || return 0
 
   while IFS=$'\t' read -r repo num url draft; do
     [[ -z "$repo" ]] && continue
@@ -199,14 +212,14 @@ login_toggle() {
 menu_label() { printf '%s' "${1//|/／}"; }   # a literal pipe would end the SwiftBar line
 
 render() {
-  local master n_on n_open n_done last err key status target title repo num fin on
-  master=$(cfg_get '.master')
+  local listening n_on n_open n_done last err key status target title repo num fin on
+  listening=$(cfg_get '.listening')
   n_on=$(cfg_get '[.repos | to_entries[] | select(.value.enabled == true)] | length')
   n_open=$(st_get '.open | length')
   last=$(st_get '.last_poll // "never"')
   err=$(st_get '.last_error // empty')
 
-  if [[ "$master" != "true" ]]; then echo "👁 off"
+  if [[ "$listening" != "true" ]]; then echo "👁 off"
   elif [[ -n "$err" ]];       then echo "👁 !"
   else                             echo "👁 $n_open"; fi
   echo "---"
@@ -262,10 +275,10 @@ render() {
   done < <("$JQ" -r '.repos | to_entries[] | [.key, (.value.enabled|tostring)] | @tsv' "$CONFIG" 2>/dev/null)
 
   echo "---"
-  if [[ "$master" == "true" ]]; then
-    echo "Pause listening | bash=\"$SELF\" param1=toggle-master terminal=false refresh=true"
+  if [[ "$listening" == "true" ]]; then
+    echo "Pause listening | bash=\"$SELF\" param1=toggle-listening terminal=false refresh=true"
   else
-    echo "Resume listening | bash=\"$SELF\" param1=toggle-master terminal=false refresh=true"
+    echo "Resume listening | bash=\"$SELF\" param1=toggle-listening terminal=false refresh=true"
   fi
   echo "Refresh now | refresh=true"
   echo "Backend: $(cfg_get '.backend // "conductor"') · notify via $(cfg_get '.notify_via // "terminal-notifier"') | bash=\"$SELF\" param1=toggle-notify terminal=false refresh=true"
@@ -275,9 +288,10 @@ render() {
 }
 
 init_files
+migrate_config
 
 case "${1:-}" in
-  toggle-master) cfg_edit '.master = (.master | not)'; exit 0 ;;
+  toggle-listening) cfg_edit '.listening = (.listening | not)'; exit 0 ;;
   toggle-repo)   cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
   toggle-notify) cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
   forget)        st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;

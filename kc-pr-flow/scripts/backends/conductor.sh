@@ -89,15 +89,42 @@ cmd_create() {
   printf 'open=%s\n' "$sess"
 }
 
+# A session reports `idle` before its first message is delivered, and also after
+# dying without ever answering — so idle alone is not completion. Completion
+# requires assistant output in the transcript; idle without output is a failure
+# once the session has stopped changing.
+IDLE_GRACE_SECONDS=180
+
+session_has_output() {
+  local out
+  out=$("$CONDUCTOR" sql \
+    "select (transcript like '%## Assistant%') as has_out from session_transcripts_view where session_id='$1'" 2>/dev/null) || return 1
+  grep -qw true <<<"$out"
+}
+
+epoch_of() { # ISO-8601, fractional seconds optional
+  local t="${1%%.*}"; t="${t%Z}"
+  date -j -u -f '%Y-%m-%dT%H:%M:%S' "$t" +%s 2>/dev/null
+}
+
 cmd_status() {
-  local sid="${1:-}" out st
+  local sid="${1:-}" out st upd age
   [[ -n "$sid" ]] || die "usage: conductor.sh status <job_id>"
   [[ -x "$CONDUCTOR" ]] || die "conductor CLI not found at $CONDUCTOR"
 
   out=$("$CONDUCTOR" session status "$sid" 2>&1)
   st=$(awk '/^Status/{print $2}' <<<"$out")
   case "$st" in
-    idle)     echo done ;;
+    idle)
+      if session_has_output "$sid"; then echo done; return; fi
+      upd=$(awk '/^Updated/{print $2}' <<<"$out")
+      age=$(( $(date -u +%s) - $(epoch_of "$upd") ))
+      if (( age > IDLE_GRACE_SECONDS )); then
+        printf 'session stopped without producing any output\n' >&2
+        echo error
+      else
+        echo running
+      fi ;;
     working)  echo running ;;
     "")
       # A missing session is terminal; anything else is undetermined, and the

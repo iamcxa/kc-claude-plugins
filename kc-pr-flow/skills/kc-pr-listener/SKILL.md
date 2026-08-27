@@ -55,7 +55,7 @@ jq '{last_poll, last_error, open:(.open|length), seen}' ~/.claude/kc-plugins-con
 tail -20 ~/.claude/audit/pr-reviewer-listen.log
 ```
 
-Read `master` for the switch, `repos` for which repositories are listened to, and
+Read `listening` for the switch, `repos` for which repositories are listened to, and
 each `seen` entry's `status`: `dispatching` → `running` → `reviewed`, or `error`
 with the backend's reason and an `attempts` count.
 
@@ -65,7 +65,7 @@ with the backend's reason and an `attempts` count.
 |---------|----------------------|
 | No menu-bar icon at all | SwiftBar was never granted a plugin folder. Open SwiftBar, set it to the folder the installer printed. |
 | Icon gone after a reboot | The host is not launched at login. Toggle **Start at login** in the menu; if the row reads `unknown`, macOS refused Automation permission for System Events and the menu-bar app needs it granted. |
-| Icon shows `off` | `master` is false. Click **Resume listening**. |
+| Icon shows `off` | `listening` is false. Click **Resume listening**. |
 | Icon shows `!` | `last_error` in state — usually `gh` auth expired. |
 | Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Clear one with the row's **retry**. |
 | A row is `❌` with "no project" | The repo has no project in that token's organization; a second organization needs its own token file. |
