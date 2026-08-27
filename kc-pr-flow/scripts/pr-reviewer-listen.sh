@@ -63,16 +63,24 @@ backend_path() {
 urlenc() { "$JQ" -rn --arg s "$1" '$s|@uri'; }
 
 notify() { # notify <title> <subtitle> [open-target]
-  local title="$1" sub="$2" target="${3:-}" via url
+  local title="$1" sub="$2" target="${3:-}" via url tn
   via=$(cfg_get '.notify_via // "swiftbar"')
-  if [[ "$via" == "swiftbar" ]]; then
-    url="swiftbar://notify?plugin=pr-reviewer.60s.sh"
-    url+="&title=$(urlenc "$title")&subtitle=$(urlenc "$sub")"
-    [[ -n "$target" ]] && url+="&href=$(urlenc "$target")"
-    "$OPEN" -g "$url" 2>/dev/null || true
-  else
-    /usr/bin/osascript -e "display notification \"$sub\" with title \"$title\"" 2>/dev/null || true
-  fi
+  case "$via" in
+    terminal-notifier)
+      tn=$(command -v terminal-notifier) || return 0
+      local args=(-title "$title" -message "$sub")
+      [[ -n "$target" ]] && args+=(-open "$target")
+      "$tn" "${args[@]}" >/dev/null 2>&1 || true ;;
+    osascript)
+      /usr/bin/osascript -e "display notification \"$sub\" with title \"$title\"" 2>/dev/null || true ;;
+    *)
+      # SwiftBar addresses a notification to a loaded plugin by filename, so this
+      # must be the file the host launched, not the listener behind it.
+      url="swiftbar://notify?plugin=$(urlenc "$(basename "$SELF")")"
+      url+="&title=$(urlenc "$title")&subtitle=$(urlenc "$sub")"
+      [[ -n "$target" ]] && url+="&href=$(urlenc "$target")"
+      "$OPEN" -g "$url" 2>/dev/null || true ;;
+  esac
 }
 
 mark_error() {
@@ -257,7 +265,7 @@ init_files
 case "${1:-}" in
   toggle-master) cfg_edit '.master = (.master | not)'; exit 0 ;;
   toggle-repo)   cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
-  toggle-notify) cfg_edit '.notify_via = (if (.notify_via // "swiftbar") == "swiftbar" then "osascript" else "swiftbar" end)'; exit 0 ;;
+  toggle-notify) cfg_edit '.notify_via = ({"swiftbar":"terminal-notifier","terminal-notifier":"osascript","osascript":"swiftbar"}[(.notify_via // "swiftbar")] // "swiftbar")'; exit 0 ;;
   forget)        st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;

@@ -14,7 +14,10 @@ STATE="$CFG_DIR/reviewer-listen.state.json"
 LEGACY="$CFG_DIR/reviewer-listen.json"
 
 BACKEND=conductor
+# terminal-notifier posts a banner under its own notification permission and
+# opens the target on click; prefer it when it is present.
 NOTIFY=swiftbar
+command -v terminal-notifier >/dev/null 2>&1 && NOTIFY=terminal-notifier
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --backend) BACKEND="${2:?}"; shift 2 ;;
@@ -71,7 +74,9 @@ fi
 mkdir -p "$PLUGIN_DIR"
 
 WRAPPER="$PLUGIN_DIR/pr-reviewer.60s.sh"
-printf '#!/bin/bash\nexec %q "$@"\n' "$LISTENER" >"$WRAPPER"
+# The wrapper is what the menu-bar host launches, so the listener must address
+# its callbacks and its notifications to the wrapper, not to itself.
+printf '#!/bin/bash\nexport PR_LISTEN_SELF=%q\nexec %q "$@"\n' "$WRAPPER" "$LISTENER" >"$WRAPPER"
 chmod +x "$WRAPPER"
 
 say ""
