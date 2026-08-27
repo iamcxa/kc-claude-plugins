@@ -2,9 +2,19 @@
 
 set -u
 
+CASE_FILTER=all
+if [ "$#" -ne 0 ]; then
+  if [ "$#" -ne 2 ] || [ "$1" != '--case' ] || [ "$2" != 'scenario-authority' ]; then
+    printf 'usage: %s [--case scenario-authority]\n' "$0" >&2
+    exit 2
+  fi
+  CASE_FILTER="$2"
+fi
+
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BENCHMARK="$HERE/review-latency-benchmark.sh"
 FIXTURE="$HERE/../test/fixtures/review-plan/phase1-promotion.jsonl"
+SCENARIOS="$HERE/../test/fixtures/review-plan/phase1-promotion-scenarios.jsonl"
 TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/review-latency-benchmark-test.XXXXXX")"
 trap 'rm -rf "$TEST_ROOT"' EXIT
 
@@ -56,6 +66,71 @@ gate_value() { # $1=file $2=gate key
   score_file "$1" | jq -r --arg key "$2" '.gates[$key]'
 }
 
+scenario_binding_valid() { # $1=corpus
+  jq -e -s --slurpfile scenarios "$SCENARIOS" '
+    INDEX($scenarios[]; .pair_id) as $scenario |
+    (length == 9) and (($scenarios | length) == 9) and
+    ([.[].pair_id] | sort | unique | length == 9) and
+    ([$scenarios[].pair_id] | sort | unique | length == 9) and
+    all(.[]; . as $pair | $scenario[$pair.pair_id] as $seed |
+      $seed.schema == "kc-pr-flow.review-latency-scenario/v1" and
+      ($seed | keys | sort == ["change_truth","contract_truth","control_truth","identity",
+        "pair_id","schema","treatment_truth"]) and
+      ($seed.identity | keys | sort == ["base_sha","config_hash","head_sha","pr_number",
+        "repository","review_key"]) and
+      ($seed.change_truth | keys | sort == ["changed_hunks","risk_signals"]) and
+      ($seed.contract_truth | keys | sort == ["maximum_event","mode","must_fix_claim_keys",
+        "required_capabilities"]) and
+      ($seed.control_truth | keys | sort == ["adjudication","coverage_gap_refs","event","posted"]) and
+      ($seed.treatment_truth | keys | sort == ["capability_gap_refs","event","event_ceiling","finding",
+        "from_exclusive","lane_outcomes","mode","raw_phase_timings","reason_codes"]) and
+      ($seed.treatment_truth.finding | keys | sort == ["adjudication","capability","category",
+        "confidence","posted","severity"]) and
+      ($seed.change_truth.changed_hunks | type == "array" and length > 0) and
+      ($seed.change_truth.risk_signals | type == "array") and
+      ($pair.exact_head == $seed.identity) and
+      ($pair.expected.mode == $seed.contract_truth.mode) and
+      ($pair.expected.maximum_event == $seed.contract_truth.maximum_event) and
+      ($pair.expected.required_capabilities == $seed.contract_truth.required_capabilities) and
+      ($pair.expected.must_fix_finding_ids ==
+        [$pair.treatment.validated_findings[] |
+          select(.candidate.claim_key as $claim |
+            $seed.contract_truth.must_fix_claim_keys | index($claim)) | .finding_id]) and
+      ($pair.control.behavior_sources.effective.event == $seed.control_truth.event) and
+      ($pair.control.behavior_sources.effective.coverage_gap_refs ==
+        $seed.control_truth.coverage_gap_refs) and
+      ($pair.control.adjudicated_posted == (if $seed.control_truth.posted then 1 else 0 end)) and
+      ($pair.control.adjudicated_false_positive ==
+        (if $seed.control_truth.adjudication == "false_positive" then 1 else 0 end)) and
+      ($pair.treatment.plan.mode == $seed.treatment_truth.mode) and
+      ($pair.treatment.plan.event_ceiling == $seed.treatment_truth.event_ceiling) and
+      ($pair.treatment.plan.reason_codes == $seed.treatment_truth.reason_codes) and
+      ($pair.treatment.plan.review_range.from_exclusive == $seed.treatment_truth.from_exclusive) and
+      ($pair.treatment.behavior_sources.effective.event == $seed.treatment_truth.event) and
+      ($pair.treatment.capability_coverage == $seed.treatment_truth.lane_outcomes) and
+      ($pair.treatment.capability_gap_refs == $seed.treatment_truth.capability_gap_refs) and
+      ($pair.treatment.validated_findings[0].candidate.capability ==
+        $seed.treatment_truth.finding.capability) and
+      ($pair.treatment.validated_findings[0].candidate.category ==
+        $seed.treatment_truth.finding.category) and
+      ($pair.treatment.validated_findings[0].candidate.severity ==
+        $seed.treatment_truth.finding.severity) and
+      ($pair.treatment.validated_findings[0].candidate.confidence ==
+        $seed.treatment_truth.finding.confidence) and
+      ($pair.treatment.validated_findings[0].adjudication ==
+        $seed.treatment_truth.finding.adjudication) and
+      ($pair.treatment.validated_findings[0].posted == $seed.treatment_truth.finding.posted) and
+      (if $seed.treatment_truth.raw_phase_timings == null then
+         $pair.treatment.timing == null
+       else
+         $pair.treatment.timing.durations_ms ==
+           $seed.treatment_truth.raw_phase_timings.durations_ms and
+         $pair.treatment.timing.lane_durations_ms ==
+           $seed.treatment_truth.raw_phase_timings.lane_durations_ms
+       end))
+  ' "$1" >/dev/null 2>&1
+}
+
 expect_rejected() {
   local label="$1" corpus="$2"
   if bash "$BENCHMARK" score --corpus "$corpus" >/dev/null 2>&1; then
@@ -73,8 +148,36 @@ if [ ! -f "$FIXTURE" ]; then
   printf 'FAIL: fixture does not exist: %s\n' "$FIXTURE"
   exit 1
 fi
+if [ ! -f "$SCENARIOS" ]; then
+  printf 'FAIL: structural scenario authority does not exist: %s\n' "$SCENARIOS"
+  exit 1
+fi
 
 report="$(score_file "$FIXTURE")"
+if scenario_binding_valid "$FIXTURE"; then
+  assert_eq "committed corpus is bound to independent scenario truth" true true
+else
+  assert_eq "committed corpus is bound to independent scenario truth" true false
+fi
+mutated="$TEST_ROOT/mutated.jsonl"
+mutate_case known-fix-only '.expected.mode="delta" | .expected.maximum_event="COMMENT" |
+  .expected.required_capabilities=["security"]' "$mutated"
+if scenario_binding_valid "$mutated"; then
+  assert_eq "expected-only mutation cannot rewrite observed scenario truth" rejected accepted
+else
+  assert_eq "expected-only mutation cannot rewrite observed scenario truth" rejected rejected
+fi
+baseline_observed_hash="$(jq -S -c 'select(.pair_id == "known-fix-only") |
+  {control,treatment}' "$FIXTURE" | sha256_text)"
+mutated_observed_hash="$(jq -S -c 'select(.pair_id == "known-fix-only") |
+  {control,treatment}' "$mutated" | sha256_text)"
+assert_eq "expected-only mutation leaves control and treatment bytes unchanged" \
+  "$baseline_observed_hash" "$mutated_observed_hash"
+if [ "$CASE_FILTER" = scenario-authority ]; then
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
 assert_eq "favorable synthetic corpus is not promotable" "do_not_promote" "$(jq -r '.verdict' <<<"$report")"
 assert_eq "report identifies structural evidence" "synthetic-structural" \
   "$(jq -r '.evidence_tier' <<<"$report")"
@@ -129,7 +232,6 @@ REVIEW_LATENCY_CALL_LEDGER="$call_ledger" PATH="$stub_dir:$PATH" \
   bash "$BENCHMARK" score --corpus "$FIXTURE" >/dev/null
 assert_eq "scoring makes no network or model call" "" "$(cat "$call_ledger")"
 
-mutated="$TEST_ROOT/mutated.jsonl"
 mutate_case known-fix-only '.treatment.plan.identity.review_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$mutated"
 assert_eq "arbitrary review key fails Q1 first" identity "$(first_failed "$mutated")"
 mutate_case known-fix-only '.treatment.plan.identity.head_sha="ffffffffffffffffffffffffffffffffffffffff"' "$mutated"

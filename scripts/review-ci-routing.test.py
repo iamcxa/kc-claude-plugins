@@ -86,6 +86,9 @@ PHASE1_PATH_OWNERS = {
     "kc-pr-flow/scripts/review-latency-benchmark.sh": {"evaluation"},
     "kc-pr-flow/scripts/review-latency-benchmark.test.sh": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl": {"evaluation"},
+    "kc-pr-flow/test/fixtures/review-plan/phase1-promotion-scenarios.jsonl": {
+        "evaluation"
+    },
 }
 
 # These runtime files are deliberately shared by existing behavioral owners;

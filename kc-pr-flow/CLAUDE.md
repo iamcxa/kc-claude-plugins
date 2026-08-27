@@ -90,6 +90,15 @@ posted-count bindings, and pins the control finding-set hash plus adjudication
 counters. Q1-Q5 cover every pair; only `delta` and `resolve` members enter the
 240-second structural latency gate.
 
+`phase1-promotion-scenarios.jsonl` is the independent structural authority for
+the committed corpus. It separates contract truth from modeled control and
+treatment truth, including changed hunks, lane outcomes, findings,
+adjudications, and raw phase timings. The latency test binds both arms directly
+to that source and rejects expected-only drift; fixture rebuild tools must read
+this scenario source, never the generated corpus. Its path routes to the
+existing evaluation job and adds no new CI job. Hosted cost per pull request is
+unmeasured.
+
 An `initial` fallback must carry `timing:null` and can never improve the
 structural latency result. Structural timing and receipt hashes model fixture
 consistency only; they are not runtime-observed evidence or promotion
