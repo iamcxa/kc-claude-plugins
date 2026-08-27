@@ -60,7 +60,7 @@ requires Captain admission and never writes either side automatically.
 | Planning window | Project #4 Iteration field |
 | Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
 | Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals |
-| Planning comparator | `docs/dev/_mods/engage-reconcile.py` |
+| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |

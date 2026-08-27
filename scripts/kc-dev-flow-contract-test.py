@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
 ADOPTED = ROOT / "docs/dev/_mods"
+ADOPTED_TOOLS = ROOT / "scripts/kc-dev-flow"
 
 
 def require(condition: bool, message: str) -> None:
@@ -86,6 +87,7 @@ required = [
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/engage-reconcile.py",
     "kc-dev-flow/scripts/engage-reconcile.test.py",
+    "scripts/kc-dev-flow/engage-reconcile.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -123,6 +125,7 @@ for retired in [
     "kc-dev-flow/skills/promote-dev-flow/SKILL.md",
     "kc-dev-flow/skills/setup-github-project-projection",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
+    "docs/dev/_mods/engage-reconcile.py",
 ]:
     require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
 
@@ -557,7 +560,7 @@ require(
 )
 require(
     (PLUGIN / "scripts/engage-reconcile.py").read_bytes()
-    == (ADOPTED / "engage-reconcile.py").read_bytes(),
+    == (ADOPTED_TOOLS / "engage-reconcile.py").read_bytes(),
     "self-adopted engage comparator differs from package source",
 )
 require(
@@ -762,6 +765,7 @@ for phrase in [
     "every currently Ready snapshot source",
     "Compare the adopted loader, engage comparator",
     "engage reconcile is read-only",
+    "outside the Spacedock workflow tree",
     "exact source, window, and outcome",
     "do not all share",
     "Captain admits every delta",
@@ -947,7 +951,7 @@ for phrase in [
     "`source` links the accepted planning item.",
     "At every engage, compare the provider's current Ready set with the committed SD snapshot.",
     "A difference requires Captain admission and never writes either side automatically.",
-    "| Planning comparator | `docs/dev/_mods/engage-reconcile.py` |",
+    "| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |",
     ".totalCount != (.items | length)",
     "--expected-source",
     "--expected-window",

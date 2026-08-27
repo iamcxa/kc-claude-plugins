@@ -20,6 +20,7 @@ LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
 RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
 RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
+ADOPTED_RECONCILE = Path("scripts/kc-dev-flow/engage-reconcile.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
 
 
@@ -51,6 +52,7 @@ def copy_repository_fixture(destination: Path) -> None:
     }
     # The runner must be able to prove itself before its first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
+    tracked.add(os.fsencode(ADOPTED_RECONCILE))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative

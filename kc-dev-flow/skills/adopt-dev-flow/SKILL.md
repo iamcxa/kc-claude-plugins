@@ -42,9 +42,11 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    `../../references/delivery-branch-base.md`,
    `../../references/pr-delivery.md`,
    `../../references/roborev-implementation-exit.md`,
-   `../../scripts/profile-contract-loader.py`,
-   `../../scripts/engage-reconcile.py`, and
-   `../../scripts/poc-close-guard.py` without local edits. The selected
+   `../../scripts/profile-contract-loader.py`, and
+   `../../scripts/poc-close-guard.py` without local edits. Vendor
+   `../../scripts/engage-reconcile.py` without local edits to a
+   repository-owned tooling path outside the Spacedock workflow tree, then bind
+   that path as the planning comparator in `## Local Profile`. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
