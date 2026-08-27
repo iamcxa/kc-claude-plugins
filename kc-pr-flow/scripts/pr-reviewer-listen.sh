@@ -87,23 +87,18 @@ mark_error() {
     '.seen[$k] = ((.seen[$k] // {}) + {status:"error", error:$e, ts:(now|todate), attempts:(((.seen[$k].attempts) // 0) + 1)})'
 }
 
-dispatch() { # dispatch <repo> <pr-number> <pr-url>
-  local repo="$1" num="$2" url="$3" key="$1#$2"
-  local be branch msg out job target
+dispatch() { # dispatch <repo> <pr-number> <pr-url> <head-branch> <head-sha>
+  local repo="$1" num="$2" url="$3" branch="$4" sha="$5" key="$1#$2"
+  local be msg out job target
 
   be=$(backend_path)
   if [[ ! -x "$be" ]]; then
     mark_error "$key" "backend not executable: $be"; return 1
   fi
 
-  branch=$("$GH" pr view "$num" --repo "$repo" --json headRefName --jq .headRefName 2>>"$LOG")
-  if [[ -z "$branch" ]]; then
-    mark_error "$key" "could not read head branch"; return 1
-  fi
-
   # Claim the key before the backend call: a crash mid-create must not double-create.
-  st_edit --arg k "$key" --arg u "$url" --arg b "$branch" \
-    '.seen[$k] = ((.seen[$k] // {}) + {status:"dispatching", url:$u, branch:$b, ts:(now|todate), attempts:(((.seen[$k].attempts) // 0) + 1)})'
+  st_edit --arg k "$key" --arg u "$url" --arg b "$branch" --arg s "$sha" \
+    '.seen[$k] = ((.seen[$k] // {}) + {status:"dispatching", url:$u, branch:$b, head_sha:$s, ts:(now|todate), attempts:(((.seen[$k].attempts) // 0) + 1)})'
 
   msg=$(mktemp -t prreview)
   sed -e "s|__PR_URL__|$url|g" -e "s|__REPO__|$repo|g" -e "s|__BRANCH__|$branch|g" \
@@ -154,6 +149,14 @@ check_completions() {
   rm -f "$errf"
 }
 
+# Has this account already submitted a review of exactly this commit?
+already_reviewed() { # <repo> <pr> <sha> <login>
+  local found
+  found=$("$GH" api "repos/$1/pulls/$2/reviews" --paginate \
+            --jq "[.[] | select(.user.login == \"$4\") | select(.commit_id == \"$3\")] | length" 2>>"$LOG") || return 1
+  [[ -n "$found" && "$found" != "0" ]]
+}
+
 poll() {
   local prs repo num url draft enabled status attempts n=0
   prs=$("$GH" search prs --review-requested=@me --state open --limit 40 \
@@ -173,17 +176,40 @@ poll() {
 
   [[ "$(cfg_get '.listening')" == "true" ]] || return 0
 
+  local me head branch sha seen_sha
+  me=$("$GH" api user --jq .login 2>>"$LOG")
+
   while IFS=$'\t' read -r repo num url draft; do
     [[ -z "$repo" ]] && continue
     (( n >= MAX_DISPATCH_PER_TICK )) && break
     [[ "$draft" == "true" ]] && continue
     enabled=$(cfg_get --arg r "$repo" '.repos[$r].enabled // false')
     [[ "$enabled" == "true" ]] || continue
+
+    # What was reviewed is a commit, not a number: a re-request after a push has to
+    # run again, and a re-request without one must not.
+    head=$("$GH" pr view "$num" --repo "$repo" --json headRefName,headRefOid \
+             --jq '[.headRefName, .headRefOid] | @tsv' 2>>"$LOG")
+    IFS=$'\t' read -r branch sha <<<"$head"
+    if [[ -z "$branch" || -z "$sha" ]]; then
+      mark_error "$repo#$num" "could not read the pull request head"; continue
+    fi
+
     status=$(st_get --arg k "$repo#$num" '.seen[$k].status // empty')
+    seen_sha=$(st_get --arg k "$repo#$num" '.seen[$k].head_sha // empty')
     attempts=$(st_get --arg k "$repo#$num" '.seen[$k].attempts // 0')
-    [[ -n "$status" && "$status" != "error" ]] && continue
-    (( attempts >= MAX_ATTEMPTS )) && continue
-    dispatch "$repo" "$num" "$url"
+    if [[ "$seen_sha" == "$sha" ]]; then
+      [[ -n "$status" && "$status" != "error" ]] && continue
+      (( attempts >= MAX_ATTEMPTS )) && continue
+    elif already_reviewed "$repo" "$num" "$sha" "$me"; then
+      # GitHub holds the durable record, so a wiped state file does not re-review.
+      st_edit --arg k "$repo#$num" --arg u "$url" --arg s "$sha" \
+        '.seen[$k] = {status:"reviewed", url:$u, head_sha:$s, finished:(now|todate), source:"github"}'
+      log "already reviewed on GitHub $repo#$num @ ${sha:0:8}"
+      continue
+    fi
+
+    dispatch "$repo" "$num" "$url" "$branch" "$sha"
     n=$((n+1))
   done < <("$JQ" -r '.open[] | [.repository.nameWithOwner, (.number|tostring), .url, (.isDraft|tostring)] | @tsv' "$STATE" 2>/dev/null)
 }

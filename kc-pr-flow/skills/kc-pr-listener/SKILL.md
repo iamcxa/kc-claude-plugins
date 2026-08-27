@@ -57,7 +57,9 @@ tail -20 ~/.claude/audit/pr-reviewer-listen.log
 
 Read `listening` for the switch, `repos` for which repositories are listened to, and
 each `seen` entry's `status`: `dispatching` → `running` → `reviewed`, or `error`
-with the backend's reason and an `attempts` count.
+with the backend's reason and an `attempts` count. Every entry carries the
+`head_sha` it applies to; `source: "github"` means the entry was adopted from an
+existing review of that commit rather than dispatched here.
 
 ## troubleshoot
 
