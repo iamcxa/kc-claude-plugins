@@ -75,7 +75,9 @@ if [ ! -f "$FIXTURE" ]; then
 fi
 
 report="$(score_file "$FIXTURE")"
-assert_eq "good corpus promotes" "promote" "$(jq -r '.verdict' <<<"$report")"
+assert_eq "favorable synthetic corpus is not promotable" "do_not_promote" "$(jq -r '.verdict' <<<"$report")"
+assert_eq "report identifies structural evidence" "synthetic-structural" \
+  "$(jq -r '.evidence_tier' <<<"$report")"
 assert_eq "ordered gate schema" "identity,required_coverage,must_fix_recall,precision,behavior_parity,latency" \
   "$(jq -r '.gate_order | join(",")' <<<"$report")"
 assert_eq "no failed gate on promotion" "" "$(jq -r '.first_failed_gate // ""' <<<"$report")"
@@ -210,7 +212,8 @@ assert_eq "gap with posted APPROVE fails Q2" false "$(gate_value "$mutated" requ
 assert_eq "initial fallback passes Q1" true "$(jq -r '.gates.identity' <<<"$report")"
 assert_eq "initial fallback passes Q5" true "$(jq -r '.gates.behavior_parity' <<<"$report")"
 mutate_case force-push '.treatment.timing=null' "$mutated"
-assert_eq "initial timing null remains accepted" promote "$(score_file "$mutated" | jq -r '.verdict')"
+assert_eq "initial timing null remains structurally non-promotable" do_not_promote \
+  "$(score_file "$mutated" | jq -r '.verdict')"
 timing_template="$(jq -c 'select(.pair_id == "known-fix-only") | .treatment.timing' "$FIXTURE")"
 jq -c --arg pair_id force-push --argjson timing "$timing_template" \
   'if .pair_id == $pair_id then .treatment.timing=$timing else . end' "$FIXTURE" >"$mutated"
@@ -232,8 +235,12 @@ mutate_case known-fix-only '._derived={identity_valid:true,behavior_parity:true}
 expect_rejected "caller derived booleans are rejected" "$mutated"
 mutate_case known-fix-only '.treatment.timing.durations_ms.caller_total=1' "$mutated"
 expect_rejected "caller total is rejected" "$mutated"
-mutate_case known-fix-only '.treatment.timing.measured_by="caller"' "$mutated"
-expect_rejected "non-runtime timing is rejected" "$mutated"
+mutate_case known-fix-only 'del(.evidence_tier)' "$mutated"
+expect_rejected "missing evidence tier is rejected" "$mutated"
+mutate_case known-fix-only '.evidence_tier="actual"' "$mutated"
+expect_rejected "changed evidence tier is rejected" "$mutated"
+mutate_case known-fix-only '.treatment.timing.evidence_tier="actual"' "$mutated"
+expect_rejected "non-structural timing tier is rejected" "$mutated"
 jq -c 'if .pair_id == "fix-plus-test" then .pair_id="known-fix-only" else . end' \
   "$FIXTURE" >"$mutated"
 expect_rejected "duplicate pair identifiers are rejected" "$mutated"

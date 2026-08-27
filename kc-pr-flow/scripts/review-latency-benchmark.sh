@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# review-latency-benchmark.sh — ordered Phase 1 latency promotion scoring.
+# review-latency-benchmark.sh — ordered Phase 1 structural latency scoring.
 #
 # Source-safe: this file declares functions only unless executed directly.
 
@@ -58,9 +58,9 @@ review_latency_hash_json() {
   printf '%s' "$canonical" | review_runtime_sha256
 }
 
-review_latency_expected_provenance() {
-  # Filled from immutable sanitized sources. This pins evidence-bearing fields,
-  # not whole rows, so ordered gate mutations still reach their owning gate.
+review_latency_expected_structural_bindings() {
+  # Pinned structural fields, not whole rows, so ordered gate mutations still
+  # reach their owning gate. These are not observed review provenance.
   case "$1" in
     known-fix-only) printf '%s\n' '{"control_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9","expected_sha256":"801bc7562f6b772cb0ab9bb4d912bf8c379d96f695dfaeb3cce63e8fc4b1cb35","posted_source_sha256":"dcb99a3d749716770fd4207bbc577f1d050f14368dd78ae8c9739b8564b5c4db","predecessor_projection_sha256":"85dad443cb2093841c3f4616cc08efd6b8f742520941ff3b3c980fc9465398f7","review_key":"16a4a31ab16aae7b2b5f7b830ab3aeb602860df5fba4e465019f9d8b40156631","treatment_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9"}' ;;
     fix-plus-test) printf '%s\n' '{"control_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3","expected_sha256":"9cb6fb9fe0068d9e0b326016159545db089849d07da238653dfc5fd30a04a0a3","posted_source_sha256":"39893d457c47cced18ecf22ac6fad39ec50f7366d4e35e0c3de32ee9d6d0782e","predecessor_projection_sha256":"bc1ab61daa93ee311344c6ece9eb4345c2b939455fe38467d09b8980251c7bbb","review_key":"eccb52f192042d4931778c1ee97a0964ae9a54ad36050b2ab7594eb79dd7c57a","treatment_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3"}' ;;
@@ -75,18 +75,18 @@ review_latency_expected_provenance() {
   esac
 }
 
-review_latency_expected_runtime_provenance() {
-  # Independent producer trust anchors for the full receipts. Keep these out
-  # of whole-line validation so timing mutations remain owned by Q6.
+review_latency_expected_structural_receipts() {
+  # Pinned structural receipt hashes. Keep these out of whole-line validation
+  # so timing mutations remain owned by Q6; they do not attest an actual run.
   case "$1" in
-    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"5b4b2681c75dc5836104069183ca8ba3658213be95ce89346482591c0eda5034"}' ;;
-    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"72921867a902db5af01bddab46c5436e0babc5b07e9c6c111d502466a777ceb1"}' ;;
-    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"9ea59e505952b4fde77a1b45e84bf127c9d3cb6ae30bbe2396136f25f535553d"}' ;;
+    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"1fcaf0db59b87175d95b1824a94c8e3075db9b2ef04c57a489047a6378ec5d03"}' ;;
+    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"8a2f1065b42acddb5f7adf37718623a4e7ec693599805d5dbe10c996ab51c884"}' ;;
+    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"57abe3fede2289e7c5eefd4411ee38aea69b5e1cdebaa20028e267e23ee3327e"}' ;;
     force-push | corrupt-receipt) printf '%s\n' '{"predecessor_receipt_sha256":null,"timing_sha256":null}' ;;
-    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"fecdb17f5aa7a2349e679e7cc7dfed5aa10664def0504adc6fc11eae133c56ec"}' ;;
-    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"ba14450be7e0c4cc1a2cf21635fc82708adb609746d89437dbd0c33069c1d76b"}' ;;
-    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"5bb964f775575512faf197ec343d9d3d9846e2122b30b280fdaea50859f8a2aa"}' ;;
-    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"87227a17338d13ef9dab5e813e48aa43019d594189c13526883c139f9c41fc40"}' ;;
+    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"294c60c5d974c676c95d32aacbea593ba701210e80a877892d52e0edd36e3d56"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"b3486bf03d8c47d004cc87d8d38eff39d474e44f2c0020927e31df17a15a7292"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"98c84feeec436f12b361b2f2cd4c4522010aaaabc1fd9257c49cdbd3dfaa2b8a"}' ;;
+    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"77f5f393f39dac604851c8dd0ccf4052e23c2ea371c845321e16a17f428c7fca"}' ;;
     *) return 1 ;;
   esac
 }
@@ -133,7 +133,7 @@ review_latency_precision_valid() {
 
 review_latency_validate_pair() {
   local pair="$1" expected_review_key identity_valid behavior_parity timing_valid precision_valid
-  local repository pr_number base_sha head_sha config_hash pair_id provenance runtime_provenance expected_hash
+  local repository pr_number base_sha head_sha config_hash pair_id structural_bindings structural_receipts expected_hash
   local control_effective_hash control_options_hash treatment_effective_hash treatment_options_hash
   local posted_source_hash posted_payload_hash posted_idempotency_key
   local predecessor_projection_hash predecessor_receipt_hash predecessor_full_receipt_hash predecessor_receipt_id
@@ -281,9 +281,9 @@ review_latency_validate_pair() {
       (.adjudication == "true_positive" or .adjudication == "false_positive") and
       (.candidate | candidate) and (.content_sha256 | type == "string") and
       (.finding_id | type == "string") and (.posted | type == "boolean");
-    def timing: exact_keys(["durations_ms","lane_durations_ms","measured_by","mode","review_key","schema"]) and
+    def timing: exact_keys(["durations_ms","evidence_tier","lane_durations_ms","mode","review_key","schema"]) and
       .schema == "kc-pr-flow.review-timing/v1" and (.review_key | sha256) and
-      (.mode == "delta" or .mode == "resolve") and .measured_by == "review-runtime" and
+      (.mode == "delta" or .mode == "resolve") and .evidence_tier == "synthetic-structural" and
       (.durations_ms | exact_keys(["collation_and_draft","confirmation_wait","external_ci_wait",
         "identity_and_plan","inventory","post_mutation","required_lanes_critical_path",
         "review_to_confirmation_ready","targeted_verification_critical_path"])) and
@@ -296,8 +296,9 @@ review_latency_validate_pair() {
         (.lane_id | token) and (.duration_ms | safe_int) and
         (.provider_family == null or (.provider_family | token))) and
         ([.[].lane_id] | unique | length) == length);
-    ($pair | exact_keys(["control","exact_head","expected","pair_id","schema","treatment"])) and
+    ($pair | exact_keys(["control","evidence_tier","exact_head","expected","pair_id","schema","treatment"])) and
     $pair.schema == "kc-pr-flow.review-latency-pair/v1" and ($pair.pair_id | token) and
+    $pair.evidence_tier == "synthetic-structural" and
     ($pair.exact_head | identity) and
     ($pair.expected | exact_keys(["maximum_event","mode","must_fix_finding_ids","required_capabilities"])) and
     ($pair.expected.mode == "initial" or $pair.expected.mode == "delta" or $pair.expected.mode == "resolve") and
@@ -384,16 +385,16 @@ review_latency_validate_pair() {
     ' >/dev/null 2>&1 || predecessor_valid=false
   fi
 
-  provenance="$(review_latency_expected_provenance "$pair_id")" || return 3
-  runtime_provenance="$(review_latency_expected_runtime_provenance "$pair_id")" || return 3
+  structural_bindings="$(review_latency_expected_structural_bindings "$pair_id")" || return 3
+  structural_receipts="$(review_latency_expected_structural_receipts "$pair_id")" || return 3
   expected_hash="$(review_latency_hash_json "$pair" '.expected')" || return 3
   identity_valid="$(jq -r --arg expected_review_key "$expected_review_key" --arg expected_hash "$expected_hash" \
-    --argjson provenance "$provenance" --arg predecessor_projection_hash "${predecessor_projection_hash:-}" \
+    --argjson structural_bindings "$structural_bindings" --arg predecessor_projection_hash "${predecessor_projection_hash:-}" \
     --arg predecessor_full_receipt_hash "${predecessor_full_receipt_hash:-}" \
-    --argjson runtime_provenance "$runtime_provenance" \
+    --argjson structural_receipts "$structural_receipts" \
     --argjson predecessor_valid "$predecessor_valid" '
     (.exact_head.review_key == $expected_review_key) and
-    (.exact_head.review_key == $provenance.review_key) and ($expected_hash == $provenance.expected_sha256) and
+    (.exact_head.review_key == $structural_bindings.review_key) and ($expected_hash == $structural_bindings.expected_sha256) and
     (.expected.mode == .treatment.plan.mode) and
     (.expected.required_capabilities == .treatment.plan.required_capabilities) and
     (.treatment.plan.identity == .exact_head) and
@@ -403,28 +404,28 @@ review_latency_validate_pair() {
     (if .treatment.timing == null then .treatment.plan.mode == "initial"
      else .treatment.timing.review_key == .exact_head.review_key and .treatment.timing.mode == .treatment.plan.mode end) and
     (if .treatment.plan.mode == "initial" then
-       $provenance.predecessor_projection_sha256 == null and
-       $runtime_provenance.predecessor_receipt_sha256 == null
+       $structural_bindings.predecessor_projection_sha256 == null and
+       $structural_receipts.predecessor_receipt_sha256 == null
      else $predecessor_valid and
-       $predecessor_projection_hash == $provenance.predecessor_projection_sha256 and
-       $predecessor_full_receipt_hash == $runtime_provenance.predecessor_receipt_sha256 end)
+       $predecessor_projection_hash == $structural_bindings.predecessor_projection_sha256 and
+       $predecessor_full_receipt_hash == $structural_receipts.predecessor_receipt_sha256 end)
   ' <<<"$pair")" || return 3
 
   behavior_parity="$(jq -r --arg control_effective_hash "$control_effective_hash" \
     --arg control_options_hash "$control_options_hash" --arg treatment_effective_hash "$treatment_effective_hash" \
     --arg treatment_options_hash "$treatment_options_hash" --arg posted_source_hash "$posted_source_hash" \
     --arg posted_payload_hash "${posted_payload_hash:-}" --arg posted_idempotency_key "${posted_idempotency_key:-}" \
-    --argjson provenance "$provenance" '
+    --argjson structural_bindings "$structural_bindings" '
     def rank: if . == "REQUEST_CHANGES" then 0 elif . == "COMMENT" then 1 elif . == "APPROVE" then 2 else -1 end;
     (.control.behavior_hashes.event_sha256 == $control_effective_hash) and
     (.control.behavior_hashes.options_sha256 == $control_options_hash) and
     (.treatment.behavior_hashes.event_sha256 == $treatment_effective_hash) and
     (.treatment.behavior_hashes.options_sha256 == $treatment_options_hash) and
     (.treatment.event_evidence.effective.source_sha256? == $treatment_effective_hash) and
-    ($control_effective_hash == $provenance.control_effective_sha256) and
-    ($treatment_effective_hash == $provenance.treatment_effective_sha256) and
-    (($posted_source_hash == "" and $provenance.posted_source_sha256 == null and .treatment.event_evidence.posted == null) or
-      ($posted_source_hash != "" and $posted_source_hash == $provenance.posted_source_sha256 and
+    ($control_effective_hash == $structural_bindings.control_effective_sha256) and
+    ($treatment_effective_hash == $structural_bindings.treatment_effective_sha256) and
+    (($posted_source_hash == "" and $structural_bindings.posted_source_sha256 == null and .treatment.event_evidence.posted == null) or
+      ($posted_source_hash != "" and $posted_source_hash == $structural_bindings.posted_source_sha256 and
        .treatment.event_evidence.posted.source_sha256 == $posted_source_hash and
        .treatment.behavior_sources.posted.payload_sha256 == $posted_payload_hash and
        .treatment.behavior_sources.posted.idempotency_key == $posted_idempotency_key and
@@ -447,13 +448,13 @@ review_latency_validate_pair() {
   if [ "$(jq -r '.treatment.timing == null' <<<"$pair")" = false ]; then
     timing_hash="$(review_latency_hash_json "$pair" '.treatment.timing')" || return 3
   fi
-  timing_valid="$(jq -r --arg timing_hash "$timing_hash" --argjson runtime_provenance "$runtime_provenance" '
+  timing_valid="$(jq -r --arg timing_hash "$timing_hash" --argjson structural_receipts "$structural_receipts" '
     if .treatment.timing == null then true else
       .treatment.timing.durations_ms as $d |
       ($d.identity_and_plan + $d.inventory + $d.required_lanes_critical_path +
        $d.targeted_verification_critical_path + $d.collation_and_draft) as $sum |
       ($d.review_to_confirmation_ready >= $sum) and
-      ($timing_hash == $runtime_provenance.timing_sha256)
+      ($timing_hash == $structural_receipts.timing_sha256)
     end
   ' <<<"$pair")" || return 3
 
@@ -507,6 +508,7 @@ phase1_promotion() {
     ["identity","required_coverage","must_fix_recall","precision","behavior_parity","latency"] as $order |
     {
       schema:"kc-pr-flow.review-latency-promotion/v1",phase:"review-plan",gate_order:$order,
+      evidence_tier:"synthetic-structural",
       gates:$gates,
       quality_gates:{identity:$q1,required_coverage:$q2,must_fix_recall:$q3,
         precision:$q4,behavior_parity:$q5},
@@ -516,8 +518,7 @@ phase1_promotion() {
           .treatment.timing.durations_ms.review_to_confirmation_ready <= 240000)]|length),
         max_ms:([$eligible[].treatment.timing.durations_ms.review_to_confirmation_ready]|max // null)},
       first_failed_gate:(first($order[] | select($gates[.] == false)) // null),
-      verdict:(if $q1 and $q2 and $q3 and $q4 and $q5 and $q6
-        then "promote" else "do_not_promote" end)
+      verdict:"do_not_promote"
     }
   '
 }

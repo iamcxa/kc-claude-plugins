@@ -77,22 +77,23 @@ route to `plan`, `runtime`, `shadow`, `post`, and `evaluation` as enforced by
 `scripts/review-ci-routing.test.py`; the evaluation workflow then runs its
 runtime-benchmark, latency-benchmark, and ablation-contract jobs.
 
-`review-latency-benchmark.sh` is the Phase 1 promotion authority for evidence,
-not for review judgment. It safe-snapshots the immutable sanitized corpus,
-requires each of the fixed nine case classes exactly once, and evaluates Q1
-identity through Q6 latency in fixed order. Q1 binds the exact head to a closed
-predecessor projection, full delta receipt, ancestry claim, review range, and
-inherited findings. Q4 recomputes `ReviewCandidate/v2` quote, evidence,
-candidate, finding, and posted-count bindings. Behavior decisions and posting
-receipts are recomputed and checked against the repository-pinned per-class
-provenance map, so caller self-resealing is not evidence. Q1-Q5 cover every
-pair; only `delta` and `resolve` receipts enter the 240-second latency gate,
-where the five runtime phase-floor durations may not exceed the later
-confirmation-ready total. The full predecessor and timing receipt hashes are
-independently pinned per class; terminal transition time is intentionally
-unbounded below the 240-second total target.
-An `initial` fallback must carry `timing:null` and can never improve the latency
-result. The scorer has no model, network, confirmation, or posting authority.
+`review-latency-benchmark.sh` is a Phase 1 structural scorer, not a promotion
+authority. It safe-snapshots the immutable synthetic corpus, requires each of
+the fixed nine case classes exactly once, and evaluates Q1 identity through Q6
+latency in fixed order. Every corpus pair and non-null timing member has the
+closed `evidence_tier:"synthetic-structural"`; missing or changed tiers fail
+validation. Q1 binds the modeled exact head to closed structural bindings. Q4
+recomputes `ReviewCandidate/v2` quote, evidence, candidate, finding, and
+posted-count bindings. Q1-Q5 cover every pair; only `delta` and `resolve`
+members enter the 240-second structural latency gate.
+
+An `initial` fallback must carry `timing:null` and can never improve the
+structural latency result. Structural timing and receipt hashes model fixture
+consistency only; they are not runtime-observed evidence or promotion
+provenance. The Q1-Q6 report always emits `do_not_promote`, even when every
+structural gate passes. The scorer has no model, network, confirmation, or
+posting authority. Fixture generators must remain explicitly structural; do not
+describe their outputs as an actual review run.
 
 Phase 2 shared inventory, Phase 3 typed collation, Phase 4 recipe extraction,
 Phase 5 specialist routing, and Phase 6 tails remain unimplemented and
