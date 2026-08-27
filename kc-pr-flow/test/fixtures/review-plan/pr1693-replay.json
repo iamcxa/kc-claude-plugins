@@ -4,11 +4,16 @@
   "repository": "datarecce/recce-cloud-infra",
   "pr_number": 1693,
   "commits": [
-    {"name": "base", "files": {"src/parser.py": "def parse(value):\n    return value\n"}},
-    {"name": "reviewed", "files": {"src/parser.py": "def parse(value):\n    return value.strip()\n"}},
+    {"name": "base", "files": {
+      "src/parser.py": "def parse(value):\n    return value\n\ndef stable_one():\n    return 1\n\ndef stable_two():\n    return 2\n"
+    }},
+    {"name": "reviewed", "files": {
+      "src/parser.py": "def parse(value):\n    return value.strip()\n\ndef stable_one():\n    return 1\n\ndef stable_two():\n    return 2\n",
+      "tests/test_parser.py": "from src.parser import parse\n\ndef test_strip():\n    assert parse(' value ') == 'value'\n\ndef test_passthrough():\n    assert parse('value') == 'value'\n"
+    }},
     {"name": "fixed", "files": {
-      "src/parser.py": "def parse(value):\n    return value.strip() or None\n",
-      "tests/test_parser.py": "from src.parser import parse\n\ndef test_empty():\n    assert parse(' ') is None\n"
+      "src/parser.py": "def parse(value):\n    return value.strip() or None\n\ndef stable_one():\n    return 1\n\ndef stable_two():\n    return 2\n",
+      "tests/test_parser.py": "from src.parser import parse\n\ndef test_strip():\n    assert parse(' value ') == 'value'\n\n# empty-input-contract empty-input-contract\ndef test_empty():\n    assert parse(' ') is None\n\ndef test_passthrough():\n    assert parse('value') == 'value'\n"
     }}
   ],
   "known_findings": [
@@ -16,7 +21,7 @@
       "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       "category": "correctness",
       "claim_key": "empty-input-contract",
-      "evidence": {"kind": "git_blob", "line": 1, "locator": "parser-anchor"},
+      "evidence": {"kind": "git_blob", "line": 2, "locator": "parser-anchor"},
       "path": "src/parser.py",
       "side": "RIGHT"
     }

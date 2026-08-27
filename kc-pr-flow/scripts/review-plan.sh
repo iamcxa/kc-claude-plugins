@@ -216,10 +216,6 @@ review_plan_validate_receipt() (
     ' >/dev/null 2>&1
 )
 
-# The decision boundary owns one path check per invocation.  All later Git
-# helpers receive only this canonical path; checking it before every Git call
-# would add a Python process to each small read without improving this
-# invocation's trust boundary.
 review_plan_real_worktree() {
   python3 - "$1" <<'PY'
 import os
@@ -249,9 +245,10 @@ PY
 }
 
 review_plan_git() {
-  local worktree="$1"
+  local worktree="$1" canonical
   shift
-  command git -C "$worktree" "$@"
+  canonical="$(review_plan_real_worktree "$worktree")" || return 2
+  command git -C "$canonical" "$@"
 }
 
 review_plan_git_identity_valid() {
@@ -266,6 +263,10 @@ review_plan_ancestor() {
 
 review_plan_changed_paths() {
   review_plan_git "$1" diff --name-status --find-renames=50% --find-copies=50% --find-copies-harder "$2..$3"
+}
+
+review_plan_changed_diff() {
+  review_plan_git "$1" diff --unified=0 --no-ext-diff --no-renames --no-color "$2..$3"
 }
 
 review_plan_changed_object_is_safe() {
@@ -299,6 +300,259 @@ review_plan_safe_path() {
   [[ "$path" != *$'\n'* && "$path" != *$'\r'* && "$path" != *\\* ]]
 }
 
+review_plan_classify_hunks() (
+  local worktree="$1" predecessor_head="$2" head_sha="$3" receipt="$4" changed="$5"
+  local snapshot_dir diff_file receipt_file changed_file diff_bytes max_diff_bytes
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 2
+  diff_file="$snapshot_dir/review.diff"
+  receipt_file="$snapshot_dir/receipt.json"
+  changed_file="$snapshot_dir/changed.tsv"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$diff_file" "$receipt_file" "$changed_file"' EXIT
+  printf '%s' "$receipt" >"$receipt_file" || return 2
+  printf '%s\n' "$changed" >"$changed_file" || return 2
+  review_plan_changed_diff "$worktree" "$predecessor_head" "$head_sha" >"$diff_file" || return 2
+  diff_bytes="$(wc -c <"$diff_file" | tr -d ' ')" || return 2
+  max_diff_bytes="${KC_PR_FLOW_MAX_PLAN_DIFF_BYTES:-4194304}"
+  [[ "$max_diff_bytes" =~ ^[1-9][0-9]*$ ]] || return 2
+  [ "$max_diff_bytes" -le 16777216 ] && [ "$diff_bytes" -le "$max_diff_bytes" ] || return 2
+
+  python3 - "$receipt_file" "$diff_file" "$changed_file" "$predecessor_head" <<'PY'
+import json
+import os
+import re
+import sys
+
+
+class ParseError(Exception):
+    pass
+
+
+def safe_path(path):
+    if not isinstance(path, str) or not path or len(path) > 1024:
+        return False
+    if path.startswith("/") or path.endswith("/") or "//" in path or "\\" in path:
+        return False
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in path):
+        return False
+    return all(component not in (".", "..", "") for component in path.split("/"))
+
+
+def boundary_path(path):
+    components = path.lower().split("/")
+    name = components[-1]
+    return (
+        any(part in {"test", "tests", "__tests__", "fixture", "fixtures", "contract", "contracts"}
+            for part in components[:-1])
+        or name.startswith("test_")
+        or re.search(r"(?:^|[._-])(?:test|spec|fixture|contract)(?:[._-]|$)", name) is not None
+    )
+
+
+DEPENDENCY_FILES = {
+    "package.json", "package-lock.json", "yarn.lock", "pnpm-lock.yaml",
+    "requirements.txt", "requirements-dev.txt", "pyproject.toml", "poetry.lock",
+    "pipfile", "pipfile.lock", "cargo.toml", "cargo.lock", "go.mod", "go.sum",
+    "gemfile", "gemfile.lock",
+}
+SECURITY_PATH = re.compile(
+    r"(?:^|/)(?:auth|authorization|rls|middleware|webhook|permission|rbac|vault|secret|token|credential|\.env)[^/]*(?:/|$)",
+    re.IGNORECASE,
+)
+SECURITY_BODY = re.compile(
+    r"(?:auth(?:entication|orization)?|authori[sz]ation|permission|rbac|rls|secret|token|credential|password|"
+    r"webhook|middleware|bypass|subprocess|shell\s*=|eval\s*\(|exec\s*\()",
+    re.IGNORECASE,
+)
+
+
+def signal_capabilities(path, body):
+    capabilities = set()
+    lower_path = path.lower()
+    name = lower_path.rsplit("/", 1)[-1]
+    if SECURITY_PATH.search(path) or SECURITY_BODY.search(body):
+        capabilities.add("security")
+    if name in DEPENDENCY_FILES:
+        capabilities.add("supply-chain")
+    if re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", lower_path):
+        capabilities.add("github-actions")
+    return capabilities
+
+
+def module_token(path):
+    stem, _ = os.path.splitext(path)
+    return stem.replace("/", ".")
+
+
+def malformed_result():
+    return {"classification": "initial", "required_capabilities": []}
+
+
+try:
+    with open(sys.argv[1], encoding="utf-8") as handle:
+        receipt = json.load(handle)
+    with open(sys.argv[2], encoding="utf-8", errors="strict") as handle:
+        lines = handle.read().splitlines()
+    with open(sys.argv[3], encoding="utf-8", errors="strict") as handle:
+        changed_lines = handle.read().splitlines()
+    predecessor_head = sys.argv[4]
+
+    statuses = {}
+    for line in changed_lines:
+        fields = line.split("\t")
+        if len(fields) != 2 or fields[0] not in {"A", "M"} or not safe_path(fields[1]):
+            raise ParseError
+        if fields[1] in statuses:
+            raise ParseError
+        statuses[fields[1]] = fields[0]
+    if not statuses or not lines:
+        raise ParseError
+
+    findings = receipt.get("known_findings")
+    if not isinstance(findings, list) or not findings:
+        raise ParseError
+    parsed_paths = set()
+    capabilities = set()
+    unmapped = False
+    index = 0
+    hunk_count = 0
+
+    while index < len(lines):
+        header = re.fullmatch(r"diff --git a/(.+) b/(.+)", lines[index])
+        if not header or header.group(1) != header.group(2) or not safe_path(header.group(1)):
+            raise ParseError
+        path = header.group(1)
+        if path not in statuses or path in parsed_paths:
+            raise ParseError
+        parsed_paths.add(path)
+        index += 1
+
+        while index < len(lines) and not lines[index].startswith("--- "):
+            metadata = lines[index]
+            if not (
+                re.fullmatch(r"index [0-9a-f]+\.\.[0-9a-f]+(?: [0-7]{6})?", metadata)
+                or re.fullmatch(r"new file mode 100(?:644|755)", metadata)
+                or re.fullmatch(r"old mode 100(?:644|755)", metadata)
+                or re.fullmatch(r"new mode 100(?:644|755)", metadata)
+            ):
+                raise ParseError
+            index += 1
+        if index + 1 >= len(lines):
+            raise ParseError
+        expected_old = "/dev/null" if statuses[path] == "A" else "a/" + path
+        if lines[index] != "--- " + expected_old or lines[index + 1] != "+++ b/" + path:
+            raise ParseError
+        index += 2
+        file_hunks = 0
+
+        while index < len(lines) and not lines[index].startswith("diff --git "):
+            match = re.fullmatch(r"@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(?: .*)?", lines[index])
+            if not match:
+                raise ParseError
+            old_start = int(match.group(1))
+            old_count = int(match.group(2) or "1")
+            new_count = int(match.group(4) or "1")
+            index += 1
+            removed = 0
+            added = 0
+            body_lines = []
+            while index < len(lines):
+                line = lines[index]
+                if line.startswith("diff --git ") or line.startswith("@@ "):
+                    break
+                if line == r"\ No newline at end of file":
+                    index += 1
+                    continue
+                if line.startswith("-"):
+                    removed += 1
+                    body_lines.append(line[1:])
+                elif line.startswith("+"):
+                    added += 1
+                    body_lines.append(line[1:])
+                else:
+                    raise ParseError
+                index += 1
+            if removed != old_count or added != new_count or old_count + new_count == 0:
+                raise ParseError
+            body = "\n".join(body_lines)
+            mapped = set()
+            for finding_index, finding in enumerate(findings):
+                evidence = finding.get("evidence", {})
+                evidence_line = evidence.get("line")
+                direct = (
+                    finding.get("path") == path
+                    and evidence.get("kind") == "git_blob"
+                    and evidence.get("head_sha") == predecessor_head
+                    and evidence.get("object_sha") == predecessor_head
+                    and isinstance(evidence_line, int)
+                    and not isinstance(evidence_line, bool)
+                    and (
+                        evidence_line == old_start
+                        if old_count == 0
+                        else old_start <= evidence_line <= old_start + old_count - 1
+                    )
+                )
+                referenced = False
+                if boundary_path(path):
+                    tokens = {
+                        finding.get("claim_key"),
+                        evidence.get("locator"),
+                        module_token(finding.get("path", "")),
+                    }
+                    referenced = any(isinstance(token, str) and token and token in body for token in tokens)
+                if direct or referenced:
+                    mapped.add(finding_index)
+            if len(mapped) > 1:
+                raise ParseError
+            if len(mapped) != 1:
+                unmapped = True
+            hunk_capabilities = signal_capabilities(path, body)
+            if hunk_capabilities:
+                capabilities.update(hunk_capabilities)
+                unmapped = True
+            file_hunks += 1
+            hunk_count += 1
+        if file_hunks == 0:
+            raise ParseError
+
+    if parsed_paths != set(statuses) or hunk_count == 0:
+        raise ParseError
+    classification = "delta" if unmapped else "resolve"
+    print(json.dumps(
+        {"classification": classification, "required_capabilities": sorted(capabilities)},
+        sort_keys=True,
+        separators=(",", ":"),
+    ))
+except (OSError, UnicodeError, ValueError, TypeError, KeyError, ParseError):
+    print(json.dumps(malformed_result(), sort_keys=True, separators=(",", ":")))
+PY
+)
+
+review_plan_route_delta() {
+  local worktree="$1" predecessor_head="$2" head_sha="$3" receipt="$4"
+  local changed status path extra classification
+  changed="$(review_plan_changed_paths "$worktree" "$predecessor_head" "$head_sha")" || return 2
+  [ -n "$changed" ] || return 2
+  while IFS=$'\t' read -r status path extra; do
+    case "$status" in
+      A|M) ;;
+      *) return 2 ;;
+    esac
+    review_plan_safe_path "$path" || return 2
+    [ -z "$extra" ] || return 2
+    review_plan_changed_object_is_safe "$worktree" "$predecessor_head" "$head_sha" "$path" || return 2
+  done <<<"$changed"
+  classification="$(review_plan_classify_hunks "$worktree" "$predecessor_head" "$head_sha" "$receipt" "$changed")" || return 2
+  jq -e '
+    type == "object" and
+    (keys | sort) == ["classification","required_capabilities"] and
+    (.classification == "initial" or .classification == "delta" or .classification == "resolve") and
+    (.required_capabilities | type == "array" and all(type == "string" and test("^[a-z][a-z0-9._-]{0,63}$")) and
+      . == (sort | unique)) and
+    (if .classification == "resolve" then .required_capabilities == [] else true end)
+  ' >/dev/null 2>&1 <<<"$classification" || return 2
+  printf '%s\n' "$classification"
+}
+
 review_plan_input_identity_valid() {
   jq -e -n --arg repository "$1" --arg pr_number "$2" --arg base_sha "$3" --arg head_sha "$4" --arg config_hash "$5" '
     ($repository | test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
@@ -315,8 +569,8 @@ review_plan_input_identity_valid() {
 review_plan_validate_decision() {
   local decision="$1" repository="$2" pr_number="$3" base_sha="$4" head_sha="$5" config_hash="$6"
   local predecessor_events="$7" delta_receipt="$8" worktree="$9"
-  local expected_review_key mode receipt_source canonical predecessor_head inherited_finding_ids
-  local receipt_capabilities expected_capabilities
+  local expected_review_key mode receipt_source predecessor_head inherited_finding_ids
+  local receipt_capabilities expected_capabilities route route_mode route_capabilities
   [ "$#" -eq 9 ] || return 2
   review_plan_source_runtime || return
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 3
@@ -389,17 +643,21 @@ review_plan_validate_decision() {
       $receipt.predecessor.base_sha == $base_sha and
       $receipt.predecessor.config_hash == $config_hash
     ' >/dev/null 2>&1 || return 3
-  canonical="$(review_plan_real_worktree "$worktree")" || return
   predecessor_head="$(jq -r '.predecessor.head_sha' <<<"$receipt_source")" || return
-  review_plan_git_identity_valid "$canonical" "$predecessor_head" || return
-  review_plan_git_identity_valid "$canonical" "$head_sha" || return
-  review_plan_ancestor "$canonical" "$predecessor_head" "$head_sha" || return
+  review_plan_git_identity_valid "$worktree" "$predecessor_head" || return
+  review_plan_git_identity_valid "$worktree" "$head_sha" || return
+  review_plan_ancestor "$worktree" "$predecessor_head" "$head_sha" || return
   [ "$predecessor_head" != "$head_sha" ] || return 3
+  route="$(review_plan_route_delta "$worktree" "$predecessor_head" "$head_sha" "$receipt_source")" || return
+  route_mode="$(jq -r '.classification' <<<"$route")" || return
+  route_capabilities="$(jq -S -c '.required_capabilities' <<<"$route")" || return
+  [ "$route_mode" = "$mode" ] || return 3
   inherited_finding_ids="$(jq -S -c '[.known_findings[].finding_id] | sort | unique' <<<"$receipt_source")" || return
   receipt_capabilities="$(jq -S -c '.required_capabilities | sort | unique' <<<"$receipt_source")" || return
   expected_capabilities="$receipt_capabilities"
   if [ "$mode" = 'delta' ]; then
-    expected_capabilities="$(jq -S -c '. + ["correctness"] | sort | unique' <<<"$receipt_capabilities")" || return
+    expected_capabilities="$(jq -S -c --argjson route_capabilities "$route_capabilities" \
+      '. + ["correctness"] + $route_capabilities | sort | unique' <<<"$receipt_capabilities")" || return
   fi
   jq -e -n \
     --argjson decision "$decision" --arg predecessor_head "$predecessor_head" \
@@ -460,29 +718,10 @@ review_plan_snapshot_receipt() (
   fi
 )
 
-review_plan_known_path() {
-  jq -e --arg path "$2" '.known_findings | any(.path == $path)' <<<"$1" >/dev/null 2>&1
-}
-
-review_plan_mechanical_adjacency() {
-  local worktree="$1" head_sha="$2" path="$3" receipt="$4" content finding_path basename import_path matches=0
-  [[ "$path" =~ (^|/)(test|tests|__tests__|fixtures)/ ]] || return 1
-  content="$(review_plan_git "$worktree" show "$head_sha:$path" 2>/dev/null)" || return 1
-  while IFS= read -r finding_path; do
-    basename="${finding_path##*/}"
-    import_path="${finding_path%.*}"
-    import_path="${import_path//\//.}"
-    if printf '%s' "$content" | grep -F -q -e "$basename" -e "$import_path"; then
-      matches=$((matches + 1))
-    fi
-  done < <(jq -r '.known_findings[].path' <<<"$receipt")
-  [ "$matches" -eq 1 ]
-}
-
 review_plan_decide() {
   local repository="$1" pr_number="$2" base_sha="$3" head_sha="$4" config_hash="$5"
-  local worktree="$6" predecessor_events="$7" delta_receipt="$8" canonical receipt_source predecessor_repository predecessor_pr
-  local predecessor_base predecessor_head predecessor_config changed status path extra unknown=0 expanded=0 known=0
+  local worktree="$6" predecessor_events="$7" delta_receipt="$8" receipt_source predecessor_repository predecessor_pr
+  local predecessor_base predecessor_head predecessor_config route route_mode route_capabilities
   local inherited_finding_ids required_capabilities
 
   review_plan_input_identity_valid "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" || return 2
@@ -490,10 +729,6 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" feature_disabled
     return
   fi
-  canonical="$(review_plan_real_worktree "$worktree")" || {
-    review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
-    return
-  }
   if [ -z "$predecessor_events" ] || [ -z "$delta_receipt" ]; then
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" missing_predecessor
     return
@@ -523,53 +758,36 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" config_changed
     return
   fi
-  if ! review_plan_git_identity_valid "$canonical" "$base_sha" ||
-    ! review_plan_git_identity_valid "$canonical" "$predecessor_head" ||
-    ! review_plan_git_identity_valid "$canonical" "$head_sha"; then
+  if ! review_plan_git_identity_valid "$worktree" "$base_sha" ||
+    ! review_plan_git_identity_valid "$worktree" "$predecessor_head" ||
+    ! review_plan_git_identity_valid "$worktree" "$head_sha"; then
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   fi
-  if ! review_plan_ancestor "$canonical" "$predecessor_head" "$head_sha"; then
+  if ! review_plan_ancestor "$worktree" "$predecessor_head" "$head_sha"; then
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" non_ancestor
     return
   fi
-  changed="$(review_plan_changed_paths "$canonical" "$predecessor_head" "$head_sha")" || {
+  route="$(review_plan_route_delta "$worktree" "$predecessor_head" "$head_sha" "$receipt_source")" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" unknown_delta
     return
   }
-  [ -n "$changed" ] || {
-    review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" unknown_delta
-    return
-  }
-  while IFS=$'\t' read -r status path extra; do
-    case "$status" in
-      A|M) ;;
-      *) unknown=1; break ;;
-    esac
-    review_plan_safe_path "$path" || { unknown=1; break; }
-    [ -z "$extra" ] || { unknown=1; break; }
-    review_plan_changed_object_is_safe "$canonical" "$predecessor_head" "$head_sha" "$path" || { unknown=1; break; }
-    if review_plan_known_path "$receipt_source" "$path"; then
-      known=1
-    elif review_plan_mechanical_adjacency "$canonical" "$head_sha" "$path" "$receipt_source"; then
-      :
-    else
-      expanded=1
-    fi
-  done <<<"$changed"
-  if [ "$unknown" -ne 0 ]; then
+  route_mode="$(jq -r '.classification' <<<"$route")" || return 3
+  route_capabilities="$(jq -S -c '.required_capabilities' <<<"$route")" || return 3
+  if [ "$route_mode" = 'initial' ]; then
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" unknown_delta
     return
   fi
   inherited_finding_ids="$(jq -S -c '[.known_findings[].finding_id] | sort | unique' <<<"$receipt_source")" || return 3
   required_capabilities="$(jq -S -c '.required_capabilities | sort | unique' <<<"$receipt_source")" || return 3
-  if [ "$known" -ne 0 ] && [ "$expanded" -eq 0 ]; then
+  if [ "$route_mode" = 'resolve' ]; then
     review_plan_build_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" resolve \
       '["trusted_predecessor","ancestor_append","known_finding_delta"]' "\"$predecessor_head\"" \
       "$inherited_finding_ids" "$required_capabilities" '"APPROVE"' false
     return
   fi
-  required_capabilities="$(jq -S -c '. + ["correctness"] | sort | unique' <<<"$required_capabilities")" || return 3
+  required_capabilities="$(jq -S -c --argjson route_capabilities "$route_capabilities" \
+    '. + ["correctness"] + $route_capabilities | sort | unique' <<<"$required_capabilities")" || return 3
   review_plan_build_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" delta \
     '["trusted_predecessor","ancestor_append","expanded_delta"]' "\"$predecessor_head\"" \
     "$inherited_finding_ids" "$required_capabilities" '"COMMENT"' false
