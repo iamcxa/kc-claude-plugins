@@ -263,7 +263,9 @@ render() {
       [[ -z "$repo" ]] && continue
       key="$repo#$num"
       status=$(st_get --arg k "$key" '.seen[$k].status // "new"')
-      target=$(st_get --arg k "$key" '.seen[$k].open // empty')
+      # An entry adopted from GitHub has no review environment to open, so the
+      # click falls back to the pull request itself.
+      target=$(st_get --arg k "$key" '.seen[$k].open // .seen[$k].url // empty')
       title=$(menu_label "${title:0:48}")
       case "$status" in
         reviewed|running)
@@ -287,7 +289,7 @@ render() {
     echo "-- ✅ $(menu_label "${key##*/}") · ${fin:5:11} | bash=\"$SELF\" param1=open param2=\"$target\" terminal=false"
   done < <("$JQ" -r '[.seen | to_entries[] | select(.value.status == "reviewed")]
                      | sort_by(.value.finished) | reverse | .[:6][]
-                     | [.key, (.value.open // ""), (.value.finished // "")] | @tsv' "$STATE" 2>/dev/null)
+                     | [.key, (.value.open // .value.url // ""), (.value.finished // "")] | @tsv' "$STATE" 2>/dev/null)
 
   echo "---"
   echo "Listening repos ($n_on)"
