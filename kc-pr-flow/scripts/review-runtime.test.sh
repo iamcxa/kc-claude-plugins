@@ -852,6 +852,7 @@ run_timing_publication_tests() {
   local path_parent path_parent_moved path_target path_payload path_rc
   local lock_parent lock_parent_moved lock_target lock_payload lock_rc lock_name copied_pid
   local mode_target mode_observation mode_lock
+  local acquire_parent acquire_swap_rc
 
   start_target="$TEST_INPUT_ROOT/timing-publication-start.json"
   start_ready="$TEST_INPUT_ROOT/timing-publication-start.ready"
@@ -980,6 +981,64 @@ run_timing_publication_tests() {
   )
   assert_eq "timing lock mode is private under ambient umask 022" "700" \
     "$(cat "$mode_observation")"
+
+  acquire_parent="$TEST_INPUT_ROOT/timing-lock-acquire-swap"
+  mkdir "$acquire_parent"
+  python3 - "$SAFE_IO" "$acquire_parent" <<'PY'
+import importlib.util
+import os
+import sys
+
+helper_path, parent = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("timing_lock_acquire_swap", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+parent_fd = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
+lock_name = ".state.json.timing.lock"
+saved_name = ".created-lock-saved"
+owner_pid = str(os.getpid())
+real_open = module.open_lock_directory
+swapped = {"done": False}
+
+def swap_before_bind(fd, name, *args):
+    if not swapped["done"] and name == lock_name:
+        swapped["done"] = True
+        os.rename(name, saved_name, src_dir_fd=fd, dst_dir_fd=fd)
+        os.mkdir(name, 0o700, dir_fd=fd)
+        replacement_fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=fd)
+        try:
+            owner_fd = os.open(
+                "owner.pid", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600,
+                dir_fd=replacement_fd,
+            )
+            os.write(owner_fd, (owner_pid + "\n").encode("ascii"))
+            os.close(owner_fd)
+        finally:
+            os.close(replacement_fd)
+    return real_open(fd, name, *args)
+
+module.open_lock_directory = swap_before_bind
+try:
+    rc = module.timing_lock_acquire(parent, parent_fd, lock_name, owner_pid)
+    try:
+        replacement_fd = os.open(lock_name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=parent_fd)
+        try:
+            owner_fd = os.open("owner.pid", os.O_RDONLY, dir_fd=replacement_fd)
+            replacement_owner = os.read(owner_fd, 64).decode("ascii").strip()
+            os.close(owner_fd)
+        finally:
+            os.close(replacement_fd)
+        replacement_survives = replacement_owner == owner_pid
+    except OSError:
+        replacement_survives = False
+    created_is_cleaned = not os.path.exists(os.path.join(parent, saved_name))
+finally:
+    os.close(parent_fd)
+raise SystemExit(0 if rc == 75 and replacement_survives and created_is_cleaned else 1)
+PY
+  acquire_swap_rc=$?
+  assert_eq "creation-to-bind swap preserves copied-PID replacement and cleans created inode" \
+    "0" "$acquire_swap_rc"
 
   timing_lock="$(dirname "$mark_target")/.$(basename "$mark_target").timing.lock"
   before_hash="$(sha256_text "$(cat "$mark_target")")"
