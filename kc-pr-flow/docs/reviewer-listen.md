@@ -65,7 +65,11 @@ by accident.
 ## Behaviour worth knowing
 
 - **One dispatch per tick.** A backlog drains one PR per minute instead of creating a burst of review environments.
-- **The seen key is claimed before the backend call**, so a crash mid-create cannot produce two reviews for one PR. A failed create retries on later ticks up to three attempts, then holds until you press retry.
+- **The seen key is claimed before the backend call**, and the backend does not run if that claim cannot be written — an unwritten claim is no claim, and the next tick would create a second review. A failed create retries on later ticks up to three attempts, then holds until you press retry.
+- **A dispatch whose result was never recorded is reopened.** Nothing checks a record stuck mid-dispatch and polling refuses to re-run it, so after five minutes it becomes a retryable failure.
+- **An unanswerable question is never an answer.** A failed GitHub review lookup, an unreadable session transcript, and "no review found" are three different outcomes; only the third lets work proceed. The other two skip the tick and are asked again.
+- **A lock nobody released expires after ten minutes.** A held lock stops polling *and* completion while the menu still looks idle, which is the most invisible failure available here.
+- **A fork head is refused, loudly.** The backend checks out a branch of the repository the project belongs to; a fork's head may be missing there, or worse, collide with a same-named local branch and review the wrong code.
 - **What counts as reviewed is a commit, not a pull request.** Each poll reads the PR's head SHA. A local record matching that SHA is a skip; a re-request after a new push therefore runs again, and a re-request without one does not.
 - **GitHub holds the durable record.** With no local record for the current head, the listener asks whether this account has already submitted a review of exactly that commit, and adopts the answer. Deleting the state file, or moving to another machine, therefore does not re-review anything.
 - **Completion comes from the backend, never from silence.** A backend that cannot determine a job's state exits non-zero, which the listener reads as *still running* — an unreachable API can therefore never fabricate a completion.

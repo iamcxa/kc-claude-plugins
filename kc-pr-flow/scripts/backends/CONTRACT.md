@@ -7,7 +7,7 @@ polling, de-duplication, notification, or menu rendering.
 ## create
 
 ```
-<backend> create <repo-slug> <pr-number> <pr-url> <head-branch> <prompt-file>
+<backend> create <repo-slug> <pr-number> <pr-url> <head-branch> <prompt-file> [head-sha]
 ```
 
 Start a review of that PR from that branch, seeded with the text in
@@ -18,7 +18,10 @@ job_id=<opaque string, no spaces>
 open=<URI or absolute path the user can open to watch the review>
 ```
 
-`job_id` is the handle `status` will be called with. `open` is what a menu click
+`job_id` is the handle `status` will be called with, and it is opaque — pack whatever
+`status` will need into it, including the account or organization the job belongs to,
+because `status` receives nothing else. `head-sha` is the commit the review was
+requested for; a branch can move between the decision and this call. `open` is what a menu click
 and a notification click resolve to — a URI scheme, an editor URL, or a directory
 path all qualify. On failure, exit non-zero and print a one-line reason to stderr;
 the listener records it and retries on a later tick.

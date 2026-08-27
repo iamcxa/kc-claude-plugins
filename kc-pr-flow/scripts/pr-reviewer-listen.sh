@@ -32,6 +32,8 @@ LOG="${PR_LISTEN_LOG:-$HOME/.claude/audit/pr-reviewer-listen.log}"
 
 MAX_DISPATCH_PER_TICK=1
 MAX_ATTEMPTS=3
+LOCK_STALE_SECONDS=600
+DISPATCH_STALE_SECONDS=300
 
 log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
 
@@ -55,6 +57,32 @@ edit_json() { # edit_json <file> [jq-args...]
 migrate_config() {
   [[ "$(cfg_get 'has("master")')" == "true" ]] || return 0
   cfg_edit '.listening = (.listening // .master) | del(.master)'
+}
+
+# Every write here is read-modify-rename, so a menu click landing during a tick can
+# silently undo it. A held lock is also a total outage — nothing polls, nothing
+# completes, and the menu looks merely idle — so a lock nobody released expires.
+lock_acquire() { # 0 = acquired, 1 = someone else holds it
+  local age
+  if [[ -d "$LOCKDIR" ]]; then
+    age=$(( $(date -u +%s) - $(stat -f %m "$LOCKDIR" 2>/dev/null || echo 0) ))
+    if (( age > LOCK_STALE_SECONDS )); then
+      rmdir "$LOCKDIR" 2>/dev/null && log "removed a lock left behind for ${age}s"
+    fi
+  fi
+  mkdir "$LOCKDIR" 2>/dev/null || return 1
+  trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
+}
+
+# A menu click is a person waiting, so wait for the tick rather than doing nothing.
+lock_wait() {
+  local i
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    lock_acquire && return 0
+    sleep 0.3
+  done
+  log "applied a menu action while a tick held the lock"
+  return 1
 }
 
 cfg_edit() { edit_json "$CONFIG" "$@"; }
@@ -97,13 +125,25 @@ dispatch() { # dispatch <repo> <pr-number> <pr-url> <head-branch> <head-sha>
   fi
 
   # Claim the key before the backend call: a crash mid-create must not double-create.
-  st_edit --arg k "$key" --arg u "$url" --arg b "$branch" --arg s "$sha" \
-    '.seen[$k] = ((.seen[$k] // {}) + {status:"dispatching", url:$u, branch:$b, head_sha:$s, ts:(now|todate), attempts:(((.seen[$k].attempts) // 0) + 1)})'
+  # An unwritten claim is no claim, so the backend must not run without it.
+  if ! st_edit --arg k "$key" --arg u "$url" --arg b "$branch" --arg s "$sha" \
+       '.seen[$k] = ((.seen[$k] // {}) + {status:"dispatching", url:$u, branch:$b, head_sha:$s, ts:(now|todate)})'; then
+    log "dispatch $key aborted: could not record the claim"; return 1
+  fi
 
+  # Substituted in the shell, not through sed: a branch name may contain the
+  # delimiter or an ampersand, which sed would treat as syntax.
+  local tmpl
+  tmpl=$(<"$PROMPT_TMPL") || { mark_error "$key" "cannot read the dispatch prompt"; return 1; }
+  tmpl=${tmpl//__PR_URL__/$url}
+  tmpl=${tmpl//__REPO__/$repo}
+  tmpl=${tmpl//__BRANCH__/$branch}
+  tmpl=${tmpl//__HEAD_SHA__/$sha}
   msg=$(mktemp -t prreview)
-  sed -e "s|__PR_URL__|$url|g" -e "s|__REPO__|$repo|g" -e "s|__BRANCH__|$branch|g" \
-      "$PROMPT_TMPL" >"$msg"
-  out=$("$be" create "$repo" "$num" "$url" "$branch" "$msg" 2>&1)
+  if ! printf '%s\n' "$tmpl" >"$msg"; then
+    rm -f "$msg"; mark_error "$key" "cannot write the dispatch prompt"; return 1
+  fi
+  out=$("$be" create "$repo" "$num" "$url" "$branch" "$msg" "$sha" 2>&1)
   local rc=$?
   rm -f "$msg"
 
@@ -128,6 +168,18 @@ check_completions() {
   local be key job verdict errf reason
   be=$(backend_path)
   [[ -x "$be" ]] || return 0
+
+  # A create whose result was never written stays "dispatching", where completion
+  # never looks and polling refuses to re-run it. Reopen it for a retry.
+  while IFS= read -r key; do
+    [[ -z "$key" ]] && continue
+    mark_error "$key" "the dispatch never confirmed a job; retrying"
+    log "reopened stalled dispatch $key"
+  done < <("$JQ" -r --argjson max "$DISPATCH_STALE_SECONDS" \
+            '.seen | to_entries[] | select(.value.status == "dispatching")
+             | select(.value.ts != null) | select((now - (.value.ts|fromdate)) > $max) | .key' \
+            "$STATE" 2>/dev/null)
+
   errf=$(mktemp)
   while IFS=$'\t' read -r key job; do
     [[ -z "$job" ]] && continue
@@ -150,15 +202,19 @@ check_completions() {
 }
 
 # Has this account already submitted a review of exactly this commit?
+# 0 = yes, 1 = no, 2 = could not ask. A failed lookup must not read as "no": that
+# would dispatch a second review of a commit already reviewed.
+# The filter emits one line per match rather than a per-page count, because
+# --paginate runs --jq once per page and would print "0" for each of them.
 already_reviewed() { # <repo> <pr> <sha> <login>
   local found
   found=$("$GH" api "repos/$1/pulls/$2/reviews" --paginate \
-            --jq "[.[] | select(.user.login == \"$4\") | select(.commit_id == \"$3\")] | length" 2>>"$LOG") || return 1
-  [[ -n "$found" && "$found" != "0" ]]
+            --jq ".[] | select(.user.login == \"$4\") | select(.commit_id == \"$3\") | .id" 2>>"$LOG") || return 2
+  [[ -n "$found" ]]
 }
 
 poll() {
-  local prs repo num url draft enabled status attempts n=0
+  local prs repo num url draft enabled status attempts fork n=0
   prs=$("$GH" search prs --review-requested=@me --state open --limit 40 \
           --json repository,number,title,url,isDraft 2>>"$LOG")
   if [[ -z "$prs" ]]; then
@@ -188,11 +244,18 @@ poll() {
 
     # What was reviewed is a commit, not a number: a re-request after a push has to
     # run again, and a re-request without one must not.
-    head=$("$GH" pr view "$num" --repo "$repo" --json headRefName,headRefOid \
-             --jq '[.headRefName, .headRefOid] | @tsv' 2>>"$LOG")
-    IFS=$'\t' read -r branch sha <<<"$head"
+    head=$("$GH" pr view "$num" --repo "$repo" --json headRefName,headRefOid,isCrossRepository \
+             --jq '[.headRefName, .headRefOid, (.isCrossRepository|tostring)] | @tsv' 2>>"$LOG")
+    IFS=$'\t' read -r branch sha fork <<<"$head"
     if [[ -z "$branch" || -z "$sha" ]]; then
       mark_error "$repo#$num" "could not read the pull request head"; continue
+    fi
+
+    # A fork head is not a branch of this repository. Dispatching it would review
+    # whatever a same-named local branch happens to hold, so refuse it visibly.
+    if [[ "$fork" == "true" ]]; then
+      mark_error "$repo#$num" "the head is in a fork, which this backend cannot check out"
+      continue
     fi
 
     status=$(st_get --arg k "$repo#$num" '.seen[$k].status // empty')
@@ -201,12 +264,19 @@ poll() {
     if [[ "$seen_sha" == "$sha" ]]; then
       [[ -n "$status" && "$status" != "error" ]] && continue
       (( attempts >= MAX_ATTEMPTS )) && continue
-    elif already_reviewed "$repo" "$num" "$sha" "$me"; then
-      # GitHub holds the durable record, so a wiped state file does not re-review.
-      st_edit --arg k "$repo#$num" --arg u "$url" --arg s "$sha" \
-        '.seen[$k] = {status:"reviewed", url:$u, head_sha:$s, finished:(now|todate), source:"github"}'
-      log "already reviewed on GitHub $repo#$num @ ${sha:0:8}"
-      continue
+    else
+      # The head moved. Let the job already in flight finish rather than running two
+      # reviews of the same pull request at once.
+      [[ "$status" == "dispatching" || "$status" == "running" ]] && continue
+      already_reviewed "$repo" "$num" "$sha" "$me"
+      case $? in
+        0) st_edit --arg k "$repo#$num" --arg u "$url" --arg s "$sha" \
+             '.seen[$k] = {status:"reviewed", url:$u, head_sha:$s, finished:(now|todate), source:"github"}'
+           log "already reviewed on GitHub $repo#$num @ ${sha:0:8}"
+           continue ;;
+        2) log "skipped $repo#$num: could not check GitHub for an existing review"
+           continue ;;
+      esac
     fi
 
     dispatch "$repo" "$num" "$url" "$branch" "$sha"
@@ -319,18 +389,17 @@ init_files
 migrate_config
 
 case "${1:-}" in
-  toggle-listening) cfg_edit '.listening = (.listening | not)'; exit 0 ;;
-  toggle-repo)   cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
-  toggle-notify) cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
-  forget)        st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
+  toggle-listening) lock_wait; cfg_edit '.listening = (.listening | not)'; exit 0 ;;
+  toggle-repo)   lock_wait; cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
+  toggle-notify) lock_wait; cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
+  forget)        lock_wait; st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;
   open)          [[ -n "${2:-}" ]] && "$OPEN" "$2"; exit 0 ;;
   log)           "$OPEN" -t "$LOG"; exit 0 ;;
   toggle-login)  login_toggle; exit 0 ;;
-  poll-only)     check_completions; poll; exit $? ;;
+  poll-only)     lock_wait; check_completions; poll; exit $? ;;
 esac
 
-if mkdir "$LOCKDIR" 2>/dev/null; then
-  trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
+if lock_acquire; then
   check_completions
   poll
 fi

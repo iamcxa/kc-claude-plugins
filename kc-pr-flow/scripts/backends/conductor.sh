@@ -53,9 +53,9 @@ project_id_for() {
 }
 
 cmd_create() {
-  local repo="${1:-}" num="${2:-}" url="${3:-}" branch="${4:-}" prompt="${5:-}"
+  local repo="${1:-}" num="${2:-}" url="${3:-}" branch="${4:-}" prompt="${5:-}" sha="${6:-}"
   [[ -n "$repo" && -n "$num" && -n "$url" && -n "$branch" && -n "$prompt" ]] \
-    || die "usage: conductor.sh create <repo> <pr> <url> <branch> <prompt-file>"
+    || die "usage: conductor.sh create <repo> <pr> <url> <branch> <prompt-file> [head-sha]"
   [[ -r "$prompt" ]] || die "prompt file not readable: $prompt"
   command -v "$JQ" >/dev/null 2>&1 || die "jq not found"
   [[ -x "$CONDUCTOR" ]] || die "conductor CLI not found at $CONDUCTOR"
@@ -71,7 +71,7 @@ cmd_create() {
   out=$("$CONDUCTOR" workspace create \
           --project-id "$pid" \
           --branch "$branch" \
-          --name "review PR #$num" \
+          --name "review PR #$num${sha:+ @${sha:0:8}}" \
           --session-name "pr-review #$num" \
           --agent claude \
           --message-file "$prompt" 2>&1) \
@@ -81,11 +81,21 @@ cmd_create() {
   [[ -n "$ws" ]] || die "workspace create returned no deep link: $(tail -2 <<<"$out" | tr '\n' ' ')"
   wsid="${ws##*id=}"
 
-  sess=$("$CONDUCTOR" workspace session "$wsid" 2>/dev/null \
-         | grep -oE 'conductor://workspace\?id=[0-9a-f-]+&session=[0-9a-f-]+' | head -1) || true
-  [[ -n "$sess" ]] || die "workspace $wsid has no session yet"
+  # #4: the session appears a moment after the workspace, and the workspace is
+  # already a side effect — waiting is cheaper than reporting a retryable failure
+  # that creates a second one.
+  local try
+  for try in 1 2 3 4 5 6 7 8 9 10; do
+    sess=$("$CONDUCTOR" workspace session "$wsid" 2>/dev/null \
+           | grep -oE 'conductor://workspace\?id=[0-9a-f-]+&session=[0-9a-f-]+' | head -1) || true
+    [[ -n "$sess" ]] && break
+    sleep 2
+  done
+  [[ -n "$sess" ]] || die "workspace $wsid was created but never produced a session — reconcile it before retrying"
 
-  printf 'job_id=%s\n' "${sess##*session=}"
+  # job_id is opaque to the listener, so the repo travels with it: `status` needs
+  # the same organization token that `create` used.
+  printf 'job_id=%s@%s\n' "${sess##*session=}" "$repo"
   printf 'open=%s\n' "$sess"
 }
 
@@ -95,11 +105,16 @@ cmd_create() {
 # once the session has stopped changing.
 IDLE_GRACE_SECONDS=180
 
+# 0 = output present, 1 = no output, 2 = could not ask. Collapsing 2 into 1 would
+# let an unreachable transcript query condemn a review that actually finished.
 session_has_output() {
   local out
   out=$("$CONDUCTOR" sql \
-    "select (transcript like '%## Assistant%') as has_out from session_transcripts_view where session_id='$1'" 2>/dev/null) || return 1
-  grep -qw true <<<"$out"
+    "select (transcript like '%## Assistant%') as has_out from session_transcripts_view where session_id='$1'" 2>/dev/null) || return 2
+  [[ -n "$out" ]] || return 2
+  grep -qw true <<<"$out" && return 0
+  grep -qw false <<<"$out" && return 1
+  return 2
 }
 
 epoch_of() { # ISO-8601, fractional seconds optional
@@ -108,15 +123,23 @@ epoch_of() { # ISO-8601, fractional seconds optional
 }
 
 cmd_status() {
-  local sid="${1:-}" out st upd age
-  [[ -n "$sid" ]] || die "usage: conductor.sh status <job_id>"
+  local job="${1:-}" sid repo out st upd age rc
+  [[ -n "$job" ]] || die "usage: conductor.sh status <job_id>"
   [[ -x "$CONDUCTOR" ]] || die "conductor CLI not found at $CONDUCTOR"
+
+  sid="${job%%@*}"
+  repo="${job#*@}"
+  [[ "$repo" != "$job" && -n "$repo" ]] && load_org_token "$repo"
 
   out=$("$CONDUCTOR" session status "$sid" 2>&1)
   st=$(awk '/^Status/{print $2}' <<<"$out")
   case "$st" in
     idle)
-      if session_has_output "$sid"; then echo done; return; fi
+      session_has_output "$sid"; rc=$?
+      case "$rc" in
+        0) echo done; return ;;
+        2) die "cannot read the session transcript" ;;
+      esac
       upd=$(awk '/^Updated/{print $2}' <<<"$out")
       age=$(( $(date -u +%s) - $(epoch_of "$upd") ))
       if (( age > IDLE_GRACE_SECONDS )); then
