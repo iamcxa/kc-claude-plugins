@@ -156,8 +156,15 @@ review_plan_decide_fresh() {
 }
 
 review_plan_canonical_for_inputs() {
-  local candidate
-  candidate="$(jq -S -c -e \
+  local raw_candidate candidate
+  raw_candidate="$(cat)" || return 1
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 1
+  # This closed validator rejects raw duplicate members before its first jq parse.
+  review_plan_validate_decision "$raw_candidate" "$PLAN_INPUT_REPO" \
+    "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
+    "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_PREDECESSOR_EVENTS" \
+    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" || return 1
+  candidate="$(printf '%s' "$raw_candidate" | jq -S -c -e \
     --arg repository "$PLAN_INPUT_REPO" \
     --argjson pr_number "$PLAN_INPUT_PR_NUMBER" \
     --arg base_sha "$PLAN_INPUT_BASE_SHA" \
@@ -175,11 +182,6 @@ review_plan_canonical_for_inputs() {
       ) |
       $plan
     ')" || return 1
-  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 1
-  review_plan_validate_decision "$candidate" "$PLAN_INPUT_REPO" \
-    "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
-    "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_PREDECESSOR_EVENTS" \
-    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" || return 1
   printf '%s\n' "$candidate"
 }
 

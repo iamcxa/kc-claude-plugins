@@ -473,6 +473,22 @@ event_plan_decision() {
         final_verdict_authority:"existing-review-runtime"}}'
 }
 
+decision_with_duplicate_member() {
+  local decision="$1" location="$2"
+  case "$location" in
+    top-level)
+      printf '%s\n' "{\"schema\":\"ignored-before-canonicalization\",${decision#\{}"
+      ;;
+    identity)
+      printf '%s\n' "${decision/\"identity\":\{/\"identity\":\{\"repository\":\"ignored-before-canonicalization\",}"
+      ;;
+    fallback)
+      printf '%s\n' "${decision/\"fallback\":\{/\"fallback\":\{\"router_advisory\":false,}"
+      ;;
+    *) return 2 ;;
+  esac
+}
+
 event_ceiling_case_status() {
   local sequence="$1" flag_after="$2" mutation="$3" seam="$4" requested_event="$5"
   local entry_flag="${6:-on}" optional_inputs="${7:-defined}"
@@ -495,6 +511,18 @@ event_ceiling_case_status() {
     delta-then-stale)
       entry_plan="$(event_plan_decision delta '"COMMENT"')"
       rerun_plan="$(jq -S -c '.required_capabilities=["correctness","security"]' <<<"$entry_plan")"
+      ;;
+    delta-then-duplicate-top-level)
+      entry_plan="$(event_plan_decision delta '"COMMENT"')"
+      rerun_plan="$(decision_with_duplicate_member "$entry_plan" top-level)"
+      ;;
+    delta-then-duplicate-identity)
+      entry_plan="$(event_plan_decision delta '"COMMENT"')"
+      rerun_plan="$(decision_with_duplicate_member "$entry_plan" identity)"
+      ;;
+    delta-then-duplicate-fallback)
+      entry_plan="$(event_plan_decision delta '"COMMENT"')"
+      rerun_plan="$(decision_with_duplicate_member "$entry_plan" fallback)"
       ;;
     *) return 2 ;;
   esac
@@ -702,6 +730,15 @@ skill_router_trace() {
         .event_ceiling=null |
         .fallback.requires_existing_initial_review=true' <<<"$decision")"
       ;;
+    duplicate-top-level-exit-0)
+      decision="$(decision_with_duplicate_member "$decision" top-level)"
+      ;;
+    duplicate-identity-exit-0)
+      decision="$(decision_with_duplicate_member "$decision" identity)"
+      ;;
+    duplicate-fallback-exit-0)
+      decision="$(decision_with_duplicate_member "$decision" fallback)"
+      ;;
     *)
       fail "unknown skill router stub mode: $stub_mode"
       return
@@ -861,6 +898,11 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_eq 'schema-only router preserves planner-state parity' "$flag_off_trace" "$schema_only_router_trace"
   assert_eq 'extra-member router preserves planner-state parity' "$flag_off_trace" "$extra_member_router_trace"
   assert_eq 'wrong-type router preserves planner-state parity' "$flag_off_trace" "$wrong_type_router_trace"
+  for duplicate_location in top-level identity fallback; do
+    duplicate_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace "duplicate-$duplicate_location-exit-0")"
+    assert_eq "raw $duplicate_location duplicate cannot engage APPROVE plan" \
+      "$flag_off_trace" "$duplicate_trace"
+  done
   for semantic_mode in \
     delta-empty-range-exit-0 \
     delta-empty-capabilities-exit-0 \
@@ -910,6 +952,10 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'event-ceiling' ]; then
     "$(event_ceiling_case_status delta off identity direct COMMENT)"
   assert_not_zero 'stale engaged plan blocks authority' \
     "$(event_ceiling_case_status delta-then-stale on none direct COMMENT)"
+  for duplicate_location in top-level identity fallback; do
+    assert_not_zero "raw $duplicate_location duplicate in authority-boundary rerun blocks COMMENT" \
+      "$(event_ceiling_case_status "delta-then-duplicate-$duplicate_location" on none direct COMMENT)"
+  done
 
   assert_not_zero 'legacy event edit cannot escalate COMMENT plan to APPROVE' \
     "$(event_ceiling_case_status delta on none legacy-edit APPROVE)"

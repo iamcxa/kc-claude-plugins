@@ -75,9 +75,12 @@ worktree, predecessor-event, and receipt inputs before routing. A non-`initial`
 decision is retained in memory as canonical `PLAN_JSON`, with an immutable
 SHA-256 digest and immutable engagement marker. At every authority boundary it
 reruns the existing `decide` command over those original inputs while the flag
-is still `on`, canonicalizes the result, and requires exact equality with the
-stored plan. It then validates the stored digest and applies the event partial
-order. It never silently clamps a disallowed event.
+is still `on`. The adapter captures the raw decision and rejects duplicate JSON
+members before any jq parse or canonicalization, then validates and canonicalizes
+the unique decision and requires exact equality with the stored plan. The same
+raw-first rejection applies to initial engagement. It then validates the stored
+digest and applies the event partial order. It never silently clamps a
+disallowed event.
 
 Before engagement, flag-off preserves legacy authority. Under flag-on, only a
 fresh rerun that still selects `initial` preserves that authority; a fresh

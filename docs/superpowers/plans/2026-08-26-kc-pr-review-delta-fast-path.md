@@ -560,7 +560,15 @@ review_plan_decide_fresh() {
 }
 
 review_plan_canonical_for_inputs() {
-  jq -S -c -e \
+  local raw_candidate candidate
+  raw_candidate="$(cat)" || return 1
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 1
+  # This closed validator rejects raw duplicate members before its first jq parse.
+  review_plan_validate_decision "$raw_candidate" "$PLAN_INPUT_REPO" \
+    "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
+    "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_PREDECESSOR_EVENTS" \
+    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" || return 1
+  candidate="$(printf '%s' "$raw_candidate" | jq -S -c -e \
     --arg repository "$PLAN_INPUT_REPO" \
     --argjson pr_number "$PLAN_INPUT_PR_NUMBER" \
     --arg base_sha "$PLAN_INPUT_BASE_SHA" \
@@ -577,7 +585,8 @@ review_plan_canonical_for_inputs() {
         ($plan.mode == "initial" or $plan.mode == "delta" or $plan.mode == "resolve")
       ) |
       $plan
-    '
+    ')" || return 1
+  printf '%s\n' "$candidate"
 }
 
 review_plan_sha256() {
@@ -1354,7 +1363,9 @@ the already-implemented Tasks 1-6 without adding a surface or changing the accep
   enforces the stored `COMMENT` ceiling (or fails closed); missing/mutated/stale/identity-mismatched
   plan blocks; autonomous and immediate-pre-post paths use the same gate.
 - [ ] Implement the immutable input snapshot, in-memory `PLAN_JSON`, existing-`decide`
-  rerun/canonical comparison, and event case check from revised Task 3 at every listed seam. Never
+  rerun/canonical comparison, and event case check from revised Task 3 at every listed seam. Reject
+  duplicate JSON members in the raw decision before any jq parse or canonicalization, both on
+  initial engagement and on every authority-boundary rerun. Never
   clamp silently to a more favorable event; reject invalid authority. Under flag-on, only a fresh
   rerun that still returns `mode=initial` may preserve legacy authority when no fast path engaged.
   After engagement, make the engagement marker and stored plan digest immutable; flag loss uses the
