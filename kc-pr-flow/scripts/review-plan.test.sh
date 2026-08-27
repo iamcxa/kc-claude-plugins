@@ -53,6 +53,10 @@ sha256_text() {
   fi
 }
 
+monotonic_ms() {
+  python3 -c 'import time; print(time.monotonic_ns() // 1000000)'
+}
+
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
   if [ ! -r "$RUNTIME" ]; then
     fail 'review-runtime.sh exists';
@@ -1453,6 +1457,77 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     KC_PR_FLOW_MAX_PLAN_ANCESTRY_COMMITS=1 \
       review_plan_ancestor "$router_binding" "$base_sha" "$merge_child"
     assert_not_zero 'raw traversal limit fails closed' "$?"
+
+    latency_root="$graft_root_one"
+    latency_head="$latency_root"
+    for latency_index in $(seq 1 100); do
+      latency_head="$(printf 'latency %s\n' "$latency_index" | \
+        git -C "$router_repo" commit-tree "$empty_tree" -p "$latency_head")"
+    done
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    latency_parent="$(git -C "$router_repo" rev-parse "$latency_head^")"
+    latency_start="$(monotonic_ms)"
+    review_plan_ancestor "$router_binding" "$latency_parent" "$latency_head"
+    latency_baseline_status=$?
+    latency_baseline_ms=$(( $(monotonic_ms) - latency_start ))
+    latency_start="$(monotonic_ms)"
+    review_plan_ancestor "$router_binding" "$latency_root" "$latency_head"
+    latency_deep_status=$?
+    latency_deep_ms=$(( $(monotonic_ms) - latency_start ))
+    assert_eq 'one-parent latency baseline preserves ancestry' '0' "$latency_baseline_status"
+    assert_eq '100-parent latency probe preserves ancestry' '0' "$latency_deep_status"
+    if [ "$latency_deep_ms" -le 5000 ]; then pass; else
+      fail "100-parent traversal stays under conservative 5s bound (got ${latency_deep_ms}ms)"
+    fi
+    latency_ratio_bound=$((latency_baseline_ms * 5 + 100))
+    printf '100-parent ancestry: baseline=%sms deep=%sms ratio-bound=%sms\n' \
+      "$latency_baseline_ms" "$latency_deep_ms" "$latency_ratio_bound"
+    if [ "$latency_deep_ms" -le "$latency_ratio_bound" ]; then pass; else
+      fail "100-parent traversal avoids per-commit process scaling (baseline ${latency_baseline_ms}ms, deep ${latency_deep_ms}ms, bound ${latency_ratio_bound}ms)"
+    fi
+    latency_start="$(monotonic_ms)"
+    ancestry_deadline_output="$(KC_PR_FLOW_MAX_PLAN_ANCESTRY_SECONDS=1 \
+      KC_PR_FLOW_TEST_ANCESTRY_DELAY_MS=1100 \
+      review_plan_ancestor "$router_binding" "$latency_parent" "$latency_head" 2>/dev/null)"
+    ancestry_deadline_status=$?
+    ancestry_deadline_ms=$(( $(monotonic_ms) - latency_start ))
+    assert_eq 'ancestry wall-clock exhaustion returns the adapter error status' '2' \
+      "$ancestry_deadline_status"
+    assert_eq 'ancestry wall-clock exhaustion releases no output' '' "$ancestry_deadline_output"
+    if [ "$ancestry_deadline_ms" -le 2500 ]; then pass; else
+      fail "ancestry wall-clock exhaustion fails promptly (got ${ancestry_deadline_ms}ms)"
+    fi
+
+    commit_blob="$(printf 'not a commit\n' | git -C "$router_repo" hash-object -w --stdin)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$commit_blob"
+    assert_eq 'blob descendant is rejected by the commit reader' '2' "$?"
+    review_plan_ancestor "$router_binding" "$graft_root_one" ffffffffffffffffffffffffffffffffffffffff
+    assert_eq 'missing descendant is rejected by the commit reader' '2' "$?"
+    tag_object="$(printf 'object %s\ntype commit\ntag ancestry-test\ntagger Test <test@example.invalid> 0 +0000\n\ntag\n' \
+      "$graft_root_one" | git -C "$router_repo" hash-object -t tag -w --stdin)"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$graft_root_one" "$tag_object"
+    assert_eq 'annotated tag descendant is rejected by the commit reader' '2' "$?"
+
+    default_oversize_message="$TEST_ROOT/default-oversize-message"
+    dd if=/dev/zero bs=1048576 count=1 2>/dev/null | tr '\000' x >"$default_oversize_message"
+    default_oversize_commit="$(git -C "$router_repo" commit-tree "$empty_tree" <"$default_oversize_message")"
+    default_oversize_size="$(git -C "$router_repo" cat-file -s "$default_oversize_commit")"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    review_plan_ancestor "$router_binding" "$default_oversize_commit" "$default_oversize_commit"
+    assert_eq 'default commit byte ceiling rejects a larger commit' '2' "$?"
+    KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES="$default_oversize_size" \
+      review_plan_ancestor "$router_binding" "$default_oversize_commit" "$default_oversize_commit"
+    assert_eq 'exact configured commit byte ceiling accepts complete framing' '0' "$?"
+
+    hard_oversize_message="$TEST_ROOT/hard-oversize-message"
+    dd if=/dev/zero bs=4194304 count=1 2>/dev/null | tr '\000' x >"$hard_oversize_message"
+    hard_oversize_commit="$(git -C "$router_repo" commit-tree "$empty_tree" <"$hard_oversize_message")"
+    router_binding="$(review_plan_worktree_binding "$router_repo")"
+    KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES=4194304 \
+      review_plan_ancestor "$router_binding" "$hard_oversize_commit" "$hard_oversize_commit"
+    assert_eq 'hard commit byte ceiling rejects a larger commit' '2' "$?"
 
     metadata_watch_parent="$TEST_ROOT/metadata-watch"
     mkdir -m 700 "$metadata_watch_parent"

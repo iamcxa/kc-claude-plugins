@@ -405,7 +405,8 @@ review_plan_git_identity_valid() {
 review_plan_ancestor() {
   review_plan_worktree_adapter ancestor "$1" "$2" "$3" \
     "${KC_PR_FLOW_MAX_PLAN_ANCESTRY_COMMITS:-10000}" \
-    "${KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES:-1048576}"
+    "${KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES:-1048576}" \
+    "${KC_PR_FLOW_MAX_PLAN_ANCESTRY_SECONDS:-2}"
 }
 
 review_plan_changed_paths() {
@@ -416,9 +417,10 @@ review_plan_changed_paths() {
 Bind the opened worktree plus its `.git` entry, Git directory, common directory, and object
 directory before routing. Revalidate every bound identity immediately before and after every
 `rev-parse`, `cat-file`, `diff`, `ls-tree`, `show`, or other Git operation. Determine ancestry from
-bounded raw exact-SHA commit objects and their `parent` headers, not Git graft, shallow, ref, or
-config semantics. Traverse at most 10,000 commits by default (100,000 hard maximum), read at most
-1 MiB per commit by default (4 MiB hard maximum), and select `initial` on either limit. Run a
+bounded raw exact-SHA commit objects and their `parent` headers through one persistent batch
+process, not Git graft, shallow, ref, or config semantics. Traverse at most 10,000 commits by
+default (100,000 hard maximum), read at most 1 MiB per commit by default (4 MiB hard maximum), use a
+2-second wall-clock deadline by default (30-second hard maximum), and select `initial` on any limit. Run a
 fixed system Git with an allowlisted environment. Operational commands use a private,
 configuration-free Git directory, the explicitly bound worktree and object directory, exact object
 IDs, no refs, no shallow/graft metadata, no inherited or repository-local config, no object

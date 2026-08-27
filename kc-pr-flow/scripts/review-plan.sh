@@ -227,6 +227,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 
 
 def open_directory(path):
@@ -378,7 +379,34 @@ def run_git(arguments, binding=None):
         )
 
 
-def read_object(binding, object_id, expected_type, limit):
+def read_batch_object(process, object_id, expected_type, limit):
+    process.stdin.write((object_id + "\n").encode("ascii"))
+    process.stdin.flush()
+    header = process.stdout.readline(257)
+    if len(header) > 256 or not header.endswith(b"\n"):
+        raise OSError
+    fields = header.decode("ascii").strip().split()
+    if (len(fields) != 3 or fields[0] != object_id or fields[1] != expected_type
+            or not fields[2].isdigit()):
+        raise OSError
+    object_size = int(fields[2])
+    if object_size > limit:
+        raise OSError
+    chunks = []
+    remaining = object_size
+    while remaining:
+        chunk = process.stdout.read(min(remaining, 65536))
+        if not chunk:
+            raise OSError
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    if process.stdout.read(1) != b"\n":
+        raise OSError
+    return b"".join(chunks)
+
+
+@contextlib.contextmanager
+def batch_object_reader(binding):
     with operational_repository(binding) as (prefix, environment):
         process = subprocess.Popen(
             prefix + ["cat-file", "--batch"],
@@ -388,37 +416,25 @@ def read_object(binding, object_id, expected_type, limit):
             stderr=subprocess.PIPE,
         )
         try:
-            process.stdin.write((object_id + "\n").encode("ascii"))
+            yield lambda object_id, expected_type, limit: read_batch_object(
+                process, object_id, expected_type, limit
+            )
             process.stdin.close()
-            header = process.stdout.readline(257)
-            if len(header) > 256 or not header.endswith(b"\n"):
-                raise OSError
-            fields = header.decode("ascii").strip().split()
-            if (len(fields) != 3 or fields[0] != object_id or fields[1] != expected_type
-                    or not fields[2].isdigit()):
-                raise OSError
-            object_size = int(fields[2])
-            if object_size > limit:
-                raise OSError
-            chunks = []
-            remaining = object_size
-            while remaining:
-                chunk = process.stdout.read(min(remaining, 65536))
-                if not chunk:
-                    raise OSError
-                chunks.append(chunk)
-                remaining -= len(chunk)
-            if process.stdout.read(1) != b"\n" or process.stdout.read(1) != b"":
+            if process.stdout.read(1) != b"":
                 raise OSError
             error = process.stderr.read()
             if process.wait() != 0 or error:
                 raise OSError
-            return b"".join(chunks)
         except BaseException:
             if process.poll() is None:
                 process.kill()
             process.wait()
             raise
+
+
+def read_object(binding, object_id, expected_type, limit):
+    with batch_object_reader(binding) as read:
+        return read(object_id, expected_type, limit)
 
 
 def commit_parents(data, object_id_length):
@@ -445,24 +461,36 @@ def commit_parents(data, object_id_length):
     return parents
 
 
-def raw_is_ancestor(binding, ancestor, descendant, traversal_limit, commit_limit):
-    pending = [descendant]
-    visited = set()
-    while pending:
-        current = pending.pop()
-        if current in visited:
-            continue
-        if len(visited) >= traversal_limit:
-            raise OSError
-        visited.add(current)
-        data = read_object(binding, current, "commit", commit_limit)
-        if current == ancestor:
-            return True
-        parents = commit_parents(data, len(current))
-        if ancestor in parents:
-            return True
-        pending.extend(parent for parent in parents if parent not in visited)
-    return False
+def raw_is_ancestor(binding, ancestor, descendant, traversal_limit, commit_limit, wall_seconds):
+    test_delay = os.environ.get("KC_PR_FLOW_TEST_ANCESTRY_DELAY_MS", "0")
+    if not test_delay.isdigit() or int(test_delay) > 5000:
+        raise OSError
+    delay_seconds = int(test_delay) / 1000
+    with batch_object_reader(binding) as read:
+        deadline = time.monotonic() + wall_seconds
+        pending = [descendant]
+        visited = set()
+        while pending:
+            if time.monotonic() > deadline:
+                raise OSError
+            if delay_seconds:
+                time.sleep(delay_seconds)
+                if time.monotonic() > deadline:
+                    raise OSError
+            current = pending.pop()
+            if current in visited:
+                continue
+            if len(visited) >= traversal_limit:
+                raise OSError
+            visited.add(current)
+            data = read(current, "commit", commit_limit)
+            if current == ancestor:
+                return True
+            parents = commit_parents(data, len(current))
+            if ancestor in parents:
+                return True
+            pending.extend(parent for parent in parents if parent not in visited)
+        return False
 
 
 def discover_repository(root_descriptor, expected_root):
@@ -656,17 +684,19 @@ try:
         if b"\x00" in data:
             raise OSError
         data.decode("utf-8")
-    elif operation == "ancestor" and len(sys.argv) == 7:
+    elif operation == "ancestor" and len(sys.argv) == 8:
         binding = closed_binding(json.loads(sys.argv[2]))
         ancestor = sys.argv[3]
         descendant = sys.argv[4]
         traversal_limit = sys.argv[5]
         commit_limit = sys.argv[6]
+        wall_seconds = sys.argv[7]
         for object_id in (ancestor, descendant):
             if len(object_id) not in (40, 64) or any(ch not in "0123456789abcdef" for ch in object_id):
                 raise ValueError
         if (not traversal_limit.isdigit() or int(traversal_limit) < 1 or int(traversal_limit) > 100000
-                or not commit_limit.isdigit() or int(commit_limit) < 1 or int(commit_limit) > 4194304):
+                or not commit_limit.isdigit() or int(commit_limit) < 1 or int(commit_limit) > 4194304
+                or not wall_seconds.isdigit() or int(wall_seconds) < 1 or int(wall_seconds) > 30):
             raise ValueError
         descriptors = validate_binding(binding)
         after_open_test_barrier()
@@ -674,7 +704,7 @@ try:
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
         is_ancestor = raw_is_ancestor(
-            binding, ancestor, descendant, int(traversal_limit), int(commit_limit)
+            binding, ancestor, descendant, int(traversal_limit), int(commit_limit), int(wall_seconds)
         )
         descriptors = validate_binding(binding)
         close_descriptors(descriptors)
@@ -717,13 +747,17 @@ review_plan_git_identity_valid() {
 }
 
 review_plan_ancestor() {
-  local traversal_limit commit_limit
+  local traversal_limit commit_limit wall_seconds
   traversal_limit="${KC_PR_FLOW_MAX_PLAN_ANCESTRY_COMMITS:-10000}"
   commit_limit="${KC_PR_FLOW_MAX_PLAN_COMMIT_BYTES:-1048576}"
+  wall_seconds="${KC_PR_FLOW_MAX_PLAN_ANCESTRY_SECONDS:-2}"
   [[ "$traversal_limit" =~ ^[1-9][0-9]*$ ]] || return 2
   [[ "$commit_limit" =~ ^[1-9][0-9]*$ ]] || return 2
-  [ "$traversal_limit" -le 100000 ] && [ "$commit_limit" -le 4194304 ] || return 2
-  review_plan_worktree_adapter ancestor "$1" "$2" "$3" "$traversal_limit" "$commit_limit"
+  [[ "$wall_seconds" =~ ^[1-9][0-9]*$ ]] || return 2
+  [ "$traversal_limit" -le 100000 ] && [ "$commit_limit" -le 4194304 ] && \
+    [ "$wall_seconds" -le 30 ] || return 2
+  review_plan_worktree_adapter ancestor "$1" "$2" "$3" \
+    "$traversal_limit" "$commit_limit" "$wall_seconds"
 }
 
 review_plan_changed_paths() {
