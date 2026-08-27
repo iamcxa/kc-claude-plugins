@@ -163,6 +163,26 @@ as not ready to leave `backlog` when it cannot ask.
   the reason for each. LOC and file counts are diagnostic signals, never
   pass/fail gates. When no scope drift is found, create no receipt or commentary.
 
+## Completion invariant
+
+A work item is complete only when both conditions hold for the same exact candidate.
+Before terminalization, the First Officer confirms both conditions from existing
+evidence produced across the selected route. Goal sufficiency binds to the exact
+candidate; minimal necessity names the candidate change removed by its without-it
+observation.
+
+- **Goal sufficiency** — observable evidence shows that the candidate reaches the
+  planning item's accepted goal at the selected profile's proportional depth.
+- **Minimal necessity** — a task-owned command or observation applies the accepted
+  goal check without the retained implementation and exposes the named absence;
+  the implementation-exit comparison leaves no retained surface unmapped to the
+  accepted goal, a named falsifier, a safety boundary, or a required lifecycle
+  obligation. Remove a surface whose absence breaks none of them.
+
+Use the existing stage output. This adds no receipt, generic without-it harness,
+or Production-depth proof to a lighter profile. CI, review, and delivery
+authorization do not substitute for either condition.
+
 - **An absolute names its enforcement point or becomes a bounded claim.**
   "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written
   into a reference, a code comment, or a commit message, names the mechanism
