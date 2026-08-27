@@ -84,6 +84,17 @@ gates:
                 digest: sha256:1d5176f64b26518721fce3e8fb9b3bf7ce6e6f25de61ddd58b4d54d79d81fb3f
                 request-digest: sha256:b72fcfca7acc0a0b3e649d892b5c8c0a677ddd33f52e750c73700735261ffc26
                 room-ref: ./release-gate-fixture-fidelity/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:cmdbanvhg3enbwaf26ma6wzk:validation:2
+                briefing: briefing:cmdbanvhg3enbwaf26ma6wzk:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-27T02:30:55.097585Z"
+                decision: approve
+                reason: Captain approved exact candidate 0e9d613 after delegated pinned-pre8 UAT passed baseline plus 10/10 mutants, release-state-restored reached would strand, and exact without-it reproduced the missing candidate.json precondition.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Repair the release-state ablation fixture so PR #258 tests the intended flow guard instead of failing on missing Git or artifact-path preconditions.
