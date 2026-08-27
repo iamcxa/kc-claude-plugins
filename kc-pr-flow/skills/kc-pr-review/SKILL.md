@@ -130,27 +130,124 @@ and complete CLI invocation.
 
 ```bash
 REVIEW_MODE=initial
-unset PLAN_JSON PLAN_EVENT_CEILING PLAN_REASON CANDIDATE_PLAN_JSON
-if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
-  if CANDIDATE_PLAN_JSON="$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
-    --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$REVIEWED_HEAD_SHA" \
-    --config-hash "$CONFIG_HASH" --repo-worktree "$REPO_WORKTREE" \
-    --predecessor-events "$PREDECESSOR_EVENTS" --delta-receipt "$DELTA_RECEIPT")" &&
-     . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" &&
-     review_plan_validate_decision "$CANDIDATE_PLAN_JSON" "$REPO" "$PR_NUMBER" \
-       "$BASE_SHA" "$REVIEWED_HEAD_SHA" "$CONFIG_HASH" \
-       "$PREDECESSOR_EVENTS" "$DELTA_RECEIPT" "$REPO_WORKTREE"; then
-    CANDIDATE_REVIEW_MODE="$(jq -r '.mode' <<<"$CANDIDATE_PLAN_JSON")"
-    if [ "$CANDIDATE_REVIEW_MODE" != initial ]; then
+FAST_PATH_ENGAGED=0
+unset PLAN_JSON PLAN_JSON_SHA256 PLAN_EVENT_CEILING PLAN_REASON CANDIDATE_PLAN_JSON
+
+# Immutable inputs for the initial decision and every authority-boundary rerun.
+PLAN_INPUT_REPO="$REPO"
+PLAN_INPUT_PR_NUMBER="$PR_NUMBER"
+PLAN_INPUT_BASE_SHA="$BASE_SHA"
+PLAN_INPUT_HEAD_SHA="$REVIEWED_HEAD_SHA"
+PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
+PLAN_INPUT_WORKTREE="$REPO_WORKTREE"
+PLAN_INPUT_PREDECESSOR_EVENTS="$PREDECESSOR_EVENTS"
+PLAN_INPUT_DELTA_RECEIPT="$DELTA_RECEIPT"
+readonly PLAN_INPUT_REPO PLAN_INPUT_PR_NUMBER PLAN_INPUT_BASE_SHA PLAN_INPUT_HEAD_SHA
+readonly PLAN_INPUT_CONFIG_HASH PLAN_INPUT_WORKTREE PLAN_INPUT_PREDECESSOR_EVENTS
+readonly PLAN_INPUT_DELTA_RECEIPT
+
+review_plan_decide_fresh() {
+  bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+    --repo "$PLAN_INPUT_REPO" --pr "$PLAN_INPUT_PR_NUMBER" \
+    --base "$PLAN_INPUT_BASE_SHA" --head "$PLAN_INPUT_HEAD_SHA" \
+    --config-hash "$PLAN_INPUT_CONFIG_HASH" --repo-worktree "$PLAN_INPUT_WORKTREE" \
+    --predecessor-events "$PLAN_INPUT_PREDECESSOR_EVENTS" \
+    --delta-receipt "$PLAN_INPUT_DELTA_RECEIPT"
+}
+
+review_plan_canonical_for_inputs() {
+  local candidate
+  candidate="$(jq -S -c -e \
+    --arg repository "$PLAN_INPUT_REPO" \
+    --argjson pr_number "$PLAN_INPUT_PR_NUMBER" \
+    --arg base_sha "$PLAN_INPUT_BASE_SHA" \
+    --arg head_sha "$PLAN_INPUT_HEAD_SHA" \
+    --arg config_hash "$PLAN_INPUT_CONFIG_HASH" '
+      . as $plan |
+      select(
+        $plan.schema == "kc-pr-flow.review-plan-decision/v1" and
+        $plan.identity.repository == $repository and
+        $plan.identity.pr_number == $pr_number and
+        $plan.identity.base_sha == $base_sha and
+        $plan.identity.head_sha == $head_sha and
+        $plan.identity.config_hash == $config_hash and
+        ($plan.mode == "initial" or $plan.mode == "delta" or $plan.mode == "resolve")
+      ) |
+      $plan
+    ')" || return 1
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 1
+  review_plan_validate_decision "$candidate" "$PLAN_INPUT_REPO" \
+    "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
+    "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_PREDECESSOR_EVENTS" \
+    "$PLAN_INPUT_DELTA_RECEIPT" "$PLAN_INPUT_WORKTREE" || return 1
+  printf '%s\n' "$candidate"
+}
+
+review_plan_sha256() {
+  python3 -c 'import hashlib, sys; print(hashlib.sha256(sys.stdin.buffer.read()).hexdigest())'
+}
+
+if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
+   CANDIDATE_PLAN_JSON="$(review_plan_decide_fresh)" &&
+   CANDIDATE_PLAN_JSON="$(printf '%s' "$CANDIDATE_PLAN_JSON" |
+     review_plan_canonical_for_inputs)"; then
+  REVIEW_MODE="$(jq -r '.mode' <<<"$CANDIDATE_PLAN_JSON")"
+  case "$REVIEW_MODE" in
+    delta|resolve)
       PLAN_JSON="$CANDIDATE_PLAN_JSON"
-      REVIEW_MODE="$CANDIDATE_REVIEW_MODE"
+      PLAN_JSON_SHA256="$(printf '%s' "$PLAN_JSON" | review_plan_sha256)"
       PLAN_EVENT_CEILING="$(jq -r '.event_ceiling' <<<"$PLAN_JSON")"
       PLAN_REASON="$(jq -r '.reason_codes | join(",")' <<<"$PLAN_JSON")"
-    fi
-    unset CANDIDATE_REVIEW_MODE
-  fi
-  unset CANDIDATE_PLAN_JSON
+      FAST_PATH_ENGAGED=1
+      ;;
+    initial) ;;
+  esac
 fi
+unset CANDIDATE_PLAN_JSON
+readonly FAST_PATH_ENGAGED
+if [ "$FAST_PATH_ENGAGED" -eq 1 ]; then
+  readonly PLAN_JSON_SHA256
+fi
+
+review_plan_event_allowed() {
+  local requested_event="$1" fresh_plan fresh_mode stored_plan stored_hash ceiling engaged
+  case "$requested_event" in APPROVE|COMMENT|REQUEST_CHANGES) ;; *) return 1 ;; esac
+
+  engaged="${FAST_PATH_ENGAGED:-0}"
+  case "$engaged" in 0|1) ;; *) return 1 ;; esac
+
+  # Flag-off preserves legacy authority only before any fast path engaged.
+  if [ "$engaged" -eq 0 ]; then
+    [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] || return 0
+    fresh_plan="$(review_plan_decide_fresh)" || return 1
+    fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
+    fresh_mode="$(jq -r '.mode' <<<"$fresh_plan")" || return 1
+    if [ "${REVIEW_MODE:-initial}" = initial ] && [ "$fresh_mode" = initial ]; then
+      return 0
+    fi
+    return 1
+  fi
+
+  # Once engaged, validate the stored plan and its immutable digest even if the flag disappears.
+  [ "${PLAN_JSON+x}" = x ] && [ "${PLAN_JSON_SHA256+x}" = x ] || return 1
+  stored_plan="$(printf '%s' "$PLAN_JSON" | review_plan_canonical_for_inputs)" || return 1
+  stored_hash="$(printf '%s' "$stored_plan" | review_plan_sha256)" || return 1
+  [ "$stored_hash" = "$PLAN_JSON_SHA256" ] || return 1
+  case "$(jq -r '.mode' <<<"$stored_plan")" in delta|resolve) ;; *) return 1 ;; esac
+
+  if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ]; then
+    fresh_plan="$(review_plan_decide_fresh)" || return 1
+    fresh_plan="$(printf '%s' "$fresh_plan" | review_plan_canonical_for_inputs)" || return 1
+    [ "$fresh_plan" = "$stored_plan" ] || return 1
+  fi
+
+  ceiling="$(jq -r '.event_ceiling' <<<"$stored_plan")" || return 1
+  case "$ceiling:$requested_event" in
+    APPROVE:APPROVE|APPROVE:COMMENT|APPROVE:REQUEST_CHANGES|\
+    COMMENT:COMMENT|COMMENT:REQUEST_CHANGES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 ```
 
 If the helper exits nonzero, emits partial output, or emits invalid JSON/schema,
@@ -1626,6 +1723,12 @@ review_interactive_invalid_confirmation() {
   local blocker_refs
   if review_interactive_blocker_evidence_valid \
     "$evidence_json" "$review_identity_json"; then
+    if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+      review_plan_event_allowed REQUEST_CHANGES || return 3
+    elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+      [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+      return 3
+    fi
     blocker_refs="$(review_interactive_blocker_refs "$evidence_json")" || return 3
     jq -S -c -n --argjson identity "$review_identity_json" \
       --argjson evidence "$evidence_json" --argjson blockers "$blocker_refs" \
@@ -1635,6 +1738,12 @@ review_interactive_invalid_confirmation() {
         confirmed_blocker_refs:$blockers,review_identity:$identity,
         blocker_evidence:$evidence,decision:null}'
     return
+  fi
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed COMMENT || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
   fi
   jq -S -c -n --argjson identity "$review_identity_json" \
     '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
@@ -1653,6 +1762,12 @@ review_interactive_prepare_confirmation() {
   local decision decision_identity decision_refs evidence_refs rc
 
   if [ "$sampled_mode" != typed ]; then
+    if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+      review_plan_event_allowed "$legacy_event" || return 3
+    elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+      [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+      return 3
+    fi
     jq -S -c -n --arg event "$legacy_event" \
       '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"legacy",
         confirmation_required:true,effective_event:$event,
@@ -1690,6 +1805,12 @@ review_interactive_prepare_confirmation() {
           review_interactive_invalid_confirmation "$expected_identity_json" null
           return
         fi
+      fi
+      if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+        review_plan_event_allowed "$(jq -r '.effective_event' <<<"$decision")" || return 3
+      elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+        [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+        return 3
       fi
       jq -S -c -n --argjson decision "$decision" \
         --argjson identity "$expected_identity_json" \
@@ -1792,6 +1913,12 @@ review_interactive_apply_event_edit() {
     *) return 3 ;;
   esac
   review_interactive_confirmation_valid "$confirmation_json" || return 3
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed "$requested_event" || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
+  fi
   if [ "$(jq -r '.source' <<<"$confirmation_json")" = legacy ]; then
     jq -S -c --arg event "$requested_event" '.effective_event=$event' \
       <<<"$confirmation_json"
@@ -1810,6 +1937,12 @@ review_interactive_confirm_post() {
   [ "$confirmation_state" = confirmed ] || return 3
   gated="$(review_interactive_apply_event_edit \
     "$confirmation_json" "$requested_event")" || return 3
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed "$requested_event" || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
+  fi
   jq -S -c -n --arg event "$requested_event" --argjson confirmation "$gated" \
     '{schema:"kc-pr-flow.interactive-post-gate/v1",human_confirmed:true,
       effective_event:$event,confirmation:$confirmation}'
@@ -1829,7 +1962,13 @@ review_interactive_post_gate_valid() {
     return 3
   fi
   confirmation="$(jq -S -c '.confirmation' <<<"$gate_json")" || return 3
-  review_interactive_confirmation_valid "$confirmation"
+  review_interactive_confirmation_valid "$confirmation" || return 3
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed "$(jq -r '.effective_event' <<<"$gate_json")" || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
+  fi
 }
 
 review_autonomous_post_gate_valid() {
@@ -1850,6 +1989,12 @@ review_autonomous_post_gate_valid() {
     (.head_sha | test("^[0-9a-f]{40}$")) and
     (.review_key | test("^[0-9a-f]{64}$"))
   ' >/dev/null 2>&1 || return 3
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed "$(jq -r '.effective_event' <<<"$gate_json")" || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
+  fi
 }
 
 review_autonomous_post_gate() {
@@ -1860,6 +2005,12 @@ review_autonomous_post_gate() {
   local review_key="${1:-}" head_sha="${2:-}" requested_event="${3:-}"
   local authorized_by="${4:-}"
   local gate
+  if declare -F review_plan_event_allowed >/dev/null 2>&1; then
+    review_plan_event_allowed "$requested_event" || return 3
+  elif [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] ||
+    [ "${FAST_PATH_ENGAGED:-0}" != 0 ]; then
+    return 3
+  fi
   gate="$(jq -S -c -n --arg review_key "$review_key" --arg head_sha "$head_sha" \
     --arg event "$requested_event" --arg by "$authorized_by" \
     '{schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:$by,
@@ -1952,7 +2103,10 @@ straight to "Legacy posting path" below, byte-identical to today. When `on`, `sc
 is the only component with posting/reconcile/network authority and guarantees at most one GitHub
 review even across a crash mid-POST:
 
-1. Compute the review key: `bash scripts/review-runtime.sh review-key --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$HEAD_SHA" --config-hash "$CONFIG_HASH"`.
+1. Immediately before constructing the request, run
+   `review_plan_event_allowed "$EFFECTIVE_EVENT"`; a nonzero result blocks posting and requires a
+   fresh review plan. Then compute the review key: `bash scripts/review-runtime.sh review-key --repo
+   "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$HEAD_SHA" --config-hash "$CONFIG_HASH"`.
 2. **Rediscover, don't assume a fresh start.** A crash between Step 7 attempts left no run ID in
    this session's memory, so scan for a resumable prior run before ever calling `post`: a run
    whose first event's `review_key` matches this exact review and that has neither a terminal
@@ -1997,6 +2151,9 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-runtime.md § "Once-only posting
 (idempotency key, marker, retention, rollback).
 
 **Legacy posting path (default).** Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check and `review-architecture-diagrams-validate.sh` against the exact previewed pair immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch, while a validation failure blocks posting and returns to regeneration.
+Immediately before either legacy posting command, run
+`review_plan_event_allowed "$EFFECTIVE_EVENT"`; a nonzero result blocks the mutation and requires a
+fresh review plan. `review-post.sh` remains the sole once-only posting owner and is unchanged.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "Review Payload"
 

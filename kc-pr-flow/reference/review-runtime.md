@@ -66,7 +66,32 @@ bash scripts/review-plan.sh decide --repo owner/repo --pr 42 --base BASE --head 
 
 The router cannot dispatch a reviewer, assert semantic correctness or security,
 choose the review event, alter confidence, authorize a human confirmation, or
-post a review. `event_ceiling` is only a maximum authority bound.
+post a review. `event_ceiling` is only a maximum authority bound, ordered as
+`APPROVE` > `COMMENT` > `REQUEST_CHANGES`; it can reduce authority but never
+upgrade it.
+
+The skill snapshots the original repository, PR, base, head, configuration,
+worktree, predecessor-event, and receipt inputs before routing. A non-`initial`
+decision is retained in memory as canonical `PLAN_JSON`, with an immutable
+SHA-256 digest and immutable engagement marker. At every authority boundary it
+reruns the existing `decide` command over those original inputs while the flag
+is still `on`, canonicalizes the result, and requires exact equality with the
+stored plan. It then validates the stored digest and applies the event partial
+order. It never silently clamps a disallowed event.
+
+Before engagement, flag-off preserves legacy authority. Under flag-on, only a
+fresh rerun that still selects `initial` preserves that authority; a fresh
+`delta` or `resolve`, invalid result, or router failure blocks the boundary.
+After engagement, a missing, mutated, stale, or identity-mismatched plan blocks.
+If the flag is later off or unexported, the stored canonical plan and digest
+remain authoritative and its ceiling is still enforced, without rerunning the
+disabled router.
+
+The same `review_plan_event_allowed` gate runs before presenting a legacy or
+typed effective event at Step 6c, after each human event edit, before autonomous
+gate creation, while constructing the confirmed post gate, and immediately
+before interactive, autonomous, once-only, or legacy posting. Any failure
+rejects that seam; it does not create confirmation or posting authority.
 
 ## Exact-head identity
 

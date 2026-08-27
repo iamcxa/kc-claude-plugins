@@ -20,6 +20,13 @@ returned required-capability lanes. In every mode, keep the existing independent
 activation rules: security remains always-on; supply-chain, Actions, and the
 break-point probe remain conditional. An `event_ceiling` only reduces authority:
 a current coverage gap must cap at `COMMENT`; it never creates a clean result.
+The event order is `APPROVE` > `COMMENT` > `REQUEST_CHANGES`. The skill reruns
+the plan over its immutable original inputs and enforces that order at the
+legacy, typed, edited, autonomous, confirmed, and immediate-pre-post seams; it
+rejects a disallowed event instead of silently clamping it. Before engagement,
+flag-off or a fresh flag-on `initial` decision preserves legacy authority. Once
+`delta` or `resolve` engages, missing, changed, stale, or identity-mismatched
+plan state fails closed, and later flag loss cannot loosen the stored ceiling.
 
 ## Step 4: Triage — Agent Selection
 

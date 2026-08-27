@@ -21,7 +21,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case receipt-contract|mode-router|trust-boundary|worktree-safety|skill-wiring]\n' "$0" >&2
+    printf 'usage: %s [--case receipt-contract|mode-router|trust-boundary|worktree-safety|skill-wiring|event-ceiling]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -427,6 +427,159 @@ skill_router_snippet() {
   ' "$SKILL"
 }
 
+skill_interactive_snippet() {
+  sed -n '/^# typed-interactive-recipe:start$/,/^# typed-interactive-recipe:end$/p' "$SKILL" |
+    sed '1d;$d'
+}
+
+event_plan_decision() {
+  local mode="$1" ceiling="$2" head_sha="${3:-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb}"
+  local review_key reason from_sha capabilities inherited fallback_initial
+  review_key="$(sha256_text "acme/widgets|1693|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa|$head_sha|cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")"
+  case "$mode" in
+    initial)
+      reason='["missing_predecessor"]'
+      from_sha=null
+      capabilities='[]'
+      inherited='[]'
+      fallback_initial=true
+      ;;
+    delta)
+      reason='["ancestor_append","expanded_delta","trusted_predecessor"]'
+      from_sha='"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
+      capabilities='["correctness"]'
+      inherited='["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"]'
+      fallback_initial=false
+      ;;
+    *) return 2 ;;
+  esac
+  jq -S -c -n --arg key "$review_key" --arg mode "$mode" --arg head "$head_sha" \
+    --argjson reason "$reason" --argjson from "$from_sha" --argjson capabilities "$capabilities" \
+    --argjson inherited "$inherited" --argjson ceiling "$ceiling" \
+    --argjson fallback_initial "$fallback_initial" '
+    {schema:"kc-pr-flow.review-plan-decision/v1",
+      identity:{repository:"acme/widgets",pr_number:1693,
+        base_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",head_sha:$head,
+        config_hash:"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        review_key:$key},mode:$mode,reason_codes:$reason,
+      review_range:{from_exclusive:$from,to_inclusive:$head},
+      inherited_finding_ids:$inherited,required_capabilities:$capabilities,
+      event_ceiling:$ceiling,
+      fallback:{router_advisory:true,requires_existing_initial_review:$fallback_initial,
+        final_verdict_authority:"existing-review-runtime"}}'
+}
+
+event_ceiling_case_status() {
+  local sequence="$1" flag_after="$2" mutation="$3" seam="$4" requested_event="$5"
+  local plugin_root router_snippet interactive_snippet entry_plan rerun_plan script output
+  plugin_root="$TEST_ROOT/event-ceiling-$sequence-$flag_after-$mutation-$seam-$requested_event"
+  mkdir -p "$plugin_root/scripts"
+  case "$sequence" in
+    initial)
+      entry_plan="$(event_plan_decision initial null)"
+      rerun_plan="$entry_plan"
+      ;;
+    initial-then-delta)
+      entry_plan="$(event_plan_decision initial null)"
+      rerun_plan="$(event_plan_decision delta '"COMMENT"')"
+      ;;
+    delta)
+      entry_plan="$(event_plan_decision delta '"COMMENT"')"
+      rerun_plan="$entry_plan"
+      ;;
+    delta-then-stale)
+      entry_plan="$(event_plan_decision delta '"COMMENT"')"
+      rerun_plan="$(jq -S -c '.required_capabilities=["correctness","security"]' <<<"$entry_plan")"
+      ;;
+    *) return 2 ;;
+  esac
+  printf '%s\n' "$entry_plan" >"$plugin_root/scripts/entry.json"
+  printf '%s\n' "$rerun_plan" >"$plugin_root/scripts/rerun.json"
+  {
+    printf '%s\n' '#!/usr/bin/env bash'
+    printf 'source %q\n' "$PLAN"
+    printf '%s\n' 'review_plan_validate_decision() { return 0; }'
+    printf '%s\n' 'if [ "${1:-}" = decide ]; then'
+    printf '%s\n' '  count_file="$(dirname "$0")/count"'
+    printf '%s\n' '  count=0; [ ! -f "$count_file" ] || count="$(cat "$count_file")"'
+    printf '%s\n' '  count=$((count + 1)); printf "%s\n" "$count" >"$count_file"'
+    printf '%s\n' '  if [ "$count" -eq 1 ]; then cat "$(dirname "$0")/entry.json"; else cat "$(dirname "$0")/rerun.json"; fi'
+    printf '%s\n' '  exit 0'
+    printf '%s\n' 'fi'
+  } >"$plugin_root/scripts/review-plan.sh"
+  chmod 0700 "$plugin_root/scripts/review-plan.sh"
+  cat >"$plugin_root/scripts/typed-approve.sh" <<'MOCK'
+#!/usr/bin/env bash
+printf '%s\n' '{"approve_eligible":true,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":[],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":[],"coverage":"complete","effective_event":"APPROVE","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":1693,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+MOCK
+  chmod 0700 "$plugin_root/scripts/typed-approve.sh"
+  router_snippet="$(skill_router_snippet)"
+  interactive_snippet="$(skill_interactive_snippet)"
+  script="$plugin_root/run.sh"
+  {
+    printf '%s\n' 'set -u'
+    printf '%s\n' 'REPO=acme/widgets'
+    printf '%s\n' 'PR_NUMBER=1693'
+    printf '%s\n' 'BASE_SHA=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    printf '%s\n' 'REVIEWED_HEAD_SHA=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    printf '%s\n' 'CONFIG_HASH=cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    printf '%s\n' 'REPO_WORKTREE=/tmp/repo'
+    printf '%s\n' 'PREDECESSOR_EVENTS=/tmp/events.jsonl'
+    printf '%s\n' 'DELTA_RECEIPT=/tmp/receipt.json'
+    printf 'CLAUDE_PLUGIN_ROOT=%q\n' "$plugin_root"
+    printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on'
+    printf '%s\n' "$router_snippet"
+    case "$flag_after" in
+      on) printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=on' ;;
+      off) printf '%s\n' 'KC_PR_FLOW_DELTA_FAST_PATH=off' ;;
+      unset) printf '%s\n' 'unset KC_PR_FLOW_DELTA_FAST_PATH' ;;
+      *) return 2 ;;
+    esac
+    case "$mutation" in
+      none) ;;
+      missing) printf '%s\n' 'unset PLAN_JSON' ;;
+      mutated) printf '%s\n' 'PLAN_JSON="$(jq -S -c '\''.reason_codes += ["tampered"]'\'' <<<"$PLAN_JSON")"' ;;
+      identity) printf '%s\n' 'PLAN_JSON="$(jq -S -c '\''.identity.head_sha="9999999999999999999999999999999999999999"'\'' <<<"$PLAN_JSON")"' ;;
+      *) return 2 ;;
+    esac
+    printf '%s\n' "$interactive_snippet"
+    printf '%s\n' 'identity='\''{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":1693,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"}'\'''
+    printf '%s\n' 'status=0'
+    case "$seam" in
+      direct)
+        printf 'review_plan_event_allowed %q >/dev/null 2>&1 || status=$?\n' "$requested_event"
+        ;;
+      legacy-edit)
+        printf '%s\n' 'confirmation="$(review_interactive_prepare_confirmation legacy COMMENT null null true)" || status=$?'
+        printf 'if [ "$status" -eq 0 ]; then review_interactive_apply_event_edit "$confirmation" %q >/dev/null 2>&1 || status=$?; fi\n' "$requested_event"
+        ;;
+      typed-present)
+        printf 'review_interactive_prepare_confirmation typed COMMENT "$identity" null %q >/dev/null 2>&1 || status=$?\n' "$plugin_root/scripts/typed-approve.sh"
+        ;;
+      confirmed)
+        printf '%s\n' 'confirmation="$(review_interactive_prepare_confirmation legacy COMMENT null null true)" || status=$?'
+        printf 'if [ "$status" -eq 0 ]; then review_interactive_confirm_post "$confirmation" %q confirmed >/dev/null 2>&1 || status=$?; fi\n' "$requested_event"
+        ;;
+      interactive-pre-post)
+        printf '%s\n' 'confirmation="$(review_interactive_prepare_confirmation legacy COMMENT null null true)" || status=$?'
+        printf '%s\n' 'gate="$(review_interactive_confirm_post "$confirmation" COMMENT confirmed)" || status=$?'
+        printf 'if [ "$status" -eq 0 ]; then gate="$(jq -S -c --arg event %q '\''.effective_event=$event | .confirmation.effective_event=$event'\'' <<<"$gate")"; review_interactive_post_gate_valid "$gate" >/dev/null 2>&1 || status=$?; fi\n' "$requested_event"
+        ;;
+      autonomous)
+        printf 'review_autonomous_post_gate "$(printf '\''d%%0.s'\'' {1..64})" "$(printf '\''b%%0.s'\'' {1..40})" %q daemon >/dev/null 2>&1 || status=$?\n' "$requested_event"
+        ;;
+      autonomous-pre-post)
+        printf '%s\n' 'gate="$(review_autonomous_post_gate "$(printf '\''d%0.s'\'' {1..64})" "$(printf '\''b%0.s'\'' {1..40})" COMMENT daemon)" || status=$?'
+        printf 'if [ "$status" -eq 0 ]; then gate="$(jq -S -c --arg event %q '\''.effective_event=$event'\'' <<<"$gate")"; review_autonomous_post_gate_valid "$gate" >/dev/null 2>&1 || status=$?; fi\n' "$requested_event"
+        ;;
+      *) return 2 ;;
+    esac
+    printf '%s\n' 'printf "%s\n" "$status"'
+  } >"$script"
+  output="$(bash "$script" 2>/dev/null)"
+  printf '%s' "$output"
+}
+
 skill_router_trace() {
   local stub_mode="$1" script plugin_root snippet output decision review_key receipt
   plugin_root="$TEST_ROOT/skill-router-$stub_mode"
@@ -676,12 +829,12 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   wrong_type_router_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace wrong-type-exit-0)"
   assert_match 'complete valid router decision is accepted' '^mode=resolve\|plan=\{.*\}\|ceiling=APPROVE\|reason=ancestor_append,known_finding_delta,trusted_predecessor$' "$valid_router_trace"
   assert_match 'complete valid delta decision is accepted' '^mode=delta\|plan=\{.*\}\|ceiling=COMMENT\|reason=ancestor_append,expanded_delta,trusted_predecessor$' "$valid_delta_router_trace"
-  assert_eq 'producer initial retains byte-identical existing flow' "$flag_off_trace" "$valid_initial_router_trace"
-  assert_eq 'failed router preserves byte-identical initial trace' "$flag_off_trace" "$failed_router_trace"
-  assert_eq 'malformed router preserves byte-identical initial trace' "$flag_off_trace" "$malformed_router_trace"
-  assert_eq 'schema-only router preserves byte-identical initial trace' "$flag_off_trace" "$schema_only_router_trace"
-  assert_eq 'extra-member router preserves byte-identical initial trace' "$flag_off_trace" "$extra_member_router_trace"
-  assert_eq 'wrong-type router preserves byte-identical initial trace' "$flag_off_trace" "$wrong_type_router_trace"
+  assert_eq 'producer initial retains planner-state parity' "$flag_off_trace" "$valid_initial_router_trace"
+  assert_eq 'failed router preserves planner-state parity' "$flag_off_trace" "$failed_router_trace"
+  assert_eq 'malformed router preserves planner-state parity' "$flag_off_trace" "$malformed_router_trace"
+  assert_eq 'schema-only router preserves planner-state parity' "$flag_off_trace" "$schema_only_router_trace"
+  assert_eq 'extra-member router preserves planner-state parity' "$flag_off_trace" "$extra_member_router_trace"
+  assert_eq 'wrong-type router preserves planner-state parity' "$flag_off_trace" "$wrong_type_router_trace"
   for semantic_mode in \
     delta-empty-range-exit-0 \
     delta-empty-capabilities-exit-0 \
@@ -692,7 +845,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
     resolve-wrong-capabilities-exit-0 \
     initial-wrong-reason-exit-0; do
     semantic_trace="$(KC_PR_FLOW_DELTA_FAST_PATH=on skill_router_trace "$semantic_mode")"
-    assert_eq "$semantic_mode preserves byte-identical initial trace under set -e" "$flag_off_trace" "$semantic_trace"
+    assert_eq "$semantic_mode preserves planner-state parity under set -e" "$flag_off_trace" "$semantic_trace"
   done
   assert_eq 'failed router leaves plan state unset' 'mode=initial|plan=unset|ceiling=unset|reason=unset' "$failed_router_trace"
   assert_eq 'skill router traces preserve planner path' "$HERE/review-plan.sh" "$PLAN"
@@ -701,8 +854,47 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
     live_receipt_rc="$(sed -n '1s/^receipt_rc=//p' <<<"$live_output")"
     live_trace="$(sed '1d' <<<"$live_output")"
     assert_eq "$identity_field mismatch keeps receipt/event replay valid" '0' "$live_receipt_rc"
-    assert_eq "$identity_field mismatch preserves byte-identical initial trace under set -e" "$flag_off_trace" "$live_trace"
+    assert_eq "$identity_field mismatch preserves planner-state parity under set -e" "$flag_off_trace" "$live_trace"
   done
+fi
+
+if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'event-ceiling' ]; then
+  assert_eq 'flag-off before engagement preserves legacy APPROVE' '0' \
+    "$(event_ceiling_case_status initial off none direct APPROVE)"
+  assert_eq 'fresh initial under flag-on preserves legacy APPROVE' '0' \
+    "$(event_ceiling_case_status initial on none direct APPROVE)"
+  assert_not_zero 'no-engagement delta rerun blocks legacy authority' \
+    "$(event_ceiling_case_status initial-then-delta on none direct COMMENT)"
+
+  assert_eq 'engaged COMMENT ceiling permits COMMENT after flag loss' '0' \
+    "$(event_ceiling_case_status delta off none direct COMMENT)"
+  assert_eq 'engaged COMMENT ceiling permits REQUEST_CHANGES after flag unexport' '0' \
+    "$(event_ceiling_case_status delta unset none direct REQUEST_CHANGES)"
+  assert_not_zero 'engaged COMMENT ceiling blocks APPROVE after flag loss' \
+    "$(event_ceiling_case_status delta off none direct APPROVE)"
+  assert_not_zero 'engaged COMMENT ceiling blocks APPROVE after flag unexport' \
+    "$(event_ceiling_case_status delta unset none direct APPROVE)"
+  assert_not_zero 'missing engaged plan blocks authority' \
+    "$(event_ceiling_case_status delta off missing direct COMMENT)"
+  assert_not_zero 'mutated engaged plan blocks authority' \
+    "$(event_ceiling_case_status delta off mutated direct COMMENT)"
+  assert_not_zero 'identity-mismatched engaged plan blocks authority' \
+    "$(event_ceiling_case_status delta off identity direct COMMENT)"
+  assert_not_zero 'stale engaged plan blocks authority' \
+    "$(event_ceiling_case_status delta-then-stale on none direct COMMENT)"
+
+  assert_not_zero 'legacy event edit cannot escalate COMMENT plan to APPROVE' \
+    "$(event_ceiling_case_status delta on none legacy-edit APPROVE)"
+  assert_not_zero 'typed effective event cannot escalate COMMENT plan to APPROVE' \
+    "$(event_ceiling_case_status delta on none typed-present APPROVE)"
+  assert_not_zero 'confirmed gate cannot escalate COMMENT plan to APPROVE' \
+    "$(event_ceiling_case_status delta on none confirmed APPROVE)"
+  assert_not_zero 'interactive immediate-pre-post gate rechecks COMMENT ceiling' \
+    "$(event_ceiling_case_status delta on none interactive-pre-post APPROVE)"
+  assert_not_zero 'autonomous gate cannot escalate COMMENT plan to APPROVE' \
+    "$(event_ceiling_case_status delta on none autonomous APPROVE)"
+  assert_not_zero 'autonomous immediate-pre-post gate rechecks COMMENT ceiling' \
+    "$(event_ceiling_case_status delta on none autonomous-pre-post APPROVE)"
 fi
 
 if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_FILTER" = 'trust-boundary' ] || [ "$CASE_FILTER" = 'worktree-safety' ]; then
