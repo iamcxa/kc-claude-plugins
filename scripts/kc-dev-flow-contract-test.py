@@ -989,6 +989,13 @@ for phrase in [
 ]:
     require(phrase in normalized_workflow, f"self-adoption misstates the admission snapshot: {phrase}")
 manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
+manual_issue_headings = [
+    "## The problem", "## Accepted outcome", "## Non-goals",
+    "## Acceptance evidence", "## Route-back conditions", "## Agent execution contract",
+]
+require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")
+heading_positions = [manual_issue_body.index(heading) for heading in manual_issue_headings]
+require(heading_positions == sorted(heading_positions), "manual admission Issue headings are out of order")
 require(
     manual_issue_body.startswith("## The problem\n"),
     "manual admission Issue body does not start directly with The problem",

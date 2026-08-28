@@ -416,6 +416,13 @@ def main() -> int:
         "```markdown\n## Human-readable release brief\n\n## The problem\n",
         "manual admission Issue body does not start directly with The problem",
     )
+    run_manual_contract_mutant(
+        "manual-issue-required-fields-removed",
+        "docs/dev/README.md",
+        "## Accepted outcome\n\n## Non-goals\n\n## Acceptance evidence\n\n## Route-back conditions\n",
+        "",
+        "manual admission Issue headings are missing or duplicated",
+    )
     run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")

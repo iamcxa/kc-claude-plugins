@@ -236,9 +236,8 @@ contract without the planning transcript. Reconcile the accepted outcome and
 complete non-goal list exactly before dispatch and before changing scope.
 ```
 
-`python3 scripts/kc-dev-flow-contract-test.py` checks this first heading and the
-manual execution clauses. The minimal-stack ablation test mutates each boundary
-and requires the contract test to reject it for the named reason.
+`python3 scripts/kc-dev-flow-contract-test.py` checks this shape; the minimal-stack
+ablation test mutates each boundary and requires rejection for the named reason.
 
 ### `ideation` — selected `shape`
 
