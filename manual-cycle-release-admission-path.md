@@ -171,16 +171,31 @@ reverse_recovery:
 
 Two searches support `EXISTS_BROKEN`: an exact repository search for Cycle-Release, manual admission, one-to-one, fresh executor, transcript, and planning delta found no shipped kc-dev-flow contract; a structural read of the kernel, adopter, continuation skill, and local workflow found working authority, reconcile, loader, and state seams but not the accepted end-to-end guarantee.
 
-## Falsifiable acceptance checks
+## Acceptance criteria
 
-| Claim | Check | It fails when |
-|---|---|---|
-| Portable and self-adopted contracts agree on one-to-one admission, fresh context, route-back, and no wrapper | `python3 scripts/kc-dev-flow-contract-test.py` | Any required clause disappears, packaged/adopted kernel bytes diverge, or the local workflow loses its binding. |
-| The new deterministic checks can speak | `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` | A mutant permits one Issue to fan out, permits execution to replace accepted scope, or restores the release-brief wrapper without the contract test rejecting it for the named reason. |
-| Existing route and exact-item selection remain intact | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 kc-dev-flow/scripts/profile-spacedock-route.test.py` | The item loads another profile/stage, an off-route state advances, or route concurrency regresses. |
-| Existing comparator remains green | `python3 scripts/kc-dev-flow-loader-eval.test.py` | The bounded loader/comparator contract changes while adding admission semantics. |
-| Dogfood remains one-to-one and fresh | Count committed entities with Issue #305 as `source`; require one non-empty recorded implementation worktree and inspect the generated worker input | More or fewer than one entity/worktree exists, or the execution prompt includes planning transcript content beyond Issue/repository/entity pointers. |
-| Dogfood terminates inside the accepted box | Compare closeout time with `started: 2026-08-28T00:05:28Z` and inspect the final report | No reviewable candidate or structured planning delta exists within one working day, or closeout omits Captain decisions and `proceed`, `change`, or `stop`. |
+**AC-1 — Portable and self-adopted contracts agree on one-to-one admission, fresh context, route-back, and no wrapper.**
+Verified by: `python3 scripts/kc-dev-flow-contract-test.py`
+Falsified by: Any required clause disappears, packaged/adopted kernel bytes diverge, or the local workflow loses its binding.
+
+**AC-2 — The new deterministic checks can speak.**
+Verified by: `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py`
+Falsified by: A mutant permits one Issue to fan out, permits execution to replace accepted scope, or restores the release-brief wrapper without the contract test rejecting it for the named reason.
+
+**AC-3 — Existing route and exact-item selection remain intact.**
+Verified by: `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 kc-dev-flow/scripts/profile-spacedock-route.test.py`
+Falsified by: The item loads another profile/stage, an off-route state advances, or route concurrency regresses.
+
+**AC-4 — Existing comparator remains green.**
+Verified by: `python3 scripts/kc-dev-flow-loader-eval.test.py`
+Falsified by: The bounded loader/comparator contract changes while adding admission semantics.
+
+**AC-5 — Dogfood remains one-to-one and fresh.**
+Verified by: Count committed entities with Issue #305 as `source`; require one non-empty recorded implementation worktree and inspect the generated worker input
+Falsified by: More or fewer than one entity/worktree exists, or the execution prompt includes planning transcript content beyond Issue/repository/entity pointers.
+
+**AC-6 — Dogfood terminates inside the accepted box.**
+Verified by: Compare closeout time with `started: 2026-08-28T00:05:28Z` and inspect the final report
+Falsified by: No reviewable candidate or structured planning delta exists within one working day, or closeout omits Captain decisions and `proceed`, `change`, or `stop`.
 
 These checks prove the documented/manual path and this dogfood instance. They do not claim engine-level prevention of an operator manually creating another task or workspace.
 
