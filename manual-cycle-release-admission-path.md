@@ -38,6 +38,15 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:w8z5xrcexs9k1qq7xrwzx5bk:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:w8z5xrcexs9k1qq7xrwzx5bk-ideation-1
+              briefing:
+                id: briefing:w8z5xrcexs9k1qq7xrwzx5bk:ideation:attempt-1:revision-1
+                digest: sha256:2115bf236c6997cb43ce868d765bca267845fb8e6805953f00f5e822117abded
+                request-digest: sha256:2efac7a3f2ef2390158d775dded2eabe4dff041ec995cdd39840df7c9e392209
+                room-ref: ./manual-cycle-release-admission-path/review/ideation/briefing-1
 ---
 
 ## Problem
