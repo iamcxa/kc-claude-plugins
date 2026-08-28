@@ -251,3 +251,11 @@ The existing profile loader, route test, comparator, and workflow graph are exer
 ### Summary
 
 The shape recovers existing GitHub, Spacedock, loader, and worktree seams rather than adding runtime or schema. It defines one manual, fresh-context path with explicit failure and route-back behavior, bounded to seven existing files and separately authorized delivery actions.
+
+## Implementation evidence: RoboRev claim
+
+- identity: `467d179a0dc7239f4623ae27b31c835d4bf4ae12016d528c401092d8383785ef`
+- claimant: `codex-thread:01a045c8-2834-7bd0-a847-65f6cce26327`
+- observed state revision: `d67181449cad2e1b19914b830fc7901ea49384d3`
+- candidate: `d8092fa93eec70a0d5c64d663e6c156983a785cf..035f7ba1efc13c2532bb22d7f809291e8dcd1b11`
+- state: `claimed`
