@@ -32,49 +32,52 @@ planning-window authority, one planning-outcome authority, one execution-record
 authority, and one delivery authority.
 Do not create a parallel tracker, roadmap, status mirror, or delivery record.
 
-## Planning and execution
+## Brief admission and planning
 
-The planning item owns discussion, the accepted goal, priority, and human-facing
-status. Within that provider, the planning window owns time and the planning
-outcome owns the accepted result. At admission, every SD task records `source`,
-`planning-window`, `planning-outcome`, and the shared `sprint` execution group.
-The SD entity set is the admission snapshot; `sprint` is an execution grouping,
-not a planning authority. Each task's `what` and `why` are an admission snapshot,
-not another accepted-goal authority. SD owns execution and evidence.
+A Development Brief is required for Pilot and Production. It fixes the problem,
+accepted outcome, complete non-goal list, acceptance evidence, and route-back
+conditions. The v3 POC decision, falsifier, budget, and stop condition form the
+Exploration Brief.
 
-At every engage, use the repository-local read-only planning reader to re-read
-the current Ready set for the snapshot's planning window/outcome plus every
-currently Ready snapshot source outside those bounds. The First Officer passes
-its source identities, window, outcome, accepted goal, and non-goals with the
-committed SD entity set and the exact engaged source, window, and outcome read
-from that work item to the read-only engage comparator. Classify every difference
-as added, removed, changed, or moved. The First Officer may continue only when
-the comparator exits `0` and stdout is one parsed `status: clean` result. The
-First Officer must refuse new dispatch or state mutation on exit `1`, exit `2`,
-or any other output; invalid input reports reconcile unavailable. The Captain
-admits the delta before an authorized actor commits a replacement snapshot. Do
-not cancel a running worker.
+A Planning Receipt is optional and must be complete or absent. It is exactly the
+`source`, `planning-window`, and `planning-outcome` tuple. A partial Planning
+Receipt is invalid. When all three fields are present, the planning item owns
+discussion, the accepted goal, priority, and human-facing status; the planning
+window owns time and the planning outcome owns the accepted result. At
+admission, each execution record stores the tuple and a runtime may also record
+a local execution group. The admitted execution set is the admission snapshot;
+its group is not a planning authority. Its accepted goal and non-goals are a
+snapshot, not another accepted-goal authority. The runtime owns execution and
+evidence.
 
-Do not add an SD-to-planning-provider projector, importer, polling loop, or
-bidirectional sync. No reconcile result writes either side automatically.
+For a complete Planning Receipt, use the repository-local read-only planning
+reader at every engage to re-read the current Ready set for the snapshot's
+planning window/outcome plus every currently Ready snapshot source outside those
+bounds. The First Officer passes its source identities, window, outcome,
+accepted goal, and non-goals with the committed execution snapshot and the exact
+engaged source, window, and outcome read from that work item to the read-only
+engage comparator. The supplied expected source, window, and outcome must match,
+and the comparator refuses a snapshot whose items do not all share that planning
+scope. Classify every difference as added, removed, changed, or moved. The First
+Officer may continue only when the comparator exits `0` and stdout is one parsed
+`status: clean` result. The First Officer must refuse new dispatch or state
+mutation on exit `1`, exit `2`, or any other output; invalid input reports
+reconcile unavailable. The Captain admits the delta before an authorized actor
+commits a replacement snapshot. Do not cancel a running worker.
 
-## Manual admission and route-back
+Without a Planning Receipt, the Captain-approved committed work item is the
+planning authority. It does not invoke the planning reader or comparator and it
+does not invent a provider, planning window, or planning outcome.
 
-A manual admission binds one planning item to one SD task and one isolated
-execution context. The First Officer enforces that binding at dispatch by
-resolving the committed task's source and recorded context, and by refusing a
-second task or execution context for the same admitted source. After dispatch
-failure, timeout, or worker loss, resume the recorded pair when safe; otherwise
-route back before creating another execution lane.
-
-The fresh executor receives the accepted planning item, repository context,
-exact committed task, and selected contract; it receives no planning transcript.
 Before dispatch and on any execution-time scope proposal, compare the accepted
 goal and complete non-goal list exactly with the admission snapshot. If either
 differs or implementation needs either to change, stop without rewriting the
-snapshot and return a structured planning delta naming the changed premise,
-affected acceptance evidence, and recommended `change` or `stop`. Unchanged
-scope produces one reviewable candidate for the existing delivery ceremony.
+snapshot or candidate and return a structured planning delta naming the changed
+premise, affected acceptance evidence, and recommended `change` or `stop`.
+
+Runtime adapters own task and execution-context cardinality. Do not add an
+execution-to-planning-provider projector, importer, polling loop, or
+bidirectional sync. No reconcile result writes either side automatically.
 
 ## Select before routing
 
@@ -116,32 +119,19 @@ loads no shape contract. Changed or uncertain premises stop with
 `RECOVERY_FULL_ROUTE_REQUIRED`; only the Captain or the recorded rollback may
 restore the full route.
 
-Queue state still has an exit bar. An item leaves `backlog` only when its
-committed body states all three:
+Queue state still has an exit bar. An item leaves `backlog` only after its
+required brief is admitted. Pilot and Production require the complete
+Development Brief above. POC requires the complete Exploration Brief recorded
+by its v3 receipt. A complete Planning Receipt adds provider reconciliation; its
+absence selects the standalone authority path instead of blocking the work.
 
-- **What it is** — one sentence sufficient for Captain triage.
-- **Why it is worth doing** — for `pilot-product-slice` and `production`, the
-  outcome it serves in the repository's existing project-context authority; for
-  `poc-exploration`, the question the experiment answers and the observable
-  result whose occurrence would abandon it.
-- **When it is scheduled** — non-empty `planning-window` and `planning-outcome`
-  fields resolved from the accepted planning item, a shared `sprint` field
-  naming the SD execution snapshot, and `sprint-readiness: ready`. `defer` keeps
-  the item queued.
-
-The scheduling fields are named because a queue answered by query is the point:
-`--where sprint=X --where sprint-readiness=ready` selects the admitted snapshot
-without reading every queued item. The planning provider still owns which
-windows and outcomes exist; the `sprint` value only groups the SD execution
-records materialized from that accepted selection. At engage, the comparator
-must check the snapshot against the supplied expected source, window, and outcome
-and reject a snapshot whose members do not all share that planning scope.
-
-The Captain checks the bar on every `backlog` exit, at profile selection.
-A reused profile receipt answers which route the item takes, never whether the
-bar is met, so reuse does not skip the check.
-`kc-dev-flow:choose-work-profile` asks for a missing part, and reports the item
-as not ready to leave `backlog` when it cannot ask.
+A runtime may separately require a local execution group and readiness field.
+That local execution grouping does not prove a Planning Receipt and must not
+invent provider scheduling metadata. The Captain checks the brief admission bar
+on every `backlog` exit at profile selection. A reused profile receipt answers
+which route the item takes, never whether the bar is met, so reuse does not skip
+the check. `kc-dev-flow:choose-work-profile` asks for a missing part and reports
+the item as not ready to leave `backlog` when it cannot ask.
 
 ## Shared boundaries
 

@@ -34,7 +34,6 @@ def work_item_text(
     direction: str = "stop",
     *,
     outcome: str | None = None,
-    handoff: str | None = None,
 ) -> str:
     if outcome is None:
         outcome = f"""## POC outcome
@@ -46,16 +45,6 @@ poc_outcome:
   strongest_limit: One provider was not evaluated
   reversal_fact: A real run loses the accepted state
   cleanup: complete
-```
-"""
-    if handoff is None:
-        handoff = """## POC handoff
-
-```yaml
-poc_handoff:
-  disposition: not_applicable
-  to:
-  reason:
 ```
 """
     return f"""---
@@ -83,7 +72,6 @@ work_profile:
 ```
 
 {outcome}
-{handoff}
 """
 
 
@@ -116,11 +104,6 @@ from pathlib import Path
 log = Path(os.environ["FAKE_SPACEDOCK_LOG"])
 with log.open("a", encoding="utf-8") as stream:
     stream.write(json.dumps({"argv": sys.argv[1:], "stdin": sys.stdin.read()}) + "\\n")
-if sys.argv[1:2] == ["status"]:
-    print(json.dumps({"command": "status", "entities": json.loads(os.environ.get("FAKE_ENTITIES", "[]"))}))
-    raise SystemExit(0)
-if sys.argv[1:2] == ["new"]:
-    raise SystemExit(int(os.environ.get("FAKE_NEW_EXIT", "0")))
 print("delegated")
 """,
         encoding="utf-8",
@@ -135,15 +118,11 @@ def run_guard(
     workflow: Path,
     item: Path,
     *arguments: str,
-    entities: list[dict[str, object]] | None = None,
-    new_exit: int = 0,
 ) -> subprocess.CompletedProcess[str]:
     environment = os.environ.copy()
     environment.update(
         {
             "FAKE_SPACEDOCK_LOG": str(log),
-            "FAKE_ENTITIES": json.dumps(entities or []),
-            "FAKE_NEW_EXIT": str(new_exit),
         }
     )
     return subprocess.run(
@@ -167,19 +146,6 @@ def run_guard(
 with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     root = Path(temporary)
     guard = load_guard()
-
-    for name, fields, expected in (
-        ("preadvanced", "status: implementation", "status must be backlog"),
-        ("prescheduled", "status: backlog\nsprint: test/S9", "must stay deferred"),
-        ("ready", "status: backlog\nsprint-readiness: ready", "must stay deferred"),
-    ):
-        body = write_item(root, f"---\nsource: poc:poc123exact\n{fields}\n---\n", name)
-        try:
-            guard.validate_delivery_body(body, "poc123exact")
-        except guard.CloseError as error:
-            require(expected in str(error), f"wrong {name} refusal: {error}")
-        else:
-            raise SystemExit(f"POC close guard accepted {name} downstream body")
 
     for field in (
         "direction",
@@ -208,36 +174,6 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
         work_item_text().replace("  evidence: artifact.json at revision abc123", "  evidence: TBD"),
         "prepare",
         "evidence must be a concrete scalar",
-    )
-
-    proceed_not_applicable = work_item_text(direction="proceed")
-    require_refusal(
-        guard,
-        root,
-        proceed_not_applicable,
-        "consume",
-        "proceed requires created, deferred, or declined",
-    )
-    stop_created = work_item_text().replace(
-        "  disposition: not_applicable\n  to:\n  reason:",
-        "  disposition: created\n  to: downstream123\n  reason:",
-    )
-    require_refusal(
-        guard,
-        root,
-        stop_created,
-        "consume",
-        "stop requires not_applicable",
-    )
-    proceed_deferred_without_reason = work_item_text(direction="proceed").replace(
-        "  disposition: not_applicable", "  disposition: deferred"
-    )
-    require_refusal(
-        guard,
-        root,
-        proceed_deferred_without_reason,
-        "consume",
-        "deferred requires a concrete reason",
     )
 
     workflow = root / "workflow"
@@ -271,14 +207,18 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
         calls[-1]["argv"][:3] == ["gate", "consume", "poc123exact"],
         f"wrong consume delegation: {calls[-1]}",
     )
+    require(
+        all(call["argv"][0] != "new" for call in calls),
+        f"POC close path created downstream work: {calls}",
+    )
 
-    proceed_item = write_item(root, work_item_text(direction="proceed"), "failed-create")
+    proceed_item = write_item(root, work_item_text(direction="proceed"), "retired-create")
     body = root / "delivery.md"
     body.write_text(
         "---\nsource: poc:poc123exact\nstatus: backlog\n---\n\n# Delivery seed\n",
         encoding="utf-8",
     )
-    failed_create = run_guard(
+    retired_create = run_guard(
         fake,
         log,
         workflow,
@@ -288,14 +228,10 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
         "delivery-seed",
         "--body",
         str(body),
-        new_exit=42,
     )
-    require(failed_create.returncode == 42, f"new failure was not preserved: {failed_create}")
-    calls = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
     require(
-        calls[-1]["argv"][0] == "new"
-        and all(call["argv"][:2] != ["gate", "consume"] for call in calls[-2:]),
-        "failed creation consumed the POC gate",
+        retired_create.returncode != 0 and "invalid choice" in retired_create.stderr,
+        "POC close guard still accepts downstream creation",
     )
 
 print("POC close guard test: PASS")

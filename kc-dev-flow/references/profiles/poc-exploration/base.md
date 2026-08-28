@@ -24,8 +24,7 @@ observable stop point in the v3 receipt before build.
   Science Officer review, or production operations unless the repository or an
   observed boundary independently requires it.
 
-## Promotion boundary
+## Route-back boundary
 
-Stop and request a new profile choice when accepted scope adds real users,
-persistent valuable state, reused shortcuts, beyond-session operation,
-retry/recovery duty, or any production trigger from the shared core.
+After proof, return `poc_outcome` to planning. Do not create or preselect
+delivery work. A new commitment enters under an independent Development Brief.

@@ -275,13 +275,14 @@ def run_reconcile_wiring_mutant() -> None:
         continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
         replace_once(
             continuation,
-            "6. Invoke the repository-local read-only engage comparator.\n",
-            "6. Continue without invoking the engage comparator.\n",
+            "7. Invoke the repository-local read-only engage comparator only in the\n"
+            "   provider-backed branch.\n",
+            "7. Continue without invoking the engage comparator.\n",
         )
         reject(
             "reconcile-wiring-removed",
             execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
-            "continuation authority resolution omits",
+            "continuation planning disambiguation omits: Invoke the repository-local read-only engage comparator only in the provider-backed branch.",
         )
 
 
@@ -310,6 +311,24 @@ def run_manual_contract_mutant(
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
         replace_once(fixture / relative, before, after)
+        reject(
+            name,
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            evidence,
+        )
+
+
+def run_kernel_contract_mutant(
+    name: str, before: str, after: str, evidence: str
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        for relative in (
+            "kc-dev-flow/references/kernel.md",
+            "docs/dev/_mods/kernel.md",
+        ):
+            replace_once(fixture / relative, before, after)
         reject(
             name,
             execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
@@ -395,18 +414,42 @@ def main() -> int:
     run_reconcile_exit_mutant()
     run_reconcile_wiring_mutant()
     run_reconcile_clean_output_wiring_mutant()
+    run_kernel_contract_mutant(
+        "required-development-brief-removed",
+        "A Development Brief is required",
+        "A Development Brief is optional",
+        "kernel omits brief boundary: Development Brief is required",
+    )
+    run_kernel_contract_mutant(
+        "standalone-path-removed",
+        "A Planning Receipt is optional",
+        "A Planning Receipt is required",
+        "kernel omits brief boundary: Planning Receipt is optional",
+    )
     run_manual_contract_mutant(
-        "one-to-many-execution-restored",
+        "partial-receipt-accepted",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
-        "exactly one committed task for the engaged source",
-        "one or more committed tasks for the engaged source",
-        "continuation planning disambiguation omits: exactly one committed task for the engaged source",
+        "report `planning receipt incomplete`",
+        "continue with the available planning fields",
+        "continuation planning disambiguation omits: report `planning receipt incomplete`",
+    )
+    run_kernel_contract_mutant(
+        "runtime-topology-restored",
+        "Runtime adapters own task and execution-context cardinality.",
+        "Runtime adapters own task and execution-context cardinality. A portable rule must not bind one planning item to one SD task and one isolated execution context.",
+        "kernel owns runtime topology: one planning item to one SD task and one isolated execution context",
+    )
+    run_kernel_contract_mutant(
+        "runtime-vocabulary-restored",
+        "admission, each execution record stores the tuple",
+        "admission, each task records the tuple",
+        "kernel owns runtime topology: each task records the tuple",
     )
     run_manual_contract_mutant(
         "execution-scope-replacement-restored",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
-        "do not replace the snapshot or candidate",
-        "replace the snapshot and continue the candidate",
+        "do not replace the snapshot or\n   candidate",
+        "replace the snapshot and continue the\n   candidate",
         "continuation planning disambiguation omits: do not replace the snapshot or candidate",
     )
     run_manual_contract_mutant(
@@ -419,9 +462,16 @@ def main() -> int:
     run_manual_contract_mutant(
         "manual-issue-required-fields-removed",
         "docs/dev/README.md",
-        "## Accepted outcome\n\n## Non-goals\n\n## Acceptance evidence\n\n## Route-back conditions\n",
-        "",
+        "```markdown\n## The problem\n\n## Accepted outcome\n\n## Non-goals\n\n## Acceptance evidence\n\n## Route-back conditions\n",
+        "```markdown\n## The problem\n",
         "manual admission Issue headings are missing or duplicated",
+    )
+    run_manual_contract_mutant(
+        "poc-route-back-removed",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "return the POC outcome to planning",
+        "continue directly into delivery",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md omits the v4 POC contract: return the POC outcome to planning",
     )
     run_missing_close_guard_mutant()
     run_release_state_mutant()

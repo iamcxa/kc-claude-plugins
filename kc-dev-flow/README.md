@@ -4,8 +4,8 @@ Load development constraints in proportion to work risk, so agent behavior is
 just sufficient without losing verification or authority boundaries.
 
 KC Dev Flow supplies one minimal authority core and three profile-native delivery
-routes. A repository keeps its own planning provider, planning windows and
-outcomes, workflow runtime, and delivery provider. The [design rationale](./RATIONALE.md) records
+routes. A repository may bind a planning provider, while its workflow runtime
+and delivery provider remain local. The [design rationale](./RATIONALE.md) records
 the observed pain, trade-offs, directional evidence, and conditions that would
 falsify this direction.
 
@@ -13,13 +13,13 @@ falsify this direction.
 
 | Profile | Working route | Intended result |
 |---|---|---|
-| POC — bounded exploration or technical proof | `build -> prove` | Evidence supports `proceed`, `stop`, or `change`; cleanup and limits are recorded. |
+| POC — bounded exploration or technical proof | `build -> prove` | Evidence supports `proceed`, `stop`, or `change`; cleanup and limits are recorded, then the outcome returns to planning. |
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
 | Production | `shape -> build -> verify`; eligible recovery `build -> verify` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
 ```mermaid
 flowchart TB
-    A["Backlog<br/>state the problem, the value,<br/>and the accepted iteration"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
+    A["Backlog<br/>admit a Development Brief<br/>or Exploration Brief"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
     B --> L["At each working stage, load<br/>shared core + selected base + selected stage"]
     L --> C{Selected profile}
 
@@ -42,8 +42,8 @@ flowchart TB
     R4 --> D
 ```
 
-An item leaves `backlog` only when it states what it is, why it is worth doing,
-and the accepted iteration it is scheduled into.
+An item leaves `backlog` only after its required brief is admitted. Scheduling
+metadata is optional; it activates provider reconciliation when present.
 
 Backlog and done are state boundaries, not working stages; a runtime may expose
 the union of route states and skip inactive ones. The profile loader rejects a stage
@@ -59,6 +59,22 @@ fallback to the full route, while `[none]` does not activate RoboRev.
 
 Each stage contract names a one-line **working perspective** — a cognitive cue,
 not another agent, review, or gate.
+
+## Inputs
+
+- **Development Brief** — required for Pilot and Production; contains the
+  problem, accepted outcome, complete non-goal list, acceptance evidence, and
+  route-back conditions.
+- **Exploration Brief** — required for POC; uses the existing v3 decision,
+  falsifier, budget, and stop-condition fields.
+- **Planning Receipt** — optional and complete or absent; the exact `source`,
+  `planning-window`, and `planning-outcome` tuple activates the adopter's
+  read-only provider reconcile. A partial tuple stops.
+
+Without a Planning Receipt, the Captain-approved committed brief is the planning
+authority. KC Dev Flow invokes no planning provider and invents no Cycle or
+Release/Milestone. Feature and bug labels use the same engine; uncertainty,
+risk, urgency, and the accepted commitment select the brief and profile.
 
 ## Seats and gates
 
@@ -125,14 +141,15 @@ for invalid input. It invokes no provider or execution runtime. The
 [design rationale](./RATIONALE.md) owns the planning/execution explanation.
 
 At a route's first working stage, the loader also requires one non-empty
-`sprint` and `sprint-readiness: ready` in work-item frontmatter. The planning
-provider owns the accepted window and outcome; `sprint` only groups the SD
-entity snapshot. The Captain admits the snapshot, and the loader checks only
-the committed field values. At every engage, the adopter's read-only planning
-reader normalizes the provider's current Ready set and the admitted snapshot;
-that current set also includes every still-Ready snapshot source outside the
-original window/outcome. The vendored comparator classifies their difference.
-Any delta stops before new dispatch or mutation until the Captain admits it.
+`sprint` and `sprint-readiness: ready` in work-item frontmatter for the packaged
+Spacedock route. Those are local execution mechanics, not Planning Receipt
+evidence. For a complete receipt, the planning provider owns the accepted window
+and outcome. At every engage, the adopter's read-only planning reader normalizes
+the provider's current Ready set and the admitted snapshot; that current set also
+includes every still-Ready snapshot source outside the original window/outcome.
+The vendored comparator classifies their difference. Any delta stops before new
+dispatch or mutation until the Captain admits it. A standalone item skips this
+provider path.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

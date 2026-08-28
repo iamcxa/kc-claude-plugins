@@ -3,9 +3,7 @@
 
 from __future__ import annotations
 
-import json
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -87,12 +85,6 @@ def poc_body(slug: str, direction: str) -> str:
 +""".replace("\n+", "\n")
 
 
-def item_id(item: Path) -> str:
-    match = re.search(r"^id:\s*(\S+)\s*$", item.read_text(encoding="utf-8"), re.MULTILINE)
-    require(match is not None, f"{item.name} has no id")
-    return match.group(1)
-
-
 def guard(workflow: Path, item: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return run(
         [
@@ -152,25 +144,8 @@ def approve(workflow: Path, item: Path) -> None:
     require(recorded.returncode == 0, f"gate record failed: {recorded.stderr}")
 
 
-def append_handoff(item: Path, disposition: str, to: str = "", reason: str = "") -> None:
-    with item.open("a", encoding="utf-8") as stream:
-        stream.write(
-            f"""
-+
-+## POC handoff
-+
-+```yaml
-+poc_handoff:
-+  disposition: {disposition}
-+  to: {to}
-+  reason: {reason}
-+```
-+""".replace("\n+", "\n")
-        )
-
-
 def finish(workflow: Path, item: Path) -> None:
-    commit_all(workflow, f"record {item.stem} handoff")
+    commit_all(workflow, f"record {item.stem} outcome")
     consumed = guard(workflow, item, "consume")
     require(consumed.returncode == 0, f"guard consume failed: {consumed.stderr}")
     finalized = run(
@@ -228,106 +203,23 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-poc-close-live-") as tempor
     (workflow / "review.md").write_text("supported fixture conclusion\n", encoding="utf-8")
     commit_all(workflow, "seed workflow")
 
-    for direction in ("stop", "change"):
+    for direction in ("stop", "change", "proceed"):
         item = create_poc(workflow, f"{direction}-poc", direction)
         approve(workflow, item)
-        append_handoff(item, "not_applicable")
         finish(workflow, item)
 
-    for disposition in ("deferred", "declined"):
-        item = create_poc(workflow, f"{disposition}-poc", "proceed")
-        approve(workflow, item)
-        append_handoff(item, disposition, reason=f"Captain {disposition} delivery")
-        finish(workflow, item)
-
-    created_poc = create_poc(workflow, "created-poc", "proceed")
-    approve(workflow, created_poc)
-    source_id = item_id(created_poc)
-    delivery = workflow / "delivery-body.txt"
-    delivery.write_text(
-        f"---\ntitle: Delivery seed\nstatus: backlog\nsource: poc:{source_id}\n---\n\n# Delivery seed\n",
-        encoding="utf-8",
-    )
-    first = guard(
+    retired_poc = create_poc(workflow, "retired-create-poc", "proceed")
+    approve(workflow, retired_poc)
+    refused_create = guard(
         workflow,
-        created_poc,
+        retired_poc,
         "create",
-        "--slug",
-        "delivery-seed",
-        "--body",
-        str(delivery),
-    )
-    require(first.returncode == 0, f"first downstream create failed: {first.stderr}")
-    second = guard(
-        workflow,
-        created_poc,
-        "create",
-        "--slug",
-        "delivery-seed",
-        "--body",
-        str(delivery),
-    )
-    require(second.returncode == 0, f"downstream retry failed: {second.stderr}")
-    first_id = json.loads(first.stdout.splitlines()[-1])["id"]
-    second_receipt = json.loads(second.stdout.splitlines()[-1])
-    require(
-        second_receipt == {
-            "disposition": "reused",
-            "id": first_id,
-            "slug": "delivery-seed",
-        },
-        f"retry did not reuse the sole downstream item: {second_receipt}",
-    )
-    append_handoff(created_poc, "created", to=first_id)
-    finish(workflow, created_poc)
-
-    failed_poc = create_poc(workflow, "failed-create-poc", "proceed")
-    approve(workflow, failed_poc)
-    failed_body = workflow / "failed-delivery.txt"
-    failed_body.write_text(
-        f"---\ntitle: Failed seed\nstatus: backlog\nsource: poc:{item_id(failed_poc)}\n---\n\n# Failed seed\n",
-        encoding="utf-8",
-    )
-    failed = guard(
-        workflow,
-        failed_poc,
-        "create",
-        "--slug",
-        "../invalid",
-        "--body",
-        str(failed_body),
-    )
-    require(failed.returncode != 0, "invalid downstream creation succeeded")
-    require(failed_poc.is_file(), "failed creation moved the POC out of validation")
-
-    duplicate_poc = create_poc(workflow, "duplicate-poc", "proceed")
-    approve(workflow, duplicate_poc)
-    duplicate_body = workflow / "duplicate-delivery.txt"
-    duplicate_body.write_text(
-        f"---\ntitle: Duplicate seed\nstatus: backlog\nsource: poc:{item_id(duplicate_poc)}\n---\n\n# Duplicate seed\n",
-        encoding="utf-8",
-    )
-    for slug in ("duplicate-one", "duplicate-two"):
-        duplicated = run(
-            [str(spacedock), "new", slug, "--workflow-dir", str(workflow)],
-            workflow,
-            input_text=duplicate_body.read_text(encoding="utf-8"),
-        )
-        require(duplicated.returncode == 0, f"could not seed {slug}: {duplicated.stderr}")
-    commit_all(workflow, "seed duplicate sources")
-    refused_duplicate = guard(
-        workflow,
-        duplicate_poc,
-        "create",
-        "--slug",
-        "duplicate-three",
-        "--body",
-        str(duplicate_body),
     )
     require(
-        refused_duplicate.returncode == 2
-        and "multiple downstream items" in refused_duplicate.stderr,
-        "duplicate canonical sources did not fail closed",
+        refused_create.returncode != 0 and "invalid choice" in refused_create.stderr,
+        "retired downstream creation command still exists",
     )
+    require(retired_poc.is_file(), "refused creation moved the POC out of validation")
+    finish(workflow, retired_poc)
 
 print("profile Spacedock route test: PASS")

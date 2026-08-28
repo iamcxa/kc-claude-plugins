@@ -48,10 +48,13 @@ README as a policy bundle.
 
 GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.
 Its Iteration field is the planning window, its GitHub Milestone is the planning
-outcome, and Status `Ready` selects candidates. Spacedock tasks are execution
-records, and `source` links the accepted planning item. At every engage, compare
-the provider's current Ready set with the committed SD snapshot. A difference
-requires Captain admission and never writes either side automatically.
+outcome, and Status `Ready` selects provider-backed candidates. Spacedock tasks
+are execution records, and `source` links the accepted planning item. At every
+provider-backed engage, compare the provider's current Ready set with the
+committed SD snapshot. A difference requires Captain admission and never writes
+either side automatically. A standalone Captain-approved brief leaves `source`,
+`planning-window`, and `planning-outcome` empty and invokes no provider reader or
+comparator.
 
 | Role | Bound local authority |
 |---|---|
@@ -165,8 +168,8 @@ python3 docs/dev/_mods/profile-contract-loader.py \
 The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
 route's first working stage it also requires one non-empty `sprint` and
-`sprint-readiness: ready`; the planning provider owns the accepted Iteration and
-Milestone, while the Captain admits the resulting SD snapshot. Its
+`sprint-readiness: ready` as local Spacedock execution mechanics. They do not
+prove a Planning Receipt. Its
 `next_workflow_stage` is the normal next state. An eligible Production recovery
 instead emits `skip_to_workflow_stage: implementation` with no loaded ideation
 contract. Profiles are per item, so POC, Pilot, and Production items may run
@@ -181,35 +184,37 @@ repository mechanics; it does not repeat the profile contract.
 
 ### `backlog` — queue and select
 
-Capture `title`, `source`, `product`, and one problem paragraph. Only the Captain
-admits it: leaving `backlog` needs the accepted provider `planning-window` and
-`planning-outcome`, a shared SD `sprint` execution-group value, and
-`sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
-then, so the admitted snapshot is `spacedock status --workflow-dir docs/dev
---where sprint=<group> --where sprint-readiness=ready`. Obtain and commit the
-supported profile receipt before moving to the selected route's first working
-state.
+Capture `title`, `product`, and the required Development Brief or Exploration
+Brief. Only the Captain admits it. Provider-backed work records the complete
+`source`, `planning-window`, and `planning-outcome` tuple; standalone work records
+none of it. A partial tuple stops. This Spacedock adoption separately requires a
+shared `sprint` execution-group value and `sprint-readiness: ready`. Queued items
+carry `sprint-readiness: defer` until then, so the admitted execution set is
+`spacedock status --workflow-dir docs/dev --where sprint=<group> --where
+sprint-readiness=ready`. Obtain and commit the supported profile receipt before
+moving to the selected route's first working state.
 
 ### Engage reconcile
 
-Before reading execution state or dispatching new work, run the read-only
-planning reader for the union of the snapshot's `planning-window`/
-`planning-outcome` Ready set and every currently Ready snapshot source
-outside those bounds. Refuse a truncated result. Compare that union with every
-committed SD entity sharing its `sprint`: source membership, window, outcome,
-accepted outcome, and non-goals. Normalize both sets into ephemeral JSON lists
-and refuse the snapshot unless every item shares the engaged item's exact
+For a complete Planning Receipt, before reading execution state or dispatching
+new work, run the read-only planning reader for the union of the snapshot's
+`planning-window`/`planning-outcome` Ready set and every currently Ready snapshot
+source outside those bounds. Refuse a truncated result. Compare that union with
+every committed SD entity sharing its `sprint`: source membership, window,
+outcome, accepted outcome, and non-goals. Normalize both sets into ephemeral JSON
+lists and refuse the snapshot unless every item shares the engaged item's exact
 window and outcome. Run the bound planning comparator with `--expected-source`,
-`--expected-window`, and `--expected-outcome` set to the exact engaged work
-item values. Exit `0` continues only when stdout parses as one JSON object with
+`--expected-window`, and `--expected-outcome` set to the exact engaged work item
+values. Exit `0` continues only when stdout parses as one JSON object with
 `status: clean` and empty delta arrays. Any other output stops before new
 dispatch or state mutation: exit `1` reports added, removed, changed, and moved
 items; exit `2` or an invalid exit-`0` payload reports unavailable input. The
 Captain admits every delta before an authorized actor commits the replacement
 snapshot. Do not cancel a running worker. This is reconcile, not projection or
-sync: neither side is written automatically.
+sync: neither side is written automatically. A standalone item skips this whole
+provider branch and uses its Captain-approved committed brief.
 
-### Manual Cycle-Release admission
+### Development Brief
 
 A manually admitted GitHub Issue uses this body shape without a
 `## Human-readable release brief` wrapper:
@@ -225,15 +230,9 @@ A manually admitted GitHub Issue uses this body shape without a
 
 ## Route-back conditions
 
-Return one reviewable candidate or a structured planning delta that names the
-changed premise, affected acceptance evidence, and recommended change or stop.
-
-## Agent execution contract
-
-Bind one Issue to one committed Spacedock task and one isolated worktree. Give
-the fresh executor the Issue, repository context, exact task, and selected
-contract without the planning transcript. Reconcile the accepted outcome and
-complete non-goal list exactly before dispatch and before changing scope.
+The accepted outcome or non-goals changed. Stop and return a structured planning
+delta that names the changed premise, affected acceptance evidence, and
+recommended change or stop.
 ```
 
 `python3 scripts/kc-dev-flow-contract-test.py` checks this shape; the minimal-stack
@@ -244,9 +243,11 @@ ablation test mutates each boundary and requires rejection for the named reason.
 Active only for Pilot and full-route Production. An eligible recovery creates no
 worker, briefing, report, or gate here; re-read its hash-bound receipt, apply the
 implementation skip, and load `build`. Otherwise load the selected `shape`
-contract. Copy the planning item's accepted outcome and non-goals into the work
-item as an admission snapshot. It is not a second accepted-goal authority.
-Record task-specific acceptance evidence as execution evidence.
+contract. For a complete Planning Receipt, copy the planning item's accepted
+outcome and non-goals into the work item as an admission snapshot; it is not a
+second accepted-goal authority. For standalone work, the Captain-approved
+committed Development Brief already holds that authority. Record task-specific
+acceptance evidence as execution evidence.
 Its conditional references load only when their predicates fire: reverse
 recovery for a proposed addition, replacement, removal, or missing claim in
 existing code; the multi-slice guard when one integrated slice is insufficient.
@@ -289,6 +290,10 @@ It is a delivery event mod, not a profile contract, and remains unread until PR
 delivery is selected or a tracked PR needs reconciliation.
 
 POC and Pilot proceed to done after their selected delivery authority is met.
+For POC, `poc-close-guard.py` validates the recorded `poc_outcome`, prepares and
+consumes the approval gate, and terminalizes the experiment. KC Dev Flow then
+returns the outcome to planning; it creates no downstream item and preselects no
+profile. Planning alone may admit a new, independent Development Brief.
 Production's validation gate approval targets the terminal `done` stage, so
 `gate consume` leaves it pending (`route=approved-awaiting-merge`) instead of
 landing anywhere: `spacedock merge guard <slug> --verdict passed|rejected` is
@@ -379,13 +384,17 @@ pr:
 mod-block:
 ---
 
-## Problem
+## The problem
 
 ## Work profile receipt
 
-## Admission snapshot: accepted outcome and non-goals (copied from `source`)
+## Accepted outcome
+
+## Non-goals
 
 ## Acceptance evidence
+
+## Route-back conditions
 
 ## Measurement
 ```

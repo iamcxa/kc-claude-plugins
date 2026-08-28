@@ -1,6 +1,6 @@
 ---
 name: adopt-dev-flow
-description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving its existing planning provider, local execution grouping, workflow runtime, and delivery provider.
+description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving any existing planning provider, local execution grouping, workflow runtime, and delivery provider.
 ---
 
 # Adopt Dev Flow
@@ -11,29 +11,28 @@ replace a working planning provider, workflow runtime, or delivery provider.
 ## Audit
 
 Read `../../references/kernel.md` and the existing repository authorities. Map
-project context, planning items, planning windows, planning outcomes, local SD
-execution groups, execution state, delivery, scope, and observation. Confirm
-that the planning provider owns discussion, acceptance, priority, human-facing
-status, time windows, and accepted outcomes; and Spacedock owns the admitted
-snapshot, execution record, and evidence. Each item has one planning-item
-authority and one execution-record authority. Classify the relevant seams as
-working, broken, stubbed, or missing; repair the cheapest compatible seam.
+project context, required briefs, any planning provider, local execution
+groups, execution state, delivery, scope, and observation. A provider-backed
+item keeps one external planning authority and a complete Planning Receipt; a
+standalone item uses its Captain-approved committed brief. The workflow runtime
+owns only its admitted snapshot, execution record, and evidence. Each item has
+one planning authority and one execution-record authority. Classify the relevant
+seams as working, broken, stubbed, or missing; repair the cheapest compatible
+seam.
 
 ## Adopt
 
 1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
-   authorities plus the repository-local profile loader and contracts root.
-   Bind the planning provider plus a repository-local read-only planning reader
-   and the vendored repository-local read-only engage comparator.
-   The reader must normalize the union of current Ready items for one planning
-   window/outcome and every currently Ready snapshot source even when it moved.
-   It must refuse a truncated result and expose source identity, accepted goal,
-   and non-goals without writing either system. A new Spacedock task stores
-   those bindings in `source`,
-   `planning-window`, and `planning-outcome`; every task in the admitted set
-   shares one `sprint` execution-group value. Its required `what` and `why` are
-   an admission snapshot and execution evidence, not a second accepted-goal
-   authority. Do not mirror live provider status into a Roadmap or SD record.
+   authorities plus the repository-local profile loader and contracts root. A
+   repository that supports Planning Receipts also binds its planning provider,
+   repository-local read-only planning reader, and vendored repository-local
+   read-only engage comparator. The reader normalizes the union of current Ready
+   items for one planning window/outcome and every currently Ready snapshot
+   source even when it moved; it refuses a truncated result and exposes source
+   identity, accepted goal, and non-goals without writing either system. A
+   standalone adopter binds the Captain-approved committed brief and installs no
+   provider adapter. Do not mirror live provider status into a Roadmap or
+   execution record.
 2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
    `../../references/reverse-recovery-audit.md`,
    `../../references/journey-slicing.md`, and
@@ -45,7 +44,7 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    `../../scripts/profile-contract-loader.py`, and
    `../../scripts/poc-close-guard.py` without local edits. Vendor
    `../../scripts/engage-reconcile.py` without local edits to a
-   repository-owned tooling path outside the Spacedock workflow tree, then bind
+   repository-owned tooling path outside the workflow runtime tree, then bind
    that path as the planning comparator in `## Local Profile`. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
@@ -54,33 +53,30 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
-   Default the entity template to `sprint-readiness: defer`. Before an item
-   enters its first working stage, bind non-empty `planning-window` and
-   `planning-outcome` values from the accepted planning item, assign the shared
-   non-empty `sprint` execution group, and set `sprint-readiness: ready`; do not
-   mark the unscheduled backlog ready during adoption. Materialize one SD task
-   for every Ready planning item in that window and outcome. The committed SD
-   entity set is the admitted snapshot.
-   For a manual admission, bind one planning item to one SD task and one isolated
-   execution context. Make the First Officer refuse a second matching task or
-   context and reuse the recorded pair after a recoverable worker failure. Feed
-   the executor only the accepted planning item, repository context, exact task,
-   and selected contract; exclude the planning transcript. When the provider
-   uses Issue bodies as admission packets, each body starts directly with
-   `## The problem`, keeps `## Agent execution contract`, and omits a
-   `## Human-readable release brief` wrapper.
-4. At every engage, the engage reconcile is read-only: invoke the reader and
-   normalize the provider's current Ready set and committed SD snapshot into
-   ephemeral comparator inputs. Refuse a snapshot whose items do not all share
-   the engaged item's exact `planning-window` and `planning-outcome`. Bind that
-   exact source, window, and outcome when invoking the vendored comparator.
+   Require the Development Brief for Pilot and Production or the v3 Exploration
+   Brief for POC. A Planning Receipt is complete or absent: provider-backed work
+   records `source`, `planning-window`, and `planning-outcome`; standalone work
+   records none of them. A partial tuple stops. Local `sprint` and
+   `sprint-readiness` remain runtime grouping and readiness mechanics, not
+   planning evidence. When the provider uses Issue bodies as admission packets,
+   each body starts directly with `## The problem` and omits both an
+   `## Agent execution contract` section and a `## Human-readable release brief`
+   wrapper.
+4. For a complete Planning Receipt, the engage reconcile is read-only: invoke
+   the reader and normalize the provider's current Ready set and committed
+   execution snapshot into ephemeral comparator inputs. Refuse a snapshot whose
+   items do not all share the engaged item's exact `planning-window` and
+   `planning-outcome`. Bind that exact source, window, and outcome when invoking
+   the vendored comparator.
    Only exit `0` with one parsed `status: clean` result and empty delta arrays
    continues. Any other output stops: exit `1` reports the classified delta,
    while exit `2` or an invalid exit-`0` payload reports unavailable input.
    Report added, removed, changed, and moved items and stop before new dispatch
    or state mutation when any difference exists. The Captain admits every delta
    before an authorized actor commits a replacement snapshot. Never mutate
-   either side automatically or cancel a running worker.
+   either side automatically or cancel a running worker. Without a Planning
+   Receipt, skip the provider reader and comparator and use the Captain-approved
+   committed brief as planning authority.
 5. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot and Production add `ideation`. No
    profile adds a state the others skip, so a runtime that owns one stage graph
@@ -193,14 +189,15 @@ conditional references; do not fold either into the shared core or load it for
 an unrelated work record.
 
 Changing the planning provider is item-scoped. Migrate only open planning items
-that have not been admitted to Spacedock. An already-admitted active task keeps
+that have not been admitted to execution. An admitted provider-backed item keeps
 its existing planning item and provider until completion; the old provider must
-remain available for those items. New admissions use the replacement provider.
-During the drain, providers may differ across snapshots, but each item retains
-one planning-item authority. Keep active Spacedock snapshots, their planning
-bindings, execution history, and delivery artifacts unchanged. Reconcile each
-snapshot through its own provider's reader. Do not install an SD projector,
-provider importer, polling loop, or bidirectional sync.
+remain available for those items. A standalone item has no provider to migrate.
+New provider-backed admissions use the replacement provider. During the drain,
+providers may differ across snapshots, but each item retains one planning
+authority. Keep admitted execution snapshots, planning bindings, execution
+history, and delivery artifacts unchanged. Reconcile each provider-backed
+snapshot through its own reader. Do not install an execution-to-provider
+projector, provider importer, polling loop, or bidirectional sync.
 
 ## Boundary
 
