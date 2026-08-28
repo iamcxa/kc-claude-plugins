@@ -97,3 +97,112 @@ Non-goals:
 ## Measurement
 
 Record the admission time, workspace or worktree identity, exact candidate revision, Captain decisions after admission, route-back events, and final `proceed`, `change`, or `stop` result.
+
+## Shape decision
+
+Recover the existing planning/execution seams with one narrow contract change. Do not add a command, stage, stored schema, synchronizer, template, or retained release-brief document. Per the Captain's backlog decision, future planning Issues start with `## The problem` and retain `## Agent execution contract`; they omit the redundant `## Human-readable release brief` wrapper.
+
+The accepted outcome and non-goals above remain unchanged. One integrated documentation-and-contract slice is sufficient; a changed accepted goal or non-goal returns to GitHub planning before further execution.
+
+## Accepted manual-admission journey
+
+1. **OBSERVED** — `gh issue view 305 --repo iamcxa/kc-claude-plugins` returned one open Issue in Project status `Ready`, Iteration 2, and milestone `kc-dev-flow Cycle-Release Admission Pilot`, with the accepted outcome, non-goals, evidence, and route-back conditions.
+2. **OBSERVED** — the state checkout at admission commit `07929c0723b585829b15d6a21e659aa6879de535` contained one entity whose `source` and `issue` resolve to Issue #305. The repository-local profile loader accepted that exact entity as `pilot-product-slice`, selected `shape`, and hash-bound it as `ca070a029595ba91f44d49c1c9db31ae5666445f989029878ef32b749e3b6b0b`.
+3. **OBSERVED** — the ideation worker started from the generated dispatch pointer, repository rules, and committed entity rather than the planning conversation. This proves the fresh-context handoff shape for ideation, not yet isolated implementation or delivery.
+4. **DESIGNED** — before implementation dispatch, `continue-dev-flow` re-reads the Issue and the current Ready set, then compares source membership, planning window, outcome, accepted goal, and non-goals with the committed `sprint: S6` snapshot. Missing input reports `planning source unavailable` or `planning reconcile unavailable`; any added, removed, changed, or moved item produces a structured planning delta and stops before dispatch or state mutation.
+5. **DESIGNED** — Spacedock dispatch creates one implementation worker for this one task in one isolated worktree and records its path in this entity. Dispatch failure, no answer, worker death, or timeout does not create a second task or execution lane; resume the same task/worktree when safe, otherwise record route-back.
+6. **DESIGNED** — the implementation worker receives the Issue, repository context, exact committed entity, and selected contract, but no planning transcript. It may clarify implementation details; if an accepted goal, non-goal, profile premise, dependency boundary, or one-working-day limit must change, it stops with a structured planning delta naming the changed premise, affected acceptance evidence, and recommended `change` or `stop` choice.
+7. **DESIGNED** — with unchanged premises, the worker produces one reviewable diff in that worktree, runs the declared exact-head checks, and records the base revision plus patch identity. A commit SHA, pull request, merge, release, or publication exists only after its separate authorization; without commit authority, the reviewable diff remains the candidate and is not promoted to a revision claim.
+8. **DESIGNED** — validation either accepts the one candidate for the existing delivery ceremony or routes the structured delta back to GitHub planning. Closeout records elapsed span from `started`, Captain decisions after admission, route-back events, worktree identity, candidate identity when one exists, and one later-pilot result: `proceed`, `change`, or `stop`.
+
+### Observable semantics and boundaries
+
+- The changed semantics are documentation-contract semantics: manual Ready admission is one planning Issue to one Spacedock task to one isolated execution context, and execution cannot silently reshape the accepted goal or non-goals.
+- Command grammar, YAML frontmatter fields, profile routes, workflow stages, provider ownership, and delivery authority do not change. `sprint` remains an execution grouping.
+- GitHub retains planning truth; the committed state-branch entity retains the admission snapshot and execution evidence; the isolated worktree retains candidate bytes. No new persistence, credentials, migration, automatic provider write, or destructive path is introduced.
+- Existing retained files are repaired in place. The kernel is the explanatory home; adopter, continuation, and local-workflow text state their bounded action and point to that invariant. No new retained document or duplicate release brief is created.
+
+## Reverse-recovery receipt
+
+```yaml
+reverse_recovery:
+  trigger: "Add a manual one-to-one, fresh-context admission and route-back contract in an existing workflow."
+  boundary: "Issue #305 Ready selection through the committed SD snapshot, selected Pilot route, and candidate-or-route-back result in this repository."
+  layers:
+    - surface: planning entry
+      location: docs/dev/README.md:50
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "The live Issue is Ready and exactly one committed entity references Issue #305."
+      disproof_hook: "Read Project #4 Ready items and count state entities with source Issue #305."
+    - surface: portable admission contract
+      location: kc-dev-flow/references/kernel.md:35
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: "Authority and reconcile exist, but exact-term search and structural reads found no explicit one-task/one-context, no-transcript, candidate-or-route-back journey."
+      disproof_hook: "Show one current kernel/adopt/continue clause that binds all three missing semantics."
+    - surface: execution entry
+      location: kc-dev-flow/skills/continue-dev-flow/SKILL.md:10
+      completeness: WORKING_UNIT_UNPROVEN
+      need: REQUIRED
+      evidence: "Authority resolution and hash-bound profile loading run; isolated implementation and its route-back have not yet been exercised for this Issue."
+      disproof_hook: "Run the fresh implementation dispatch and observe either duplicate execution or silent premise replacement."
+    - surface: persistence and readback
+      location: docs/dev/.spacedock-state/manual-cycle-release-admission-path.md
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "The state branch preserves the source, window, outcome, sprint, receipt, gate decision, and admission body at one committed path."
+      disproof_hook: "Read the committed entity and fail if any bound field or accepted snapshot is absent."
+  decision: recover
+```
+
+Two searches support `EXISTS_BROKEN`: an exact repository search for Cycle-Release, manual admission, one-to-one, fresh executor, transcript, and planning delta found no shipped kc-dev-flow contract; a structural read of the kernel, adopter, continuation skill, and local workflow found working authority, reconcile, loader, and state seams but not the accepted end-to-end guarantee.
+
+## Falsifiable acceptance checks
+
+| Claim | Check | It fails when |
+|---|---|---|
+| Portable and self-adopted contracts agree on one-to-one admission, fresh context, route-back, and no wrapper | `python3 scripts/kc-dev-flow-contract-test.py` | Any required clause disappears, packaged/adopted kernel bytes diverge, or the local workflow loses its binding. |
+| The new deterministic checks can speak | `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` | A mutant permits one Issue to fan out, permits execution to replace accepted scope, or restores the release-brief wrapper without the contract test rejecting it for the named reason. |
+| Existing route and exact-item selection remain intact | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 kc-dev-flow/scripts/profile-spacedock-route.test.py` | The item loads another profile/stage, an off-route state advances, or route concurrency regresses. |
+| Existing comparator remains green | `python3 scripts/kc-dev-flow-loader-eval.test.py` | The bounded loader/comparator contract changes while adding admission semantics. |
+| Dogfood remains one-to-one and fresh | Count committed entities with Issue #305 as `source`; require one non-empty recorded implementation worktree and inspect the generated worker input | More or fewer than one entity/worktree exists, or the execution prompt includes planning transcript content beyond Issue/repository/entity pointers. |
+| Dogfood terminates inside the accepted box | Compare closeout time with `started: 2026-08-28T00:05:28Z` and inspect the final report | No reviewable candidate or structured planning delta exists within one working day, or closeout omits Captain decisions and `proceed`, `change`, or `stop`. |
+
+These checks prove the documented/manual path and this dogfood instance. They do not claim engine-level prevention of an operator manually creating another task or workspace.
+
+## Where it touches
+
+Delivery base for stop-number measurement: fetched `origin/main@d8092fa93eec70a0d5c64d663e6c156983a785cf`; implementation must re-fetch and replace this base if it moved before editing.
+
+| Path | Lines now | Estimated lines after | Purpose |
+|---|---:|---:|---|
+| `kc-dev-flow/references/kernel.md` | 214 | 228 | Own the portable manual-admission and route-back invariant. |
+| `docs/dev/_mods/kernel.md` | 214 | 228 | Keep the self-adopted kernel byte-identical. |
+| `kc-dev-flow/skills/adopt-dev-flow/SKILL.md` | 188 | 200 | Bind one Ready planning item to one task and one execution context without automation. |
+| `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | 186 | 202 | Verify fresh inputs and emit candidate or structured planning delta. |
+| `docs/dev/README.md` | 356 | 374 | Bind the repository's manual GitHub-to-Spacedock journey and omit the wrapper. |
+| `scripts/kc-dev-flow-contract-test.py` | 1016 | 1052 | Check package/adopter/local clauses and their single explanatory home. |
+| `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 337 | 373 | Mutate one-to-one, no-reshape, and no-wrapper clauses and require named rejection. |
+
+The existing profile loader, route test, comparator, and workflow graph are exercised but unchanged; changing them would be an unplanned surface and returns to shape.
+
+## Stop numbers
+
+- Stop when the diff against the recorded delivery base exceeds **7 changed files**.
+- Stop when additions plus deletions exceed **175 changed lines**.
+- Likeliest runaway area: stop when deterministic contract coverage across `scripts/kc-dev-flow-contract-test.py` and `scripts/kc-dev-flow-minimal-stack-ablation.test.py` exceeds **90 changed lines**.
+- A crossed number requires one Captain choice recorded here: reduce scope, reshape with replacement numbers, or promote the profile. Any required change to the accepted outcome or non-goals returns to GitHub planning instead of choosing among those implementation options.
+
+## Stage Report: ideation
+
+- DONE: Define one accepted manual-admission journey from a Ready Issue through an exact snapshot and isolated execution to either a reviewable candidate or structured route-back; mark every step OBSERVED or DESIGNED.
+  Eight ordered steps cover the observed Issue/entity/loader handoff and designed reconcile, isolated execution, candidate, failure, timeout, and route-back behavior.
+- DONE: Produce falsifiable acceptance checks and a file-level touch table for the smallest existing documentation, contract, and test surfaces; incorporate the Captain decision to omit the redundant Human-readable release brief wrapper.
+  Six checks name their falsifiers; seven existing files cover portable/local contracts and mutations, with no new wrapper or retained document.
+- DONE: Set stop numbers for changed files, changed lines, and the likeliest runaway area; return to planning if the accepted goal or non-goals must change.
+  Stop at more than 7 files, 175 changed lines, or 90 deterministic-test lines; accepted-scope change routes to GitHub planning.
+
+### Summary
+
+The shape recovers existing GitHub, Spacedock, loader, and worktree seams rather than adding runtime or schema. It defines one manual, fresh-context path with explicit failure and route-back behavior, bounded to seven existing files and separately authorized delivery actions.
