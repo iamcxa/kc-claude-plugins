@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:w8z5xrcexs9k1qq7xrwzx5bk:ideation:attempt-2:revision-1",
+  "question": "Approve the shaped manual Cycle-Release admission path to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:w8z5xrcexs9k1qq7xrwzx5bk:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/73f3e51e6ba23454de175e89e511b8d865f6a291/manual-cycle-release-admission-path.md",
+      "rev": "sha256:943be51cb1fd90671ef973139e21bc938f97575019cfda1c148471c61cf6e6e6",
+      "mediaType": "text/markdown",
+      "summary": "The Pilot shape uses existing GitHub, Spacedock, profile-loader, comparator, and worktree seams. It defines one fresh-context manual journey, six scanner-readable and falsifiable acceptance criteria, seven existing touch files, and stop conditions at more than 7 files, 175 changed lines, or 90 deterministic-test lines. Future Issues start directly with The problem; no new wrapper, runtime, schema, automatic dispatch, provider write, stage, or release authority is added."
+    }
+  ]
+}

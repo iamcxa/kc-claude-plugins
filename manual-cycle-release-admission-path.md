@@ -51,6 +51,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-28T00:24:23.244715Z"
                 reason: The prepared ideation briefing cannot be presented because ac-scan found no required Acceptance criteria section; preserve the six shaped checks and repair only their scanner-readable heading and AC labels.
+            - id: gate-attempt:w8z5xrcexs9k1qq7xrwzx5bk-ideation-2
+              briefing:
+                id: briefing:w8z5xrcexs9k1qq7xrwzx5bk:ideation:attempt-2:revision-1
+                digest: sha256:944c9e9743399a545d3aefd074a2d9032e65acf9be94ed65cae117cce50a96ae
+                request-digest: sha256:fd8584a5796c7d41bf89decdfb66f7206b52f47bac6097c1a9ffcc57eaa74229
+                room-ref: ./manual-cycle-release-admission-path/review/ideation/briefing-2
 ---
 
 ## Problem
