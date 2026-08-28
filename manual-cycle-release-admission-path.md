@@ -8,7 +8,7 @@ planning-window: Iteration 2
 planning-outcome: kc-dev-flow Cycle-Release Admission Pilot
 sprint: S6
 sprint-readiness: ready
-started:
+started: 2026-08-28T00:05:28Z
 completed:
 verdict:
 worktree:
