@@ -13,7 +13,7 @@
     }},
     {"name": "fixed", "files": {
       "src/parser.py": "def parse(value):\n    return value.strip() or None\n\ndef stable_one():\n    return 1\n\ndef stable_two():\n    return 2\n",
-      "tests/test_parser.py": "from src.parser import parse\n\ndef test_strip():\n    assert parse(' value ') == 'value'\n\n# empty-input-contract empty-input-contract\ndef test_empty():\n    assert parse(' ') is None\n\ndef test_passthrough():\n    assert parse('value') == 'value'\n"
+      "tests/test_parser.py": "from src.parser import parse\n\ndef test_strip():\n    assert parse(' value ') == 'value'\n\n# parser-anchor parser-anchor\ndef test_empty():\n    assert parse(' ') is None\n\ndef test_passthrough():\n    assert parse('value') == 'value'\n"
     }}
   ],
   "known_findings": [

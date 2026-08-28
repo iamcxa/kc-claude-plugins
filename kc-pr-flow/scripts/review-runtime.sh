@@ -669,6 +669,294 @@ review_runtime_review_key() {
   printf '%s|%s|%s|%s|%s' "$1" "$2" "$3" "$4" "$5" | review_runtime_sha256
 }
 
+# RFC 8785 JSON Canonicalization Scheme for the closed identity values used by
+# the v2 projection. Runtime inputs already reject floats and integers outside
+# the interoperable JSON range; the encoder repeats that boundary and sorts
+# object names by UTF-16 code units as RFC 8785 requires.
+review_runtime_jcs_canonical() {
+  review_runtime_require_python || return
+  python3 -c '
+import json
+import sys
+
+MAX_SAFE_INTEGER = 9007199254740991
+
+def reject_duplicate_members(pairs):
+    value = {}
+    for key, member in pairs:
+        if key in value:
+            raise ValueError("duplicate member")
+        value[key] = member
+    return value
+
+def valid_string(value):
+    if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+        raise ValueError("invalid Unicode scalar")
+    return value
+
+def encode(value):
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    if isinstance(value, int) and not isinstance(value, bool):
+        if abs(value) > MAX_SAFE_INTEGER:
+            raise ValueError("integer outside interoperable range")
+        return str(value)
+    if isinstance(value, float):
+        raise ValueError("floating point identity is unsupported")
+    if isinstance(value, str):
+        return json.dumps(valid_string(value), ensure_ascii=False, separators=(",", ":"))
+    if isinstance(value, list):
+        return "[" + ",".join(encode(member) for member in value) + "]"
+    if isinstance(value, dict):
+        keys = sorted(value, key=lambda key: valid_string(key).encode("utf-16-be"))
+        return "{" + ",".join(encode(key) + ":" + encode(value[key]) for key in keys) + "}"
+    raise ValueError("unsupported JSON identity type")
+
+try:
+    parsed = json.load(sys.stdin, object_pairs_hook=reject_duplicate_members,
+                       parse_float=lambda _: (_ for _ in ()).throw(ValueError("float")))
+    sys.stdout.write(encode(parsed))
+except (ValueError, TypeError, json.JSONDecodeError, UnicodeError):
+    raise SystemExit(3)
+'
+}
+
+review_runtime_jcs_sha256() {
+  local canonical
+  canonical="$(review_runtime_jcs_canonical)" || return
+  printf '%s' "$canonical" | review_runtime_sha256
+}
+
+review_runtime_nfc_path() {
+  [ "$#" -eq 1 ] || return 2
+  review_runtime_require_python || return
+  python3 -c '
+import sys
+import unicodedata
+
+value = sys.argv[1]
+if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+    raise SystemExit(3)
+sys.stdout.write(unicodedata.normalize("NFC", value))
+' "$1"
+}
+
+# Derive every machine-owned v2 identity field in one Python launch. Keeping
+# normalization, JCS encoding, claim-key synthesis, null anchoring, and finding
+# hashing in one operation avoids multiplying interpreter startup cost while
+# preserving one authority for producer and validator call sites.
+review_runtime_identity_projection() {
+  local repository='' review_key=''
+  if [ "$#" -eq 2 ]; then
+    repository="$1"
+    review_key="$2"
+  elif [ "$#" -ne 0 ]; then
+    return 2
+  fi
+  review_runtime_require_python || return
+  python3 -c '
+import hashlib
+import json
+import re
+import sys
+import unicodedata
+
+MAX_SAFE_INTEGER = 9007199254740991
+
+def reject_duplicate_members(pairs):
+    value = {}
+    for key, member in pairs:
+        if key in value:
+            raise ValueError("duplicate member")
+        value[key] = member
+    return value
+
+def valid_string(value):
+    if not isinstance(value, str):
+        raise ValueError("expected string")
+    if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+        raise ValueError("invalid Unicode scalar")
+    return value
+
+def encode(value):
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    if isinstance(value, int) and not isinstance(value, bool):
+        if abs(value) > MAX_SAFE_INTEGER:
+            raise ValueError("integer outside interoperable range")
+        return str(value)
+    if isinstance(value, float):
+        raise ValueError("floating point identity is unsupported")
+    if isinstance(value, str):
+        return json.dumps(valid_string(value), ensure_ascii=False, separators=(",", ":"))
+    if isinstance(value, list):
+        return "[" + ",".join(encode(member) for member in value) + "]"
+    if isinstance(value, dict):
+        keys = sorted(value, key=lambda key: valid_string(key).encode("utf-16-be"))
+        return "{" + ",".join(encode(key) + ":" + encode(value[key]) for key in keys) + "}"
+    raise ValueError("unsupported JSON identity type")
+
+def digest(value):
+    return hashlib.sha256(encode(value).encode("utf-8")).hexdigest()
+
+def canonical_path(value):
+    return unicodedata.normalize("NFC", valid_string(value))
+
+def exact_evidence_identity(path, side, evidence):
+    evidence_path = evidence.get("path")
+    if evidence_path is not None and canonical_path(evidence_path) != path:
+        raise ValueError("evidence path mismatch")
+    return {
+        "content_sha256": evidence["content_sha256"],
+        "line": evidence.get("line"),
+        "object_sha": evidence["object_sha"],
+        "path": path,
+        "side": side,
+    }
+
+try:
+    subject = json.load(sys.stdin, object_pairs_hook=reject_duplicate_members,
+                        parse_float=lambda _: (_ for _ in ()).throw(ValueError("float")))
+    if not isinstance(subject, dict):
+        raise ValueError("identity subject must be an object")
+    path = canonical_path(subject["path"])
+    side = valid_string(subject["side"])
+    category = valid_string(subject["category"])
+    if re.fullmatch(r"[a-z][a-z0-9._-]{0,46}", category) is None:
+        raise ValueError("invalid category")
+    evidence = subject["evidence"]
+    if not isinstance(evidence, dict):
+        raise ValueError("invalid evidence")
+    if evidence.get("path") is not None:
+        evidence = dict(evidence)
+        evidence["path"] = canonical_path(evidence["path"])
+    evidence_identity = exact_evidence_identity(path, side, evidence)
+    claim_key = category + "-" + digest(evidence_identity)[:16]
+    if re.fullmatch(r"[a-z][a-z0-9._-]{0,63}", claim_key) is None:
+        raise ValueError("invalid claim key")
+    if evidence_identity["line"] is None:
+        anchor_sha256 = digest([
+            path, side, evidence_identity["object_sha"], None,
+            evidence_identity["content_sha256"],
+        ])
+    else:
+        anchor_sha256 = subject.get("anchor_sha256")
+        if not isinstance(anchor_sha256, str) or re.fullmatch(r"[0-9a-f]{64}", anchor_sha256) is None:
+            raise ValueError("invalid anchor")
+    canonical_subject = dict(subject)
+    canonical_subject["path"] = path
+    canonical_subject["evidence"] = evidence
+    canonical_subject["anchor_sha256"] = anchor_sha256
+    canonical_subject["claim_key"] = claim_key
+    finding_id = None
+    repository = sys.argv[1]
+    review_key = sys.argv[2]
+    if repository or review_key:
+        if not repository or re.fullmatch(r"[0-9a-f]{64}", review_key) is None:
+            raise ValueError("invalid finding authority")
+        finding_id = digest({
+            "anchor_sha256": anchor_sha256,
+            "category": category,
+            "claim_key": claim_key,
+            "evidence": evidence_identity,
+            "path": path,
+            "repository": repository,
+            "review_key": review_key,
+            "side": side,
+        })
+    sys.stdout.write(encode({
+        "evidence_identity": evidence_identity,
+        "finding_id": finding_id,
+        "subject": canonical_subject,
+    }))
+except (KeyError, ValueError, TypeError, json.JSONDecodeError, UnicodeError):
+    raise SystemExit(3)
+' "$repository" "$review_key"
+}
+
+review_runtime_exact_evidence_identity() {
+  local path="$1" side="$2" evidence="$3" canonical_path evidence_path
+  [ "$#" -eq 3 ] || return 2
+  canonical_path="$(review_runtime_nfc_path "$path")" || return
+  evidence_path="$(printf '%s' "$evidence" | jq -r '.path // empty')" || return
+  if [ -n "$evidence_path" ]; then
+    evidence_path="$(review_runtime_nfc_path "$evidence_path")" || return
+    [ "$evidence_path" = "$canonical_path" ] || return 3
+  fi
+  jq -c -n --arg path "$canonical_path" --arg side "$side" --argjson evidence "$evidence" '
+    {
+      content_sha256:$evidence.content_sha256,
+      line:($evidence.line // null),
+      object_sha:$evidence.object_sha,
+      path:$path,
+      side:$side
+    }
+  ' | review_runtime_jcs_canonical
+}
+
+review_runtime_claim_key() {
+  local category="$1" evidence_identity="$2" evidence_sha256 claim_key
+  [ "$#" -eq 2 ] || return 2
+  [[ "$category" =~ ^[a-z][a-z0-9._-]{0,46}$ ]] || return 3
+  evidence_sha256="$(printf '%s' "$evidence_identity" | review_runtime_jcs_sha256)" || return
+  claim_key="$category-${evidence_sha256:0:16}"
+  [[ "$claim_key" =~ ^[a-z][a-z0-9._-]{0,63}$ ]] || return 3
+  printf '%s\n' "$claim_key"
+}
+
+review_runtime_null_anchor_sha256() {
+  local path="$1" side="$2" evidence="$3" canonical_path
+  [ "$#" -eq 3 ] || return 2
+  canonical_path="$(review_runtime_nfc_path "$path")" || return
+  jq -c -n --arg path "$canonical_path" --arg side "$side" --argjson evidence "$evidence" '
+    [$path,$side,$evidence.object_sha,null,$evidence.content_sha256]
+  ' | review_runtime_jcs_sha256
+}
+
+review_runtime_canonical_identity_subject() {
+  [ "$#" -eq 1 ] || return 2
+  printf '%s' "$1" | review_runtime_identity_projection | jq -c '.subject'
+}
+
+review_runtime_blob_line_anchor_sha256() {
+  local blob_file="$1" line="$2"
+  [ "$#" -eq 2 ] && [[ "$line" =~ ^[1-9][0-9]*$ ]] || return 2
+  review_runtime_require_python || return
+  python3 -c '
+import hashlib
+import sys
+
+with open(sys.argv[1], "rb") as source:
+    lines = source.read().splitlines(keepends=True)
+index = int(sys.argv[2]) - 1
+if index < 0 or index >= len(lines):
+    raise SystemExit(3)
+value = lines[index]
+for terminator in (b"\r\n", b"\n", b"\r"):
+    if value.endswith(terminator):
+        value = value[:-len(terminator)]
+        break
+sys.stdout.write(hashlib.sha256(value).hexdigest())
+' "$blob_file" "$line"
+}
+
+review_runtime_finding_id() {
+  [ "$#" -eq 7 ] || return 2
+  jq -c -n \
+    --arg path "$3" --arg side "$4" --argjson evidence "$5" \
+    --arg anchor_sha256 "$6" --arg category "$7" '
+    {path:$path,side:$side,evidence:$evidence,anchor_sha256:$anchor_sha256,category:$category}
+  ' | review_runtime_identity_projection "$1" "$2" | jq -r '.finding_id'
+}
+
 review_runtime_boolean_valid() {
   case "$1" in
     true | false) return 0 ;;
@@ -678,8 +966,9 @@ review_runtime_boolean_valid() {
 
 # Canonical review configuration v1. Arguments are normalized effective values,
 # not request text: tier, archetype, four booleans, and comma-separated active
-# capability identifiers. jq -S -c provides deterministic compact key ordering;
-# capabilities are sorted and deduplicated before serialization.
+# capability identifiers. The closed ASCII-key object is serialized into the
+# same bytes that RFC 8785 JCS produces; capabilities are alias-normalized,
+# sorted, and deduplicated before serialization.
 review_runtime_config_canonical() {
   local agent_tier='lite'
   local pr_archetype='mixed'
@@ -737,7 +1026,10 @@ review_runtime_config_canonical() {
     --arg cross_model "$cross_model" \
     --arg noise_filter "$noise_filter" \
     --arg capabilities "$capabilities" '
-      ($capabilities | if . == "" then [] else split(",") | sort | unique end) as $normalized_capabilities |
+      ($capabilities |
+        if . == "" then []
+        else split(",") | map(if . == "correctness" then "code_correctness" else . end) | sort | unique
+        end) as $normalized_capabilities |
       {
         schema:"kc-pr-flow.review-config/v1",
         modes:{
@@ -755,7 +1047,7 @@ review_runtime_config_canonical() {
 review_runtime_config_hash() {
   local canonical
   canonical="$(review_runtime_config_canonical "$@")" || return
-  printf '%s' "$canonical" | review_runtime_sha256
+  printf '%s' "$canonical" | review_runtime_jcs_sha256
 }
 
 # Accept only the exact canonical v1 bytes. Callers that consume a saved config
@@ -1054,7 +1346,8 @@ review_runtime_payload_matches_v1_schema() {
       exact_keys(["base_sha","capability","config_hash","head_sha","lane_id","pr_number","repository","review_key","run_id","schema"]; ["provider_hint"]) and
       .schema == "kc-pr-flow.review-task/v1" and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and
-      (.review_key | sha256) and (.lane_id | safe_token) and (.capability | safe_token) and
+      (.review_key | sha256) and (.lane_id | safe_token) and
+      (.capability | safe_token) and .capability != "correctness" and
       (.repository | type == "string" and length > 0) and (.pr_number | positive_integer) and
       (.base_sha | sha1) and (.head_sha | sha1) and (.config_hash | sha256) and
       ((has("provider_hint") | not) or (.provider_hint | safe_metadata));
@@ -1063,7 +1356,8 @@ review_runtime_payload_matches_v1_schema() {
       exact_keys(["candidates","capability","lane_id","review_key","run_id","schema","terminal_status","usage"]; ["provider_family"]) and
       .schema == "kc-pr-flow.lane-result/v1" and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and
-      (.review_key | sha256) and (.lane_id | safe_token) and (.capability | safe_token) and
+      (.review_key | sha256) and (.lane_id | safe_token) and
+      (.capability | safe_token) and .capability != "correctness" and
       (.terminal_status == "succeeded" or .terminal_status == "failed" or .terminal_status == "unavailable") and
       (.candidates | type == "array" and all(sha256) and (unique | length) == length) and
       (.usage | usage) and
@@ -1071,16 +1365,15 @@ review_runtime_payload_matches_v1_schema() {
     def candidate:
       type == "object" and
       exact_keys(["anchor_sha256","candidate_id","category","claim_key","evidence","lane_id","ordinal","path","review_key","run_id","schema","side"]; []) and
-      .schema == "kc-pr-flow.review-candidate/v1" and (.candidate_id | sha256) and
+      .schema == "kc-pr-flow.review-candidate/v2" and (.candidate_id | sha256) and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and (.review_key | sha256) and
       (.lane_id | safe_token) and (.ordinal | positive_integer) and (.path | safe_path) and
       (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and (.evidence | type == "object");
     def finding:
       type == "object" and
-      exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","merge_key","path","review_key","schema","side"]; []) and
-      .schema == "kc-pr-flow.review-finding/v1" and (.finding_id | sha256) and (.review_key | sha256) and
-      (.merge_key | type == "string" and length > 0 and length <= 1400 and (test("[[:cntrl:]]") | not)) and
+      exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","path","review_key","schema","side"]; []) and
+      .schema == "kc-pr-flow.review-finding/v2" and (.finding_id | sha256) and (.review_key | sha256) and
       (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
       (.candidate_ids | type == "array" and length > 0 and all(sha256) and (unique | length) == length) and (.evidence | type == "object");
@@ -1131,14 +1424,6 @@ review_runtime_candidate_id() {
   printf '%s|%s|%s|%s' "$1" "$2" "$3" "$4" | review_runtime_sha256
 }
 
-review_runtime_merge_key() {
-  printf '%s' "$1" | jq -r '[.path,.side,.evidence.content_sha256,.category,.claim_key] | join("|")'
-}
-
-review_runtime_finding_id() {
-  printf '%s|%s' "$1" "$2" | review_runtime_sha256
-}
-
 # Once-only posting idempotency key (design A2): binds the exact review
 # identity, the exact reviewed head, and the exact serialized review payload.
 # Any of the three changing yields a different key, so a moved head or a
@@ -1165,7 +1450,8 @@ review_runtime_validate_t2_identity() {
   local line="$1"
   local event_type="$2"
   local expected actual run_id lane_id ordinal evidence_hash candidate_id
-  local finding_count finding index merge_key finding_id evidence
+  local finding_count finding index finding_id evidence path claim_key
+  local canonical_path anchor_sha256 identity_projection canonical_subject canonical_evidence
   local commit_id head_sha review_key payload_sha256_field idempotency_key expected_idempotency_key
   case "$event_type" in
     authorization.granted | post.intent)
@@ -1221,6 +1507,31 @@ review_runtime_validate_t2_identity() {
         printf '%s' 'evidence_identity_mismatch'
         return 1
       fi
+      path="$(printf '%s' "$line" | jq -r '.payload.candidate.path')" || return
+      identity_projection="$(printf '%s' "$line" | jq -c '.payload.candidate' |
+        review_runtime_identity_projection)" || return
+      canonical_subject="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
+      canonical_path="$(printf '%s' "$canonical_subject" | jq -r '.path')" || return
+      if [ "$path" != "$canonical_path" ]; then
+        printf '%s' 'noncanonical_path'
+        return 1
+      fi
+      canonical_evidence="$(printf '%s' "$canonical_subject" | jq -c '.evidence')" || return
+      if ! jq -e -n --argjson actual "$evidence" --argjson canonical "$canonical_evidence" \
+        '$actual == $canonical' >/dev/null 2>&1; then
+        printf '%s' 'noncanonical_path'
+        return 1
+      fi
+      claim_key="$(printf '%s' "$canonical_subject" | jq -r '.claim_key')" || return
+      if [ "$(printf '%s' "$line" | jq -r '.payload.candidate.claim_key')" != "$claim_key" ]; then
+        printf '%s' 'claim_key_mismatch'
+        return 1
+      fi
+      anchor_sha256="$(printf '%s' "$canonical_subject" | jq -r '.anchor_sha256')" || return
+      if [ "$(printf '%s' "$line" | jq -r '.payload.candidate.anchor_sha256')" != "$anchor_sha256" ]; then
+        printf '%s' 'anchor_sha256_mismatch'
+        return 1
+      fi
       run_id="$(printf '%s' "$line" | jq -r '.run_id')"
       lane_id="$(printf '%s' "$line" | jq -r '.payload.candidate.lane_id')"
       ordinal="$(printf '%s' "$line" | jq -r '.payload.candidate.ordinal')"
@@ -1246,13 +1557,34 @@ review_runtime_validate_t2_identity() {
           printf '%s' 'evidence_identity_mismatch'
           return 1
         fi
-        merge_key="$(review_runtime_merge_key "$finding")" || return
-        actual="$(printf '%s' "$finding" | jq -r '.merge_key')"
-        if [ "$actual" != "$merge_key" ]; then
-          printf '%s' 'merge_key_mismatch'
+        path="$(printf '%s' "$finding" | jq -r '.path')" || return
+        identity_projection="$(printf '%s' "$finding" |
+          review_runtime_identity_projection \
+            "$(printf '%s' "$line" | jq -r '.repository')" \
+            "$(printf '%s' "$line" | jq -r '.review_key')")" || return
+        canonical_subject="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
+        canonical_path="$(printf '%s' "$canonical_subject" | jq -r '.path')" || return
+        if [ "$path" != "$canonical_path" ]; then
+          printf '%s' 'noncanonical_path'
           return 1
         fi
-        expected="$(review_runtime_finding_id "$(printf '%s' "$line" | jq -r '.review_key')" "$merge_key")" || return
+        canonical_evidence="$(printf '%s' "$canonical_subject" | jq -c '.evidence')" || return
+        if ! jq -e -n --argjson actual "$evidence" --argjson canonical "$canonical_evidence" \
+          '$actual == $canonical' >/dev/null 2>&1; then
+          printf '%s' 'noncanonical_path'
+          return 1
+        fi
+        claim_key="$(printf '%s' "$canonical_subject" | jq -r '.claim_key')" || return
+        if [ "$(printf '%s' "$finding" | jq -r '.claim_key')" != "$claim_key" ]; then
+          printf '%s' 'claim_key_mismatch'
+          return 1
+        fi
+        anchor_sha256="$(printf '%s' "$canonical_subject" | jq -r '.anchor_sha256')" || return
+        if [ "$(printf '%s' "$finding" | jq -r '.anchor_sha256')" != "$anchor_sha256" ]; then
+          printf '%s' 'anchor_sha256_mismatch'
+          return 1
+        fi
+        expected="$(printf '%s' "$identity_projection" | jq -r '.finding_id')" || return
         finding_id="$(printf '%s' "$finding" | jq -r '.finding_id')"
         if [ "$finding_id" != "$expected" ]; then
           printf '%s' 'finding_id_mismatch'
@@ -2204,7 +2536,11 @@ review_runtime_replay() (
           .candidates[$candidate.candidate_id] = {
             lane_id:$candidate.lane_id,
             sequence:$event.sequence,
-            merge_key:([$candidate.path,$candidate.side,$candidate.evidence.content_sha256,$candidate.category,$candidate.claim_key] | join("|"))
+            finding_identity:[
+              $candidate.path,$candidate.side,$candidate.evidence.object_sha,
+              ($candidate.evidence.line // null),$candidate.evidence.content_sha256,
+              $candidate.anchor_sha256,$candidate.category,$candidate.claim_key
+            ]
           }
         end
       elif $event.event_type == "lane.finished" then
@@ -2227,12 +2563,10 @@ review_runtime_replay() (
         ($merged + $uncertain) as $combined |
         ($state.candidates | keys | sort) as $observed_ids |
         ($findings | map(.finding_id)) as $finding_ids |
-        ($findings | map(.merge_key)) as $merge_keys |
         if
           (($combined | unique | length) != ($combined | length)) or
           (($combined | sort) != $observed_ids) or
           (($finding_ids | unique | length) != ($finding_ids | length)) or
-          (($merge_keys | unique | length) != ($merge_keys | length)) or
           (all($combined[];
             . as $candidate_id | $state.candidates[$candidate_id] != null) | not) or
           (all($uncertain[];
@@ -2241,7 +2575,11 @@ review_runtime_replay() (
             . as $finding |
             all($finding.candidate_ids[];
               . as $candidate_id |
-              $state.candidates[$candidate_id].merge_key == $finding.merge_key)) | not)
+              $state.candidates[$candidate_id].finding_identity == [
+                $finding.path,$finding.side,$finding.evidence.object_sha,
+                ($finding.evidence.line // null),$finding.evidence.content_sha256,
+                $finding.anchor_sha256,$finding.category,$finding.claim_key
+              ])) | not)
         then
           .ok = false
         else
@@ -2264,7 +2602,7 @@ review_runtime_replay() (
     .[0] as $start |
     reduce .[1:][] as $event (
     {
-      schema:"kc-pr-flow.review-projection/v1",
+      schema:"kc-pr-flow.review-projection/v2",
       run:{
         schema:$start.schema,
         run_id:$start.run_id,
@@ -2963,15 +3301,17 @@ review_runtime_shadow_observation_valid() {
       ([.input_tokens,.output_tokens,.total_tokens] | all(token_count)) and
       (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end);
     def candidate:
-      type == "object" and exact_keys(["anchor_sha256","category","claim_key","evidence","ordinal","path","side"]; []) and
+      type == "object" and exact_keys(["category","evidence","ordinal","path","side"]; ["anchor_sha256"]) and
       (.ordinal | positive_integer) and (.path | safe_path) and
       (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
+      (.category | type == "string" and test("^[a-z][a-z0-9._-]{0,46}$")) and
+      (if .evidence.line == null then (has("anchor_sha256") | not) else (.anchor_sha256 | sha256) end) and
       (.evidence | type == "object");
     def finding:
-      type == "object" and exact_keys(["anchor_sha256","candidate_refs","category","claim_key","evidence","path","side"]; []) and
+      type == "object" and exact_keys(["candidate_refs","category","evidence","path","side"]; ["anchor_sha256"]) and
       (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
+      (.category | type == "string" and test("^[a-z][a-z0-9._-]{0,46}$")) and
+      (if .evidence.line == null then (has("anchor_sha256") | not) else (.anchor_sha256 | sha256) end) and
       (.evidence | type == "object") and
       (.candidate_refs | type == "array" and length > 0 and all(reference) and (unique | length) == length);
     . as $observation |
@@ -2987,7 +3327,7 @@ review_runtime_shadow_observation_valid() {
       all(.[]; sha256)) and
     (.lanes | type == "array" and length > 0 and
       all(type == "object" and exact_keys(["candidates","capability","lane_id","terminal_status","usage"]; ["provider_family"]) and
-        (.lane_id | safe_token) and (.capability | safe_token) and
+        (.lane_id | safe_token) and (.capability | safe_token) and .capability != "correctness" and
         (.terminal_status == "succeeded" or .terminal_status == "failed" or .terminal_status == "unavailable") and
         (.usage | usage) and
         ((has("provider_family") | not) or (.provider_family | safe_token)) and
@@ -3009,15 +3349,14 @@ review_runtime_shadow_observation_valid() {
     ([$observation.synthesis.uncertain_candidate_refs[] | [.lane_id,.ordinal]]) as $uncertain_refs |
     (($finding_refs + $uncertain_refs) | unique | length) == (($finding_refs + $uncertain_refs) | length) and
     (($finding_refs + $uncertain_refs) | sort) == ($candidate_refs | sort) and
-    ($observation.synthesis.findings | map([.path,.side,.evidence.content_sha256,.category,.claim_key]) | unique | length) == ($observation.synthesis.findings | length) and
     all($observation.synthesis.findings[];
       . as $finding |
       all($finding.candidate_refs[];
         . as $reference |
         any($candidates[];
           .ref == [$reference.lane_id,$reference.ordinal] and
-          [.candidate.path,.candidate.side,.candidate.evidence.content_sha256,.candidate.category,.candidate.claim_key] ==
-          [$finding.path,$finding.side,$finding.evidence.content_sha256,$finding.category,$finding.claim_key])))
+          [.candidate.path,.candidate.side,.candidate.anchor_sha256,.candidate.evidence.content_sha256,.candidate.category] ==
+          [$finding.path,$finding.side,$finding.anchor_sha256,$finding.evidence.content_sha256,$finding.category])))
   ' "$observation_file" >/dev/null 2>&1 || return 1
 
   repository="$(jq -r '.identity.repository' "$observation_file")" || return
@@ -3052,7 +3391,7 @@ review_runtime_collect_shadow_observation() (
   local lane_count lane_index=0 lane lane_id capability provider_family terminal_status usage
   local candidate_count candidate_index candidate ordinal evidence_hash candidate_id
   local candidate_ids ref_record finding_count finding_index finding candidate_ref_count reference_index reference
-  local referenced_candidate_id candidate_id_list findings merge_key finding_id uncertain_count uncertain_index
+  local referenced_candidate_id candidate_id_list findings finding_id identity_projection uncertain_count uncertain_index
   local uncertain_ids append_status observer_output rc
   local collector_status_emitted='false'
 
@@ -3128,6 +3467,7 @@ review_runtime_collect_shadow_observation() (
     candidate_index=0
     while [ "$candidate_index" -lt "$candidate_count" ]; do
       candidate="$(printf '%s' "$lane" | jq -c --argjson index "$candidate_index" '.candidates[$index]')" || return
+      candidate="$(review_runtime_canonical_identity_subject "$candidate")" || return
       ordinal="$(printf '%s' "$candidate" | jq -r '.ordinal')" || return
       evidence_hash="$(printf '%s' "$candidate" | jq -r '.evidence.content_sha256')" || return
       candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
@@ -3137,7 +3477,7 @@ review_runtime_collect_shadow_observation() (
       printf '%s\n' "$ref_record" >>"$candidate_refs" || return
       payload="$(printf '%s' "$candidate" | jq -S -c --arg run_id "$run_id" --arg review_key "$review_key" \
         --arg lane_id "$lane_id" --arg candidate_id "$candidate_id" '
-        {candidate:(. + {schema:"kc-pr-flow.review-candidate/v1",run_id:$run_id,review_key:$review_key,lane_id:$lane_id,candidate_id:$candidate_id})}')" || return
+        {candidate:(. + {schema:"kc-pr-flow.review-candidate/v2",run_id:$run_id,review_key:$review_key,lane_id:$lane_id,candidate_id:$candidate_id})}')" || return
       sequence=$((sequence + 1))
       event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" finding.observed "$payload")" || return
       printf '%s\n' "$event" >>"$pending_events" || return
@@ -3161,6 +3501,9 @@ review_runtime_collect_shadow_observation() (
   finding_index=0
   while [ "$finding_index" -lt "$finding_count" ]; do
     finding="$(jq -c --argjson index "$finding_index" '.synthesis.findings[$index]' "$observation_snapshot")" || return
+    identity_projection="$(printf '%s' "$finding" |
+      review_runtime_identity_projection "$repository" "$review_key")" || return
+    finding="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
     candidate_id_list='[]'
     candidate_ref_count="$(printf '%s' "$finding" | jq '.candidate_refs | length')" || return
     reference_index=0
@@ -3174,13 +3517,19 @@ review_runtime_collect_shadow_observation() (
       candidate_id_list="$(printf '%s' "$candidate_id_list" | jq -c --arg candidate_id "$referenced_candidate_id" '. + [$candidate_id]')" || return
       reference_index=$((reference_index + 1))
     done
-    merge_key="$(review_runtime_merge_key "$finding")" || return
-    finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")" || return
-    finding="$(printf '%s' "$finding" | jq -S -c --arg review_key "$review_key" --arg merge_key "$merge_key" \
+    finding_id="$(printf '%s' "$identity_projection" | jq -r '.finding_id')" || return
+    finding="$(printf '%s' "$finding" | jq -S -c --arg review_key "$review_key" \
       --arg finding_id "$finding_id" --argjson candidate_ids "$candidate_id_list" '
-      del(.candidate_refs) + {schema:"kc-pr-flow.review-finding/v1",review_key:$review_key,
-      merge_key:$merge_key,finding_id:$finding_id,candidate_ids:$candidate_ids}')" || return
-    findings="$(printf '%s' "$findings" | jq -c --argjson finding "$finding" '. + [$finding]')" || return
+      del(.candidate_refs) + {schema:"kc-pr-flow.review-finding/v2",review_key:$review_key,
+      finding_id:$finding_id,candidate_ids:($candidate_ids | sort | unique)}')" || return
+    findings="$(printf '%s' "$findings" | jq -S -c --argjson finding "$finding" '
+      if any(.[]; .finding_id == $finding.finding_id) then
+        map(if .finding_id == $finding.finding_id then
+          .candidate_ids = ((.candidate_ids + $finding.candidate_ids) | sort | unique)
+        else . end)
+      else (. + [$finding])
+      end | sort_by(.finding_id)
+    ')" || return
     finding_index=$((finding_index + 1))
   done
 

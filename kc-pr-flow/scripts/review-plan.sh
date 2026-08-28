@@ -9,7 +9,7 @@ review_plan_source_runtime() {
 }
 
 review_plan_content_sha256() {
-  jq -S -c 'del(.content_sha256)' | review_runtime_sha256
+  jq -c 'del(.content_sha256)' | review_runtime_jcs_sha256
 }
 
 review_plan_required_capabilities() {
@@ -35,7 +35,7 @@ review_plan_validate_config() (
   local config_file="$1" expected_hash="$2" expected_capabilities="$3" canonical actual_hash actual_capabilities
   [ "$#" -eq 3 ] || return 2
   canonical="$(review_plan_snapshot_config "$config_file")" || return 3
-  actual_hash="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
+  actual_hash="$(printf '%s' "$canonical" | review_runtime_jcs_sha256)" || return
   [ "$actual_hash" = "$expected_hash" ] || return 3
   actual_capabilities="$(jq -S -c '.capabilities' <<<"$canonical")" || return 3
   [ "$actual_capabilities" = "$expected_capabilities" ] || return 3
@@ -55,18 +55,18 @@ review_plan_build_receipt() (
   required_capabilities="$(printf '%s' "$projection" | review_plan_required_capabilities)" || return 3
   jq -e '
     type == "array" and length > 0 and
-    all(type == "string" and test("^[a-z][a-z0-9._-]{0,63}$")) and
+    all(type == "string" and test("^[a-z][a-z0-9._-]{0,63}$") and . != "correctness") and
     . == (sort | unique)
   ' >/dev/null <<<"$required_capabilities" || return 3
   review_plan_validate_config "$config_file" "$(jq -r '.run.config_hash' <<<"$projection")" \
     "$required_capabilities" >/dev/null || return 3
-  projection_hash="$(printf '%s' "$projection" | jq -S -c . | review_runtime_sha256)" || return
+  projection_hash="$(printf '%s' "$projection" | review_runtime_jcs_sha256)" || return
   receipt_id="$(printf '%s' "$(jq -r '.run.run_id + "|" + .run.review_key' <<<"$projection")|$projection_hash" |
     review_runtime_sha256)" || return
   canonical="$(jq -S -c --arg receipt_id "$receipt_id" --argjson required_capabilities "$required_capabilities" '
     .run as $run |
     {
-      schema:"kc-pr-flow.review-delta-receipt/v1",
+      schema:"kc-pr-flow.review-delta-receipt/v2",
       predecessor:{
         repository:$run.repository,pr_number:$run.pr_number,
         base_sha:$run.base_sha,head_sha:$run.head_sha,
@@ -83,8 +83,9 @@ review_plan_build_receipt() (
       coverage_gap_refs:[]
     }' <<<"$projection")" || return 3
   jq -e '.required_capabilities | length > 0' >/dev/null <<<"$canonical" || return 3
-  content_sha256="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
-  jq -S -c --arg hash "$content_sha256" '. + {content_sha256:$hash}' <<<"$canonical"
+  content_sha256="$(printf '%s' "$canonical" | review_runtime_jcs_sha256)" || return
+  jq -c --arg hash "$content_sha256" '. + {content_sha256:$hash}' <<<"$canonical" |
+    review_runtime_jcs_canonical
 )
 
 review_plan_validate_receipt() (
@@ -109,8 +110,8 @@ review_plan_validate_receipt() (
   expected_capabilities="$(printf '%s' "$projection_source" | review_plan_required_capabilities)" || return 3
   review_plan_validate_config "$config_file" "$(jq -r '.run.config_hash' <<<"$projection_source")" \
     "$expected_capabilities" >/dev/null || return 3
-  receipt_hash="$(printf '%s' "$receipt_source" | jq -S -c . 2>/dev/null)" || return 3
-  projection_hash="$(printf '%s' "$projection_source" | jq -S -c . 2>/dev/null | review_runtime_sha256)" || return 3
+  receipt_hash="$(printf '%s' "$receipt_source" | review_runtime_jcs_canonical 2>/dev/null)" || return 3
+  projection_hash="$(printf '%s' "$projection_source" | review_runtime_jcs_sha256 2>/dev/null)" || return 3
   expected_review_key="$(printf '%s|%s|%s|%s|%s' \
     "$(jq -r '.run.repository' <<<"$projection_source")" \
     "$(jq -r '.run.pr_number' <<<"$projection_source")" \
@@ -121,8 +122,7 @@ review_plan_validate_receipt() (
     review_runtime_sha256)" || return
   # jq emits a line terminator; hash the canonical JSON value itself, matching
   # the producer's command-substitution boundary rather than that terminator.
-  expected_content_sha256="$(printf '%s' "$receipt_hash" | jq -S -c 'del(.content_sha256)' 2>/dev/null)" || return 3
-  expected_content_sha256="$(printf '%s' "$expected_content_sha256" | review_runtime_sha256)" || return
+  expected_content_sha256="$(printf '%s' "$receipt_hash" | jq -c 'del(.content_sha256)' 2>/dev/null | review_runtime_jcs_sha256)" || return
 
   jq -e -n \
     --argjson receipt "$receipt_source" \
@@ -193,10 +193,10 @@ review_plan_validate_receipt() (
       def projection_lane:
         type == "object" and
         exact_keys(["capability","lane_id","result","task"]) and
-        (.capability | token) and (.lane_id | token);
+        (.capability | token) and .capability != "correctness" and (.lane_id | token);
       def projection:
         exact_keys(["behavior_hashes","candidates","findings","lanes","lifecycle","run","schema","uncertain_candidate_ids","usage_observations"]) and
-        .schema == "kc-pr-flow.review-projection/v1" and
+        .schema == "kc-pr-flow.review-projection/v2" and
         (.run | projection_run) and
         (.lanes | type == "array" and length > 0 and all(projection_lane) and
           all(.result.terminal_status == "succeeded") and
@@ -220,12 +220,13 @@ review_plan_validate_receipt() (
         .resolution_state == "unresolved";
       ($projection | projection) and
       ($receipt | exact_keys(["content_sha256","coverage_gap_refs","known_findings","predecessor","required_capabilities","schema"])) and
-      $receipt.schema == "kc-pr-flow.review-delta-receipt/v1" and
+      $receipt.schema == "kc-pr-flow.review-delta-receipt/v2" and
       ($receipt.content_sha256 == $expected_content_sha256) and
       ($receipt.predecessor | identity) and
       ($receipt.known_findings | type == "array" and all(receipt_finding) and
         ([.[].finding_id] | . == (sort | unique))) and
-      ($receipt.required_capabilities | type == "array" and length > 0 and all(token) and
+      ($receipt.required_capabilities | type == "array" and length > 0 and
+        all(token and . != "correctness") and
         . == (sort | unique)) and
       ($receipt.coverage_gap_refs | type == "array" and all(token) and
         . == (sort | unique)) and
@@ -1229,6 +1230,8 @@ review_plan_validate_decision() {
         type == "array" and all(.[]; sha256) and . == (sort | unique);
       def sorted_unique_tokens:
         type == "array" and all(.[]; token) and . == (sort | unique);
+      def sorted_unique_capabilities:
+        type == "array" and all(.[]; token and . != "correctness") and . == (sort | unique);
       def identity:
         exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key"]) and
         .repository == $repository and .pr_number == $pr_number and .base_sha == $base_sha and
@@ -1253,7 +1256,7 @@ review_plan_validate_decision() {
       ($decision.reason_codes | type == "array" and length > 0 and all(token) and . == (sort | unique)) and
       ($decision.review_range | review_range) and
       ($decision.inherited_finding_ids | sorted_unique_sha256) and
-      ($decision.required_capabilities | sorted_unique_tokens) and
+      ($decision.required_capabilities | sorted_unique_capabilities) and
       ($decision.event_ceiling == null or $decision.event_ceiling == "APPROVE" or $decision.event_ceiling == "COMMENT") and
       ($decision.fallback | fallback) and
       (if $decision.mode == "initial" then
@@ -1300,7 +1303,7 @@ review_plan_validate_decision() {
   expected_capabilities="$receipt_capabilities"
   if [ "$mode" = 'delta' ]; then
     expected_capabilities="$(jq -S -c --argjson route_capabilities "$route_capabilities" \
-      '. + ["correctness"] + $route_capabilities | sort | unique' <<<"$receipt_capabilities")" || return
+    '. + ["code_correctness"] + $route_capabilities | sort | unique' <<<"$receipt_capabilities")" || return
   fi
   jq -e -n \
     --argjson decision "$decision" --arg predecessor_head "$predecessor_head" \
@@ -1439,7 +1442,7 @@ review_plan_decide() {
     return
   fi
   required_capabilities="$(jq -S -c --argjson route_capabilities "$route_capabilities" \
-    '. + ["correctness"] + $route_capabilities | sort | unique' <<<"$required_capabilities")" || return 3
+    '. + ["code_correctness"] + $route_capabilities | sort | unique' <<<"$required_capabilities")" || return 3
   review_plan_build_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" delta \
     '["trusted_predecessor","ancestor_append","expanded_delta"]' "\"$predecessor_head\"" \
     "$inherited_finding_ids" "$required_capabilities" '"COMMENT"' false

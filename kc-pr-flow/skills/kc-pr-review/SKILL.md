@@ -418,9 +418,13 @@ never changes which agents run or how findings are judged.
   `estimated` provenance only for an explicit bounded estimate—never relabel
   an estimate as reported or coerce absent counts to zero.
 - Every provider observation becomes one candidate. Before assigning ordinals within a lane,
-  normalize its repository-relative path, `LEFT|RIGHT|FILE` side, side-bound object SHA, verified
-  evidence `content_sha256`, anchor hash, constrained category, and constrained `claim_key`. Store
-  no excerpt, prompt, diff, body, comment, rationale, or provider raw text. Apply a stable sort by `path`, `side`, `anchor_sha256`, `category`, `claim_key`, and evidence `content_sha256`, then assign
+  NFC-normalize its repository-relative path, `LEFT|RIGHT|FILE` side, side-bound object SHA,
+  verified evidence `content_sha256`, deterministic anchor hash, and constrained category. For a
+  line anchor, hash the exact raw blob line bytes without its terminator; omit `anchor_sha256` when
+  the evidence line is null. Never accept or serialize a model-authored `claim_key`; the runtime
+  derives it from the canonical exact evidence identity. Store no excerpt, prompt, diff, body,
+  comment, rationale, or provider raw text. Apply a stable sort by `path`, `side`,
+  `anchor_sha256 // ""`, `category`, and evidence `content_sha256`, then assign
   deterministic 1-based `ordinal` values.
 - During synthesis, merged observations become finding `candidate_refs`. Route every non-merged,
   rejected, ambiguous, or uncertain observation to `uncertain_candidate_refs`; these two sets must
@@ -458,7 +462,7 @@ shadow_ledger_finish_lane() { # lane_id status provider_family-or-empty usage-js
   local lane_id="$1" terminal_status="$2" provider_family="$3" usage_json="$4" candidates_json="$5"
   local ordered_candidates
   ordered_candidates="$(printf '%s' "$candidates_json" | jq -c '
-    sort_by([.path,.side,.anchor_sha256,.category,.claim_key,.evidence.content_sha256]) |
+    sort_by([.path,.side,(.anchor_sha256 // ""),.category,.evidence.content_sha256]) |
     to_entries | map(.value + {ordinal:(.key + 1)})')" || return
   SHADOW_LANES_JSON="$(printf '%s' "$SHADOW_LANES_JSON" | jq -c \
     --arg lane_id "$lane_id" --arg terminal_status "$terminal_status" --arg provider_family "$provider_family" \
@@ -476,7 +480,7 @@ shadow_ledger_finalize_synthesis() { # findings-json uncertain-candidate-refs-js
   SHADOW_SYNTHESIS_JSON="$(jq -c -n --argjson findings "$findings_json" --argjson uncertain "$uncertain_json" '
     {findings:($findings |
       map(.candidate_refs |= sort_by([.lane_id,.ordinal])) |
-      sort_by([.path,.side,.anchor_sha256,.category,.claim_key,.evidence.content_sha256])),
+      sort_by([.path,.side,(.anchor_sha256 // ""),.category,.evidence.content_sha256])),
      uncertain_candidate_refs:($uncertain | sort_by([.lane_id,.ordinal]))}')" || return
 }
 
@@ -1504,8 +1508,8 @@ When enabled:
      "schema": "kc-pr-flow.shadow-observation/v1",
      "identity": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40 hex>", "head_sha": "<40 hex>", "config_hash": "<64 hex>", "occurred_at": "<UTC RFC3339>"},
      "behavior_hashes": {"body_sha256": "<64 hex>", "inline_comments_sha256": "<64 hex>", "event_sha256": "<64 hex>", "options_sha256": "<64 hex>", "confirmation_input_sha256": "<64 hex>", "github_call_log_sha256": "<64 hex>"},
-     "lanes": [{"lane_id": "code_correctness", "capability": "code_correctness", "provider_family": "claude", "terminal_status": "succeeded", "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2, "provenance": "reported", "provider_family": "claude", "scope": "lane"}, "candidates": [{"ordinal": 1, "path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "claim_key": "missing_guard", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}}]}],
-     "synthesis": {"findings": [{"path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "claim_key": "missing_guard", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}, "candidate_refs": [{"lane_id": "code_correctness", "ordinal": 1}]}], "uncertain_candidate_refs": []}
+     "lanes": [{"lane_id": "code_correctness", "capability": "code_correctness", "provider_family": "claude", "terminal_status": "succeeded", "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2, "provenance": "reported", "provider_family": "claude", "scope": "lane"}, "candidates": [{"ordinal": 1, "path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}}]}],
+     "synthesis": {"findings": [{"path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}, "candidate_refs": [{"lane_id": "code_correctness", "ordinal": 1}]}], "uncertain_candidate_refs": []}
    }
    ```
 
@@ -1514,7 +1518,7 @@ When enabled:
    `lane_id`; candidates are ordered and unique by positive `ordinal`. Candidates contain no
    runtime-generated IDs. Every finding has non-empty unique resolvable `candidate_refs`; uncertain
    refs are resolvable, disjoint from findings, and are never silently promoted or dropped. The two
-   sets partition every candidate. Candidate/finding merge fields and evidence-content hashes must
+   sets partition every candidate. Candidate/finding identity fields and evidence-content hashes must
    agree. Evidence pointers carry the exact review key/base/head identity and obey LEFT/base plus
    RIGHT-or-FILE/head object binding. Never add excerpts, prompts, diffs, bodies, comments, model
    output, provider payloads, arbitrary values, or extra keys.

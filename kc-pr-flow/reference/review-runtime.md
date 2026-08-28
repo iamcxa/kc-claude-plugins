@@ -18,10 +18,10 @@ only these advisory schemas:
 
 ```json
 {
-  "schema": "kc-pr-flow.review-delta-receipt/v1",
+  "schema": "kc-pr-flow.review-delta-receipt/v2",
   "predecessor": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40-hex>", "head_sha": "<40-hex>", "config_hash": "<64-hex>", "review_key": "<64-hex>", "run_id": "run-safe-token", "receipt_id": "<64-hex>"},
-  "known_findings": [{"finding_id": "<64-hex>", "claim_key": "safe-token", "evidence_sha256": "<64-hex>", "path": "relative/path", "side": "RIGHT", "resolution_state": "unresolved"}],
-  "required_capabilities": ["correctness"],
+  "known_findings": [{"finding_id": "<64-hex>", "claim_key": "category-<16-hex>", "anchor_sha256": "<64-hex>", "category": "correctness", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64-hex>", "base_sha": "<40-hex>", "head_sha": "<40-hex>", "object_sha": "<40-hex>", "content_sha256": "<64-hex>", "path": "relative/path", "side": "RIGHT", "line": 7, "locator": null}, "evidence_sha256": "<64-hex>", "path": "relative/path", "side": "RIGHT", "resolution_state": "unresolved"}],
+  "required_capabilities": ["code_correctness"],
   "coverage_gap_refs": [],
   "content_sha256": "<64-hex>"
 }
@@ -35,7 +35,7 @@ only these advisory schemas:
   "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],
   "review_range": {"from_exclusive": "<40-hex>", "to_inclusive": "<40-hex>"},
   "inherited_finding_ids": ["<64-hex>"],
-  "required_capabilities": ["correctness"],
+  "required_capabilities": ["code_correctness"],
   "event_ceiling": "APPROVE",
   "fallback": {"router_advisory": true, "requires_existing_initial_review": false, "final_verdict_authority": "existing-review-runtime"}
 }
@@ -123,7 +123,10 @@ equivalent remote forms to `owner/repository` before `start`, event construction
 comparison. Git-origin URL normalization is a separate operation used only when verifying a local
 `git_blob` evidence pointer.
 
-The canonical configuration schema is `kc-pr-flow.review-config/v1`. It contains a sorted, deduplicated capability array and these effective modes:
+The canonical configuration schema is `kc-pr-flow.review-config/v1`. It contains a sorted,
+deduplicated capability array and these effective modes. Only that set-valued `capabilities` array
+maps the legacy `correctness` spelling to `code_correctness`; repetitions and both spellings
+collapse, while structured values or the alias in any other field are invalid.
 
 | Field | Values | Default |
 |---|---|---|
@@ -134,7 +137,12 @@ The canonical configuration schema is `kc-pr-flow.review-config/v1`. It contains
 | `cross_model` | boolean | `false` |
 | `noise_filter` | boolean | `false` |
 
-`config-hash` serializes the normalized object with `jq -S -c` and hashes those compact bytes without a trailing newline. Prompts, diffs, rendered review content, comments, and provider output are not configuration inputs. The delta receipt boundary consumes one safe canonical config snapshot, recomputes this hash, and requires its sorted unique capabilities to equal the unique replayed lane capabilities before producing, validating, or trusting a predecessor; invalid or mismatched input falls back to `initial`.
+`config-hash` serializes the normalized object as RFC 8785 JSON Canonicalization Scheme UTF-8 bytes
+and hashes them without a trailing newline. Prompts, diffs, rendered review content, comments, and
+provider output are not configuration inputs. The delta receipt boundary consumes one safe
+canonical config snapshot, recomputes this hash, and requires its sorted unique capabilities to
+equal the unique replayed lane capabilities before producing, validating, or trusting a
+predecessor; invalid or mismatched input falls back to `initial`.
 
 Every execution receives a fresh `run-*` ID. A successor may reference a predecessor and one of `manual_rerun`, `config_change`, `head_appended`, `head_rewritten`, or `recovery_fork`; the relationship does not change either run's immutable exact-head identity.
 
@@ -236,7 +244,7 @@ run.started
   -> run.finished
 ```
 
-`lane.started` carries a provider-neutral `kc-pr-flow.review-task/v1`. `finding.observed` carries a `kc-pr-flow.review-candidate/v1` whose ID binds run, lane, ordinal, and evidence hash. `lane.finished` carries a `kc-pr-flow.lane-result/v1` and must account for exactly the candidates observed for that lane. `synthesis.finished` carries unique `kc-pr-flow.review-finding/v1` records plus uncertain candidate IDs; together they must partition every observed candidate exactly once. Finding IDs bind the review key and evidence-sensitive constrained merge key. `run.finished` carries exactly the six SHA-256 hashes of the frozen legacy body, inline comments, event, options, confirmation input, and GitHub-call log. A shadow receipt is complete only when every declared lane is terminal, synthesis partitions all candidates, `run.finished` is last, and those behavior hashes are present.
+`lane.started` carries a provider-neutral `kc-pr-flow.review-task/v1`. `finding.observed` carries a `kc-pr-flow.review-candidate/v2` whose ID binds run, lane, ordinal, and evidence hash. `lane.finished` carries a `kc-pr-flow.lane-result/v1` and must account for exactly the candidates observed for that lane. `synthesis.finished` carries unique `kc-pr-flow.review-finding/v2` records plus uncertain candidate IDs; together they must partition every observed candidate exactly once. The runtime NFC-normalizes repository-relative paths and uses RFC 8785 canonical UTF-8 bytes to derive the machine-owned claim key and finding ID. The finding ID binds repository, review key, path, side, exact evidence identity, deterministic anchor, category, and claim key while excluding lane, ordinal, and prose. Equal complete identities from multiple lanes collapse to one finding; received duplicate finding IDs are invalid. `run.finished` carries exactly the six SHA-256 hashes of the frozen legacy body, inline comments, event, options, confirmation input, and GitHub-call log. A shadow receipt is complete only when every declared lane is terminal, synthesis partitions all candidates, `run.finished` is last, and those behavior hashes are present.
 
 Enforcement is intentionally layered. `validate` checks individual event envelopes and hashes, not
 cross-event ordering. `append` additionally protects accepted run identity and contiguous sequence,
@@ -306,7 +314,7 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `start` | Create a private exact-head run and emit its `run.started` event. Required: `--repo`, `--pr`, `--base`, `--head`, `--config-hash`; `--occurred-at` defaults to current UTC. `--predecessor-run-id` and `--successor-reason` must be supplied together. |
 | `append --event-file FILE` | Append each candidate JSONL line to its managed run. `-` reads standard input. Returns counts for appended, duplicate, quarantined, and blocked records. |
 | `validate --event-file FILE` | Stream and validate event envelopes independently, then return valid/invalid counts. It does not enforce authoritative cross-event relationships. `-` reads standard input. |
-| `replay --event-file FILE` | Validate a complete authoritative log, enforce chronological relationships, and rebuild the deterministic `review-projection/v1`. |
+| `replay --event-file FILE` | Validate a complete authoritative log, enforce chronological relationships, and rebuild the deterministic `review-projection/v2`. |
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `timing-start --review-key HASH --mode initial\|delta\|resolve --output FILE` | Create one new mode-0600 content-hashed monotonic timing state. Existing, linked, or non-regular output targets are refused. |

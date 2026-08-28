@@ -32,6 +32,9 @@ fail() { FAIL=$((FAIL + 1)); printf 'FAIL: %s\n' "$1"; }
 assert_eq() {
   if [ "$2" = "$3" ]; then pass; else fail "$1 (expected [$2], got [$3])"; fi
 }
+assert_not_eq() {
+  if [ "$2" != "$3" ]; then pass; else fail "$1 (values unexpectedly equal [$2])"; fi
+}
 assert_not_zero() {
   if [ "$2" -ne 0 ]; then pass; else fail "$1 (expected nonzero status)"; fi
 }
@@ -92,12 +95,15 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
         base_sha:$base,head_sha:$head,object_sha:$head,path:"src/review.sh",side:"RIGHT",line:1,
         locator:"review-anchor",content_sha256:$hash}')"
     CANDIDATE_ID="$(review_runtime_candidate_id "$RUN_ID" security-1 1 "$CONTENT_SHA256")"
-    CANDIDATE="$(jq -S -c -n --arg id "$CANDIDATE_ID" --arg key "$REVIEW_KEY" \
-      --arg run "$RUN_ID" --argjson evidence "$POINTER" \
-      '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
-        lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",
-        anchor_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
+    ANCHOR_SHA256="$(review_runtime_blob_line_anchor_sha256 "$FIXTURE_REPO/src/review.sh" 1)"
+    IDENTITY_PROJECTION="$(jq -c -n --arg anchor "$ANCHOR_SHA256" --argjson evidence "$POINTER" '
+      {path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",evidence:$evidence}
+    ' | review_runtime_identity_projection "$REPOSITORY" "$REVIEW_KEY")"
+    CANDIDATE="$(jq -S -c --arg id "$CANDIDATE_ID" --arg key "$REVIEW_KEY" \
+      --arg run "$RUN_ID" '
+      .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,
+        review_key:$key,lane_id:"security-1",ordinal:1}
+    ' <<<"$IDENTITY_PROJECTION")"
     TASK="$(jq -S -c -n --arg run "$RUN_ID" --arg key "$REVIEW_KEY" --arg repo "$REPOSITORY" \
       --arg base "$HEAD_SHA" --arg head "$HEAD_SHA" --arg config "$CONFIG_HASH" \
       '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"security-1",
@@ -107,12 +113,12 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       --argjson usage "$USAGE" \
       '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"security-1",
         capability:"security",terminal_status:"succeeded",candidates:[$id],usage:$usage,provider_family:"claude"}')"
-    FINDING_ID="$(review_runtime_finding_id "$REVIEW_KEY" "src/review.sh|RIGHT|$CONTENT_SHA256|security|unchecked-boundary")"
-    FINDING="$(jq -S -c -n --arg id "$FINDING_ID" --arg key "$REVIEW_KEY" --arg merge "src/review.sh|RIGHT|$CONTENT_SHA256|security|unchecked-boundary" \
-      --argjson evidence "$POINTER" --arg candidate "$CANDIDATE_ID" \
-      '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
-        path:"src/review.sh",side:"RIGHT",anchor_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        category:"security",claim_key:"unchecked-boundary",candidate_ids:[$candidate],evidence:$evidence}')"
+    FINDING_ID="$(jq -r '.finding_id' <<<"$IDENTITY_PROJECTION")"
+    FINDING="$(jq -S -c --arg id "$FINDING_ID" --arg key "$REVIEW_KEY" \
+      --arg candidate "$CANDIDATE_ID" '
+      .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,
+        review_key:$key,candidate_ids:[$candidate]}
+    ' <<<"$IDENTITY_PROJECTION")"
     BEHAVIOR="$(jq -S -c -n --arg hash "$CONTENT_SHA256" \
       '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
         github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
@@ -145,7 +151,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       receipt_rc=$?
       assert_eq 'receipt command succeeds for complete replay' '0' "$receipt_rc"
       projection="$(review_runtime_replay "$EVENT_FILE")"
-      assert_eq 'receipt schema' 'kc-pr-flow.review-delta-receipt/v1' "$(jq -r '.schema' <<<"$receipt_out")"
+      assert_eq 'receipt schema' 'kc-pr-flow.review-delta-receipt/v2' "$(jq -r '.schema' <<<"$receipt_out")"
       assert_eq 'receipt keys are closed' 'content_sha256,coverage_gap_refs,known_findings,predecessor,required_capabilities,schema' "$(jq -r 'keys | sort | join(",")' <<<"$receipt_out")"
       assert_eq 'all terminal findings remain unresolved' 'unresolved' "$(jq -r '[.known_findings[].resolution_state] | unique | join(",")' <<<"$receipt_out")"
       assert_eq 'finding IDs come from replay' "$(jq -r '.findings | map(.finding_id) | sort | join(",")' <<<"$projection")" "$(jq -r '.known_findings | map(.finding_id) | sort | join(",")' <<<"$receipt_out")"
@@ -170,7 +176,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
         {schema:"kc-pr-flow.review-config/v1",
          modes:{agent_tier:"lite",pr_archetype:"mixed",full_pass:false,probe_required:false,
                 cross_model:false,noise_filter:false},
-         capabilities:["correctness","github-actions","security","supply-chain","test-coverage","type-safety"]}
+         capabilities:["code_correctness","github-actions","security","supply-chain","test-coverage","type-safety"]}
       ' | tr -d '\n' >"$MISMATCH_CONFIG_FILE"
       mismatch_config_hash="$(printf '%s' "$(cat "$MISMATCH_CONFIG_FILE")" | review_runtime_sha256)"
       mismatch_projection="$(jq -S -c --arg hash "$mismatch_config_hash" '.run.config_hash=$hash' <<<"$projection")"
@@ -224,7 +230,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
 
       six_projection="$(jq -S -c --arg hash "$mismatch_config_hash" '
         .run.config_hash=$hash |
-        .lanes = (["correctness","github-actions","security","supply-chain","test-coverage","type-safety"] |
+        .lanes = (["code_correctness","github-actions","security","supply-chain","test-coverage","type-safety"] |
           map({capability:.,lane_id:(. + "-1"),task:{},result:{terminal_status:"succeeded"}}))
       ' <<<"$projection")"
       (
@@ -256,6 +262,10 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       assert_receipt_rejected 'arbitrary receipt_id is rejected' "$(jq -S -c '.predecessor.receipt_id=("0"*64)' <<<"$receipt_out")"
       assert_receipt_rejected 'changed content_sha256 is rejected' "$(jq -S -c '.content_sha256=("0"*64)' <<<"$receipt_out")"
       assert_receipt_rejected 'changed finding_id is rejected' "$(jq -S -c '.known_findings[0].finding_id=("1"*64)' <<<"$receipt_out")"
+      assert_receipt_rejected 'v1 receipt identity is rejected' \
+        "$(jq -S -c '.schema="kc-pr-flow.review-delta-receipt/v1"' <<<"$receipt_out")"
+      assert_receipt_rejected 'unknown receipt identity version is rejected' \
+        "$(jq -S -c '.schema="kc-pr-flow.review-delta-receipt/v3"' <<<"$receipt_out")"
       assert_receipt_rejected 'extra top-level member is rejected' "$(jq -S -c '.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'extra predecessor member is rejected' "$(jq -S -c '.predecessor.extra_key=true' <<<"$receipt_out")"
       assert_receipt_rejected 'missing evidence hash is rejected' "$(jq -S -c 'del(.known_findings[0].evidence_sha256)' <<<"$receipt_out")"
@@ -283,7 +293,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
         canonical="$(jq -S -c --arg receipt_id "$replay_receipt_id" '
           .run as $run |
           {
-            schema:"kc-pr-flow.review-delta-receipt/v1",
+            schema:"kc-pr-flow.review-delta-receipt/v2",
             predecessor:{repository:$run.repository,pr_number:$run.pr_number,
               base_sha:$run.base_sha,head_sha:$run.head_sha,config_hash:$run.config_hash,
               review_key:$run.review_key,run_id:$run.run_id,receipt_id:$receipt_id},
@@ -363,7 +373,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'receipt-contract' ]; then
       printf '%s\n' "$START" "$LANE_START" "$OBSERVED" "$LANE_FINISHED" "$uncertain_synthesized" "$FINISHED" >"$uncertain_events"
       assert_predecessor_state_rejected 'uncertain predecessor candidate' "$uncertain_events"
 
-      duplicate_receipt_raw='{"schema":"kc-pr-flow.review-delta-receipt/v1","schema":"kc-pr-flow.review-delta-receipt/v1"}'
+      duplicate_receipt_raw='{"schema":"kc-pr-flow.review-delta-receipt/v2","schema":"kc-pr-flow.review-delta-receipt/v2"}'
       assert_receipt_rejected 'raw duplicate receipt member is rejected' "$duplicate_receipt_raw"
 
       symlink_events="$TEST_ROOT/events-link.jsonl"
@@ -402,8 +412,8 @@ fi
 make_replay_receipt() {
   local fixture_repo="$1" repository="$2" pr_number="$3" base_sha="$4" reviewed_sha="$5"
   local config_hash="$6" config_file="$7" event_file="$8" receipt_file="$9" fixture="${10}"
-  local finding_meta path side anchor_sha256 category claim_key evidence_kind evidence_line evidence_locator
-  local review_key object_sha content_sha run_id pointer merge_key
+  local finding_meta path side anchor_sha256 category evidence_kind evidence_line evidence_locator
+  local review_key object_sha content_sha run_id pointer identity_projection
   local candidate_id candidate task_correctness task_coverage result_correctness result_coverage finding_id finding behavior
   local started correctness_started coverage_started observed correctness_finished coverage_finished synthesized finished
 
@@ -430,7 +440,6 @@ make_replay_receipt() {
   side="$(jq -r '.side' <<<"$finding_meta")" || return
   anchor_sha256="$(jq -r '.anchor_sha256' <<<"$finding_meta")" || return
   category="$(jq -r '.category' <<<"$finding_meta")" || return
-  claim_key="$(jq -r '.claim_key' <<<"$finding_meta")" || return
   evidence_kind="$(jq -r '.evidence.kind' <<<"$finding_meta")" || return
   evidence_line="$(jq -r '.evidence.line' <<<"$finding_meta")" || return
   evidence_locator="$(jq -r '.evidence.locator' <<<"$finding_meta")" || return
@@ -445,36 +454,35 @@ make_replay_receipt() {
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:$kind,review_key:$key,repository:$repo,
       base_sha:$base,head_sha:$head,object_sha:$object,path:$path,side:$side,line:$line,
       locator:$locator,content_sha256:$hash}')"
-  candidate_id="$(review_runtime_candidate_id "$run_id" correctness-1 1 "$content_sha")"
-  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" \
-    --arg path "$path" --arg side "$side" --arg anchor "$anchor_sha256" \
-    --arg category "$category" --arg claim "$claim_key" --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
-      lane_id:"correctness-1",ordinal:1,path:$path,side:$side,anchor_sha256:$anchor,
-      category:$category,claim_key:$claim,evidence:$evidence}')"
+  candidate_id="$(review_runtime_candidate_id "$run_id" code_correctness-1 1 "$content_sha")"
+  identity_projection="$(jq -c -n --arg path "$path" --arg side "$side" \
+    --arg anchor "$anchor_sha256" --arg category "$category" --argjson evidence "$pointer" '
+    {path:$path,side:$side,anchor_sha256:$anchor,category:$category,evidence:$evidence}
+  ' | review_runtime_identity_projection "$repository" "$review_key")" || return
+  candidate="$(jq -S -c --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" '
+    .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,
+      review_key:$key,lane_id:"code_correctness-1",ordinal:1}
+  ' <<<"$identity_projection")"
   task_correctness="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
     --arg base "$base_sha" --arg head "$reviewed_sha" --arg config "$config_hash" --argjson pr "$pr_number" \
-    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"correctness-1",
-      capability:"correctness",repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"code_correctness-1",
+      capability:"code_correctness",repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
   task_coverage="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
     --arg base "$base_sha" --arg head "$reviewed_sha" --arg config "$config_hash" --argjson pr "$pr_number" \
     '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"test-coverage-1",
       capability:"test-coverage",repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config}')"
   result_correctness="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg id "$candidate_id" \
-    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"correctness-1",
-      capability:"correctness",terminal_status:"succeeded",candidates:[$id],usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"code_correctness-1",
+      capability:"code_correctness",terminal_status:"succeeded",candidates:[$id],usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
   result_coverage="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" \
     '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"test-coverage-1",
       capability:"test-coverage",terminal_status:"succeeded",candidates:[],usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"fixture",scope:"lane"},provider_family:"fixture"}')"
-  merge_key="$path|$side|$content_sha|$category|$claim_key"
-  finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")"
-  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" \
-    --arg merge "$merge_key" --arg candidate "$candidate_id" --arg path "$path" --arg side "$side" \
-    --arg anchor "$anchor_sha256" --arg category "$category" --arg claim "$claim_key" \
-    --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
-      path:$path,side:$side,anchor_sha256:$anchor,category:$category,claim_key:$claim,
-      candidate_ids:[$candidate],evidence:$evidence}')"
+  finding_id="$(jq -r '.finding_id' <<<"$identity_projection")"
+  finding="$(jq -S -c --arg id "$finding_id" --arg key "$review_key" \
+    --arg candidate "$candidate_id" '
+    .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,
+      review_key:$key,candidate_ids:[$candidate]}
+  ' <<<"$identity_projection")"
   behavior="$(jq -S -c -n --arg hash "$content_sha" \
     '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
       github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
@@ -494,8 +502,8 @@ make_replay_receipt() {
 make_capability_replay_events() {
   local fixture_repo="$1" repository="$2" pr_number="$3" base_sha="$4" reviewed_sha="$5"
   local config_hash="$6" event_file="$7" capabilities="$8" fixture="$9"
-  local finding_meta path side anchor_sha256 category claim_key evidence_kind evidence_line evidence_locator
-  local review_key object_sha content_sha run_id pointer merge_key candidate_id candidate finding behavior finding_id
+  local finding_meta path side anchor_sha256 category evidence_kind evidence_line evidence_locator
+  local review_key object_sha content_sha run_id pointer identity_projection candidate_id candidate finding behavior finding_id
   local capability lane_id task result candidate_ids sequence
 
   finding_meta="$(jq -e -S -c '.known_findings[0]' "$fixture")" || return 2
@@ -503,7 +511,6 @@ make_capability_replay_events() {
   side="$(jq -r '.side' <<<"$finding_meta")" || return
   anchor_sha256="$(jq -r '.anchor_sha256' <<<"$finding_meta")" || return
   category="$(jq -r '.category' <<<"$finding_meta")" || return
-  claim_key="$(jq -r '.claim_key' <<<"$finding_meta")" || return
   evidence_kind="$(jq -r '.evidence.kind' <<<"$finding_meta")" || return
   evidence_line="$(jq -r '.evidence.line' <<<"$finding_meta")" || return
   evidence_locator="$(jq -r '.evidence.locator' <<<"$finding_meta")" || return
@@ -518,22 +525,21 @@ make_capability_replay_events() {
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:$kind,review_key:$key,repository:$repo,
       base_sha:$base,head_sha:$head,object_sha:$object,path:$path,side:$side,line:$line,
       locator:$locator,content_sha256:$hash}')"
-  candidate_id="$(review_runtime_candidate_id "$run_id" correctness-1 1 "$content_sha")"
-  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" \
-    --arg path "$path" --arg side "$side" --arg anchor "$anchor_sha256" \
-    --arg category "$category" --arg claim "$claim_key" --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
-      lane_id:"correctness-1",ordinal:1,path:$path,side:$side,anchor_sha256:$anchor,
-      category:$category,claim_key:$claim,evidence:$evidence}')"
-  merge_key="$path|$side|$content_sha|$category|$claim_key"
-  finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")"
-  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" \
-    --arg merge "$merge_key" --arg candidate "$candidate_id" --arg path "$path" --arg side "$side" \
-    --arg anchor "$anchor_sha256" --arg category "$category" --arg claim "$claim_key" \
-    --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
-      path:$path,side:$side,anchor_sha256:$anchor,category:$category,claim_key:$claim,
-      candidate_ids:[$candidate],evidence:$evidence}')"
+  candidate_id="$(review_runtime_candidate_id "$run_id" code_correctness-1 1 "$content_sha")"
+  identity_projection="$(jq -c -n --arg path "$path" --arg side "$side" \
+    --arg anchor "$anchor_sha256" --arg category "$category" --argjson evidence "$pointer" '
+    {path:$path,side:$side,anchor_sha256:$anchor,category:$category,evidence:$evidence}
+  ' | review_runtime_identity_projection "$repository" "$review_key")" || return
+  candidate="$(jq -S -c --arg id "$candidate_id" --arg key "$review_key" --arg run "$run_id" '
+    .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,
+      review_key:$key,lane_id:"code_correctness-1",ordinal:1}
+  ' <<<"$identity_projection")"
+  finding_id="$(jq -r '.finding_id' <<<"$identity_projection")"
+  finding="$(jq -S -c --arg id "$finding_id" --arg key "$review_key" \
+    --arg candidate "$candidate_id" '
+    .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,
+      review_key:$key,candidate_ids:[$candidate]}
+  ' <<<"$identity_projection")"
   behavior="$(jq -S -c -n --arg hash "$content_sha" \
     '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
       github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
@@ -555,7 +561,7 @@ make_capability_replay_events() {
   sequence=$((sequence + 1))
   for capability in $(printf '%s' "$capabilities" | tr ',' ' '); do
     lane_id="$capability-1"
-    if [ "$capability" = 'correctness' ]; then
+    if [ "$capability" = 'code_correctness' ]; then
       candidate_ids="$(jq -S -c -n --arg id "$candidate_id" '[$id]')"
     else
       candidate_ids='[]'
@@ -621,7 +627,7 @@ event_plan_decision() {
     delta)
       reason='["ancestor_append","expanded_delta","trusted_predecessor"]'
       from_sha='"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"'
-      capabilities='["correctness"]'
+      capabilities='["code_correctness"]'
       inherited='["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"]'
       fallback_initial=false
       ;;
@@ -680,7 +686,7 @@ event_ceiling_case_status() {
       ;;
     delta-then-stale)
       entry_plan="$(event_plan_decision delta '"COMMENT"')"
-      rerun_plan="$(jq -S -c '.required_capabilities=["correctness","security"]' <<<"$entry_plan")"
+      rerun_plan="$(jq -S -c '.required_capabilities=["code_correctness","security"]' <<<"$entry_plan")"
       ;;
     delta-then-duplicate-top-level)
       entry_plan="$(event_plan_decision delta '"COMMENT"')"
@@ -823,7 +829,7 @@ skill_router_trace() {
       reason_codes:["ancestor_append","known_finding_delta","trusted_predecessor"],
       review_range:{from_exclusive:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",to_inclusive:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
       inherited_finding_ids:["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"],
-      required_capabilities:["correctness"],
+      required_capabilities:["code_correctness"],
       event_ceiling:"APPROVE",
       fallback:{router_advisory:true,requires_existing_initial_review:false,final_verdict_authority:"existing-review-runtime"}}')"
   case "$stub_mode" in
@@ -924,7 +930,7 @@ skill_router_trace() {
       head_sha:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       config_hash:"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
      known_findings:[{finding_id:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}],
-     required_capabilities:["correctness"]}')"
+     required_capabilities:["code_correctness"]}')"
   printf '%s\n' "$receipt" >"$plugin_root/scripts/review-plan.sh.receipt"
   {
     printf '%s\n' '#!/usr/bin/env bash'
@@ -988,7 +994,7 @@ skill_config_snapshot_trace() {
      mode:"resolve",reason_codes:["ancestor_append","known_finding_delta","trusted_predecessor"],
      review_range:{from_exclusive:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",to_inclusive:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
      inherited_finding_ids:["dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"],
-     required_capabilities:["correctness"],event_ceiling:"APPROVE",
+     required_capabilities:["code_correctness"],event_ceiling:"APPROVE",
      fallback:{router_advisory:true,requires_existing_initial_review:false,final_verdict_authority:"existing-review-runtime"}}')"
   decision_file="$plugin_root/decision.json"
   printf '%s\n' "$decision" >"$decision_file"
@@ -1151,7 +1157,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'coverage gap.*COMMENT' 'skill constrains coverage gaps to COMMENT'
   assert_file_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
   assert_file_contains "$SKILL" 'review_plan_validate_decision' 'skill validates the complete closed planner decision'
-  assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
+  assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v2' 'runtime reference documents the delta receipt schema'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
   assert_file_contains "$REFERENCE" 'receipt --event-file terminal-events\.jsonl --config-file review-config\.json' \
     'runtime reference receipt example uses the canonical config snapshot'
@@ -1309,12 +1315,15 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
   finding_id="$(make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_config" "$router_events" "$router_receipt" "$fixture")"
 
   if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ]; then
-    fixture_finding="$(jq -S -c '.known_findings[0]' "$fixture")"
+    fixture_finding="$(jq -S -c '.known_findings[0] | del(.claim_key)' "$fixture")"
     receipt_fixture_finding="$(jq -S -c '.known_findings[0] | {
       anchor_sha256,category,claim_key,
       evidence:{kind:.evidence.kind,line:.evidence.line,locator:.evidence.locator},path,side
-    }' "$router_receipt")"
-    assert_eq 'PR1693 receipt finding metadata comes from fixture' "$fixture_finding" "$receipt_fixture_finding"
+    } | del(.claim_key)' "$router_receipt")"
+    assert_eq 'PR1693 receipt non-claim metadata comes from fixture' "$fixture_finding" "$receipt_fixture_finding"
+    assert_not_eq 'PR1693 receipt ignores the fixture-authored claim key' \
+      "$(jq -r '.known_findings[0].claim_key' "$fixture")" \
+      "$(jq -r '.known_findings[0].claim_key' "$router_receipt")"
 
     invalid_metadata_fixture="$TEST_ROOT/pr1693-invalid-metadata.json"
     jq -S '.known_findings[0].unexpected=true' "$fixture" >"$invalid_metadata_fixture"
@@ -1336,12 +1345,15 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     make_replay_receipt "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$config_hash" "$router_config" \
       "$mutated_metadata_events" "$mutated_metadata_receipt" "$mutated_metadata_fixture" >/dev/null
     assert_eq 'mutated fixture receipt validates against fresh replay' '0' "$?"
-    mutated_fixture_finding="$(jq -S -c '.known_findings[0]' "$mutated_metadata_fixture")"
+    mutated_fixture_finding="$(jq -S -c '.known_findings[0] | del(.claim_key)' "$mutated_metadata_fixture")"
     mutated_receipt_finding="$(jq -S -c '.known_findings[0] | {
       anchor_sha256,category,claim_key,
       evidence:{kind:.evidence.kind,line:.evidence.line,locator:.evidence.locator},path,side
-    }' "$mutated_metadata_receipt")"
-    assert_eq 'mutated fixture metadata changes generated receipt' "$mutated_fixture_finding" "$mutated_receipt_finding"
+    } | del(.claim_key)' "$mutated_metadata_receipt")"
+    assert_eq 'mutated fixture non-claim metadata changes generated receipt' "$mutated_fixture_finding" "$mutated_receipt_finding"
+    assert_not_eq 'mutated fixture cannot override the machine claim key' \
+      "$(jq -r '.known_findings[0].claim_key' "$mutated_metadata_fixture")" \
+      "$(jq -r '.known_findings[0].claim_key' "$mutated_metadata_receipt")"
     review_plan_validate_receipt "$(cat "$mutated_metadata_receipt")" "$mutated_metadata_events" "$router_config" >/dev/null 2>&1
     assert_eq 'mutated fixture receipt remains replay-valid' '0' "$?"
 
@@ -1351,9 +1363,9 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'router is advisory ceiling' 'APPROVE' "$(jq -r '.event_ceiling' <<<"$decision")"
     assert_eq 'decision keys are closed' 'event_ceiling,fallback,identity,inherited_finding_ids,mode,reason_codes,required_capabilities,review_range,schema' "$(jq -r 'keys | sort | join(",")' <<<"$decision")"
     assert_eq 'replay reasons are sorted' 'ancestor_append,known_finding_delta,trusted_predecessor' "$(jq -r '.reason_codes | join(",")' <<<"$decision")"
-    assert_eq 'replay capabilities are inherited' 'correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
+    assert_eq 'replay capabilities are inherited' 'code_correctness,test-coverage' "$(jq -r '.required_capabilities | join(",")' <<<"$decision")"
     six_lane_config="$TEST_ROOT/router-six-lane-config.json"
-    six_capabilities='correctness,github-actions,security,supply-chain,test-coverage,type-safety'
+    six_capabilities='code_correctness,github-actions,security,supply-chain,test-coverage,type-safety'
     printf '%s' "$(review_runtime_config_canonical lite mixed false false false false "$six_capabilities")" >"$six_lane_config"
     six_lane_hash="$(review_runtime_config_hash lite mixed false false false false "$six_capabilities")"
     six_lane_events="$TEST_ROOT/router-six-lane-events.jsonl"
@@ -1368,7 +1380,7 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     assert_eq 'full matching six-lane predecessor inherits its finding' "$six_lane_finding" "$(jq -r '.inherited_finding_ids | join(",")' <<<"$six_lane_decision")"
     one_lane_events="$TEST_ROOT/router-one-lane-under-six-config-events.jsonl"
     one_lane_receipt="$TEST_ROOT/router-one-lane-under-six-config-receipt.json"
-    make_capability_replay_events "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$six_lane_hash" "$one_lane_events" correctness "$fixture" >/dev/null
+    make_capability_replay_events "$router_repo" "$repo_id" 1693 "$base_sha" "$reviewed_sha" "$six_lane_hash" "$one_lane_events" code_correctness "$fixture" >/dev/null
     (
       # Deliberately mint the replay-derived fixture receipt without config validation;
       # the production decide path below must reject its incomplete predecessor lanes.
@@ -1618,6 +1630,15 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'mode-router' ] || [ "$CASE_
     mutated_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$mutated_receipt")"
     assert_eq 'mutated finding evidence uses initial review' 'initial' "$(jq -r '.mode' <<<"$mutated_decision")"
     assert_eq 'mutated finding evidence has no synthetic ceiling' 'null' "$(jq -r '.event_ceiling' <<<"$mutated_decision")"
+    for rejected_receipt_version in v1 v3; do
+      rejected_receipt="$TEST_ROOT/rejected-receipt-$rejected_receipt_version.json"
+      jq -S -c --arg version "$rejected_receipt_version" \
+        '.schema=("kc-pr-flow.review-delta-receipt/" + $version)' \
+        "$router_receipt" >"$rejected_receipt"
+      rejected_version_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$rejected_receipt")"
+      assert_eq "$rejected_receipt_version receipt routes byte-identically to invalid-predecessor initial" \
+        "$mutated_decision" "$rejected_version_decision"
+    done
     inherited_gap="$TEST_ROOT/inherited-gap.json"
     jq -S -c '.coverage_gap_refs=["coverage-gap"] | .content_sha256=("0" * 64)' "$router_receipt" >"$inherited_gap"
     gap_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide --repo "$repo_id" --pr 1693 --base "$base_sha" --head "$fixed_sha" --config-hash "$config_hash" --config-file "$router_config" --repo-worktree "$router_repo" --predecessor-events "$router_events" --delta-receipt "$inherited_gap")"

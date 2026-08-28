@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing|timing-publication]\n' "$0" >&2
+    printf 'usage: %s [--case identity-v2|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing|timing-publication]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -112,6 +112,143 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_identity_v2_tests() {
+  local canonical legacy_hash canonical_hash structured_config out_of_field_config
+  local jcs_input jcs_output duplicate_jcs_rc nfd_path nfc_path evidence_null subject_null projection_null
+  local permuted_subject permuted_projection replayed_projection blob_file anchor_one anchor_two
+  local task_alias candidate candidate_event finding finding_event wrong_schema
+  canonical="$(review_runtime_config_canonical lite mixed false false false false \
+    'correctness,code_correctness,correctness,security')"
+  assert_eq "legacy correctness aliases only inside the capability set" \
+    '["code_correctness","security"]' "$(jq -c '.capabilities' <<<"$canonical")"
+  legacy_hash="$(review_runtime_config_hash lite mixed false false false false \
+    'correctness,code_correctness,correctness,security')"
+  canonical_hash="$(review_runtime_config_hash lite mixed false false false false \
+    'code_correctness,security')"
+  assert_eq "capability alias repetitions collapse before hashing" "$canonical_hash" "$legacy_hash"
+
+  structured_config="$(jq -S -c -n '
+    {schema:"kc-pr-flow.review-config/v1",
+     modes:{agent_tier:"lite",pr_archetype:"mixed",full_pass:false,probe_required:false,
+            cross_model:false,noise_filter:false},
+     capabilities:[{alias:"correctness"}]}
+  ')"
+  review_runtime_config_canonical_snapshot "$structured_config" >/dev/null 2>&1
+  assert_eq "structured correctness alias is rejected" "3" "$?"
+
+  out_of_field_config="$(jq -S -c -n '
+    {schema:"kc-pr-flow.review-config/v1",
+     modes:{agent_tier:"lite",pr_archetype:"mixed",full_pass:false,probe_required:false,
+            cross_model:false,noise_filter:false,correctness:"code_correctness"},
+     capabilities:["code_correctness"]}
+  ')"
+  review_runtime_config_canonical_snapshot "$out_of_field_config" >/dev/null 2>&1
+  assert_eq "out-of-field correctness alias is rejected" "3" "$?"
+
+  jcs_input='{"":1,"😀":2,"é":"café"}'
+  jcs_output="$(printf '%s' "$jcs_input" | review_runtime_jcs_canonical)"
+  assert_eq "JCS sorts member names by UTF-16 code units and emits UTF-8" \
+    '{"é":"café","😀":2,"":1}' "$jcs_output"
+  printf '%s' '{"a":1,"a":2}' | review_runtime_jcs_canonical >/dev/null 2>&1
+  duplicate_jcs_rc=$?
+  assert_eq "JCS rejects duplicate members before canonicalization" "3" "$duplicate_jcs_rc"
+
+  nfd_path="$(printf 'src/cafe\314\201.txt')"
+  nfc_path="$(printf 'src/caf\303\251.txt')"
+  evidence_null="$(jq -c -n --arg path "$nfd_path" \
+    --arg object_sha aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+    --arg content_sha256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb \
+    '{path:$path,object_sha:$object_sha,line:null,content_sha256:$content_sha256}')"
+  subject_null="$(jq -c -n --arg path "$nfd_path" --argjson evidence "$evidence_null" \
+    '{path:$path,side:"RIGHT",category:"security",claim_key:"model-override",evidence:$evidence}')"
+  projection_null="$(printf '%s' "$subject_null" |
+    review_runtime_identity_projection acme/widgets \
+      0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)"
+  assert_eq "repository-relative paths are NFC-normalized before identity hashing" \
+    "$nfc_path" "$(jq -r '.subject.path' <<<"$projection_null")"
+  assert_eq "evidence paths use the same NFC-normalized repository path" \
+    "$nfc_path" "$(jq -r '.subject.evidence.path' <<<"$projection_null")"
+  assert_eq "machine synthesis replaces a model-authored claim key" \
+    'security-e297de7cdad6467d' "$(jq -r '.subject.claim_key' <<<"$projection_null")"
+  assert_eq "null-line anchor has a fixed canonical identity vector" \
+    '62cc48da6410596cace6be046568225d9842438dd8af4e3899605f4cafae9243' \
+    "$(jq -r '.subject.anchor_sha256' <<<"$projection_null")"
+  assert_eq "finding ID has a fixed RFC 8785 identity vector" \
+    '45b4563cf30eace62673d429df33303d7bc0a587fd9e45a92cab2941d321b048' \
+    "$(jq -r '.finding_id' <<<"$projection_null")"
+  assert_eq "finding ID helper accepts no model-authored claim key" \
+    "$(jq -r '.finding_id' <<<"$projection_null")" \
+    "$(review_runtime_finding_id acme/widgets \
+      0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef \
+      "$nfc_path" RIGHT "$(jq -c '.subject.evidence' <<<"$projection_null")" \
+      "$(jq -r '.subject.anchor_sha256' <<<"$projection_null")" security)"
+
+  permuted_subject="$(jq -c -n --arg path "$nfc_path" \
+    --argjson evidence "$(jq -c -n --arg path "$nfc_path" \
+      --arg object_sha aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+      --arg content_sha256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb \
+      '{content_sha256:$content_sha256,line:null,object_sha:$object_sha,path:$path}')" '
+    {body:"ignored",ordinal:99,lane_id:"other-lane",title:"ignored",summary:"ignored",
+     evidence:$evidence,category:"security",side:"RIGHT",path:$path}')"
+  permuted_projection="$(printf '%s' "$permuted_subject" |
+    review_runtime_identity_projection acme/widgets \
+      0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)"
+  assert_eq "lane, index, prose, title, body, and insertion order do not change finding ID" \
+    "$(jq -r '.finding_id' <<<"$projection_null")" \
+    "$(jq -r '.finding_id' <<<"$permuted_projection")"
+  replayed_projection="$(jq -c '.subject' <<<"$projection_null" |
+    review_runtime_identity_projection acme/widgets \
+      0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef)"
+  assert_eq "v2 identity derivation is idempotent" "$projection_null" "$replayed_projection"
+
+  blob_file="$TEST_INPUT_ROOT/identity-v2-lines.txt"
+  printf 'alpha\r\ncaf\303\251\nomega\r' >"$blob_file"
+  anchor_one="$(review_runtime_blob_line_anchor_sha256 "$blob_file" 1)"
+  anchor_two="$(review_runtime_blob_line_anchor_sha256 "$blob_file" 2)"
+  assert_eq "non-null anchor excludes the CRLF terminator" "$(sha256_text alpha)" "$anchor_one"
+  assert_eq "non-null anchor hashes the exact UTF-8 line bytes" "$(sha256_text "$(printf 'caf\303\251')")" "$anchor_two"
+
+  task_alias="$(jq -c -n --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg config_hash "$CONFIG_HASH" '
+    {payload:{review_task:{schema:"kc-pr-flow.review-task/v1",run_id:"run-alias",review_key:$review_key,
+      lane_id:"correctness-1",capability:"correctness",repository:"acme/widgets",pr_number:42,
+      base_sha:$base_sha,head_sha:$head_sha,config_hash:$config_hash}}}')"
+  review_runtime_payload_matches_v1_schema "$task_alias" lane.started >/dev/null 2>&1
+  assert_eq "correctness alias outside the capabilities array is rejected" "1" "$?"
+
+  candidate="$(jq -c --arg run_id run-alias --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg candidate_id dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd \
+    '.subject + {schema:"kc-pr-flow.review-candidate/v2",run_id:$run_id,review_key:$review_key,
+      lane_id:"security-1",ordinal:1,candidate_id:$candidate_id}' <<<"$projection_null")"
+  candidate_event="$(jq -c -n --argjson candidate "$candidate" '{payload:{candidate:$candidate}}')"
+  review_runtime_payload_matches_v1_schema "$candidate_event" finding.observed >/dev/null 2>&1
+  assert_eq "canonical v2 candidate schema is accepted" "0" "$?"
+  for wrong_schema in kc-pr-flow.review-candidate/v1 kc-pr-flow.review-candidate/v3; do
+    review_runtime_payload_matches_v1_schema \
+      "$(jq -c --arg schema "$wrong_schema" '.payload.candidate.schema=$schema' <<<"$candidate_event")" \
+      finding.observed >/dev/null 2>&1
+    assert_eq "$wrong_schema candidate identity is rejected" "1" "$?"
+  done
+
+  finding="$(jq -c --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg finding_id "$(jq -r '.finding_id' <<<"$projection_null")" \
+    --arg candidate_id dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd \
+    '.subject + {schema:"kc-pr-flow.review-finding/v2",review_key:$review_key,
+      finding_id:$finding_id,candidate_ids:[$candidate_id]}' <<<"$projection_null")"
+  finding_event="$(jq -c -n --argjson finding "$finding" '{payload:{findings:[$finding],uncertain_candidate_ids:[]}}')"
+  review_runtime_payload_matches_v1_schema "$finding_event" synthesis.finished >/dev/null 2>&1
+  assert_eq "canonical v2 finding schema is accepted" "0" "$?"
+  for wrong_schema in kc-pr-flow.review-finding/v1 kc-pr-flow.review-finding/v3; do
+    review_runtime_payload_matches_v1_schema \
+      "$(jq -c --arg schema "$wrong_schema" '.payload.findings[0].schema=$schema' <<<"$finding_event")" \
+      synthesis.finished >/dev/null 2>&1
+    assert_eq "$wrong_schema finding identity is rejected" "1" "$?"
+  done
+
+  (review_runtime_finding_id only two >/dev/null 2>&1)
+  assert_eq "legacy two-argument finding identity has no compatibility mode" "2" "$?"
+}
 
 run_merge_readiness_tests() {
   local receipt="$1" ready_policy="$2" blocked_policy="$3" repo="$4"
@@ -475,7 +612,7 @@ run_interactive_decision_tests() {
   local measurement_target measurement receipt_content receipt_id
   local control_file control_artifact control_hash raw_event_hash
   local canonical_decision treatment_units control_units measurement_binding binding_hash
-  local run_id content_hash anchor candidate_id merge_key finding_id pointer candidate
+  local run_id content_hash anchor candidate_id finding_id pointer candidate identity_projection
   local task usage result finding behavior_hashes start lane_started observed lane_finished synthesized finished
   local types_task_one types_task_two types_result_one types_result_two types_started_one types_started_two types_finished_one types_finished_two
   local interactive_head interactive_base interactive_key identity manual_clean manual_na review_config
@@ -500,18 +637,21 @@ run_interactive_decision_tests() {
   interactive_base="$interactive_head"
   interactive_key="$(sha256_text "$REPOSITORY|$PR_NUMBER|$interactive_base|$interactive_head|$CONFIG_HASH")"
   content_hash="$(review_runtime_sha256 <"$repo/src/review.sh")"
-  anchor='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  anchor="$(review_runtime_blob_line_anchor_sha256 "$repo/src/review.sh" 1)"
   candidate_id="$(review_runtime_candidate_id "$run_id" security-1 1 "$content_hash")"
   pointer="$(jq -S -c -n --arg key "$interactive_key" --arg repo "$REPOSITORY" \
     --arg base "$interactive_base" --arg head "$interactive_head" --arg hash "$content_hash" \
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$key,repository:$repo,
       base_sha:$base,head_sha:$head,object_sha:$head,path:"src/review.sh",side:"RIGHT",line:1,
       locator:"review-anchor",content_sha256:$hash}')"
-  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$interactive_key" \
-    --arg run "$run_id" --arg anchor "$anchor" --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
-      lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,
-      category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
+  identity_projection="$(jq -c -n --arg anchor "$anchor" --argjson evidence "$pointer" '
+    {path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",evidence:$evidence}
+  ' | review_runtime_identity_projection "$REPOSITORY" "$interactive_key")"
+  candidate="$(jq -S -c --arg id "$candidate_id" --arg key "$interactive_key" \
+    --arg run "$run_id" '
+    .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,
+      review_key:$key,lane_id:"security-1",ordinal:1}
+  ' <<<"$identity_projection")"
   task="$(jq -S -c -n --arg run "$run_id" --arg key "$interactive_key" \
     --arg repo "$REPOSITORY" --arg base "$interactive_base" --arg head "$interactive_head" --arg config "$CONFIG_HASH" \
     '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"security-1",
@@ -521,14 +661,12 @@ run_interactive_decision_tests() {
     --arg id "$candidate_id" --argjson usage "$usage" \
     '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"security-1",
       capability:"security",terminal_status:"succeeded",candidates:[$id],usage:$usage,provider_family:"claude"}')"
-  merge_key="src/review.sh|RIGHT|$content_hash|security|unchecked-boundary"
-  finding_id="$(review_runtime_finding_id "$interactive_key" "$merge_key")"
-  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$interactive_key" \
-    --arg merge "$merge_key" --arg anchor "$anchor" --arg candidate "$candidate_id" \
-    --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
-      path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",
-      claim_key:"unchecked-boundary",candidate_ids:[$candidate],evidence:$evidence}')"
+  finding_id="$(jq -r '.finding_id' <<<"$identity_projection")"
+  finding="$(jq -S -c --arg id "$finding_id" --arg key "$interactive_key" \
+    --arg candidate "$candidate_id" '
+    .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,review_key:$key,
+      candidate_ids:[$candidate]}
+  ' <<<"$identity_projection")"
   behavior_hashes="$(jq -S -c -n --arg hash "$content_hash" \
     '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
       github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
@@ -1302,6 +1440,13 @@ run_review_timing_tests() {
   export PATH
 }
 
+if [ "$CASE_FILTER" = 'identity-v2' ]; then
+  run_identity_v2_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
 if [ "$CASE_FILTER" = 'review-timing' ]; then
   run_review_timing_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
@@ -1317,6 +1462,7 @@ if [ "$CASE_FILTER" = 'timing-publication' ]; then
 fi
 
 if [ "$CASE_FILTER" = 'all' ]; then
+  run_identity_v2_tests
   run_review_timing_tests
 fi
 
@@ -2112,32 +2258,36 @@ PY
 
 run_evidence_binding_tests() {
   local fixture_event pointer candidate candidate_id candidate_event
-  local merge_key finding_id finding finding_event evidence_hash changed_hash
+  local finding_id finding finding_event evidence_hash changed_hash identity_projection
   local mutation_name mutation_filter mutated_event reason validator_probe
-  local old_candidate_id old_merge_key old_finding_id
-  local scoped_kind scoped_pointer scoped_candidate scoped_finding scoped_event standalone_pointer
+  local old_candidate_id old_finding_id changed_claim_key
+  local scoped_kind scoped_pointer scoped_candidate scoped_finding scoped_event standalone_pointer scoped_projection
 
   fixture_event="$(sed -n '1p' "$FIXTURE")"
   evidence_hash='dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
   changed_hash='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   candidate_id="$(sha256_text "run-fixture-fresh|security-1|1|$evidence_hash")"
-  merge_key="src/review.sh|RIGHT|$evidence_hash|security|unchecked-boundary"
-  finding_id="$(sha256_text "$EXPECTED_REVIEW_KEY|$merge_key")"
   pointer="$(jq -S -c -n \
     --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
     --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
     --arg content_sha256 "$evidence_hash" \
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,path:"src/review.sh",side:"RIGHT",line:7,locator:"review-anchor",content_sha256:$content_sha256}')"
-  candidate="$(jq -S -c -n \
-    --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
-    --argjson evidence "$pointer" \
-    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$candidate_id,run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
+  identity_projection="$(jq -c -n --argjson evidence "$pointer" '
+    {path:"src/review.sh",side:"RIGHT",
+     anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+     category:"security",evidence:$evidence}
+  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+  candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
+    .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
+      run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
+  ' <<<"$identity_projection")"
   candidate_event="$(rehash_event "$(jq -c --argjson candidate "$candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
-  finding="$(jq -S -c -n \
-    --arg finding_id "$finding_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
-    --arg merge_key "$merge_key" --argjson evidence "$pointer" \
-    --arg candidate_id "$candidate_id" \
-    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$finding_id,review_key:$review_key,merge_key:$merge_key,path:"src/review.sh",side:"RIGHT",anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",category:"security",claim_key:"unchecked-boundary",candidate_ids:[$candidate_id],evidence:$evidence}')"
+  finding_id="$(jq -r '.finding_id' <<<"$identity_projection")"
+  finding="$(jq -S -c --arg finding_id "$finding_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg candidate_id "$candidate_id" '
+    .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$finding_id,
+      review_key:$review_key,candidate_ids:[$candidate_id]}
+  ' <<<"$identity_projection")"
   finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
 
   if review_runtime_evidence_pointer_valid "$pointer"; then
@@ -2168,7 +2318,15 @@ run_evidence_binding_tests() {
         '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"review_comment",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,pr_number:42,comment_id:9001,path:"src/review.sh",side:"RIGHT",line:7,locator:"comment",content_sha256:$content_sha256}')"
     fi
 
-    scoped_candidate="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$candidate")"
+    scoped_projection="$(jq -c -n --argjson evidence "$scoped_pointer" '
+      {path:"src/review.sh",side:"RIGHT",category:"security",evidence:$evidence} +
+      (if $evidence.line == null then {}
+       else {anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"} end)
+    ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+    scoped_candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
+      .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
+        run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
+    ' <<<"$scoped_projection")"
     scoped_event="$(rehash_event "$(jq -c --argjson candidate "$scoped_candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
     reason="$(review_runtime_validate_line "$scoped_event")"
     assert_eq "$scoped_kind candidate accepts matching PR locator" "" "$reason"
@@ -2182,7 +2340,11 @@ run_evidence_binding_tests() {
     reason="$(review_runtime_validate_line "$mutated_event")"
     assert_eq "$scoped_kind candidate rejects another PR locator" "evidence_identity_mismatch" "$reason"
 
-    scoped_finding="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$finding")"
+    scoped_finding="$(jq -S -c --arg review_key "$EXPECTED_REVIEW_KEY" \
+      --arg candidate_id "$candidate_id" '
+      .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:.finding_id,
+        review_key:$review_key,candidate_ids:[$candidate_id]}
+    ' <<<"$scoped_projection")"
     scoped_event="$(rehash_event "$(jq -c --argjson finding "$scoped_finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
     reason="$(review_runtime_validate_line "$scoped_event")"
     assert_eq "$scoped_kind finding accepts matching PR locator" "" "$reason"
@@ -2196,11 +2358,21 @@ run_evidence_binding_tests() {
     --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
     --arg content_sha256 "$evidence_hash" \
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"issue",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,issue_number:43,locator:"issue",content_sha256:$content_sha256}')"
-  scoped_candidate="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$candidate")"
+  scoped_projection="$(jq -c -n --argjson evidence "$scoped_pointer" '
+    {path:"src/review.sh",side:"RIGHT",category:"security",evidence:$evidence}
+  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+  scoped_candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
+    .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
+      run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
+  ' <<<"$scoped_projection")"
   scoped_event="$(rehash_event "$(jq -c --argjson candidate "$scoped_candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
   reason="$(review_runtime_validate_line "$scoped_event")"
   assert_eq "issue candidate locator remains independent from PR number" "" "$reason"
-  scoped_finding="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$finding")"
+  scoped_finding="$(jq -S -c --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg candidate_id "$candidate_id" '
+    .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:.finding_id,
+      review_key:$review_key,candidate_ids:[$candidate_id]}
+  ' <<<"$scoped_projection")"
   scoped_event="$(rehash_event "$(jq -c --argjson finding "$scoped_finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
   reason="$(review_runtime_validate_line "$scoped_event")"
   assert_eq "issue finding locator remains independent from PR number" "" "$reason"
@@ -2237,19 +2409,30 @@ MUTATIONS
   old_candidate_id="$candidate_id"
   mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" '.payload.candidate.evidence.content_sha256=$hash' <<<"$candidate_event")")"
   reason="$(review_runtime_validate_line "$mutated_event")"
-  assert_eq "candidate identity changes with evidence content hash" "candidate_id_mismatch" "$reason"
+  assert_eq "machine claim key changes with candidate evidence content hash" "claim_key_mismatch" "$reason"
   assert_eq "candidate test retains the original identity for the drift probe" "$old_candidate_id" "$(jq -r '.payload.candidate.candidate_id' <<<"$mutated_event")"
+  changed_claim_key="$(jq -c --arg hash "$changed_hash" '.evidence.content_sha256=$hash' <<<"$(jq -c '.subject' <<<"$identity_projection")" |
+    review_runtime_identity_projection | jq -r '.subject.claim_key')"
+  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg claim_key "$changed_claim_key" '
+    .payload.candidate.evidence.content_sha256=$hash |
+    .payload.candidate.claim_key=$claim_key
+  ' <<<"$candidate_event")")"
+  reason="$(review_runtime_validate_line "$mutated_event")"
+  assert_eq "candidate ID changes with canonical evidence identity" "candidate_id_mismatch" "$reason"
 
-  old_merge_key="$merge_key"
   old_finding_id="$finding_id"
   mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" '.payload.findings[0].evidence.content_sha256=$hash' <<<"$finding_event")")"
   reason="$(review_runtime_validate_line "$mutated_event")"
-  assert_eq "merge identity changes with evidence content hash" "merge_key_mismatch" "$reason"
-  assert_eq "finding drift probe retains the old merge key" "$old_merge_key" "$(jq -r '.payload.findings[0].merge_key' <<<"$mutated_event")"
+  assert_eq "machine claim key changes with finding evidence content hash" "claim_key_mismatch" "$reason"
   assert_eq "finding drift probe retains the old finding id" "$old_finding_id" "$(jq -r '.payload.findings[0].finding_id' <<<"$mutated_event")"
-  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg merge_key "src/review.sh|RIGHT|$changed_hash|security|unchecked-boundary" '.payload.findings[0].evidence.content_sha256=$hash | .payload.findings[0].merge_key=$merge_key' <<<"$finding_event")")"
+  changed_claim_key="$(jq -c --arg hash "$changed_hash" '.evidence.content_sha256=$hash' <<<"$(jq -c '.subject' <<<"$identity_projection")" |
+    review_runtime_identity_projection | jq -r '.subject.claim_key')"
+  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg claim_key "$changed_claim_key" '
+    .payload.findings[0].evidence.content_sha256=$hash |
+    .payload.findings[0].claim_key=$claim_key
+  ' <<<"$finding_event")")"
   reason="$(review_runtime_validate_line "$mutated_event")"
-  assert_eq "finding identity changes after evidence-bound merge key changes" "finding_id_mismatch" "$reason"
+  assert_eq "finding identity changes after canonical evidence identity changes" "finding_id_mismatch" "$reason"
 }
 
 if [ "$CASE_FILTER" = 'privacy-envelope' ]; then
@@ -2905,7 +3088,7 @@ printf '%s\n' "$fresh_fixture" >"$t2_seed"
 t2_replay="$(bash "$RUNTIME" replay --event-file "$t2_seed")"
 t2_replay_rc=$?
 assert_eq "replay accepts a valid authoritative log" "0" "$t2_replay_rc"
-assert_eq "replay emits the projection schema" "kc-pr-flow.review-projection/v1" "$(jq -r '.schema' <<<"$t2_replay")"
+assert_eq "replay emits the projection schema" "kc-pr-flow.review-projection/v2" "$(jq -r '.schema' <<<"$t2_replay")"
 assert_eq "replay retains exact-head run identity" "$HEAD_SHA" "$(jq -r '.run.head_sha' <<<"$t2_replay")"
 assert_eq "empty replay starts with no provider lanes" "0" "$(jq -r '.lanes | length' <<<"$t2_replay")"
 t2_show="$(bash "$RUNTIME" show --event-file "$t2_seed")"
@@ -2949,25 +3132,33 @@ git -C "$t2_repo" -c user.name='Review Runtime Test' -c user.email='runtime@exam
 git -C "$t2_repo" remote add origin 'https://github.com/acme/widgets.git'
 t2_object_sha="$(git -C "$t2_repo" rev-parse HEAD)"
 t2_evidence_hash="$(review_runtime_sha256 <"$t2_repo/evidence.txt")"
-t2_anchor_one="$(sha256_text 'evidence.txt|RIGHT|2')"
-t2_anchor_two="$(sha256_text 'evidence.txt|RIGHT|1')"
+t2_anchor_one="$(review_runtime_blob_line_anchor_sha256 "$t2_repo/evidence.txt" 2)"
+t2_anchor_two="$(review_runtime_blob_line_anchor_sha256 "$t2_repo/evidence.txt" 1)"
 t2_candidate_one_id="$(sha256_text "run-fixture-fresh|security-1|1|$t2_evidence_hash")"
 t2_candidate_two_id="$(sha256_text "run-fixture-fresh|security-1|2|$t2_evidence_hash")"
-t2_merge_key="evidence.txt|RIGHT|$t2_evidence_hash|security|unchecked-boundary"
-t2_finding_id="$(sha256_text "$EXPECTED_REVIEW_KEY|$t2_merge_key")"
 t2_pointer="$(jq -S -c -n \
   --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
   --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
   --arg content_sha256 "$t2_evidence_hash" \
   '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,path:"evidence.txt",side:"RIGHT",line:2,locator:"review-anchor",content_sha256:$content_sha256}')"
-t2_candidate_one="$(jq -S -c -n \
-  --arg candidate_id "$t2_candidate_one_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
-  --arg anchor_sha256 "$t2_anchor_one" --argjson evidence "$t2_pointer" \
-  '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$candidate_id,run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1,path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
-t2_candidate_two="$(jq -S -c -n \
-  --arg candidate_id "$t2_candidate_two_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
-  --arg anchor_sha256 "$t2_anchor_two" --argjson evidence "$t2_pointer" \
-  '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$candidate_id,run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:2,path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",claim_key:"uncertain-ownership",evidence:$evidence}')"
+t2_pointer_two="$(jq -S -c '.line=1' <<<"$t2_pointer")"
+t2_identity_one="$(jq -c -n --arg anchor_sha256 "$t2_anchor_one" --argjson evidence "$t2_pointer" '
+  {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",evidence:$evidence}
+' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+t2_identity_two="$(jq -c -n --arg anchor_sha256 "$t2_anchor_two" --argjson evidence "$t2_pointer_two" '
+  {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",evidence:$evidence}
+' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+t2_finding_id="$(jq -r '.finding_id' <<<"$t2_identity_one")"
+t2_candidate_one="$(jq -S -c --arg candidate_id "$t2_candidate_one_id" \
+  --arg review_key "$EXPECTED_REVIEW_KEY" '
+  .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
+    run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
+' <<<"$t2_identity_one")"
+t2_candidate_two="$(jq -S -c --arg candidate_id "$t2_candidate_two_id" \
+  --arg review_key "$EXPECTED_REVIEW_KEY" '
+  .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
+    run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:2}
+' <<<"$t2_identity_two")"
 t2_review_task="$(jq -S -c -n \
   --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
   --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg config_hash "$CONFIG_HASH" \
@@ -2977,11 +3168,11 @@ t2_lane_result="$(jq -S -c -n \
   --arg review_key "$EXPECTED_REVIEW_KEY" --arg one "$t2_candidate_one_id" --arg two "$t2_candidate_two_id" \
   --argjson usage "$t2_usage" \
   '{schema:"kc-pr-flow.lane-result/v1",run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",capability:"security",terminal_status:"succeeded",candidates:[$one,$two],usage:$usage,provider_family:"claude"}')"
-t2_finding="$(jq -S -c -n \
-  --arg finding_id "$t2_finding_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
-  --arg merge_key "$t2_merge_key" --arg anchor_sha256 "$t2_anchor_one" \
-  --arg candidate_id "$t2_candidate_one_id" --argjson evidence "$t2_pointer" \
-  '{schema:"kc-pr-flow.review-finding/v1",finding_id:$finding_id,review_key:$review_key,merge_key:$merge_key,path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",claim_key:"unchecked-boundary",candidate_ids:[$candidate_id],evidence:$evidence}')"
+t2_finding="$(jq -S -c --arg finding_id "$t2_finding_id" \
+  --arg review_key "$EXPECTED_REVIEW_KEY" --arg candidate_id "$t2_candidate_one_id" '
+  .subject + {schema:"kc-pr-flow.review-finding/v2",finding_id:$finding_id,
+    review_key:$review_key,candidate_ids:[$candidate_id]}
+' <<<"$t2_identity_one")"
 t2_lane_started="$(rehash_event "$(jq -c --argjson task "$t2_review_task" '.sequence=2 | .event_type="lane.started" | .payload={review_task:$task}' <<<"$fresh_fixture")")"
 t2_observed_one="$(rehash_event "$(jq -c --argjson candidate "$t2_candidate_one" '.sequence=3 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fresh_fixture")")"
 t2_observed_two="$(rehash_event "$(jq -c --argjson candidate "$t2_candidate_two" '.sequence=4 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fresh_fixture")")"
@@ -3024,7 +3215,7 @@ else
 fi
 
 # Cross-event replay rejects provider results that drift from their task and
-# merged findings whose candidate observations have a different merge key.
+# merged findings whose candidate observations have a different v2 identity.
 t2_wrong_capability="$(rehash_event "$(jq -c '.payload.lane_result.capability="types"' <<<"$t2_lane_finished")")"
 printf '%s\n%s\n%s\n%s\n%s\n%s\n' "$fresh_fixture" "$t2_lane_started" "$t2_observed_one" "$t2_observed_two" "$t2_wrong_capability" "$t2_synthesized" >"$TEST_STATE_ROOT/t2-wrong-capability.jsonl"
 bash "$RUNTIME" replay --event-file "$TEST_STATE_ROOT/t2-wrong-capability.jsonl" >/dev/null 2>&1
@@ -3047,7 +3238,7 @@ printf '%s\n%s\n%s\n%s\n%s\n%s\n' "$fresh_fixture" "$t2_lane_started" "$t2_obser
 bash "$RUNTIME" replay --event-file "$TEST_STATE_ROOT/t2-duplicate-finding.jsonl" >/dev/null 2>&1
 t2_duplicate_finding_rc=$?
 assert_eq "replay rejects assigning one candidate to two findings" "74" "$t2_duplicate_finding_rc"
-assert_eq "replay rejects duplicate finding identity and merge key" "74" "$t2_duplicate_finding_rc"
+assert_eq "replay rejects duplicate noncanonical finding IDs" "74" "$t2_duplicate_finding_rc"
 
 # A finished lane owns the exact set of candidates observed for that lane.
 t2_unknown_candidate_id='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'

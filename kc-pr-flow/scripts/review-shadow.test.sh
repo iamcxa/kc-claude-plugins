@@ -429,14 +429,20 @@ jq -S -c -n \
     lanes:[
       {lane_id:"correctness",capability:"code_correctness",provider_family:"claude",terminal_status:"succeeded",
        usage:{input_tokens:100,output_tokens:20,total_tokens:120,provenance:"reported",provider_family:"claude",scope:"lane"},
-       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence}]},
+       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence}]},
       {lane_id:"security",capability:"security",terminal_status:"unavailable",
        usage:{input_tokens:null,output_tokens:null,total_tokens:null,provenance:"unavailable",provider_family:null,scope:"lane"},
-       candidates:[{ordinal:1,path:"src/uncertain.sh",side:"FILE",anchor_sha256:$uncertain_evidence.content_sha256,category:"security",claim_key:"uncertain_boundary",evidence:$uncertain_evidence}]}
+       candidates:[
+         {ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence},
+         {ordinal:2,path:"src/uncertain.sh",side:"FILE",category:"security",evidence:$uncertain_evidence}
+       ]}
     ],
     synthesis:{
-      findings:[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}],
-      uncertain_candidate_refs:[{lane_id:"security",ordinal:1}]
+      findings:[
+        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]},
+        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"security",ordinal:1}]}
+      ],
+      uncertain_candidate_refs:[{lane_id:"security",ordinal:2}]
     }
   }' >"$OBSERVATION"
 
@@ -479,12 +485,36 @@ on_event_file="$(find "$ON_ROOT" -name events.jsonl -type f)"
 assert_eq 'collector publishes exactly one authoritative event log' '1' "$(find "$ON_ROOT" -name events.jsonl -type f | wc -l | tr -d ' ')"
 actual_lifecycle="$(jq -r '.event_type' "$on_event_file" | paste -sd, -)"
 assert_eq 'collector emits the deterministic complete lifecycle' \
-  'run.started,lane.started,finding.observed,lane.finished,lane.started,finding.observed,lane.finished,synthesis.finished,run.finished' \
+  'run.started,lane.started,finding.observed,lane.finished,lane.started,finding.observed,finding.observed,lane.finished,synthesis.finished,run.finished' \
   "$actual_lifecycle"
 assert_eq 'run.finished durably binds all six behavior hashes' \
   "$(jq -S -c '.behavior_hashes' "$OBSERVATION")" \
   "$(jq -S -c 'select(.event_type == "run.finished") | .payload.behavior_hashes' "$on_event_file")"
 replayed_on="$(bash "$RUNTIME" replay --event-file "$on_event_file")"
+assert_eq 'replay replaces v1 with the canonical v2 projection' \
+  'kc-pr-flow.review-projection/v2' "$(jq -r '.schema' <<<"$replayed_on")"
+assert_eq 'collector emits only v2 candidate identity' \
+  'kc-pr-flow.review-candidate/v2' \
+  "$(jq -r 'select(.event_type == "finding.observed") | .payload.candidate.schema' "$on_event_file" | sort -u)"
+assert_eq 'collector emits only v2 finding identity' \
+  'kc-pr-flow.review-finding/v2' \
+  "$(jq -r 'select(.event_type == "synthesis.finished") | .payload.findings[].schema' "$on_event_file" | sort -u)"
+assert_eq 'claim key is machine-owned from category and canonical exact evidence identity' \
+  'correctness-32285a207f7bce09' "$(jq -r '.findings[0].claim_key' <<<"$replayed_on")"
+assert_eq 'finding ID is the fixed RFC 8785 identity vector' \
+  'b67226b9db3acf1045ef40d239a38e9848a4878537aadce8a6a87a8928e2c966' \
+  "$(jq -r '.findings[0].finding_id' <<<"$replayed_on")"
+assert_eq 'multi-lane duplicate identities collapse to one finding' \
+  '1' "$(jq -r '.findings | length' <<<"$replayed_on")"
+assert_eq 'collapsed finding preserves both candidate references' \
+  '2' "$(jq -r '.findings[0].candidate_ids | length' <<<"$replayed_on")"
+direct_finding_id="$(jq -c '.synthesis.findings[1]' "$OBSERVATION" |
+  review_runtime_identity_projection "$REPOSITORY" "$REVIEW_KEY" | jq -r '.finding_id')"
+assert_eq 'producer and validator share the finding projection authority' \
+  "$direct_finding_id" "$(jq -r '.findings[0].finding_id' <<<"$replayed_on")"
+assert_eq 'null-line anchor uses the canonical null preimage' \
+  '528c61ab65097131846c8849b796c965c7ebfe7ecd37b2b792291b61b949e2e2' \
+  "$(jq -r '.candidates[] | select(.evidence.line == null) | .anchor_sha256' <<<"$replayed_on")"
 assert_eq 'replay exposes the exact frozen body hash' "$(file_sha256 "$BODY")" \
   "$(jq -r '.behavior_hashes.body_sha256' <<<"$replayed_on")"
 assert_eq 'observer exposes the exact frozen body hash' "$(file_sha256 "$BODY")" \
@@ -573,6 +603,15 @@ assert_invalid_observation 'raw provider value' '.lanes[0].provider_payload={raw
 assert_invalid_observation 'unresolved candidate reference' '.synthesis.findings[0].candidate_refs[0].ordinal=99'
 assert_invalid_observation 'uncertain and finding overlap' '.synthesis.uncertain_candidate_refs=[{lane_id:"correctness",ordinal:1}]'
 assert_invalid_observation 'inconsistent finding evidence' '.synthesis.findings[0].evidence.content_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"'
+assert_invalid_observation 'model-authored candidate claim key' '.lanes[0].candidates[0].claim_key="forged"'
+assert_invalid_observation 'model-authored finding claim key' '.synthesis.findings[0].claim_key="forged"'
+
+v1_candidate_event="$(jq -c 'select(.event_type == "finding.observed") | .payload.candidate.schema="kc-pr-flow.review-candidate/v1"' "$on_event_file" | head -1)"
+review_runtime_payload_matches_v1_schema "$v1_candidate_event" finding.observed >/dev/null 2>&1
+assert_eq 'received v1 candidate identity rejects closed' '1' "$?"
+v1_finding_event="$(jq -c 'select(.event_type == "synthesis.finished") | .payload.findings[0].schema="kc-pr-flow.review-finding/v1"' "$on_event_file")"
+review_runtime_payload_matches_v1_schema "$v1_finding_event" synthesis.finished >/dev/null 2>&1
+assert_eq 'received v1 finding identity rejects closed' '1' "$?"
 
 # Exact-head failures do not collect and cannot mutate the legacy artifacts.
 HEAD_ROOT="$TEST_ROOT/head-state"
@@ -674,7 +713,8 @@ assert_eq 'ledger maps capabilities independently of provider names' '1' "$(prin
 assert_eq 'ledger defines terminal status rules' '1' "$(printf '%s' "$ledger_block" | grep -cF '`succeeded`, `failed`, or `unavailable`' || true)"
 assert_eq 'ledger forbids partial reported usage' '1' "$(printf '%s' "$ledger_block" | grep -cF 'reported only when all provider token counts are complete' || true)"
 assert_eq 'ledger preserves every provider observation' '1' "$(printf '%s' "$ledger_block" | grep -cF 'Every provider observation becomes one candidate' || true)"
-assert_eq 'ledger defines deterministic candidate sorting' '1' "$(printf '%s' "$ledger_block" | grep -cF 'stable sort by `path`, `side`, `anchor_sha256`, `category`, `claim_key`, and evidence `content_sha256`' || true)"
+assert_eq 'ledger excludes model-authored claim keys' '1' "$(printf '%s' "$ledger_block" | grep -cF 'Never accept or serialize a model-authored `claim_key`' || true)"
+assert_eq 'ledger recipe sorts without a model-authored claim key' '2' "$(printf '%s' "$ledger_block" | grep -cF 'sort_by([.path,.side,(.anchor_sha256 // ""),.category,.evidence.content_sha256])' || true)"
 assert_eq 'ledger partitions every candidate exactly once' '1' "$(printf '%s' "$ledger_block" | grep -cF 'partition every candidate exactly once' || true)"
 assert_eq 'ledger creates a private 0700 directory' '1' "$(printf '%s' "$ledger_block" | grep -cF 'mktemp -d' || true)"
 assert_eq 'ledger makes the observation file 0600' '1' "$(printf '%s' "$ledger_block" | grep -cF 'chmod 0600' || true)"
@@ -720,11 +760,11 @@ DOCUMENTED_RESULT="$TEST_ROOT/documented-result.json"
   fi
   shadow_ledger_register_lane correctness code_correctness claude
   documented_candidates="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence}]')"
+    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence}]')"
   documented_usage='{"input_tokens":100,"output_tokens":20,"total_tokens":120,"provenance":"reported","provider_family":"claude","scope":"lane"}'
   shadow_ledger_finish_lane correctness succeeded claude "$documented_usage" "$documented_candidates"
   documented_findings="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}]')"
+    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}]')"
   shadow_ledger_finalize_synthesis "$documented_findings" '[]'
   shadow_ledger_finalize_behavior_hashes \
     "$(file_sha256 "$BODY")" "$(file_sha256 "$INLINE_COMMENTS")" "$(file_sha256 "$EVENT")" \
