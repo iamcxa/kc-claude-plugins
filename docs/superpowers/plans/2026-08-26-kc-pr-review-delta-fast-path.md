@@ -1257,17 +1257,23 @@ git commit -m "test(kc-pr-flow): keep synthetic latency evidence structural"
 
 ### Task 6: CI ownership and final Phase 1 verification
 
+**Historical implementation and slimming-route boundary:** The workflow setup below was implemented
+before the 2026-08-28 slimming amendment; `review-plan-tests.yml` is therefore an existing owner,
+not a workflow this route may create. The slimming route creates no standing CI workflow. Future
+narrow checks use the existing plan, runtime, or evaluation owner only; they may not add a workflow
+or a new CI lifecycle.
+
 **Files:**
-- Create: `.github/workflows/review-plan-tests.yml`
-- Modify: `.github/workflows/review-runtime-tests.yml:7-22,40-48`
-- Modify: `.github/workflows/review-evaluation-tests.yml:6-41,50-85`
-- Modify: `scripts/review-ci-routing.test.py:11-17,58-66,68-109`
+- Existing historical owner: `.github/workflows/review-plan-tests.yml`
+- Existing owners: `.github/workflows/review-runtime-tests.yml`,
+  `.github/workflows/review-evaluation-tests.yml`, and `scripts/review-ci-routing.test.py`
 
 **Interfaces:**
-- Produces: one `plan` CI owner for `review-plan.sh`, its test, and replay fixture; existing `runtime` owns timing commands; existing `evaluation` owns latency scoring.
-- Consumes: Task 1-5 behavioral commands without adding dependencies.
+- Historical result: the existing `plan` owner covers `review-plan.sh`, its test, and replay fixture;
+  existing `runtime` owns timing commands; existing `evaluation` owns latency scoring.
+- Slimming route: consumes those owners without adding a workflow, dependency, or lifecycle.
 
-- [ ] **Step 1: Write failing CI routing expectations**
+- [x] **Historical Step 1: CI routing expectations were implemented before this amendment**
 
 Add `plan` to `WORKFLOWS`, route each new file to exactly one behavioral owner plus the static
 contracts workflow, and add:
@@ -1292,27 +1298,29 @@ Expected routes:
 "kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl": {"evaluation"},
 ```
 
-- [ ] **Step 2: Run RED**
+- [x] **Historical Step 2: RED was recorded before the workflow implementation**
 
 ```bash
 python3 scripts/review-ci-routing.test.py
 ```
 
-Expected: FAIL because `review-plan-tests.yml` and new route ownership do not exist.
+This former RED state is retained only as implementation provenance. Do not recreate a missing
+workflow or use it as a future slimming-route step.
 
-- [ ] **Step 3: Add the narrow workflows**
+- [x] **Historical Step 3: existing narrow workflow ownership was implemented before this amendment**
 
-Create `review-plan-tests.yml` using the pinned checkout and required `bash`, `jq`, `python3`, and
-SHA-256 tools from `review-runtime-tests.yml:31-48`. Use exact PR/push path filters for the plan
-script, test, fixture, runtime dependency, skill/reference wiring, and workflow itself. Run only:
+`review-plan-tests.yml` was created with the pinned checkout and required `bash`, `jq`, `python3`,
+and SHA-256 tools. It uses exact PR/push path filters for the plan script, test, fixture, runtime
+dependency, skill/reference wiring, and itself, and runs only:
 
 ```bash
 bash kc-pr-flow/scripts/review-plan.test.sh
 ```
 
-Add timing-owned paths to `review-runtime-tests.yml`; add latency scorer/test/fixture paths and
-command to `review-evaluation-tests.yml`. Keep pull-request and push path lists byte-equal as
-required by `review-ci-routing.test.py:61-66`.
+The historical implementation added timing-owned paths to `review-runtime-tests.yml` and latency
+scorer/test/fixture paths plus command to `review-evaluation-tests.yml`; pull-request and push path
+lists remain byte-equal as required by `review-ci-routing.test.py:61-66`. For the slimming route,
+future checks extend only those existing owners and must not create another workflow.
 
 - [ ] **Step 4: Run GREEN static and behavioral contracts**
 
