@@ -1068,7 +1068,7 @@ RUNTIME
 
 skill_router_live_identity_mismatch_trace() {
   local mismatch="$1" fixture plugin_root router_repo replay_lines base_sha reviewed_sha fixed_sha
-  local repository config_hash receipt_repository receipt_pr receipt_base receipt_config router_config receipt_config_file
+  local repository config_hash receipt_repository receipt_pr receipt_base receipt_config router_config receipt_config_file receipt_config_bytes
   local events receipt receipt_json receipt_rc inherited_finding_ids required_capabilities decision script snippet output
   fixture="$HERE/../test/fixtures/review-plan/pr1693-replay.json"
   plugin_root="$TEST_ROOT/skill-router-live-$mismatch"
@@ -1096,7 +1096,8 @@ skill_router_live_identity_mismatch_trace() {
     base_sha) receipt_base="$reviewed_sha" ;;
     config_hash)
       receipt_config_file="$plugin_root/changed-config.json"
-      review_runtime_config_canonical standard mixed false false false false correctness,test-coverage >"$receipt_config_file"
+      receipt_config_bytes="$(review_runtime_config_canonical standard mixed false false false false correctness,test-coverage)"
+      printf '%s' "$receipt_config_bytes" >"$receipt_config_file"
       receipt_config="$(review_runtime_config_hash standard mixed false false false false correctness,test-coverage)"
       ;;
     *) fail "unknown live identity mismatch: $mismatch"; return ;;
