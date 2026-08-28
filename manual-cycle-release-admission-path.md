@@ -81,6 +81,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-28T01:48:08.59539Z"
                 reason: The committed validation report semantically covers AC-1 through AC-4, but the structured AC scan leaves AC-2 and AC-3 unevidenced because the combined checklist line does not cite them individually. Withdraw before Captain presentation and repair only the report citations.
+            - id: gate-attempt:w8z5xrcexs9k1qq7xrwzx5bk-validation-2
+              briefing:
+                id: briefing:w8z5xrcexs9k1qq7xrwzx5bk:validation:attempt-2:revision-1
+                digest: sha256:fd8d7f8ee11ae88ca280d8ffb3ad44a351c0bfd164b871430be2d3962353d0ce
+                request-digest: sha256:055eb8ac3f28472ab9e9e5617019d3a9294c6b77da67e39934e867a1bae7b6fe
+                room-ref: ./manual-cycle-release-admission-path/review/validation/briefing-2
 ---
 
 ## Problem
