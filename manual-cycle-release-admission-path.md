@@ -259,3 +259,12 @@ The shape recovers existing GitHub, Spacedock, loader, and worktree seams rather
 - observed state revision: `d67181449cad2e1b19914b830fc7901ea49384d3`
 - candidate: `d8092fa93eec70a0d5c64d663e6c156983a785cf..035f7ba1efc13c2532bb22d7f809291e8dcd1b11`
 - state: `claimed`
+
+### Changed-tip confirmation claim
+
+- identity: `fbc02c98cdf63868808d42d050926d78a5e671450b53a281c8d41200d3cb3644`
+- claimant: `codex-thread:01a045c8-2834-7bd0-a847-65f6cce26327`
+- observed state revision: `c03687da3b79f23f10dff053dee0dbbddc37399a`
+- candidate: `d8092fa93eec70a0d5c64d663e6c156983a785cf..6df481a34b90a63aa05bfebeaa5566aa45169817`
+- prior finding: RoboRev job `287` required the Issue-shape check to bind each required heading once and in order.
+- state: `claimed`
