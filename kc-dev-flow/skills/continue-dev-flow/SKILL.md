@@ -19,30 +19,43 @@ Continue by the selected profile's smallest sufficient route.
    source branch and stack, rather than branching from the trunk or waiting for
    it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
    applies whoever owns the delivery ceremony.
-3. Read the exact committed Spacedock work item only far enough to resolve its
-   `source`, `planning-window`, `planning-outcome`, and `sprint`. Do not read
-   current execution state yet, and do not treat the task body as a second
-   planning authority.
-4. Follow the exact work item's `source` to the accepted planning item and
-   invoke the repository-local read-only planning reader. Read the item for the
-   problem, decision, success condition, priority, and human-facing status, and
-   obtain the union of the provider's current Ready set for the recorded
-   planning window/outcome and every currently Ready snapshot source even when
-   its current window or outcome moved. Refuse a truncated provider result. If
-   `source` is not a resolvable planning link, report `planning
-   source unavailable` and stop before reading execution state. If the reader or
-   its inputs are unavailable, report `planning reconcile unavailable` and stop
-   at the same boundary. Do not promote the admission snapshot into planning
-   authority or invent, migrate, or rewrite its planning item.
-5. Compare that current Ready set with the committed SD entity set for the same
-   `sprint`. Compare source identity and membership, `planning-window`,
-   `planning-outcome`, accepted goal, and non-goals; classify each difference as
-   added, removed, changed, or moved. Normalize both sets into ephemeral JSON
-   lists whose items contain `source`, `planning-window`,
-   `planning-outcome`, `accepted-goal`, and string-list `non-goals`. Do
-   not commit or reuse those files. Refuse the snapshot unless every item
-   shares the exact window and outcome read from the engaged item.
-6. Invoke the repository-local read-only engage comparator.
+3. Read the exact committed work item and selected brief. A Pilot or
+   Production item requires one Development Brief containing the problem,
+   accepted outcome, complete non-goal list, acceptance evidence, and route-back
+   conditions. A POC item uses its complete v3 decision, falsifier, budget, and
+   stop condition as the Exploration Brief. Do not read current execution state.
+4. Classify its optional Planning Receipt before provider access. The receipt is
+   exactly `source`, `planning-window`, and `planning-outcome`:
+   - when all Planning Receipt fields are absent, use the Captain-approved
+     committed brief as planning authority and do not invoke a provider reader or
+     comparator;
+   - when all Planning Receipt fields are present, run provider reconcile only
+     for the provider-backed branch below; and
+   - otherwise report `planning receipt incomplete` and stop before reading
+     execution state or mutating it.
+5. In the provider-backed branch, follow the exact work item's `source` to the
+   accepted planning item and invoke the repository-local read-only planning
+   reader. Read the item for the problem, decision, success condition, priority,
+   and human-facing status, and obtain the union of the provider's current Ready
+   set for the recorded planning window/outcome and every currently Ready
+   snapshot source even when its current window or outcome moved. Refuse a
+   truncated provider result. If `source` is not a resolvable planning link,
+   report `planning source unavailable` and stop before reading execution state.
+   If the reader or its inputs are unavailable, report `planning reconcile
+   unavailable` and stop at the same boundary. Do not promote the admission
+   snapshot into planning authority or invent, migrate, or rewrite its planning
+   item.
+6. Still in that branch, compare the current Ready set with the committed
+   execution snapshot selected through the adapter's local grouping. Compare
+   source identity and membership, `planning-window`, `planning-outcome`,
+   accepted goal, and non-goals; classify each difference as added, removed,
+   changed, or moved. Normalize both sets into ephemeral JSON lists whose items
+   contain `source`, `planning-window`, `planning-outcome`, `accepted-goal`, and
+   string-list `non-goals`. Do not commit or reuse those files. Refuse the
+   snapshot unless every item shares the exact window and outcome read from the
+   engaged item.
+7. Invoke the repository-local read-only engage comparator only in the
+   provider-backed branch.
 
    ```bash
    python3 <planning-comparator> \
@@ -62,11 +75,17 @@ Continue by the selected profile's smallest sufficient route.
    comparison finds an added, removed, changed, or moved item, report the
    delta and stop before new dispatch or state mutation. The Captain must admit
    the delta before an authorized actor commits a replacement snapshot. No
-   difference writes the provider or SD automatically. Do not cancel a running
-   worker. The stop applies to new dispatch and later state changes.
-7. Then read current execution state from its declared authority. Do not
+   difference writes the provider or execution snapshot automatically. Do not
+   cancel a running worker. The stop applies to new dispatch and later state
+   changes.
+8. Before dispatch and whenever execution proposes a scope change, compare the
+   accepted goal and complete non-goal list exactly with the admission snapshot.
+   If either differs or must change, stop; do not replace the snapshot or
+   candidate. Return a structured planning delta naming the changed premise,
+   affected acceptance evidence, and recommended `change` or `stop`.
+9. Then read current execution state from its declared authority. Do not
    enumerate the state tree or use provider status to advance execution.
-8. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
+10. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
    and Production receipts remain loadable, while an active v2 POC must finish
    on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
    or stale before the first working stage, invoke
@@ -77,16 +96,15 @@ Continue by the selected profile's smallest sufficient route.
    Captain before dispatch.
 
 If the repository changes planning provider, migrate only open planning items
-that have not been admitted to SD. An already-admitted active SD task with a
-resolvable planning link keeps its existing planning item and provider until
-completion; the old provider must remain available for it. The legacy non-link
-refusal above is not a migration and creates no planning item. New admissions
-use the new provider. During this drain, each active item still has one
-planning-item authority. Keep the active SD snapshot and its source, window,
-outcome, and execution group unchanged. Reconcile each snapshot through the
-reader for its own provider. Do not project SD state back to the provider,
-import provider state into SD, poll either side, or rewrite an active snapshot
-onto the replacement provider.
+that have not been admitted to execution. An admitted provider-backed item keeps
+its existing planning item and provider until completion; the old provider must
+remain available for it. A standalone item has no provider to migrate. New
+provider-backed admissions use the replacement provider. During this drain,
+each active item still has one planning authority. Keep a provider-backed item's
+snapshot, source, window, outcome, and execution group unchanged and reconcile
+it through its own provider reader. Do not project execution state back to the
+provider, import provider state into execution, poll either side, or rewrite an
+active snapshot onto the replacement provider.
 
 ## Load one route
 
@@ -164,9 +182,10 @@ contract. Skipped stages create no review or evidence obligation.
 
 At POC validation, use the repository-local `poc-close-guard.py`. Record one
 `poc_outcome`, prepare the gate through the guard, and record approval without
-`--consume`. Then record one Captain-owned `poc_handoff`: stop/change use
-`not_applicable`; proceed uses created, deferred, or declined. A created item
-must resolve uniquely by `source: poc:<exact-source-id>` before guarded consume.
+`--consume`. After approval, consume the gate through the guard and terminalize
+the POC. Then return the POC outcome to planning. KC Dev Flow does not create
+downstream delivery work or preselect its profile; planning decides whether a
+new Development Brief exists, and that item enters KC Dev Flow independently.
 Raw Spacedock remains bypassable; this is a fail-closed KC Dev Flow path, not an
 engine tamper-resistance claim.
 

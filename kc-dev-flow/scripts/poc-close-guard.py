@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
-import json
 import os
 import re
 import shutil
@@ -107,38 +106,12 @@ def parse_outcome(text: str) -> str:
     return direction
 
 
-def parse_handoff(text: str, direction: str) -> tuple[str, str, str]:
-    block = one_yaml_section(text, "POC handoff", "poc_handoff")
-    disposition = one_field(block, "disposition")
-    to = one_field(block, "to", concrete=False)
-    reason = one_field(block, "reason", concrete=False)
-    if direction in {"stop", "change"}:
-        if disposition != "not_applicable":
-            raise CloseError(f"{direction} requires not_applicable")
-        if to or reason:
-            raise CloseError("not_applicable requires empty to and reason")
-    elif disposition not in {"created", "deferred", "declined"}:
-        raise CloseError("proceed requires created, deferred, or declined")
-    elif disposition == "created":
-        if LOADER.is_placeholder_scalar(to):
-            raise CloseError("created requires a concrete to")
-        if reason:
-            raise CloseError("created requires an empty reason")
-    else:
-        if to:
-            raise CloseError(f"{disposition} requires an empty to")
-        if LOADER.is_placeholder_scalar(reason):
-            raise CloseError(f"{disposition} requires a concrete reason")
-    return disposition, to, reason
-
-
-def validate(path: Path, phase: str) -> tuple[str, str, tuple[str, str, str] | None]:
+def validate(path: Path, phase: str) -> tuple[str, str]:
     if phase not in {"prepare", "consume"}:
         raise CloseError(f"unsupported close phase: {phase}")
     text, item_id = read_work_item(path)
     direction = parse_outcome(text)
-    handoff = parse_handoff(text, direction) if phase == "consume" else None
-    return item_id, direction, handoff
+    return item_id, direction
 
 
 def invoke_spacedock(
@@ -160,86 +133,6 @@ def invoke_spacedock(
     return result
 
 
-def find_downstream(
-    spacedock: Path, workflow_dir: Path, source_id: str
-) -> dict[str, object] | None:
-    result = invoke_spacedock(
-        spacedock,
-        [
-            "status",
-            "--workflow-dir",
-            str(workflow_dir),
-            "--where",
-            f"source=poc:{source_id}",
-            "--archived",
-            "--all-fields",
-            "--json",
-        ],
-    )
-    try:
-        document = json.loads(result.stdout)
-    except json.JSONDecodeError as exc:
-        raise CloseError(f"Spacedock status returned invalid JSON: {exc}") from exc
-    entities = document.get("entities")
-    if not isinstance(entities, list) or not all(
-        isinstance(entity, dict) for entity in entities
-    ):
-        raise CloseError("Spacedock status returned no entity list")
-    if len(entities) > 1:
-        raise CloseError(
-            f"source poc:{source_id} resolves to multiple downstream items"
-        )
-    return entities[0] if entities else None
-
-
-def validate_delivery_body(path: Path, source_id: str) -> str:
-    try:
-        text = path.expanduser().resolve().read_text(encoding="utf-8")
-    except OSError as exc:
-        raise CloseError(f"cannot read downstream body {path}: {exc}") from exc
-    if "## Work profile receipt" in text:
-        raise CloseError("downstream body must not preselect a work profile")
-    if not text.startswith("---\n"):
-        raise CloseError("downstream body is missing leading frontmatter")
-    frontmatter_end = text.find("\n---\n", 4)
-    if frontmatter_end < 0:
-        raise CloseError("downstream body frontmatter is unterminated")
-    frontmatter = text[4:frontmatter_end]
-    try:
-        fields = {
-            name: LOADER._one_field(
-                frontmatter, rf"^{name}:[ \t]*([^\n#]+?)[ \t]*$", f"downstream {name}"
-            )
-            for name in ("source", "status")
-        }
-    except LOADER.ContractError as exc:
-        raise CloseError(str(exc)) from exc
-    expected = f"poc:{source_id}"
-    if fields["source"] != expected:
-        raise CloseError(f"downstream source must be {expected}")
-    if fields["status"] != "backlog":
-        raise CloseError("downstream status must be backlog")
-    if re.search(
-        r"^(?:sprint:[ \t]*[^ \t#\n]|sprint-readiness:[ \t]*ready[ \t]*$)",
-        frontmatter, re.MULTILINE,
-    ):
-        raise CloseError("downstream body must stay deferred")
-    return text
-
-
-def emit_result(disposition: str, entity: dict[str, object]) -> None:
-    item_id = entity.get("id")
-    slug = entity.get("slug")
-    if not isinstance(item_id, str) or not isinstance(slug, str):
-        raise CloseError(f"downstream identity is incomplete: {entity!r}")
-    print(
-        json.dumps(
-            {"disposition": disposition, "id": item_id, "slug": slug},
-            sort_keys=True,
-        )
-    )
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     configured = os.environ.get("SPACEDOCK_BIN") or shutil.which("spacedock")
@@ -252,10 +145,6 @@ def parse_args() -> argparse.Namespace:
     prepare.add_argument("--question", required=True)
     prepare.add_argument("--artifact", required=True)
     prepare.add_argument("--summary", required=True)
-    create = commands.add_parser("create")
-    create.add_argument("--slug", required=True)
-    create.add_argument("--body", type=Path, required=True)
-
     commands.add_parser("consume")
     return parser.parse_args()
 
@@ -270,7 +159,7 @@ def main() -> int:
     workflow_dir = args.workflow_dir.expanduser().resolve()
 
     if args.command == "prepare":
-        item_id, _outcome, _handoff = validate(args.work_item, "prepare")
+        item_id, _outcome = validate(args.work_item, "prepare")
         command = [
             "gate",
             "prepare",
@@ -289,43 +178,7 @@ def main() -> int:
         sys.stderr.write(result.stderr)
         return 0
 
-    text, source_id = read_work_item(args.work_item)
-    direction = parse_outcome(text)
-    if args.command == "create":
-        if direction != "proceed":
-            raise CloseError("downstream creation requires direction proceed")
-        existing = find_downstream(spacedock, workflow_dir, source_id)
-        if existing is not None:
-            emit_result("reused", existing)
-            return 0
-        body = validate_delivery_body(args.body, source_id)
-        result = invoke_spacedock(
-            spacedock,
-            [
-                "new",
-                args.slug,
-                "--workflow-dir",
-                str(workflow_dir),
-            ],
-            input_text=body,
-        )
-        sys.stdout.write(result.stdout)
-        created = find_downstream(spacedock, workflow_dir, source_id)
-        if created is None:
-            raise CloseError(
-                "Spacedock new succeeded but the canonical source did not resolve"
-            )
-        emit_result("created", created)
-        return 0
-
-    item_id, _outcome, handoff = validate(args.work_item, "consume")
-    disposition, to, _reason = handoff
-    if disposition == "created":
-        downstream = find_downstream(spacedock, workflow_dir, item_id)
-        if downstream is None or downstream.get("id") != to:
-            raise CloseError(
-                "created handoff.to must resolve to the sole canonical downstream item"
-            )
+    item_id, _outcome = validate(args.work_item, "consume")
     result = invoke_spacedock(
         spacedock,
         [

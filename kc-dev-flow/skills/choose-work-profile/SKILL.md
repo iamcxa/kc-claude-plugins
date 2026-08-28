@@ -51,14 +51,20 @@ configuration, or rewrite records it owns. If you cannot state that consumers
 upgrade without acting, recommend Production; the error that costs more is the
 one that sends a migration out on a shorter route.
 
-Check the shared core's `backlog` exit bar in the same read. The work item must
-already state what it is, why it is worth doing, and when it is scheduled — an
-accepted `planning-window`, `planning-outcome`, shared SD `sprint`, and
-`sprint-readiness: ready` — in the form that core requires for the profile under
-consideration. A missing part is a missing fact: carry it into the question below
-rather than supplying it. The planning window and outcome are the planning
-provider's answer, and snapshot admission is the Captain's; an item missing
-either is not ready to leave `backlog` however clear its problem statement is.
+Check the shared core's brief admission bar in the same read. Pilot and
+Production require a Development Brief with the problem, accepted outcome,
+complete non-goal list, acceptance evidence, and route-back conditions. POC
+requires the four concrete v3 Exploration Brief fields. A Planning Receipt is
+optional: all of `source`, `planning-window`, and `planning-outcome` selects the
+provider-backed path; none selects standalone Captain authority; a partial tuple
+keeps the item in `backlog`. A local runtime may separately require `sprint` and
+`sprint-readiness: ready`, but those fields do not invent or prove provider
+scheduling.
+
+Feature and bug labels do not select the route. A clear urgent bug may use a
+standalone Development Brief, an uncertain bug may use POC, and a scheduled
+feature or bug may carry a Planning Receipt. Choose from uncertainty and the
+accepted commitment, not the ticket label.
 
 Derive a recommendation from the task. Ask one clarifying question only when one
 missing fact — an incomplete exit bar included — could change the choice or

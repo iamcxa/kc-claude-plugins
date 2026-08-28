@@ -472,11 +472,11 @@ for phrase in [
     "planning item owns discussion, the accepted goal, priority, and human-facing status",
     "planning window owns time",
     "planning outcome owns the accepted result",
-    "SD entity set is the admission snapshot",
-    "`sprint` is an execution grouping, not a planning authority",
-    "`what` and `why` are an admission snapshot, not another accepted-goal authority",
-    "SD owns execution and evidence",
-    "SD-to-planning-provider projector",
+    "admitted execution set is the admission snapshot",
+    "its group is not a planning authority",
+    "accepted goal and non-goals are a snapshot, not another accepted-goal authority",
+    "runtime owns execution and evidence",
+    "execution-to-planning-provider projector",
     "No reconcile result writes either side automatically",
     "the read-only engage comparator",
     "exact engaged source",
@@ -489,17 +489,39 @@ for phrase in [
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
 for phrase in [
-    "An item leaves `backlog` only when its committed body states all three",
-    "**What it is**",
-    "**Why it is worth doing**",
-    "**When it is scheduled**",
-    "`sprint-readiness: ready`",
-    "--where sprint=X --where sprint-readiness=ready",
+    "Development Brief is required",
+    "Planning Receipt is optional",
+    "complete or absent",
+    "partial Planning Receipt",
+    "Captain-approved committed work item",
+    "does not invoke the planning reader or comparator",
+    "compare the accepted goal and complete non-goal list exactly",
+    "structured planning delta",
+    "affected acceptance evidence",
+    "recommended `change` or `stop`",
+    "Runtime adapters own task and execution-context cardinality",
+]:
+    require(phrase in normalized_kernel, f"kernel omits brief boundary: {phrase}")
+for forbidden in [
+    "one planning item to one SD task and one isolated execution context",
+    "refusing a second task or execution context for the same admitted source",
+    "The fresh executor receives",
+    "each task records the tuple",
+    "The SD entity set",
+    "committed SD entity set",
+    "SD-to-planning-provider projector",
+]:
+    require(forbidden not in normalized_kernel, f"kernel owns runtime topology: {forbidden}")
+for phrase in [
+    "An item leaves `backlog` only after its required brief is admitted",
+    "Development Brief",
+    "Exploration Brief",
+    "local execution grouping does not prove a Planning Receipt",
 ]:
     require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
 require(
-    "when it is scheduled" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
-    "choose-work-profile no longer checks the scheduling part of the exit bar",
+    "brief admission" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
+    "choose-work-profile no longer checks the brief admission bar",
 )
 # `public compatibility` promoted on publication, which every change to this
 # package satisfies, so the trigger fired on all of them and sorted none. The
@@ -546,13 +568,26 @@ for relative, phrases in {
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
         "poc_outcome",
-        "poc_handoff",
-        "source: poc:<exact-source-id>",
+        "return the POC outcome to planning",
+        "does not create downstream delivery work",
+        "planning decides whether a new Development Brief exists",
     ],
 }.items():
     normalized = " ".join(read(relative).split())
     for phrase in phrases:
         require(phrase in normalized, f"{relative} omits the v4 POC contract: {phrase}")
+poc_guard_source = read("kc-dev-flow/scripts/poc-close-guard.py")
+require(
+    'commands.add_parser("create")' not in poc_guard_source,
+    "POC guard still creates downstream work",
+)
+normalized_continue = " ".join(
+    read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
+)
+require(
+    "poc_handoff" not in normalized_continue,
+    "continuation still owns downstream POC handoff",
+)
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
@@ -758,20 +793,30 @@ require(
 )
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
 for phrase in [
-    "Default the entity template to `sprint-readiness: defer`",
-    "do not mark the unscheduled backlog ready during adoption",
+    "repository that supports Planning Receipts",
+    "standalone adopter binds the Captain-approved committed brief",
+    "A Planning Receipt is complete or absent",
+    "Local `sprint` and `sprint-readiness` remain runtime grouping and readiness mechanics",
     "repository-local read-only planning reader",
     "repository-local read-only engage comparator",
     "every currently Ready snapshot source",
     "Compare the adopted loader, engage comparator",
-    "engage reconcile is read-only",
-    "outside the Spacedock workflow tree",
+    "For a complete Planning Receipt, the engage reconcile is read-only",
+    "outside the workflow runtime tree",
     "exact source, window, and outcome",
     "do not all share",
     "Captain admits every delta",
     "parsed `status: clean` result",
+    "starts directly with `## The problem`",
+    "omits both an `## Agent execution contract` section",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+for forbidden in [
+    "one planning item to one SD task and one isolated execution context",
+    "refuse a second matching task or context",
+    "Feed the executor only",
+]:
+    require(forbidden not in normalized_adopter, f"adopter owns runtime topology: {forbidden}")
 for phrase in [
     "Migrating from 3.x to 4.x",
     "drain every entity at `status: release`",
@@ -799,11 +844,8 @@ for phrase in [
 ]:
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 continuation_authority_order = [
-    "Read the exact committed Spacedock work item only far enough to resolve its `source`, `planning-window`, `planning-outcome`, and `sprint`.",
-    "Follow the exact work item's `source` to the accepted planning item and invoke the repository-local read-only planning reader.",
-    "Compare that current Ready set with the committed SD entity set for the same `sprint`.",
-    "Invoke the repository-local read-only engage comparator.",
-    "If the comparison finds an added, removed, changed, or moved item, report the delta and stop before new dispatch or state mutation.",
+    "Read the exact committed work item and selected brief.",
+    "Classify its optional Planning Receipt before provider access.",
     "Then read current execution state from its declared authority.",
 ]
 continuation_authority_positions = []
@@ -813,15 +855,21 @@ for phrase in continuation_authority_order:
 require(
     continuation_authority_positions == sorted(continuation_authority_positions)
     and len(set(continuation_authority_positions)) == len(continuation_authority_positions),
-    "continuation must resolve the snapshot, reconcile provider state read-only, then read execution state",
+    "continuation must resolve the brief and optional receipt before execution state",
 )
 for phrase in [
+    "all Planning Receipt fields are absent",
+    "all Planning Receipt fields are present",
+    "report `planning receipt incomplete`",
+    "run provider reconcile only for the provider-backed branch",
+    "Invoke the repository-local read-only engage comparator only in the provider-backed branch.",
+    "Captain-approved committed brief",
     "If `source` is not a resolvable planning link, report `planning source unavailable`",
     "stop before reading execution state",
     "Do not promote the admission snapshot into planning authority",
     "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
     "Do not cancel a running worker.",
-    "No difference writes the provider or SD automatically.",
+    "No difference writes the provider or execution snapshot automatically.",
     "every currently Ready snapshot source",
     "Refuse a truncated provider result",
     "--expected-source <exact-work-item-source>",
@@ -831,6 +879,10 @@ for phrase in [
     "Exit `1` reports the classified delta",
     "Exit `2` reports `planning reconcile unavailable`",
     "stdout parses as one JSON object with `status: clean`",
+    "compare the accepted goal and complete non-goal list exactly",
+    "do not replace the snapshot or candidate",
+    "affected acceptance evidence",
+    "recommended `change` or `stop`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
 for phrase in [
@@ -866,7 +918,11 @@ for phrase in [
 for phrase in [
     "The first version of KC Dev Flow",
     "carrying the whole workshop",
-    "kc-dev-flow-work-profile/v2",
+    "kc-dev-flow-work-profile/v3",
+    "A Planning Receipt is optional and complete or absent",
+    "Without a Planning Receipt, the Captain-approved committed work item",
+    "Runtime adapters decide task, worktree, and worker cardinality",
+    "returns `poc_outcome` to planning",
     "directional evidence",
     "What would prove this wrong",
     "Load the work, not the ceremony",
@@ -874,6 +930,13 @@ for phrase in [
     "The First Officer continues only on one parsed `status: clean` result",
 ]:
     require(phrase in normalized_rationale, f"rationale omits: {phrase}")
+for forbidden in [
+    "committed Spacedock entity set is the snapshot",
+    "bind each task to its planning selection",
+    "not yet admitted to SD move",
+    "`sprint` remains an SD execution grouping",
+]:
+    require(forbidden not in normalized_rationale, f"rationale restores runtime coupling: {forbidden}")
 require(
     "net repository lines" not in normalized_rationale,
     "rationale retains a mutable PR diff snapshot",
@@ -949,7 +1012,8 @@ normalized_workflow = " ".join(workflow.split())
 for phrase in [
     "GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.",
     "`source` links the accepted planning item.",
-    "At every engage, compare the provider's current Ready set with the committed SD snapshot.",
+    "At every provider-backed engage, compare the provider's current Ready set with the committed SD snapshot.",
+    "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
     "A difference requires Captain admission and never writes either side automatically.",
     "| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |",
     ".totalCount != (.items | length)",
@@ -961,12 +1025,39 @@ for phrase in [
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [
-    "Copy the planning item's accepted outcome and non-goals into the work item as an admission snapshot.",
-    "It is not a second accepted-goal authority.",
+    "For a complete Planning Receipt, copy the planning item's accepted outcome and non-goals into the work item as an admission snapshot",
+    "it is not a second accepted-goal authority",
+    "For standalone work, the Captain-approved committed Development Brief already holds that authority.",
     "Record task-specific acceptance evidence as execution evidence.",
-    "## Admission snapshot: accepted outcome and non-goals (copied from `source`)",
 ]:
-    require(phrase in normalized_workflow, f"self-adoption misstates the admission snapshot: {phrase}")
+    require(phrase in normalized_workflow, f"self-adoption misstates brief authority: {phrase}")
+manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
+normalized_manual_issue_body = " ".join(manual_issue_body.split())
+manual_issue_headings = [
+    "## The problem", "## Accepted outcome", "## Non-goals",
+    "## Acceptance evidence", "## Route-back conditions",
+]
+require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")
+heading_positions = [manual_issue_body.index(heading) for heading in manual_issue_headings]
+require(heading_positions == sorted(heading_positions), "manual admission Issue headings are out of order")
+require(
+    manual_issue_body.startswith("## The problem\n"),
+    "manual admission Issue body does not start directly with The problem",
+)
+require(
+    "## Human-readable release brief" not in manual_issue_body,
+    "manual admission Issue body restored the redundant release-brief wrapper",
+)
+for phrase in [
+    "The accepted outcome or non-goals changed",
+    "structured planning delta",
+]:
+    require(phrase in normalized_manual_issue_body, f"manual admission Issue body omits: {phrase}")
+for forbidden in [
+    "## Agent execution contract",
+    "one Issue to one committed Spacedock task and one isolated worktree",
+]:
+    require(forbidden not in manual_issue_body, f"manual admission Issue body owns runtime topology: {forbidden}")
 for phrase in [
     "Roadmap headings are legacy or local SD execution-group identifiers, not planning windows or outcomes.",
     "It does not store task state, acceptance criteria, evidence, or provider-specific cycle metadata.",
@@ -974,7 +1065,7 @@ for phrase in [
     require(phrase in normalized_roadmap, f"Roadmap is not thin enough for provider-neutral planning: {phrase}")
 require(
     "sprint-readiness: defer" in workflow
-    and "--where sprint-readiness=ready" in workflow,
+    and "--where sprint-readiness=ready" in normalized_workflow,
     "self-adoption template/query no longer default closed and select only ready items",
 )
 frontmatter = workflow.split("---", 2)[1]
