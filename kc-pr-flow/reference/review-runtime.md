@@ -50,10 +50,15 @@ claiming a gap is untrusted and selects `initial` with no synthetic ceiling.
 Any missing, malformed, unsafe, stale, hash-mismatched, replay-invalid, or
 non-ancestor input does the same.
 
+`review-config.json` below is the same safe, private regular-file snapshot of
+the exact canonical `kc-pr-flow.review-config/v1` bytes used to derive
+`CONFIG_HASH`; it has no trailing newline. The receipt producer and every
+non-initial decision must receive that same snapshot.
+
 ```bash
-bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl
+bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl --config-file review-config.json
 bash scripts/review-plan.sh decide --repo owner/repo --pr 42 --base BASE --head HEAD \
-  --config-hash CONFIG_HASH --repo-worktree REPO_DIR \
+  --config-hash CONFIG_HASH --config-file review-config.json --repo-worktree REPO_DIR \
   --predecessor-events terminal-events.jsonl --delta-receipt receipt.json
 ```
 

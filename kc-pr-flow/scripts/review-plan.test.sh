@@ -1153,6 +1153,10 @@ if [ "$CASE_FILTER" = 'all' ] || [ "$CASE_FILTER" = 'skill-wiring' ]; then
   assert_file_contains "$SKILL" 'review_plan_validate_decision' 'skill validates the complete closed planner decision'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-delta-receipt/v1' 'runtime reference documents the delta receipt schema'
   assert_file_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' 'runtime reference documents the plan decision schema'
+  assert_file_contains "$REFERENCE" 'receipt --event-file terminal-events\.jsonl --config-file review-config\.json' \
+    'runtime reference receipt example uses the canonical config snapshot'
+  assert_file_contains "$REFERENCE" '[[:space:]]--config-hash CONFIG_HASH --config-file review-config\.json --repo-worktree REPO_DIR' \
+    'runtime reference decide example reuses the canonical config snapshot'
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted' 'human_confirmed'; do
     assert_file_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
   done
