@@ -153,6 +153,14 @@ if [ ! -f "$SCENARIOS" ]; then
   exit 1
 fi
 
+assert_eq "structural corpus uses no production identity schema" true \
+  "$(jq -s -r '[.. | objects | .schema? | select(. == "kc-pr-flow.review-delta-receipt/v1" or
+    . == "kc-pr-flow.review-delta-receipt/v2" or . == "kc-pr-flow.review-candidate/v2" or
+    . == "kc-pr-flow.evidence-pointer/v1")] |
+    length == 0' "$FIXTURE")"
+assert_eq "structural authority contains no downstream correctness alias" true \
+  "$(jq -s -r '[.. | strings | select(. == "correctness")] | length == 0' "$SCENARIOS" "$FIXTURE")"
+
 report="$(score_file "$FIXTURE")"
 if scenario_binding_valid "$FIXTURE"; then
   assert_eq "committed corpus is bound to independent scenario truth" true true
@@ -173,6 +181,15 @@ mutated_observed_hash="$(jq -S -c 'select(.pair_id == "known-fix-only") |
   {control,treatment}' "$mutated" | sha256_text)"
 assert_eq "expected-only mutation leaves control and treatment bytes unchanged" \
   "$baseline_observed_hash" "$mutated_observed_hash"
+mutate_case known-fix-only \
+  '.treatment.predecessor_evidence.receipt.schema="kc-pr-flow.review-delta-receipt/v1"' "$mutated"
+expect_rejected "production v1 receipt cannot enter structural scoring" "$mutated"
+mutate_case known-fix-only \
+  '.treatment.validated_findings[0].candidate.schema="kc-pr-flow.review-candidate/v2"' "$mutated"
+expect_rejected "production v2 candidate cannot mask a structural artifact" "$mutated"
+mutate_case known-fix-only \
+  '.treatment.plan.required_capabilities[0]="correctness"' "$mutated"
+expect_rejected "downstream correctness alias is rejected by structural scoring" "$mutated"
 if [ "$CASE_FILTER" = scenario-authority ]; then
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
   [ "$FAIL" -eq 0 ]

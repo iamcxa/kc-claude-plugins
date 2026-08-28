@@ -43,9 +43,11 @@ review_plan_validate_config() (
 )
 
 review_plan_build_receipt() (
-  local event_file="$1" config_file="$2" projection projection_hash receipt_id required_capabilities canonical content_sha256
-  [ "$#" -eq 2 ] || return 2
+  local event_file="$1" config_file="$2" repository_path="$3"
+  local projection projection_hash receipt_id required_capabilities canonical content_sha256
+  [ "$#" -eq 3 ] || return 2
   projection="$(review_runtime_replay "$event_file")" || return 3
+  review_runtime_projection_identities_verified "$projection" "$repository_path" || return 3
   jq -e '
     .lifecycle.complete == true and
     (.lanes | length > 0) and
@@ -90,11 +92,12 @@ review_plan_build_receipt() (
 
 review_plan_validate_receipt() (
   local receipt='' event_file='' projection receipt_hash projection_hash expected_review_key expected_receipt_id expected_content_sha256
-  local config_file='' receipt_source projection_source expected_capabilities
-  [ "$#" -eq 3 ] || return 2
+  local config_file='' repository_path='' receipt_source projection_source expected_capabilities
+  [ "$#" -eq 4 ] || return 2
   receipt="$1"
   event_file="$2"
   config_file="$3"
+  repository_path="$4"
   receipt_source="$receipt"
 
   # Reject duplicate members before jq parses either value. A path argument is
@@ -107,6 +110,7 @@ review_plan_validate_receipt() (
   # file, and the projection is always rebuilt through review-runtime replay.
   projection="$(review_runtime_replay "$event_file")" || return 3
   projection_source="$projection"
+  review_runtime_projection_identities_verified "$projection_source" "$repository_path" || return 3
   expected_capabilities="$(printf '%s' "$projection_source" | review_plan_required_capabilities)" || return 3
   review_plan_validate_config "$config_file" "$(jq -r '.run.config_hash' <<<"$projection_source")" \
     "$expected_capabilities" >/dev/null || return 3
@@ -822,6 +826,12 @@ review_plan_git() {
   review_plan_worktree_adapter git "$binding" "$@"
 }
 
+# Let the shared identity authority read exact Git objects through this
+# plan-owned, inode-validated object-store boundary.
+review_runtime_bound_git() {
+  review_plan_git "$@"
+}
+
 review_plan_blob_is_safe() {
   local binding="$1" object="$2" max_blob_bytes
   max_blob_bytes="${KC_PR_FLOW_MAX_PLAN_BLOB_BYTES:-4194304}"
@@ -1280,7 +1290,7 @@ review_plan_validate_decision() {
   worktree="$worktree_binding"
 
   receipt_source="$(review_plan_snapshot_receipt "$delta_receipt")" || return
-  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" || return 3
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" "$worktree" || return 3
   jq -e -n \
     --argjson receipt "$receipt_source" --arg repository "$repository" --argjson pr_number "$pr_number" \
     --arg base_sha "$base_sha" --arg config_hash "$config_hash" '
@@ -1392,7 +1402,7 @@ review_plan_decide() {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   }
-  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" || {
+  review_plan_validate_receipt "$receipt_source" "$predecessor_events" "$config_file" "$worktree" || {
     review_plan_initial_decision "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" invalid_predecessor
     return
   }
@@ -1449,17 +1459,21 @@ review_plan_decide() {
 }
 
 review_plan_usage() {
-  printf 'usage: %s receipt --event-file FILE --config-file FILE\n' "${0##*/}" >&2
+  printf 'usage: %s receipt --event-file FILE --config-file FILE --repo-worktree DIR\n' "${0##*/}" >&2
   printf '       %s decide ...\n' "${0##*/}" >&2
 }
 
 review_plan_main_receipt() {
-  local event_file='' config_file=''
+  local event_file='' config_file='' repository_path=''
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --event-file|--config-file)
+      --event-file|--config-file|--repo-worktree)
         [ "$#" -ge 2 ] || { printf 'review-plan: missing value for %s\n' "$1" >&2; return 2; }
-        if [ "$1" = '--event-file' ]; then event_file="$2"; else config_file="$2"; fi
+        case "$1" in
+          --event-file) event_file="$2" ;;
+          --config-file) config_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
+        esac
         shift 2
         ;;
       *)
@@ -1468,11 +1482,11 @@ review_plan_main_receipt() {
         ;;
     esac
   done
-  if [ -z "$event_file" ] || [ -z "$config_file" ]; then
-    printf 'review-plan: --event-file and --config-file are required\n' >&2
+  if [ -z "$event_file" ] || [ -z "$config_file" ] || [ -z "$repository_path" ]; then
+    printf 'review-plan: --event-file, --config-file, and --repo-worktree are required\n' >&2
     return 2
   fi
-  review_plan_build_receipt "$event_file" "$config_file"
+  review_plan_build_receipt "$event_file" "$config_file" "$repository_path"
 }
 
 review_plan_main_decide() {

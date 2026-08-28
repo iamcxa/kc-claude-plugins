@@ -18,7 +18,7 @@
   ],
   "known_findings": [
     {
-      "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "anchor_sha256": "7360eee9c85b4c40a025c49a5987e66448d4fd3c3d56eacc0f4dc79f536eca44",
       "category": "correctness",
       "claim_key": "empty-input-contract",
       "evidence": {"kind": "git_blob", "line": 2, "locator": "parser-anchor"},
@@ -43,7 +43,7 @@
         ],
         "known_findings": [
           {
-            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "anchor_sha256": "f05ae5b367c2eccba101e6bda35be2f3ff403c48e0a0c8529b925b66b80456c5",
             "category": "correctness",
             "claim_key": "policy-result",
             "evidence": {"kind": "git_blob", "line": 2, "locator": "policy-anchor"},
@@ -63,7 +63,7 @@
         ],
         "known_findings": [
           {
-            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "anchor_sha256": "345134db2e66d25f51e6c9a9e5183bdba347a06c8845529d8b7207a9b556a4c0",
             "category": "correctness",
             "claim_key": "lock-version",
             "evidence": {"kind": "git_blob", "line": 1, "locator": "lock-anchor"},
@@ -89,7 +89,7 @@
         ],
         "known_findings": [
           {
-            "anchor_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "anchor_sha256": "f05ae5b367c2eccba101e6bda35be2f3ff403c48e0a0c8529b925b66b80456c5",
             "category": "security",
             "claim_key": "authorization-result",
             "evidence": {"kind": "git_blob", "line": 2, "locator": "authorization-anchor"},
@@ -103,7 +103,7 @@
   "expected": {
     "mode": "resolve",
     "reason_codes": ["trusted_predecessor", "ancestor_append", "known_finding_delta"],
-    "required_capabilities": ["correctness", "test-coverage"],
+    "required_capabilities": ["code_correctness", "test-coverage"],
     "event_ceiling": "APPROVE"
   }
 }

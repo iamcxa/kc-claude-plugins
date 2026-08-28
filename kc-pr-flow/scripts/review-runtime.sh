@@ -749,14 +749,9 @@ sys.stdout.write(unicodedata.normalize("NFC", value))
 # normalization, JCS encoding, claim-key synthesis, null anchoring, and finding
 # hashing in one operation avoids multiplying interpreter startup cost while
 # preserving one authority for producer and validator call sites.
-review_runtime_identity_projection() {
-  local repository='' review_key=''
-  if [ "$#" -eq 2 ]; then
-    repository="$1"
-    review_key="$2"
-  elif [ "$#" -ne 0 ]; then
-    return 2
-  fi
+review_runtime_identity_projection_core() {
+  local repository="$1" review_key="$2" resolved_anchor="$3"
+  [ "$#" -eq 3 ] || return 2
   review_runtime_require_python || return
   python3 -c '
 import hashlib
@@ -848,7 +843,14 @@ try:
             evidence_identity["content_sha256"],
         ])
     else:
-        anchor_sha256 = subject.get("anchor_sha256")
+        supplied_anchor = subject.get("anchor_sha256")
+        resolved_anchor = sys.argv[3]
+        if resolved_anchor == "__unverified__":
+            anchor_sha256 = supplied_anchor
+        else:
+            anchor_sha256 = resolved_anchor
+            if supplied_anchor is not None and supplied_anchor != anchor_sha256:
+                raise ValueError("anchor mismatch")
         if not isinstance(anchor_sha256, str) or re.fullmatch(r"[0-9a-f]{64}", anchor_sha256) is None:
             raise ValueError("invalid anchor")
     canonical_subject = dict(subject)
@@ -879,7 +881,72 @@ try:
     }))
 except (KeyError, ValueError, TypeError, json.JSONDecodeError, UnicodeError):
     raise SystemExit(3)
-' "$repository" "$review_key"
+' "$repository" "$review_key" "$resolved_anchor"
+}
+
+# Identity-bearing producers and trust boundaries use this authority. A
+# non-null line is never caller-authoritative: its anchor is read from the raw
+# Git blob named by the closed evidence pointer and any supplied value must
+# match. Null anchors remain repository-independent canonical hashes.
+review_runtime_identity_projection() {
+  local repository='' review_key='' repository_path='' subject line resolved_anchor=''
+  if [ "$#" -eq 2 ] || [ "$#" -eq 3 ]; then
+    repository="$1"
+    review_key="$2"
+    [ "$#" -eq 2 ] || repository_path="$3"
+  elif [ "$#" -ne 0 ]; then
+    return 2
+  fi
+  subject="$(cat)" || return
+  line="$(printf '%s' "$subject" | jq -r '.evidence.line // "null"' 2>/dev/null)" || return 3
+  if [ "$line" != 'null' ]; then
+    [ -n "$repository_path" ] || return 3
+    resolved_anchor="$(printf '%s' "$subject" | jq -c '.evidence' |
+      review_runtime_git_blob_line_anchor_sha256 "$repository_path" - "$repository")" || return 3
+  fi
+  printf '%s' "$subject" |
+    review_runtime_identity_projection_core "$repository" "$review_key" "$resolved_anchor"
+}
+
+# Durable event validation can prove canonical self-consistency without access
+# to a checkout, but it grants no evidence trust. Every producer or consumer
+# that can publish or act on a finding re-runs the verified authority above.
+review_runtime_identity_projection_unverified() {
+  local repository='' review_key=''
+  if [ "$#" -eq 2 ]; then
+    repository="$1"
+    review_key="$2"
+  elif [ "$#" -ne 0 ]; then
+    return 2
+  fi
+  review_runtime_identity_projection_core "$repository" "$review_key" '__unverified__'
+}
+
+review_runtime_projection_identities_verified() {
+  local projection="$1" repository_path="$2"
+  local repository review_key subject_count index subject identity_projection expected_finding actual_finding
+  [ "$#" -eq 2 ] || return 2
+  repository="$(printf '%s' "$projection" | jq -r '.run.repository')" || return
+  review_key="$(printf '%s' "$projection" | jq -r '.run.review_key')" || return
+  subject_count="$(printf '%s' "$projection" | jq '[.candidates[],.findings[]] | length')" || return
+  index=0
+  while [ "$index" -lt "$subject_count" ]; do
+    subject="$(printf '%s' "$projection" | jq -c --argjson index "$index" \
+      '[.candidates[],.findings[]][$index]')" || return
+    identity_projection="$(printf '%s' "$subject" |
+      review_runtime_identity_projection "$repository" "$review_key" "$repository_path")" || return 3
+    jq -e -n --argjson actual "$subject" --argjson projected "$identity_projection" '
+      $projected.subject as $canonical |
+      [$actual.path,$actual.side,$actual.anchor_sha256,$actual.category,$actual.claim_key,$actual.evidence] ==
+      [$canonical.path,$canonical.side,$canonical.anchor_sha256,$canonical.category,$canonical.claim_key,$canonical.evidence]
+    ' >/dev/null 2>&1 || return 3
+    actual_finding="$(printf '%s' "$subject" | jq -r '.finding_id // empty')" || return
+    if [ -n "$actual_finding" ]; then
+      expected_finding="$(printf '%s' "$identity_projection" | jq -r '.finding_id')" || return
+      [ "$actual_finding" = "$expected_finding" ] || return 3
+    fi
+    index=$((index + 1))
+  done
 }
 
 review_runtime_exact_evidence_identity() {
@@ -922,8 +989,12 @@ review_runtime_null_anchor_sha256() {
 }
 
 review_runtime_canonical_identity_subject() {
-  [ "$#" -eq 1 ] || return 2
-  printf '%s' "$1" | review_runtime_identity_projection | jq -c '.subject'
+  [ "$#" -eq 1 ] || [ "$#" -eq 2 ] || return 2
+  if [ "$#" -eq 2 ]; then
+    printf '%s' "$1" | review_runtime_identity_projection '' '' "$2" | jq -c '.subject'
+  else
+    printf '%s' "$1" | review_runtime_identity_projection | jq -c '.subject'
+  fi
 }
 
 review_runtime_blob_line_anchor_sha256() {
@@ -948,13 +1019,77 @@ sys.stdout.write(hashlib.sha256(value).hexdigest())
 ' "$blob_file" "$line"
 }
 
+review_runtime_git_source_run() {
+  local repository_source="$1"
+  shift
+  if [ -d "$repository_source" ] && [ ! -L "$repository_source" ]; then
+    GIT_NO_LAZY_FETCH=1 GIT_NO_REPLACE_OBJECTS=1 GIT_OPTIONAL_LOCKS=0 GIT_TERMINAL_PROMPT=0 \
+      git -C "$repository_source" --no-replace-objects "$@"
+  elif declare -F review_runtime_bound_git >/dev/null 2>&1; then
+    review_runtime_bound_git "$repository_source" "$@"
+  else
+    return 3
+  fi
+}
+
+review_runtime_git_blob_line_anchor_sha256() (
+  local repository_path="$1" pointer_source="$2"
+  local snapshot_dir='' pointer_file='' blob_file='' pointer repository_identity
+  local object_sha path line expected_content actual_content object_type pointer_repository
+  local expected_repository="${3-}" filesystem_source=false
+  [ "$#" -eq 2 ] || [ "$#" -eq 3 ] || return 2
+  review_runtime_require_python || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  pointer_file="$snapshot_dir/pointer.json"
+  blob_file="$snapshot_dir/blob"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$pointer_file" "$blob_file"' EXIT
+  if [ "$pointer_source" = '-' ]; then
+    review_runtime_snapshot_stdin "$pointer_file" 'evidence pointer' 1048576 || return
+  elif [ -f "$pointer_source" ] && [ ! -L "$pointer_source" ]; then
+    review_runtime_snapshot_regular_file "$pointer_source" "$pointer_file" 'evidence pointer' 1048576 || return
+  else
+    [ "${#pointer_source}" -le 1048576 ] || return 3
+    printf '%s' "$pointer_source" >"$pointer_file" || return
+    chmod 0600 "$pointer_file" || return
+  fi
+  pointer="$(cat "$pointer_file")" || return
+  review_runtime_json_has_unique_members "$pointer" >/dev/null 2>&1 || return 3
+  review_runtime_evidence_pointer_valid "$pointer" || return 3
+  [ "$(printf '%s' "$pointer" | jq -r '.kind')" = 'git_blob' ] || return 3
+  line="$(printf '%s' "$pointer" | jq -r '.line')" || return
+  [ "$line" != 'null' ] && [[ "$line" =~ ^[1-9][0-9]*$ ]] || return 3
+  pointer_repository="$(printf '%s' "$pointer" | jq -r '.repository')" || return
+  if [ -n "$expected_repository" ] && [ "$pointer_repository" != "$expected_repository" ]; then
+    return 3
+  fi
+  if [ -d "$repository_path" ] && [ ! -L "$repository_path" ]; then
+    filesystem_source=true
+  elif [ -z "$expected_repository" ] || ! declare -F review_runtime_bound_git >/dev/null 2>&1; then
+    return 3
+  fi
+  review_runtime_git_source_run "$repository_path" rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 3
+  if [ "$filesystem_source" = true ]; then
+    repository_identity="$(review_runtime_github_repository_identity "$repository_path")" || return 3
+    [ "$repository_identity" = "$pointer_repository" ] || return 3
+  fi
+  object_sha="$(printf '%s' "$pointer" | jq -r '.object_sha')" || return
+  path="$(printf '%s' "$pointer" | jq -r '.path')" || return
+  expected_content="$(printf '%s' "$pointer" | jq -r '.content_sha256')" || return
+  object_type="$(review_runtime_git_source_run "$repository_path" cat-file -t "$object_sha:$path" 2>/dev/null)" || return 3
+  [ "$object_type" = 'blob' ] || return 3
+  review_runtime_git_source_run "$repository_path" show "$object_sha:$path" >"$blob_file" 2>/dev/null || return 3
+  actual_content="$(review_runtime_sha256 <"$blob_file")" || return
+  [ "$actual_content" = "$expected_content" ] || return 3
+  review_runtime_blob_line_anchor_sha256 "$blob_file" "$line"
+)
+
 review_runtime_finding_id() {
-  [ "$#" -eq 7 ] || return 2
+  [ "$#" -eq 7 ] || [ "$#" -eq 8 ] || return 2
   jq -c -n \
     --arg path "$3" --arg side "$4" --argjson evidence "$5" \
     --arg anchor_sha256 "$6" --arg category "$7" '
     {path:$path,side:$side,evidence:$evidence,anchor_sha256:$anchor_sha256,category:$category}
-  ' | review_runtime_identity_projection "$1" "$2" | jq -r '.finding_id'
+  ' | review_runtime_identity_projection "$1" "$2" "${8:-}" | jq -r '.finding_id'
 }
 
 review_runtime_boolean_valid() {
@@ -1509,7 +1644,7 @@ review_runtime_validate_t2_identity() {
       fi
       path="$(printf '%s' "$line" | jq -r '.payload.candidate.path')" || return
       identity_projection="$(printf '%s' "$line" | jq -c '.payload.candidate' |
-        review_runtime_identity_projection)" || return
+        review_runtime_identity_projection_unverified)" || return
       canonical_subject="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
       canonical_path="$(printf '%s' "$canonical_subject" | jq -r '.path')" || return
       if [ "$path" != "$canonical_path" ]; then
@@ -1559,7 +1694,7 @@ review_runtime_validate_t2_identity() {
         fi
         path="$(printf '%s' "$finding" | jq -r '.path')" || return
         identity_projection="$(printf '%s' "$finding" |
-          review_runtime_identity_projection \
+          review_runtime_identity_projection_unverified \
             "$(printf '%s' "$line" | jq -r '.repository')" \
             "$(printf '%s' "$line" | jq -r '.review_key')")" || return
         canonical_subject="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
@@ -2773,6 +2908,10 @@ review_runtime_rehydrate_interactive() (
     review_runtime_interactive_invalid invalid_receipt
     return 3
   }
+  if ! review_runtime_projection_identities_verified "$projection" "$repository_path"; then
+    review_runtime_interactive_invalid evidence_verification_failed
+    return 3
+  fi
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   policy_snapshot="$snapshot_dir/capability-policy.json"
   pointer_file="$snapshot_dir/evidence-pointer.json"
@@ -3271,8 +3410,9 @@ review_runtime_shadow_status() {
 # the same exact-head validator used by event validation and verify-evidence.
 review_runtime_shadow_observation_valid() {
   local observation_file="$1"
+  local repository_path="${2:-}"
   local observation duplicate_rc repository pr_number base_sha head_sha config_hash
-  local review_key identity_event pointer_count pointer_index pointer
+  local review_key identity_event pointer_count pointer_index pointer subject_count subject_index subject
 
   observation="$(cat "$observation_file")" || return 1
   review_runtime_json_has_unique_members "$observation"
@@ -3377,6 +3517,17 @@ review_runtime_shadow_observation_valid() {
     review_runtime_evidence_pointer_matches_event "$pointer" "$identity_event" || return 1
     pointer_index=$((pointer_index + 1))
   done
+  if [ -n "$repository_path" ]; then
+    subject_count="$(jq '[.lanes[].candidates[],.synthesis.findings[]] | length' "$observation_file")" || return
+    subject_index=0
+    while [ "$subject_index" -lt "$subject_count" ]; do
+      subject="$(jq -c --argjson index "$subject_index" \
+        '[.lanes[].candidates[],.synthesis.findings[]][$index]' "$observation_file")" || return
+      printf '%s' "$subject" |
+        review_runtime_identity_projection '' '' "$repository_path" >/dev/null || return 1
+      subject_index=$((subject_index + 1))
+    done
+  fi
 }
 
 # Convert one validated projection into a complete append-only event lifecycle.
@@ -3385,6 +3536,7 @@ review_runtime_shadow_observation_valid() {
 review_runtime_collect_shadow_observation() (
   local observation_file="$1"
   local live_head="$2"
+  local repository_path="$3"
   local snapshot_dir='' observation_snapshot='' pending_events='' candidate_refs=''
   local repository pr_number base_sha head_sha config_hash occurred_at review_key
   local start_event run_id state_root repo_key event_file sequence=1 event payload
@@ -3412,7 +3564,7 @@ review_runtime_collect_shadow_observation() (
     review_runtime_shadow_status not_observed invalid_observation
     return 0
   fi
-  if ! review_runtime_shadow_observation_valid "$observation_snapshot"; then
+  if ! review_runtime_shadow_observation_valid "$observation_snapshot" "$repository_path"; then
     review_runtime_shadow_status not_observed invalid_observation
     return 0
   fi
@@ -3467,7 +3619,7 @@ review_runtime_collect_shadow_observation() (
     candidate_index=0
     while [ "$candidate_index" -lt "$candidate_count" ]; do
       candidate="$(printf '%s' "$lane" | jq -c --argjson index "$candidate_index" '.candidates[$index]')" || return
-      candidate="$(review_runtime_canonical_identity_subject "$candidate")" || return
+      candidate="$(review_runtime_canonical_identity_subject "$candidate" "$repository_path")" || return
       ordinal="$(printf '%s' "$candidate" | jq -r '.ordinal')" || return
       evidence_hash="$(printf '%s' "$candidate" | jq -r '.evidence.content_sha256')" || return
       candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
@@ -3502,7 +3654,7 @@ review_runtime_collect_shadow_observation() (
   while [ "$finding_index" -lt "$finding_count" ]; do
     finding="$(jq -c --argjson index "$finding_index" '.synthesis.findings[$index]' "$observation_snapshot")" || return
     identity_projection="$(printf '%s' "$finding" |
-      review_runtime_identity_projection "$repository" "$review_key")" || return
+      review_runtime_identity_projection "$repository" "$review_key" "$repository_path")" || return
     finding="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
     candidate_id_list='[]'
     candidate_ref_count="$(printf '%s' "$finding" | jq '.candidate_refs | length')" || return
@@ -3590,6 +3742,7 @@ review_runtime_shadow() (
   local head_check_status="${2:-}"
   local live_head="${3:-}"
   local observation_file="${4:-}"
+  local repository_path="${5:-}"
   if [ "$enabled" != 'on' ]; then
     review_runtime_shadow_status disabled shadow_disabled
     return 0
@@ -3602,7 +3755,7 @@ review_runtime_shadow() (
     review_runtime_shadow_status not_observed missing_observation
     return 0
   fi
-  review_runtime_collect_shadow_observation "$observation_file" "$live_head"
+  review_runtime_collect_shadow_observation "$observation_file" "$live_head" "$repository_path"
 )
 
 review_runtime_main_event_file() {
@@ -3755,11 +3908,11 @@ review_runtime_main_decide_merge_readiness() {
 
 review_runtime_main_shadow() {
   local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
-  local head_check_status='' live_head='' observation_file=''
+  local head_check_status='' live_head='' observation_file='' repository_path=''
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --enabled | --head-check-status | --live-head | --observation-file)
+      --enabled | --head-check-status | --live-head | --observation-file | --repo-worktree)
         [ "$#" -ge 2 ] || {
           printf 'review-runtime: missing value for %s\n' "$1" >&2
           return 2
@@ -3769,6 +3922,7 @@ review_runtime_main_shadow() {
           --head-check-status) head_check_status="$2" ;;
           --live-head) live_head="$2" ;;
           --observation-file) observation_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
         esac
         shift 2
         ;;
@@ -3780,8 +3934,8 @@ review_runtime_main_shadow() {
   done
 
   if [ "$enabled" = 'on' ]; then
-    if [ -z "$head_check_status" ] || [ -z "$observation_file" ]; then
-      printf 'review-runtime: enabled shadow requires head status and one observation file\n' >&2
+    if [ -z "$head_check_status" ] || [ -z "$observation_file" ] || [ -z "$repository_path" ]; then
+      printf 'review-runtime: enabled shadow requires head status, one observation file, and a worktree\n' >&2
       return 2
     fi
     if [ "$head_check_status" = 'ok' ] && [ -z "$live_head" ]; then
@@ -3790,7 +3944,7 @@ review_runtime_main_shadow() {
     fi
   fi
 
-  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" "$observation_file"
+  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" "$observation_file" "$repository_path"
 }
 
 review_runtime_main_config_hash() {

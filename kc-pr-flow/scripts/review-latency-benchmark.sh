@@ -62,15 +62,15 @@ review_latency_expected_structural_bindings() {
   # Pinned structural fields, not whole rows, so ordered gate mutations still
   # reach their owning gate. These are not observed review provenance.
   case "$1" in
-    known-fix-only) printf '%s\n' '{"control_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9","expected_sha256":"801bc7562f6b772cb0ab9bb4d912bf8c379d96f695dfaeb3cce63e8fc4b1cb35","posted_source_sha256":"dcb99a3d749716770fd4207bbc577f1d050f14368dd78ae8c9739b8564b5c4db","predecessor_projection_sha256":"85dad443cb2093841c3f4616cc08efd6b8f742520941ff3b3c980fc9465398f7","review_key":"16a4a31ab16aae7b2b5f7b830ab3aeb602860df5fba4e465019f9d8b40156631","treatment_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9"}' ;;
-    fix-plus-test) printf '%s\n' '{"control_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3","expected_sha256":"9cb6fb9fe0068d9e0b326016159545db089849d07da238653dfc5fd30a04a0a3","posted_source_sha256":"39893d457c47cced18ecf22ac6fad39ec50f7366d4e35e0c3de32ee9d6d0782e","predecessor_projection_sha256":"bc1ab61daa93ee311344c6ece9eb4345c2b939455fe38467d09b8980251c7bbb","review_key":"eccb52f192042d4931778c1ee97a0964ae9a54ad36050b2ab7594eb79dd7c57a","treatment_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3"}' ;;
-    unrelated-new-path) printf '%s\n' '{"control_effective_sha256":"f7f0df5d8e4cb8264cade66fbb31ae8158006fbce238469450635bdb7cdefe62","expected_sha256":"280e8ef17934a4dd2025b13ac5772a0a284005005532d085e15a5fbca1585f73","posted_source_sha256":"586b4dea1ac1b60db04512c64f7d211a44695070721efc7a17c139dab31de69d","predecessor_projection_sha256":"500cd18d7bdc89a659a9cd4f24d54137e483b19924ecb5492dd00148ec5ac950","review_key":"85efefd21cbba5fa7932b5726da66d0306e0cb66a41f24e3cac915e981081d76","treatment_effective_sha256":"f7f0df5d8e4cb8264cade66fbb31ae8158006fbce238469450635bdb7cdefe62"}' ;;
-    force-push) printf '%s\n' '{"control_effective_sha256":"d02dd6eb5207d201ef8862d0f508c1cb185610c8d8557e37069e0c7f61933106","expected_sha256":"663c4e741d28836f0562075ae35ae55446afca74a9439c9c246447af2d8a057c","posted_source_sha256":"c4cfe585289ae4083b59c10d2d7521ccd65c4ae12bf84dab8f3b620da636ef8b","predecessor_projection_sha256":null,"review_key":"98bb2f0c3be75c3f013d8edfef2da812bd94aa08df371046335f658e930e20d9","treatment_effective_sha256":"d02dd6eb5207d201ef8862d0f508c1cb185610c8d8557e37069e0c7f61933106"}' ;;
-    corrupt-receipt) printf '%s\n' '{"control_effective_sha256":"c43585e2b51db034b4520f41f0524a910f1c4efa01a5ecd4344695b22449a3db","expected_sha256":"1f1ce54286fd229e0654513d56900b67447dac17d06bf724af133995f2ffd064","posted_source_sha256":"b8b84b4c3fc44f445f20f6715aebf0d29b1968afbb23511eb6c3fb484dc8ba25","predecessor_projection_sha256":null,"review_key":"2a1dc582318e9766475b93d2f5cabe382823dfcb139377f08bbe802a92a0e5d8","treatment_effective_sha256":"c43585e2b51db034b4520f41f0524a910f1c4efa01a5ecd4344695b22449a3db"}' ;;
-    security-finding) printf '%s\n' '{"control_effective_sha256":"7a1f6472bce4dce518a453a2cb18b3ce86eec1eba3f40a2030f1672626a0921e","expected_sha256":"402ff73039047c52e23c8adba453ae0e8095d8b94f2692c120d02da7ff40bc04","posted_source_sha256":"9f0486e6051a6dc2a8eed96c5dbe5559b332d5da2b638a205ae3e995f97553e3","predecessor_projection_sha256":"0ad342d36b42402079e9206752e4345c97a64af11eb71a0e0ce1ce6730480028","review_key":"5a92e8dbace8db1d04e2d9b719259fdfc7060fcc8ebf8ab9272316eb2a75af73","treatment_effective_sha256":"7a1f6472bce4dce518a453a2cb18b3ce86eec1eba3f40a2030f1672626a0921e"}' ;;
-    unavailable-required-lane) printf '%s\n' '{"control_effective_sha256":"a565c7818a596ab6572b0bdb8df46377a4b2508201055c1b7c65a2130950c380","expected_sha256":"0ffa74c76bd44b1e0659f10093ea771b422b2037a4252d28c23d16fa1d4eba65","posted_source_sha256":"ce9d05c1fb6a4f10e6fa21be9f338c13ae6baf657d27768d4854fc874b7b5258","predecessor_projection_sha256":"d73cd77039a6f003f04d3a8f4e61335578af36593aa7bea283533204a6f16674","review_key":"0f560cc11827b35e5a5c36f0753c962b414870892b6e62dd590f1dcfedfd31f4","treatment_effective_sha256":"a565c7818a596ab6572b0bdb8df46377a4b2508201055c1b7c65a2130950c380"}' ;;
-    cross-layer-no-dispute) printf '%s\n' '{"control_effective_sha256":"a137ea9c4df7945eb08a8a8698ce3123f473e1835ce13aefbb2ec5ab1b54f718","expected_sha256":"02e8a00bb9208bbc9a27dc8891f5e7dee549ae731284f4e20b55805cf87db9be","posted_source_sha256":"fe8dcf43cf7dc03f57b3ef43c4ef9d3d1b5ab157bc2c916392c570fcb7c6dfd6","predecessor_projection_sha256":"88d76958f1e9224a77c4d9c226107fd763c5e12eaa3417ff086962c467e911f2","review_key":"debdffa76c6d088748931a2c006d316b429e49c1aeb5467aa77d647c1763dd11","treatment_effective_sha256":"a137ea9c4df7945eb08a8a8698ce3123f473e1835ce13aefbb2ec5ab1b54f718"}' ;;
-    new-material-dispute) printf '%s\n' '{"control_effective_sha256":"cb89e297f7efbd9fc1dc5d81f66235d47861653b65b2a15123764ad62567af31","expected_sha256":"1e8b5e2e94823ad7346775518bf3babefbf9eedb0343b7c7998ef2f7581bec0d","posted_source_sha256":"52d9a16e4f770e28d8a29a822d4f578fe656f77acc182613951951b32ca6345f","predecessor_projection_sha256":"086485544ee7a0149d8f1d89ee8216dcbdce5e106e490233ca84d2ee72d6daab","review_key":"b2f94ca3497d6bb2ec669864a86629b4b132f0404d77bad2240919918fe5afb8","treatment_effective_sha256":"cb89e297f7efbd9fc1dc5d81f66235d47861653b65b2a15123764ad62567af31"}' ;;
+    known-fix-only) printf '%s\n' '{"control_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9","expected_sha256":"3bb861a3e5f5110af6fd59ebcd8aa44a0f6895c5522047de641a574e2c68b9b0","posted_source_sha256":"bf3bc46517631d75bc3102c997a1b2d7e0842e0aac08906f823f76edcca1c095","predecessor_projection_sha256":"18eba9e3dc74796d6e4b18ba9856d0fa32812735c9cdd871f55edfd92eed60e6","review_key":"16a4a31ab16aae7b2b5f7b830ab3aeb602860df5fba4e465019f9d8b40156631","treatment_effective_sha256":"8137bbfb7ebff44922756b5b8423647c064e5739872159186c5e02cbbba476b9"}' ;;
+    fix-plus-test) printf '%s\n' '{"control_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3","expected_sha256":"bf92bdf639f0b1cf7be24b2d9cd108a45e8a2d53c47c549b68dfd9894bd148e9","posted_source_sha256":"c82e51e0610de272c0fa2645c4b593aa244c79b9ac20d3ccdd4ec964d291b32f","predecessor_projection_sha256":"728049fcdda578b30ff8383f0a46acaa64836e3a4f13efff8db1d09dd37cef76","review_key":"eccb52f192042d4931778c1ee97a0964ae9a54ad36050b2ab7594eb79dd7c57a","treatment_effective_sha256":"7e0bc2524c296e85969765c06a725a82c33b30e4874a738026f1d76e7e9b09e3"}' ;;
+    unrelated-new-path) printf '%s\n' '{"control_effective_sha256":"f7f0df5d8e4cb8264cade66fbb31ae8158006fbce238469450635bdb7cdefe62","expected_sha256":"400d9b72f27c864c62ca93388e713b74ba7c2bda614710a34d92cbaa0e4a68b5","posted_source_sha256":"bdafc04fd0d2dca9dd6c7019cdddb7f14600cbd4fa7fc467821fcdc9800ec071","predecessor_projection_sha256":"f348cf2f0bc57a4ecc0004bdca1a9e0991a89c5a73b4be455fac0991af0df284","review_key":"85efefd21cbba5fa7932b5726da66d0306e0cb66a41f24e3cac915e981081d76","treatment_effective_sha256":"f7f0df5d8e4cb8264cade66fbb31ae8158006fbce238469450635bdb7cdefe62"}' ;;
+    force-push) printf '%s\n' '{"control_effective_sha256":"d02dd6eb5207d201ef8862d0f508c1cb185610c8d8557e37069e0c7f61933106","expected_sha256":"1cbdc91f3795c25ea10ed2744b0c64e17e709fd0df8336f36b954739d8b2fea3","posted_source_sha256":"aaa58b36d004df326857808b923a9d8182a96d42af237616aef639802e7785d6","predecessor_projection_sha256":null,"review_key":"98bb2f0c3be75c3f013d8edfef2da812bd94aa08df371046335f658e930e20d9","treatment_effective_sha256":"d02dd6eb5207d201ef8862d0f508c1cb185610c8d8557e37069e0c7f61933106"}' ;;
+    corrupt-receipt) printf '%s\n' '{"control_effective_sha256":"c43585e2b51db034b4520f41f0524a910f1c4efa01a5ecd4344695b22449a3db","expected_sha256":"254c4e84d63047aabe2a4826cce9b93a8b5af9e9f7733dafce4fb0c27f7651d6","posted_source_sha256":"818245796005ad08b3cff8bd4b07ee6cb3f07d7dca41670bf834c65b1def6cb8","predecessor_projection_sha256":null,"review_key":"2a1dc582318e9766475b93d2f5cabe382823dfcb139377f08bbe802a92a0e5d8","treatment_effective_sha256":"c43585e2b51db034b4520f41f0524a910f1c4efa01a5ecd4344695b22449a3db"}' ;;
+    security-finding) printf '%s\n' '{"control_effective_sha256":"7a1f6472bce4dce518a453a2cb18b3ce86eec1eba3f40a2030f1672626a0921e","expected_sha256":"a489f0309c6f404c1218e86d3cb2ecc6cbf17f759d936a9076db890dad894aa2","posted_source_sha256":"333c547b3c38974a4ed008155d7221820f643762642efae7045d7f95f83a3862","predecessor_projection_sha256":"484e491d8aeba9878c730a03b16fa6493679a5bd34b03bff073b4a7fc45cd324","review_key":"5a92e8dbace8db1d04e2d9b719259fdfc7060fcc8ebf8ab9272316eb2a75af73","treatment_effective_sha256":"7a1f6472bce4dce518a453a2cb18b3ce86eec1eba3f40a2030f1672626a0921e"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"control_effective_sha256":"a565c7818a596ab6572b0bdb8df46377a4b2508201055c1b7c65a2130950c380","expected_sha256":"9a20ad162b03ef04670a12ce14037577aa50f7303c3af06399629b222f3e4028","posted_source_sha256":"b47cfc2647c0a7fd626c1bfcab5b60aec4f26c14d062a2d803f631b7089facdb","predecessor_projection_sha256":"1e9122c5264588442b542f0842f89ec3b52786e712bcd6d2b31d08726ad31634","review_key":"0f560cc11827b35e5a5c36f0753c962b414870892b6e62dd590f1dcfedfd31f4","treatment_effective_sha256":"a565c7818a596ab6572b0bdb8df46377a4b2508201055c1b7c65a2130950c380"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"control_effective_sha256":"a137ea9c4df7945eb08a8a8698ce3123f473e1835ce13aefbb2ec5ab1b54f718","expected_sha256":"af83877aed32ca801644e6d124b463c206fc1736fa79b905704495fa99fe6f58","posted_source_sha256":"8149a4fa39fd0867838195f3616a7ca37af68d8cf1a31520c597fd69535bee33","predecessor_projection_sha256":"11f5c881ec58c9978c250c87607433cb80680bac7e5f81140b84cd268cd835be","review_key":"debdffa76c6d088748931a2c006d316b429e49c1aeb5467aa77d647c1763dd11","treatment_effective_sha256":"a137ea9c4df7945eb08a8a8698ce3123f473e1835ce13aefbb2ec5ab1b54f718"}' ;;
+    new-material-dispute) printf '%s\n' '{"control_effective_sha256":"cb89e297f7efbd9fc1dc5d81f66235d47861653b65b2a15123764ad62567af31","expected_sha256":"92039ba8ef3a60731aca4a49b3698c67ac68d31316a20f03af4c172e4a378bb2","posted_source_sha256":"c6d7b403a1968e520da60eff8ca6f42f39f586e442bede59308fb39691b58c96","predecessor_projection_sha256":"623c22c23bd93cb82c77baaca4e076095b7907910be21d28d19e88f84a6d3b17","review_key":"b2f94ca3497d6bb2ec669864a86629b4b132f0404d77bad2240919918fe5afb8","treatment_effective_sha256":"cb89e297f7efbd9fc1dc5d81f66235d47861653b65b2a15123764ad62567af31"}' ;;
     *) return 1 ;;
   esac
 }
@@ -79,14 +79,14 @@ review_latency_expected_structural_hashes() {
   # Pinned structural artifact hashes. Keep these out of whole-line validation
   # so timing mutations remain owned by Q6; they do not attest an actual run.
   case "$1" in
-    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"a10f4f110b5caabf27fb0835e0ffb9e576a36e60cd918e1cc8429e02a9fb25c8","timing_sha256":"1cd2d0fa871e84164ab049334406d2c292fe7bc40ab25a0b67cb88abf73c79c1"}' ;;
-    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"b1fa49e2f73c31e2aeba6d548853c2562ea78f9d1cb135e482025df9835e173b","timing_sha256":"741ef21dfbaf78f6501c92e202bd105b7dafb9ec936c96c09d4f6b9a8cd37112"}' ;;
-    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"a66613f2db8049c94c86c3717fc97eda22a890422a5d1bd08736e2e79304a4da","timing_sha256":"36522ff0ded99d7e75ec7f1f1c3609b4d6e0199a885cfd3bb3b5c8076d052b21"}' ;;
+    known-fix-only) printf '%s\n' '{"predecessor_receipt_sha256":"2739074a049d19196ce3491523e6bda42729d76f994f41c1ab59c2cf31ddd242","timing_sha256":"1cd2d0fa871e84164ab049334406d2c292fe7bc40ab25a0b67cb88abf73c79c1"}' ;;
+    fix-plus-test) printf '%s\n' '{"predecessor_receipt_sha256":"4b39d0fe7e376404e8a9be3bf54d7808dd61eceae21b6eee8e7ccaec20bceebf","timing_sha256":"741ef21dfbaf78f6501c92e202bd105b7dafb9ec936c96c09d4f6b9a8cd37112"}' ;;
+    unrelated-new-path) printf '%s\n' '{"predecessor_receipt_sha256":"69c5850eb2754cc00229df4570e64d6c2ec0fa2ec9c4538018f8182787b9f988","timing_sha256":"36522ff0ded99d7e75ec7f1f1c3609b4d6e0199a885cfd3bb3b5c8076d052b21"}' ;;
     force-push | corrupt-receipt) printf '%s\n' '{"predecessor_receipt_sha256":null,"timing_sha256":null}' ;;
-    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"50185b80f8b5506195bf99e69f63d9d6741bc64f247d2c9bc6dcfe47fc06aae0","timing_sha256":"b0a229d0bbce8e19820697a534ae3c6fdd59d6299542b36e9dcd6659c0060aaf"}' ;;
-    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"dd7bf4c933b269942ca5e77d69497fea727336d54525188d5d9d8374f07d6147","timing_sha256":"20c6490f2418a2989ac923aef158b7e615038a096670d2fe747ddf9fda212a39"}' ;;
-    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"43cad162d8067d9e4a349f66648ca6f3f69b3991c5959c3e2885aeeb95f2fe15","timing_sha256":"34989c8612e9a0e20de4c88049af7373d9029461cc4ae22db75919d657acefeb"}' ;;
-    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"7f3a540ab8f0348a994bb8f83847282f8931b5b200c60965df924fbf3feb0ccb","timing_sha256":"12046d74c3006c370a87e972b70c183e99bee1632ab9b27e38c3b1a5952d0d7b"}' ;;
+    security-finding) printf '%s\n' '{"predecessor_receipt_sha256":"4fa80a2b9dde7d7bd99def44fc134a7f846b74026a034ec91f62188cd44a652e","timing_sha256":"b0a229d0bbce8e19820697a534ae3c6fdd59d6299542b36e9dcd6659c0060aaf"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"predecessor_receipt_sha256":"e8662bae14ad74deb06fd9f805334bc05b201613d2f855c7093b3a9af13ae7ce","timing_sha256":"20c6490f2418a2989ac923aef158b7e615038a096670d2fe747ddf9fda212a39"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"4deecff86f76706bddfbc9bbb15fe08c8d1f4e11b93557e54f94793b668ee5ff","timing_sha256":"34989c8612e9a0e20de4c88049af7373d9029461cc4ae22db75919d657acefeb"}' ;;
+    new-material-dispute) printf '%s\n' '{"predecessor_receipt_sha256":"6611ba6b2e2f055cd14340ebe119038324db5980d388b9f7022ee9ad54f6f16a","timing_sha256":"12046d74c3006c370a87e972b70c183e99bee1632ab9b27e38c3b1a5952d0d7b"}' ;;
     *) return 1 ;;
   esac
 }
@@ -95,15 +95,15 @@ review_latency_expected_control_bindings() {
   # The control arm has no validated-finding objects, so bind its canonical
   # finding set and adjudication counters independently of caller-supplied data.
   case "$1" in
-    known-fix-only) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"c6cb87947fd87d24c6b79a60683cc423253a9536a724a13a3af2e7d06f8c65be"}' ;;
-    fix-plus-test) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"ee44b0b230d202a061af49533908b76731f21d27899c105b841849b77be4472b"}' ;;
-    unrelated-new-path) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"d4cd563b365675c45eb02e3db8066d269643093f2884b3f82e20e9487c3b3439"}' ;;
-    force-push) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"59bbab21ba9f6fab054dbe75cb24b0ed6bf4cc003df974e47359d7eb208938b2"}' ;;
-    corrupt-receipt) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"e79e1f4d0639a95afde4c71929046d4cebc0d68fb97fe318c82f93ff62976832"}' ;;
-    security-finding) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"3407ff83d543008f88c1096135a9959db393b37bc5d61afe20ac28f2841661f2"}' ;;
-    unavailable-required-lane) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"abc018aabe8a8d609971274a407d4a5319d51f1ecc06cc94660fee36c1046356"}' ;;
-    cross-layer-no-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"c790b6a519916608ae8c635d195d3bdd42a2f40675cd7b887c17126fdb631ef7"}' ;;
-    new-material-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"506adcae2a93a164447e8b4f29a2075f39de322b504af4274a5226f3057c2903"}' ;;
+    known-fix-only) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"74fab45ccae762719249b784965ecbc05d0a2008bdedb50b9c39dc2a88d18625"}' ;;
+    fix-plus-test) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"a775e4121cbed4fd62b94293ef533d649a079599a09716ce7b10fb4a1db88b3e"}' ;;
+    unrelated-new-path) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"7bf7c36c0ec1c7ba27f4e1706bf6b14f9bb659f33c681630f76c7e7c9d172426"}' ;;
+    force-push) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"540c1b4a0d10c200c0bfa46959755aa86099f40bcc7c427c4246fa40f025a2ed"}' ;;
+    corrupt-receipt) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"e79083289fba40c03428b97437e54fdab4379e01aabb8b329adca5a6c8453286"}' ;;
+    security-finding) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"8a31da689131b1a3d2700daaa7d3b929f5f38fac0a35ce37d1caaaceb3410ff0"}' ;;
+    unavailable-required-lane) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"4fc28527ef48b372d7e08d161078956edb8f0532a5f9941c96b4173cc22486b5"}' ;;
+    cross-layer-no-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"5172140e899958cb3760ecabca70f216143c551702f60e61b79e13d5e5800242"}' ;;
+    new-material-dispute) printf '%s\n' '{"adjudicated_false_positive":0,"adjudicated_posted":1,"finding_ids_sha256":"48676fc1459ddffddcfcc79530ccf50e4fd8210c12cb3504c578b5f784ff771f"}' ;;
     *) return 1 ;;
   esac
 }
@@ -190,6 +190,8 @@ review_latency_validate_pair() {
     def positive_int: safe_int and . > 0;
     def hashes: type == "array" and all(.[]; sha256) and . == (sort | unique);
     def tokens: type == "array" and all(.[]; token) and . == (sort | unique);
+    def capabilities:
+      type == "array" and all(.[]; token and . != "correctness") and . == (sort | unique);
     def event: . == "APPROVE" or . == "COMMENT" or . == "REQUEST_CHANGES";
     def identity:
       exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key"]) and
@@ -208,7 +210,7 @@ review_latency_validate_pair() {
       (.review_range | exact_keys(["from_exclusive","to_inclusive"])) and
       (.review_range.from_exclusive == null or (.review_range.from_exclusive | sha1)) and
       (.review_range.to_inclusive | sha1) and
-      (.inherited_finding_ids | hashes) and (.required_capabilities | tokens) and
+      (.inherited_finding_ids | hashes) and (.required_capabilities | capabilities) and
       (.event_ceiling == null or .event_ceiling == "APPROVE" or .event_ceiling == "COMMENT") and
       (.fallback | fallback) and
       (if .mode == "initial" then
@@ -242,7 +244,8 @@ review_latency_validate_pair() {
         (.payload.head_sha | sha1) and (.payload.review_key | sha256));
     def behavior_sources: exact_keys(["effective","posted"]) and
       (.effective | effective_source) and (.posted | posted_source);
-    def coverage_entry: exact_keys(["capability","gap_ref","status"]) and (.capability | token) and
+    def coverage_entry: exact_keys(["capability","gap_ref","status"]) and
+      (.capability | token and . != "correctness") and
       (if .status == "complete" then .gap_ref == null elif .status == "gap" then (.gap_ref | token) else false end);
     def effective_evidence:
       no_extra_keys(["coverage_gap_refs","event","review_key","schema","source_sha256"]) and
@@ -268,12 +271,12 @@ review_latency_validate_pair() {
        (.projection.base_sha | sha1) and (.projection.head_sha | sha1) and
        (.projection.config_hash | sha256) and (.projection.review_key | sha256) and
        (.projection.run_id | run_token) and (.projection.finding_ids | hashes) and
-       (.projection.required_capabilities | tokens) and
+       (.projection.required_capabilities | capabilities) and
        (.receipt | exact_keys(["content_sha256","coverage_gap_refs","known_findings","predecessor",
          "required_capabilities","schema"])) and
-       .receipt.schema == "kc-pr-flow.review-delta-receipt/v1" and (.receipt.content_sha256 | sha256) and
+       .receipt.schema == "kc-pr-flow.review-latency-receipt/v1" and (.receipt.content_sha256 | sha256) and
        (.receipt.coverage_gap_refs | tokens) and (.receipt.known_findings | type == "array" and all(.[]; receipt_finding)) and
-       (.receipt.required_capabilities | tokens) and
+       (.receipt.required_capabilities | capabilities) and
        (.receipt.predecessor | exact_keys(["base_sha","config_hash","head_sha","pr_number","receipt_id",
          "repository","review_key","run_id"])) and
        (.receipt.predecessor.repository | repository) and (.receipt.predecessor.pr_number | positive_int) and
@@ -285,13 +288,13 @@ review_latency_validate_pair() {
        (.ancestry.current_head_sha | sha1) and (.ancestry.predecessor_head_sha | sha1) and
        .ancestry.relationship == "ancestor_append" and (.ancestry.source_sha256 | sha256));
     def evidence_pointer: exact_keys(["anchor_sha256","content_sha256","head_sha","path","review_key","schema","side"]) and
-      .schema == "kc-pr-flow.evidence-pointer/v1" and (.anchor_sha256 | sha256) and
+      .schema == "kc-pr-flow.review-latency-evidence-pointer/v1" and (.anchor_sha256 | sha256) and
       (.content_sha256 | type == "string") and (.head_sha | sha1) and (.path | safe_path) and
       (.review_key | sha256) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE");
     def candidate: exact_keys(["anchor_sha256","candidate_id","capability","category","claim_key","confidence",
       "evidence","lane_id","path","review_key","schema","severity","side","summary"]) and
-      .schema == "kc-pr-flow.review-candidate/v2" and (.anchor_sha256 | sha256) and
-      (.candidate_id | type == "string") and (.capability | token) and (.category | token) and
+      .schema == "kc-pr-flow.review-latency-candidate/v1" and (.anchor_sha256 | sha256) and
+      (.candidate_id | type == "string") and (.capability | token and . != "correctness") and (.category | token) and
       (.claim_key | token) and (.confidence | safe_int and . >= 1 and . <= 10) and
       (.lane_id | token) and (.path | safe_path) and (.review_key | sha256) and
       (.severity == "LOW" or .severity == "MEDIUM" or .severity == "HIGH" or .severity == "CRITICAL") and
@@ -325,7 +328,7 @@ review_latency_validate_pair() {
     ($pair.exact_head | identity) and
     ($pair.expected | exact_keys(["maximum_event","mode","must_fix_finding_ids","required_capabilities"])) and
     ($pair.expected.mode == "initial" or $pair.expected.mode == "delta" or $pair.expected.mode == "resolve") and
-    ($pair.expected.must_fix_finding_ids | hashes) and ($pair.expected.required_capabilities | tokens) and
+    ($pair.expected.must_fix_finding_ids | hashes) and ($pair.expected.required_capabilities | capabilities) and
     ($pair.expected.maximum_event | event) and
     ($pair.control | exact_keys(["adjudicated_false_positive","adjudicated_posted","behavior_hashes",
       "behavior_sources","finding_ids"])) and ($pair.control.finding_ids | hashes) and

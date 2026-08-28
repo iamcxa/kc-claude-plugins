@@ -317,14 +317,33 @@ tree_receipt() {
 
 REPOSITORY='acme/widgets'
 PR_NUMBER='42'
-BASE_SHA='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-HEAD_SHA='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 MOVED_HEAD='dddddddddddddddddddddddddddddddddddddddd'
 CONFIG_HASH='cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+SHADOW_REPO="$TEST_ROOT/shadow-repo"
+mkdir -p "$SHADOW_REPO/src"
+git -C "$SHADOW_REPO" init -q
+git -C "$SHADOW_REPO" remote add origin 'https://github.com/acme/widgets.git'
+printf '%s\n' 'seed' >"$SHADOW_REPO/README.md"
+git -C "$SHADOW_REPO" add README.md
+GIT_AUTHOR_DATE='2026-07-20T00:00:00Z' GIT_COMMITTER_DATE='2026-07-20T00:00:00Z' \
+  git -C "$SHADOW_REPO" -c user.name='Shadow Test' -c user.email='shadow@example.invalid' \
+    commit -qm base
+BASE_SHA="$(git -C "$SHADOW_REPO" rev-parse HEAD)"
+git -C "$SHADOW_REPO" config filter.anchor.clean "sed 's/worktree/raw/'"
+git -C "$SHADOW_REPO" config filter.anchor.smudge "sed 's/raw/worktree/'"
+git -C "$SHADOW_REPO" config filter.anchor.required true
+printf '%s\n' 'src/app.sh filter=anchor -text' >"$SHADOW_REPO/.gitattributes"
+printf 'worktree anchor\r\nsecond raw line\n' >"$SHADOW_REPO/src/app.sh"
+printf '%s\n' 'uncertain evidence' >"$SHADOW_REPO/src/uncertain.sh"
+git -C "$SHADOW_REPO" add .gitattributes src/app.sh src/uncertain.sh
+GIT_AUTHOR_DATE='2026-07-21T00:00:00Z' GIT_COMMITTER_DATE='2026-07-21T00:00:00Z' \
+  git -C "$SHADOW_REPO" -c user.name='Shadow Test' -c user.email='shadow@example.invalid' \
+    commit -qm head
+HEAD_SHA="$(git -C "$SHADOW_REPO" rev-parse HEAD)"
 REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
 OCCURRED_AT='2026-07-22T00:00:00Z'
-EVIDENCE_HASH='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-UNCERTAIN_HASH='ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+EVIDENCE_HASH="$(git -C "$SHADOW_REPO" show "${HEAD_SHA}:src/app.sh" | file_sha256 /dev/stdin)"
+UNCERTAIN_HASH="$(git -C "$SHADOW_REPO" show "${HEAD_SHA}:src/uncertain.sh" | file_sha256 /dev/stdin)"
 
 # Fixed compatibility vectors and invalid-input guards remain part of the
 # shadow contract because the skill uses both executable hash authorities.
@@ -402,13 +421,18 @@ POINTER="$(jq -S -c -n \
   --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg content_sha256 "$EVIDENCE_HASH" '
   {schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:$repository,
    review_key:$review_key,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,
-   content_sha256:$content_sha256,path:"src/app.sh",side:"RIGHT",line:7,locator:null}')"
+   content_sha256:$content_sha256,path:"src/app.sh",side:"RIGHT",line:1,locator:null}')"
 UNCERTAIN_POINTER="$(jq -S -c -n \
   --arg repository "$REPOSITORY" --arg review_key "$REVIEW_KEY" \
   --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg content_sha256 "$UNCERTAIN_HASH" '
   {schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:$repository,
    review_key:$review_key,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,
    content_sha256:$content_sha256,path:"src/uncertain.sh",side:"FILE",line:null,locator:null}')"
+ANCHOR_SHA256="$(review_runtime_git_blob_line_anchor_sha256 "$SHADOW_REPO" "$POINTER")"
+assert_eq 'collector anchor comes from filtered raw Git blob bytes' "$(sha256_text 'raw anchor')" \
+  "$ANCHOR_SHA256"
+assert_eq 'collector anchor ignores different worktree filter bytes' "$(sha256_text 'worktree anchor')" \
+  "$(review_runtime_blob_line_anchor_sha256 "$SHADOW_REPO/src/app.sh" 1)"
 
 OBSERVATION="$TEST_ROOT/observation.json"
 jq -S -c -n \
@@ -421,7 +445,8 @@ jq -S -c -n \
   --arg options_sha256 "$(file_sha256 "$OPTIONS")" \
   --arg confirmation_input_sha256 "$(file_sha256 "$CONFIRMATION_INPUT")" \
   --arg github_call_log_sha256 "$(file_sha256 "$GITHUB_CALL_LOG")" \
-  --argjson evidence "$POINTER" --argjson uncertain_evidence "$UNCERTAIN_POINTER" '
+  --argjson evidence "$POINTER" --argjson uncertain_evidence "$UNCERTAIN_POINTER" \
+  --arg anchor_sha256 "$ANCHOR_SHA256" '
   {
     schema:"kc-pr-flow.shadow-observation/v1",
     identity:{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,config_hash:$config_hash,occurred_at:$occurred_at},
@@ -429,18 +454,18 @@ jq -S -c -n \
     lanes:[
       {lane_id:"correctness",capability:"code_correctness",provider_family:"claude",terminal_status:"succeeded",
        usage:{input_tokens:100,output_tokens:20,total_tokens:120,provenance:"reported",provider_family:"claude",scope:"lane"},
-       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence}]},
+       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"correctness",evidence:$evidence}]},
       {lane_id:"security",capability:"security",terminal_status:"unavailable",
        usage:{input_tokens:null,output_tokens:null,total_tokens:null,provenance:"unavailable",provider_family:null,scope:"lane"},
        candidates:[
-         {ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence},
+         {ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"correctness",evidence:$evidence},
          {ordinal:2,path:"src/uncertain.sh",side:"FILE",category:"security",evidence:$uncertain_evidence}
        ]}
     ],
     synthesis:{
       findings:[
-        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]},
-        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"security",ordinal:1}]}
+        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]},
+        {path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"security",ordinal:1}]}
       ],
       uncertain_candidate_refs:[{lane_id:"security",ordinal:2}]
     }
@@ -448,7 +473,8 @@ jq -S -c -n \
 
 run_shadow_executable() { # gate, head-status, live-head, observation, state-root
   KC_PR_FLOW_STATE_DIR="$5" bash "$RUNTIME" shadow \
-    --enabled "$1" --head-check-status "$2" --live-head "$3" --observation-file "$4"
+    --enabled "$1" --head-check-status "$2" --live-head "$3" --observation-file "$4" \
+    --repo-worktree "$SHADOW_REPO"
 }
 
 # Identity-only state is never a successful observation.
@@ -500,20 +526,20 @@ assert_eq 'collector emits only v2 finding identity' \
   'kc-pr-flow.review-finding/v2' \
   "$(jq -r 'select(.event_type == "synthesis.finished") | .payload.findings[].schema' "$on_event_file" | sort -u)"
 assert_eq 'claim key is machine-owned from category and canonical exact evidence identity' \
-  'correctness-32285a207f7bce09' "$(jq -r '.findings[0].claim_key' <<<"$replayed_on")"
+  'correctness-4a257203c303556b' "$(jq -r '.findings[0].claim_key' <<<"$replayed_on")"
 assert_eq 'finding ID is the fixed RFC 8785 identity vector' \
-  'b67226b9db3acf1045ef40d239a38e9848a4878537aadce8a6a87a8928e2c966' \
+  '62ec9e8e08a45e2fbc0e9c7fb2604a5106bb204ab6f441484da579bd0fb7939c' \
   "$(jq -r '.findings[0].finding_id' <<<"$replayed_on")"
 assert_eq 'multi-lane duplicate identities collapse to one finding' \
   '1' "$(jq -r '.findings | length' <<<"$replayed_on")"
 assert_eq 'collapsed finding preserves both candidate references' \
   '2' "$(jq -r '.findings[0].candidate_ids | length' <<<"$replayed_on")"
 direct_finding_id="$(jq -c '.synthesis.findings[1]' "$OBSERVATION" |
-  review_runtime_identity_projection "$REPOSITORY" "$REVIEW_KEY" | jq -r '.finding_id')"
+  review_runtime_identity_projection "$REPOSITORY" "$REVIEW_KEY" "$SHADOW_REPO" | jq -r '.finding_id')"
 assert_eq 'producer and validator share the finding projection authority' \
   "$direct_finding_id" "$(jq -r '.findings[0].finding_id' <<<"$replayed_on")"
 assert_eq 'null-line anchor uses the canonical null preimage' \
-  '528c61ab65097131846c8849b796c965c7ebfe7ecd37b2b792291b61b949e2e2' \
+  'df9a7ab0ec90b9f7f0464597bbc418afef4eec7b54ba619c84bab73c8fb7dd39' \
   "$(jq -r '.candidates[] | select(.evidence.line == null) | .anchor_sha256' <<<"$replayed_on")"
 assert_eq 'replay exposes the exact frozen body hash' "$(file_sha256 "$BODY")" \
   "$(jq -r '.behavior_hashes.body_sha256' <<<"$replayed_on")"
@@ -526,11 +552,11 @@ assert_legacy_unchanged 'enabled collector'
 # unavailable with null usage family; reported/estimated mismatches are closed.
 UNKNOWN_UNAVAILABLE="$TEST_ROOT/unknown-unavailable.json"
 cp "$OBSERVATION" "$UNKNOWN_UNAVAILABLE"
-review_runtime_shadow_observation_valid "$UNKNOWN_UNAVAILABLE"
+review_runtime_shadow_observation_valid "$UNKNOWN_UNAVAILABLE" "$SHADOW_REPO"
 assert_eq 'unknown-provider unavailable observation validates' '0' "$?"
 KNOWN_UNAVAILABLE="$TEST_ROOT/known-unavailable.json"
 jq -c '.lanes[1].provider_family="gemini"' "$OBSERVATION" >"$KNOWN_UNAVAILABLE"
-review_runtime_shadow_observation_valid "$KNOWN_UNAVAILABLE"
+review_runtime_shadow_observation_valid "$KNOWN_UNAVAILABLE" "$SHADOW_REPO"
 assert_eq 'known-provider unavailable observation validates with null usage family' '0' "$?"
 KNOWN_UNAVAILABLE_ROOT="$TEST_ROOT/known-unavailable-state"
 known_unavailable_output="$(run_shadow_executable on ok "$HEAD_SHA" "$KNOWN_UNAVAILABLE" "$KNOWN_UNAVAILABLE_ROOT")"
@@ -545,7 +571,7 @@ for mismatch_provenance in reported estimated; do
   jq -c --arg provenance "$mismatch_provenance" \
     '.lanes[0].usage.provenance=$provenance | .lanes[0].usage.provider_family="gemini"' \
     "$OBSERVATION" >"$MISMATCH_OBSERVATION"
-  review_runtime_shadow_observation_valid "$MISMATCH_OBSERVATION" >/dev/null 2>&1
+  review_runtime_shadow_observation_valid "$MISMATCH_OBSERVATION" "$SHADOW_REPO" >/dev/null 2>&1
   assert_eq "$mismatch_provenance provider-family mismatch is rejected" '1' "$?"
 done
 
@@ -603,6 +629,9 @@ assert_invalid_observation 'raw provider value' '.lanes[0].provider_payload={raw
 assert_invalid_observation 'unresolved candidate reference' '.synthesis.findings[0].candidate_refs[0].ordinal=99'
 assert_invalid_observation 'uncertain and finding overlap' '.synthesis.uncertain_candidate_refs=[{lane_id:"correctness",ordinal:1}]'
 assert_invalid_observation 'inconsistent finding evidence' '.synthesis.findings[0].evidence.content_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"'
+assert_invalid_observation 'forged raw Git line anchor' \
+  '(.lanes[].candidates[] | select(.evidence.line != null).anchor_sha256)=("f"*64) |
+   (.synthesis.findings[].anchor_sha256)=("f"*64)'
 assert_invalid_observation 'model-authored candidate claim key' '.lanes[0].candidates[0].claim_key="forged"'
 assert_invalid_observation 'model-authored finding claim key' '.synthesis.findings[0].claim_key="forged"'
 
@@ -635,7 +664,7 @@ review_runtime_observe() {
   review_runtime_observe_actual "$@"
 }
 DYNAMIC_ROOT="$TEST_ROOT/dynamic-state"
-dynamic_output="$(KC_PR_FLOW_STATE_DIR="$DYNAMIC_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION")"
+dynamic_output="$(KC_PR_FLOW_STATE_DIR="$DYNAMIC_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO")"
 assert_eq 'dynamic production seam completes' 'observed' "$(jq -r '.status' <<<"$dynamic_output")"
 assert_eq 'dynamic production seam invokes observer exactly once' '1' "$(wc -l <"$OBSERVER_CALL_LOG" | tr -d ' ')"
 eval "$(declare -f review_runtime_observe_actual | sed '1s/review_runtime_observe_actual/review_runtime_observe/')"
@@ -646,7 +675,7 @@ original_require_jq_definition="$(declare -f review_runtime_require_jq | sed '1s
 eval "$original_require_jq_definition"
 review_runtime_require_jq() { return 69; }
 MISSING_JQ_ROOT="$TEST_ROOT/missing-jq-state"
-missing_jq_output="$(KC_PR_FLOW_STATE_DIR="$MISSING_JQ_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" 2>/dev/null)"
+missing_jq_output="$(KC_PR_FLOW_STATE_DIR="$MISSING_JQ_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
 assert_eq 'missing jq is typed not_observed' 'not_observed' "$(jq -r '.status' <<<"$missing_jq_output")"
 assert_eq 'missing jq creates no receipt' '0' "$(find "$MISSING_JQ_ROOT" -name events.jsonl -type f 2>/dev/null | wc -l | tr -d ' ')"
 eval "$(declare -f review_runtime_require_jq_actual | sed '1s/review_runtime_require_jq_actual/review_runtime_require_jq/')"
@@ -667,7 +696,7 @@ review_runtime_build_event() {
   review_runtime_build_event_actual "$@"
 }
 POST_START_ROOT="$TEST_ROOT/post-start-state"
-post_start_output="$(KC_PR_FLOW_STATE_DIR="$POST_START_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" 2>/dev/null)"
+post_start_output="$(KC_PR_FLOW_STATE_DIR="$POST_START_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
 post_start_rc=$?
 assert_eq 'post-start failure remains fail-open' '0' "$post_start_rc"
 assert_eq 'post-start failure emits typed not_observed' 'not_observed' "$(jq -r '.status' <<<"$post_start_output")"
@@ -759,12 +788,12 @@ DOCUMENTED_RESULT="$TEST_ROOT/documented-result.json"
     exit 0
   fi
   shadow_ledger_register_lane correctness code_correctness claude
-  documented_candidates="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence}]')"
+  documented_candidates="$(jq -c -n --argjson evidence "$POINTER" --arg anchor "$ANCHOR_SHA256" \
+    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor,category:"correctness",evidence:$evidence}]')"
   documented_usage='{"input_tokens":100,"output_tokens":20,"total_tokens":120,"provenance":"reported","provider_family":"claude","scope":"lane"}'
   shadow_ledger_finish_lane correctness succeeded claude "$documented_usage" "$documented_candidates"
-  documented_findings="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}]')"
+  documented_findings="$(jq -c -n --argjson evidence "$POINTER" --arg anchor "$ANCHOR_SHA256" \
+    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$anchor,category:"correctness",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}]')"
   shadow_ledger_finalize_synthesis "$documented_findings" '[]'
   shadow_ledger_finalize_behavior_hashes \
     "$(file_sha256 "$BODY")" "$(file_sha256 "$INLINE_COMMENTS")" "$(file_sha256 "$EVENT")" \
@@ -776,7 +805,8 @@ DOCUMENTED_RESULT="$TEST_ROOT/documented-result.json"
   documented_file="$SHADOW_OBSERVATION_FILE"
   documented_dir="$SHADOW_TMP_DIR"
   documented_valid=false
-  if [ "$SHADOW_OBSERVATION_READY" = true ] && review_runtime_shadow_observation_valid "$documented_file"; then
+  if [ "$SHADOW_OBSERVATION_READY" = true ] &&
+    review_runtime_shadow_observation_valid "$documented_file" "$SHADOW_REPO"; then
     documented_valid=true
   fi
   documented_lane="$(jq -c '.lanes[0] | {lane_id,ordinal:(.candidates[0].ordinal)}' "$documented_file" 2>/dev/null || true)"

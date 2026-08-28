@@ -118,6 +118,8 @@ run_identity_v2_tests() {
   local jcs_input jcs_output duplicate_jcs_rc nfd_path nfc_path evidence_null subject_null projection_null
   local permuted_subject permuted_projection replayed_projection blob_file anchor_one anchor_two
   local task_alias candidate candidate_event finding finding_event wrong_schema
+  local git_anchor_repo git_anchor_head git_anchor_content git_anchor_pointer git_anchor expected_git_anchor
+  local git_identity forged_git_identity git_identity_rc forged_git_identity_rc
   canonical="$(review_runtime_config_canonical lite mixed false false false false \
     'correctness,code_correctness,correctness,security')"
   assert_eq "legacy correctness aliases only inside the capability set" \
@@ -208,6 +210,49 @@ run_identity_v2_tests() {
   anchor_two="$(review_runtime_blob_line_anchor_sha256 "$blob_file" 2)"
   assert_eq "non-null anchor excludes the CRLF terminator" "$(sha256_text alpha)" "$anchor_one"
   assert_eq "non-null anchor hashes the exact UTF-8 line bytes" "$(sha256_text "$(printf 'caf\303\251')")" "$anchor_two"
+
+  git_anchor_repo="$TEST_INPUT_ROOT/identity-v2-git-anchor"
+  mkdir "$git_anchor_repo"
+  git -C "$git_anchor_repo" init -q
+  git -C "$git_anchor_repo" config filter.anchor.clean "sed 's/worktree/raw/'"
+  git -C "$git_anchor_repo" config filter.anchor.smudge "sed 's/raw/worktree/'"
+  git -C "$git_anchor_repo" config filter.anchor.required true
+  printf '%s\n' 'evidence.txt filter=anchor -text' >"$git_anchor_repo/.gitattributes"
+  printf 'worktree anchor\r\nsecond line\n' >"$git_anchor_repo/evidence.txt"
+  git -C "$git_anchor_repo" add .gitattributes evidence.txt
+  git -C "$git_anchor_repo" -c user.name='Identity Test' -c user.email='identity@example.invalid' \
+    commit -qm seed
+  git -C "$git_anchor_repo" remote add origin 'https://github.com/acme/widgets.git'
+  git_anchor_head="$(git -C "$git_anchor_repo" rev-parse HEAD)"
+  git_anchor_content="$(git -C "$git_anchor_repo" show "$git_anchor_head:evidence.txt" |
+    review_runtime_sha256)"
+  git_anchor_pointer="$(jq -S -c -n --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg object_sha "$git_anchor_head" --arg content_sha256 "$git_anchor_content" '
+    {schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,
+     repository:"acme/widgets",base_sha:$object_sha,head_sha:$object_sha,object_sha:$object_sha,
+     path:"evidence.txt",side:"RIGHT",line:1,locator:"review-anchor",
+     content_sha256:$content_sha256}')"
+  expected_git_anchor="$(sha256_text 'raw anchor')"
+  git_anchor="$(review_runtime_git_blob_line_anchor_sha256 "$git_anchor_repo" "$git_anchor_pointer" 2>/dev/null)"
+  assert_eq "Git anchor hashes raw filtered blob bytes without the CRLF terminator" \
+    "$expected_git_anchor" "$git_anchor"
+  assert_eq "Git anchor does not hash filtered worktree bytes" false \
+    "$(jq -n --arg git "$git_anchor" --arg worktree \
+      "$(review_runtime_blob_line_anchor_sha256 "$git_anchor_repo/evidence.txt" 1)" '$git == $worktree')"
+  git_identity="$(jq -c -n --arg anchor "$git_anchor" --argjson evidence "$git_anchor_pointer" '
+    {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor,category:"security",evidence:$evidence}
+  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY" "$git_anchor_repo" 2>/dev/null)"
+  git_identity_rc=$?
+  assert_eq "shared identity authority accepts the raw Git blob anchor" 0 "$git_identity_rc"
+  assert_eq "shared identity authority derives the raw Git blob anchor" "$expected_git_anchor" \
+    "$(jq -r '.subject.anchor_sha256 // empty' <<<"$git_identity" 2>/dev/null)"
+  forged_git_identity="$(jq -c -n --arg anchor "$(sha256_text forged)" \
+    --argjson evidence "$git_anchor_pointer" '
+    {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor,category:"security",evidence:$evidence}
+  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY" "$git_anchor_repo" 2>/dev/null)"
+  forged_git_identity_rc=$?
+  assert_eq "shared identity authority rejects a forged non-null anchor" 3 "$forged_git_identity_rc"
+  assert_eq "forged non-null anchor produces no identity" '' "$forged_git_identity"
 
   task_alias="$(jq -c -n --arg review_key "$EXPECTED_REVIEW_KEY" \
     --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg config_hash "$CONFIG_HASH" '
@@ -646,7 +691,7 @@ run_interactive_decision_tests() {
       locator:"review-anchor",content_sha256:$hash}')"
   identity_projection="$(jq -c -n --arg anchor "$anchor" --argjson evidence "$pointer" '
     {path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",evidence:$evidence}
-  ' | review_runtime_identity_projection "$REPOSITORY" "$interactive_key")"
+  ' | review_runtime_identity_projection "$REPOSITORY" "$interactive_key" "$repo")"
   candidate="$(jq -S -c --arg id "$candidate_id" --arg key "$interactive_key" \
     --arg run "$run_id" '
     .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,
@@ -2276,7 +2321,7 @@ run_evidence_binding_tests() {
     {path:"src/review.sh",side:"RIGHT",
      anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
      category:"security",evidence:$evidence}
-  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+  ' | review_runtime_identity_projection_unverified "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
   candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
     .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
       run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
@@ -2322,7 +2367,7 @@ run_evidence_binding_tests() {
       {path:"src/review.sh",side:"RIGHT",category:"security",evidence:$evidence} +
       (if $evidence.line == null then {}
        else {anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"} end)
-    ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+    ' | review_runtime_identity_projection_unverified "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
     scoped_candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
       .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
         run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
@@ -2360,7 +2405,7 @@ run_evidence_binding_tests() {
     '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"issue",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,issue_number:43,locator:"issue",content_sha256:$content_sha256}')"
   scoped_projection="$(jq -c -n --argjson evidence "$scoped_pointer" '
     {path:"src/review.sh",side:"RIGHT",category:"security",evidence:$evidence}
-  ' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+  ' | review_runtime_identity_projection_unverified "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
   scoped_candidate="$(jq -S -c --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" '
     .subject + {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$candidate_id,
       run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1}
@@ -2412,7 +2457,7 @@ MUTATIONS
   assert_eq "machine claim key changes with candidate evidence content hash" "claim_key_mismatch" "$reason"
   assert_eq "candidate test retains the original identity for the drift probe" "$old_candidate_id" "$(jq -r '.payload.candidate.candidate_id' <<<"$mutated_event")"
   changed_claim_key="$(jq -c --arg hash "$changed_hash" '.evidence.content_sha256=$hash' <<<"$(jq -c '.subject' <<<"$identity_projection")" |
-    review_runtime_identity_projection | jq -r '.subject.claim_key')"
+    review_runtime_identity_projection_unverified | jq -r '.subject.claim_key')"
   mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg claim_key "$changed_claim_key" '
     .payload.candidate.evidence.content_sha256=$hash |
     .payload.candidate.claim_key=$claim_key
@@ -2426,7 +2471,7 @@ MUTATIONS
   assert_eq "machine claim key changes with finding evidence content hash" "claim_key_mismatch" "$reason"
   assert_eq "finding drift probe retains the old finding id" "$old_finding_id" "$(jq -r '.payload.findings[0].finding_id' <<<"$mutated_event")"
   changed_claim_key="$(jq -c --arg hash "$changed_hash" '.evidence.content_sha256=$hash' <<<"$(jq -c '.subject' <<<"$identity_projection")" |
-    review_runtime_identity_projection | jq -r '.subject.claim_key')"
+    review_runtime_identity_projection_unverified | jq -r '.subject.claim_key')"
   mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg claim_key "$changed_claim_key" '
     .payload.findings[0].evidence.content_sha256=$hash |
     .payload.findings[0].claim_key=$claim_key
@@ -3144,10 +3189,10 @@ t2_pointer="$(jq -S -c -n \
 t2_pointer_two="$(jq -S -c '.line=1' <<<"$t2_pointer")"
 t2_identity_one="$(jq -c -n --arg anchor_sha256 "$t2_anchor_one" --argjson evidence "$t2_pointer" '
   {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",evidence:$evidence}
-' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+' | review_runtime_identity_projection_unverified "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
 t2_identity_two="$(jq -c -n --arg anchor_sha256 "$t2_anchor_two" --argjson evidence "$t2_pointer_two" '
   {path:"evidence.txt",side:"RIGHT",anchor_sha256:$anchor_sha256,category:"security",evidence:$evidence}
-' | review_runtime_identity_projection "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
+' | review_runtime_identity_projection_unverified "$REPOSITORY" "$EXPECTED_REVIEW_KEY")"
 t2_finding_id="$(jq -r '.finding_id' <<<"$t2_identity_one")"
 t2_candidate_one="$(jq -S -c --arg candidate_id "$t2_candidate_one_id" \
   --arg review_key "$EXPECTED_REVIEW_KEY" '

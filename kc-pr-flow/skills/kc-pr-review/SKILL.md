@@ -1528,7 +1528,7 @@ When enabled:
 
    ```bash
    if [ "${SHADOW_OBSERVATION_READY:-false}" = true ]; then
-     SHADOW_STATUS="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" shadow --enabled on --head-check-status "$SHADOW_HEAD_STATUS" --live-head "$FRESH_HEAD_SHA" --observation-file "$SHADOW_OBSERVATION_FILE" 2>/dev/null)" || SHADOW_STATUS=''
+     SHADOW_STATUS="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" shadow --enabled on --head-check-status "$SHADOW_HEAD_STATUS" --live-head "$FRESH_HEAD_SHA" --observation-file "$SHADOW_OBSERVATION_FILE" --repo-worktree "$REPO_WORKTREE" 2>/dev/null)" || SHADOW_STATUS=''
    else
      SHADOW_STATUS=''
    fi

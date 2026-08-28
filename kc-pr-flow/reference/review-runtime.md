@@ -56,7 +56,7 @@ the exact canonical `kc-pr-flow.review-config/v1` bytes used to derive
 non-initial decision must receive that same snapshot.
 
 ```bash
-bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl --config-file review-config.json
+bash scripts/review-plan.sh receipt --event-file terminal-events.jsonl --config-file review-config.json --repo-worktree REPO_DIR
 bash scripts/review-plan.sh decide --repo owner/repo --pr 42 --base BASE --head HEAD \
   --config-hash CONFIG_HASH --config-file review-config.json --repo-worktree REPO_DIR \
   --predecessor-events terminal-events.jsonl --delta-receipt receipt.json

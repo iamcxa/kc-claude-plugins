@@ -85,7 +85,8 @@ latency in fixed order. Every corpus pair has the closed
 has the closed `fixture_kind:"synthetic-structural"` shape and carries no
 runtime receipt schema or producer claim. Missing or changed provenance fails
 validation. Q1 binds the modeled exact head to closed structural bindings. Q4
-recomputes `ReviewCandidate/v2` quote, evidence, candidate, finding, and
+recomputes the distinct `kc-pr-flow.review-latency-candidate/v1` structural
+quote, evidence, candidate, finding, and
 posted-count bindings, and pins the control finding-set hash plus adjudication
 counters. Q1-Q5 cover every pair; only `delta` and `resolve` members enter the
 240-second structural latency gate.
