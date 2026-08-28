@@ -87,6 +87,17 @@ gates:
                 digest: sha256:fd8d7f8ee11ae88ca280d8ffb3ad44a351c0bfd164b871430be2d3962353d0ce
                 request-digest: sha256:055eb8ac3f28472ab9e9e5617019d3a9294c6b77da67e39934e867a1bae7b6fe
                 room-ref: ./manual-cycle-release-admission-path/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:w8z5xrcexs9k1qq7xrwzx5bk:validation:2
+                briefing: briefing:w8z5xrcexs9k1qq7xrwzx5bk:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-28T01:52:49.6988Z"
+                decision: approve
+                reason: 'Captain approved the validated exact candidate as satisfying Issue #305''s admitted outcome and closing this SD execution as proceed; pull-request, merge, release, publication, and provider-write authority remain separate.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Problem
