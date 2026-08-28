@@ -478,10 +478,13 @@ run_collector_memoization_tests() {
   local evidence_log="$TEST_ROOT/memo-evidence-calls.log"
   local memo_root="$TEST_ROOT/memo-state"
   local uncached_root="$TEST_ROOT/uncached-state"
-  local failure_root="$TEST_ROOT/memo-failure-state"
+  local race_root="$TEST_ROOT/snapshot-race-state"
+  local terminal_failure_root="$TEST_ROOT/memo-terminal-failure-state"
   local memo_output memo_event_file uncached_output uncached_event_file
-  local total_bytes terminal_bytes preterminal_limit failure_output failure_event_file
-  local validation_definition evidence_definition
+  local race_output race_event_file barrier_log="$TEST_ROOT/snapshot-barrier.log"
+  local terminal_failure_output terminal_failure_event_file
+  local terminal_barrier_log="$TEST_ROOT/terminal-barrier.log"
+  local validation_definition evidence_definition barrier_definition
 
   validation_definition="$(declare -f review_runtime_validate_authoritative_log |
     sed '1s/review_runtime_validate_authoritative_log/review_runtime_validate_authoritative_log_actual/')"
@@ -526,17 +529,56 @@ run_collector_memoization_tests() {
     fail 'optimized and uncached append publish byte-identical event logs'
   fi
 
-  total_bytes="$(wc -c <"$memo_event_file" | tr -d ' ')"
-  terminal_bytes="$(tail -n 1 "$memo_event_file" | wc -c | tr -d ' ')"
-  preterminal_limit=$((total_bytes - terminal_bytes))
-  failure_output="$(KC_PR_FLOW_STATE_DIR="$failure_root" \
-    KC_PR_FLOW_MAX_EVENTS_BYTES="$preterminal_limit" \
+  barrier_definition="$(declare -f review_runtime_append_snapshot_barrier 2>/dev/null || true)"
+  : >"$barrier_log"
+  review_runtime_append_snapshot_barrier() {
+    printf 'barrier\n' >>"$barrier_log"
+    if [ "$(wc -l <"$barrier_log" | tr -d ' ')" = '1' ]; then
+      printf '%s\n' 'SENTINEL post-snapshot path replacement' >"$1"
+    fi
+  }
+  race_output="$(KC_PR_FLOW_STATE_DIR="$race_root" \
+    review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO")"
+  assert_eq 'post-snapshot managed-path replacement still completes from the fixed snapshot' \
+    'observed' "$(jq -r '.status' <<<"$race_output")"
+  assert_eq 'every cached append crosses the deterministic post-snapshot barrier' \
+    '9' "$(wc -l <"$barrier_log" | tr -d ' ')"
+  race_event_file="$(find "$race_root" -name events.jsonl -type f)"
+  if grep -F 'SENTINEL post-snapshot path replacement' "$race_event_file" >/dev/null 2>&1; then
+    fail 'cached append publishes the replaced managed path instead of its fixed snapshot'
+  else
+    pass
+  fi
+  if [ -n "$barrier_definition" ]; then
+    eval "$barrier_definition"
+  else
+    unset -f review_runtime_append_snapshot_barrier
+  fi
+
+  : >"$terminal_barrier_log"
+  review_runtime_append_snapshot_barrier() {
+    if [ "${3-}" = 'run.finished' ]; then
+      KC_PR_FLOW_MAX_EVENTS_BYTES="$(wc -c <"$2" | tr -d ' ')"
+      export KC_PR_FLOW_MAX_EVENTS_BYTES
+      printf 'terminal\n' >>"$terminal_barrier_log"
+    fi
+  }
+  terminal_failure_output="$(KC_PR_FLOW_STATE_DIR="$terminal_failure_root" \
     review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
-  assert_eq 'terminal size failure stays typed not_observed' \
-    'not_observed' "$(jq -r '.status' <<<"$failure_output")"
-  failure_event_file="$(find "$failure_root" -name events.jsonl -type f | head -1)"
-  assert_eq 'terminal verification failure publishes no run.finished authority' \
-    '0' "$(jq -r 'select(.event_type == "run.finished") | 1' "$failure_event_file" 2>/dev/null | wc -l | tr -d ' ')"
+  assert_eq 'cached terminal append size failure stays typed not_observed' \
+    'not_observed' "$(jq -r '.status' <<<"$terminal_failure_output")"
+  assert_eq 'size ceiling is lowered only at the cached terminal append barrier' \
+    '1' "$(wc -l <"$terminal_barrier_log" | tr -d ' ')"
+  terminal_failure_event_file="$(find "$terminal_failure_root" -name events.jsonl -type f | head -1)"
+  assert_eq 'preflight-passing prefix publishes synthesis before terminal failure' \
+    '1' "$(jq -r 'select(.event_type == "synthesis.finished") | 1' "$terminal_failure_event_file" 2>/dev/null | wc -l | tr -d ' ')"
+  assert_eq 'cached terminal append failure publishes no run.finished authority' \
+    '0' "$(jq -r 'select(.event_type == "run.finished") | 1' "$terminal_failure_event_file" 2>/dev/null | wc -l | tr -d ' ')"
+  if [ -n "$barrier_definition" ]; then
+    eval "$barrier_definition"
+  else
+    unset -f review_runtime_append_snapshot_barrier
+  fi
 }
 
 if [ "$CASE_FILTER" = 'collector-memoization' ]; then

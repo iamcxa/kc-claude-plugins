@@ -2256,6 +2256,10 @@ review_runtime_acquire_run_reservation() {
   return 75
 }
 
+review_runtime_append_snapshot_barrier() {
+  :
+}
+
 review_runtime_append_line() (
   local line="$1"
   local cached_prefix_sha256="${2-}" cached_prefix_count="${3-}"
@@ -2264,7 +2268,7 @@ review_runtime_append_line() (
   local state_root repo_dir pr_dir run_dir events_file lock_dir lock_owner_pid=''
   local existing_line existing_id existing_integrity event_id integrity_sha256
   local authority_line last_sequence expected_sequence duplicate_integrity=''
-  local temp_events='' temp_run_dir='' rc validation_rc
+  local temp_events='' temp_run_dir='' snapshot_dir='' prefix_snapshot='' rc validation_rc
   local log_verdicts='' next_verdicts=''
 
   if [ "$#" -eq 4 ]; then
@@ -2308,7 +2312,7 @@ review_runtime_append_line() (
     return 75
   }
   lock_owner_pid="$REVIEW_RUNTIME_LOCK_OWNER_PID"
-  trap '[ -z "$temp_events" ] || rm -f "$temp_events"; [ -z "$temp_run_dir" ] || review_runtime_remove_private_run "$temp_run_dir"; review_runtime_release_owned_lock "$lock_dir" "$lock_owner_pid"' EXIT
+  trap '[ -z "$temp_events" ] || rm -f "$temp_events"; [ -z "$temp_run_dir" ] || review_runtime_remove_private_run "$temp_run_dir"; review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$prefix_snapshot"; review_runtime_release_owned_lock "$lock_dir" "$lock_owner_pid"' EXIT
   trap 'exit 129' HUP
   trap 'exit 130' INT
   trap 'exit 143' TERM
@@ -2322,14 +2326,21 @@ review_runtime_append_line() (
       return 74
     fi
     if [ "$cache_active" = true ]; then
-      actual_prefix_sha256="$(review_runtime_sha256 <"$events_file")" || return
-      actual_prefix_count="$(wc -l <"$events_file" | tr -d ' ')" || return
+      snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+      prefix_snapshot="$snapshot_dir/events.jsonl"
+      review_runtime_snapshot_regular_file \
+        "$events_file" "$prefix_snapshot" 'verified event prefix' \
+        "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
+      review_runtime_append_snapshot_barrier \
+        "$events_file" "$prefix_snapshot" "$event_type" || return 74
+      actual_prefix_sha256="$(review_runtime_sha256 <"$prefix_snapshot")" || return
+      actual_prefix_count="$(wc -l <"$prefix_snapshot" | tr -d ' ')" || return
       if [ "$actual_prefix_sha256" != "$cached_prefix_sha256" ] ||
         [ "$actual_prefix_count" != "$cached_prefix_count" ]; then
         printf 'review-runtime: verified event prefix changed before append\n' >&2
         return 74
       fi
-      authority_line="$(sed -n '1p' "$events_file")"
+      authority_line="$(sed -n '1p' "$prefix_snapshot")"
       if ! review_runtime_same_run_identity "$authority_line" "$line"; then
         review_runtime_quarantine "$line" 'run_identity_mismatch' || return
         printf '%s\n' 'quarantined'
@@ -2346,7 +2357,7 @@ review_runtime_append_line() (
         return 1
       fi
       temp_events="$(mktemp "$run_dir/.events.next.XXXXXX")" || return 74
-      if ! cat "$events_file" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
+      if ! cat "$prefix_snapshot" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
         return 74
       fi
       review_runtime_events_size_within_limit "$temp_events"
