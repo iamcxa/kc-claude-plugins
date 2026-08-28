@@ -322,3 +322,26 @@ The implementation commits one bounded manual admission contract and determinist
 ### Summary
 
 Validation accepts the exact candidate for the existing separately authorized delivery ceremony; no code defect or planning-premise delta was found. The evidence proves the documented manual path and this one fresh-context dogfood run, not engine-level prevention of manual duplicate execution.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: AC-1 — Portable and self-adopted contracts agree on one-to-one admission, fresh context, route-back, and no wrapper.
+  At exact candidate `6df481a34b90a63aa05bfebeaa5566aa45169817`, `scripts/kc-dev-flow-contract-test.py` passed and packaged/adopted kernels compared byte-for-byte; deleting a required clause or diverging the copies makes this evidence fail.
+- DONE: AC-2 — The new deterministic checks can speak.
+  At the same tip, `scripts/kc-dev-flow-minimal-stack-ablation.test.py` passed after rejecting one-to-many execution, scope replacement, wrapper restoration, and missing required headings for their named reasons.
+- DONE: AC-3 — Existing route and exact-item selection remain intact.
+  At the same tip, `kc-dev-flow/scripts/profile-contract-loader.test.py` and `kc-dev-flow/scripts/profile-spacedock-route.test.py` passed; the exact entity independently loaded `pilot-product-slice` at `validation` as `verify-deliver`.
+- DONE: AC-4 — Existing comparator remains green.
+  At the same tip, `scripts/kc-dev-flow-loader-eval.test.py` passed; a bounded loader/comparator contract change makes this suite fail.
+- DONE: Independently verify AC-1 through AC-4 at exact candidate `6df481a34b90a63aa05bfebeaa5566aa45169817`: inspect the seven-file diff, run the named contract, minimal-stack ablation, profile-loader, profile-route, and comparator suites, and reject any claim not supported at that tip.
+  The four scanner-readable citations above split the already verified evidence without changing the candidate, test results, or validation verdict.
+- DONE: Verify AC-5 from durable evidence: exactly one committed Spacedock entity names Issue #305 as `source`, exactly one non-empty recorded implementation worktree exists, and the generated fresh worker assignment contains only Issue/repository/entity/selected-contract pointers rather than the planning transcript.
+  Prior durable evidence remains unchanged: one matching source, one recorded non-empty worktree, and fresh thread `01a045c8-2834-7bd0-a847-65f6cce26327` with pointer-only execution input and no planning transcript.
+- DONE: Verify AC-6: the candidate or a structured planning delta exists within one working day of `started: 2026-08-28T00:05:28Z`, and the validation report records the Captain decisions plus exactly one recommendation of `proceed`, `change`, or `stop`.
+  Candidate timing, the two recorded Captain decisions, post-admission count 1, and zero route-back events remain unchanged; the prior validation report's single recommendation remains the sole recommendation.
+- DONE: Adversarially test the kernel claim, minimal implementation stack, and without-it evidence: require package/adopter parity, all stop numbers to remain uncrossed, no runtime/schema/stage/automation/provider-write/authority expansion, and an honest disposition of RoboRev's provider PASS versus closed `UNKNOWN(reason: stale)` mapping. Do not create or update a PR or mutate a planning provider.
+  The prior exact evidence remains unchanged: 7 files, 174 lines, 85 deterministic-test lines, no prohibited surface, and provider PASS kept non-gating beside the closed stale mapping.
+
+### Summary
+
+Cycle 2 repairs only durable evidence indexing: each AC now has its own explicit citation. Product bytes, exact candidate, test evidence, scope, and verdict are unchanged.
