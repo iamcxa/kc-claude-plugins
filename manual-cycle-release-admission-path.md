@@ -68,6 +68,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:w8z5xrcexs9k1qq7xrwzx5bk:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:w8z5xrcexs9k1qq7xrwzx5bk-validation-1
+              briefing:
+                id: briefing:w8z5xrcexs9k1qq7xrwzx5bk:validation:attempt-1:revision-1
+                digest: sha256:51985595e275acfe81330d59b92d0ad0bc8858e866bf4b5d783ad015202f594d
+                request-digest: sha256:fd9272b5f76541428d52209f242c808cd81ac7f0aca2ae50f9d18492c042bde6
+                room-ref: ./manual-cycle-release-admission-path/review/validation/briefing-1
 ---
 
 ## Problem

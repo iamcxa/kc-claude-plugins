@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:w8z5xrcexs9k1qq7xrwzx5bk:validation:attempt-1:revision-1",
+  "question": "Does candidate 6df481a satisfy Issue #305's admitted outcome, so this SD execution may close as proceed while commit, pull-request, merge, release, and publication authority remain separate?",
+  "artifacts": [
+    {
+      "id": "artifact:w8z5xrcexs9k1qq7xrwzx5bk:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/db886538acdd421aa18aa902fa189770f21807f4/manual-cycle-release-admission-path.md",
+      "rev": "sha256:66dda6fb5e2759dd5c9ef6d95d056406f0bdc8c2dc5cef0ee64bcee04590b0b7",
+      "mediaType": "text/markdown",
+      "summary": "Fresh validation passed all six acceptance criteria at exact candidate 6df481a: one Issue, one committed SD task, one isolated worktree, no planning transcript, exact scope reconciliation, bounded route-back, package/adopter parity, and named without-it failures. The diff remains inside all stop numbers at 7 files, 174 changed lines, and 85 deterministic-test lines. Recommendation: proceed; this approval does not authorize a pull request, merge, release, publication, or provider write."
+    }
+  ]
+}
