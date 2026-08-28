@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:w8z5xrcexs9k1qq7xrwzx5bk:backlog:attempt-1:revision-1",
+  "question": "Approve Issue #305 admission into Pilot ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:w8z5xrcexs9k1qq7xrwzx5bk:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6a13b9284ac6ea39a6d269a878cde7de8b79cf4a/manual-cycle-release-admission-path.md",
+      "rev": "sha256:3b8c652673d1bfa0a27c9efc0054788078c9c1077b9ddf34fc88b369eec06794",
+      "mediaType": "text/markdown",
+      "summary": "Outcome: one bounded GitHub release package hands off to one Spacedock task and one isolated executor. Scope: define the manual admission and route-back contract, add only deterministic coverage needed to preserve it, and run one fresh-context dogfood. Excludes automatic dispatch, multi-Issue execution, provider writes, new stored planning state, workflow-stage changes, and release authority."
+    }
+  ]
+}

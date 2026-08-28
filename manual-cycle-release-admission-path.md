@@ -15,6 +15,18 @@ worktree:
 issue: "#305"
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:w8z5xrcexs9k1qq7xrwzx5bk:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:w8z5xrcexs9k1qq7xrwzx5bk-backlog-1
+              briefing:
+                id: briefing:w8z5xrcexs9k1qq7xrwzx5bk:backlog:attempt-1:revision-1
+                digest: sha256:090dcffcf46754187a66e77c0d0b88390545c113bbb5e5522feb26d87a9e6fca
+                request-digest: sha256:9ed5cf164977e3553f12d76b4bc304e7d22083ab853405caff94b34c1a0a550e
+                room-ref: ./manual-cycle-release-admission-path/review/backlog/briefing-1
 ---
 
 ## Problem
