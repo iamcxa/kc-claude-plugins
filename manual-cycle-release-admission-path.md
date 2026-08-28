@@ -294,3 +294,18 @@ The shape recovers existing GitHub, Spacedock, loader, and worktree seams rather
 ### Summary
 
 The implementation commits one bounded manual admission contract and deterministic without-it evidence while staying inside every shaped stop number. The exact candidate is locally green; RoboRev's repaired provider result is positive but remains non-gating and contract-mapped as stale evidence for validation to assess.
+
+## Stage Report: validation
+
+- DONE: Independently verify AC-1 through AC-4 at exact candidate `6df481a34b90a63aa05bfebeaa5566aa45169817`: inspect the seven-file diff, run the named contract, minimal-stack ablation, profile-loader, profile-route, and comparator suites, and reject any claim not supported at that tip.
+  All five suites passed at the clean exact tip; the ablation suite rejects one-to-many execution, scope replacement, wrapper restoration, and missing required headings, while the loader and route suites would fail on wrong-stage, off-route, or concurrency drift.
+- DONE: Verify AC-5 from durable evidence: exactly one committed Spacedock entity names Issue #305 as `source`, exactly one non-empty recorded implementation worktree exists, and the generated fresh worker assignment contains only Issue/repository/entity/selected-contract pointers rather than the planning transcript.
+  State `HEAD` has one matching source; the one recorded worktree exists at candidate `6df481a`; fresh Codex thread `01a045c8-2834-7bd0-a847-65f6cce26327` booted from the generated pointer carrying the Issue via the entity source plus repository, exact-entity, and selected-contract inputs, with no planning transcript.
+- DONE: Verify AC-6: the candidate or a structured planning delta exists within one working day of `started: 2026-08-28T00:05:28Z`, and the validation report records the Captain decisions plus exactly one recommendation of `proceed`, `change`, or `stop`.
+  Candidate `6df481a` was committed at `2026-08-28T00:59:00Z`, 53m32s after start; Captain decisions were Pilot selection at `2026-08-27T23:48:54Z` and the post-admission no-wrapper choice recorded at `2026-08-28T00:11:30Z` (post-admission count 1), route-back events were 0, and the single recommendation is `proceed`.
+- DONE: Adversarially test the kernel claim, minimal implementation stack, and without-it evidence: require package/adopter parity, all stop numbers to remain uncrossed, no runtime/schema/stage/automation/provider-write/authority expansion, and an honest disposition of RoboRev's provider PASS versus closed `UNKNOWN(reason: stale)` mapping. Do not create or update a PR or mutate a planning provider.
+  Kernels compare byte-for-byte; the diff is 7 files, 174 lines, and 85 deterministic-test lines; only retained docs/contracts and their tests changed, and RoboRev job 288's provider PASS remains non-gating while the contract mapping stays `UNKNOWN(reason: stale)` because required identity fields are absent.
+
+### Summary
+
+Validation accepts the exact candidate for the existing separately authorized delivery ceremony; no code defect or planning-premise delta was found. The evidence proves the documented manual path and this one fresh-context dogfood run, not engine-level prevention of manual duplicate execution.
