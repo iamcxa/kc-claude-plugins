@@ -77,6 +77,10 @@ gates:
                 digest: sha256:51985595e275acfe81330d59b92d0ad0bc8858e866bf4b5d783ad015202f594d
                 request-digest: sha256:fd9272b5f76541428d52209f242c808cd81ac7f0aca2ae50f9d18492c042bde6
                 room-ref: ./manual-cycle-release-admission-path/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-28T01:48:08.59539Z"
+                reason: The committed validation report semantically covers AC-1 through AC-4, but the structured AC scan leaves AC-2 and AC-3 unevidenced because the combined checklist line does not cite them individually. Withdraw before Captain presentation and repair only the report citations.
 ---
 
 ## Problem
