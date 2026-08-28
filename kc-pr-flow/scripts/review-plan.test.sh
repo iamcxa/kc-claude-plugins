@@ -1999,10 +1999,16 @@ PY
     }
     stalled_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide \
       "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" \
-      "$router_repo" "$router_events" "$router_receipt")"
+      "$router_repo" "$router_events" "$router_receipt" "$router_config")"
     assert_eq 'ancestry adapter errors select the unchanged initial planner' 'initial' \
       "$(jq -r '.mode' <<<"$stalled_decision")"
     eval "$original_deadline_adapter"
+
+    legacy_missing_config_decision="$(KC_PR_FLOW_DELTA_FAST_PATH=on review_plan_decide \
+      "$repo_id" 1693 "$base_sha" "$fixed_sha" "$config_hash" \
+      "$router_repo" "$router_events" "$router_receipt")"
+    assert_eq 'legacy direct caller without config keeps the initial planner' 'initial' \
+      "$(jq -r '.mode' <<<"$legacy_missing_config_decision")"
 
     commit_blob="$(printf 'not a commit\n' | git -C "$router_repo" hash-object -w --stdin)"
     router_binding="$(review_plan_worktree_binding "$router_repo")"
@@ -2148,7 +2154,7 @@ PY
       race_decision="$(PATH="$race_stub:$PATH" KC_PR_FLOW_TEST_GIT_OPEN_READY_FD=8 \
         KC_PR_FLOW_TEST_GIT_OPEN_PROCEED_FD=9 KC_PR_FLOW_DELTA_FAST_PATH=on \
         review_plan_decide "$repo_id" 1693 "$race_base" "$race_fixed" "$config_hash" \
-          "$race_repo" "$race_events" "$race_receipt")"
+          "$race_repo" "$race_events" "$race_receipt" "$router_config")"
       exec 8>&-
       exec 9>&-
       wait "$swapper_pid"

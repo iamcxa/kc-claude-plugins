@@ -1363,7 +1363,7 @@ review_plan_snapshot_receipt() (
 
 review_plan_decide() {
   local repository="$1" pr_number="$2" base_sha="$3" head_sha="$4" config_hash="$5"
-  local worktree="$6" predecessor_events="$7" delta_receipt="$8" config_file="$9" receipt_source predecessor_repository predecessor_pr
+  local worktree="$6" predecessor_events="$7" delta_receipt="$8" config_file="${9-}" receipt_source predecessor_repository predecessor_pr
   local predecessor_base predecessor_head predecessor_config route route_mode route_capabilities
   local inherited_finding_ids required_capabilities worktree_binding
 
