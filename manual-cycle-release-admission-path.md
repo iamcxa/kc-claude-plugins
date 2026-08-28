@@ -1,7 +1,7 @@
 ---
 id: w8z5xrcexs9k1qq7xrwzx5bk
 title: Add a manual Cycle-Release admission path
-status: ideation
+status: implementation
 source: https://github.com/iamcxa/kc-claude-plugins/issues/305
 product: kc-dev-flow
 planning-window: Iteration 2
@@ -67,7 +67,7 @@ gates:
                 reason: 'Captain approved the shaped Pilot slice: one manual admission journey, six falsifiable acceptance criteria, seven existing touch files, and the recorded stop numbers.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
