@@ -1,7 +1,7 @@
 ---
 id: w8z5xrcexs9k1qq7xrwzx5bk
 title: Add a manual Cycle-Release admission path
-status: backlog
+status: ideation
 source: https://github.com/iamcxa/kc-claude-plugins/issues/305
 product: kc-dev-flow
 planning-window: Iteration 2
@@ -37,7 +37,7 @@ gates:
                 reason: Captain approved the admitted direction and instructed future issues to omit the redundant Human-readable release brief wrapper, start directly with The problem, and retain the agent execution contract.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Problem
