@@ -268,3 +268,29 @@ The shape recovers existing GitHub, Spacedock, loader, and worktree seams rather
 - candidate: `d8092fa93eec70a0d5c64d663e6c156983a785cf..6df481a34b90a63aa05bfebeaa5566aa45169817`
 - prior finding: RoboRev job `287` required the Issue-shape check to bind each required heading once and in order.
 - state: `claimed`
+
+### RoboRev observation result
+
+- capability: `review_convergence`; mode: `observe`; profile: `pilot-product-slice`; provider: `roborev`
+- outcome: `UNKNOWN(reason: stale)`
+- exact input: base `d8092fa93eec70a0d5c64d663e6c156983a785cf`, tip `6df481a34b90a63aa05bfebeaa5566aa45169817`, identity `fbc02c98cdf63868808d42d050926d78a5e671450b53a281c8d41200d3cb3644`, config object `225a29d4fa1eef963a7effaab7e60afa5f488e8f`
+- confirmation job: id `288`; job UUID `fb249a7b-a751-4290-a5ed-cbcc0a2d5934`; review UUID `044f77bc-8669-4436-8e34-f5e404e195e5`; provider verdict `P`
+- mapping rationale: terminal JSON omitted configuration hash, selected profile, implementation family, panel identity/population, and caps; the closed mapping does not copy missing expected fields into evidence.
+- members: `panel: none`; provider member population absent, contributing to `stale`
+- requests: `1`; changed-tip confirmations: `1`
+- cost: `$0.0570056` approximate total; `jobs_with_cost=2`, `jobs_total=2`, `complete=true`
+
+## Stage Report: implementation
+
+- DONE: Implement the shaped manual path on only the seven existing touch files: preserve one Issue to one Spacedock task to one isolated execution context, exact accepted-goal and non-goal reconciliation, structured route-back, and Issue bodies that start directly with The problem.
+  Candidate `6df481a34b90a63aa05bfebeaa5566aa45169817` adds the portable kernel invariant, adopter/continuation duties, and repository Issue shape; removing one-to-one or no-replacement clauses now fails the contract.
+- DONE: Add focused deterministic coverage that is observed rejecting one-to-many execution, silent execution-time scope replacement, and restoration of the redundant release-brief wrapper; keep the existing contract, profile-route, comparator, and minimal-stack suites green.
+  At the exact candidate, the contract, profile Spacedock route, loader comparator, and minimal-stack ablation suites passed; the ablation suite observed all three named mutants plus removal of required Issue fields fail for their named reason.
+- DONE: Apply the retained-document rules, preserve package/adopter parity, record an exact candidate revision, and stop before continuing if the diff exceeds 7 files, 175 changed lines, or 90 deterministic-test lines, or if any new runtime, schema, stage, automation, provider write, or authority is required.
+  The exact diff is 7 files, 174 changed lines, and 85 deterministic-test lines; package/adopter kernels are byte-identical, no retained document was added or removed, and no project-context file or prohibited surface changed.
+- DONE: Follow the selected Pilot build contract's typed RoboRev observation and the repository Local Profile exactly.
+  Job `287` found one Medium test gap, commit `6df481a` repaired it, and changed-tip job `288` passed; the closed evidence mapping remains `UNKNOWN(reason: stale)` because required identity fields were absent from provider JSON, so validation retains authority.
+
+### Summary
+
+The implementation commits one bounded manual admission contract and deterministic without-it evidence while staying inside every shaped stop number. The exact candidate is locally green; RoboRev's repaired provider result is positive but remains non-gating and contract-mapped as stale evidence for validation to assess.
