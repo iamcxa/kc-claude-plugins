@@ -1,7 +1,7 @@
 ---
 id: w8z5xrcexs9k1qq7xrwzx5bk
 title: Add a manual Cycle-Release admission path
-status: implementation
+status: validation
 source: https://github.com/iamcxa/kc-claude-plugins/issues/305
 product: kc-dev-flow
 planning-window: Iteration 2
