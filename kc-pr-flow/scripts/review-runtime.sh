@@ -922,10 +922,52 @@ review_runtime_identity_projection_unverified() {
   review_runtime_identity_projection_core "$repository" "$review_key" '__unverified__'
 }
 
-review_runtime_projection_identities_verified() {
-  local projection="$1" repository_path="$2"
-  local repository review_key subject_count index subject identity_projection expected_finding actual_finding
+# One process-local cache record binds the full evidence content digest to the
+# closed pointer and the canonical exact evidence identity. The cached value is
+# only the raw-Git-derived anchor; all v2 identity fields still come from the
+# shared projection authority above.
+review_runtime_evidence_cache_key() {
+  local subject pointer path side exact_identity content_sha256
+  [ "$#" -eq 1 ] || return 2
+  subject="$1"
+  pointer="$(printf '%s' "$subject" | jq -c '.evidence')" || return
+  review_runtime_evidence_pointer_valid "$pointer" || return 3
+  path="$(printf '%s' "$subject" | jq -r '.path')" || return
+  side="$(printf '%s' "$subject" | jq -r '.side')" || return
+  exact_identity="$(review_runtime_exact_evidence_identity "$path" "$side" "$pointer")" || return
+  content_sha256="$(printf '%s' "$pointer" | jq -r '.content_sha256')" || return
+  jq -c -n --arg content_sha256 "$content_sha256" --argjson pointer "$pointer" \
+    --argjson exact_identity "$exact_identity" \
+    '{content_sha256:$content_sha256,pointer:$pointer,exact_identity:$exact_identity}' |
+    review_runtime_jcs_sha256
+}
+
+review_runtime_cached_evidence_anchor() {
+  local cache="$1" expected_key="$2" key anchor
   [ "$#" -eq 2 ] || return 2
+  while IFS=' ' read -r key anchor; do
+    if [ "$key" = "$expected_key" ] && [[ "$anchor" =~ ^[0-9a-f]{64}$ ]]; then
+      printf '%s\n' "$anchor"
+      return 0
+    fi
+  done <<<"$cache"
+  return 3
+}
+
+review_runtime_identity_projection_from_verified_cache() {
+  local repository="$1" review_key="$2" cache="$3" subject key anchor
+  [ "$#" -eq 3 ] || return 2
+  subject="$(cat)" || return
+  key="$(review_runtime_evidence_cache_key "$subject")" || return 3
+  anchor="$(review_runtime_cached_evidence_anchor "$cache" "$key")" || return 3
+  printf '%s' "$subject" |
+    review_runtime_identity_projection_core "$repository" "$review_key" "$anchor"
+}
+
+review_runtime_projection_identities_verified() {
+  local projection="$1" repository_path="$2" verified_evidence_cache="${3-}"
+  local repository review_key subject_count index subject identity_projection expected_finding actual_finding
+  [ "$#" -eq 2 ] || [ "$#" -eq 3 ] || return 2
   repository="$(printf '%s' "$projection" | jq -r '.run.repository')" || return
   review_key="$(printf '%s' "$projection" | jq -r '.run.review_key')" || return
   subject_count="$(printf '%s' "$projection" | jq '[.candidates[],.findings[]] | length')" || return
@@ -933,8 +975,14 @@ review_runtime_projection_identities_verified() {
   while [ "$index" -lt "$subject_count" ]; do
     subject="$(printf '%s' "$projection" | jq -c --argjson index "$index" \
       '[.candidates[],.findings[]][$index]')" || return
-    identity_projection="$(printf '%s' "$subject" |
-      review_runtime_identity_projection "$repository" "$review_key" "$repository_path")" || return 3
+    if [ "$#" -eq 3 ]; then
+      identity_projection="$(printf '%s' "$subject" |
+        review_runtime_identity_projection_from_verified_cache \
+          "$repository" "$review_key" "$verified_evidence_cache")" || return 3
+    else
+      identity_projection="$(printf '%s' "$subject" |
+        review_runtime_identity_projection "$repository" "$review_key" "$repository_path")" || return 3
+    fi
     jq -e -n --argjson actual "$subject" --argjson projected "$identity_projection" '
       $projected.subject as $canonical |
       [$actual.path,$actual.side,$actual.anchor_sha256,$actual.category,$actual.claim_key,$actual.evidence] ==
@@ -1921,6 +1969,35 @@ review_runtime_same_run_identity() {
     [$candidate.repository,$candidate.pr_number,$candidate.base_sha,$candidate.head_sha,$candidate.config_hash,$candidate.review_key,$candidate.run_id]' >/dev/null 2>&1
 }
 
+review_runtime_event_evidence_covered_by_cache() {
+  local line="$1" cache="$2" event_type subject_count=0 index=0 subject
+  [ "$#" -eq 2 ] || return 2
+  event_type="$(printf '%s' "$line" | jq -r '.event_type')" || return
+  case "$event_type" in
+    finding.observed)
+      subject_count=1
+      ;;
+    synthesis.finished)
+      subject_count="$(printf '%s' "$line" | jq '.payload.findings | length')" || return
+      ;;
+    *) return 0 ;;
+  esac
+  while [ "$index" -lt "$subject_count" ]; do
+    if [ "$event_type" = 'finding.observed' ]; then
+      subject="$(printf '%s' "$line" | jq -c '.payload.candidate')" || return
+    else
+      subject="$(printf '%s' "$line" | jq -c --argjson index "$index" \
+        '.payload.findings[$index]')" || return
+    fi
+    printf '%s' "$subject" |
+      review_runtime_identity_projection_from_verified_cache \
+        "$(printf '%s' "$line" | jq -r '.repository')" \
+        "$(printf '%s' "$line" | jq -r '.review_key')" \
+        "$cache" >/dev/null || return 3
+    index=$((index + 1))
+  done
+}
+
 review_runtime_validate_authoritative_log() {
   local events_file="$1"
   # Verdicts the caller already holds for exactly these lines, newline
@@ -2181,12 +2258,22 @@ review_runtime_acquire_run_reservation() {
 
 review_runtime_append_line() (
   local line="$1"
+  local cached_prefix_sha256="${2-}" cached_prefix_count="${3-}"
+  local verified_evidence_cache="${4-}" cache_active=false actual_prefix_sha256 actual_prefix_count
   local reason repository pr_number run_id event_type sequence repo_key
   local state_root repo_dir pr_dir run_dir events_file lock_dir lock_owner_pid=''
   local existing_line existing_id existing_integrity event_id integrity_sha256
   local authority_line last_sequence expected_sequence duplicate_integrity=''
   local temp_events='' temp_run_dir='' rc validation_rc
   local log_verdicts='' next_verdicts=''
+
+  if [ "$#" -eq 4 ]; then
+    [[ "$cached_prefix_sha256" =~ ^[0-9a-f]{64}$ ]] || return 74
+    review_runtime_positive_safe_integer "$cached_prefix_count" || return 74
+    cache_active=true
+  elif [ "$#" -ne 1 ]; then
+    return 2
+  fi
 
   review_runtime_require_python || return
   review_runtime_validate_runtime_config || return
@@ -2233,6 +2320,45 @@ review_runtime_append_line() (
     if [ -L "$events_file" ] || [ ! -f "$events_file" ]; then
       printf 'review-runtime: unsafe events path for %s\n' "$run_id" >&2
       return 74
+    fi
+    if [ "$cache_active" = true ]; then
+      actual_prefix_sha256="$(review_runtime_sha256 <"$events_file")" || return
+      actual_prefix_count="$(wc -l <"$events_file" | tr -d ' ')" || return
+      if [ "$actual_prefix_sha256" != "$cached_prefix_sha256" ] ||
+        [ "$actual_prefix_count" != "$cached_prefix_count" ]; then
+        printf 'review-runtime: verified event prefix changed before append\n' >&2
+        return 74
+      fi
+      authority_line="$(sed -n '1p' "$events_file")"
+      if ! review_runtime_same_run_identity "$authority_line" "$line"; then
+        review_runtime_quarantine "$line" 'run_identity_mismatch' || return
+        printf '%s\n' 'quarantined'
+        return 1
+      fi
+      if ! review_runtime_event_evidence_covered_by_cache "$line" "$verified_evidence_cache"; then
+        printf 'review-runtime: event evidence is outside the verified in-process cache\n' >&2
+        return 74
+      fi
+      expected_sequence=$((cached_prefix_count + 1))
+      if [ "$sequence" != "$expected_sequence" ]; then
+        review_runtime_quarantine "$line" 'event_sequence_conflict' || return
+        printf '%s\n' 'quarantined'
+        return 1
+      fi
+      temp_events="$(mktemp "$run_dir/.events.next.XXXXXX")" || return 74
+      if ! cat "$events_file" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
+        return 74
+      fi
+      review_runtime_events_size_within_limit "$temp_events"
+      rc=$?
+      [ "$rc" -eq 0 ] || return "$rc"
+      chmod 0600 "$temp_events" || return 74
+      if [ -L "$events_file" ] || [ ! -f "$events_file" ] || ! mv -f "$temp_events" "$events_file"; then
+        return 74
+      fi
+      temp_events=''
+      printf '%s\n' 'appended'
+      return 0
     fi
     # One batched duplicate-member pass serves this whole append: the existing
     # log now, and below the same log plus the line already validated above.
@@ -3413,6 +3539,9 @@ review_runtime_shadow_observation_valid() {
   local repository_path="${2:-}"
   local observation duplicate_rc repository pr_number base_sha head_sha config_hash
   local review_key identity_event pointer_count pointer_index pointer subject_count subject_index subject
+  local cache_key cached_anchor identity_projection
+
+  REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE=''
 
   observation="$(cat "$observation_file")" || return 1
   review_runtime_json_has_unique_members "$observation"
@@ -3523,8 +3652,22 @@ review_runtime_shadow_observation_valid() {
     while [ "$subject_index" -lt "$subject_count" ]; do
       subject="$(jq -c --argjson index "$subject_index" \
         '[.lanes[].candidates[],.synthesis.findings[]][$index]' "$observation_file")" || return
-      printf '%s' "$subject" |
-        review_runtime_identity_projection '' '' "$repository_path" >/dev/null || return 1
+      cache_key="$(review_runtime_evidence_cache_key "$subject")" || return 1
+      if cached_anchor="$(review_runtime_cached_evidence_anchor \
+        "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE" "$cache_key")"; then
+        identity_projection="$(printf '%s' "$subject" |
+          review_runtime_identity_projection_core '' '' "$cached_anchor")" || return 1
+      else
+        identity_projection="$(printf '%s' "$subject" |
+          review_runtime_identity_projection '' '' "$repository_path")" || return 1
+        cached_anchor="$(printf '%s' "$identity_projection" | jq -r '.subject.anchor_sha256')" || return
+        if [ -n "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE" ]; then
+          REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE="$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE
+$cache_key $cached_anchor"
+        else
+          REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE="$cache_key $cached_anchor"
+        fi
+      fi
       subject_index=$((subject_index + 1))
     done
   fi
@@ -3544,7 +3687,8 @@ review_runtime_collect_shadow_observation() (
   local candidate_count candidate_index candidate ordinal evidence_hash candidate_id
   local candidate_ids ref_record finding_count finding_index finding candidate_ref_count reference_index reference
   local referenced_candidate_id candidate_id_list findings finding_id identity_projection uncertain_count uncertain_index
-  local uncertain_ids append_status observer_output rc
+  local uncertain_ids append_status observer_output terminal_projection rc
+  local verified_prefix_sha256 verified_prefix_count=1
   local collector_status_emitted='false'
 
   if ! review_runtime_require_jq; then
@@ -3619,7 +3763,9 @@ review_runtime_collect_shadow_observation() (
     candidate_index=0
     while [ "$candidate_index" -lt "$candidate_count" ]; do
       candidate="$(printf '%s' "$lane" | jq -c --argjson index "$candidate_index" '.candidates[$index]')" || return
-      candidate="$(review_runtime_canonical_identity_subject "$candidate" "$repository_path")" || return
+      candidate="$(printf '%s' "$candidate" |
+        review_runtime_identity_projection_from_verified_cache \
+          '' '' "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE" | jq -c '.subject')" || return
       ordinal="$(printf '%s' "$candidate" | jq -r '.ordinal')" || return
       evidence_hash="$(printf '%s' "$candidate" | jq -r '.evidence.content_sha256')" || return
       candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
@@ -3654,7 +3800,8 @@ review_runtime_collect_shadow_observation() (
   while [ "$finding_index" -lt "$finding_count" ]; do
     finding="$(jq -c --argjson index "$finding_index" '.synthesis.findings[$index]' "$observation_snapshot")" || return
     identity_projection="$(printf '%s' "$finding" |
-      review_runtime_identity_projection "$repository" "$review_key" "$repository_path")" || return
+      review_runtime_identity_projection_from_verified_cache \
+        "$repository" "$review_key" "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE")" || return
     finding="$(printf '%s' "$identity_projection" | jq -c '.subject')" || return
     candidate_id_list='[]'
     candidate_ref_count="$(printf '%s' "$finding" | jq '.candidate_refs | length')" || return
@@ -3708,21 +3855,34 @@ review_runtime_collect_shadow_observation() (
   event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" run.finished "$payload")" || return
   printf '%s\n' "$event" >>"$pending_events" || return
 
-  if ! review_runtime_replay "$pending_events" | jq -e '.lifecycle.complete' >/dev/null 2>&1; then
+  terminal_projection="$(review_runtime_replay "$pending_events")" || terminal_projection=''
+  if [ -z "$terminal_projection" ] ||
+    ! printf '%s' "$terminal_projection" | jq -e '.lifecycle.complete' >/dev/null 2>&1 ||
+    ! review_runtime_projection_identities_verified \
+      "$terminal_projection" "$repository_path" \
+      "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE"; then
     collector_status_emitted='true'
     review_runtime_shadow_status not_observed invalid_collector_projection
     return 0
   fi
+  verified_prefix_sha256="$(sed -n '1p' "$pending_events" | review_runtime_sha256)" || return
+  exec 9<"$pending_events" || return
   while IFS= read -r event || [ -n "$event" ]; do
     [ "$(printf '%s' "$event" | jq -r '.sequence')" = '1' ] && continue
-    append_status="$(review_runtime_append_line "$event")"
+    append_status="$(review_runtime_append_line "$event" \
+      "$verified_prefix_sha256" "$verified_prefix_count" \
+      "$REVIEW_RUNTIME_VERIFIED_EVIDENCE_CACHE")"
     rc=$?
     if [ "$rc" -ne 0 ] || { [ "$append_status" != 'appended' ] && [ "$append_status" != 'duplicate' ]; }; then
       collector_status_emitted='true'
       review_runtime_shadow_status not_observed collector_append_failed
       return 0
     fi
-  done <"$pending_events"
+    verified_prefix_count=$((verified_prefix_count + 1))
+    verified_prefix_sha256="$(sed -n "1,${verified_prefix_count}p" "$pending_events" |
+      review_runtime_sha256)" || return
+  done <&9
+  exec 9<&-
   observer_output="$(review_runtime_observe "$event_file" "$head_sha" "$review_key")"
   rc=$?
   if [ "$rc" -eq 0 ] && [ -n "$observer_output" ]; then

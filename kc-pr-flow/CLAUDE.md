@@ -149,7 +149,8 @@ expected must-fix findings before efficiency, and admits only the documented 20%
 60% bound local-rehydration branch. Its executable local producer binds raw terminal, decision,
 and designed-full-review control artifacts and applies `canonical-artifact-bytes/v1` to treatment
 and control; replay output is not a full-rerun control. Crash-safe recovery, predecessor lineage, and
-append/compaction performance remain deferred.
+compaction remain deferred. Shadow collection memoizes only a process-local, full-byte-hash-bound
+verified prefix; terminal receipt authority still requires complete replay and evidence verification.
 
 **Once-only posting (increment 2.3, shipped).** `scripts/review-post.sh` is the only component with
 posting/reconcile/network authority; `review-runtime.sh` still never posts. It is off by default,

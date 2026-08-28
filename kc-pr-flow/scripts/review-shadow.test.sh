@@ -2,6 +2,7 @@
 # Contract tests for the closed kc-pr-review production shadow collector.
 # shellcheck disable=SC2016 # Assertions intentionally match literal skill/runtime text.
 # shellcheck disable=SC2317 # The dependency probe invokes this dynamic command override indirectly.
+# shellcheck disable=SC2329 # Memoization probes invoke dynamic function overrides indirectly.
 
 set -uo pipefail
 
@@ -14,12 +15,13 @@ trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case production-collector|typed-interactive-seam]\n' "$0" >&2
+    printf 'usage: %s [--case production-collector|collector-memoization|typed-interactive-seam]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
 fi
 if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &&
+  [ "$CASE_FILTER" != 'collector-memoization' ] &&
   [ "$CASE_FILTER" != 'typed-interactive-seam' ]; then
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
@@ -470,6 +472,79 @@ jq -S -c -n \
       uncertain_candidate_refs:[{lane_id:"security",ordinal:2}]
     }
   }' >"$OBSERVATION"
+
+run_collector_memoization_tests() {
+  local validation_log="$TEST_ROOT/memo-validation-calls.log"
+  local evidence_log="$TEST_ROOT/memo-evidence-calls.log"
+  local memo_root="$TEST_ROOT/memo-state"
+  local uncached_root="$TEST_ROOT/uncached-state"
+  local failure_root="$TEST_ROOT/memo-failure-state"
+  local memo_output memo_event_file uncached_output uncached_event_file
+  local total_bytes terminal_bytes preterminal_limit failure_output failure_event_file
+  local validation_definition evidence_definition
+
+  validation_definition="$(declare -f review_runtime_validate_authoritative_log |
+    sed '1s/review_runtime_validate_authoritative_log/review_runtime_validate_authoritative_log_actual/')"
+  evidence_definition="$(declare -f review_runtime_git_blob_line_anchor_sha256 |
+    sed '1s/review_runtime_git_blob_line_anchor_sha256/review_runtime_git_blob_line_anchor_sha256_actual/')"
+  eval "$validation_definition"
+  eval "$evidence_definition"
+  : >"$validation_log"
+  : >"$evidence_log"
+  review_runtime_validate_authoritative_log() {
+    printf 'validate\n' >>"$validation_log"
+    review_runtime_validate_authoritative_log_actual "$@"
+  }
+  review_runtime_git_blob_line_anchor_sha256() {
+    printf 'verify\n' >>"$evidence_log"
+    review_runtime_git_blob_line_anchor_sha256_actual "$@"
+  }
+
+  memo_output="$(KC_PR_FLOW_STATE_DIR="$memo_root" \
+    review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO")"
+  assert_eq 'memoized collector completes through the public shadow seam' \
+    'observed' "$(jq -r '.status' <<<"$memo_output")"
+  assert_eq 'collector performs exactly one start validation, terminal replay, and observation replay' \
+    '3' "$(wc -l <"$validation_log" | tr -d ' ')"
+  assert_eq 'duplicate exact evidence pointers trigger one raw Git evidence read' \
+    '1' "$(wc -l <"$evidence_log" | tr -d ' ')"
+
+  eval "$(declare -f review_runtime_validate_authoritative_log_actual |
+    sed '1s/review_runtime_validate_authoritative_log_actual/review_runtime_validate_authoritative_log/')"
+  eval "$(declare -f review_runtime_git_blob_line_anchor_sha256_actual |
+    sed '1s/review_runtime_git_blob_line_anchor_sha256_actual/review_runtime_git_blob_line_anchor_sha256/')"
+
+  memo_event_file="$(find "$memo_root" -name events.jsonl -type f)"
+  uncached_output="$(KC_PR_FLOW_STATE_DIR="$uncached_root" \
+    bash "$RUNTIME" append --event-file "$memo_event_file")"
+  assert_eq 'uncached external append accepts every optimized event byte' \
+    '0' "$(jq -r '.quarantined + .blocked' <<<"$uncached_output")"
+  uncached_event_file="$(find "$uncached_root" -name events.jsonl -type f)"
+  if cmp -s "$memo_event_file" "$uncached_event_file"; then
+    pass
+  else
+    fail 'optimized and uncached append publish byte-identical event logs'
+  fi
+
+  total_bytes="$(wc -c <"$memo_event_file" | tr -d ' ')"
+  terminal_bytes="$(tail -n 1 "$memo_event_file" | wc -c | tr -d ' ')"
+  preterminal_limit=$((total_bytes - terminal_bytes))
+  failure_output="$(KC_PR_FLOW_STATE_DIR="$failure_root" \
+    KC_PR_FLOW_MAX_EVENTS_BYTES="$preterminal_limit" \
+    review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
+  assert_eq 'terminal size failure stays typed not_observed' \
+    'not_observed' "$(jq -r '.status' <<<"$failure_output")"
+  failure_event_file="$(find "$failure_root" -name events.jsonl -type f | head -1)"
+  assert_eq 'terminal verification failure publishes no run.finished authority' \
+    '0' "$(jq -r 'select(.event_type == "run.finished") | 1' "$failure_event_file" 2>/dev/null | wc -l | tr -d ' ')"
+}
+
+if [ "$CASE_FILTER" = 'collector-memoization' ]; then
+  run_collector_memoization_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
 
 run_shadow_executable() { # gate, head-status, live-head, observation, state-root
   KC_PR_FLOW_STATE_DIR="$5" bash "$RUNTIME" shadow \
