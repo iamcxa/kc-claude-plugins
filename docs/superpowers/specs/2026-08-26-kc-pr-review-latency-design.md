@@ -4,10 +4,11 @@
 - **Plugin:** `kc-pr-flow`
 - **Target skill:** `kc-pr-flow/skills/kc-pr-review/SKILL.md`
 - **Status:** Approved for phased implementation; Captain-approved Phase 1 revision recorded
-  2026-08-27; latency promotion deferred
-- **Promotion target:** A post-fix review reaches the existing confirmation gate in at most four
-  minutes on independently adjudicated actual control/treatment evidence, without losing any
-  expected must-fix finding. The current synthetic corpus does not prove this target.
+  2026-08-27; Captain-approved slimming and measurement amendment recorded 2026-08-28;
+  promotion deferred
+- **Promotion target:** The controlling promotion rule is section 0.5. The historical four-minute
+  and 100%-known-finding targets are not current promotion claims. The current synthetic corpus and
+  the exploratory pair do not prove promotion.
 
 ## 0. Captain-approved Phase 1 revision (2026-08-27)
 
@@ -88,6 +89,67 @@ Q1-Q6, Phase 1 stays default-off and unpromoted.
    Phase 1 suites, and obtain a fresh exact-head full-branch review. No paid run is part of this
    repair.
 
+### 0.5 Captain-approved slimming and measurement amendment (2026-08-28)
+
+This amendment supersedes conflicting promotion and identity statements in this design and the
+implementation plan. It changes no staging or publishing lifecycle, creates no CI workflow, and
+does not promote the fast path.
+
+#### 0.5.1 Frozen exploratory result and promotion rule
+
+The one-pair result is exploratory, not promotion evidence: control was 444159 ms; treatment was
+335487 ms (24.47% reduction); the setup collector was 438850 ms and is outside treatment latency;
+the treatment-agent critical path was 285650 ms. The combined treatment recalled 6 of 14 actionable
+findings and missed 8. Those eight are semantic predecessor-observation misses, not router-dropped
+inherited IDs or newly introduced delta hunks.
+
+Promotion requires all of the following on at least five real stacked control/treatment pairs:
+
+1. Median review-to-confirmation reduction is at least 33.3%.
+2. Recall is at least 90%.
+3. No frozen Critical or High defect class is missed.
+4. False positives are no greater than the control.
+
+The prior four-minute and 100%-known-finding statements are historical design targets only. They do
+not independently promote a route and do not describe the current exploratory pair. This amendment's
+multi-pair rule controls any later promotion decision.
+
+#### 0.5.2 Preregistered identity, adjudication, and sequencing
+
+The v2 identity is machine-owned: the runtime derives the canonical claim key and finding identity
+from validated v2 inputs; a model may supply evidence and bounded review text but may not author,
+select, or override either identity. This explicitly supersedes section 7.2's prohibition on
+machine-derived claim keys. Invalid or ambiguous v2 identity fails closed to an unresolved partition
+and cannot merge candidates.
+
+Severity is a closed rubric: `Critical`, `High`, `Medium`, and `Low`. Every blind adjudicator labels
+every accepted finding; an incomplete label matrix fails closed. A finding's severity is the maximum
+submitted blind label, and a defect class's severity is the maximum of its member findings.
+
+Blind adjudication compares same defects after de-identification. The pair-to-arm mapping remains
+sealed until the partition is frozen; transitivity conflicts remain unresolved rather than inferred;
+the Captain may reject a proposed match; and any unresolved partition fails closed. PR #14's rewritten
+lineage is a fail-closed fallback case, never a positive pair.
+
+The required order is: preregister; v2 identity; memoized collector; paired runs and seal; blind
+adjudication/freeze; timing analysis; recipe/test consolidation. Timing analysis cannot backfill an
+unfrozen partition or create promotion evidence.
+
+#### 0.5.3 Surface mapping and bounded cleanup exception
+
+| Surface | Before | After |
+|---|---|---|
+| v1 finding identity | Reviewer-authored claim key prohibited machine derivation | v2 machine-owned canonical identity replaces v1; model prose remains untrusted input |
+| Event runtime collector | Repeated collection work | Memoized collector optimization in the existing runtime; no staging/publish lifecycle |
+| Skill recipes | Duplicated mechanical logic | Behavior-preserving deletion only after measurement truth is frozen; existing authority remains |
+| Existing contract-test owners | Current source-safe contracts | Add only narrow v2 identity, collector, adjudication, and parity checks to their existing owners; no new standing CI workflow |
+
+After frozen measurement truth, behavior-preserving recipe and test consolidation may occur without
+enabling promotion. It may delete duplicated skill logic only when the existing runtime remains the
+authority and the semantic safety text—exact-head, evidence/quote, coverage, confirmation, posting,
+and fail-closed rules—remains. Rollback restores the previous recipe text; it does not alter the
+frozen evidence or grant promotion authority.
+
 ## 1. Problem
 
 `kc-pr-review` currently optimizes for broad first-pass coverage. A fresh invocation performs PR
@@ -114,9 +176,9 @@ separate evidence supports changing it.
 
 1. A trusted post-fix review has a deterministic `resolve` or `delta` route instead of silently
    repeating a full initial review.
-2. The promotion corpus retains **100% of expected must-fix findings**. Recall is evaluated before
-   any latency or token improvement.
-3. Eligible post-fix benchmark runs reach a confirmation-ready draft within **240 seconds**,
+2. Promotion uses the section 0.5 multi-pair recall, frozen-severity, and false-positive rule.
+   Recall is evaluated before any latency or token improvement.
+3. Promotion uses section 0.5's median review-to-confirmation reduction across real stacked pairs,
    measured from the first exact-head snapshot to the completed draft receipt. Human response time,
    GitHub Actions time, and post-confirmation GitHub mutation time are reported separately.
 4. Exact-head validation, the quote-the-line gate, posting authorization, and once-only posting
@@ -135,17 +197,18 @@ Promotion is ordered. A later gate cannot repair an earlier failure.
 |---|---|---|
 | Q1 Identity | Exact repository, PR, base, head, config, and receipt binding | All valid; any mismatch rejected |
 | Q2 Coverage | Required capability terminals | Complete, or effective event capped at `COMMENT` |
-| Q3 Recall | Expected must-fix findings recovered | 100% per corpus case |
+| Q3 Recall | Accepted findings recovered | At least 90% across real stacked pairs; no frozen Critical/High defect class missed |
 | Q4 Precision | Posted findings survive quote and evidence validation | No decrease from the full-review control; zero unquoted actionable findings |
 | Q5 Behavior | Event, confirmation options, and posting authority | Same or more conservative than the control |
-| Q6 Latency | Exact-head snapshot to confirmation-ready draft | At most 240 seconds per eligible post-fix promotion run |
+| Q6 Latency | Review-to-confirmation reduction | Median at least 33.3% across at least five real stacked pairs |
 | Q7 Cost | Reported comparable provider usage | Record only; no promotion claim until provider/scope match |
 
 For Q6, an eligible post-fix treatment is exactly `delta` or `resolve`. An `initial` fallback still
 participates in Q1-Q5 but has no fast-path timing receipt and is excluded from every latency count.
 
 If Q1-Q5 pass but Q6 fails, the phase is safe but not promoted as a latency improvement. If Q1-Q5
-fail, the phase is rolled back regardless of its speed.
+fail, the phase is rolled back regardless of its speed. The historical 240-second and 100%-known-
+finding values remain non-promotable design context under section 0.5.
 
 ### 2.3 Non-goals
 
@@ -519,9 +582,10 @@ repeated ad hoc parsing without transferring semantic judgment to a script.
 
 Reviewer lanes still decide whether an issue exists and emit a constrained candidate. The collator
 may reject malformed evidence, keep uncertain candidates visible, merge exact fingerprints, and
-apply already-specified confidence destinations. It may not invent a claim key, decide two
-different claims are equivalent, raise confidence, label code secure, suppress a valid finding, or
-choose the review event.
+apply already-specified confidence destinations. Under section 0.5, it derives the machine-owned v2
+claim key and finding identity from validated canonical inputs; it may not accept a model-authored
+identity, decide two different claims are equivalent, raise confidence, label code secure, suppress
+a valid finding, or choose the review event.
 
 Fingerprint inputs are reviewer-assigned and evidence-bound. On uncertain equivalence, candidates
 remain separate. Extra review is safer than a false merge that hides a defect.
@@ -689,8 +753,9 @@ until the runtime commands own the recipes.
 ### 8.7 Rollback boundary
 
 `KC_PR_FLOW_RUNTIME_RECIPES=on` selects the extracted path during rollout. Off uses the prior recipe
-path until parity is promoted. The final cleanup of embedded recipes occurs only after the flag-on
-path passes the promotion corpus; reverting that cleanup restores the previous instruction path.
+path. Per section 0.5, final behavior-preserving cleanup may occur after measurement truth is frozen
+without promotion; it retains semantic safety text and existing runtime authority. Reverting that
+cleanup restores the previous instruction path and does not change evidence or promotion state.
 
 ## 9. Phase 5: risk-triggered specialist routing
 
@@ -752,9 +817,9 @@ still reviews correctness and may escalate.
 
 | Dimension | Acceptance |
 |---|---|
-| Recall | 100% must-fix recall overall and 100% of security-labeled expected findings on the promotion corpus |
+| Recall | Meets section 0.5's real-pair recall and frozen Critical/High-class rule; skipped specialists do not hide a required finding |
 | Precision | No increase in posted false positives; skipped specialists do not produce clean/security claims |
-| Latency | Eligible post-fix runs meet 240 seconds without relying on a missing required lane |
+| Latency | Meets section 0.5's median reduction rule without relying on a missing required lane |
 | Behavior | Unknown, trust-boundary, dependency, workflow, and inherited-security cases still dispatch specialists or cap at `COMMENT` |
 
 ### 9.6 RED and GREEN commands
@@ -923,23 +988,25 @@ philosophy rather than replace it:
   "quality_gates": {
     "identity": true,
     "required_coverage": true,
-    "must_fix_recall": true,
+    "recall": true,
+    "frozen_critical_high_classes": true,
     "precision": true,
     "behavior_parity": true
   },
-  "latency": {
-    "target_ms": 240000,
-    "eligible_runs": 9,
-    "passing_runs": 9,
-    "max_ms": 231000
+  "measurement": {
+    "real_stacked_pairs": 5,
+    "median_review_to_confirmation_reduction_pct": 33.3,
+    "recall_pct": 90,
+    "missed_frozen_critical_high_classes": 0,
+    "false_positives_no_greater_than_control": true
   },
   "verdict": "promote"
 }
 ```
 
-The scorer emits `do_not_promote` on any earlier quality failure, regardless of latency. A run that
-times out without complete required evidence may complete as `COMMENT`, but it cannot count as a
-successful four-minute `APPROVE`-eligible run.
+The scorer emits `do_not_promote` on any earlier quality failure, regardless of timing. A run that
+times out without complete required evidence may complete as `COMMENT`, but it cannot count as an
+accepted real pair.
 
 For the current committed synthetic corpus, `do_not_promote` is unconditional and expected; passing
 Q1-Q6 fields are structural self-tests, not a promotion verdict. Enabling `promote` requires a new
@@ -997,6 +1064,6 @@ specialist lanes only where exact-head shadow evidence proves that conservative 
 recall. Phase 6 is conditional and is not built unless timing attribution shows its tails are
 material.
 
-The target is deliberately asymmetric: post-fix review may earn an at-most-four-minute path with
-100% known-finding recall only after actual independent evidence; initial review keeps its current
-coverage until independent evidence supports a narrower topology.
+The target is deliberately asymmetric: post-fix review may earn promotion only under section 0.5's
+real-pair rule; initial review keeps its current coverage until independent evidence supports a
+narrower topology.

@@ -59,10 +59,11 @@ unsupported synthetic promotion claim.
 | Existing plan/runtime/evaluation CI workflows | Phase 1 behavioral ownership | Same triggers/jobs; no new hosted or paid execution |
 
 The revised outcome is a safe, default-off, **unpromoted** Phase 1 foundation. The four-minute and
-100% must-fix targets remain future promotion criteria. Phases 2-6, specialist reduction, posting
-ownership, human confirmation, actual evidence collection, and paid model/provider runs remain
-non-goals. Rollback remains setting `KC_PR_FLOW_DELTA_FAST_PATH` to anything except `on`; receipts
-remain readable and do not gain authority.
+100% must-fix targets are historical design targets; the later Captain-approved multi-pair rule
+below controls promotion. Phases 2-6, specialist reduction, posting ownership, human confirmation,
+actual evidence collection, and paid model/provider runs remain non-goals. Rollback remains setting
+`KC_PR_FLOW_DELTA_FAST_PATH` to anything except `on`; receipts remain readable and do not gain
+authority.
 
 The revision is falsified if a same-file unrelated/security hunk selects `resolve`; a failed,
 unavailable, or uncertain predecessor is trusted; `APPROVE` crosses a `COMMENT` ceiling; a Git
@@ -88,6 +89,69 @@ The receipt boundary now also binds completeness to one immutable canonical
 This amendment is falsified if a six-capability configuration with one succeeded replayed lane
 issues a receipt or selects a non-`initial` decision. The fast path remains default-off; no network,
 model, confirmation, posting, rollout, or promotion authority changes.
+
+## Captain-approved slimming and measurement amendment (2026-08-28)
+
+This route records measurement truth before follow-up runtime work. It adds no staging or publishing
+lifecycle and no standing CI workflow; narrow source-safe checks belong only to existing contract-test
+owners.
+
+### Controlling promotion evidence
+
+The current one-pair result is exploratory and cannot promote: control 444159 ms; treatment 335487
+ms; 24.47% reduction; setup collector 438850 ms outside treatment latency; treatment-agent critical
+path 285650 ms; combined treatment recall 6 of 14 actionable findings, with 8 misses. The eight
+misses are semantic predecessor-observation misses, not router-dropped inherited IDs or newly
+introduced delta hunks.
+
+Promotion requires at least five real stacked control/treatment pairs, median review-to-confirmation
+reduction of at least 33.3%, recall of at least 90%, zero missed frozen Critical/High defect classes,
+and false positives no greater than control. The earlier four-minute and 100%-known-finding statements
+remain historical and non-promotable; they do not describe a current promotion or override this rule.
+
+### Identity and blind adjudication
+
+Before collection, Task 2 replaces v1 with a machine-owned v2 identity: the runtime derives canonical
+claim keys and finding identity from validated v2 inputs. Models may supply evidence and bounded prose
+but cannot author, select, or override identity. This explicitly supersedes the latency design's
+section 7.2 ban on machine-derived claim keys. Invalid or ambiguous identity remains an unresolved,
+fail-closed partition.
+
+The closed severity rubric is `Critical`, `High`, `Medium`, and `Low`. Every blind adjudicator labels
+every accepted finding; an incomplete label matrix fails closed. Per-finding severity is the maximum
+submitted blind label, and class severity is the maximum member severity. Same-defect adjudication is
+blind and de-identified, arm mapping stays sealed until freeze, transitivity conflicts remain
+unresolved, and the Captain may reject a proposed match. PR #14 rewritten lineage is a fail-closed
+fallback case, never one of the positive pairs.
+
+### Required sequence, surfaces, and cleanup boundary
+
+Execute in this order: preregister; v2 identity; memoized collector; paired runs and seal; blind
+adjudication/freeze; timing analysis; recipe/test consolidation. No later step can convert unfrozen
+or unresolved evidence into promotion evidence.
+
+| Surface | Before | After |
+|---|---|---|
+| v1 identity | Reviewer-authored identity with a machine-derived-key prohibition | v2 machine-owned identity replaces v1; model prose remains untrusted |
+| Existing event runtime | Repeated collector work | Memoized collector in the same runtime; no staging/publish lifecycle |
+| `SKILL.md` recipes | Duplicated mechanical logic | Behavior-preserving deletion after frozen truth, with existing runtime authority retained |
+| Existing contract-test owners | Current source-safe tests | Narrow v2 identity, collector, adjudication, and parity cases only; no new workflow |
+
+Recipe and test consolidation may follow frozen measurement truth without enabling promotion. It may
+delete duplicated skill logic only if the existing runtime remains authoritative and semantic safety
+text—exact head, evidence/quote, coverage, confirmation, posting, and fail-closed rules—remains.
+Rollback restores the prior recipe text without changing frozen evidence or promotion state.
+
+### Follow-up task allocation
+
+- Task 2 owns v2 identity and adds source-safe identity cases to the existing collation/runtime test
+  owners; it does not introduce a new workflow.
+- Task 3 owns the in-process memoized collector and adds its source-safe cases to the existing runtime
+  test owner; collector setup remains outside treatment latency.
+- Task 4 owns preregistration, pair sealing, blind adjudication, freeze, and timing analysis; it
+  selects five provenance-valid ancestor pairs and excludes PR #14 from positives.
+- Task 5 may consolidate recipes/tests only after Task 4 freezes measurement truth; parity tests do
+  not establish semantic correctness or promotion.
 
 ## File map
 
@@ -994,6 +1058,10 @@ assert_eq "structural gates still exercise Q1-Q6" "true" \
 assert_eq "target is four minutes" "240000" "$(jq -r '.latency.target_ms' <<<"$report")"
 ```
 
+This 240000-ms assertion is legacy structural-fixture coverage only. It cannot promote the route;
+the real-pair promotion rule in the Captain-approved slimming and measurement amendment controls
+Task 4 and later evidence collection.
+
 Q2 passes only when every required capability has a unique `complete` coverage entry and there are
 no gap refs, or when every incomplete required capability has a unique gap entry and the bound
 effective event—and the posted event when present—is `COMMENT` or `REQUEST_CHANGES`. The latter
@@ -1474,7 +1542,9 @@ This implementation plan ends after Phase 1. Do not add these to a Phase 1 task 
 
 - Phase 2: shared exact-head inventory.
 - Phase 3: typed finding collation.
-- Phase 4: move shadow/confirmation recipes into runtime and shrink `SKILL.md`.
+- Phase 4: move shadow/confirmation recipes into runtime and shrink `SKILL.md`; the section above
+  permits only behavior-preserving cleanup after frozen measurement truth, never promotion or removal
+  of semantic safety text.
 - Phase 5: risk-triggered specialist routing, including any reduction of today's unconditional
   security reviewer.
 - Phase 6: nonblocking learning and indexed posting state, only if measured timing warrants it.
