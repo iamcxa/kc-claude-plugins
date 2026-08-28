@@ -45,40 +45,48 @@ to the repository's identity.
 
 ## Planning must remain replaceable
 
-Planning and execution answer different questions. The planning provider owns
-the discussion, the decision to proceed, priority, and human-facing status for
-each item. Its planning window owns time, and its planning outcome owns the
-accepted result. After the Captain admits one Ready item set, the committed
-Spacedock entity set is the snapshot; Spacedock owns stages and execution
-evidence, while the delivery provider owns pull requests and required checks.
-The SD task's `what` and `why` preserve the admission snapshot; they do not
-become another accepted-goal authority.
+Planning and execution answer different questions. Every route begins with one
+admitted brief. Pilot and Production use a Development Brief that fixes the
+problem, accepted outcome, complete non-goal list, acceptance evidence, and
+route-back conditions. POC uses the decision, falsifier, budget, and stop
+condition already stored in `kc-dev-flow-work-profile/v3` as its Exploration
+Brief. Feature and bug labels do not change this engine.
 
-A projector makes those authorities look convenient by mirroring state, but it
-also turns a provider change into a data migration and creates another status
-record to reconcile. KC Dev Flow instead uses an admission snapshot plus a
-read-only engage reconcile. `source`, `planning-window`, and `planning-outcome`
-bind each task to its planning selection; `sprint` groups the resulting SD
-entities for execution. At every engage, a repository-local reader normalizes
-the provider's current Ready set, including every still-Ready snapshot source
-outside the original window/outcome, and the committed snapshot. The First
-Officer supplies the source, window, and outcome read from the exact work item;
-the vendored read-only comparator checks the normalized snapshot against those
-expected values and classifies every delta. The First Officer continues only on
-one parsed `status: clean` result. The Captain admits a delta before an
+A Planning Receipt is optional and complete or absent. Provider-backed work
+records exactly `source`, `planning-window`, and `planning-outcome`. Its planning
+item owns discussion, the accepted goal, priority, and human-facing status; its
+window owns time and its outcome owns the accepted result. The committed
+execution snapshot preserves those inputs without becoming another planning
+authority.
+
+At every provider-backed engage, a repository-local reader normalizes the
+provider's current Ready set, including every still-Ready snapshot source
+outside the original window/outcome, and the committed execution snapshot. The
+First Officer supplies the source, window, and outcome read from the exact work
+item; the vendored read-only comparator checks the normalized snapshot against
+those expected values and classifies every delta. The First Officer continues
+only on one parsed `status: clean` result. The Captain admits a delta before an
 authorized actor commits the replacement snapshot. Because reconcile writes
 neither side, it is not synchronization.
 
+Without a Planning Receipt, the Captain-approved committed work item is the
+planning authority. It invokes no planning provider or comparator and invents
+no Cycle or Release/Milestone. A partial receipt is invalid rather than a reason
+to guess which authority applies.
+
 That boundary lets a repository replace GitHub Projects with Linear, or the
-reverse, without rewriting active Spacedock snapshots, execution history, or
-delivery evidence. Only open planning items not yet admitted to SD move. Active
-items keep their existing planning item and provider until completion, so the
-old provider and its read-only reader stay available during the drain; new
-admissions use the replacement provider. Providers may differ across snapshots,
-but each item retains one planning-item authority. `sprint` remains an SD
-execution grouping rather than a provider Cycle or Milestone authority, and no
-projector, importer, polling loop, or bidirectional sync is part of the portable
-package.
+reverse, without changing KC Dev Flow. Open provider-backed work not yet
+admitted to execution may move; an admitted item keeps its provider and reader
+until completion. Standalone work has no provider to migrate. Runtime adapters
+decide task, worktree, and worker cardinality, retry, resume, and delivery
+ceremony. Their local grouping is not a provider Cycle or Milestone authority.
+No projector, importer, polling loop, or bidirectional sync is part of the
+portable package.
+
+Exploration observes a decision rather than silently creating delivery scope.
+After approval, POC or Spike terminalizes and returns `poc_outcome` to planning.
+Planning decides whether a new Development Brief exists; KC Dev Flow does not
+create or preselect that downstream work.
 
 ## Optional prose is still loaded prose
 
@@ -88,7 +96,7 @@ imitating nearby ceremony. Optional policy can cost almost as much attention as
 mandatory policy.
 
 So the new design does not ask the model to ignore most of a large contract. A
-loader receives the exact work item and its `kc-dev-flow-work-profile/v2`
+loader receives the exact work item and its `kc-dev-flow-work-profile/v3`
 receipt. It emits only three things: the shared authority core, the selected
 profile base, and the current stage. Unselected profiles are absent.
 

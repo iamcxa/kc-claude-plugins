@@ -918,7 +918,11 @@ for phrase in [
 for phrase in [
     "The first version of KC Dev Flow",
     "carrying the whole workshop",
-    "kc-dev-flow-work-profile/v2",
+    "kc-dev-flow-work-profile/v3",
+    "A Planning Receipt is optional and complete or absent",
+    "Without a Planning Receipt, the Captain-approved committed work item",
+    "Runtime adapters decide task, worktree, and worker cardinality",
+    "returns `poc_outcome` to planning",
     "directional evidence",
     "What would prove this wrong",
     "Load the work, not the ceremony",
@@ -926,6 +930,13 @@ for phrase in [
     "The First Officer continues only on one parsed `status: clean` result",
 ]:
     require(phrase in normalized_rationale, f"rationale omits: {phrase}")
+for forbidden in [
+    "committed Spacedock entity set is the snapshot",
+    "bind each task to its planning selection",
+    "not yet admitted to SD move",
+    "`sprint` remains an SD execution grouping",
+]:
+    require(forbidden not in normalized_rationale, f"rationale restores runtime coupling: {forbidden}")
 require(
     "net repository lines" not in normalized_rationale,
     "rationale retains a mutable PR diff snapshot",
