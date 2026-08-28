@@ -47,6 +47,10 @@ gates:
                 digest: sha256:2115bf236c6997cb43ce868d765bca267845fb8e6805953f00f5e822117abded
                 request-digest: sha256:2efac7a3f2ef2390158d775dded2eabe4dff041ec995cdd39840df7c9e392209
                 room-ref: ./manual-cycle-release-admission-path/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-28T00:24:23.244715Z"
+                reason: The prepared ideation briefing cannot be presented because ac-scan found no required Acceptance criteria section; preserve the six shaped checks and repair only their scanner-readable heading and AC labels.
 ---
 
 ## Problem
