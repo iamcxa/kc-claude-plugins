@@ -66,7 +66,20 @@ Continue by the selected profile's smallest sufficient route.
    worker. The stop applies to new dispatch and later state changes.
 7. Then read current execution state from its declared authority. Do not
    enumerate the state tree or use provider status to advance execution.
-8. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
+8. For a manual admission, require exactly one committed task for the engaged source
+   and exactly one non-empty isolated execution context recorded for that
+   task. The First Officer refuses a new dispatch when either count differs.
+   A recoverable dispatch failure, timeout, or worker loss resumes the same
+   task and context; otherwise report the cardinality delta and route back.
+9. Build the fresh executor input from the accepted planning item, repository
+   context, exact committed task, and selected contract. Exclude the planning
+   transcript.
+10. Before dispatch and whenever execution proposes a scope change, compare the
+   accepted goal and complete non-goal list exactly with the admission snapshot.
+   If either differs or must change, stop; do not replace the snapshot or candidate.
+   Return a structured planning delta naming the changed premise,
+   affected acceptance evidence, and recommended `change` or `stop`.
+11. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
    and Production receipts remain loadable, while an active v2 POC must finish
    on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
    or stale before the first working stage, invoke

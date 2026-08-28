@@ -489,6 +489,16 @@ for phrase in [
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
 for phrase in [
+    "one planning item to one SD task and one isolated execution context",
+    "refusing a second task or execution context for the same admitted source",
+    "receives no planning transcript",
+    "compare the accepted goal and complete non-goal list exactly",
+    "structured planning delta",
+    "affected acceptance evidence",
+    "recommended `change` or `stop`",
+]:
+    require(phrase in normalized_kernel, f"kernel omits manual admission boundary: {phrase}")
+for phrase in [
     "An item leaves `backlog` only when its committed body states all three",
     "**What it is**",
     "**Why it is worth doing**",
@@ -770,6 +780,9 @@ for phrase in [
     "do not all share",
     "Captain admits every delta",
     "parsed `status: clean` result",
+    "one planning item to one SD task and one isolated execution context",
+    "starts directly with `## The problem`",
+    "keeps `## Agent execution contract`",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 for phrase in [
@@ -831,6 +844,14 @@ for phrase in [
     "Exit `1` reports the classified delta",
     "Exit `2` reports `planning reconcile unavailable`",
     "stdout parses as one JSON object with `status: clean`",
+    "exactly one committed task for the engaged source",
+    "exactly one non-empty isolated execution context",
+    "fresh executor input",
+    "Exclude the planning transcript",
+    "compare the accepted goal and complete non-goal list exactly",
+    "do not replace the snapshot or candidate",
+    "affected acceptance evidence",
+    "recommended `change` or `stop`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
 for phrase in [
@@ -967,6 +988,21 @@ for phrase in [
     "## Admission snapshot: accepted outcome and non-goals (copied from `source`)",
 ]:
     require(phrase in normalized_workflow, f"self-adoption misstates the admission snapshot: {phrase}")
+manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
+require(
+    manual_issue_body.startswith("## The problem\n"),
+    "manual admission Issue body does not start directly with The problem",
+)
+require(
+    "## Human-readable release brief" not in manual_issue_body,
+    "manual admission Issue body restored the redundant release-brief wrapper",
+)
+for phrase in [
+    "## Agent execution contract",
+    "one Issue to one committed Spacedock task and one isolated worktree",
+    "one reviewable candidate or a structured planning delta",
+]:
+    require(phrase in manual_issue_body, f"manual admission Issue body omits: {phrase}")
 for phrase in [
     "Roadmap headings are legacy or local SD execution-group identifiers, not planning windows or outcomes.",
     "It does not store task state, acceptance criteria, evidence, or provider-specific cycle metadata.",

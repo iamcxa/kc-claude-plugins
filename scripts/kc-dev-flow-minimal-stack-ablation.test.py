@@ -303,6 +303,20 @@ def run_reconcile_clean_output_wiring_mutant() -> None:
         )
 
 
+def run_manual_contract_mutant(
+    name: str, relative: str, before: str, after: str, evidence: str
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        replace_once(fixture / relative, before, after)
+        reject(
+            name,
+            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            evidence,
+        )
+
+
 def run_missing_close_guard_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
@@ -381,6 +395,27 @@ def main() -> int:
     run_reconcile_exit_mutant()
     run_reconcile_wiring_mutant()
     run_reconcile_clean_output_wiring_mutant()
+    run_manual_contract_mutant(
+        "one-to-many-execution-restored",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "exactly one committed task for the engaged source",
+        "one or more committed tasks for the engaged source",
+        "continuation planning disambiguation omits: exactly one committed task for the engaged source",
+    )
+    run_manual_contract_mutant(
+        "execution-scope-replacement-restored",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "do not replace the snapshot or candidate",
+        "replace the snapshot and continue the candidate",
+        "continuation planning disambiguation omits: do not replace the snapshot or candidate",
+    )
+    run_manual_contract_mutant(
+        "release-brief-wrapper-restored",
+        "docs/dev/README.md",
+        "```markdown\n## The problem\n",
+        "```markdown\n## Human-readable release brief\n\n## The problem\n",
+        "manual admission Issue body does not start directly with The problem",
+    )
     run_missing_close_guard_mutant()
     run_release_state_mutant()
     print("kc-dev-flow minimal-stack ablation: PASS")

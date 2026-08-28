@@ -209,6 +209,37 @@ Captain admits every delta before an authorized actor commits the replacement
 snapshot. Do not cancel a running worker. This is reconcile, not projection or
 sync: neither side is written automatically.
 
+### Manual Cycle-Release admission
+
+A manually admitted GitHub Issue uses this body shape without a
+`## Human-readable release brief` wrapper:
+
+```markdown
+## The problem
+
+## Accepted outcome
+
+## Non-goals
+
+## Acceptance evidence
+
+## Route-back conditions
+
+Return one reviewable candidate or a structured planning delta that names the
+changed premise, affected acceptance evidence, and recommended change or stop.
+
+## Agent execution contract
+
+Bind one Issue to one committed Spacedock task and one isolated worktree. Give
+the fresh executor the Issue, repository context, exact task, and selected
+contract without the planning transcript. Reconcile the accepted outcome and
+complete non-goal list exactly before dispatch and before changing scope.
+```
+
+`python3 scripts/kc-dev-flow-contract-test.py` checks this first heading and the
+manual execution clauses. The minimal-stack ablation test mutates each boundary
+and requires the contract test to reject it for the named reason.
+
 ### `ideation` — selected `shape`
 
 Active only for Pilot and full-route Production. An eligible recovery creates no

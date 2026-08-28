@@ -58,6 +58,24 @@ not cancel a running worker.
 Do not add an SD-to-planning-provider projector, importer, polling loop, or
 bidirectional sync. No reconcile result writes either side automatically.
 
+## Manual admission and route-back
+
+A manual admission binds one planning item to one SD task and one isolated
+execution context. The First Officer enforces that binding at dispatch by
+resolving the committed task's source and recorded context, and by refusing a
+second task or execution context for the same admitted source. After dispatch
+failure, timeout, or worker loss, resume the recorded pair when safe; otherwise
+route back before creating another execution lane.
+
+The fresh executor receives the accepted planning item, repository context,
+exact committed task, and selected contract; it receives no planning transcript.
+Before dispatch and on any execution-time scope proposal, compare the accepted
+goal and complete non-goal list exactly with the admission snapshot. If either
+differs or implementation needs either to change, stop without rewriting the
+snapshot and return a structured planning delta naming the changed premise,
+affected acceptance evidence, and recommended `change` or `stop`. Unchanged
+scope produces one reviewable candidate for the existing delivery ceremony.
+
 ## Select before routing
 
 Before entering a working stage, re-read the committed receipt. New choices use

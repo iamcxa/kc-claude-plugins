@@ -61,6 +61,14 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    mark the unscheduled backlog ready during adoption. Materialize one SD task
    for every Ready planning item in that window and outcome. The committed SD
    entity set is the admitted snapshot.
+   For a manual admission, bind one planning item to one SD task and one isolated
+   execution context. Make the First Officer refuse a second matching task or
+   context and reuse the recorded pair after a recoverable worker failure. Feed
+   the executor only the accepted planning item, repository context, exact task,
+   and selected contract; exclude the planning transcript. When the provider
+   uses Issue bodies as admission packets, each body starts directly with
+   `## The problem`, keeps `## Agent execution contract`, and omits a
+   `## Human-readable release brief` wrapper.
 4. At every engage, the engage reconcile is read-only: invoke the reader and
    normalize the provider's current Ready set and committed SD snapshot into
    ephemeral comparator inputs. Refuse a snapshot whose items do not all share
