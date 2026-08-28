@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-08-28T00:05:28Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-manual-cycle-release-admission-path
 issue: "#305"
 pr:
 mod-block:
