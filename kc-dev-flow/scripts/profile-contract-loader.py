@@ -31,6 +31,7 @@ ROUTES = {
 PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
 PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
 POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
+POC_ARTIFACTS = {"no-code", "disposable", "retained"}
 RECOVERY_FIELDS = (
     "recovery_failure",
     "recovery_falsifier",
@@ -77,6 +78,18 @@ def is_placeholder_scalar(value: str) -> bool:
         or folded in PLACEHOLDER_WORDS
         or re.fullmatch(r"<[^>\n]+>", normalized) is not None
     )
+
+
+def _optional_field(block: str, field: str) -> str | None:
+    matches = re.findall(rf"^  {re.escape(field)}:[ \t]*([^\n#]*?)[ \t]*$", block, re.MULTILINE)
+    if len(matches) > 1:
+        raise ContractError(f"work item must contain at most one {field}")
+    if not matches:
+        return None
+    value = matches[0].strip().strip("\"'").strip()
+    if is_placeholder_scalar(value):
+        raise ContractError(f"{field} must be a concrete scalar")
+    return value
 
 
 def validate_admission_brief(path: Path, profile: str) -> str | None:
@@ -206,6 +219,23 @@ def resolve_work_item(path: Path) -> dict[str, str]:
             if is_placeholder_scalar(value):
                 raise ContractError(f"{field} must be a concrete scalar")
             poc_values[field] = value
+        artifact, safety = (_optional_field(block, field) for field in ("poc_artifact", "poc_safety_boundary"))
+        if (artifact is None) != (safety is None):
+            raise ContractError("poc_artifact and poc_safety_boundary must appear together")
+        if artifact is not None and artifact not in POC_ARTIFACTS:
+            raise ContractError("poc_artifact must be no-code, disposable, or retained")
+        minutes_text = _optional_field(block, "poc_decision_ready_minutes")
+        minutes = 15 if minutes_text is None else int(minutes_text) if minutes_text.isdigit() else 0
+        if minutes < 1:
+            raise ContractError("poc_decision_ready_minutes must be a positive integer")
+        reason = _optional_field(block, "poc_decision_ready_reason")
+        if minutes != 15 and reason is None:
+            raise ContractError("a non-15 poc_decision_ready_minutes requires a reason")
+        poc_values["poc_decision_ready_minutes"] = minutes
+        poc_values["poc_proof_path"] = "direct" if artifact in {"no-code", "disposable"} and safety == "none" else "fresh"
+        for field, value in (("poc_artifact", artifact), ("poc_safety_boundary", safety), ("poc_decision_ready_reason", reason)):
+            if value is not None:
+                poc_values[field] = value
 
     route_text = _one_field(block, r"^  route:[ \t]*([^\n#]+?)[ \t]*$", "profile route")
     if not (route_text.startswith("[") and route_text.endswith("]")):
@@ -440,9 +470,15 @@ def load_contracts(
         result["development_brief_sha256"] = development_brief_sha256
     if "recovery_failure" in receipt:
         result["review_risks"] = receipt["review_risks"]
+    if profile == "poc-exploration":
+        for key in ("poc_artifact", "poc_safety_boundary", "poc_decision_ready_minutes", "poc_decision_ready_reason", "poc_proof_path"):
+            if key in receipt:
+                result[key] = receipt[key]
     if logical_stage == "build":
         result["implementation_exit_observation_declared"] = (
-            receipt.get("review_risks") != ["none"]
+            receipt.get("poc_proof_path") != "direct"
+            if profile == "poc-exploration"
+            else receipt.get("review_risks") != ["none"]
         )
     return result
 
@@ -466,6 +502,8 @@ def render_text(contract: dict[str, object]) -> str:
         "skip_to_workflow_stage",
         "review_risks",
         "implementation_exit_observation_declared",
+        "poc_artifact", "poc_safety_boundary", "poc_decision_ready_minutes",
+        "poc_decision_ready_reason", "poc_proof_path",
         "development_brief_sha256",
     ):
         if key in contract:

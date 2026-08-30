@@ -51,9 +51,10 @@ one integrated slice is insufficient, the multi-slice guard. Selecting a
 profile, vendoring a reference, or seeing a link does not activate it.
 
 A v3 POC receipt also fixes one decision, falsifier, budget, and stop condition
-before entry. Its close guard records `proceed`, `stop`, or `change`; a
-`proceed` outcome may create or reuse one downstream item, but scheduling and
-profile selection remain separate Captain decisions. Pilot and Production may
+before entry. New receipts add a default-15-minute decision-ready limit plus an
+artifact and safety boundary. Its close guard records `proceed`, `stop`, or
+`change` and returns that outcome to planning without creating downstream work.
+Pilot and Production may
 continue on v2 receipts; active v2 POCs finish on the pinned 3.x contract or are
 re-recorded before the v4 cutover.
 
@@ -72,9 +73,10 @@ It cannot create work, admit it to a sprint, or interrupt the selected route.
 
 ### Proportional implementation-exit observation
 
-Every profile emits `review_convergence` in `observe` mode at implementation
-exit. POC requests one Medium-reasoning Claude Sonnet review with a High finding
-floor and no RoboRev confirmation. Pilot uses Medium reasoning and a Medium
+Pilot, Production, retained POCs, and safety-bound POCs emit
+`review_convergence` in `observe` mode at implementation exit. Direct no-code or
+disposable POCs emit no observation and close through the existing terminal
+gate without a validation worker. Pilot uses Medium reasoning and a Medium
 floor with one changed-tip confirmation. Production uses Thorough reasoning and
 a Medium floor with one changed-tip confirmation. All routes use one reviewer
 and no panel.

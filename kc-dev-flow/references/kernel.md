@@ -41,7 +41,9 @@ complete non-goal list, and route-back conditions. The explicit admission
 loader mode rejects a missing, duplicate, placeholder, evidence-only, or
 dual-section brief. Default loading leaves already-admitted headings unchanged.
 The v3 POC decision, falsifier, budget, and stop condition form the Exploration
-Brief.
+Brief. New POCs also record artifact class, any repository safety boundary, and
+a positive decision-ready minute limit. The limit defaults to 15; an override
+requires its reason.
 
 A Planning Receipt is optional and must be complete or absent. Explicit
 admission mode validates it before provider access. It is exactly the
@@ -105,7 +107,14 @@ project-global; different items may use different routes concurrently.
 | `production` | `shape -> build -> verify`; eligible recovery `build -> verify` |
 
 A v3 POC fixes one `poc_decision`, `poc_falsifier`, `poc_budget`, and
-`poc_stop_when` before implementation. A short Production route requires only
+`poc_stop_when` before implementation. A `no-code` or `disposable` POC with no
+safety boundary uses direct proof: build records the durable outcome and skips
+review plus fresh validation. Retained work or any named safety boundary keeps
+fresh proof. Older admitted v3 receipts keep that fresh path. Decision-ready
+time runs from admission to the durable outcome; Captain wait and terminal
+cleanup are separate. Over budget or after a Captain intervention, only a
+complete `change` outcome may continue to the terminal authorization gate.
+A short Production route requires only
 concrete `recovery_failure`, `recovery_falsifier`, `recovery_rollback`, and a
 closed non-empty `review_risks`; other Pilot and Production receipts omit them.
 

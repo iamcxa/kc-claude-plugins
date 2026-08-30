@@ -195,7 +195,10 @@ contract. Skipped stages create no review or evidence obligation.
 ## Advance
 
 At POC validation, use the repository-local `poc-close-guard.py`. Record one
-`poc_outcome`, prepare the gate through the guard, and record approval without
+`poc_outcome` and one separate `poc_close_measurement`. For direct proof, build
+records the outcome and the guard moves the item from implementation to
+validation solely for the terminal gate; do not dispatch a validation worker.
+For fresh proof, validation records the outcome. Prepare the gate through the guard, and record approval without
 `--consume`. After approval, consume the gate through the guard and terminalize
 the POC. Then return the POC outcome to planning. KC Dev Flow does not create
 downstream delivery work or preselect its profile; planning decides whether a
@@ -225,7 +228,8 @@ that changes the decision, and next action.
 ## Optional observations
 
 At implementation exit, inspect the loader's
-`implementation_exit_observation_declared` field. When the loader output is true,
+`implementation_exit_observation_declared` field. Direct POCs emit false; retained
+or safety-bound POCs and the higher profiles keep their existing value. When the loader output is true,
 read the selected build contract's `review_convergence` observation and provider
 contract it names — `../../references/roborev-implementation-exit.md` — as the
 method. Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, and

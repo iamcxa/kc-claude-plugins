@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime
 import importlib.util
 import os
 import re
@@ -33,7 +34,7 @@ def load_profile_loader():
 LOADER = load_profile_loader()
 
 
-def read_work_item(path: Path) -> tuple[str, str]:
+def read_work_item(path: Path) -> tuple[str, str, dict[str, object]]:
     path = path.expanduser().resolve()
     try:
         text = path.read_text(encoding="utf-8")
@@ -47,9 +48,6 @@ def read_work_item(path: Path) -> tuple[str, str]:
         raise CloseError("POC close path requires kc-dev-flow-work-profile/v3")
     if receipt["profile"] != "poc-exploration":
         raise CloseError("POC close path requires selected profile poc-exploration")
-    if receipt["workflow_stage"] != "validation":
-        raise CloseError("POC close path requires work item status validation")
-
     frontmatter_end = text.find("\n---\n", 4)
     if not text.startswith("---\n") or frontmatter_end < 0:
         raise CloseError("work item frontmatter is invalid")
@@ -61,7 +59,12 @@ def read_work_item(path: Path) -> tuple[str, str]:
         )
     except LOADER.ContractError as exc:
         raise CloseError(str(exc)) from exc
-    return text, item_id
+    started = re.findall(r"^started:\s*([^\n#]+?)\s*$", text[4:frontmatter_end], re.MULTILINE)
+    if len(started) > 1:
+        raise CloseError("work item must contain at most one frontmatter started")
+    if started:
+        receipt["started"] = started[0].strip().strip("\"'").strip()
+    return text, item_id, receipt
 
 
 def one_yaml_section(text: str, heading: str, root_key: str) -> str:
@@ -96,22 +99,66 @@ def one_field(block: str, field: str, *, concrete: bool = True) -> str:
     return value
 
 
-def parse_outcome(text: str) -> str:
+def unsigned(block: str, field: str) -> int:
+    value = one_field(block, field)
+    if not value.isdigit():
+        raise CloseError(f"{field} must be a non-negative integer")
+    return int(value)
+
+
+def timestamp(value: str, field: str) -> datetime.datetime:
+    try:
+        parsed = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise CloseError(f"{field} must be RFC3339") from exc
+    if parsed.tzinfo is None:
+        raise CloseError(f"{field} must include a timezone")
+    return parsed
+
+
+def parse_outcome(text: str, receipt: dict[str, object]) -> str:
     block = one_yaml_section(text, "POC outcome", "poc_outcome")
     direction = one_field(block, "direction")
     if direction not in {"proceed", "stop", "change"}:
         raise CloseError("direction must be proceed, stop, or change")
-    for field in ("evidence", "strongest_limit", "reversal_fact", "cleanup"):
+    if "poc_artifact" not in receipt:
+        for field in ("evidence", "strongest_limit", "reversal_fact", "cleanup"):
+            one_field(block, field)
+        return direction
+    admitted_at = one_field(block, "admitted_at")
+    decision_ready_at = one_field(block, "decision_ready_at")
+    elapsed = unsigned(block, "decision_ready_elapsed_seconds")
+    interventions = unsigned(block, "captain_interventions_before_decision_ready")
+    for field in ("evidence", "strongest_limit", "reversal_fact"):
         one_field(block, field)
+    cleanup_at_decision = one_field(block, "cleanup_status_at_decision")
+    if cleanup_at_decision not in {"pending", "complete", "failed", "not-applicable"}:
+        raise CloseError("cleanup_status_at_decision is invalid")
+    if admitted_at != receipt["started"]:
+        raise CloseError("admitted_at must equal frontmatter started")
+    computed = (timestamp(decision_ready_at, "decision_ready_at") - timestamp(admitted_at, "admitted_at")).total_seconds()
+    if computed < 0 or computed != elapsed:
+        raise CloseError("decision_ready_elapsed_seconds does not match the timestamps")
+    if (elapsed > int(receipt["poc_decision_ready_minutes"]) * 60 or interventions) and direction != "change":
+        raise CloseError("budget exhaustion or Captain intervention requires direction change")
+    close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
+    unsigned(close, "captain_wait_seconds")
+    unsigned(close, "terminal_cleanup_seconds")
+    if one_field(close, "cleanup_status") not in {"complete", "failed", "not-applicable"}:
+        raise CloseError("cleanup_status is invalid")
     return direction
 
 
-def validate(path: Path, phase: str) -> tuple[str, str]:
+def validate(path: Path, phase: str) -> tuple[str, str, str, str]:
     if phase not in {"prepare", "consume"}:
         raise CloseError(f"unsupported close phase: {phase}")
-    text, item_id = read_work_item(path)
-    direction = parse_outcome(text)
-    return item_id, direction
+    text, item_id, receipt = read_work_item(path)
+    proof_path = str(receipt["poc_proof_path"])
+    stage = str(receipt["workflow_stage"])
+    allowed = {"validation", "implementation"} if phase == "prepare" and proof_path == "direct" else {"validation"}
+    if stage not in allowed:
+        raise CloseError(f"POC {proof_path} close path requires work item status {' or '.join(sorted(allowed))}")
+    return item_id, parse_outcome(text, receipt), proof_path, stage
 
 
 def invoke_spacedock(
@@ -159,7 +206,12 @@ def main() -> int:
     workflow_dir = args.workflow_dir.expanduser().resolve()
 
     if args.command == "prepare":
-        item_id, _outcome = validate(args.work_item, "prepare")
+        item_id, _outcome, proof_path, stage = validate(args.work_item, "prepare")
+        if proof_path == "direct" and stage == "implementation":
+            invoke_spacedock(
+                spacedock,
+                ["status", "--workflow-dir", str(workflow_dir), "--set", item_id, "status=validation"],
+            )
         command = [
             "gate",
             "prepare",
@@ -178,7 +230,7 @@ def main() -> int:
         sys.stderr.write(result.stderr)
         return 0
 
-    item_id, _outcome = validate(args.work_item, "consume")
+    item_id, _outcome, _proof_path, _stage = validate(args.work_item, "consume")
     result = invoke_spacedock(
         spacedock,
         [

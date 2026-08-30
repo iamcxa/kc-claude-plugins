@@ -24,9 +24,12 @@ flowchart TB
     L --> C{Selected profile}
 
     C -->|POC| P1["Build<br/>smallest real journey"]
-    P1 --> P2["RoboRev exit observation<br/>High+ · Spacedock adopters"]
-    P2 --> P3["Prove<br/>journey + riskiest assumption"]
+    P1 --> P0{Direct proof?}
+    P0 -->|yes| P4["Durable outcome<br/>terminal gate"]
+    P0 -->|no| P2["RoboRev exit observation<br/>High+ · Spacedock adopters"]
+    P2 --> P3["Fresh proof<br/>journey + riskiest assumption"]
     P3 --> D[Done]
+    P4 --> D
 
     C -->|Pilot| T1["Shape<br/>bounded user journey"]
     T1 --> T2["Build<br/>real seams + recovery"]
@@ -68,7 +71,9 @@ not another agent, review, or gate.
   ascending `AC-N` bullets for new admission. Already-admitted prose is not
   migrated or rewritten.
 - **Exploration Brief** — required for POC; uses the existing v3 decision,
-  falsifier, budget, and stop-condition fields.
+  falsifier, budget, and stop-condition fields. New admissions also record an
+  artifact class, safety boundary, and positive decision-ready minute limit;
+  15 is the default and a different limit requires its reason.
 - **Planning Receipt** — optional and complete or absent; the exact `source`,
   `planning-window`, and `planning-outcome` tuple activates the adopter's
   read-only provider reconcile. A partial tuple stops.

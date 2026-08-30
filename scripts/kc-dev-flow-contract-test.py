@@ -571,9 +571,14 @@ for relative, phrases in {
         "poc_falsifier",
         "poc_budget",
         "poc_stop_when",
+        "poc_artifact",
+        "poc_safety_boundary",
+        "poc_decision_ready_minutes",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
         "poc_outcome",
+        "poc_close_measurement",
+        "do not dispatch a validation worker",
         "return the POC outcome to planning",
         "does not create downstream delivery work",
         "planning decides whether a new Development Brief exists",
@@ -582,6 +587,12 @@ for relative, phrases in {
     normalized = " ".join(read(relative).split())
     for phrase in phrases:
         require(phrase in normalized, f"{relative} omits the v4 POC contract: {phrase}")
+architecture = " ".join(read("ARCHITECTURE.md").split())
+require(
+    "Direct no-code or disposable POCs emit no observation" in architecture
+    and "without a validation worker" in architecture,
+    "project context still claims unconditional POC review or validation",
+)
 poc_guard_source = read("kc-dev-flow/scripts/poc-close-guard.py")
 require(
     'commands.add_parser("create")' not in poc_guard_source,
