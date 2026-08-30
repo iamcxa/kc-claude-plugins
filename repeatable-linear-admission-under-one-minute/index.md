@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-repeatable-linear-admission-under-one-minute
 issue:
-pr:
+pr: "#307"
 mod-block:
 id: np4b5ef99wf5tns6r7aqs10p
 gates:
