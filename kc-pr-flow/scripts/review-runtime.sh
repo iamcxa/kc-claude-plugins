@@ -1878,17 +1878,10 @@ review_runtime_compare_usage() (
   fi
 )
 
-review_runtime_replay() (
-  local event_file="$1"
-  local snapshot_dir='' event_snapshot=''
+review_runtime_replay_snapshot() {
+  local event_snapshot="$1"
   review_runtime_require_jq || return
   review_runtime_require_python || return
-  umask 077
-  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
-  event_snapshot="$snapshot_dir/events.jsonl"
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$event_snapshot"' EXIT
-  review_runtime_snapshot_regular_file \
-    "$event_file" "$event_snapshot" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
   review_runtime_validate_authoritative_log "$event_snapshot" >/dev/null || return
   if ! jq -e -s '
     reduce .[] as $event (
@@ -2033,16 +2026,23 @@ review_runtime_replay() (
       .behavior_hashes != null and
       (.lifecycle.unexpected_event | not)
     )' "$event_snapshot"
+}
+
+review_runtime_replay() (
+  local event_file="$1" snapshot_dir='' event_snapshot=''
+  umask 077
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  event_snapshot="$snapshot_dir/events.jsonl"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$event_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$event_file" "$event_snapshot" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
+  review_runtime_replay_snapshot "$event_snapshot"
 )
 
-review_runtime_snapshot_canonical_config() (
-  local config_file="$1" snapshot_dir='' config_snapshot='' raw canonical byte_count
+review_runtime_validate_config_snapshot() {
+  local config_snapshot="$1" raw canonical byte_count
   review_runtime_require_jq || return
-  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
-  config_snapshot="$snapshot_dir/review-config.json"
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$config_snapshot"' EXIT
-  review_runtime_snapshot_regular_file "$config_file" "$config_snapshot" 'review config' \
-    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  [ -f "$config_snapshot" ] && [ ! -L "$config_snapshot" ] || return 3
   raw="$(cat "$config_snapshot")" || return 74
   review_runtime_json_has_unique_members "$raw" >/dev/null 2>&1 || return 3
   canonical="$(printf '%s' "$raw" | jq -S -c . 2>/dev/null)" || return 3
@@ -2065,6 +2065,16 @@ review_runtime_snapshot_canonical_config() (
     return 3
   fi
   printf '%s' "$canonical"
+}
+
+review_runtime_snapshot_canonical_config() (
+  local config_file="$1" snapshot_dir='' config_snapshot=''
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  config_snapshot="$snapshot_dir/review-config.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$config_snapshot"' EXIT
+  review_runtime_snapshot_regular_file "$config_file" "$config_snapshot" 'review config' \
+    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  review_runtime_validate_config_snapshot "$config_snapshot"
 )
 
 review_runtime_v2_git_anchor() (
@@ -2106,12 +2116,39 @@ print(hashlib.sha256(value).hexdigest())
 PY
 )
 
-review_runtime_receipt() (
-  local event_file="$1" config_file="$2" repository_path="$3"
+# Shared sourceable boundary for the producer and the PR2 planner. Arguments
+# are immutable snapshot paths owned by the caller of the top-level operation.
+review_runtime_validate_delta_receipt() {
+  local receipt_snapshot="$1" event_snapshot="$2" config_snapshot="$3" repository_path="$4"
+  local raw canonical unsigned expected_content expected_receipt
+  [ "$#" -eq 4 ] || return 2
+  [ -f "$receipt_snapshot" ] && [ ! -L "$receipt_snapshot" ] || return 3
+  [ -f "$event_snapshot" ] && [ ! -L "$event_snapshot" ] || return 3
+  [ -f "$config_snapshot" ] && [ ! -L "$config_snapshot" ] || return 3
+  [ -d "$repository_path" ] && [ ! -L "$repository_path" ] || return 3
+  raw="$(cat "$receipt_snapshot")" || return 3
+  review_runtime_json_has_unique_members "$raw" >/dev/null 2>&1 || return 3
+  canonical="$(printf '%s' "$raw" | jq -S -c . 2>/dev/null)" || return 3
+  unsigned="$(printf '%s' "$canonical" | jq -S -c 'del(.content_sha256)')" || return 3
+  expected_content="$(printf '%s' "$unsigned" | review_runtime_sha256)" || return
+  if ! printf '%s' "$canonical" | jq -e --arg expected_content "$expected_content" '
+    (keys | sort) == ["content_sha256","coverage_gap_refs","known_findings","predecessor","required_capabilities","schema"] and
+    .schema == "kc-pr-flow.review-delta-receipt/v2" and
+    .content_sha256 == $expected_content
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  expected_receipt="$(review_runtime_build_delta_receipt \
+    "$event_snapshot" "$config_snapshot" "$repository_path")" || return 3
+  [ "$canonical" = "$expected_receipt" ] || return 3
+}
+
+review_runtime_build_delta_receipt() (
+  local event_snapshot="$1" config_snapshot="$2" repository_path="$3"
   local projection config config_hash capabilities projection_hash receipt_id canonical content_sha256
   local repository review_key finding_count index finding pointer anchor expected_claim expected_finding
   [ "$#" -eq 3 ] || return 2
-  projection="$(review_runtime_replay "$event_file")" || return 3
+  projection="$(review_runtime_replay_snapshot "$event_snapshot")" || return 3
   if ! printf '%s' "$projection" | jq -e '
     .lifecycle.complete == true and (.lanes | length > 0) and
     all(.lanes[]; .result.terminal_status == "succeeded") and
@@ -2120,7 +2157,7 @@ review_runtime_receipt() (
   ' >/dev/null 2>&1; then
     return 3
   fi
-  config="$(review_runtime_snapshot_canonical_config "$config_file")" || return 3
+  config="$(review_runtime_validate_config_snapshot "$config_snapshot")" || return 3
   config_hash="$(printf '%s' "$config" | review_runtime_sha256)" || return
   [ "$config_hash" = "$(printf '%s' "$projection" | jq -r '.run.config_hash')" ] || return 3
   capabilities="$(printf '%s' "$projection" | jq -S -c '[.lanes[].capability] | sort | unique')" || return
@@ -2171,6 +2208,27 @@ review_runtime_receipt() (
     return 3
   fi
   printf '%s\n' "$canonical"
+)
+
+review_runtime_receipt() (
+  local event_file="$1" config_file="$2" repository_path="$3"
+  local snapshot_dir='' event_snapshot='' config_snapshot='' receipt_snapshot=''
+  [ "$#" -eq 3 ] || return 2
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  event_snapshot="$snapshot_dir/events.jsonl"
+  config_snapshot="$snapshot_dir/review-config.json"
+  receipt_snapshot="$snapshot_dir/delta-receipt.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$event_snapshot" "$config_snapshot" "$receipt_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$event_file" "$event_snapshot" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
+  review_runtime_snapshot_regular_file "$config_file" "$config_snapshot" 'review config' \
+    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  review_runtime_build_delta_receipt \
+    "$event_snapshot" "$config_snapshot" "$repository_path" >"$receipt_snapshot" || return
+  chmod 0600 "$receipt_snapshot" || return 74
+  review_runtime_validate_delta_receipt \
+    "$receipt_snapshot" "$event_snapshot" "$config_snapshot" "$repository_path" || return
+  cat "$receipt_snapshot"
 )
 
 review_runtime_show() {

@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case delta-receipt-happy-path|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-happy-path|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -53,6 +53,14 @@ assert_match() { # $1=description $2=extended-regex $3=actual
     pass
   else
     fail "$1 ([$3] does not match [$2])"
+  fi
+}
+
+assert_not_zero() { # $1=description $2=actual status
+  if [ "$2" -ne 0 ]; then
+    pass
+  else
+    fail "$1 (expected nonzero status)"
   fi
 }
 
@@ -244,6 +252,127 @@ PY
   assert_eq 'receipt path makes no network, model, append, start, or post calls' '0' "$(wc -l <"$call_ledger" | tr -d ' ')"
 }
 
+run_delta_receipt_contract_tests() {
+  local root receipt events config repo output rc validator_ledger
+  local barrier_events barrier_config barrier_ledger snapshot_ledger event_hash config_hash
+  local mutation_name mutation_filter candidate mutation_file
+  run_delta_receipt_happy_path_tests
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  receipt="$root/receipt-one.json"
+  events="$root/events.jsonl"
+  config="$root/review-config.json"
+  repo="$root/repo"
+  validator_ledger="$root/validator-calls"
+  : >"$validator_ledger"
+
+  if declare -F review_runtime_validate_delta_receipt >/dev/null 2>&1; then
+    review_runtime_validate_delta_receipt "$receipt" "$events" "$config" "$repo" >/dev/null 2>&1
+    assert_eq 'sourceable receipt validator accepts the producer output' '0' "$?"
+    eval "$(declare -f review_runtime_validate_delta_receipt | sed '1s/review_runtime_validate_delta_receipt/review_runtime_validate_delta_receipt_original/')"
+    review_runtime_validate_delta_receipt() {
+      printf 'called\n' >>"$validator_ledger"
+      return 97
+    }
+    output="$(review_runtime_receipt "$events" "$config" "$repo" 2>/dev/null)"
+    rc=$?
+    assert_eq 'producer returns the shared validator failure' '97' "$rc"
+    assert_eq 'producer emits no receipt when shared validation fails' '' "$output"
+    assert_eq 'producer invokes the shared validator exactly once' '1' "$(wc -l <"$validator_ledger" | tr -d ' ')"
+    eval "$(declare -f review_runtime_validate_delta_receipt_original | sed '1s/review_runtime_validate_delta_receipt_original/review_runtime_validate_delta_receipt/')"
+    unset -f review_runtime_validate_delta_receipt_original
+  else
+    fail 'sourceable review_runtime_validate_delta_receipt exists for producer and PR2 consumer'
+  fi
+
+  barrier_events="$root/barrier-events.jsonl"
+  barrier_config="$root/barrier-config.json"
+  barrier_ledger="$root/barrier-validator"
+  snapshot_ledger="$root/barrier-snapshots"
+  cp "$events" "$barrier_events"
+  cp "$config" "$barrier_config"
+  : >"$barrier_ledger"
+  : >"$snapshot_ledger"
+  event_hash="$(review_runtime_sha256 <"$barrier_events")"
+  config_hash="$(review_runtime_sha256 <"$barrier_config")"
+  eval "$(declare -f review_runtime_snapshot_regular_file | sed '1s/review_runtime_snapshot_regular_file/review_runtime_snapshot_regular_file_original/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt | sed '1s/review_runtime_validate_delta_receipt/review_runtime_validate_delta_receipt_original/')"
+  review_runtime_snapshot_regular_file() {
+    review_runtime_snapshot_regular_file_original "$@"
+    rc=$?
+    [ "$rc" -eq 0 ] || return "$rc"
+    case "$3" in
+      'event file') printf '{"replaced":true}\n' >"$1" ;;
+      'review config') printf '{"replaced":true}\n' >"$1" ;;
+    esac
+    printf '%s\n' "$3" >>"$snapshot_ledger"
+  }
+  review_runtime_validate_delta_receipt() {
+    printf '%s|%s|%s|%s\n' \
+      "$([ "$2" = "$barrier_events" ] && printf caller || printf snapshot)" \
+      "$([ "$3" = "$barrier_config" ] && printf caller || printf snapshot)" \
+      "$(review_runtime_sha256 <"$2")" "$(review_runtime_sha256 <"$3")" >>"$barrier_ledger"
+    review_runtime_validate_delta_receipt_original "$@"
+  }
+  output="$(review_runtime_receipt "$barrier_events" "$barrier_config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'receipt survives caller event/config replacement after snapshots' '0' "$rc"
+  assert_eq 'barrier receipt keeps original bytes' "$(cat "$receipt")" "$output"
+  assert_eq 'top-level receipt snapshots each caller input once' 'event file,review config' \
+    "$(sort "$snapshot_ledger" | paste -sd, -)"
+  assert_eq 'shared validator receives original immutable event/config snapshots' \
+    "snapshot|snapshot|$event_hash|$config_hash" "$(cat "$barrier_ledger")"
+  eval "$(declare -f review_runtime_snapshot_regular_file_original | sed '1s/review_runtime_snapshot_regular_file_original/review_runtime_snapshot_regular_file/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt_original | sed '1s/review_runtime_validate_delta_receipt_original/review_runtime_validate_delta_receipt/')"
+  unset -f review_runtime_snapshot_regular_file_original review_runtime_validate_delta_receipt_original
+
+  reseal_delta_receipt() {
+    local value="$1" unsigned hash
+    unsigned="$(printf '%s' "$value" | jq -S -c 'del(.content_sha256)')" || return
+    hash="$(printf '%s' "$unsigned" | review_runtime_sha256)" || return
+    printf '%s' "$unsigned" | jq -S -c --arg hash "$hash" '. + {content_sha256:$hash}'
+  }
+  while IFS='|' read -r mutation_name mutation_filter; do
+    candidate="$(jq -S -c "$mutation_filter" "$receipt")" || return
+    candidate="$(reseal_delta_receipt "$candidate")" || return
+    mutation_file="$root/receipt-$mutation_name.json"
+    printf '%s\n' "$candidate" >"$mutation_file"
+    review_runtime_validate_delta_receipt "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+    assert_not_zero "validator rejects $mutation_name mutation after self-reseal" "$?"
+  done <<'EOF'
+top-extra|.extra=true
+top-missing|del(.coverage_gap_refs)
+predecessor-extra|.predecessor.extra=true
+predecessor-missing|del(.predecessor.repository)
+finding-extra|.known_findings[0].extra=true
+finding-missing|del(.known_findings[0].claim_key)
+repository|.predecessor.repository="other/widgets"
+pr-number|.predecessor.pr_number=43
+base-sha|.predecessor.base_sha=("1"*40)
+head-sha|.predecessor.head_sha=("2"*40)
+config-hash|.predecessor.config_hash=("3"*64)
+review-key|.predecessor.review_key=("4"*64)
+run-id|.predecessor.run_id="run-mutated"
+receipt-id|.predecessor.receipt_id=("5"*64)
+finding-id|.known_findings[0].finding_id=("6"*64)
+EOF
+  mutation_file="$root/receipt-content-hash.json"
+  jq -S -c '.content_sha256=("7"*64)' "$receipt" >"$mutation_file"
+  review_runtime_validate_delta_receipt "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+  assert_not_zero 'validator rejects changed content hash' "$?"
+  mutation_file="$root/receipt-raw-duplicate.json"
+  printf '%s\n' '{"schema":"kc-pr-flow.review-delta-receipt/v2","schema":"kc-pr-flow.review-delta-receipt/v2"}' >"$mutation_file"
+  review_runtime_validate_delta_receipt "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+  assert_not_zero 'validator rejects raw duplicate receipt members' "$?"
+  unset -f reseal_delta_receipt
+}
+
+if [ "$CASE_FILTER" = 'delta-receipt-contract' ]; then
+  run_delta_receipt_contract_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
 if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
   run_delta_receipt_happy_path_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
@@ -252,7 +381,7 @@ if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
 fi
 
 if [ "$CASE_FILTER" = 'all' ]; then
-  run_delta_receipt_happy_path_tests
+  run_delta_receipt_contract_tests
 fi
 
 run_merge_readiness_tests() {
