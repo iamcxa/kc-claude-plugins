@@ -412,6 +412,16 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = trust-boundary ]; then
   review_plan_changed_diff "$trust_repo" "$trust_base" "$trust_head" >/dev/null
   assert_eq 'repository external diff is disabled' 0 "$?"
   assert_eq 'repository external diff is never invoked' 0 "$([ -s "$ledger" ] && printf 1 || printf 0)"
+
+  fsmonitor="$TEST_ROOT/fsmonitor.sh"
+  fsmonitor_ledger="$TEST_ROOT/fsmonitor.log"
+  printf '#!/bin/sh\nprintf invoked >>"%s"\nexit 0\n' "$fsmonitor_ledger" >"$fsmonitor"
+  chmod +x "$fsmonitor"
+  git -C "$trust_repo" config core.fsmonitor "$fsmonitor"
+  review_plan_route_state "$trust_repo" "$trust_base" "$trust_head" >/dev/null
+  assert_eq 'route state remains readable with hostile fsmonitor configured' 0 "$?"
+  assert_eq 'repository fsmonitor executable is never invoked' 0 \
+    "$([ -s "$fsmonitor_ledger" ] && printf 1 || printf 0)"
 fi
 
 if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then

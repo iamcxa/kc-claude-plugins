@@ -70,7 +70,7 @@ review_plan_git() {
     GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
     GIT_NO_LAZY_FETCH=1 GIT_NO_REPLACE_OBJECTS=1 GIT_OPTIONAL_LOCKS=0 GIT_TERMINAL_PROMPT=0 \
     git -C "$worktree" --no-replace-objects \
-      -c core.attributesFile=/dev/null -c diff.external= "$@"
+      -c core.attributesFile=/dev/null -c core.fsmonitor=false -c diff.external= "$@"
 }
 
 review_plan_git_identity_valid() {
