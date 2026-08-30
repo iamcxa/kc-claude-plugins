@@ -27,6 +27,17 @@ gates:
                 digest: sha256:d957aa962460d82265eb1b209882c1fb94a5f9f730bad3285ea9790107fd1fa0
                 request-digest: sha256:d389c270362b520d29fb75b44a2009188fee723770ce1223a38ebd69df97677c
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:np4b5ef99wf5tns6r7aqs10p:backlog:1
+                briefing: briefing:np4b5ef99wf5tns6r7aqs10p:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T10:09:33.703034Z"
+                decision: approve
+                reason: Captain approved the DEV-12 Pilot and the one-time manual workspace Linear MCP bootstrap for initial admission only; validation must use the durable reader and retain no exception.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
