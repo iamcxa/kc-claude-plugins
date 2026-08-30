@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-1:revision-1",
+  "question": "Approve the shaped DEV-12 Pilot to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a6cb5851b601bbaebf13c57b2f2f4fa2019b6d36/repeatable-linear-admission-under-one-minute/index.md",
+      "rev": "sha256:6533c313e87c95fb490ad0abadbc7fb7ce9d78fecbddf6bf248e5eb08591e8af",
+      "mediaType": "text/markdown",
+      "summary": "The Pilot shape defines one read-only workspace-bound Linear admission command plus fail-closed Development Brief and complete-or-absent Planning Receipt loader guards. The authoritative 60-second measurement spans successful Todo-plus-Cycle update readback through envelope parsing and includes the fresh Linear read; internal command timing is diagnostic only. Scope is ten files in one Draft PR with two reviewable commits, expected about 1,050 changed lines, and hard stops at 11 files, 1,201 changed lines, or 301 adapter lines. Every retained reader, loader guard, snapshot binding, comparator check, and dispatch stop maps to a named goal or without-it failure. The one-time manual MCP bootstrap is absent from the steady-state route, and all declared non-goals remain excluded."
+    }
+  ]
+}
