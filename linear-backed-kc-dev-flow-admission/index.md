@@ -1,6 +1,6 @@
 ---
 title: "Admit one Linear-planned release into kc-dev-flow"
-status: implementation
+status: validation
 source: "https://linear.app/duckbase-co/issue/DEV-11/admit-one-linear-planned-release-into-kc-dev-flow"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
