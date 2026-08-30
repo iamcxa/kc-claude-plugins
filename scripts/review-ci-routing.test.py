@@ -69,15 +69,18 @@ expected_routes = {
     "kc-pr-flow/scripts/review-runtime.sh": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime-safe-io.py": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-plan.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-plan.test.sh": {"runtime"},
     "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl": {"runtime"},
+    "kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json": {"runtime"},
     "kc-pr-flow/scripts/review-shadow.test.sh": {"shadow"},
     "kc-pr-flow/scripts/review-post.sh": {"post"},
     "kc-pr-flow/test/fixtures/review-post/reviews.json": {"post"},
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
-    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"shadow", "evaluation", "cross_model"},
-    "kc-pr-flow/reference/review-triage.md": {"evaluation"},
+    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"runtime", "shadow", "evaluation", "cross_model"},
+    "kc-pr-flow/reference/review-triage.md": {"runtime", "evaluation"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
     "kc-pr-flow/reference/gh-api-patterns.md": set(),
     "PRODUCT.md": set(),
@@ -98,7 +101,10 @@ for path, expected in expected_routes.items():
     require(actual == expected, f"{path}: expected {sorted(expected)}, got {sorted(actual)}")
 
 expected_commands = {
-    "runtime": ["bash kc-pr-flow/scripts/review-runtime.test.sh"],
+    "runtime": [
+        "bash kc-pr-flow/scripts/review-runtime.test.sh",
+        "bash kc-pr-flow/scripts/review-plan.test.sh",
+    ],
     "shadow": ["bash kc-pr-flow/scripts/review-shadow.test.sh"],
     "post": ["bash kc-pr-flow/scripts/review-post.test.sh"],
     "evaluation": [
@@ -122,21 +128,5 @@ for name, text in texts.items():
         "review-architecture-diagrams.test.sh",
     ):
         require(retired not in text, f"{name}: retained non-owned check {retired}")
-
-contracts_text = (ROOT / ".github/workflows/review-ci-contracts.yml").read_text(encoding="utf-8")
-contracts_pull = event_paths(contracts_text, "pull_request")
-contracts_push = event_paths(contracts_text, "push")
-require(contracts_pull == contracts_push, "review contracts: pull and push routing differ")
-for required_path in (
-    "kc-pr-flow/scripts/review-*",
-    "kc-pr-flow/reference/review-triage.md",
-    "kc-pr-flow/skills/kc-pr-review/SKILL.md",
-    "kc-pr-flow/test/fixtures/review-plan/**",
-):
-    require(required_path in contracts_pull, f"review contracts: missing route {required_path}")
-require(
-    "bash kc-pr-flow/scripts/review-plan.test.sh" in contracts_text,
-    "review contracts: missing plan suite command",
-)
 
 print("review CI routing contract: PASS")

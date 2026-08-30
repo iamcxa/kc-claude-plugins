@@ -6,9 +6,6 @@ on:
       - ".github/workflows/*.yml"
       - "scripts/review-ci-routing.test.py"
       - "kc-pr-flow/scripts/review-*"
-      - "kc-pr-flow/reference/review-triage.md"
-      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
-      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
   push:
     branches: [main]
@@ -16,9 +13,6 @@ on:
       - ".github/workflows/*.yml"
       - "scripts/review-ci-routing.test.py"
       - "kc-pr-flow/scripts/review-*"
-      - "kc-pr-flow/reference/review-triage.md"
-      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
-      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
 
 permissions:
@@ -68,4 +62,3 @@ jobs:
           python3 -m py_compile kc-pr-flow/scripts/review-*.py
           bash -n kc-pr-flow/scripts/review-*.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh
           shellcheck kc-pr-flow/scripts/review-*.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh
-          bash kc-pr-flow/scripts/review-plan.test.sh

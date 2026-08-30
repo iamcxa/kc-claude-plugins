@@ -175,6 +175,9 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
   review_plan_validate_decision "$escalated" acme/widgets 42 "$ROUTE_BASE" "$ROUTE_FIXED" \
     "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
   assert_not_zero 'shared validator rejects a delta APPROVE escalation' "$?"
+  review_plan_event_allowed "$escalated" COMMENT acme/widgets 42 "$ROUTE_BASE" "$ROUTE_FIXED" \
+    "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
+  assert_not_zero 'event gate rejects a mutated stored decision' "$?"
 
   git -C "$ROUTE_REPO" checkout -q "$ROUTE_FIXED"
   mkdir -p "$ROUTE_REPO/docs"
@@ -227,6 +230,9 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
       --delta-receipt "$ROUTE_RECEIPT"
   )"
   assert_eq 'changed config identity falls back to initial' initial "$(jq -r '.mode' <<<"$changed_config")"
+  review_plan_event_allowed "$delta" COMMENT acme/widgets 42 "$ROUTE_BASE" "$unseen_head" \
+    "$changed_hash" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
+  assert_not_zero 'event gate rejects changed frozen identity inputs' "$?"
 
   printf 'dirty\n' >"$ROUTE_REPO/untracked.txt"
   dirty="$(
@@ -427,6 +433,7 @@ fi
 if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then
   SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
   REFERENCE="$HERE/../reference/review-runtime.md"
+  typed_recipe="$TEST_ROOT/typed-interactive-recipe.sh"
   assert_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on' 'skill documents exact opt-in'
   assert_contains "$SKILL" 'review-plan\.sh.*decide' 'skill invokes the planner'
   assert_contains "$SKILL" 'review_plan_validate_decision' 'skill reuses the shared decision validator'
@@ -441,6 +448,51 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted'; do
     assert_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
   done
+
+  sed -n '/^# typed-interactive-recipe:start$/,/^# typed-interactive-recipe:end$/p' "$SKILL" |
+    sed '1d;$d' >"$typed_recipe"
+  # shellcheck source=/dev/null
+  . "$typed_recipe"
+  review_plan_guard_event() {
+    case "$1" in COMMENT|REQUEST_CHANGES) return 0 ;; *) return 3 ;; esac
+  }
+  review_interactive_prepare_confirmation legacy APPROVE null null true >/dev/null 2>&1
+  assert_not_zero 'legacy presentation executes the COMMENT ceiling' "$?"
+
+  legacy_confirmation="$(review_interactive_prepare_confirmation legacy COMMENT null null true)"
+  review_interactive_apply_event_edit "$legacy_confirmation" APPROVE >/dev/null 2>&1
+  assert_not_zero 'human event edit executes the COMMENT ceiling' "$?"
+  review_interactive_confirm_post "$legacy_confirmation" APPROVE confirmed >/dev/null 2>&1
+  assert_not_zero 'human confirmation executes the COMMENT ceiling' "$?"
+
+  typed_approve="$TEST_ROOT/typed-approve.sh"
+  cat >"$typed_approve" <<'MOCK'
+#!/usr/bin/env bash
+printf '%s\n' '{"approve_eligible":true,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":[],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":[],"coverage":"complete","effective_event":"APPROVE","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+MOCK
+  chmod 0700 "$typed_approve"
+  typed_identity='{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"}'
+  review_interactive_prepare_confirmation typed COMMENT "$typed_identity" null \
+    "$typed_approve" >/dev/null 2>&1
+  assert_not_zero 'typed presentation executes the COMMENT ceiling' "$?"
+
+  interactive_gate="$(review_interactive_confirm_post "$legacy_confirmation" COMMENT confirmed)"
+  edited_interactive_gate="$(jq -S -c \
+    '.effective_event="APPROVE" | .confirmation.effective_event="APPROVE"' \
+    <<<"$interactive_gate")"
+  review_interactive_post_gate_valid "$edited_interactive_gate" >/dev/null 2>&1
+  assert_not_zero 'interactive immediate pre-post executes the COMMENT ceiling' "$?"
+
+  autonomous_key="$(printf 'd%.0s' {1..64})"
+  autonomous_head="$(printf 'b%.0s' {1..40})"
+  review_autonomous_post_gate "$autonomous_key" "$autonomous_head" APPROVE daemon \
+    >/dev/null 2>&1
+  assert_not_zero 'autonomous construction executes the COMMENT ceiling' "$?"
+  autonomous_gate="$(review_autonomous_post_gate \
+    "$autonomous_key" "$autonomous_head" COMMENT daemon)"
+  edited_autonomous_gate="$(jq -S -c '.effective_event="APPROVE"' <<<"$autonomous_gate")"
+  review_autonomous_post_gate_valid "$edited_autonomous_gate" >/dev/null 2>&1
+  assert_not_zero 'autonomous immediate pre-post executes the COMMENT ceiling' "$?"
 fi
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"

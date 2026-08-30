@@ -10,7 +10,12 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-plan.sh"
+      - "kc-pr-flow/scripts/review-plan.test.sh"
       - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -19,7 +24,12 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-plan.sh"
+      - "kc-pr-flow/scripts/review-plan.test.sh"
       - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
 
@@ -49,3 +59,6 @@ jobs:
 
       - name: Run core contract
         run: bash kc-pr-flow/scripts/review-runtime.test.sh
+
+      - name: Run delta planner contract
+        run: bash kc-pr-flow/scripts/review-plan.test.sh
