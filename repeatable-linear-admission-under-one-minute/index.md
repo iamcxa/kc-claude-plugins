@@ -1,6 +1,6 @@
 ---
 title: "Add a workspace-bound Linear reader and admission guard"
-status: ideation
+status: implementation
 source: "https://linear.app/duckbase-co/issue/DEV-12/add-a-workspace-bound-linear-reader-and-admission-guard"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -67,7 +67,7 @@ gates:
                 reason: Captain replied ok to the presented DEV-12 ideation gate, approving the shaped admission command, canonical AC contract, bounded fourteen-file implementation, and declared stop numbers.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
