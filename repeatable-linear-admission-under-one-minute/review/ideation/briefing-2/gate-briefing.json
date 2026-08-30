@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-2:revision-1",
+  "question": "Approve the corrected DEV-12 Pilot shape to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/0c86ccf7c03862c7405485d1c7f6fcbabf69c624/repeatable-linear-admission-under-one-minute/index.md",
+      "rev": "sha256:7ea41445c03918a84b75d73d6d0209b1f93b3dbfd3fff821129759c960997bb1",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 4 defines one read-only workspace-bound Linear admission command and an explicit admission-only canonical Development Brief guard. New admissions require one Acceptance criteria section with stable AC-N identifiers and reject evidence-only or dual-section input; normal profile loading remains unchanged, so already-admitted work is neither revalidated nor migrated. The authoritative 60-second measurement includes the fresh Linear read. AC-1 through AC-6 are covered. The integrated Draft PR is estimated at fourteen files and about 1,350 changed lines, with hard stops at 15 files, 1,501 changed lines, or 121 loader lines; most volume is deterministic tests, package/adopter parity, and retained-document alignment. No sync, webhook, automatic launch, paid delegation, multi-issue package, Initiative, Milestone, POC redesign, or prior-work migration is included."
+    }
+  ]
+}

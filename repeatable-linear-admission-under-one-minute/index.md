@@ -51,6 +51,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-30T10:35:35.951128Z"
                 reason: Captain approved replacing the internal Acceptance evidence list with the single Spacedock-native Acceptance criteria plus AC-N contract; the prepared ideation snapshot is stale.
+            - id: gate-attempt:np4b5ef99wf5tns6r7aqs10p-ideation-2
+              briefing:
+                id: briefing:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-2:revision-1
+                digest: sha256:ae20440e2a9d139ab996caed53186c10e658ee16ccb129c0ca0f2e32c48dabac
+                request-digest: sha256:5f5a3a3f4def9c771659a3e9aad04aeec3e70b90697676e78f077d7ed3aa499b
+                room-ref: ./review/ideation/briefing-2
 ---
 
 ## The problem
