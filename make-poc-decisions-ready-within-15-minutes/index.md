@@ -422,3 +422,92 @@ The shape recovers the existing loader, POC build contract, and close guard; it
 adds no timer, stage, provider, or state authority. Direct no-code/disposable POCs
 write the decision during build and skip RoboRev plus fresh validation, while
 retained or safety-bound POCs and all Pilot/Production behavior stay unchanged.
+
+## Implementation evidence
+
+```yaml
+implementation_evidence:
+  delivery_base: 6bcdea3eca985a42aeceea45534c91584fee490a
+  candidate: 2f3391855653889ede9ac205eaa4b7a88befff43
+  diff: {files: 16, added: 379, deleted: 51, changed_lines: 430, core_changed_lines: 320}
+  stop_audit:
+    new_files_dependencies_stages_services_ci_or_provider_surfaces: none
+    pilot_or_production_profile_contract_diff: none
+  retained_documents:
+    treatment: repaired existing documents in place; added none; deleted none
+    package_adopter_pairs: kernel, poc-exploration/build, profile-contract-loader.py, poc-close-guard.py
+  project_context:
+    authority: ARCHITECTURE.md
+    landed_change: direct no-code/disposable POCs omit RoboRev and a validation worker; Pilot and Production remain unchanged
+    check: kc-dev-flow-contract-test.py passed on the candidate
+  focused_checks:
+    - profile-contract-loader.test.py PASS; invalid budgets, unexplained overrides, direct selection, named safety, and higher-profile routes are behavioral assertions
+    - poc-close-guard.test.py PASS; timestamp mismatch, intervention, 901-second proceed, 901-second change, and direct status routing are behavioral assertions
+    - profile-spacedock-route.test.py and kc-dev-flow-contract-test.py PASS; route or mirror drift makes them fail
+    - version-parity-check.sh and skill-frontmatter-lint.sh PASS
+  without_it:
+    effective_budget: removing parsing made zero minutes pass; loader test exited 1
+    proof_selector: forcing fresh proof restored review for direct no-code; loader test exited 1
+    close_guard: removing exhaustion enforcement accepted a required-change case; guard test exited 1
+  dogfood:
+    decision: Does the new direct POC path produce a durable decision without extra proof ceremony?
+    admission_commit: 3076684c3d5fcbbed3ca0ac314c955ec669cbb05
+    admission_time: 2026-08-30T14:36:20Z
+    outcome_commit: 1c561f6d1cc7ad37ade7fd95825c748404d0efcf
+    outcome_time: 2026-08-30T14:36:48Z
+    decision_ready_elapsed_seconds: 28
+    captain_interventions_before_decision_ready: 0
+    candidate: 2f3391855653889ede9ac205eaa4b7a88befff43
+    exact_tree_probe: a3de404c2b8fb21c9201e2e3d4312438c52e018d
+    loader: {budget_minutes: 15, proof_path: direct, observation_declared: false}
+    validation_dispatch_or_report: none
+    cleanup: not-applicable
+  implementation_exit_observation:
+    capability: review_convergence
+    mode: observe
+    selected_profile: pilot-product-slice
+    provider: roborev
+    candidate: 2f3391855653889ede9ac205eaa4b7a88befff43
+    identity_sha256: bc5b44b6a5dd76bed7c8a72829ffb30a0130f2f0ecebdeedb898154c275c1dc4
+    config_blob_sha: 225a29d4fa1eef963a7effaab7e60afa5f488e8f
+    config_sha256: ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1
+    reviewer: {agent: codex, model: gpt-5.6-terra, reasoning: medium, minimum_severity: medium, panel: none}
+    result: UNAVAILABLE
+    reason: unavailable
+    evidence: RoboRev v0.62.0 daemon healthy; fixed Codex reviewer health probe timed out after 30 seconds
+    request_count: 0
+    confirmation_count: 0
+    cost_coverage: not-applicable because no review job was requested
+    authority: observation only; validation and delivery authority unchanged
+```
+
+## Stage Report: implementation
+
+- DONE: Implement only the three approved mechanisms and preserve Pilot and Production behavior within every stop number.
+  Candidate `2f3391855653889ede9ac205eaa4b7a88befff43` changes 16 files and 430 lines, uses exactly 320 core lines, adds no surface, and has no Pilot/Production profile-contract diff.
+- DONE: AC-1 — Enforce a positive default-15 decision-ready minute budget and explained overrides.
+  `profile-contract-loader.test.py` fails if zero, negative, non-integer, or unexplained non-15 limits are accepted.
+- DONE: AC-2 — Separate decision-ready elapsed time from Captain wait and terminal cleanup.
+  `poc-close-guard.test.py` recomputes RFC3339 elapsed time and fails if timestamps mismatch or close measurements are missing.
+- DONE: AC-3 — Skip RoboRev and fresh validation only for eligible direct POCs.
+  Loader and guard tests fail if direct no-code work emits review, misses the direct path, or dispatches anything before the terminal gate; named safety remains fresh.
+- DONE: AC-4 — Limit POC proof to one real journey, one critical falsifier, and retained mechanisms.
+  The measured direct journey, 901-second falsifier, and three focused removals ran; no broad minimal-stack mutant suite ran.
+- DONE: AC-5 — Fail closed on budget exhaustion or Captain intervention.
+  The guard rejects 901-second `proceed` and intervention-bearing `proceed`; it accepts 901 seconds only as a complete `change`.
+- DONE: AC-6 — Measure one fresh no-code POC within 15 minutes and without post-admission Captain intervention.
+  Admission `3076684c3d5fcbbed3ca0ac314c955ec669cbb05` reached outcome `1c561f6d1cc7ad37ade7fd95825c748404d0efcf` in 28 seconds with zero interventions, no review, and no validation dispatch.
+- DONE: AC-7 — Preserve Pilot and Production routes, obligations, and admission behavior.
+  Focused route and full contract tests passed, and an exact base-to-candidate diff over both higher-profile contract trees is empty.
+- DONE: Prove AC-1 through AC-7 with focused deterministic checks, three without-it removals, and one measured no-code dogfood bound to the exact candidate.
+  Each removal made its owned test fail, all restored checks passed, and the dogfood records the candidate, commits, timestamps, loader result, and cleanup.
+- DONE: Record the exact diff, retained-document treatment, project-context update, and the Pilot implementation-exit observation without granting it validation authority.
+  The evidence above records all four; RoboRev is `UNAVAILABLE(reason: unavailable)` after its health probe, with zero requests and observation-only authority.
+
+### Summary
+
+The candidate adds only the approved effective budget, proof selector, and close
+guard enforcement. Direct no-code/disposable POCs can reach the existing
+terminal gate without RoboRev or a validation worker, while retained work,
+safety-bound POCs, Pilot, and Production retain fresh proof behavior.
+The Pilot RoboRev observation remained unavailable and non-authoritative.
