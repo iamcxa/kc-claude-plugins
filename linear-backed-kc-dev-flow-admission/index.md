@@ -27,6 +27,17 @@ gates:
                 digest: sha256:d61e388310926a6c75f01000aa683e2a26c21a31fdc7d558ef101d7b2b71984c
                 request-digest: sha256:158d74ff29a2ad0e8398fa21b9603960877b3f59d258be893de7b126bcf5c2ec
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k0h7t34tjp7em4ns8rae22qv:backlog:1
+                briefing: briefing:k0h7t34tjp7em4ns8rae22qv:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T07:42:31.282085Z"
+                decision: approve
+                reason: Captain approved the presented POC profile and backlog admission with ok after the exact Linear snapshot, clean reconcile, drift stop, scope boundary, and without-it proof target were shown.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
