@@ -388,6 +388,16 @@ building a generic lifecycle engine.
   Three existing seams retain the behavior; the designed state-backed dogfood and exact 901-second falsifier cover the real journey and failure boundary.
 - DONE: Define exact touch surfaces, stop numbers, focused without-it checks, and the measured no-code dogfood without expanding the approved scope.
   Sixteen files, 550 changed lines, three focused removals, and one no-code dogfood are bounded against delivery base `6bcdea3eca985a42aeceea45534c91584fee490a`.
+- DONE: AC-2 — Separate decision-ready, Captain-wait, and cleanup measurements.
+  The shaped outcome binds `admitted_at` to `started`, recomputes elapsed seconds, and records close measurements separately.
+- DONE: AC-3 — Skip review and fresh validation only for eligible direct POCs.
+  The artifact-and-safety selector suppresses RoboRev and validation dispatch for no-code/disposable work while named safety boundaries stay fresh.
+- DONE: AC-4 — Limit proof to retained mechanisms.
+  The shape selects one real dogfood, the 901-second falsifier, and exactly three mechanism-specific without-it checks.
+- DONE: AC-5 — Fail closed when the decision budget is exhausted.
+  At 901 seconds, only `change` with evidence, limit, reversal, and cleanup status is accepted; `proceed` and `stop` are rejected.
+- DONE: AC-6 — Measure one fresh no-code dogfood.
+  The dogfood receipt records admission and outcome commits, elapsed seconds, zero interventions, exact revision, no review, no validation dispatch, and cleanup.
 
 ### Summary
 
