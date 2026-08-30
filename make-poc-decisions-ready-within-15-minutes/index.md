@@ -47,6 +47,10 @@ gates:
                 digest: sha256:2195c09ef398a2fca41d22928862c9963e60d8746208c9d8073b210881e1e82e
                 request-digest: sha256:197fd1cbfa7c651e488cb63526bab3ee1654e43d44b7b17fcb45343b869475fe
                 room-ref: ./review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-30T13:39:27.008307Z"
+                reason: The ideation report semantically covers AC-1 through AC-7, but the structured AC scan leaves AC-2 through AC-6 unevidenced; repair only scanner-readable report citations before Captain presentation.
 ---
 
 ## The problem
