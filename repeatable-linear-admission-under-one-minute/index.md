@@ -422,7 +422,7 @@ project_context:
   surface: exact-work-item profile loading and provider-backed admission
   stale_claim: The loader is described as binding only status and profile receipt before emitting three policy artifacts.
   approved_change: State that explicit admission mode validates one canonical AC-N Development Brief and the complete-or-absent Planning Receipt before provider access, while default profile loading leaves already-admitted headings unchanged and the repository-local provider guard owns authentication, current read, snapshot reconcile, and dispatch-envelope emission.
-  landed_change: pending
+  landed_change: "ARCHITECTURE.md at candidate 90de4e35748893529161a84bb863210259d1de1d now distinguishes explicit admission validation, unchanged default loading, and provider-guard ownership."
   planned_check: Run canonical admission, evidence-only and dual-section refusal, exact active dual-section default-load, AC-scan, and Linear admission fixtures, then compare the architecture claim with observed success and refusal behavior.
   validation_evidence: pending
 ```
@@ -495,7 +495,21 @@ review_convergence:
   identity: sha256:5dc242d9095dd2448bd786caac2b009e21d359920c0757f44a9905f11494004a
   claimant: agent:codex:01a05252-d05c-7ef2-ba41-b33fb04d87ed
   observed_state_revision: a022cac7b934734b7a96687d89d86208ddb39ef3
-  state: claimed
+  base_sha: 7256e02dbbc5340e4328bfeeb016448e4033fde5
+  tip_sha: 8675e8e46d865aba1428484002cee5cdbfd48b94
+  config_sha256: ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1
+  profile: pilot-product-slice
+  agent: codex
+  model: gpt-5.6-terra
+  reasoning: medium
+  minimum_severity: medium
+  panel: none
+  job_id: 290
+  job_uuid: 1164593f-6e73-4b9a-a1bf-5dc08887da7f
+  member_states: [codex:findings]
+  outcome: FAIL
+  reason: findings
+  state: observed
 ```
 
 ## RoboRev implementation changed-tip confirmation claim
@@ -508,5 +522,56 @@ review_convergence:
   identity: sha256:41e6617b79eb0a764f04695d9fd274c0f8d0cc994b5355bcaa98f1ac08395526
   claimant: agent:codex:01a05252-d05c-7ef2-ba41-b33fb04d87ed
   observed_state_revision: d709d2f6211e9e2599cd8877997070d94747a550
-  state: claimed
+  base_sha: 8675e8e46d865aba1428484002cee5cdbfd48b94
+  tip_sha: 90de4e35748893529161a84bb863210259d1de1d
+  config_sha256: ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1
+  profile: pilot-product-slice
+  agent: codex
+  model: gpt-5.6-terra
+  reasoning: medium
+  minimum_severity: medium
+  panel: none
+  job_id: 291
+  job_uuid: 04bc11c4-307b-4f61-a960-ec22ebe52b16
+  member_states: [codex:passed]
+  outcome: PASS
+  reason: passed
+  request_count: 1
+  confirmation_count: 1
+  cost_usd_approximate: 0.0684288
+  cost_jobs_with_cost: 2
+  cost_jobs_total: 2
+  cost_complete: true
+  state: observed
 ```
+
+## Stage Report: implementation
+
+- DONE: Implement the runnable read-only Linear admission command and explicit admission-only canonical Development Brief guard on the approved fourteen-file surface; stop before exceeding 15 files, 1,501 changed lines, or 121 loader lines, and preserve every declared non-goal.
+  Evidence: `git diff --numstat 7256e02dbbc5340e4328bfeeb016448e4033fde5` at `90de4e35748893529161a84bb863210259d1de1d` reports 14 files and 1,284 additions-plus-deletions; the package loader reports 98 changed lines.
+  Evidence: the candidate has the accepted three commits; `git diff --check` passes and package/adopter loader plus kernel bytes compare equal.
+  Scope: no mirror, synchronization, polling, webhook, automatic launch, Linear Agent delegation, multi-issue package, Initiative, Milestone, POC redesign, migration, framework, or production operation was added.
+  Failure boundary: 15 files, 1,501 lines, 121 loader lines, a byte mismatch, or any declared non-goal would have stopped implementation; none occurred.
+
+- DONE: Prove AC-1 through AC-6 with focused deterministic checks: workspace authentication refusal, canonical and dual-section admission behavior, unchanged default loading for already-admitted work, five-field binding, clean progress and classified drift, the full external 60-second boundary, and without-it mutants for every retained mechanism.
+  `AC-1` and `AC-2`: `python3 scripts/kc-dev-flow-contract-test.py` passes live-shape fixtures for the five fields, missing key/workspace, synthetic 401, wrong organization, truncation, timeout, read-only queries, and state/work-item races.
+  `AC-3`: `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` passes required-section, duplicate, empty, placeholder, ordered unique `AC-N`, evidence-only, dual-section, all eight receipt masks, and unchanged historical default-load cases.
+  `AC-4`: the contract test keeps started progress clean and classifies Project/Cycle as `moved`, goal/non-goal as `changed`, and membership as `added` or `removed`.
+  `AC-5`: the exact candidate and state `7dc36f1d709c25ea228079f41640afedc965d7ad` read back DEV-12 `unstarted`, Cycle `b788c52d`, and Project `535b8bd1`, then emitted a clean envelope in 3,507 ms externally and 3,438 ms internally with zero Captain interventions; envelope SHA-256 is `35bdaa502e455825c13afc1ac9488b009d99d88e70b14ce920e518711b74e99b`.
+  `AC-6`: focused without-it runs rejected 10 of 10 retained contract/runtime mutants; after the ordering repair, all six reader/auth/loader/state/comparator/envelope runtime mutants reran and were rejected at the final tip.
+  Diagnostic: the broad historical mutant runner had already rejected 18 mechanisms before an unrelated baseline diagnostic and then disk pressure, so it was not rerun or treated as the acceptance authority; focused checks had no survivor and 14 GB was free afterward.
+  Failure boundary: any refusal stdout, provider/state mutation, unclassified drift, elapsed time above 60 seconds, unchanged mutant, or non-clean reconcile would fail this item; none remained.
+
+- DONE: Keep package/adopter bytes and retained claims aligned, record the project-context landed change, compare the exact implementation diff against the accepted journey, and take at most the declared single RoboRev observation plus one changed-tip confirmation without treating it as validation authority.
+  Parity: `cmp` passes for package/adopter loaders and kernels; retained documentation names only admission-mode canonical validation and unchanged default continuation.
+  Project context: `ARCHITECTURE.md` at the final candidate contains the approved loader/provider-guard ownership change; fresh validation evidence remains `pending` for the next stage.
+  RoboRev observation: job 290 reviewed exact base-to-tip `7256e02..8675e8e` with Codex, `gpt-5.6-terra`, medium reasoning/severity, and no panel; it returned `FAIL(reason: findings)` for non-canonical multi-item ordering.
+  Repair: both normalized lists now sort by source, and the integration fixture presents two clean items in reverse provider order while requiring equal snapshot/live hashes.
+  RoboRev confirmation: the sole allowed changed-tip job 291 reviewed `8675e8e..90de4e3` with the same configuration and returned `PASS(reason: passed)` with no issues; request count is one and confirmation count is one.
+  Cost coverage: `roborev cost --json` reports approximate total USD 0.0684288, `jobs_with_cost: 2`, `jobs_total: 2`, and `complete: true`.
+  AC coverage: installed Spacedock 0.27.0 `status --read repeatable-linear-admission-under-one-minute --stage implementation --ac-scan --json` returns exactly `AC-1` through `AC-6`, each with `unevidenced: false`, and no unknown identifier.
+  Failure boundary: parity drift, a missing landed claim, stale RoboRev correlation, a second request/confirmation, or treating reviewer output as validation would fail this item; none occurred.
+
+### Summary
+
+Candidate `90de4e35748893529161a84bb863210259d1de1d` implements the accepted read-only admission journey in three commits below every stop number. Deterministic contracts, exact live measurement, without-it evidence, and the bounded reviewer observation support implementation handoff; fresh validation remains the next-stage authority.
