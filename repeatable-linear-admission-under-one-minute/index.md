@@ -497,3 +497,16 @@ review_convergence:
   observed_state_revision: a022cac7b934734b7a96687d89d86208ddb39ef3
   state: claimed
 ```
+
+## RoboRev implementation changed-tip confirmation claim
+
+```yaml
+review_convergence:
+  capability: review_convergence
+  mode: observe
+  provider: roborev
+  identity: sha256:41e6617b79eb0a764f04695d9fd274c0f8d0cc994b5355bcaa98f1ac08395526
+  claimant: agent:codex:01a05252-d05c-7ef2-ba41-b33fb04d87ed
+  observed_state_revision: d709d2f6211e9e2599cd8877997070d94747a550
+  state: claimed
+```
