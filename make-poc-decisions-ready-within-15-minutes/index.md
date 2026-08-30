@@ -77,6 +77,17 @@ gates:
                 digest: sha256:e48fba3c26502617b14bc04d41853fd67127031136063929e7a0d50a7ca2ca00
                 request-digest: sha256:9ca34665623d5200d9225599c2ee9e5d417bbab7a5013be9bb39902cbf63abe6
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k80xhxhk9b9e26mnnyn2jwsh:validation:1
+                briefing: briefing:k80xhxhk9b9e26mnnyn2jwsh:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T15:14:11.222693Z"
+                decision: approve
+                reason: Captain approved the presented exact-candidate validation result, including authoritative 76-second dogfood evidence and the bounded non-authoritative RoboRev unavailability.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
