@@ -620,6 +620,8 @@ Candidate `90de4e35748893529161a84bb863210259d1de1d` implements the accepted rea
   Remaining Pilot delivery: Captain-authorized push and Draft PR creation, then exact-head provider feedback, required checks, and merge/release authorization remain outside this local validation.
   Production/promotion: no Production runtime, release, rollback, SLO, or operational claim is made; promote before production data or credentials, cross-repository reuse, compatibility migration, automatic launch, unattended operation, or SLO/support duty enters accepted scope.
 
+PR feedback: {"dispositions":[],"fingerprint":"sha256:7143d2aee70468f9a8935363a0702c47094a418313365002b95724f35d81d6cc","head":"90de4e35748893529161a84bb863210259d1de1d","layer":"single","pr":307,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+
 ### Summary
 
 Exact candidate `90de4e35748893529161a84bb863210259d1de1d` passes independent live, deterministic, mutation, scope, parity, retained-document, project-context, and provider-state validation with no repair loop consumed. Local Pilot validation is complete; delivery authority and any future Production promotion remain with the Captain and First Officer route.
