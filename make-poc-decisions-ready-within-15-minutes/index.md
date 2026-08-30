@@ -27,6 +27,17 @@ gates:
                 digest: sha256:3508a3f5b697f989c16118348d0e213c997209b88c64cbcb149fc94a35343771
                 request-digest: sha256:ec83aaa24f2d201c6dca20ff69b2a5a3d7b64778fd6fb19116eff1b56822839f
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k80xhxhk9b9e26mnnyn2jwsh:backlog:1
+                briefing: briefing:k80xhxhk9b9e26mnnyn2jwsh:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T13:22:16.295709Z"
+                decision: approve
+                reason: Captain approved the presented DEV-14 Linear package and Pilot admission; live reconcile must remain clean before ideation dispatch.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
