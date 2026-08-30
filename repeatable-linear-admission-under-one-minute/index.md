@@ -7,7 +7,7 @@ planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T1
 planning-outcome: "Linear Project 535b8bd1-2d97-4d57-9161-1051574af0d5 Repeatable Linear admission under 1 minute sha256:74d2f2065da858dfe47fe3c04f6b32f0cddb9418d477de18b766dc5089254854"
 sprint: repeatable-linear-admission-under-one-minute
 sprint-readiness: ready
-started:
+started: 2026-08-30T10:11:04Z
 completed:
 verdict:
 worktree:
