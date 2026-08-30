@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-08-30T10:11:04Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-repeatable-linear-admission-under-one-minute
 issue:
 pr:
 mod-block:
