@@ -57,6 +57,17 @@ gates:
                 digest: sha256:ae20440e2a9d139ab996caed53186c10e658ee16ccb129c0ca0f2e32c48dabac
                 request-digest: sha256:5f5a3a3f4def9c771659a3e9aad04aeec3e70b90697676e78f077d7ed3aa499b
                 room-ref: ./review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:np4b5ef99wf5tns6r7aqs10p:ideation:2
+                briefing: briefing:np4b5ef99wf5tns6r7aqs10p:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-30T10:55:29.840978Z"
+                decision: approve
+                reason: Captain replied ok to the presented DEV-12 ideation gate, approving the shaped admission command, canonical AC contract, bounded fourteen-file implementation, and declared stop numbers.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
