@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k80xhxhk9b9e26mnnyn2jwsh:ideation:attempt-1:revision-1",
+  "question": "Approve the 16-file bounded shape to enter Pilot implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:k80xhxhk9b9e26mnnyn2jwsh:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/91b0f3283002fb7e38bfed6adc582d62d49304ad/make-poc-decisions-ready-within-15-minutes/index.md",
+      "rev": "sha256:1a5ca2eebcffcb8c271fcc97918119f748b183ce121750c8ef595c1eaae42afe",
+      "mediaType": "text/markdown",
+      "summary": "Retain only effective budget parsing, direct-or-fresh proof selection, and close enforcement; cap implementation at 16 files, 550 changed lines, and 320 loader-or-close-guard lines, with one measured no-code dogfood and three focused without-it removals."
+    }
+  ]
+}
