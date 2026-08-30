@@ -1,6 +1,6 @@
 ---
 title: "Admit one Linear-planned release into kc-dev-flow"
-status: validation
+status: done
 source: "https://linear.app/duckbase-co/issue/DEV-11/admit-one-linear-planned-release-into-kc-dev-flow"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -8,11 +8,11 @@ planning-outcome: "Linear Project 10ae38f6-2d58-45a6-8ce5-388b35086e97 Linear-ba
 sprint: linear-backed-kc-dev-flow-admission
 sprint-readiness: ready
 started: 2026-08-30T07:47:10Z
-completed:
-verdict:
+completed: 2026-08-30T09:21:43Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-linear-backed-kc-dev-flow-admission
 issue:
-pr:
+pr: local-merge:7256e02
 mod-block:
 id: k0h7t34tjp7em4ns8rae22qv
 gates:
@@ -57,7 +57,8 @@ gates:
                 reason: Captain approved the validated proceed outcome and return to planning.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-30T09:21:43Z
 ---
 
 ## The problem
