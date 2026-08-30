@@ -47,6 +47,10 @@ gates:
                 digest: sha256:e362aa8d68d66fbc893646535091801441fd33ad5f190e2adccfab0516839533
                 request-digest: sha256:a71cab564b59dd27a70565bf670fb3b84ca0e9e2dfbb66993a7a010bd94f4c2f
                 room-ref: ./review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-08-30T10:35:35.951128Z"
+                reason: Captain approved replacing the internal Acceptance evidence list with the single Spacedock-native Acceptance criteria plus AC-N contract; the prepared ideation snapshot is stale.
 ---
 
 ## The problem
