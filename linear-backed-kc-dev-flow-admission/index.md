@@ -157,3 +157,36 @@ Record elapsed time from admitted task creation to POC verdict, the number of Ca
 ### Summary
 
 The live Linear planning object normalized into the already committed provider-neutral receipt without schema expansion or a retained Linear adapter. Existing comparator behavior proved both dispatch-permitting clean state and fail-closed Project drift on the unchanged candidate, while RoboRev's loader-enforcement finding remains the strongest limit for PROCEED, CHANGE, or STOP.
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: proceed
+  evidence: "At code revision 7256e02, the live Project 10ae38f6, Cycle b788c52d, and sole admitted member DEV-11 normalized to digest c29c728e; In Progress remained clean at exit 0, intentional Project drift returned exit 1 moved, the comparator contract passed, and all minimal-stack mutants were rejected."
+  strongest_limit: "RoboRev job 289 correctly found that the loader does not runtime-enforce the Pilot or Production Development Brief and complete-or-absent Planning Receipt; this is an explicit POC limit, not a blocker to the v3 POC Exploration Brief and exact read-only proof exercised here."
+  reversal_fact: "Return direction to change or stop if a future provider object cannot normalize into the existing five-field snapshot, or if invalid brief or partial-receipt admission survives the proposed Pilot enforcement; no durable Linear adapter exists to unwind."
+  cleanup: "Removed all ephemeral JSON fixtures; retained no Linear adapter, credentials, webhook, poller, mirror, or provider write, and left the code worktree clean."
+  observed_journey_result: "One Linear Project, one current Cycle, and DEV-11 reconciled through the existing provider-neutral comparator after Todo changed to In Progress without a false removal."
+  artifact_revision: "7256e02dbbc5340e4328bfeeb016448e4033fde5"
+  critical_risk_check: "Intentional planning-outcome digest drift stopped with exit 1 and classified DEV-11 as moved; identical input SHA-256 values before and after prove the compare remained read-only."
+  elapsed: "41m43s from task admission at 2026-08-30T07:47:10Z to verdict at 2026-08-30T08:28:53Z."
+  captain_interventions: "One post-admission provider-status intervention moved DEV-11 from Todo to In Progress; no planning-content rewrite was needed."
+  retained_components: "The committed Planning Receipt and admission snapshot plus the existing engage comparator and continuation wiring; removing the snapshot loses exact scope, while disabling delta exit or comparator wiring makes the ablation fail."
+  cleanup_status: "complete"
+  unproved_limits: "No persistent Linear reader, authentication lifecycle, retry behavior, polling, webhook, automatic launch, multi-issue package, or production operation was tested."
+  pilot_promotion_trigger: "Captain accepts persistent reuse, lifecycle, or operational responsibility and a separate Pilot brief makes loader enforcement of the Development Brief and complete-or-absent Planning Receipt an acceptance criterion."
+```
+
+## Stage Report: validation
+
+- DONE: Reproduce the exact live Linear Project, Cycle, issue, and admitted-set read; prove the committed snapshot still reconciles clean after DEV-11 moves to In Progress.
+  MCP read Project `10ae38f6`, Cycle `b788c52d`, and only started member `DEV-11`; digest `c29c728e` matched the committed receipt and exact live normalization returned exit `0` with four empty delta arrays.
+- DONE: Independently exercise the intentional planning-package drift and comparator contract/minimal-stack ablation; classify RoboRev job 289's loader-enforcement finding as a blocker or an explicit POC limit.
+  Project-digest drift returned exit `1` with DEV-11 in `moved`; `engage-reconcile.test.py` passed and would fail if membership delta returned `0`, while `kc-dev-flow-minimal-stack-ablation.test.py` passed after rejecting all 22 mutants; job 289 is an explicit POC limit because v3 POC brief fields are runtime-enforced but future Pilot and Production brief/receipt admission is not.
+- DONE: Record one bounded poc_outcome with direction proceed, change, or stop; include exact evidence, strongest limit, reversal fact, cleanup status, and any Pilot promotion trigger.
+  Recorded `proceed` for revision `7256e02`, bounded to return to planning with no downstream authority; the outcome names exact live/comparator evidence, the loader-enforcement limit, reversal and cleanup facts, and a Captain-authorized Pilot trigger.
+
+### Summary
+
+The bounded POC passed: normal Linear execution status progress did not invalidate the admitted snapshot, while planning-package drift stopped before dispatch. Proceed means return the evidence to planning only; a durable Linear reader or Pilot remains unapproved until the Captain accepts the promotion trigger and the loader-enforcement limit becomes explicit Pilot scope.
