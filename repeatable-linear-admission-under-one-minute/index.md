@@ -108,7 +108,17 @@ Return to Linear Planning with `change` or `stop` if the 60-second target requir
 
 ## Measurement
 
-Measure wall-clock time from successful Todo-plus-Cycle update readback to dispatch-envelope emission. Record the exact candidate revision, elapsed time, Captain interventions after admission, clean and drift results, retained components, the acceptance evidence broken by removing each component, and cleanup status.
+An external validation harness captures monotonic `t0` when the authorized
+Todo-plus-Cycle update readback succeeds, immediately invokes the admission
+command, and captures `t1` only after it parses the emitted dispatch envelope.
+The accepted wall-clock measurement is `t1 - t0`, so it includes command
+startup, the command's fresh Linear read, normalization, snapshot binding,
+reconcile, loader work, and envelope emission. The command may separately
+report its process-local elapsed time for diagnosis, but that shorter interval
+does not prove the 60-second journey. Record the exact candidate revision, both
+intervals, Captain interventions after admission, clean and drift results,
+retained components, the acceptance evidence broken by removing each
+component, and cleanup status.
 
 ## Pilot shape
 
@@ -130,13 +140,18 @@ by the repository-local Linear adapter.
    non-empty `LINEAR_API_KEY` to this session; the prior DEV-11 run observed
    Linear Project, Cycle, and issue readback and retained no credential or
    provider payload.
-2. **DESIGNED:** `linear-admission.py` — one read-only admission command — pins
+2. **DESIGNED:** An external validation harness observes the successful
+   readback of the separately authorized Todo-plus-Cycle update, captures
+   monotonic `t0`, and immediately starts the read-only admission command. The
+   harness neither performs nor repeats the update; it only owns the full
+   journey clock.
+3. **DESIGNED:** `linear-admission.py` — one read-only admission command — pins
    the exact committed work item and state revision, then invokes the profile
    loader before provider access. The loader accepts Pilot or Production only
    when the Development Brief has exactly one non-placeholder problem,
    accepted outcome, non-goal list, acceptance-evidence list, and route-back
    section, and when the Planning Receipt tuple is complete or absent.
-3. **DESIGNED:** For the complete Linear receipt, the command reads the key
+4. **DESIGNED:** For the complete Linear receipt, the command reads the key
    only from the current Conductor process environment, requires the current
    `CONDUCTOR_WORKSPACE_ID`, and checks that the authenticated Linear
    organization is `duckbase-co`. It follows the exact issue source, paginates
@@ -145,27 +160,31 @@ by the repository-local Linear adapter.
    Missing variables, an authentication or organization mismatch, malformed
    data, incomplete pagination, network failure, or timeout emits no envelope
    and exits before state access or mutation.
-4. **DESIGNED:** The command derives the committed five-field snapshot from
+5. **DESIGNED:** The command derives the committed five-field snapshot from
    the immutable state revision for every ready execution item sharing the
    engaged `sprint`. It maps source, planning window, planning outcome,
    accepted outcome, and complete non-goals without writing an intermediate
    file; it rejects a dirty, changing, missing, duplicate, or mixed-scope
    snapshot.
-5. **OBSERVED:** The unchanged `engage-reconcile.py` comparator at `7256e02`
+6. **OBSERVED:** The unchanged `engage-reconcile.py` comparator at `7256e02`
    returned exit `0` with four empty delta arrays after DEV-11 moved from Todo
    to In Progress, and returned exit `1` with `moved` after intentional Project
    digest drift. The designed command accepts only exit `0` plus one parsed
    `status: clean` object; `added`, `removed`, `changed`, `moved`, invalid
    output, process death, or no answer emits no envelope.
-6. **DESIGNED:** After the successful Linear readback, the command records a
-   monotonic start, binds the work-item hash, state revision, Linear
+7. **DESIGNED:** At process entry, the command records a diagnostic monotonic
+   start, then binds the work-item hash, state revision, Linear
    organization, five-field snapshot hash, live-read hash, clean reconcile,
    and loaded profile-contract hashes into one
-   `kc-dev-flow-dispatch-envelope/v1` JSON object. It emits that object only
-   when elapsed time is at most 60 seconds. The First Officer may dispatch from
-   that envelope; the command never creates a task, launches a workspace, or
-   contacts a worker.
-7. **DESIGNED:** Every refusal is safe to retry after the credential, network,
+   `kc-dev-flow-dispatch-envelope/v1` JSON object. The envelope's
+   `command_elapsed_ms` covers process entry through emission and is useful for
+   diagnosis, but does not include the external readback-to-invocation gap and
+   is not the accepted metric. After parsing the envelope, the harness captures
+   `t1` and proves `journey_elapsed_ms = t1 - t0 <= 60000`; this full interval
+   includes the command's fresh provider read. The First Officer may dispatch
+   from that envelope; the command never creates a task, launches a workspace,
+   or contacts a worker.
+8. **DESIGNED:** Every refusal is safe to retry after the credential, network,
    state race, or Captain-approved snapshot is repaired. A crash, abandonment,
    timeout, or rerun leaves Linear and Spacedock unchanged and cannot reuse an
    earlier envelope because each envelope binds the current work-item and state
@@ -184,6 +203,10 @@ reader has no OAuth, shared-account, or interactive fallback.
 - Success stdout is one JSON dispatch envelope and exit `0`. Every refusal uses
   non-secret stderr, non-zero exit, and empty stdout, so envelope presence is
   the mechanical dispatch stop.
+- The envelope's `command_elapsed_ms` is a diagnostic segment only. The
+  external validation receipt owns `readback_t0`, `envelope_t1`, and
+  `journey_elapsed_ms`; only that receipt can prove the accepted 60-second
+  boundary.
 - The profile loader newly rejects an invalid Development Brief or partial
   Planning Receipt and returns hashes for the validated brief and complete or
   absent receipt. Its selected route, stage loading, and hash binding remain
@@ -200,8 +223,9 @@ reader has no OAuth, shared-account, or interactive fallback.
 - Persistent inputs are only the committed Linear Planning Receipt,
   Development Brief, admitted Spacedock snapshot, and selected profile receipt.
   Linear results, normalized current data, and the envelope stay in memory or
-  stdout; later stage evidence may record hashes, revisions, and elapsed time,
-  not the token or raw provider response.
+  stdout; later stage evidence may record hashes, revisions, the harness's
+  `readback_t0`, `envelope_t1`, full `journey_elapsed_ms`, and diagnostic
+  `command_elapsed_ms`, not the token or raw provider response.
 - The reader uses GraphQL query operations only, requests only organization,
   issue, Project, Cycle, state, goal, and non-goal fields, follows pagination,
   and has no mutation, comment, webhook, poller, cache, mirror, or retry loop.
@@ -217,7 +241,7 @@ reader has no OAuth, shared-account, or interactive fallback.
 
 | Property | Check that must pass | Change that makes it fail |
 |---|---|---|
-| End-to-end under 60 seconds | On exact candidate revision, move DEV-12 Todo to In Progress, read it back, run the single command, parse one bound envelope, and assert `elapsed_ms <= 60000` with zero later Captain prompts. | Manual JSON/MCP input, an interactive prompt, missing binding, invalid envelope, or elapsed time above 60 seconds. |
+| End-to-end under 60 seconds | On the exact candidate revision, an external harness captures monotonic `t0` at successful readback of the separately authorized DEV-12 Todo-plus-Cycle update, immediately invokes the command, captures `t1` after parsing one bound envelope, and asserts `t1 - t0 <= 60000` with zero later Captain prompts. It also records `command_elapsed_ms` only as a nested diagnostic and proves the full interval contains the command's fresh Linear request. | Manual JSON/MCP input, an interactive prompt, missing binding, invalid envelope, omitted provider-read interval, use of `command_elapsed_ms` as the acceptance result, or `t1 - t0` above 60 seconds. |
 | Workspace-bound authentication | Run with the current workspace variables; then independently test missing key, missing Conductor identity, synthetic 401, and wrong Linear organization. Assert all refusals have empty stdout and unchanged state. | Any fallback credential, accepted mismatch, secret-bearing diagnostic, task creation, state write, or envelope. |
 | Development Brief | Mutate each required section to missing, duplicate, empty, or placeholder and run the loader before provider access. | Any malformed Pilot or Production brief loads a route. |
 | Complete-or-absent Planning Receipt | Exercise all eight presence combinations for source, window, and outcome: zero or three may load, while the other six fail before provider access. | A partial tuple loads or an absent standalone tuple invokes Linear. |
@@ -283,14 +307,14 @@ were excluded; the prior live POC and archived work item were included.
 
 | Path | Lines now | Lines after | Journey obligation |
 |---|---:|---:|---|
-| `scripts/kc-dev-flow/linear-admission.py` | 0 | 280 | Workspace authentication, paginated read, five-field normalization, immutable state binding, comparator invocation, measurement, and success-only envelope. |
+| `scripts/kc-dev-flow/linear-admission.py` | 0 | 280 | Workspace authentication, paginated read, five-field normalization, immutable state binding, comparator invocation, internal diagnostic timing, and success-only envelope. |
 | `kc-dev-flow/scripts/profile-contract-loader.py` | 419 | 500 | Fail-closed Development Brief and complete-or-absent Planning Receipt validation before route load. |
 | `kc-dev-flow/scripts/profile-contract-loader.test.py` | 1,455 | 1,640 | Falsify every brief section, receipt presence combination, duplicate, placeholder, and valid standalone/provider case. |
 | `docs/dev/_mods/profile-contract-loader.py` | 419 | 500 | Preserve byte-identical adopted loader behavior used by this workflow. |
 | `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | 228 | 250 | Prefer the bound admission guard and treat one valid envelope as the only provider-backed dispatch input; retain manual fallback for adopters without a guard. |
 | `docs/dev/README.md` | 403 | 435 | Bind `duckbase-co`, the Conductor environment credential, the local guard, and its exact command without changing authorities. |
 | `kc-dev-flow/README.md` | 192 | 210 | Document the strengthened loader and optional adopter admission-guard seam. |
-| `scripts/kc-dev-flow-contract-test.py` | 1,182 | 1,450 | Fake Linear/state integration, 60-second/envelope/auth/data-safety checks, and package/adopter binding. |
+| `scripts/kc-dev-flow-contract-test.py` | 1,182 | 1,450 | Fake Linear/state integration, external full-boundary timing, envelope/auth/data-safety checks, and package/adopter binding. |
 | `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 487 | 555 | Reject removal of reader, loader checks, snapshot binding, comparator validation, or dispatch stop. |
 | `ARCHITECTURE.md` | 252 | 265 | Repair the profile-loading claim to include admission validation and the provider guard outside the provider-neutral loader. |
 
@@ -355,3 +379,16 @@ retained documents.
 ### Summary
 
 The shaped Pilot is one fail-closed, read-only command that replaces DEV-11's manual MCP and normalization steps without changing the five-field contract or automatically launching work. The route recovers the loader and dispatch wiring, adds only the missing workspace Linear adapter, preserves the proven comparator, and keeps every output bound to current committed inputs.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Define one end-to-end Pilot journey from the workspace-bound Linear read through the existing five-field snapshot and clean reconcile to a valid dispatch envelope within 60 seconds; the one-time manual bootstrap must not exist in the steady-state route.
+  The repaired journey starts at external monotonic `t0` on successful Todo-plus-Cycle update readback and ends at `t1` after envelope parsing, explicitly including command startup and the command's fresh Linear read; `command_elapsed_ms` is diagnostic only.
+- DONE: Define fail-closed authentication, Development Brief, complete-or-absent Planning Receipt, and planning-drift behavior with falsifiable acceptance checks, observable semantics, persistence, recovery, and data-safety boundaries.
+  The unchanged refusal, persistence, recovery, and read-only boundaries now store the external full-journey timestamps separately from the shorter internal timing, so timing cannot weaken any stop.
+- DONE: Name the smallest file-level implementation surface and diff-based stop numbers, mapping every retained reader, loader guard, snapshot binding, comparator behavior, and dispatch stop to a goal, safety boundary, or without-it failure while preserving all declared non-goals.
+  The ten-file surface and all stop numbers remain unchanged; only the adapter's internal timing and the contract harness's authoritative external measurement responsibilities were clarified.
+
+### Summary
+
+The accepted 60-second proof now spans the full update-readback-to-envelope boundary and includes the provider read. The admission command remains read-only and may report its own shorter duration, but only the external harness interval can satisfy the Pilot metric.
