@@ -59,6 +59,8 @@ def write_work_item(
     sprint_readiness: str | None = "ready",
     poc_fields: dict[str, str] | None = None,
     recovery_fields: dict[str, str] | None = None,
+    planning_receipt: tuple[str, str, str] = ("", "", ""),
+    body: str = "",
 ) -> Path:
     if route is None:
         route = [logical for logical, _next in MODULE.ROUTES[profile].values()]
@@ -71,7 +73,14 @@ def write_work_item(
         }
     path = root / "work-items" / f"{name}.md"
     path.parent.mkdir(exist_ok=True)
-    frontmatter = ["---", f"status: {workflow_stage}"]
+    source, planning_window, planning_outcome = planning_receipt
+    frontmatter = [
+        "---",
+        f"status: {workflow_stage}",
+        f"source: {source}",
+        f"planning-window: {planning_window}",
+        f"planning-outcome: {planning_outcome}",
+    ]
     if sprint is not None:
         frontmatter.append(f"sprint: {sprint}")
     if sprint_readiness is not None:
@@ -105,13 +114,179 @@ def write_work_item(
             "",
         ]
     )
-    path.write_text("\n".join(frontmatter + receipt), encoding="utf-8")
+    path.write_text("\n".join(frontmatter + receipt) + body, encoding="utf-8")
     return path
 
 
 with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary:
     root = Path(temporary)
     write_fixture(root)
+
+    canonical_brief = """
+## The problem
+
+Manual normalization cannot be repeated safely.
+
+## Accepted outcome
+
+One bound reader emits a dispatch envelope.
+
+## Non-goals
+
+- No provider writes.
+- No automatic workspace launch.
+
+## Acceptance criteria
+
+- **AC-1** A current read binds the admitted set.
+- **AC-2** Every refusal emits no envelope.
+
+## Route-back conditions
+
+Stop when the planning tuple cannot express the work.
+"""
+
+    def run_admission(item: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(item),
+                "--format",
+                "json",
+                "--validate-admission",
+            ],
+            text=True,
+            capture_output=True,
+        )
+
+    admitted = write_work_item(
+        root,
+        "pilot-product-slice",
+        "ideation",
+        "canonical-admission",
+        planning_receipt=("https://linear.app/example/DEV-12", "Cycle 1", "Project 1"),
+        body=canonical_brief,
+    )
+    admission_result = run_admission(admitted)
+    require(admission_result.returncode == 0, admission_result.stderr)
+    require(
+        len(json.loads(admission_result.stdout)["development_brief_sha256"]) == 64,
+        "canonical admission did not return the Development Brief hash",
+    )
+
+    def expect_admission_refusal(name: str, body: str) -> None:
+        item = write_work_item(
+            root,
+            "production",
+            "ideation",
+            name,
+            planning_receipt=("source", "window", "outcome"),
+            body=body,
+        )
+        rejected = run_admission(item)
+        require(
+            rejected.returncode == 2 and not rejected.stdout,
+            f"admission accepted {name}: {rejected.stdout}{rejected.stderr}",
+        )
+
+    section_content = {
+        "The problem": "Manual normalization cannot be repeated safely.",
+        "Accepted outcome": "One bound reader emits a dispatch envelope.",
+        "Non-goals": "- No provider writes.\n- No automatic workspace launch.",
+        "Acceptance criteria": (
+            "- **AC-1** A current read binds the admitted set.\n"
+            "- **AC-2** Every refusal emits no envelope."
+        ),
+        "Route-back conditions": "Stop when the planning tuple cannot express the work.",
+    }
+    for heading, content in section_content.items():
+        exact = f"## {heading}\n\n{content}"
+        expect_admission_refusal(
+            f"missing-{heading.lower().replace(' ', '-')}",
+            canonical_brief.replace(exact, ""),
+        )
+        expect_admission_refusal(
+            f"duplicate-{heading.lower().replace(' ', '-')}",
+            canonical_brief + f"\n## {heading}\n\n{content}\n",
+        )
+        expect_admission_refusal(
+            f"empty-{heading.lower().replace(' ', '-')}",
+            canonical_brief.replace(exact, f"## {heading}\n"),
+        )
+        expect_admission_refusal(
+            f"placeholder-{heading.lower().replace(' ', '-')}",
+            canonical_brief.replace(exact, f"## {heading}\n\n<value>"),
+        )
+
+    criteria_block = section_content["Acceptance criteria"]
+    for name, criteria in (
+        ("non-ascending-ac", "- **AC-2** Second.\n- **AC-1** First."),
+        ("duplicate-ac", "- **AC-1** First.\n- **AC-1** Duplicate."),
+        ("placeholder-ac", "- **AC-1** <condition>"),
+        ("missing-ac-prefix", "- A condition without a stable identifier."),
+    ):
+        expect_admission_refusal(name, canonical_brief.replace(criteria_block, criteria))
+    expect_admission_refusal(
+        "evidence-only-admission",
+        canonical_brief.replace("## Acceptance criteria", "## Acceptance evidence"),
+    )
+    expect_admission_refusal(
+        "dual-section-admission",
+        canonical_brief + "\n## Acceptance evidence\n\nHistorical evidence.\n",
+    )
+
+    for mask in range(8):
+        values = tuple(
+            value if mask & (1 << position) else ""
+            for position, value in enumerate(("source", "window", "outcome"))
+        )
+        receipt_item = write_work_item(
+            root,
+            "pilot-product-slice",
+            "ideation",
+            f"receipt-presence-{mask}",
+            planning_receipt=values,
+            body=canonical_brief,
+        )
+        result = run_admission(receipt_item)
+        require(
+            (result.returncode == 0) == (mask in {0, 7}),
+            f"Planning Receipt presence mask {mask} had wrong admission result",
+        )
+
+    historical = write_work_item(
+        root,
+        "pilot-product-slice",
+        "validation",
+        "manual-cycle-release-admission-path",
+        planning_receipt=("source", "window", "outcome"),
+        body=canonical_brief + "\n## Acceptance evidence\n\nHistorical evidence.\n",
+    )
+    historical_bytes = historical.read_bytes()
+    default_result = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(historical),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(default_result.returncode == 0, default_result.stderr)
+    require(
+        run_admission(historical).returncode == 2
+        and historical.read_bytes() == historical_bytes,
+        "historical dual-section continuation was reclassified or rewritten",
+    )
 
     expected_routes = {
         "poc-exploration": {
