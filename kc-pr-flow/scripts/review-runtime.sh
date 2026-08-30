@@ -417,7 +417,7 @@ review_runtime_timing_finish() (
     (($m[4].monotonic_ns - $m[3].monotonic_ns) | ms) as $targeted |
     (($m[5].monotonic_ns - $m[4].monotonic_ns) | ms) as $collation |
     (($m[6].monotonic_ns - $s.start_ns) | ms) as $wall |
-    (($m[6].monotonic_ns - $s.start_ns -
+    (($m[6].monotonic_ns - $m[1].monotonic_ns -
       ($m[3].monotonic_ns - $m[2].monotonic_ns)) | ms) as $review |
     {
       schema:"kc-pr-flow.review-timing/v1",review_key:$s.review_key,mode:$s.mode,

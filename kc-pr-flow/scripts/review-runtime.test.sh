@@ -109,7 +109,10 @@ run_review_timing_tests() {
   local invalid_state="$TEST_INPUT_ROOT/review-timing-invalid-state.json"
   local invalid_lanes="$TEST_INPUT_ROOT/review-timing-invalid-lanes.json"
   local lanes="$TEST_INPUT_ROOT/review-timing-lanes.json"
-  local review_key rc phase timing before
+  local deterministic_state="$TEST_INPUT_ROOT/review-timing-deterministic-state.json"
+  local deterministic_receipt="$TEST_INPUT_ROOT/review-timing-deterministic-receipt.json"
+  local monotonic_counter="$TEST_INPUT_ROOT/review-timing-monotonic-counter"
+  local review_key rc phase timing before monotonic_definition deterministic_timing
   review_key="$(printf 'a%.0s' {1..64})"
   printf '%s\n' '[{"duration_ms":17,"lane_id":"correctness","provider_family":"claude"},{"duration_ms":23,"lane_id":"security","provider_family":"claude"}]' >"$lanes"
 
@@ -145,6 +148,26 @@ run_review_timing_tests() {
   assert_eq 'unobserved external attribution stays null' 'null,null,null' \
     "$(jq -r '[.attribution_ms.hosted_ci,.attribution_ms.unrelated_queue,
       .attribution_ms.human_wait] | map(tostring) | join(",")' <<<"$timing")"
+
+  monotonic_definition="$(declare -f review_runtime_monotonic_ns)"
+  printf '0\n' >"$monotonic_counter"
+  review_runtime_monotonic_ns() {
+    local index values
+    values='1000000000 1100000000 1300000000 2300000000 2800000000 3500000000 3800000000 4000000000'
+    index="$(cat "$monotonic_counter")"
+    printf '%s\n' "${values}" | awk -v field="$((index + 1))" '{print $field}'
+    printf '%s\n' "$((index + 1))" >"$monotonic_counter"
+  }
+  review_runtime_timing_start "$review_key" delta "$deterministic_state"
+  for phase in identity_and_plan inventory required_lanes_critical_path collector \
+    targeted_verification_critical_path collation_and_draft confirmation_ready; do
+    review_runtime_timing_mark "$deterministic_state" "$phase"
+  done
+  deterministic_timing="$(review_runtime_timing_finish "$deterministic_state" \
+    "$lanes" "$deterministic_receipt")"
+  eval "$monotonic_definition"
+  assert_eq 'promotion timing starts immediately before required-agent dispatch' 2200 \
+    "$(jq -r '.durations_ms.review_to_confirmation_ready' <<<"$deterministic_timing")"
 
   before="$(sha256_text "$(cat "$state")")"
   mkdir "$state.lock"
