@@ -567,6 +567,8 @@ The rejected local-only dogfood was replaced without changing product files, sco
   The clean worktree remains at tree `a3de404c2b8fb21c9201e2e3d4312438c52e018d`; fresh loader, close-guard, route, contract, version-parity, and skill-frontmatter checks pass and fail on their owned budget, timing, direct-proof, exhaustion, higher-profile, mirror, or metadata drift.
 - DONE: Issue a fresh validation verdict that supersedes only the rejected local-only dogfood evidence and preserves the minimum-stack and stop-number conclusions.
   PASS: authoritative shared-state evidence repairs AC-4 and AC-6 without changing the 16-file, 430-line, exactly-320-core-line candidate or its three-mechanism minimum stack.
+- DONE: Observe all current Draft PR feedback at the exact candidate head and record a bounded disposition.
+  PR `iamcxa/kc-claude-plugins#308`, layer `single`, head `2f3391855653889ede9ac205eaa4b7a88befff43`, author `iamcxa`, Draft OPEN; GraphQL review threads were complete (`hasNextPage=false`, zero nodes), REST review pages were complete (zero reviews), and repeated PR view matched the same head; canonical fingerprint input `{"head":"2f3391855653889ede9ac205eaa4b7a88befff43","items":[],"layer":"single","pr":308,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}` has SHA-256 `363fd0f0c9e722e5aab684f9afc66003ce13c5cfadb149a47d417870d84a432b`; dispositions `[]`.
 
 ### Summary
 
