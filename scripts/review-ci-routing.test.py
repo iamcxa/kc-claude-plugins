@@ -123,4 +123,20 @@ for name, text in texts.items():
     ):
         require(retired not in text, f"{name}: retained non-owned check {retired}")
 
+contracts_text = (ROOT / ".github/workflows/review-ci-contracts.yml").read_text(encoding="utf-8")
+contracts_pull = event_paths(contracts_text, "pull_request")
+contracts_push = event_paths(contracts_text, "push")
+require(contracts_pull == contracts_push, "review contracts: pull and push routing differ")
+for required_path in (
+    "kc-pr-flow/scripts/review-*",
+    "kc-pr-flow/reference/review-triage.md",
+    "kc-pr-flow/skills/kc-pr-review/SKILL.md",
+    "kc-pr-flow/test/fixtures/review-plan/**",
+):
+    require(required_path in contracts_pull, f"review contracts: missing route {required_path}")
+require(
+    "bash kc-pr-flow/scripts/review-plan.test.sh" in contracts_text,
+    "review contracts: missing plan suite command",
+)
+
 print("review CI routing contract: PASS")

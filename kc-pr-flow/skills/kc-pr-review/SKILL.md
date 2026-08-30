@@ -118,6 +118,39 @@ Merge the results into Step 5/6 before any APPROVE or clean COMMENT.
 
 This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
 
+### Step 2.1d: Optional trusted delta plan
+
+The delta fast path is default-off. It is advisory and read-only: it cannot post, skip human
+confirmation, or replace the existing initial review. Engage it only when
+`KC_PR_FLOW_DELTA_FAST_PATH=on` and the caller supplies one terminal event log, its S01 receipt,
+the matching canonical config file, and an isolated clean repository worktree.
+
+```bash
+PLAN_JSON="$(
+  bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+    --repo "$PR_REPOSITORY" --pr "$PR_NUMBER" \
+    --base "$CURRENT_BASE_SHA" --head "$CURRENT_HEAD_SHA" \
+    --config-hash "$CONFIG_HASH" --config-file "$REVIEW_CONFIG_FILE" \
+    --repo-worktree "$PWD" --predecessor-events "$PREDECESSOR_EVENTS" \
+    --delta-receipt "$DELTA_RECEIPT"
+)" || PLAN_JSON=
+```
+
+Source `review-plan.sh` and call `review_plan_validate_decision` before reading any field.
+Invalid, missing, stale, non-ancestor, dirty, incomplete, uncertain, or unclassified input means
+`initial`; do the unchanged full review. A valid `resolve` reviews the exact returned range and
+rechecks inherited findings. A valid `delta` reviews that range with every returned required
+capability. Never infer a narrower range or lane set.
+
+Keep the validated canonical plan immutable for the invocation. Immediately before every existing
+event-authority seam—legacy presentation, typed presentation, human edit, confirmation,
+autonomous construction, and both interactive and autonomous pre-post checks—rerun
+`review_plan_validate_decision` from the frozen inputs and require byte equality with
+`PLAN_JSON`. Then enforce its `event_ceiling`: COMMENT allows COMMENT or REQUEST_CHANGES but
+never APPROVE; APPROVE allows the existing three events. Any rerun or equality failure refuses
+posting. Step 6c human confirmation and `review-post.sh` remain the only confirmation and network
+owners.
+
 ### Step 2.2: Optional kc-dev-flow handoff
 
 When the caller supplies an external handoff path and the installed

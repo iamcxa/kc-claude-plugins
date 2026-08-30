@@ -1,0 +1,17 @@
+{
+  "schema": "kc-pr-flow.review-plan-replay/v1",
+  "repository": "acme/widgets",
+  "pr_number": 42,
+  "finding": {
+    "path": "src/parser.py",
+    "side": "RIGHT",
+    "line": 2,
+    "category": "correctness"
+  },
+  "expected": {
+    "mapped_fix_mode": "resolve",
+    "mapped_fix_ceiling": "APPROVE",
+    "unseen_mode": "delta",
+    "unseen_ceiling": "COMMENT"
+  }
+}
