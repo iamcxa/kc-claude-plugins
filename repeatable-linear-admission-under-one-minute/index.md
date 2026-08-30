@@ -484,3 +484,16 @@ DEV-12 now uses one canonical `## Acceptance criteria` section with stable `AC-1
 ### Summary
 
 The minimum stack no longer classifies or migrates legacy headings: normal profile loading remains unchanged for every already-admitted item, including the active v3 validation item with both historical sections. DEV-12 and future admissions alone take the explicit canonical `AC-N` validation path through the admission guard, and a dual-section new admission still fails before provider access or dispatch.
+
+## RoboRev implementation observation claim
+
+```yaml
+review_convergence:
+  capability: review_convergence
+  mode: observe
+  provider: roborev
+  identity: sha256:5dc242d9095dd2448bd786caac2b009e21d359920c0757f44a9905f11494004a
+  claimant: agent:codex:01a05252-d05c-7ef2-ba41-b33fb04d87ed
+  observed_state_revision: a022cac7b934734b7a96687d89d86208ddb39ef3
+  state: claimed
+```
