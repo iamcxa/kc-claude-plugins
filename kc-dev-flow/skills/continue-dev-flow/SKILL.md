@@ -89,6 +89,17 @@ Continue by the selected profile's smallest sufficient route.
    only from one `kc-dev-flow-dispatch-envelope/v1` JSON object that binds the
    current work-item and state revisions, snapshot, live read, clean comparator,
    and loaded contracts. Empty stdout is the mechanical dispatch stop.
+
+   The same successful provider read also returns one ephemeral `delivery`
+   binding with `branch` and `close_line`; derive both from the same exact
+   reconciled `source`, never from work-item prose. A Linear adapter returns its
+   exact `branchName` and `Fixes TEAM-N`. A GitHub Issue adapter returns
+   `branch: null` and `Closes owner/repo#N`; null preserves the current delivery
+   branch. A non-empty branch is the exact forge head branch, even when the local
+   worktree branch differs. Append the close line exactly once to the reviewed
+   PR body. Missing, malformed, or source-mismatched bindings stop before branch
+   push or PR creation. This binding writes neither provider nor execution
+   state.
 8. Before dispatch and whenever execution proposes a scope change, compare the
    accepted goal and complete non-goal list exactly with the admission snapshot.
    If either differs or must change, stop; do not replace the snapshot or

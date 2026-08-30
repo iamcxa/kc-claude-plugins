@@ -20,6 +20,20 @@ trigger. It loads independently of this reference, because base choice is decide
 before any ceremony runs and survives a provider owning the ceremony. Take the
 base from there; this reference only carries it out.
 
+## Provider planning linkage
+
+For provider-backed work, carry the adapter's ephemeral `delivery.branch` and
+`delivery.close_line` from the same exact reconciled `source`. A non-empty
+branch replaces the ordinary delivery branch byte-for-byte as the forge head;
+null keeps that ordinary branch. Append the close line exactly once to the
+reviewed PR body. Stop before push or PR creation when either value is missing,
+malformed, or does not bind the reconciled source.
+
+Do not infer either value from prose or maintain another planning field. Linear
+supplies its exact issue branch plus `Fixes TEAM-N`; a GitHub Issue supplies a
+null branch plus `Closes owner/repo#N`. Use the legacy `issue` field only for a
+standalone item with no Planning Receipt.
+
 ## Approval and candidate identity
 
 The kernel already places merge authorization with the Captain. Two delivery
@@ -90,7 +104,8 @@ sees the "why" first.
 | `## Evidence` | yes when verification ran | 1-2 bullets, `N/N passed` per suite. No per-test breakdowns or enumerated suite lists. |
 | `## Review guidance` | optional | 1 line naming the risky file or change, only when a stage report flagged it. |
 | `---` separator + work-item link | yes | Link the exact committed work item at its exact revision. |
-| `Closes {issue}` | yes when the work item records an issue | Use the recorded value exactly as written. |
+| Provider close line | yes for provider-backed work | Append `delivery.close_line` exactly once. |
+| `Closes {issue}` | yes only for a standalone item recording an issue | Use the legacy value exactly as written. |
 | `Related: {siblings}` | optional | Only when a stage report flagged follow-ups. |
 
 Extract deterministically from the work item and its stage reports:

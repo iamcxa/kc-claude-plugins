@@ -65,8 +65,8 @@ provider and default loader path unchanged.
 | Planning items | GitHub Issues plus Project #4, as the current replaceable provider |
 | Planning window | Project #4 Iteration field |
 | Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
-| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals |
-| Linear admission guard | `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, and accept no credential argument or interactive fallback |
+| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals; derive ephemeral delivery `{branch: null, close_line: "Closes owner/repo#N"}` from that exact issue source |
+| Linear admission guard | `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, accept no credential argument or interactive fallback, and emit Linear's exact `branchName` plus `Fixes DEV-N` from the reconciled issue |
 | Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
@@ -218,7 +218,8 @@ python3 scripts/kc-dev-flow/linear-admission.py \
 Success stdout is one `kc-dev-flow-dispatch-envelope/v1` object. Every
 authentication, canonical-brief, pagination, snapshot, comparator, race, or
 timeout refusal has empty stdout, so the First Officer has no dispatch input.
-The command is read-only and never creates a task or workspace.
+Its ephemeral `delivery` binding supplies the exact forge head branch and PR
+close line. The command is read-only and never creates a task or workspace.
 
 For a complete Planning Receipt, before reading execution state or dispatching
 new work, run the read-only planning reader for the union of the snapshot's

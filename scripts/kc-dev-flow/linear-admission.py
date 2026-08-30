@@ -138,7 +138,7 @@ class Linear:
 
 ISSUE_QUERY = """query AdmissionIssue($id: String!) {
   viewer { organization { id urlKey } }
-  issue(id: $id) { id identifier url description state { type }
+  issue(id: $id) { id identifier url branchName description state { type }
     project { id name content } cycle { id startsAt endsAt } }
 }"""
 PROJECT_QUERY = """query AdmissionProject($id: String!) {
@@ -159,6 +159,43 @@ def issue_identifier(source: str) -> str:
     if not match:
         raise AdmissionError("snapshot source is not a Linear issue URL")
     return match.group(1)
+
+
+def delivery_binding(issue: object, source: str, timeout: float) -> dict[str, str]:
+    if not isinstance(issue, dict) or issue.get("url") != source:
+        raise AdmissionError("Linear delivery source does not match the engaged item")
+    identifier = issue.get("identifier")
+    branch = issue.get("branchName")
+    if not isinstance(identifier, str) or not re.fullmatch(r"[A-Z][A-Z0-9]*-\d+", identifier):
+        raise AdmissionError("Linear delivery identifier is invalid")
+    if identifier != issue_identifier(source):
+        raise AdmissionError("Linear delivery identifier does not match the engaged source")
+    if not isinstance(branch, str) or not branch or len(branch.encode("utf-8")) > 240:
+        raise AdmissionError("Linear delivery branch is invalid")
+    env = os.environ.copy()
+    env.update(
+        {
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_NO_REPLACE_OBJECTS": "1",
+            "GIT_OPTIONAL_LOCKS": "0",
+        }
+    )
+    try:
+        checked = subprocess.run(
+            ["git", "check-ref-format", "--branch", branch],
+            env=env,
+            capture_output=True,
+            check=False,
+            timeout=timeout,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise AdmissionError("Linear delivery branch validation unavailable") from exc
+    if checked.returncode != 0 or not re.search(
+        rf"(?:^|[/_-]){re.escape(identifier)}(?:$|[/_-])", branch, re.IGNORECASE
+    ):
+        raise AdmissionError("Linear delivery branch does not bind the engaged issue")
+    return {"branch": branch, "close_line": f"Fixes {identifier}"}
 
 
 def live_item(issue: object) -> dict[str, object]:
@@ -309,6 +346,11 @@ def main() -> int:
             raise AdmissionError("Planning Receipt is not a bound Linear tuple")
         linear = Linear(key, args.graphql_url, deadline)
         engaged_live = linear.query(ISSUE_QUERY, {"id": issue_identifier(str(engaged["source"]))})
+        delivery = delivery_binding(
+            engaged_live.get("issue"),
+            str(engaged["source"]),
+            max(0.01, deadline - time.monotonic()),
+        )
         viewer = engaged_live.get("viewer")
         organization = viewer.get("organization") if isinstance(viewer, dict) else None
         if not isinstance(organization, dict) or organization.get("urlKey") != args.linear_workspace:
@@ -390,6 +432,7 @@ def main() -> int:
             "schema": "kc-dev-flow-dispatch-envelope/v1",
             "conductor_workspace_id": workspace_id,
             "linear_organization": organization["urlKey"],
+            "delivery": delivery,
             "work_item_sha256": hashlib.sha256(committed).hexdigest(),
             "state_revision": args.state_revision,
             "snapshot_sha256": digest(snapshots),
