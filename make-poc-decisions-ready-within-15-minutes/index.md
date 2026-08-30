@@ -51,6 +51,12 @@ gates:
                 by: agent:first-officer
                 at: "2026-08-30T13:39:27.008307Z"
                 reason: The ideation report semantically covers AC-1 through AC-7, but the structured AC scan leaves AC-2 through AC-6 unevidenced; repair only scanner-readable report citations before Captain presentation.
+            - id: gate-attempt:k80xhxhk9b9e26mnnyn2jwsh-ideation-2
+              briefing:
+                id: briefing:k80xhxhk9b9e26mnnyn2jwsh:ideation:attempt-2:revision-1
+                digest: sha256:c6a10735e3e4cba1211f158691b198a0865d349c13fbdc825b6e8ff3663e1272
+                request-digest: sha256:b03ad92af416ca0e63dd16286d0070a9eb00cf38d85ec8253970bea5c223c056
+                room-ref: ./review/ideation/briefing-2
 ---
 
 ## The problem
