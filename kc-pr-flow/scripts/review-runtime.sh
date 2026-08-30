@@ -1946,7 +1946,11 @@ review_runtime_replay_snapshot() {
         ($merged + $uncertain) as $combined |
         ($state.candidates | keys | sort) as $observed_ids |
         ($findings | map(.finding_id)) as $finding_ids |
-        ($findings | map(.merge_key)) as $merge_keys |
+        ($findings | map(
+          if .schema == "kc-pr-flow.review-finding/v1" then .merge_key
+          else [.path,.side,.anchor_sha256,.category,.claim_key,
+            .evidence.content_sha256,.evidence.object_sha,.evidence.path,.evidence.side,.evidence.line]
+          end)) as $merge_keys |
         if
           (($combined | unique | length) != ($combined | length)) or
           (($combined | sort) != $observed_ids) or
@@ -2102,6 +2106,7 @@ review_runtime_snapshot_canonical_config() (
 review_runtime_v2_git_anchor() (
   local pointer="$1" repository_path="$2" expected_repository="$3"
   local snapshot_dir='' blob_file='' object_sha path line expected_content actual_content identity
+  local blob_size max_bytes="${KC_PR_FLOW_MAX_EVIDENCE_BYTES:-1048576}"
   [ "$#" -eq 3 ] || return 2
   review_runtime_evidence_pointer_valid "$pointer" || return 3
   [ "$(printf '%s' "$pointer" | jq -r '.kind')" = 'git_blob' ] || return 3
@@ -2114,6 +2119,11 @@ review_runtime_v2_git_anchor() (
     return 3
   fi
   expected_content="$(printf '%s' "$pointer" | jq -r '.content_sha256')" || return
+  review_runtime_positive_safe_integer "$max_bytes" || return 73
+  blob_size="$(GIT_NO_LAZY_FETCH=1 GIT_NO_REPLACE_OBJECTS=1 GIT_OPTIONAL_LOCKS=0 GIT_TERMINAL_PROMPT=0 \
+    git -C "$repository_path" --no-replace-objects cat-file -s "$object_sha:$path" 2>/dev/null)" || return 3
+  [ "$blob_size" = 0 ] || review_runtime_positive_safe_integer "$blob_size" || return 3
+  [ "$blob_size" -le "$max_bytes" ] || return 3
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   blob_file="$snapshot_dir/evidence-blob"
   trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$blob_file"' EXIT

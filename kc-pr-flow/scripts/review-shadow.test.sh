@@ -8,22 +8,18 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
 SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
-REFERENCE="$HERE/../reference/review-runtime.md"
-WORKFLOW="$HERE/../../.github/workflows/review-runtime-tests.yml"
-SHADOW_WORKFLOW="$HERE/../../.github/workflows/review-shadow-tests.yml"
 TEST_ROOT="$(mktemp -d)"
 trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
 
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case production-collector|s01-inertness|typed-interactive-seam]\n' "$0" >&2
+    printf 'usage: %s [--case production-collector|typed-interactive-seam]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
 fi
 if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &&
-  [ "$CASE_FILTER" != 's01-inertness' ] &&
   [ "$CASE_FILTER" != 'typed-interactive-seam' ]; then
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
@@ -46,50 +42,6 @@ test_sha256() {
   else
     printf '%s' "$1" | sha256sum | awk '{print $1}'
   fi
-}
-
-run_s01_inertness_tests() {
-  local definitions baseline candidate value
-
-  assert_eq 'runtime workflow owns the runtime reference in pull and push' 2 \
-    "$(grep -cF -- '- "kc-pr-flow/reference/review-runtime.md"' "$WORKFLOW" || true)"
-  for owner in \
-    'kc-pr-flow/scripts/review-shadow.test.sh' \
-    'kc-pr-flow/skills/kc-pr-review/SKILL.md'; do
-    assert_eq "shadow workflow owns $owner in pull and push" 2 \
-      "$(grep -cF -- "- \"$owner\"" "$SHADOW_WORKFLOW" || true)"
-  done
-  assert_eq 'existing runtime job runs the core contract once' 1 \
-    "$(grep -cF 'bash kc-pr-flow/scripts/review-runtime.test.sh' "$WORKFLOW" || true)"
-  assert_eq 'existing shadow job runs the shadow contract once' 1 \
-    "$(grep -cF 'bash kc-pr-flow/scripts/review-shadow.test.sh' "$SHADOW_WORKFLOW" || true)"
-
-  for phrase in \
-    'receipt --event-file FILE --config-file FILE --repo-worktree DIR' \
-    'read-only receipt authority' \
-    'internally replays' \
-    'raw Git' \
-    'no routing, timing, network, or posting authority' \
-    'receipt-ready v2 events without routing'; do
-    assert_eq "reference documents $phrase" 1 "$(grep -cF "$phrase" "$REFERENCE" || true)"
-  done
-
-  assert_eq 'production skill has no receipt authority call' 0 \
-    "$(grep -cE 'review-runtime\.sh.*[[:space:]]receipt([[:space:]]|$)' "$SKILL" || true)"
-  definitions='. "$1"; declare -f review_runtime_receipt review_runtime_validate_delta_receipt_files review_runtime_build_delta_receipt review_runtime_collect_shadow_observation review_runtime_shadow'
-  baseline="$(env -u KC_PR_FLOW_DELTA_FAST_PATH bash -c "$definitions" _ "$RUNTIME")"
-  if [ -n "$baseline" ]; then pass; else fail 'S01 receipt and shadow authority is sourceable'; fi
-  if printf '%s' "$baseline" | grep -Eq 'KC_PR_FLOW_DELTA_FAST_PATH|review[_-]?route|review[_-]?post|(^|[;&|[:space:]])(gh|curl|wget|claude|codex)([[:space:]]|$)'; then
-    fail 'S01 authority contains routing, posting, network, model, or fast-path control'
-  else
-    pass
-  fi
-  baseline="$(test_sha256 "$baseline")"
-  for value in '' off unknown on; do
-    candidate="$(KC_PR_FLOW_DELTA_FAST_PATH="$value" bash -c "$definitions" _ "$RUNTIME")"
-    assert_eq "fast-path value [${value:-empty}] cannot change S01 authority" "$baseline" \
-      "$(test_sha256 "$candidate")"
-  done
 }
 
 run_typed_interactive_seam_tests() {
@@ -329,15 +281,6 @@ MOCK
 # `all` has to mean all: this group was previously reachable only by naming it
 # explicitly, so its assertions never ran in CI (which invokes this script with
 # no arguments) — including every check on posting authority.
-if [ "$CASE_FILTER" = 's01-inertness' ] || [ "$CASE_FILTER" = 'all' ]; then
-  run_s01_inertness_tests
-  if [ "$CASE_FILTER" = 's01-inertness' ]; then
-    printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
-    [ "$FAIL" -eq 0 ]
-    exit
-  fi
-fi
-
 if [ "$CASE_FILTER" = 'typed-interactive-seam' ] || [ "$CASE_FILTER" = 'all' ]; then
   run_typed_interactive_seam_tests
   if [ "$CASE_FILTER" = 'typed-interactive-seam' ]; then
@@ -585,23 +528,28 @@ MINT_POINTER="$(jq -S -c -n --arg repository "$REPOSITORY" --arg review_key "$MI
 jq -S -c --arg base "$MINT_HEAD" --arg head "$MINT_HEAD" --arg config "$MINT_CONFIG_HASH" \
   --argjson evidence "$MINT_POINTER" --arg anchor "$MINT_ANCHOR" '
   .identity.base_sha=$base | .identity.head_sha=$head | .identity.config_hash=$config |
-  .lanes=[(.lanes[0] | .candidates=[(.candidates[0] | .evidence=$evidence |
-    .anchor_sha256=$anchor | .claim_key="caller-claim")])] |
-  .synthesis.findings=[(.synthesis.findings[0] | .evidence=$evidence |
-    .anchor_sha256=$anchor | .claim_key="caller-claim")] |
+  .lanes=[(.lanes[0] | .candidates=[
+    (.candidates[0] | .evidence=$evidence | .anchor_sha256=$anchor | .claim_key="caller-claim"),
+    (.candidates[0] | .ordinal=2 | .category="performance" | .evidence=$evidence |
+      .anchor_sha256=$anchor | .claim_key="second-claim")])] |
+  .synthesis.findings=[
+    (.synthesis.findings[0] | .evidence=$evidence | .anchor_sha256=$anchor | .claim_key="caller-claim"),
+    (.synthesis.findings[0] | .category="performance" | .evidence=$evidence |
+      .anchor_sha256=$anchor | .claim_key="second-claim" | .candidate_refs[0].ordinal=2)] |
   .synthesis.uncertain_candidate_refs=[]' "$OBSERVATION" >"$MINT_OBSERVATION"
 MINT_OUTPUT="$(KC_PR_FLOW_STATE_DIR="$MINT_ROOT" \
   review_runtime_shadow on ok "$MINT_HEAD" "$MINT_OBSERVATION" "$MINT_REPO")"
 assert_eq 'receipt-ready shadow observation completes' observed "$(jq -r '.status' <<<"$MINT_OUTPUT")"
 MINT_EVENTS="$(find "$MINT_ROOT" -name events.jsonl -type f)"
 assert_eq 'shadow candidates and findings converge on v2 identity' \
-  'kc-pr-flow.review-candidate/v2,kc-pr-flow.review-finding/v2' \
+  'kc-pr-flow.review-candidate/v2,kc-pr-flow.review-candidate/v2,kc-pr-flow.review-finding/v2,kc-pr-flow.review-finding/v2' \
   "$(jq -r 'if .event_type == "finding.observed" then .payload.candidate.schema
     elif .event_type == "synthesis.finished" then .payload.findings[].schema else empty end' \
     "$MINT_EVENTS" | paste -sd, -)"
 bash "$RUNTIME" receipt --event-file "$MINT_EVENTS" --config-file "$MINT_CONFIG" \
   --repo-worktree "$MINT_REPO" >"$MINT_RECEIPT" 2>/dev/null
 assert_eq 'terminal shadow log mints a current delta receipt' 0 "$?"
+assert_eq 'receipt preserves two distinct v2 findings' 2 "$(jq '.known_findings | length' "$MINT_RECEIPT")"
 review_runtime_validate_delta_receipt_files \
   "$MINT_RECEIPT" "$MINT_EVENTS" "$MINT_CONFIG" "$MINT_REPO" >/dev/null 2>&1
 assert_eq 'shared file validator accepts the minted shadow receipt' 0 "$?"

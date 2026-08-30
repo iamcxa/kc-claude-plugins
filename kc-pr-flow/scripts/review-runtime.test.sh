@@ -9,6 +9,10 @@ RUNTIME="$HERE/review-runtime.sh"
 BENCHMARK="$HERE/review-runtime-benchmark.sh"
 SAFE_IO="$HERE/review-runtime-safe-io.py"
 FIXTURE="$HERE/../test/fixtures/review-runtime/valid-events.jsonl"
+SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
+REFERENCE="$HERE/../reference/review-runtime.md"
+WORKFLOW="$HERE/../../.github/workflows/review-runtime-tests.yml"
+SHADOW_WORKFLOW="$HERE/../../.github/workflows/review-shadow-tests.yml"
 TEST_STATE_ROOT="$(mktemp -d)"
 TEST_INPUT_ROOT="$(mktemp -d)"
 cleanup() {
@@ -25,7 +29,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-files|delta-receipt-happy-path|delta-receipt-identity|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-files|delta-receipt-happy-path|delta-receipt-identity|s01-inertness|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -70,6 +74,42 @@ sha256_text() {
   else
     printf '%s' "$1" | sha256sum | awk '{print $1}'
   fi
+}
+
+run_s01_inertness_tests() {
+  local definitions baseline candidate value owner phrase
+
+  assert_eq 'runtime workflow owns the runtime reference in pull and push' 2 \
+    "$(grep -cF -- '- "kc-pr-flow/reference/review-runtime.md"' "$WORKFLOW" || true)"
+  for owner in 'kc-pr-flow/scripts/review-shadow.test.sh' 'kc-pr-flow/skills/kc-pr-review/SKILL.md'; do
+    assert_eq "shadow workflow owns $owner in pull and push" 2 \
+      "$(grep -cF -- "- \"$owner\"" "$SHADOW_WORKFLOW" || true)"
+  done
+  assert_eq 'existing runtime job runs the core contract once' 1 \
+    "$(grep -cF 'bash kc-pr-flow/scripts/review-runtime.test.sh' "$WORKFLOW" || true)"
+  assert_eq 'existing shadow job runs the shadow contract once' 1 \
+    "$(grep -cF 'bash kc-pr-flow/scripts/review-shadow.test.sh' "$SHADOW_WORKFLOW" || true)"
+  for phrase in 'receipt --event-file FILE --config-file FILE --repo-worktree DIR' \
+    'read-only receipt authority' 'internally replays' 'raw Git' \
+    'no routing, timing, network, or posting authority' 'receipt-ready v2 events without routing'; do
+    assert_eq "reference documents $phrase" 1 "$(grep -cF "$phrase" "$REFERENCE" || true)"
+  done
+  assert_eq 'production skill has no receipt authority call' 0 \
+    "$(grep -cE 'review-runtime\.sh.*[[:space:]]receipt([[:space:]]|$)' "$SKILL" || true)"
+  definitions='. "$1"; declare -f review_runtime_receipt review_runtime_validate_delta_receipt_files review_runtime_build_delta_receipt review_runtime_collect_shadow_observation review_runtime_shadow'
+  baseline="$(env -u KC_PR_FLOW_DELTA_FAST_PATH bash -c "$definitions" _ "$RUNTIME")"
+  if [ -n "$baseline" ]; then pass; else fail 'S01 receipt and shadow authority is sourceable'; fi
+  if printf '%s' "$baseline" | grep -Eq 'KC_PR_FLOW_DELTA_FAST_PATH|review[_-]?route|review[_-]?post|(^|[;&|[:space:]])(gh|curl|wget|claude|codex)([[:space:]]|$)'; then
+    fail 'S01 authority contains routing, posting, network, model, or fast-path control'
+  else
+    pass
+  fi
+  baseline="$(sha256_text "$baseline")"
+  for value in '' off unknown on; do
+    candidate="$(KC_PR_FLOW_DELTA_FAST_PATH="$value" bash -c "$definitions" _ "$RUNTIME")"
+    assert_eq "fast-path value [${value:-empty}] cannot change S01 authority" "$baseline" \
+      "$(sha256_text "$candidate")"
+  done
 }
 
 file_mode() {
@@ -849,8 +889,30 @@ PY
   rc=$?
   assert_eq 'file validator accepts raw Git blob receipt without stdout' '0|' "$rc|$output"
 
+  output="$(KC_PR_FLOW_MAX_EVIDENCE_BYTES=1 \
+    review_runtime_receipt "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'producer rejects raw Git blobs over the evidence limit' "$rc"
+  assert_eq 'oversize producer emits no receipt' '' "$output"
+  output="$(KC_PR_FLOW_MAX_EVIDENCE_BYTES=1 review_runtime_validate_delta_receipt_files \
+    "$target_receipt" "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'file validator rejects raw Git blobs over the evidence limit' "$rc"
+  assert_eq 'oversize file validator emits no stdout' '' "$output"
+
   unset -f assert_identity_rejected write_subject_evidence_pair_events write_target_evidence_events
 }
+
+if [ "$CASE_FILTER" = 's01-inertness' ]; then
+  if declare -F run_s01_inertness_tests >/dev/null; then
+    run_s01_inertness_tests
+  else
+    fail 'runtime suite owns the S01 inertness contract'
+  fi
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
 
 if [ "$CASE_FILTER" = 'delta-receipt-identity' ]; then
   run_delta_receipt_identity_tests
@@ -881,6 +943,7 @@ if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
 fi
 
 if [ "$CASE_FILTER" = 'all' ]; then
+  run_s01_inertness_tests
   run_delta_receipt_contract_tests
   run_delta_receipt_file_validator_tests
   run_delta_receipt_identity_tests
