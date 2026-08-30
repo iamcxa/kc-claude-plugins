@@ -63,8 +63,10 @@ not another agent, review, or gate.
 ## Inputs
 
 - **Development Brief** — required for Pilot and Production; contains the
-  problem, accepted outcome, complete non-goal list, acceptance evidence, and
-  route-back conditions.
+  problem, accepted outcome, complete non-goal list, route-back conditions, and
+  one canonical `## Acceptance criteria` section with concrete, unique,
+  ascending `AC-N` bullets for new admission. Already-admitted prose is not
+  migrated or rewritten.
 - **Exploration Brief** — required for POC; uses the existing v3 decision,
   falsifier, budget, and stop-condition fields.
 - **Planning Receipt** — optional and complete or absent; the exact `source`,
@@ -131,6 +133,9 @@ configuration or rewrite its own records is Production.
 For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
+Its explicit `--validate-admission` mode additionally validates the canonical
+Development Brief and complete-or-absent Planning Receipt for a new Pilot or
+Production admission. Default loading does not inspect acceptance headings.
 
 `scripts/engage-reconcile.py` is the read-only compare mechanism. It checks
 ephemeral normalized admission and current Ready sets against the
@@ -150,6 +155,11 @@ includes every still-Ready snapshot source outside the original window/outcome.
 The vendored comparator classifies their difference. Any delta stops before new
 dispatch or mutation until the Captain admits it. A standalone item skips this
 provider path.
+An adopter may bind one repository-local read-only admission command that owns
+workspace authentication, current provider read, exact state snapshot,
+comparator invocation, and success-only dispatch-envelope emission. That seam
+adds no provider, persistence, synchronization, or launch authority to the
+portable package.
 
 Everything else under `references/` is conditional. Selecting a profile
 activates none of it; a reference link is not activation, and vendoring one adds

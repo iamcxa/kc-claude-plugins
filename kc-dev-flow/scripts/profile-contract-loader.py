@@ -47,6 +47,13 @@ RECOVERY_RISKS = {
 }
 NULL_LIKE = {"null", "~"}
 PLACEHOLDER_WORDS = {"tbd", "todo"}
+DEVELOPMENT_BRIEF_SECTIONS = (
+    "The problem",
+    "Accepted outcome",
+    "Non-goals",
+    "Acceptance criteria",
+    "Route-back conditions",
+)
 
 
 class ContractError(RuntimeError):
@@ -70,6 +77,78 @@ def is_placeholder_scalar(value: str) -> bool:
         or folded in PLACEHOLDER_WORDS
         or re.fullmatch(r"<[^>\n]+>", normalized) is not None
     )
+
+
+def validate_admission_brief(path: Path, profile: str) -> str | None:
+    """Validate a new Pilot or Production admission without changing its bytes."""
+    if profile not in {"pilot-product-slice", "production"}:
+        return None
+    try:
+        raw = path.read_bytes()
+        text = raw.decode("utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ContractError(f"cannot read admission brief {path}: {exc}") from exc
+
+    frontmatter_end = text.find("\n---\n", 4)
+    frontmatter = text[4:frontmatter_end]
+    receipt_values: list[str] = []
+    for field in ("source", "planning-window", "planning-outcome"):
+        matches = re.findall(
+            rf"^{re.escape(field)}:[ \t]*([^\n#]*?)[ \t]*$",
+            frontmatter,
+            flags=re.MULTILINE,
+        )
+        if len(matches) != 1:
+            raise ContractError(f"admission must contain exactly one {field}")
+        receipt_values.append(matches[0].strip().strip("\"'").strip())
+    present = [not is_placeholder_scalar(value) for value in receipt_values]
+    if any(present) and not all(present):
+        raise ContractError("Planning Receipt must be complete or absent")
+
+    if re.search(r"^## Acceptance evidence\s*$", text, re.MULTILINE):
+        raise ContractError(
+            "new admission cannot contain Acceptance evidence with canonical criteria"
+        )
+    sections: list[str] = []
+    for heading in DEVELOPMENT_BRIEF_SECTIONS:
+        matches = list(
+            re.finditer(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
+        )
+        if len(matches) != 1:
+            raise ContractError(f"Development Brief must contain exactly one {heading}")
+        start = matches[0].end()
+        next_heading = re.search(r"^##\s+", text[start:], re.MULTILINE)
+        end = start + next_heading.start() if next_heading else len(text)
+        section = text[start:end].strip()
+        if is_placeholder_scalar(section):
+            raise ContractError(f"Development Brief {heading} must be concrete")
+        sections.append(f"## {heading}\n\n{section}")
+
+    non_goals = [
+        line[2:].strip()
+        for line in sections[2].splitlines()
+        if line.startswith("- ")
+    ]
+    if not non_goals or any(is_placeholder_scalar(item) for item in non_goals):
+        raise ContractError("Development Brief Non-goals must be a concrete list")
+    criteria_lines = [
+        line for line in sections[3].splitlines() if line.startswith("- ")
+    ]
+    criteria = [
+        re.fullmatch(r"- \*\*AC-(\d+)\*\*\s+(.+)", line) for line in criteria_lines
+    ]
+    if (
+        not criteria
+        or any(match is None for match in criteria)
+        or [int(match.group(1)) for match in criteria if match] != list(
+            range(1, len(criteria) + 1)
+        )
+        or any(is_placeholder_scalar(match.group(2)) for match in criteria if match)
+    ):
+        raise ContractError(
+            "Acceptance criteria must use unique ascending concrete AC-N bullets"
+        )
+    return hashlib.sha256("\n\n".join(sections).encode("utf-8")).hexdigest()
 
 
 def resolve_work_item(path: Path) -> dict[str, str]:
@@ -283,9 +362,16 @@ def check_conditional_references(
     return declared_receipts
 
 
-def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
+def load_contracts(
+    root: Path, work_item: Path, *, validate_admission: bool = False
+) -> dict[str, object]:
     root = root.expanduser().resolve()
     receipt = resolve_work_item(work_item)
+    development_brief_sha256 = (
+        validate_admission_brief(work_item, receipt["profile"])
+        if validate_admission
+        else None
+    )
     profile = receipt["profile"]
     workflow_stage = receipt["workflow_stage"]
     route = ROUTES[profile]
@@ -350,6 +436,8 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
         "declared_receipts": declared_receipts,
         "loaded": loaded,
     }
+    if development_brief_sha256 is not None:
+        result["development_brief_sha256"] = development_brief_sha256
     if "recovery_failure" in receipt:
         result["review_risks"] = receipt["review_risks"]
     if logical_stage == "build":
@@ -378,6 +466,7 @@ def render_text(contract: dict[str, object]) -> str:
         "skip_to_workflow_stage",
         "review_risks",
         "implementation_exit_observation_declared",
+        "development_brief_sha256",
     ):
         if key in contract:
             header[key] = contract[key]
@@ -397,13 +486,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--contracts-root", type=Path, required=True)
     parser.add_argument("--work-item", type=Path, required=True)
     parser.add_argument("--format", choices=("text", "json"), default="text")
+    parser.add_argument("--validate-admission", action="store_true")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     try:
-        contract = load_contracts(args.contracts_root, args.work_item)
+        contract = load_contracts(
+            args.contracts_root,
+            args.work_item,
+            validate_admission=args.validate_admission,
+        )
     except ContractError as exc:
         print(f"profile contract: {exc}", file=sys.stderr)
         return 2

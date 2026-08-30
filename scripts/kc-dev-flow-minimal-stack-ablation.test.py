@@ -22,6 +22,7 @@ RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
 RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
 ADOPTED_RECONCILE = Path("scripts/kc-dev-flow/engage-reconcile.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
+LINEAR_ADMISSION = Path("scripts/kc-dev-flow/linear-admission.py")
 
 
 class AblationError(RuntimeError):
@@ -318,6 +319,20 @@ def run_manual_contract_mutant(
         )
 
 
+def run_loader_admission_mutant(
+    name: str, before: str, after: str, evidence: str
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
+        replace_once(fixture / LOADER, before, after)
+        reject(
+            name,
+            execute([sys.executable, str(fixture / LOADER_TEST)], fixture),
+            evidence,
+        )
+
+
 def run_kernel_contract_mutant(
     name: str, before: str, after: str, evidence: str
 ) -> None:
@@ -414,6 +429,78 @@ def main() -> int:
     run_reconcile_exit_mutant()
     run_reconcile_wiring_mutant()
     run_reconcile_clean_output_wiring_mutant()
+    run_loader_admission_mutant(
+        "canonical-admission-heading-removed",
+        '    "Acceptance criteria",\n',
+        '    "Acceptance evidence",\n',
+        "Development Brief must contain exactly one Acceptance evidence",
+    )
+    run_loader_admission_mutant(
+        "dual-section-refusal-removed",
+        '    if re.search(r"^## Acceptance evidence\\s*$", text, re.MULTILINE):\n',
+        '    if False and re.search(r"^## Acceptance evidence\\s*$", text, re.MULTILINE):\n',
+        "admission accepted dual-section-admission",
+    )
+    run_loader_admission_mutant(
+        "ac-order-check-removed",
+        "        or [int(match.group(1)) for match in criteria if match] != list(\n",
+        "        or False and [int(match.group(1)) for match in criteria if match] != list(\n",
+        "admission accepted non-ascending-ac",
+    )
+    run_loader_admission_mutant(
+        "default-loader-revalidation-restored",
+        '        if validate_admission\n        else None\n',
+        '        if True\n        else None\n',
+        "new admission cannot contain Acceptance evidence with canonical criteria",
+    )
+    run_loader_admission_mutant(
+        "partial-planning-receipt-accepted",
+        "    if any(present) and not all(present):\n",
+        "    if False:\n",
+        "Planning Receipt presence mask 1 had wrong admission result",
+    )
+    run_manual_contract_mutant(
+        "linear-reader-removed",
+        str(LINEAR_ADMISSION),
+        "        request = urllib.request.Request(\n",
+        '        raise AdmissionError("reader removed")\n        request = urllib.request.Request(\n',
+        "clean Linear admission failed",
+    )
+    run_manual_contract_mutant(
+        "workspace-auth-guard-removed",
+        str(LINEAR_ADMISSION),
+        "        if not key or not workspace_id:\n",
+        "        if False:\n",
+        "missing-workspace emitted an envelope",
+    )
+    run_manual_contract_mutant(
+        "admission-loader-invocation-removed",
+        str(LINEAR_ADMISSION),
+        '"--format", "json", "--validate-admission"],\n',
+        '"--format", "json", "--invalid-admission-mode"],\n',
+        'Linear admission omits retained mechanism: "--validate-admission"',
+    )
+    run_manual_contract_mutant(
+        "state-binding-final-check-removed",
+        str(LINEAR_ADMISSION),
+        "        if final_head != args.state_revision or final_status or work_item.read_bytes() != committed:\n",
+        "        if False:\n",
+        "changing work-item bytes emitted an envelope",
+    )
+    run_manual_contract_mutant(
+        "comparator-payload-stop-removed",
+        str(LINEAR_ADMISSION),
+        '        if compared.returncode != 0 or reconciliation.get("status") != "clean" or not empty:\n',
+        "        if False:\n",
+        'Linear admission omits retained mechanism: "status") != "clean"',
+    )
+    run_manual_contract_mutant(
+        "success-only-envelope-stop-removed",
+        str(LINEAR_ADMISSION),
+        '        print(f"linear admission: {exc}", file=sys.stderr)\n',
+        '        print(f"linear admission: {exc}")\n',
+        "missing-key emitted an envelope",
+    )
     run_kernel_contract_mutant(
         "required-development-brief-removed",
         "A Development Brief is required",
@@ -462,7 +549,7 @@ def main() -> int:
     run_manual_contract_mutant(
         "manual-issue-required-fields-removed",
         "docs/dev/README.md",
-        "```markdown\n## The problem\n\n## Accepted outcome\n\n## Non-goals\n\n## Acceptance evidence\n\n## Route-back conditions\n",
+        "```markdown\n## The problem\n\n## Accepted outcome\n\n## Non-goals\n\n## Acceptance criteria\n\n- **AC-1** <observable condition>\n\n## Route-back conditions\n",
         "```markdown\n## The problem\n",
         "manual admission Issue headings are missing or duplicated",
     )

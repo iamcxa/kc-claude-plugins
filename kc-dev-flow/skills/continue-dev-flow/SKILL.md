@@ -20,17 +20,22 @@ Continue by the selected profile's smallest sufficient route.
    it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
    applies whoever owns the delivery ceremony.
 3. Read the exact committed work item and selected brief. A Pilot or
-   Production item requires one Development Brief containing the problem,
-   accepted outcome, complete non-goal list, acceptance evidence, and route-back
-   conditions. A POC item uses its complete v3 decision, falsifier, budget, and
-   stop condition as the Exploration Brief. Do not read current execution state.
+   Production new admission requires one Development Brief containing the
+   problem, accepted outcome, complete non-goal list, route-back conditions, and
+   one canonical `## Acceptance criteria` section with unique ascending `AC-N`
+   bullets. A POC item uses its complete v3 decision, falsifier, budget, and
+   stop condition as the Exploration Brief. Do not read current execution state
+   or revalidate and rewrite an already-admitted item's historical headings.
 4. Classify its optional Planning Receipt before provider access. The receipt is
    exactly `source`, `planning-window`, and `planning-outcome`:
    - when all Planning Receipt fields are absent, use the Captain-approved
      committed brief as planning authority and do not invoke a provider reader or
      comparator;
    - when all Planning Receipt fields are present, run provider reconcile only
-     for the provider-backed branch below; and
+     for the provider-backed branch below. For a new Pilot or Production
+     admission, first invoke the repository-local profile loader's explicit
+     `--validate-admission` mode; default continuation never selects that mode;
+     and
    - otherwise report `planning receipt incomplete` and stop before reading
      execution state or mutating it.
 5. In the provider-backed branch, follow the exact work item's `source` to the
@@ -78,6 +83,12 @@ Continue by the selected profile's smallest sufficient route.
    difference writes the provider or execution snapshot automatically. Do not
    cancel a running worker. The stop applies to new dispatch and later state
    changes.
+
+   When `## Local Profile` binds one combined provider admission guard, use it
+   for steps 4–7 instead of manual provider input or normalization. Continue
+   only from one `kc-dev-flow-dispatch-envelope/v1` JSON object that binds the
+   current work-item and state revisions, snapshot, live read, clean comparator,
+   and loaded contracts. Empty stdout is the mechanical dispatch stop.
 8. Before dispatch and whenever execution proposes a scope change, compare the
    accepted goal and complete non-goal list exactly with the admission snapshot.
    If either differs or must change, stop; do not replace the snapshot or
@@ -115,6 +126,9 @@ is the active contract: shared core, selected profile base, and selected stage.
 Do not separately read the full kernel, another profile, another stage, or an
 installed-package fallback. Profile selection is per work item, never a
 project-global mode; simultaneous items may load different routes.
+For canonical admitted work, the latest Stage Report cites stable `AC-N`
+identifiers and the repository's Spacedock `--ac-scan` check must report no
+unknown or uncovered criterion before the next gate.
 
 A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
 the loader's output already parses that block into `declared_receipts` — the

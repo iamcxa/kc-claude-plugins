@@ -4,11 +4,16 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
+import http.server
 import json
+import os
 import re
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 from pathlib import Path
 
 
@@ -88,6 +93,7 @@ required = [
     "kc-dev-flow/scripts/engage-reconcile.py",
     "kc-dev-flow/scripts/engage-reconcile.test.py",
     "scripts/kc-dev-flow/engage-reconcile.py",
+    "scripts/kc-dev-flow/linear-admission.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -1010,7 +1016,7 @@ require(
 workflow = read("docs/dev/README.md")
 normalized_workflow = " ".join(workflow.split())
 for phrase in [
-    "GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.",
+    "GitHub Issues plus Project #4 is this repository's default planning provider, not an iteration authority.",
     "`source` links the accepted planning item.",
     "At every provider-backed engage, compare the provider's current Ready set with the committed SD snapshot.",
     "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
@@ -1022,6 +1028,10 @@ for phrase in [
     "--expected-outcome",
     "every item shares the engaged item's exact window and outcome",
     "stdout parses as one JSON object with `status: clean`",
+    "Linear admission guard",
+    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment",
+    "`kc-dev-flow-dispatch-envelope/v1` object",
+    "--state-revision",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [
@@ -1035,7 +1045,7 @@ manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
 normalized_manual_issue_body = " ".join(manual_issue_body.split())
 manual_issue_headings = [
     "## The problem", "## Accepted outcome", "## Non-goals",
-    "## Acceptance evidence", "## Route-back conditions",
+    "## Acceptance criteria", "## Route-back conditions",
 ]
 require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")
 heading_positions = [manual_issue_body.index(heading) for heading in manual_issue_headings]
@@ -1047,6 +1057,11 @@ require(
 require(
     "## Human-readable release brief" not in manual_issue_body,
     "manual admission Issue body restored the redundant release-brief wrapper",
+)
+require(
+    "- **AC-1** <observable condition>" in manual_issue_body
+    and "## Acceptance evidence" not in manual_issue_body,
+    "manual admission Issue body is not canonical AC-N criteria",
 )
 for phrase in [
     "The accepted outcome or non-goals changed",
@@ -1142,6 +1157,19 @@ require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
 )
+for phrase in [
+    "explicit `--validate-admission` mode",
+    "Default loading does not inspect acceptance headings.",
+    "success-only dispatch-envelope emission",
+]:
+    require(phrase in normalized_package_readme, f"package README omits admission boundary: {phrase}")
+architecture = " ".join(read("ARCHITECTURE.md").split())
+for phrase in [
+    "one canonical `AC-N` Development Brief",
+    "default loading leaves already-admitted headings unchanged",
+    "success-only dispatch-envelope emission without creating execution state",
+]:
+    require(phrase in architecture, f"architecture omits admission boundary: {phrase}")
 # One sentence covers conditionality for the whole set, so a reference added
 # later cannot be described as always-loaded by omitting an adjective. The
 # per-file checks then confirm each one is still listed with a trigger.
@@ -1177,6 +1205,241 @@ for name in ["chief-engineer", "science-officer", "science-officer-em"]:
     require(name in package_readme, f"package README omits {name}")
     require(name in root_readme, f"root README omits {name}")
 
+linear_admission = ROOT / "scripts/kc-dev-flow/linear-admission.py"
+linear_source = linear_admission.read_text(encoding="utf-8")
+for mechanism in [
+    'os.environ.get("CONDUCTOR_WORKSPACE_ID"',
+    '"--validate-admission"',
+    '"GIT_NO_REPLACE_OBJECTS": "1"',
+    '"state or work-item revision changed during admission"',
+    '"status") != "clean"',
+    '"kc-dev-flow-dispatch-envelope/v1"',
+]:
+    require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
+
+
+class LinearFixture(http.server.BaseHTTPRequestHandler):
+    def log_message(self, _format: str, *args: object) -> None:
+        return
+
+    def do_POST(self) -> None:
+        fixture = self.server
+        length = int(self.headers.get("Content-Length", "0"))
+        request = json.loads(self.rfile.read(length))
+        query, variables = request["query"], request["variables"]
+        fixture.queries.append(query)
+        if fixture.scenario == "unauthorized":
+            self.send_error(401)
+            return
+        if fixture.scenario == "timeout":
+            time.sleep(0.2)
+        if fixture.scenario in {"state-race", "work-item-race"} and not fixture.raced:
+            fixture.raced = True
+            if fixture.scenario == "state-race":
+                (fixture.state / "race.md").write_text("race\n", encoding="utf-8")
+                subprocess.run(["git", "-C", str(fixture.state), "add", "race.md"], check=True)
+                subprocess.run(
+                    ["git", "-C", str(fixture.state), "-c", "user.name=fixture",
+                     "-c", "user.email=fixture@example.test", "commit", "-m", "race"],
+                    check=True, capture_output=True,
+                )
+            else:
+                fixture.work_item.write_text(
+                    fixture.work_item.read_text(encoding="utf-8") + "changed\n",
+                    encoding="utf-8",
+                )
+        content = fixture.project_content
+        cycle_id = fixture.cycle_id
+        goal, non_goal = fixture.goal, fixture.non_goal
+        if fixture.scenario == "project-drift":
+            content += " changed"
+        if fixture.scenario == "cycle-drift":
+            cycle_id = "22222222-2222-4222-8222-222222222222"
+        if fixture.scenario == "goal-drift":
+            goal += " changed"
+        if fixture.scenario == "non-goal-drift":
+            non_goal += " changed"
+        state_type = "completed" if fixture.scenario == "removed" else "started"
+
+        def issue(identifier: str = "DEV-12") -> dict[str, object]:
+            return {
+                "id": identifier.lower(), "identifier": identifier,
+                "url": f"https://linear.app/duckbase-co/issue/{identifier}/fixture",
+                "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
+                "state": {"type": state_type},
+                "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
+                "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
+            }
+
+        if "AdmissionIssue" in query:
+            data = {
+                "viewer": {"organization": {"id": "org", "urlKey": (
+                    "wrong" if fixture.scenario == "wrong-org" else "duckbase-co"
+                )}},
+                "issue": issue(str(variables["id"])),
+            }
+        elif "AdmissionProject" in query:
+            data = {"project": {"id": fixture.project_id, "name": fixture.project_name, "content": content}}
+        else:
+            nodes = [] if fixture.scenario == "removed" else [issue("DEV-13"), issue()]
+            if fixture.scenario == "added":
+                nodes.append(issue("DEV-14"))
+            page = {"hasNextPage": fixture.scenario == "truncated", "endCursor": None}
+            data = {"issues": {"nodes": nodes, "pageInfo": page}}
+        encoded = json.dumps({"data": data}).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+        try:
+            self.wfile.write(encoded)
+        except BrokenPipeError:
+            pass
+
+
+with tempfile.TemporaryDirectory(prefix="linear-admission-contract-") as temporary:
+    fixture_root = Path(temporary)
+    workflow = fixture_root / "docs/dev"
+    state = workflow / ".spacedock-state"
+    state.mkdir(parents=True)
+    project_id = "11111111-1111-4111-8111-111111111111"
+    cycle_id = "33333333-3333-4333-8333-333333333333"
+    project_name, project_content = "Project One", "One accepted package."
+    starts, ends = "2026-08-27T16:00:00.000Z", "2026-09-10T16:00:00.000Z"
+    goal, non_goal = "Emit one exact envelope.", "No provider writes."
+    source = "https://linear.app/duckbase-co/issue/DEV-12/fixture"
+    project_digest = hashlib.sha256(f"{project_name}\n{project_content}".encode()).hexdigest()
+    window = f"Linear Cycle {cycle_id} {starts}/{ends}"
+    outcome = f"Linear Project {project_id} {project_name} sha256:{project_digest}"
+    work_item = state / "dev-12.md"
+    work_item.write_text(
+        f"""---
+status: implementation
+source: {source}
+planning-window: "{window}"
+planning-outcome: "{outcome}"
+sprint: dev-12
+sprint-readiness: ready
+---
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  route: [shape, build, verify-deliver]
+  basis: fixture
+```
+
+## The problem
+
+Manual provider input is not repeatable.
+
+## Accepted outcome
+
+{goal}
+
+## Non-goals
+
+- {non_goal}
+
+## Acceptance criteria
+
+- **AC-1** A current read emits one exact envelope.
+
+## Route-back conditions
+
+Stop on any planning drift.
+""",
+        encoding="utf-8",
+    )
+    (state / "dev-13.md").write_text(
+        work_item.read_text(encoding="utf-8").replace("DEV-12", "DEV-13"),
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "init", str(state)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(state), "add", "dev-12.md", "dev-13.md"], check=True)
+    subprocess.run(
+        ["git", "-C", str(state), "-c", "user.name=fixture",
+         "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
+        check=True, capture_output=True,
+    )
+    revision = subprocess.check_output(["git", "-C", str(state), "rev-parse", "HEAD"], text=True).strip()
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), LinearFixture)
+    server.scenario, server.queries, server.raced = "clean", [], False
+    server.state, server.work_item = state, work_item
+    server.project_id, server.project_name, server.project_content = project_id, project_name, project_content
+    server.cycle_id, server.starts, server.ends = cycle_id, starts, ends
+    server.goal, server.non_goal = goal, non_goal
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    def admit(scenario: str, *, key: str | None = "test-key", conductor: str | None = "workspace", timeout: str = "5") -> subprocess.CompletedProcess[str]:
+        server.scenario, server.raced = scenario, False
+        env = os.environ.copy()
+        for name, value in (("LINEAR_API_KEY", key), ("CONDUCTOR_WORKSPACE_ID", conductor)):
+            if value is None:
+                env.pop(name, None)
+            else:
+                env[name] = value
+        return subprocess.run(
+            [sys.executable, str(linear_admission), "--workflow-dir", str(workflow),
+             "--work-item", str(work_item), "--contracts-root", str(ADOPTED),
+             "--comparator", str(ADOPTED_TOOLS / "engage-reconcile.py"),
+             "--linear-workspace", "duckbase-co", "--state-revision", revision,
+             "--timeout", timeout, "--graphql-url", f"http://127.0.0.1:{server.server_port}/graphql"],
+            cwd=ROOT, env=env, text=True, capture_output=True,
+        )
+
+    before = (revision, work_item.read_bytes())
+    requests_before = len(server.queries)
+    for name, key, conductor in (("missing-key", None, "workspace"), ("missing-workspace", "test-key", None)):
+        refused = admit(name, key=key, conductor=conductor)
+        require(refused.returncode == 2 and not refused.stdout, f"{name} emitted an envelope")
+    require(len(server.queries) == requests_before, "missing authentication reached Linear")
+    started_at = time.monotonic()
+    clean = admit("clean")
+    journey_ms = round((time.monotonic() - started_at) * 1000)
+    require(clean.returncode == 0, f"clean Linear admission failed: {clean.stderr}")
+    envelope = json.loads(clean.stdout)
+    require(
+        envelope["schema"] == "kc-dev-flow-dispatch-envelope/v1"
+        and envelope["reconcile"] == {"added": [], "changed": [], "moved": [], "removed": [], "status": "clean"}
+        and envelope["snapshot_sha256"] == envelope["live_read_sha256"]
+        and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
+        f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
+    )
+    for scenario, classification in (
+        ("project-drift", "moved"), ("cycle-drift", "moved"),
+        ("goal-drift", "changed"), ("non-goal-drift", "changed"),
+        ("added", "added"), ("removed", "removed"),
+    ):
+        refused = admit(scenario)
+        require(
+            refused.returncode == 2 and not refused.stdout and f'"{classification}"' in refused.stderr,
+            f"{scenario} did not stop with {classification}: {refused.stderr}",
+        )
+    for scenario in ("wrong-org", "unauthorized", "truncated"):
+        refused = admit(scenario)
+        require(refused.returncode == 2 and not refused.stdout, f"{scenario} emitted an envelope")
+    timed_out = admit("timeout", timeout="0.05")
+    require(timed_out.returncode == 2 and not timed_out.stdout, "timeout emitted an envelope")
+    require(before == (revision, work_item.read_bytes()), "Linear outcomes changed state or work-item bytes")
+    require(all("mutation" not in query.casefold() for query in server.queries), "Linear reader sent a mutation")
+    raced = admit("work-item-race")
+    require(raced.returncode == 2 and not raced.stdout, "changing work-item bytes emitted an envelope")
+    subprocess.run(
+        ["git", "-C", str(state), "restore", "--source", revision, "--", "dev-12.md"],
+        check=True,
+    )
+    raced = admit("state-race")
+    require(raced.returncode == 2 and not raced.stdout, "changing state revision emitted an envelope")
+    server.shutdown()
+    server.server_close()
+
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
+run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 
 print("kc-dev-flow contract: PASS")

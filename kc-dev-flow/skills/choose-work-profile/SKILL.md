@@ -53,7 +53,10 @@ one that sends a migration out on a shorter route.
 
 Check the shared core's brief admission bar in the same read. Pilot and
 Production require a Development Brief with the problem, accepted outcome,
-complete non-goal list, acceptance evidence, and route-back conditions. POC
+complete non-goal list, route-back conditions, and one canonical
+`## Acceptance criteria` section. Its concrete bullets use unique ascending
+`AC-N` identifiers; an evidence-only or dual-section new admission is refused.
+Existing admitted prose is not migrated or rewritten. POC
 requires the four concrete v3 Exploration Brief fields. A Planning Receipt is
 optional: all of `source`, `planning-window`, and `planning-outcome` selects the
 provider-backed path; none selects standalone Captain authority; a partial tuple

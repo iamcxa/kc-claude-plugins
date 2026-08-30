@@ -46,7 +46,7 @@ receive placeholder reviews or receipts.
 Read only this section before resolving the selected item. Do not read this full
 README as a policy bundle.
 
-GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.
+GitHub Issues plus Project #4 is this repository's default planning provider, not an iteration authority.
 Its Iteration field is the planning window, its GitHub Milestone is the planning
 outcome, and Status `Ready` selects provider-backed candidates. Spacedock tasks
 are execution records, and `source` links the accepted planning item. At every
@@ -55,6 +55,9 @@ committed SD snapshot. A difference requires Captain admission and never writes
 either side automatically. A standalone Captain-approved brief leaves `source`,
 `planning-window`, and `planning-outcome` empty and invokes no provider reader or
 comparator.
+New Linear-backed Pilot and Production admissions instead use the combined
+repository-local Linear admission guard below. Existing admitted work keeps its
+provider and default loader path unchanged.
 
 | Role | Bound local authority |
 |---|---|
@@ -63,12 +66,13 @@ comparator.
 | Planning window | Project #4 Iteration field |
 | Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
 | Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals |
+| Linear admission guard | `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, and accept no credential argument or interactive fallback |
 | Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
-| Profile loader | `docs/dev/_mods/profile-contract-loader.py` |
+| Profile loader | `docs/dev/_mods/profile-contract-loader.py`; default loading preserves admitted headings, while only the Linear admission guard selects `--validate-admission` for new Pilot or Production work |
 | POC close guard | `docs/dev/_mods/poc-close-guard.py` |
 | Contracts root | `docs/dev/_mods` |
 | Delivery | GitHub PR to `main`; required checks; release-please owns versions and tags |
@@ -196,6 +200,26 @@ moving to the selected route's first working state.
 
 ### Engage reconcile
 
+For a new Linear-backed Pilot or Production admission, pin the full state commit
+and run the combined guard; no manual MCP read, copied provider JSON, or
+hand-written normalization is accepted:
+
+```bash
+python3 scripts/kc-dev-flow/linear-admission.py \
+  --workflow-dir docs/dev \
+  --work-item "$EXACT_COMMITTED_WORK_ITEM" \
+  --contracts-root docs/dev/_mods \
+  --comparator scripts/kc-dev-flow/engage-reconcile.py \
+  --linear-workspace duckbase-co \
+  --state-revision "$EXACT_40_HEX_STATE_REVISION" \
+  --timeout 30
+```
+
+Success stdout is one `kc-dev-flow-dispatch-envelope/v1` object. Every
+authentication, canonical-brief, pagination, snapshot, comparator, race, or
+timeout refusal has empty stdout, so the First Officer has no dispatch input.
+The command is read-only and never creates a task or workspace.
+
 For a complete Planning Receipt, before reading execution state or dispatching
 new work, run the read-only planning reader for the union of the snapshot's
 `planning-window`/`planning-outcome` Ready set and every currently Ready snapshot
@@ -226,7 +250,9 @@ A manually admitted GitHub Issue uses this body shape without a
 
 ## Non-goals
 
-## Acceptance evidence
+## Acceptance criteria
+
+- **AC-1** <observable condition>
 
 ## Route-back conditions
 
@@ -237,6 +263,8 @@ recommended change or stop.
 
 `python3 scripts/kc-dev-flow-contract-test.py` checks this shape; the minimal-stack
 ablation test mutates each boundary and requires rejection for the named reason.
+At gate time, Spacedock `--ac-scan` must find every stable `AC-N` identifier in
+the latest Stage Report with no unknown or uncovered criterion.
 
 ### `ideation` — selected `shape`
 
