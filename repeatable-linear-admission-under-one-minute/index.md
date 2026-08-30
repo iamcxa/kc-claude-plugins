@@ -424,7 +424,7 @@ project_context:
   approved_change: State that explicit admission mode validates one canonical AC-N Development Brief and the complete-or-absent Planning Receipt before provider access, while default profile loading leaves already-admitted headings unchanged and the repository-local provider guard owns authentication, current read, snapshot reconcile, and dispatch-envelope emission.
   landed_change: "ARCHITECTURE.md at candidate 90de4e35748893529161a84bb863210259d1de1d now distinguishes explicit admission validation, unchanged default loading, and provider-guard ownership."
   planned_check: Run canonical admission, evidence-only and dual-section refusal, exact active dual-section default-load, AC-scan, and Linear admission fixtures, then compare the architecture claim with observed success and refusal behavior.
-  validation_evidence: pending
+  validation_evidence: "Exact candidate 90de4e35748893529161a84bb863210259d1de1d passed the canonical admission suite, the exact historical dual-section default-load plus admission refusal, and a live 4,594 ms Linear readback-to-envelope journey at state ed9b7fc46fc2d4dfddaa560da5402d7742c8c6be."
 ```
 
 No retained document is added or removed. Update `ARCHITECTURE.md`, the shared
@@ -575,3 +575,31 @@ review_convergence:
 ### Summary
 
 Candidate `90de4e35748893529161a84bb863210259d1de1d` implements the accepted read-only admission journey in three commits below every stop number. Deterministic contracts, exact live measurement, without-it evidence, and the bounded reviewer observation support implementation handoff; fresh validation remains the next-stage authority.
+
+## Stage Report: validation
+
+- DONE: Independently rerun the exact candidate's live Linear admission journey and deterministic loader/contract checks, proving AC-1..AC-6, retry/refusal/data-safety, full external <=60s, and zero manual MCP fallback.
+  `AC-1` and `AC-5`: an external harness read back DEV-12 `unstarted`, Project `535b8bd1`, and Cycle `b788c52d`, then exact candidate `90de4e3` at state `ed9b7fc` emitted one clean envelope in 4,594 ms externally and 4,513 ms internally; the snapshot and live SHA-256 both equal `014283af8e5546780efed68517913422b8eb119eba65c900194058c7c8d250c7`, and any identity, hash, clean-reconcile, envelope, or 60-second mismatch would fail.
+  `AC-2` and recovery/data safety: `scripts/kc-dev-flow-contract-test.py` passed missing key/workspace, synthetic 401, wrong organization, pagination, timeout, work-item/state-race, read-only query, empty-refusal-stdout, and refusal-then-clean retry checks; the live run independently left the credential, state HEAD/status, and temporary-path set unchanged.
+  `AC-3` and `AC-4`: `kc-dev-flow/scripts/profile-contract-loader.test.py` and the contract suite passed canonical/dual-section/default-load/receipt-mask checks plus clean Todo progress and classified Project/Cycle/goal/non-goal/membership drift; malformed admission, historical-content rewrite, clean drift, or unclassified delta would fail.
+  `AC-6`: eleven focused final-tip mutants removed the five canonical/default/receipt guards and six reader/auth/loader/state/comparator/envelope mechanisms; all eleven were rejected for their named reason.
+  Journey facts: readback `2026-08-30T12:14:55.878236+00:00`, zero Captain interventions after readback, zero manual Linear MCP fallback, and no provider or execution-state mutation.
+  AC coverage: Spacedock validation `--ac-scan` returns exactly `AC-1` through `AC-6`, every item evidenced and no unknown identifier.
+
+- DONE: Independently verify 14 files/1,284 lines/98 loader lines, package/adopter parity, retained-document checks, project-context landed claim, and without-it final-tip mutants; report any smaller equivalent or unmapped surface.
+  Scope: fresh `git diff --numstat 7256e02..90de4e3` reports 14 files and 1,284 additions-plus-deletions; `kc-dev-flow/scripts/profile-contract-loader.py` reports 96 additions and 2 deletions, or 98 changed lines, while `git diff --check` passes.
+  Parity: byte comparison passes for package/adopter loaders and kernels; the full contract test also passes their package/adopter contract.
+  Retained documents: no Markdown file was added or deleted; the loader/refusal suites and live reader spot-check the changed canonical-admission, unchanged-default-loading, provider-guard, and data-safety claims.
+  Project context: `ARCHITECTURE.md:23-28` names explicit admission validation, unchanged default loading, and provider-guard ownership; canonical tests, exact historical dual-section default load plus admission refusal, and the live journey falsify each boundary and replace the receipt's pending evidence.
+  Minimality: every changed file maps to the accepted fourteen-file journey, no dependency or second authority was added, and no smaller equivalent or unmapped surface was found; any surviving retained-mechanism mutant or file outside the map would invalidate this conclusion.
+
+- DONE: Verify candidate 90de4e35748893529161a84bb863210259d1de1d is clean and branch-base/provider state is current, classify RoboRev repair evidence without treating it as authority, report no PR feedback because no PR exists, and state remaining Pilot production/promotion obligations.
+  Candidate/base: branch `spacedock-ensign/repeatable-linear-admission-under-one-minute` is clean at `90de4e3`; fresh fetch keeps `origin/main` and the merge base at `7256e02`.
+  Provider: no pull request exists for the candidate branch, so there is no PR feedback; superseded PR #275 remains open, merged PR #277 is its replacement, and neither was mutated.
+  RoboRev classification: job 290 is advisory repair evidence for the source-order finding, and job 291 is advisory changed-tip confirmation with no issue; the deterministic and live validation above, not RoboRev, supply the verdict.
+  Remaining Pilot delivery: Captain-authorized push and Draft PR creation, then exact-head provider feedback, required checks, and merge/release authorization remain outside this local validation.
+  Production/promotion: no Production runtime, release, rollback, SLO, or operational claim is made; promote before production data or credentials, cross-repository reuse, compatibility migration, automatic launch, unattended operation, or SLO/support duty enters accepted scope.
+
+### Summary
+
+Exact candidate `90de4e35748893529161a84bb863210259d1de1d` passes independent live, deterministic, mutation, scope, parity, retained-document, project-context, and provider-state validation with no repair loop consumed. Local Pilot validation is complete; delivery authority and any future Production promotion remain with the Captain and First Officer route.
