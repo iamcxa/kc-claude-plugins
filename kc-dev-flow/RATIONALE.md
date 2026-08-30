@@ -47,8 +47,11 @@ to the repository's identity.
 
 Planning and execution answer different questions. Every route begins with one
 admitted brief. Pilot and Production use a Development Brief that fixes the
-problem, accepted outcome, complete non-goal list, acceptance evidence, and
-route-back conditions. POC uses the decision, falsifier, budget, and stop
+problem, accepted outcome, complete non-goal list, route-back conditions, and
+one canonical `## Acceptance criteria` section with stable `AC-N` identifiers
+for new admission. Explicit admission validation rejects evidence-only or dual
+sections and a partial Planning Receipt; default continuation leaves prior
+admitted headings untouched. POC uses the decision, falsifier, budget, and stop
 condition already stored in `kc-dev-flow-work-profile/v3` as its Exploration
 Brief. Feature and bug labels do not change this engine.
 
@@ -67,7 +70,10 @@ item; the vendored read-only comparator checks the normalized snapshot against
 those expected values and classifies every delta. The First Officer continues
 only on one parsed `status: clean` result. The Captain admits a delta before an
 authorized actor commits the replacement snapshot. Because reconcile writes
-neither side, it is not synchronization.
+neither side, it is not synchronization. An adopter can combine that read,
+exact snapshot binding, comparator, and a success-only envelope behind one
+repository-local guard. The command creates no execution record and grants no
+delivery authority.
 
 Without a Planning Receipt, the Captain-approved committed work item is the
 planning authority. It invokes no planning provider or comparator and invents

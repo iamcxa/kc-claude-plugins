@@ -34,12 +34,17 @@ Do not create a parallel tracker, roadmap, status mirror, or delivery record.
 
 ## Brief admission and planning
 
-A Development Brief is required for Pilot and Production. It fixes the problem,
-accepted outcome, complete non-goal list, acceptance evidence, and route-back
-conditions. The v3 POC decision, falsifier, budget, and stop condition form the
-Exploration Brief.
+A Development Brief is required for Pilot and Production. New admission uses
+one `## Acceptance criteria` section whose concrete bullets have unique,
+ascending `AC-N` identifiers; it also fixes the problem, accepted outcome,
+complete non-goal list, and route-back conditions. The explicit admission
+loader mode rejects a missing, duplicate, placeholder, evidence-only, or
+dual-section brief. Default loading leaves already-admitted headings unchanged.
+The v3 POC decision, falsifier, budget, and stop condition form the Exploration
+Brief.
 
-A Planning Receipt is optional and must be complete or absent. It is exactly the
+A Planning Receipt is optional and must be complete or absent. Explicit
+admission mode validates it before provider access. It is exactly the
 `source`, `planning-window`, and `planning-outcome` tuple. A partial Planning
 Receipt is invalid. When all three fields are present, the planning item owns
 discussion, the accepted goal, priority, and human-facing status; the planning
@@ -120,8 +125,9 @@ loads no shape contract. Changed or uncertain premises stop with
 restore the full route.
 
 Queue state still has an exit bar. An item leaves `backlog` only after its
-required brief is admitted. Pilot and Production require the complete
-Development Brief above. POC requires the complete Exploration Brief recorded
+required brief is admitted. Pilot and Production require the canonical
+Development Brief above for new admission; continuation does not revalidate or
+rewrite admitted prose. POC requires the complete Exploration Brief recorded
 by its v3 receipt. A complete Planning Receipt adds provider reconciliation; its
 absence selects the standalone authority path instead of blocking the work.
 

@@ -292,6 +292,7 @@ def main() -> int:
                 snapshots.append(normalized_item(text))
         if not snapshots or len({str(item["source"]) for item in snapshots}) != len(snapshots):
             raise AdmissionError("committed snapshot is missing or duplicated")
+        snapshots.sort(key=lambda item: str(item["source"]))
         expected_window, expected_outcome = engaged.get("planning-window"), engaged.get("planning-outcome")
         if any(
             item["planning-window"] != expected_window or item["planning-outcome"] != expected_outcome
@@ -340,7 +341,10 @@ def main() -> int:
                 current = linear.query(ISSUE_QUERY, {"id": issue_identifier(source)}).get("issue")
                 if isinstance(current, dict) and isinstance(current.get("state"), dict) and current["state"].get("type") in ACTIVE_TYPES:
                     by_url[str(current.get("url"))] = current
-        current_items = [live_item(issue) for issue in by_url.values()]
+        current_items = sorted(
+            (live_item(issue) for issue in by_url.values()),
+            key=lambda item: str(item["source"]),
+        )
 
         with tempfile.TemporaryDirectory(prefix="linear-admission-") as temporary:
             temporary_path = Path(temporary)

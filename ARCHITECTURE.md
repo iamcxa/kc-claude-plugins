@@ -20,7 +20,12 @@ Continuation resolves authority and profile before loading workflow policy. It
 reads the workflow's small Local Profile, the exact work item, and its committed
 profile receipt. A deterministic repository-local loader then emits three
 policy artifacts: shared core, selected profile base, and selected current
-stage. The selected build contract contains that profile's typed exit
+stage. Its explicit admission mode first validates one canonical `AC-N`
+Development Brief and a complete-or-absent Planning Receipt for new Pilot or
+Production work; default loading leaves already-admitted headings unchanged.
+The repository-local provider guard owns workspace authentication, current
+read, exact snapshot reconciliation, and success-only dispatch-envelope
+emission without creating execution state. The selected build contract contains that profile's typed exit
 observation. A selected stage may also contain a typed conditional-reference
 descriptor; its referenced file remains unread unless the named trigger is
 true. The loader rejects a stage outside the selected route. It takes and

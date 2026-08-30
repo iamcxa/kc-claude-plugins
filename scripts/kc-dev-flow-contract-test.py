@@ -1016,7 +1016,7 @@ require(
 workflow = read("docs/dev/README.md")
 normalized_workflow = " ".join(workflow.split())
 for phrase in [
-    "GitHub Issues plus Project #4 is this repository's current planning provider, not an iteration authority.",
+    "GitHub Issues plus Project #4 is this repository's default planning provider, not an iteration authority.",
     "`source` links the accepted planning item.",
     "At every provider-backed engage, compare the provider's current Ready set with the committed SD snapshot.",
     "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
@@ -1028,6 +1028,10 @@ for phrase in [
     "--expected-outcome",
     "every item shares the engaged item's exact window and outcome",
     "stdout parses as one JSON object with `status: clean`",
+    "Linear admission guard",
+    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment",
+    "`kc-dev-flow-dispatch-envelope/v1` object",
+    "--state-revision",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
 for phrase in [
@@ -1041,7 +1045,7 @@ manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
 normalized_manual_issue_body = " ".join(manual_issue_body.split())
 manual_issue_headings = [
     "## The problem", "## Accepted outcome", "## Non-goals",
-    "## Acceptance evidence", "## Route-back conditions",
+    "## Acceptance criteria", "## Route-back conditions",
 ]
 require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")
 heading_positions = [manual_issue_body.index(heading) for heading in manual_issue_headings]
@@ -1053,6 +1057,11 @@ require(
 require(
     "## Human-readable release brief" not in manual_issue_body,
     "manual admission Issue body restored the redundant release-brief wrapper",
+)
+require(
+    "- **AC-1** <observable condition>" in manual_issue_body
+    and "## Acceptance evidence" not in manual_issue_body,
+    "manual admission Issue body is not canonical AC-N criteria",
 )
 for phrase in [
     "The accepted outcome or non-goals changed",
@@ -1148,6 +1157,19 @@ require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
 )
+for phrase in [
+    "explicit `--validate-admission` mode",
+    "Default loading does not inspect acceptance headings.",
+    "success-only dispatch-envelope emission",
+]:
+    require(phrase in normalized_package_readme, f"package README omits admission boundary: {phrase}")
+architecture = " ".join(read("ARCHITECTURE.md").split())
+for phrase in [
+    "one canonical `AC-N` Development Brief",
+    "default loading leaves already-admitted headings unchanged",
+    "success-only dispatch-envelope emission without creating execution state",
+]:
+    require(phrase in architecture, f"architecture omits admission boundary: {phrase}")
 # One sentence covers conditionality for the whole set, so a reference added
 # later cannot be described as always-loaded by omitting an adjective. The
 # per-file checks then confirm each one is still listed with a trigger.
@@ -1259,9 +1281,9 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         elif "AdmissionProject" in query:
             data = {"project": {"id": fixture.project_id, "name": fixture.project_name, "content": content}}
         else:
-            nodes = [] if fixture.scenario == "removed" else [issue()]
+            nodes = [] if fixture.scenario == "removed" else [issue("DEV-13"), issue()]
             if fixture.scenario == "added":
-                nodes.append(issue("DEV-13"))
+                nodes.append(issue("DEV-14"))
             page = {"hasNextPage": fixture.scenario == "truncated", "endCursor": None}
             data = {"issues": {"nodes": nodes, "pageInfo": page}}
         encoded = json.dumps({"data": data}).encode("utf-8")
@@ -1333,8 +1355,12 @@ Stop on any planning drift.
 """,
         encoding="utf-8",
     )
+    (state / "dev-13.md").write_text(
+        work_item.read_text(encoding="utf-8").replace("DEV-12", "DEV-13"),
+        encoding="utf-8",
+    )
     subprocess.run(["git", "init", str(state)], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(state), "add", "dev-12.md"], check=True)
+    subprocess.run(["git", "-C", str(state), "add", "dev-12.md", "dev-13.md"], check=True)
     subprocess.run(
         ["git", "-C", str(state), "-c", "user.name=fixture",
          "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
