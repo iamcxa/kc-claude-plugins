@@ -96,6 +96,10 @@ work_profile:
   poc_falsifier: <the cheapest credible negative evidence>
   poc_budget: <explicit time, model, provider, or review ceiling>
   poc_stop_when: <observable point at which work stops>
+  poc_artifact: no-code | disposable | retained
+  poc_safety_boundary: none | <named repository safety check>
+  poc_decision_ready_minutes: 15
+  poc_decision_ready_reason: <required only for a non-15 override>
   # Eligible Production recovery only; omit on the full route.
   recovery_failure: <exact bounded failure>
   recovery_falsifier: <repository-owned command or observable scenario>

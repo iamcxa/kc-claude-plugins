@@ -75,6 +75,39 @@ work_profile:
 """
 
 
+def direct_item_text(
+    direction: str = "proceed", ready_at: str = "2026-08-30T00:15:00Z", elapsed: int = 900, interventions: int = 0
+) -> str:
+    outcome = f"""## POC outcome
+```yaml
+poc_outcome:
+  direction: {direction}
+  admitted_at: 2026-08-30T00:00:00Z
+  decision_ready_at: {ready_at}
+  decision_ready_elapsed_seconds: {elapsed}
+  captain_interventions_before_decision_ready: {interventions}
+  evidence: exact read-only probe at revision abc123
+  strongest_limit: One provider was not evaluated
+  reversal_fact: A real run loses the accepted state
+  cleanup_status_at_decision: complete
+```
+
+## POC close measurement
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: 0
+  terminal_cleanup_seconds: 2
+  cleanup_status: complete
+```
+"""
+    return work_item_text(direction, outcome=outcome).replace(
+        "status: validation", "status: implementation\nstarted: 2026-08-30T00:00:00Z"
+    ).replace(
+        "  poc_stop_when: Stop after the first integrated result",
+        "  poc_stop_when: Stop after the first integrated result\n  poc_artifact: no-code\n  poc_safety_boundary: none",
+    )
+
+
 def write_item(root: Path, text: str, name: str = "poc-item") -> Path:
     path = root / f"{name}.md"
     path.write_text(text, encoding="utf-8")
@@ -146,6 +179,13 @@ def run_guard(
 with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     root = Path(temporary)
     guard = load_guard()
+    direct = write_item(root, direct_item_text(), "direct")
+    require(guard.validate(direct, "prepare")[2:] == ("direct", "implementation"), "direct POC was not accepted from implementation")
+    require_refusal(guard, root, direct_item_text(elapsed=899), "prepare", "does not match")
+    require_refusal(guard, root, direct_item_text(interventions=1), "prepare", "requires direction change")
+    require_refusal(guard, root, direct_item_text(ready_at="2026-08-30T00:15:01Z", elapsed=901), "prepare", "requires direction change")
+    changed = write_item(root, direct_item_text("change", "2026-08-30T00:15:01Z", 901), "over-budget-change")
+    require(guard.validate(changed, "prepare")[1] == "change", "901-second change outcome was refused")
 
     for field in (
         "direction",
@@ -199,6 +239,11 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
         calls[-1]["argv"][:3] == ["gate", "prepare", "poc123exact"],
         f"wrong prepare delegation: {calls[-1]}",
     )
+
+    direct_prepared = run_guard(fake, log, workflow, direct, "prepare", "--question", "Supported?", "--artifact", "review.md", "--summary", "POC")
+    require(direct_prepared.returncode == 0, direct_prepared.stderr)
+    calls = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+    require(calls[-2]["argv"][0] == "status" and calls[-1]["argv"][:2] == ["gate", "prepare"], f"direct close dispatched fresh validation: {calls[-2:]}")
 
     consumed = run_guard(fake, log, workflow, stop_item, "consume")
     require(consumed.returncode == 0, consumed.stderr)

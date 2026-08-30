@@ -672,6 +672,45 @@ Stop when the planning tuple cannot express the work.
         "poc_budget": "One local run and one review",
         "poc_stop_when": "Stop after the first integrated result",
     }
+    direct_fields = {
+        **valid_poc_fields,
+        "poc_artifact": "no-code",
+        "poc_safety_boundary": "none",
+    }
+    direct_item = write_work_item(
+        root, "poc-exploration", "implementation", "direct-default", poc_fields=direct_fields
+    )
+    direct = MODULE.load_contracts(root, direct_item)
+    require(
+        direct["poc_decision_ready_minutes"] == 15
+        and direct["poc_proof_path"] == "direct"
+        and direct["implementation_exit_observation_declared"] is False,
+        f"direct POC did not default to a review-free 15-minute path: {direct}",
+    )
+    named_boundary = dict(direct_fields, poc_safety_boundary="repository-security-check")
+    fresh = MODULE.load_contracts(
+        root,
+        write_work_item(root, "poc-exploration", "implementation", "safety-fresh", poc_fields=named_boundary),
+    )
+    require(
+        fresh["poc_proof_path"] == "fresh"
+        and fresh["implementation_exit_observation_declared"] is True,
+        "a named POC safety boundary did not retain fresh proof",
+    )
+    for name, updates, error in (
+        ("zero-minutes", {"poc_decision_ready_minutes": "0"}, "positive integer"),
+        ("negative-minutes", {"poc_decision_ready_minutes": "-1"}, "positive integer"),
+        ("non-integer-minutes", {"poc_decision_ready_minutes": "1.5"}, "positive integer"),
+        ("unexplained-override", {"poc_decision_ready_minutes": "7"}, "requires a reason"),
+        ("partial-selector", {"poc_artifact": "no-code"}, "must appear together"),
+    ):
+        fields = {**valid_poc_fields, **updates}
+        try:
+            MODULE.load_contracts(root, write_work_item(root, "poc-exploration", "implementation", name, poc_fields=fields))
+        except MODULE.ContractError as exc:
+            require(error in str(exc), f"wrong {name} refusal: {exc}")
+        else:
+            raise SystemExit(f"profile contract loader test: accepted {name}")
     for missing_field in required_poc_fields:
         missing_fields = {
             field: value

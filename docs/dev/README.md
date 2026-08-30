@@ -80,7 +80,7 @@ provider and default loader path unchanged.
 | Orchestration | First Officer |
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
-| Optional observation | Typed RoboRev observation at every profile's implementation exit where its trigger is active; Production recovery requires a named risk, and `[none]` invokes nothing |
+| Optional observation | Typed RoboRev observation at every profile's implementation exit where eligible: Pilot, full Production, retained/safety-bound POCs, and named-risk Production recovery; direct POCs and recovery `[none]` invoke nothing |
 | RoboRev local bindings | Fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, `panel: none`; implementation family is provenance only; `.roborev.toml` is the repository fallback; state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
 | Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md`; `docs/dev/_mods/roborev-implementation-exit.md` |
 | Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. **Local base policy: trunk-only, pending a refit.** The vendored `pr-merge` copy resolves its base as the configured trunk and rebases onto it, so a stacked base would be re-targeted and the PR would carry its parent's commits. Until that copy accepts a sibling base, do not stack here; the refit requirement is to make it preserve the selected base. |
@@ -291,12 +291,13 @@ POC build performs its conditional reverse-recovery check here because POC has
 no shape stage. Pilot and Production do not repeat a completed shape audit; an
 unplanned new surface returns to the stage that owns scope.
 
-After tests and an exact candidate revision exist, the loader's selected typed
-RoboRev observation loads
+After tests and an exact candidate revision exist, a true loader
+`implementation_exit_observation_declared` loads
 [`_mods/roborev-implementation-exit.md`](./_mods/roborev-implementation-exit.md)
-as the build stage's `implementation_exit_observation_declared` reference.
-Its receipt is observation, not validation or delivery authority. POC ends after
-one request; Pilot and full-route Production allow one changed-tip confirmation.
+as the build observation. Direct no-code/disposable POCs emit false and perform
+no provider work; retained or safety-bound POCs stay fresh. Its receipt is
+observation, not validation or delivery authority. POC ends after one request;
+Pilot and full-route Production allow one changed-tip confirmation.
 Recovery allows that observation only for a named accepted risk. Recheck its
 falsifier, exact diff, rollback, and risks before exit and validation; uncertainty
 returns `RECOVERY_FULL_ROUTE_REQUIRED` to the Captain-owned full-route decision.
@@ -318,8 +319,11 @@ It is a delivery event mod, not a profile contract, and remains unread until PR
 delivery is selected or a tracked PR needs reconciliation.
 
 POC and Pilot proceed to done after their selected delivery authority is met.
-For POC, `poc-close-guard.py` validates the recorded `poc_outcome`, prepares and
-consumes the approval gate, and terminalizes the experiment. KC Dev Flow then
+For a direct POC, build durably records `poc_outcome`; `poc-close-guard.py`
+checks the admission-to-outcome time, separate close measurement, and proof path,
+then moves the item to `validation` only for the existing terminal gate without
+dispatching a validation worker. Fresh POCs record the outcome in validation.
+The guard prepares and consumes the approval gate and terminalizes the experiment. KC Dev Flow then
 returns the outcome to planning; it creates no downstream item and preselects no
 profile. Planning alone may admit a new, independent Development Brief.
 Production's validation gate approval targets the terminal `done` stage, so
