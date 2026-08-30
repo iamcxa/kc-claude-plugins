@@ -1069,8 +1069,11 @@ review_runtime_validate_t2_identity() {
         .payload.candidate as $candidate |
         [$candidate.run_id,$candidate.review_key,$candidate.evidence.repository]
         == [.run_id,.review_key,.repository] and
-        $candidate.path == $candidate.evidence.path and
-        $candidate.side == $candidate.evidence.side' >/dev/null 2>&1; then
+        (if $candidate.evidence.kind == "git_blob" or
+              $candidate.evidence.kind == "review_comment" then
+          $candidate.path == $candidate.evidence.path and
+          $candidate.side == $candidate.evidence.side
+        else true end)' >/dev/null 2>&1; then
         printf '%s' 'candidate_identity_mismatch'
         return 1
       fi
@@ -1114,7 +1117,9 @@ review_runtime_validate_t2_identity() {
           return 1
         fi
         if ! printf '%s' "$finding" | jq -e '
-          .path == .evidence.path and .side == .evidence.side' >/dev/null 2>&1; then
+          if .evidence.kind == "git_blob" or .evidence.kind == "review_comment" then
+            .path == .evidence.path and .side == .evidence.side
+          else true end' >/dev/null 2>&1; then
           printf '%s' 'evidence_identity_mismatch'
           return 1
         fi
