@@ -106,14 +106,14 @@ Starting from successful readback of one Captain-approved Todo-plus-Cycle update
 - No POC-profile redesign.
 - No migration of previously admitted work.
 
-## Acceptance evidence
+## Acceptance criteria
 
-- One live workspace-bound Linear read resolves DEV-12, its Project, Cycle 1, and the complete admitted set into the existing five-field snapshot.
-- Missing or invalid authentication stops before task creation, state mutation, or dispatch without altering the real credential.
-- Pilot and Production admission rejects a missing or invalid Development Brief and a partial Planning Receipt before task creation or dispatch.
-- Todo to In Progress remains clean; a changed Cycle, Project package, goal, non-goal, or admitted membership stops with a classified delta.
-- A fresh exact-revision measurement emits a valid dispatch envelope within 60 seconds of Todo-plus-Cycle update readback with no additional Captain intervention.
-- Removing any retained reader, loader guard, snapshot binding, comparator behavior, or dispatch stop breaks a named accepted property.
+- **AC-1** One live workspace-bound Linear read resolves DEV-12, its Project, Cycle 1, and the complete admitted set into the existing five-field snapshot.
+- **AC-2** Missing or invalid authentication stops before task creation, state mutation, or dispatch without altering the real credential.
+- **AC-3** Pilot and Production admission rejects a missing or invalid Development Brief and a partial Planning Receipt before task creation or dispatch.
+- **AC-4** Todo to In Progress remains clean; a changed Cycle, Project package, goal, non-goal, or admitted membership stops with a classified delta.
+- **AC-5** A fresh exact-revision measurement emits a valid dispatch envelope within 60 seconds of Todo-plus-Cycle update readback with no additional Captain intervention.
+- **AC-6** Removing any retained reader, loader guard, snapshot binding, comparator behavior, or dispatch stop breaks a named accepted property.
 
 ## Route-back conditions
 
@@ -130,7 +130,7 @@ reconcile, loader work, and envelope emission. The command may separately
 report its process-local elapsed time for diagnosis, but that shorter interval
 does not prove the 60-second journey. Record the exact candidate revision, both
 intervals, Captain interventions after admission, clean and drift results,
-retained components, the acceptance evidence broken by removing each
+retained components, the acceptance criterion broken by removing each
 component, and cleanup status.
 
 ## Pilot shape
@@ -138,14 +138,16 @@ component, and cleanup status.
 ### Delta versus the delivery base
 
 The delivery base is fetched `origin/main` at
-`7256e02dbbc5340e4328bfeeb016448e4033fde5`. The proposed route changes ten
-files and is expected to change about 1,050 lines: most of the size is the
-provider fixture coverage, existing loader tests, package/adopter parity, and
-ablation proof rather than new runtime behavior. It is the minimum one-PR
-route because landing the loader alone leaves the manual Linear bootstrap,
-while landing the reader alone admits invalid briefs and partial receipts; use
-two reviewable commits in one Draft PR, generic admission enforcement followed
-by the repository-local Linear adapter.
+`7256e02dbbc5340e4328bfeeb016448e4033fde5`. The approved canonical acceptance
+contract expands the proposed route from ten to fourteen files and from about
+1,050 to about 1,600 changed lines. The added surface is the shared kernel and
+adopted mirror, profile-selection instruction, rationale, and their contract
+coverage; no new runtime authority is added. Keep one integrated Draft PR with
+three reviewable commits: canonical brief/compatibility guard, repository-local
+Linear adapter, then retained-document alignment. Splitting the PR would expose
+a new internal brief contract without its first admitted consumer or duplicate
+the same parity and ablation edits; reaching a stop number below still returns
+the item to shape before implementation continues.
 
 ### Accepted journey
 
@@ -162,9 +164,21 @@ by the repository-local Linear adapter.
    the exact committed work item and state revision, then invokes the profile
    loader before provider access. The loader accepts Pilot or Production only
    when the Development Brief has exactly one non-placeholder problem,
-   accepted outcome, non-goal list, acceptance-evidence list, and route-back
-   section, and when the Planning Receipt tuple is complete or absent.
-4. **DESIGNED:** For the complete Linear receipt, the command reads the key
+   accepted outcome, non-goal list, `## Acceptance criteria`, and route-back
+   section, and when the Planning Receipt tuple is complete or absent. Every
+   acceptance bullet starts with one unique, ascending `**AC-N**` identifier
+   and a non-placeholder observable condition. A work item containing both
+   `## Acceptance criteria` and `## Acceptance evidence` is invalid.
+4. **DESIGNED:** Compatibility is syntax-only and adopter-bound. The generic
+   loader defaults to canonical criteria and accepts legacy
+   `## Acceptance evidence` only when the local caller supplies the fixed
+   DEV-12 admission cutoff `2026-08-30T10:11:04Z`, the work item is already in
+   a post-backlog state, its valid `started` time is strictly earlier than that
+   cutoff, and it contains no criteria section. It emits one
+   `acceptance_mode` and one Development Brief hash; it never copies, rewrites,
+   combines, or treats both sections as authorities. DEV-12, whose `started`
+   time equals the cutoff, uses canonical `AC-1` through `AC-6`.
+5. **DESIGNED:** For the complete Linear receipt, the command reads the key
    only from the current Conductor process environment, requires the current
    `CONDUCTOR_WORKSPACE_ID`, and checks that the authenticated Linear
    organization is `duckbase-co`. It follows the exact issue source, paginates
@@ -173,19 +187,19 @@ by the repository-local Linear adapter.
    Missing variables, an authentication or organization mismatch, malformed
    data, incomplete pagination, network failure, or timeout emits no envelope
    and exits before state access or mutation.
-5. **DESIGNED:** The command derives the committed five-field snapshot from
+6. **DESIGNED:** The command derives the committed five-field snapshot from
    the immutable state revision for every ready execution item sharing the
    engaged `sprint`. It maps source, planning window, planning outcome,
    accepted outcome, and complete non-goals without writing an intermediate
    file; it rejects a dirty, changing, missing, duplicate, or mixed-scope
    snapshot.
-6. **OBSERVED:** The unchanged `engage-reconcile.py` comparator at `7256e02`
+7. **OBSERVED:** The unchanged `engage-reconcile.py` comparator at `7256e02`
    returned exit `0` with four empty delta arrays after DEV-11 moved from Todo
    to In Progress, and returned exit `1` with `moved` after intentional Project
    digest drift. The designed command accepts only exit `0` plus one parsed
    `status: clean` object; `added`, `removed`, `changed`, `moved`, invalid
    output, process death, or no answer emits no envelope.
-7. **DESIGNED:** At process entry, the command records a diagnostic monotonic
+8. **DESIGNED:** At process entry, the command records a diagnostic monotonic
    start, then binds the work-item hash, state revision, Linear
    organization, five-field snapshot hash, live-read hash, clean reconcile,
    and loaded profile-contract hashes into one
@@ -197,7 +211,7 @@ by the repository-local Linear adapter.
    includes the command's fresh provider read. The First Officer may dispatch
    from that envelope; the command never creates a task, launches a workspace,
    or contacts a worker.
-8. **DESIGNED:** Every refusal is safe to retry after the credential, network,
+9. **DESIGNED:** Every refusal is safe to retry after the credential, network,
    state race, or Captain-approved snapshot is repaired. A crash, abandonment,
    timeout, or rerun leaves Linear and Spacedock unchanged and cannot reuse an
    earlier envelope because each envelope binds the current work-item and state
@@ -221,9 +235,16 @@ reader has no OAuth, shared-account, or interactive fallback.
   `journey_elapsed_ms`; only that receipt can prove the accepted 60-second
   boundary.
 - The profile loader newly rejects an invalid Development Brief or partial
-  Planning Receipt and returns hashes for the validated brief and complete or
-  absent receipt. Its selected route, stage loading, and hash binding remain
+  Planning Receipt. The future brief contract has one canonical
+  `## Acceptance criteria` section with stable `AC-N` identifiers; duplicate,
+  missing, non-ascending, placeholder, or dual-section input fails closed. The
+  loader returns `acceptance_mode`, the validated brief hash, and the complete
+  or absent receipt; selected route, stage loading, and hash binding remain
   unchanged.
+- The optional local cutoff permits only already-admitted, pre-DEV-12 items to
+  keep their sole legacy `## Acceptance evidence` section in place. An absent
+  cutoff, backlog item, equal/later `started` time, or both sections rejects.
+  Compatibility performs no migration and creates no second scope authority.
 - The five-field snapshot and comparator exit/output schemas remain unchanged.
   Todo-to-In-Progress is execution progress, while Project, Cycle, accepted
   goal, non-goal, or membership differences remain planning drift.
@@ -234,7 +255,10 @@ reader has no OAuth, shared-account, or interactive fallback.
 ### Persistence, recovery, and data safety
 
 - Persistent inputs are only the committed Linear Planning Receipt,
-  Development Brief, admitted Spacedock snapshot, and selected profile receipt.
+  Development Brief with its sole acceptance section, admitted Spacedock
+  snapshot, and selected profile receipt. Canonical `AC-N` identifiers remain
+  stable within the hash-bound brief and are the references consumed by
+  Spacedock `--ac-scan`.
   Linear results, normalized current data, and the envelope stay in memory or
   stdout; later stage evidence may record hashes, revisions, the harness's
   `readback_t0`, `envelope_t1`, full `journey_elapsed_ms`, and diagnostic
@@ -254,15 +278,17 @@ reader has no OAuth, shared-account, or interactive fallback.
 
 | Property | Check that must pass | Change that makes it fail |
 |---|---|---|
-| End-to-end under 60 seconds | On the exact candidate revision, an external harness captures monotonic `t0` at successful readback of the separately authorized DEV-12 Todo-plus-Cycle update, immediately invokes the command, captures `t1` after parsing one bound envelope, and asserts `t1 - t0 <= 60000` with zero later Captain prompts. It also records `command_elapsed_ms` only as a nested diagnostic and proves the full interval contains the command's fresh Linear request. | Manual JSON/MCP input, an interactive prompt, missing binding, invalid envelope, omitted provider-read interval, use of `command_elapsed_ms` as the acceptance result, or `t1 - t0` above 60 seconds. |
-| Workspace-bound authentication | Run with the current workspace variables; then independently test missing key, missing Conductor identity, synthetic 401, and wrong Linear organization. Assert all refusals have empty stdout and unchanged state. | Any fallback credential, accepted mismatch, secret-bearing diagnostic, task creation, state write, or envelope. |
-| Development Brief | Mutate each required section to missing, duplicate, empty, or placeholder and run the loader before provider access. | Any malformed Pilot or Production brief loads a route. |
-| Complete-or-absent Planning Receipt | Exercise all eight presence combinations for source, window, and outcome: zero or three may load, while the other six fail before provider access. | A partial tuple loads or an absent standalone tuple invokes Linear. |
-| Exact snapshot binding | Change the work-item bytes, state revision, source, window, outcome, accepted goal, non-goal, or admitted membership between reads. | A stale or mixed snapshot produces an envelope, or no changed hash/delta identifies the premise. |
-| Planning semantics | Live Todo-to-In-Progress stays clean; fixtures classify Cycle or Project as `moved`, goal or non-goal as `changed`, and membership as `added` or `removed`. | Status-only progress stops, or any planning change is clean/unclassified. |
+| `AC-5` End-to-end under 60 seconds | On the exact candidate revision, an external harness captures monotonic `t0` at successful readback of the separately authorized DEV-12 Todo-plus-Cycle update, immediately invokes the command, captures `t1` after parsing one bound envelope, and asserts `t1 - t0 <= 60000` with zero later Captain prompts. It also records `command_elapsed_ms` only as a nested diagnostic and proves the full interval contains the command's fresh Linear request. | Manual JSON/MCP input, an interactive prompt, missing binding, invalid envelope, omitted provider-read interval, use of `command_elapsed_ms` as the acceptance result, or `t1 - t0` above 60 seconds. |
+| `AC-2` Workspace-bound authentication | Run with the current workspace variables; then independently test missing key, missing Conductor identity, synthetic 401, and wrong Linear organization. Assert all refusals have empty stdout and unchanged state. | Any fallback credential, accepted mismatch, secret-bearing diagnostic, task creation, state write, or envelope. |
+| `AC-3` Canonical Development Brief | Mutate each required section to missing, duplicate, empty, or placeholder; mutate criteria to missing, duplicate, non-ascending, duplicate-ID, or placeholder `AC-N`; and supply both criteria and evidence. Run the loader before provider access and require every mutant to fail. | Any malformed Pilot or Production brief loads, both acceptance sections coexist, or criteria load without stable `AC-N` identifiers. |
+| `AC-3` Legacy compatibility | With the local cutoff `2026-08-30T10:11:04Z`, accept one non-backlog fixture whose `started` time is earlier and whose sole acceptance section is evidence. Reject absent cutoff, backlog, invalid time, equality, later time, both sections, and any attempted rewrite; require canonical mode for DEV-12. | Legacy syntax admits new work, two sections coexist, compatibility mutates the item, or more than one acceptance authority is emitted. |
+| `AC-3` Complete-or-absent Planning Receipt | Exercise all eight presence combinations for source, window, and outcome: zero or three may load, while the other six fail before provider access. | A partial tuple loads or an absent standalone tuple invokes Linear. |
+| `AC-1` Live read and exact snapshot binding | Run the workspace read and assert DEV-12, Project `535b8bd1`, Cycle `b788c52d`, and the complete admitted set normalize to the five fields; then change work-item bytes, state revision, source, window, outcome, accepted goal, non-goal, or membership between reads. | The exact live set does not resolve, a stale or mixed snapshot produces an envelope, or no changed hash/delta identifies the premise. |
+| `AC-4` Planning semantics | Live Todo-to-In-Progress stays clean; fixtures classify Cycle or Project as `moved`, goal or non-goal as `changed`, and membership as `added` or `removed`. | Status-only progress stops, or any planning change is clean/unclassified. |
+| Acceptance coverage | Run Spacedock `--ac-scan` against the exact DEV-12 revision after the latest Stage Report and require `AC-1` through `AC-6` covered with no unknown identifier. | Any criterion is uncovered, renumbered, duplicated, or cited only outside the latest Stage Report evidence. |
 | Read-only and cleanup | A fake GraphQL server rejects mutation text and captures requested fields; compare Linear fixtures, state HEAD/status, temp paths, and credential value before and after every outcome. | Provider/state bytes change, an intermediate survives, unnecessary fields are fetched, or the real credential changes. |
 | Dispatch stop | Feed auth, brief, receipt, truncation, comparator, state-race, and timeout failures to the integration fixture and assert empty stdout; feed the clean case and assert one envelope. | Any failure produces dispatchable stdout or success produces more than one object. |
-| Without-it proof | Mutate away each retained reader, loader check, state/hash binding, comparator exit/payload check, and empty-stdout dispatch stop. | The contract and ablation suites do not reject every mutant. |
+| `AC-6` Without-it proof | Mutate away each retained reader, canonical/legacy mutual exclusion, cutoff check, `AC-N` validation, Planning Receipt check, state/hash binding, comparator exit/payload check, and empty-stdout dispatch stop. | The contract and ablation suites do not reject every mutant. |
 
 ### Reverse-recovery receipt
 
@@ -281,8 +307,8 @@ reverse_recovery:
       location: kc-dev-flow/references/kernel.md:35
       completeness: WORKING_UNIT_UNPROVEN
       need: REQUIRED
-      evidence: The contract is explicit, but the current loader parses only profile and scheduling fields.
-      disproof_hook: Pass a Pilot fixture with a missing brief and a partial receipt to the loader.
+      evidence: The prose contract exists, but it names legacy acceptance evidence and the current loader parses only profile and scheduling fields.
+      disproof_hook: Pass missing or dual acceptance sections, invalid AC-N identifiers, cutoff-edge legacy items, and a partial receipt to the loader.
     - surface: Linear read and normalization handler
       location: MISSING
       completeness: MISSING
@@ -321,15 +347,19 @@ were excluded; the prior live POC and archived work item were included.
 | Path | Lines now | Lines after | Journey obligation |
 |---|---:|---:|---|
 | `scripts/kc-dev-flow/linear-admission.py` | 0 | 280 | Workspace authentication, paginated read, five-field normalization, immutable state binding, comparator invocation, internal diagnostic timing, and success-only envelope. |
-| `kc-dev-flow/scripts/profile-contract-loader.py` | 419 | 500 | Fail-closed Development Brief and complete-or-absent Planning Receipt validation before route load. |
-| `kc-dev-flow/scripts/profile-contract-loader.test.py` | 1,455 | 1,640 | Falsify every brief section, receipt presence combination, duplicate, placeholder, and valid standalone/provider case. |
-| `docs/dev/_mods/profile-contract-loader.py` | 419 | 500 | Preserve byte-identical adopted loader behavior used by this workflow. |
-| `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | 228 | 250 | Prefer the bound admission guard and treat one valid envelope as the only provider-backed dispatch input; retain manual fallback for adopters without a guard. |
-| `docs/dev/README.md` | 403 | 435 | Bind `duckbase-co`, the Conductor environment credential, the local guard, and its exact command without changing authorities. |
-| `kc-dev-flow/README.md` | 192 | 210 | Document the strengthened loader and optional adopter admission-guard seam. |
-| `scripts/kc-dev-flow-contract-test.py` | 1,182 | 1,450 | Fake Linear/state integration, external full-boundary timing, envelope/auth/data-safety checks, and package/adopter binding. |
-| `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 487 | 555 | Reject removal of reader, loader checks, snapshot binding, comparator validation, or dispatch stop. |
-| `ARCHITECTURE.md` | 252 | 265 | Repair the profile-loading claim to include admission validation and the provider guard outside the provider-neutral loader. |
+| `kc-dev-flow/scripts/profile-contract-loader.py` | 419 | 525 | Enforce the canonical criteria/`AC-N` brief, mutually exclusive pre-cutoff legacy mode, and complete-or-absent Planning Receipt before route load. |
+| `kc-dev-flow/scripts/profile-contract-loader.test.py` | 1,455 | 1,700 | Falsify every brief section, `AC-N` shape, dual-section case, cutoff edge, receipt presence combination, and valid canonical/legacy/standalone/provider case. |
+| `docs/dev/_mods/profile-contract-loader.py` | 419 | 525 | Preserve byte-identical adopted loader behavior used by this workflow. |
+| `kc-dev-flow/references/kernel.md` | 249 | 270 | Make `## Acceptance criteria` with stable `AC-N` identifiers the one future Development Brief contract and bound legacy syntax to compatibility only. |
+| `docs/dev/_mods/kernel.md` | 249 | 270 | Preserve byte-identical adopted core semantics. |
+| `kc-dev-flow/skills/choose-work-profile/SKILL.md` | 122 | 135 | Capture canonical criteria before selection expands them and refuse dual-section briefs. |
+| `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | 228 | 260 | Load the sole canonical or eligible legacy acceptance mode, run `--ac-scan` for canonical reports, prefer the bound admission guard, and accept only one valid envelope. |
+| `docs/dev/README.md` | 403 | 455 | Bind `duckbase-co`, the Conductor credential, DEV-12 cutoff, local guard command, canonical brief template, and local `--ac-scan` proof without changing authorities. |
+| `kc-dev-flow/README.md` | 192 | 225 | Document canonical criteria, narrow legacy compatibility, strengthened loader, and optional adopter admission-guard seam. |
+| `kc-dev-flow/RATIONALE.md` | 176 | 190 | Keep the planning/execution rationale aligned with one acceptance authority and no migration. |
+| `scripts/kc-dev-flow-contract-test.py` | 1,182 | 1,560 | Exercise canonical/legacy contract and `--ac-scan` coverage plus fake Linear/state integration, full-boundary timing, envelope/auth/data safety, and package/adopter identity. |
+| `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 487 | 610 | Reject removal of reader, acceptance-section mutual exclusion, cutoff, `AC-N` checks, receipt guard, snapshot binding, comparator validation, or dispatch stop. |
+| `ARCHITECTURE.md` | 252 | 275 | Repair profile-loading and acceptance-authority claims to include canonical admission validation, narrow compatibility, and the provider guard outside the neutral loader. |
 
 The existing `kc-dev-flow/scripts/engage-reconcile.py` and adopted
 `scripts/kc-dev-flow/engage-reconcile.py` remain byte-identical and unchanged;
@@ -340,7 +370,7 @@ their 168-line behavior is exercised, not redesigned.
 | Retained mechanism | Goal or safety boundary | Without-it failure |
 |---|---|---|
 | Workspace Linear reader inside `linear-admission.py` | Replace manual MCP and normalization while failing closed on credential, organization, pagination, and timeout. | No repeatable live read, or a wrong/truncated workspace can be dispatched. |
-| Loader Development Brief and receipt guard | Reject invalid authority inputs before provider access or state read. | Pilot/Production admits missing scope or a provider path with no complete identity. |
+| Loader Development Brief and receipt guard | Require one canonical `AC-N` criteria section for new work, permit one explicitly bounded pre-DEV-12 legacy evidence section without migration, reject both, and validate the Planning Receipt before provider or state read. | New work can use legacy syntax, an item can gain two acceptance authorities, prior admitted work is forced to migrate, or a provider path has incomplete identity. |
 | State-revision and canonical snapshot binding | Make the compared five fields and execution group exact and replayable. | A clean result can describe different work-item or state bytes than the dispatch. |
 | Existing comparator exit and payload behavior | Preserve clean progress and classify planning drift without writes. | Todo progress falsely blocks, or Project/Cycle/goal/non-goal/membership drift proceeds. |
 | Success-only envelope and First Officer stop | Give dispatch one machine-checkable, current input without automatic launch. | A failure can be mistaken for approval, or an old receipt can authorize new work. |
@@ -349,10 +379,12 @@ their 168-line behavior is exercised, not redesigned.
 
 Measure all thresholds as additions plus deletions from
 `7256e02dbbc5340e4328bfeeb016448e4033fde5` using diff numstat. Stop and return
-to shape when the diff reaches **11 changed files**, **1,201 changed lines**, or
-**301 changed lines in `scripts/kc-dev-flow/linear-admission.py`**, the provider
-read/normalization area most likely to grow. These are halt conditions: do not
-trade test, parity, data-safety, or dispatch-stop coverage to remain below them.
+to shape when the diff reaches **15 changed files**, **1,751 changed lines**, or
+**161 changed lines in `kc-dev-flow/scripts/profile-contract-loader.py`**, the
+brief-validation and legacy-compatibility area most likely to grow after this
+adjustment. These are halt conditions: do not trade canonical/legacy mutual
+exclusion, `AC-N` coverage, parity, data safety, or dispatch-stop coverage to
+remain below them.
 
 No retained component may add a GitHub mirror, synchronization, polling,
 webhook, automatic workspace launch, paid Linear Agent delegation, multi-issue
@@ -369,16 +401,17 @@ project_context:
   claim_locator: kc-dev-flow profile-native loading
   surface: exact-work-item profile loading and provider-backed admission
   stale_claim: The loader is described as binding only status and profile receipt before emitting three policy artifacts.
-  approved_change: State that the loader also validates the Development Brief and complete-or-absent Planning Receipt, while a repository-local provider guard owns authentication, current read, snapshot reconcile, and dispatch-envelope emission.
+  approved_change: State that the loader validates one canonical AC-N Development Brief, a mutually exclusive pre-DEV-12 legacy mode, and the complete-or-absent Planning Receipt, while a repository-local provider guard owns authentication, current read, snapshot reconcile, and dispatch-envelope emission.
   landed_change: pending
-  planned_check: Run the loader and Linear admission contract fixtures, then compare the architecture claim with their observed success and refusal behavior.
+  planned_check: Run canonical, legacy-cutoff, dual-section, AC-scan, and Linear admission contract fixtures, then compare the architecture claim with observed success and refusal behavior.
   validation_evidence: pending
 ```
 
-No retained document is added or removed. Update `ARCHITECTURE.md`, both README
-sections, and the existing continuation instructions in place; keep task status,
-revision, timing, and live credential facts in this work item rather than the
-retained documents.
+No retained document is added or removed. Update `ARCHITECTURE.md`, the shared
+kernel and adopted mirror, both README files, `RATIONALE.md`, and the existing
+selection/continuation instructions in place; keep task status, revision,
+timing, live credential facts, and compatibility evidence in this work item
+rather than the retained documents.
 
 ## Stage Report: ideation
 
@@ -405,3 +438,16 @@ The shaped Pilot is one fail-closed, read-only command that replaces DEV-11's ma
 ### Summary
 
 The accepted 60-second proof now spans the full update-readback-to-envelope boundary and includes the provider read. The admission command remains read-only and may report its own shorter duration, but only the external harness interval can satisfy the Pilot metric.
+
+## Stage Report: ideation (cycle 3)
+
+- DONE: Define one end-to-end Pilot journey from the workspace-bound Linear read through the existing five-field snapshot and clean reconcile to a valid dispatch envelope within 60 seconds; the one-time manual bootstrap must not exist in the steady-state route.
+  `AC-1` binds the live DEV-12/Project/Cycle read to the five fields, `AC-4` keeps execution progress clean and planning drift classified, and `AC-5` measures the full external readback-to-envelope interval including the provider read.
+- DONE: Define fail-closed authentication, Development Brief, complete-or-absent Planning Receipt, and planning-drift behavior with falsifiable acceptance checks, observable semantics, persistence, recovery, and data-safety boundaries.
+  `AC-2` covers workspace authentication refusal; `AC-3` covers canonical `AC-N`, dual-section rejection, pre-cutoff legacy compatibility, and receipt completeness; `AC-4` covers clean progress and each drift class.
+- DONE: Name the smallest file-level implementation surface and diff-based stop numbers, mapping every retained reader, loader guard, snapshot binding, comparator behavior, and dispatch stop to a goal, safety boundary, or without-it failure while preserving all declared non-goals.
+  `AC-6` covers every retained-mechanism mutant; the honest surface is fourteen files and implementation halts at 15 files, 1,751 changed lines, or 161 loader lines without migrating prior work or adding another authority. A live Spacedock `--ac-scan` returned `unevidenced: false` for `AC-1`, `AC-2`, `AC-3`, `AC-4`, `AC-5`, and `AC-6`.
+
+### Summary
+
+DEV-12 now uses one canonical `## Acceptance criteria` section with stable `AC-1` through `AC-6`, and the latest checklist evidence cites all six for Spacedock coverage scanning. Legacy evidence remains readable only for post-backlog items started before DEV-12 through one explicit local cutoff; both sections are always invalid, so compatibility neither migrates work nor creates a second authority.
