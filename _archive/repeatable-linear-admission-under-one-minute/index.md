@@ -1,6 +1,6 @@
 ---
 title: "Add a workspace-bound Linear reader and admission guard"
-status: validation
+status: done
 source: "https://linear.app/duckbase-co/issue/DEV-12/add-a-workspace-bound-linear-reader-and-admission-guard"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -8,8 +8,8 @@ planning-outcome: "Linear Project 535b8bd1-2d97-4d57-9161-1051574af0d5 Repeatabl
 sprint: repeatable-linear-admission-under-one-minute
 sprint-readiness: ready
 started: 2026-08-30T10:11:04Z
-completed:
-verdict:
+completed: 2026-08-30T12:55:08Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-repeatable-linear-admission-under-one-minute
 issue:
 pr: pr-merge:307
@@ -87,7 +87,8 @@ gates:
                 reason: Captain accepted the exact-candidate validation evidence and authorized entry into Draft PR delivery.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-30T12:55:08Z
 ---
 
 ## The problem
