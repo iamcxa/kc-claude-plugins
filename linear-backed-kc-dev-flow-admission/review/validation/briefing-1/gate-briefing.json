@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k0h7t34tjp7em4ns8rae22qv:validation:attempt-1:revision-1",
+  "question": "Approve the validated POC outcome and return proceed to Linear planning?",
+  "artifacts": [
+    {
+      "id": "artifact:k0h7t34tjp7em4ns8rae22qv:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ac7a61c09d4e8db3256b8a5446bbd9cde0e6d938/linear-backed-kc-dev-flow-admission/index.md",
+      "rev": "sha256:ae892ff99172ab91f37290c528df52c982aab65e477667a5f84f2ae32b46cbe8",
+      "mediaType": "text/markdown",
+      "summary": "POC passed on exact revision 7256e02: live Linear admission stayed clean through In Progress, intentional planning drift stopped, and no durable adapter was retained. Proceed authorizes terminalization and return to planning only; it does not authorize a Pilot or implementation."
+    }
+  ]
+}

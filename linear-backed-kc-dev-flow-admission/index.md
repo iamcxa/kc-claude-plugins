@@ -38,6 +38,26 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:k0h7t34tjp7em4ns8rae22qv:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:k0h7t34tjp7em4ns8rae22qv-validation-1
+              briefing:
+                id: briefing:k0h7t34tjp7em4ns8rae22qv:validation:attempt-1:revision-1
+                digest: sha256:e7b7caae4c92cd5aaa2be2d27a9970e4747ed77fa89e6da6abfb39f58cf3a9d6
+                request-digest: sha256:6256822d6690112660cf6388c41f8699db5c2efe2da480a8ef6d0bf9202eb5b2
+                room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k0h7t34tjp7em4ns8rae22qv:validation:1
+                briefing: briefing:k0h7t34tjp7em4ns8rae22qv:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T09:18:02.679282Z"
+                decision: approve
+                reason: Captain approved the validated proceed outcome and return to planning.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
