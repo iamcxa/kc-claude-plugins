@@ -317,14 +317,22 @@ tree_receipt() {
 
 REPOSITORY='acme/widgets'
 PR_NUMBER='42'
-BASE_SHA='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-HEAD_SHA='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 MOVED_HEAD='dddddddddddddddddddddddddddddddddddddddd'
 CONFIG_HASH='cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+SHADOW_REPO="$TEST_ROOT/shadow-repo"
+mkdir -p "$SHADOW_REPO/src"
+git -C "$SHADOW_REPO" init -q
+printf '%s\n' one two three four five six 'evidence line' >"$SHADOW_REPO/src/app.sh"
+printf 'uncertain file\n' >"$SHADOW_REPO/src/uncertain.sh"
+git -C "$SHADOW_REPO" add src/app.sh src/uncertain.sh
+git -C "$SHADOW_REPO" -c user.name='Shadow Test' -c user.email='shadow@example.invalid' commit -qm seed
+HEAD_SHA="$(git -C "$SHADOW_REPO" rev-parse HEAD)"
+BASE_SHA="$HEAD_SHA"
 REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
 OCCURRED_AT='2026-07-22T00:00:00Z'
-EVIDENCE_HASH='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-UNCERTAIN_HASH='ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+EVIDENCE_HASH="$(file_sha256 "$SHADOW_REPO/src/app.sh")"
+UNCERTAIN_HASH="$(file_sha256 "$SHADOW_REPO/src/uncertain.sh")"
+EVIDENCE_ANCHOR="$(sha256_text 'evidence line')"
 
 # Fixed compatibility vectors and invalid-input guards remain part of the
 # shadow contract because the skill uses both executable hash authorities.
@@ -409,6 +417,8 @@ UNCERTAIN_POINTER="$(jq -S -c -n \
   {schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:$repository,
    review_key:$review_key,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,
    content_sha256:$content_sha256,path:"src/uncertain.sh",side:"FILE",line:null,locator:null}')"
+UNCERTAIN_ANCHOR="$(sha256_text "$(printf '%s' "$UNCERTAIN_POINTER" | jq -S -c \
+  '{content_sha256,line,object_sha,path,side}')")"
 
 OBSERVATION="$TEST_ROOT/observation.json"
 jq -S -c -n \
@@ -421,7 +431,8 @@ jq -S -c -n \
   --arg options_sha256 "$(file_sha256 "$OPTIONS")" \
   --arg confirmation_input_sha256 "$(file_sha256 "$CONFIRMATION_INPUT")" \
   --arg github_call_log_sha256 "$(file_sha256 "$GITHUB_CALL_LOG")" \
-  --argjson evidence "$POINTER" --argjson uncertain_evidence "$UNCERTAIN_POINTER" '
+  --argjson evidence "$POINTER" --argjson uncertain_evidence "$UNCERTAIN_POINTER" \
+  --arg evidence_anchor "$EVIDENCE_ANCHOR" --arg uncertain_anchor "$UNCERTAIN_ANCHOR" '
   {
     schema:"kc-pr-flow.shadow-observation/v1",
     identity:{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,config_hash:$config_hash,occurred_at:$occurred_at},
@@ -429,20 +440,21 @@ jq -S -c -n \
     lanes:[
       {lane_id:"correctness",capability:"code_correctness",provider_family:"claude",terminal_status:"succeeded",
        usage:{input_tokens:100,output_tokens:20,total_tokens:120,provenance:"reported",provider_family:"claude",scope:"lane"},
-       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence}]},
+       candidates:[{ordinal:1,path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence_anchor,category:"correctness",claim_key:"missing_guard",evidence:$evidence}]},
       {lane_id:"security",capability:"security",terminal_status:"unavailable",
        usage:{input_tokens:null,output_tokens:null,total_tokens:null,provenance:"unavailable",provider_family:null,scope:"lane"},
-       candidates:[{ordinal:1,path:"src/uncertain.sh",side:"FILE",anchor_sha256:$uncertain_evidence.content_sha256,category:"security",claim_key:"uncertain_boundary",evidence:$uncertain_evidence}]}
+       candidates:[{ordinal:1,path:"src/uncertain.sh",side:"FILE",anchor_sha256:$uncertain_anchor,category:"security",claim_key:"uncertain_boundary",evidence:$uncertain_evidence}]}
     ],
     synthesis:{
-      findings:[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}],
+      findings:[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence_anchor,category:"correctness",claim_key:"missing_guard",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}],
       uncertain_candidate_refs:[{lane_id:"security",ordinal:1}]
     }
   }' >"$OBSERVATION"
 
 run_shadow_executable() { # gate, head-status, live-head, observation, state-root
   KC_PR_FLOW_STATE_DIR="$5" bash "$RUNTIME" shadow \
-    --enabled "$1" --head-check-status "$2" --live-head "$3" --observation-file "$4"
+    --enabled "$1" --head-check-status "$2" --live-head "$3" --observation-file "$4" \
+    --repo-worktree "$SHADOW_REPO"
 }
 
 # Identity-only state is never a successful observation.
@@ -490,6 +502,52 @@ assert_eq 'replay exposes the exact frozen body hash' "$(file_sha256 "$BODY")" \
 assert_eq 'observer exposes the exact frozen body hash' "$(file_sha256 "$BODY")" \
   "$(jq -r '.behavior_hashes.body_sha256' <<<"$on_output")"
 assert_legacy_unchanged 'enabled collector'
+
+# A terminal shadow lifecycle must converge on the current v2 receipt authority.
+MINT_REPO="$TEST_ROOT/mint-repo"
+MINT_ROOT="$TEST_ROOT/mint-state"
+MINT_OBSERVATION="$TEST_ROOT/mint-observation.json"
+MINT_CONFIG="$TEST_ROOT/mint-config.json"
+MINT_RECEIPT="$TEST_ROOT/mint-receipt.json"
+mkdir -p "$MINT_REPO/src"
+git -C "$MINT_REPO" init -q
+printf '%s\n' one two three four five six 'evidence line' >"$MINT_REPO/src/app.sh"
+git -C "$MINT_REPO" add src/app.sh
+git -C "$MINT_REPO" -c user.name='Shadow Test' -c user.email='shadow@example.invalid' commit -qm seed
+MINT_HEAD="$(git -C "$MINT_REPO" rev-parse HEAD)"
+printf '%s' "$(review_runtime_config_canonical lite bugfix false false false false code_correctness)" >"$MINT_CONFIG"
+MINT_CONFIG_HASH="$(file_sha256 "$MINT_CONFIG")"
+MINT_REVIEW_KEY="$(review_runtime_review_key "$REPOSITORY" "$PR_NUMBER" "$MINT_HEAD" "$MINT_HEAD" "$MINT_CONFIG_HASH")"
+MINT_CONTENT_HASH="$(file_sha256 "$MINT_REPO/src/app.sh")"
+MINT_ANCHOR="$(sha256_text 'evidence line')"
+MINT_POINTER="$(jq -S -c -n --arg repository "$REPOSITORY" --arg review_key "$MINT_REVIEW_KEY" \
+  --arg sha "$MINT_HEAD" --arg content "$MINT_CONTENT_HASH" '
+  {schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:$repository,
+   review_key:$review_key,base_sha:$sha,head_sha:$sha,object_sha:$sha,
+   content_sha256:$content,path:"src/app.sh",side:"RIGHT",line:7,locator:null}')"
+jq -S -c --arg base "$MINT_HEAD" --arg head "$MINT_HEAD" --arg config "$MINT_CONFIG_HASH" \
+  --argjson evidence "$MINT_POINTER" --arg anchor "$MINT_ANCHOR" '
+  .identity.base_sha=$base | .identity.head_sha=$head | .identity.config_hash=$config |
+  .lanes=[(.lanes[0] | .candidates=[(.candidates[0] | .evidence=$evidence |
+    .anchor_sha256=$anchor | .claim_key="caller-claim")])] |
+  .synthesis.findings=[(.synthesis.findings[0] | .evidence=$evidence |
+    .anchor_sha256=$anchor | .claim_key="caller-claim")] |
+  .synthesis.uncertain_candidate_refs=[]' "$OBSERVATION" >"$MINT_OBSERVATION"
+MINT_OUTPUT="$(KC_PR_FLOW_STATE_DIR="$MINT_ROOT" \
+  review_runtime_shadow on ok "$MINT_HEAD" "$MINT_OBSERVATION" "$MINT_REPO")"
+assert_eq 'receipt-ready shadow observation completes' observed "$(jq -r '.status' <<<"$MINT_OUTPUT")"
+MINT_EVENTS="$(find "$MINT_ROOT" -name events.jsonl -type f)"
+assert_eq 'shadow candidates and findings converge on v2 identity' \
+  'kc-pr-flow.review-candidate/v2,kc-pr-flow.review-finding/v2' \
+  "$(jq -r 'if .event_type == "finding.observed" then .payload.candidate.schema
+    elif .event_type == "synthesis.finished" then .payload.findings[].schema else empty end' \
+    "$MINT_EVENTS" | paste -sd, -)"
+bash "$RUNTIME" receipt --event-file "$MINT_EVENTS" --config-file "$MINT_CONFIG" \
+  --repo-worktree "$MINT_REPO" >"$MINT_RECEIPT" 2>/dev/null
+assert_eq 'terminal shadow log mints a current delta receipt' 0 "$?"
+review_runtime_validate_delta_receipt_files \
+  "$MINT_RECEIPT" "$MINT_EVENTS" "$MINT_CONFIG" "$MINT_REPO" >/dev/null 2>&1
+assert_eq 'shared file validator accepts the minted shadow receipt' 0 "$?"
 
 # Provider identity and usage provenance are compatible without inventing
 # unavailable usage ownership. Known and unknown providers may both be
@@ -596,7 +654,7 @@ review_runtime_observe() {
   review_runtime_observe_actual "$@"
 }
 DYNAMIC_ROOT="$TEST_ROOT/dynamic-state"
-dynamic_output="$(KC_PR_FLOW_STATE_DIR="$DYNAMIC_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION")"
+dynamic_output="$(KC_PR_FLOW_STATE_DIR="$DYNAMIC_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO")"
 assert_eq 'dynamic production seam completes' 'observed' "$(jq -r '.status' <<<"$dynamic_output")"
 assert_eq 'dynamic production seam invokes observer exactly once' '1' "$(wc -l <"$OBSERVER_CALL_LOG" | tr -d ' ')"
 eval "$(declare -f review_runtime_observe_actual | sed '1s/review_runtime_observe_actual/review_runtime_observe/')"
@@ -607,7 +665,7 @@ original_require_jq_definition="$(declare -f review_runtime_require_jq | sed '1s
 eval "$original_require_jq_definition"
 review_runtime_require_jq() { return 69; }
 MISSING_JQ_ROOT="$TEST_ROOT/missing-jq-state"
-missing_jq_output="$(KC_PR_FLOW_STATE_DIR="$MISSING_JQ_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" 2>/dev/null)"
+missing_jq_output="$(KC_PR_FLOW_STATE_DIR="$MISSING_JQ_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
 assert_eq 'missing jq is typed not_observed' 'not_observed' "$(jq -r '.status' <<<"$missing_jq_output")"
 assert_eq 'missing jq creates no receipt' '0' "$(find "$MISSING_JQ_ROOT" -name events.jsonl -type f 2>/dev/null | wc -l | tr -d ' ')"
 eval "$(declare -f review_runtime_require_jq_actual | sed '1s/review_runtime_require_jq_actual/review_runtime_require_jq/')"
@@ -628,7 +686,7 @@ review_runtime_build_event() {
   review_runtime_build_event_actual "$@"
 }
 POST_START_ROOT="$TEST_ROOT/post-start-state"
-post_start_output="$(KC_PR_FLOW_STATE_DIR="$POST_START_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" 2>/dev/null)"
+post_start_output="$(KC_PR_FLOW_STATE_DIR="$POST_START_ROOT" review_runtime_shadow on ok "$HEAD_SHA" "$OBSERVATION" "$SHADOW_REPO" 2>/dev/null)"
 post_start_rc=$?
 assert_eq 'post-start failure remains fail-open' '0' "$post_start_rc"
 assert_eq 'post-start failure emits typed not_observed' 'not_observed' "$(jq -r '.status' <<<"$post_start_output")"

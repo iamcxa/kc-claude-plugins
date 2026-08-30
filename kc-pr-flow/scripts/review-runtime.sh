@@ -3009,11 +3009,12 @@ review_runtime_shadow_observation_valid() {
 review_runtime_collect_shadow_observation() (
   local observation_file="$1"
   local live_head="$2"
+  local repository_path="$3"
   local snapshot_dir='' observation_snapshot='' pending_events='' candidate_refs=''
   local repository pr_number base_sha head_sha config_hash occurred_at review_key
   local start_event run_id state_root repo_key event_file sequence=1 event payload
   local lane_count lane_index=0 lane lane_id capability provider_family terminal_status usage
-  local candidate_count candidate_index candidate ordinal evidence_hash candidate_id
+  local candidate_count candidate_index candidate ordinal evidence evidence_hash anchor claim_key candidate_id
   local candidate_ids ref_record finding_count finding_index finding candidate_ref_count reference_index reference
   local referenced_candidate_id candidate_id_list findings merge_key finding_id uncertain_count uncertain_index
   local uncertain_ids append_status observer_output rc
@@ -3093,14 +3094,20 @@ review_runtime_collect_shadow_observation() (
       candidate="$(printf '%s' "$lane" | jq -c --argjson index "$candidate_index" '.candidates[$index]')" || return
       ordinal="$(printf '%s' "$candidate" | jq -r '.ordinal')" || return
       evidence_hash="$(printf '%s' "$candidate" | jq -r '.evidence.content_sha256')" || return
+      evidence="$(printf '%s' "$candidate" | jq -c '.evidence')" || return
+      anchor="$(review_runtime_v2_git_anchor "$evidence" "$repository_path" "$repository")" || return
       candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
       candidate_ids="$(printf '%s' "$candidate_ids" | jq -c --arg candidate_id "$candidate_id" '. + [$candidate_id]')" || return
       ref_record="$(jq -S -c -n --arg lane_id "$lane_id" --argjson ordinal "$ordinal" --arg candidate_id "$candidate_id" \
         '{lane_id:$lane_id,ordinal:$ordinal,candidate_id:$candidate_id}')" || return
       printf '%s\n' "$ref_record" >>"$candidate_refs" || return
-      payload="$(printf '%s' "$candidate" | jq -S -c --arg run_id "$run_id" --arg review_key "$review_key" \
-        --arg lane_id "$lane_id" --arg candidate_id "$candidate_id" '
-        {candidate:(. + {schema:"kc-pr-flow.review-candidate/v1",run_id:$run_id,review_key:$review_key,lane_id:$lane_id,candidate_id:$candidate_id})}')" || return
+      candidate="$(printf '%s' "$candidate" | jq -S -c --arg run_id "$run_id" --arg review_key "$review_key" \
+        --arg lane_id "$lane_id" --arg candidate_id "$candidate_id" --arg anchor "$anchor" '
+        . + {schema:"kc-pr-flow.review-candidate/v2",run_id:$run_id,review_key:$review_key,
+          lane_id:$lane_id,candidate_id:$candidate_id,anchor_sha256:$anchor}')" || return
+      claim_key="$(review_runtime_v2_claim_key "$candidate")" || return
+      payload="$(printf '%s' "$candidate" | jq -S -c --arg claim_key "$claim_key" \
+        '.claim_key=$claim_key | {candidate:.}')" || return
       sequence=$((sequence + 1))
       event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" finding.observed "$payload")" || return
       printf '%s\n' "$event" >>"$pending_events" || return
@@ -3137,12 +3144,16 @@ review_runtime_collect_shadow_observation() (
       candidate_id_list="$(printf '%s' "$candidate_id_list" | jq -c --arg candidate_id "$referenced_candidate_id" '. + [$candidate_id]')" || return
       reference_index=$((reference_index + 1))
     done
-    merge_key="$(review_runtime_merge_key "$finding")" || return
-    finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")" || return
-    finding="$(printf '%s' "$finding" | jq -S -c --arg review_key "$review_key" --arg merge_key "$merge_key" \
-      --arg finding_id "$finding_id" --argjson candidate_ids "$candidate_id_list" '
-      del(.candidate_refs) + {schema:"kc-pr-flow.review-finding/v1",review_key:$review_key,
-      merge_key:$merge_key,finding_id:$finding_id,candidate_ids:$candidate_ids}')" || return
+    evidence="$(printf '%s' "$finding" | jq -c '.evidence')" || return
+    anchor="$(review_runtime_v2_git_anchor "$evidence" "$repository_path" "$repository")" || return
+    finding="$(printf '%s' "$finding" | jq -S -c --arg review_key "$review_key" --arg anchor "$anchor" \
+      --argjson candidate_ids "$candidate_id_list" '
+      del(.candidate_refs) + {schema:"kc-pr-flow.review-finding/v2",review_key:$review_key,
+        anchor_sha256:$anchor,candidate_ids:$candidate_ids}')" || return
+    claim_key="$(review_runtime_v2_claim_key "$finding")" || return
+    finding="$(printf '%s' "$finding" | jq -S -c --arg claim_key "$claim_key" '.claim_key=$claim_key')" || return
+    finding_id="$(review_runtime_v2_finding_id "$finding" "$repository" "$review_key")" || return
+    finding="$(printf '%s' "$finding" | jq -S -c --arg finding_id "$finding_id" '.finding_id=$finding_id')" || return
     findings="$(printf '%s' "$findings" | jq -c --argjson finding "$finding" '. + [$finding]')" || return
     finding_index=$((finding_index + 1))
   done
@@ -3204,6 +3215,7 @@ review_runtime_shadow() (
   local head_check_status="${2:-}"
   local live_head="${3:-}"
   local observation_file="${4:-}"
+  local repository_path="${5:-}"
   if [ "$enabled" != 'on' ]; then
     review_runtime_shadow_status disabled shadow_disabled
     return 0
@@ -3216,7 +3228,11 @@ review_runtime_shadow() (
     review_runtime_shadow_status not_observed missing_observation
     return 0
   fi
-  review_runtime_collect_shadow_observation "$observation_file" "$live_head"
+  if [ -z "$repository_path" ] || [ ! -d "$repository_path" ] || [ -L "$repository_path" ]; then
+    review_runtime_shadow_status not_observed collector_error
+    return 0
+  fi
+  review_runtime_collect_shadow_observation "$observation_file" "$live_head" "$repository_path"
 )
 
 review_runtime_main_event_file() {
@@ -3398,11 +3414,11 @@ review_runtime_main_decide_merge_readiness() {
 
 review_runtime_main_shadow() {
   local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
-  local head_check_status='' live_head='' observation_file=''
+  local head_check_status='' live_head='' observation_file='' repository_path=''
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --enabled | --head-check-status | --live-head | --observation-file)
+      --enabled | --head-check-status | --live-head | --observation-file | --repo-worktree)
         [ "$#" -ge 2 ] || {
           printf 'review-runtime: missing value for %s\n' "$1" >&2
           return 2
@@ -3412,6 +3428,7 @@ review_runtime_main_shadow() {
           --head-check-status) head_check_status="$2" ;;
           --live-head) live_head="$2" ;;
           --observation-file) observation_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
         esac
         shift 2
         ;;
@@ -3423,8 +3440,8 @@ review_runtime_main_shadow() {
   done
 
   if [ "$enabled" = 'on' ]; then
-    if [ -z "$head_check_status" ] || [ -z "$observation_file" ]; then
-      printf 'review-runtime: enabled shadow requires head status and one observation file\n' >&2
+    if [ -z "$head_check_status" ] || [ -z "$observation_file" ] || [ -z "$repository_path" ]; then
+      printf 'review-runtime: enabled shadow requires head status, one observation file, and one repo worktree\n' >&2
       return 2
     fi
     if [ "$head_check_status" = 'ok' ] && [ -z "$live_head" ]; then
@@ -3433,7 +3450,7 @@ review_runtime_main_shadow() {
     fi
   fi
 
-  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" "$observation_file"
+  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" "$observation_file" "$repository_path"
 }
 
 review_runtime_main_config_hash() {
