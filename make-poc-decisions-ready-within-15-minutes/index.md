@@ -1,6 +1,6 @@
 ---
 title: "Make POC decisions ready within 15 minutes"
-status: backlog
+status: ideation
 source: "https://linear.app/duckbase-co/issue/DEV-14/make-poc-decisions-ready-within-15-minutes"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -37,7 +37,7 @@ gates:
                 reason: Captain approved the presented DEV-14 Linear package and Pilot admission; live reconcile must remain clean before ideation dispatch.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
