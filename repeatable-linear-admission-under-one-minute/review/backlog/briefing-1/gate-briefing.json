@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:np4b5ef99wf5tns6r7aqs10p:backlog:attempt-1:revision-1",
+  "question": "Approve DEV-12 to enter Pilot ideation with the one-time manual Linear MCP bootstrap reconcile?",
+  "artifacts": [
+    {
+      "id": "artifact:np4b5ef99wf5tns6r7aqs10p:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/db69a346152681558fbe9b873bc829d18b41d0cc/repeatable-linear-admission-under-one-minute/index.md",
+      "rev": "sha256:675421eaa55ab9d69e005cee3545c2a2ed4bb42ae0fae67ddec8f08c50b1e9dc",
+      "mediaType": "text/markdown",
+      "summary": "DEV-12 is the only Todo issue in the bound Project and Cycle; the live five-field reconcile is clean and the Project fingerprint matches. The Captain approved Pilot and a one-time manual workspace Linear MCP bootstrap only for initial admission. This bootstrap is excluded from the 60-second metric; validation must use the newly built durable reader and the exception must not remain. Scope excludes sync, webhooks, automatic launch, paid delegation, multi-issue packages, Initiative, Milestone, POC redesign, and migration."
+    }
+  ]
+}

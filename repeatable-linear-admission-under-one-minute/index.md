@@ -15,6 +15,18 @@ issue:
 pr:
 mod-block:
 id: np4b5ef99wf5tns6r7aqs10p
+gates:
+    version: 1
+    records:
+        - id: gate:np4b5ef99wf5tns6r7aqs10p:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:np4b5ef99wf5tns6r7aqs10p-backlog-1
+              briefing:
+                id: briefing:np4b5ef99wf5tns6r7aqs10p:backlog:attempt-1:revision-1
+                digest: sha256:d957aa962460d82265eb1b209882c1fb94a5f9f730bad3285ea9790107fd1fa0
+                request-digest: sha256:d389c270362b520d29fb75b44a2009188fee723770ce1223a38ebd69df97677c
+                room-ref: ./review/backlog/briefing-1
 ---
 
 ## The problem
