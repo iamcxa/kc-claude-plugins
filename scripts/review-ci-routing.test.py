@@ -77,8 +77,11 @@ expected_routes = {
     "kc-pr-flow/scripts/review-post.sh": {"post"},
     "kc-pr-flow/test/fixtures/review-post/reviews.json": {"post"},
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-real-pair-score.py": {"evaluation"},
+    "kc-pr-flow/scripts/review-real-pair-score.test.py": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
+    "kc-pr-flow/test/fixtures/review-evaluation/real-pair-score-shape.json": {"evaluation"},
     "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"runtime", "shadow", "evaluation", "cross_model"},
     "kc-pr-flow/reference/review-triage.md": {"runtime", "evaluation"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
@@ -110,6 +113,7 @@ expected_commands = {
     "evaluation": [
         "bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh",
         "bash kc-pr-flow/scripts/review-ablation.test.sh",
+        "python3 kc-pr-flow/scripts/review-real-pair-score.test.py",
     ],
     "cross_model": ["bash kc-pr-flow/scripts/cross-model.test.sh"],
 }

@@ -10,6 +10,8 @@ on:
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-real-pair-score.py"
+      - "kc-pr-flow/scripts/review-real-pair-score.test.py"
       - "kc-pr-flow/scripts/review-ablation.sh"
       - "kc-pr-flow/scripts/review-ablation-core.py"
       - "kc-pr-flow/scripts/review-ablation.test.sh"
@@ -17,6 +19,7 @@ on:
       - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
       - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
       - "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl"
+      - "kc-pr-flow/test/fixtures/review-evaluation/real-pair-score-shape.json"
       - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
       - "kc-pr-flow/reference/review-triage.md"
       - "kc-pr-flow/reference/learned-patterns.md"
@@ -28,6 +31,8 @@ on:
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-real-pair-score.py"
+      - "kc-pr-flow/scripts/review-real-pair-score.test.py"
       - "kc-pr-flow/scripts/review-ablation.sh"
       - "kc-pr-flow/scripts/review-ablation-core.py"
       - "kc-pr-flow/scripts/review-ablation.test.sh"
@@ -35,6 +40,7 @@ on:
       - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
       - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
       - "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl"
+      - "kc-pr-flow/test/fixtures/review-evaluation/real-pair-score-shape.json"
       - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
       - "kc-pr-flow/reference/review-triage.md"
       - "kc-pr-flow/reference/learned-patterns.md"
@@ -65,6 +71,9 @@ jobs:
 
       - name: Run paired benchmark contract
         run: bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: Run real-pair scorer shape contract
+        run: python3 kc-pr-flow/scripts/review-real-pair-score.test.py
 
   review-ablation:
     name: review skill ablation contract
