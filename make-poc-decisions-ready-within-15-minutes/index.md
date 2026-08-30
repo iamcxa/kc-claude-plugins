@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-08-30T13:20:03Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-make-poc-decisions-ready-within-15-minutes
 issue:
 pr:
 mod-block:
