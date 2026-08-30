@@ -57,6 +57,17 @@ gates:
                 digest: sha256:c6a10735e3e4cba1211f158691b198a0865d349c13fbdc825b6e8ff3663e1272
                 request-digest: sha256:b03ad92af416ca0e63dd16286d0070a9eb00cf38d85ec8253970bea5c223c056
                 room-ref: ./review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:k80xhxhk9b9e26mnnyn2jwsh:ideation:2
+                briefing: briefing:k80xhxhk9b9e26mnnyn2jwsh:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-08-30T14:17:35.545336Z"
+                decision: approve
+                reason: Captain approved the presented bounded implementation shape, including the 15-minute fail-closed behavior, 16-file and 550-line caps, and focused evidence plan.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
