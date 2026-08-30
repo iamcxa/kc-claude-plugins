@@ -906,7 +906,9 @@ review_runtime_validate_t2_identity() {
       if ! printf '%s' "$line" | jq -e '
         .payload.candidate as $candidate |
         [$candidate.run_id,$candidate.review_key,$candidate.evidence.repository]
-        == [.run_id,.review_key,.repository]' >/dev/null 2>&1; then
+        == [.run_id,.review_key,.repository] and
+        $candidate.path == $candidate.evidence.path and
+        $candidate.side == $candidate.evidence.side' >/dev/null 2>&1; then
         printf '%s' 'candidate_identity_mismatch'
         return 1
       fi
@@ -946,6 +948,11 @@ review_runtime_validate_t2_identity() {
         fi
         evidence="$(printf '%s' "$finding" | jq -c '.evidence')" || return
         if ! review_runtime_evidence_pointer_matches_event "$evidence" "$line"; then
+          printf '%s' 'evidence_identity_mismatch'
+          return 1
+        fi
+        if ! printf '%s' "$finding" | jq -e '
+          .path == .evidence.path and .side == .evidence.side' >/dev/null 2>&1; then
           printf '%s' 'evidence_identity_mismatch'
           return 1
         fi
@@ -1912,7 +1919,11 @@ review_runtime_replay_snapshot() {
           .candidates[$candidate.candidate_id] = {
             lane_id:$candidate.lane_id,
             sequence:$event.sequence,
-            merge_key:([$candidate.path,$candidate.side,$candidate.evidence.content_sha256,$candidate.category,$candidate.claim_key] | join("|"))
+            merge_key:([$candidate.path,$candidate.side,$candidate.evidence.content_sha256,$candidate.category,$candidate.claim_key] | join("|")),
+            v2_identity:{anchor_sha256:$candidate.anchor_sha256,category:$candidate.category,
+              claim_key:$candidate.claim_key,path:$candidate.path,side:$candidate.side,
+              evidence:{content_sha256:$candidate.evidence.content_sha256,line:$candidate.evidence.line,
+                object_sha:$candidate.evidence.object_sha,path:$candidate.evidence.path,side:$candidate.evidence.side}}
           }
         end
       elif $event.event_type == "lane.finished" then
@@ -1952,7 +1963,18 @@ review_runtime_replay_snapshot() {
               $state.candidates[$candidate_id].merge_key ==
                 ($finding.merge_key //
                   ([$finding.path,$finding.side,$finding.evidence.content_sha256,
-                    $finding.category,$finding.claim_key] | join("|"))))) | not)
+                    $finding.category,$finding.claim_key] | join("|"))))) | not) or
+          (all($findings[];
+            . as $finding |
+            if $finding.schema == "kc-pr-flow.review-finding/v2" then
+              all($finding.candidate_ids[];
+                . as $candidate_id |
+                $state.candidates[$candidate_id].v2_identity ==
+                  {anchor_sha256:$finding.anchor_sha256,category:$finding.category,
+                    claim_key:$finding.claim_key,path:$finding.path,side:$finding.side,
+                    evidence:{content_sha256:$finding.evidence.content_sha256,line:$finding.evidence.line,
+                      object_sha:$finding.evidence.object_sha,path:$finding.evidence.path,side:$finding.evidence.side}})
+            else true end) | not)
         then
           .ok = false
         else
@@ -2079,18 +2101,18 @@ review_runtime_snapshot_canonical_config() (
 
 review_runtime_v2_git_anchor() (
   local pointer="$1" repository_path="$2" expected_repository="$3"
-  local snapshot_dir='' blob_file='' object_sha path line expected_content actual_content repository_identity
+  local snapshot_dir='' blob_file='' object_sha path line expected_content actual_content identity
   [ "$#" -eq 3 ] || return 2
   review_runtime_evidence_pointer_valid "$pointer" || return 3
   [ "$(printf '%s' "$pointer" | jq -r '.kind')" = 'git_blob' ] || return 3
   [ "$(printf '%s' "$pointer" | jq -r '.repository')" = "$expected_repository" ] || return 3
   [ -d "$repository_path" ] && [ ! -L "$repository_path" ] || return 3
-  repository_identity="$(review_runtime_github_repository_identity "$repository_path")" || return 3
-  [ "$repository_identity" = "$expected_repository" ] || return 3
   object_sha="$(printf '%s' "$pointer" | jq -r '.object_sha')" || return
   path="$(printf '%s' "$pointer" | jq -r '.path')" || return
-  line="$(printf '%s' "$pointer" | jq -r '.line')" || return
-  [[ "$line" =~ ^[1-9][0-9]*$ ]] || return 3
+  line="$(printf '%s' "$pointer" | jq -c '.line')" || return
+  if [ "$line" != 'null' ] && ! [[ "$line" =~ ^[1-9][0-9]*$ ]]; then
+    return 3
+  fi
   expected_content="$(printf '%s' "$pointer" | jq -r '.content_sha256')" || return
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
   blob_file="$snapshot_dir/evidence-blob"
@@ -2099,6 +2121,12 @@ review_runtime_v2_git_anchor() (
     git -C "$repository_path" --no-replace-objects cat-file blob "$object_sha:$path" >"$blob_file" 2>/dev/null || return 3
   actual_content="$(review_runtime_sha256 <"$blob_file")" || return
   [ "$actual_content" = "$expected_content" ] || return 3
+  if [ "$line" = 'null' ]; then
+    identity="$(printf '%s' "$pointer" | jq -S -c \
+      '{content_sha256,line,object_sha,path,side}')" || return 3
+    printf '%s' "$identity" | review_runtime_sha256
+    return
+  fi
   python3 - "$blob_file" "$line" <<'PY'
 import hashlib
 import pathlib
