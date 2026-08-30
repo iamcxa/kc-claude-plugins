@@ -2116,9 +2116,9 @@ print(hashlib.sha256(value).hexdigest())
 PY
 )
 
-# Shared sourceable boundary for the producer and the PR2 planner. Arguments
-# are immutable snapshot paths owned by the caller of the top-level operation.
-review_runtime_validate_delta_receipt() {
+# Snapshot-only validation boundary. Callers with mutable paths must use
+# review_runtime_validate_delta_receipt_files instead.
+review_runtime_validate_delta_receipt_snapshots() {
   local receipt_snapshot="$1" event_snapshot="$2" config_snapshot="$3" repository_path="$4"
   local raw canonical unsigned expected_content expected_receipt
   [ "$#" -eq 4 ] || return 2
@@ -2142,6 +2142,27 @@ review_runtime_validate_delta_receipt() {
     "$event_snapshot" "$config_snapshot" "$repository_path")" || return 3
   [ "$canonical" = "$expected_receipt" ] || return 3
 }
+
+# Safe high-level boundary for PR2 and other callers with file paths. Each
+# untrusted input is snapshotted exactly once before snapshot-only validation.
+review_runtime_validate_delta_receipt_files() (
+  local receipt_file="$1" event_file="$2" config_file="$3" repository_path="$4"
+  local snapshot_dir='' receipt_snapshot='' event_snapshot='' config_snapshot=''
+  [ "$#" -eq 4 ] || return 2
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  receipt_snapshot="$snapshot_dir/delta-receipt.json"
+  event_snapshot="$snapshot_dir/events.jsonl"
+  config_snapshot="$snapshot_dir/review-config.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$receipt_snapshot" "$event_snapshot" "$config_snapshot"' EXIT
+  review_runtime_snapshot_regular_file "$receipt_file" "$receipt_snapshot" 'delta receipt' \
+    "${KC_PR_FLOW_MAX_RECEIPT_BYTES:-1048576}" || return
+  review_runtime_snapshot_regular_file "$event_file" "$event_snapshot" 'event file' \
+    "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
+  review_runtime_snapshot_regular_file "$config_file" "$config_snapshot" 'review config' \
+    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  review_runtime_validate_delta_receipt_snapshots \
+    "$receipt_snapshot" "$event_snapshot" "$config_snapshot" "$repository_path"
+)
 
 review_runtime_build_delta_receipt() (
   local event_snapshot="$1" config_snapshot="$2" repository_path="$3"
@@ -2226,7 +2247,7 @@ review_runtime_receipt() (
   review_runtime_build_delta_receipt \
     "$event_snapshot" "$config_snapshot" "$repository_path" >"$receipt_snapshot" || return
   chmod 0600 "$receipt_snapshot" || return 74
-  review_runtime_validate_delta_receipt \
+  review_runtime_validate_delta_receipt_snapshots \
     "$receipt_snapshot" "$event_snapshot" "$config_snapshot" "$repository_path" || return
   cat "$receipt_snapshot"
 )
