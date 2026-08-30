@@ -728,16 +728,21 @@ review_runtime_payload_matches_v1_schema() {
     def candidate:
       type == "object" and
       exact_keys(["anchor_sha256","candidate_id","category","claim_key","evidence","lane_id","ordinal","path","review_key","run_id","schema","side"]; []) and
-      .schema == "kc-pr-flow.review-candidate/v1" and (.candidate_id | sha256) and
+      (.schema == "kc-pr-flow.review-candidate/v1" or .schema == "kc-pr-flow.review-candidate/v2") and (.candidate_id | sha256) and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and (.review_key | sha256) and
       (.lane_id | safe_token) and (.ordinal | positive_integer) and (.path | safe_path) and
       (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and (.evidence | type == "object");
     def finding:
       type == "object" and
-      exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","merge_key","path","review_key","schema","side"]; []) and
-      .schema == "kc-pr-flow.review-finding/v1" and (.finding_id | sha256) and (.review_key | sha256) and
-      (.merge_key | type == "string" and length > 0 and length <= 1400 and (test("[[:cntrl:]]") | not)) and
+      ((.schema == "kc-pr-flow.review-finding/v1" and
+        exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","merge_key","path","review_key","schema","side"]; [])) or
+       (.schema == "kc-pr-flow.review-finding/v2" and
+        exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","path","review_key","schema","side"]; []))) and
+      (.finding_id | sha256) and (.review_key | sha256) and
+      (if .schema == "kc-pr-flow.review-finding/v1" then
+        (.merge_key | type == "string" and length > 0 and length <= 1400 and (test("[[:cntrl:]]") | not))
+       else true end) and
       (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
       (.candidate_ids | type == "array" and length > 0 and all(sha256) and (unique | length) == length) and (.evidence | type == "object");
@@ -796,6 +801,38 @@ review_runtime_finding_id() {
   printf '%s|%s' "$1" "$2" | review_runtime_sha256
 }
 
+# V2 removes caller-authored merge keys. The claim and finding identities are
+# hashes of closed machine fields; raw Git verification is repeated by the
+# receipt producer before any finding gains predecessor authority.
+review_runtime_v2_evidence_identity() {
+  local subject="$1"
+  printf '%s' "$subject" | jq -S -c '
+    {content_sha256:.evidence.content_sha256,line:.evidence.line,
+     object_sha:.evidence.object_sha,path:.path,side:.side}'
+}
+
+review_runtime_v2_claim_key() {
+  local subject="${1-}" category evidence_identity digest
+  [ -n "$subject" ] || subject="$(cat)" || return
+  category="$(printf '%s' "$subject" | jq -r '.category')" || return
+  evidence_identity="$(review_runtime_v2_evidence_identity "$subject")" || return
+  digest="$(printf '%s' "$evidence_identity" | review_runtime_sha256)" || return
+  printf '%s-%s\n' "$category" "${digest:0:16}"
+}
+
+review_runtime_v2_finding_id() {
+  local subject="$1" repository="$2" review_key="$3"
+  local evidence_identity canonical
+  evidence_identity="$(review_runtime_v2_evidence_identity "$subject")" || return
+  canonical="$(printf '%s' "$subject" | jq -S -c \
+    --arg repository "$repository" --arg review_key "$review_key" \
+    --argjson evidence_identity "$evidence_identity" '
+      {anchor_sha256:.anchor_sha256,category:.category,claim_key:.claim_key,
+       evidence:$evidence_identity,path:.path,repository:$repository,
+       review_key:$review_key,side:.side}')" || return
+  printf '%s' "$canonical" | review_runtime_sha256
+}
+
 # Once-only posting idempotency key (design A2): binds the exact review
 # identity, the exact reviewed head, and the exact serialized review payload.
 # Any of the three changing yields a different key, so a moved head or a
@@ -822,7 +859,7 @@ review_runtime_validate_t2_identity() {
   local line="$1"
   local event_type="$2"
   local expected actual run_id lane_id ordinal evidence_hash candidate_id
-  local finding_count finding index merge_key finding_id evidence
+  local finding_count finding index merge_key finding_id evidence schema claim_key
   local commit_id head_sha review_key payload_sha256_field idempotency_key expected_idempotency_key
   case "$event_type" in
     authorization.granted | post.intent)
@@ -888,6 +925,15 @@ review_runtime_validate_t2_identity() {
         printf '%s' 'candidate_id_mismatch'
         return 1
       fi
+      schema="$(printf '%s' "$line" | jq -r '.payload.candidate.schema')" || return
+      if [ "$schema" = 'kc-pr-flow.review-candidate/v2' ]; then
+        claim_key="$(printf '%s' "$line" | jq -c '.payload.candidate' |
+          review_runtime_v2_claim_key)" || return
+        if [ "$(printf '%s' "$line" | jq -r '.payload.candidate.claim_key')" != "$claim_key" ]; then
+          printf '%s' 'claim_key_mismatch'
+          return 1
+        fi
+      fi
       ;;
     synthesis.finished)
       finding_count="$(printf '%s' "$line" | jq -r '.payload.findings | length')" || return
@@ -903,13 +949,25 @@ review_runtime_validate_t2_identity() {
           printf '%s' 'evidence_identity_mismatch'
           return 1
         fi
-        merge_key="$(review_runtime_merge_key "$finding")" || return
-        actual="$(printf '%s' "$finding" | jq -r '.merge_key')"
-        if [ "$actual" != "$merge_key" ]; then
-          printf '%s' 'merge_key_mismatch'
-          return 1
+        schema="$(printf '%s' "$finding" | jq -r '.schema')" || return
+        if [ "$schema" = 'kc-pr-flow.review-finding/v2' ]; then
+          claim_key="$(review_runtime_v2_claim_key "$finding")" || return
+          if [ "$(printf '%s' "$finding" | jq -r '.claim_key')" != "$claim_key" ]; then
+            printf '%s' 'claim_key_mismatch'
+            return 1
+          fi
+          expected="$(review_runtime_v2_finding_id "$finding" \
+            "$(printf '%s' "$line" | jq -r '.repository')" \
+            "$(printf '%s' "$line" | jq -r '.review_key')")" || return
+        else
+          merge_key="$(review_runtime_merge_key "$finding")" || return
+          actual="$(printf '%s' "$finding" | jq -r '.merge_key')"
+          if [ "$actual" != "$merge_key" ]; then
+            printf '%s' 'merge_key_mismatch'
+            return 1
+          fi
+          expected="$(review_runtime_finding_id "$(printf '%s' "$line" | jq -r '.review_key')" "$merge_key")" || return
         fi
-        expected="$(review_runtime_finding_id "$(printf '%s' "$line" | jq -r '.review_key')" "$merge_key")" || return
         finding_id="$(printf '%s' "$finding" | jq -r '.finding_id')"
         if [ "$finding_id" != "$expected" ]; then
           printf '%s' 'finding_id_mismatch'
@@ -1898,7 +1956,10 @@ review_runtime_replay() (
             . as $finding |
             all($finding.candidate_ids[];
               . as $candidate_id |
-              $state.candidates[$candidate_id].merge_key == $finding.merge_key)) | not)
+              $state.candidates[$candidate_id].merge_key ==
+                ($finding.merge_key //
+                  ([$finding.path,$finding.side,$finding.evidence.content_sha256,
+                    $finding.category,$finding.claim_key] | join("|"))))) | not)
         then
           .ok = false
         else
@@ -1972,6 +2033,144 @@ review_runtime_replay() (
       .behavior_hashes != null and
       (.lifecycle.unexpected_event | not)
     )' "$event_snapshot"
+)
+
+review_runtime_snapshot_canonical_config() (
+  local config_file="$1" snapshot_dir='' config_snapshot='' raw canonical byte_count
+  review_runtime_require_jq || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  config_snapshot="$snapshot_dir/review-config.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$config_snapshot"' EXIT
+  review_runtime_snapshot_regular_file "$config_file" "$config_snapshot" 'review config' \
+    "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}" || return
+  raw="$(cat "$config_snapshot")" || return 74
+  review_runtime_json_has_unique_members "$raw" >/dev/null 2>&1 || return 3
+  canonical="$(printf '%s' "$raw" | jq -S -c . 2>/dev/null)" || return 3
+  byte_count="$(wc -c <"$config_snapshot" | tr -d ' ')" || return
+  [ "$byte_count" -eq "${#canonical}" ] || return 3
+  if ! printf '%s' "$canonical" | jq -e '
+    def exact_keys($required): (keys | sort) == ($required | sort);
+    def capability: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    type == "object" and exact_keys(["capabilities","modes","schema"]) and
+    .schema == "kc-pr-flow.review-config/v1" and
+    (.modes | type == "object" and
+      exact_keys(["agent_tier","cross_model","full_pass","noise_filter","pr_archetype","probe_required"]) and
+      (.agent_tier == "lite" or .agent_tier == "standard" or .agent_tier == "full") and
+      (.pr_archetype == "bugfix" or .pr_archetype == "cross_stack" or .pr_archetype == "docs" or
+       .pr_archetype == "feature" or .pr_archetype == "mixed" or .pr_archetype == "refactor" or
+       .pr_archetype == "style") and
+      ([.full_pass,.probe_required,.cross_model,.noise_filter] | all(type == "boolean"))) and
+    (.capabilities | type == "array" and length > 0 and all(capability) and . == (sort | unique))
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  printf '%s' "$canonical"
+)
+
+review_runtime_v2_git_anchor() (
+  local pointer="$1" repository_path="$2" expected_repository="$3"
+  local snapshot_dir='' blob_file='' object_sha path line expected_content actual_content repository_identity
+  [ "$#" -eq 3 ] || return 2
+  review_runtime_evidence_pointer_valid "$pointer" || return 3
+  [ "$(printf '%s' "$pointer" | jq -r '.kind')" = 'git_blob' ] || return 3
+  [ "$(printf '%s' "$pointer" | jq -r '.repository')" = "$expected_repository" ] || return 3
+  [ -d "$repository_path" ] && [ ! -L "$repository_path" ] || return 3
+  repository_identity="$(review_runtime_github_repository_identity "$repository_path")" || return 3
+  [ "$repository_identity" = "$expected_repository" ] || return 3
+  object_sha="$(printf '%s' "$pointer" | jq -r '.object_sha')" || return
+  path="$(printf '%s' "$pointer" | jq -r '.path')" || return
+  line="$(printf '%s' "$pointer" | jq -r '.line')" || return
+  [[ "$line" =~ ^[1-9][0-9]*$ ]] || return 3
+  expected_content="$(printf '%s' "$pointer" | jq -r '.content_sha256')" || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  blob_file="$snapshot_dir/evidence-blob"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$blob_file"' EXIT
+  GIT_NO_LAZY_FETCH=1 GIT_NO_REPLACE_OBJECTS=1 GIT_OPTIONAL_LOCKS=0 GIT_TERMINAL_PROMPT=0 \
+    git -C "$repository_path" --no-replace-objects cat-file blob "$object_sha:$path" >"$blob_file" 2>/dev/null || return 3
+  actual_content="$(review_runtime_sha256 <"$blob_file")" || return
+  [ "$actual_content" = "$expected_content" ] || return 3
+  python3 - "$blob_file" "$line" <<'PY'
+import hashlib
+import pathlib
+import sys
+lines = pathlib.Path(sys.argv[1]).read_bytes().splitlines(keepends=True)
+index = int(sys.argv[2]) - 1
+if index < 0 or index >= len(lines):
+    raise SystemExit(3)
+value = lines[index]
+for ending in (b"\r\n", b"\n", b"\r"):
+    if value.endswith(ending):
+        value = value[:-len(ending)]
+        break
+print(hashlib.sha256(value).hexdigest())
+PY
+)
+
+review_runtime_receipt() (
+  local event_file="$1" config_file="$2" repository_path="$3"
+  local projection config config_hash capabilities projection_hash receipt_id canonical content_sha256
+  local repository review_key finding_count index finding pointer anchor expected_claim expected_finding
+  [ "$#" -eq 3 ] || return 2
+  projection="$(review_runtime_replay "$event_file")" || return 3
+  if ! printf '%s' "$projection" | jq -e '
+    .lifecycle.complete == true and (.lanes | length > 0) and
+    all(.lanes[]; .result.terminal_status == "succeeded") and
+    .uncertain_candidate_ids == [] and .behavior_hashes != null and
+    all(.findings[]; .schema == "kc-pr-flow.review-finding/v2")
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  config="$(review_runtime_snapshot_canonical_config "$config_file")" || return 3
+  config_hash="$(printf '%s' "$config" | review_runtime_sha256)" || return
+  [ "$config_hash" = "$(printf '%s' "$projection" | jq -r '.run.config_hash')" ] || return 3
+  capabilities="$(printf '%s' "$projection" | jq -S -c '[.lanes[].capability] | sort | unique')" || return
+  [ "$capabilities" = "$(printf '%s' "$config" | jq -S -c '.capabilities')" ] || return 3
+
+  repository="$(printf '%s' "$projection" | jq -r '.run.repository')" || return
+  review_key="$(printf '%s' "$projection" | jq -r '.run.review_key')" || return
+  finding_count="$(printf '%s' "$projection" | jq -r '.findings | length')" || return
+  index=0
+  while [ "$index" -lt "$finding_count" ]; do
+    finding="$(printf '%s' "$projection" | jq -c --argjson index "$index" '.findings[$index]')" || return
+    pointer="$(printf '%s' "$finding" | jq -c '.evidence')" || return
+    anchor="$(review_runtime_v2_git_anchor "$pointer" "$repository_path" "$repository")" || return 3
+    [ "$anchor" = "$(printf '%s' "$finding" | jq -r '.anchor_sha256')" ] || return 3
+    expected_claim="$(review_runtime_v2_claim_key "$finding")" || return
+    [ "$expected_claim" = "$(printf '%s' "$finding" | jq -r '.claim_key')" ] || return 3
+    expected_finding="$(review_runtime_v2_finding_id "$finding" "$repository" "$review_key")" || return
+    [ "$expected_finding" = "$(printf '%s' "$finding" | jq -r '.finding_id')" ] || return 3
+    index=$((index + 1))
+  done
+
+  projection_hash="$(printf '%s' "$projection" | review_runtime_sha256)" || return
+  receipt_id="$(printf '%s' "$(printf '%s' "$projection" | jq -r '.run.run_id')|$review_key|$projection_hash" |
+    review_runtime_sha256)" || return
+  canonical="$(printf '%s' "$projection" | jq -S -c \
+    --arg receipt_id "$receipt_id" --argjson capabilities "$capabilities" '
+      .run as $run |
+      {
+        schema:"kc-pr-flow.review-delta-receipt/v2",
+        predecessor:{repository:$run.repository,pr_number:$run.pr_number,base_sha:$run.base_sha,
+          head_sha:$run.head_sha,config_hash:$run.config_hash,review_key:$run.review_key,
+          run_id:$run.run_id,receipt_id:$receipt_id},
+        known_findings:(.findings | map({finding_id,claim_key,anchor_sha256,category,evidence,
+          evidence_sha256:.evidence.content_sha256,path,side,resolution_state:"unresolved"}) |
+          sort_by(.finding_id)),
+        required_capabilities:$capabilities,
+        coverage_gap_refs:[]
+      }')" || return 3
+  content_sha256="$(printf '%s' "$canonical" | review_runtime_sha256)" || return
+  canonical="$(printf '%s' "$canonical" | jq -S -c --arg content_sha256 "$content_sha256" \
+    '. + {content_sha256:$content_sha256}')" || return 3
+  if ! printf '%s' "$canonical" | jq -e '
+    (keys | sort) == ["content_sha256","coverage_gap_refs","known_findings","predecessor","required_capabilities","schema"] and
+    .schema == "kc-pr-flow.review-delta-receipt/v2" and
+    .coverage_gap_refs == [] and (.required_capabilities | length > 0) and
+    all(.known_findings[]; .resolution_state == "unresolved")
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  printf '%s\n' "$canonical"
 )
 
 review_runtime_show() {
@@ -2945,6 +3144,35 @@ review_runtime_main_event_file() {
   esac
 }
 
+review_runtime_main_receipt() {
+  local event_file='' config_file='' repository_path=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --event-file | --config-file | --repo-worktree)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --event-file) event_file="$2" ;;
+          --config-file) config_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown receipt option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$event_file" ] || [ -z "$config_file" ] || [ -z "$repository_path" ]; then
+    printf 'review-runtime: receipt requires --event-file, --config-file, and --repo-worktree\n' >&2
+    return 2
+  fi
+  review_runtime_receipt "$event_file" "$config_file" "$repository_path"
+}
+
 review_runtime_main_observe() {
   local event_file=''
   local expected_head=''
@@ -3242,7 +3470,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|receipt --event-file FILE --config-file FILE --repo-worktree DIR|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -3289,6 +3517,7 @@ review_runtime_main() {
     config-hash) review_runtime_main_config_hash "$@" ;;
     review-key) review_runtime_main_review_key "$@" ;;
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
+    receipt) review_runtime_main_receipt "$@" ;;
     observe) review_runtime_main_observe "$@" ;;
     rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
     decide-merge-readiness) review_runtime_main_decide_merge_readiness "$@" ;;

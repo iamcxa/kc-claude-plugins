@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case delta-receipt-happy-path|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -112,6 +112,148 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_delta_receipt_happy_path_tests() {
+  local root repo config events first_receipt second_receipt stub_dir call_ledger
+  local repository pr_number base_sha head_sha config_hash review_key run_id occurred_at
+  local content_sha256 anchor_sha256 claim_key finding_id candidate_id pointer candidate task usage result finding behavior
+  local start lane_started observed lane_finished synthesized finished receipt_rc
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  repo="$root/repo"
+  config="$root/review-config.json"
+  events="$root/events.jsonl"
+  first_receipt="$root/receipt-one.json"
+  second_receipt="$root/receipt-two.json"
+  stub_dir="$root/stubs"
+  call_ledger="$root/calls"
+  repository='acme/widgets'
+  pr_number=42
+  run_id='run-delta-receipt-happy'
+  occurred_at='2026-08-30T00:00:00Z'
+
+  mkdir -p "$repo/src" "$stub_dir"
+  git -C "$repo" init -q
+  printf 'evidence bound review\n' >"$repo/src/review.sh"
+  git -C "$repo" add src/review.sh
+  git -C "$repo" -c user.name='Receipt Test' -c user.email='receipt@example.invalid' commit -qm seed
+  git -C "$repo" remote add origin 'https://github.com/acme/widgets.git'
+  head_sha="$(git -C "$repo" rev-parse HEAD)"
+  base_sha="$head_sha"
+  printf '%s' "$(review_runtime_config_canonical lite mixed false false false false security)" >"$config"
+  config_hash="$(review_runtime_sha256 <"$config")"
+  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")"
+  content_sha256="$(review_runtime_sha256 <"$repo/src/review.sh")"
+  anchor_sha256="$(python3 - "$repo/src/review.sh" <<'PY'
+import hashlib
+import pathlib
+import sys
+line = pathlib.Path(sys.argv[1]).read_bytes().splitlines()[0]
+print(hashlib.sha256(line).hexdigest())
+PY
+)"
+  pointer="$(jq -S -c -n --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$head_sha" --arg hash "$content_sha256" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$key,repository:$repo,
+      base_sha:$base,head_sha:$head,object_sha:$head,path:"src/review.sh",side:"RIGHT",line:1,
+      locator:"review-anchor",content_sha256:$hash}')"
+  claim_key="$(python3 - "$pointer" <<'PY'
+import hashlib
+import json
+import sys
+pointer = json.loads(sys.argv[1])
+identity = {"content_sha256": pointer["content_sha256"], "line": pointer["line"],
+            "object_sha": pointer["object_sha"], "path": pointer["path"], "side": pointer["side"]}
+encoded = json.dumps(identity, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode()
+print("security-" + hashlib.sha256(encoded).hexdigest()[:16])
+PY
+)"
+  finding_id="$(python3 - "$anchor_sha256" "$claim_key" "$pointer" "$repository" "$review_key" <<'PY'
+import hashlib
+import json
+import sys
+anchor, claim, raw_pointer, repository, review_key = sys.argv[1:]
+pointer = json.loads(raw_pointer)
+identity = {"content_sha256": pointer["content_sha256"], "line": pointer["line"],
+            "object_sha": pointer["object_sha"], "path": pointer["path"], "side": pointer["side"]}
+value = {"anchor_sha256": anchor, "category": "security", "claim_key": claim,
+         "evidence": identity, "path": pointer["path"], "repository": repository,
+         "review_key": review_key, "side": pointer["side"]}
+encoded = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode()
+print(hashlib.sha256(encoded).hexdigest())
+PY
+)"
+  candidate_id="$(review_runtime_candidate_id "$run_id" security-1 1 "$content_sha256")"
+  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg run "$run_id" --arg key "$review_key" \
+    --arg anchor "$anchor_sha256" --arg claim "$claim_key" --argjson evidence "$pointer" '
+      {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,review_key:$key,
+       lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,
+       category:"security",claim_key:$claim,evidence:$evidence}')"
+  task="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$head_sha" --arg config "$config_hash" \
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",repository:$repo,pr_number:42,base_sha:$base,head_sha:$head,config_hash:$config}')"
+  usage='{"input_tokens":100,"output_tokens":25,"provenance":"reported","provider_family":"claude","scope":"lane","total_tokens":125}'
+  result="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg id "$candidate_id" \
+    --argjson usage "$usage" \
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",terminal_status:"succeeded",candidates:[$id],usage:$usage,provider_family:"claude"}')"
+  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" --arg candidate "$candidate_id" \
+    --arg anchor "$anchor_sha256" --arg claim "$claim_key" --argjson evidence "$pointer" '
+      {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,review_key:$key,candidate_ids:[$candidate],
+       path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",claim_key:$claim,
+       evidence:$evidence}')"
+  behavior="$(jq -S -c -n --arg hash "$content_sha256" \
+    '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
+      github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
+  start="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 1 "$occurred_at" run.started '{}')"
+  lane_started="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 2 "$occurred_at" lane.started "$(jq -S -c -n --argjson value "$task" '{review_task:$value}')")"
+  observed="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 3 "$occurred_at" finding.observed "$(jq -S -c -n --argjson value "$candidate" '{candidate:$value}')")"
+  lane_finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 4 "$occurred_at" lane.finished "$(jq -S -c -n --argjson value "$result" '{lane_result:$value}')")"
+  synthesized="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" synthesis.finished "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')")"
+  finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 6 "$occurred_at" run.finished "$(jq -S -c -n --argjson value "$behavior" '{behavior_hashes:$value}')")"
+  printf '%s\n' "$start" "$lane_started" "$observed" "$lane_finished" "$synthesized" "$finished" >"$events"
+
+  : >"$call_ledger"
+  for command in gh curl wget claude codex agy review-runtime-append review-runtime-start review-post.sh; do
+    printf '#!/bin/sh\nprintf "%%s\\n" "$(basename "$0") $*" >>"$CALL_LEDGER"\nexit 97\n' >"$stub_dir/$command"
+    chmod +x "$stub_dir/$command"
+  done
+  PATH="$stub_dir:$PATH" CALL_LEDGER="$call_ledger" bash "$RUNTIME" receipt \
+    --event-file "$events" --config-file "$config" --repo-worktree "$repo" >"$first_receipt" 2>"$root/receipt.stderr"
+  receipt_rc=$?
+  assert_eq 'receipt command succeeds for one complete v2 finding' '0|' \
+    "$receipt_rc|$(cat "$root/receipt.stderr")"
+  assert_eq 'receipt schema is v2' 'kc-pr-flow.review-delta-receipt/v2' "$(jq -r '.schema' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt top-level keys are closed' \
+    'content_sha256,coverage_gap_refs,known_findings,predecessor,required_capabilities,schema' \
+    "$(jq -r 'keys | sort | join(",")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt predecessor identity comes from replay' \
+    "$repository|$pr_number|$base_sha|$head_sha|$config_hash|$review_key|$run_id" \
+    "$(jq -r '.predecessor | [.repository,.pr_number,.base_sha,.head_sha,.config_hash,.review_key,.run_id] | join("|")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt capability comes from replay and config' 'security' "$(jq -r '.required_capabilities | join(",")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt has no coverage gaps' '0' "$(jq -r '.coverage_gap_refs | length' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt finding identity comes from replay' "$finding_id|$claim_key|$anchor_sha256|unresolved" \
+    "$(jq -r '.known_findings[0] | [.finding_id,.claim_key,.anchor_sha256,.resolution_state] | join("|")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt evidence comes from replay' "$pointer" "$(jq -S -c '.known_findings[0].evidence' "$first_receipt" 2>/dev/null)"
+  PATH="$stub_dir:$PATH" CALL_LEDGER="$call_ledger" bash "$RUNTIME" receipt \
+    --event-file "$events" --config-file "$config" --repo-worktree "$repo" >"$second_receipt" 2>>"$root/receipt.stderr"
+  receipt_rc=$?
+  assert_eq 'second receipt command succeeds' '0|' \
+    "$receipt_rc|$(cat "$root/receipt.stderr")"
+  assert_eq 'receipt bytes are deterministic' '0' "$(cmp -s "$first_receipt" "$second_receipt"; printf '%s' "$?")"
+  assert_eq 'receipt path makes no network, model, append, start, or post calls' '0' "$(wc -l <"$call_ledger" | tr -d ' ')"
+}
+
+if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
+  run_delta_receipt_happy_path_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_delta_receipt_happy_path_tests
+fi
 
 run_merge_readiness_tests() {
   local receipt="$1" ready_policy="$2" blocked_policy="$3" repo="$4"
