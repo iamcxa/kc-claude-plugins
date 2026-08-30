@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k0h7t34tjp7em4ns8rae22qv:backlog:attempt-1:revision-1",
+  "question": "Approve this bounded POC admission and advance it from backlog to implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:k0h7t34tjp7em4ns8rae22qv:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d7d5b5568105bb41ac7e8835be16866ec16431f4/linear-backed-kc-dev-flow-admission/index.md",
+      "rev": "sha256:76133227b0b7d4e396f7efb1497bd8a7dbf003058f91d7ae66a1b5c3cf9b611c",
+      "mediaType": "text/markdown",
+      "summary": "DEV-11 is the sole Linear source in Cycle 1; the committed snapshot matches the live MCP read, clean reconcile exits 0, intentional Project drift exits 1, and the POC excludes any durable adapter or automatic sync."
+    }
+  ]
+}
