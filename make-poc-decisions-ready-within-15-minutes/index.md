@@ -1,6 +1,6 @@
 ---
 title: "Make POC decisions ready within 15 minutes"
-status: ideation
+status: implementation
 source: "https://linear.app/duckbase-co/issue/DEV-14/make-poc-decisions-ready-within-15-minutes"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -67,7 +67,7 @@ gates:
                 reason: Captain approved the presented bounded implementation shape, including the 15-minute fail-closed behavior, 16-file and 550-line caps, and focused evidence plan.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
