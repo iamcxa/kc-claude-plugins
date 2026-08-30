@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:k80xhxhk9b9e26mnnyn2jwsh:backlog:attempt-1:revision-1",
+  "question": "Approve this Captain-approved Linear package to enter Pilot ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:k80xhxhk9b9e26mnnyn2jwsh:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/384c7ab54bb2e9bbc8bc5931b015eb8c3445730b/make-poc-decisions-ready-within-15-minutes/index.md",
+      "rev": "sha256:c118564f654716b5728a913562a6cfdfa2eabc00262071874539281c94bb30ed",
+      "mediaType": "text/markdown",
+      "summary": "Admit one bounded Pilot that makes POC outcomes decision-ready within 15 minutes by default, preserves focused evidence and route-back, and excludes timers, provider redesign, and Pilot or Production changes."
+    }
+  ]
+}
