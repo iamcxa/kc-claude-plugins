@@ -538,3 +538,16 @@ Validation rejects the candidate because the accepted dogfood proof is not in th
 ### Summary
 
 The rejected local-only dogfood was replaced without changing product files, scope, stop numbers, or accepted criteria. The fresh shared-state journey reached a durable `proceed` outcome in 76 seconds and its explicit absence receipts are readable at the pushed outcome commit.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Re-verify AC-4 and AC-6 from authoritative spacedock-state/dev commits ba5124277d55801c0b5efb5d9c79ea0e339a1611 and b3aae89b6e5bb8bc36714d43bb47814b0d053fa7, including their ancestry and explicit absence receipts.
+  Remote readback proves the 76-second direct parent pair; the outcome records zero Captain interventions, zero RoboRev requests, and zero validation-worker dispatches, while loader/guard tests fail on proof-path or 901-second boundary drift.
+- DONE: Confirm exact product candidate 2f3391855653889ede9ac205eaa4b7a88befff43 is unchanged and all previously green AC-1, AC-2, AC-3, AC-5, AC-7 evidence remains valid.
+  The clean worktree remains at tree `a3de404c2b8fb21c9201e2e3d4312438c52e018d`; fresh loader, close-guard, route, contract, version-parity, and skill-frontmatter checks pass and fail on their owned budget, timing, direct-proof, exhaustion, higher-profile, mirror, or metadata drift.
+- DONE: Issue a fresh validation verdict that supersedes only the rejected local-only dogfood evidence and preserves the minimum-stack and stop-number conclusions.
+  PASS: authoritative shared-state evidence repairs AC-4 and AC-6 without changing the 16-file, 430-line, exactly-320-core-line candidate or its three-mechanism minimum stack.
+
+### Summary
+
+Validation passes AC-1 through AC-7 at exact candidate `2f3391855653889ede9ac205eaa4b7a88befff43`. This verdict replaces only the rejected local-only dogfood proof; the accepted scope, minimum stack, stop numbers, and zero Pilot/Production profile-contract diff remain unchanged.
