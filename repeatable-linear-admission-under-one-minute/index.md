@@ -77,6 +77,17 @@ gates:
                 digest: sha256:d72b877f0acaf59687c2f4b69d3e459f29c856de49163c21f05bd259f9544ba5
                 request-digest: sha256:085a1bae46dbccc34691f88240cfd1eaf2b197adb2451112a282ff7ebc814416
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:np4b5ef99wf5tns6r7aqs10p:validation:1
+                briefing: briefing:np4b5ef99wf5tns6r7aqs10p:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-08-30T12:38:13.097219Z"
+                decision: approve
+                reason: Captain accepted the exact-candidate validation evidence and authorized entry into Draft PR delivery.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
