@@ -1,6 +1,6 @@
 ---
 title: "Make POC decisions ready within 15 minutes"
-status: validation
+status: done
 source: "https://linear.app/duckbase-co/issue/DEV-14/make-poc-decisions-ready-within-15-minutes"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
@@ -8,12 +8,12 @@ planning-outcome: Linear Project 90103fbc-2653-47d8-829a-36cccc6116da POC decisi
 sprint: poc-decisions-within-15-minutes
 sprint-readiness: ready
 started: 2026-08-30T13:20:03Z
-completed:
-verdict:
+completed: 2026-08-30T15:46:36Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-make-poc-decisions-ready-within-15-minutes
 issue:
 pr: pr-merge:308
-mod-block: merge:pr-merge
+mod-block:
 id: k80xhxhk9b9e26mnnyn2jwsh
 gates:
     version: 1
@@ -87,7 +87,8 @@ gates:
                 reason: Captain approved the presented exact-candidate validation result, including authoritative 76-second dogfood evidence and the bounded non-authoritative RoboRev unavailability.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-08-30T15:46:36Z
 ---
 
 ## The problem
