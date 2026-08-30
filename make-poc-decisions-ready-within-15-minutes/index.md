@@ -4,7 +4,7 @@ status: ideation
 source: "https://linear.app/duckbase-co/issue/DEV-14/make-poc-decisions-ready-within-15-minutes"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
-planning-outcome: "Linear Project 90103fbc-2653-47d8-829a-36cccc6116da POC decisions within 15 minutes sha256:7e067b4acb570cebc4c0deac353c84dc41fca2d9ba490368dc09328e54962394"
+planning-outcome: Linear Project 90103fbc-2653-47d8-829a-36cccc6116da POC decisions within 15 minutes sha256:7d790de539c857ef05cea26e21d02850304b70e9eccca931daa463fc1df39a5b
 sprint: poc-decisions-within-15-minutes
 sprint-readiness: ready
 started: 2026-08-30T13:20:03Z
