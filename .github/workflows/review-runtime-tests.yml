@@ -34,7 +34,8 @@ jobs:
   review-runtime:
     name: typed review runtime contract
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    # Exact-head local full suite: 468.61s; hosted duration remains unmeasured.
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
