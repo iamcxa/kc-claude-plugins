@@ -112,3 +112,273 @@ Return `change` to planning if the time budget cannot fail closed without killin
 ## Measurement
 
 Record admitted-task creation time, durable `poc_outcome` time, decision-ready elapsed time, Captain interventions before that outcome, Captain wait, terminal cleanup, exact implementation revision, retained mechanisms, focused falsifier results, and cleanup status. The accepted dogfood requires decision-ready elapsed time at or below 15 minutes and zero post-admission Captain interventions before the durable outcome.
+
+## Ideation shape
+
+### Decision
+
+Retain three mechanisms only: an effective decision-ready budget in the existing
+profile loader, a proof-path selector in the existing POC receipt, and timing plus
+route enforcement in the existing POC close guard. Do not add a timer, scheduler,
+new state store, review service, or generic ablation harness.
+
+`direct proof` means the build worker writes the outcome. `fresh proof` means a
+separate validation worker checks retained code. New POC admissions record:
+
+```yaml
+poc_artifact: no-code | disposable | retained
+poc_safety_boundary: none | <named repository safety check>
+poc_decision_ready_minutes: 15
+poc_decision_ready_reason: <required only for a non-15 override>
+```
+
+The loader requires a positive integer, uses 15 when the minute field is absent,
+and requires a concrete reason when it differs from 15. Missing artifact fields
+on an already-admitted v3 receipt select the existing retained/fresh path, so no
+receipt migration or historical rewrite is needed.
+
+`no-code` and `disposable` select direct proof only when
+`poc_safety_boundary: none`; `retained` or any named safety boundary selects fresh
+proof. Direct proof emits `implementation_exit_observation_declared: false`, so
+RoboRev, the optional code-review observer, is not invoked. Pilot and Production
+continue to emit their existing observation and route values.
+
+The durable decision record is:
+
+```yaml
+poc_outcome:
+  direction: proceed | stop | change
+  admitted_at: <RFC3339 value equal to frontmatter started>
+  decision_ready_at: <RFC3339 durable-outcome time>
+  decision_ready_elapsed_seconds: <non-negative integer>
+  captain_interventions_before_decision_ready: <non-negative integer>
+  evidence: <strongest exact evidence and revision>
+  strongest_limit: <strongest remaining limit>
+  reversal_fact: <fact that reverses the conclusion>
+  cleanup_status_at_decision: pending | complete | failed | not-applicable
+```
+
+After the outcome is committed, cleanup records its separate measurement before
+the terminal gate is prepared:
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: <non-negative integer>
+  terminal_cleanup_seconds: <non-negative integer>
+  cleanup_status: complete | failed | not-applicable
+```
+
+The close guard parses both timestamps, recomputes elapsed seconds, and rejects a
+mismatched measurement. The inclusive default limit is 900 seconds; 901 seconds
+is exhausted. Exhaustion or any post-admission Captain intervention before the
+decision requires `direction: change` and all evidence, limit, reversal, and
+cleanup fields. It cannot silently continue as `proceed` or `stop`.
+
+For direct proof, the First Officer calls the close guard after the implementation
+report. The guard advances the existing task to `validation` only to use its
+existing terminal authorization gate; it creates no validation worker dispatch
+or validation report. The gate still prepares its approval briefing. Fresh proof
+keeps the existing validation dispatch. Both paths keep the same Captain-owned
+terminal gate and planning route-back.
+
+### Accepted journey
+
+1. **DESIGNED** — Spacedock consumes the admitted backlog gate, enters
+   `implementation`, and persists the original `started` timestamp in the task.
+2. **DESIGNED** — `profile-contract-loader.py` reads the exact committed POC
+   receipt, emits the effective minute limit and proof path, and suppresses the
+   POC review observation only for direct proof.
+3. **DESIGNED** — The implementation worker exercises one real CLI journey and
+   its critical falsifier. For direct proof it commits `poc_outcome` immediately;
+   for fresh proof it leaves the outcome to the validation worker.
+4. **DESIGNED** — Git in the Spacedock state checkout makes the outcome durable.
+   The recorded decision-ready time is the outcome commit time, not prose written
+   before persistence.
+5. **DESIGNED** — `poc-close-guard.py` verifies the effective limit, elapsed time,
+   intervention count, evidence fields, and selected proof path. Direct proof
+   reaches the existing terminal gate without a validation dispatch.
+6. **DESIGNED** — After cleanup measurement and the existing Captain approval,
+   the close guard consumes the gate and Spacedock archives the task. Planning
+   receives the outcome; no downstream task or profile is created.
+
+Unhappy paths use the same facts. A provider prerequisite, no answer, or process
+death resumes from the persisted `started` time; if the limit has expired, the
+next durable result is `change`. An active tool call is not killed: once it
+returns, an over-budget result records `change`; inability to preserve evidence
+returns to planning. A direct receipt with a named safety boundary is refused as
+inconsistent. A failed state commit is not decision-ready. Failed cleanup remains
+visible and prevents terminalization without erasing the outcome.
+
+### Acceptance checks
+
+| Criterion | Check that can falsify it |
+|---|---|
+| AC-1 | Loader fixtures prove absent minutes emit 15, zero/negative/non-integer values fail, and a non-15 value without a reason fails. |
+| AC-2 | Close-guard fixtures bind `admitted_at` to `started`, recompute elapsed seconds, and reject mismatched or negative measurements. |
+| AC-3 | A direct no-code/disposable fixture emits no review observation and closes without invoking a validation worker; a named safety boundary stays fresh. |
+| AC-4 | Run only the real dogfood journey, the 901-second falsifier, and the three mechanism-specific without-it checks below. |
+| AC-5 | At 901 seconds, `proceed` and `stop` fail; `change` succeeds only with evidence, limit, reversal, and cleanup status. |
+| AC-6 | A fresh state-backed no-code POC records outcome commit minus `started` at 900 seconds or less, zero interventions, no RoboRev receipt, and no validation dispatch. |
+| AC-7 | Pilot and Production route tables, profile-contract bytes, observation values, and admission fixtures remain unchanged; any diff in their profile files stops implementation. |
+
+### Measured no-code dogfood
+
+Create one fresh POC on the implementation revision whose decision is: "Does the
+new direct POC path produce a durable decision without extra proof ceremony?"
+Its artifact is `no-code`, safety boundary is `none`, and the minute override is
+omitted so the loader must emit 15. The real journey loads the committed task,
+runs the repository-local loader and one exact read-only CLI probe, records the
+critical result, and commits `poc_outcome` to the state branch.
+
+The dogfood falsifier is any one of: effective budget not 15, a POC RoboRev
+request, a validation-worker dispatch, elapsed time above 900 seconds, an
+intervention count above zero, or changed Pilot/Production output. Record the
+admission commit, outcome commit, both commit timestamps, elapsed seconds, exact
+implementation revision, commands, proof-path fields, absence of review and
+validation dispatch, and cleanup result. Captain gate wait and terminal cleanup
+occur after decision-ready and remain separate measurements.
+
+### Focused without-it proof
+
+Use delivery base `6bcdea3eca985a42aeceea45534c91584fee490a` as the candidate
+without the retained mechanisms. Do not run the repository's broad minimal-stack
+ablation suite for this POC.
+
+- Remove only effective-budget parsing: the default/override fixture must stop
+  rejecting an invalid or unexplained limit.
+- Remove only the proof-path selector: the direct fixture must again emit the POC
+  review observation or require fresh validation.
+- Remove only the close-guard elapsed/direct branch: the 901-second outcome must
+  be accepted incorrectly or the direct implementation outcome must be refused.
+
+Before shaping, the unchanged seams were exercised successfully:
+`profile-contract-loader.test.py`, `poc-close-guard.test.py`, and
+`profile-spacedock-route.test.py` all passed. Those results prove the existing
+loader and terminal gate are recoverable; they do not prove the new budget or
+direct path.
+
+### Reverse-recovery receipt
+
+```yaml
+reverse_recovery:
+  trigger: replace unconditional POC review/fresh proof and add decision-time enforcement
+  boundary: committed POC receipt through loader, outcome, close guard, and Spacedock state
+  layers:
+    - surface: Exploration Brief budget
+      location: kc-dev-flow/references/kernel.md:43-44,107-108
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: poc_budget is a free scalar and carries no enforced decision-ready limit
+      disproof_hook: run a loader fixture with zero minutes or an unexplained override
+    - surface: profile selection and review activation
+      location: kc-dev-flow/scripts/profile-contract-loader.py:198-208,443-446
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: the loader accepts no artifact class and declares POC review unconditionally
+      disproof_hook: load a no-code POC and inspect effective budget and observation fields
+    - surface: durable outcome validation
+      location: kc-dev-flow/scripts/poc-close-guard.py:99-114
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: the guard validates five strings but no clock, intervention, or proof path
+      disproof_hook: validate a 901-second proceed outcome
+    - surface: terminal state and archive
+      location: kc-dev-flow/scripts/profile-spacedock-route.test.py
+      completeness: WORKING
+      need: REQUIRED
+      evidence: the live focused route test passed on the delivery base
+      disproof_hook: run profile-spacedock-route.test.py without a runnable Spacedock close path
+  decision: recover
+```
+
+Recovery extends the loader and close guard already used by the journey. It does
+not create a second route engine, timer, state ledger, or terminal authority.
+
+### Project-context receipt
+
+```yaml
+project_context:
+  impact: update
+  authority: ARCHITECTURE.md via docs/dev/README.md Local Profile
+  claim_locator: Architecture Contracts / kc-dev-flow profile-native loading / Proportional implementation-exit observation
+  surface: POC review activation and proof dispatch
+  stale_claim: every POC requests RoboRev and proceeds through fresh validation
+  approved_change: direct no-code/disposable POCs suppress RoboRev and fresh proof; Pilot and Production remain unchanged
+  landed_change: pending
+  planned_check: compare the landed claim with loader and close-guard behavior plus the measured dogfood
+  validation_evidence: pending
+```
+
+`PRODUCT.md` remains accurate: it already promises proportional routes without
+specifying unconditional POC review or fresh validation. `CLAUDE.md` has no
+affected claim. The only bound project-context edit is the stale Architecture
+claim above.
+
+### Retained-document treatment
+
+Repair existing documents in place under Retained Document Policy Rule 8; add or
+delete none. The per-section overlap check covers the POC budget, direct/fresh
+proof, review activation, and close semantics across the kernel, package README,
+adopter README, profile build contract, continuation skill, and Architecture.
+Keep the portable rule in the kernel, runtime binding in `docs/dev/README.md`, and
+public architecture claim in `ARCHITECTURE.md`; do not copy work-item timing or
+dogfood results into retained documents.
+
+### Where it touches
+
+`lines after` is an estimate. Package/adopter mirror pairs are one logical
+mechanism but both physical files and all bytes count.
+
+| Path | Lines now | Lines after | Why omission fails |
+|---|---:|---:|---|
+| `ARCHITECTURE.md` | 257 | 257 | AC-3/AC-7: its unconditional POC-review claim would become false. |
+| `docs/dev/README.md` | 431 | 441 | AC-2/AC-3/AC-6: the local runtime would not know the no-dispatch close path or measurements. |
+| `kc-dev-flow/references/kernel.md` | 255 | 263 | AC-1/AC-3/AC-5: the portable admission and completion contract would stay stale. |
+| `docs/dev/_mods/kernel.md` | 255 | 263 | Same kernel mechanism; omission breaks adopted/package byte identity and AC-7. |
+| `kc-dev-flow/references/profiles/poc-exploration/build.md` | 76 | 84 | AC-3/AC-4/AC-6: direct build would not owe the outcome or focused proof. |
+| `docs/dev/_mods/profiles/poc-exploration/build.md` | 76 | 84 | Same build mechanism; omission breaks adopted/package byte identity and AC-7. |
+| `kc-dev-flow/scripts/profile-contract-loader.py` | 513 | 540 | AC-1/AC-3/AC-7: no effective budget, proof selector, or isolated POC activation. |
+| `docs/dev/_mods/profile-contract-loader.py` | 513 | 540 | Same loader mechanism; omission leaves the live adopter unenforced. |
+| `kc-dev-flow/scripts/poc-close-guard.py` | 202 | 250 | AC-2/AC-3/AC-5/AC-6: elapsed, intervention, and direct close remain unenforced. |
+| `docs/dev/_mods/poc-close-guard.py` | 202 | 250 | Same close mechanism; omission leaves the live adopter unenforced. |
+| `kc-dev-flow/README.md` | 202 | 212 | AC-1/AC-3: its public POC route and review description would be wrong. |
+| `kc-dev-flow/scripts/profile-contract-loader.test.py` | 1630 | 1685 | AC-1/AC-3/AC-7: loader defaults, refusals, and unchanged higher profiles lack deterministic proof. |
+| `kc-dev-flow/scripts/poc-close-guard.test.py` | 237 | 300 | AC-2/AC-3/AC-5/AC-6: timing, overrun, evidence, and direct-close falsifiers lack enforcement proof. |
+| `kc-dev-flow/skills/choose-work-profile/SKILL.md` | 125 | 133 | AC-1/AC-3: new POC admissions would not record artifact, safety, or minute fields. |
+| `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | 242 | 254 | AC-2/AC-3/AC-5/AC-6: orchestration would still dispatch fresh validation unconditionally. |
+| `scripts/kc-dev-flow-contract-test.py` | 1445 | 1470 | AC-3/AC-7: mirror identity and higher-profile invariants would not fail closed. |
+
+No new file, dependency, stage, background process, or CI workflow is allowed.
+Four required source/adopter pairs account for eight of the sixteen files; this
+mirror cost is the irreducible size concern for the gate.
+
+### Stop numbers
+
+Measure from delivery base `6bcdea3eca985a42aeceea45534c91584fee490a`.
+Implementation stops and reports instead of continuing when any condition holds:
+
+- more than 16 changed files;
+- more than 550 total added plus deleted lines from `git diff --numstat`;
+- more than 320 added plus deleted lines across the loader, close guard, their
+  tests, and required mirrors;
+- any changed file under Pilot or Production profile contracts; or
+- any new file, dependency, stage, scheduler, timer, state store, CI workflow, or
+  planning-provider surface.
+
+The likely runaway area is outcome parsing plus route transition in the loader
+and close guard. If it crosses its 320-line stop, return to shape instead of
+building a generic lifecycle engine.
+
+## Stage Report: ideation
+
+- DONE: Shape the smallest retained mechanisms that satisfy AC-1 through AC-7, including one real journey and the critical falsifier.
+  Three existing seams retain the behavior; the designed state-backed dogfood and exact 901-second falsifier cover the real journey and failure boundary.
+- DONE: Define exact touch surfaces, stop numbers, focused without-it checks, and the measured no-code dogfood without expanding the approved scope.
+  Sixteen files, 550 changed lines, three focused removals, and one no-code dogfood are bounded against delivery base `6bcdea3eca985a42aeceea45534c91584fee490a`.
+
+### Summary
+
+The shape recovers the existing loader, POC build contract, and close guard; it
+adds no timer, stage, provider, or state authority. Direct no-code/disposable POCs
+write the decision during build and skip RoboRev plus fresh validation, while
+retained or safety-bound POCs and all Pilot/Production behavior stay unchanged.
