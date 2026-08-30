@@ -68,6 +68,15 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:np4b5ef99wf5tns6r7aqs10p:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:np4b5ef99wf5tns6r7aqs10p-validation-1
+              briefing:
+                id: briefing:np4b5ef99wf5tns6r7aqs10p:validation:attempt-1:revision-1
+                digest: sha256:d72b877f0acaf59687c2f4b69d3e459f29c856de49163c21f05bd259f9544ba5
+                request-digest: sha256:085a1bae46dbccc34691f88240cfd1eaf2b197adb2451112a282ff7ebc814416
+                room-ref: ./review/validation/briefing-1
 ---
 
 ## The problem

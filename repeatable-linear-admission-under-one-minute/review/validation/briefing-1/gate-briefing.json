@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:np4b5ef99wf5tns6r7aqs10p:validation:attempt-1:revision-1",
+  "question": "Approve DEV-12 validation and authorize Draft PR creation?",
+  "artifacts": [
+    {
+      "id": "artifact:np4b5ef99wf5tns6r7aqs10p:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/acb4c62b1a448d39a169befd9803df0c1e97b35c/repeatable-linear-admission-under-one-minute/index.md",
+      "rev": "sha256:48e34d7afc773634062c71eb95e18d30ea7cd6e016f4fc86e6fdfc38164f6106",
+      "mediaType": "text/markdown",
+      "summary": "Exact candidate 90de4e3 passed independent live Linear admission in 4.594 seconds, all AC-1 through AC-6, deterministic contract and loader checks, 11 of 11 focused final-tip without-it mutants, scope/parity checks, and clean provider/base state. No PR exists yet; approval authorizes pr-merge to push and create a Draft PR, not merge it."
+    }
+  ]
+}
