@@ -618,6 +618,19 @@ review_plan_validate_decision() {
   [ "$expected" = "$canonical" ] || return 3
 }
 
+review_plan_event_allowed() {
+  local decision="$1" requested_event="$2"
+  shift 2
+  [ "$#" -eq 9 ] || return 2
+  case "$requested_event" in APPROVE|COMMENT|REQUEST_CHANGES) ;; *) return 3 ;; esac
+  review_plan_validate_decision "$decision" "$@" || return 3
+  case "$(jq -r '.event_ceiling' <<<"$decision"):$requested_event" in
+    APPROVE:APPROVE|APPROVE:COMMENT|APPROVE:REQUEST_CHANGES|\
+    COMMENT:COMMENT|COMMENT:REQUEST_CHANGES) return 0 ;;
+    *) return 3 ;;
+  esac
+}
+
 review_plan_main_decide() {
   local repository='' pr_number='' base_sha='' head_sha='' config_hash=''
   local config_file='' repository_path='' predecessor_events='' delta_receipt=''

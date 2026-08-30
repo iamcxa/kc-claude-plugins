@@ -168,6 +168,9 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
   review_plan_validate_decision "$resolve" acme/widgets 42 "$ROUTE_BASE" "$ROUTE_FIXED" \
     "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
   assert_eq 'shared validator accepts the executable resolve decision' 0 "$?"
+  review_plan_event_allowed "$resolve" APPROVE acme/widgets 42 "$ROUTE_BASE" "$ROUTE_FIXED" \
+    "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
+  assert_eq 'resolve permits APPROVE only after a fresh plan validation' 0 "$?"
   escalated="$(jq -S -c '.mode="delta" | .event_ceiling="APPROVE"' <<<"$resolve")"
   review_plan_validate_decision "$escalated" acme/widgets 42 "$ROUTE_BASE" "$ROUTE_FIXED" \
     "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
@@ -190,6 +193,12 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
   assert_eq 'delta cannot approve' COMMENT "$(jq -r '.event_ceiling' <<<"$delta")"
   assert_eq 'delta requires correctness plus predecessor coverage' code_correctness \
     "$(jq -r '.required_capabilities | join(",")' <<<"$delta")"
+  review_plan_event_allowed "$delta" APPROVE acme/widgets 42 "$ROUTE_BASE" "$unseen_head" \
+    "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
+  assert_not_zero 'delta refuses APPROVE at the executable event gate' "$?"
+  review_plan_event_allowed "$delta" COMMENT acme/widgets 42 "$ROUTE_BASE" "$unseen_head" \
+    "$ROUTE_CONFIG_HASH" "$ROUTE_EVENTS" "$ROUTE_RECEIPT" "$ROUTE_REPO" "$ROUTE_CONFIG"
+  assert_eq 'delta permits COMMENT after a fresh plan validation' 0 "$?"
 
   missing="$(
     KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
@@ -275,6 +284,77 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
   assert_eq 'dependency change selects delta' delta "$(jq -r '.mode' <<<"$dependency")"
   assert_eq 'dependency change requires supply-chain' supply-chain \
     "$(jq -r '.required_capabilities | map(select(. == "supply-chain")) | join(",")' <<<"$dependency")"
+
+  git -C "$ROUTE_REPO" checkout -q "$ROUTE_FIXED"
+  mkdir -p "$ROUTE_REPO/security"
+  printf 'def authorize(token):\n    return bool(token)\n' >"$ROUTE_REPO/security/policy.py"
+  git -C "$ROUTE_REPO" add security/policy.py
+  git -C "$ROUTE_REPO" commit -qm security
+  security_head="$(git -C "$ROUTE_REPO" rev-parse HEAD)"
+  security="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$security_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'security change requires security review' security \
+    "$(jq -r '.required_capabilities | map(select(. == "security")) | join(",")' <<<"$security")"
+
+  git -C "$ROUTE_REPO" checkout -q "$ROUTE_FIXED"
+  mkdir -p "$ROUTE_REPO/.github/workflows"
+  printf 'name: CI\non: push\njobs: {}\n' >"$ROUTE_REPO/.github/workflows/ci.yml"
+  git -C "$ROUTE_REPO" add .github/workflows/ci.yml
+  git -C "$ROUTE_REPO" commit -qm workflow
+  workflow_head="$(git -C "$ROUTE_REPO" rev-parse HEAD)"
+  workflow="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$workflow_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'workflow change requires GitHub Actions review' github-actions \
+    "$(jq -r '.required_capabilities | map(select(. == "github-actions")) | join(",")' <<<"$workflow")"
+
+  git -C "$ROUTE_REPO" checkout -q "$ROUTE_FIXED"
+  ln -s parser.py "$ROUTE_REPO/src/parser-link.py"
+  git -C "$ROUTE_REPO" add src/parser-link.py
+  git -C "$ROUTE_REPO" commit -qm symlink
+  symlink_head="$(git -C "$ROUTE_REPO" rev-parse HEAD)"
+  symlink="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$symlink_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'symlink change falls back to initial' initial "$(jq -r '.mode' <<<"$symlink")"
+
+  git -C "$ROUTE_REPO" checkout -q "$ROUTE_FIXED"
+  git -C "$ROUTE_REPO" mv src/parser.py src/renamed-parser.py
+  git -C "$ROUTE_REPO" commit -qm rename
+  rename_head="$(git -C "$ROUTE_REPO" rev-parse HEAD)"
+  rename="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$rename_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'rename falls back to initial' initial "$(jq -r '.mode' <<<"$rename")"
+
+  orphan_tree="$(git -C "$ROUTE_REPO" mktree </dev/null)"
+  orphan_head="$(printf 'unrelated\n' | git -C "$ROUTE_REPO" commit-tree "$orphan_tree")"
+  git -C "$ROUTE_REPO" checkout -q "$orphan_head"
+  nonancestor="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$orphan_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'non-ancestor history falls back to initial' initial "$(jq -r '.mode' <<<"$nonancestor")"
 fi
 
 if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = receipt-contract ]; then
@@ -340,8 +420,11 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then
   assert_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on' 'skill documents exact opt-in'
   assert_contains "$SKILL" 'review-plan\.sh.*decide' 'skill invokes the planner'
   assert_contains "$SKILL" 'review_plan_validate_decision' 'skill reuses the shared decision validator'
-  assert_contains "$SKILL" 'legacy presentation, typed presentation, human edit, confirmation' \
-    'skill names the existing event authority seams'
+  for seam in legacy-presentation typed-presentation human-edit confirmation \
+    autonomous-construction interactive-pre-post autonomous-pre-post; do
+    assert_contains "$SKILL" "review_plan_guard_event.*# $seam" \
+      "skill executes the event guard at $seam"
+  done
   assert_contains "$SKILL" 'Step 6c' 'skill preserves human confirmation'
   assert_contains "$REFERENCE" 'kc-pr-flow\.review-plan-decision/v1' \
     'runtime reference documents the plan schema'
