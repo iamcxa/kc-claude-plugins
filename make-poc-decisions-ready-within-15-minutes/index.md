@@ -13,7 +13,7 @@ verdict:
 worktree: .worktrees/spacedock-ensign-make-poc-decisions-ready-within-15-minutes
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 id: k80xhxhk9b9e26mnnyn2jwsh
 gates:
     version: 1
