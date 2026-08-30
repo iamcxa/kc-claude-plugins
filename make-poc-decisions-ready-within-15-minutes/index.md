@@ -451,16 +451,19 @@ implementation_evidence:
     close_guard: removing exhaustion enforcement accepted a required-change case; guard test exited 1
   dogfood:
     decision: Does the new direct POC path produce a durable decision without extra proof ceremony?
-    admission_commit: 3076684c3d5fcbbed3ca0ac314c955ec669cbb05
-    admission_time: 2026-08-30T14:36:20Z
-    outcome_commit: 1c561f6d1cc7ad37ade7fd95825c748404d0efcf
-    outcome_time: 2026-08-30T14:36:48Z
-    decision_ready_elapsed_seconds: 28
+    evidence_path: make-poc-decisions-ready-within-15-minutes/evidence/direct-poc-cycle-2.md
+    admission_commit: ba5124277d55801c0b5efb5d9c79ea0e339a1611
+    admission_time: 2026-08-30T14:59:15Z
+    outcome_commit: b3aae89b6e5bb8bc36714d43bb47814b0d053fa7
+    outcome_time: 2026-08-30T15:00:31Z
+    decision_ready_elapsed_seconds: 76
     captain_interventions_before_decision_ready: 0
     candidate: 2f3391855653889ede9ac205eaa4b7a88befff43
     exact_tree_probe: a3de404c2b8fb21c9201e2e3d4312438c52e018d
     loader: {budget_minutes: 15, proof_path: direct, observation_declared: false}
-    validation_dispatch_or_report: none
+    roborev_request_receipt: {requested: false, request_count: 0, before_list_json: null, after_list_json: null}
+    validation_dispatch_receipt: {requested: false, dispatch_count: 0, validation_worker_dispatched: false}
+    remote_readback: spacedock-state/dev at b3aae89b6e5bb8bc36714d43bb47814b0d053fa7
     cleanup: not-applicable
   implementation_exit_observation:
     capability: review_convergence
@@ -524,3 +527,14 @@ The Pilot RoboRev observation remained unavailable and non-authoritative.
 ### Summary
 
 Validation rejects the candidate because the accepted dogfood proof is not in the authoritative split-root state and does not durably prove no RoboRev request or validation dispatch. Rework should rerun the direct POC on the shared state branch, push both commits and their absence receipts, then re-dispatch validation at the same exact candidate.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Keep exact product candidate 2f3391855653889ede9ac205eaa4b7a88befff43 unchanged and rerun only the rejected direct-POC evidence journey in authoritative shared state.
+  Remote `spacedock-state/dev` readback shows admission `ba5124277d55801c0b5efb5d9c79ea0e339a1611` and outcome `b3aae89b6e5bb8bc36714d43bb47814b0d053fa7`; the clean code worktree remains at the exact candidate.
+- DONE: Persist and push independently readable admission, outcome, no-RoboRev-request, and no-validation-dispatch receipts; update the durable implementation report and leave code/state clean.
+  The pushed evidence file records a 76-second direct outcome, zero Captain interventions, zero RoboRev requests, and zero validation-worker dispatches; remote loader readback returns budget 15, direct proof, and observation false.
+
+### Summary
+
+The rejected local-only dogfood was replaced without changing product files, scope, stop numbers, or accepted criteria. The fresh shared-state journey reached a durable `proceed` outcome in 76 seconds and its explicit absence receipts are readable at the pushed outcome commit.
