@@ -1,12 +1,13 @@
 name: kc-pr-flow review evaluation tests
 
-# These model-free suites validate the A/B skill-ablation harness and the
-# sanitized paired-receipt scorer. They do not validate runtime or posting.
+# These model-free suites validate timing, scorers, and the A/B skill-ablation
+# harness. They do not dispatch models or validate posting.
 
 on:
   pull_request:
     paths:
       - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
@@ -32,6 +33,7 @@ on:
     branches: [main]
     paths:
       - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
@@ -79,6 +81,9 @@ jobs:
 
       - name: Run paired benchmark contract
         run: bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: Run monotonic review timing contract
+        run: bash kc-pr-flow/scripts/review-runtime.test.sh --case review-timing
 
       - name: Run structural latency diagnostic contract
         run: bash kc-pr-flow/scripts/review-latency-benchmark.test.sh

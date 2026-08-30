@@ -68,7 +68,7 @@ for name, text in texts.items():
 expected_routes = {
     "kc-pr-flow/scripts/review-runtime.sh": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime-safe-io.py": {"runtime", "shadow", "post", "evaluation"},
-    "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime", "evaluation"},
     "kc-pr-flow/scripts/review-plan.sh": {"runtime"},
     "kc-pr-flow/scripts/review-plan.test.sh": {"runtime"},
     "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl": {"runtime"},
@@ -120,6 +120,7 @@ expected_commands = {
     "evaluation": [
         "bash kc-pr-flow/scripts/review-latency-benchmark.test.sh",
         "bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh",
+        "bash kc-pr-flow/scripts/review-runtime.test.sh --case review-timing",
         "bash kc-pr-flow/scripts/review-ablation.test.sh",
         "python3 kc-pr-flow/scripts/review-real-pair-score.test.py",
     ],
@@ -129,8 +130,9 @@ all_commands = [command for commands in expected_commands.values() for command i
 
 for name, text in texts.items():
     for command in all_commands:
+        present = any(line.strip() == f"run: {command}" for line in text.splitlines())
         require(
-            (command in text) == (command in expected_commands[name]),
+            present == (command in expected_commands[name]),
             f"{name}: wrong behavioral suite ownership for {command}",
         )
     for retired in (

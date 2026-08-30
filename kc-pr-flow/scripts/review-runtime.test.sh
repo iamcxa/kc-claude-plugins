@@ -27,7 +27,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-files|delta-receipt-happy-path|delta-receipt-identity|s01-inertness|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-files|delta-receipt-happy-path|delta-receipt-identity|s01-inertness|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness|review-timing]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -100,6 +100,74 @@ run_s01_inertness_tests() {
     assert_eq "fast-path value [${value:-empty}] cannot change S01 authority" "$baseline" \
       "$(sha256_text "$candidate")"
   done
+}
+
+run_review_timing_tests() {
+  local state="$TEST_INPUT_ROOT/review-timing-state.json"
+  local receipt="$TEST_INPUT_ROOT/review-timing-receipt.json"
+  local invalid_receipt="$TEST_INPUT_ROOT/review-timing-invalid-receipt.json"
+  local invalid_state="$TEST_INPUT_ROOT/review-timing-invalid-state.json"
+  local invalid_lanes="$TEST_INPUT_ROOT/review-timing-invalid-lanes.json"
+  local lanes="$TEST_INPUT_ROOT/review-timing-lanes.json"
+  local review_key rc phase timing before
+  review_key="$(printf 'a%.0s' {1..64})"
+  printf '%s\n' '[{"duration_ms":17,"lane_id":"correctness","provider_family":"claude"},{"duration_ms":23,"lane_id":"security","provider_family":"claude"}]' >"$lanes"
+
+  bash "$RUNTIME" timing-start --review-key "$review_key" --mode delta --output "$state"
+  rc=$?
+  assert_eq 'timing-start creates runtime state' 0 "$rc"
+  assert_eq 'timing state is private' 600 "$(file_mode "$state")"
+  for phase in identity_and_plan inventory required_lanes_critical_path collector \
+    targeted_verification_critical_path collation_and_draft confirmation_ready; do
+    bash "$RUNTIME" timing-mark --timing-file "$state" --phase "$phase" >/dev/null
+    assert_eq "timing mark accepts $phase" 0 "$?"
+  done
+  timing="$(bash "$RUNTIME" timing-finish --timing-file "$state" \
+    --lane-durations-file "$lanes" --output "$receipt")"
+  rc=$?
+  assert_eq 'timing-finish emits a receipt' 0 "$rc"
+  assert_eq 'terminal timing schema is closed' true "$(jq -r '
+    keys == ["attribution_ms","durations_ms","lane_durations_ms","mode","review_key","schema"] and
+    .schema == "kc-pr-flow.review-timing/v1" and .mode == "delta" and
+    (.durations_ms | keys) == ["collation_and_draft","collector","identity_and_plan","inventory",
+      "required_lanes_critical_path","review_to_confirmation_ready",
+      "targeted_verification_critical_path","wall_to_confirmation_ready"] and
+    (.attribution_ms | keys) == ["agent_critical_path","collector","hosted_ci","human_wait","unrelated_queue"]
+  ' <<<"$timing")"
+  assert_eq 'parallel lane durations remain separate observations' 'correctness,security' \
+    "$(jq -r '[.lane_durations_ms[].lane_id] | join(",")' <<<"$timing")"
+  assert_eq 'collector is excluded from the promotion interval' true "$(jq -r '
+    .durations_ms.review_to_confirmation_ready + .durations_ms.collector <=
+      .durations_ms.wall_to_confirmation_ready and
+    .attribution_ms.collector == .durations_ms.collector and
+    .attribution_ms.agent_critical_path == .durations_ms.required_lanes_critical_path
+  ' <<<"$timing")"
+  assert_eq 'unobserved external attribution stays null' 'null,null,null' \
+    "$(jq -r '[.attribution_ms.hosted_ci,.attribution_ms.unrelated_queue,
+      .attribution_ms.human_wait] | map(tostring) | join(",")' <<<"$timing")"
+
+  before="$(sha256_text "$(cat "$state")")"
+  mkdir "$state.lock"
+  bash "$RUNTIME" timing-mark --timing-file "$state" --phase confirmation_ready >/dev/null 2>&1
+  assert_eq 'a concurrent writer makes timing-mark fail closed' 75 "$?"
+  rmdir "$state.lock"
+  assert_eq 'failed concurrent mark preserves complete state' "$before" "$(sha256_text "$(cat "$state")")"
+
+  bash "$RUNTIME" timing-start --review-key "$review_key" --mode initial --output "$invalid_state"
+  assert_eq 'second timing state starts independently' 0 "$?"
+  bash "$RUNTIME" timing-mark --timing-file "$invalid_state" --phase inventory >/dev/null 2>&1
+  assert_not_zero 'out-of-order timing phase fails closed' "$?"
+  assert_eq 'out-of-order timing phase preserves empty marks' 0 "$(jq '.marks | length' "$invalid_state")"
+
+  printf '%s\n' '[{"duration_ms":1,"lane_id":"same","provider_family":"claude"},{"duration_ms":2,"lane_id":"same","provider_family":"claude"}]' >"$invalid_lanes"
+  bash "$RUNTIME" timing-finish --timing-file "$state" \
+    --lane-durations-file "$invalid_lanes" --output "$invalid_receipt" >/dev/null 2>&1
+  assert_not_zero 'duplicate lane observations fail closed' "$?"
+  assert_eq 'invalid lane input publishes no receipt' absent "$([ -e "$invalid_receipt" ] && printf present || printf absent)"
+
+  bash "$RUNTIME" timing-finish --timing-file "$state" \
+    --lane-durations-file "$lanes" --output "$receipt" >/dev/null 2>&1
+  assert_not_zero 'timing receipt publication is no-clobber' "$?"
 }
 
 file_mode() {
@@ -893,6 +961,13 @@ PY
   unset -f assert_identity_rejected write_subject_evidence_pair_events write_target_evidence_events
 }
 
+if [ "$CASE_FILTER" = 'review-timing' ]; then
+  run_review_timing_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
 if [ "$CASE_FILTER" = 's01-inertness' ]; then
   if declare -F run_s01_inertness_tests >/dev/null; then
     run_s01_inertness_tests
@@ -933,6 +1008,7 @@ if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
 fi
 
 if [ "$CASE_FILTER" = 'all' ]; then
+  run_review_timing_tests
   run_s01_inertness_tests
   run_delta_receipt_contract_tests
   run_delta_receipt_file_validator_tests
