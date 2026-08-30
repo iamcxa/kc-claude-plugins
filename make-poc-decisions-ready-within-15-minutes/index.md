@@ -511,3 +511,16 @@ guard enforcement. Direct no-code/disposable POCs can reach the existing
 terminal gate without RoboRev or a validation worker, while retained work,
 safety-bound POCs, Pilot, and Production retain fresh proof behavior.
 The Pilot RoboRev observation remained unavailable and non-authoritative.
+
+## Stage Report: validation
+
+- FAILED: Independently verify AC-1 through AC-7 at exact candidate 2f3391855653889ede9ac205eaa4b7a88befff43 and reject any claim not supported at that tip.
+  At the clean exact tip, loader, close-guard, route, and full contract tests support AC-1, AC-2, AC-3, AC-5, and AC-7; AC-4 and AC-6 lack a durable real-journey receipt.
+- FAILED: Verify the 28-second zero-intervention dogfood from durable state commits, including absence of RoboRev requests and validation dispatch for the direct POC.
+  The two commits form the claimed 28-second ancestor pair only in unpushed `/Users/kent/.Trash/direct-poc-dogfood-20260830T143648Z`; they have no remote, are absent from shared state, and preserve no request or dispatch receipt.
+- DONE: Adversarially confirm the three-mechanism minimum stack, all stop numbers, package-adopter parity, retained-document treatment, and honest RoboRev UNAVAILABLE disposition.
+  Focused tests pass; the diff is 16 files, 430 lines, and exactly 320 core lines; four package-adopter pairs have matching SHA-256 values; all paths are modified in place; RoboRev v0.62.0 has no exact-branch job, so the pre-request `UNAVAILABLE` result claims no review authority.
+
+### Summary
+
+Validation rejects the candidate because the accepted dogfood proof is not in the authoritative split-root state and does not durably prove no RoboRev request or validation dispatch. Rework should rerun the direct POC on the shared state branch, push both commits and their absence receipts, then re-dispatch validation at the same exact candidate.
