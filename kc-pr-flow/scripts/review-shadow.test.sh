@@ -8,18 +8,20 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
 SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
+SHADOW_WORKFLOW="$HERE/../../.github/workflows/review-shadow-tests.yml"
 TEST_ROOT="$(mktemp -d)"
 trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
 
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case production-collector|typed-interactive-seam]\n' "$0" >&2
+    printf 'usage: %s [--case production-collector|s01-skill-inertness|typed-interactive-seam]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
 fi
 if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &&
+  [ "$CASE_FILTER" != 's01-skill-inertness' ] &&
   [ "$CASE_FILTER" != 'typed-interactive-seam' ]; then
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
@@ -42,6 +44,18 @@ test_sha256() {
   else
     printf '%s' "$1" | sha256sum | awk '{print $1}'
   fi
+}
+
+run_s01_skill_inertness_tests() {
+  local owner
+  for owner in 'kc-pr-flow/scripts/review-shadow.test.sh' 'kc-pr-flow/skills/kc-pr-review/SKILL.md'; do
+    assert_eq "shadow workflow owns $owner in pull and push" 2 \
+      "$(grep -cF -- "- \"$owner\"" "$SHADOW_WORKFLOW" || true)"
+  done
+  assert_eq 'existing shadow job runs the shadow contract once' 1 \
+    "$(grep -cF 'bash kc-pr-flow/scripts/review-shadow.test.sh' "$SHADOW_WORKFLOW" || true)"
+  assert_eq 'production skill has no receipt authority call' 0 \
+    "$(grep -cE 'review-runtime\.sh.*[[:space:]]receipt([[:space:]]|$)' "$SKILL" || true)"
 }
 
 run_typed_interactive_seam_tests() {
@@ -281,6 +295,15 @@ MOCK
 # `all` has to mean all: this group was previously reachable only by naming it
 # explicitly, so its assertions never ran in CI (which invokes this script with
 # no arguments) — including every check on posting authority.
+if [ "$CASE_FILTER" = 's01-skill-inertness' ] || [ "$CASE_FILTER" = 'all' ]; then
+  run_s01_skill_inertness_tests
+  if [ "$CASE_FILTER" = 's01-skill-inertness' ]; then
+    printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+    [ "$FAIL" -eq 0 ]
+    exit
+  fi
+fi
+
 if [ "$CASE_FILTER" = 'typed-interactive-seam' ] || [ "$CASE_FILTER" = 'all' ]; then
   run_typed_interactive_seam_tests
   if [ "$CASE_FILTER" = 'typed-interactive-seam' ]; then
