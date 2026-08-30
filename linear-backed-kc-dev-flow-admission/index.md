@@ -1,16 +1,16 @@
 ---
 title: "Admit one Linear-planned release into kc-dev-flow"
-status: ideation
+status: implementation
 source: "https://linear.app/duckbase-co/issue/DEV-11/admit-one-linear-planned-release-into-kc-dev-flow"
 product: kc-dev-flow
 planning-window: "Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z"
 planning-outcome: "Linear Project 10ae38f6-2d58-45a6-8ce5-388b35086e97 Linear-backed kc-dev-flow admission sha256:c29c728e43bbc88a12f7794bf1d687eeec3b3005baa96b93c51bede6f53f51e1"
 sprint: linear-backed-kc-dev-flow-admission
 sprint-readiness: ready
-started:
+started: 2026-08-30T07:47:10Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-linear-backed-kc-dev-flow-admission
 issue:
 pr:
 mod-block:
