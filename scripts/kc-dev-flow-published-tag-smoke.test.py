@@ -272,10 +272,12 @@ class FakeSmokeRuntime:
         self,
         *,
         observed_tag: str,
+        tag_revision: str | None = None,
         mutate_host: str = "",
         invalid_codex_report: bool = False,
     ) -> None:
         self.observed_tag = observed_tag
+        self.tag_revision = tag_revision or self.published_revision
         self.mutate_host = mutate_host
         self.invalid_codex_report = invalid_codex_report
         self.sources: dict[str, Path] = {}
@@ -314,6 +316,12 @@ class FakeSmokeRuntime:
             stdout = (
                 self.candidate_revision if cwd == ROOT else self.published_revision
             ) + "\n"
+        elif (
+            command[:2] == ["git", "rev-parse"]
+            and len(command) == 3
+            and command[2].endswith("^{commit}")
+        ):
+            stdout = self.tag_revision + "\n"
         elif command[:3] == ["git", "status", "--porcelain"]:
             pass
         elif command[:3] == ["git", "archive", "--format=tar"]:
@@ -462,7 +470,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-smoke-test-") as temporary:
             lambda path=path: smoke.load_candidate_receipt(path), fragment, label
         )
 
-    published_runtime = FakeSmokeRuntime(observed_tag=smoke_tag)
+    published_runtime = FakeSmokeRuntime(observed_tag="e2e-pipeline-v3.3.5")
     published_result, published_error = run_fake(
         published_runtime,
         lambda: smoke.run_published_smoke(smoke_tag, receipt_path, 30),
@@ -479,8 +487,8 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-smoke-test-") as temporary:
         (
             "tag",
             candidate_receipt,
-            FakeSmokeRuntime(observed_tag=f"{smoke_tag}-other"),
-            "resolved",
+            FakeSmokeRuntime(observed_tag=smoke_tag, tag_revision="e" * 40),
+            "does not resolve to checkout HEAD",
         ),
         (
             "version",

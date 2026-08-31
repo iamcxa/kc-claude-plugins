@@ -703,11 +703,14 @@ def run_published_smoke(
             timeout=timeout,
         )
         revision = run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        observed_tag = run(
-            ["git", "describe", "--tags", "--exact-match", "HEAD"], cwd=checkout
+        tag_revision = run(
+            ["git", "rev-parse", f"refs/tags/{tag}^{{commit}}"], cwd=checkout
         ).stdout.strip()
-        if observed_tag != tag:
-            raise SmokeError(f"checkout resolved {observed_tag!r}, expected {tag!r}")
+        if tag_revision != revision:
+            raise SmokeError(
+                f"published tag {tag!r} does not resolve to checkout HEAD: "
+                f"{tag_revision} != {revision}"
+            )
 
         snapshot = published_root / "snapshot"
         tracked_package_snapshot(checkout, revision, snapshot, timeout)
