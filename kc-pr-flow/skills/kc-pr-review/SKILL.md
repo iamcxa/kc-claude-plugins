@@ -1817,7 +1817,7 @@ review_autonomous_post_gate() {
 ```
 
 `review_interactive_prepare_confirmation` is read-only and has no GitHub client, posting payload,
-authorization, idempotency, resume, lock-recovery, retention, or daemon surface. Its result only
+authorization, idempotency, resume, lock-recovery, retention, or unattended-caller surface. Its result only
 renders the existing mandatory §6c gate. It must not call `gh`, post a review, create a pending
 payload, or mutate any remote or accepted state.
 
@@ -1874,7 +1874,7 @@ schema must be `kc-pr-flow.interactive-post-gate/v1`; its effective event and co
 decision-bound confirmation are the sole posting authority. A missing, decisionless, malformed, or
 event-edited receipt blocks Step 7.
 
-**Autonomous (no human is at §6c — the daemon).** There is nobody to confirm, so the interactive
+**Autonomous (no human is at §6c).** There is nobody to confirm, so the interactive
 receipt cannot honestly be produced: `human_confirmed` stays a claim only the human path may make.
 Build `review_autonomous_post_gate "$REVIEW_KEY" "$HEAD_SHA" "$EFFECTIVE_EVENT" daemon` instead. It
 names the review it authorizes, and `review-post.sh` refuses it if the review key or head does not

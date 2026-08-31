@@ -99,7 +99,7 @@ Break-point probe (Step 4.5p) prevents approving a fix based on unit tests alone
 1. User explicitly requests it: `--full-pass` / `--pass-all` flag, OR phrases like "8-pass review", "full pass", "全面複查", "do all passes", "deep review".
 2. `PR_ARCHETYPE = bugfix` AND the diff touches files across ≥ 2 of: `ui`, `api`, `domain`, `storage`, `external-adapter` layers (same criteria as Step 4.5p probe activation).
 3. `PR_ARCHETYPE = cross-stack` (frontend + backend changes in the same PR).
-4. User accepted a "deep review" recommendation from a prior failure analysis or daemon report.
+4. User accepted a "deep review" recommendation from a prior failure analysis or unattended review report.
 
 **Precedence**: explicit user intent wins. If the user requests `--full-pass` / `--pass-all` / "8-pass review", keep `FULL_PASS_MODE = true` even for small, docs, refactor, or style PRs. Only an explicit "skip passes" / "lite review" / "quick review" request can override an explicit full-pass request.
 

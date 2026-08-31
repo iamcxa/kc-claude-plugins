@@ -1,6 +1,6 @@
 {
   "name": "kc-pr-flow",
-  "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon, and break-point runtime-path probes.",
+  "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, menu-bar review listener, and break-point runtime-path probes.",
   "version": "1.11.2",
   "author": {
     "name": "Kent Chen",
@@ -14,7 +14,7 @@
     "workflow",
     "announcement",
     "slack",
-    "daemon",
+    "listener",
     "automated",
     "break-point",
     "verification"

@@ -295,7 +295,7 @@ posting protocol above is the increment-2.3 capability that was originally defer
 Crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, and append/compaction
 performance remain deferred.
 
-An autonomous caller (the daemon) now has an authorization of its own rather than approving the human
+An autonomous caller now has an authorization of its own rather than approving the human
 gate on the user's behalf: `kc-pr-flow.autonomous-post-gate/v1`, which has no `human_confirmed` field
 to forge and is bound to the `review_key` and `head_sha` it authorizes, refused on mismatch. What is
 still deferred is the rest of a preauthorization contract — **no event ceiling, no expiry**, no fresh

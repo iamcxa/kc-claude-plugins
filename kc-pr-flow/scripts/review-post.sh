@@ -18,9 +18,9 @@
 #   stale payload.
 #
 # Rollback / default-deny: KC_PR_FLOW_ONCE_ONLY_POST (default off) gates only
-# `post` (fresh authorization + intent). Absence denies EVERY caller -- daemon
-# or interactive alike, since neither sets it -- so "the daemon never takes
-# the new posting path" holds by default with no daemon-specific code. `resume`
+# `post` (fresh authorization + intent). Absence denies EVERY caller -- unattended
+# or interactive alike, since neither sets it -- so "an unattended caller never
+# takes the new posting path" holds by default with no caller-specific code. `resume`
 # and `gc` are never gated: rollback must never block reconciling or expiring
 # evidence from a POST made while the flag was on.
 set -uo pipefail
@@ -292,7 +292,7 @@ review_post_gate_valid() {
   # so `human_confirmed` keeps meaning exactly that and stays unforgeable by an
   # autonomous caller.
   #
-  # The autonomous gate is for a caller with no human at that gate (the daemon).
+  # The autonomous gate is for a caller with no human at that gate.
   # It carries no `human_confirmed` field at all, and unlike the interactive gate
   # it must name the review it authorizes: a gate minted for another review key
   # or another head is refused here rather than trusted, which is what keeps a
@@ -357,7 +357,7 @@ review_post_gate_valid() {
 }
 
 # Operator-level kill switch, layered above the per-call gate above. Off
-# (the default) denies every caller with no daemon/interactive distinction.
+# (the default) denies every caller with no unattended/interactive distinction.
 review_post_rollback_enabled() {
   [ "${KC_PR_FLOW_ONCE_ONLY_POST:-off}" = on ]
 }

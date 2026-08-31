@@ -1,6 +1,6 @@
 # kc-pr-flow
 
-PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: create, self-review, inline review, resolve feedback, commit history cleanup, build-in-public announcements, and automated review daemon.
+PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: create, self-review, inline review, resolve feedback, commit history cleanup, build-in-public announcements, and a menu-bar listener that reviews incoming review requests.
 
 ## Skills
 
@@ -12,7 +12,7 @@ PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: crea
 | `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads with cross-AI duplicate issue grouping + cross-review verdict persistence (suppresses prior-dismissed findings across cycles) |
 | `kc-pr-reorg` | `squash commits`, `reorganize commits` | Reorganize messy commit history into logical groups |
 | `break-point-probe` | `pressure-test this fix`, `break-point check`, `verify the break-point` | Verify whether a bugfix reaches the real runtime break-point path |
-| [`kc-pr-daemon`](docs/daemon.md) | `start daemon`, `daemon status`, `pr daemon` | Manage automated PR review daemon |
+| [`kc-pr-listener`](docs/reviewer-listen.md) | `install pr listener`, `new machine PR review setup`, `review 沒通知我`, `add a review backend` | Install and troubleshoot the menu-bar review-request listener |
 
 ## Dependencies
 
@@ -40,7 +40,7 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 
 | Guide | What it covers |
 |-------|---------------|
-| [Daemon](docs/daemon.md) | Architecture, configuration, classification logic, notifications, usage tracking |
+| [Review listener](docs/reviewer-listen.md) | Menu-bar listener: dispatch, completion tracking, notifications, backend seam, multi-organization tokens |
 | [Typed review runtime](docs/review-runtime.md) | Mode selection, terminal rehydration, receipt inspection, promotion measurement, rollback, and troubleshooting |
 | [Review triage](reference/review-triage.md) | Agent tiering, 8-pass activation, security dispatch, and pre-scan rules |
 | [Review architecture diagrams](docs/review-architecture-diagrams.md) | Optional sequence and architecture/status diagrams, fail-closed generated-output validation, confirmation flow, evidence colors, and freshness rules |
@@ -114,7 +114,7 @@ elapsed since `post.intent` — otherwise a lagging list would duplicate a revie
 `post` reconciles against the marker before its own POST too, so a repeat invocation of an
 already-landed payload reconciles instead of posting twice. Neither
 `resume` nor `gc` is gated by the rollback flag, so rolling back never deletes evidence needed to
-reconcile an uncertain remote result. A caller with no human at the confirmation gate (the daemon)
+reconcile an uncertain remote result. A caller with no human at the confirmation gate (an unattended review runner)
 presents its own `kc-pr-flow.autonomous-post-gate/v1` — no `human_confirmed` field to forge, bound to
 the review key and head it authorizes — instead of approving the human gate on the user's behalf. The
 rest of a preauthorization contract is still deferred: no event ceiling, no expiry, no fresh head
@@ -141,7 +141,7 @@ User preferences live in `~/.claude/kc-plugins-config/` (shared across all kc-pl
 | `channels.yaml` | pr-announce | Slack channel → ID + default tone/lang/mention |
 | `language.yaml` | all skills | Output language per directory (longest prefix match) |
 | `identity.yaml` | pr-create | GitHub username, default assignee |
-| `pr-flow/daemon.yaml` | pr-daemon | Poll interval, model, ci-gate, notifications |
+| `pr-flow/reviewer-listen.config.json` | pr-listener | Master switch, backend, notification channel, per-repo switches |
 | `pr-flow/review-state/{repo-slug}-{branch}.jsonl` | pr-review-resolve | Per-branch verdict log; Step 3.6 reads to suppress re-flagged dismissed findings, Step 9 appends one record per Issue |
 
 Verdict log writes use `jq -nc` with a `python3` fallback so quotes, backslashes, and newlines in reviewer findings remain valid JSONL. If neither encoder exists, the resolve flow skips persistence for that issue and continues without cross-cycle suppression.
@@ -269,7 +269,7 @@ flowchart TD
 | `reference/review-architecture-diagrams-evals.md` | Behavioral pressure scenarios for preview-only authorization, label breakout rejection, and moved-head regeneration |
 | `reference/review-runtime.md` | Normative typed event, identity, storage, evidence, provenance, command, failure, and once-only posting contracts |
 | `reference/e2e-verification.md` | Layer classification patterns for E2E integration detection |
-| `reference/pr-review-loop.md` | Daemon iteration prompt: classification, risk tiers, safety rules |
+| `reference/reviewer-dispatch-prompt.md` | Opening message for a dispatched review run: scope, hard constraints, verdict shape |
 
 ### Shared Config
 
@@ -278,4 +278,4 @@ flowchart TD
 | `~/.claude/kc-plugins-config/channels.yaml` | Slack channel → ID mapping + defaults |
 | `~/.claude/kc-plugins-config/language.yaml` | Output language preferences per directory |
 | `~/.claude/kc-plugins-config/identity.yaml` | GitHub identity + default assignee |
-| `~/.claude/kc-plugins-config/pr-flow/daemon.yaml` | Poll interval, model, ci-gate, notifications |
+| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | Listener intent: master switch, backend, notification channel, per-repo switches |

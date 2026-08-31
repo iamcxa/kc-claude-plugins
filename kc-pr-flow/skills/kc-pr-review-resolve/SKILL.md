@@ -197,7 +197,7 @@ Reference: `reference/learned-patterns.md` "Cross-AI-reviewer thread deduplicati
 
 ## Step 3.6: Cross-Review Verdict Persistence (suppress re-flagged dismissed findings)
 
-Iterative review cycles (and especially daemon mode) re-surface the same Copilot / Sentry / AI-bot comments on every poll. After the user has dismissed an Issue as `wont_fix` / `false_positive` in a prior cycle, suppress it from the current triage as long as the underlying file hasn't changed.
+Iterative review cycles re-surface the same Copilot / Sentry / AI-bot comments on every poll. After the user has dismissed an Issue as `wont_fix` / `false_positive` in a prior cycle, suppress it from the current triage as long as the underlying file hasn't changed.
 
 **State file**: `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`
 

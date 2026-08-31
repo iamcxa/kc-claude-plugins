@@ -1,6 +1,6 @@
 # kc-pr-flow
 
-PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon.
+PR lifecycle workflow: create, review, resolve reviews, commit reorg, menu-bar review listener.
 
 ## Prerequisites
 
@@ -116,13 +116,13 @@ payload after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800s / 7 days) 
 window — `resume`/`gc` are never gated by the rollback flag, so rolling back never deletes evidence
 needed to reconcile an uncertain remote result.
 
-**Autonomous (daemon) posting.** A caller with no human at §6c cannot produce the interactive
+**Autonomous posting.** A caller with no human at §6c cannot produce the interactive
 receipt — `human_confirmed` is a claim only the human path may make — so it presents
 `kc-pr-flow.autonomous-post-gate/v1` instead: no `human_confirmed` field, a closed key set that
 refuses one being smuggled in, and a binding to the `review_key` + `head_sha` it authorizes, which
-`review-post.sh` checks against the request and refuses on mismatch. `reference/pr-review-loop.md`
-directs the daemon to build that gate rather than approve §6c on the user's behalf, and to enable the
-once-only path so an interrupted iteration reconciles instead of reposting — the duplicate guard is
+`review-post.sh` checks against the request and refuses on mismatch. An unattended caller
+must build that gate rather than approve §6c on the user's behalf, and enable the
+once-only path so an interrupted run reconciles instead of reposting — the duplicate guard is
 the durable idempotency marker, not the next iteration's `submittedAt` observation. Rollback still
 governs: with the flag off, an autonomous gate authorizes nothing.
 
@@ -224,7 +224,7 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 | `kc-pr-review-resolve` | "resolve reviews", "address feedback", "fix review comments", PR has unresolved threads. Respects `pr_review_resolve.auto_confirm` config (see **Configuration** below). |
 | `kc-pr-reorg` | "squash commits", "clean up history", "reorganize commits", "reorder commits", 5+ messy commits |
 | `kc-pr-announce` | "announce", "post to product", "draft product message", "公告", after PR + demo completion |
-| `kc-pr-daemon` | "start daemon", "stop daemon", "daemon status", "pr daemon", "daemon config", "啟動 daemon", "停止 daemon" |
+| `kc-pr-listener` | "install pr listener", "new machine PR review setup", "SwiftBar 沒反應", "review 沒通知我", "add a review backend" |
 | `break-point-probe` | "pressure-test this fix", "break-point check", "verify the break-point", bugfix / cross-stack PR review |
 
 ## Configuration
@@ -266,7 +266,7 @@ Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → 
 | `review-architecture-diagrams-evals.md` | pr-review maintainers | Behavioral pressure scenarios for preview authorization, label breakout, and head freshness |
 | `review-runtime.md` | pr-review maintainers and runtime adapters | Typed receipt lifecycle, exact-head identity, storage, evidence, provenance, CLI, recovery boundaries, and once-only posting (resume, retention, rollback) |
 | `e2e-verification.md` | pr-create | Layer classification patterns for E2E integration detection |
-| `pr-review-loop.md` | pr-daemon (iteration prompt) | Classification logic, risk tiers, safety rules for daemon |
+| `reviewer-dispatch-prompt.md` | pr-listener (dispatch prompt) | Scope, hard constraints, and verdict shape for a dispatched review run |
 
 ### External Config (shared across plugins)
 
@@ -275,7 +275,7 @@ Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → 
 | `~/.claude/kc-plugins-config/channels.yaml` | pr-announce | Slack workspace registry + channel → ID + defaults + project path → default channel mapping |
 | `~/.claude/kc-plugins-config/language.yaml` | all skills | Output language per directory (longest prefix match) |
 | `~/.claude/kc-plugins-config/identity.yaml` | pr-create | GitHub username, default assignee |
-| `~/.claude/kc-plugins-config/pr-flow/daemon.yaml` | pr-daemon | Poll interval, model, ci-gate, notifications |
+| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | pr-listener | Master switch, backend, notification channel, per-repo switches |
 | `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl` | pr-review-resolve | Per-branch verdict log (JSONL). Step 3.6 reads to suppress re-flagged dismissed findings; Step 9 appends one record per Issue. |
 
 Verdict records must be written with a JSON encoder (`jq -nc` preferred, `python3` fallback) because review concepts can contain quotes, backslashes, or newlines. If neither encoder exists, dedup degrades gracefully by skipping the write rather than emitting malformed JSONL.
