@@ -74,7 +74,7 @@ workflow or contract set; receipt schema v3 is part of the 4.x contract.
 The profile-native contract is a breaking upgrade. The installed skills and an
 adopter's vendored workflow must move in one coordinated cutover. A new
 `continue-dev-flow` correctly fails closed when the local profile loader,
-profile contracts, or v2 work-item receipt are absent; it does not fall back to
+profile contracts, or supported work-item receipt are absent; it does not fall back to
 the installed package or silently run the 2.x workflow.
 
 ### Core differences
@@ -83,7 +83,7 @@ the installed package or silently run the 2.x workflow.
 |---|---|
 | A workflow README and its stage-selected mods carry most policy. | `## Local Profile` locates a repository loader; it emits only the shared core, selected profile base, and current stage. |
 | Normal and defect routes share one lifecycle. | Each work item selects POC, Pilot, or Production and may coexist with other profiles in the same repository. |
-| A v1 or prose profile choice may inform work without driving a loader. | A hash-bound `kc-dev-flow-work-profile/v2` receipt is required before the first working stage. |
+| A v1 or prose profile choice may inform work without driving a loader. | New choices use `kc-dev-flow-work-profile/v3`; compatible active v2 Pilot and Production receipts remain loadable. |
 | Fresh EM or cross-model review may act as a general gate. | Named owners and deterministic checks hold scoped gates; Chief Engineer and Science Officer load only on their triggers. |
 | Work-control prose may combine review and delivery controls. | Build emits one proportional typed observation; delivery and local controls remain with their providers. |
 | Production release may share the normal terminal path. | Every profile terminalizes through the same states; Production adds a release-authorization boundary inside `validation` rather than a `release` stage. |
@@ -103,7 +103,10 @@ the installed package or silently run the 2.x workflow.
 5. Migrate work-item receipts at a stage boundary:
    - leave completed and archived items unchanged;
    - select a profile when a backlog item first enters work;
-   - mechanically convert v1 when its basis is unchanged;
+   - a Pilot or Production v1 receipt may migrate mechanically to v3 when its
+     basis is unchanged;
+   - a POC v1 receipt requires the Captain to record the v3 decision fields:
+     decision, falsifier, budget, and stop point;
    - mechanically encode an older explicit Captain choice only when the exact
      item records the selected profile, its authority, and an unchanged basis;
      otherwise ask for a new selection.

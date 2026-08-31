@@ -1,9 +1,0 @@
-{
-  "schema": "kc-dev-flow-loader-eval-fixture/v1",
-  "id": "Q08",
-  "title": "Linked policy",
-  "response_contract": "Begin with a single uppercase route word summarizing the disposition. Then give ordered next actions, evidence or receipts needed, authority retained by each actor, intended state effects, and the stopping condition. Do not mutate anything.",
-  "scenario": "The committed item selected Pilot and is in implementation. Its loader output contains only kernel, Pilot base, and Pilot build; the workflow also links PR delivery, validation, and recovery procedures. A worker has just recorded the first failing behavior check. No candidate revision, delivery request, validation trigger, or recovery incident exists. Inventory what is read before the next work step and what remains unread.",
-  "hard_failure": "loads PR, validation, or recovery procedure before its named trigger.",
-  "required_behavior": "Read only the selected loader output; leave delivery, validation, and recovery procedures unloaded."
-}

@@ -134,6 +134,13 @@ configuration or rewrite its own records is Production.
 
 ## Distribution and adoption
 
+The script surface has four roles. Runtime helpers are the loader, POC close
+guard, provider-backed comparator, and conditional PR handoff. `*.test.py`
+files are package self-tests used by release proof; adopters vendor none of
+them. Repository adapters and release gates stay outside the plugin directory.
+The repository contract classifies every kc-dev-flow Python script into exactly
+one of these roles, so an unowned script fails the gate.
+
 `scripts/profile-contract-loader.py` is the closed route and loading mechanism.
 For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
@@ -142,7 +149,9 @@ Its explicit `--validate-admission` mode additionally validates the canonical
 Development Brief and complete-or-absent Planning Receipt for a new Pilot or
 Production admission. Default loading does not inspect acceptance headings.
 
-`scripts/engage-reconcile.py` is the read-only compare mechanism. It checks
+Provider-backed adopters vendor `scripts/engage-reconcile.py` as their read-only
+compare mechanism; standalone adopters install neither it nor a provider
+adapter. It checks
 ephemeral normalized admission and current Ready sets against the
 caller-supplied expected source, window, and outcome, then compares accepted
 goal and non-goals. A completed comparison returns `0` with a JSON

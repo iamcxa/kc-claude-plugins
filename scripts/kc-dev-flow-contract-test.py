@@ -111,7 +111,6 @@ required = [
     "kc-dev-flow/skills/science-officer/agents/openai.yaml",
     "kc-dev-flow/skills/science-officer-em/SKILL.md",
     "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
-    "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
     "scripts/kc-dev-flow-multi-profile-gate.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
@@ -135,8 +134,59 @@ for retired in [
     "kc-dev-flow/skills/setup-github-project-projection",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "docs/dev/_mods/engage-reconcile.py",
+    # This blind-evaluation adapter had no caller outside its own test. Keep the
+    # retired experiment from silently returning as release or runtime surface.
+    "scripts/kc-dev-flow-loader-eval.py",
+    "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/fixtures/kc-dev-flow-loader-eval/q08.json",
 ]:
     require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
+
+script_roles = {
+    "runtime": {
+        "kc-dev-flow/scripts/profile-contract-loader.py",
+        "kc-dev-flow/scripts/engage-reconcile.py",
+        "kc-dev-flow/scripts/poc-close-guard.py",
+        "kc-dev-flow/scripts/pr-review-handoff.py",
+    },
+    "package-test": {
+        "kc-dev-flow/scripts/profile-contract-loader.test.py",
+        "kc-dev-flow/scripts/engage-reconcile.test.py",
+        "kc-dev-flow/scripts/poc-close-guard.test.py",
+        "kc-dev-flow/scripts/pr-review-handoff.test.py",
+        "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+    },
+    "repository-adapter": {
+        "scripts/kc-dev-flow/engage-reconcile.py",
+        "scripts/kc-dev-flow/linear-admission.py",
+    },
+    "release-proof": {
+        "scripts/kc-dev-flow-contract-test.py",
+        "scripts/kc-dev-flow-minimal-stack-ablation.test.py",
+        "scripts/kc-dev-flow-multi-profile-gate.py",
+        "scripts/kc-dev-flow-published-tag-smoke.py",
+        "scripts/kc-dev-flow-published-tag-smoke.test.py",
+    },
+}
+classified_scripts = set().union(*script_roles.values())
+require(
+    sum(len(paths) for paths in script_roles.values()) == len(classified_scripts),
+    "kc-dev-flow script roles overlap",
+)
+observed_scripts = {
+    path.relative_to(ROOT).as_posix()
+    for root in (PLUGIN / "scripts", ROOT / "scripts/kc-dev-flow")
+    for path in root.glob("*.py")
+} | {
+    path.relative_to(ROOT).as_posix()
+    for path in (ROOT / "scripts").glob("kc-dev-flow*.py")
+}
+require(
+    observed_scripts == classified_scripts,
+    "kc-dev-flow scripts must have exactly one runtime, test, adapter, or release-proof role: "
+    f"unclassified={sorted(observed_scripts - classified_scripts)} "
+    f"missing={sorted(classified_scripts - observed_scripts)}",
+)
 
 documentation_references = [
     {
@@ -290,7 +340,6 @@ for relative in [
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
-    "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
 ]:
     require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
@@ -316,7 +365,6 @@ if not require_ablation_only:
         [sys.executable, "kc-dev-flow/scripts/pr-review-handoff.test.py"],
         "PR review handoff",
     )
-    run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
     run(
         [sys.executable, "scripts/kc-dev-flow-published-tag-smoke.test.py"],
         "published-tag smoke behavior",
@@ -1043,7 +1091,8 @@ for phrase in [
     "repository-local read-only planning reader",
     "repository-local read-only engage comparator",
     "every currently Ready snapshot source",
-    "Compare the adopted loader, engage comparator",
+    "For a provider-backed adopter, also compare its engage comparator",
+    "A standalone adopter has no comparator to compare or exercise",
     "For a complete Planning Receipt, the engage reconcile is read-only",
     "outside the workflow runtime tree",
     "exact source, window, and outcome",
@@ -1052,8 +1101,17 @@ for phrase in [
     "parsed `status: clean` result",
     "starts directly with `## The problem`",
     "omits both an `## Agent execution contract` section",
+    "Only a provider-backed adopter vendors the engage comparator",
+    "A standalone adopter vendors neither a comparator nor a provider adapter",
+    "A missing delivery authority is a refit requirement",
+    "do not invent direct Git delivery",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
+require(
+    adopt_steps == list(range(1, 11)),
+    f"adopter steps must be unique and sequential: {adopt_steps}",
+)
 for forbidden in [
     "one planning item to one SD task and one isolated execution context",
     "refuse a second matching task or context",
@@ -1159,6 +1217,9 @@ for phrase in [
     "leave completed and archived items unchanged",
     "finding-only terminal",
     "Preserve `retained-document-policy.md`",
+    "New choices use `kc-dev-flow-work-profile/v3`",
+    "Pilot or Production v1 receipt may migrate mechanically to v3",
+    "a POC v1 receipt requires the Captain to record the v3 decision fields",
 ]:
     require(phrase in migration, f"migration guide omits: {phrase}")
 for phrase in [
