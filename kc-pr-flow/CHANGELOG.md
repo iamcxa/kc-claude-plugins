@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.11.2...kc-pr-flow-v1.12.0) (2026-08-31)
+
+
+### Features
+
+* **kc-dev-flow:** add exact-SHA PR review handoff ([#293](https://github.com/iamcxa/kc-claude-plugins/issues/293)) ([f7a3f01](https://github.com/iamcxa/kc-claude-plugins/commit/f7a3f018e9756c44b354c3a24326594b084b044b))
+* **kc-pr-flow:** surface minimum-stack review evidence ([#298](https://github.com/iamcxa/kc-claude-plugins/issues/298)) ([019128c](https://github.com/iamcxa/kc-claude-plugins/commit/019128c114f2606541303618ed7b2a1c76c0034c))
+
 ## [1.11.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.11.1...kc-pr-flow-v1.11.2) (2026-08-13)
 
 

@@ -1,5 +1,47 @@
 # Changelog
 
+## [4.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v3.0.0...kc-dev-flow-v4.0.0) (2026-08-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **kc-dev-flow:** remove setup-github-project-projection and its runtime.
+* **kc-dev-flow:** Active v2 POCs must finish on the pinned 3.x package/vendor pair or be Captain re-recorded with the v3 POC fields before the 4.x cutover.
+* **kc-dev-flow:** adopters must remove the retired release state and provide sprint plus sprint-readiness ready before a route first enters work.
+
+### Features
+
+* **kc-dev-flow:** add exact-SHA PR review handoff ([#293](https://github.com/iamcxa/kc-claude-plugins/issues/293)) ([f7a3f01](https://github.com/iamcxa/kc-claude-plugins/commit/f7a3f018e9756c44b354c3a24326594b084b044b))
+* **kc-dev-flow:** add Hermes portable package ([#259](https://github.com/iamcxa/kc-claude-plugins/issues/259)) ([cd2a917](https://github.com/iamcxa/kc-claude-plugins/commit/cd2a9179fe4a4574ad6014fe6a4b369a4f0201ba))
+* **kc-dev-flow:** add manual cycle-release admission ([#306](https://github.com/iamcxa/kc-claude-plugins/issues/306)) ([7256e02](https://github.com/iamcxa/kc-claude-plugins/commit/7256e02dbbc5340e4328bfeeb016448e4033fde5))
+* **kc-dev-flow:** add workspace-bound Linear admission ([#307](https://github.com/iamcxa/kc-claude-plugins/issues/307)) ([6bcdea3](https://github.com/iamcxa/kc-claude-plugins/commit/6bcdea3eca985a42aeceea45534c91584fee490a))
+* **kc-dev-flow:** bound POC decision-ready path ([#308](https://github.com/iamcxa/kc-claude-plugins/issues/308)) ([b8a070e](https://github.com/iamcxa/kc-claude-plugins/commit/b8a070e48860ae1cfa7ae14c99f1e743b2b40083))
+* **kc-dev-flow:** give backlog an exit bar and shape a journey statement ([#267](https://github.com/iamcxa/kc-claude-plugins/issues/267)) ([a15ab03](https://github.com/iamcxa/kc-claude-plugins/commit/a15ab033a52d2cc6740543132d3c224dcbe30e9f))
+* **kc-dev-flow:** let a declared size threshold stop work and hand back ([#272](https://github.com/iamcxa/kc-claude-plugins/issues/272)) ([ef808a9](https://github.com/iamcxa/kc-claude-plugins/commit/ef808a91059146f0c59c033c06fb4ae5dfb1bed9))
+* **kc-dev-flow:** make Production recovery proportional ([31207d6](https://github.com/iamcxa/kc-claude-plugins/commit/31207d6ff45a5c0ddecd5b2f9f7d3dfd6961be0f))
+* **kc-dev-flow:** make profile routing release-safe and schedule backlog entry ([#283](https://github.com/iamcxa/kc-claude-plugins/issues/283)) ([a2035c2](https://github.com/iamcxa/kc-claude-plugins/commit/a2035c2c99d273d255076ba35b30df5300742712))
+* **kc-dev-flow:** make scaffolding and guards carry a removal condition ([#271](https://github.com/iamcxa/kc-claude-plugins/issues/271)) ([cc095b0](https://github.com/iamcxa/kc-claude-plugins/commit/cc095b063f42be603358e0d72628a3e694b451ec))
+* **kc-dev-flow:** make shape name where the work touches ([#269](https://github.com/iamcxa/kc-claude-plugins/issues/269)) ([f0af07f](https://github.com/iamcxa/kc-claude-plugins/commit/f0af07f0c8c72ddc322cff93af1160192bdc04ff))
+* **kc-dev-flow:** read the declared receipt field from conditional-reference blocks ([#262](https://github.com/iamcxa/kc-claude-plugins/issues/262)) ([b8ff74e](https://github.com/iamcxa/kc-claude-plugins/commit/b8ff74ec0f7abad244075553631aa414a76cd533))
+* **kc-dev-flow:** route bounded POCs through one workflow ([#291](https://github.com/iamcxa/kc-claude-plugins/issues/291)) ([844edfa](https://github.com/iamcxa/kc-claude-plugins/commit/844edfa75a021cc6c013186bb88fba81f598f912))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** bind provider delivery linkage ([#309](https://github.com/iamcxa/kc-claude-plugins/issues/309)) ([36d7ec1](https://github.com/iamcxa/kc-claude-plugins/commit/36d7ec1a84e3b22917484a92cf06e5056483b1e8))
+* **kc-dev-flow:** compare the route smoke's verdict the way Spacedock reads it ([#268](https://github.com/iamcxa/kc-claude-plugins/issues/268)) ([8cd6caa](https://github.com/iamcxa/kc-claude-plugins/commit/8cd6caa604de4d73ece3e8c15e1a31e72e050daf))
+* **kc-dev-flow:** demote Production's release from a graph state to a terminal-approval boundary ([#276](https://github.com/iamcxa/kc-claude-plugins/issues/276)) ([8ddd794](https://github.com/iamcxa/kc-claude-plugins/commit/8ddd794d271b24c91d2bf4a9fa329ff533939485))
+* **kc-dev-flow:** enforce engage reconcile deltas ([#303](https://github.com/iamcxa/kc-claude-plugins/issues/303)) ([d8092fa](https://github.com/iamcxa/kc-claude-plugins/commit/d8092fa93eec70a0d5c64d663e6c156983a785cf))
+* **kc-dev-flow:** keep the adoption check from vendoring a test, and trim the README ([#257](https://github.com/iamcxa/kc-claude-plugins/issues/257)) ([54957ee](https://github.com/iamcxa/kc-claude-plugins/commit/54957ee66ab0eabfbb22406b5da48d9351002a47))
+* **kc-dev-flow:** price retained comments by necessity ([#282](https://github.com/iamcxa/kc-claude-plugins/issues/282)) ([57e116a](https://github.com/iamcxa/kc-claude-plugins/commit/57e116aa48faeb0a41a5c2ab6a43cef22a9d8612))
+* **kc-dev-flow:** restore four verification-discipline clauses dropped by the 3.0 rewrite ([#279](https://github.com/iamcxa/kc-claude-plugins/issues/279)) ([eb057c7](https://github.com/iamcxa/kc-claude-plugins/commit/eb057c780269114ef5fde09381e41229daf7563f))
+* **kc-dev-flow:** stop the FO's verdict boundary reading as a licence to relay ([#277](https://github.com/iamcxa/kc-claude-plugins/issues/277)) ([9fee712](https://github.com/iamcxa/kc-claude-plugins/commit/9fee712cbb0a6a5657d3c6727cc9093c6af54548))
+
+
+### Code Refactoring
+
+* **kc-dev-flow:** make planning providers replaceable ([#300](https://github.com/iamcxa/kc-claude-plugins/issues/300)) ([19e1a72](https://github.com/iamcxa/kc-claude-plugins/commit/19e1a7271230b179feb8e65382a1f39d013bc922))
+
 ## [3.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.5.0...kc-dev-flow-v3.0.0) (2026-08-19)
 
 

@@ -13,7 +13,7 @@
       "name": "e2e-pipeline",
       "source": "./e2e-pipeline",
       "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
-      "version": "3.3.4",
+      "version": "3.3.5",
       "keywords": [
         "e2e",
         "browser-testing",
@@ -84,7 +84,7 @@
       "name": "kc-team-ops",
       "source": "./kc-team-ops",
       "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
-      "version": "1.6.0",
+      "version": "1.7.0",
       "keywords": [
         "team-ops",
         "em",
@@ -110,7 +110,7 @@
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
       "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
-      "version": "1.11.2",
+      "version": "1.12.0",
       "keywords": [
         "pr",
         "review",
@@ -133,7 +133,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
-      "version": "3.0.0",
+      "version": "4.0.0",
       "keywords": [
         "development-workflow",
         "sprint",
