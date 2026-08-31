@@ -1,6 +1,6 @@
 {
   "name": "kc-dev-flow",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Profile-native POC, Pilot, and Production delivery routes with a minimal shared authority core.",
   "author": {
     "name": "Kent Chen",

@@ -1,7 +1,7 @@
 {
   "name": "kc-dev-flow",
   "description": "Profile-native POC, Pilot, and Production delivery routes with a minimal shared authority core.",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
