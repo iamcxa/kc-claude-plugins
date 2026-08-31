@@ -15,10 +15,13 @@ cutover, in this order:
    falsifier, budget, and stop point. Under the old graph and loader, drain every
    entity at `status: release` to `done`; `spacedock status --where
    status=release` must return empty before the graph changes.
-2. Remove `release` from the adopter's workflow graph. Re-vendor the loader,
+2. Remove `release` from the adopter's workflow graph. Bound its existing
+   `## Local Profile` with one start marker
+   `<!-- kc-dev-flow-static-local-profile:start -->` and one end marker
+   `<!-- kc-dev-flow-static-local-profile:end -->`. Re-vendor the loader,
    engage comparator, close guard, kernel, profile tree, and conditional
-   references byte-for-byte, including Production `verify.md` and deletion
-   of Production `release.md`.
+   references byte-for-byte, including Production `verify.md` and deletion of
+   Production `release.md`.
    Active v2 Pilot and Production receipts remain loadable; new choices use v3.
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
@@ -91,8 +94,10 @@ the installed package or silently run the 2.x workflow.
    ordinary continuation while one side is new and the other is still 2.x.
 2. Audit existing project, work-item, iteration, execution-state, delivery,
    scope, gate, and observation authorities. Preserve their working owners.
-3. Add the loader and contracts root to a concise `## Local Profile`. Vendor the
-   shared core, profile tree, loader, and conditional references byte-for-byte.
+3. Add the loader and contracts root to a concise `## Local Profile`, bounded by
+   exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
+   and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Vendor
+   the shared core, profile tree, loader, and conditional references byte-for-byte.
 4. Map POC, Pilot, and Production onto the existing runtime. Prove inactive
    stages can be skipped and the Production release boundary is representable.
 5. Migrate work-item receipts at a stage boundary:

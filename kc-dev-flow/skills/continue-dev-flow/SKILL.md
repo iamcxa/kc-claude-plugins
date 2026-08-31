@@ -9,9 +9,10 @@ Continue by the selected profile's smallest sufficient route.
 
 ## Resolve authority before policy
 
-1. Read the workflow locator from the nearest repository instructions. Locate
-   `## Local Profile` and the next same-level heading, then read that bounded
-   section plus the frontmatter; do not open the full workflow README.
+1. Locate the workflow README via the nearest repository instructions. Require
+   the unique ordered `kc-dev-flow-static-local-profile` start/end marker pair, with
+   `## Local Profile` immediately after start. Read only its frontmatter and
+   marked block; never infer boundaries from headings or open the full README.
 2. Recheck the worktree, branch, shared-state owner, and remote delivery state.
    When this item is delivered through a reviewable delivery artifact, list the
    open artifacts before creating or reusing a branch. An open unmerged artifact
