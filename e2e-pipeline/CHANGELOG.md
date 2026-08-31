@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.5](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.4...e2e-pipeline-v3.3.5) (2026-08-31)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** require declared profile liveness before verification ([#289](https://github.com/iamcxa/kc-claude-plugins/issues/289)) ([2e8595f](https://github.com/iamcxa/kc-claude-plugins/commit/2e8595f0a1fa4448bc14a56baedd18214824158e))
+
 ## [3.3.4](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.3...e2e-pipeline-v3.3.4) (2026-08-19)
 
 
