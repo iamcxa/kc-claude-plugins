@@ -44,10 +44,12 @@ seam.
    `../../references/pr-delivery.md`,
    `../../references/roborev-implementation-exit.md`,
    `../../scripts/profile-contract-loader.py`, and
-   `../../scripts/poc-close-guard.py` without local edits. Vendor
-   `../../scripts/engage-reconcile.py` without local edits to a
-   repository-owned tooling path outside the workflow runtime tree, then bind
-   that path as the planning comparator in `## Local Profile`. The selected
+   `../../scripts/poc-close-guard.py` without local edits. Only a
+   provider-backed adopter vendors the engage comparator: copy
+   `../../scripts/engage-reconcile.py` without local edits to a repository-owned
+   tooling path outside the workflow runtime tree, then bind that path in
+   `## Local Profile`. A standalone adopter vendors neither a comparator nor a
+   provider adapter. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
@@ -112,9 +114,13 @@ seam.
    rebases onto it will re-target a stacked branch and open an artifact carrying
    the parent's work. Record that as a refit requirement against the local
    provider copy; do not bind a stacked default over a ceremony that discards it.
-7. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
+   A missing delivery authority is a refit requirement. Do not classify its
+   absence as a route that delivers without a review artifact, do not invent
+   direct Git delivery, a trunk push, forge ceremony, merge guard, or release
+   owner, and stop before delivery until the repository names that authority.
+8. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
-8. Resolve the implementation-exit observation by its precondition first. The
+9. Resolve the implementation-exit observation by its precondition first. The
    vendored `roborev-implementation-exit.md` claims single-flight through a
    Spacedock-registered state holder, so the observation is in scope only for a
    repository running Spacedock with kc-dev-flow. Without that state authority,
@@ -135,7 +141,7 @@ seam.
    adoption defect: the observation would emit and resolve nothing at every
    future implementation exit, so record it as a refit requirement instead of
    leaving a permanent silent `UNAVAILABLE`.
-9. Re-run every profile-stage loader combination this repository will run and
+10. Re-run every profile-stage loader combination this repository will run and
    prove that unselected profile and stage markers are absent from each result,
    then run the repository's normal gates. Vendor no test: the packaged loader
    contract test resolves the loader as its own sibling, so pointing it at the
@@ -149,12 +155,13 @@ review stages.
 
 ## Upgrade
 
-Compare the adopted loader, engage comparator, core, and selected profile files
-with this source. Present changed authority, route, and proof semantics for
-acceptance. Replace accepted canonical files mechanically; do not create
-locally edited hybrids. Against the adopted comparator, run one clean, one
-delta, and one invalid-input invocation; then re-run every profile-stage loader
-combination and prove that unselected profile and stage markers are absent.
+Compare the adopted loader, core, and selected profile files with this source.
+For a provider-backed adopter, also compare its engage comparator and run one
+clean, one delta, and one invalid-input invocation. A standalone adopter has no
+comparator to compare or exercise. Present changed authority, route, and proof
+semantics for acceptance. Replace accepted canonical files mechanically; do not
+create locally edited hybrids. Re-run every profile-stage loader combination and
+prove that unselected profile and stage markers are absent.
 
 A reference that exists in this source and not in the adopter is a missing
 capability, not an intentional omission. Compare the source reference set with
@@ -167,16 +174,19 @@ fires. That is the path by which a repository upgraded before a reference existe
 picks it up.
 
 An existing v1 receipt remains evidence of the prior choice but cannot drive the
-new loader. When its basis is unchanged, migrate it mechanically to v2 with the
-same selection and derived route; do not ask the Captain to repeat the choice.
-Re-select only when its basis is stale. Do not reopen completed work solely to
-migrate a receipt.
+new loader. A Pilot or Production v1 receipt with an unchanged basis may migrate
+mechanically to v3 with the same selection and derived route; do not ask the
+Captain to repeat the choice. A POC v1 receipt cannot supply the v3 decision,
+falsifier, budget, and stop point, so the Captain records those fields before it
+continues. Re-select only when the basis is stale. Do not reopen completed work
+solely to migrate a receipt.
 
 An older explicit Captain choice outside the v1 schema may also migrate without
 another question only when the exact work item names the selected profile, the
 Captain as its authority, and an unchanged basis. Record those legacy sources,
 set the canonical route, and use the selected profile as the prior
-recommendation. A missing, ambiguous, or stale element requires a new selection.
+recommendation. A POC still requires all v3 decision fields. A missing,
+ambiguous, or stale element requires a new selection.
 
 Retire old source mods by disposition, not by filename alone:
 
