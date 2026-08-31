@@ -605,6 +605,29 @@ require(
     "poc_handoff" not in normalized_continue,
     "continuation still owns downstream POC handoff",
 )
+for phrase in [
+    "one ephemeral `delivery` binding",
+    "exact `branchName` and `Fixes TEAM-N`",
+    "`branch: null` and `Closes owner/repo#N`",
+    "stop before branch push or PR creation",
+]:
+    require(
+        phrase in normalized_continue,
+        f"continuation omits provider delivery linkage: {phrase}",
+    )
+normalized_pr_delivery = " ".join(
+    read("kc-dev-flow/references/pr-delivery.md").split()
+)
+for phrase in [
+    "delivery.branch",
+    "delivery.close_line",
+    "same exact reconciled `source`",
+    "legacy `issue` field only for a standalone item",
+]:
+    require(
+        phrase in normalized_pr_delivery,
+        f"PR delivery omits provider linkage: {phrase}",
+    )
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
@@ -1224,6 +1247,8 @@ for mechanism in [
     '"GIT_NO_REPLACE_OBJECTS": "1"',
     '"state or work-item revision changed during admission"',
     '"status") != "clean"',
+    '"branchName"',
+    '"delivery": delivery',
     '"kc-dev-flow-dispatch-envelope/v1"',
 ]:
     require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
@@ -1273,14 +1298,27 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         state_type = "completed" if fixture.scenario == "removed" else "started"
 
         def issue(identifier: str = "DEV-12") -> dict[str, object]:
-            return {
-                "id": identifier.lower(), "identifier": identifier,
+            reported_identifier = (
+                "DEV-99"
+                if fixture.scenario == "mismatched-identifier" and "AdmissionIssue" in query
+                else identifier
+            )
+            branch_name = (
+                "feature/not-the-engaged-issue"
+                if fixture.scenario == "invalid-branch"
+                else f"feature/{reported_identifier.lower()}-fixture"
+            )
+            item = {
+                "id": identifier.lower(), "identifier": reported_identifier,
                 "url": f"https://linear.app/duckbase-co/issue/{identifier}/fixture",
                 "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
                 "state": {"type": state_type},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
                 "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
             }
+            if "branchName" in query:
+                item["branchName"] = branch_name
+            return item
 
         if "AdmissionIssue" in query:
             data = {
@@ -1387,7 +1425,14 @@ Stop on any planning drift.
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
 
-    def admit(scenario: str, *, key: str | None = "test-key", conductor: str | None = "workspace", timeout: str = "5") -> subprocess.CompletedProcess[str]:
+    def admit(
+        scenario: str,
+        *,
+        key: str | None = "test-key",
+        conductor: str | None = "workspace",
+        timeout: str = "5",
+        reader: Path = linear_admission,
+    ) -> subprocess.CompletedProcess[str]:
         server.scenario, server.raced = scenario, False
         env = os.environ.copy()
         for name, value in (("LINEAR_API_KEY", key), ("CONDUCTOR_WORKSPACE_ID", conductor)):
@@ -1396,7 +1441,7 @@ Stop on any planning drift.
             else:
                 env[name] = value
         return subprocess.run(
-            [sys.executable, str(linear_admission), "--workflow-dir", str(workflow),
+            [sys.executable, str(reader), "--workflow-dir", str(workflow),
              "--work-item", str(work_item), "--contracts-root", str(ADOPTED),
              "--comparator", str(ADOPTED_TOOLS / "engage-reconcile.py"),
              "--linear-workspace", "duckbase-co", "--state-revision", revision,
@@ -1417,11 +1462,45 @@ Stop on any planning drift.
     envelope = json.loads(clean.stdout)
     require(
         envelope["schema"] == "kc-dev-flow-dispatch-envelope/v1"
+        and envelope.get("delivery") == {
+            "branch": "feature/dev-12-fixture",
+            "close_line": "Fixes DEV-12",
+        }
         and envelope["reconcile"] == {"added": [], "changed": [], "moved": [], "removed": [], "status": "clean"}
         and envelope["snapshot_sha256"] == envelope["live_read_sha256"]
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
     )
+    with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
+        mutant_root = Path(temporary)
+        branch_mutant = mutant_root / "branch-read-removed.py"
+        branch_source, branch_count = re.subn(
+            r" url branchName description", " url description", linear_source, count=1
+        )
+        require(branch_count == 1, "Linear branch-read mutant anchor changed")
+        branch_mutant.write_text(branch_source, encoding="utf-8")
+        refused = admit("clean", reader=branch_mutant)
+        require(
+            refused.returncode == 2 and not refused.stdout,
+            "linear-delivery-branch-read-removed mutant survived",
+        )
+
+        envelope_mutant = mutant_root / "delivery-envelope-removed.py"
+        envelope_source, envelope_count = re.subn(
+            r'^            "delivery": delivery,\n',
+            "",
+            linear_source,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        require(envelope_count == 1, "Linear delivery-envelope mutant anchor changed")
+        envelope_mutant.write_text(envelope_source, encoding="utf-8")
+        survived = admit("clean", reader=envelope_mutant)
+        survived_envelope = json.loads(survived.stdout) if survived.returncode == 0 else {}
+        require(
+            survived.returncode != 0 or survived_envelope.get("delivery") != envelope["delivery"],
+            "linear-delivery-envelope-removed mutant survived",
+        )
     for scenario, classification in (
         ("project-drift", "moved"), ("cycle-drift", "moved"),
         ("goal-drift", "changed"), ("non-goal-drift", "changed"),
@@ -1432,13 +1511,20 @@ Stop on any planning drift.
             refused.returncode == 2 and not refused.stdout and f'"{classification}"' in refused.stderr,
             f"{scenario} did not stop with {classification}: {refused.stderr}",
         )
-    for scenario in ("wrong-org", "unauthorized", "truncated"):
+    for scenario in (
+        "wrong-org", "unauthorized", "truncated", "invalid-branch",
+        "mismatched-identifier",
+    ):
         refused = admit(scenario)
         require(refused.returncode == 2 and not refused.stdout, f"{scenario} emitted an envelope")
     timed_out = admit("timeout", timeout="0.05")
     require(timed_out.returncode == 2 and not timed_out.stdout, "timeout emitted an envelope")
     require(before == (revision, work_item.read_bytes()), "Linear outcomes changed state or work-item bytes")
     require(all("mutation" not in query.casefold() for query in server.queries), "Linear reader sent a mutation")
+    require(
+        any("AdmissionIssue" in query and "branchName" in query for query in server.queries),
+        "Linear reader did not request branchName",
+    )
     raced = admit("work-item-race")
     require(raced.returncode == 2 and not raced.stdout, "changing work-item bytes emitted an envelope")
     subprocess.run(

@@ -149,6 +149,15 @@ One parameterized unit owns every single-PR delivery operation:
 | Title | reviewed `UNIT_TITLE` |
 | Body file | mode-0600 reviewed `UNIT_BODY_FILE` |
 
+When `delivery.branch` is non-empty, bind `UNIT_BRANCH` to it byte-for-byte;
+otherwise retain `{branch}`. Append `delivery.close_line` exactly once to the reviewed PR body.
+Both values must come from the current successful provider adapter result for
+the exact reconciled source. A missing, malformed, or source-mismatched provider
+binding stops before push or PR creation.
+For provider-backed work, this extension supersedes the released `Closes {issue}` rule above:
+do not read or append the legacy frontmatter `issue`. Standalone work keeps the
+released rule and has no provider delivery binding.
+
 A single PR binds exactly one approved delivery unit. A caller may invoke the
 same unit more than once, but it must supply and approve all eight values for
 each invocation; no value carries across units or comes from the launch

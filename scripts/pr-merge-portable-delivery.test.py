@@ -61,6 +61,9 @@ CHECKS = 'gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required'
 SET_SENTINEL = "spacedock status --workflow-dir {dir} --set {slug} pr=pr-merge:{N}"
 COMMIT_SENTINEL = "spacedock state commit {slug} --workflow-dir {dir}"
 GUARD = "spacedock merge guard {slug} --workflow-dir {dir} --verdict passed"
+PROVIDER_BRANCH = "When `delivery.branch` is non-empty, bind `UNIT_BRANCH` to it byte-for-byte"
+PROVIDER_CLOSE = "Append `delivery.close_line` exactly once to the reviewed PR body"
+PROVIDER_ISSUE_OVERRIDE = "supersedes the released `Closes {issue}` rule above"
 
 
 def validate(text: str) -> list[str]:
@@ -74,6 +77,9 @@ def validate(text: str) -> list[str]:
         "released create disabled": "This is the only active PR-create command; do not execute the released inline-body command above.",
         "exact base/candidate preflight": PREFLIGHT,
         "exact candidate refspec": PUSH,
+        "provider delivery branch": PROVIDER_BRANCH,
+        "provider close line": PROVIDER_CLOSE,
+        "provider legacy issue override": PROVIDER_ISSUE_OVERRIDE,
         "candidate body metadata": "Candidate: {full approved SHA}",
         "mode-0600 body": '`PR_BODY_FILE=$(mktemp)` and `chmod 600 "$PR_BODY_FILE"`',
         "one unit per PR": "A single PR binds exactly one approved delivery unit",
@@ -132,6 +138,18 @@ mutants = {
             1,
         ),
         "automatic local-merge terminal success is forbidden",
+    ),
+    "provider-branch-ignored": (
+        EXTENSION.replace(PROVIDER_BRANCH, "Ignore `delivery.branch`.", 1),
+        "missing provider delivery branch",
+    ),
+    "provider-close-line-ignored": (
+        EXTENSION.replace(PROVIDER_CLOSE, "Omit `delivery.close_line`.", 1),
+        "missing provider close line",
+    ),
+    "provider-legacy-issue-restored": (
+        EXTENSION.replace(PROVIDER_ISSUE_OVERRIDE, "retains the released `Closes {issue}` rule above", 1),
+        "missing provider legacy issue override",
     ),
 }
 
