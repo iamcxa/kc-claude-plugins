@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import math
 import os
 import shutil
 import subprocess
@@ -17,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GATE = Path("scripts/kc-dev-flow-multi-profile-gate.py")
 LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
+ADOPTED_LOADER = Path("docs/dev/_mods/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
 RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
 RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
@@ -41,6 +41,8 @@ def copy_gate_fixture(destination: Path) -> None:
     (destination / "scripts").mkdir(parents=True)
     shutil.copy2(ROOT / GATE, destination / GATE)
     shutil.copytree(ROOT / "kc-dev-flow", destination / "kc-dev-flow")
+    (destination / "docs/dev").mkdir(parents=True)
+    shutil.copy2(ROOT / "docs/dev/README.md", destination / "docs/dev/README.md")
 
 
 def copy_repository_fixture(destination: Path) -> None:
@@ -125,6 +127,14 @@ def permit_poc_ideation(fixture: Path) -> None:
         '        "ideation": ("build", "implementation"),\n'
         '        "implementation": ("build", "validation"),\n',
     )
+    contracts = fixture / "kc-dev-flow/references"
+    totals = route_totals(contracts)
+    poc_total = totals["poc-exploration"]
+    for profile in ("pilot-product-slice", "production"):
+        if totals[profile] <= poc_total:
+            path = contracts / "profiles" / profile / "build.md"
+            with path.open("ab") as contract:
+                contract.write(b"X" * (poc_total - totals[profile] + 1))
 
 
 def broaden_readiness_query(fixture: Path) -> None:
@@ -148,12 +158,69 @@ def skip_pilot_terminalization(fixture: Path) -> None:
     )
 
 
-def exceed_stage_ceiling(fixture: Path) -> None:
+def exceed_static_input_ceiling(fixture: Path) -> None:
     contracts = fixture / "kc-dev-flow/references"
-    tree_bytes = sum(path.stat().st_size for path in contracts.rglob("*.md"))
+    ceiling = load_gate(fixture / GATE).STATIC_INSTRUCTION_CEILING_BYTES
     path = contracts / "profiles/poc-exploration/build.md"
     with path.open("ab") as contract:
-        contract.write(b"X" * tree_bytes)
+        contract.write(b"X" * ceiling)
+
+
+def hide_oversized_local_profile_behind_fenced_heading(fixture: Path) -> None:
+    workflow = fixture / "docs/dev/README.md"
+    ceiling = load_gate(fixture / GATE).STATIC_INSTRUCTION_CEILING_BYTES
+    replace_once(
+        workflow,
+        "\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+        "\n```markdown\n## Example heading\n```\n\n"
+        + ("X" * ceiling)
+        + "\n\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+    )
+
+
+def hide_oversized_local_profile_behind_mixed_fence_closer(fixture: Path) -> None:
+    workflow = fixture / "docs/dev/README.md"
+    ceiling = load_gate(fixture / GATE).STATIC_INSTRUCTION_CEILING_BYTES
+    replace_once(
+        workflow,
+        "\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+        "\n```markdown\n```~\n## Example heading\n"
+        + ("X" * ceiling)
+        + "\n```\n\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+    )
+
+
+def hide_oversized_local_profile_behind_html_comment(fixture: Path) -> None:
+    workflow = fixture / "docs/dev/README.md"
+    ceiling = load_gate(fixture / GATE).STATIC_INSTRUCTION_CEILING_BYTES
+    replace_once(
+        workflow,
+        "\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+        "\n<!--\n## Example heading\n-->\n"
+        + ("X" * ceiling)
+        + "\n\n<!-- kc-dev-flow-static-local-profile:end -->\n",
+    )
+
+
+def replace_local_profile_with_frontmatter_comment(fixture: Path) -> None:
+    workflow = fixture / "docs/dev/README.md"
+    text = workflow.read_text(encoding="utf-8")
+    start = text.index("<!-- kc-dev-flow-static-local-profile:start -->")
+    end_marker = "<!-- kc-dev-flow-static-local-profile:end -->"
+    end = text.index(end_marker) + len(end_marker)
+    text = text[:start] + text[end:]
+    workflow.write_text(
+        text.replace("---\n", "---\n## Local Profile\n", 1),
+        encoding="utf-8",
+    )
+
+
+def convert_workflow_to_crlf(fixture: Path) -> None:
+    workflow = fixture / "docs/dev/README.md"
+    raw = workflow.read_bytes()
+    if b"\r" in raw:
+        raise AblationError("baseline workflow already contains CR bytes")
+    workflow.write_bytes(raw.replace(b"\n", b"\r\n"))
 
 
 def route_totals(contracts: Path) -> dict[str, int]:
@@ -186,39 +253,118 @@ def load_gate(path: Path):
 def make_poc_not_lightest(fixture: Path) -> None:
     contracts = fixture / "kc-dev-flow/references"
     totals = route_totals(contracts)
-    gate = load_gate(fixture / GATE)
+    replace_once(
+        fixture / GATE,
+        "STATIC_INSTRUCTION_CEILING_BYTES = 40_000",
+        "STATIC_INSTRUCTION_CEILING_BYTES = 1_000_000",
+    )
     delta = totals["pilot-product-slice"] - totals["poc-exploration"]
     addition = delta // 2 + 1
-    tree_after = (
-        sum(path.stat().st_size for path in contracts.rglob("*.md")) + 2 * addition
-    )
-    kernel = (contracts / "kernel.md").stat().st_size
-    base = (contracts / "profiles/poc-exploration/base.md").stat().st_size
-    stage_after = max(
-        kernel
-        + base
-        + (contracts / "profiles/poc-exploration" / name).stat().st_size
-        + addition
-        for name in ("build.md", "prove.md")
-    )
-    required_tree = math.ceil(stage_after / gate.STAGE_LOAD_CEILING)
-    padding = max(0, required_tree - tree_after)
-    if padding:
-        # Keep this mutant scoped to the route-total guard when shared-core
-        # growth consumes the independent stage-ceiling headroom.
-        (contracts / "poc-lightest-mutant-padding.md").write_bytes(b"X" * padding)
-        tree_after += padding
     for name in ("build.md", "prove.md"):
         path = contracts / "profiles/poc-exploration" / name
-        if (
-            kernel + base + path.stat().st_size + addition
-            > tree_after * gate.STAGE_LOAD_CEILING
-        ):
-            raise AblationError(
-                "cannot isolate the POC-lightest mutant without crossing the stage ceiling"
-            )
         with path.open("ab") as contract:
             contract.write(b"X" * addition)
+
+
+def run_static_accounting_mutant(name: str, anchor: str) -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        replace_once(fixture / GATE, anchor, "")
+        reject(
+            name,
+            execute(
+                [sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"],
+                fixture,
+            ),
+            "release gate static input account omits continue-dev-flow or Local Profile",
+        )
+
+
+def run_rendered_payload_omission_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        for relative in (LOADER, ADOPTED_LOADER):
+            replace_once(
+                fixture / relative,
+                '    for item in contract["loaded"]:\n        chunks.append(\n',
+                '    for item in contract["loaded"]:\n'
+                '        if item["path"] == "kernel.md" or item["path"].endswith("/base.md"):\n'
+                "            continue\n"
+                "        chunks.append(\n",
+            )
+        reject(
+            "rendered-kernel-and-base-omitted",
+            execute(
+                [sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"],
+                fixture,
+            ),
+            "default loader output omits selected payload: kernel.md",
+        )
+
+
+def run_production_payload_omission_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        for relative in (LOADER, ADOPTED_LOADER):
+            replace_once(
+                fixture / relative,
+                '    for item in contract["loaded"]:\n        chunks.append(\n',
+                '    for item in contract["loaded"]:\n'
+                '        if item["path"].startswith("profiles/production/"):\n'
+                "            continue\n"
+                "        chunks.append(\n",
+            )
+        reject(
+            "rendered-production-payloads-omitted",
+            execute(
+                [sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"],
+                fixture,
+            ),
+            "default loader output omits selected payload: profiles/production/base.md",
+        )
+
+
+def run_routing_header_omission_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        for relative in (LOADER, ADOPTED_LOADER):
+            replace_once(
+                fixture / relative,
+                '            "next_workflow_stage",\n',
+                "",
+            )
+        reject(
+            "rendered-routing-header-omitted",
+            execute(
+                [sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"],
+                fixture,
+            ),
+            "default loader output header differs: poc-exploration/implementation",
+        )
+
+
+def run_rendered_payload_order_mutant() -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        copy_repository_fixture(fixture)
+        for relative in (LOADER, ADOPTED_LOADER):
+            replace_once(
+                fixture / relative,
+                '    for item in contract["loaded"]:\n',
+                '    for item in reversed(contract["loaded"]):\n',
+            )
+        reject(
+            "rendered-payload-order-reversed",
+            execute(
+                [sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"],
+                fixture,
+            ),
+            "default loader output order or framing differs: poc-exploration/implementation",
+        )
 
 
 def run_scheduling_mutant() -> None:
@@ -243,8 +389,8 @@ def run_poc_entry_mutant() -> None:
         shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
         replace_once(
             fixture / LOADER,
-            '    if schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":\n',
-            '    if False and schema == PROFILE_SCHEMA_V3 and profile == "poc-exploration":\n',
+            'POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")\n',
+            'POC_FIELDS = ("poc_falsifier", "poc_budget", "poc_stop_when")\n',
         )
         reject(
             "poc-entry-fields-disabled",
@@ -282,7 +428,7 @@ def run_reconcile_wiring_mutant() -> None:
         )
         reject(
             "reconcile-wiring-removed",
-            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
             "continuation planning disambiguation omits: Invoke the repository-local read-only engage comparator only in the provider-backed branch.",
         )
 
@@ -300,8 +446,8 @@ def run_reconcile_clean_output_wiring_mutant() -> None:
         )
         reject(
             "reconcile-clean-output-wiring-removed",
-            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
-            "continuation planning disambiguation omits: stdout parses as one JSON object with `status: clean`",
+            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
+            "continuation omits provider engage behavior: stdout parses as one JSON object with `status: clean`",
         )
 
 
@@ -314,7 +460,7 @@ def run_manual_contract_mutant(
         replace_once(fixture / relative, before, after)
         reject(
             name,
-            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
             evidence,
         )
 
@@ -346,7 +492,7 @@ def run_kernel_contract_mutant(
             replace_once(fixture / relative, before, after)
         reject(
             name,
-            execute([sys.executable, str(fixture / CONTRACT_TEST)], fixture),
+            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
             evidence,
         )
 
@@ -382,7 +528,7 @@ def run_release_state_mutant() -> None:
         )
         reject(
             "release-state-restored",
-            execute([sys.executable, str(contract_test)], fixture),
+            execute([sys.executable, str(contract_test), "--ablation-check"], fixture),
             "would strand",
         )
 
@@ -415,9 +561,74 @@ def main() -> int:
         "pilot-item is still active after its route completed",
     )
     run_gate_mutant(
-        "oversized-stage-load",
-        exceed_stage_ceiling,
-        f"over the {load_gate(ROOT / GATE).STAGE_LOAD_CEILING:.0%} share",
+        "oversized-static-input",
+        exceed_static_input_ceiling,
+        "over the absolute 40000-byte static instruction ceiling",
+    )
+    run_gate_mutant(
+        "fenced-heading-local-profile-bypass",
+        hide_oversized_local_profile_behind_fenced_heading,
+        "over the absolute 40000-byte static instruction ceiling",
+    )
+    run_gate_mutant(
+        "mixed-fence-closer-local-profile-bypass",
+        hide_oversized_local_profile_behind_mixed_fence_closer,
+        "over the absolute 40000-byte static instruction ceiling",
+    )
+    run_gate_mutant(
+        "html-comment-local-profile-bypass",
+        hide_oversized_local_profile_behind_html_comment,
+        "over the absolute 40000-byte static instruction ceiling",
+    )
+    run_gate_mutant(
+        "frontmatter-comment-local-profile-substitute",
+        replace_local_profile_with_frontmatter_comment,
+        "workflow must contain one static Local Profile start marker",
+    )
+    run_gate_mutant(
+        "crlf-static-input-undercount",
+        convert_workflow_to_crlf,
+        "workflow must use LF-only newlines",
+    )
+    run_static_accounting_mutant(
+        "continuation-input-accounting-removed",
+        '        "kc-dev-flow/skills/continue-dev-flow/SKILL.md": continuation.stat().st_size,\n',
+    )
+    run_static_accounting_mutant(
+        "local-profile-input-accounting-removed",
+        '        "docs/dev/README.md#frontmatter+Local Profile": workflow_context_bytes(workflow),\n',
+    )
+    run_rendered_payload_omission_mutant()
+    run_production_payload_omission_mutant()
+    run_routing_header_omission_mutant()
+    run_rendered_payload_order_mutant()
+    run_manual_contract_mutant(
+        "marked-local-profile-read-contract-removed",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "   marked block; never infer boundaries from headings or open the full README.\n",
+        "   infer its boundary from headings in the full workflow README.\n",
+        "continuation is missing: Read only its frontmatter and marked block",
+    )
+    run_manual_contract_mutant(
+        "adopter-local-profile-marker-removed",
+        "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+        "<!-- kc-dev-flow-static-local-profile:start -->",
+        "<!-- local-profile-start-removed -->",
+        "adopter omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
+    )
+    run_manual_contract_mutant(
+        "migration-3x-local-profile-marker-removed",
+        "kc-dev-flow/MIGRATION.md",
+        "   `<!-- kc-dev-flow-static-local-profile:start -->` and one end marker\n",
+        "   `<!-- local-profile-start-removed -->` and one end marker\n",
+        "3.x migration omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
+    )
+    run_manual_contract_mutant(
+        "migration-2x-local-profile-marker-removed",
+        "kc-dev-flow/MIGRATION.md",
+        "   exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`\n",
+        "   exactly one start marker `<!-- local-profile-start-removed -->`\n",
+        "2.x migration omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
     )
     run_gate_mutant(
         "poc-no-longer-lightest",
@@ -522,14 +733,14 @@ def main() -> int:
     )
     run_kernel_contract_mutant(
         "runtime-topology-restored",
-        "Runtime adapters own task and execution-context cardinality.",
-        "Runtime adapters own task and execution-context cardinality. A portable rule must not bind one planning item to one SD task and one isolated execution context.",
+        "Runtime adapters own task and execution-context\ncardinality.",
+        "Runtime adapters own task and execution-context\ncardinality. one planning item to one SD task and one isolated execution context.",
         "kernel owns runtime topology: one planning item to one SD task and one isolated execution context",
     )
     run_kernel_contract_mutant(
         "runtime-vocabulary-restored",
-        "admission, each execution record stores the tuple",
-        "admission, each task records the tuple",
+        "Runtime adapters own task and execution-context\ncardinality.",
+        "Runtime adapters own task and execution-context\ncardinality. At admission, each task records the tuple.",
         "kernel owns runtime topology: each task records the tuple",
     )
     run_manual_contract_mutant(

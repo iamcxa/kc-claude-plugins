@@ -21,6 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
 ADOPTED = ROOT / "docs/dev/_mods"
 ADOPTED_TOOLS = ROOT / "scripts/kc-dev-flow"
+require_ablation_only = sys.argv[1:] == ["--ablation-check"]
+if sys.argv[1:] not in ([], ["--ablation-check"]):
+    raise SystemExit("usage: kc-dev-flow-contract-test.py [--ablation-check]")
 
 
 def require(condition: bool, message: str) -> None:
@@ -292,39 +295,40 @@ for relative in [
 ]:
     require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
 
-run(
-    [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
-    "profile loader",
-)
-run(
-    [sys.executable, "kc-dev-flow/scripts/engage-reconcile.test.py"],
-    "engage reconcile",
-)
-run(
-    [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
-    "POC close guard",
-)
-run(
-    [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
-    "profile Spacedock route",
-)
-run(
-    [sys.executable, "kc-dev-flow/scripts/pr-review-handoff.test.py"],
-    "PR review handoff",
-)
-run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
-run(
-    [sys.executable, "scripts/kc-dev-flow-published-tag-smoke.test.py"],
-    "published-tag smoke behavior",
-)
-run(
-    [sys.executable, "scripts/roborev-implementation-exit-contract.test.py"],
-    "RoboRev contract",
-)
-run(
-    [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
-    "portable PR delivery",
-)
+if not require_ablation_only:
+    run(
+        [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
+        "profile loader",
+    )
+    run(
+        [sys.executable, "kc-dev-flow/scripts/engage-reconcile.test.py"],
+        "engage reconcile",
+    )
+    run(
+        [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
+        "POC close guard",
+    )
+    run(
+        [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
+        "profile Spacedock route",
+    )
+    run(
+        [sys.executable, "kc-dev-flow/scripts/pr-review-handoff.test.py"],
+        "PR review handoff",
+    )
+    run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
+    run(
+        [sys.executable, "scripts/kc-dev-flow-published-tag-smoke.test.py"],
+        "published-tag smoke behavior",
+    )
+    run(
+        [sys.executable, "scripts/roborev-implementation-exit-contract.test.py"],
+        "RoboRev contract",
+    )
+    run(
+        [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
+        "portable PR delivery",
+    )
 loader_path = PLUGIN / "scripts/profile-contract-loader.py"
 spec = importlib.util.spec_from_file_location("profile_contract_loader", loader_path)
 require(spec is not None and spec.loader is not None, "cannot import profile loader")
@@ -441,6 +445,175 @@ require(
     "the release gate can misclassify a git diff SIGPIPE/error as an unrelated release",
 )
 
+gate_path = ROOT / "scripts/kc-dev-flow-multi-profile-gate.py"
+gate_spec = importlib.util.spec_from_file_location("kc_dev_flow_release_gate", gate_path)
+require(gate_spec is not None and gate_spec.loader is not None, "cannot import release gate")
+gate = importlib.util.module_from_spec(gate_spec)
+gate_spec.loader.exec_module(gate)
+require(
+    hasattr(gate, "STATIC_INSTRUCTION_CEILING_BYTES")
+    and gate.STATIC_INSTRUCTION_CEILING_BYTES == 40_000,
+    "release gate does not enforce the absolute 40000-byte static instruction ceiling",
+)
+require(
+    hasattr(gate, "mandatory_static_components"),
+    "release gate does not expose its mandatory static input accounting",
+)
+static_components = gate.mandatory_static_components(ROOT)
+expected_static_components = {
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+    "docs/dev/README.md#frontmatter+Local Profile",
+}
+require(
+    set(static_components) == expected_static_components,
+    "release gate static input account omits continue-dev-flow or Local Profile",
+)
+require(
+    static_components["kc-dev-flow/skills/continue-dev-flow/SKILL.md"]
+    == (PLUGIN / "skills/continue-dev-flow/SKILL.md").stat().st_size,
+    "release gate does not count the exact continue-dev-flow bytes",
+)
+require(
+    static_components["docs/dev/README.md#frontmatter+Local Profile"]
+    == gate.workflow_context_bytes(ROOT / "docs/dev/README.md"),
+    "release gate does not count the bounded workflow frontmatter and Local Profile bytes",
+)
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-workflow-context-") as temporary:
+    fenced_workflow = Path(temporary) / "README.md"
+    fenced_text = """---
+state: fixture
+---
+
+# Fixture
+
+<!-- kc-dev-flow-static-local-profile:start -->
+## Local Profile
+
+Count this.
+
+```markdown
+```~
+## Mixed fence closer is not a heading
+```
+
+<!--
+## HTML comment heading
+-->
+
+Count this too.
+
+<!-- kc-dev-flow-static-local-profile:end -->
+
+## State prerequisite
+
+Do not count this.
+"""
+    fenced_workflow.write_text(fenced_text, encoding="utf-8")
+    expected_context = (
+        fenced_text[: fenced_text.index("\n---\n", 4) + len("\n---\n")]
+        + fenced_text[
+            fenced_text.index("## Local Profile")
+            : fenced_text.index(gate.LOCAL_PROFILE_END) + len(gate.LOCAL_PROFILE_END)
+        ]
+    )
+    require(
+        gate.workflow_context_bytes(fenced_workflow) == len(expected_context.encode("utf-8")),
+        "release gate does not count the exact marked Local Profile bytes",
+    )
+    fenced_workflow.write_bytes(fenced_text.replace("\n", "\r\n").encode("utf-8"))
+    try:
+        gate.workflow_context_bytes(fenced_workflow)
+    except gate.GateError as error:
+        require("LF-only newlines" in str(error), "CRLF workflow failed for the wrong reason")
+    else:
+        require(False, "release gate accepts CRLF that makes static byte accounting undercount")
+require(
+    "reference tree" not in gate_path.read_text(encoding="utf-8"),
+    "release gate still uses a gameable percentage of the reference tree",
+)
+_routes, measured_components, measured_static_inputs = gate.assert_proportional_load(
+    loader, PLUGIN / "references"
+)
+require(
+    measured_components == static_components,
+    "release gate reported a different static prefix from its component account",
+)
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-static-load-") as temporary:
+    for profile, route in expected_routes.items():
+        logical_route = [logical for logical, _next_stage in route.values()]
+        for workflow_stage, (logical_stage, _next_stage) in route.items():
+            item = write_profile_work_item(
+                Path(temporary), profile, workflow_stage, logical_route
+            )
+            selected = loader.load_contracts(PLUGIN / "references", item)
+            canonical = dict(selected)
+            canonical["work_item"] = "<work-item>"
+            rendered = loader.render_text(canonical)
+            expected_header = {
+                key: canonical[key]
+                for key in (
+                    "schema",
+                    "work_item",
+                    "work_item_sha256",
+                    "receipt_schema",
+                    "profile",
+                    "workflow_stage",
+                    "logical_stage",
+                    "next_workflow_stage",
+                    "declared_receipts",
+                )
+            }
+            for key in (
+                "skip_to_workflow_stage",
+                "review_risks",
+                "implementation_exit_observation_declared",
+                "poc_artifact",
+                "poc_safety_boundary",
+                "poc_decision_ready_minutes",
+                "poc_decision_ready_reason",
+                "poc_proof_path",
+                "development_brief_sha256",
+            ):
+                if key in canonical:
+                    expected_header[key] = canonical[key]
+            try:
+                actual_header = json.loads(rendered.splitlines()[0])
+            except (IndexError, json.JSONDecodeError):
+                actual_header = None
+            require(
+                actual_header == expected_header,
+                f"default loader output header differs: {profile}/{workflow_stage}",
+            )
+            expected_chunks = [json.dumps(expected_header, sort_keys=True)]
+            expected_static_bytes = sum(static_components.values()) + len(
+                rendered.encode("utf-8")
+            )
+            require(
+                measured_static_inputs[f"{profile}/{workflow_stage}"]
+                == expected_static_bytes,
+                f"release gate does not count {profile}/{workflow_stage} default output",
+            )
+            for relative in (
+                "kernel.md",
+                f"profiles/{profile}/base.md",
+                f"profiles/{profile}/{logical_stage}.md",
+            ):
+                raw = (PLUGIN / "references" / relative).read_bytes()
+                expected_payload = (
+                    f"<contract path={json.dumps(relative)} "
+                    f"sha256={json.dumps(hashlib.sha256(raw).hexdigest())}>\n"
+                    f"{raw.decode('utf-8')}</contract>"
+                )
+                expected_chunks.append(f"\n{expected_payload}")
+                require(
+                    expected_payload in rendered,
+                    f"default loader output omits selected payload: {relative}",
+                )
+            require(
+                rendered == "\n".join(expected_chunks) + "\n",
+                f"default loader output order or framing differs: {profile}/{workflow_stage}",
+            )
+
 kernel = read("kc-dev-flow/references/kernel.md")
 normalized_kernel = " ".join(kernel.split())
 for phrase in [
@@ -471,29 +644,43 @@ for phrase in [
     "create no receipt or commentary",
 ]:
     require(phrase in normalized_kernel, f"kernel omits subtraction rule: {phrase}")
-require_production_route(kernel, "`production`", "`shape -> build -> verify`")
+chooser_contract = read("kc-dev-flow/skills/choose-work-profile/SKILL.md")
+require_production_route(
+    chooser_contract,
+    "`Production` (`production`)",
+    "`shape -> build -> verify`",
+)
 for phrase in [
     "one planning authority per item",
     "one execution-record authority",
     "planning item owns discussion, the accepted goal, priority, and human-facing status",
     "planning window owns time",
     "planning outcome owns the accepted result",
-    "admitted execution set is the admission snapshot",
-    "its group is not a planning authority",
-    "accepted goal and non-goals are a snapshot, not another accepted-goal authority",
+    "admitted execution set and its accepted goal and non-goals are snapshots, not planning authorities",
+    "local execution grouping does not prove a Planning Receipt",
     "runtime owns execution and evidence",
     "execution-to-planning-provider projector",
     "No reconcile result writes either side automatically",
     "the read-only engage comparator",
-    "exact engaged source",
-    "supplied expected source, window, and outcome",
-    "do not all share that planning scope",
-    "The First Officer must refuse new dispatch or state mutation",
-    "parsed `status: clean` result",
-    "added, removed, changed, or moved",
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
+normalized_continuation_policy = " ".join(
+    read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
+)
+for phrase in [
+    "exact work item's `source`",
+    "shares the exact window and outcome read from the engaged item",
+    "stdout parses as one JSON object with `status: clean`",
+    "Exit `1` reports the classified delta",
+    "Exit `2` reports `planning reconcile unavailable`",
+    "added, removed, changed, or moved item",
+    "Captain must admit the delta",
+]:
+    require(
+        phrase in normalized_continuation_policy,
+        f"continuation omits provider engage behavior: {phrase}",
+    )
 for phrase in [
     "Development Brief is required",
     "Planning Receipt is optional",
@@ -582,6 +769,12 @@ for relative, phrases in {
         "return the POC outcome to planning",
         "does not create downstream delivery work",
         "planning decides whether a new Development Brief exists",
+    ],
+    "kc-dev-flow/references/profiles/poc-exploration/base.md": [
+        "Decision-ready time above the recorded limit",
+        "any Captain intervention before decision-ready",
+        "ends product proof",
+        "Continue only to record a complete `change` outcome",
     ],
 }.items():
     normalized = " ".join(read(relative).split())
@@ -817,6 +1010,16 @@ normalized_science = " ".join(science.split())
 normalized_migration = " ".join(migration.split())
 normalized_production_verify = " ".join(production_verify.split())
 
+for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
+    require(marker in normalized_adopter, f"adopter omits static Local Profile marker: {marker}")
+migration_3x = migration.split("## Migrating from 3.x to 4.x", 1)[1].split(
+    "## Migrating from 2.x", 1
+)[0]
+migration_2x = migration.split("## Migrating from 2.x", 1)[1]
+for label, section in (("3.x migration", migration_3x), ("2.x migration", migration_2x)):
+    for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
+        require(marker in section, f"{label} omits static Local Profile marker: {marker}")
+
 for phrase in [
     "v2 Pilot or Production receipt",
     "v1 POC",
@@ -872,7 +1075,10 @@ require(
 )
 
 for phrase in [
-    "read that bounded section plus the frontmatter",
+    "kc-dev-flow-static-local-profile",
+    "start/end marker pair",
+    "Read only its frontmatter and marked block",
+    "never infer boundaries from headings",
     "repository-local profile loader",
     "--work-item <exact-committed-work-item>",
     "simultaneous items may load different routes",

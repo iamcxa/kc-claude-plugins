@@ -14,9 +14,10 @@ name: kc-dev-flow release gate
 # or on a manual dispatch. Every other PR pays checkout and one branch, and
 # reports success.
 #
-# Measured ubuntu-latest cost: 13 s wall-clock for the baseline plus ablations
-# (32705393764), and 7 s for an unrelated PR's always-report path (32698558322),
-# including checkout. Dollar/month cost was not measured.
+# Trigger cost is unchanged: unrelated PRs still pay only checkout plus the
+# scope decision (historically 7 s in run 32698558322). This revision's full
+# ubuntu-latest cost is not measured yet. Exact-tree local macOS measurements
+# were 2.3 s for the gate and 106.0 s for all ablations; dollar cost is unmeasured.
 
 on:
   pull_request:
