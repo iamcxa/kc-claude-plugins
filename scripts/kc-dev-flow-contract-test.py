@@ -1443,6 +1443,15 @@ require(
     "cognitive cue, not another agent, review, or gate" in normalized_package_readme,
     "package README overstates stage-role authority",
 )
+for phrase in [
+    "candidate receipt is valid only for its exact tracked package snapshot",
+    "discard the receipt and rerun candidate mode on the final release PR head",
+    "local install sync waits for that check to pass",
+]:
+    require(
+        phrase in normalized_package_readme,
+        f"package README omits the release-proof boundary: {phrase}",
+    )
 require("](./MIGRATION.md)" in package_readme, "package README omits migration guide")
 require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
 require(

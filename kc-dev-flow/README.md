@@ -141,6 +141,16 @@ them. Repository adapters and release gates stay outside the plugin directory.
 The repository contract classifies every kc-dev-flow Python script into exactly
 one of these roles, so an unowned script fails the gate.
 
+### Release proof
+
+Published mode enforces that a candidate receipt is valid only for its exact
+tracked package snapshot. Run candidate mode on the clean release PR head after
+all `kc-dev-flow` and marketplace changes have landed. If that snapshot changes
+before the release tag is created, discard the receipt and rerun candidate mode
+on the final release PR head. After release-please creates the tag, run
+published mode against it with the retained receipt; local install sync waits
+for that check to pass.
+
 `scripts/profile-contract-loader.py` is the closed route and loading mechanism.
 For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
