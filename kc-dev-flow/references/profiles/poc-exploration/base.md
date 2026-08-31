@@ -10,6 +10,9 @@ safe mechanism. The result may be disposable.
 Fix the next decision, cheapest credible falsifier, explicit budget, and
 observable stop point in the v3 receipt before build.
 
+- Decision-ready time above the recorded limit, or any Captain intervention
+  before decision-ready, ends product proof. Continue only to record a complete
+  `change` outcome and reach terminal authorization.
 - Use shell, a CLI, an off-the-shelf tool, a library, or existing repository code
   when it reaches the outcome safely. Do not add a framework for hypothetical
   maintenance, scale, portability, or language purity.

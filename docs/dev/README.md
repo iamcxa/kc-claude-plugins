@@ -41,6 +41,7 @@ the working route and the contracts an agent loads:
 Backlog and done are state boundaries, not worker stages. Skipped stages do not
 receive placeholder reviews or receipts.
 
+<!-- kc-dev-flow-static-local-profile:start -->
 ## Local Profile
 
 Read only this section before resolving the selected item. Do not read this full
@@ -118,6 +119,8 @@ activate it; the Production label and `[none]` are insufficient.
 All use `panel: none`. The result is observation, not validation or delivery
 authority. Missing CLI, daemon/local mode, mapped agent, authentication, or host
 bridge is an honest `UNAVAILABLE`; normal fresh validation remains reachable.
+
+<!-- kc-dev-flow-static-local-profile:end -->
 
 ## State prerequisite
 

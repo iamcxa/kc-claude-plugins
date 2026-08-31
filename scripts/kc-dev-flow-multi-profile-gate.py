@@ -14,10 +14,13 @@ routing safe to ship:
    boundary (`route=approved-awaiting-merge` then `merge guard --verdict`)
    rather than as a state the other profiles skip.
 4. Proportional load — the POC route loads strictly less than every other
-   profile's, and no single stage load exceeds a declared share of the
-   reference tree. This is the only automated evidence behind "POC does
-   not pay for Production policy"; without it a POC contract can grow past
-   Production's and the claim silently becomes false.
+   profile's, and every stage stays within an absolute static-instruction
+   budget. The budget counts the continuation skill, workflow frontmatter and
+   bounded Local Profile, and the loader's canonical emitted text for the
+   shared core, selected profile base, and selected stage. The dynamic work-item
+   path is replaced by `<work-item>`; the work-item body and conditionally
+   triggered references remain excluded. This is the automated evidence behind
+   "POC does not pay for Production policy" and the bounded static-load claim.
 
 Claims 1, 2 and 4 read the packaged contracts; claim 3 needs the real runtime
 and runs against the installed Spacedock binary. The self-adopted
@@ -54,12 +57,13 @@ GRAPH_STATES = ["backlog", "ideation", "implementation", "validation", "done"]
 # 1.4%, so asserting it would false-block a Release PR over an ordinary edit.
 LIGHTEST_PROFILE = "poc-exploration"
 
-# Ceiling on one stage's loaded bytes as a share of the whole reference tree.
-# Integrated v4 high-water mark: 20.8% (Pilot `shape`). The remaining headroom
-# lets the POC-lightest ablation cross the route-total boundary without first
-# tripping this independent guard; the ceiling still catches a stage that
-# quietly absorbs a conditional reference it should have left unread.
-STAGE_LOAD_CEILING = 0.25
+# Stable absolute budget for instructions that Continue Dev Flow always reads
+# before the dynamic work item. Unlike a percentage, unused reference files
+# cannot increase this allowance. Bytes keep the check dependency-free and
+# reproducible; they are not presented as an exact model-token count.
+STATIC_INSTRUCTION_CEILING_BYTES = 40_000
+LOCAL_PROFILE_START = "<!-- kc-dev-flow-static-local-profile:start -->"
+LOCAL_PROFILE_END = "<!-- kc-dev-flow-static-local-profile:end -->"
 
 WORKFLOW_README = """---
 commissioned-by: spacedock@0.27.0
@@ -109,15 +113,69 @@ def profile_states(loader) -> dict[str, list[str]]:
     return states
 
 
-def reference_tree_bytes(contracts_root: Path) -> int:
-    return sum(path.stat().st_size for path in contracts_root.rglob("*.md"))
+def workflow_context_bytes(workflow_readme: Path) -> int:
+    """Bytes required by step 1 of Continue Dev Flow."""
+    raw = workflow_readme.read_bytes()
+    require(b"\r" not in raw, f"workflow must use LF-only newlines: {workflow_readme}")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise GateError(f"workflow is not UTF-8: {workflow_readme}") from error
+    require(text.startswith("---\n"), f"workflow has no frontmatter: {workflow_readme}")
+    frontmatter_end = text.find("\n---\n", 4)
+    require(frontmatter_end >= 0, f"workflow frontmatter is unterminated: {workflow_readme}")
+    content_start = frontmatter_end + len("\n---\n")
+    require(
+        text.count(LOCAL_PROFILE_START) == 1,
+        f"workflow must contain one static Local Profile start marker: {workflow_readme}",
+    )
+    require(
+        text.count(LOCAL_PROFILE_END) == 1,
+        f"workflow must contain one static Local Profile end marker: {workflow_readme}",
+    )
+    marker_start = text.index(LOCAL_PROFILE_START)
+    marker_end = text.index(LOCAL_PROFILE_END)
+    local_start = marker_start + len(LOCAL_PROFILE_START) + 1
+    local_end = marker_end + len(LOCAL_PROFILE_END)
+    require(
+        marker_start >= content_start and marker_start < marker_end,
+        f"workflow static Local Profile markers are out of order: {workflow_readme}",
+    )
+    require(
+        text[local_start:].startswith("## Local Profile\n"),
+        f"workflow static Local Profile marker does not bind the section: {workflow_readme}",
+    )
+    bounded = text[:content_start] + text[local_start:local_end]
+    return len(bounded.encode("utf-8"))
 
 
-def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
-    """Every profile's whole-route load, with the POC claim asserted."""
-    tree = reference_tree_bytes(contracts_root)
-    require(tree > 0, f"no contracts found under {contracts_root}")
+def mandatory_static_components(repository_root: Path) -> dict[str, int]:
+    """Static instructions required before the selected work item is read."""
+    continuation = repository_root / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+    workflow = repository_root / "docs/dev/README.md"
+    require(continuation.is_file(), f"continuation skill is missing: {continuation}")
+    require(workflow.is_file(), f"workflow README is missing: {workflow}")
+    return {
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md": continuation.stat().st_size,
+        "docs/dev/README.md#frontmatter+Local Profile": workflow_context_bytes(workflow),
+    }
+
+
+def canonical_contract_output_bytes(loader, contract: dict[str, object]) -> int:
+    """Default loader text with only the variable work-item path normalized."""
+    canonical = dict(contract)
+    canonical["work_item"] = "<work-item>"
+    return len(loader.render_text(canonical).encode("utf-8"))
+
+
+def assert_proportional_load(
+    loader, contracts_root: Path
+) -> tuple[dict[str, int], dict[str, int], dict[str, int]]:
+    """Whole-route contract load plus the complete mandatory static load."""
+    static_components = mandatory_static_components(ROOT)
+    static_prefix = sum(static_components.values())
     totals: dict[str, int] = {}
+    static_inputs: dict[str, int] = {}
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-load-") as temporary:
         scratch = Path(temporary)
         for profile, route in loader.ROUTES.items():
@@ -131,10 +189,13 @@ def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
                 )
                 contract = loader.load_contracts(contracts_root, item)
                 stage_bytes = sum(entry["bytes"] for entry in contract["loaded"])
+                emitted_bytes = canonical_contract_output_bytes(loader, contract)
+                static_input_bytes = static_prefix + emitted_bytes
+                static_inputs[f"{profile}/{state}"] = static_input_bytes
                 require(
-                    stage_bytes <= tree * STAGE_LOAD_CEILING,
-                    f"{profile} {state} loads {stage_bytes} bytes, over the "
-                    f"{STAGE_LOAD_CEILING:.0%} share of the {tree}-byte reference tree",
+                    static_input_bytes <= STATIC_INSTRUCTION_CEILING_BYTES,
+                    f"{profile} {state} requires {static_input_bytes} bytes, over the "
+                    f"absolute {STATIC_INSTRUCTION_CEILING_BYTES}-byte static instruction ceiling",
                 )
                 total += stage_bytes
             totals[profile] = total
@@ -145,7 +206,7 @@ def assert_proportional_load(loader, contracts_root: Path) -> dict[str, int]:
             f"{LIGHTEST_PROFILE} no longer loads less than {profile} under "
             f"{contracts_root}: {lightest} vs {total}",
         )
-    return totals
+    return totals, static_components, static_inputs
 
 
 def load_loader():
@@ -333,13 +394,18 @@ def main() -> int:
     # byte-identical by kc-dev-flow-contract-test.py, which also exercises the
     # loader over both; measuring the same bytes twice here would add no claim.
     contracts = PLUGIN / "references"
-    route_bytes = assert_proportional_load(loader, contracts)
+    route_bytes, static_components, static_input_bytes = assert_proportional_load(
+        loader, contracts
+    )
     results: dict[str, object] = {
         "schema": "kc-dev-flow-multi-profile-gate/v1",
         "contracts_root": str(contracts.relative_to(ROOT)),
         "runtime": "spacedock",
         "profiles": sorted(states),
         "route_bytes": route_bytes,
+        "static_instruction_ceiling_bytes": STATIC_INSTRUCTION_CEILING_BYTES,
+        "static_components": static_components,
+        "static_input_bytes": static_input_bytes,
     }
 
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-multi-profile-") as temporary:

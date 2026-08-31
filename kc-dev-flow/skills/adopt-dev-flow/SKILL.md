@@ -22,8 +22,10 @@ seam.
 
 ## Adopt
 
-1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
-   authorities plus the repository-local profile loader and contracts root. A
+1. Add a concise `## Local Profile` near the workflow frontmatter, bounded by
+   exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
+   and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
+   existing authorities plus the repository-local profile loader and contracts root. A
    repository that supports Planning Receipts also binds its planning provider,
    repository-local read-only planning reader, and vendored repository-local
    read-only engage comparator. The reader normalizes the union of current Ready
