@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.0...kc-dev-flow-v4.0.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** bind release receipt to final tree ([#316](https://github.com/iamcxa/kc-claude-plugins/issues/316)) ([2234e3e](https://github.com/iamcxa/kc-claude-plugins/commit/2234e3e47cd8a1ba7ec5353194738d17551302b5))
+
 ## [4.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v3.0.0...kc-dev-flow-v4.0.0) (2026-08-31)
 
 
