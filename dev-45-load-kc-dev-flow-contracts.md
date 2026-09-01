@@ -8,7 +8,7 @@ planning-outcome: Linear Project e780d04f-cf7d-4ebb-bf9a-90fec8466923 Plugin-own
 sprint: S7
 sprint-readiness: ready
 design: required
-started:
+started: 2026-09-01T16:31:49Z
 completed:
 verdict:
 worktree:
