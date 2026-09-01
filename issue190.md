@@ -22,6 +22,10 @@ gates:
                 digest: sha256:253bf935c9d5337496283f3815c4a4516e71a440b359d54423bfbd192925f60c
                 request-digest: sha256:fc172a37edab148775d8df0c7aa960aecc67ce50a85c42431d1f3ed3df2ac030
                 room-ref: ./issue190/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-01T14:45:35.052903Z"
+                reason: Validation ac-scan reports AC-1 through AC-6 unevidenced; repair scanner-readable evidence citations before Captain presentation.
 ---
 
 ## Problem
