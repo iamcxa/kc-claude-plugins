@@ -16,6 +16,29 @@ issue:
 pr:
 mod-block:
 id: 3fkmdwdvsfha8ektb2s5jz7d
+gates:
+    version: 1
+    records:
+        - id: gate:3fkmdwdvsfha8ektb2s5jz7d:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:3fkmdwdvsfha8ektb2s5jz7d-backlog-1
+              briefing:
+                id: briefing:3fkmdwdvsfha8ektb2s5jz7d:backlog:attempt-1:revision-1
+                digest: sha256:ae267311c31a0901273945546368887a7d6c2cd9bfe84748a06a52dc5dbdf822
+                request-digest: sha256:a18c3d220d0cbce5f1048e194bf5745aeecdc945a63c166cc1766b7bc5ddda4b
+                room-ref: ./dev-45-load-kc-dev-flow-contracts/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3fkmdwdvsfha8ektb2s5jz7d:backlog:1
+                briefing: briefing:3fkmdwdvsfha8ektb2s5jz7d:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-01T16:29:53.994804Z"
+                decision: approve
+                reason: Captain approved the bound Production ideation direction.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Work profile receipt

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3fkmdwdvsfha8ektb2s5jz7d:backlog:attempt-1:revision-1",
+  "question": "Approve DEV-45 to enter Production ideation for plugin-owned runtime contracts?",
+  "artifacts": [
+    {
+      "id": "artifact:3fkmdwdvsfha8ektb2s5jz7d:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fe26510728330661ef80d5f1048d2def44b08b6b/dev-45-load-kc-dev-flow-contracts.md",
+      "rev": "sha256:c366012681d8de2c4ca2c42165e178ab88c3e87708097670bdf9dec40bf42a2e",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval: the exact Linear Project and Cycle are bound; the Production receipt makes the installed plugin canonical, pins each active stage, stops incompatible upgrades before dispatch, and preserves repository-owned README policy, local mods, and Spacedock state. Scope excludes plugin installation, release automation, provider writes, executor scheduling, and Hermes or Nightwatch portfolio work."
+    }
+  ]
+}
