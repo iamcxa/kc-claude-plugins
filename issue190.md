@@ -10,6 +10,18 @@ worktree: /Users/kent/mini-legs/rx-0bdfaef9-64c7-4b5a-992b-b813c61ddbe8/worktree
 issue: "190"
 pr: "#194"
 design: trivial-pass
+gates:
+    version: 1
+    records:
+        - id: gate:srqy4f40m20yf5fp392vtcn0:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:srqy4f40m20yf5fp392vtcn0-validation-1
+              briefing:
+                id: briefing:srqy4f40m20yf5fp392vtcn0:validation:attempt-1:revision-1
+                digest: sha256:253bf935c9d5337496283f3815c4a4516e71a440b359d54423bfbd192925f60c
+                request-digest: sha256:fc172a37edab148775d8df0c7aa960aecc67ce50a85c42431d1f3ed3df2ac030
+                room-ref: ./issue190/review/validation/briefing-1
 ---
 
 ## Problem
