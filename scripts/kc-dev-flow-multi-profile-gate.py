@@ -22,10 +22,9 @@ routing safe to ship:
    triggered references remain excluded. This is the automated evidence behind
    "POC does not pay for Production policy" and the bounded static-load claim.
 
-Claims 1, 2 and 4 read the packaged contracts; claim 3 needs the real runtime
-and runs against the installed Spacedock binary. The self-adopted
-`docs/dev/_mods` copy is not re-read here: kc-dev-flow-contract-test.py holds
-it byte-identical and exercises the loader over both roots.
+Claims 1, 2 and 4 read the installed-package source; claim 3 needs the real
+runtime and runs against the installed Spacedock binary. The repository keeps
+no canonical contract copy; kc-dev-flow-contract-test.py rejects one returning.
 """
 
 from __future__ import annotations
