@@ -26,21 +26,26 @@ cutover, in this order:
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
 4. Default the adopter's entity template to `sprint-readiness: defer`. Before
-   continuing any item already at its first working stage, resolve its accepted
-   planning window and outcome from `source`, have the Captain approve that
-   snapshot, record non-empty `planning-window`, `planning-outcome`, and shared
-   `sprint` values, and set `sprint-readiness: ready`. Backlog items need those
-   values only when selected; do not mark the unscheduled queue ready as a bulk
-   migration.
+   continuing any item already at its first working stage, classify its Planning
+   Receipt before recording scheduling fields. For provider-backed work, resolve
+   the accepted planning window and outcome from `source`, have the Captain
+   approve that snapshot, and record non-empty `planning-window` and
+   `planning-outcome` values. For standalone work, leave `source`,
+   `planning-window`, and `planning-outcome` absent and use the Captain-approved
+   committed brief as planning authority. Both paths assign a non-empty local
+   `sprint` execution group and set `sprint-readiness: ready`. Backlog items need
+   those values only when selected; do not mark the unscheduled queue ready as a
+   bulk migration.
 5. Prove the drivable set with `spacedock status --where sprint=X --where
-   sprint-readiness=ready`, then run one read-only engage reconcile against the
-   provider's current Ready set plus every still-Ready snapshot source outside
-   the original window/outcome. Refuse a snapshot whose items do not all share
-   the engaged item's exact window and outcome. Invoke the vendored comparator
-   with that exact source, window, and outcome. Only exit `0` with one parsed
-   `status: clean` result and empty delta arrays continues. A delta, truncated
-   result, invalid input, or any other output must stop before dispatch. Run
-   every profile-stage load,
+   sprint-readiness=ready`. Run the reader and comparator only for provider-backed
+   work, against the provider's current Ready set plus every still-Ready snapshot
+   source outside the original window/outcome. Refuse a snapshot whose items do
+   not all share the engaged item's exact window and outcome. Invoke the vendored
+   comparator with that exact source, window, and outcome. Standalone work skips
+   both and continues from the Captain-approved committed brief. For the
+   provider-backed path, only exit `0` with one parsed `status: clean` result and
+   empty delta arrays continues. A delta, truncated result, invalid input, or any
+   other output must stop before dispatch. Run every profile-stage load,
    guarded POC close path, package
    parity check, and normal repository gate before updating the installed
    plugin.
