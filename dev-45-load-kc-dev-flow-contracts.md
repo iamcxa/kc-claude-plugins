@@ -282,3 +282,30 @@ review_convergence_observation:
     jobs_total: 10
     complete: false
 ```
+
+## Stage Report: implementation
+
+- DONE: Before product edits, base the implementation worktree on current origin/main and use Linear's exact branch feature/dev-45-load-kc-dev-flow-contracts-from-the-installed-plugin.
+  The clean worktree rebased to `origin/main@3aafd3d22e749257f3551079475cc41183525d7c` and remained on the exact branch through candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404`.
+- SKIPPED: The delivery PR must contain Fixes DEV-45.
+  Implementation created no PR; validation/delivery must append `Fixes DEV-45` before authorized Draft creation.
+- DONE: Implement the selected installed manifest and self-locating loader.
+  Commit `a91da87379c77ab4d4b7837f2dec664d5eb20136` validates one package manifest, hashes every declared byte, and resolves only its own installed package root.
+- DONE: Implement the per-stage version/digest pin, compatible next-stage upgrade, and fail-closed incompatible-refit boundary.
+  Commit `12ded46ac9ef31169932fcd6e545596dcef8af0a` binds attempt/version/digest/work-item/interface; the focused suite fails same-stage drift and requires explicit accepted refit before an incompatible boundary opens.
+- DONE: Preserve README policy, local mods, provider adapters, and Spacedock state.
+  Sentinel README bytes, local-mod bytes/mode, and unrelated state survive adoption/upgrade; Linear remains the repository adapter and `docs/dev/_mods/pr-merge.md` remains byte-identical.
+- DONE: Delete vendored canonical copies and parity machinery only after fresh-adopter, all-profile/stage, preservation, migration, and without-it proofs pass.
+  Commit `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` removes 22 canonical copies after the loader, repository contract, and 57-mutant ablation suite pass; reintroducing a copy now fails the repository contract.
+- DONE: Stop above 44 changed files, 4,800 diff lines, or any host-specific resolver or Spacedock-core edit.
+  Final scope is 37 files and 3,868 changed lines (`+1000/-2868`), with no host-specific discovery adapter or Spacedock-core edit.
+- DONE: Record exact counts plus RoboRev observation.
+  RoboRev job `292` returned `SEVERITY_THRESHOLD_MET`; strict JSON correlation records `UNKNOWN(reason: stale)` because panel identity and complete member population are absent, with one request, zero confirmations, and incomplete cost coverage.
+- DONE: Exercise the required implementation proof.
+  `profile-contract-loader.test.py` fails on install-root, digest, active-pin, refit, or preservation regressions; `kc-dev-flow-contract-test.py` fails on route/package/adopter drift; `kc-dev-flow-minimal-stack-ablation.test.py` rejects every named mechanism removal.
+- DONE: Run the relevant repository exit gates.
+  Version parity, marketplace schema/installability, skill frontmatter, multi-profile static budget, package/repository contract, and minimal-stack ablation all pass; no CI workflow changed, so per-PR CI cost is unchanged and was not remeasured.
+
+### Summary
+
+The candidate now loads canonical KC Dev Flow contracts from one installed, self-locating manifest and pins exact version/digest bytes per active attempt. Compatible upgrades begin only at stage boundaries, incompatible interfaces stop for explicit refit, and the self-adopter retains only local policy, adapters, mods, and state.
