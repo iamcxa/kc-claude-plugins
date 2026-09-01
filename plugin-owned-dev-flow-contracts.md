@@ -28,6 +28,10 @@ gates:
                 digest: sha256:578780997ab5340c4f3313324434b99ae1956b471ac2d74fc70606b8c5928135
                 request-digest: sha256:51967b548356b08de925116ec8acdbea0be579dfb3c4e2b8a56c7e3006d016fd
                 room-ref: ./plugin-owned-dev-flow-contracts/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-01T15:03:22.471893Z"
+                reason: Captain changed the planning source of truth from GitHub Project to Linear; rebind the planning provider before presenting the backlog gate.
 ---
 
 ## Problem
