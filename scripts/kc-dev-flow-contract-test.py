@@ -19,8 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
-ADOPTED = ROOT / "docs/dev/_mods"
-ADOPTED_TOOLS = ROOT / "scripts/kc-dev-flow"
+LOCAL_MODS = ROOT / "docs/dev/_mods"
 require_ablation_only = sys.argv[1:] == ["--ablation-check"]
 if sys.argv[1:] not in ([], ["--ablation-check"]):
     raise SystemExit("usage: kc-dev-flow-contract-test.py [--ablation-check]")
@@ -83,6 +82,7 @@ required = [
     "kc-dev-flow/__init__.py",
     "kc-dev-flow/MIGRATION.md",
     "kc-dev-flow/RATIONALE.md",
+    "kc-dev-flow/contract-manifest.json",
     "kc-dev-flow/references/kernel.md",
     "kc-dev-flow/references/reverse-recovery-audit.md",
     "kc-dev-flow/references/journey-slicing.md",
@@ -95,7 +95,6 @@ required = [
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/engage-reconcile.py",
     "kc-dev-flow/scripts/engage-reconcile.test.py",
-    "scripts/kc-dev-flow/engage-reconcile.py",
     "scripts/kc-dev-flow/linear-admission.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
@@ -134,6 +133,7 @@ for retired in [
     "kc-dev-flow/skills/setup-github-project-projection",
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "docs/dev/_mods/engage-reconcile.py",
+    "scripts/kc-dev-flow/engage-reconcile.py",
     # This blind-evaluation adapter had no caller outside its own test. Keep the
     # retired experiment from silently returning as release or runtime surface.
     "scripts/kc-dev-flow-loader-eval.py",
@@ -157,7 +157,6 @@ script_roles = {
         "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     },
     "repository-adapter": {
-        "scripts/kc-dev-flow/engage-reconcile.py",
         "scripts/kc-dev-flow/linear-admission.py",
     },
     "release-proof": {
@@ -444,10 +443,34 @@ def write_profile_work_item(
     )
     return path
 
+installed_package = loader.load_installed_package()
+manifest = json.loads((PLUGIN / "contract-manifest.json").read_text(encoding="utf-8"))
+expected_manifest_resources = {
+    "references/kernel.md",
+    "references/reverse-recovery-audit.md",
+    "references/journey-slicing.md",
+    "references/retained-document-policy.md",
+    "references/project-context-maintenance.md",
+    "references/delivery-branch-base.md",
+    "references/pr-delivery.md",
+    "references/roborev-implementation-exit.md",
+    "scripts/profile-contract-loader.py",
+    "scripts/poc-close-guard.py",
+    "scripts/engage-reconcile.py",
+    "skills/adopt-dev-flow/SKILL.md",
+    "skills/continue-dev-flow/SKILL.md",
+} | {
+    f"references/profiles/{profile}/{name}"
+    for profile, names in profile_files.items()
+    for name in names
+}
 require(
-    (PLUGIN / "references/kernel.md").read_bytes()
-    == (ADOPTED / "kernel.md").read_bytes(),
-    "self-adopted shared core differs from package source",
+    manifest.get("schema") == "kc-dev-flow-contract-manifest/v1"
+    and manifest.get("contract_interface") == "kc-dev-flow-profile-contract/v3"
+    and set(manifest.get("resources", [])) == expected_manifest_resources
+    and installed_package["version"] == "4.0.1"
+    and len(str(installed_package["contract_digest"])) == 64,
+    "installed manifest does not bind the exact canonical runtime surface",
 )
 # `release` was a Production-only runtime state until it stranded a Pilot item
 # outside its declared route. Nothing else reads adoption prose, so the retired
@@ -869,35 +892,31 @@ for phrase in [
         phrase in normalized_pr_delivery,
         f"PR delivery omits provider linkage: {phrase}",
     )
-require(
-    (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
-    == (ADOPTED / "profile-contract-loader.py").read_bytes(),
-    "self-adopted profile loader differs from package source",
-)
-require(
-    (PLUGIN / "scripts/engage-reconcile.py").read_bytes()
-    == (ADOPTED_TOOLS / "engage-reconcile.py").read_bytes(),
-    "self-adopted engage comparator differs from package source",
-)
-require(
-    (PLUGIN / "scripts/poc-close-guard.py").read_bytes()
-    == (ADOPTED / "poc-close-guard.py").read_bytes(),
-    "self-adopted POC close guard differs from package source",
-)
-for reference in [
-    "reverse-recovery-audit.md",
-    "journey-slicing.md",
-    "retained-document-policy.md",
-    "project-context-maintenance.md",
-    "delivery-branch-base.md",
-    "pr-delivery.md",
-    "roborev-implementation-exit.md",
-]:
-    require(
-        (PLUGIN / "references" / reference).read_bytes()
-        == (ADOPTED / reference).read_bytes(),
-        f"self-adopted conditional reference differs: {reference}",
+obsolete_adopter_copies = {
+    LOCAL_MODS / "kernel.md",
+    LOCAL_MODS / "profile-contract-loader.py",
+    LOCAL_MODS / "poc-close-guard.py",
+    ROOT / "scripts/kc-dev-flow/engage-reconcile.py",
+} | {
+    LOCAL_MODS / reference
+    for reference in (
+        "reverse-recovery-audit.md",
+        "journey-slicing.md",
+        "retained-document-policy.md",
+        "project-context-maintenance.md",
+        "delivery-branch-base.md",
+        "pr-delivery.md",
+        "roborev-implementation-exit.md",
     )
+} | {
+    LOCAL_MODS / "profiles" / profile / name
+    for profile, names in profile_files.items()
+    for name in names
+}
+require(
+    not [path for path in obsolete_adopter_copies if path.exists()],
+    "canonical runtime copies remain in the adopter",
+)
 for reference, trigger in [
     ("retained-document-policy.md", "retained_document_change"),
     ("project-context-maintenance.md", "project_context_claim_may_change"),
@@ -913,17 +932,9 @@ for reference, trigger in [
         and "do not load the file when that trigger is false" in policy,
         f"conditional reference has stale adoption instructions: {reference}",
     )
-for profile, names in profile_files.items():
-    for name in names:
-        require(
-            (PLUGIN / "references/profiles" / profile / name).read_bytes()
-            == (ADOPTED / "profiles" / profile / name).read_bytes(),
-            f"self-adopted profile contract differs: {profile}/{name}",
-        )
-
 with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
     work_items = Path(temporary)
-    for contracts_root in [PLUGIN / "references", ADOPTED]:
+    for contracts_root in [PLUGIN / "references"]:
         for profile, stages in expected_routes.items():
             logical_route = [logical for logical, _next in stages.values()]
             for workflow_stage, (logical_stage, next_stage) in stages.items():
@@ -1090,20 +1101,20 @@ for phrase in [
     "A Planning Receipt is complete or absent",
     "Local `sprint` and `sprint-readiness` remain runtime grouping and readiness mechanics",
     "repository-local read-only planning reader",
-    "repository-local read-only engage comparator",
+    "installed loader's sibling read-only engage comparator",
     "every currently Ready snapshot source",
-    "For a provider-backed adopter, also compare its engage comparator",
-    "A standalone adopter has no comparator to compare or exercise",
+    "For a provider-backed adopter, run one clean, one delta, and one invalid-input comparator invocation",
+    "A standalone adopter has no comparator to exercise",
     "For a complete Planning Receipt, the engage reconcile is read-only",
-    "outside the workflow runtime tree",
+    "do not persist an installation path",
     "exact source, window, and outcome",
     "do not all share",
     "Captain admits every delta",
     "parsed `status: clean` result",
     "starts directly with `## The problem`",
     "omits both an `## Agent execution contract` section",
-    "Only a provider-backed adopter vendors the engage comparator",
-    "A standalone adopter vendors neither a comparator nor a provider adapter",
+    "A provider-backed adopter keeps its provider adapter",
+    "standalone adopter installs neither a comparator nor a provider adapter",
     "A missing delivery authority is a refit requirement",
     "do not invent direct Git delivery",
 ]:
@@ -1158,10 +1169,10 @@ for phrase in [
     "start/end marker pair",
     "Read only its frontmatter and marked block",
     "never infer boundaries from headings",
-    "repository-local profile loader",
+    "from this activated skill",
     "--work-item <exact-committed-work-item>",
     "simultaneous items may load different routes",
-    "Do not separately read the full kernel, another profile, another stage",
+    "emits shared core, selected base, and selected stage only",
     "kc-dev-flow:chief-engineer",
     "kc-dev-flow:science-officer",
     "kc-dev-flow-conditional-references/v1",
@@ -1187,7 +1198,7 @@ for phrase in [
     "all Planning Receipt fields are present",
     "report `planning receipt incomplete`",
     "run provider reconcile only for the provider-backed branch",
-    "Invoke the repository-local read-only engage comparator only in the provider-backed branch.",
+    "Invoke the installed loader's sibling read-only engage comparator only in the provider-backed branch.",
     "Captain-approved committed brief",
     "If `source` is not a resolvable planning link, report `planning source unavailable`",
     "stop before reading execution state",
@@ -1228,7 +1239,7 @@ for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
 for phrase in [
     "older explicit Captain choice outside the v1 schema",
     "extra local terminal state only through an explicit mapping",
-    "Preserve the surviving `retained-document-policy.md`",
+    "Keep `retained-document-policy.md`",
     "`receipt: null` adds no receipt",
 ]:
     require(phrase in normalized_adopter, f"adopter omits migration rule: {phrase}")
@@ -1346,7 +1357,7 @@ for phrase in [
     "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
     "A difference requires Captain admission and never writes either side automatically.",
     "| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`",
-    "| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |",
+    "| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |",
     "reconcile every active Issue in the exact Project/Cycle",
     "--expected-source",
     "--expected-window",
@@ -1443,9 +1454,11 @@ for phrase in [
     "Pilot | `backlog -> ideation -> implementation -> validation -> done`",
     "profile-contract-loader.py",
     "Profiles are per item",
+    "| Installed contract interface | `kc-dev-flow-local-profile/v1` |",
+    "| Local mods | `docs/dev/_mods/pr-merge.md` |",
     "No agent is a general gatekeeper",
     "delivery event mod, not a profile contract",
-    "seven conditional references",
+    "canonical runtime resources",
     "`pr_delivery_selected` stays false and `pr-delivery.md` is not loaded here",
     "Work-item records and unrelated Markdown changes activate neither",
 ]:
@@ -1513,7 +1526,7 @@ for phrase in [
 # per-file checks then confirm each one is still listed with a trigger.
 for phrase in [
     "Everything else under `references/` is conditional",
-    "a reference link is not activation, and vendoring one adds no ordinary-stage work",
+    "Selecting a profile or installing the package activates none of it",
     "`reverse-recovery-audit.md`",
     "`journey-slicing.md`",
     "`retained-document-policy.md`",
@@ -1746,8 +1759,9 @@ Stop on any planning drift.
                 env[name] = value
         return subprocess.run(
             [sys.executable, str(reader), "--workflow-dir", str(workflow),
-             "--work-item", str(work_item), "--contracts-root", str(ADOPTED),
-             "--comparator", str(ADOPTED_TOOLS / "engage-reconcile.py"),
+             "--work-item", str(work_item),
+             "--profile-loader", str(PLUGIN / "scripts/profile-contract-loader.py"),
+             "--local-profile", str(ROOT / "docs/dev/README.md"),
              "--linear-workspace", "duckbase-co", "--state-revision", revision,
              "--timeout", timeout, "--graphql-url", f"http://127.0.0.1:{server.server_port}/graphql"],
             cwd=ROOT, env=env, text=True, capture_output=True,
@@ -1772,6 +1786,9 @@ Stop on any planning drift.
         }
         and envelope["reconcile"] == {"added": [], "changed": [], "moved": [], "removed": [], "status": "clean"}
         and envelope["snapshot_sha256"] == envelope["live_read_sha256"]
+        and envelope["plugin_version"] == installed_package["version"]
+        and envelope["contract_digest"] == installed_package["contract_digest"]
+        and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
     )
