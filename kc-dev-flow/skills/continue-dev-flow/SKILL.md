@@ -34,7 +34,7 @@ Continue by the selected profile's smallest sufficient route.
      comparator;
    - when all Planning Receipt fields are present, run provider reconcile only
      for the provider-backed branch below. For a new Pilot or Production
-     admission, first invoke the repository-local profile loader's explicit
+     admission, first invoke this activated skill's installed profile loader in explicit
      `--validate-admission` mode; default continuation never selects that mode;
      and
    - otherwise report `planning receipt incomplete` and stop before reading
@@ -60,8 +60,9 @@ Continue by the selected profile's smallest sufficient route.
    string-list `non-goals`. Do not commit or reuse those files. Refuse the
    snapshot unless every item shares the exact window and outcome read from the
    engaged item.
-7. Invoke the repository-local read-only engage comparator only in the
-   provider-backed branch.
+7. Invoke the installed loader's sibling read-only engage comparator only in
+   the provider-backed branch. The activated skill supplies both package paths
+   for this invocation; do not store an installation path in the repository.
 
    ```bash
    python3 <planning-comparator> \
@@ -118,25 +119,18 @@ Continue by the selected profile's smallest sufficient route.
    `kc-dev-flow:choose-work-profile` to complete the v3 POC fields with the
    Captain before dispatch.
 
-If the repository changes planning provider, migrate only open planning items
-that have not been admitted to execution. An admitted provider-backed item keeps
-its existing planning item and provider until completion; the old provider must
-remain available for it. A standalone item has no provider to migrate. New
-provider-backed admissions use the replacement provider. During this drain,
-each active item still has one planning authority. Keep a provider-backed item's
-snapshot, source, window, outcome, and execution group unchanged and reconcile
-it through its own provider reader. Do not project execution state back to the
-provider, import provider state into execution, poll either side, or rewrite an
-active snapshot onto the replacement provider.
+On a planning-provider change, migrate only unadmitted items. Active items keep
+their provider, reader, snapshot, source, window, outcome, and execution group
+through completion; new admissions use the replacement. Do not project, import,
+poll, or rewrite either authority.
 
 ## Load one route
 
-Invoke the repository-local profile loader declared in `## Local Profile` with
-the exact committed work-item file. The loader derives and validates that item's
-supported receipt and current status, then binds their hash into the output. The output
-is the active contract: shared core, selected profile base, and selected stage.
-Do not separately read the full kernel, another profile, another stage, or an
-installed-package fallback. Profile selection is per work item, never a
+Resolve `../../scripts/profile-contract-loader.py` from this activated skill.
+Its manifest binds version, Local Profile interface, and canonical
+byte. Invoke it with the exact item and marked README; do not search hosts or
+store its path. It emits shared core, selected base, and selected stage only.
+Profile selection is per item, never a
 project-global mode; simultaneous items may load different routes.
 For canonical admitted work, the latest Stage Report cites stable `AC-N`
 identifiers and the repository's Spacedock `--ac-scan` check must report no
@@ -171,15 +165,23 @@ before the stage verdict. Record a named receipt in the existing work item;
 `receipt: null` creates no receipt. A link is not activation. A reference cannot
 add stages, broaden scope, or become a standing policy bundle.
 
-The canonical vendored loader invocation is:
+Before dispatch, the First Officer writes and commits the state-owned stage-pin
+sidecar, re-reads it, and dispatches only that envelope:
 
 ```bash
-python3 <profile-loader> \
-  --contracts-root <contracts-root> \
-  --work-item <exact-committed-work-item>
+python3 <activated-skill-package>/scripts/profile-contract-loader.py \
+  --work-item <exact-committed-work-item> \
+  --local-profile <workflow-readme> \
+  --stage-pin <state-owned-stage-pin> \
+  --stage-attempt <runtime-owned-attempt> \
+  --write-stage-pin
 ```
 
-Use `--format json` only when a machine consumer needs the structured envelope.
+Same-stage drift returns `ACTIVE_STAGE_PIN_MISMATCH`; restore the pinned plugin.
+At the next boundary, an unchanged `local_profile_interface` may bind an
+upgrade. `LOCAL_PROFILE_REFIT_REQUIRED` emits no envelope or pin and names the
+README/local mods for Captain review; after the accepted refit, add
+`--accept-local-profile-refit`. Use `--format json` only for a machine consumer.
 
 At Production `ideation`, `skip_to_workflow_stage: implementation` loads no
 contract and authorizes only that existing state transition: re-read the same
@@ -206,7 +208,7 @@ contract. Skipped stages create no review or evidence obligation.
 
 ## Advance
 
-At POC validation, use the repository-local `poc-close-guard.py`. Record one
+At POC validation, use this installed package's sibling `poc-close-guard.py`. Record one
 `poc_outcome` and one separate `poc_close_measurement`. For direct proof, build
 records the outcome and the guard moves the item from implementation to
 validation solely for the terminal gate; do not dispatch a validation worker.
@@ -251,8 +253,7 @@ or named recovery risk emits true; recovery `[none]` emits false. A false or
 absent declaration performs no RoboRev probe or invocation. An unavailable
 fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
 
-The provider contract is vendored and loaded like any other conditional
-reference, so an adopter that vendors the profile tree gets this capability
-rather than having to author a runbook for it. Only the repository-local
-bindings stay local. Load improvement harvesting only on an explicit request; it
+The provider contract is declared by the installed manifest and loaded like any
+other conditional reference. README policy, local mods, provider adapters, and
+Spacedock state stay repository-owned. Load improvement harvesting only on an explicit request; it
 never interrupts the selected product route.

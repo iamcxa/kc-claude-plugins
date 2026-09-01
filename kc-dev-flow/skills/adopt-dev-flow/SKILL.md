@@ -25,9 +25,12 @@ seam.
 1. Add a concise `## Local Profile` near the workflow frontmatter, bounded by
    exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
    and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
-   existing authorities plus the repository-local profile loader and contracts root. A
+   existing authorities plus `Installed contract interface`, `Local mods`, and
+   the repository's work-item and state authorities. The activated skill anchors
+   its own package root and supplies `../../scripts/profile-contract-loader.py`
+   for that invocation; do not persist an installation path. A
    repository that supports Planning Receipts also binds its planning provider,
-   repository-local read-only planning reader, and vendored repository-local
+   repository-local read-only planning reader, and the installed loader's sibling
    read-only engage comparator. The reader normalizes the union of current Ready
    items for one planning window/outcome and every currently Ready snapshot
    source even when it moved; it refuses a truncated result and exposes source
@@ -35,24 +38,16 @@ seam.
    standalone adopter binds the Captain-approved committed brief and installs no
    provider adapter. Do not mirror live provider status into a Roadmap or
    execution record.
-2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
-   `../../references/reverse-recovery-audit.md`,
-   `../../references/journey-slicing.md`, and
-   `../../references/retained-document-policy.md`,
-   `../../references/project-context-maintenance.md`,
-   `../../references/delivery-branch-base.md`,
-   `../../references/pr-delivery.md`,
-   `../../references/roborev-implementation-exit.md`,
-   `../../scripts/profile-contract-loader.py`, and
-   `../../scripts/poc-close-guard.py` without local edits. Only a
-   provider-backed adopter vendors the engage comparator: copy
-   `../../scripts/engage-reconcile.py` without local edits to a repository-owned
-   tooling path outside the workflow runtime tree, then bind that path in
-   `## Local Profile`. A standalone adopter vendors neither a comparator nor a
-   provider adapter. The selected
-   stage owns each typed conditional-reference trigger; vendoring a reference
-   does not load it. The selected `build.md` owns its typed proportional observation.
-   Local provider paths and exceptions stay in the workflow README.
+2. Read `../../contract-manifest.json` beside the activated skill. It declares
+   the contract interface, Local Profile interface, and exact plugin-owned
+   runtime resources. Run its sibling installed loader from that same package;
+   do not search host caches, inspect host names, copy canonical resources into
+   the repository, or add a repository fallback. A provider-backed adopter keeps
+   its provider adapter but uses the installed sibling `engage-reconcile.py`; a
+   standalone adopter installs neither a comparator nor a provider adapter. The
+   selected stage owns each typed conditional-reference trigger; installation
+   does not load a reference. Local provider paths, README policy, local mods,
+   and Spacedock state remain repository-owned.
 3. Select a profile before the first working stage and store the v3 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
@@ -71,7 +66,7 @@ seam.
    execution snapshot into ephemeral comparator inputs. Refuse a snapshot whose
    items do not all share the engaged item's exact `planning-window` and
    `planning-outcome`. Bind that exact source, window, and outcome when invoking
-   the vendored comparator.
+   the installed sibling comparator.
    Only exit `0` with one parsed `status: clean` result and empty delta arrays
    continues. Any other output stops: exit `1` reports the classified delta,
    while exit `2` or an invalid exit-`0` payload reports unavailable input.
@@ -90,7 +85,14 @@ seam.
    provider's merge verdict is the sole terminal consumer. Backlog and done
    remain non-working states. Preserve an extra local terminal state only
    through an explicit mapping; it does not silently join every profile route.
-6. Make each working stage a small loader invocation or pointer. Load a
+6. Make each working stage a small installed-loader invocation or pointer. Pass
+   the exact work item, marked Local Profile, stage-pin sidecar, and runtime-owned
+   attempt identity. Before dispatch, write and commit one
+   `kc-dev-flow-stage-pin/v1` record, re-read it, and dispatch only its emitted
+   contract. Same-stage re-entry requires its exact plugin version, contract
+   digest, work-item hash, and attempt. A compatible installed upgrade may create
+   the next stage's pin; `LOCAL_PROFILE_REFIT_REQUIRED` stops before pin write or
+   dispatch and names the README and declared local mods requiring review. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes
    and `project_context_claim_may_change` to a possible changed claim in the
@@ -121,7 +123,7 @@ seam.
 8. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
 9. Resolve the implementation-exit observation by its precondition first. The
-   vendored `roborev-implementation-exit.md` claims single-flight through a
+   installed `roborev-implementation-exit.md` claims single-flight through a
    Spacedock-registered state holder, so the observation is in scope only for a
    repository running Spacedock with kc-dev-flow. Without that state authority,
    record the observation as out of scope once and leave its trigger false. That
@@ -141,13 +143,13 @@ seam.
    adoption defect: the observation would emit and resolve nothing at every
    future implementation exit, so record it as a refit requirement instead of
    leaving a permanent silent `UNAVAILABLE`.
-10. Re-run every profile-stage loader combination this repository will run and
-   prove that unselected profile and stage markers are absent from each result,
-   then run the repository's normal gates. Vendor no test: the packaged loader
-   contract test resolves the loader as its own sibling, so pointing it at the
-   vendored copy would mean copying a test file into a repository that has no
-   other use for it, and running the packaged copy would exercise the package
-   rather than this adoption.
+10. From at least one arbitrary installed root with host-specific environment
+   variables absent, re-run every profile-stage combination this repository will
+   use and prove that unselected profile and stage markers are absent. Snapshot
+   README policy, local-mod bytes and modes, provider adapters, and state before
+   migration; compare them after adoption and compatible upgrade. Delete
+   byte-identical canonical repository copies and parity machinery only after
+   these proofs pass, then run the repository's normal gates.
 
 If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty
@@ -155,23 +157,22 @@ review stages.
 
 ## Upgrade
 
-Compare the adopted loader, core, and selected profile files with this source.
-For a provider-backed adopter, also compare its engage comparator and run one
-clean, one delta, and one invalid-input invocation. A standalone adopter has no
-comparator to compare or exercise. Present changed authority, route, and proof
-semantics for acceptance. Replace accepted canonical files mechanically; do not
-create locally edited hybrids. Re-run every profile-stage loader combination and
-prove that unselected profile and stage markers are absent.
+Compare the active stage pin with the currently installed manifest. During an
+active stage, any version or digest change returns `ACTIVE_STAGE_PIN_MISMATCH`;
+restore the pinned install instead of mixing bytes. At the next boundary, an
+unchanged Local Profile interface is compatible and may bind the new version and
+digest. An interface change returns `LOCAL_PROFILE_REFIT_REQUIRED` with empty
+stdout and no pin or state mutation. Present changed authority, route, and proof
+semantics for Captain acceptance before refitting the named README or local mod.
+After that accepted refit, the next-stage invocation explicitly adds
+`--accept-local-profile-refit`; an ordinary compatible upgrade never uses it.
 
-A reference that exists in this source and not in the adopter is a missing
-capability, not an intentional omission. Compare the source reference set with
-the vendored one, vendor each absent file, and bind its trigger by the adopt
-rules above. The loader enforces presence: `check_conditional_references` refuses
-a stage contract that declares a reference the adopter has not vendored, so an
-incomplete re-vendor stops the route instead of silently dropping the capability.
-It checks presence only — the reference still stays unread until its trigger
-fires. That is the path by which a repository upgraded before a reference existed
-picks it up.
+For a provider-backed adopter, run one clean, one delta, and one invalid-input
+comparator invocation through the installed package. A standalone adopter has
+no comparator to exercise. Re-run every profile-stage combination and prove
+that unselected profile and stage markers are absent. The manifest makes a
+missing declared reference an installed-package defect; do not repair it by
+creating a repository copy.
 
 An existing v1 receipt remains evidence of the prior choice but cannot drive the
 new loader. A Pilot or Production v1 receipt with an unchanged basis may migrate
@@ -195,10 +196,9 @@ Retire old source mods by disposition, not by filename alone:
 | `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
 | `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
 
-Preserve the surviving `retained-document-policy.md` and
-`project-context-maintenance.md` references byte-for-byte. They remain typed
-conditional references; do not fold either into the shared core or load it for
-an unrelated work record.
+Keep `retained-document-policy.md` and `project-context-maintenance.md` as typed
+installed conditional references; do not copy them into the repository, fold
+them into the shared core, or load either for an unrelated work record.
 
 Changing the planning provider is item-scoped. Migrate only open planning items
 that have not been admitted to execution. An admitted provider-backed item keeps

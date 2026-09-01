@@ -66,14 +66,15 @@ standalone Captain-approved brief leaves `source`, `planning-window`, and
 | Planning window | Linear Cycle |
 | Planning outcome | Linear Project as one user-value release package |
 | Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, accept no credential argument or interactive fallback, reconcile every active Issue in the exact Project/Cycle, and emit Linear's exact `branchName` plus `Fixes DEV-N` from the engaged Issue |
-| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
+| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
-| Profile loader | `docs/dev/_mods/profile-contract-loader.py`; default loading preserves admitted headings, while only the Linear admission guard selects `--validate-admission` for new Pilot or Production work |
-| POC close guard | `docs/dev/_mods/poc-close-guard.py` |
-| Contracts root | `docs/dev/_mods` |
+| Profile loader | Installed `profile-contract-loader.py` supplied by the activated `kc-dev-flow` skill; default loading preserves admitted headings, while only the Linear admission guard selects `--validate-admission` for new Pilot or Production work |
+| POC close guard | Installed sibling `poc-close-guard.py` supplied by the activated skill |
+| Installed contract interface | `kc-dev-flow-local-profile/v1` |
+| Local mods | `docs/dev/_mods/pr-merge.md` |
 | Delivery | GitHub PR to `main`; required checks; release-please owns versions and tags |
 | Scope, profile, irreversibility, merge/release | Captain |
 | Orchestration | First Officer |
@@ -81,15 +82,17 @@ standalone Captain-approved brief leaves `source`, `planning-window`, and
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
 | Optional observation | Typed RoboRev observation at every profile's implementation exit where eligible: Pilot, full Production, retained/safety-bound POCs, and named-risk Production recovery; direct POCs and recovery `[none]` invoke nothing |
 | RoboRev local bindings | Fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, `panel: none`; implementation family is provenance only; `.roborev.toml` is the repository fallback; state holder `docs/dev/.spacedock-state`; prerequisite `scripts/dev-flow-state-prereq.sh`; durability `spacedock state commit` |
-| Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md`; `docs/dev/_mods/roborev-implementation-exit.md` |
+| Conditional references | Installed manifest resources `reverse-recovery-audit.md`, `journey-slicing.md`, `retained-document-policy.md`, `project-context-maintenance.md`, `delivery-branch-base.md`, `pr-delivery.md`, and `roborev-implementation-exit.md` |
 | Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. **Local base policy: trunk-only, pending a refit.** The vendored `pr-merge` copy resolves its base as the configured trunk and rebases onto it, so a stacked base would be re-targeted and the PR would carry its parent's commits. Until that copy accepts a sibling base, do not stack here; the refit requirement is to make it preserve the selected base. |
 | Workflow scope | This repository's own plugin development is in scope, not exempt. The countable trigger is a **second pull request for the same piece of work**: one PR may be a small task, a second says it is not — stop there and take the work through the stages. Entering means reading this Local Profile section first, before the selected item; a session that runs the stages while skipping this table still misses the local base policy and the bound authorities below. Recorded 2026-08-22 after four plugin PRs merged with no entity, no stage report and no gate, and the largest defect among them survived to `main` because nothing had asked what would falsify it. |
 | PR lifecycle | Spacedock `pr-merge`, only when a PR is the selected delivery artifact. It owns the ceremony, so `pr_delivery_selected` stays false and `pr-delivery.md` is not loaded here. |
 
-The loader, shared core, profile contracts, and seven conditional references are
-vendored from `kc-dev-flow`.
-`scripts/kc-dev-flow-contract-test.py` checks their package/adopter identity and
-every supported profile-stage combination.
+The activated `kc-dev-flow` skill supplies its self-locating installed loader.
+`contract-manifest.json` binds the package version, contract digest, Local
+Profile interface, and canonical runtime resources. This repository retains
+only README policy, local mods, provider adapters, and Spacedock state;
+`scripts/kc-dev-flow-contract-test.py` checks every supported profile-stage
+combination and rejects canonical repository copies.
 
 The selected stage resolves documentation triggers from accepted scope and
 rechecks them against the exact diff before implementation exit or validation.
@@ -162,13 +165,27 @@ POC fields before dispatch.
 Use the host's structured Ask UI when available; plain chat is the fallback.
 Selection precedes acceptance-criteria expansion and stage dispatch.
 
-Load the selected working contract with:
+The activated skill supplies its exact installed loader path as
+`$KC_DEV_FLOW_LOADER` for the current invocation; do not persist that path. The
+First Officer also supplies the state-owned pin path and runtime-owned attempt:
 
 ```bash
-python3 docs/dev/_mods/profile-contract-loader.py \
-  --contracts-root docs/dev/_mods \
-  --work-item "$EXACT_COMMITTED_WORK_ITEM"
+python3 "$KC_DEV_FLOW_LOADER" \
+  --work-item "$EXACT_COMMITTED_WORK_ITEM" \
+  --local-profile docs/dev/README.md \
+  --stage-pin "$EXACT_STAGE_PIN" \
+  --stage-attempt "$EXACT_STAGE_ATTEMPT" \
+  --write-stage-pin
 ```
+
+Write and commit the pin before dispatch, then rerun without
+`--write-stage-pin` and require exact readback. Same-stage re-entry restores the
+pinned plugin when version or digest differs. A compatible upgrade takes effect
+only when the next stage writes its pin; `LOCAL_PROFILE_REFIT_REQUIRED` stops
+before pin write or dispatch and names this README plus `Local mods` for Captain
+review; after the accepted refit, rerun with `--accept-local-profile-refit`.
+Plugin upgrades do not rewrite README policy, local mods, provider
+adapters, or unrelated Spacedock state.
 
 The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
@@ -180,7 +197,7 @@ instead emits `skip_to_workflow_stage: implementation` with no loaded ideation
 contract. Profiles are per item, so POC, Pilot, and Production items may run
 concurrently in this repository without a global profile switch. A refusal
 blocks only that item's dispatch until its receipt, state, scheduling fields, or
-vendored adoption is corrected.
+installed binding is corrected.
 
 ## Stages
 
@@ -209,8 +226,8 @@ hand-written normalization is accepted:
 python3 scripts/kc-dev-flow/linear-admission.py \
   --workflow-dir docs/dev \
   --work-item "$EXACT_COMMITTED_WORK_ITEM" \
-  --contracts-root docs/dev/_mods \
-  --comparator scripts/kc-dev-flow/engage-reconcile.py \
+  --profile-loader "$KC_DEV_FLOW_LOADER" \
+  --local-profile docs/dev/README.md \
   --linear-workspace duckbase-co \
   --state-revision "$EXACT_40_HEX_STATE_REVISION" \
   --timeout 30
@@ -294,9 +311,9 @@ no shape stage. Pilot and Production do not repeat a completed shape audit; an
 unplanned new surface returns to the stage that owns scope.
 
 After tests and an exact candidate revision exist, a true loader
-`implementation_exit_observation_declared` loads
-[`_mods/roborev-implementation-exit.md`](./_mods/roborev-implementation-exit.md)
-as the build observation. Direct no-code/disposable POCs emit false and perform
+`implementation_exit_observation_declared` loads the installed
+`roborev-implementation-exit.md` resource as the build observation. Direct
+no-code/disposable POCs emit false and perform
 no provider work; retained or safety-bound POCs stay fresh. Its receipt is
 observation, not validation or delivery authority. POC ends after one request;
 Pilot and full-route Production allow one changed-tip confirmation.

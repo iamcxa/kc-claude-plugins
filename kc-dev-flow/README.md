@@ -136,8 +136,8 @@ configuration or rewrite its own records is Production.
 
 The script surface has four roles. Runtime helpers are the loader, POC close
 guard, provider-backed comparator, and conditional PR handoff. `*.test.py`
-files are package self-tests used by release proof; adopters vendor none of
-them. Repository adapters and release gates stay outside the plugin directory.
+files are package self-tests used by release proof. Adopters copy no canonical
+runtime file; repository adapters and release gates stay outside the plugin directory.
 The repository contract classifies every kc-dev-flow Python script into exactly
 one of these roles, so an unowned script fails the gate.
 
@@ -152,6 +152,9 @@ published mode against it with the retained receipt; local install sync waits
 for that check to pass.
 
 `scripts/profile-contract-loader.py` is the closed route and loading mechanism.
+It resolves `contract-manifest.json` from its own installed package, validates
+the manifest's exact resource inventory, and hashes the manifest plus every
+declared byte. No host/cache discovery or repository contracts root participates.
 For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
@@ -159,9 +162,9 @@ Its explicit `--validate-admission` mode additionally validates the canonical
 Development Brief and complete-or-absent Planning Receipt for a new Pilot or
 Production admission. Default loading does not inspect acceptance headings.
 
-Provider-backed adopters vendor `scripts/engage-reconcile.py` as their read-only
-compare mechanism; standalone adopters install neither it nor a provider
-adapter. It checks
+Provider-backed adopters invoke the installed loader's sibling
+`scripts/engage-reconcile.py` as their read-only compare mechanism; standalone
+adopters install neither a provider reader nor adapter. It checks
 ephemeral normalized admission and current Ready sets against the
 caller-supplied expected source, window, and outcome, then compares accepted
 goal and non-goals. A completed comparison returns `0` with a JSON
@@ -176,7 +179,7 @@ evidence. For a complete receipt, the planning provider owns the accepted window
 and outcome. At every engage, the adopter's read-only planning reader normalizes
 the provider's current Ready set and the admitted snapshot; that current set also
 includes every still-Ready snapshot source outside the original window/outcome.
-The vendored comparator classifies their difference. Any delta stops before new
+The installed comparator classifies their difference. Any delta stops before new
 dispatch or mutation until the Captain admits it. A standalone item skips this
 provider path.
 An adopter may bind one repository-local read-only admission command that owns
@@ -185,9 +188,8 @@ comparator invocation, and success-only dispatch-envelope emission. That seam
 adds no provider, persistence, synchronization, or launch authority to the
 portable package.
 
-Everything else under `references/` is conditional. Selecting a profile
-activates none of it; a reference link is not activation, and vendoring one adds
-no ordinary-stage work.
+Everything else under `references/` is conditional. Selecting a profile or
+installing the package activates none of it; a reference link is not activation.
 
 | Reference | Loads when |
 |---|---|
@@ -203,10 +205,12 @@ Retained-document and project-context policy both carry a `build` obligation and
 are independently rechecked at validation. An unavailable provider cannot
 silently become a delivery failure.
 
-`adopt-dev-flow` vendors these files and binds their local paths in the
-workflow's `## Local Profile`. `continue-dev-flow` then reads that binding, the
-exact work item and receipt, and invokes the local loader — not the full
-workflow README, unselected profiles, or installed package fallback. An adopter
+`adopt-dev-flow` binds the Local Profile interface while preserving README
+policy, local mods, provider adapters, and state. The activated skill supplies
+its own loader path for each invocation without persisting an installation
+path. A state-owned stage pin fixes version and digest for the active attempt;
+a compatible upgrade starts at the next boundary, while an incompatible Local
+Profile interface stops for refit before pin write or dispatch. An adopter
 moving from an earlier vendored layout follows [MIGRATION.md](./MIGRATION.md).
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
@@ -222,5 +226,5 @@ exposes the package skills with stable names such as
 `kc-dev-flow:choose-work-profile` and `kc-dev-flow:continue-dev-flow`.
 
 The Hermes package is a distribution route, not a repository runtime fallback:
-an adopter still vendors and binds its own selected contracts in `## Local
-Profile`.
+the activated skill anchors the same installed manifest and loader while the
+adopter keeps only its Local Profile policy, local mods, adapters, and state.

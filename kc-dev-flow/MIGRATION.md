@@ -1,5 +1,57 @@
 # Migration
 
+## Migrating a vendored 4.x adopter to installed contracts
+
+This migration makes the installed `kc-dev-flow` package the canonical runtime
+source. The adopter retains its marked workflow README, local mods, provider
+adapters, work items, and Spacedock state. It removes repository copies of the
+kernel, profiles, conditional references, loader, POC close guard, and engage
+comparator only after the installed route is proven.
+
+1. Freeze the adopter revision and snapshot the complete marked Local Profile,
+   each declared local-mod byte hash and mode, provider-adapter bytes, and state
+   HEAD/tree/status. Inventory every canonical repository copy and verify it is
+   byte-identical to the currently installed package before classifying it as a
+   deletion candidate.
+2. Add `Installed contract interface` with
+   `kc-dev-flow-local-profile/v1` and `Local mods` to the marked Local Profile.
+   Remove stored loader, contracts-root, close-guard, comparator, and
+   conditional-reference installation paths. The activated `adopt-dev-flow` or
+   `continue-dev-flow` skill supplies its own sibling loader path for the current
+   invocation; do not search host caches or persist that path.
+3. For a provider-backed repository, keep its provider reader/adapter and pass
+   the installed loader path into that adapter. The adapter invokes the loader's
+   sibling `engage-reconcile.py`. A standalone repository keeps neither reader
+   nor adapter and invokes no comparator.
+4. From at least three arbitrary package roots with Claude, Codex, Hermes, and
+   Conductor discovery variables absent, run every supported profile-stage
+   combination. Require the installed manifest's version/digest envelope, the
+   selected kernel/base/stage only, and no unselected marker.
+5. Create the state authority's stage-pin sidecar. Before dispatch, the First
+   Officer writes and commits one `kc-dev-flow-stage-pin/v1` record, reruns the
+   loader to read it back, and dispatches only that envelope. Same-stage re-entry
+   accepts only the pinned plugin version, contract digest, work-item hash, and
+   attempt. Restore missing or changed pinned bytes; do not fall back to the
+   repository copies.
+6. Exercise one compatible upgrade by changing package version/digest without
+   changing `local_profile_interface`: the active stage must return
+   `ACTIVE_STAGE_PIN_MISMATCH`, while the next stage may write the new pin.
+   Exercise one incompatible interface upgrade: it must return
+   `LOCAL_PROFILE_REFIT_REQUIRED` with empty stdout, name the README and declared
+   local mods, and leave the prior pin and state unchanged.
+   After the Captain accepts and the named bindings are refit, rerun the next
+   boundary once with `--accept-local-profile-refit`.
+7. Recompare every preservation snapshot. Only after the fresh-adopter,
+   all-route, upgrade, refit, and preservation checks pass, delete the canonical
+   repository copies and package/adopter parity machinery. Reject any remaining
+   canonical copy. Run the adopter's provider, close-guard, route, and normal
+   repository gates through the installed package.
+
+Rollback before a new-stage pin restores the old installed plugin and the
+atomic Local Profile/deletion commit. After a new stage is pinned, keep that
+version through the active stage and schedule any downgrade for the following
+boundary. Never rewrite active work-item history or unrelated Spacedock state.
+
 ## Migrating from 3.x to 4.x
 
 Version 4 keeps one graph and three profile slugs, changes new receipts to
