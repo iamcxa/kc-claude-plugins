@@ -630,6 +630,25 @@ def main() -> int:
         "   exactly one start marker `<!-- local-profile-start-removed -->`\n",
         "2.x migration omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
     )
+    run_manual_contract_mutant(
+        "migration-3x-standalone-fields-removed",
+        "kc-dev-flow/MIGRATION.md",
+        "   `planning-outcome` values. For standalone work, leave `source`,\n"
+        "   `planning-window`, and `planning-outcome` absent and use the Captain-approved\n"
+        "   committed brief as planning authority. Both paths assign a non-empty local\n",
+        "   `planning-outcome` values. Record provider planning fields for every item.\n"
+        "   Both paths assign a non-empty local\n",
+        "3.x migration omits standalone planning branch: For standalone work, leave `source`, `planning-window`, and `planning-outcome` absent",
+    )
+    run_manual_contract_mutant(
+        "migration-3x-standalone-reconcile-removed",
+        "kc-dev-flow/MIGRATION.md",
+        "   comparator with that exact source, window, and outcome. Standalone work skips\n"
+        "   both and continues from the Captain-approved committed brief. For the\n",
+        "   comparator with that exact source, window, and outcome. All work runs the\n"
+        "   comparator before continuing. For the\n",
+        "3.x migration omits standalone planning branch: Standalone work skips both and continues from the Captain-approved committed brief",
+    )
     run_gate_mutant(
         "poc-no-longer-lightest",
         make_poc_not_lightest,

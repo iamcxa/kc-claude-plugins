@@ -1064,6 +1064,7 @@ migration_3x = migration.split("## Migrating from 3.x to 4.x", 1)[1].split(
     "## Migrating from 2.x", 1
 )[0]
 migration_2x = migration.split("## Migrating from 2.x", 1)[1]
+normalized_migration_3x = " ".join(migration_3x.split())
 for label, section in (("3.x migration", migration_3x), ("2.x migration", migration_2x)):
     for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
@@ -1126,6 +1127,26 @@ for phrase in [
     "parsed `status: clean` result",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
+for phrase in [
+    "classify its Planning Receipt before recording scheduling fields",
+    "For provider-backed work, resolve the accepted planning window and outcome from `source`",
+    "For standalone work, leave `source`, `planning-window`, and `planning-outcome` absent",
+    "Both paths assign a non-empty local `sprint` execution group",
+    "Run the reader and comparator only for provider-backed work",
+    "Standalone work skips both and continues from the Captain-approved committed brief",
+]:
+    require(
+        phrase in normalized_migration_3x,
+        f"3.x migration omits standalone planning branch: {phrase}",
+    )
+for stale in [
+    "Before continuing any item already at its first working stage, resolve its accepted planning window and outcome from `source`",
+    "then run one read-only engage reconcile against the provider's current Ready set",
+]:
+    require(
+        stale not in normalized_migration_3x,
+        f"3.x migration still makes provider planning universal: {stale}",
+    )
 require(
     "review disposition" in normalized_production_verify
     and "model identity" in normalized_production_verify,
