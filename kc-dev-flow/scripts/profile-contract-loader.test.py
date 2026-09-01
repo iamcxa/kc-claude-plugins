@@ -1325,6 +1325,7 @@ README-POLICY-SENTINEL
         pin: Path | None = None,
         attempt: str | None = None,
         write_pin: bool = False,
+        accept_refit: bool = False,
         profile_path: Path = local_profile,
     ) -> subprocess.CompletedProcess[str]:
         command = [
@@ -1343,6 +1344,8 @@ README-POLICY-SENTINEL
             command.extend(["--stage-attempt", attempt])
         if write_pin:
             command.append("--write-stage-pin")
+        if accept_refit:
+            command.append("--accept-local-profile-refit")
         env = os.environ.copy()
         for name in (
             "CLAUDECODE",
@@ -1476,6 +1479,26 @@ README-POLICY-SENTINEL
         == preserved["mod"]
         and state_sentinel.read_bytes() == preserved["state"],
         "installed loading changed README policy, local-mod bytes/mode, or unrelated state",
+    )
+    local_profile.write_text(
+        local_profile.read_text(encoding="utf-8").replace(
+            "kc-dev-flow-local-profile/v1", "kc-dev-flow-local-profile/v2", 1
+        ),
+        encoding="utf-8",
+    )
+    accepted_refit = installed_run(
+        incompatible_root / "scripts/profile-contract-loader.py",
+        pin_item,
+        pin=pin_path,
+        attempt="validation-1",
+        write_pin=True,
+        accept_refit=True,
+    )
+    require(
+        accepted_refit.returncode == 0
+        and json.loads(accepted_refit.stdout)["local_profile_interface"]
+        == "kc-dev-flow-local-profile/v2",
+        f"accepted Local Profile refit did not open the next boundary: {accepted_refit.stderr}",
     )
 
 # --- Live Spacedock route mechanism: the production release-authorization

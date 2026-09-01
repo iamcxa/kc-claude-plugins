@@ -231,6 +231,8 @@ def bind_stage_pin(
     local_profile: dict[str, object],
     attempt: str,
     previous: dict[str, object] | None,
+    *,
+    accept_local_profile_refit: bool = False,
 ) -> dict[str, object]:
     if not attempt or len(attempt.encode("utf-8")) > 160:
         raise ContractError("stage attempt must be a non-empty bounded identifier")
@@ -256,7 +258,10 @@ def bind_stage_pin(
             )
         if previous.get("work_item") != contract["work_item"]:
             raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item identity changed")
-        if previous.get("local_profile_interface") != interface:
+        if (
+            previous.get("local_profile_interface") != interface
+            and not accept_local_profile_refit
+        ):
             raise ContractError(
                 "LOCAL_PROFILE_REFIT_REQUIRED: "
                 f"{local_profile['path']} Installed contract interface and declared "
@@ -737,6 +742,7 @@ def load_installed_contracts(
     stage_pin_path: Path | None = None,
     stage_attempt: str | None = None,
     persist_stage_pin: bool = False,
+    accept_local_profile_refit: bool = False,
 ) -> dict[str, object]:
     """Load contracts from this installed package and optionally bind a stage pin."""
     previous = read_stage_pin(stage_pin_path) if stage_pin_path is not None else None
@@ -776,7 +782,14 @@ def load_installed_contracts(
         return contract
     if stage_pin_path is None or stage_attempt is None:
         raise ContractError("stage pinning requires --stage-pin and --stage-attempt")
-    pin = bind_stage_pin(contract, package, local_profile, stage_attempt, previous)
+    pin = bind_stage_pin(
+        contract,
+        package,
+        local_profile,
+        stage_attempt,
+        previous,
+        accept_local_profile_refit=accept_local_profile_refit,
+    )
     contract["stage_pin"] = pin
     if persist_stage_pin:
         write_stage_pin(stage_pin_path, pin)
@@ -833,6 +846,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stage-pin", type=Path)
     parser.add_argument("--stage-attempt")
     parser.add_argument("--write-stage-pin", action="store_true")
+    parser.add_argument("--accept-local-profile-refit", action="store_true")
     parser.add_argument("--format", choices=("text", "json"), default="text")
     parser.add_argument("--validate-admission", action="store_true")
     return parser.parse_args()
@@ -848,6 +862,7 @@ def main() -> int:
             stage_pin_path=args.stage_pin,
             stage_attempt=args.stage_attempt,
             persist_stage_pin=args.write_stage_pin,
+            accept_local_profile_refit=args.accept_local_profile_refit,
         )
     except ContractError as exc:
         print(f"profile contract: {exc}", file=sys.stderr)

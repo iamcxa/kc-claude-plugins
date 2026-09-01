@@ -66,7 +66,7 @@ At every provider-backed engage, a repository-local reader normalizes the
 provider's current Ready set, including every still-Ready snapshot source
 outside the original window/outcome, and the committed execution snapshot. The
 First Officer supplies the source, window, and outcome read from the exact work
-item; the vendored read-only comparator checks the normalized snapshot against
+item; the installed loader's sibling read-only comparator checks the normalized snapshot against
 those expected values and classifies every delta. The First Officer continues
 only on one parsed `status: clean` result. The Captain admits a delta before an
 authorized actor commits the replacement snapshot. Because reconcile writes

@@ -237,13 +237,14 @@ def live_item(issue: object) -> dict[str, object]:
 
 
 def run_loader(args: argparse.Namespace, deadline: float) -> dict[str, object]:
-    loader = args.contracts_root / "profile-contract-loader.py"
+    loader = args.profile_loader.expanduser().resolve()
     if not loader.is_file():
-        loader = args.contracts_root.parent / "scripts" / "profile-contract-loader.py"
+        raise AdmissionError("admission profile loader unavailable")
     try:
         result = subprocess.run(
-            [sys.executable, str(loader), "--contracts-root", str(args.contracts_root),
-             "--work-item", str(args.work_item), "--format", "json", "--validate-admission"],
+            [sys.executable, str(loader), "--work-item", str(args.work_item),
+             "--local-profile", str(args.local_profile), "--format", "json",
+             "--validate-admission"],
             text=True, capture_output=True, timeout=max(0.01, deadline - time.monotonic())
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
@@ -263,8 +264,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--workflow-dir", type=Path, required=True)
     parser.add_argument("--work-item", type=Path, required=True)
-    parser.add_argument("--contracts-root", type=Path, required=True)
-    parser.add_argument("--comparator", type=Path, required=True)
+    parser.add_argument("--profile-loader", type=Path, required=True)
+    parser.add_argument("--local-profile", type=Path, required=True)
     parser.add_argument("--linear-workspace", required=True)
     parser.add_argument("--state-revision", required=True)
     parser.add_argument("--timeout", type=float, default=30.0)
@@ -292,6 +293,10 @@ def main() -> int:
 
         state = (args.workflow_dir / ".spacedock-state").resolve()
         work_item = args.work_item.resolve()
+        profile_loader = args.profile_loader.expanduser().resolve()
+        comparator = profile_loader.parent / "engage-reconcile.py"
+        if not comparator.is_file():
+            raise AdmissionError("installed planning comparator unavailable")
         if not work_item.is_relative_to(state) or not re.fullmatch(r"[0-9a-f]{40}", args.state_revision):
             raise AdmissionError("work item or state revision is not exact")
         head = git(state, "rev-parse", "HEAD", timeout=max(0.01, deadline - time.monotonic())).decode().strip()
@@ -395,7 +400,7 @@ def main() -> int:
             current_path.write_text(json.dumps(current_items), encoding="utf-8")
             try:
                 compared = subprocess.run(
-                    [sys.executable, str(args.comparator), "--snapshot", str(snapshot_path),
+                    [sys.executable, str(comparator), "--snapshot", str(snapshot_path),
                      "--current", str(current_path), "--expected-source", str(engaged["source"]),
                      "--expected-window", str(expected_window), "--expected-outcome", str(expected_outcome)],
                     text=True, capture_output=True, timeout=max(0.01, deadline - time.monotonic())
@@ -439,6 +444,9 @@ def main() -> int:
             "live_read_sha256": digest(current_items),
             "reconcile": reconciliation,
             "development_brief_sha256": loader["development_brief_sha256"],
+            "plugin_version": loader["plugin_version"],
+            "contract_digest": loader["contract_digest"],
+            "local_profile_interface": loader["local_profile_interface"],
             "profile_contract_hashes": contract_hashes,
             "command_elapsed_ms": round((time.monotonic() - started) * 1000),
         }
