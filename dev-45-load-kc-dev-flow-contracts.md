@@ -11,7 +11,7 @@ design: required
 started: 2026-09-01T16:31:49Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-dev-45-load-kc-dev-flow-contracts
 issue:
 pr:
 mod-block:
