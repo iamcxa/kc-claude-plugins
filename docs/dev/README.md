@@ -47,27 +47,25 @@ receive placeholder reviews or receipts.
 Read only this section before resolving the selected item. Do not read this full
 README as a policy bundle.
 
-GitHub Issues plus Project #4 is this repository's default planning provider, not an iteration authority.
-Its Iteration field is the planning window, its GitHub Milestone is the planning
-outcome, and Status `Ready` selects provider-backed candidates. Spacedock tasks
-are execution records, and `source` links the accepted planning item. At every
-provider-backed engage, compare the provider's current Ready set with the
-committed SD snapshot. A difference requires Captain admission and never writes
-either side automatically. A standalone Captain-approved brief leaves `source`,
-`planning-window`, and `planning-outcome` empty and invokes no provider reader or
-comparator.
-New Linear-backed Pilot and Production admissions instead use the combined
-repository-local Linear admission guard below. Existing admitted work keeps its
-provider and default loader path unchanged.
+Linear is this repository's planning provider for new provider-backed
+admissions, not an iteration authority. A Linear Project is the planning
+outcome and release package, its Cycle is the planning window, and active
+`unstarted` or `started` Issues select candidates. Spacedock tasks are execution
+records, and `source` links the accepted Linear Issue. At every provider-backed
+engage, compare the current Project/Cycle active set with the committed SD
+snapshot. A difference requires Captain admission and never writes either side
+automatically. Existing admitted work keeps its recorded provider and reader;
+GitHub Project #4 remains historical and receives no new admissions. A
+standalone Captain-approved brief leaves `source`, `planning-window`, and
+`planning-outcome` empty and invokes no provider reader or comparator.
 
 | Role | Bound local authority |
 |---|---|
 | Project context | Root `PRODUCT.md`, `ARCHITECTURE.md`, and `CLAUDE.md` |
-| Planning items | GitHub Issues plus Project #4, as the current replaceable provider |
-| Planning window | Project #4 Iteration field |
-| Planning outcome | GitHub Issue Milestone surfaced in Project #4 |
-| Planning reader | Read-only `gh project item-list 4 --owner iamcxa --limit 1000 --format json`; refuse when `.totalCount != (.items | length)`, then normalize the union of Status `Ready` items in the bound Iteration/Milestone and currently Ready snapshot sources with their issue source, Iteration, Milestone, accepted outcome, and non-goals; derive ephemeral delivery `{branch: null, close_line: "Closes owner/repo#N"}` from that exact issue source |
-| Linear admission guard | `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, accept no credential argument or interactive fallback, and emit Linear's exact `branchName` plus `Fixes DEV-N` from the reconciled issue |
+| Planning items | Linear Issues in team `dev`; new provider-backed admissions only |
+| Planning window | Linear Cycle |
+| Planning outcome | Linear Project as one user-value release package |
+| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, accept no credential argument or interactive fallback, reconcile every active Issue in the exact Project/Cycle, and emit Linear's exact `branchName` plus `Fixes DEV-N` from the engaged Issue |
 | Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
@@ -244,7 +242,7 @@ provider branch and uses its Captain-approved committed brief.
 
 ### Development Brief
 
-A manually admitted GitHub Issue uses this body shape without a
+A Linear Issue used for admission has this body shape without a
 `## Human-readable release brief` wrapper:
 
 ```markdown

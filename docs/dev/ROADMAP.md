@@ -378,6 +378,10 @@ approval, reduced Production evidence, or a generalized evaluation framework.
 
 - [Issue #297](https://github.com/iamcxa/kc-claude-plugins/issues/297)
 
+### Sprint S7 — plugin-owned runtime contracts
+
+- [Linear Project: Plugin-owned kc-dev-flow contracts](https://linear.app/duckbase-co/project/plugin-owned-kc-dev-flow-contracts-0cbeacf87dd5)
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine

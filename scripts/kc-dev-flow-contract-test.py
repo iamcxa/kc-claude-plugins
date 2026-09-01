@@ -1338,24 +1338,31 @@ require(
 workflow = read("docs/dev/README.md")
 normalized_workflow = " ".join(workflow.split())
 for phrase in [
-    "GitHub Issues plus Project #4 is this repository's default planning provider, not an iteration authority.",
-    "`source` links the accepted planning item.",
-    "At every provider-backed engage, compare the provider's current Ready set with the committed SD snapshot.",
+    "Linear is this repository's planning provider for new provider-backed admissions, not an iteration authority.",
+    "`source` links the accepted Linear Issue.",
+    "At every provider-backed engage, compare the current Project/Cycle active set with the committed SD snapshot.",
+    "Existing admitted work keeps its recorded provider and reader",
+    "GitHub Project #4 remains historical and receives no new admissions.",
     "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
     "A difference requires Captain admission and never writes either side automatically.",
+    "| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`",
     "| Planning comparator | `scripts/kc-dev-flow/engage-reconcile.py` |",
-    ".totalCount != (.items | length)",
+    "reconcile every active Issue in the exact Project/Cycle",
     "--expected-source",
     "--expected-window",
     "--expected-outcome",
     "every item shares the engaged item's exact window and outcome",
     "stdout parses as one JSON object with `status: clean`",
-    "Linear admission guard",
     "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment",
     "`kc-dev-flow-dispatch-envelope/v1` object",
     "--state-revision",
 ]:
-    require(phrase in normalized_workflow, f"self-adoption omits provider-neutral planning boundary: {phrase}")
+    require(phrase in normalized_workflow, f"self-adoption omits Linear cutover boundary: {phrase}")
+require(
+    "GitHub Issues plus Project #4 is this repository's default planning provider"
+    not in normalized_workflow,
+    "self-adoption restored GitHub Project as the default for new admissions",
+)
 for phrase in [
     "For a complete Planning Receipt, copy the planning item's accepted outcome and non-goals into the work item as an admission snapshot",
     "it is not a second accepted-goal authority",
