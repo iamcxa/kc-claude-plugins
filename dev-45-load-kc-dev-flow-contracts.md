@@ -243,3 +243,15 @@ Explicit exclusions are automatic plugin installation, a PATH launcher, host cac
 ### Summary
 
 Ideation selects a self-locating installed-resource manifest with a durable per-stage version/digest pin and a fail-closed local-profile compatibility boundary. The design removes 2,645 lines of canonical repository copies only after installed-route, preservation, upgrade, and without-it proofs pass; implementation remains one atomic delivery slice with no host adapter or Spacedock-core expansion.
+
+## Implementation evidence
+
+```yaml
+review_convergence_claim:
+  schema: kc-dev-flow-roborev-claim/v1
+  identity: 7141d793868da4f0f12f69a24997e546f37f733e428d96dfeb6ef1100ff35e60
+  claimant: spacedock-ensign-3fkmdwdvsf-implementation
+  state_revision: ae448413ed83897e158413f2640fc73946830c75
+  state: claimed
+  candidate: 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404
+```
