@@ -1,0 +1,41 @@
+{
+  "schema": "kc-dev-flow-contract-manifest/v1",
+  "contract_interface": "kc-dev-flow-profile-contract/v3",
+  "local_profile_interface": {
+    "schema": "kc-dev-flow-local-profile/v1",
+    "required_bindings": [
+      "Project context",
+      "Work items",
+      "Execution state",
+      "Profile receipt",
+      "Installed contract interface",
+      "Local mods"
+    ]
+  },
+  "resources": [
+    "references/kernel.md",
+    "references/reverse-recovery-audit.md",
+    "references/journey-slicing.md",
+    "references/retained-document-policy.md",
+    "references/project-context-maintenance.md",
+    "references/delivery-branch-base.md",
+    "references/pr-delivery.md",
+    "references/roborev-implementation-exit.md",
+    "references/profiles/poc-exploration/base.md",
+    "references/profiles/poc-exploration/build.md",
+    "references/profiles/poc-exploration/prove.md",
+    "references/profiles/pilot-product-slice/base.md",
+    "references/profiles/pilot-product-slice/shape.md",
+    "references/profiles/pilot-product-slice/build.md",
+    "references/profiles/pilot-product-slice/verify-deliver.md",
+    "references/profiles/production/base.md",
+    "references/profiles/production/shape.md",
+    "references/profiles/production/build.md",
+    "references/profiles/production/verify.md",
+    "scripts/profile-contract-loader.py",
+    "scripts/poc-close-guard.py",
+    "scripts/engage-reconcile.py",
+    "skills/adopt-dev-flow/SKILL.md",
+    "skills/continue-dev-flow/SKILL.md"
+  ]
+}
