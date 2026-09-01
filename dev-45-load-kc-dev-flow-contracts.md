@@ -1,6 +1,6 @@
 ---
 title: Load kc-dev-flow contracts from the installed plugin
-status: backlog
+status: ideation
 source: https://linear.app/duckbase-co/issue/DEV-45/load-kc-dev-flow-contracts-from-the-installed-plugin
 product: kc-dev-flow
 planning-window: Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z
@@ -38,7 +38,7 @@ gates:
                 reason: Captain approved the bound Production ideation direction.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Work profile receipt
