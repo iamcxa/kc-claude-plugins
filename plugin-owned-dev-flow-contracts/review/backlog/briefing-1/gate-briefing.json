@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:d04wdm6eayba80ayawqg1qk7:backlog:attempt-1:revision-1",
+  "question": "Approve the plugin-owned contract direction and its bounded ideation proof?",
+  "artifacts": [
+    {
+      "id": "artifact:d04wdm6eayba80ayawqg1qk7:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f41f24a5d3f57b0ea300576a07b596400a2d34cf/plugin-owned-dev-flow-contracts.md",
+      "rev": "sha256:15cdbc843ca4bdcc6fcde385a2aa71ef3d23c54b6ce9c96460e31205b208fd57",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval into ideation: the task makes the installed plugin canonical, preserves repository-local policy and state, freezes contracts within a stage, and requires compatibility refusal plus minimum-stack evidence before implementation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:d04wdm6eayba80ayawqg1qk7:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/19e1a7271230b179feb8e65382a1f39d013bc922/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:8f9c20eeab4fb1a7096c8344f4f62b832b4f2d7a7cc5e85e1458acddeb77f3c4"
+    }
+  ]
+}

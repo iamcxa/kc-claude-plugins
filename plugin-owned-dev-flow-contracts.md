@@ -16,6 +16,18 @@ issue:
 pr:
 mod-block:
 id: d04wdm6eayba80ayawqg1qk7
+gates:
+    version: 1
+    records:
+        - id: gate:d04wdm6eayba80ayawqg1qk7:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:d04wdm6eayba80ayawqg1qk7-backlog-1
+              briefing:
+                id: briefing:d04wdm6eayba80ayawqg1qk7:backlog:attempt-1:revision-1
+                digest: sha256:578780997ab5340c4f3313324434b99ae1956b471ac2d74fc70606b8c5928135
+                request-digest: sha256:51967b548356b08de925116ec8acdbea0be579dfb3c4e2b8a56c7e3006d016fd
+                room-ref: ./plugin-owned-dev-flow-contracts/review/backlog/briefing-1
 ---
 
 ## Problem
