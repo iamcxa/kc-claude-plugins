@@ -1,0 +1,49 @@
+---
+title: Load kc-dev-flow contracts from the installed plugin
+status: backlog
+source: https://linear.app/duckbase-co/issue/DEV-45/load-kc-dev-flow-contracts-from-the-installed-plugin
+product: kc-dev-flow
+planning-window: Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z
+planning-outcome: Linear Project e780d04f-cf7d-4ebb-bf9a-90fec8466923 Plugin-owned kc-dev-flow contracts sha256:4106b2e493e8bd75052c1fb3b775eaf434ef8b087a7717611d5d81f2a3a81990
+sprint: kc-dev-flow/plugin-owned-contracts
+sprint-readiness: ready
+design: required
+started:
+completed:
+verdict:
+worktree:
+issue:
+pr:
+mod-block:
+id: 3fkmdwdvsfha8ektb2s5jz7d
+---
+
+## Problem
+
+Repository adoption currently copies canonical kc-dev-flow kernels, profiles, references, loaders, and guards into each repository. Installation and upgrades therefore duplicate plugin-owned behavior, create merge and parity work, and can leave a repository on mixed contract bytes.
+
+## Accepted outcome
+
+An installed kc-dev-flow plugin is the canonical runtime source. An adopter repository keeps only its local workflow README, local mods, and Spacedock state. Adoption and upgrades inspect and refit those local files without copying canonical contracts. A stage pins the plugin version and contract digest it starts with; a compatible upgrade becomes effective at the next stage boundary, while an incompatible boundary stops before dispatch until local policy is refit.
+
+## Non-goals
+
+- Do not change planning semantics beyond the approved forward-only Linear cutover for new docs/dev admissions.
+- Do not mutate active Spacedock state during plugin upgrades.
+- Do not bind the design to Conductor, Claude Code, Codex, Hermes, GitHub Projects, or Linear internals.
+- Do not retain vendored canonical files merely for offline parity.
+- Do not build automatic plugin installation, marketplace release automation, executor scheduling, or the proposed Hermes/Nightwatch portfolio direction.
+
+## Acceptance criteria
+
+- **AC-1** A fresh adopter executes every supported profile and stage from installed plugin resources without repository copies of canonical kernel, profile, reference, loader, or guard files.
+- **AC-2** An active stage stays bound to its starting plugin version and contract digest; the next stage uses a compatible installed upgrade.
+- **AC-3** An incompatible upgrade fails before next-stage dispatch and identifies the README or local mod refit required.
+- **AC-4** Adoption and upgrade preserve repository-owned README policy, local mods, and Spacedock state.
+- **AC-5** Migration removes obsolete vendored files and parity machinery without weakening profile routing, close guards, or kernel authority.
+- **AC-6** Runtime resolution remains host-neutral and works from Spacedock tracks in repository worktrees.
+- **AC-7** Goal-sufficiency and without-it evidence prove every retained mechanism is necessary and the adoption surface is smaller.
+
+## Route-back conditions
+
+The accepted outcome, non-goals, Linear Project, or Cycle changes; runtime discovery cannot bind a plugin version and digest at a stage boundary; or the minimum retained repository surface cannot preserve local policy without weakening kernel authority.
