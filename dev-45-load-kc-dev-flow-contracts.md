@@ -39,6 +39,26 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:3fkmdwdvsfha8ektb2s5jz7d:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:3fkmdwdvsfha8ektb2s5jz7d-ideation-1
+              briefing:
+                id: briefing:3fkmdwdvsfha8ektb2s5jz7d:ideation:attempt-1:revision-1
+                digest: sha256:316d0049499202ef0cee28d3ea037f8ab3ad5847ec235249f2fcfa6168f3b2db
+                request-digest: sha256:16b49076565a628748444eb81e392ce0d54bf48c34d4391a608818f2df24586c
+                room-ref: ./dev-45-load-kc-dev-flow-contracts/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3fkmdwdvsfha8ektb2s5jz7d:ideation:1
+                briefing: briefing:3fkmdwdvsfha8ektb2s5jz7d:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-01T23:14:22.958866Z"
+                decision: approve
+                reason: Captain approved the resource-anchor manifest and bounded Production implementation.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Work profile receipt

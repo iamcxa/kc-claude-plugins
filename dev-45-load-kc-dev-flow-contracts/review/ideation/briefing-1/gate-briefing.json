@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3fkmdwdvsfha8ektb2s5jz7d:ideation:attempt-1:revision-1",
+  "question": "Approve the resource-anchor manifest design and bounded Production implementation for DEV-45?",
+  "artifacts": [
+    {
+      "id": "artifact:3fkmdwdvsfha8ektb2s5jz7d:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d1d0e629e69ebf972cb6e1197624c9eb4c440a78/dev-45-load-kc-dev-flow-contracts.md",
+      "rev": "sha256:e45d7fcc1589b03cb14b0b051b8284d8f9fcf4ee1610f25a7333b4a054cd6bc5",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval into implementation. Ideation selected a skill-relative installed manifest over embedded bundles and PATH launchers; binds one version and digest per active stage; permits compatible upgrades only at the next boundary; refuses incompatible upgrades before state mutation or dispatch; preserves README policy, local mods, provider adapters, and Spacedock state. The integrated slice is bounded to about 40 files and 4,250 diff lines, including 2,645 lines of exact-copy deletion, with hard stops above 44 files, 4,800 lines, or any host-specific resolver or Spacedock-core edit. All seven delivery ACs remain explicitly unmet until implementation and validation evidence exists."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:3fkmdwdvsfha8ektb2s5jz7d:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/133e869d18a55c7a7fe7ed507fd4816b71602104/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:f6db2e91a20d0b7b1b954b48a94778b9cc33b9e8586a2f4de1a1a9708b3dea83"
+    }
+  ]
+}
