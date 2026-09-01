@@ -255,3 +255,30 @@ review_convergence_claim:
   state: claimed
   candidate: 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404
 ```
+
+```yaml
+review_convergence_observation:
+  schema: kc-dev-flow-roborev-observation/v1
+  candidate: 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404
+  base: 3aafd3d22e749257f3551079475cc41183525d7c
+  capability: review_convergence
+  mode: observe
+  profile: production
+  provider: roborev
+  outcome: UNKNOWN
+  reason: stale
+  identity: 7141d793868da4f0f12f69a24997e546f37f733e428d96dfeb6ef1100ff35e60
+  config_sha256: ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1
+  job_id: 292
+  job_uuid: 15ae54d7-0137-4a69-8ddc-f9ba6ebc48a7
+  provider_verdict: SEVERITY_THRESHOLD_MET
+  missing_identity_fields: [panel_identity, stable_member_population]
+  request_count: 1
+  confirmation_count: 0
+  cost:
+    job_usd: 0.0372104
+    aggregate_usd: 1.9240536
+    jobs_with_cost: 7
+    jobs_total: 10
+    complete: false
+```
