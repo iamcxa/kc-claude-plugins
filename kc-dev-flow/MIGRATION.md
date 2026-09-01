@@ -10,14 +10,20 @@ planning provider is replaceable, while admitted SD snapshots and active
 execution remain stable. Upgrade the adopter and installed plugin as one
 cutover, in this order:
 
+The code and state roots do not update atomically. Pause new dispatch before the
+first code or state change, prepare both sides of the cutover, install the new
+package while dispatch remains paused, and resume only after its adoption parity
+guard returns clean and the route checks below pass. Existing workers may finish
+on their pinned package/vendor pair.
+
 1. Inventory active receipts. Finish each active v2 POC on its pinned 3.x
    package/vendor pair, or have the Captain re-record it as v3 with decision,
    falsifier, budget, and stop point. Under the old graph and loader, drain every
    entity at `status: release` to `done`; `spacedock status --where
    status=release` must return empty before the graph changes.
-2. Remove `release` from the adopter's workflow graph. Bound its existing
-   `## Local Profile` with one start marker
-   `<!-- kc-dev-flow-static-local-profile:start -->` and one end marker
+2. Remove `release` from the adopter's workflow graph. Place one start marker
+   `<!-- kc-dev-flow-static-local-profile:start -->` immediately before its
+   `## Local Profile` heading and one end marker
    `<!-- kc-dev-flow-static-local-profile:end -->`. Re-vendor the loader,
    engage comparator, close guard, kernel, profile tree, and conditional
    references byte-for-byte, including Production `verify.md` and deletion of
@@ -26,6 +32,12 @@ cutover, in this order:
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
 4. Default the adopter's entity template to `sprint-readiness: defer`. Before
+   classifying any Planning Receipt, inventory every existing `source` field
+   before treating it as Planning Receipt data. When an existing value is
+   repository-local free text rather than a resolvable planning-item link, move
+   that value to a repository-owned field and leave the canonical `source` value
+   empty before validating a new admission or continuing that item under v4.
+   Preserve the value; do not reinterpret it as provider identity. Before
    continuing any item already at its first working stage, classify its Planning
    Receipt before recording scheduling fields. For provider-backed work, resolve
    the accepted planning window and outcome from `source`, have the Captain
@@ -46,9 +58,9 @@ cutover, in this order:
    provider-backed path, only exit `0` with one parsed `status: clean` result and
    empty delta arrays continues. A delta, truncated result, invalid input, or any
    other output must stop before dispatch. Run every profile-stage load,
-   guarded POC close path, package
-   parity check, and normal repository gate before updating the installed
-   plugin.
+   guarded POC close path, package route check, and normal repository gate. With
+   dispatch still paused, update the installed plugin and run its adoption
+   parity guard against the staged vendored paths before resuming.
 
 ### Retire the planning projection
 
@@ -99,9 +111,13 @@ the installed package or silently run the 2.x workflow.
    ordinary continuation while one side is new and the other is still 2.x.
 2. Audit existing project, work-item, iteration, execution-state, delivery,
    scope, gate, and observation authorities. Preserve their working owners.
-3. Add the loader and contracts root to a concise `## Local Profile`, bounded by
+   Before interpreting an existing `source` as Planning Receipt data, preserve
+   repository-local free text in a repository-owned field and leave the
+   canonical `source` value empty.
+3. Add the loader and contracts root to a concise `## Local Profile`, with
    exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
-   and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Vendor
+   immediately before that heading and one end marker
+   `<!-- kc-dev-flow-static-local-profile:end -->`. Vendor
    the shared core, profile tree, loader, and conditional references byte-for-byte.
 4. Map POC, Pilot, and Production onto the existing runtime. Prove inactive
    stages can be skipped and the Production release boundary is representable.
@@ -131,7 +147,9 @@ the installed package or silently run the 2.x workflow.
    accept a sibling branch before a stacked base is safe there.
 8. Run every profile-stage loader combination, prove unselected contracts are
    absent, exercise runtime skips, and run the repository's normal gates. Merge
-   the adopter refit before updating the installed plugin used for continuation.
+   the adopter refit, then update the installed plugin while dispatch remains
+   paused. Run the new installed adoption parity guard and resume only when it
+   returns clean.
 
 ### Decisions that remain local
 

@@ -230,6 +230,22 @@ Stop when the planning tuple cannot express the work.
         ("missing-ac-prefix", "- A condition without a stable identifier."),
     ):
         expect_admission_refusal(name, canonical_brief.replace(criteria_block, criteria))
+    malformed_ac = write_work_item(
+        root,
+        "production",
+        "ideation",
+        "actionable-ac-error",
+        planning_receipt=("source", "window", "outcome"),
+        body=canonical_brief.replace(
+            criteria_block, "- **AC-1:** A colon makes this format invalid."
+        ),
+    )
+    malformed_ac_result = run_admission(malformed_ac)
+    require(
+        malformed_ac_result.returncode == 2
+        and "- **AC-N** <text>" in malformed_ac_result.stderr,
+        f"AC refusal omitted the required literal format: {malformed_ac_result.stderr}",
+    )
     expect_admission_refusal(
         "evidence-only-admission",
         canonical_brief.replace("## Acceptance criteria", "## Acceptance evidence"),

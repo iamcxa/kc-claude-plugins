@@ -18,13 +18,16 @@ standalone item uses its Captain-approved committed brief. The workflow runtime
 owns only its admitted snapshot, execution record, and evidence. Each item has
 one planning authority and one execution-record authority. Classify the relevant
 seams as working, broken, stubbed, or missing; repair the cheapest compatible
-seam.
+seam. Before interpreting an existing `source` as Planning Receipt data,
+preserve repository-local free text in a repository-owned field and leave the
+canonical `source` value empty.
 
 ## Adopt
 
 1. Add a concise `## Local Profile` near the workflow frontmatter, bounded by
    exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
-   and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
+   immediately before that heading and one end marker
+   `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
    existing authorities plus the repository-local profile loader and contracts root. A
    repository that supports Planning Receipts also binds its planning provider,
    repository-local read-only planning reader, and vendored repository-local
@@ -49,7 +52,28 @@ seam.
    `../../scripts/engage-reconcile.py` without local edits to a repository-owned
    tooling path outside the workflow runtime tree, then bind that path in
    `## Local Profile`. A standalone adopter vendors neither a comparator nor a
-   provider adapter. The selected
+   provider adapter. Do not vendor `adoption-parity.py`. Resolve
+   `../../scripts/adoption-parity.py` relative to this `SKILL.md`, then invoke
+   that absolute path with the bound canonical paths:
+
+   ```bash
+   python3 <resolved-adoption-parity.py> \
+     --adopter-root <repository-root> \
+     --contracts-root <contracts-root> \
+     --profile-loader <profile-loader> \
+     --poc-close-guard <poc-close-guard> \
+     --planning-mode <standalone-or-provider-capable> \
+     [--engage-comparator <engage-comparator>]
+   ```
+
+   Use `provider-capable` whenever Local Profile binds a planning provider or
+   reader, including for a later standalone item; otherwise use `standalone`.
+   Provider-capable
+   mode requires `--engage-comparator`; standalone mode refuses it. This checks
+   adoption bytes without invoking provider access. Continue only on its exit-0
+   clean JSON result. Extra repository-owned files are outside its canonical
+   set; changed, missing, package-local, symlink-bound, or hard-linked files
+   stop. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
    Local provider paths and exceptions stay in the workflow README.
@@ -141,7 +165,8 @@ seam.
    adoption defect: the observation would emit and resolve nothing at every
    future implementation exit, so record it as a refit requirement instead of
    leaving a permanent silent `UNAVAILABLE`.
-10. Re-run every profile-stage loader combination this repository will run and
+10. Run the installed adoption parity guard against the final vendored paths,
+   then re-run every profile-stage loader combination this repository will run and
    prove that unselected profile and stage markers are absent from each result,
    then run the repository's normal gates. Vendor no test: the packaged loader
    contract test resolves the loader as its own sibling, so pointing it at the
@@ -162,6 +187,8 @@ comparator to compare or exercise. Present changed authority, route, and proof
 semantics for acceptance. Replace accepted canonical files mechanically; do not
 create locally edited hybrids. Re-run every profile-stage loader combination and
 prove that unselected profile and stage markers are absent.
+Run the installed adoption parity guard on the replacement before resuming
+dispatch; a mismatch keeps the cutover stopped.
 
 A reference that exists in this source and not in the adopter is a missing
 capability, not an intentional omission. Compare the source reference set with

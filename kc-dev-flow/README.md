@@ -134,10 +134,10 @@ configuration or rewrite its own records is Production.
 
 ## Distribution and adoption
 
-The script surface has four roles. Runtime helpers are the loader, POC close
-guard, provider-backed comparator, and conditional PR handoff. `*.test.py`
-files are package self-tests used by release proof; adopters vendor none of
-them. Repository adapters and release gates stay outside the plugin directory.
+The script surface has four roles. Runtime helpers are adoption parity, the
+loader, POC close guard, provider-backed comparator, and conditional PR handoff.
+`*.test.py` files are package self-tests used by release proof; adopters vendor
+none of them. Repository adapters and release gates stay outside the plugin directory.
 The repository contract classifies every kc-dev-flow Python script into exactly
 one of these roles, so an unowned script fails the gate.
 
@@ -150,6 +150,17 @@ before the release tag is created, discard the receipt and rerun candidate mode
 on the final release PR head. After release-please creates the tag, run
 published mode against it with the retained receipt; local install sync waits
 for that check to pass.
+
+`scripts/adoption-parity.py` compares the installed package's canonical
+references, profile loader, and POC close guard with files bound inside the
+adopter root before any provider access, execution-state read, or dispatch. A
+Local Profile that binds a planning provider or reader uses `provider-capable`
+mode and must include its engage comparator, even when the current item is
+standalone; a profile without either uses `standalone`. The check never invokes
+provider access. Extra repository-owned
+files are ignored. Only its clean JSON result permits continuation; a missing,
+changed, package-local, symlink-bound, or hard-linked canonical file returns
+empty stdout and stops.
 
 `scripts/profile-contract-loader.py` is the closed route and loading mechanism.
 For a selected work item it emits exactly `references/kernel.md`, that profile's

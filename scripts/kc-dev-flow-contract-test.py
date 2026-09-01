@@ -91,6 +91,8 @@ required = [
     "kc-dev-flow/references/delivery-branch-base.md",
     "kc-dev-flow/references/pr-delivery.md",
     "kc-dev-flow/references/roborev-implementation-exit.md",
+    "kc-dev-flow/scripts/adoption-parity.py",
+    "kc-dev-flow/scripts/adoption-parity.test.py",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/engage-reconcile.py",
@@ -144,12 +146,14 @@ for retired in [
 
 script_roles = {
     "runtime": {
+        "kc-dev-flow/scripts/adoption-parity.py",
         "kc-dev-flow/scripts/profile-contract-loader.py",
         "kc-dev-flow/scripts/engage-reconcile.py",
         "kc-dev-flow/scripts/poc-close-guard.py",
         "kc-dev-flow/scripts/pr-review-handoff.py",
     },
     "package-test": {
+        "kc-dev-flow/scripts/adoption-parity.test.py",
         "kc-dev-flow/scripts/profile-contract-loader.test.py",
         "kc-dev-flow/scripts/engage-reconcile.test.py",
         "kc-dev-flow/scripts/poc-close-guard.test.py",
@@ -332,6 +336,8 @@ for profile, names in profile_files.items():
                 )
 
 for relative in [
+    "kc-dev-flow/scripts/adoption-parity.py",
+    "kc-dev-flow/scripts/adoption-parity.test.py",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/engage-reconcile.py",
@@ -344,7 +350,20 @@ for relative in [
 ]:
     require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
 
+contract_test_source = Path(__file__).read_text(encoding="utf-8")
+parity_runner = (
+    '[sys.executable, "kc-dev-flow/scripts/' + 'adoption-parity.test.py"]'
+)
+require(
+    contract_test_source.count(parity_runner) == 1,
+    "contract test omits adoption parity behavior runner",
+)
+
 if not require_ablation_only:
+    run(
+        [sys.executable, "kc-dev-flow/scripts/adoption-parity.test.py"],
+        "adoption parity",
+    )
     run(
         [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
         "profile loader",
@@ -1060,14 +1079,27 @@ normalized_production_verify = " ".join(production_verify.split())
 
 for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
     require(marker in normalized_adopter, f"adopter omits static Local Profile marker: {marker}")
+require(
+    "immediately before that heading" in normalized_adopter,
+    "adopter does not place Local Profile immediately after its start marker",
+)
 migration_3x = migration.split("## Migrating from 3.x to 4.x", 1)[1].split(
     "## Migrating from 2.x", 1
 )[0]
 migration_2x = migration.split("## Migrating from 2.x", 1)[1]
 normalized_migration_3x = " ".join(migration_3x.split())
+normalized_migration_2x = " ".join(migration_2x.split())
 for label, section in (("3.x migration", migration_3x), ("2.x migration", migration_2x)):
     for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
+require(
+    "immediately before its\n   `## Local Profile` heading" in migration_3x,
+    "3.x migration does not place Local Profile immediately after its start marker",
+)
+require(
+    "immediately before that heading" in normalized_migration_2x,
+    "2.x migration does not place Local Profile immediately after its start marker",
+)
 
 for phrase in [
     "v2 Pilot or Production receipt",
@@ -1104,6 +1136,17 @@ for phrase in [
     "omits both an `## Agent execution contract` section",
     "Only a provider-backed adopter vendors the engage comparator",
     "A standalone adopter vendors neither a comparator nor a provider adapter",
+    "Do not vendor `adoption-parity.py`",
+    "Resolve `../../scripts/adoption-parity.py` relative to this `SKILL.md`",
+    "python3 <resolved-adoption-parity.py>",
+    "--adopter-root <repository-root>",
+    "--profile-loader <profile-loader>",
+    "--poc-close-guard <poc-close-guard>",
+    "--planning-mode <standalone-or-provider-capable>",
+    "Use `provider-capable` whenever Local Profile binds a planning provider or reader",
+    "Provider-capable mode requires `--engage-comparator`; standalone mode refuses it",
+    "Extra repository-owned files are outside its canonical set",
+    "package-local, symlink-bound, or hard-linked files stop",
     "A missing delivery authority is a refit requirement",
     "do not invent direct Git delivery",
 ]:
@@ -1128,6 +1171,12 @@ for phrase in [
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 for phrase in [
+    "inventory every existing `source` field before treating it as Planning Receipt data",
+    "move that value to a repository-owned field and leave the canonical `source` value empty before validating a new admission",
+    "or continuing that item under v4",
+    "Pause new dispatch before the first code or state change",
+    "install the new package while dispatch remains paused",
+    "resume only after its adoption parity guard returns clean",
     "classify its Planning Receipt before recording scheduling fields",
     "For provider-backed work, resolve the accepted planning window and outcome from `source`",
     "For standalone work, leave `source`, `planning-window`, and `planning-outcome` absent",
@@ -1137,8 +1186,19 @@ for phrase in [
 ]:
     require(
         phrase in normalized_migration_3x,
-        f"3.x migration omits standalone planning branch: {phrase}",
+        f"3.x migration omits: {phrase}",
     )
+legacy_source_rule = (
+    "preserve repository-local free text in a repository-owned field and leave "
+    "the canonical `source` value empty"
+)
+require(legacy_source_rule in normalized_adopter, "adopter omits legacy source migration rule")
+require(legacy_source_rule in normalized_migration_2x, "2.x migration omits legacy source migration rule")
+for phrase in [
+    "update the installed plugin while dispatch remains paused",
+    "Run the new installed adoption parity guard and resume only when it returns clean",
+]:
+    require(phrase in normalized_migration_2x, f"2.x migration omits cutover guard: {phrase}")
 for stale in [
     "Before continuing any item already at its first working stage, resolve its accepted planning window and outcome from `source`",
     "then run one read-only engage reconcile against the provider's current Ready set",
@@ -1154,11 +1214,14 @@ require(
 )
 
 for phrase in [
+    "Locate workflow README via nearest repository instructions",
     "kc-dev-flow-static-local-profile",
-    "start/end marker pair",
-    "Read only its frontmatter and marked block",
-    "never infer boundaries from headings",
+    "pair starts immediately before `## Local Profile`",
+    "Read only its frontmatter/marked block",
+    "never infer marker bounds",
     "repository-local profile loader",
+    "Before provider/state/dispatch, resolve `../../scripts/adoption-parity.py` from this `SKILL.md`; require clean JSON",
+    "Use `provider-capable` when planning provider/reader is bound, else `standalone`",
     "--work-item <exact-committed-work-item>",
     "simultaneous items may load different routes",
     "Do not separately read the full kernel, another profile, another stage",
@@ -1472,6 +1535,18 @@ for phrase in [
     require(
         phrase in normalized_package_readme,
         f"package README omits the release-proof boundary: {phrase}",
+    )
+for phrase in [
+    "`scripts/adoption-parity.py` compares the installed package's canonical references, profile loader, and POC close guard with files bound inside the adopter root",
+    "A Local Profile that binds a planning provider or reader uses `provider-capable` mode",
+    "must include its engage comparator, even when the current item is standalone",
+    "The check never invokes provider access",
+    "Extra repository-owned files are ignored",
+    "Only its clean JSON result permits continuation",
+]:
+    require(
+        phrase in normalized_package_readme,
+        f"package README omits adoption parity: {phrase}",
     )
 require("](./MIGRATION.md)" in package_readme, "package README omits migration guide")
 require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
