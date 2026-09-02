@@ -374,6 +374,26 @@ Stop when the planning tuple cannot express the work.
         "historical dual-section continuation was reclassified or rewritten",
     )
 
+    default_admission_result = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(admitted),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(default_admission_result.returncode == 0, default_admission_result.stderr)
+    require(
+        "development_brief_sha256" not in json.loads(default_admission_result.stdout),
+        "default loading (no --validate-admission) inspected acceptance headings",
+    )
+
     expected_routes = {
         "poc-exploration": {
             "implementation": ("build", "validation"),
@@ -1452,6 +1472,21 @@ workflow: fixture
 README-POLICY-SENTINEL
 """,
         encoding="utf-8",
+    )
+    decoy_profile = root / "decoy-README.md"
+    decoy_profile.write_text(
+        local_profile.read_text(encoding="utf-8").replace(
+            "README-POLICY-SENTINEL", "| Local mods | outside-marker.md |"
+        ),
+        encoding="utf-8",
+    )
+    local_interface = json.loads(
+        (HERE.parent / "contract-manifest.json").read_bytes()
+    )["local_profile_interface"]
+    require(
+        MODULE.read_local_profile(decoy_profile, local_interface)["local_mods"]
+        == "local-pr-merge.md",
+        "Local Profile reader consumed a binding outside the marker pair",
     )
     state = root / "state"
     state.mkdir()

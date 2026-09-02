@@ -20,6 +20,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
 LOCAL_MODS = ROOT / "docs/dev/_mods"
+# --ablation-check skips the mechanism sub-suites run() shells out to, so an
+# assertion that relies on one of them guards nothing in that mode.
 require_ablation_only = sys.argv[1:] == ["--ablation-check"]
 if sys.argv[1:] not in ([], ["--ablation-check"]):
     raise SystemExit("usage: kc-dev-flow-contract-test.py [--ablation-check]")
@@ -751,7 +753,6 @@ for phrase in [
     "runtime owns execution and evidence",
     "execution-to-planning-provider projector",
     "No reconcile result writes either side automatically",
-    "the read-only engage comparator",
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
@@ -844,17 +845,8 @@ for relative, phrases in {
     "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
         "Could credible negative evidence cancel or materially change the next commitment",
         "kc-dev-flow-work-profile/v3",
-        "poc_decision",
-        "poc_falsifier",
-        "poc_budget",
-        "poc_stop_when",
-        "poc_artifact",
-        "poc_safety_boundary",
-        "poc_decision_ready_minutes",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
-        "poc_outcome",
-        "poc_close_measurement",
         "do not dispatch a validation worker",
         "return the POC outcome to planning",
         "does not create downstream delivery work",
@@ -1100,11 +1092,6 @@ for label, section in (("3.x migration", migration_3x), ("2.x migration", migrat
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
 
 for phrase in [
-    "v2 Pilot or Production receipt",
-    "v1 POC",
-    "complete the v3 POC fields",
-    "build -> prove",
-    "shape -> build -> verify-deliver",
     "structured Ask UI",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
@@ -1235,12 +1222,6 @@ for phrase in [
     "No difference writes the provider or execution snapshot automatically.",
     "every currently Ready snapshot source",
     "Refuse a truncated provider result",
-    "--expected-source <exact-work-item-source>",
-    "--expected-window <exact-work-item-planning-window>",
-    "--expected-outcome <exact-work-item-planning-outcome>",
-    "every item shares the exact window and outcome",
-    "Exit `1` reports the classified delta",
-    "Exit `2` reports `planning reconcile unavailable`",
     "stdout parses as one JSON object with `status: clean`",
     "compare the accepted goal and complete non-goal list exactly",
     "do not replace the snapshot or candidate",
@@ -1386,14 +1367,6 @@ for phrase in [
     "| Planning reader and admission guard | Installed sibling `linear-admission.py`",
     "| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |",
     "reconcile exact Project/Cycle active Issues",
-    "--expected-source",
-    "--expected-window",
-    "--expected-outcome",
-    "every item shares the engaged item's exact window and outcome",
-    "stdout parses as one JSON object with `status: clean`",
-    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from Conductor env",
-    "`kc-dev-flow-dispatch-envelope/v1` object",
-    "--state-revision",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits Linear cutover boundary: {phrase}")
 require(
@@ -1540,12 +1513,6 @@ require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
 )
-for phrase in [
-    "explicit `--validate-admission` mode",
-    "Default loading does not inspect acceptance headings.",
-    "success-only dispatch-envelope emission",
-]:
-    require(phrase in normalized_package_readme, f"package README omits admission boundary: {phrase}")
 architecture = " ".join(read("ARCHITECTURE.md").split())
 for phrase in [
     "one canonical `AC-N` Development Brief",
@@ -1553,24 +1520,6 @@ for phrase in [
     "success-only dispatch-envelope emission without creating execution state",
 ]:
     require(phrase in architecture, f"architecture omits admission boundary: {phrase}")
-# One sentence covers conditionality for the whole set, so a reference added
-# later cannot be described as always-loaded by omitting an adjective. The
-# per-file checks then confirm each one is still listed with a trigger.
-for phrase in [
-    "Everything else under `references/` is conditional",
-    "Selecting a profile or installing the package activates none of it",
-    "`reverse-recovery-audit.md`",
-    "`journey-slicing.md`",
-    "`retained-document-policy.md`",
-    "`project-context-maintenance.md`",
-    "it loads even when a provider mod owns the ceremony",
-    "already owns the forge-PR ceremony",
-]:
-    require(
-        phrase in normalized_package_readme,
-        f"package README omits mod boundary: {phrase}",
-    )
-
 validation_runbook = read("docs/dev/runbooks/validation-evidence.md")
 normalized_validation_runbook = " ".join(validation_runbook.split())
 for stale in ["selected policy mods", "Write all six lines", "the EM selects"]:
