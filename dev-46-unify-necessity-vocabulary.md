@@ -1,12 +1,12 @@
 ---
-title: kc-dev-flow: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument
+title: "kc-dev-flow: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument"
 status: backlog
 source: https://linear.app/duckbase-co/issue/DEV-46/kc-dev-flow-unify-the-necessity-vocabulary-across-kernel-and-reverse
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
 planning-outcome: Linear Project 4746021d-2930-4589-80a0-b7b3d1d70eeb kc-dev-flow slimming dogfood sha256:0599c390742642a1edf03e07a50c28635ff41d3ef77188e076cb2f02e6d85372
-sprint:
-sprint-readiness: defer
+sprint: S8
+sprint-readiness: ready
 started:
 completed:
 verdict:
