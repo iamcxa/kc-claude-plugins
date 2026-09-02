@@ -1,6 +1,20 @@
 # Changelog
 
-## [4.0.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.1...kc-dev-flow-v4.0.2) (2026-09-02)
+## [4.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.1...kc-dev-flow-v4.1.0) (2026-09-02)
+
+
+### Coordinated upgrade
+
+* **kc-dev-flow:** the activated plugin now supplies the contract manifest,
+  kernel, profiles, conditional references, loader, and guards. Adopters keep
+  only their marked Local Profile, local policy and provider mods, and state.
+  Follow `MIGRATION.md` and cut over at a stage boundary; do not mix the old
+  vendored runtime with the installed runtime in one active stage.
+
+
+### Features
+
+* **kc-dev-flow:** load contracts from the installed plugin ([#324](https://github.com/iamcxa/kc-claude-plugins/issues/324)) ([b7c3675](https://github.com/iamcxa/kc-claude-plugins/commit/b7c3675bd228e8785c92ea5dd6dd9d5ba6049408))
 
 
 ### Bug Fixes
