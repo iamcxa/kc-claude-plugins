@@ -42,6 +42,32 @@ UNIT_ROWS = [
     ("Body file", "mode-0600 reviewed `UNIT_BODY_FILE`"),
 ]
 
+STACK_ROWS = [
+    ("Layer", "`UNIT_BRANCH`", "`UNIT_BASE_BRANCH`", "`UNIT_BASE_SHA`", "Provider close line"),
+    ("---", "---", "---", "---", "---"),
+    (
+        "bottom",
+        "explicitly reviewed layer-unique delivery-unit branch",
+        "trunk `$BASE`",
+        "approved trunk `$BASE_SHA`",
+        "omit",
+    ),
+    (
+        "each middle",
+        "explicitly reviewed layer-unique delivery-unit branch",
+        "branch immediately below",
+        "approved `UNIT_CANDIDATE_SHA` immediately below",
+        "omit",
+    ),
+    (
+        "top",
+        "exact `delivery.branch`",
+        "branch immediately below",
+        "approved `UNIT_CANDIDATE_SHA` immediately below",
+        "append exact `delivery.close_line` once",
+    ),
+]
+
 COMPLETION_ROWS = [
     ("Evidence", "Required result", "Otherwise"),
     ("---", "---", "---"),
@@ -61,15 +87,21 @@ CHECKS = 'gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required'
 SET_SENTINEL = "spacedock status --workflow-dir {dir} --set {slug} pr=pr-merge:{N}"
 COMMIT_SENTINEL = "spacedock state commit {slug} --workflow-dir {dir}"
 GUARD = "spacedock merge guard {slug} --workflow-dir {dir} --verdict passed"
-PROVIDER_BRANCH = "When `delivery.branch` is non-empty, bind `UNIT_BRANCH` to it byte-for-byte"
-PROVIDER_CLOSE = "Append `delivery.close_line` exactly once to the reviewed PR body"
+PROVIDER_BRANCH = "bind `UNIT_BRANCH` byte-for-byte to `delivery.branch`"
+PROVIDER_CLOSE = "append `delivery.close_line` exactly once to the reviewed PR body"
 PROVIDER_ISSUE_OVERRIDE = "supersedes the released `Closes {issue}` rule above"
+PROVIDER_STACK_TOP = "reserve both provider values for the top layer"
+PROVIDER_STACK_LOWER = "Every lower layer uses its own explicitly reviewed delivery-unit branch and base, carries no provider close line"
+README_BASE_POLICY = "**Local base policy: dependency-aware.**"
+README_STACK_BASE = "Dependent green layers use the reviewed sibling branch immediately below and its exact candidate SHA"
 
 
-def validate(text: str) -> list[str]:
+def validate(text: str, readme: str = README) -> list[str]:
     errors: list[str] = []
     if table(text, "Canonical Draft delivery unit") != UNIT_ROWS:
         errors.append("canonical delivery-unit table drifted")
+    if table(text, "Native stack delivery-unit composition") != STACK_ROWS:
+        errors.append("provider stack delivery-unit table drifted")
     if table(text, "Single-PR completion decision") != COMPLETION_ROWS:
         errors.append("single-PR completion table drifted")
     required = {
@@ -80,6 +112,8 @@ def validate(text: str) -> list[str]:
         "provider delivery branch": PROVIDER_BRANCH,
         "provider close line": PROVIDER_CLOSE,
         "provider legacy issue override": PROVIDER_ISSUE_OVERRIDE,
+        "provider stack top binding": PROVIDER_STACK_TOP,
+        "provider stack lower binding": PROVIDER_STACK_LOWER,
         "candidate body metadata": "Candidate: {full approved SHA}",
         "mode-0600 body": '`PR_BODY_FILE=$(mktemp)` and `chmod 600 "$PR_BODY_FILE"`',
         "one unit per PR": "A single PR binds exactly one approved delivery unit",
@@ -103,10 +137,12 @@ def validate(text: str) -> list[str]:
         errors.append("automatic local-merge terminal success is forbidden")
     if (
         "When a PR is the selected delivery artifact, authenticated product PR"
-        not in README
-        or "`mergedAt` supplies the completion time" not in README
+        not in readme
+        or "`mergedAt` supplies the completion time" not in readme
     ):
         errors.append("README selected-PR terminal requirement drifted")
+    if README_BASE_POLICY not in readme or README_STACK_BASE not in readme:
+        errors.append("README sibling-base policy drifted")
     return errors
 
 
@@ -151,11 +187,53 @@ mutants = {
         EXTENSION.replace(PROVIDER_ISSUE_OVERRIDE, "retains the released `Closes {issue}` rule above", 1),
         "missing provider legacy issue override",
     ),
+    "provider-stack-lower-reuses-top-branch": (
+        EXTENSION.replace(
+            "explicitly reviewed layer-unique delivery-unit branch",
+            "exact `delivery.branch`",
+            1,
+        ),
+        "provider stack delivery-unit table drifted",
+    ),
+    "provider-stack-lower-carries-close-line": (
+        EXTENSION.replace(
+            "| bottom | explicitly reviewed layer-unique delivery-unit branch | trunk `$BASE` | approved trunk `$BASE_SHA` | omit |",
+            "| bottom | explicitly reviewed layer-unique delivery-unit branch | trunk `$BASE` | approved trunk `$BASE_SHA` | append exact `delivery.close_line` once |",
+            1,
+        ),
+        "provider stack delivery-unit table drifted",
+    ),
+    "provider-stack-top-loses-provider-binding": (
+        EXTENSION.replace(
+            "| top | exact `delivery.branch` | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below | append exact `delivery.close_line` once |",
+            "| top | explicitly reviewed layer-unique delivery-unit branch | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below | omit |",
+            1,
+        ),
+        "provider stack delivery-unit table drifted",
+    ),
 }
 
 for name, (mutant, expected) in mutants.items():
     failures = validate(mutant)
     if expected not in failures:
+        raise SystemExit(f"portable-delivery:{name}: mutant survived: {failures}")
+    print(f"portable-delivery:{name}:REJECTED")
+
+readme_mutants = {
+    "readme-trunk-only-restored": README.replace(
+        README_BASE_POLICY,
+        "**Local base policy: trunk-only, pending a refit.**",
+        1,
+    ),
+    "readme-sibling-base-removed": README.replace(
+        README_STACK_BASE,
+        "Dependent green layers target trunk",
+        1,
+    ),
+}
+for name, mutant in readme_mutants.items():
+    failures = validate(EXTENSION, mutant)
+    if "README sibling-base policy drifted" not in failures:
         raise SystemExit(f"portable-delivery:{name}: mutant survived: {failures}")
     print(f"portable-delivery:{name}:REJECTED")
 
