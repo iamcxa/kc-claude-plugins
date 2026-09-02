@@ -415,3 +415,16 @@ review_convergence_observation:
 ### Summary
 
 The duplicate Mermaid node is repaired in one diagram-only commit, with plugin manifest and repository delivery-mod authority now distinct and all earned checks green at exact candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`. The single changed-tip observation could not correlate its range and remains non-authoritative; fresh validation owns the corrected candidate and the carried diagnostic before any Draft PR.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Reverify candidate 61ce308dfeaae40f05b997092eb3a3a359a61ff6 against required base 3aafd3d22e749257f3551079475cc41183525d7c, prove the duplicate Mermaid node is closed with correct distinct edges, and confirm the correction changed no other candidate byte.
+  `61ce308dfeaae40f05b997092eb3a3a359a61ff6` has parent `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404`; their diff is exactly one `ARCHITECTURE.md` line (`+1/-1`), with manifest `M -> L`, delivery `D -.-> RM`, and the focused duplicate-node/exact-edge probe passing.
+- DONE: Independently adjudicate whether KC_DEV_FLOW_LOADER has a concrete host-neutral resolution/export before every documented README and Linear command; reproduce the accepted journey or reject with exact evidence and a bounded assignment.
+  The carried diagnostic is rejected: `continue-dev-flow` resolves exact sibling `../../scripts/profile-contract-loader.py`, `docs/dev/README.md:168-170` binds that resolved path as invocation-local `KC_DEV_FLOW_LOADER`, skill-relative `realpath` plus the README loader command passed without host discovery, and the contract suite passed Linear admission with `--profile-loader` deriving the sibling comparator; no global export is promised or required.
+- DONE: Rerun the earned exact-candidate AC-1 through AC-7, stop-count, migration, rollback, and delivery-readiness checks; record one final PASSED or REJECTED verdict and do not create or merge a PR.
+  Final verdict: PASSED for local exact-candidate validation. Loader, repository-contract, live three-profile, 57-mutant ablation, release metadata/parity, frontmatter, plugin-release, state-prerequisite, comparator, close-guard, route, and RoboRev-contract checks passed; migration and boundary rollback remain explicit, 37 files/3,870 lines stay below 44/4,800, and no canonical adopter copy remains. No PR exists, so provider feedback was not queried; the candidate is ready only for Captain-authorized Draft creation with exactly one `Fixes DEV-45`, not merge or release.
+
+### Summary
+
+The one-line Mermaid repair is exact, closes the prior architecture failure, and leaves all AC-1 through AC-7 evidence green at corrected candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`. The wrong-range RoboRev loader-path diagnostic does not reproduce when the activated skill's required invocation-local binding is honored; local validation passes, while PR creation and release authority remain pending with the Captain.
