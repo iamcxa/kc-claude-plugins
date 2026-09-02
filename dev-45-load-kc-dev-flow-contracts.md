@@ -347,3 +347,16 @@ Candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` now has one durable impleme
 ### Summary
 
 Exact candidate behavior passes the fresh-adopter, lifecycle, preservation, repository-gate, and 57-mutant necessity evidence. Validation returns to implementation because the changed architecture diagram merges two distinct authorities under one Mermaid node ID; after that correction, validation must rerun at the new exact revision before any Captain-authorized Draft PR.
+
+## Implementation evidence (cycle 3)
+
+```yaml
+review_convergence_claim:
+  schema: kc-dev-flow-roborev-claim/v1
+  identity: aeae44bc0a2eca0a277c745ecdaed8e8374d9a592f0a182686f907dba32e3699
+  claimant: spacedock-ensign-3fkmdwdvsf-implementation
+  state_revision: 1e657ec8b9f36c2b153b4e70d6b57d1fb4ea3d9f
+  state: claimed
+  candidate: 61ce308dfeaae40f05b997092eb3a3a359a61ff6
+  confirmation_of_candidate: 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404
+```
