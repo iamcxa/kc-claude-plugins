@@ -85,6 +85,17 @@ gates:
                 digest: sha256:f3deab388349267e8a65308a452315b11fc25588464c29e9ccbd9c5304210466
                 request-digest: sha256:63a5fa9ecc1f2596e7e47ab61eb4c14ef7d32d4253308ec6c81c87488e9d0546
                 room-ref: ./dev-45-load-kc-dev-flow-contracts/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3fkmdwdvsfha8ektb2s5jz7d:validation:2
+                briefing: briefing:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-02T03:55:05.599987Z"
+                decision: approve
+                reason: Captain approved exact validated candidate 111d47126df43c15c02d8db4bb0fb4621df25aa1 for native-stack delivery.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Work profile receipt
