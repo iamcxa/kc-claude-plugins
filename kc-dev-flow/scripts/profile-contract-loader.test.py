@@ -241,6 +241,22 @@ Stop when the planning tuple cannot express the work.
         ("missing-ac-prefix", "- A condition without a stable identifier."),
     ):
         expect_admission_refusal(name, canonical_brief.replace(criteria_block, criteria))
+    malformed_ac = write_work_item(
+        root,
+        "production",
+        "ideation",
+        "actionable-ac-error",
+        planning_receipt=("source", "window", "outcome"),
+        body=canonical_brief.replace(
+            criteria_block, "- **AC-1:** A colon makes this format invalid."
+        ),
+    )
+    malformed_ac_result = run_admission(malformed_ac)
+    require(
+        malformed_ac_result.returncode == 2
+        and "- **AC-N** <text>" in malformed_ac_result.stderr,
+        f"AC refusal omitted the required literal format: {malformed_ac_result.stderr}",
+    )
     expect_admission_refusal(
         "evidence-only-admission",
         canonical_brief.replace("## Acceptance criteria", "## Acceptance evidence"),
@@ -268,6 +284,53 @@ Stop when the planning tuple cannot express the work.
             (result.returncode == 0) == (mask in {0, 7}),
             f"Planning Receipt presence mask {mask} had wrong admission result",
         )
+
+    omitted_receipt = write_work_item(
+        root,
+        "pilot-product-slice",
+        "ideation",
+        "standalone-omitted-planning-receipt",
+        body=canonical_brief,
+    )
+    omitted_receipt.write_text(
+        re.sub(
+            r"^(?:source|planning-window|planning-outcome):[^\n]*\n",
+            "",
+            omitted_receipt.read_text(encoding="utf-8"),
+            flags=re.MULTILINE,
+        ),
+        encoding="utf-8",
+    )
+    omitted_result = run_admission(omitted_receipt)
+    require(
+        omitted_result.returncode == 0,
+        "standalone admission with an omitted Planning Receipt was rejected: "
+        f"{omitted_result.stderr}",
+    )
+
+    partial_declaration = write_work_item(
+        root,
+        "pilot-product-slice",
+        "ideation",
+        "standalone-partial-planning-receipt-declaration",
+        body=canonical_brief,
+    )
+    partial_declaration.write_text(
+        re.sub(
+            r"^(?:planning-window|planning-outcome):[^\n]*\n",
+            "",
+            partial_declaration.read_text(encoding="utf-8"),
+            flags=re.MULTILINE,
+        ),
+        encoding="utf-8",
+    )
+    partial_result = run_admission(partial_declaration)
+    require(
+        partial_result.returncode == 2
+        and "Planning Receipt must be complete or absent" in partial_result.stderr,
+        "partial Planning Receipt declaration had the wrong admission result: "
+        f"{partial_result.stdout}{partial_result.stderr}",
+    )
 
     historical = write_work_item(
         root,

@@ -356,15 +356,21 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
     frontmatter_end = text.find("\n---\n", 4)
     frontmatter = text[4:frontmatter_end]
     receipt_values: list[str] = []
+    declared_receipt_fields: list[bool] = []
     for field in ("source", "planning-window", "planning-outcome"):
         matches = re.findall(
             rf"^{re.escape(field)}:[ \t]*([^\n#]*?)[ \t]*$",
             frontmatter,
             flags=re.MULTILINE,
         )
-        if len(matches) != 1:
-            raise ContractError(f"admission must contain exactly one {field}")
-        receipt_values.append(matches[0].strip().strip("\"'").strip())
+        if len(matches) > 1:
+            raise ContractError(f"admission must not repeat {field}")
+        declared_receipt_fields.append(bool(matches))
+        receipt_values.append(
+            matches[0].strip().strip("\"'").strip() if matches else ""
+        )
+    if any(declared_receipt_fields) and not all(declared_receipt_fields):
+        raise ContractError("Planning Receipt must be complete or absent")
     present = [not is_placeholder_scalar(value) for value in receipt_values]
     if any(present) and not all(present):
         raise ContractError("Planning Receipt must be complete or absent")
@@ -410,7 +416,8 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
         or any(is_placeholder_scalar(match.group(2)) for match in criteria if match)
     ):
         raise ContractError(
-            "Acceptance criteria must use unique ascending concrete AC-N bullets"
+            "Acceptance criteria must use unique ascending concrete bullets "
+            "formatted exactly as `- **AC-N** <text>`"
         )
     return hashlib.sha256("\n\n".join(sections).encode("utf-8")).hexdigest()
 

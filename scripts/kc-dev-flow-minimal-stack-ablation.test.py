@@ -752,6 +752,12 @@ def main() -> int:
         "    if False:\n",
         "Planning Receipt presence mask 1 had wrong admission result",
     )
+    run_loader_admission_mutant(
+        "omitted-planning-receipt-rejected",
+        "        if len(matches) > 1:\n",
+        "        if len(matches) != 1:\n",
+        "standalone admission with an omitted Planning Receipt was rejected",
+    )
     run_manual_contract_mutant(
         "linear-reader-removed",
         str(LINEAR_ADMISSION),

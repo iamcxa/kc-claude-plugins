@@ -18,7 +18,9 @@ standalone item uses its Captain-approved committed brief. The workflow runtime
 owns only its admitted snapshot, execution record, and evidence. Each item has
 one planning authority and one execution-record authority. Classify the relevant
 seams as working, broken, stubbed, or missing; repair the cheapest compatible
-seam.
+seam. Before interpreting an existing `source` as Planning Receipt data,
+preserve repository-local free text in a repository-owned field and remove the
+canonical `source` field. Do not reinterpret provenance as provider identity.
 
 ## Adopt
 

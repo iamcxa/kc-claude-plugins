@@ -1,5 +1,11 @@
 # Migration
 
+Before any brownfield migration, inventory every existing `source` field. When
+an existing value is repository-local free text rather than a resolvable
+planning-item link, move it to a repository-owned provenance field and remove
+the canonical `source` field before either v4 admission validation or
+continuation. Preserve the value; do not reinterpret it as provider identity.
+
 ## Migrating a vendored 4.x adopter to installed contracts
 
 This migration makes the installed `kc-dev-flow` package the canonical runtime
