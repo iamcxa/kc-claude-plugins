@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: m29y546p4sh77vbs2dv09gkp
+gates:
+    version: 1
+    records:
+        - id: gate:m29y546p4sh77vbs2dv09gkp:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:m29y546p4sh77vbs2dv09gkp-backlog-1
+              briefing:
+                id: briefing:m29y546p4sh77vbs2dv09gkp:backlog:attempt-1:revision-1
+                digest: sha256:7ae98598b34e8752d28496fb24b9d24a58db08b6fc675d9dcd83c2e78b21e62a
+                room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/backlog/briefing-1
 ---
 
 ## The problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m29y546p4sh77vbs2dv09gkp:backlog:attempt-1:revision-1",
+  "question": "Approve DEV-51 to enter Pilot ideation: replace the contract test's phrase pins with behaviour assertions a mutation can redden?",
+  "artifacts": [
+    {
+      "id": "artifact:m29y546p4sh77vbs2dv09gkp:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e9a3f86917077d0dab2a5a7d3be24f80516b9100/dev-51-behaviour-assertions-for-contract-pins.md",
+      "rev": "sha256:fd5397df0108ff1f44292de08ca2810a8b5a7f5cd7a27f76f94d9c4a267211b9",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval: Linear DEV-51 bound (Todo, Cycle 2, Project kc-dev-flow slimming dogfood, sprint S8); Pilot receipt with route shape, build, verify-deliver; semantics_unchanged true so validation must name the equivalence instrument, which is this item's own deliverable. Two-tier instrument: deterministic assertions on loader, guard, and close-guard outputs; behavior-diff sampling for agent-only prose; wording-only pins recorded with reasons. No pin removed before its replacement reddened on the same removal; per-case behavior-diff cost measured. Scope excludes contract slimming, a generic harness, model-backed CI checks, and loader or guard behaviour changes."
+    }
+  ]
+}
