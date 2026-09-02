@@ -1,6 +1,6 @@
 ---
 title: "POC: ship-flow glue on one Issue — cloud dispatch, pinned-SHA verify, Captain-gated Draft PR"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
