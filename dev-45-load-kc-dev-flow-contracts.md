@@ -360,3 +360,58 @@ review_convergence_claim:
   candidate: 61ce308dfeaae40f05b997092eb3a3a359a61ff6
   confirmation_of_candidate: 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404
 ```
+
+```yaml
+review_convergence_observation:
+  schema: kc-dev-flow-roborev-observation/v1
+  candidate: 61ce308dfeaae40f05b997092eb3a3a359a61ff6
+  expected_base: 3aafd3d22e749257f3551079475cc41183525d7c
+  observed_base: 9d4e499ac5ac66d668131d378be41d487f89d446
+  capability: review_convergence
+  mode: observe
+  profile: production
+  provider: roborev
+  outcome: UNKNOWN
+  reason: state_unknown
+  identity: aeae44bc0a2eca0a277c745ecdaed8e8374d9a592f0a182686f907dba32e3699
+  config_sha256: ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1
+  job_id: 293
+  job_uuid: 25c6f5b8-2754-4c50-98d6-3cf2061a1e4a
+  provider_verdict: FAIL
+  launch_correlation: mismatched_range
+  missing_identity_fields: [panel_identity, stable_member_population]
+  request_count: 1
+  confirmation_count: 1
+  diagnostic_disposition: carry KC_DEV_FLOW_LOADER binding finding to fresh validation; no retry or implementation expansion
+  cost:
+    job_usd: 0.0548216
+    aggregate_usd: 1.9788752
+    jobs_with_cost: 8
+    jobs_total: 11
+    complete: false
+```
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Fix only the duplicate Mermaid node ID in ARCHITECTURE.md so the installed manifest and repository-owned pr-merge mod remain distinct nodes with correct edges.
+  Commit `61ce308dfeaae40f05b997092eb3a3a359a61ff6` changes only the delivery-mod declaration from node `M` to `RM`; the installed manifest remains `M -> L` and delivery remains `D -.-> RM`, so reverting that line recreates the duplicate-ID conflation.
+- DONE: Commit the bounded correction on the exact Linear branch, rerun the earned architecture and repository checks.
+  Exact branch `feature/dev-45-load-kc-dev-flow-contracts-from-the-installed-plugin` is clean at `61ce308dfeaae40f05b997092eb3a3a359a61ff6`; the focused `awk` duplicate-node/exact-edge check, `python3 scripts/kc-dev-flow-contract-test.py`, `python3 scripts/kc-dev-flow-multi-profile-gate.py --json`, and `git diff --check 3aafd3d22e749257f3551079475cc41183525d7c..61ce308dfeaae40f05b997092eb3a3a359a61ff6` pass and fail on duplicate/incorrect graph edges, KC Dev Flow contract drift, route/budget drift, or whitespace errors respectively.
+- DONE: Report the new exact candidate and diff counts, and preserve every unaffected implementation claim.
+  Candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` over `3aafd3d22e749257f3551079475cc41183525d7c` is 37 files and 3,870 changed lines (`+1001/-2869`), below the 44-file/4,800-line stops; commit `61ce308dfeaae40f05b997092eb3a3a359a61ff6` is exactly one diagram-line replacement, so no non-diagram candidate byte changed.
+- DONE: Preserve durable evidence for every acceptance criterion on the corrected candidate.
+  AC-1 evidence: candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` retains commits `a91da87379c77ab4d4b7837f2dec664d5eb20136`, `12ded46ac9ef31169932fcd6e545596dcef8af0a`, and `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404`; `python3 scripts/kc-dev-flow-contract-test.py` fails if any supported profile-stage needs a repository canonical copy or a copy is reintroduced.
+  AC-2 evidence: pinning commit `12ded46ac9ef31169932fcd6e545596dcef8af0a` remains in candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`; the previously earned `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` fails if a same-stage A pin accepts version/digest B or the next compatible stage does not write digest B.
+  AC-3 evidence: compatibility commit `12ded46ac9ef31169932fcd6e545596dcef8af0a` remains in candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`; `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` fail if an incompatible interface dispatches, writes a pin, omits the refit target, or a compatibility-guard removal survives.
+  AC-4 evidence: candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` changes only `ARCHITECTURE.md` after validated candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404`; `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` fails if README policy, local-mod bytes/mode, or unrelated state commit/tree/status changes.
+  AC-5 evidence: deletion commit `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` plus diagram repair `61ce308dfeaae40f05b997092eb3a3a359a61ff6` passed `python3 scripts/kc-dev-flow-contract-test.py` and the focused `awk` duplicate-node/exact-edge check; they fail if a canonical copy returns, a route/guard/kernel mutation survives, or installed manifest node `M` and repository mod node `RM` conflate.
+  AC-6 evidence: self-locating commit `a91da87379c77ab4d4b7837f2dec664d5eb20136` remains in candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`; `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` fails if three install roots require host-specific discovery or moving the package/worktree changes resolution.
+  AC-7 evidence: candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` retains the 57-mutant `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` result and `git diff --shortstat 3aafd3d22e749257f3551079475cc41183525d7c..61ce308dfeaae40f05b997092eb3a3a359a61ff6` reports 37 files/3,870 lines; evidence fails if a named mechanism-removal mutant survives or scope exceeds 44 files/4,800 lines.
+- FAILED: Obtain correlatable changed-tip RoboRev confirmation.
+  The one allowed confirmation produced job `293` for `9d4e499ac5ac66d668131d378be41d487f89d446..61ce308dfeaae40f05b997092eb3a3a359a61ff6`, not required `3aafd3d22e749257f3551079475cc41183525d7c..61ce308dfeaae40f05b997092eb3a3a359a61ff6`; strict launch correlation is `UNKNOWN(reason: state_unknown)`, no retry is allowed, and its loader-binding diagnostic is carried to fresh validation without claiming authority.
+- SKIPPED: Create or link the delivery PR.
+  No PR exists for this branch. Delivery must create the authorized PR and include exactly one `Fixes DEV-45` linkage after fresh validation of `61ce308dfeaae40f05b997092eb3a3a359a61ff6`.
+
+### Summary
+
+The duplicate Mermaid node is repaired in one diagram-only commit, with plugin manifest and repository delivery-mod authority now distinct and all earned checks green at exact candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`. The single changed-tip observation could not correlate its range and remains non-authoritative; fresh validation owns the corrected candidate and the carried diagnostic before any Draft PR.
