@@ -245,7 +245,8 @@ For a complete Planning Receipt, before reading execution state or dispatching
 new work, run the read-only planning reader for the union of the snapshot's
 `planning-window`/`planning-outcome` Ready set and every currently Ready snapshot
 source outside those bounds. Refuse a truncated result. Compare that union with
-every committed SD entity sharing its `sprint`: source membership, window,
+every non-terminal committed SD entity sharing its `sprint` (a `done` or archived
+item has left the active set and is not a removed planning item): source membership, window,
 outcome, accepted outcome, and non-goals. Normalize both sets into ephemeral JSON
 lists and refuse the snapshot unless every item shares the engaged item's exact
 window and outcome. Run the bound planning comparator with `--expected-source`,
