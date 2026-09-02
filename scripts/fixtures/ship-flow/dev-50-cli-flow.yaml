@@ -1,0 +1,30 @@
+name: dev-50-cli-flow
+description: |
+  DEV-50's three-step CLI flow. Fixture for scripts/ship-flow/e2e-cli.sh:
+  every step is `action: "Execute external"`, consuming e2e-pipeline's
+  `execute.cli` step shape without depending on e2e-pipeline itself.
+
+steps:
+  - id: readme_present
+    action: "Execute external"
+    description: "Confirm the pinned checkout carries the dev README"
+    execute:
+      cli:
+        - run: "test -f docs/dev/README.md"
+          expect: "exit code 0"
+
+  - id: contract_test_present
+    action: "Execute external"
+    description: "Confirm the pinned checkout carries the contract test"
+    execute:
+      cli:
+        - run: "test -f scripts/kc-dev-flow-contract-test.py"
+          expect: "exit code 0"
+
+  - id: trivially_true
+    action: "Execute external"
+    description: "A step that always succeeds"
+    execute:
+      cli:
+        - run: "true"
+          expect: "exit code 0"

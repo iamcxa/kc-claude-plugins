@@ -1,0 +1,30 @@
+name: dev-50-cli-flow-failing
+description: |
+  Negative fixture for scripts/ship-flow/e2e-cli.sh: same as
+  dev-50-cli-flow.yaml, but the third step's command is `false`, so its
+  exit code never matches the declared `expect`.
+
+steps:
+  - id: readme_present
+    action: "Execute external"
+    description: "Confirm the pinned checkout carries the dev README"
+    execute:
+      cli:
+        - run: "test -f docs/dev/README.md"
+          expect: "exit code 0"
+
+  - id: contract_test_present
+    action: "Execute external"
+    description: "Confirm the pinned checkout carries the contract test"
+    execute:
+      cli:
+        - run: "test -f scripts/kc-dev-flow-contract-test.py"
+          expect: "exit code 0"
+
+  - id: trivially_false
+    action: "Execute external"
+    description: "A step that always fails"
+    execute:
+      cli:
+        - run: "false"
+          expect: "exit code 0"
