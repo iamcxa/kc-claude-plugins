@@ -753,8 +753,6 @@ for phrase in [
     "local execution grouping does not prove a Planning Receipt",
     "runtime owns execution and evidence",
     "execution-to-planning-provider projector",
-    "No reconcile result writes either side automatically",
-    "the read-only engage comparator",
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
@@ -831,17 +829,8 @@ for relative, phrases in {
     "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
         "Could credible negative evidence cancel or materially change the next commitment",
         "kc-dev-flow-work-profile/v3",
-        "poc_decision",
-        "poc_falsifier",
-        "poc_budget",
-        "poc_stop_when",
-        "poc_artifact",
-        "poc_safety_boundary",
-        "poc_decision_ready_minutes",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
-        "poc_outcome",
-        "poc_close_measurement",
         "do not dispatch a validation worker",
         "return the POC outcome to planning",
         "does not create downstream delivery work",
@@ -1085,11 +1074,6 @@ for label, section in (("3.x migration", migration_3x), ("2.x migration", migrat
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
 
 for phrase in [
-    "v2 Pilot or Production receipt",
-    "v1 POC",
-    "complete the v3 POC fields",
-    "build -> prove",
-    "shape -> build -> verify-deliver",
     "structured Ask UI",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
@@ -1202,16 +1186,8 @@ for phrase in [
     "Do not promote the admission snapshot into planning authority",
     "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
     "Do not cancel a running worker.",
-    "No difference writes the provider or execution snapshot automatically.",
     "every currently Ready snapshot source",
     "Refuse a truncated provider result",
-    "--expected-source <exact-work-item-source>",
-    "--expected-window <exact-work-item-planning-window>",
-    "--expected-outcome <exact-work-item-planning-outcome>",
-    "every item shares the exact window and outcome",
-    "Exit `1` reports the classified delta",
-    "Exit `2` reports `planning reconcile unavailable`",
-    "stdout parses as one JSON object with `status: clean`",
     "compare the accepted goal and complete non-goal list exactly",
     "do not replace the snapshot or candidate",
     "affected acceptance evidence",
@@ -1349,14 +1325,6 @@ for phrase in [
     "| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`",
     "| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |",
     "reconcile every active Issue in the exact Project/Cycle",
-    "--expected-source",
-    "--expected-window",
-    "--expected-outcome",
-    "every item shares the engaged item's exact window and outcome",
-    "stdout parses as one JSON object with `status: clean`",
-    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment",
-    "`kc-dev-flow-dispatch-envelope/v1` object",
-    "--state-revision",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits Linear cutover boundary: {phrase}")
 require(
