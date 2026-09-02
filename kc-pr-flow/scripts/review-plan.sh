@@ -303,7 +303,7 @@ try:
         raise ParseError
 
     findings = receipt.get("known_findings")
-    if not isinstance(findings, list) or not findings:
+    if not isinstance(findings, list):
         raise ParseError
     receipt_capabilities = receipt.get("required_capabilities")
     if (

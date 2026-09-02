@@ -55,6 +55,7 @@ make_route_fixture() {
   local fixture_name="${1-default}" finding_category="${2-correctness}"
   local receipt_capabilities="${3-code_correctness}"
   local lane_capability="${4-code_correctness}"
+  local zero_findings="${5-false}"
   local repo="$TEST_ROOT/repo-$fixture_name" observation="$TEST_ROOT/observation-$fixture_name.json"
   local state_root="$TEST_ROOT/state-$fixture_name" observed run_id pointer anchor content_hash
   mkdir -p "$repo/src"
@@ -102,6 +103,7 @@ make_route_fixture() {
     --arg base "$ROUTE_BASE" --arg head "$ROUTE_REVIEWED" \
     --arg config_hash "$ROUTE_CONFIG_HASH" --arg category "$finding_category" \
     --arg lane_capability "$lane_capability" \
+    --argjson zero_findings "$zero_findings" \
     --argjson pointer "$pointer" --arg anchor "$anchor" '
       {
         schema:"kc-pr-flow.shadow-observation/v1",
@@ -116,13 +118,15 @@ make_route_fixture() {
           terminal_status:"succeeded",
           usage:{input_tokens:10,output_tokens:5,total_tokens:15,provenance:"reported",
             provider_family:"claude",scope:"lane"},
-          candidates:[{ordinal:1,path:"src/parser.py",side:"RIGHT",anchor_sha256:$anchor,
-            category:$category,claim_key:"missing_strip",evidence:$pointer}]
+          candidates:(if $zero_findings then [] else
+            [{ordinal:1,path:"src/parser.py",side:"RIGHT",anchor_sha256:$anchor,
+              category:$category,claim_key:"missing_strip",evidence:$pointer}] end)
         }],
         synthesis:{
-          findings:[{path:"src/parser.py",side:"RIGHT",anchor_sha256:$anchor,
-            category:$category,claim_key:"missing_strip",evidence:$pointer,
-            candidate_refs:[{lane_id:"correctness",ordinal:1}]}],
+          findings:(if $zero_findings then [] else
+            [{path:"src/parser.py",side:"RIGHT",anchor_sha256:$anchor,
+              category:$category,claim_key:"missing_strip",evidence:$pointer,
+              candidate_refs:[{lane_id:"correctness",ordinal:1}]}] end),
           uncertain_candidate_refs:[]
         }
       }' >"$observation"
@@ -499,6 +503,53 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = mode-router ]; then
       --delta-receipt "$ROUTE_RECEIPT"
   )"
   assert_eq 'non-ancestor history falls back to initial' initial "$(jq -r '.mode' <<<"$nonancestor")"
+
+  make_route_fixture zero-findings correctness code_correctness code_correctness true
+  assert_eq 'zero-finding S01 receipt is valid and closed' 0 \
+    "$(jq -r '.known_findings | length' "$ROUTE_RECEIPT")"
+  git -C "$ROUTE_REPO" checkout -q "$ROUTE_REVIEWED"
+  mkdir -p "$ROUTE_REPO/docs"
+  printf 'safe unseen work\n' >"$ROUTE_REPO/docs/zero-findings.md"
+  git -C "$ROUTE_REPO" add docs/zero-findings.md
+  git -C "$ROUTE_REPO" commit -qm zero-findings-unseen
+  zero_findings_head="$(git -C "$ROUTE_REPO" rev-parse HEAD)"
+  zero_findings_delta="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$zero_findings_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'zero-finding predecessor permits safe unseen delta' delta \
+    "$(jq -r '.mode' <<<"$zero_findings_delta")"
+  assert_eq 'zero-finding delta remains comment-only' COMMENT \
+    "$(jq -r '.event_ceiling' <<<"$zero_findings_delta")"
+  assert_eq 'zero-finding delta inherits no findings' 0 \
+    "$(jq -r '.inherited_finding_ids | length' <<<"$zero_findings_delta")"
+  assert_eq 'zero-finding delta retains predecessor coverage' code_correctness \
+    "$(jq -r '.required_capabilities | join(",")' <<<"$zero_findings_delta")"
+
+  zero_findings_bad_coverage="$TEST_ROOT/zero-findings-bad-coverage.json"
+  jq -S -c '.required_capabilities=[]' "$ROUTE_RECEIPT" >"$zero_findings_bad_coverage"
+  bad_coverage="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo acme/widgets --pr 42 --base "$ROUTE_BASE" --head "$zero_findings_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$zero_findings_bad_coverage"
+  )"
+  assert_eq 'zero findings do not bypass capability coverage validation' initial \
+    "$(jq -r '.mode' <<<"$bad_coverage")"
+
+  wrong_identity="$(
+    KC_PR_FLOW_DELTA_FAST_PATH=on bash "$PLAN" decide \
+      --repo other/widgets --pr 42 --base "$ROUTE_BASE" --head "$zero_findings_head" \
+      --config-hash "$ROUTE_CONFIG_HASH" --config-file "$ROUTE_CONFIG" \
+      --repo-worktree "$ROUTE_REPO" --predecessor-events "$ROUTE_EVENTS" \
+      --delta-receipt "$ROUTE_RECEIPT"
+  )"
+  assert_eq 'zero findings do not bypass predecessor identity validation' initial \
+    "$(jq -r '.mode' <<<"$wrong_identity")"
 fi
 
 replay_fixture_decide() {
@@ -660,6 +711,7 @@ fi
 if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then
   SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
   REFERENCE="$HERE/../reference/review-runtime.md"
+  plan_cleanup_recipe="$TEST_ROOT/delta-plan-cleanup-recipe.sh"
   typed_recipe="$TEST_ROOT/typed-interactive-recipe.sh"
   assert_contains "$SKILL" 'KC_PR_FLOW_DELTA_FAST_PATH=on' 'skill documents exact opt-in'
   assert_contains "$SKILL" 'review-plan\.sh.*decide' 'skill invokes the planner'
@@ -675,6 +727,62 @@ if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = skill-wiring ]; then
   for forbidden in 'gh pr review' 'review-post.sh post' 'authorization.granted'; do
     assert_not_contains "$PLAN" "$forbidden" "planner has no posting authority: $forbidden"
   done
+
+  sed -n '/^# delta-plan-cleanup-recipe:start$/,/^# delta-plan-cleanup-recipe:end$/p' "$SKILL" |
+    sed '1d;$d' >"$plan_cleanup_recipe"
+  # shellcheck source=/dev/null
+  . "$RUNTIME"
+  # shellcheck source=/dev/null
+  . "$plan_cleanup_recipe"
+  if declare -F review_plan_cleanup_inputs >/dev/null &&
+    declare -F review_plan_guard_event_final >/dev/null; then
+    pass
+
+    success_dir="$(review_runtime_private_snapshot_dir)"
+    success_events="$success_dir/events.jsonl"
+    success_receipt="$success_dir/receipt.json"
+    success_config="$success_dir/config.json"
+    printf 'immutable events\n' >"$success_events"
+    printf 'immutable receipt\n' >"$success_receipt"
+    printf 'immutable config\n' >"$success_config"
+    PLAN_INPUT_DIR="$success_dir"
+    PLAN_INPUT_EVENTS="$success_events"
+    PLAN_INPUT_RECEIPT="$success_receipt"
+    PLAN_INPUT_CONFIG="$success_config"
+    PLAN_INPUT_READY=true
+    # shellcheck disable=SC2317,SC2329 # Invoked by review_plan_guard_event_final.
+    review_plan_guard_event() {
+      [ "$(cat "$PLAN_INPUT_EVENTS")" = 'immutable events' ] &&
+        [ "$(cat "$PLAN_INPUT_RECEIPT")" = 'immutable receipt' ] &&
+        [ "$(cat "$PLAN_INPUT_CONFIG")" = 'immutable config' ]
+    }
+    review_plan_guard_event_final COMMENT
+    assert_eq 'final authority guard reads immutable bytes before cleanup' 0 "$?"
+    assert_eq 'successful final guard removes exact snapshot files and directory' false \
+      "$([ -e "$success_events" ] || [ -e "$success_receipt" ] ||
+          [ -e "$success_config" ] || [ -e "$success_dir" ] && printf true || printf false)"
+    assert_eq 'successful cleanup resets plan handles and readiness' '||||false' \
+      "$PLAN_INPUT_DIR|$PLAN_INPUT_EVENTS|$PLAN_INPUT_RECEIPT|$PLAN_INPUT_CONFIG|$PLAN_INPUT_READY"
+
+    partial_dir="$(review_runtime_private_snapshot_dir)"
+    partial_events="$partial_dir/events.jsonl"
+    partial_receipt="$partial_dir/receipt.json"
+    partial_config="$partial_dir/config.json"
+    printf 'partial events\n' >"$partial_events"
+    PLAN_INPUT_DIR="$partial_dir"
+    PLAN_INPUT_EVENTS="$partial_events"
+    PLAN_INPUT_RECEIPT="$partial_receipt"
+    PLAN_INPUT_CONFIG="$partial_config"
+    PLAN_INPUT_READY=false
+    review_plan_cleanup_inputs
+    assert_eq 'partial snapshot cleanup removes known file and empty directory' false \
+      "$([ -e "$partial_events" ] || [ -e "$partial_dir" ] && printf true || printf false)"
+    assert_eq 'partial cleanup resets plan handles and readiness' '||||false' \
+      "$PLAN_INPUT_DIR|$PLAN_INPUT_EVENTS|$PLAN_INPUT_RECEIPT|$PLAN_INPUT_CONFIG|$PLAN_INPUT_READY"
+    assert_not_contains "$plan_cleanup_recipe" 'rm -rf' +      'plan snapshot cleanup never uses recursive deletion'
+  else
+    fail 'skill defines executable plan snapshot cleanup and final guard'
+  fi
 
   sed -n '/^# typed-interactive-recipe:start$/,/^# typed-interactive-recipe:end$/p' "$SKILL" |
     sed '1d;$d' >"$typed_recipe"
