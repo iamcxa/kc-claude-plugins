@@ -1,6 +1,6 @@
 ---
 title: Load kc-dev-flow contracts from the installed plugin
-status: validation
+status: implementation
 source: https://linear.app/duckbase-co/issue/DEV-45/load-kc-dev-flow-contracts-from-the-installed-plugin
 product: kc-dev-flow
 planning-window: Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z
@@ -13,7 +13,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-45-load-kc-dev-flow-contracts
 issue:
-pr: "#323"
+pr:
 mod-block:
 id: 3fkmdwdvsfha8ektb2s5jz7d
 gates:
@@ -78,7 +78,7 @@ gates:
                 reason: Captain approved exact candidate 61ce308d as locally validated and authorized one Draft PR with Fixes DEV-45.
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## Work profile receipt
@@ -459,3 +459,24 @@ Native stack exception: REJECTED — PR #323 already separates dependent green l
 The one-line Mermaid repair is exact, closes the prior architecture failure, and leaves all AC-1 through AC-7 evidence green at corrected candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`. The wrong-range RoboRev loader-path diagnostic does not reproduce when the activated skill's required invocation-local binding is honored; local validation passes, while PR creation and release authority remain pending with the Captain.
 
 PR feedback: {"dispositions":[],"fingerprint":"sha256:11374cc6b7bfd28902fd621a1603f5669788aaab44d804bc6364a83597a5b18f","head":"61ce308dfeaae40f05b997092eb3a3a359a61ff6","layer":"single","pr_number":323,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Keep PR #323 Draft; do not ready, merge, close, push, create, or link PRs.
+  Live readback shows PR #323 OPEN and Draft at unchanged remote head `61ce308dfeaae40f05b997092eb3a3a359a61ff6`; candidate `111d47126df43c15c02d8db4bb0fb4621df25aa1` remains local.
+- DONE: Make the smallest local contract correction that supports provider-backed native stacks.
+  Commit `111d47126df43c15c02d8db4bb0fb4621df25aa1` reserves exact `delivery.branch` and `delivery.close_line` for the top layer while lower layers bind reviewed unique branch/base pairs with no close line.
+- DONE: Update the Local Profile delivery-base row so it matches the executable sibling-base behavior already required by pr-merge.
+  The Local Profile now selects trunk for independent units and the immediately lower reviewed sibling branch/candidate for dependent green layers.
+- DONE: Add focused behavior-level coverage in the existing contract suite; do not add a new standing checker or dependency.
+  `python3 scripts/pr-merge-portable-delivery.test.py` passes and rejects lower-layer provider-branch reuse, lower-layer close lines, lost top provider binding, restored trunk-only policy, and removed sibling-base policy.
+- DONE: Preserve all unrelated candidate bytes and prior acceptance evidence.
+  The correction changes only `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and `scripts/pr-merge-portable-delivery.test.py`; prior commits and AC-1 through AC-7 behavior remain intact.
+- DONE: Stop and report instead of widening if this requires a provider schema change, more than five files, or more than 300 changed lines.
+  No provider schema changed; the correction is 3 files and 121 changed lines (`+100/-21`) over rejected candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`.
+- DONE: Report the new exact candidate plus focused falsification evidence.
+  Exact candidate `111d47126df43c15c02d8db4bb0fb4621df25aa1` passes the focused portable-delivery suite, repository contract, all-profile route gate, installed-loader suite, and exact-base diff check; total scope is 39 files/3,991 changed lines below 44/4,800.
+
+### Summary
+
+Provider-backed native-stack delivery now gives every lower layer an explicitly reviewed unique branch/base and no provider close line, while the top alone carries Linear's exact branch and `Fixes DEV-45`. The bounded three-file correction preserves the installed-contract outcome and leaves Draft PR #323 untouched for fresh validation.
