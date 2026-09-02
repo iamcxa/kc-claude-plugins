@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-02T14:44:00Z
 completed:
 verdict:
 worktree:
@@ -94,21 +94,25 @@ Dispatched 2026-09-02T14:48:57Z (workspace create); full task delivered 14:50:44
 
 ```yaml
 poc_outcome:
-  direction: proceed
+  direction: change
   admitted_at: 2026-09-02T14:44:00Z
   decision_ready_at: 2026-09-02T15:25:07Z
   decision_ready_elapsed_seconds: 2467
   captain_interventions_before_decision_ready: 0
   candidate: 0144264343775f4c74f517ccea488a8ef91c44bc
   evidence: >-
-    One cloud worker, dispatched by message only, ran kc-dev-flow build on DEV-50,
-    pushed the branch without opening a PR, and returned an Evidence block whose
-    CANDIDATE_SHA equals the remote head the FO pinned. At that SHA the FO ran the
-    without-it check twice (retained exit 0, README restored to base exit 1
-    "needs one Goal section"), the contract test three ways (candidate PASS; base
-    README FAIL; duplicated Goal FAIL "headings are missing or duplicated"), and a
-    three-step CLI e2e flow (all pass, evidence/e2e-*.log). pr-merge preflight
-    merge-tree is clean. See evidence/receipt-*.json and evidence/worker-evidence-block.md.
+    Glue holds: one cloud worker, dispatched by message only, ran kc-dev-flow
+    build on DEV-50, pushed the branch without opening a PR, and returned an
+    Evidence block whose CANDIDATE_SHA equals the remote head the FO pinned. At
+    that SHA the FO ran the without-it check twice (retained exit 0, README
+    restored to base exit 1 "needs one Goal section"), the contract test three
+    ways (candidate PASS; base README FAIL; duplicated Goal FAIL), and a
+    three-step CLI e2e flow (all pass). pr-merge preflight was clean at the
+    approved base; base moved once (#340) and the unit was re-presented and
+    re-approved at bda45e6b; Draft PR #342 opened at the exact candidate.
+    Direction is change, not proceed, because the 15-minute decision limit was
+    exceeded (41 min) and four glue defects require ship-flow contract changes
+    before the same run can be repeated inside budget.
   strongest_limit: >-
     Four glue defects, none needing a new mechanism: (1) Conductor's WAF blocks
     dispatch messages carrying a bootstrap curl|tar line, so the task text had to
@@ -124,5 +128,27 @@ poc_outcome:
     A repeat where the worker cannot produce CANDIDATE_SHA, the pinned head moves
     during verification, the without-it command cannot be run FO-side, or the
     delivery unit's merge-tree preflight conflicts.
-  cleanup_status_at_decision: pending (worker workspace idle, throwaway branch poc/dev-62-dispatch on remote, candidate branch on remote, no PR yet)
+  cleanup_status_at_decision: pending
 ```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: 0
+  terminal_cleanup_seconds: 120
+  cleanup_status: complete
+```
+
+## Cleanup
+
+Worker workspace and session archived; throwaway dispatch branch `poc/dev-62-dispatch` deleted from origin; acceptance worktrees pruned. Retained on purpose: candidate branch and Draft PR #342 (Captain-approved delivery), ROADMAP S9 registration as Draft PR #343.
+
+## Change returned to planning
+
+Four ship-flow contract changes before a repeat can stay inside the 15-minute limit:
+
+1. Dispatch text must not carry a bootstrap `curl | tar` line (Conductor WAF blocks it); with the preinstalled image the line disappears, and any long task text is committed to a carrier the worker fetches.
+2. FO reads worker transcripts through `conductor sql` on `session_transcripts_view`; the CLI `session message` output truncates at 64 KB and `--after` rejects message ids.
+3. `WITHOUT_IT_COMMAND` is one self-contained shell line the worker supplies and the FO runs verbatim in a no-secrets worktree; a path to an untracked file is not evidence, and the FO does not author a substitute.
+4. CLI e2e evidence is a timestamped stdout log; `asciinema` and `script(1)` hang without a pty under this harness.
