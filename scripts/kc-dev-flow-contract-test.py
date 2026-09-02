@@ -714,7 +714,7 @@ for phrase in [
     "reports both the blocks it cut and the candidates it kept, with the reason for each",
     "LOC and file counts are diagnostic signals, never pass/fail gates",
     "create no receipt or commentary",
-    "A removed surface owes the same necessity claim as a retained one: the accepted goal check passes without it. A removal with no such claim is unmapped.",
+    "A removal is graded by Minimal necessity like a retention; without it, unmapped.",
 ]:
     require(phrase in normalized_kernel, f"kernel omits subtraction rule: {phrase}")
 

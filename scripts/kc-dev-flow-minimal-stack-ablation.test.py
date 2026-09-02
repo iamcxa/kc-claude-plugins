@@ -833,9 +833,9 @@ def main() -> int:
     )
     run_kernel_contract_mutant(
         "removal-grading-clause-removed",
-        "create no receipt or commentary.\n  A removed surface owes the same necessity claim as a retained one: the\n  accepted goal check passes without it. A removal with no such claim is\n  unmapped.\n",
+        "create no receipt or commentary.\n  A removal is graded by Minimal necessity like a retention; without it,\n  unmapped.\n",
         "create no receipt or commentary.\n",
-        "kernel omits subtraction rule: A removed surface owes the same necessity claim",
+        "kernel omits subtraction rule: A removal is graded by Minimal necessity",
     )
     run_loader_admission_mutant(
         "necessity-instrument-field-removed",

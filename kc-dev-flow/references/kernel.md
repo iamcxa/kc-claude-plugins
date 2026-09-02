@@ -109,8 +109,7 @@ synthetic obligation and cannot remove the route's only authorization boundary.
   A comment pass reports both the blocks it cut and the candidates it kept, with
   the reason for each. LOC and file counts are diagnostic signals, never
   pass/fail gates. When no scope drift is found, create no receipt or commentary.
-  A removed surface owes the same necessity claim as a retained one: the
-  accepted goal check passes without it. A removal with no such claim is
+  A removal is graded by Minimal necessity like a retention; without it,
   unmapped.
 
 ## Completion invariant
@@ -153,7 +152,9 @@ the same way whether or not the thing it watches is broken.
 
 - **A check is evidence only once it has been seen to fail.** Run it against a
   case it must flag before running it against the case in question; its silence
-  carries information only after you have heard it speak.
+  carries information only after you have heard it speak. This binds the check,
+  not only the artifact: a round that cannot say what would have reddened its own
+  instrument has measured nothing.
 - **Name the falsifier's kind.** `refusal` — drive the system and read its
   rejection. `mutation` — change the producer and observe what breaks; this is
   the kind that reaches a consumer silently duplicating a producer's derivation
