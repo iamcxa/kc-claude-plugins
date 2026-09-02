@@ -798,6 +798,13 @@ def main() -> int:
         "changing work-item bytes emitted an envelope",
     )
     run_manual_contract_mutant(
+        "terminal-sibling-exclusion-removed",
+        str(LINEAR_ADMISSION),
+        '            if path.startswith("_archive/") or fields.get("status") == "done":\n                continue\n',
+        "",
+        "clean Linear admission failed",
+    )
+    run_manual_contract_mutant(
         "comparator-payload-stop-removed",
         str(LINEAR_ADMISSION),
         '        if compared.returncode != 0 or reconciliation.get("status") != "clean" or not empty:\n',

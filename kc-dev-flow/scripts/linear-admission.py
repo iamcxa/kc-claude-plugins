@@ -328,6 +328,8 @@ def main() -> int:
                 fields = frontmatter(text)
             except (UnicodeDecodeError, AdmissionError):
                 continue
+            if path.startswith("_archive/") or fields.get("status") == "done":
+                continue
             if fields.get("sprint") == sprint and fields.get("sprint-readiness") == "ready":
                 snapshots.append(normalized_item(text))
         if not snapshots or len({str(item["source"]) for item in snapshots}) != len(snapshots):

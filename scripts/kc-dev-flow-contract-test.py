@@ -1646,6 +1646,9 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         state_type = "completed" if fixture.scenario == "removed" else "started"
 
         def issue(identifier: str = "DEV-12") -> dict[str, object]:
+            # The archived sibling is finished in Linear as well; only an active
+            # snapshot item that Linear has closed is a removed planning item.
+            issue_state = "completed" if identifier == "DEV-11" else state_type
             reported_identifier = (
                 "DEV-99"
                 if fixture.scenario == "mismatched-identifier" and "AdmissionIssue" in query
@@ -1660,7 +1663,7 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
                 "id": identifier.lower(), "identifier": reported_identifier,
                 "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
                 "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
-                "state": {"type": state_type},
+                "state": {"type": issue_state},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
                 "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
             }
@@ -1758,8 +1761,17 @@ Stop on any planning drift.
         work_item.read_text(encoding="utf-8").replace("DEV-12", "DEV-13"),
         encoding="utf-8",
     )
+    # A finished sibling stays in the state tree with the same sprint but leaves
+    # Linear's active set; it must not count as a removed planning item.
+    (state / "_archive").mkdir()
+    (state / "_archive/dev-11.md").write_text(
+        work_item.read_text(encoding="utf-8")
+        .replace("DEV-12", "DEV-11")
+        .replace("status: implementation", "status: done", 1),
+        encoding="utf-8",
+    )
     subprocess.run(["git", "init", str(state)], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(state), "add", "dev-12.md", "dev-13.md"], check=True)
+    subprocess.run(["git", "-C", str(state), "add", "dev-12.md", "dev-13.md", "_archive/dev-11.md"], check=True)
     subprocess.run(
         ["git", "-C", str(state), "-c", "user.name=fixture",
          "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
