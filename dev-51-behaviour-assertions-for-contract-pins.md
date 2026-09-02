@@ -7,7 +7,7 @@ planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16
 planning-outcome: Linear Project 4746021d-2930-4589-80a0-b7b3d1d70eeb kc-dev-flow slimming dogfood sha256:0599c390742642a1edf03e07a50c28635ff41d3ef77188e076cb2f02e6d85372
 sprint: S8
 sprint-readiness: ready
-started:
+started: 2026-09-02T14:23:40Z
 completed:
 verdict:
 worktree:
