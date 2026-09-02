@@ -15,6 +15,31 @@ issue:
 pr:
 mod-block:
 id: mavxcgkp974vpfe4wakx78mj
+gates:
+    version: 1
+    records:
+        - id: gate:mavxcgkp974vpfe4wakx78mj:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:mavxcgkp974vpfe4wakx78mj-backlog-1
+              briefing:
+                id: briefing:mavxcgkp974vpfe4wakx78mj:backlog:attempt-1:revision-1
+                digest: sha256:629a2e1f1e4b9f2a2ad7540091a121021e90e5528f10536c6831b3e68cbbd123
+                room-ref: ./dev-62-ship-flow-glue-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:mavxcgkp974vpfe4wakx78mj:backlog:1
+                briefing: briefing:mavxcgkp974vpfe4wakx78mj:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-02T14:45:35.716635Z"
+                decision: approve
+                reason: Captain admitted DEV-62 as a standalone poc-exploration item in sprint S9; POC route build -> prove maps to implementation -> validation; no Planning Receipt by Captain choice.
+                conn:
+                    quote: 直接進 SD 也可以，省掉儀式時間
+                    source: Captain chat, this conversation, 2026-09-02, replying to the FO's question whether DEV-62 should be Linear-backed or standalone-admitted
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:mavxcgkp974vpfe4wakx78mj:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-62 as a standalone POC (poc-exploration, S9) and move it to implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:mavxcgkp974vpfe4wakx78mj:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/02d4d28cd40dc2f09bbb24b1ddec160826eef403/dev-62-ship-flow-glue-poc/review/backlog/admission.md",
+      "rev": "sha256:4ee4155c0481724402bc7b8a92c238a6e68dea56210ef974436ece834e73e2cc",
+      "mediaType": "text/markdown",
+      "summary": "Standalone POC admission; no Planning Receipt; disposable artifact; falsifier is any step that needs a new mechanism."
+    }
+  ]
+}
