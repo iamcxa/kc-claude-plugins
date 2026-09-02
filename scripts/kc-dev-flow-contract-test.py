@@ -1904,6 +1904,13 @@ for phrase in [
     "exits non-zero on the first step whose command's exit code does not match its declared `expect`",
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the CLI e2e evidence rule: {phrase}")
+for phrase in [
+    "`CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, and `WITHOUT_IT_REMOVED_VARIANT`",
+    "`WITHOUT_IT_COMMAND` is one self-contained shell line: it references no file outside the candidate "
+    "tree, it exits 0 on the candidate and non-zero once `WITHOUT_IT_REMOVED_VARIANT` is applied, and the "
+    "First Officer runs it verbatim, unchanged, in a worktree with no secrets.",
+]:
+    require(phrase in normalized_workflow, f"Ship-flow runtime omits the WITHOUT_IT_COMMAND one-line rule: {phrase}")
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
