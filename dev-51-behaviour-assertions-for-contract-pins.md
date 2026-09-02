@@ -677,6 +677,140 @@ in this report were captured that way.
 
 Route back accepted as a bounded planning delta. Changed premise: the shape's strict action-divergence RED did not fire on any of the three probe cases, so AC-3 as admitted was not dischargeable for tier-2. Affected evidence: AC-3 only; the accepted outcome and non-goals are unchanged, and the Linear Issue's AC-3 was updated to the same text. Ruling: DEV-51 completes tier-1 (the remaining five split halves and the release-proof boundary group, plus the two deferred classifications) and records every tier-2 candidate as wording-only with the probe evidence; no further behavior-diff case is run under this item. The negative result is a finding for DEV-52: a rule whose removal changes nothing because a duplicate survives elsewhere is a removal candidate signal.
 
+
+## Captain-ruled continuation: tier-1 completion and tier-2 final disposition (cycle 2)
+
+Per the Captain ruling above (route-back accepted, AC-3 amended to require every
+tier-2 candidate recorded wording-only rather than reddened), this cycle:
+converted the five split sites' tier-1 halves, investigated the release-proof
+boundary group, resolved the two deferred classifications, and recorded all
+tier-2 candidates as wording-only. No further `behavior-diff` case was run.
+
+### Mutation replay table (tier-1, cycle 2)
+
+| Site key | Mechanism mutated | New instrument (command → failure) | Old pin on same mutation |
+|---|---|---|---|
+| `kernel omits provider-neutral planning boundary` (T1 half: "the read-only engage comparator", "No reconcile result writes either side automatically") | Same mechanism and mutation as cycle 1's T1-1 (`engage-reconcile.py` L164 `return 0`) — reused, not re-run | `python3 kc-dev-flow/scripts/engage-reconcile.test.py` → exit 1, "membership delta returned 0" | GREEN (2/2 phrases still in kernel.md) |
+| `{relative} omits the v4 POC contract` (T1 half: `poc_*` field names) | (a) `profile-contract-loader.py` L35 `POC_FIELDS`: drop `poc_stop_when`. (b) `poc-close-guard.py` L120: `one_yaml_section(text, "POC outcome", "poc_outcome")` → heading `"POC outcome MUTATED"` | (a) `profile-contract-loader.test.py` → exit 1, "v3 POC accepted a missing poc_stop_when". (b) `poc-close-guard.test.py` → exit 1, `CloseError: work item must contain exactly one POC outcome MUTATED` | GREEN both (7/7 choose-work-profile field-name phrases; 2/2 continue-dev-flow poc_outcome/poc_close_measurement phrases) |
+| `chooser is missing` (T1 half: receipt schema/route strings) | `profile-contract-loader.py` L20 `ROUTES["poc-exploration"]["validation"]`: `("prove", "done")` → `("prove-mutated", "done")` | `python3 scripts/kc-dev-flow-contract-test.py` → exit 1, "route topology drifted" (existing L403 `require(loader.ROUTES == expected_routes, ...)` plus `profile-contract-loader.test.py`'s own copy) | GREEN (6/6 phrases still in choose-work-profile/SKILL.md) |
+| `continuation planning disambiguation omits` (T1 half: `--expected-*`, exit codes, `status: clean`) | Same mechanism and mutation as cycle 1's T1-1/this cycle's provider-neutral-boundary row (`engage-reconcile.py` L164) — reused | `python3 kc-dev-flow/scripts/engage-reconcile.test.py` → exit 1, "membership delta returned 0" | GREEN (8/8 converted phrases still in continue-dev-flow/SKILL.md) |
+| `self-adoption omits Linear cutover boundary` (T1 half: `--expected-*`, `--state-revision`, envelope schema, process-env refusal) | `linear-admission.py` L402: `"--expected-source", str(engaged["source"])` → prefixed `"MUTATED-"` | `python3 scripts/kc-dev-flow-contract-test.py` → exit 1, "clean Linear admission failed: linear admission: planning comparator returned invalid output" (existing inline mock-Linear-server fixture, L1625+) | GREEN (8/8 phrases still in docs/dev/README.md) |
+
+Every mutation above was reverted after its cycle; full `kc-dev-flow-contract-test.py`
+(plain and `--ablation-check`) passes at the candidate (below).
+
+**`kernel omits completion invariant` (row 1 of the inventory) is not in this
+table.** Its shape-recorded tier is `split`, but between T2 (the working
+agent's without-it observation) and **wording-only** (the FO/ensign handoff
+half) — it has no tier-1 half. The shape's own totals ("8 tier 1, 5 split, 13
+tier 2, 5 wording-only = 31") undercount by one in the same direction as its
+earlier corrected 19→20→31 pin-count error: a row-by-row count of the `##
+Pin inventory` table's Tier column finds **6** rows marked `split`, not 5 —
+this row is the sixth, and it has no tier-1 component to convert. The
+Captain's "five split sites" instruction correctly names the five that do
+carry a tier-1 half (all five converted above); this finding is recorded so
+the totals line can be corrected without re-opening AC-1.
+
+### Release-proof boundary: investigated, stays wording-only
+
+Per the shape's stated fallback ("build names the receipt field it asserts,
+else this drops to wording-only"): the field is **`tree_sha256`**, in
+`scripts/kc-dev-flow-published-tag-smoke.py`'s `load_candidate_receipt()`.
+Its structural validation (format, presence, wrong-length/garbage digest) is
+tested (`kc-dev-flow-published-tag-smoke.test.py` L458, L501). But the
+specific comparison that enforces "candidate receipt is valid only for its
+exact tracked package snapshot" — `if source_digest != receipt["tree_sha256"]:
+raise SmokeError(...tracked snapshot drift)` at L727-730 — sits inside the
+**published-mode** path, which does a live `git clone --branch <tag>` against
+the real repository over network; no test exercises that branch, and building
+one is a live-git/host-CLI harness this dispatch does not have budget to add
+without risking an unverified mutation cycle (the same non-goal that bars
+removing a pin whose replacement hasn't reddened applies equally to *adding*
+one that hasn't). Recorded wording-only per the shape's explicit contingency;
+pin unchanged.
+
+### Deferred classifications, resolved
+
+- **`continuation omits provider delivery linkage`**: does `pr-review-handoff.py`
+  already refuse? **No.** Read in full — it is "Create and validate the
+  non-authoritative kc-dev-flow PR-review evidence index," with no reference
+  to branch push, PR creation, or the delivery binding this pin protects.
+  Stays tier-2, now wording-only per the Captain ruling.
+- **`manual admission Issue body omits`**: does the existing non-loop
+  template-parse assertion (heading set/order/`startswith`, L1416-1435) cover
+  the two remaining phrases? **No.** Those assertions check structure
+  (headings present once, in order, body starts with `## The problem`); the
+  two remaining phrases ("The accepted outcome or non-goals changed",
+  "structured planning delta") are prose *inside* the Route-back conditions
+  section's content, not a structural fact any parse covers. Confirmed
+  wording-only, unchanged from its original classification.
+
+### Tier-2 final disposition: all candidates wording-only
+
+Per the Captain ruling, every tier-2 candidate rule is recorded wording-only
+with its reason; no further `behavior-diff` case is required to redden. The
+three probe cases already run (`## Tier-2 checkpoint` above) are the evidence
+for the ruling itself, not per-rule proof — each remaining candidate's "reason"
+below is the ruling, not a repeated probe.
+
+**Count correction**: the shape's totals line said "13 tier 2." A row-by-row
+count of the original inventory's Tier column finds **12** rows marked
+plain `2`, plus **6** rows marked `split` (not 5 — see above), one of which
+(`kernel omits completion invariant`) has a T2 half with no T1 counterpart.
+Counting every candidate rule that is now wording-only under this ruling:
+12 pure-T2 rows + 6 split rows' T2/remaining halves = **18**, matching the
+shape's own separately-stated "18 tier-2 candidate rules" even though its
+"13 tier 2, 5 split" breakdown was off by one in each direction. 18 is
+therefore the correct, internally-consistent count; "13/5" is not.
+
+| Rule (site key) | Reason (wording-only, per Captain ruling) |
+|---|---|
+| `kernel omits subtraction rule` | Probed (checkpoint case 1): inconclusive by action; pin stays |
+| `audit omits unified need vocabulary` | Not probed (checkpoint stopped at 3 cases); route-back ruling applies |
+| `kernel omits brief boundary` | Probed (checkpoint case 2): inconclusive by action; pin stays |
+| `continuation omits provider delivery linkage` | Deferred classification resolved this cycle: `pr-review-handoff.py` does not refuse; stays T2 → wording-only |
+| `PR delivery omits provider linkage` | Not probed; route-back ruling applies |
+| `adopter omits scheduling binding` | Not probed (largest single site, highest design cost); route-back ruling applies |
+| `continuation authority resolution omits` | Not probed; route-back ruling applies |
+| `adopter omits migration rule` | Not probed; route-back ruling applies |
+| `Chief Engineer is missing` | Probed (checkpoint case 3): near-null divergence, duplicate wording found; pin stays |
+| `Science Officer is missing` | Not probed ("same shape as" Chief Engineer per inventory, untested); route-back ruling applies |
+| `self-adoption misstates brief authority` | Not probed; route-back ruling applies |
+| `validation runbook omits` | Not probed; route-back ruling applies |
+| `kernel omits completion invariant` (T2 half) | Not probed; route-back ruling applies. (Its other half was already wording-only in the shape — FO/ensign handoff duty, out of this item.) |
+| `kernel omits provider-neutral planning boundary` (T2 remainder, 9 phrases) | Authority-split/no-projector prose; T1 half converted above |
+| `{relative} omits the v4 POC contract` (T2 remainder) | Narrative duties (README/base.md); T1 half (field names) converted above |
+| `chooser is missing` (T2 remainder: "structured Ask UI") | UI-behavior prose, not mechanism-testable; T1 half converted above |
+| `continuation planning disambiguation omits` (T2 remainder) | Branch-selection/authority prose, plus "Refuse a truncated provider result" — investigated, **not currently enforced by any mechanism** (no "truncat" string anywhere in `kc-dev-flow/scripts/*.py`); a real gap in the shape's T1 classification, left as an agent-followed instruction, wording-only |
+| `self-adoption omits Linear cutover boundary` (T2 remainder: "not an iteration authority" sentence) | Repo-policy prose with no mechanism; T1 half converted above |
+
+Wording-only pins unchanged from the original inventory (never tier-2): **5**
+(`v4 migration omits`, `3.x migration omits standalone planning branch`,
+`rationale omits`, `manual admission Issue body omits` — confirmed above,
+`Roadmap is not thin enough for provider-neutral planning`).
+
+### Diff stops (final, against delivery base `f47fd8ca`)
+
+- **Changed files: 2** of the stop-5 budget (unchanged from cycle 1).
+- **Changed lines: 144** (41 added + 103 deleted) of the stop-600 budget.
+- Comment pass: unchanged from cycle 1 — 7 lines (the one pointer comment),
+  no new comments added this cycle.
+
+### Final candidate verification
+
+- `python3 scripts/kc-dev-flow-contract-test.py` → `kc-dev-flow contract: PASS`, exit 0, 45.0s.
+- `python3 scripts/kc-dev-flow-contract-test.py --ablation-check` → `kc-dev-flow contract: PASS`, exit 0, 5.8s.
+
+### F1/F2 equivalence evidence (cycle 2 addendum)
+
+F2 (tier-1 replacement asserts nothing the mechanism enforces) disproved for
+all 5 cycle-2 conversions via the mutation replay table above — same
+patch → owning-instrument-red-naming-the-rule → `git apply -R`/`git checkout
+--`/revert → green sequence as cycle 1. Combined with cycle 1's 7 groups,
+**12 of 13 tier-1 groups now carry a full mutation-replay triple**; the 13th
+(`package README omits the release-proof boundary`) was investigated and
+named (field: `tree_sha256`) but not converted, for the stated reason.
+
 ## Stage Report: implementation
 
 - FAILED (partial): Replace the tier-1 and split pin sites with assertions on the enforcing mechanism's observable output, and for every replaced pin record the mutation run before the old pin is removed.
@@ -689,3 +823,17 @@ Route back accepted as a bounded planning delta. Changed premise: the shape's st
 ### Summary
 
 Converted 7 of 8 pure tier-1 pin sites to mechanism-observable assertions, each with a redden-before-removal mutation triple recorded in `## Mutation replay table`; found and closed two real coverage gaps (Local Profile marker boundary, `--validate-admission` default-mode absence) rather than assuming existing coverage sufficed. Ran the three tier-2 probe cases the shape specified and stopped at the checkpoint as required: all three were inconclusive by strict action-divergence, but two showed sharp reasoning-cost divergence and the third revealed a real duplicate-wording finding — the checkpoint report to the Captain leads with the instrument question (does strict RED even fit reasoning-quality prose rules) rather than treating cost alone as the gating fact. The 5 split sites' tier-1 halves, the release-proof-boundary site, and three build-deferred classification checks are left unconverted with stated reasons; diff stayed at 2 files / 112 lines against the 5-file/600-line budget, well under both stops.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Convert the remaining tier-1 work (five split sites' tier-1 halves, release-proof boundary group) with the same mutation discipline, and resolve the two deferred classifications.
+  `## Captain-ruled continuation` — 5 of 5 named split sites converted with mutation-replay triples (2 reused an already-proven mechanism, 3 are new mutations); release-proof boundary investigated, field named (`tree_sha256`), stays wording-only per the shape's own stated fallback (live-git harness not present, not added this cycle). Both deferred classifications resolved: `pr-review-handoff.py` does not refuse (stays T2/wording-only); the template-parse assertion does not cover the manual-admission prose phrases (confirmed wording-only, unchanged).
+- DONE: Record all 18 tier-2 candidate rules as wording-only with reason and a pointer to the checkpoint probes; run no further behavior-diff case.
+  `## Tier-2 final disposition` table — all 18 (12 pure T2 + 6 split T2/other remainders, corrected from the shape's internally-inconsistent "13 tier 2, 5 split") recorded with reason; the 3 already-probed rules point to the checkpoint's per-case evidence, the rest cite the Captain's route-back ruling. No new `behavior-diff` invocation this cycle.
+  One real gap found: `continuation planning disambiguation omits`'s "Refuse a truncated provider result" phrase, which the shape classified tier-1-adjacent, is not enforced by any mechanism (`grep -r truncat kc-dev-flow/scripts/*.py` is empty) — recorded wording-only, not silently converted.
+- DONE: Stay inside the stops, run the full contract test and ablation check at the final candidate, and amend the stage report with final diff counts, comment pass, remaining wording-only count, and F1/F2 evidence.
+  `## Diff stops (final)`: 2 files / 144 lines, both within the 5-file/600-line budget. Comment pass unchanged (7 lines, one pointer comment, nothing new). `## Final candidate verification`: contract test PASS exit 0, 45.0s; `--ablation-check` PASS exit 0, 5.8s. `## F1/F2 equivalence evidence (cycle 2 addendum)`: 12 of 13 tier-1 groups now carry a full mutation-replay triple (F2 disproved for each); the 13th is investigated-and-named, not converted.
+
+### Summary
+
+Checklist item 1 is now **DONE**: 12 of the 13 tier-1 groups (7 pure + 5 split halves) carry full redden-before-removal mutation triples; the 13th (release-proof boundary) was investigated per the shape's own contingency and named as wording-only rather than force-converted without a verified mutation. All 18 tier-2 candidates are recorded wording-only per the Captain's route-back ruling, with the 3 checkpoint-probed rules pointing to their case evidence and the rest citing the ruling; one real tier-1/tier-2 misclassification was found and corrected (`Refuse a truncated provider result` is not mechanism-enforced) rather than silently forced into tier-1 to close the count. Final diff: 2 files / 144 lines against the 5-file/600-line budget. Full contract test and `--ablation-check` both pass at the candidate.
