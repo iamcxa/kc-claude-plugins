@@ -574,6 +574,15 @@ rewritten.
 - candidate: `f9683a337e4c056a4e0cc1e597dc4a93ce762ca6..8613cedb50c5bd62bcf01dcffba12934648108e9`
 - state: `claimed`
 
+### Changed-tip confirmation claim
+
+- identity: `3f3ca3ca757f4cbb02dc6e49abfd1018bf592ef8a63f11a9aa2d6c5bc6f00be9`
+- claimant: `claude-ensign:2b074c1c-5e22-4879-9eda-db61c5abee89`
+- observed state revision: `7ea470486ca51d3f09a75d8591d926d6ea438142`
+- candidate: `f9683a337e4c056a4e0cc1e597dc4a93ce762ca6..7571a25de42c7d83759ac40963feabdb0ab3c76b`
+- prior finding: RoboRev job `294` (Medium) found kc-dev-flow/references/profiles/pilot-product-slice/shape.md:64 never told an author to record `semantics_unchanged`, unlike Production's copy; repaired in commit `7571a25d` by restoring the sentence and trimming a same-file restatement to hold the byte ceiling.
+- state: `claimed`
+
 ## Stage Report: implementation
 
 - DONE: Land one necessity vocabulary across kernel.md and reverse-recovery-audit.md (AC-1, AC-2, AC-3) with contract-test and ablation assertions that reject each renamed boundary for its named reason (AC-5), running the old assertion against each mutation before removing it so no previously caught regression is lost.
