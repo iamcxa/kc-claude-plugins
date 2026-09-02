@@ -251,6 +251,14 @@ check_completions() {
 # would dispatch a second review of a commit already reviewed.
 # The filter emits one line per match rather than a per-page count, because
 # --paginate runs --jq once per page and would print "0" for each of them.
+# A commit this account pushed is part of the review it came from — the auto-fix
+# path would otherwise treat its own fix as new code and review it again.
+head_is_ours() { # <repo> <sha> <login>
+  local who
+  who=$("$GH" api "repos/$1/commits/$2" --jq '.author.login' 2>>"$LOG") || return 1
+  [[ -n "$who" && "$who" == "$3" ]]
+}
+
 already_reviewed() { # <repo> <pr> <sha> <login>
   local found
   found=$("$GH" api "repos/$1/pulls/$2/reviews" --paginate \
@@ -318,6 +326,11 @@ poll() {
       # The head moved. Let the job already in flight finish rather than running two
       # reviews of the same pull request at once.
       [[ "$status" == "dispatching" || "$status" == "running" ]] && continue
+      if [[ -n "$seen_sha" ]] && head_is_ours "$repo" "$sha" "$me"; then
+        st_edit --arg k "$repo#$num" --arg s "$sha" '.seen[$k] += {head_sha:$s}'
+        log "adopted our own follow-up commit on $repo#$num @ ${sha:0:8}"
+        continue
+      fi
       already_reviewed "$repo" "$num" "$sha" "$me"
       case $? in
         0) st_edit --arg k "$repo#$num" --arg u "$url" --arg s "$sha" \

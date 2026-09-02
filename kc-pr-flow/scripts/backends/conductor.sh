@@ -109,16 +109,37 @@ cmd_create() {
 # once the session has stopped changing.
 IDLE_GRACE_SECONDS=180
 
-# 0 = output present, 1 = no output, 2 = could not ask. Collapsing 2 into 1 would
-# let an unreachable transcript query condemn a review that actually finished.
-session_has_output() {
-  local out
+# Conductor reports a session idle mid-run — between turns, and during a long tool
+# call — so idle alone is not completion. What separates the two is whether the
+# transcript is still growing, which needs a value from the previous observation.
+PROGRESS_CACHE="$CFG_DIR/conductor-progress.json"
+
+# Sets PROBE_LEN and PROBE_HAS_OUT. 0 = probed, 2 = could not ask; collapsing the
+# second into "no output" would let an unreachable query condemn a finished review.
+session_probe() {
+  local out row
   out=$("$CONDUCTOR" sql \
-    "select (transcript like '%## Assistant%') as has_out from session_transcripts_view where session_id='$1'" 2>/dev/null) || return 2
-  [[ -n "$out" ]] || return 2
-  grep -qw true <<<"$out" && return 0
-  grep -qw false <<<"$out" && return 1
-  return 2
+    "select length(transcript) as n, (transcript like '%## Assistant%') as has_out from session_transcripts_view where session_id='$1'" 2>/dev/null) || return 2
+  row=$(sed -n 3p <<<"$out")
+  [[ -n "$row" ]] || return 2
+  PROBE_LEN=$(awk '{print $1}' <<<"$row")
+  PROBE_HAS_OUT=$(awk '{print $2}' <<<"$row")
+  [[ "$PROBE_LEN" =~ ^[0-9]+$ ]] || return 2
+  return 0
+}
+
+progress_seen() { # <session> -> prints the length recorded last time, if any
+  [[ -f "$PROGRESS_CACHE" ]] || return 0
+  "$JQ" -r --arg s "$1" '.[$s].len // empty' "$PROGRESS_CACHE" 2>/dev/null
+}
+
+progress_record() { # <session> <len>
+  local tmp
+  mkdir -p "$CFG_DIR"
+  [[ -f "$PROGRESS_CACHE" ]] || printf '{}\n' >"$PROGRESS_CACHE"
+  tmp="$PROGRESS_CACHE.tmp.$$"
+  "$JQ" --arg s "$1" --argjson n "$2" '.[$s] = {len:$n, ts:(now|todate)}' "$PROGRESS_CACHE" >"$tmp" 2>/dev/null \
+    && mv "$tmp" "$PROGRESS_CACHE" || rm -f "$tmp"
 }
 
 epoch_of() { # ISO-8601, fractional seconds optional
@@ -127,7 +148,7 @@ epoch_of() { # ISO-8601, fractional seconds optional
 }
 
 cmd_status() {
-  local job="${1:-}" sid repo out st upd age rc
+  local job="${1:-}" sid repo out st upd age seen
   [[ -n "$job" ]] || die "usage: conductor.sh status <job_id>"
   [[ -x "$CONDUCTOR" ]] || die "conductor CLI not found at $CONDUCTOR"
 
@@ -139,19 +160,22 @@ cmd_status() {
   st=$(awk '/^Status/{print $2}' <<<"$out")
   case "$st" in
     idle)
-      session_has_output "$sid"; rc=$?
-      case "$rc" in
-        0) echo done; return ;;
-        2) die "cannot read the session transcript" ;;
-      esac
-      upd=$(awk '/^Updated/{print $2}' <<<"$out")
-      age=$(( $(date -u +%s) - $(epoch_of "$upd") ))
-      if (( age > IDLE_GRACE_SECONDS )); then
-        printf 'session stopped without producing any output\n' >&2
-        echo error
-      else
-        echo running
-      fi ;;
+      session_probe "$sid" || die "cannot read the session transcript"
+      if [[ "$PROBE_HAS_OUT" != "true" ]]; then
+        upd=$(awk '/^Updated/{print $2}' <<<"$out")
+        age=$(( $(date -u +%s) - $(epoch_of "$upd") ))
+        if (( age > IDLE_GRACE_SECONDS )); then
+          printf 'session stopped without producing any output\n' >&2
+          echo error
+        else
+          echo running
+        fi
+        return
+      fi
+      # Idle with output, but only a transcript that stopped growing is finished.
+      seen=$(progress_seen "$sid")
+      progress_record "$sid" "$PROBE_LEN"
+      if [[ -n "$seen" && "$seen" == "$PROBE_LEN" ]]; then echo done; else echo running; fi ;;
     working)  echo running ;;
     "")
       # A missing session is terminal; anything else is undetermined, and the

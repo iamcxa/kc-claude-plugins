@@ -19,7 +19,7 @@ work around silently.
 
 Hard constraints:
 
-- Never merge, never approve, never force-push. Review and comment only.
+- Never merge and never force-push.
 - Scope is the PR diff. Do not open unrelated work.
 - Project conventions in AGENTS.md and CLAUDE.md win over generic best practice.
 
