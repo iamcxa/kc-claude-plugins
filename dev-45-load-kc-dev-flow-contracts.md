@@ -334,3 +334,16 @@ The candidate now loads canonical KC Dev Flow contracts from one installed, self
 ### Summary
 
 Candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` now has one durable implementation citation for every AC-1 through AC-7, each tied to the exact commit/check and its falsifying regression. These are implementation proofs for the next gate; they do not claim validation authority.
+
+## Stage Report: validation
+
+- DONE: Independently verify exact candidate 2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404 on the Linear branch against current origin/main: rerun the fresh-adopter installed-root matrix, all supported profile-stage routes, relevant repository gates, and confirm no canonical adopter copy remains.
+  Exact branch `feature/dev-45-load-kc-dev-flow-contracts-from-the-installed-plugin` stayed at `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` over `origin/main@3aafd3d22e749257f3551079475cc41183525d7c`; the installed-loader suite fails if any of eight routes across three arbitrary roots needs host discovery, the live three-profile gate fails on route or terminal drift, repository gates passed, and `docs/dev/_mods/pr-merge.md` is the only retained mod file.
+- DONE: Adversarially falsify active-stage pinning, compatible next-stage upgrade, incompatible-refit refusal, repository-owned surface preservation, and every retained-mechanism without-it claim; map concrete evidence or failure to AC-1 through AC-7 and re-anchor the mechanism set to the smaller adoption surface.
+  AC-1/AC-6 passed the arbitrary-root all-route matrix; AC-2 rejected same-stage A/B drift and accepted compatible B only at the next boundary; AC-3 exited 2 with empty stdout, named README/local-mod refit, and preserved the pin; AC-4 preserved README, mod bytes/mode, and unrelated state; AC-5 passed route, close-guard, kernel, and no-copy checks; AC-7 rejected all 57 named mutants and confirmed 37 files/3,868 changed lines.
+- FAILED: Verify architecture, migration, rollback or forward-recovery, exact stop counts, and delivery readiness; observe live provider feedback only if a PR exists, and do not create or merge a PR without Captain authorization.
+  Migration and boundary rollback are documented and 37 files/3,868 lines stay below the 44/4,800 stops, but `ARCHITECTURE.md:48` and `:55` both declare Mermaid node `M`, conflating the installed package manifest with the `pr-merge` runtime mod; implementation owns renaming one node and exact-revision revalidation. No PR exists, so provider feedback was not queried; release authorization, operational owner, and monitoring handoff are not yet recorded, and delivery is not ready.
+
+### Summary
+
+Exact candidate behavior passes the fresh-adopter, lifecycle, preservation, repository-gate, and 57-mutant necessity evidence. Validation returns to implementation because the changed architecture diagram merges two distinct authorities under one Mermaid node ID; after that correction, validation must rerun at the new exact revision before any Captain-authorized Draft PR.
