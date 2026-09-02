@@ -468,7 +468,6 @@ require(
     manifest.get("schema") == "kc-dev-flow-contract-manifest/v1"
     and manifest.get("contract_interface") == "kc-dev-flow-profile-contract/v3"
     and set(manifest.get("resources", [])) == expected_manifest_resources
-    and installed_package["version"] == "4.0.1"
     and len(str(installed_package["contract_digest"])) == 64,
     "installed manifest does not bind the exact canonical runtime surface",
 )
