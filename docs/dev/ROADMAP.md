@@ -382,6 +382,10 @@ approval, reduced Production evidence, or a generalized evaluation framework.
 
 - [Linear Project: Plugin-owned kc-dev-flow contracts](https://linear.app/duckbase-co/project/plugin-owned-kc-dev-flow-contracts-0cbeacf87dd5)
 
+### Sprint S8 — kc-dev-flow slimming dogfood
+
+- [Linear Project: kc-dev-flow slimming dogfood](https://linear.app/duckbase-co/project/kc-dev-flow-slimming-dogfood-448c59624fc2)
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine
