@@ -1,6 +1,6 @@
 ---
 title: "Replace kc-dev-flow contract-test phrase pins with behaviour assertions a mutation can redden"
-status: validation
+status: done
 source: https://linear.app/duckbase-co/issue/DEV-51/replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
@@ -8,8 +8,8 @@ planning-outcome: Linear Project 4746021d-2930-4589-80a0-b7b3d1d70eeb kc-dev-flo
 sprint: S8
 sprint-readiness: ready
 started: 2026-09-02T14:23:40Z
-completed:
-verdict:
+completed: 2026-09-02T17:30:09Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-dev-51-behaviour-assertions-for-contract-pins
 issue:
 pr: pr-merge:344
@@ -83,7 +83,8 @@ gates:
                 reason: Captain approved the verification ruling for exact revision 370f02ba and authorized push under the Linear head branch plus Draft PR creation with close line Fixes DEV-51; 6 of 13 tier-1 groups converted, 23 rules wording-only under the tier-2 ruling.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-02T17:30:09Z
 ---
 
 ## The problem
