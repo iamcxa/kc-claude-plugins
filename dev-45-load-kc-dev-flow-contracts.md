@@ -59,6 +59,26 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:3fkmdwdvsfha8ektb2s5jz7d:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:3fkmdwdvsfha8ektb2s5jz7d-validation-1
+              briefing:
+                id: briefing:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-1:revision-1
+                digest: sha256:67cfae00b03c4d75ae08dce198a354a43b5dcd1229b850ea81e77601e2e8c09c
+                request-digest: sha256:ea77823e1d8648c65a254d91ae769b83feaf60b4e16b331849d7a6c6209e509b
+                room-ref: ./dev-45-load-kc-dev-flow-contracts/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3fkmdwdvsfha8ektb2s5jz7d:validation:1
+                briefing: briefing:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-02T01:19:52.677671Z"
+                decision: approve
+                reason: Captain approved exact candidate 61ce308d as locally validated and authorized one Draft PR with Fixes DEV-45.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Work profile receipt

@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-1:revision-1",
+  "question": "Approve exact candidate 61ce308d as locally validated and authorize one Draft PR with Fixes DEV-45?",
+  "artifacts": [
+    {
+      "id": "artifact:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/20bf317ad5b06e02b4f442aab0fc2ac27aa00f92/dev-45-load-kc-dev-flow-contracts.md",
+      "rev": "sha256:abe81ef79aa49750850f5e8c14d9515b18c41da1e744f081f64ad8c6579ba712",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval. Fresh validation passed AC-1 through AC-7 on exact Linear branch candidate 61ce308d over main 3aafd3d2: installed-resource loading, stage pinning, compatible boundary upgrade, incompatible-refit refusal, local-policy/mod/state preservation, host-neutral worktree resolution, and all 57 without-it mutants. The one-line Mermaid correction closes the only initial validation finding. The carried KC_DEV_FLOW_LOADER diagnostic was independently rejected by the invocation-local accepted journey. Scope is 37 files and 3,870 changed lines (+1001/-2869), below the 44/4,800 stops. RoboRev confirmation remains non-authoritative UNKNOWN because it used the wrong range; fresh validation did not rely on it. Approval authorizes one Draft PR with exactly one Fixes DEV-45, not merge or release."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/133e869d18a55c7a7fe7ed507fd4816b71602104/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:f6db2e91a20d0b7b1b954b48a94778b9cc33b9e8586a2f4de1a1a9708b3dea83"
+    }
+  ]
+}
