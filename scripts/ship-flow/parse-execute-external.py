@@ -2,64 +2,71 @@
 """Extract `execute.cli[].{run,expect}` pairs from `Execute external` steps.
 
 Consumes e2e-pipeline's flow YAML step shape (`action: "Execute external"`,
-`execute: {cli: [{run, expect}]}`) narrowly, with a line-oriented parser
-scoped to that shape only -- no general YAML parsing and no dependency on
-e2e-pipeline or a third-party YAML library.
+`execute: {cli: [{run, expect}]}`) narrowly -- walks the parsed document for
+that shape only, with no dependency on e2e-pipeline.
 
 Prints one shell-quoted `<run>\\t<expect>` pair per line, in step order, for
-scripts/ship-flow/e2e-cli.sh to consume.
+scripts/ship-flow/e2e-cli.sh to consume. `expect` is the empty string when a
+`cli` entry omits it; e2e-cli.sh treats anything other than `exit code <N>`
+as an unrecognized expect and fails the run, so this parser does not invent
+a default.
+
+Exits 2 (not a Python traceback) on: PyYAML unavailable, the file missing or
+unreadable, or the file not parsing as YAML. A partial or best-effort parse
+that silently produced zero steps would make a real flow indistinguishable
+from a broken one -- both must fail loud.
 """
 from __future__ import annotations
 
-import re
 import shlex
 import sys
 
-STEP_RE = re.compile(r"^  - id: ")
-ACTION_RE = re.compile(r'^    action:\s*"?([^"\n]+?)"?\s*$')
-CLI_LIST_RE = re.compile(r"^      cli:\s*$")
-RUN_RE = re.compile(r'^        - run:\s*"(.*)"\s*$')
-EXPECT_RE = re.compile(r'^          expect:\s*"(.*)"\s*$')
-DEDENT_RE = re.compile(r"^  \S")
+try:
+    import yaml
+except ImportError:
+    print(
+        "parse-execute-external: PyYAML (`import yaml`) is required and is not "
+        "installed in this environment -- install it (e.g. `dnf install "
+        "python3-pyyaml` or `pip install pyyaml`) rather than falling back to a "
+        "regex parser that silently mis-parses valid YAML.",
+        file=sys.stderr,
+    )
+    sys.exit(2)
 
 
-def parse(text: str) -> list[tuple[str, str]]:
+def extract(document: object) -> list[tuple[str, str]]:
     pairs: list[tuple[str, str]] = []
-    action: str | None = None
-    in_cli = False
-    for line in text.splitlines():
-        if STEP_RE.match(line):
-            action = None
-            in_cli = False
+    if not isinstance(document, dict):
+        return pairs
+    steps = document.get("steps")
+    if not isinstance(steps, list):
+        return pairs
+    for step in steps:
+        if not isinstance(step, dict) or step.get("action") != "Execute external":
             continue
-        if DEDENT_RE.match(line):
-            in_cli = False
+        execute = step.get("execute")
+        cli = execute.get("cli") if isinstance(execute, dict) else None
+        if not isinstance(cli, list):
             continue
-        match = ACTION_RE.match(line)
-        if match:
-            action = match.group(1)
-            continue
-        if CLI_LIST_RE.match(line):
-            in_cli = action == "Execute external"
-            continue
-        if not in_cli:
-            continue
-        match = RUN_RE.match(line)
-        if match:
-            pairs.append((match.group(1), "exit code 0"))
-            continue
-        match = EXPECT_RE.match(line)
-        if match and pairs:
-            run, _ = pairs[-1]
-            pairs[-1] = (run, match.group(1))
+        for entry in cli:
+            if not isinstance(entry, dict) or entry.get("run") is None:
+                continue
+            pairs.append((str(entry["run"]), str(entry.get("expect", ""))))
     return pairs
 
 
 def main() -> None:
     if len(sys.argv) != 2:
-        raise SystemExit("usage: parse-execute-external.py <flow.yaml>")
-    text = open(sys.argv[1], encoding="utf-8").read()
-    for run, expect in parse(text):
+        print("usage: parse-execute-external.py <flow.yaml>", file=sys.stderr)
+        sys.exit(2)
+    path = sys.argv[1]
+    try:
+        with open(path, encoding="utf-8") as handle:
+            document = yaml.safe_load(handle)
+    except (OSError, yaml.YAMLError) as error:
+        print(f"parse-execute-external: cannot parse {path}: {error}", file=sys.stderr)
+        sys.exit(2)
+    for run, expect in extract(document):
         print(f"{shlex.quote(run)}\t{shlex.quote(expect)}")
 
 
