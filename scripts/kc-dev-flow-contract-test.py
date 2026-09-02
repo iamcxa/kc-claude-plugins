@@ -96,7 +96,6 @@ required = [
     "kc-dev-flow/scripts/engage-reconcile.py",
     "kc-dev-flow/scripts/engage-reconcile.test.py",
     "kc-dev-flow/scripts/linear-admission.py",
-    "scripts/kc-dev-flow/linear-admission.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -135,6 +134,7 @@ for retired in [
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "docs/dev/_mods/engage-reconcile.py",
     "scripts/kc-dev-flow/engage-reconcile.py",
+    "scripts/kc-dev-flow/linear-admission.py",
     # This blind-evaluation adapter had no caller outside its own test. Keep the
     # retired experiment from silently returning as release or runtime surface.
     "scripts/kc-dev-flow-loader-eval.py",
@@ -157,9 +157,6 @@ script_roles = {
         "kc-dev-flow/scripts/poc-close-guard.test.py",
         "kc-dev-flow/scripts/pr-review-handoff.test.py",
         "kc-dev-flow/scripts/profile-spacedock-route.test.py",
-    },
-    "repository-adapter": {
-        "scripts/kc-dev-flow/linear-admission.py",
     },
     "release-proof": {
         "scripts/kc-dev-flow-contract-test.py",
@@ -1386,15 +1383,15 @@ for phrase in [
     "GitHub Project #4 remains historical and receives no new admissions.",
     "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
     "A difference requires Captain admission and never writes either side automatically.",
-    "| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`",
+    "| Planning reader and admission guard | Installed sibling `linear-admission.py`",
     "| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |",
-    "reconcile every active Issue in the exact Project/Cycle",
+    "reconcile exact Project/Cycle active Issues",
     "--expected-source",
     "--expected-window",
     "--expected-outcome",
     "every item shares the engaged item's exact window and outcome",
     "stdout parses as one JSON object with `status: clean`",
-    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment",
+    "`LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from Conductor env",
     "`kc-dev-flow-dispatch-envelope/v1` object",
     "--state-revision",
 ]:
@@ -1514,6 +1511,11 @@ require(
     "cognitive cue, not another agent, review, or gate" in normalized_package_readme,
     "package README overstates stage-role authority",
 )
+require(
+    "stable entity slug rather than a host filesystem path"
+    in normalized_package_readme,
+    "package README omits portable stage-pin identity",
+)
 for phrase in [
     "candidate receipt is valid only for its exact tracked package snapshot",
     "discard the receipt and rerun candidate mode on the final release PR head",
@@ -1587,7 +1589,6 @@ for name in ["chief-engineer", "science-officer", "science-officer-em"]:
     require(name in root_readme, f"root README omits {name}")
 
 linear_admission = PLUGIN / "scripts/linear-admission.py"
-repository_linear_admission = ROOT / "scripts/kc-dev-flow/linear-admission.py"
 linear_source = linear_admission.read_text(encoding="utf-8")
 for mechanism in [
     'os.environ.get("CONDUCTOR_WORKSPACE_ID"',
@@ -1825,12 +1826,6 @@ Stop on any planning drift.
         and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
-    )
-    bridge = admit("clean", reader=repository_linear_admission)
-    require(
-        bridge.returncode == 0
-        and json.loads(bridge.stdout).get("delivery") == envelope["delivery"],
-        f"repository Linear admission bridge failed: {bridge.stderr}",
     )
     with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
         mutant_root = Path(temporary)

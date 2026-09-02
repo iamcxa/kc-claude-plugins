@@ -239,6 +239,13 @@ def bind_stage_pin(
     if not attempt or len(attempt.encode("utf-8")) > 160:
         raise ContractError("stage attempt must be a non-empty bounded identifier")
     current_stage = str(contract["workflow_stage"])
+    current_work_item = str(contract["work_item_identity"])
+    previous_work_item = ""
+    if previous is not None and isinstance(previous.get("work_item"), str):
+        recorded = Path(str(previous["work_item"]))
+        previous_work_item = (
+            recorded.parent.name if recorded.name == "index.md" else recorded.stem
+        )
     interface = str(package["local_profile_interface"]["schema"])
     if previous is not None and previous.get("workflow_stage") == current_stage:
         exact = {
@@ -248,7 +255,9 @@ def bind_stage_pin(
             "work_item_sha256": contract["work_item_sha256"],
             "local_profile_interface": interface,
         }
-        if any(previous.get(key) != value for key, value in exact.items()):
+        if previous_work_item != current_work_item or any(
+            previous.get(key) != value for key, value in exact.items()
+        ):
             raise ContractError(
                 "ACTIVE_STAGE_PIN_MISMATCH: restore the pinned plugin version and bytes"
             )
@@ -258,7 +267,7 @@ def bind_stage_pin(
             raise ContractError(
                 "STAGE_PIN_TRANSITION_MISMATCH: current stage is not the pinned next stage"
             )
-        if previous.get("work_item") != contract["work_item"]:
+        if previous_work_item != current_work_item:
             raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item identity changed")
         if (
             previous.get("local_profile_interface") != interface
@@ -271,7 +280,7 @@ def bind_stage_pin(
             )
     return {
         "schema": STAGE_PIN_SCHEMA,
-        "work_item": contract["work_item"],
+        "work_item": current_work_item,
         "work_item_sha256": contract["work_item_sha256"],
         "profile": contract["profile"],
         "workflow_stage": current_stage,
@@ -598,6 +607,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
 
     return {
         "path": path.as_posix(),
+        "identity": path.parent.name if path.name == "index.md" else path.stem,
         "sha256": hashlib.sha256(raw).hexdigest(),
         "schema": schema,
         "profile": profile,
@@ -694,6 +704,7 @@ def load_contracts(
         return {
             "schema": "kc-dev-flow-profile-contract/v2",
             "work_item": receipt["path"],
+            "work_item_identity": receipt["identity"],
             "work_item_sha256": receipt["sha256"],
             "receipt_schema": receipt["schema"],
             "profile": profile,
@@ -742,6 +753,7 @@ def load_contracts(
     result = {
         "schema": "kc-dev-flow-profile-contract/v2",
         "work_item": receipt["path"],
+        "work_item_identity": receipt["identity"],
         "work_item_sha256": receipt["sha256"],
         "receipt_schema": receipt["schema"],
         "profile": profile,
