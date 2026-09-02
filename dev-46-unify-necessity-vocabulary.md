@@ -321,7 +321,7 @@ record. This is a build-time check, not a decision.
 | `scripts/kc-dev-flow-contract-test.py` | 1869 | ~1918 |
 | `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 873 | ~928 |
 
-Reconciled journey to table: every step's acting file appears above except three,
+Reconciled journey to table: every step's acting file appears above except four,
 each named with why it does not change.
 
 - `.github/workflows/kc-dev-flow-release-gate.yml` — step 6 depends on it; it
@@ -486,7 +486,7 @@ Each names the change that would make it fail.
 - **AC-7** — the loader test drives a v3 Production receipt at `implementation`
   with no `semantics_unchanged` and observes it load, and a second at
   `validation` with no `semantics_unchanged` key at all and observes it load;
-  `MIGRATION.md` records the one-line addition an item re-entering shape must
+  `MIGRATION.md` records the one-line addition an item at or re-entering shape must
   make. *Fails if* the requirement is made unconditional, which turns both
   expected successes into refusals.
 
@@ -497,7 +497,9 @@ has nothing to check and proceeds. That is the AC-7 carve-out, and it is
 deliberate: a new item entering `ideation` is refused without the declaration,
 so the gate holds for everything shaped after this lands. Removal condition:
 none needed; this is not scaffolding but the stage gate itself. The
-`MIGRATION.md` line is the migration AC-7 requires, and it is one line because no
+`MIGRATION.md` line is the migration AC-7 requires — it applies to any item at or
+re-entering `ideation` when the new version lands, not only one that re-enters —
+and it is one line because no
 stored value changes shape.
 
 Bounded claim, stated once: the loader refuses an absent or placeholder
@@ -510,7 +512,7 @@ verify-owner duty and is written as one.
 - DONE: Name the enforcement point for AC-4 (a declared-unchanged change is refused until it names an equivalence instrument seen to fail): loader-required field or prose-only bounded claim, and record whether a required loader field counts as a receipt under the non-goals.
   `## Shape` § AC-4 enforcement point — `ContractError` in `resolve_work_item`, `kc-dev-flow/scripts/profile-contract-loader.py`, gated at the `validation` stage for the two evidence scalars and at `ideation` for the declaration; the non-goal ruling is that a field inside the existing `work_profile` receipt is not a new receipt, because `POC_FIELDS` and `RECOVERY_FIELDS` already carry conditionally-required scalars there.
 - DONE: Deliver the `where it touches` table and stop numbers against the delivery base, reconciled both ways with the journey, covering kernel.md, reverse-recovery-audit.md, the contract test, the minimal-stack ablation test, and the loader-served copies.
-  `## Shape` § Where it touches — 13 files, `lines now` from `git show f9683a33:<path>`; reconciled both directions with three journey files named as unchanged and two table files named as outside the journey.
+  `## Shape` § Where it touches — 13 files, `lines now` from `git show f9683a33:<path>`; reconciled both directions with four journey files named as unchanged and two table files named as outside the journey.
 - DONE: Record the reverse_recovery receipt for this brownfield change (need-axis rename, disproof_hook unification, removal grading) and decide multi_slice_required with falsifiable acceptance checks mapped to AC-1..AC-7.
   `## Shape` § Reverse-recovery receipt (7 layers, `decision: redesign`), § multi_slice_required: false, § Falsifiable acceptance checks (AC-1..AC-7, each naming its falsifying change).
 
