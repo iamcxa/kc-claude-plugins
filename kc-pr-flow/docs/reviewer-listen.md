@@ -59,6 +59,7 @@ by accident.
 
 ## Menu
 
+- **The badge counts what wants attention**, not what GitHub still lists. A review request stays open on GitHub until a review is submitted, which can be long after this has reviewed that commit, so a reviewed row is not counted; drafts are not either.
 - **Review requests** — one row per open PR awaiting you. `⏳` running, `✅` reviewed, `❌` failed with the backend's reason and a **retry**, `○` not dispatched yet.
 - **Finished reviews** — the last six completed reviews. This section exists because a reviewed PR *disappears* from the request list: GitHub drops it from review-requested the moment a review is submitted.
 - **Listening repos** — every repo that has appeared, click to toggle. New repos start **on**, so a request in a new repo needs no configuration.

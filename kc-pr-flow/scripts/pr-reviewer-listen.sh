@@ -371,16 +371,22 @@ login_toggle() {
 menu_label() { printf '%s' "${1//|/／}"; }   # a literal pipe would end the SwiftBar line
 
 render() {
-  local listening n_on n_open n_done last err key status target title repo num fin on
+  local listening n_on n_open n_todo n_done last err key status target title repo num fin on
   listening=$(cfg_get '.listening')
   n_on=$(cfg_get '[.repos | to_entries[] | select(.value.enabled == true)] | length')
   n_open=$(st_get '.open | length')
+  # The badge counts what still wants attention, not what GitHub still lists: a
+  # request stays open there until a review is submitted, long after this has
+  # reviewed the commit.
+  n_todo=$(st_get '. as $r | [$r.open[] | select(.isDraft != true)
+             | ($r.seen[(.repository.nameWithOwner + "#" + (.number|tostring))].status // "new")
+             | select(. != "reviewed")] | length')
   last=$(st_get '.last_poll // "never"')
   err=$(st_get '.last_error // empty')
 
   if [[ "$listening" != "true" ]]; then echo "👁 off"
   elif [[ -n "$err" ]];       then echo "👁 !"
-  else                             echo "👁 $n_open"; fi
+  else                             echo "👁 $n_todo"; fi
   echo "---"
 
   if [[ -n "$err" ]]; then
