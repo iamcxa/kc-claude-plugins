@@ -203,6 +203,32 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-09-02 — Pilot and Production require `semantics_unchanged` at every stage after ideation
+
+A Pilot or Production `work_profile` receipt requires `semantics_unchanged:
+true | false` at every working stage from `ideation` onward, not only at
+`ideation`, making the shape contracts' existing "declare the observable
+semantics this work may change, or state that it changes none" prose
+machine-readable and refusing an item that drops the declaration to skip the
+`validation`-stage requirement below. Declaring `true` further requires
+`equivalence_instrument` and `equivalence_instrument_failure` at `validation`.
+
+An item already past `ideation` when the new plugin version lands carries no
+`semantics_unchanged` key and is refused at its next stage load. Add the one
+line to the `work_profile` receipt before that load:
+
+```yaml
+  semantics_unchanged: false
+```
+
+The loader cannot distinguish a receipt that never declared the field from one
+that declared `true` at `ideation` and had the field removed or flipped to
+`false` before `validation` — both read as "field absent" or "field false" at
+the later stage. That gap is not closed by this field; catching a changed
+declaration is the ideation gate's bound briefing digest and the shape's
+recorded `semantics_unchanged` value, which the validation-stage owner compares
+against the receipt in hand.
+
 ## 2026-08-24 — promotion asks whether a consumer must migrate
 
 `public compatibility` was one of the triggers that promote work to

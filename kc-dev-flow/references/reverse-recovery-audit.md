@@ -1,7 +1,7 @@
 ---
 name: reverse-recovery-audit
 description: "Triggered brownfield audit that distinguishes recovery, missing capability, and removal candidates before new implementation is accepted"
-version: 0.3.0
+version: 0.4.0
 ---
 
 # Reverse-Recovery Audit
@@ -38,11 +38,21 @@ that the proposed change would create, replace, remove, or directly build on.
 
 | Need | Meaning | Minimum evidence |
 |---|---|---|
-| `REQUIRED` | A consumer or accepted obligation needs it | Named consumer or contract |
-| `NO_OBSERVED_CONSUMER` | None found inside declared boundaries | Two searches plus the boundary where they stopped |
+| `REQUIRED` | A named consumer or contract needs it, or it maps to `kernel.md`'s minimal-necessity reasons — the accepted goal, a named falsifier, a safety boundary, or a required lifecycle obligation | Named consumer or contract, or one of the four named reasons |
+| `NO_OBSERVED_CONSUMER` | None of the REQUIRED reasons was found inside declared boundaries | Two searches plus the boundary where they stopped |
 | `UNKNOWN` | Need was not established | Missing search or an open boundary named |
 
 `NO_OBSERVED_CONSUMER` is a removal candidate, never removal authority.
+
+Worked case: a safety-boundary surface with no observed consumer classifies
+`REQUIRED`, the same tier `kernel.md`'s execution-tier mapping reaches, because a
+safety boundary is one of the four named reasons and does not depend on finding a
+consumer.
+
+This audit's `disproof_hook` runs at the search tier: it can conclude only that
+two searches inside the named boundary found no consumer, never that none
+exists. `kernel.md`'s without-it observation runs the same primitive at the
+execution tier and can conclude a surface is unnecessary.
 
 ## Procedure
 

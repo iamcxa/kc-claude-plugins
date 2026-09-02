@@ -39,6 +39,9 @@ data safety, and deliver it through the repository's declared authority.
 
 ## Required output
 
+- when the receipt declares `semantics_unchanged: true`, the named
+  `equivalence_instrument` observed to fail against
+  `equivalence_instrument_failure`, the case it must flag;
 - exact-revision journey evidence;
 - retry/recovery, duplicate, diagnostic, and data-safety results that apply;
 - provider feedback disposition when a delivery artifact exists;

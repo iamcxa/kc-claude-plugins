@@ -259,6 +259,8 @@ def entity_body(slug: str, profile: str, route: list[str], status: str = "backlo
             "  poc_stop_when: Stop after the first integrated result",
             ]
         )
+    elif profile in ("pilot-product-slice", "production"):
+        lines.append("  semantics_unchanged: false")
     lines.extend(["```", ""])
     return "\n".join(lines)
 

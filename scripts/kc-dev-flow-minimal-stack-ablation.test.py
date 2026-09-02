@@ -842,6 +842,32 @@ def main() -> int:
         "Runtime adapters own task and execution-context\ncardinality. At admission, each task records the tuple.",
         "kernel owns runtime topology: each task records the tuple",
     )
+    run_kernel_contract_mutant(
+        "removal-grading-clause-removed",
+        "create no receipt or commentary.\n  A removal is graded by Minimal necessity like a retention; without it,\n  unmapped.\n",
+        "create no receipt or commentary.\n",
+        "kernel omits subtraction rule: A removal is graded by Minimal necessity",
+    )
+    run_loader_admission_mutant(
+        "necessity-instrument-field-removed",
+        'NECESSITY_FIELDS = ("equivalence_instrument", "equivalence_instrument_failure")\n',
+        'NECESSITY_FIELDS = ("equivalence_instrument_failure",)\n',
+        "wrong unchanged-no-instrument refusal",
+    )
+    run_loader_admission_mutant(
+        "necessity-post-ideation-requirement-removed",
+        "    if necessity_active:\n",
+        "    if necessity_active and workflow_stage == first_workflow_stage:\n",
+        "accepted unchanged-no-instrument",
+    )
+    run_manual_contract_mutant(
+        "audit-worked-case-classification-reverted",
+        "kc-dev-flow/references/reverse-recovery-audit.md",
+        "consumer classifies\n`REQUIRED`, the same tier",
+        "consumer classifies\n`NO_OBSERVED_CONSUMER`, not the tier",
+        "audit omits unified need vocabulary: a safety-boundary surface with no "
+        "observed consumer classifies `REQUIRED`",
+    )
     run_manual_contract_mutant(
         "execution-scope-replacement-restored",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",

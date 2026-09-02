@@ -109,6 +109,8 @@ synthetic obligation and cannot remove the route's only authorization boundary.
   A comment pass reports both the blocks it cut and the candidates it kept, with
   the reason for each. LOC and file counts are diagnostic signals, never
   pass/fail gates. When no scope drift is found, create no receipt or commentary.
+  A removal is graded by Minimal necessity like a retention; without it,
+  unmapped.
 
 ## Completion invariant
 
