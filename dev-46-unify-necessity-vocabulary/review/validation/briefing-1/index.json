@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:50c1y5wf7dzh0ww2a9qajn47:validation:attempt-1:revision-1",
+  "question": "Approve DEV-46 at exact revision f70b8cdb (pushed to origin/feature/dev-46-kc-dev-flow-unify-the-necessity-vocabulary-across-kernel-and) as verified against AC-1..AC-7, and authorize Draft PR creation with close line Fixes DEV-46 toward the terminal merge guard?",
+  "artifacts": [
+    {
+      "id": "artifact:50c1y5wf7dzh0ww2a9qajn47:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5a55b93074d1d09e3b600f2d940cae8b580863ee/dev-46-unify-necessity-vocabulary.md",
+      "rev": "sha256:af7e6e38fe2cdaa28ac5b63d1f2ef5b3646a719e8095c3c98348871ec77dc4cc",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval. Fresh-context validation independently re-ran all five gates and every AC-1..AC-7 falsifier at 54e33baa, then fixed one stale sentence in choose-work-profile/SKILL.md (semantics_unchanged wrongly described as ideation-only) and re-ran all gates clean at the superseding candidate f70b8cdb. Corrected a factual error in the build report: ablation mutants are 62 rejected vs 58 at base, not 64 vs 60; the +4 delta holds. RoboRev 294 and the missing-field half of 295 confirmed repaired in code. Open residual for the Captain: a semantics_unchanged true-\u003efalse flip after ideation is caught by the ideation gate's pinned briefing digest (reproduced byte-for-byte on this item) but no code automates that comparison. Diff 14 files against f9683a33, under stops. Approval here is terminal: consume leaves route=approved-awaiting-merge; the merge guard finalizes after the PR merges."
+    }
+  ]
+}

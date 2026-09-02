@@ -56,6 +56,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:50c1y5wf7dzh0ww2a9qajn47:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:50c1y5wf7dzh0ww2a9qajn47-validation-1
+              briefing:
+                id: briefing:50c1y5wf7dzh0ww2a9qajn47:validation:attempt-1:revision-1
+                digest: sha256:0c23766fb155e2ef0e5afa7cb13f5dbf7c4fa6621bac71cfcb5d2e4b795b58cf
+                room-ref: ./dev-46-unify-necessity-vocabulary/review/validation/briefing-1
 ---
 
 ## The problem
