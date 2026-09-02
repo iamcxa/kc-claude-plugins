@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-02T08:19:42Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-dev-46-unify-necessity-vocabulary
 issue:
 pr:
 mod-block:
