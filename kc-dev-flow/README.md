@@ -213,7 +213,8 @@ silently become a delivery failure.
 `adopt-dev-flow` binds the Local Profile interface while preserving README
 policy, local mods, provider adapters, and state. The activated skill supplies
 its own loader path for each invocation without persisting an installation
-path. A state-owned stage pin fixes version and digest for the active attempt;
+path. A state-owned stage pin fixes version and digest for the active attempt
+and records the stable entity slug rather than a host filesystem path;
 a compatible upgrade starts at the next boundary, while an incompatible Local
 Profile interface stops for refit before pin write or dispatch. An adopter
 moving from an earlier vendored layout follows [MIGRATION.md](./MIGRATION.md).

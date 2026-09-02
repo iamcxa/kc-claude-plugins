@@ -1561,6 +1561,58 @@ README-POLICY-SENTINEL
         and first_document["stage_pin"] == first_pin,
         f"installed first-stage binding is incomplete: {first_document}",
     )
+    require(
+        first_pin["work_item"] == "installed-stage-pin"
+        and str(root) not in json.dumps(first_pin),
+        f"stage pin persisted a host-bound work-item path: {first_pin}",
+    )
+
+    relocated_root = Path(temporary) / "relocated-worktree"
+    relocated_item = relocated_root / "work-items/installed-stage-pin.md"
+    relocated_item.parent.mkdir(parents=True)
+    shutil.copy2(pin_item, relocated_item)
+    relocated_item.write_text(
+        relocated_item.read_text(encoding="utf-8").replace(
+            "status: ideation", "status: implementation", 1
+        ),
+        encoding="utf-8",
+    )
+    relocated_pin = relocated_root / "active-stage-pin.json"
+    legacy_pin = dict(first_pin)
+    legacy_pin["work_item"] = pin_item.resolve().as_posix()
+    relocated_pin.write_text(
+        json.dumps(legacy_pin, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    relocated = installed_run(
+        LOADER,
+        relocated_item,
+        pin=relocated_pin,
+        attempt="implementation-relocated-1",
+        write_pin=True,
+    )
+    require(
+        relocated.returncode == 0
+        and json.loads(relocated_pin.read_text(encoding="utf-8"))["work_item"]
+        == "installed-stage-pin",
+        f"stage pin did not survive a worktree relocation: {relocated.stderr}",
+    )
+    wrong_item = relocated_root / "work-items/different-item.md"
+    shutil.copy2(relocated_item, wrong_item)
+    wrong_pin = relocated_root / "wrong-item-stage-pin.json"
+    shutil.copy2(pin_path, wrong_pin)
+    rejected_rebind = installed_run(
+        LOADER,
+        wrong_item,
+        pin=wrong_pin,
+        attempt="implementation-relocated-1",
+        write_pin=True,
+    )
+    require(
+        rejected_rebind.returncode == 2
+        and "work item identity changed" in rejected_rebind.stderr,
+        "stage pin accepted a different work-item slug after relocation",
+    )
 
     arbitrary_loaders: list[Path] = []
     for index in range(3):
