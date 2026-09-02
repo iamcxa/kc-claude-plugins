@@ -843,6 +843,12 @@ def main() -> int:
         'NECESSITY_FIELDS = ("equivalence_instrument_failure",)\n',
         "wrong unchanged-no-instrument refusal",
     )
+    run_loader_admission_mutant(
+        "necessity-post-ideation-requirement-removed",
+        "    if necessity_active:\n",
+        "    if necessity_active and workflow_stage == first_workflow_stage:\n",
+        "accepted unchanged-no-instrument",
+    )
     run_manual_contract_mutant(
         "audit-worked-case-classification-reverted",
         "kc-dev-flow/references/reverse-recovery-audit.md",

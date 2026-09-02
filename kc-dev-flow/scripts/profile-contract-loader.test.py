@@ -76,7 +76,6 @@ def write_work_item(
         necessity_fields is None
         and profile in MODULE.NECESSITY_PROFILES
         and schema.endswith("/v3")
-        and workflow_stage == "ideation"
         and route != ["build", "verify"]
     ):
         necessity_fields = {"semantics_unchanged": "false"}
@@ -1020,26 +1019,26 @@ Stop when the planning tuple cannot express the work.
         "declared-unchanged receipt did not load at ideation: refusal sits at the wrong boundary",
     )
 
-    # AC-7: a pre-change v3 receipt with no semantics_unchanged key still loads
-    # past ideation, so the requirement lands only for items shaped after it.
-    MODULE.resolve_work_item(
-        write_work_item(
-            root,
-            "production",
-            "implementation",
-            "legacy-necessity-implementation",
-            necessity_fields={},
+    # AC-7: a pre-change v3 receipt with no semantics_unchanged key is refused
+    # at every stage after ideation, not silently treated as legacy; MIGRATION.md
+    # carries the one-line addition an in-flight item must make before its next
+    # stage.
+    for missing_stage, missing_name in (
+        ("implementation", "legacy-necessity-implementation"),
+        ("validation", "legacy-necessity-validation"),
+    ):
+        missing_item = write_work_item(
+            root, "production", missing_stage, missing_name, necessity_fields={}
         )
-    )
-    MODULE.resolve_work_item(
-        write_work_item(
-            root,
-            "production",
-            "validation",
-            "legacy-necessity-validation",
-            necessity_fields={},
-        )
-    )
+        try:
+            MODULE.resolve_work_item(missing_item)
+        except MODULE.ContractError as exc:
+            require(
+                str(exc) == "work item must contain exactly one semantics_unchanged",
+                f"wrong {missing_name} refusal: {exc}",
+            )
+        else:
+            raise SystemExit(f"profile contract loader test: accepted {missing_name}")
 
     missing = root / "profiles" / "production" / "verify.md"
     missing.unlink()

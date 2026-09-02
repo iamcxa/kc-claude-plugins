@@ -573,20 +573,19 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         )
         if sprint_readiness != "ready":
             raise ContractError("frontmatter sprint-readiness must be 'ready'")
-        if necessity_active:
-            semantics_unchanged = _one_field(
-                block,
-                r"^  semantics_unchanged:[ \t]*([^\n#]*?)[ \t]*$",
-                "semantics_unchanged",
-            )
-            if semantics_unchanged not in {"true", "false"}:
-                raise ContractError("semantics_unchanged must be true or false")
-            necessity_values["semantics_unchanged"] = semantics_unchanged
-    if necessity_active and workflow_stage == "validation":
-        semantics_unchanged = _optional_field(block, "semantics_unchanged")
-        if semantics_unchanged is not None and semantics_unchanged not in {"true", "false"}:
+    if necessity_active:
+        # Required at every working stage after ideation, not only at
+        # ideation: a receipt cannot drop the declaration to skip the
+        # validation-stage equivalence-evidence requirement below.
+        semantics_unchanged = _one_field(
+            block,
+            r"^  semantics_unchanged:[ \t]*([^\n#]*?)[ \t]*$",
+            "semantics_unchanged",
+        )
+        if semantics_unchanged not in {"true", "false"}:
             raise ContractError("semantics_unchanged must be true or false")
-        if semantics_unchanged == "true":
+        necessity_values["semantics_unchanged"] = semantics_unchanged
+        if workflow_stage == "validation" and semantics_unchanged == "true":
             for field in NECESSITY_FIELDS:
                 value = _one_field(
                     block,

@@ -436,7 +436,7 @@ def write_profile_work_item(
                 "  poc_stop_when: Stop after the first integrated result",
             ]
         )
-    elif profile in ("pilot-product-slice", "production") and workflow_stage == "ideation":
+    elif profile in ("pilot-product-slice", "production"):
         receipt.append("  semantics_unchanged: false")
     receipt.extend(["```", ""])
     path.write_text(
@@ -1723,6 +1723,7 @@ work_profile:
   recommended: pilot-product-slice
   route: [shape, build, verify-deliver]
   basis: fixture
+  semantics_unchanged: false
 ```
 
 ## The problem
