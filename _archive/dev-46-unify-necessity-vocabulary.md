@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument"
-status: validation
+status: done
 source: https://linear.app/duckbase-co/issue/DEV-46/kc-dev-flow-unify-the-necessity-vocabulary-across-kernel-and-reverse
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
@@ -8,8 +8,8 @@ planning-outcome: Linear Project 4746021d-2930-4589-80a0-b7b3d1d70eeb kc-dev-flo
 sprint: S8
 sprint-readiness: ready
 started: 2026-09-02T08:19:42Z
-completed:
-verdict:
+completed: 2026-09-02T13:44:40Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-dev-46-unify-necessity-vocabulary
 issue:
 pr: pr-merge:334
@@ -74,7 +74,8 @@ gates:
                 reason: Captain approved the verification ruling for exact revision f70b8cdb and authorized Draft PR creation with close line Fixes DEV-46; the true->false flip residual is accepted as a hand-checked catch at the ideation briefing digest.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-02T13:44:40Z
 ---
 
 ## The problem
