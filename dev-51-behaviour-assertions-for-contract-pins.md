@@ -457,3 +457,231 @@ Five journey steps were exercised rather than asserted: the contract test passes
 Two facts the gate should rule on. The recorded pin count is wrong in both places the item states it (19 and 20) against a measured 31 sites / 245 phrases; and the inventory yields 18 tier-2 candidate rules against a proposed cap of 8 cases, which the shape does not resolve by reclassifying rules to fit — it measures three cases, declares that probe biased low, and puts the choice to the Captain, which is this item's own route-back condition firing as designed.
 
 Three environment limits are recorded rather than assumed: this worktree is not a valid baseline (a stale empty `setup-github-project-projection` directory reddens the run in 0.46 s), a behavior-diff trial copy carries no work item because `docs/dev/.spacedock-state` is gitignored and absent from `git archive HEAD`, and the trial agent has no `Write`/`Edit` tool, so a rule whose violation is only visible as an edit cannot be sampled without recasting.
+
+## Mutation replay table (tier-1, cycle 1)
+
+Seven of the eight pure tier-1 sites converted. Each row is a replayable
+triple — patch, command, expected failure message — plus the old pin's
+result against the same mutation (isolated phrase check, since a mechanism
+mutation exits `kc-dev-flow-contract-test.py` at the earlier `run()` call
+before the pin's `require` line is ever reached; see `where it touches`).
+Full patches and raw logs are in this dispatch's scratch notes, not
+committed — the table below is the replayable record.
+
+| Site key | Mechanism mutated | New instrument (command → failure) | Old pin on same mutation |
+|---|---|---|---|
+| `continuation omits provider engage behavior` | `engage-reconcile.py` L164: `return 1 if result["status"]=="delta" else 0` → `return 0` | `python3 kc-dev-flow/scripts/engage-reconcile.test.py` → exit 1, "engage reconcile test: membership delta returned 0" | GREEN (7/7 phrases still in continue-dev-flow/SKILL.md; never watched code) |
+| `kernel backlog exit bar is missing` | `profile-contract-loader.py validate_admission_brief()`: insert `return "0"*64` before all checks | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → exit 1, "admission accepted missing-the-problem: {...}" | GREEN (4/4 phrases still in kernel.md) |
+| `adopter omits static Local Profile marker` | `profile-contract-loader.py` L183: `end = text.index(LOCAL_PROFILE_END)` → `end = len(text)` (new assertion added first — see below, gap found) | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → exit 1, uncaught `ContractError: Local Profile duplicates binding 'Local mods'` | GREEN (both markers still in adopt-dev-flow/SKILL.md) — correction: inventory's paraphrased pin text ("start/end marker pair") does not match the real check, which compares the two `LOCAL_PROFILE_START/END` constants directly |
+| `continuation is missing` + `package README omits mod boundary` (shared mechanism) | `profile-contract-loader.py` `paths` list: append a duplicate `root/"kernel.md"` entry | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → exit 1, "wrong loaded paths: [..., 'kernel.md']" (existing L642-648 assertion) | GREEN (12/12 continue-dev-flow phrases; 8/8 README phrases) |
+| `package README omits admission boundary` | `profile-contract-loader.py` L685: `if validate_admission` → `if True` (new assertion added first — see below, gap found) | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → exit 1, "default loading (no --validate-admission) inspected acceptance headings" | GREEN (3/3 phrases still in kc-dev-flow/README.md) |
+| `continuation omits doc trigger` | `check_conditional_references()`: `if isinstance(receipt, str): declared_receipts.append(receipt)` → `declared_receipts.append(str(receipt))` | `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → exit 1, "declared_receipts leaked a null receipt... : ['stage_receipt', 'None']" (existing L1290-1305 isolation test) | GREEN (4/4 phrases still in continue-dev-flow/SKILL.md) |
+
+Every mutation was reverted after its cycle; `profile-contract-loader.test.py`,
+`engage-reconcile.test.py`, and the full `kc-dev-flow-contract-test.py` (both
+plain and `--ablation-check`) all pass at the candidate (below).
+
+**Coverage gaps found and closed** (2 of 7 groups needed a net-new mechanism
+assertion; the other 5 cited existing coverage as the shape's `use` decision
+expected):
+
+- `adopter omits static Local Profile marker`: no prior test proved content
+  outside the marker pair is ignored. Added a decoy fixture in
+  `profile-contract-loader.test.py` (after L1455) asserting
+  `MODULE.read_local_profile` on a copy with a colliding `| Local mods |` row
+  placed after the end marker still returns the inside-marker value.
+- `package README omits admission boundary`: prior coverage only proved
+  `development_brief_sha256` is present WITH `--validate-admission`, never
+  proved it is absent WITHOUT the flag. Added a default-mode loader run on
+  the same canonical-admission item (after L202) asserting the field's
+  absence.
+
+Both additions were confirmed passing on the unmutated tree before their
+mutation cycle ran (AC-2's "assertion fails naming the rule... rule
+restored" sequence, not written and mutated in the same step).
+
+## Tier-1 groups not converted this cycle
+
+Checklist item 1 ("replace the tier-1 and split pin sites") is **partial**:
+7 of 8 pure tier-1 groups converted; the 5 split sites' tier-1 halves are
+untouched. Reason: each remaining group needs its own mutation-verify cycle
+against a mechanism not yet exercised in this dispatch (`poc-close-guard.py`,
+`linear-admission.py`, or additional `engage-reconcile.py` flag paths), and
+continuing past 7 groups risked rushed, unverified edits — the non-goal this
+item forbids ("do not delete a pin whose replacement has not reddened").
+Every pin below stays in place, unmodified:
+
+| Site key | Reason not converted |
+|---|---|
+| `kernel omits provider-neutral planning boundary` (split, T1 half) | Not run: `engage-reconcile.py` exit 0/1/2 mutation cycle not attempted this dispatch |
+| `{relative} omits the v4 POC contract` (split, T1 half) | Not run: `poc_*` receipt fields vs `poc-close-guard.py` mutation cycle not attempted |
+| `chooser is missing` (split, T1 half) | Not run: `receipt_schema`/route-resolution mutation cycle not attempted |
+| `continuation planning disambiguation omits` (split, T1 half) | Not run: `--expected-*` flags / exit codes / refuse-truncated mutation cycle not attempted |
+| `self-adoption omits Linear cutover boundary` (split, T1 half) | Not run: `--expected-*`/`--state-revision`/`linear-admission.py` refusal mutation cycle not attempted |
+| `package README omits the release-proof boundary` (pure T1) | Deferred by the shape itself pending the smoke-test receipt-field investigation ("build names the receipt field it asserts, else this drops to wording-only"); not investigated this dispatch |
+| `continuation omits provider delivery linkage` (T2, deferred classification) | Shape asked build to check whether `pr-review-handoff.py` already refuses (which would move it to T1); not checked this dispatch |
+| `manual admission Issue body omits` (wording-only, deferred confirmation) | Shape asked build to re-check whether the existing template-parse assertion covers the two remaining phrases; not checked this dispatch |
+
+Remaining wording-only pins: **5**, unchanged from the inventory
+(`v4 migration omits`, `3.x migration omits standalone planning branch`,
+`rationale omits`, `manual admission Issue body omits` pending the check
+above, `Roadmap is not thin enough for provider-neutral planning`).
+
+## F1/F2 equivalence evidence (this cycle)
+
+- **F2** (tier-1 replacement asserts nothing the mechanism enforces): disproved
+  for all 7 converted groups — the mutation replay table above is exactly
+  the required patch → owning-suite-red-naming-the-rule → `git apply -R` →
+  green sequence, for each.
+- **F1** (a mutation the old pin caught produces no failure from the new
+  instrument): not applicable to tier-1 groups (F1 is the tier-2/behavior-diff
+  half of the equivalence instrument); see the tier-2 checkpoint below for the
+  tier-2 side of F1.
+
+## Tier-2 checkpoint: three measured cases, then stop
+
+Per the shape's hard stop, three cases were run and no further tier-2 rule
+was converted. All three used **one deviation from the shape's suggested
+method**, recorded once here and applying to all three: the task instructs
+the agent to `Read <file> in full` directly rather than routing it through
+`profile-contract-loader.py --work-item <fixture>`. A loader-routed fixture
+would need a sixth tracked file (breaching the 5-file stop) or reuse of a
+`.spacedock-state` entity (impossible — gitignored, absent from the trial's
+`git archive HEAD` per the shape's own observed constraint). Rule presence
+is still the only variable between variants, so the A/B stays clean, but
+this is a floor of a floor: a real agent reaches kernel.md through the
+loader at a decision point mid-task, not via a direct instruction to read
+it. This is a further low-bias factor beyond the shape's stated one (cheap
+single-role documents, no fixture needed).
+
+| Case | Rule (deleted sentence) | Runner | Result |
+|---|---|---|---|
+| 1 | `kernel omits subtraction rule` — "A comment that earns its place still passes a necessity test: keep each fact... cut restatement of adjacent code" | `behavior-diff.sh --file kernel.md --fast` | **Inconclusive by action** (both variants: "Cut"). Citation source shifted: before quotes the deleted sentence verbatim; after substitutes a different kernel.md rule (Completion invariant) plus the repo's `CLAUDE.md` comment rule. |
+| 2 | `kernel omits brief boundary` — "A Planning Receipt is optional and must be complete or absent: a partial Planning Receipt is invalid" | `behavior-diff.sh --file kernel.md --fast` | **Inconclusive by action** (both variants: "stop, not usable"). Reasoning and cost diverged sharply: before cites the deleted sentence verbatim in 307 output tokens / 14.1s; after reasons through an unrelated sentence ("unavailable result") to the same conclusion in 3603 output tokens / 52.0s — 11.7x tokens, 3.7x duration for a strained, second-order justification. |
+| 3 | `Chief Engineer is missing` — "This skill has no gate or state authority." (Return section) | `behavior-diff.sh --file chief-engineer/SKILL.md --fast` | **Near-null divergence.** Both variants correctly refuse to advance workflow state, citing the *same* surviving Boundaries-section sentence ("do not... advance workflow state") — the deleted sentence duplicated a rule stated a second time elsewhere in the same file, so removing one statement changed nothing observable. Finding for the future slimming item: this file states the no-gate-authority duty twice. |
+
+**Cost table** (`--fast` = 1 trial/variant = 2 headless runs; `duration_ms`
+and `usage` output tokens are the `result` line of each trial's
+`trace.jsonl`; `total_cost_usd` not used per the shape):
+
+| Case | Wall-clock (whole invocation) | Before: duration_ms / output tokens | After: duration_ms / output tokens |
+|---|---|---|---|
+| 1 | ~64s (dir-timestamp derived: `config.json` to `report.html`, includes decision-diff + render post-processing — approximate, not wrapped at invocation) | 12,638 / 470 | 13,913 / 454 |
+| 2 | 87s (wrapped at invocation) | 14,072 / 307 | 51,993 / 3,603 |
+| 3 | 51s (wrapped at invocation) | 17,463 / 507 | 17,385 / 539 |
+
+Median wall-clock across the three `--fast` (2-run) probes: **64s**.
+Projected to a 6-run recorded-proof measurement (×3 trials): **≈192s
+(3.2 min)**, against the cap of 45 min / 6 runs per case. Trivially under
+the cap on wall-clock. **This probe is biased low for two independent
+reasons**, both stated by the shape and confirmed here: (1) all three cases
+are single-role rules in documents a plain `claude -p` reaches with no
+fixture, while most of the remaining 15 candidate rules sit at
+First-Officer/adoption decision points needing a tracked work item and
+workflow directory; (2) this dispatch's "read the file directly" deviation
+(above) is an even shallower probe of agent behavior than the loader-routed
+task the shape specified.
+
+**The checkpoint fact for the Captain is not primarily about cost — it is
+about the instrument.** None of the three cases produced the shape's strict
+definition of RED (after-variant takes the forbidden action, before-variant
+doesn't). All three reached the *same* action in both variants; the
+observable divergence was in citation accuracy and reasoning cost, not
+action. This suggests the strict action-divergence RED test may be the
+wrong instrument for prose duties a competent model tends to re-derive by
+other means (case 1, 3) or reach via strained substitute reasoning (case 2)
+— not that these rules are unnecessary. If this pattern holds across more
+samples, **AC-3 as written ("the case is RED... names the rule") may be
+undischargeable for some or all of the 18 tier-2 candidates on the strict
+test**, independent of cost.
+
+Three options for the Captain, plus one observation:
+
+1. **Raise the cap** — affordable on wall-clock (64s median vs 45 min), so
+   raising case count doesn't change feasibility; it does not address the
+   instrument question above.
+2. **Narrow tier-2 sampling to `kernel.md` rules only** (5 sites, the one
+   document every working stage loads) — reduces exposure to the
+   fixture-dependent, First-Officer-decision-point rules that are both more
+   expensive to design and least tested by this probe.
+3. **Route back** — the route-back condition ("a tier-2 case cannot be made
+   to redden for a rule the slimming intends to touch... is a planning
+   delta") already covers a case that stays inconclusive after design
+   effort; two of three did, on the strict test.
+4. *(Observation, not an option)* — if the Captain wants tier-2 cases that
+   satisfy strict action-divergence RED, the case design itself likely needs
+   to target rules whose violation is a distinct, checkable *action*
+   (dispatch/stop, write/refuse) rather than a *reasoning-quality* duty like
+   a comment-necessity or citation-accuracy rule; cases 1-3 were both drawn
+   from the shape's own suggested set and were reasoning-quality rules.
+
+No further tier-2 rule was converted pending this ruling, per the shape.
+
+## Comment pass (this diff, against `f47fd8ca`)
+
+- **Kept**: one 7-line pointer comment in `scripts/kc-dev-flow-contract-test.py`
+  (before the first deleted tier-1 loop), naming why the region is smaller
+  and pointing to this table. Reason: without it, a future reader sees a
+  large deleted region with no trace of what replaced its coverage —
+  not re-derivable from the surrounding code alone.
+- **Cut**: none drafted-then-cut this cycle; the two new test additions in
+  `profile-contract-loader.test.py` carry no comments — the `require()`
+  failure messages state the fact directly.
+- Removed one now-dead variable (`normalized_continuation_policy`, orphaned
+  by deleting its only consumer) while editing the same region — Minimal
+  necessity, not a separate pass.
+
+## Diff stops (against delivery base `f47fd8ca`)
+
+- **Changed files: 2** of the stop-5 budget
+  (`scripts/kc-dev-flow-contract-test.py`,
+  `kc-dev-flow/scripts/profile-contract-loader.test.py`).
+- **Changed lines: 112** (41 added + 71 deleted) of the stop-600 budget.
+- **Tier-2 case design**: stopped at 3 measured cases per the hard stop
+  above.
+
+## Candidate verification
+
+At the candidate revision, in the worktree (not a clean clone — this
+worktree was independently confirmed a valid baseline this session; the
+shape's "not a valid baseline" finding was about a different, earlier
+worktree state):
+
+- `python3 scripts/kc-dev-flow-contract-test.py` → `kc-dev-flow contract: PASS`, exit 0, 40.4s (down from the 50.7s/51.1s baseline — expected, 7 fewer prose-scan loops execute).
+- `python3 scripts/kc-dev-flow-contract-test.py --ablation-check` → `kc-dev-flow contract: PASS`, exit 0.
+
+## Implementation-exit observation (`implementation_exit_observation_declared: true`)
+
+The `build` contract's conditional reference names
+`roborev-implementation-exit.md`, read in full this stage. It requires a
+Spacedock-registered state holder, single-flight claim transaction, and a
+RoboRev CLI/daemon probe on the executing host, then a live-batch provider
+review with its own request/confirmation caps. **This observation was not
+run in this dispatch** — exercising it is a separate, non-trivial capability
+probe (state-holder claim, RoboRev host detection, live job wait) outside
+this stage's tier-1/tier-2 pin-conversion scope, and the document itself
+states that an unrun observation on a repository lacking the dependency "is
+a declared boundary, not a missing binding... and not an `UNAVAILABLE`
+result to re-derive." This is recorded as a gap, not a claimed PASS, FAIL,
+UNKNOWN, or UNAVAILABLE outcome.
+
+## Process note
+
+The exit-code-swallowing pipe pattern (`command | tail; echo EXIT:$?`, which
+always reports the pipe's own exit code, not the command's) recurred three
+times early in this stage before being corrected to capture output to a
+file and check `$?` directly. All exit-code claims from that point forward
+in this report were captured that way.
+
+## Stage Report: implementation
+
+- FAILED (partial): Replace the tier-1 and split pin sites with assertions on the enforcing mechanism's observable output, and for every replaced pin record the mutation run before the old pin is removed.
+  7 of 8 pure tier-1 groups converted with a full mutation-replay triple each (`## Mutation replay table`); the 5 split sites' tier-1 halves and the 8th pure group (`release-proof boundary`) are unconverted, each with a stated reason (`## Tier-1 groups not converted this cycle`) — no pin was removed without its replacement reddening first.
+- DONE: Run the three tier-2 probe cases with the shape's method, report the median against the caps, and stop at the checkpoint with the three options for the Captain.
+  `## Tier-2 checkpoint` — 3 cases run (`--fast`, 2 runs each), all inconclusive by the shape's strict action-divergence test; median wall-clock 64s, ×3 projection ≈192s against the 45 min/6-run cap. Checkpoint fact recorded is about the instrument (strict RED may be undischargeable for reasoning-quality prose duties), not primarily cost. Three Captain options plus one observation recorded; no further tier-2 rule converted.
+- DONE: Stay inside the shape's stops and record diff counts, comment pass, remaining wording-only pins, full contract test + ablation results, and this item's F1/F2 equivalence evidence.
+  `## Diff stops`: 2 files / 112 lines, both within budget. `## Comment pass`: 1 kept (7-line pointer, reason stated), 0 cut, 1 dead variable removed. `## Candidate verification`: contract test PASS exit 0 40.4s; `--ablation-check` PASS exit 0. Remaining wording-only pins: 5, unchanged. `## F1/F2 equivalence evidence`: F2 disproved for all 7 converted groups (replay table); F1 is tier-2's evidence half, addressed in the checkpoint's per-case citation/action records.
+
+### Summary
+
+Converted 7 of 8 pure tier-1 pin sites to mechanism-observable assertions, each with a redden-before-removal mutation triple recorded in `## Mutation replay table`; found and closed two real coverage gaps (Local Profile marker boundary, `--validate-admission` default-mode absence) rather than assuming existing coverage sufficed. Ran the three tier-2 probe cases the shape specified and stopped at the checkpoint as required: all three were inconclusive by strict action-divergence, but two showed sharp reasoning-cost divergence and the third revealed a real duplicate-wording finding — the checkpoint report to the Captain leads with the instrument question (does strict RED even fit reasoning-quality prose rules) rather than treating cost alone as the gating fact. The 5 split sites' tier-1 halves, the release-proof-boundary site, and three build-deferred classification checks are left unconverted with stated reasons; diff stayed at 2 files / 112 lines against the 5-file/600-line budget, well under both stops.
