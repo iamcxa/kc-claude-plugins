@@ -641,8 +641,16 @@ def main() -> int:
         "compatible next-stage upgrade did not bind the new package",
     )
     run_loader_admission_mutant(
+        "stage-pin-portable-identity-removed",
+        '        "work_item": current_work_item,\n',
+        '        "work_item": contract["work_item"],\n',
+        "stage pin persisted a host-bound work-item path",
+    )
+    run_loader_admission_mutant(
         "active-stage-equality-disabled",
-        "        if any(previous.get(key) != value for key, value in exact.items()):\n",
+        "        if previous_work_item != current_work_item or any(\n"
+        "            previous.get(key) != value for key, value in exact.items()\n"
+        "        ):\n",
         "        if False:\n",
         "active stage accepted changed installed version or bytes",
     )

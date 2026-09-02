@@ -65,7 +65,7 @@ standalone Captain-approved brief leaves `source`, `planning-window`, and
 | Planning items | Linear Issues in team `dev`; new provider-backed admissions only |
 | Planning window | Linear Cycle |
 | Planning outcome | Linear Project as one user-value release package |
-| Planning reader and admission guard | Read-only `scripts/kc-dev-flow/linear-admission.py`; bind organization `duckbase-co`, read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from the current Conductor process environment, accept no credential argument or interactive fallback, reconcile every active Issue in the exact Project/Cycle, and emit Linear's exact `branchName` plus `Fixes DEV-N` from the engaged Issue |
+| Planning reader and admission guard | Installed sibling `linear-admission.py`; organization `duckbase-co`; read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from Conductor env, accept no credential argument or prompt, reconcile exact Project/Cycle active Issues, and emit the engaged Issue's exact `branchName` plus `Fixes DEV-N` |
 | Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
@@ -219,11 +219,13 @@ moving to the selected route's first working state.
 ### Engage reconcile
 
 For a new Linear-backed Pilot or Production admission, pin the full state commit
-and run the combined guard; no manual MCP read, copied provider JSON, or
-hand-written normalization is accepted:
+and run the combined guard. Resolve installed `../../scripts/linear-admission.py`
+from the active skill as `$KC_DEV_FLOW_LINEAR_ADMISSION` for this invocation;
+never persist it. No manual MCP read, copied provider JSON, or hand-written
+normalization is accepted:
 
 ```bash
-python3 scripts/kc-dev-flow/linear-admission.py \
+python3 "$KC_DEV_FLOW_LINEAR_ADMISSION" \
   --workflow-dir docs/dev \
   --work-item "$EXACT_COMMITTED_WORK_ITEM" \
   --profile-loader "$KC_DEV_FLOW_LOADER" \
