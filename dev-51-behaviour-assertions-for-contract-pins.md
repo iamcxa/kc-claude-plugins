@@ -56,6 +56,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:m29y546p4sh77vbs2dv09gkp:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:m29y546p4sh77vbs2dv09gkp-validation-1
+              briefing:
+                id: briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-1:revision-1
+                digest: sha256:48e8738f6cb964ea57f5fd311a8ca40420641d96c5ff217a2270abbfda6e13a8
+                room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/validation/briefing-1
 ---
 
 ## The problem

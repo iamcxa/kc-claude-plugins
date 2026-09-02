@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-1:revision-1",
+  "question": "Approve DEV-51 at exact revision 99a0c826 (pushed to origin/feature/dev-51-replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour) as verified against AC-1..AC-5, and authorize Draft PR creation with close line Fixes DEV-51 toward the terminal merge guard?",
+  "artifacts": [
+    {
+      "id": "artifact:m29y546p4sh77vbs2dv09gkp:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a988c808ff8e7e3444e56f41f31d6e7ab3778f80/dev-51-behaviour-assertions-for-contract-pins.md",
+      "rev": "sha256:614977f2fae30fc0a4b7f51bb8b9fcab4cc484cb97b07058f07529008a8e16a3",
+      "mediaType": "text/markdown",
+      "summary": "See the validation stage report: independent re-run of the contract test and ablation check at the candidate, replayed mutation triples across the four mechanisms, equivalence instrument recorded in the receipt, delivery readiness with the two findings routed to DEV-52 and DEV-60."
+    }
+  ]
+}
