@@ -177,12 +177,19 @@ item adds nothing for AC-6.
 ### Journey
 
 Accepted journey. Each step names the acting program. `OBSERVED` here means the
-step was exercised by `python3 scripts/kc-dev-flow-contract-test.py` run in a
-clean `f9683a33` worktree this session, exit 0, `kc-dev-flow contract: PASS` —
-that suite drives the loader against generated receipts at each route stage and
-asserts the contract prose, so it observes steps 1, 2, 3, 4, and 6. It does not
-run an adopter's real shape audit; a step's `OBSERVED` mark covers the mechanism,
-not a field use.
+step was exercised in a clean `f9683a33` worktree this session by two runs, both
+exit 0:
+
+- `python3 scripts/kc-dev-flow-contract-test.py` — `kc-dev-flow contract: PASS`.
+  Drives the loader against generated receipts at each route stage and asserts
+  the contract prose, observing steps 1, 2, 3, 4, and 6.
+- `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` — `kc-dev-flow
+  minimal-stack ablation: PASS`, 60 mutants all `REJECTED`. This is the run that
+  makes the marks mean something: it establishes that the checks above have been
+  seen to fail, so their silence on the candidate will carry information.
+
+Neither runs an adopter's real shape audit. A step's `OBSERVED` mark covers the
+mechanism, not a field use in production.
 
 1. OBSERVED — `choose-work-profile` (agent, reading its SKILL.md template)
    returns a `work_profile` receipt into the work item. The Captain selects.
@@ -508,6 +515,11 @@ verify-owner duty and is written as one.
   `## Shape` § Reverse-recovery receipt (7 layers, `decision: redesign`), § multi_slice_required: false, § Falsifiable acceptance checks (AC-1..AC-7, each naming its falsifying change).
 
 ### Summary
+
+Both delivery-base gates were run this session in a clean `f9683a33` worktree
+and pass: the contract test exit 0, and the ablation exit 0 with 60 mutants all
+rejected. The ablation run is what lets the shape claim its acceptance checks can
+fail rather than merely exist.
 
 The delivery base moved the ground under two checklist items. `origin/main`
 (`f9683a33`) already deleted the vendored `docs/dev/_mods/` contract pair — only
