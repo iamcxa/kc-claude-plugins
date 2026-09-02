@@ -79,6 +79,12 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:3fkmdwdvsfha8ektb2s5jz7d-validation-2
+              briefing:
+                id: briefing:3fkmdwdvsfha8ektb2s5jz7d:validation:attempt-2:revision-1
+                digest: sha256:f3deab388349267e8a65308a452315b11fc25588464c29e9ccbd9c5304210466
+                request-digest: sha256:63a5fa9ecc1f2596e7e47ab61eb4c14ef7d32d4253308ec6c81c87488e9d0546
+                room-ref: ./dev-45-load-kc-dev-flow-contracts/review/validation/briefing-2
 ---
 
 ## Work profile receipt
