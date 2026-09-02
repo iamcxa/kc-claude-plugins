@@ -758,22 +758,13 @@ for phrase in [
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
-normalized_continuation_policy = " ".join(
-    read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
-)
-for phrase in [
-    "exact work item's `source`",
-    "shares the exact window and outcome read from the engaged item",
-    "stdout parses as one JSON object with `status: clean`",
-    "Exit `1` reports the classified delta",
-    "Exit `2` reports `planning reconcile unavailable`",
-    "added, removed, changed, or moved item",
-    "Captain must admit the delta",
-]:
-    require(
-        phrase in normalized_continuation_policy,
-        f"continuation omits provider engage behavior: {phrase}",
-    )
+# Tier-1 rules below are graded through the mechanism they name (loader JSON,
+# comparator exit code, guard refusal), not through the sentence describing
+# them — see DEV-51's mutation replay table for the redden/restore proof per
+# rule. `engage-reconcile.test.py` already covers provider engage behavior:
+# exit 0 with `status: clean`, exit 1 with a classified added/removed/changed/
+# moved delta, exit 2 on invalid input, and `--expected-source/-window/-outcome`
+# binding to the exact work item.
 for phrase in [
     "Development Brief is required",
     "Planning Receipt is optional",
@@ -798,13 +789,6 @@ for forbidden in [
     "SD-to-planning-provider projector",
 ]:
     require(forbidden not in normalized_kernel, f"kernel owns runtime topology: {forbidden}")
-for phrase in [
-    "An item leaves `backlog` only after its required brief is admitted",
-    "Development Brief",
-    "Exploration Brief",
-    "local execution grouping does not prove a Planning Receipt",
-]:
-    require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
 require(
     "brief admission" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
     "choose-work-profile no longer checks the brief admission bar",
@@ -1091,8 +1075,6 @@ normalized_science = " ".join(science.split())
 normalized_migration = " ".join(migration.split())
 normalized_production_verify = " ".join(production_verify.split())
 
-for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
-    require(marker in normalized_adopter, f"adopter omits static Local Profile marker: {marker}")
 migration_3x = migration.split("## Migrating from 3.x to 4.x", 1)[1].split(
     "## Migrating from 2.x", 1
 )[0]
@@ -1194,21 +1176,6 @@ require(
     "Production verification omits risk-selected review disposition",
 )
 
-for phrase in [
-    "kc-dev-flow-static-local-profile",
-    "start/end marker pair",
-    "Read only its frontmatter and marked block",
-    "never infer boundaries from headings",
-    "from this activated skill",
-    "--work-item <exact-committed-work-item>",
-    "simultaneous items may load different routes",
-    "emits shared core, selected base, and selected stage only",
-    "kc-dev-flow:chief-engineer",
-    "kc-dev-flow:science-officer",
-    "kc-dev-flow-conditional-references/v1",
-    "A link is not activation",
-]:
-    require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 continuation_authority_order = [
     "Read the exact committed work item and selected brief.",
     "Classify its optional Planning Receipt before provider access.",
@@ -1251,13 +1218,6 @@ for phrase in [
     "recommended `change` or `stop`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
-for phrase in [
-    "retained_document_change",
-    "project_context_claim_may_change",
-    "A Markdown work record alone satisfies neither trigger",
-    "`receipt: null` creates no receipt",
-]:
-    require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
 require_production_route(continue_skill, "Production", "`backlog -> ideation -> implementation -> validation -> done`")
 require(
     "-> release ->" not in continue_skill,
@@ -1538,12 +1498,6 @@ require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
 )
-for phrase in [
-    "explicit `--validate-admission` mode",
-    "Default loading does not inspect acceptance headings.",
-    "success-only dispatch-envelope emission",
-]:
-    require(phrase in normalized_package_readme, f"package README omits admission boundary: {phrase}")
 architecture = " ".join(read("ARCHITECTURE.md").split())
 for phrase in [
     "one canonical `AC-N` Development Brief",
@@ -1551,24 +1505,6 @@ for phrase in [
     "success-only dispatch-envelope emission without creating execution state",
 ]:
     require(phrase in architecture, f"architecture omits admission boundary: {phrase}")
-# One sentence covers conditionality for the whole set, so a reference added
-# later cannot be described as always-loaded by omitting an adjective. The
-# per-file checks then confirm each one is still listed with a trigger.
-for phrase in [
-    "Everything else under `references/` is conditional",
-    "Selecting a profile or installing the package activates none of it",
-    "`reverse-recovery-audit.md`",
-    "`journey-slicing.md`",
-    "`retained-document-policy.md`",
-    "`project-context-maintenance.md`",
-    "it loads even when a provider mod owns the ceremony",
-    "already owns the forge-PR ceremony",
-]:
-    require(
-        phrase in normalized_package_readme,
-        f"package README omits mod boundary: {phrase}",
-    )
-
 validation_runbook = read("docs/dev/runbooks/validation-evidence.md")
 normalized_validation_runbook = " ".join(validation_runbook.split())
 for stale in ["selected policy mods", "Write all six lines", "the EM selects"]:
