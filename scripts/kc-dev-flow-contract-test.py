@@ -20,6 +20,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
 LOCAL_MODS = ROOT / "docs/dev/_mods"
+# --ablation-check skips the mechanism sub-suites run() shells out to, so an
+# assertion that relies on one of them guards nothing in that mode.
 require_ablation_only = sys.argv[1:] == ["--ablation-check"]
 if sys.argv[1:] not in ([], ["--ablation-check"]):
     raise SystemExit("usage: kc-dev-flow-contract-test.py [--ablation-check]")
@@ -754,11 +756,6 @@ for phrase in [
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
-# Below: DEV-51's contract-test.py mechanism citations hold only under a full
-# run (mechanism suites execute via run()); `--ablation-check` skips run(), so
-# a citation is not a guard against a prose-only mutation of the cited
-# document — see the validation-bounce note in the DEV-51 work item for which
-# sites still carry a real guard after that correction.
 normalized_continuation_policy = " ".join(
     read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
 )
