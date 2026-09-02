@@ -477,6 +477,25 @@ The one-line Mermaid repair is exact, closes the prior architecture failure, and
 
 PR feedback: {"dispositions":[],"fingerprint":"sha256:11374cc6b7bfd28902fd621a1603f5669788aaab44d804bc6364a83597a5b18f","head":"61ce308dfeaae40f05b997092eb3a3a359a61ff6","layer":"single","pr_number":323,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
 
+## Stage Report: validation (cycle 4)
+
+- DONE: Observe complete GitHub-native feedback for PRs 324, 325, and 326 at their exact approved heads, with stable bottom/middle/top layer identities.
+  Start and repeat repository-explicit PR views matched bottom `#324@a91da87379c77ab4d4b7837f2dec664d5eb20136`, middle `#325@75ef10766a6e9d1fd315a295b388b75b1987a336`, and top `#326@314045f475d077d8dbb0e87ec536c906a04505e7`; every GraphQL thread page ended with `hasNextPage=false` and zero nodes, and every REST review pagination returned one complete empty page.
+- DONE: Record one canonical github-pr-feedback/v1 line per layer with complete pagination, exact-head repeat readback, fingerprint, and evidence-bearing dispositions.
+  The three records below hash canonical UTF-8 objects containing `pr_number`, stable layer, exact head, and `items:[]`; their empty dispositions are clean only because both native feedback populations completed without retained external items.
+- DONE: Commit and push only the durable validation observation; do not modify product code, PR content, branches, Draft status, stack linkage, readiness, or merge state.
+  Product worktree remains clean at `111d47126df43c15c02d8db4bb0fb4621df25aa1`, whose tree equals top candidate `314045f475d077d8dbb0e87ec536c906a04505e7`; no product or provider mutation was made.
+- FAILED: Classify the current three-PR stack as Ready.
+  Required runs `33589546743` for PR #324 and `33589563504` for PR #325 fail `kc-dev-flow-contract-test.py` with `self-adopted profile loader differs from package source`; PR #326 has both required checks passing, so independent-layer delivery readiness is not satisfied.
+
+### Summary
+
+GitHub-native feedback is complete and empty at all three exact heads, with stable bottom, middle, and top identities. The current stack is not Ready because the bottom and middle required portable-contract checks fail independently; this report records the observation without changing product or provider state.
+
+PR feedback: {"dispositions":[],"fingerprint":"sha256:8169a60f11878b081fcdc13b57501aeabc2e4392bfd98369557fc9c55054b7ba","head":"a91da87379c77ab4d4b7837f2dec664d5eb20136","layer":"bottom","pr_number":324,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+PR feedback: {"dispositions":[],"fingerprint":"sha256:9e3074d3870cdf70fd08e4861a33b0f2182041b9ffeccb26eceabd251cfae60b","head":"75ef10766a6e9d1fd315a295b388b75b1987a336","layer":"middle","pr_number":325,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+PR feedback: {"dispositions":[],"fingerprint":"sha256:654eac8235793e0b9029a37b8e03c04841111498725943edf2143d8a7b8e306e","head":"314045f475d077d8dbb0e87ec536c906a04505e7","layer":"top","pr_number":326,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+
 ## Stage Report: implementation (cycle 4)
 
 - DONE: Keep PR #323 Draft; do not ready, merge, close, push, create, or link PRs.
