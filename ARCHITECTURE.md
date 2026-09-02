@@ -52,7 +52,7 @@ flowchart LR
     L --> C["Active policy<br/>core + base + stage"]
     C -. "when stage is build" .-> X["Implementation exit<br/>typed observation"]
     C -. "typed trigger true" .-> R["Triggered references<br/>and bounded receipts"]
-    D["PR delivery event"] -.-> M["Spacedock pr-merge<br/>runtime mod"]
+    D["PR delivery event"] -.-> RM["Spacedock pr-merge<br/>runtime mod"]
 ```
 
 POC build may trigger reverse recovery for a proposed brownfield capability
