@@ -159,7 +159,8 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
         or any(is_placeholder_scalar(match.group(2)) for match in criteria if match)
     ):
         raise ContractError(
-            "Acceptance criteria must use unique ascending concrete AC-N bullets"
+            "Acceptance criteria must use unique ascending concrete bullets "
+            "formatted exactly as `- **AC-N** <text>`"
         )
     return hashlib.sha256("\n\n".join(sections).encode("utf-8")).hexdigest()
 

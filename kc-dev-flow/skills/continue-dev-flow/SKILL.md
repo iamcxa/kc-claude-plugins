@@ -1,18 +1,19 @@
 ---
 name: continue-dev-flow
-description: Resume an adopted repository's approved work through its selected POC, Pilot, or Production route while loading only the shared core and selected profile-stage contract.
+description: Continue an approved kc-dev-flow route with shared core and selected profile-stage contract.
 ---
 
 # Continue Dev Flow
 
-Continue by the selected profile's smallest sufficient route.
-
 ## Resolve authority before policy
 
-1. Locate the workflow README via the nearest repository instructions. Require
-   the unique ordered `kc-dev-flow-static-local-profile` start/end marker pair, with
-   `## Local Profile` immediately after start. Read only its frontmatter and
-   marked block; never infer boundaries from headings or open the full README.
+1. Locate workflow README via nearest repository instructions. Its sole
+   `kc-dev-flow-static-local-profile` pair starts immediately before
+   `## Local Profile`. Read only its frontmatter/marked block; never infer marker
+   bounds. Before provider/state/dispatch, resolve
+   `../../scripts/adoption-parity.py` from this `SKILL.md`; require clean JSON.
+   Use `provider-capable` when planning provider/reader is bound, else
+   `standalone`.
 2. Recheck the worktree, branch, shared-state owner, and remote delivery state.
    When this item is delivered through a reviewable delivery artifact, list the
    open artifacts before creating or reusing a branch. An open unmerged artifact

@@ -23,6 +23,8 @@ RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
 ADOPTED_RECONCILE = Path("scripts/kc-dev-flow/engage-reconcile.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
 LINEAR_ADMISSION = Path("scripts/kc-dev-flow/linear-admission.py")
+ADOPTION_PARITY = Path("kc-dev-flow/scripts/adoption-parity.py")
+ADOPTION_PARITY_TEST = Path("kc-dev-flow/scripts/adoption-parity.test.py")
 
 
 class AblationError(RuntimeError):
@@ -56,6 +58,8 @@ def copy_repository_fixture(destination: Path) -> None:
     # The runner must be able to prove itself before its first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
     tracked.add(os.fsencode(ADOPTED_RECONCILE))
+    tracked.add(os.fsencode(ADOPTION_PARITY))
+    tracked.add(os.fsencode(ADOPTION_PARITY_TEST))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
@@ -605,9 +609,32 @@ def main() -> int:
     run_manual_contract_mutant(
         "marked-local-profile-read-contract-removed",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
-        "   marked block; never infer boundaries from headings or open the full README.\n",
-        "   infer its boundary from headings in the full workflow README.\n",
-        "continuation is missing: Read only its frontmatter and marked block",
+        "   `## Local Profile`. Read only its frontmatter/marked block; never infer marker\n",
+        "   `## Local Profile`. Read full workflow README and infer its boundary.\n",
+        "continuation is missing: Read only its frontmatter/marked block",
+    )
+    run_manual_contract_mutant(
+        "adoption-parity-wiring-removed",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "   bounds. Before provider/state/dispatch, resolve\n",
+        "   bounds. Skip adoption parity before provider/state/dispatch.\n",
+        "continuation is missing: Before provider/state/dispatch, resolve `../../scripts/adoption-parity.py` from this `SKILL.md`; require clean JSON",
+    )
+    run_manual_contract_mutant(
+        "adoption-parity-mode-made-circular",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "   Use `provider-capable` when planning provider/reader is bound, else\n",
+        "   Use `provider-capable` only when a comparator is already bound, else\n",
+        "continuation is missing: Use `provider-capable` when planning provider/reader is bound, else `standalone`",
+    )
+    run_manual_contract_mutant(
+        "adoption-parity-test-runner-removed",
+        "scripts/kc-dev-flow-contract-test.py",
+        "        [sys.executable, \"kc-dev-flow/scripts/adoption-parity.test.py\"],\n"
+        "        \"adoption parity\",\n",
+        "        [sys.executable, \"kc-dev-flow/scripts/profile-contract-loader.test.py\"],\n"
+        "        \"profile loader duplicate\",\n",
+        "contract test omits adoption parity behavior runner",
     )
     run_manual_contract_mutant(
         "adopter-local-profile-marker-removed",
@@ -619,8 +646,8 @@ def main() -> int:
     run_manual_contract_mutant(
         "migration-3x-local-profile-marker-removed",
         "kc-dev-flow/MIGRATION.md",
-        "   `<!-- kc-dev-flow-static-local-profile:start -->` and one end marker\n",
-        "   `<!-- local-profile-start-removed -->` and one end marker\n",
+        "   `<!-- kc-dev-flow-static-local-profile:start -->` immediately before its\n",
+        "   `<!-- local-profile-start-removed -->` immediately before its\n",
         "3.x migration omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
     )
     run_manual_contract_mutant(
@@ -631,6 +658,20 @@ def main() -> int:
         "2.x migration omits static Local Profile marker: <!-- kc-dev-flow-static-local-profile:start -->",
     )
     run_manual_contract_mutant(
+        "migration-3x-legacy-source-inventory-removed",
+        "kc-dev-flow/MIGRATION.md",
+        "   classifying any Planning Receipt, inventory every existing `source` field\n"
+        "   before treating it as Planning Receipt data. When an existing value is\n"
+        "   repository-local free text rather than a resolvable planning-item link, move\n"
+        "   that value to a repository-owned field and leave the canonical `source` value\n"
+        "   empty before validating a new admission or continuing that item under v4.\n"
+        "   Preserve the value; do not reinterpret it as provider identity. Before\n"
+        "   continuing any item already at its first working stage, classify its Planning\n",
+        "   classify every existing `source` field as Planning Receipt data before\n"
+        "   continuing any item already at its first working stage, classify its Planning\n",
+        "3.x migration omits: inventory every existing `source` field before treating it as Planning Receipt data",
+    )
+    run_manual_contract_mutant(
         "migration-3x-standalone-fields-removed",
         "kc-dev-flow/MIGRATION.md",
         "   `planning-outcome` values. For standalone work, leave `source`,\n"
@@ -638,7 +679,7 @@ def main() -> int:
         "   committed brief as planning authority. Both paths assign a non-empty local\n",
         "   `planning-outcome` values. Record provider planning fields for every item.\n"
         "   Both paths assign a non-empty local\n",
-        "3.x migration omits standalone planning branch: For standalone work, leave `source`, `planning-window`, and `planning-outcome` absent",
+        "3.x migration omits: For standalone work, leave `source`, `planning-window`, and `planning-outcome` absent",
     )
     run_manual_contract_mutant(
         "migration-3x-standalone-reconcile-removed",
@@ -647,7 +688,7 @@ def main() -> int:
         "   both and continues from the Captain-approved committed brief. For the\n",
         "   comparator with that exact source, window, and outcome. All work runs the\n"
         "   comparator before continuing. For the\n",
-        "3.x migration omits standalone planning branch: Standalone work skips both and continues from the Captain-approved committed brief",
+        "3.x migration omits: Standalone work skips both and continues from the Captain-approved committed brief",
     )
     run_gate_mutant(
         "poc-no-longer-lightest",
@@ -676,6 +717,12 @@ def main() -> int:
         "        or [int(match.group(1)) for match in criteria if match] != list(\n",
         "        or False and [int(match.group(1)) for match in criteria if match] != list(\n",
         "admission accepted non-ascending-ac",
+    )
+    run_loader_admission_mutant(
+        "actionable-ac-format-removed",
+        '            "formatted exactly as `- **AC-N** <text>`"\n',
+        '            "with stable identifiers"\n',
+        "AC refusal omitted the required literal format",
     )
     run_loader_admission_mutant(
         "default-loader-revalidation-restored",
