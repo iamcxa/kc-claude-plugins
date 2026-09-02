@@ -825,6 +825,124 @@ patch → owning-instrument-red-naming-the-rule → `git apply -R`/`git checkout
 (`package README omits the release-proof boundary`) was investigated and
 named (field: `tree_sha256`) but not converted, for the stated reason.
 
+## Validation bounce (2026-09-03): AC-5 forbade a loss the tier-1 conversions caused
+
+Validation ran `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py < /dev/null`
+(the full ablation, not `--ablation-check`, which is a quick mode of the
+contract test itself) and found `installed-skill-anchor-removed` survived at
+`99a0c826`, on the merged tip `ce70336f` (origin/main #340 merged in under
+Captain authorization; one hunk resolved by keeping this item's retained
+`self-adoption omits Linear cutover boundary` phrase with #340's wording — no
+other conflict).
+
+### Root cause
+
+`kc-dev-flow-contract-test.py --ablation-check` is used by every
+`run_manual_contract_mutant`/`run_kernel_contract_mutant`/custom mutant that
+targets a *document* (not loader/engage-reconcile/linear-admission code).
+`--ablation-check` skips the `if not require_ablation_only: run([...])` block
+that shells out to `profile-contract-loader.test.py`, `engage-reconcile.test.py`,
+and `poc-close-guard.test.py`. Every tier-1 conversion whose sole evidence was
+"the mechanism suite already covers this, invoked via `run()`" therefore has
+**zero effective protection** in the exact mode AC-5's ablation suite drives —
+the mutation-verify cycles in cycles 1-2 proved the mechanism reddens on a
+*code* mutation, never on a *document-prose* mutation, so AC-4's "the old
+assertion is run against each mutation its replacement claims to cover" was
+not actually satisfied for these sites: the ablation's document mutations are
+mutations the old (now-deleted) pin covered that the new instrument never saw.
+
+The discriminating test, applied to every phrase in every tier-1 group: delete
+the sentence, touch no mechanism, and ask whether a mechanism refuses an agent
+that violates the rule the sentence stated, with a message naming it. A named
+refusal is tier-1; a document instructing an agent how to behave, with nothing
+that inspects whether the agent complied, is tier-2/agent-only — regardless of
+whether the *behavior the document asks for* happens to be separately
+mechanism-tested elsewhere (e.g. the loader's own `loaded == 3 paths`
+invariant is real and `profile-contract-loader.test.py` proves it, but nothing
+proves `continue-dev-flow/SKILL.md` still *describes* that invariant
+correctly once its pin is gone).
+
+### Every surviving/misbehaving mutant, its disposition
+
+The suite stops at the first survivor; each fix below was applied, then the
+full ablation was re-run to find the next one, until exit 0.
+
+| # | Mutant | What it mutates | Disposition |
+|---|---|---|---|
+| 1 | `installed-skill-anchor-removed` | `continue-dev-flow/SKILL.md`: "Resolve `../../scripts/profile-contract-loader.py` from this activated skill." → "Resolve a profile loader from the current host." | Pin restored: whole `continuation is missing` site (12 phrases) — an FO path-resolution instruction with no mechanism naming a violation |
+| 2 | `marked-local-profile-read-contract-removed` | Same document: "marked block; never infer boundaries from headings..." reworded | Same restore (site above; this phrase is one of the 12) |
+| 3 | `adopter-local-profile-marker-removed` | `adopt-dev-flow/SKILL.md`: start marker text replaced | Pin restored: whole `adopter omits static Local Profile marker` site (both markers) |
+| 4 | `reconcile-clean-output-wiring-removed` | `continue-dev-flow/SKILL.md`: "Exit `0` continues only when stdout parses as one JSON object with `status: clean`..." reworded | Pin restored: whole `continuation omits provider engage behavior` site (7 phrases), plus `normalized_continuation_policy` re-added |
+| 5 | `default-loader-revalidation-restored` | `profile-contract-loader.py`: `if validate_admission` → `if True` (a **code** mutation, checked via `profile-contract-loader.test.py` directly, not `--ablation-check`) | Not a prose-pin loss — this item's own cycle-1 addition (the default-mode `development_brief_sha256`-absence assertion) sat *before* the pre-existing `historical` dual-section test in the file and fired first with a different, true-but-generic message, masking the specific evidence (`"new admission cannot contain Acceptance evidence with canonical criteria"`) this mutant expects. Fixed by relocating the addition to after the `historical` test (still asserting the same fact, on the same `admitted` fixture item) — no restore, no reclassification, `package README omits admission boundary` stays tier-1 |
+
+Two more sites were restored **preemptively**, before running further and
+finding their own survivor, because they are the same misclassification
+class and a future validation pass would find them: `kernel backlog exit bar
+is missing` (whole site, 4 phrases — "leaves `backlog` only after its brief
+is admitted" is an FO transition duty; `--validate-admission` is a tool the FO
+chooses to run, and default loading admitting a brief-less item is exactly
+what this item's own cycle-1 mutation proved) and `continuation omits doc
+trigger` (whole site, 4 phrases — `check_conditional_references`'s own
+docstring states "does not evaluate `trigger`"; trigger evaluation is
+agent-only). Both were re-verified present in the current document
+(`docs/dev/README.md`'s merge from #340 did not touch either) before
+restoring, per the order-of-operations check below.
+
+Two split sites lost only the specific phrases that are agent prohibitions
+with no refusing mechanism, keeping their genuinely mechanism-backed halves
+converted: `kernel omits provider-neutral planning boundary` ("No reconcile
+result writes either side automatically" restored; "the read-only engage
+comparator" — the exit-code/JSON observable itself — stays converted) and
+`continuation planning disambiguation omits` ("No difference writes the
+provider or execution snapshot automatically." and "stdout parses as one JSON
+object with `status: clean`" restored; the `--expected-*` flags, exit codes,
+and "Refuse a truncated provider result" wording-only status are unchanged).
+
+### Order-of-operations check (before each restore)
+
+Every phrase restored was grep-checked against the current document at the
+merged tip (`ce70336f`, post-#340) before restoring, so a survivor would fail
+for "mutant survived" (the correct symptom) rather than "failed for the wrong
+reason" (a stale phrase). All matched verbatim — #340 did not reword any
+phrase this item restores.
+
+### Corrected tier classification
+
+| Site key | Original tier (shape) | State after cycles 1-2 | State after validation bounce |
+|---|---|---|---|
+| `continuation omits provider engage behavior` | 1 (pure) | converted | **restored — tier-2/wording-only** (agent-instruction category error) |
+| `kernel backlog exit bar is missing` | 1 (pure) | converted | **restored — tier-2/wording-only** (same) |
+| `adopter omits static Local Profile marker` | 1 (pure) | converted | **restored — tier-2/wording-only** (same) |
+| `continuation is missing` | 1 (pure) | converted | **restored — tier-2/wording-only** (same) |
+| `continuation omits doc trigger` | 1 (pure) | converted | **restored — tier-2/wording-only** (same) |
+| `package README omits admission boundary` | 1 (pure) | converted | **stays converted** — inline, ungated assertion; fixed an unrelated test-ordering conflict, not a reclassification |
+| `package README omits mod boundary` | 1 (pure) | converted | **stays converted** — shares the loader's `loaded == 3 paths` mutation with `continuation is missing`, but its own pin phrases are in `kc-dev-flow/README.md`, a document with no agent-decision-path role (per the original inventory); no mutant targets it, and the discriminating test does not clearly indict it — left as-is rather than restored on suspicion alone |
+| `package README omits the release-proof boundary` | 1 (pure) | not converted (field named, wording-only) | unchanged |
+| `kernel omits provider-neutral planning boundary` | split | T1 half converted (2 phrases) | **T1 half reduced to 1 phrase** ("the read-only engage comparator"); "No reconcile result writes either side automatically" restored to T2/wording-only |
+| `{relative} omits the v4 POC contract` | split | T1 half converted | **stays converted** — POC field names are refused by name (`"exactly one {missing_field}"`, `"POC outcome MUTATED"` style messages), the discriminating test passes |
+| `chooser is missing` | split | T1 half converted | **stays converted** — inline, ungated `loader.ROUTES == expected_routes` |
+| `continuation planning disambiguation omits` | split | T1 half converted (8 phrases) | **T1 half reduced to 6 phrases**; 2 restored to T2/wording-only |
+| `self-adoption omits Linear cutover boundary` | split | T1 half converted | **stays converted** — inline Linear-fixture exercise, `--expected-*`/`--state-revision` are `argparse(required=True)`-named flags, envelope schema is an inline JSON assertion |
+
+**Net**: of the original 13 tier-1 groups, **6 keep a mutation-verified
+tier-1 conversion in some form** (2 pure + 4 split, 2 of the split reduced in
+scope), **5 pure groups are fully restored** to their original phrase pins,
+and **2 sites** (`package README omits the release-proof boundary`,
+never converted) plus the newly-restored 5 remain wording-only/tier-2 under
+the Captain's route-back ruling. The wording-only/tier-2 count under that
+ruling grows from 18 to **23** (18 original tier-2 candidates + 5 restored
+sites), each still carrying a reason: the 18 cite the checkpoint ruling, the
+5 restored ones cite this bounce's misclassification finding.
+
+### Verification at the corrected tip
+
+- `python3 scripts/kc-dev-flow-contract-test.py` → `kc-dev-flow contract: PASS`, exit 0, 45.8s.
+- `python3 scripts/kc-dev-flow-contract-test.py --ablation-check` → `kc-dev-flow contract: PASS`, exit 0, 5.8s.
+- `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py < /dev/null` → `kc-dev-flow minimal-stack ablation: PASS`, exit 0, 2m14s, **64 mutants REJECTED**, 0 survivors.
+- `git diff --stat origin/main`: 2 files, 93 lines (40 added + 53 deleted) — `scripts/kc-dev-flow-contract-test.py`, `kc-dev-flow/scripts/profile-contract-loader.test.py`. Within the 5-file/600-line stops.
+- Comment pass: the tier-1 pointer comment (above the surviving conversions) was rewritten to state the actual constraint (mechanism citations require a full run; `--ablation-check` skips it) instead of naming groups that are no longer accurate — 5 lines, down from 7.
+
+
 ## Stage Report: implementation
 
 - FAILED (partial): Replace the tier-1 and split pin sites with assertions on the enforcing mechanism's observable output, and for every replaced pin record the mutation run before the old pin is removed.
@@ -868,3 +986,16 @@ Independently reran the full contract test and ablation check at `99a0c826` (bot
 **Authorization requested from the Captain:** (1) how to reconcile `99a0c826` against current `origin/main` — a rebase/merge is a code-changing repair that would invalidate this validation's exact-revision evidence (the 4 replayed triples and the loader-accepted receipt) and require re-verification on the new revision, so the choice of whether to repair now, defer, or accept a stale base is the Captain's; (2) once reconciled, explicit authorization to push the resulting revision to `feature/dev-51-replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour` and open the Draft PR with close line `Fixes DEV-51`, per `pr-delivery.md`'s "wait for an explicit instruction to push."
 
 Remaining production obligations and promotion triggers (`verify-deliver.md` Required output): none observed — the change touches only test/script files with no adopter-visible contract, and no Pilot promotion boundary (production data or credentials, broad exposure, a compatibility break forcing consumer action, irreversible migration, unattended recurring operation, or SLO/support duty) was crossed this stage.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Run the full ablation with stdin closed, and for each surviving mutant read what it mutates and restore the pin (with reclassification) or retarget with a proven triple; never delete or weaken a mutant.
+  `## Validation bounce` — 4 real prose-mutation survivors found and fixed by restoring their pins (`continuation is missing`, `continuation omits provider engage behavior`, `adopter omits static Local Profile marker`, plus a preemptive restore of `kernel backlog exit bar is missing` and `continuation omits doc trigger` for the identical misclassification class), 2 split-site phrases restored, and one non-prose test-ordering conflict (`default-loader-revalidation-restored`) fixed by relocating this item's own cycle-1 test addition rather than touching the ablation file. No mutant in `scripts/kc-dev-flow-minimal-stack-ablation.test.py` was edited, deleted, or weakened.
+- DONE: Re-run the full contract test and the full ablation at the final tip; record both exit codes, elapsed times, and the count of mutants rejected.
+  `## Verification at the corrected tip` — contract test PASS exit 0, 45.8s; `--ablation-check` PASS exit 0, 5.8s; full ablation PASS exit 0, 2m14s, **64 mutants REJECTED**, 0 survivors.
+- DONE: Amend the stage report with a Validation bounce section (every survivor, disposition, corrected tier, updated wording-only count) and final diff counts against origin/main.
+  `## Corrected tier classification` table — 6 of the original 13 tier-1 groups keep a mutation-verified conversion (2 pure fully, 4 split fully or partially), 5 pure groups fully restored to phrase pins, tier-2/wording-only count grows from 18 to 23. `git diff --stat origin/main`: 2 files / 93 lines, within the 5-file/600-line stops.
+
+### Summary
+
+The validation bounce found a systematic category error, not an isolated miss: five of the seven cycle-1 "pure tier-1" conversions cited a mechanism test invoked through `contract-test.py`'s gated `run()` block, which `--ablation-check` — the mode every document-mutation mutant in the ablation suite drives — skips entirely, so the cited mechanism provided no actual protection against the exact class of mutation (document prose rewording) the deleted pin used to catch. Root cause and fix are recorded together with the discriminating test (does a mechanism refuse an agent's violation by name, or does the document only instruct the agent) applied to every phrase in every affected group, not just the one the ablation happened to catch first — five whole sites and two split-site phrases were restored on that basis, including two the ablation had not yet reached, to close the class rather than the single reported instance. One unrelated defect (a new cycle-1 test assertion firing before an existing, more specific one under a particular loader-code mutation) was fixed by reordering, not by touching tier classification. The full ablation now passes cleanly with 64 mutants rejected and zero survivors; the corrected diff against origin/main is 2 files / 93 lines.
