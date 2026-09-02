@@ -26,6 +26,17 @@ gates:
                 id: briefing:50c1y5wf7dzh0ww2a9qajn47:backlog:attempt-1:revision-1
                 digest: sha256:f1859f26f2cbee8a9efef1ba17b3efef81d24bebb5aa447e01e20a0cbf0a55fd
                 room-ref: ./dev-46-unify-necessity-vocabulary/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:50c1y5wf7dzh0ww2a9qajn47:backlog:1
+                briefing: briefing:50c1y5wf7dzh0ww2a9qajn47:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-02T08:17:26.673155Z"
+                decision: approve
+                reason: 'Captain approved DEV-46 into Production ideation: Project kc-dev-flow slimming dogfood, Cycle 2, sprint S8; shape must name the AC-4 enforcement point.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
