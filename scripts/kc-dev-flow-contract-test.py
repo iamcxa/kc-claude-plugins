@@ -1646,8 +1646,6 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         state_type = "completed" if fixture.scenario == "removed" else "started"
 
         def issue(identifier: str = "DEV-12") -> dict[str, object]:
-            # The archived sibling is finished in Linear as well; only an active
-            # snapshot item that Linear has closed is a removed planning item.
             issue_state = "completed" if identifier == "DEV-11" else state_type
             reported_identifier = (
                 "DEV-99"
@@ -1761,8 +1759,8 @@ Stop on any planning drift.
         work_item.read_text(encoding="utf-8").replace("DEV-12", "DEV-13"),
         encoding="utf-8",
     )
-    # A finished sibling stays in the state tree with the same sprint but leaves
-    # Linear's active set; it must not count as a removed planning item.
+    # Archived and finished in Linear too: only an active snapshot item that
+    # Linear has closed counts as a removed planning item.
     (state / "_archive").mkdir()
     (state / "_archive/dev-11.md").write_text(
         work_item.read_text(encoding="utf-8")
