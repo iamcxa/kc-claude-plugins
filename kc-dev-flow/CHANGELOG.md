@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.1.0...kc-dev-flow-v4.1.1) (2026-09-02)
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** ship portable Linear admission runtime ([5e3b8de](https://github.com/iamcxa/kc-claude-plugins/commit/5e3b8deba6f58f1889e6e9f1df91162d17699f61))
+
 ## [4.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.1...kc-dev-flow-v4.1.0) (2026-09-02)
 
 
