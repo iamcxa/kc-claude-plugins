@@ -309,3 +309,28 @@ review_convergence_observation:
 ### Summary
 
 The candidate now loads canonical KC Dev Flow contracts from one installed, self-locating manifest and pins exact version/digest bytes per active attempt. Compatible upgrades begin only at stage boundaries, incompatible interfaces stop for explicit refit, and the self-adopter retains only local policy, adapters, mods, and state.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Cite fresh-adopter installed-resource execution.
+  AC-1 evidence: candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` (manifest commit `a91da87379c77ab4d4b7837f2dec664d5eb20136`, binding commit `12ded46ac9ef31169932fcd6e545596dcef8af0a`, deletion commit `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404`) passed `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 scripts/kc-dev-flow-contract-test.py`; either check fails if any supported profile-stage cannot load from an arbitrary installed root, needs a repository canonical copy, or a canonical copy is reintroduced.
+- DONE: Cite active-stage pinning and compatible boundary upgrade.
+  AC-2 evidence: commit `12ded46ac9ef31169932fcd6e545596dcef8af0a` in candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 kc-dev-flow/scripts/profile-contract-loader.test.py`; the check fails if a same-stage A pin accepts version/digest B or if the next compatible stage does not write digest B.
+- DONE: Cite incompatible-upgrade refusal.
+  AC-3 evidence: commit `12ded46ac9ef31169932fcd6e545596dcef8af0a` in candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` and `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py`; the checks fail if an incompatible interface emits dispatch stdout, writes a pin, omits the README/local-mod refit target, or a mutation deleting the compatibility guard survives.
+- DONE: Cite preservation of repository-owned surfaces.
+  AC-4 evidence: candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 kc-dev-flow/scripts/profile-contract-loader.test.py`; the check fails if adoption or upgrade changes sentinel README policy, local-mod bytes or mode, or unrelated Spacedock state commit/tree/status.
+- DONE: Cite safe vendored-copy and parity removal.
+  AC-5 evidence: deletion commit `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 scripts/kc-dev-flow-contract-test.py` and `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py`; the checks fail if an obsolete canonical adopter copy returns or if a route, conditional-reference, POC close-guard, or kernel-authority mutation survives.
+- DONE: Cite host-neutral resolution from worktrees.
+  AC-6 evidence: self-locating commit `a91da87379c77ab4d4b7837f2dec664d5eb20136` in candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` from the exact implementation worktree; the check fails if three arbitrary install roots require Claude, Codex, Hermes, or Conductor environment discovery, or if moving the package/worktree changes resolution.
+- DONE: Cite goal-sufficiency, necessity, and reduced surface.
+  AC-7 evidence: candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` passed `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` with all 57 named mutants rejected, while `git diff --shortstat 3aafd3d22e749257f3551079475cc41183525d7c..2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` reports 37 files and 3,868 changed lines; evidence fails if any named mechanism-removal mutant survives or scope exceeds 44 files/4,800 lines.
+- DONE: Inspect RoboRev job 292's stored finding output and record the non-action disposition.
+  `roborev show --job 292 --json` stores exact output `SEVERITY_THRESHOLD_MET` with `min_severity: medium`, so it exposes no Medium, High, or Critical finding to repair; no product commit or changed-tip confirmation was made. The strict observation remains `UNKNOWN(reason: stale)` because panel identity and stable member population are still absent; this provider result is observation only, not validation authority.
+- SKIPPED: Create or link the delivery PR.
+  No PR exists for this branch. Delivery must create the authorized PR and include exactly one `Fixes DEV-45` linkage before completion.
+
+### Summary
+
+Candidate `2c5149dc33fdbe6cf4aeaf75c7c683a4681ab404` now has one durable implementation citation for every AC-1 through AC-7, each tied to the exact commit/check and its falsifying regression. These are implementation proofs for the next gate; they do not claim validation authority.
