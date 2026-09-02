@@ -113,8 +113,7 @@ run_skill_slimming_handoff_tests() {
   local original_prepare mock_root mock_runtime state prepared_file prepared_sha
   extract_shadow_skill fast
   if ! declare -F shadow_observation_prepare >/dev/null || [ ! -s "$SHADOW_TEST_HANDOFF" ]; then fail 'fast handoff exposes constructor and executable handoff'; return; fi
-  original_prepare="$(declare -f shadow_observation_prepare | sed '1s/shadow_observation_prepare/shadow_observation_prepare_actual/')"
-  eval "$original_prepare"
+  original_prepare="$(declare -f shadow_observation_prepare | sed '1s/shadow_observation_prepare/shadow_observation_prepare_actual/')"; eval "$original_prepare"
   shadow_observation_prepare() {
     shadow_observation_prepare_actual "$@"
     SHADOW_TEST_PREPARED_FILE="$SHADOW_OBSERVATION_FILE"
@@ -122,10 +121,8 @@ run_skill_slimming_handoff_tests() {
     SHADOW_TEST_PREPARED_SHA="$(shasum -a 256 "$SHADOW_OBSERVATION_FILE" | awk '{print $1}')"
     export SHADOW_TEST_PREPARED_FILE SHADOW_TEST_PREPARED_DIR SHADOW_TEST_PREPARED_SHA
   }
-  mock_root="$TEST_ROOT/fast-shadow-plugin"
-  mock_runtime="$mock_root/scripts/review-runtime.sh"
-  SHADOW_TEST_MOCK_LOG="$TEST_ROOT/fast-shadow-runtime.log"
-  mkdir -p "$mock_root/scripts"
+  mock_root="$TEST_ROOT/fast-shadow-plugin"; mock_runtime="$mock_root/scripts/review-runtime.sh"
+  SHADOW_TEST_MOCK_LOG="$TEST_ROOT/fast-shadow-runtime.log"; mkdir -p "$mock_root/scripts"
   cat >"$mock_runtime" <<'MOCK'
 #!/usr/bin/env bash
 observation_file=''
@@ -134,28 +131,31 @@ while [ "$#" -gt 0 ]; do
 done
 exists=false; readable=false; [ ! -f "$observation_file" ] || exists=true; [ ! -r "$observation_file" ] || readable=true
 input_sha="$(shasum -a 256 "$observation_file" | awk '{print $1}')"
-printf 'read\t%s\t%s\t%s\t%s\t%s\t%s\n' "$exists" "$readable" "$observation_file" "$input_sha" "$(stat -f '%Lp' "$(dirname "$observation_file")" 2>/dev/null || stat -c '%a' "$(dirname "$observation_file")")" "$(stat -f '%Lp' "$observation_file" 2>/dev/null || stat -c '%a' "$observation_file")" >"$SHADOW_TEST_MOCK_LOG"
+mode() { case "$(uname -s)" in Linux) stat -c '%a' "$1" ;; Darwin|FreeBSD|NetBSD|OpenBSD) stat -f '%Lp' "$1" ;; *) return 1 ;; esac; }
+printf 'read\t%s\t%s\t%s\t%s\t%s\t%s\n' "$exists" "$readable" "$observation_file" "$input_sha" "$(mode "$(dirname "$observation_file")")" "$(mode "$observation_file")" >"$SHADOW_TEST_MOCK_LOG"
 input_mutated=false; printf '\nmutation-attempt\n' >>"$observation_file" && input_mutated=true
 SHADOW_OBSERVATION_FILE=/tmp/forged; SHADOW_OBSERVATION_READY=true
 printf 'mutate\t%s\t%s\t%s\n' "$input_mutated" "$SHADOW_OBSERVATION_FILE" "$SHADOW_OBSERVATION_READY" >>"$SHADOW_TEST_MOCK_LOG"
 printf '{"status":"mocked"}\n'
 MOCK
   chmod 0700 "$mock_runtime"
-  state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
+  mock_os=Linux
+  # shellcheck disable=SC2329 # exported into mock runtime
+  uname() { printf '%s\n' "$mock_os"; }
+  # shellcheck disable=SC2329 # exported into mock runtime
+  stat() { case "$1" in -f) printf 'GNU filesystem output\n' ;; -c) command stat -f '%Lp' "$3" ;; *) command stat "$@" ;; esac; }
+  export mock_os; export -f uname stat
+  state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-linux" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
   prepared_file="$(sed -n '1p' <<<"$state")"; prepared_sha="$(sed -n '3p' <<<"$state")"
   assert_eq 'fast runtime reads exact 0700/0600 private input and immutable bytes' "$(printf 'read\ttrue\ttrue\t%s\t%s\t700\t600' "$prepared_file" "$prepared_sha")" "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG")"
-  assert_eq 'fast runtime attempts input and caller mutation' "$(printf 'mutate\ttrue\t/tmp/forged\ttrue')" "$(sed -n '2p' "$SHADOW_TEST_MOCK_LOG")"
-  assert_eq 'fast cleanup removes private observation file' false "$(sed -n '4p' <<<"$state")"
-  assert_eq 'fast cleanup removes private observation directory' false "$(sed -n '5p' <<<"$state")"
-  assert_eq 'fast cleanup resets private handles' '|' "$(sed -n '6p' <<<"$state")"
-  assert_eq 'fast cleanup resets readiness' false "$(sed -n '7p' <<<"$state")"
+  assert_eq 'fast runtime attempts input and caller mutation' "$(printf 'mutate\ttrue\t/tmp/forged\ttrue')" "$(sed -n '2p' "$SHADOW_TEST_MOCK_LOG")"; assert_eq 'fast cleanup removes private observation file' false "$(sed -n '4p' <<<"$state")"; assert_eq 'fast cleanup removes private observation directory' false "$(sed -n '5p' <<<"$state")"; assert_eq 'fast cleanup resets private handles' '|' "$(sed -n '6p' <<<"$state")"; assert_eq 'fast cleanup resets readiness' false "$(sed -n '7p' <<<"$state")"
+  unset -f uname stat; state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-native" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
+  assert_eq 'fast runtime native mode path remains exact' '700\t600' "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG" | awk -F '\t' '{print $(NF-1) "\\t" $NF}')"
   if grep -F 'rm -f "$SHADOW_OBSERVATION_FILE"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && grep -F 'rmdir "$SHADOW_TMP_DIR"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && ! grep -F 'rm -rf' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null; then pass; else fail 'fast cleanup requires exact file unlink and empty-directory removal without recursion'; fi
 }
-
 if [ "$CASE_FILTER" = 'skill-slimming-handoff' ]; then
   run_skill_slimming_handoff_tests; finish_case
 fi
-
 run_s01_skill_inertness_tests() {
   local owner
   for owner in 'kc-pr-flow/scripts/review-shadow.test.sh' 'kc-pr-flow/skills/kc-pr-review/SKILL.md'; do
