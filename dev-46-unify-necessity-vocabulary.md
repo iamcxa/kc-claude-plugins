@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-46-unify-necessity-vocabulary
 issue:
-pr: 334
+pr: pr-merge:334
 mod-block:
 id: 50c1y5wf7dzh0ww2a9qajn47
 gates:
