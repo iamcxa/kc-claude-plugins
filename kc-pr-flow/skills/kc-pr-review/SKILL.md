@@ -133,9 +133,37 @@ PLAN_INPUT_BASE_SHA="$CURRENT_BASE_SHA"
 PLAN_INPUT_HEAD_SHA="$CURRENT_HEAD_SHA"
 PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
 PLAN_INPUT_WORKTREE="$PWD"
+PLAN_INPUT_DIR=
 PLAN_INPUT_EVENTS=
 PLAN_INPUT_RECEIPT=
 PLAN_INPUT_CONFIG=
+PLAN_INPUT_READY=false
+
+# delta-plan-cleanup-recipe:start
+review_plan_cleanup_inputs() {
+  local cleanup_rc=0
+  if [ -n "${PLAN_INPUT_DIR-}" ] &&
+    declare -F review_runtime_remove_private_snapshot_dir >/dev/null; then
+    review_runtime_remove_private_snapshot_dir "$PLAN_INPUT_DIR" \
+      "${PLAN_INPUT_EVENTS-}" "${PLAN_INPUT_RECEIPT-}" "${PLAN_INPUT_CONFIG-}" ||
+      cleanup_rc=$?
+  fi
+  PLAN_INPUT_DIR=
+  PLAN_INPUT_EVENTS=
+  PLAN_INPUT_RECEIPT=
+  PLAN_INPUT_CONFIG=
+  PLAN_INPUT_READY=false
+  return "$cleanup_rc"
+}
+
+review_plan_guard_event_final() {
+  local requested_event="$1" guard_rc=0 cleanup_rc=0
+  review_plan_guard_event "$requested_event" || guard_rc=$?
+  review_plan_cleanup_inputs || cleanup_rc=$?
+  [ "$guard_rc" -eq 0 ] || return "$guard_rc"
+  return "$cleanup_rc"
+}
+# delta-plan-cleanup-recipe:end
 
 if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
    [ -n "${PREDECESSOR_EVENTS-}" ] && [ -n "${DELTA_RECEIPT-}" ] &&
@@ -172,13 +200,17 @@ if [ -n "$PLAN_JSON" ] &&
   PLAN_JSON=
 fi
 case "$(jq -r '.mode // "initial"' <<<"${PLAN_JSON:-{}}" 2>/dev/null)" in
-  delta|resolve) ;;
+  delta|resolve) PLAN_INPUT_READY=true ;;
   *) PLAN_JSON= ;;
 esac
 
 review_plan_guard_event() {
   local requested_event="$1"
-  [ -n "${PLAN_JSON-}" ] || return 0
+  if [ -z "${PLAN_JSON-}" ]; then
+    review_plan_cleanup_inputs || return 3
+    return 0
+  fi
+  [ "${PLAN_INPUT_READY:-false}" = true ] || return 3
   . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 3
   review_plan_event_allowed "$PLAN_JSON" "$requested_event" \
     "$PLAN_INPUT_REPOSITORY" "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" \
@@ -201,6 +233,10 @@ autonomous construction, and both interactive and autonomous pre-post checks—r
 never APPROVE; APPROVE allows the existing three events. Any rerun or equality failure refuses
 posting. Step 6c human confirmation and `review-post.sh` remain the only confirmation and network
 owners.
+
+If the invocation returns or the user cancels before either final pre-post validator runs, call
+`review_plan_cleanup_inputs` before returning. It removes only the three named snapshots and then
+the empty private directory; never use recursive deletion.
 
 ### Step 2.2: Optional kc-dev-flow handoff
 
@@ -1864,7 +1900,11 @@ review_interactive_post_gate_valid() {
   fi
   confirmation="$(jq -S -c '.confirmation' <<<"$gate_json")" || return 3
   review_interactive_confirmation_valid "$confirmation" || return 3
-  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3; fi # interactive-pre-post
+  if declare -F review_plan_guard_event_final >/dev/null; then
+    review_plan_guard_event_final "$(jq -r '.effective_event' <<<"$gate_json")" || return 3 # interactive-pre-post
+  elif declare -F review_plan_guard_event >/dev/null; then
+    review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3 # interactive-pre-post
+  fi
 }
 
 review_autonomous_post_gate_valid() {
@@ -1885,7 +1925,11 @@ review_autonomous_post_gate_valid() {
     (.head_sha | test("^[0-9a-f]{40}$")) and
     (.review_key | test("^[0-9a-f]{64}$"))
   ' >/dev/null 2>&1 || return 3
-  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3; fi # autonomous-pre-post
+  if declare -F review_plan_guard_event_final >/dev/null; then
+    review_plan_guard_event_final "$(jq -r '.effective_event' <<<"$gate_json")" || return 3 # autonomous-pre-post
+  elif declare -F review_plan_guard_event >/dev/null; then
+    review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3 # autonomous-pre-post
+  fi
 }
 
 review_autonomous_post_gate() {
