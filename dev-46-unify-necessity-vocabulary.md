@@ -176,7 +176,13 @@ item adds nothing for AC-6.
 
 ### Journey
 
-Accepted journey. Each step names the acting program.
+Accepted journey. Each step names the acting program. `OBSERVED` here means the
+step was exercised by `python3 scripts/kc-dev-flow-contract-test.py` run in a
+clean `f9683a33` worktree this session, exit 0, `kc-dev-flow contract: PASS` —
+that suite drives the loader against generated receipts at each route stage and
+asserts the contract prose, so it observes steps 1, 2, 3, 4, and 6. It does not
+run an adopter's real shape audit; a step's `OBSERVED` mark covers the mechanism,
+not a field use.
 
 1. OBSERVED — `choose-work-profile` (agent, reading its SKILL.md template)
    returns a `work_profile` receipt into the work item. The Captain selects.
@@ -190,10 +196,12 @@ Accepted journey. Each step names the acting program.
 4. OBSERVED — at implementation exit and at completion, a worker reads
    `kernel.md` and maps each retained surface to the accepted goal, a named
    falsifier, a safety boundary, or a required lifecycle obligation.
-5. DESIGNED — a worker declaring `semantics_unchanged: true` at its route's
-   first working stage supplies an equivalence instrument and the case that
-   instrument was observed to flag; the loader refuses the stage load without
-   them.
+5. DESIGNED — a worker declares `semantics_unchanged` at shape (`ideation`).
+   When it declared `true`, the same worker reaching the `validation` stage must
+   carry an equivalence instrument and the case that instrument was observed to
+   flag; the loader refuses the `validation` stage load without them. The
+   refusal sits at the verification boundary, not at shape, because the
+   observed-failure evidence does not exist until build has run.
 6. OBSERVED — `scripts/kc-dev-flow-contract-test.py` asserts the kernel and
    contract phrases; `scripts/kc-dev-flow-minimal-stack-ablation.test.py`
    mutates each and requires rejection. `.github/workflows/kc-dev-flow-release-gate.yml`
@@ -226,15 +234,25 @@ Named point: `resolve_work_item` in
 `kc-dev-flow/scripts/profile-contract-loader.py`, fail-closed — the stage
 contract does not render.
 
-Fields, on schema `kc-dev-flow-work-profile/v3` (no version bump; see below):
+Fields, on schema `kc-dev-flow-work-profile/v3` (no version bump; see below).
+They are gated at two different stages, because AC-4 refuses at the
+**verification** boundary and the evidence it demands does not exist before
+build has run:
 
 - `semantics_unchanged: true | false` — required for `pilot-product-slice` and
-  `production` when `workflow_stage` equals the route's first working stage.
-  Precedent: the existing `if workflow_stage == first_workflow_stage` sprint
-  check.
-- when `true`, `equivalence_instrument` and `equivalence_instrument_failure` are
-  required and rejected as placeholders through the existing
-  `is_placeholder_scalar`.
+  `production` when `workflow_stage` equals the route's first working stage
+  (`ideation`). Precedent: the existing `if workflow_stage ==
+  first_workflow_stage` sprint check. This adds no new obligation in substance:
+  both `shape.md` contracts already require the author to "declare alongside it
+  the observable semantics this work may change ... or state that it changes
+  none." The field makes that existing declaration machine-readable.
+- `equivalence_instrument` and `equivalence_instrument_failure` — required, and
+  rejected as placeholders through the existing `is_placeholder_scalar`, when
+  `workflow_stage` is `validation` (the `verify` and `verify-deliver` working
+  stages, per `ROUTES`) **and** the receipt carries `semantics_unchanged: true`.
+  They are not required at `ideation`: at shape, "the instrument was observed to
+  fail" can only be a promise, and a field that can only hold a promise is a
+  placeholder the loader would be pretending to check.
 
 **The bounded half.** The loader enforces presence and non-placeholder
 concreteness. It cannot verify that the named instrument exists, ran, or
@@ -263,16 +281,20 @@ not. Only the recovery route has a strict key allowlist
 (`recovery_keys != expected_recovery_keys`); the normal route has none, so a new
 key on a v3 receipt does not break existing validation.
 
-**Open Captain decision — the recovery route.** Production recovery's route is
-`[build, verify]` with an exact key allowlist permitting only
-`recovery_failure`, `recovery_falsifier`, `recovery_rollback`, and
-`review_risks`. Requiring the declaration there means expanding that
-fail-closed exact set. Recommendation: compose through the existing field
-instead — on the recovery route, treat `review_risks` omitting `behavior` as the
-declared-unchanged case and require the two equivalence scalars then, expanding
-`expected_recovery_keys` by exactly those two. This is the one ruling most
-likely to change the shape: if the Captain declines, AC-4 becomes a separate
-work item rather than part of this one.
+**The recovery route needs no allowlist change.** Production recovery's
+`[build, verify]` route enforces an exact key set, but the check reads
+`set(re.findall(r"^  (recovery_[a-z0-9_]+|review_risks):", block, re.MULTILINE))`
+— `semantics_unchanged`, `equivalence_instrument`, and
+`equivalence_instrument_failure` match neither alternation, never enter
+`recovery_keys`, and cannot trip the comparison. Run against a fixture block
+carrying all four keys, the pattern returns `{'review_risks',
+'recovery_failure'}` only. A recovery route also has no `ideation` stage, so it
+is never asked for `semantics_unchanged`; a recovery repairs a named
+`recovery_failure` and normally does change behaviour.
+
+**Unverified, checked at build:** whether adding a key to a recovery receipt
+disturbs the loader's hash-binding of that receipt to the recovery eligibility
+record. This is a build-time check, not a decision.
 
 ### Where it touches
 
@@ -301,7 +323,14 @@ each named with why it does not change.
   item adds no reference file, so the resource set is unchanged. Verify at build.
 - `scripts/kc-dev-flow-multi-profile-gate.py` (541) — builds `work_profile`
   fixtures at line 246. Unchanged only if its Pilot and Production fixtures sit
-  at a stage past their route's first; **unverified**, checked at build.
+  at a stage past `ideation` and none reaches `validation` with
+  `semantics_unchanged: true`; **unverified**, checked at build.
+- `kc-dev-flow/scripts/profile-spacedock-route.test.py` — carries the v3 schema
+  string and may build Pilot/Production fixtures at `ideation`, which under this
+  design need `semantics_unchanged`; **unverified**, checked at build. Same
+  class as the two fixture builders above, and the reason
+  `kc-dev-flow-contract-test.py`'s `lines after` allows for its own fixture
+  builder gaining the field.
 
 Reconciled table to journey: `kc-dev-flow/MIGRATION.md` and
 `choose-work-profile/SKILL.md` appear in the table but not as journey steps —
@@ -397,14 +426,10 @@ than adding a mechanism.
 ### multi_slice_required: false
 
 `journey-slicing.md` was read and not loaded as a receipt. The change is ~340
-lines across 13 files at the delivery base and delivers as one integrated slice.
-The apparent cut — vocabulary first, loader field second — fails the guard's own
-rule rather than passing it: the loader field can be blocked independently by
-the recovery-allowlist ruling above, and "if a piece can be blocked
-independently, it is another work item rather than a slice." So the fallback is
-recorded as a work-item split, not a second slice: should the Captain decline
-the recovery-route expansion, AC-4 leaves this item entirely and AC-1 through
-AC-3 and AC-5 through AC-7 land alone.
+lines across 13 files at the delivery base, under every stop number, and
+delivers as one integrated slice. No piece needs to land before another to be
+demonstrable: the vocabulary rename and the loader field are each observable on
+their own, and neither blocks the other.
 
 Other conditional references: `retained_document_change` fires —
 `kernel.md` and `reverse-recovery-audit.md` are retained documents and the
@@ -432,13 +457,18 @@ Each names the change that would make it fail.
   removed surfaces; an ablation mutant restores the added-only enumeration and
   must be rejected. *Fails if* removals are graded in new prose while the
   asserted phrase still matches the old added-only sentence.
-- **AC-4** — `profile-contract-loader.test.py` drives the loader with a
-  Production shape receipt carrying `semantics_unchanged: true` and no
-  `equivalence_instrument`, and reads the `ContractError`; a second case supplies
-  `TBD` and reads the same refusal. The ablation adds a
+- **AC-4** — `profile-contract-loader.test.py` drives the loader at
+  `workflow_stage: validation` with a Production receipt carrying
+  `semantics_unchanged: true` and no `equivalence_instrument`, and reads the
+  `ContractError`; a second case supplies `TBD` for
+  `equivalence_instrument_failure` and reads the same refusal; a third drives the
+  same receipt at `ideation` and observes it load, proving the refusal sits at
+  the verification boundary and not at shape. The ablation adds a
   `run_loader_admission_mutant` deleting the field from the required tuple.
   *Fails if* the `raise` is removed or downgraded: the expected rejection does
-  not arrive and the case errors as an unexpected success.
+  not arrive and the case errors as an unexpected success. *Also fails if* the
+  gate is bound at `ideation` instead: the third case's expected load becomes a
+  refusal.
 - **AC-5** — build records a pairing table over
   `git diff f9683a33 -- scripts/kc-dev-flow-contract-test.py scripts/kc-dev-flow-minimal-stack-ablation.test.py`,
   matching every removed `require(` or mutant to a replacement asserting the same
@@ -446,24 +476,32 @@ Each names the change that would make it fail.
 - **AC-6** — `git ls-tree -r --name-only <candidate> -- docs/dev/_mods/` returns
   only `pr-merge.md` and the contract test passes. *Fails if* either vendored
   file returns: `obsolete_adopter_copies` rejects it.
-- **AC-7** — the loader test drives a v3 Production receipt at `build` with no
-  `semantics_unchanged` and observes it load; `MIGRATION.md` records the one-line
-  addition an item re-entering shape must make. *Fails if* the requirement is
-  made unconditional, which turns that expected success into a refusal.
+- **AC-7** — the loader test drives a v3 Production receipt at `implementation`
+  with no `semantics_unchanged` and observes it load, and a second at
+  `validation` with no `semantics_unchanged` key at all and observes it load;
+  `MIGRATION.md` records the one-line addition an item re-entering shape must
+  make. *Fails if* the requirement is made unconditional, which turns both
+  expected successes into refusals.
 
 ### Residual and scaffolding record
 
-The stage-gated requirement means an item admitted before this change and past
-its shape stage is never asked to declare. That is deliberate and bounded, not a
-gate an author can dodge at will — a new item entering shape is refused without
-the field. Removal condition for the carve-out: none needed; it is not
-scaffolding, it is the stage gate itself. The `MIGRATION.md` line is the migration
-AC-7 requires, and it is one line because no stored value changes shape.
+A pre-change item carries no `semantics_unchanged` key, so its `validation` load
+has nothing to check and proceeds. That is the AC-7 carve-out, and it is
+deliberate: a new item entering `ideation` is refused without the declaration,
+so the gate holds for everything shaped after this lands. Removal condition:
+none needed; this is not scaffolding but the stage gate itself. The
+`MIGRATION.md` line is the migration AC-7 requires, and it is one line because no
+stored value changes shape.
+
+Bounded claim, stated once: the loader refuses an absent or placeholder
+instrument. It does not and cannot establish that the named instrument was run
+or that it failed. Nothing in this item makes that claim enforceable; it is a
+verify-owner duty and is written as one.
 
 ## Stage Report: ideation
 
 - DONE: Name the enforcement point for AC-4 (a declared-unchanged change is refused until it names an equivalence instrument seen to fail): loader-required field or prose-only bounded claim, and record whether a required loader field counts as a receipt under the non-goals.
-  `## Shape` § AC-4 enforcement point — `ContractError` in `resolve_work_item`, `kc-dev-flow/scripts/profile-contract-loader.py`; the non-goal ruling is that a field inside the existing `work_profile` receipt is not a new receipt, because `POC_FIELDS` and `RECOVERY_FIELDS` already carry conditionally-required scalars there.
+  `## Shape` § AC-4 enforcement point — `ContractError` in `resolve_work_item`, `kc-dev-flow/scripts/profile-contract-loader.py`, gated at the `validation` stage for the two evidence scalars and at `ideation` for the declaration; the non-goal ruling is that a field inside the existing `work_profile` receipt is not a new receipt, because `POC_FIELDS` and `RECOVERY_FIELDS` already carry conditionally-required scalars there.
 - DONE: Deliver the `where it touches` table and stop numbers against the delivery base, reconciled both ways with the journey, covering kernel.md, reverse-recovery-audit.md, the contract test, the minimal-stack ablation test, and the loader-served copies.
   `## Shape` § Where it touches — 13 files, `lines now` from `git show f9683a33:<path>`; reconciled both directions with three journey files named as unchanged and two table files named as outside the journey.
 - DONE: Record the reverse_recovery receipt for this brownfield change (need-axis rename, disproof_hook unification, removal grading) and decide multi_slice_required with falsifiable acceptance checks mapped to AC-1..AC-7.
@@ -480,15 +518,17 @@ carries those files, so every count was taken from `f9683a33`, not from disk.
 
 AC-4 lands as a loader-required field rather than prose because the testing
 obligation demands an observed refusal, and only `ContractError` produces a
-rejection to read; the loader half is bounded to presence and non-placeholder
-concreteness, with "the instrument was seen to fail" written as a verify-owner
-duty. A v4 schema bump was rejected — the v3 string appears in ten files and buys
-nothing a stage gate does not.
+rejection to read. The declaration is required at `ideation` and the two evidence
+scalars at `validation`, because AC-4 refuses at the verification boundary and
+"the instrument was observed to fail" cannot be anything but a promise before
+build has run. The loader half is bounded to presence and non-placeholder
+concreteness; "seen to fail" is a verify-owner duty. A v4 schema bump was
+rejected — the v3 string appears in ten files and buys nothing a stage gate does
+not. The Production recovery route needs no change: its exact-key regex matches
+only `recovery_*` and `review_risks`, verified by running the pattern against a
+fixture block carrying all four keys.
 
-Two things the Captain owns. The Production recovery route's exact key allowlist
-must expand for AC-4 to reach the most refactor-shaped case; if that ruling goes
-the other way, AC-4 leaves this item as a separate work item rather than becoming
-a second slice. Separately, the entity's `## Non-goals` bullets are truncated
-mid-sentence in the admitted body; the shape was written against the complete
-`scope_boundary` line in the work-profile receipt and the snapshot was not
+One thing the Captain owns: the entity's `## Non-goals` bullets are truncated
+mid-sentence in the admitted body. The shape was written against the complete
+`scope_boundary` line in the work-profile receipt, and the snapshot was not
 rewritten.
