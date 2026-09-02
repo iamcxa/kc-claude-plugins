@@ -386,6 +386,15 @@ approval, reduced Production evidence, or a generalized evaluation framework.
 
 - [Linear Project: kc-dev-flow slimming dogfood](https://linear.app/duckbase-co/project/kc-dev-flow-slimming-dogfood-448c59624fc2)
 
+### Sprint S9 — ship-flow glue POC
+
+Standalone POC group, no Planning Receipt. One disposable experiment proves
+whether cloud dispatch, pinned-SHA verification, and a Captain-gated Draft PR
+connect with existing components and a dispatch message only. Its `poc_outcome`
+returns to planning; plan-flow and ship-flow admissions wait on it.
+
+- [DEV-62](https://linear.app/duckbase-co/issue/DEV-62/poc-ship-flow-glue-on-one-issue-cloud-dispatch-pinned-sha-verify)
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine
