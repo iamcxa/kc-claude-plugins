@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:mavxcgkp974vpfe4wakx78mj:validation:attempt-1:revision-1",
+  "question": "Close DEV-62 POC with direction change: glue proven at PR #342, four ship-flow contract changes returned to planning?",
+  "artifacts": [
+    {
+      "id": "artifact:mavxcgkp974vpfe4wakx78mj:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6bb31529c8237c232f3eee594d03296e8f6f2e58/dev-62-ship-flow-glue-poc/evidence/close-review.md",
+      "rev": "sha256:28b07738c3402f77bbc2b9848210f7cb4f70b271589a50ff7e54f51c849778e6",
+      "mediaType": "text/markdown",
+      "summary": "poc_outcome change; candidate delivered as Draft PR #342; four glue defects recorded for plan-flow"
+    }
+  ]
+}

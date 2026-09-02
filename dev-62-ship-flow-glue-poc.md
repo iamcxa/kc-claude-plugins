@@ -1,6 +1,6 @@
 ---
 title: "POC: ship-flow glue on one Issue — cloud dispatch, pinned-SHA verify, Captain-gated Draft PR"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
@@ -40,6 +40,28 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:mavxcgkp974vpfe4wakx78mj:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:mavxcgkp974vpfe4wakx78mj-validation-1
+              briefing:
+                id: briefing:mavxcgkp974vpfe4wakx78mj:validation:attempt-1:revision-1
+                digest: sha256:e3b1e8d52900b6ba9c37eda8ed2adb61679c1b188ce3354a1c477ae3abcc2525
+                room-ref: ./dev-62-ship-flow-glue-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:mavxcgkp974vpfe4wakx78mj:validation:1
+                briefing: briefing:mavxcgkp974vpfe4wakx78mj:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-02T16:03:17.784049Z"
+                decision: approve
+                reason: 'POC outcome recorded as change: glue proven end to end (Draft PR #342 at the exact approved candidate), decision limit exceeded, four ship-flow contract changes returned to planning. Terminal close consumes the POC; PR #342 and #343 merge authority stays with the Captain.'
+                conn:
+                    quote: ok 核准
+                    source: Captain chat, this conversation, 2026-09-03, approving the DEV-50 delivery unit at base bda45e6b; the POC's accepted outcome was that exact delivery
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
