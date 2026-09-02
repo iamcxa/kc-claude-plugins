@@ -13,7 +13,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-45-load-kc-dev-flow-contracts
 issue:
-pr:
+pr: "#323"
 mod-block:
 id: 3fkmdwdvsfha8ektb2s5jz7d
 gates:
