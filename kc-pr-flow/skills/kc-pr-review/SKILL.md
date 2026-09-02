@@ -118,6 +118,90 @@ Merge the results into Step 5/6 before any APPROVE or clean COMMENT.
 
 This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
 
+### Step 2.1d: Optional trusted delta plan
+
+The delta fast path is default-off. It is advisory and read-only: it cannot post, skip human
+confirmation, or replace the existing initial review. Engage it only when
+`KC_PR_FLOW_DELTA_FAST_PATH=on` and the caller supplies one terminal event log, its S01 receipt,
+the matching canonical config file, and an isolated clean repository worktree.
+
+```bash
+PLAN_JSON=
+PLAN_INPUT_REPOSITORY="$PR_REPOSITORY"
+PLAN_INPUT_PR_NUMBER="$PR_NUMBER"
+PLAN_INPUT_BASE_SHA="$CURRENT_BASE_SHA"
+PLAN_INPUT_HEAD_SHA="$CURRENT_HEAD_SHA"
+PLAN_INPUT_CONFIG_HASH="$CONFIG_HASH"
+PLAN_INPUT_WORKTREE="$PWD"
+PLAN_INPUT_EVENTS=
+PLAN_INPUT_RECEIPT=
+PLAN_INPUT_CONFIG=
+
+if [ "${KC_PR_FLOW_DELTA_FAST_PATH:-off}" = on ] &&
+   [ -n "${PREDECESSOR_EVENTS-}" ] && [ -n "${DELTA_RECEIPT-}" ] &&
+   [ -n "${REVIEW_CONFIG_FILE-}" ] &&
+   . "${CLAUDE_PLUGIN_ROOT}/scripts/review-runtime.sh" &&
+   PLAN_INPUT_DIR="$(review_runtime_private_snapshot_dir)"; then
+  PLAN_INPUT_EVENTS="$PLAN_INPUT_DIR/events.jsonl"
+  PLAN_INPUT_RECEIPT="$PLAN_INPUT_DIR/receipt.json"
+  PLAN_INPUT_CONFIG="$PLAN_INPUT_DIR/config.json"
+  if review_runtime_snapshot_regular_file "$PREDECESSOR_EVENTS" "$PLAN_INPUT_EVENTS" \
+       'predecessor events' "${KC_PR_FLOW_MAX_EVENT_BYTES:-16777216}" &&
+     review_runtime_snapshot_regular_file "$DELTA_RECEIPT" "$PLAN_INPUT_RECEIPT" \
+       'delta receipt' "${KC_PR_FLOW_MAX_RECEIPT_BYTES:-16777216}" &&
+     review_runtime_snapshot_regular_file "$REVIEW_CONFIG_FILE" "$PLAN_INPUT_CONFIG" \
+       'review config' "${KC_PR_FLOW_MAX_CONFIG_BYTES:-1048576}"; then
+    PLAN_JSON="$(KC_PR_FLOW_DELTA_FAST_PATH=on \
+      bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" decide \
+        --repo "$PLAN_INPUT_REPOSITORY" --pr "$PLAN_INPUT_PR_NUMBER" \
+        --base "$PLAN_INPUT_BASE_SHA" --head "$PLAN_INPUT_HEAD_SHA" \
+        --config-hash "$PLAN_INPUT_CONFIG_HASH" --config-file "$PLAN_INPUT_CONFIG" \
+        --repo-worktree "$PLAN_INPUT_WORKTREE" --predecessor-events "$PLAN_INPUT_EVENTS" \
+        --delta-receipt "$PLAN_INPUT_RECEIPT")" || PLAN_JSON=
+  fi
+fi
+
+if [ -n "$PLAN_JSON" ]; then
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || PLAN_JSON=
+fi
+if [ -n "$PLAN_JSON" ] &&
+   ! review_plan_validate_decision "$PLAN_JSON" "$PLAN_INPUT_REPOSITORY" \
+     "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" "$PLAN_INPUT_HEAD_SHA" \
+     "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_EVENTS" "$PLAN_INPUT_RECEIPT" \
+     "$PLAN_INPUT_WORKTREE" "$PLAN_INPUT_CONFIG"; then
+  PLAN_JSON=
+fi
+case "$(jq -r '.mode // "initial"' <<<"${PLAN_JSON:-{}}" 2>/dev/null)" in
+  delta|resolve) ;;
+  *) PLAN_JSON= ;;
+esac
+
+review_plan_guard_event() {
+  local requested_event="$1"
+  [ -n "${PLAN_JSON-}" ] || return 0
+  . "${CLAUDE_PLUGIN_ROOT}/scripts/review-plan.sh" || return 3
+  review_plan_event_allowed "$PLAN_JSON" "$requested_event" \
+    "$PLAN_INPUT_REPOSITORY" "$PLAN_INPUT_PR_NUMBER" "$PLAN_INPUT_BASE_SHA" \
+    "$PLAN_INPUT_HEAD_SHA" "$PLAN_INPUT_CONFIG_HASH" "$PLAN_INPUT_EVENTS" \
+    "$PLAN_INPUT_RECEIPT" "$PLAN_INPUT_WORKTREE" "$PLAN_INPUT_CONFIG"
+}
+```
+
+Source `review-plan.sh` and call `review_plan_validate_decision` before reading any field.
+Invalid, missing, stale, non-ancestor, dirty, incomplete, uncertain, or unclassified input means
+`initial`; do the unchanged full review. A valid `resolve` reviews the exact returned range and
+rechecks inherited findings. A valid `delta` reviews that range with every returned required
+capability. Never infer a narrower range or lane set.
+
+Keep the validated canonical plan immutable for the invocation. Immediately before every existing
+event-authority seam—legacy presentation, typed presentation, human edit, confirmation,
+autonomous construction, and both interactive and autonomous pre-post checks—rerun
+`review_plan_validate_decision` from the frozen inputs and require byte equality with
+`PLAN_JSON`. Then enforce its `event_ceiling`: COMMENT allows COMMENT or REQUEST_CHANGES but
+never APPROVE; APPROVE allows the existing three events. Any rerun or equality failure refuses
+posting. Step 6c human confirmation and `review-post.sh` remain the only confirmation and network
+owners.
+
 ### Step 2.2: Optional kc-dev-flow handoff
 
 When the caller supplies an external handoff path and the installed
@@ -1599,6 +1683,7 @@ review_interactive_prepare_confirmation() {
   local decision decision_identity decision_refs evidence_refs rc
 
   if [ "$sampled_mode" != typed ]; then
+    if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$legacy_event" || return 3; fi # legacy-presentation
     jq -S -c -n --arg event "$legacy_event" \
       '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"legacy",
         confirmation_required:true,effective_event:$event,
@@ -1637,6 +1722,7 @@ review_interactive_prepare_confirmation() {
           return
         fi
       fi
+      if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$(jq -r '.effective_event' <<<"$decision")" || return 3; fi # typed-presentation
       jq -S -c -n --argjson decision "$decision" \
         --argjson identity "$expected_identity_json" \
         --argjson evidence "$evidence_json" '
@@ -1737,6 +1823,7 @@ review_interactive_apply_event_edit() {
     APPROVE | COMMENT | REQUEST_CHANGES) ;;
     *) return 3 ;;
   esac
+  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$requested_event" || return 3; fi # human-edit
   review_interactive_confirmation_valid "$confirmation_json" || return 3
   if [ "$(jq -r '.source' <<<"$confirmation_json")" = legacy ]; then
     jq -S -c --arg event "$requested_event" '.effective_event=$event' \
@@ -1754,6 +1841,7 @@ review_interactive_confirm_post() {
   local confirmation_state="$3"
   local gated
   [ "$confirmation_state" = confirmed ] || return 3
+  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$requested_event" || return 3; fi # confirmation
   gated="$(review_interactive_apply_event_edit \
     "$confirmation_json" "$requested_event")" || return 3
   jq -S -c -n --arg event "$requested_event" --argjson confirmation "$gated" \
@@ -1775,7 +1863,8 @@ review_interactive_post_gate_valid() {
     return 3
   fi
   confirmation="$(jq -S -c '.confirmation' <<<"$gate_json")" || return 3
-  review_interactive_confirmation_valid "$confirmation"
+  review_interactive_confirmation_valid "$confirmation" || return 3
+  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3; fi # interactive-pre-post
 }
 
 review_autonomous_post_gate_valid() {
@@ -1796,6 +1885,7 @@ review_autonomous_post_gate_valid() {
     (.head_sha | test("^[0-9a-f]{40}$")) and
     (.review_key | test("^[0-9a-f]{64}$"))
   ' >/dev/null 2>&1 || return 3
+  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$(jq -r '.effective_event' <<<"$gate_json")" || return 3; fi # autonomous-pre-post
 }
 
 review_autonomous_post_gate() {
@@ -1806,6 +1896,7 @@ review_autonomous_post_gate() {
   local review_key="${1:-}" head_sha="${2:-}" requested_event="${3:-}"
   local authorized_by="${4:-}"
   local gate
+  if declare -F review_plan_guard_event >/dev/null; then review_plan_guard_event "$requested_event" || return 3; fi # autonomous-construction
   gate="$(jq -S -c -n --arg review_key "$review_key" --arg head_sha "$head_sha" \
     --arg event "$requested_event" --arg by "$authorized_by" \
     '{schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:$by,
