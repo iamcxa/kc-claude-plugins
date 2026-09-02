@@ -15,6 +15,31 @@ issue: DEV-67
 pr:
 mod-block:
 id: t5nxcbfq1ynpff13kh3sdnga
+gates:
+    version: 1
+    records:
+        - id: gate:t5nxcbfq1ynpff13kh3sdnga:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:t5nxcbfq1ynpff13kh3sdnga-backlog-1
+              briefing:
+                id: briefing:t5nxcbfq1ynpff13kh3sdnga:backlog:attempt-1:revision-1
+                digest: sha256:faa74ff5ea2a9d60326880ac55f147251b405fd8a7993666480d429f86457d25
+                room-ref: ./dev-67-plan-receipt-packaged-ship-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t5nxcbfq1ynpff13kh3sdnga:backlog:1
+                briefing: briefing:t5nxcbfq1ynpff13kh3sdnga:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-02T16:34:33.791896Z"
+                decision: approve
+                reason: Captain admitted DEV-67 as a standalone poc-exploration item in sprint S9; POC route build -> prove; 60-minute limit carries its reason.
+                conn:
+                    quote: 如果沒其他問題要討論可以先做 PoC
+                    source: Captain chat, this conversation, 2026-09-03, after confirming the two-question POC scope and plan-flow backlog
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

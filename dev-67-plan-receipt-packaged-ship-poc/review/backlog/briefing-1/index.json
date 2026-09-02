@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t5nxcbfq1ynpff13kh3sdnga:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-67 as a standalone POC (poc-exploration, S9, 60-minute limit) and move it to implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:t5nxcbfq1ynpff13kh3sdnga:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9ab93ccf5efc7b225b807b56a59518d306ed10c6/dev-67-plan-receipt-packaged-ship-poc/review/backlog/admission.md",
+      "rev": "sha256:65199d7b9a81d4b2f50e9a7de978b5fbdb2812e3bc31d0211f3c230559a73ade",
+      "mediaType": "text/markdown",
+      "summary": "Two-question POC: plan receipt sufficiency and packaged ship glue on DEV-64/65/66."
+    }
+  ]
+}
