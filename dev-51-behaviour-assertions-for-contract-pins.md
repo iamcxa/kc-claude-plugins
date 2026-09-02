@@ -64,6 +64,10 @@ gates:
                 id: briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-1:revision-1
                 digest: sha256:48e8738f6cb964ea57f5fd311a8ca40420641d96c5ff217a2270abbfda6e13a8
                 room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-02T16:25:34.919867Z"
+                reason: Candidate 99a0c826 conflicts with origin/main (#340) in scripts/kc-dev-flow-contract-test.py; delivery readiness FAILED; a merge is a code-changing repair that changes the exact revision.
 ---
 
 ## The problem
