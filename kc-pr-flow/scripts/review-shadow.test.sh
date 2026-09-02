@@ -2,16 +2,13 @@
 # Contract tests for the closed kc-pr-review production shadow collector.
 # shellcheck disable=SC2016 # Assertions intentionally match literal skill/runtime text.
 # shellcheck disable=SC2317 # The dependency probe invokes this dynamic command override indirectly.
-
 set -uo pipefail
-
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
 SKILL="${KC_PR_FLOW_SHADOW_TEST_SKILL:-$HERE/../skills/kc-pr-review/SKILL.md}"
 SHADOW_WORKFLOW="$HERE/../../.github/workflows/review-shadow-tests.yml"
 TEST_ROOT="$(mktemp -d)"
 trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
-
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
@@ -28,7 +25,6 @@ if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
 fi
-
 PASS=0
 FAIL=0
 pass() { PASS=$((PASS + 1)); }
@@ -132,7 +128,8 @@ done
 exists=false; readable=false; [ ! -f "$observation_file" ] || exists=true; [ ! -r "$observation_file" ] || readable=true
 input_sha="$(shasum -a 256 "$observation_file" | awk '{print $1}')"
 mode() { case "$(uname -s)" in Linux) stat -c '%a' "$1" ;; Darwin|FreeBSD|NetBSD|OpenBSD) stat -f '%Lp' "$1" ;; *) return 1 ;; esac; }
-printf 'read\t%s\t%s\t%s\t%s\t%s\t%s\n' "$exists" "$readable" "$observation_file" "$input_sha" "$(mode "$(dirname "$observation_file")")" "$(mode "$observation_file")" >"$SHADOW_TEST_MOCK_LOG"
+dir_mode="$(mode "$(dirname "$observation_file")")" && file_mode="$(mode "$observation_file")" || exit 1
+printf 'read\t%s\t%s\t%s\t%s\t%s\t%s\n' "$exists" "$readable" "$observation_file" "$input_sha" "$dir_mode" "$file_mode" >"$SHADOW_TEST_MOCK_LOG"
 input_mutated=false; printf '\nmutation-attempt\n' >>"$observation_file" && input_mutated=true
 SHADOW_OBSERVATION_FILE=/tmp/forged; SHADOW_OBSERVATION_READY=true
 printf 'mutate\t%s\t%s\t%s\n' "$input_mutated" "$SHADOW_OBSERVATION_FILE" "$SHADOW_OBSERVATION_READY" >>"$SHADOW_TEST_MOCK_LOG"
@@ -149,6 +146,9 @@ MOCK
   prepared_file="$(sed -n '1p' <<<"$state")"; prepared_sha="$(sed -n '3p' <<<"$state")"
   assert_eq 'fast runtime reads exact 0700/0600 private input and immutable bytes' "$(printf 'read\ttrue\ttrue\t%s\t%s\t700\t600' "$prepared_file" "$prepared_sha")" "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG")"
   assert_eq 'fast runtime attempts input and caller mutation' "$(printf 'mutate\ttrue\t/tmp/forged\ttrue')" "$(sed -n '2p' "$SHADOW_TEST_MOCK_LOG")"; assert_eq 'fast cleanup removes private observation file' false "$(sed -n '4p' <<<"$state")"; assert_eq 'fast cleanup removes private observation directory' false "$(sed -n '5p' <<<"$state")"; assert_eq 'fast cleanup resets private handles' '|' "$(sed -n '6p' <<<"$state")"; assert_eq 'fast cleanup resets readiness' false "$(sed -n '7p' <<<"$state")"
+  mock_os=Unknown; SHADOW_TEST_MOCK_LOG="$TEST_ROOT/unknown-shadow-runtime.log"; unknown_input="$TEST_ROOT/unknown-input.json"
+  printf '{}\n' >"$unknown_input"; "$mock_runtime" --observation-file "$unknown_input" >/dev/null; assert_eq 'unknown OS aborts before the mock log' 1 "$?"
+  assert_eq 'unknown OS writes no mock log' false "$([ -e "$SHADOW_TEST_MOCK_LOG" ] && printf true || printf false)"
   unset -f uname stat; state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-native" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
   assert_eq 'fast runtime native mode path remains exact' '700\t600' "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG" | awk -F '\t' '{print $(NF-1) "\\t" $NF}')"
   if grep -F 'rm -f "$SHADOW_OBSERVATION_FILE"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && grep -F 'rmdir "$SHADOW_TMP_DIR"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && ! grep -F 'rm -rf' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null; then pass; else fail 'fast cleanup requires exact file unlink and empty-directory removal without recursion'; fi
