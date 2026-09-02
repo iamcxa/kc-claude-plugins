@@ -37,7 +37,7 @@ def write_fixture(root: Path) -> None:
         "production": ("shape", "build", "verify"),
     }.items():
         profile_root = root / "profiles" / profile
-        profile_root.mkdir(parents=True)
+        profile_root.mkdir(parents=True, exist_ok=True)
         (profile_root / "base.md").write_text(
             f"BASE-{profile}\n", encoding="utf-8"
         )
@@ -119,7 +119,18 @@ def write_work_item(
 
 
 with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary:
-    root = Path(temporary)
+    package_root = Path(temporary) / "kc-dev-flow"
+    shutil.copytree(HERE.parent, package_root)
+    LOADER = package_root / "scripts/profile-contract-loader.py"
+    fixture_loader = LOADER.read_text(encoding="utf-8")
+    fixture_loader = fixture_loader.replace(
+        '    parser.add_argument("--work-item", type=Path, required=True)\n',
+        '    parser.add_argument("--contracts-root", type=Path, help=argparse.SUPPRESS)\n'
+        '    parser.add_argument("--work-item", type=Path, required=True)\n',
+        1,
+    )
+    LOADER.write_text(fixture_loader, encoding="utf-8")
+    root = package_root / "references"
     write_fixture(root)
 
     canonical_brief = """
@@ -898,12 +909,12 @@ Stop when the planning tuple cannot express the work.
         capture_output=True,
     )
     require(
-        rejected.returncode == 2 and "cannot load selected contract" in rejected.stderr,
+        rejected.returncode == 2 and "installed resource missing" in rejected.stderr,
         "missing selected stage did not fail closed",
     )
     missing.write_text("STAGE-production-verify\n", encoding="utf-8")
 
-    # A stage that declares a conditional reference the adopter never vendored
+    # A stage that declares a conditional reference absent from the package
     # must fail at load, not silently drop the capability the stage declares.
     declaring_stage = root / "profiles" / "poc-exploration" / "prove.md"
     declaring_stage.write_text(
@@ -933,8 +944,8 @@ Stop when the planning tuple cannot express the work.
     require(
         rejected.returncode == 2
         and "never-vendored.md" in rejected.stderr
-        and "not vendored" in rejected.stderr,
-        "unvendored conditional reference did not fail closed",
+        and "not installed" in rejected.stderr,
+        "missing installed conditional reference did not fail closed",
     )
 
     # The same stage passes once the reference exists, so the check gates on
@@ -1263,6 +1274,231 @@ Stop when the planning tuple cannot express the work.
         header_document.get("declared_receipts") == ["text_format_receipt"],
         "text-format default output's header line did not carry "
         f"declared_receipts: {header_document.get('declared_receipts')!r}",
+    )
+
+    # Installed-package journey: arbitrary roots, no host discovery, durable
+    # active-stage equality, compatible boundary upgrade, and refit refusal.
+    local_profile = root / "adopter-README.md"
+    local_mod = root / "local-pr-merge.md"
+    local_mod.write_text("LOCAL-MOD-SENTINEL\n", encoding="utf-8")
+    local_profile.write_text(
+        """---
+workflow: fixture
+---
+
+<!-- kc-dev-flow-static-local-profile:start -->
+## Local Profile
+
+| Role | Bound local authority |
+|---|---|
+| Project context | PRODUCT.md |
+| Work items | state/*.md |
+| Execution state | state |
+| Profile receipt | exact work item |
+| Installed contract interface | `kc-dev-flow-local-profile/v1` |
+| Local mods | local-pr-merge.md |
+
+<!-- kc-dev-flow-static-local-profile:end -->
+
+README-POLICY-SENTINEL
+""",
+        encoding="utf-8",
+    )
+    state = root / "state"
+    state.mkdir()
+    state_sentinel = state / "unrelated-state.md"
+    state_sentinel.write_text("STATE-SENTINEL\n", encoding="utf-8")
+    pin_path = state / "active-stage-pin.json"
+    pin_item = write_work_item(
+        root, "production", "ideation", "installed-stage-pin"
+    )
+    preserved = {
+        "readme": local_profile.read_bytes(),
+        "mod": (local_mod.read_bytes(), local_mod.stat().st_mode & 0o777),
+        "state": state_sentinel.read_bytes(),
+    }
+
+    def installed_run(
+        loader_path: Path,
+        item: Path,
+        *,
+        pin: Path | None = None,
+        attempt: str | None = None,
+        write_pin: bool = False,
+        accept_refit: bool = False,
+        profile_path: Path = local_profile,
+    ) -> subprocess.CompletedProcess[str]:
+        command = [
+            sys.executable,
+            str(loader_path),
+            "--work-item",
+            str(item),
+            "--local-profile",
+            str(profile_path),
+            "--format",
+            "json",
+        ]
+        if pin is not None:
+            command.extend(["--stage-pin", str(pin)])
+        if attempt is not None:
+            command.extend(["--stage-attempt", attempt])
+        if write_pin:
+            command.append("--write-stage-pin")
+        if accept_refit:
+            command.append("--accept-local-profile-refit")
+        env = os.environ.copy()
+        for name in (
+            "CLAUDECODE",
+            "CODEX_THREAD_ID",
+            "PI_CODING_AGENT_DIR",
+            "CONDUCTOR_WORKSPACE_ID",
+            "HERMES_HOME",
+        ):
+            env.pop(name, None)
+        return subprocess.run(command, text=True, capture_output=True, env=env)
+
+    first = installed_run(
+        LOADER, pin_item, pin=pin_path, attempt="ideation-1", write_pin=True
+    )
+    require(first.returncode == 0, first.stderr)
+    first_document = json.loads(first.stdout)
+    first_pin = json.loads(pin_path.read_text(encoding="utf-8"))
+    require(
+        first_document["schema"] == "kc-dev-flow-profile-contract/v3"
+        and first_document["plugin_version"] == "4.0.1"
+        and len(first_document["contract_digest"]) == 64
+        and first_document["stage_pin"] == first_pin,
+        f"installed first-stage binding is incomplete: {first_document}",
+    )
+
+    arbitrary_loaders: list[Path] = []
+    for index in range(3):
+        arbitrary_root = Path(temporary) / f"arbitrary-install-{index}" / "bundle"
+        shutil.copytree(package_root, arbitrary_root)
+        arbitrary_loaders.append(arbitrary_root / "scripts/profile-contract-loader.py")
+    for installed_loader in arbitrary_loaders:
+        for profile, stages in expected_routes.items():
+            for workflow_stage in stages:
+                item = write_work_item(
+                    root,
+                    profile,
+                    workflow_stage,
+                    f"arbitrary-{installed_loader.parents[1].parent.name}-{profile}-{workflow_stage}",
+                )
+                loaded = installed_run(installed_loader, item)
+                require(
+                    loaded.returncode == 0
+                    and json.loads(loaded.stdout)["profile"] == profile,
+                    f"arbitrary installed route failed: {loaded.stderr}",
+                )
+
+    compatible_root = Path(temporary) / "compatible-upgrade" / "kc-dev-flow"
+    shutil.copytree(package_root, compatible_root)
+    compatible_metadata = json.loads(
+        (compatible_root / "plugin.json").read_text(encoding="utf-8")
+    )
+    compatible_metadata["version"] = "4.0.2"
+    (compatible_root / "plugin.json").write_text(
+        json.dumps(compatible_metadata, indent=2) + "\n", encoding="utf-8"
+    )
+    with (compatible_root / "references/kernel.md").open("a", encoding="utf-8") as kernel:
+        kernel.write("COMPATIBLE-UPGRADE-MARKER\n")
+    compatible_loader = compatible_root / "scripts/profile-contract-loader.py"
+    active_upgrade = installed_run(
+        compatible_loader, pin_item, pin=pin_path, attempt="ideation-1"
+    )
+    require(
+        active_upgrade.returncode == 2
+        and not active_upgrade.stdout
+        and "ACTIVE_STAGE_PIN_MISMATCH" in active_upgrade.stderr
+        and json.loads(pin_path.read_text(encoding="utf-8")) == first_pin,
+        "active stage accepted changed installed version or bytes",
+    )
+
+    pin_item.write_text(
+        pin_item.read_text(encoding="utf-8").replace(
+            "status: ideation", "status: implementation", 1
+        ),
+        encoding="utf-8",
+    )
+    boundary_upgrade = installed_run(
+        compatible_loader,
+        pin_item,
+        pin=pin_path,
+        attempt="implementation-1",
+        write_pin=True,
+    )
+    require(boundary_upgrade.returncode == 0, boundary_upgrade.stderr)
+    boundary_document = json.loads(boundary_upgrade.stdout)
+    require(
+        boundary_document["plugin_version"] == "4.0.2"
+        and boundary_document["contract_digest"] != first_pin["contract_digest"]
+        and json.loads(pin_path.read_text(encoding="utf-8"))["workflow_stage"]
+        == "implementation",
+        "compatible next-stage upgrade did not bind the new package",
+    )
+
+    incompatible_root = Path(temporary) / "incompatible-upgrade" / "kc-dev-flow"
+    shutil.copytree(compatible_root, incompatible_root)
+    incompatible_manifest_path = incompatible_root / "contract-manifest.json"
+    incompatible_manifest = json.loads(
+        incompatible_manifest_path.read_text(encoding="utf-8")
+    )
+    incompatible_manifest["local_profile_interface"]["schema"] = (
+        "kc-dev-flow-local-profile/v2"
+    )
+    incompatible_manifest_path.write_text(
+        json.dumps(incompatible_manifest, indent=2) + "\n", encoding="utf-8"
+    )
+    pin_before_refit = pin_path.read_bytes()
+    pin_item.write_text(
+        pin_item.read_text(encoding="utf-8").replace(
+            "status: implementation", "status: validation", 1
+        ),
+        encoding="utf-8",
+    )
+    incompatible = installed_run(
+        incompatible_root / "scripts/profile-contract-loader.py",
+        pin_item,
+        pin=pin_path,
+        attempt="validation-1",
+        write_pin=True,
+    )
+    require(
+        incompatible.returncode == 2
+        and not incompatible.stdout
+        and "LOCAL_PROFILE_REFIT_REQUIRED" in incompatible.stderr
+        and local_profile.as_posix() in incompatible.stderr
+        and "local-pr-merge.md" in incompatible.stderr
+        and pin_path.read_bytes() == pin_before_refit,
+        f"incompatible boundary did not fail closed: {incompatible.stderr}",
+    )
+    require(
+        local_profile.read_bytes() == preserved["readme"]
+        and (local_mod.read_bytes(), local_mod.stat().st_mode & 0o777)
+        == preserved["mod"]
+        and state_sentinel.read_bytes() == preserved["state"],
+        "installed loading changed README policy, local-mod bytes/mode, or unrelated state",
+    )
+    local_profile.write_text(
+        local_profile.read_text(encoding="utf-8").replace(
+            "kc-dev-flow-local-profile/v1", "kc-dev-flow-local-profile/v2", 1
+        ),
+        encoding="utf-8",
+    )
+    accepted_refit = installed_run(
+        incompatible_root / "scripts/profile-contract-loader.py",
+        pin_item,
+        pin=pin_path,
+        attempt="validation-1",
+        write_pin=True,
+        accept_refit=True,
+    )
+    require(
+        accepted_refit.returncode == 0
+        and json.loads(accepted_refit.stdout)["local_profile_interface"]
+        == "kc-dev-flow-local-profile/v2",
+        f"accepted Local Profile refit did not open the next boundary: {accepted_refit.stderr}",
     )
 
 # --- Live Spacedock route mechanism: the production release-authorization

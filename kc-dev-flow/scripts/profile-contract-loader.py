@@ -6,8 +6,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -55,10 +57,259 @@ DEVELOPMENT_BRIEF_SECTIONS = (
     "Acceptance criteria",
     "Route-back conditions",
 )
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+MANIFEST_PATH = PACKAGE_ROOT / "contract-manifest.json"
+MANIFEST_SCHEMA = "kc-dev-flow-contract-manifest/v1"
+STAGE_PIN_SCHEMA = "kc-dev-flow-stage-pin/v1"
+LOCAL_PROFILE_START = "<!-- kc-dev-flow-static-local-profile:start -->"
+LOCAL_PROFILE_END = "<!-- kc-dev-flow-static-local-profile:end -->"
 
 
 class ContractError(RuntimeError):
     """A selected route cannot be loaded safely."""
+
+
+def _json_object(raw: bytes, label: str) -> dict[str, object]:
+    """Decode one JSON object while refusing duplicate keys."""
+
+    def unique_pairs(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ContractError(f"{label} contains duplicate key {key!r}")
+            result[key] = value
+        return result
+
+    try:
+        value = json.loads(raw, object_pairs_hook=unique_pairs)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ContractError(f"cannot parse {label}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise ContractError(f"{label} must be one JSON object")
+    return value
+
+
+def load_installed_package() -> dict[str, object]:
+    """Validate the package beside this loader and bind its declared bytes."""
+    try:
+        manifest_raw = MANIFEST_PATH.read_bytes()
+        package_raw = (PACKAGE_ROOT / "plugin.json").read_bytes()
+    except OSError as exc:
+        raise ContractError(f"installed package metadata unavailable: {exc}") from exc
+    manifest = _json_object(manifest_raw, "installed contract manifest")
+    package = _json_object(package_raw, "installed plugin metadata")
+    if manifest.get("schema") != MANIFEST_SCHEMA:
+        raise ContractError("installed contract manifest schema is unsupported")
+    if package.get("name") != "kc-dev-flow":
+        raise ContractError("installed plugin metadata does not name kc-dev-flow")
+    version = package.get("version")
+    if not isinstance(version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+        raise ContractError("installed plugin version is invalid")
+    contract_interface = manifest.get("contract_interface")
+    local_interface = manifest.get("local_profile_interface")
+    resources = manifest.get("resources")
+    if contract_interface != "kc-dev-flow-profile-contract/v3":
+        raise ContractError("installed contract interface is unsupported")
+    if not isinstance(local_interface, dict) or not isinstance(
+        local_interface.get("schema"), str
+    ):
+        raise ContractError("installed local-profile interface is invalid")
+    required_bindings = local_interface.get("required_bindings")
+    if (
+        not isinstance(required_bindings, list)
+        or not required_bindings
+        or any(not isinstance(item, str) or not item for item in required_bindings)
+        or len(required_bindings) != len(set(required_bindings))
+    ):
+        raise ContractError("installed local-profile bindings are invalid")
+    if (
+        not isinstance(resources, list)
+        or not resources
+        or any(not isinstance(item, str) or not item for item in resources)
+        or len(resources) != len(set(resources))
+    ):
+        raise ContractError("installed resource inventory is invalid")
+
+    digest = hashlib.sha256()
+    digest.update(b"manifest\0")
+    digest.update(manifest_raw)
+    resource_hashes: list[dict[str, object]] = []
+    for declared in resources:
+        relative = Path(declared)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ContractError(f"installed resource path escapes package: {declared!r}")
+        path = (PACKAGE_ROOT / relative).resolve()
+        if not path.is_relative_to(PACKAGE_ROOT) or not path.is_file():
+            raise ContractError(f"installed resource missing: {declared}")
+        try:
+            raw = path.read_bytes()
+        except OSError as exc:
+            raise ContractError(f"installed resource unreadable: {declared}: {exc}") from exc
+        digest.update(b"resource\0")
+        digest.update(declared.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(raw)
+        resource_hashes.append(
+            {
+                "path": declared,
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "bytes": len(raw),
+            }
+        )
+    return {
+        "version": version,
+        "contract_interface": contract_interface,
+        "local_profile_interface": local_interface,
+        "contract_digest": digest.hexdigest(),
+        "resources": resource_hashes,
+    }
+
+
+def read_local_profile(
+    path: Path, interface: dict[str, object]
+) -> dict[str, object]:
+    """Read only the marked Local Profile and validate its machine binding."""
+    path = path.expanduser().resolve()
+    try:
+        raw = path.read_bytes()
+        text = raw.decode("utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ContractError(f"cannot read Local Profile {path}: {exc}") from exc
+    if text.count(LOCAL_PROFILE_START) != 1 or text.count(LOCAL_PROFILE_END) != 1:
+        raise ContractError("Local Profile must contain one ordered marker pair")
+    start = text.index(LOCAL_PROFILE_START) + len(LOCAL_PROFILE_START)
+    end = text.index(LOCAL_PROFILE_END)
+    if start >= end:
+        raise ContractError("Local Profile markers are out of order")
+    block = text[start:end].lstrip("\n")
+    if not block.startswith("## Local Profile\n"):
+        raise ContractError("Local Profile heading must immediately follow its start marker")
+    rows: dict[str, str] = {}
+    for line in block.splitlines():
+        match = re.fullmatch(r"\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|", line)
+        if not match or match.group(1) in {"Role", "---"}:
+            continue
+        name, value = match.group(1).strip(), match.group(2).strip()
+        if name in rows:
+            raise ContractError(f"Local Profile duplicates binding {name!r}")
+        rows[name] = value
+    required = interface["required_bindings"]
+    missing = [name for name in required if name not in rows]
+    if missing:
+        raise ContractError("Local Profile is missing bindings: " + ", ".join(missing))
+    expected = str(interface["schema"])
+    if rows["Installed contract interface"].strip("`") != expected:
+        raise ContractError(
+            f"LOCAL_PROFILE_REFIT_REQUIRED: {path} Installed contract interface "
+            f"must be {expected}; review Local mods {rows.get('Local mods', 'none')}"
+        )
+    return {
+        "path": path.as_posix(),
+        "sha256": hashlib.sha256(block.encode("utf-8")).hexdigest(),
+        "interface": expected,
+        "local_mods": rows.get("Local mods", "none"),
+    }
+
+
+def read_stage_pin(path: Path) -> dict[str, object] | None:
+    path = path.expanduser().resolve()
+    if not path.exists():
+        return None
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise ContractError(f"cannot read stage pin {path}: {exc}") from exc
+    pin = _json_object(raw, "stage pin")
+    if pin.get("schema") != STAGE_PIN_SCHEMA:
+        raise ContractError("stage pin schema is unsupported")
+    return pin
+
+
+def bind_stage_pin(
+    contract: dict[str, object],
+    package: dict[str, object],
+    local_profile: dict[str, object],
+    attempt: str,
+    previous: dict[str, object] | None,
+    *,
+    accept_local_profile_refit: bool = False,
+) -> dict[str, object]:
+    if not attempt or len(attempt.encode("utf-8")) > 160:
+        raise ContractError("stage attempt must be a non-empty bounded identifier")
+    current_stage = str(contract["workflow_stage"])
+    interface = str(package["local_profile_interface"]["schema"])
+    if previous is not None and previous.get("workflow_stage") == current_stage:
+        exact = {
+            "attempt": attempt,
+            "plugin_version": package["version"],
+            "contract_digest": package["contract_digest"],
+            "work_item_sha256": contract["work_item_sha256"],
+            "local_profile_interface": interface,
+        }
+        if any(previous.get(key) != value for key, value in exact.items()):
+            raise ContractError(
+                "ACTIVE_STAGE_PIN_MISMATCH: restore the pinned plugin version and bytes"
+            )
+        return previous
+    if previous is not None:
+        if previous.get("next_workflow_stage") != current_stage:
+            raise ContractError(
+                "STAGE_PIN_TRANSITION_MISMATCH: current stage is not the pinned next stage"
+            )
+        if previous.get("work_item") != contract["work_item"]:
+            raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item identity changed")
+        if (
+            previous.get("local_profile_interface") != interface
+            and not accept_local_profile_refit
+        ):
+            raise ContractError(
+                "LOCAL_PROFILE_REFIT_REQUIRED: "
+                f"{local_profile['path']} Installed contract interface and declared "
+                f"Local mods {local_profile['local_mods']} require review before dispatch"
+            )
+    return {
+        "schema": STAGE_PIN_SCHEMA,
+        "work_item": contract["work_item"],
+        "work_item_sha256": contract["work_item_sha256"],
+        "profile": contract["profile"],
+        "workflow_stage": current_stage,
+        "logical_stage": contract["logical_stage"],
+        "next_workflow_stage": contract["next_workflow_stage"],
+        "attempt": attempt,
+        "plugin_version": package["version"],
+        "contract_digest": package["contract_digest"],
+        "local_profile_interface": interface,
+        "local_profile_sha256": local_profile["sha256"],
+    }
+
+
+def write_stage_pin(path: Path, pin: dict[str, object]) -> None:
+    path = path.expanduser().resolve()
+    if not path.parent.is_dir():
+        raise ContractError(f"stage pin parent does not exist: {path.parent}")
+    raw = (json.dumps(pin, sort_keys=True, separators=(",", ":")) + "\n").encode(
+        "utf-8"
+    )
+    temporary_name: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", delete=False
+        ) as temporary:
+            temporary_name = temporary.name
+            temporary.write(raw)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        os.replace(temporary_name, path)
+        if path.read_bytes() != raw:
+            raise ContractError(f"stage pin readback failed: {path}")
+    except OSError as exc:
+        raise ContractError(f"cannot write stage pin {path}: {exc}") from exc
+    finally:
+        if temporary_name is not None:
+            try:
+                Path(temporary_name).unlink(missing_ok=True)
+            except OSError:
+                pass
 
 
 def _one_field(text: str, pattern: str, label: str) -> str:
@@ -329,7 +580,7 @@ CONDITIONAL_SCHEMA = "kc-dev-flow-conditional-references/v1"
 def check_conditional_references(
     root: Path, contract_path: Path, text: str
 ) -> list[str]:
-    """Refuse a stage contract that names a reference the adopter has not vendored,
+    """Refuse a stage contract that names a reference absent from the package,
     and return this contract's own declared non-null receipt names.
 
     The reference itself stays unread until its trigger fires; only its presence
@@ -337,7 +588,7 @@ def check_conditional_references(
     dropping the capability the stage declares. Presence alone is not enough:
     the resolved target must stay inside the contracts root, so an absolute
     path, a `..` escape, or a symlink out of the tree cannot satisfy the check
-    with a file the adopter never vendored.
+    with a file outside the selected installed package.
 
     Bounded guarantee on the returned receipt names: this surfaces which
     receipt names this contract's own `kc-dev-flow-conditional-references/v1`
@@ -384,7 +635,7 @@ def check_conditional_references(
             if not target.is_file():
                 raise ContractError(
                     f"{contract_path.name} declares conditional reference "
-                    f"{declared_path!r}, which is not vendored at {target}"
+                    f"{declared_path!r}, which is not installed at {target}"
                 )
             receipt = entry.get("receipt")
             if isinstance(receipt, str):
@@ -483,6 +734,70 @@ def load_contracts(
     return result
 
 
+def load_installed_contracts(
+    work_item: Path,
+    *,
+    validate_admission: bool = False,
+    local_profile_path: Path | None = None,
+    stage_pin_path: Path | None = None,
+    stage_attempt: str | None = None,
+    persist_stage_pin: bool = False,
+    accept_local_profile_refit: bool = False,
+) -> dict[str, object]:
+    """Load contracts from this installed package and optionally bind a stage pin."""
+    previous = read_stage_pin(stage_pin_path) if stage_pin_path is not None else None
+    try:
+        package = load_installed_package()
+    except ContractError as exc:
+        if previous is not None:
+            try:
+                receipt = resolve_work_item(work_item)
+            except ContractError:
+                raise exc
+            if previous.get("workflow_stage") == receipt.get("workflow_stage"):
+                raise ContractError(f"ACTIVE_STAGE_PIN_MISMATCH: {exc}") from exc
+        raise
+    contract = load_contracts(
+        PACKAGE_ROOT / "references",
+        work_item,
+        validate_admission=validate_admission,
+    )
+    contract.update(
+        {
+            "schema": package["contract_interface"],
+            "plugin_version": package["version"],
+            "contract_digest": package["contract_digest"],
+            "local_profile_interface": package["local_profile_interface"]["schema"],
+        }
+    )
+    if local_profile_path is None:
+        if stage_pin_path is not None or stage_attempt is not None or persist_stage_pin:
+            raise ContractError("stage pinning requires --local-profile")
+        return contract
+    local_profile = read_local_profile(
+        local_profile_path, package["local_profile_interface"]
+    )
+    contract["local_profile"] = local_profile
+    if stage_pin_path is None and stage_attempt is None and not persist_stage_pin:
+        return contract
+    if stage_pin_path is None or stage_attempt is None:
+        raise ContractError("stage pinning requires --stage-pin and --stage-attempt")
+    pin = bind_stage_pin(
+        contract,
+        package,
+        local_profile,
+        stage_attempt,
+        previous,
+        accept_local_profile_refit=accept_local_profile_refit,
+    )
+    contract["stage_pin"] = pin
+    if persist_stage_pin:
+        write_stage_pin(stage_pin_path, pin)
+        if read_stage_pin(stage_pin_path) != pin:
+            raise ContractError(f"stage pin verification failed: {stage_pin_path}")
+    return contract
+
+
 def render_text(contract: dict[str, object]) -> str:
     header = {
         key: contract[key]
@@ -499,6 +814,11 @@ def render_text(contract: dict[str, object]) -> str:
         )
     }
     for key in (
+        "plugin_version",
+        "contract_digest",
+        "local_profile_interface",
+        "local_profile",
+        "stage_pin",
         "skip_to_workflow_stage",
         "review_risks",
         "implementation_exit_observation_declared",
@@ -521,8 +841,12 @@ def render_text(contract: dict[str, object]) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--contracts-root", type=Path, required=True)
     parser.add_argument("--work-item", type=Path, required=True)
+    parser.add_argument("--local-profile", type=Path)
+    parser.add_argument("--stage-pin", type=Path)
+    parser.add_argument("--stage-attempt")
+    parser.add_argument("--write-stage-pin", action="store_true")
+    parser.add_argument("--accept-local-profile-refit", action="store_true")
     parser.add_argument("--format", choices=("text", "json"), default="text")
     parser.add_argument("--validate-admission", action="store_true")
     return parser.parse_args()
@@ -531,10 +855,14 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
-        contract = load_contracts(
-            args.contracts_root,
+        contract = load_installed_contracts(
             args.work_item,
             validate_admission=args.validate_admission,
+            local_profile_path=args.local_profile,
+            stage_pin_path=args.stage_pin,
+            stage_attempt=args.stage_attempt,
+            persist_stage_pin=args.write_stage_pin,
+            accept_local_profile_refit=args.accept_local_profile_refit,
         )
     except ContractError as exc:
         print(f"profile contract: {exc}", file=sys.stderr)

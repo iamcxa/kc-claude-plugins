@@ -18,31 +18,41 @@ built, and verified.
 
 Continuation resolves authority and profile before loading workflow policy. It
 reads the workflow's small Local Profile, the exact work item, and its committed
-profile receipt. A deterministic repository-local loader then emits three
-policy artifacts: shared core, selected profile base, and selected current
-stage. Its explicit admission mode first validates one canonical `AC-N`
+profile receipt. The activated skill anchors a deterministic installed loader;
+its package manifest binds plugin version, contract digest, Local Profile
+interface, and exact canonical resources. The loader emits three policy
+artifacts: shared core, selected profile base, and selected current stage. Its
+explicit admission mode first validates one canonical `AC-N`
 Development Brief and a complete-or-absent Planning Receipt for new Pilot or
 Production work; default loading leaves already-admitted headings unchanged.
 The repository-local provider guard owns workspace authentication, current
 read, exact snapshot reconciliation, and success-only dispatch-envelope
-emission without creating execution state. The selected build contract contains that profile's typed exit
+emission without creating execution state; it receives the installed loader
+anchor for the invocation and uses its sibling comparator. The selected build contract contains that profile's typed exit
 observation. A selected stage may also contain a typed conditional-reference
 descriptor; its referenced file remains unread unless the named trigger is
 true. The loader rejects a stage outside the selected route. It takes and
 hash-binds the exact committed work item, so profile is item-local rather than a
-project-global switch; concurrent items may follow different routes safely.
+project-global switch; concurrent items may follow different routes safely. One
+state-owned stage pin binds the active attempt to its starting plugin version,
+contract digest, work-item hash, and Local Profile interface. Same-stage drift
+fails closed; a compatible installed upgrade takes effect only at the next
+stage boundary, while an incompatible interface stops before pin write or
+dispatch for an explicit README/local-mod refit.
 
 One superset Spacedock graph serves all three routes. The loading boundary is:
 
 ```mermaid
 flowchart LR
-    W["Exact work item<br/>status + profile receipt"] --> L[Profile loader]
-    K[Shared kernel] --> L
-    P["Selected profile<br/>base + current stage"] --> L
+    W["Exact work item<br/>status + profile receipt"] --> L[Installed profile loader]
+    M["Package manifest<br/>version + digest + interface"] --> L
+    K["Installed shared kernel"] --> L
+    P["Installed selected profile<br/>base + current stage"] --> L
+    S["State-owned stage pin<br/>attempt + version + digest"] <--> L
     L --> C["Active policy<br/>core + base + stage"]
     C -. "when stage is build" .-> X["Implementation exit<br/>typed observation"]
     C -. "typed trigger true" .-> R["Triggered references<br/>and bounded receipts"]
-    D["PR delivery event"] -.-> M["Spacedock pr-merge<br/>runtime mod"]
+    D["PR delivery event"] -.-> RM["Spacedock pr-merge<br/>runtime mod"]
 ```
 
 POC build may trigger reverse recovery for a proposed brownfield capability

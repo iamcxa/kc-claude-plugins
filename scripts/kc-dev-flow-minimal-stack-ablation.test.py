@@ -16,11 +16,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GATE = Path("scripts/kc-dev-flow-multi-profile-gate.py")
 LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
-ADOPTED_LOADER = Path("docs/dev/_mods/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
 RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
 RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
-ADOPTED_RECONCILE = Path("scripts/kc-dev-flow/engage-reconcile.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
 LINEAR_ADMISSION = Path("scripts/kc-dev-flow/linear-admission.py")
 
@@ -55,7 +53,6 @@ def copy_repository_fixture(destination: Path) -> None:
     }
     # The runner must be able to prove itself before its first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
-    tracked.add(os.fsencode(ADOPTED_RECONCILE))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
@@ -285,7 +282,7 @@ def run_rendered_payload_omission_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
-        for relative in (LOADER, ADOPTED_LOADER):
+        for relative in (LOADER,):
             replace_once(
                 fixture / relative,
                 '    for item in contract["loaded"]:\n        chunks.append(\n',
@@ -308,7 +305,7 @@ def run_production_payload_omission_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
-        for relative in (LOADER, ADOPTED_LOADER):
+        for relative in (LOADER,):
             replace_once(
                 fixture / relative,
                 '    for item in contract["loaded"]:\n        chunks.append(\n',
@@ -331,7 +328,7 @@ def run_routing_header_omission_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
-        for relative in (LOADER, ADOPTED_LOADER):
+        for relative in (LOADER,):
             replace_once(
                 fixture / relative,
                 '            "next_workflow_stage",\n',
@@ -351,7 +348,7 @@ def run_rendered_payload_order_mutant() -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
-        for relative in (LOADER, ADOPTED_LOADER):
+        for relative in (LOADER,):
             replace_once(
                 fixture / relative,
                 '    for item in contract["loaded"]:\n',
@@ -422,14 +419,14 @@ def run_reconcile_wiring_mutant() -> None:
         continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
         replace_once(
             continuation,
-            "7. Invoke the repository-local read-only engage comparator only in the\n"
-            "   provider-backed branch.\n",
+            "7. Invoke the installed loader's sibling read-only engage comparator only in\n"
+            "   the provider-backed branch. The activated skill supplies both package paths\n",
             "7. Continue without invoking the engage comparator.\n",
         )
         reject(
             "reconcile-wiring-removed",
             execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
-            "continuation planning disambiguation omits: Invoke the repository-local read-only engage comparator only in the provider-backed branch.",
+            "continuation planning disambiguation omits: Invoke the installed loader's sibling read-only engage comparator only in the provider-backed branch.",
         )
 
 
@@ -479,16 +476,28 @@ def run_loader_admission_mutant(
         )
 
 
+def run_loader_multi_mutant(
+    name: str, mutations: list[tuple[str, str]], evidence: str
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
+        fixture = Path(temporary)
+        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
+        for before, after in mutations:
+            replace_once(fixture / LOADER, before, after)
+        reject(
+            name,
+            execute([sys.executable, str(fixture / LOADER_TEST)], fixture),
+            evidence,
+        )
+
+
 def run_kernel_contract_mutant(
     name: str, before: str, after: str, evidence: str
 ) -> None:
     with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
         fixture = Path(temporary)
         copy_repository_fixture(fixture)
-        for relative in (
-            "kc-dev-flow/references/kernel.md",
-            "docs/dev/_mods/kernel.md",
-        ):
+        for relative in ("kc-dev-flow/references/kernel.md",):
             replace_once(fixture / relative, before, after)
         reject(
             name,
@@ -603,6 +612,60 @@ def main() -> int:
     run_routing_header_omission_mutant()
     run_rendered_payload_order_mutant()
     run_manual_contract_mutant(
+        "installed-skill-anchor-removed",
+        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+        "Resolve `../../scripts/profile-contract-loader.py` from this activated skill.\n",
+        "Resolve a profile loader from the current host.\n",
+        "continuation is missing: from this activated skill",
+    )
+    run_manual_contract_mutant(
+        "manifest-inventory-removed",
+        "kc-dev-flow/contract-manifest.json",
+        '    "references/kernel.md",\n',
+        "",
+        "installed manifest does not bind the exact canonical runtime surface",
+    )
+    run_manual_contract_mutant(
+        "local-interface-binding-removed",
+        "docs/dev/README.md",
+        "| Installed contract interface | `kc-dev-flow-local-profile/v1` |\n",
+        "",
+        "self-adoption is missing: | Installed contract interface | `kc-dev-flow-local-profile/v1` |",
+    )
+    run_loader_admission_mutant(
+        "installed-digest-disabled",
+        "        digest.update(raw)\n",
+        "        digest.update(b\"\")\n",
+        "compatible next-stage upgrade did not bind the new package",
+    )
+    run_loader_admission_mutant(
+        "active-stage-equality-disabled",
+        "        if any(previous.get(key) != value for key, value in exact.items()):\n",
+        "        if False:\n",
+        "active stage accepted changed installed version or bytes",
+    )
+    run_loader_multi_mutant(
+        "local-interface-compatibility-disabled",
+        [
+            (
+                '    if rows["Installed contract interface"].strip("`") != expected:\n',
+                '    if False and rows["Installed contract interface"].strip("`") != expected:\n',
+            ),
+            (
+                '            previous.get("local_profile_interface") != interface\n',
+                '            False and previous.get("local_profile_interface") != interface\n',
+            ),
+        ],
+        "incompatible boundary did not fail closed",
+    )
+    run_loader_admission_mutant(
+        "preservation-check-disabled",
+        '    contract["local_profile"] = local_profile\n',
+        '    local_profile_path.write_text(local_profile_path.read_text(encoding="utf-8") + "MUTATION\\n", encoding="utf-8")\n'
+        '    contract["local_profile"] = local_profile\n',
+        "installed loading changed README policy, local-mod bytes/mode, or unrelated state",
+    )
+    run_manual_contract_mutant(
         "marked-local-profile-read-contract-removed",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
         "   marked block; never infer boundaries from headings or open the full README.\n",
@@ -706,8 +769,8 @@ def main() -> int:
     run_manual_contract_mutant(
         "admission-loader-invocation-removed",
         str(LINEAR_ADMISSION),
-        '"--format", "json", "--validate-admission"],\n',
-        '"--format", "json", "--invalid-admission-mode"],\n',
+        '             "--validate-admission"],\n',
+        '             "--invalid-admission-mode"],\n',
         'Linear admission omits retained mechanism: "--validate-admission"',
     )
     run_manual_contract_mutant(
