@@ -13,7 +13,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-45-load-kc-dev-flow-contracts
 issue:
-pr:
+pr: iamcxa/kc-claude-plugins#326
 mod-block: merge:pr-merge
 id: 3fkmdwdvsfha8ektb2s5jz7d
 gates:
