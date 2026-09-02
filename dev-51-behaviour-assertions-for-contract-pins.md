@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-02T14:23:40Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-dev-51-behaviour-assertions-for-contract-pins
 issue:
 pr:
 mod-block:
