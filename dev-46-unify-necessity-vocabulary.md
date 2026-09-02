@@ -90,29 +90,29 @@ has been seen to fail before it is trusted.
 - Do not change profile routing, stage order, gate authority, or the
 - Do not add a fourth work profile for refactor-shaped work.
 
-## Acceptance evidence
+## Acceptance criteria
 
-* **AC-1** The need axis of `reverse-recovery-audit.md` and the mapping targets
+- **AC-1** The need axis of `reverse-recovery-audit.md` and the mapping targets
   of the kernel's minimal-necessity condition use one vocabulary, and a
   safety-boundary surface with no observed consumer classifies identically under
   both contracts.
-* **AC-2** The audit's `disproof_hook` and the kernel's without-it observation
+- **AC-2** The audit's `disproof_hook` and the kernel's without-it observation
   are one named primitive with two declared tiers, and each contract states
   which tier it uses and what that tier can and cannot conclude.
-* **AC-3** The kernel's implementation-exit comparison grades removed surfaces
+- **AC-3** The kernel's implementation-exit comparison grades removed surfaces
   by the same predicate as retained surfaces, and a removal with no necessity
   claim is rejected for that named reason.
-* **AC-4** A change that declares its observable semantics unchanged is refused
+- **AC-4** A change that declares its observable semantics unchanged is refused
   at its verification boundary until it names an equivalence instrument and
   supplies evidence that the instrument was observed to fail against a case it
   must flag.
-* **AC-5 **`scripts/kc-dev-flow-contract-test.py` and the minimal-stack ablation
+- **AC-5** `scripts/kc-dev-flow-contract-test.py` and the minimal-stack ablation
   test reject each renamed boundary for its named reason; no assertion that
   previously caught a semantic regression is lost in the rename.
-* **AC-6** Canonical `kc-dev-flow/references/` and self-adopted
+- **AC-6** Canonical `kc-dev-flow/references/` and self-adopted
   `docs/dev/_mods/` copies of both contracts stay byte-identical, or the
   installed-plugin resolution has already removed the vendored pair.
-* **AC-7** Every adopter-visible rename is reachable by taking the new plugin
+- **AC-7** Every adopter-visible rename is reachable by taking the new plugin
   version, or the item records the exact migration an adopter must run and the
   version that carries it.
 
