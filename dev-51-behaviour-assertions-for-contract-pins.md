@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-51-behaviour-assertions-for-contract-pins
 issue:
-pr: 344
+pr: pr-merge:344
 mod-block:
 id: m29y546p4sh77vbs2dv09gkp
 gates:
