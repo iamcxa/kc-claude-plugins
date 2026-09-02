@@ -2977,6 +2977,34 @@ assert_eq "idempotent quarantine remains metadata-only" "1" "$(find "$idempotent
 assert_eq "idempotent quarantine metadata stays read-only" "400" "$(file_mode "$idempotent_quarantine_dir/metadata.json")"
 assert_eq "idempotent quarantine directory stays read-only" "500" "$(file_mode "$idempotent_quarantine_dir")"
 
+# GNU stat accepts -f as filesystem status and emits no mode authority. A
+# complete private quarantine must still be recognized through the public API.
+gnu_stat_state="$(mktemp -d)"
+gnu_stat_line='{"case":"gnu stat filesystem output"}'
+gnu_stat_hash="$(sha256_text "$gnu_stat_line")"
+gnu_stat_dir="$gnu_stat_state/quarantine/$gnu_stat_hash-invalid_json"
+(
+  export KC_PR_FLOW_STATE_DIR="$gnu_stat_state"
+  uname() { printf '%s\n' Linux; }
+  stat() {
+    case "$1" in
+      -f) printf '%s\n' 'Filesystem 512-blocks Used Available Capacity iused ifree %iused Mounted on'; return 0 ;;
+      -c)
+        case "$3" in
+          "$gnu_stat_dir") printf '%s\n' 500 ;;
+          "$gnu_stat_dir/metadata.json") printf '%s\n' 400 ;;
+          *) return 1 ;;
+        esac
+        ;;
+      *) command stat "$@" ;;
+    esac
+  }
+  review_runtime_quarantine "$gnu_stat_line" invalid_json >/dev/null 2>&1
+)
+gnu_stat_quarantine_rc=$?
+assert_eq "GNU stat filesystem output recognizes complete quarantine" "0" "$gnu_stat_quarantine_rc"
+assert_eq "GNU stat quarantine keeps metadata artifact" "true" "$([ -f "$gnu_stat_dir/metadata.json" ] && printf true || printf false)"
+
 # Quarantine uses the same owned-lock lifecycle as event append. A forced
 # publication failure cleans both private temp and owned lock, then retries.
 forced_quarantine_state="$(mktemp -d)"

@@ -1239,11 +1239,11 @@ review_runtime_validate_authoritative_log() {
 }
 
 review_runtime_file_mode() {
-  if stat -f '%Lp' "$1" >/dev/null 2>&1; then
-    stat -f '%Lp' "$1"
-  else
-    stat -c '%a' "$1"
-  fi
+  case "$(uname -s)" in
+    Linux) stat -c '%a' "$1" ;;
+    Darwin|FreeBSD|NetBSD|OpenBSD) stat -f '%Lp' "$1" ;;
+    *) return 1 ;;
+  esac
 }
 
 review_runtime_quarantine_complete() {
