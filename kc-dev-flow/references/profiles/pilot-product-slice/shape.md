@@ -39,8 +39,7 @@ smallest maintainable slice.
 
 ## Required output
 
-- one accepted journey, explicit non-goals, and the observable semantics this
-  work may change;
+- one accepted journey and explicit non-goals;
 - persistence, recovery, and data-safety boundaries;
 - task-specific acceptance checks able to falsify the slice;
 - a file-level `where it touches` table;
@@ -63,7 +62,7 @@ resulting behaviour, in the order it happens. Three rules bind it:
 
 Declare alongside it the observable semantics this work may change — command
 grammar, stored formats, authority, runtime behaviour — or state that it changes
-none.
+none. Record it as `semantics_unchanged`.
 
 ## Where it touches
 
