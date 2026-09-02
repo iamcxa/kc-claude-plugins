@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:50c1y5wf7dzh0ww2a9qajn47:ideation:attempt-1:revision-1",
+  "question": "Approve the DEV-46 shape to enter Production implementation: AC-4 bound as a loader-required field, 13 files / ~340 lines against f9683a33 with stops at 16 files / 500 lines, single slice, reverse-recovery decision redesign?",
+  "artifacts": [
+    {
+      "id": "artifact:50c1y5wf7dzh0ww2a9qajn47:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c01f8cad78c7762bf3ed11d5c07fdc6fb44ec0d2/dev-46-unify-necessity-vocabulary.md",
+      "rev": "sha256:4e1f489f43f292001373f60b3600d96e03ca3a8aaa62669e57c37fbf2ae0361a",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval: all three checklist items DONE. AC-4 enforcement point is ContractError in resolve_work_item (declaration required at ideation, two evidence scalars at validation); a field inside the existing work_profile receipt is ruled not a new receipt. Where-it-touches: 13 files, ~340 lines against delivery base f9683a33, stops 16 files / 500 lines, runaway area the two test files at 180 lines. reverse_recovery receipt 7 layers, decision redesign; multi_slice_required false. Delivery-base gates run in a clean f9683a33 worktree: contract test exit 0, ablation 60 mutants all REJECTED. AC-6 already satisfied on main (vendored pair deleted; obsolete_adopter_copies enforces). Finding for the Captain: the admitted Non-goals bullets are truncated mid-sentence by the admission normalizer on hard-wrapped Linear bullets; shape used the complete scope_boundary line."
+    }
+  ]
+}
