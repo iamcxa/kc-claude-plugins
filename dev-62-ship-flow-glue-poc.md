@@ -1,6 +1,6 @@
 ---
 title: "POC: ship-flow glue on one Issue — cloud dispatch, pinned-SHA verify, Captain-gated Draft PR"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-02, replying to the FO's question whether DEV-62 should be Linear-backed or standalone-admitted
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
