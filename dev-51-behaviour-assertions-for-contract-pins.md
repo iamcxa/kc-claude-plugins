@@ -1,6 +1,6 @@
 ---
 title: "Replace kc-dev-flow contract-test phrase pins with behaviour assertions a mutation can redden"
-status: ideation
+status: implementation
 source: https://linear.app/duckbase-co/issue/DEV-51/replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved the DEV-51 shape: 31 pin sites tiered, tier-2 budget checkpoint at three measured cases against a cap of 8, own equivalence instrument named.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
