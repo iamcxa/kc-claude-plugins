@@ -750,16 +750,31 @@ for phrase in [
     "local execution grouping does not prove a Planning Receipt",
     "runtime owns execution and evidence",
     "execution-to-planning-provider projector",
+    "No reconcile result writes either side automatically",
     "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
-# Tier-1 rules below are graded through the mechanism they name (loader JSON,
-# comparator exit code, guard refusal), not through the sentence describing
-# them — see DEV-51's mutation replay table for the redden/restore proof per
-# rule. `engage-reconcile.test.py` already covers provider engage behavior:
-# exit 0 with `status: clean`, exit 1 with a classified added/removed/changed/
-# moved delta, exit 2 on invalid input, and `--expected-source/-window/-outcome`
-# binding to the exact work item.
+# Below: DEV-51's contract-test.py mechanism citations hold only under a full
+# run (mechanism suites execute via run()); `--ablation-check` skips run(), so
+# a citation is not a guard against a prose-only mutation of the cited
+# document — see the validation-bounce note in the DEV-51 work item for which
+# sites still carry a real guard after that correction.
+normalized_continuation_policy = " ".join(
+    read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
+)
+for phrase in [
+    "exact work item's `source`",
+    "shares the exact window and outcome read from the engaged item",
+    "stdout parses as one JSON object with `status: clean`",
+    "Exit `1` reports the classified delta",
+    "Exit `2` reports `planning reconcile unavailable`",
+    "added, removed, changed, or moved item",
+    "Captain must admit the delta",
+]:
+    require(
+        phrase in normalized_continuation_policy,
+        f"continuation omits provider engage behavior: {phrase}",
+    )
 for phrase in [
     "Development Brief is required",
     "Planning Receipt is optional",
@@ -784,6 +799,13 @@ for forbidden in [
     "SD-to-planning-provider projector",
 ]:
     require(forbidden not in normalized_kernel, f"kernel owns runtime topology: {forbidden}")
+for phrase in [
+    "An item leaves `backlog` only after its required brief is admitted",
+    "Development Brief",
+    "Exploration Brief",
+    "local execution grouping does not prove a Planning Receipt",
+]:
+    require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
 require(
     "brief admission" in " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split()),
     "choose-work-profile no longer checks the brief admission bar",
@@ -1061,6 +1083,8 @@ normalized_science = " ".join(science.split())
 normalized_migration = " ".join(migration.split())
 normalized_production_verify = " ".join(production_verify.split())
 
+for marker in (gate.LOCAL_PROFILE_START, gate.LOCAL_PROFILE_END):
+    require(marker in normalized_adopter, f"adopter omits static Local Profile marker: {marker}")
 migration_3x = migration.split("## Migrating from 3.x to 4.x", 1)[1].split(
     "## Migrating from 2.x", 1
 )[0]
@@ -1157,6 +1181,21 @@ require(
     "Production verification omits risk-selected review disposition",
 )
 
+for phrase in [
+    "kc-dev-flow-static-local-profile",
+    "start/end marker pair",
+    "Read only its frontmatter and marked block",
+    "never infer boundaries from headings",
+    "from this activated skill",
+    "--work-item <exact-committed-work-item>",
+    "simultaneous items may load different routes",
+    "emits shared core, selected base, and selected stage only",
+    "kc-dev-flow:chief-engineer",
+    "kc-dev-flow:science-officer",
+    "kc-dev-flow-conditional-references/v1",
+    "A link is not activation",
+]:
+    require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 continuation_authority_order = [
     "Read the exact committed work item and selected brief.",
     "Classify its optional Planning Receipt before provider access.",
@@ -1183,14 +1222,23 @@ for phrase in [
     "Do not promote the admission snapshot into planning authority",
     "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
     "Do not cancel a running worker.",
+    "No difference writes the provider or execution snapshot automatically.",
     "every currently Ready snapshot source",
     "Refuse a truncated provider result",
+    "stdout parses as one JSON object with `status: clean`",
     "compare the accepted goal and complete non-goal list exactly",
     "do not replace the snapshot or candidate",
     "affected acceptance evidence",
     "recommended `change` or `stop`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
+for phrase in [
+    "retained_document_change",
+    "project_context_claim_may_change",
+    "A Markdown work record alone satisfies neither trigger",
+    "`receipt: null` creates no receipt",
+]:
+    require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
 require_production_route(continue_skill, "Production", "`backlog -> ideation -> implementation -> validation -> done`")
 require(
     "-> release ->" not in continue_skill,

@@ -200,25 +200,6 @@ Stop when the planning tuple cannot express the work.
         len(json.loads(admission_result.stdout)["development_brief_sha256"]) == 64,
         "canonical admission did not return the Development Brief hash",
     )
-    default_admission_result = subprocess.run(
-        [
-            sys.executable,
-            str(LOADER),
-            "--contracts-root",
-            str(root),
-            "--work-item",
-            str(admitted),
-            "--format",
-            "json",
-        ],
-        text=True,
-        capture_output=True,
-    )
-    require(default_admission_result.returncode == 0, default_admission_result.stderr)
-    require(
-        "development_brief_sha256" not in json.loads(default_admission_result.stdout),
-        "default loading (no --validate-admission) inspected acceptance headings",
-    )
 
     def expect_admission_refusal(name: str, body: str) -> None:
         item = write_work_item(
@@ -391,6 +372,26 @@ Stop when the planning tuple cannot express the work.
         run_admission(historical).returncode == 2
         and historical.read_bytes() == historical_bytes,
         "historical dual-section continuation was reclassified or rewritten",
+    )
+
+    default_admission_result = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(admitted),
+            "--format",
+            "json",
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(default_admission_result.returncode == 0, default_admission_result.stderr)
+    require(
+        "development_brief_sha256" not in json.loads(default_admission_result.stdout),
+        "default loading (no --validate-admission) inspected acceptance headings",
     )
 
     expected_routes = {
