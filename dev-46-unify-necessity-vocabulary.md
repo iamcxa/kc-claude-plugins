@@ -566,6 +566,14 @@ mid-sentence in the admitted body. The shape was written against the complete
 `scope_boundary` line in the work-profile receipt, and the snapshot was not
 rewritten.
 
+## Implementation evidence: RoboRev claim
+
+- identity: `43c8bfd90d54d74dea48ce47d570938af3afde11dccfa06dc6e46b7ca2413140`
+- claimant: `claude-ensign:2b074c1c-5e22-4879-9eda-db61c5abee89`
+- observed state revision: `4fcc5a9e00d109a3a1496d9263a51e0150ecee5a`
+- candidate: `f9683a337e4c056a4e0cc1e597dc4a93ce762ca6..8613cedb50c5bd62bcf01dcffba12934648108e9`
+- state: `claimed`
+
 ## Stage Report: implementation
 
 - DONE: Land one necessity vocabulary across kernel.md and reverse-recovery-audit.md (AC-1, AC-2, AC-3) with contract-test and ablation assertions that reject each renamed boundary for its named reason (AC-5), running the old assertion against each mutation before removing it so no previously caught regression is lost.
