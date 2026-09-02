@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.0.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.1...kc-dev-flow-v4.0.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** align standalone admission contracts ([#329](https://github.com/iamcxa/kc-claude-plugins/issues/329)) ([36a3642](https://github.com/iamcxa/kc-claude-plugins/commit/36a36426c43143ee60158ffba1fa7ec1401b244e))
+* **kc-dev-flow:** align standalone migration guidance ([#319](https://github.com/iamcxa/kc-claude-plugins/issues/319)) ([9d4e499](https://github.com/iamcxa/kc-claude-plugins/commit/9d4e499ac5ac66d668131d378be41d487f89d446))
+* **kc-dev-flow:** derive installed version in release tests ([#330](https://github.com/iamcxa/kc-claude-plugins/issues/330)) ([69247af](https://github.com/iamcxa/kc-claude-plugins/commit/69247afb8610b03e650d77aea542d230d1544d48))
+
 ## [4.0.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.0...kc-dev-flow-v4.0.1) (2026-08-31)
 
 
