@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument"
-status: backlog
+status: ideation
 source: https://linear.app/duckbase-co/issue/DEV-46/kc-dev-flow-unify-the-necessity-vocabulary-across-kernel-and-reverse
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved DEV-46 into Production ideation: Project kc-dev-flow slimming dogfood, Cycle 2, sprint S8; shape must name the AC-4 enforcement point.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
