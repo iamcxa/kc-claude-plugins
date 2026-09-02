@@ -40,8 +40,9 @@ Continue by the selected profile's smallest sufficient route.
    - otherwise report `planning receipt incomplete` and stop before reading
      execution state or mutating it.
 5. In the provider-backed branch, follow the exact work item's `source` to the
-   accepted planning item and invoke the repository-local read-only planning
-   reader. Read the item for the problem, decision, success condition, priority,
+   accepted planning item. Use installed sibling `../../scripts/linear-admission.py`
+   for Linear, or the bound local reader otherwise. Read the item for the problem,
+   decision, success condition, priority,
    and human-facing status, and obtain the union of the provider's current Ready
    set for the recorded planning window/outcome and every currently Ready
    snapshot source even when its current window or outcome moved. Refuse a

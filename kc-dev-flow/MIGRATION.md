@@ -76,10 +76,12 @@ cutover, in this order:
 2. Remove `release` from the adopter's workflow graph. Bound its existing
    `## Local Profile` with one start marker
    `<!-- kc-dev-flow-static-local-profile:start -->` and one end marker
-   `<!-- kc-dev-flow-static-local-profile:end -->`. Re-vendor the loader,
-   engage comparator, close guard, kernel, profile tree, and conditional
-   references byte-for-byte, including Production `verify.md` and deletion of
-   Production `release.md`.
+   `<!-- kc-dev-flow-static-local-profile:end -->`. Install a package whose
+   manifest declares the loader, engage comparator, close guard, optional
+   workspace-neutral Linear admission guard, kernel, profile tree, and
+   conditional references. Delete byte-identical canonical repository copies;
+   do not re-vendor the installed runtime. Keep adapters only for planning
+   providers the package does not support.
    Active v2 Pilot and Production receipts remain loadable; new choices use v3.
 3. Mechanically re-record each committed Production v2 receipt under its same
    Captain selection so its route is `[shape, build, verify]`.
@@ -98,8 +100,10 @@ cutover, in this order:
    sprint-readiness=ready`. Run the reader and comparator only for provider-backed
    work, against the provider's current Ready set plus every still-Ready snapshot
    source outside the original window/outcome. Refuse a snapshot whose items do
-   not all share the engaged item's exact window and outcome. Invoke the vendored
-   comparator with that exact source, window, and outcome. Standalone work skips
+   not all share the engaged item's exact window and outcome. Linear-backed work
+   may invoke the installed Linear admission guard; another provider invokes its
+   adapter and the installed comparator with that exact source, window, and
+   outcome. Standalone work skips
    both and continues from the Captain-approved committed brief. For the
    provider-backed path, only exit `0` with one parsed `status: clean` result and
    empty delta arrays continues. A delta, truncated result, invalid input, or any
