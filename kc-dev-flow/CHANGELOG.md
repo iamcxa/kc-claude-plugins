@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.1...kc-dev-flow-v4.1.0) (2026-09-02)
+
+
+### Coordinated upgrade
+
+* **kc-dev-flow:** the activated plugin now supplies the contract manifest,
+  kernel, profiles, conditional references, loader, and guards. Adopters keep
+  only their marked Local Profile, local policy and provider mods, and state.
+  Follow `MIGRATION.md` and cut over at a stage boundary; do not mix the old
+  vendored runtime with the installed runtime in one active stage.
+
+
+### Features
+
+* **kc-dev-flow:** load contracts from the installed plugin ([#324](https://github.com/iamcxa/kc-claude-plugins/issues/324)) ([b7c3675](https://github.com/iamcxa/kc-claude-plugins/commit/b7c3675bd228e8785c92ea5dd6dd9d5ba6049408))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** align standalone admission contracts ([#329](https://github.com/iamcxa/kc-claude-plugins/issues/329)) ([36a3642](https://github.com/iamcxa/kc-claude-plugins/commit/36a36426c43143ee60158ffba1fa7ec1401b244e))
+* **kc-dev-flow:** align standalone migration guidance ([#319](https://github.com/iamcxa/kc-claude-plugins/issues/319)) ([9d4e499](https://github.com/iamcxa/kc-claude-plugins/commit/9d4e499ac5ac66d668131d378be41d487f89d446))
+* **kc-dev-flow:** derive installed version in release tests ([#330](https://github.com/iamcxa/kc-claude-plugins/issues/330)) ([69247af](https://github.com/iamcxa/kc-claude-plugins/commit/69247afb8610b03e650d77aea542d230d1544d48))
+
 ## [4.0.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.0.0...kc-dev-flow-v4.0.1) (2026-08-31)
 
 

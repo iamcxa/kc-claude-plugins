@@ -133,7 +133,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
-      "version": "4.0.1",
+      "version": "4.1.0",
       "keywords": [
         "development-workflow",
         "sprint",
