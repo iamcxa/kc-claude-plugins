@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-2:revision-1",
+  "question": "Approve DEV-51 at exact revision 370f02ba as verified against AC-1..AC-5 (contract test PASS, full ablation 64/64 rejected, four mutation triples replayed, restored pins byte-identical to main), and authorize push under feature/dev-51-replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour plus Draft PR creation with close line Fixes DEV-51 toward the terminal merge guard?",
+  "artifacts": [
+    {
+      "id": "artifact:m29y546p4sh77vbs2dv09gkp:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/3dbf0892ea4d8d705c81e2a47fd555ed643eca4c/dev-51-behaviour-assertions-for-contract-pins.md",
+      "rev": "sha256:25d7a2a27486e8e09045f5e5413073e08e12f8dde55abba8f2843c3b260dbb95",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval. Re-verified at 370f02ba after the validation bounce: contract test PASS 44.6 s; full ablation PASS 2m07s, 64 mutants rejected, 0 survivors (matches the FO's independent run); four mutation triples replayed, one per mechanism, all redden and restore as recorded; only two pins removed against origin/main and both are in the replay table; the five restored pins are byte-identical to main. Receipt equivalence-instrument fields corrected to this tip and accepted by the loader. merge-tree against origin/main clean. Outcome is an honest contraction: 6 of 13 tier-1 groups converted, 23 rules recorded wording-only under the Captain's tier-2 ruling. Findings routed: tier-2 negative result and duplicate-rule signal to DEV-52, truncated-provider-result gap to DEV-60, quick-mode ablation skipping mechanism suites needs a new issue. Approval here is terminal: consume leaves route=approved-awaiting-merge; the merge guard finalizes after the PR merges."
+    }
+  ]
+}

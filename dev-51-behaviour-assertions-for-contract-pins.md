@@ -68,6 +68,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-02T16:25:34.919867Z"
                 reason: Candidate 99a0c826 conflicts with origin/main (#340) in scripts/kc-dev-flow-contract-test.py; delivery readiness FAILED; a merge is a code-changing repair that changes the exact revision.
+            - id: gate-attempt:m29y546p4sh77vbs2dv09gkp-validation-2
+              briefing:
+                id: briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-2:revision-1
+                digest: sha256:7f8187fd2f63e68b6adcc321577da471e987fbd3afa693622d5cc1fe7b3dac07
+                room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/validation/briefing-2
 ---
 
 ## The problem
