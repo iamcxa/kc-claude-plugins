@@ -2,16 +2,16 @@
 # Columns: id\trelpath\tstart\tend\tkind\tremoval_text-or--\tsha256(text).
 # The sha column is GENERATED (review-ablation.sh arm --write-pins), never hand-typed.
 # Coordinates and pins are re-derived from final bytes; IDs stay stable.
-S1	skills/kc-pr-review/SKILL.md	1127	1127	cut	-	1d066b679f6f63b2e20ce7e2bee52bb83bdeee333adc81792fbea96e314bca3b
-S2	skills/kc-pr-review/SKILL.md	1129	1134	cut	-	1b77bba6ea281095c45e57b9ac355ac42c62f86eb1fd845184c2555dad4202ed
-S3	skills/kc-pr-review/SKILL.md	1136	1136	cut	-	346a287af920611c64022f4a99a2a4419b5cbdfa7be93556e8d37da942c5ca9b
-S4	skills/kc-pr-review/SKILL.md	1138	1138	cut	-	a5627033b436e60bd9ee116dc54cd90629f43f106796c8904600a49670212f0e
-S5	skills/kc-pr-review/SKILL.md	1140	1140	cut	-	a9022b0db237b4ed8d06119bcb0157aacd77076bdedb7a54b25464ab11799f6c
-S6	skills/kc-pr-review/SKILL.md	1142	1142	cut_sub	 after the verification gate	d790114083e922cba7b5d0410f115cd265beca8528148fa5d9271f62ef185694
-S7	skills/kc-pr-review/SKILL.md	1013	1014	cut	-	091e1d9ea9b32d4ad3762ecfde737b347b7e74b0d7a5dc3cd59e2655b3abe395
+S1	skills/kc-pr-review/SKILL.md	1163	1163	cut	-	1d066b679f6f63b2e20ce7e2bee52bb83bdeee333adc81792fbea96e314bca3b
+S2	skills/kc-pr-review/SKILL.md	1165	1170	cut	-	1b77bba6ea281095c45e57b9ac355ac42c62f86eb1fd845184c2555dad4202ed
+S3	skills/kc-pr-review/SKILL.md	1172	1172	cut	-	346a287af920611c64022f4a99a2a4419b5cbdfa7be93556e8d37da942c5ca9b
+S4	skills/kc-pr-review/SKILL.md	1174	1174	cut	-	a5627033b436e60bd9ee116dc54cd90629f43f106796c8904600a49670212f0e
+S5	skills/kc-pr-review/SKILL.md	1176	1176	cut	-	a9022b0db237b4ed8d06119bcb0157aacd77076bdedb7a54b25464ab11799f6c
+S6	skills/kc-pr-review/SKILL.md	1178	1178	cut_sub	 after the verification gate	d790114083e922cba7b5d0410f115cd265beca8528148fa5d9271f62ef185694
+S7	skills/kc-pr-review/SKILL.md	1049	1050	cut	-	091e1d9ea9b32d4ad3762ecfde737b347b7e74b0d7a5dc3cd59e2655b3abe395
 S9	reference/review-triage.md	230	230	cut	-	ddb60957884e4ec6c85a19020b93e8918ed4bcba6af368afd7c336c151daeaba
 S10	reference/review-triage.md	232	236	cut	-	14b8e2944cc1233431d8b07979e7c6a0136c674a8d0ebdeaeaba180857a36a7d
 S11	reference/learned-patterns.md	13	15	cut	-	13b443b9f028d916ff8f206f83d0da5b2bcd652312a5b662d31bf8fbf5532002
-K1	skills/kc-pr-review/SKILL.md	265	265	keep	-	f9bf1be28d401f3a297fb0094c5938e88cf477c5edc201094cf9dc3beea877fe
+K1	skills/kc-pr-review/SKILL.md	301	301	keep	-	f9bf1be28d401f3a297fb0094c5938e88cf477c5edc201094cf9dc3beea877fe
 K2	reference/review-triage.md	238	245	keep	-	cc538eeb1618467694e9eecdc554d6ba22a759c96f874a8d9da19fdfa8ba5e6a
 K3	reference/learned-patterns.md	9	11	keep	-	e4273c7434d823642f09c29130f55e6bf18f6cedeed7265bf45fdb97b1c762b6
