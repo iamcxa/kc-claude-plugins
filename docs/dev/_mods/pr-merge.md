@@ -149,11 +149,12 @@ One parameterized unit owns every single-PR delivery operation:
 | Title | reviewed `UNIT_TITLE` |
 | Body file | mode-0600 reviewed `UNIT_BODY_FILE` |
 
-When `delivery.branch` is non-empty, bind `UNIT_BRANCH` to it byte-for-byte;
-otherwise retain `{branch}`. Append `delivery.close_line` exactly once to the reviewed PR body.
-Both values must come from the current successful provider adapter result for
-the exact reconciled source. A missing, malformed, or source-mismatched provider
-binding stops before push or PR creation.
+For provider-backed single-PR delivery, bind `UNIT_BRANCH` byte-for-byte to `delivery.branch` and append `delivery.close_line` exactly once to the reviewed PR body.
+For a provider-backed native stack, reserve both provider values for the top layer.
+Every lower layer uses its own explicitly reviewed delivery-unit branch and base, carries no provider close line, and has a branch distinct from every other layer.
+Both provider values must come from the current successful
+provider adapter result for the exact reconciled source. A missing, malformed,
+or source-mismatched provider binding stops before push or PR creation.
 For provider-backed work, this extension supersedes the released `Closes {issue}` rule above:
 do not read or append the legacy frontmatter `issue`. Standalone work keeps the
 released rule and has no provider delivery binding.
@@ -401,16 +402,16 @@ Bind one approved canonical Draft delivery unit per layer in bottom-to-top order
 Use the unit defined above without changing its Draft, explicit repository,
 body-file, exact-base preflight, or exact-candidate refspec contract:
 
-| Layer | `UNIT_BASE_BRANCH` | `UNIT_BASE_SHA` |
-| --- | --- | --- |
-| bottom | trunk `$BASE` | approved trunk `$BASE_SHA` |
-| each higher | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below |
+| Layer | `UNIT_BRANCH` | `UNIT_BASE_BRANCH` | `UNIT_BASE_SHA` | Provider close line |
+| --- | --- | --- | --- | --- |
+| bottom | explicitly reviewed layer-unique delivery-unit branch | trunk `$BASE` | approved trunk `$BASE_SHA` | omit |
+| each middle | explicitly reviewed layer-unique delivery-unit branch | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below | omit |
+| top | exact `delivery.branch` | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below | append exact `delivery.close_line` once |
 
-Invoke the canonical bottom delivery unit unchanged for every layer. The
-bottom unit's full approved candidate therefore becomes the exact preflight
-base SHA for the next unit. For parallel delivery, invoke independent units
-whose base branch and approved base SHA both resolve to trunk; none targets a
-sibling branch.
+Invoke the canonical Draft delivery unit once per table row. The bottom unit's
+full approved candidate becomes the exact preflight base SHA for the next unit.
+For parallel delivery, invoke independent units whose base branch and approved
+base SHA both resolve to trunk; none targets a sibling branch.
 
 Each unit gets its own reviewed title, mode-0600 body file containing its full
 `Candidate:` SHA, code repository, branch, base branch, base SHA, candidate SHA,
