@@ -477,6 +477,26 @@ The one-line Mermaid repair is exact, closes the prior architecture failure, and
 
 PR feedback: {"dispositions":[],"fingerprint":"sha256:11374cc6b7bfd28902fd621a1603f5669788aaab44d804bc6364a83597a5b18f","head":"61ce308dfeaae40f05b997092eb3a3a359a61ff6","layer":"single","pr_number":323,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
 
+## Stage Report: validation (cycle 5)
+
+- DONE: Re-read exact heads, bodies, bases, stack identity/order, and required checks for corrected GitHub-native stack #328.
+  Active order is bottom Draft PR #324 `main..399a010cfd8a3d1c2688798472b927f4c9a74f9d` then top Draft PR #326 `feature/dev-45-add-installed-contract-loader..314045f475d077d8dbb0e87ec536c906a04505e7`; both bodies bind those exact candidates, only top carries one `Fixes DEV-45`, and PR #325 is MERGED at `2026-09-02T04:26:48Z` and excluded from active stack #328.
+- DONE: Perform the complete GitHub-native feedback observation for both active layers.
+  Start and repeat repository-explicit views matched both exact heads; every GraphQL thread page ended with `hasNextPage=false` and zero nodes, every REST review pagination returned one complete empty page, and the two canonical records below therefore have empty evidence-bearing disposition populations.
+- DONE: Validate bottom-layer required checks against the corrected exact base.
+  Required runs `33590837218` and `33590837209` both passed after checking out merge `a0bd048babbaf042f91ac582f30285278f8d9db2`, exactly candidate `399a010cfd8a3d1c2688798472b927f4c9a74f9d` into `main@3aafd3d22e749257f3551079475cc41183525d7c`.
+- FAILED: Adjudicate PR #326 as having valid base-bound CI evidence after the base/topology correction.
+  Required runs `33589599589` and `33589599609` passed only on old merge `2e70da1af3822b6bf860fd4425cdc91841a00364`, whose immutable checkout log says top `314045f475d077d8dbb0e87ec536c906a04505e7` into old base `75ef10766a6e9d1fd315a295b388b75b1987a336`; current merge ref `f6e01e9979361220aae4abfbb1387b590973de3e` instead composes the top over corrected bottom merge `a0bd048babbaf042f91ac582f30285278f8d9db2`, so current Actions association metadata cannot substitute for an exact corrected-topology run.
+- DONE: Append and commit only the durable validation observation without mutating product code, PRs, readiness, stack links, or gate state.
+  Product worktree remains clean at `111d47126df43c15c02d8db4bb0fb4621df25aa1`, whose tree equals top candidate `314045f475d077d8dbb0e87ec536c906a04505e7`; all provider operations were read-only.
+
+### Summary
+
+Corrected stack #328 has stable two-layer identities, exact bodies, complete empty GitHub-native feedback, and valid bottom-layer checks. Validation is REJECTED only because PR #326 has no required CI run against the corrected base composition; it must remain Draft and not Ready until that exact base-bound evidence exists.
+
+PR feedback: {"dispositions":[],"fingerprint":"sha256:5b1677c63be19e9086e36ae77589a8c06ed3031f02f87375e5e108eb93abae32","head":"399a010cfd8a3d1c2688798472b927f4c9a74f9d","layer":"bottom","pr_number":324,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+PR feedback: {"dispositions":[],"fingerprint":"sha256:654eac8235793e0b9029a37b8e03c04841111498725943edf2143d8a7b8e306e","head":"314045f475d077d8dbb0e87ec536c906a04505e7","layer":"top","pr_number":326,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
+
 ## Stage Report: validation (cycle 4)
 
 - DONE: Observe complete GitHub-native feedback for PRs 324, 325, and 326 at their exact approved heads, with stable bottom/middle/top layer identities.
