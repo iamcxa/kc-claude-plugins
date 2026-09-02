@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:50c1y5wf7dzh0ww2a9qajn47:backlog:attempt-1:revision-1",
+  "question": "Approve DEV-46 to enter Production ideation: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument?",
+  "artifacts": [
+    {
+      "id": "artifact:50c1y5wf7dzh0ww2a9qajn47:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/acf487d0089f184b6c034f85cffab1b1903b7c2c/dev-46-unify-necessity-vocabulary.md",
+      "rev": "sha256:0f1b87a9f29b85b62515c6acb324866a605234c3c43e44b45bf19070b1d64e58",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval: the exact Linear Project (kc-dev-flow slimming dogfood) and Cycle 2 are bound, sprint S8 is registered on main, and the Production receipt names one necessity predicate with two instrument tiers, removal graded like retention, and an equivalence-instrument requirement whose enforcement point shape must name. Scope excludes merging the two contracts, changing removal authority, any aggregate minimality gate, new receipts or harnesses, routing or gate-authority changes, and a fourth profile."
+    }
+  ]
+}
