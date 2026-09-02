@@ -95,7 +95,7 @@ Also route back when a tier-2 case cannot be made to redden for a rule the slimm
 
 ## Measurement
 
-Not yet measured. Shape records the pin inventory (20 loop sites, 31 require lines on main at f47fd8ca), the `where it touches` table, and stop numbers; build records per-case behavior-diff cost and the count of remaining wording-only pins.
+Shape measured the pin inventory against `f47fd8ca`: **31 positive phrase-pin loop sites, one `require` line each, 245 pinned phrases**, occupying 369 of 1903 lines — see `## Pin inventory` and the correction to the recorded "20 loop sites". The AC-5 baseline is `kc-dev-flow contract: PASS`, exit `0`, 50.7 s in a clean clone. The `where it touches` table and stop numbers are recorded. Build records per-case behavior-diff cost and the count of remaining wording-only pins.
 
 ## Shape
 
@@ -133,7 +133,7 @@ reverse_recovery:
   boundary: scripts/kc-dev-flow-contract-test.py and the mechanism test suites it would delegate to (kc-dev-flow/scripts/*.test.py); no contract prose in scope
   layers:
     - surface: 31 positive phrase-pin loop sites
-      location: scripts/kc-dev-flow-contract-test.py L694-L1584
+      location: scripts/kc-dev-flow-contract-test.py, the 31 sites keyed by `require` message prefix in `## Pin inventory` (L694-L1584 at f47fd8ca only)
       completeness: EXISTS_BROKEN
       need: REQUIRED
       evidence: green when a rule is dropped and its words survive elsewhere; red when a kept rule is shortened — the failure named in `## The problem`
@@ -166,10 +166,20 @@ frameworks: the replay table below and the tier-2 case entries. The non-goal
 
 ### Accepted journey
 
-1. **OBSERVED** — GitHub Actions `marketplace-parity.yml` L57 runs
-   `./scripts/kc-dev-flow-contract-test.py`; that script also shells out to
-   `profile-contract-loader.test.py`, `engage-reconcile.test.py`, and
-   `poc-close-guard.test.py` (L338-L354). One CI entry point, four suites.
+1. **OBSERVED** — `python3 scripts/kc-dev-flow-contract-test.py` in a clean
+   local clone at `f47fd8ca` prints `kc-dev-flow contract: PASS`, exits `0`, and
+   takes **50.7 s** wall-clock. That is the AC-5 baseline. It shells out to the
+   mechanism suites: `profile-contract-loader.test.py` alone is 18.7 s and
+   `engage-reconcile.test.py` 1.8 s, so a tier-1 mutation can be driven on the
+   owning suite for seconds and confirmed on the full run once.
+   Two environment facts build must respect, both observed:
+   this shape worktree is **not** a valid baseline — the full run exits `1` in
+   0.46 s on `retired control still shipped:
+   kc-dev-flow/skills/setup-github-project-projection`, an empty leftover
+   directory holding no tracked file, left by an earlier checkout; and a bare
+   `git archive HEAD` export is not one either — a later sub-check needs a real
+   git checkout and dies on a missing smoke-test `candidate.json`. Mutation runs
+   go in a clean clone.
 2. **OBSERVED** — `profile-contract-loader.py --work-item <this item> --format json`
    emits `loaded` = exactly `["kernel.md", "profiles/pilot-product-slice/base.md",
    "profiles/pilot-product-slice/shape.md"]` and `declared_receipts` =
@@ -226,10 +236,20 @@ The equivalence instrument for that declaration is **the replaced suite plus its
 own mutation proof** — there is no second instrument, because the suite is the
 deliverable. Concretely, the declaration is falsified if either holds:
 
-- **F1** — a mutation the old pin caught produces no failure from the new suite.
-  Evidence validation must see: for one recorded tier-2 entry, `git apply` the
-  patch, run `python3 scripts/kc-dev-flow-contract-test.py` at the delivery base
-  (old pin red, recorded), then on the item's head (the case red, recorded).
+- **F1** — a mutation the old pin caught produces no failure from the new
+  instrument. The two sides are graded by different instruments, so the evidence
+  is asymmetric and validation must see both halves: **old side** — `git apply`
+  the recorded deletion patch in a clean clone at `f47fd8ca` and run
+  `python3 scripts/kc-dev-flow-contract-test.py`; the pin is red, message
+  recorded. **New side** — a tier-2 case is a `behavior-diff` run, not a suite
+  assertion, so the same patch on the item's head leaves the contract test
+  **green** by design. The case's redness is evidenced either by replaying it
+  (`behavior-diff.sh --file <doc> --task <recorded task> --fast`, 2 headless
+  runs) or by the flow-diff verdict excerpt copied into the case record. The
+  runner writes to `${BEHAVIOR_DIFF_HOME:-~/.behavior-diff}/runs/` on the
+  builder's machine, which is neither the repository nor this work item — so
+  every case record carries the excerpt, and replay is the fallback, not the
+  primary evidence path.
 - **F2** — the tier-1 replacement asserts nothing the mechanism enforces. Evidence
   validation must see: `git apply` the tier-1 patch, run the owning suite, read
   the failure message, confirm it names the rule; `git apply -R`, rerun, green.
@@ -245,39 +265,45 @@ no agent ever read the sentence. Tier 2 = only an agent's reading enforces it.
 Wording-only = the document sits on no agent's decision path, so no case can be
 designed. `split` means the site's pins divide across two tiers.
 
-| Site | Pins | Document | Rule the pin protects | Tier | Observable / case / reason |
+**The site key is the `require` failure-message prefix, not the line number.**
+Build edits this file top to bottom, so every L-number below is true only of
+`f47fd8ca` and is stale after the first conversion. The message prefix is unique
+per site and greppable, and it is what a replay record and the
+`reverse_recovery` receipt cite.
+
+| Site key | Pins | Document | Rule the pin protects | Tier | Observable / case / reason |
 |---|---|---|---|---|---|
-| L694-706 | 10 | kernel.md | Completion invariant: goal sufficiency + minimal necessity on one candidate | split | T2 for the working agent's without-it observation; the "First Officer confirms both before terminalization" half is an FO/ensign **handoff** rule needing the duo cycle — out of this item, recorded wording-only |
-| L711-722 | 9 | kernel.md | Implementation-exit subtraction and comment-necessity pass | 2 | Case: agent finishes a change with a restating comment; does it report cut blocks and kept candidates? Kernel loads at every stage — cheapest case, run first |
-| L726-739 | 5 | reverse-recovery-audit.md | Unified need vocabulary (`REQUIRED`, `NO_OBSERVED_CONSUMER`, search vs execution tier) | 2 | Case must first make the trigger fire, then reach the classification — two hops, higher design cost |
-| L746-760 | 12 | kernel.md | Provider-neutral planning authority split; no projector; no auto-write | split | T1: comparator read-only behaviour = `engage-reconcile.py` exit 0/1/2 (OBSERVED). T2: the authority-split and no-projector prose |
-| L764-776 | 7 | continue-dev-flow/SKILL.md | Provider engage behaviour: exact source, shared window/outcome, `status: clean`, exit 1/2 | 1 | `engage-reconcile.py` stdout JSON + exit code (OBSERVED) |
-| L777-790 | 11 | kernel.md | Brief boundary, Planning Receipt complete-or-absent, structured planning delta shape | 2 | Case: agent is handed a partial receipt and must stop with a delta rather than proceed |
-| L801-807 | 4 | kernel.md | Backlog exit bar: item leaves `backlog` only after the brief is admitted | 1 | `--validate-admission` emits `development_brief_sha256` (OBSERVED); build confirms the refusal path on a brief-less item |
-| L842-875 | 21 | README, choose-work-profile, continue-dev-flow, poc base | v4 POC contract fields and close duties | split | T1: `poc_*` receipt fields against the loader's `receipt_schema` and `poc-close-guard.py`. T2: the "do not dispatch a validation worker" duties |
-| L894-903 | 4 | continue-dev-flow/SKILL.md | Provider delivery linkage: one ephemeral binding, stop before push | 2 | Case at the delivery decision point; build checks first whether `pr-review-handoff.py` already refuses, which would move it to T1 |
-| L907-916 | 4 | pr-delivery.md | `delivery.branch` / `delivery.close_line` / reconciled source | 2 | Conditional reference; case must make `pr_delivery_selected` true |
-| L1094-1095 | 2 | adopt-dev-flow/SKILL.md | Static Local Profile marker pair | 1 | Loader reads only between `gate.LOCAL_PROFILE_START/END`; mutation = put a directive outside the markers and assert the loader ignores it |
-| L1105-1113 | 6 | choose-work-profile/SKILL.md | v3 receipt schema, route names, structured Ask UI | split | T1: `receipt_schema` and route resolution in loader JSON. T2: "structured Ask UI" |
-| L1120-1147 | 25 | adopt-dev-flow/SKILL.md | Adoption procedure: receipt classification, comparator exercise, provenance | 2 | Largest single site; several distinct rules. Case cost dominated by having to reach adoption in a trial |
-| L1159-1170 | 9 | MIGRATION.md | v4 migration steps | wording-only | Human migration document. Not in the loader's emitted set and on no agent's decision path — nothing to sample |
-| L1171-1182 | 6 | MIGRATION.md (3.x section) | Standalone planning branch during 3.x→4.x | wording-only | Same reason |
-| L1197-1211 | 12 | continue-dev-flow/SKILL.md | Loader invocation contract: emits core + base + stage only, exact work item, `A link is not activation` | 1 | `loaded` is exactly three paths and `declared_receipts` is the declared set (OBSERVED) |
-| L1218-1220 | 3 | continue-dev-flow/SKILL.md | Authority resolution order: brief, then receipt, then execution state | 2 | The surrounding order assertion (L1221-1225) survives; only the phrase membership is replaced by a case that puts the agent at a state read with an unclassified receipt |
-| L1226-1253 | 25 | continue-dev-flow/SKILL.md | Planning disambiguation: which branch runs the comparator, delta handling | split | T1: `--expected-*` flags, exit codes, `status: clean`, refuse-truncated. T2: branch selection and "do not promote the snapshot into planning authority" |
-| L1254-1260 | 4 | continue-dev-flow/SKILL.md | Conditional doc triggers; `receipt: null` creates no receipt | 1 | `declared_receipts` omits the `receipt: null` reference (OBSERVED) |
-| L1269-1275 | 4 | adopt-dev-flow/SKILL.md | Migration rule for older Captain choices and terminal-state mapping | 2 | Case at the adoption decision point |
-| L1287-1301 | 12 | RATIONALE.md | Why the flow is shaped this way | wording-only | Rationale prose read by people. No agent loads it at any decision point |
-| L1314-1319 | 3 | chief-engineer/SKILL.md | Next smallest step; `proceed \| adjust \| escalate`; no gate authority | 2 | Case: ask the Chief Engineer for a call that invites a state mutation; does it stay advisory? |
-| L1320-1326 | 4 | science-officer/SKILL.md | Risk trigger; recommendation set; not a veto; do not read the legacy alias | 2 | Same shape as above |
-| L1381-1401 | 18 | docs/dev/README.md | Linear cutover boundary, comparator table, env-var scoping, dispatch envelope | split | T1: `--expected-*`, `--state-revision`, envelope schema, and the process-env refusal `workspace authentication is unavailable` (OBSERVED). Wording-only: "not an iteration authority", a repo policy statement with no mechanism |
-| L1407-1413 | 4 | docs/dev/README.md | Admission snapshot is not a second accepted-goal authority | 2 | This text is the ideation stage definition the FO serves to a worker; case puts the worker at the snapshot/brief conflict |
-| L1436-1440 | 2 | docs/dev/README.md (Issue template) | Template starts at the problem; carries a planning delta | wording-only | The template's structure is already asserted non-loop at L1416-L1435 (heading set, order, `startswith`); the two remaining phrases are prose a human fills in. Build re-checks whether a template parse covers them before this is final |
-| L1446-1450 | 2 | docs/dev/ROADMAP.md | Roadmap headings are execution groups, not planning windows | wording-only | A hygiene statement about a human-maintained planning file; no agent reads ROADMAP at a decision point |
-| L1517-1525 | 3 | kc-dev-flow/README.md | Candidate receipt binds its exact package snapshot | 1 | `scripts/kc-dev-flow-published-tag-smoke.py` enforces it; build names the receipt field it asserts, else this drops to wording-only |
-| L1541-1546 | 3 | kc-dev-flow/README.md | `--validate-admission` is explicit; default does not inspect acceptance headings | 1 | Presence/absence of `development_brief_sha256` in loader JSON (OBSERVED) |
-| L1557-1570 | 8 | kc-dev-flow/README.md | Everything under `references/` is conditional; selecting a profile activates none of it | 1 | `loaded` list and `declared_receipts` (OBSERVED) |
-| L1576-1584 | 3 | docs/dev/runbooks/validation-evidence.md | POC never loads it; smallest evidence set that can fail | 2 | The validation ensign reads this runbook; case puts it at evidence selection |
+| `kernel omits completion invariant`<br>L694-706 | 10 | kernel.md | Completion invariant: goal sufficiency + minimal necessity on one candidate | split | T2 for the working agent's without-it observation; the "First Officer confirms both before terminalization" half is an FO/ensign **handoff** rule needing the duo cycle — out of this item, recorded wording-only |
+| `kernel omits subtraction rule`<br>L711-722 | 9 | kernel.md | Implementation-exit subtraction and comment-necessity pass | 2 | Case: agent finishes a change with a restating comment; does it report cut blocks and kept candidates? Kernel loads at every stage — cheapest case, run first |
+| `audit omits unified need vocabulary`<br>L726-739 | 5 | reverse-recovery-audit.md | Unified need vocabulary (`REQUIRED`, `NO_OBSERVED_CONSUMER`, search vs execution tier) | 2 | Case must first make the trigger fire, then reach the classification — two hops, higher design cost |
+| `kernel omits provider-neutral planning boundary`<br>L746-760 | 12 | kernel.md | Provider-neutral planning authority split; no projector; no auto-write | split | T1: comparator read-only behaviour = `engage-reconcile.py` exit 0/1/2 (OBSERVED). T2: the authority-split and no-projector prose |
+| `continuation omits provider engage behavior`<br>L764-776 | 7 | continue-dev-flow/SKILL.md | Provider engage behaviour: exact source, shared window/outcome, `status: clean`, exit 1/2 | 1 | `engage-reconcile.py` stdout JSON + exit code (OBSERVED) |
+| `kernel omits brief boundary`<br>L777-790 | 11 | kernel.md | Brief boundary, Planning Receipt complete-or-absent, structured planning delta shape | 2 | Case: agent is handed a partial receipt and must stop with a delta rather than proceed |
+| `kernel backlog exit bar is missing`<br>L801-807 | 4 | kernel.md | Backlog exit bar: item leaves `backlog` only after the brief is admitted | 1 | `--validate-admission` emits `development_brief_sha256` (OBSERVED); build confirms the refusal path on a brief-less item |
+| `{relative} omits the v4 POC contract`<br>L842-875 | 21 | README, choose-work-profile, continue-dev-flow, poc base | v4 POC contract fields and close duties | split | T1: `poc_*` receipt fields against the loader's `receipt_schema` and `poc-close-guard.py`. T2: the "do not dispatch a validation worker" duties |
+| `continuation omits provider delivery linkage`<br>L894-903 | 4 | continue-dev-flow/SKILL.md | Provider delivery linkage: one ephemeral binding, stop before push | 2 | Case at the delivery decision point; build checks first whether `pr-review-handoff.py` already refuses, which would move it to T1 |
+| `PR delivery omits provider linkage`<br>L907-916 | 4 | pr-delivery.md | `delivery.branch` / `delivery.close_line` / reconciled source | 2 | Conditional reference; case must make `pr_delivery_selected` true |
+| `adopter omits static Local Profile marker`<br>L1094-1095 | 2 | adopt-dev-flow/SKILL.md | Static Local Profile marker pair | 1 | Loader reads only between `gate.LOCAL_PROFILE_START/END`; mutation = put a directive outside the markers and assert the loader ignores it |
+| `chooser is missing`<br>L1105-1113 | 6 | choose-work-profile/SKILL.md | v3 receipt schema, route names, structured Ask UI | split | T1: `receipt_schema` and route resolution in loader JSON. T2: "structured Ask UI" |
+| `adopter omits scheduling binding`<br>L1120-1147 | 25 | adopt-dev-flow/SKILL.md | Adoption procedure: receipt classification, comparator exercise, provenance | 2 | Largest single site; several distinct rules. Case cost dominated by having to reach adoption in a trial |
+| `v4 migration omits`<br>L1159-1170 | 9 | MIGRATION.md | v4 migration steps | wording-only | Human migration document. Not in the loader's emitted set and on no agent's decision path — nothing to sample |
+| `3.x migration omits standalone planning branch`<br>L1171-1182 | 6 | MIGRATION.md (3.x section) | Standalone planning branch during 3.x→4.x | wording-only | Same reason |
+| `continuation is missing`<br>L1197-1211 | 12 | continue-dev-flow/SKILL.md | Loader invocation contract: emits core + base + stage only, exact work item, `A link is not activation` | 1 | `loaded` is exactly three paths and `declared_receipts` is the declared set (OBSERVED) |
+| `continuation authority resolution omits`<br>L1218-1220 | 3 | continue-dev-flow/SKILL.md | Authority resolution order: brief, then receipt, then execution state | 2 | The surrounding order assertion (L1221-1225) survives; only the phrase membership is replaced by a case that puts the agent at a state read with an unclassified receipt |
+| `continuation planning disambiguation omits`<br>L1226-1253 | 25 | continue-dev-flow/SKILL.md | Planning disambiguation: which branch runs the comparator, delta handling | split | T1: `--expected-*` flags, exit codes, `status: clean`, refuse-truncated. T2: branch selection and "do not promote the snapshot into planning authority" |
+| `continuation omits doc trigger`<br>L1254-1260 | 4 | continue-dev-flow/SKILL.md | Conditional doc triggers; `receipt: null` creates no receipt | 1 | `declared_receipts` omits the `receipt: null` reference (OBSERVED) |
+| `adopter omits migration rule`<br>L1269-1275 | 4 | adopt-dev-flow/SKILL.md | Migration rule for older Captain choices and terminal-state mapping | 2 | Case at the adoption decision point |
+| `rationale omits`<br>L1287-1301 | 12 | RATIONALE.md | Why the flow is shaped this way | wording-only | Rationale prose read by people. No agent loads it at any decision point |
+| `Chief Engineer is missing`<br>L1314-1319 | 3 | chief-engineer/SKILL.md | Next smallest step; `proceed \| adjust \| escalate`; no gate authority | 2 | Case: ask the Chief Engineer for a call that invites a state mutation; does it stay advisory? |
+| `Science Officer is missing`<br>L1320-1326 | 4 | science-officer/SKILL.md | Risk trigger; recommendation set; not a veto; do not read the legacy alias | 2 | Same shape as above |
+| `self-adoption omits Linear cutover boundary`<br>L1381-1401 | 18 | docs/dev/README.md | Linear cutover boundary, comparator table, env-var scoping, dispatch envelope | split | T1: `--expected-*`, `--state-revision`, envelope schema, and the process-env refusal `workspace authentication is unavailable` (OBSERVED). Wording-only: "not an iteration authority", a repo policy statement with no mechanism |
+| `self-adoption misstates brief authority`<br>L1407-1413 | 4 | docs/dev/README.md | Admission snapshot is not a second accepted-goal authority | 2 | This text is the ideation stage definition the FO serves to a worker; case puts the worker at the snapshot/brief conflict |
+| `manual admission Issue body omits`<br>L1436-1440 | 2 | docs/dev/README.md (Issue template) | Template starts at the problem; carries a planning delta | wording-only | The template's structure is already asserted non-loop at L1416-L1435 (heading set, order, `startswith`); the two remaining phrases are prose a human fills in. Build re-checks whether a template parse covers them before this is final |
+| `Roadmap is not thin enough for provider-neutral planning`<br>L1446-1450 | 2 | docs/dev/ROADMAP.md | Roadmap headings are execution groups, not planning windows | wording-only | A hygiene statement about a human-maintained planning file; no agent reads ROADMAP at a decision point |
+| `package README omits the release-proof boundary`<br>L1517-1525 | 3 | kc-dev-flow/README.md | Candidate receipt binds its exact package snapshot | 1 | `scripts/kc-dev-flow-published-tag-smoke.py` enforces it; build names the receipt field it asserts, else this drops to wording-only |
+| `package README omits admission boundary`<br>L1541-1546 | 3 | kc-dev-flow/README.md | `--validate-admission` is explicit; default does not inspect acceptance headings | 1 | Presence/absence of `development_brief_sha256` in loader JSON (OBSERVED) |
+| `package README omits mod boundary`<br>L1557-1570 | 8 | kc-dev-flow/README.md | Everything under `references/` is conditional; selecting a profile activates none of it | 1 | `loaded` list and `declared_receipts` (OBSERVED) |
+| `validation runbook omits`<br>L1576-1584 | 3 | docs/dev/runbooks/validation-evidence.md | POC never loads it; smallest evidence set that can fail | 2 | The validation ensign reads this runbook; case puts it at evidence selection |
 
 Totals: **8 tier 1, 5 split, 13 tier 2, 5 wording-only = 31.** Counting split
 halves, there are **13 tier-1 rule groups and 18 tier-2 candidate rules**.
@@ -314,6 +340,22 @@ figure, not a billed one, and a threshold denominated in it would be a threshold
 on a number nobody is charged. `--fast` (1 trial per variant, 2 headless runs)
 for the probe; 3 trials per variant (6 runs) for a recorded proof.
 
+**Three constraints the runner imposes on task design, all observed in
+`behavior-diff.sh` and `run-trial.sh`.** First, each variant is
+`git -C <repo> archive HEAD | tar -x` into a scratch copy, and
+`docs/dev/.spacedock-state` is gitignored (`.gitignore:29`) — confirmed by
+`git archive HEAD | tar -t`, which lists zero entries under it. **A trial copy
+has no work item and no state checkout**, so any case needing one must carry a
+tracked fixture in the task. Second, the trial's tool allowlist has no `Write`
+or `Edit`; the agent reads and runs Bash only, and the flow diff is derived from
+the commands it ran plus its final answer. A rule whose violation is only
+visible as an edit cannot be sampled this way — it has to be recast so the
+divergence appears in what the agent runs or says. Third, `kernel.md` is read
+only if the task routes the agent through the loader (for example, "run
+`kc-dev-flow/scripts/profile-contract-loader.py --work-item <fixture>` and act on
+the contract it loads"); a task that never forces that read yields identical
+flows for a reason that is not about the rule.
+
 **Machine dependency, declared.** The runner is not in this repository. It is
 `~/.claude/plugins/cache/engram/behavior-diff/0.1.0/skills/behavior-diff/scripts/behavior-diff.sh`
 from the `engram` marketplace, and it needs `jq` and the `claude` CLI on PATH.
@@ -332,7 +374,13 @@ deliberate and is the item's first reportable fact. Build therefore measures
 **three cases first** — L711-722 (kernel, always loaded, cheapest), L777-790
 (kernel, planning delta), L1314-1319 (chief-engineer, a small separate skill) —
 then stops and reports the measured median against the cap with the projection
-for the remaining 15. The Captain then chooses: raise the cap, narrow tier-2
+for the remaining 15. **That probe is biased low and the report says so**: all
+three are single-role rules in documents a plain `claude -p` reaches with no
+fixture, while most of the remaining 15 sit in `continue-dev-flow/SKILL.md` and
+`adopt-dev-flow/SKILL.md` at First-Officer and adoption decision points that
+need a tracked work item, a workflow directory, and possibly a spacedock binary
+inside the trial copy. The Captain's checkpoint choice must not be made on the
+cheap-class median alone. The Captain then chooses: raise the cap, narrow tier-2
 sampling to `kernel.md` rules only (5 sites, the one document every working
 stage loads), or route back. Build does not convert the remaining tier-2 rules
 before that choice, and does not reclassify an unaffordable rule as wording-only
@@ -385,6 +433,8 @@ for a Captain choice; it passes and fails nothing.
 
 ### Summary
 
-The five OBSERVED journey steps were exercised, not asserted: `engage-reconcile.py` was run to see exit 0 with `{"status":"clean"}`, exit 1 with a classified delta, and exit 2 on invalid input; `profile-contract-loader.py --format json` was run against this work item to see `loaded` equal exactly three paths and `declared_receipts` omit the `receipt: null` reference; `--validate-admission` was run to see `development_brief_sha256` appear only in that mode; and `linear-admission.py` was run without credentials to see it refuse with `workspace authentication is unavailable`. Those four outputs are the tier-1 observables the 8 tier-1 and 5 split sites replace their pins with, and `linear-admission.py` L295 shows the comparator is invoked mechanically rather than followed as an instruction — which is what makes those rules tier 1 rather than tier 2.
+Five journey steps were exercised rather than asserted: the contract test passes in a clean clone at `f47fd8ca` (exit `0`, 50.7 s — the AC-5 baseline), `engage-reconcile.py` was driven to exit `0`/`1`/`2` with its JSON, the loader was run to see `loaded` equal exactly three paths, `declared_receipts` omit the `receipt: null` reference, and `development_brief_sha256` appear only under `--validate-admission`, and `linear-admission.py` was run credential-less to see it refuse — those four outputs are what the 8 tier-1 and 5 split sites assert instead of wording.
 
-Two facts the gate should rule on. First, the recorded pin count was wrong in both places the item states it (19 and 20); the measured figure is 31 sites / 245 phrases, and the seven negative-pin loops are excluded with a stated reason, which is what bounds AC-1. Second, the inventory yields 18 tier-2 candidate rules against a proposed cap of 8 cases — the shape does not resolve that by reclassifying rules to fit. It measures three cases, reports the median against the cap, and puts the choice (raise the cap, narrow tier-2 to `kernel.md`'s five sites, or route back) to the Captain, which is the item's own route-back condition firing as designed. The tier-2 instrument is an installed plugin outside this repository (`engram` behavior-diff 0.1.0, plus `jq` and the `claude` CLI); that is declared as a limit on tier-2 reproducibility and nothing tier-2 runs in CI.
+Two facts the gate should rule on. The recorded pin count is wrong in both places the item states it (19 and 20) against a measured 31 sites / 245 phrases; and the inventory yields 18 tier-2 candidate rules against a proposed cap of 8 cases, which the shape does not resolve by reclassifying rules to fit — it measures three cases, declares that probe biased low, and puts the choice to the Captain, which is this item's own route-back condition firing as designed.
+
+Three environment limits are recorded rather than assumed: this worktree is not a valid baseline (a stale empty `setup-github-project-projection` directory reddens the run in 0.46 s), a behavior-diff trial copy carries no work item because `docs/dev/.spacedock-state` is gitignored and absent from `git archive HEAD`, and the trial agent has no `Write`/`Edit` tool, so a rule whose violation is only visible as an edit cannot be sampled without recasting.
