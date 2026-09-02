@@ -26,6 +26,17 @@ gates:
                 id: briefing:m29y546p4sh77vbs2dv09gkp:backlog:attempt-1:revision-1
                 digest: sha256:7ae98598b34e8752d28496fb24b9d24a58db08b6fc675d9dcd83c2e78b21e62a
                 room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:m29y546p4sh77vbs2dv09gkp:backlog:1
+                briefing: briefing:m29y546p4sh77vbs2dv09gkp:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-02T14:10:08.252464Z"
+                decision: approve
+                reason: 'Captain approved DEV-51 into Pilot ideation: Project kc-dev-flow slimming dogfood, Cycle 2, sprint S8; semantics_unchanged true, the equivalence instrument is the item''s own deliverable.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
