@@ -1,6 +1,6 @@
 ---
 title: Load kc-dev-flow contracts from the installed plugin
-status: validation
+status: done
 source: https://linear.app/duckbase-co/issue/DEV-45/load-kc-dev-flow-contracts-from-the-installed-plugin
 product: kc-dev-flow
 planning-window: Linear Cycle b788c52d-8370-475f-be4f-8fcd88dd03d6 2026-08-27T16:00:00.000Z/2026-09-10T16:00:00.000Z
@@ -9,12 +9,12 @@ sprint: S7
 sprint-readiness: ready
 design: required
 started: 2026-09-01T16:31:49Z
-completed:
-verdict:
+completed: 2026-09-02T04:54:01Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-dev-45-load-kc-dev-flow-contracts
 issue:
 pr: pr-merge:326
-mod-block: merge:pr-merge
+mod-block:
 id: 3fkmdwdvsfha8ektb2s5jz7d
 gates:
     version: 1
@@ -95,7 +95,8 @@ gates:
                 reason: Captain approved exact validated candidate 111d47126df43c15c02d8db4bb0fb4621df25aa1 for native-stack delivery.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-02T04:54:01Z
 ---
 
 ## Work profile receipt
