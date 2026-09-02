@@ -59,6 +59,7 @@ def write_work_item(
     sprint_readiness: str | None = "ready",
     poc_fields: dict[str, str] | None = None,
     recovery_fields: dict[str, str] | None = None,
+    necessity_fields: dict[str, str] | None = None,
     planning_receipt: tuple[str, str, str] = ("", "", ""),
     body: str = "",
 ) -> Path:
@@ -71,6 +72,14 @@ def write_work_item(
             "poc_budget": "One local run and one review",
             "poc_stop_when": "Stop after the first integrated result",
         }
+    if (
+        necessity_fields is None
+        and profile in MODULE.NECESSITY_PROFILES
+        and schema.endswith("/v3")
+        and workflow_stage == "ideation"
+        and route != ["build", "verify"]
+    ):
+        necessity_fields = {"semantics_unchanged": "false"}
     path = root / "work-items" / f"{name}.md"
     path.parent.mkdir(exist_ok=True)
     source, planning_window, planning_outcome = planning_receipt
@@ -103,6 +112,10 @@ def write_work_item(
     if recovery_fields is not None:
         receipt.extend(
             f"  {field}: {value}" for field, value in recovery_fields.items()
+        )
+    if necessity_fields is not None:
+        receipt.extend(
+            f"  {field}: {value}" for field, value in necessity_fields.items()
         )
     receipt.extend(
         [
@@ -952,6 +965,80 @@ Stop when the planning tuple cannot express the work.
     require(
         rejected.returncode == 2 and "stale route" in rejected.stderr,
         "stale profile route did not fail closed",
+    )
+
+    unchanged_no_instrument = write_work_item(
+        root,
+        "production",
+        "validation",
+        "unchanged-no-instrument",
+        necessity_fields={"semantics_unchanged": "true"},
+    )
+    try:
+        MODULE.resolve_work_item(unchanged_no_instrument)
+    except MODULE.ContractError as exc:
+        require(
+            str(exc) == "work item must contain exactly one equivalence_instrument",
+            f"wrong unchanged-no-instrument refusal: {exc}",
+        )
+    else:
+        raise SystemExit("profile contract loader test: accepted unchanged-no-instrument")
+
+    unchanged_placeholder_failure = write_work_item(
+        root,
+        "production",
+        "validation",
+        "unchanged-placeholder-failure",
+        necessity_fields={
+            "semantics_unchanged": "true",
+            "equivalence_instrument": "python3 scripts/kc-dev-flow-contract-test.py --ablation-check",
+            "equivalence_instrument_failure": "TBD",
+        },
+    )
+    try:
+        MODULE.resolve_work_item(unchanged_placeholder_failure)
+    except MODULE.ContractError as exc:
+        require(
+            "equivalence_instrument_failure must be a concrete scalar" in str(exc),
+            f"wrong placeholder-failure refusal: {exc}",
+        )
+    else:
+        raise SystemExit(
+            "profile contract loader test: accepted placeholder equivalence_instrument_failure"
+        )
+
+    unchanged_at_ideation = write_work_item(
+        root,
+        "production",
+        "ideation",
+        "unchanged-at-ideation",
+        necessity_fields={"semantics_unchanged": "true"},
+    )
+    loaded_unchanged = MODULE.resolve_work_item(unchanged_at_ideation)
+    require(
+        loaded_unchanged["semantics_unchanged"] == "true",
+        "declared-unchanged receipt did not load at ideation: refusal sits at the wrong boundary",
+    )
+
+    # AC-7: a pre-change v3 receipt with no semantics_unchanged key still loads
+    # past ideation, so the requirement lands only for items shaped after it.
+    MODULE.resolve_work_item(
+        write_work_item(
+            root,
+            "production",
+            "implementation",
+            "legacy-necessity-implementation",
+            necessity_fields={},
+        )
+    )
+    MODULE.resolve_work_item(
+        write_work_item(
+            root,
+            "production",
+            "validation",
+            "legacy-necessity-validation",
+            necessity_fields={},
+        )
     )
 
     missing = root / "profiles" / "production" / "verify.md"

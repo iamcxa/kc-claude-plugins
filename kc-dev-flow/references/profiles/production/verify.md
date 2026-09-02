@@ -39,6 +39,9 @@ cheapest instruments that can fail.
 
 ## Required output
 
+- when the receipt declares `semantics_unchanged: true`, the named
+  `equivalence_instrument` observed to fail against
+  `equivalence_instrument_failure`, the case it must flag;
 - exact-revision journey and lifecycle evidence;
 - required deterministic gate results;
 - review disposition: deterministic-only with reason, applicable named

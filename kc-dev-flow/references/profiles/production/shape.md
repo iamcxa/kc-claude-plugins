@@ -64,7 +64,7 @@ resulting behaviour, in the order it happens. Three rules bind it:
 
 Declare alongside it the observable semantics this work may change — command
 grammar, stored formats, authority, runtime behaviour — or state that it changes
-none.
+none. Record it as `semantics_unchanged`.
 
 ## Where it touches
 

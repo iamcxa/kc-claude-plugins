@@ -831,6 +831,26 @@ def main() -> int:
         "Runtime adapters own task and execution-context\ncardinality. At admission, each task records the tuple.",
         "kernel owns runtime topology: each task records the tuple",
     )
+    run_kernel_contract_mutant(
+        "removal-grading-clause-removed",
+        "create no receipt or commentary.\n  Grade removals too.\n",
+        "create no receipt or commentary.\n",
+        "kernel omits subtraction rule: Grade removals too",
+    )
+    run_loader_admission_mutant(
+        "necessity-instrument-field-removed",
+        'NECESSITY_FIELDS = ("equivalence_instrument", "equivalence_instrument_failure")\n',
+        'NECESSITY_FIELDS = ("equivalence_instrument_failure",)\n',
+        "wrong unchanged-no-instrument refusal",
+    )
+    run_manual_contract_mutant(
+        "audit-worked-case-classification-reverted",
+        "kc-dev-flow/references/reverse-recovery-audit.md",
+        "consumer classifies\n`REQUIRED`, the same tier",
+        "consumer classifies\n`NO_OBSERVED_CONSUMER`, not the tier",
+        "audit omits unified need vocabulary: a safety-boundary surface with no "
+        "observed consumer classifies `REQUIRED`",
+    )
     run_manual_contract_mutant(
         "execution-scope-replacement-restored",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",

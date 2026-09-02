@@ -39,6 +39,8 @@ RECOVERY_FIELDS = (
     "recovery_falsifier",
     "recovery_rollback",
 )
+NECESSITY_PROFILES = {"pilot-product-slice", "production"}
+NECESSITY_FIELDS = ("equivalence_instrument", "equivalence_instrument_failure")
 RECOVERY_RISKS = {
     "behavior",
     "contract-schema",
@@ -551,6 +553,8 @@ def resolve_work_item(path: Path) -> dict[str, str]:
             f"stale route for {profile}: expected {expected_route}, got {receipt_route}"
         )
 
+    necessity_values: dict[str, str] = {}
+    necessity_active = schema == PROFILE_SCHEMA_V3 and profile in NECESSITY_PROFILES and not is_recovery
     first_workflow_stage = next(iter(ROUTES[profile]))
     if workflow_stage == first_workflow_stage:
         sprint = _one_field(
@@ -569,6 +573,29 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         )
         if sprint_readiness != "ready":
             raise ContractError("frontmatter sprint-readiness must be 'ready'")
+        if necessity_active:
+            semantics_unchanged = _one_field(
+                block,
+                r"^  semantics_unchanged:[ \t]*([^\n#]*?)[ \t]*$",
+                "semantics_unchanged",
+            )
+            if semantics_unchanged not in {"true", "false"}:
+                raise ContractError("semantics_unchanged must be true or false")
+            necessity_values["semantics_unchanged"] = semantics_unchanged
+    if necessity_active and workflow_stage == "validation":
+        semantics_unchanged = _optional_field(block, "semantics_unchanged")
+        if semantics_unchanged is not None and semantics_unchanged not in {"true", "false"}:
+            raise ContractError("semantics_unchanged must be true or false")
+        if semantics_unchanged == "true":
+            for field in NECESSITY_FIELDS:
+                value = _one_field(
+                    block,
+                    rf"^  {field}:[ \t]*([^\n#]*?)[ \t]*$",
+                    field,
+                )
+                if is_placeholder_scalar(value):
+                    raise ContractError(f"{field} must be a concrete scalar")
+                necessity_values[field] = value
 
     return {
         "path": path.as_posix(),
@@ -578,6 +605,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         "workflow_stage": workflow_stage,
         **poc_values,
         **recovery_values,
+        **necessity_values,
     }
 
 

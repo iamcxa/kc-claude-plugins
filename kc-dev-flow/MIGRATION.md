@@ -199,6 +199,17 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-09-02 — Pilot and Production ideation declares `semantics_unchanged`
+
+A Pilot or Production `work_profile` receipt entering `ideation` now requires
+`semantics_unchanged: true | false`, making the shape contracts' existing
+"declare the observable semantics this work may change, or state that it
+changes none" prose machine-readable; declaring `true` further requires
+`equivalence_instrument` and `equivalence_instrument_failure` at `validation`.
+A receipt already past `ideation` when the new plugin version is installed
+carries no `semantics_unchanged` key and loads unchanged — the requirement
+binds only an item at or re-entering `ideation`.
+
 ## 2026-08-24 — promotion asks whether a consumer must migrate
 
 `public compatibility` was one of the triggers that promote work to

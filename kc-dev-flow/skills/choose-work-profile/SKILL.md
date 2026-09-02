@@ -14,7 +14,11 @@ Ask first: **Could credible negative evidence cancel or materially change the
 next commitment this item asks the Captain to accept?** Yes recommends POC. No
 compares Pilot and Production using the existing delivery-risk boundaries.
 
-Read the exact work item and its `## Work profile receipt`. Reuse an unchanged
+Read the exact work item and its `## Work profile receipt`. A Pilot or
+Production receipt entering `ideation` records `semantics_unchanged`, making the
+shape's existing observable-semantics declaration machine-readable; the loader
+refuses `ideation` without it and refuses `validation` without an
+`equivalence_instrument` when it was declared `true`. Reuse an unchanged
 supported receipt. A v2 Pilot or Production receipt remains supported; an active
 v2 POC must finish on its pinned 3.x pair or be Captain re-recorded as v3. Treat
 any receipt as stale when audience, lifespan, valuable state, mutation boundary,
@@ -91,6 +95,8 @@ work_profile:
     implementation: [<task-specific obligations>]
     testing: [<task-specific obligations>]
   scope_boundary: <what this profile excludes>
+  # Pilot and Production entering ideation only.
+  semantics_unchanged: true | false
   # POC only; omit these fields for Pilot and Production.
   poc_decision: <the next commitment this evidence decides>
   poc_falsifier: <the cheapest credible negative evidence>

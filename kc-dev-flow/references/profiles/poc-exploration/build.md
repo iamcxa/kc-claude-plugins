@@ -60,7 +60,8 @@ production qualities outside the selected boundary.
 
 For direct proof, record the durable `poc_outcome` during build, run one real
 journey, its critical falsifier, and without-it checks only for retained
-mechanisms. Do not invoke RoboRev or dispatch a validation worker. Fresh proof
+mechanisms — `reverse-recovery-audit.md`'s `disproof_hook`, run at execution
+tier. Do not invoke RoboRev or dispatch a validation worker. Fresh proof
 keeps the outcome and independent decision in validation. If time is exhausted,
 record `change` with the strongest evidence, limit, reversal fact, and cleanup
 status; do not kill an active tool call or continue silently.

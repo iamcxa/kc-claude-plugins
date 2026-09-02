@@ -436,6 +436,8 @@ def write_profile_work_item(
                 "  poc_stop_when: Stop after the first integrated result",
             ]
         )
+    elif profile in ("pilot-product-slice", "production") and workflow_stage == "ideation":
+        receipt.append("  semantics_unchanged: false")
     receipt.extend(["```", ""])
     path.write_text(
         "\n".join(receipt),
@@ -712,8 +714,26 @@ for phrase in [
     "reports both the blocks it cut and the candidates it kept, with the reason for each",
     "LOC and file counts are diagnostic signals, never pass/fail gates",
     "create no receipt or commentary",
+    "Grade removals too",
 ]:
     require(phrase in normalized_kernel, f"kernel omits subtraction rule: {phrase}")
+
+audit = read("kc-dev-flow/references/reverse-recovery-audit.md")
+normalized_audit = " ".join(audit.split())
+for phrase in [
+    "it maps to `kernel.md`'s minimal-necessity reasons — the accepted goal, a "
+    "named falsifier, a safety boundary, or a required lifecycle obligation",
+    "`NO_OBSERVED_CONSUMER` | None of the REQUIRED reasons was found inside "
+    "declared boundaries",
+    "a safety-boundary surface with no observed consumer classifies `REQUIRED`, "
+    "the same tier `kernel.md`'s execution-tier mapping reaches",
+    "This audit's `disproof_hook` runs at the search tier: it can conclude only "
+    "that two searches inside the named boundary found no consumer, never that "
+    "none exists",
+    "`kernel.md`'s without-it observation runs the same primitive at the "
+    "execution tier and can conclude a surface is unnecessary",
+]:
+    require(phrase in normalized_audit, f"audit omits unified need vocabulary: {phrase}")
 chooser_contract = read("kc-dev-flow/skills/choose-work-profile/SKILL.md")
 require_production_route(
     chooser_contract,
