@@ -73,6 +73,17 @@ gates:
                 id: briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-2:revision-1
                 digest: sha256:7f8187fd2f63e68b6adcc321577da471e987fbd3afa693622d5cc1fe7b3dac07
                 room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:m29y546p4sh77vbs2dv09gkp:validation:2
+                briefing: briefing:m29y546p4sh77vbs2dv09gkp:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-02T17:16:21.004124Z"
+                decision: approve
+                reason: Captain approved the verification ruling for exact revision 370f02ba and authorized push under the Linear head branch plus Draft PR creation with close line Fixes DEV-51; 6 of 13 tier-1 groups converted, 23 rules wording-only under the tier-2 ruling.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
