@@ -1,6 +1,6 @@
 ---
 title: "Replace kc-dev-flow contract-test phrase pins with behaviour assertions a mutation can redden"
-status: implementation
+status: validation
 source: https://linear.app/duckbase-co/issue/DEV-51/replace-kc-dev-flow-contract-test-phrase-pins-with-behaviour
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
