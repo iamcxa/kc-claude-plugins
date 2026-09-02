@@ -153,3 +153,342 @@ bound at a verification boundary without adding a new receipt or harness.
 ## Measurement
 
 Not yet measured. Shape records the `where it touches` table and stop numbers against the delivery base; build records the diff counts as diagnostics.
+
+## Shape
+
+### Delivery base
+
+`origin/main` = `f9683a33`. Recorded because the working checkout `133e869d` is
+behind `main` and still carries a `docs/dev/_mods/` tree that `main` deleted, so
+any `lines now` counted in this checkout for a vendored file is a phantom. All
+counts below are `git show f9683a33:<path> | wc -l`.
+
+### AC-6 is already satisfied at the delivery base
+
+`git ls-tree -r --name-only f9683a33 -- docs/dev/_mods/` returns exactly one
+path, `docs/dev/_mods/pr-merge.md`. The vendored contract pair is gone; the
+loader resolves from `PACKAGE_ROOT / "references"` against
+`kc-dev-flow/contract-manifest.json`. AC-6's second branch — "the
+installed-plugin resolution has already removed the vendored pair" — holds, and
+its enforcement point is the `obsolete_adopter_copies` set in
+`scripts/kc-dev-flow-contract-test.py`, which refuses the pair's return. This
+item adds nothing for AC-6.
+
+### Journey
+
+Accepted journey. Each step names the acting program.
+
+1. OBSERVED — `choose-work-profile` (agent, reading its SKILL.md template)
+   returns a `work_profile` receipt into the work item. The Captain selects.
+2. OBSERVED — `kc-dev-flow/scripts/profile-contract-loader.py` reads the work
+   item, validates the receipt, and renders the kernel plus the selected
+   profile's base and current stage contract. It raises `ContractError` and
+   emits nothing on an invalid receipt.
+3. OBSERVED — a shape worker reads `reverse-recovery-audit.md` when
+   `brownfield_capability_change` fires and writes a `reverse_recovery` receipt
+   classifying each layer on completeness and need.
+4. OBSERVED — at implementation exit and at completion, a worker reads
+   `kernel.md` and maps each retained surface to the accepted goal, a named
+   falsifier, a safety boundary, or a required lifecycle obligation.
+5. DESIGNED — a worker declaring `semantics_unchanged: true` at its route's
+   first working stage supplies an equivalence instrument and the case that
+   instrument was observed to flag; the loader refuses the stage load without
+   them.
+6. OBSERVED — `scripts/kc-dev-flow-contract-test.py` asserts the kernel and
+   contract phrases; `scripts/kc-dev-flow-minimal-stack-ablation.test.py`
+   mutates each and requires rejection. `.github/workflows/kc-dev-flow-release-gate.yml`
+   runs both.
+
+Unhappy paths, same terms. A worker who never fires
+`brownfield_capability_change` reads no audit and reaches step 4 with the
+kernel vocabulary only — the split this item closes. A worker who declares
+unchanged semantics today passes step 5 with nothing, because nothing exists to
+refuse it (`grep -rn -iE "equivalence|semantics_unchanged" kc-dev-flow/` at
+`f9683a33` returns no match). A loader `ContractError` stops the stage; it does
+not degrade to a warning.
+
+**Observable semantics this work may change.** Stored format: the `work_profile`
+receipt gains one required and two conditional scalars. Runtime behaviour: the
+loader refuses a receipt it previously accepted. Command grammar and authority:
+unchanged. Contract prose that agents read: changed, which is the point.
+
+### AC-4 enforcement point
+
+**A loader-required field, not a prose-only bounded claim.** The constraint that
+decides it is this item's own testing obligation — "a declared-unchanged change
+without an instrument is refused at the named enforcement point and the refusal
+is observed." A prose-only claim has no observable refusal; its only available
+check is a substring assertion that the sentence is present, and the kernel's
+own verification discipline names `refusal` as driving the system and reading
+its rejection. Only `ContractError` produces a rejection to read.
+
+Named point: `resolve_work_item` in
+`kc-dev-flow/scripts/profile-contract-loader.py`, fail-closed — the stage
+contract does not render.
+
+Fields, on schema `kc-dev-flow-work-profile/v3` (no version bump; see below):
+
+- `semantics_unchanged: true | false` — required for `pilot-product-slice` and
+  `production` when `workflow_stage` equals the route's first working stage.
+  Precedent: the existing `if workflow_stage == first_workflow_stage` sprint
+  check.
+- when `true`, `equivalence_instrument` and `equivalence_instrument_failure` are
+  required and rejected as placeholders through the existing
+  `is_placeholder_scalar`.
+
+**The bounded half.** The loader enforces presence and non-placeholder
+concreteness. It cannot verify that the named instrument exists, ran, or
+failed. That half is a duty on the verify owner, written as a required-output
+line in `production/verify.md` and `pilot-product-slice/verify-deliver.md` — a
+prohibition assigned to a named authority, which the kernel's classify-by-falsifier
+rule permits without a mechanism. Both halves get written; neither is claimed to
+be the other.
+
+**Non-goal ruling: a required field inside the existing `work_profile` receipt
+is not a new receipt.** The scope boundary bans "a new receipt or harness" and
+the non-goals ban "a new receipt, registry, script, CI job, reviewer loop". The
+`work_profile` receipt already exists, is already loader-validated, and already
+carries conditionally-required scalars under exactly this pattern (`POC_FIELDS`,
+`RECOVERY_FIELDS`). No new YAML block, file, script, or CI job. The route-back
+condition "the equivalence requirement cannot be bound at a verification
+boundary without adding a new receipt or harness" therefore does not fire.
+
+**Why v3 and not v4.** `kc-dev-flow-work-profile/v3` appears in ten files at the
+delivery base (`RATIONALE.md`, `README.md`, `MIGRATION.md`,
+`profile-spacedock-route.test.py`, `profile-contract-loader.py`,
+`poc-close-guard.py`, `profile-contract-loader.test.py`,
+`poc-close-guard.test.py`, `choose-work-profile/SKILL.md`, `docs/dev/README.md`).
+A bump is mechanical churn across all ten and buys nothing the stage gate does
+not. Only the recovery route has a strict key allowlist
+(`recovery_keys != expected_recovery_keys`); the normal route has none, so a new
+key on a v3 receipt does not break existing validation.
+
+**Open Captain decision — the recovery route.** Production recovery's route is
+`[build, verify]` with an exact key allowlist permitting only
+`recovery_failure`, `recovery_falsifier`, `recovery_rollback`, and
+`review_risks`. Requiring the declaration there means expanding that
+fail-closed exact set. Recommendation: compose through the existing field
+instead — on the recovery route, treat `review_risks` omitting `behavior` as the
+declared-unchanged case and require the two equivalence scalars then, expanding
+`expected_recovery_keys` by exactly those two. This is the one ruling most
+likely to change the shape: if the Captain declines, AC-4 becomes a separate
+work item rather than part of this one.
+
+### Where it touches
+
+| path | lines now | lines after |
+|---|---|---|
+| `kc-dev-flow/references/kernel.md` | 181 | ~196 |
+| `kc-dev-flow/references/reverse-recovery-audit.md` | 81 | ~93 |
+| `kc-dev-flow/references/profiles/production/shape.md` | 91 | ~95 |
+| `kc-dev-flow/references/profiles/production/verify.md` | 65 | ~72 |
+| `kc-dev-flow/references/profiles/pilot-product-slice/shape.md` | 90 | ~94 |
+| `kc-dev-flow/references/profiles/pilot-product-slice/verify-deliver.md` | 48 | ~55 |
+| `kc-dev-flow/references/profiles/poc-exploration/build.md` | 84 | ~87 |
+| `kc-dev-flow/scripts/profile-contract-loader.py` | 886 | ~935 |
+| `kc-dev-flow/scripts/profile-contract-loader.test.py` | 1976 | ~2045 |
+| `kc-dev-flow/skills/choose-work-profile/SKILL.md` | 129 | ~135 |
+| `kc-dev-flow/MIGRATION.md` | 301 | ~316 |
+| `scripts/kc-dev-flow-contract-test.py` | 1869 | ~1918 |
+| `scripts/kc-dev-flow-minimal-stack-ablation.test.py` | 873 | ~928 |
+
+Reconciled journey to table: every step's acting file appears above except three,
+each named with why it does not change.
+
+- `.github/workflows/kc-dev-flow-release-gate.yml` — step 6 depends on it; it
+  runs both tests by path and no path changes.
+- `kc-dev-flow/contract-manifest.json` (41) — step 2 resolves through it; this
+  item adds no reference file, so the resource set is unchanged. Verify at build.
+- `scripts/kc-dev-flow-multi-profile-gate.py` (541) — builds `work_profile`
+  fixtures at line 246. Unchanged only if its Pilot and Production fixtures sit
+  at a stage past their route's first; **unverified**, checked at build.
+
+Reconciled table to journey: `kc-dev-flow/MIGRATION.md` and
+`choose-work-profile/SKILL.md` appear in the table but not as journey steps —
+they are AC-7's adopter-visible surface, which the journey deliberately does not
+run.
+
+Not in either, and why: `docs/dev/_mods/kernel.md` and
+`docs/dev/_mods/reverse-recovery-audit.md` do not exist at `f9683a33`.
+`kc-dev-flow/references/roborev-implementation-exit.md` (210) carries none of the
+necessity vocabulary — AC-3's clause lives only in `kernel.md`
+(`grep -n -i remov kc-dev-flow/references/kernel.md` at `f9683a33` shows the
+implementation-exit clause grading only retention).
+
+### Stop numbers
+
+Measured as `git diff --stat f9683a33 <candidate>`.
+
+- changed files: stop at **16** (estimate 13).
+- changed lines: stop at **500** (estimate ~340).
+- named runaway area: `profile-contract-loader.test.py` plus
+  `kc-dev-flow-minimal-stack-ablation.test.py` together — stop at **180**
+  changed lines across the pair. Named because AC-4 and AC-5 both land there and
+  an ablation mutant is cheap to add and hard to stop adding.
+
+Crossing any of the three stops work and reports; it passes and fails nothing.
+
+### Rollback policy
+
+Forward-recovery. Every change is contract prose plus a loader field guarded by
+deterministic tests already in the release gate; a bad revision is reverted by
+`git revert` of the single delivery commit. No migration, no stored state, no
+external mutation. The one irreversible-shaped risk is an adopter that took the
+new version and wrote `semantics_unchanged` into a receipt: a revert makes that
+field unread, not invalid, because the normal route has no key allowlist.
+
+### Reverse-recovery receipt
+
+```yaml
+reverse_recovery:
+  trigger: replacement of two disjoint need vocabularies with one, replacement of two names for one evidence primitive, and a missing equivalence-instrument requirement
+  boundary: journey = an author classifies whether a surface earns its place, and a verify owner refuses a declared-unchanged change without an instrument; search boundary = kc-dev-flow/ and scripts/kc-dev-flow* at f9683a33, excluding .context/ scratch, CHANGELOGs, and adopter repositories not checked out here
+  layers:
+    - surface: reverse-recovery need axis (REQUIRED / NO_OBSERVED_CONSUMER / UNKNOWN)
+      location: kc-dev-flow/references/reverse-recovery-audit.md:38-45
+      completeness: WORKING
+      need: REQUIRED
+      evidence: three conditional-reference blocks declare receipt reverse_recovery (production/shape.md, pilot-product-slice/shape.md, poc-exploration/build.md) and the contract test asserts all three
+      disproof_hook: delete the receipt key from production/shape.md, then python3 scripts/kc-dev-flow-contract-test.py
+    - surface: disproof_hook receipt field
+      location: kc-dev-flow/references/reverse-recovery-audit.md:76
+      completeness: WORKING_UNIT_UNPROVEN
+      need: NO_OBSERVED_CONSUMER under the audit and REQUIRED under the kernel — the instance of AC-1 appearing inside its own receipt, recorded as evidence for AC-1 rather than as a finding
+      evidence: two searches — repo-wide grep for disproof_hook across kc-dev-flow/ and scripts/ returns one line, and the loader's declared-receipt return path reads receipt names only, never fields
+      disproof_hook: grep -rn disproof_hook kc-dev-flow/ scripts/ at f9683a33 returns only reverse-recovery-audit.md:76
+    - surface: kernel minimal-necessity mapping targets
+      location: kc-dev-flow/references/kernel.md:123-128
+      completeness: WORKING
+      need: REQUIRED
+      evidence: contract test requires the verbatim phrase "the accepted goal, a named falsifier, a safety boundary, or a required lifecycle obligation"; the ablation drives run_kernel_contract_mutant against the same file
+      disproof_hook: mutate the phrase in kernel.md, then python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py
+    - surface: kernel implementation-exit comparison
+      location: kc-dev-flow/references/kernel.md:100-113
+      completeness: EXISTS_BROKEN
+      need: REQUIRED
+      evidence: fails at the seam AC-3 names — it enumerates added files, dependencies, abstractions, tests, and comments and grades no removal; grep -n -i remov over kernel.md at f9683a33 shows every hit grading retention or scaffolding, none grading a removal's own necessity claim
+      disproof_hook: grep -n -i remov kc-dev-flow/references/kernel.md at f9683a33
+    - surface: equivalence-instrument requirement for a declared-unchanged change
+      location: MISSING
+      completeness: MISSING
+      need: REQUIRED
+      evidence: two searches — grep -rn -iE "equivalence|semantics_unchanged|behaviour-preserving" over kc-dev-flow/ and docs/dev/ returns no match, and both verify contracts' Required output lists were read in full and name no instrument; boundary stops at this repository, excluding subspace-relay and carlove-v1
+      disproof_hook: grep -rn -iE "equivalence|semantics_unchanged" kc-dev-flow/ scripts/ at f9683a33
+    - surface: loader conditional required-field machinery
+      location: kc-dev-flow/scripts/profile-contract-loader.py:35-48,513-540
+      completeness: WORKING
+      need: REQUIRED
+      evidence: driven by profile-contract-loader.test.py and by the ablation's run_poc_entry_mutant, which deletes poc_decision from POC_FIELDS and requires the loader test to reject
+      disproof_hook: python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py
+    - surface: vendored docs/dev/_mods/{kernel,reverse-recovery-audit}.md
+      location: MISSING
+      completeness: MISSING
+      need: NO_OBSERVED_CONSUMER
+      evidence: two searches — git ls-tree -r --name-only f9683a33 -- docs/dev/_mods/ returns only pr-merge.md, and the contract test's obsolete_adopter_copies set names both paths as forbidden; boundary is the delivery base tree
+      disproof_hook: restore docs/dev/_mods/kernel.md, then python3 scripts/kc-dev-flow-contract-test.py
+  decision: redesign
+```
+
+Per-layer split behind the single `decision`: the vocabulary layers are a
+redesign of two incompatible existing contracts; layer five is `build`; layer
+six is `use` — the AC-4 field composes onto existing loader machinery rather
+than adding a mechanism.
+
+### multi_slice_required: false
+
+`journey-slicing.md` was read and not loaded as a receipt. The change is ~340
+lines across 13 files at the delivery base and delivers as one integrated slice.
+The apparent cut — vocabulary first, loader field second — fails the guard's own
+rule rather than passing it: the loader field can be blocked independently by
+the recovery-allowlist ruling above, and "if a piece can be blocked
+independently, it is another work item rather than a slice." So the fallback is
+recorded as a work-item split, not a second slice: should the Captain decline
+the recovery-route expansion, AC-4 leaves this item entirely and AC-1 through
+AC-3 and AC-5 through AC-7 land alone.
+
+Other conditional references: `retained_document_change` fires —
+`kernel.md` and `reverse-recovery-audit.md` are retained documents and the
+policy carries no receipt, so its rules bind the prose without a record here.
+`project_context_claim_may_change` is false: `kc-dev-flow/README.md:194`
+describes the audit's trigger, not its need vocabulary, and no bound
+project-context document states a described behaviour this item changes.
+
+### Falsifiable acceptance checks
+
+Each names the change that would make it fail.
+
+- **AC-1** — the ablation gains a `run_kernel_contract_mutant` restoring the old
+  mapping-target phrase and a `run_manual_contract_mutant` restoring
+  `NO_OBSERVED_CONSUMER` in `reverse-recovery-audit.md`; both must be rejected by
+  `kc-dev-flow-contract-test.py --ablation-check`. The audit prose carries one
+  worked case — a safety-boundary surface with no observed consumer — asserted
+  verbatim by the contract test. *Fails if* either old phrase survives the
+  rename, because then the mutant is a no-op and the ablation reports a survivor.
+- **AC-2** — the contract test requires, in both files, the one primitive name
+  plus each contract's declared tier and that tier's stated limit. *Fails if* the
+  primitive is named in `kernel.md` only: the reverse-recovery phrase assertion
+  finds nothing.
+- **AC-3** — the contract test requires an implementation-exit clause naming
+  removed surfaces; an ablation mutant restores the added-only enumeration and
+  must be rejected. *Fails if* removals are graded in new prose while the
+  asserted phrase still matches the old added-only sentence.
+- **AC-4** — `profile-contract-loader.test.py` drives the loader with a
+  Production shape receipt carrying `semantics_unchanged: true` and no
+  `equivalence_instrument`, and reads the `ContractError`; a second case supplies
+  `TBD` and reads the same refusal. The ablation adds a
+  `run_loader_admission_mutant` deleting the field from the required tuple.
+  *Fails if* the `raise` is removed or downgraded: the expected rejection does
+  not arrive and the case errors as an unexpected success.
+- **AC-5** — build records a pairing table over
+  `git diff f9683a33 -- scripts/kc-dev-flow-contract-test.py scripts/kc-dev-flow-minimal-stack-ablation.test.py`,
+  matching every removed `require(` or mutant to a replacement asserting the same
+  class. *Fails if* any removal is unmatched.
+- **AC-6** — `git ls-tree -r --name-only <candidate> -- docs/dev/_mods/` returns
+  only `pr-merge.md` and the contract test passes. *Fails if* either vendored
+  file returns: `obsolete_adopter_copies` rejects it.
+- **AC-7** — the loader test drives a v3 Production receipt at `build` with no
+  `semantics_unchanged` and observes it load; `MIGRATION.md` records the one-line
+  addition an item re-entering shape must make. *Fails if* the requirement is
+  made unconditional, which turns that expected success into a refusal.
+
+### Residual and scaffolding record
+
+The stage-gated requirement means an item admitted before this change and past
+its shape stage is never asked to declare. That is deliberate and bounded, not a
+gate an author can dodge at will — a new item entering shape is refused without
+the field. Removal condition for the carve-out: none needed; it is not
+scaffolding, it is the stage gate itself. The `MIGRATION.md` line is the migration
+AC-7 requires, and it is one line because no stored value changes shape.
+
+## Stage Report: ideation
+
+- DONE: Name the enforcement point for AC-4 (a declared-unchanged change is refused until it names an equivalence instrument seen to fail): loader-required field or prose-only bounded claim, and record whether a required loader field counts as a receipt under the non-goals.
+  `## Shape` § AC-4 enforcement point — `ContractError` in `resolve_work_item`, `kc-dev-flow/scripts/profile-contract-loader.py`; the non-goal ruling is that a field inside the existing `work_profile` receipt is not a new receipt, because `POC_FIELDS` and `RECOVERY_FIELDS` already carry conditionally-required scalars there.
+- DONE: Deliver the `where it touches` table and stop numbers against the delivery base, reconciled both ways with the journey, covering kernel.md, reverse-recovery-audit.md, the contract test, the minimal-stack ablation test, and the loader-served copies.
+  `## Shape` § Where it touches — 13 files, `lines now` from `git show f9683a33:<path>`; reconciled both directions with three journey files named as unchanged and two table files named as outside the journey.
+- DONE: Record the reverse_recovery receipt for this brownfield change (need-axis rename, disproof_hook unification, removal grading) and decide multi_slice_required with falsifiable acceptance checks mapped to AC-1..AC-7.
+  `## Shape` § Reverse-recovery receipt (7 layers, `decision: redesign`), § multi_slice_required: false, § Falsifiable acceptance checks (AC-1..AC-7, each naming its falsifying change).
+
+### Summary
+
+The delivery base moved the ground under two checklist items. `origin/main`
+(`f9683a33`) already deleted the vendored `docs/dev/_mods/` contract pair — only
+`pr-merge.md` survives — so AC-6 is satisfied by its own escape clause with the
+contract test's `obsolete_adopter_copies` set as the enforcement point, and this
+item does zero work for it. The working checkout is behind main and still
+carries those files, so every count was taken from `f9683a33`, not from disk.
+
+AC-4 lands as a loader-required field rather than prose because the testing
+obligation demands an observed refusal, and only `ContractError` produces a
+rejection to read; the loader half is bounded to presence and non-placeholder
+concreteness, with "the instrument was seen to fail" written as a verify-owner
+duty. A v4 schema bump was rejected — the v3 string appears in ten files and buys
+nothing a stage gate does not.
+
+Two things the Captain owns. The Production recovery route's exact key allowlist
+must expand for AC-4 to reach the most refactor-shaped case; if that ruling goes
+the other way, AC-4 leaves this item as a separate work item rather than becoming
+a second slice. Separately, the entity's `## Non-goals` bullets are truncated
+mid-sentence in the admitted body; the shape was written against the complete
+`scope_boundary` line in the work-profile receipt and the snapshot was not
+rewritten.
