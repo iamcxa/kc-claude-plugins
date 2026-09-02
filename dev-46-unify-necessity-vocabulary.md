@@ -45,6 +45,17 @@ gates:
                 id: briefing:50c1y5wf7dzh0ww2a9qajn47:ideation:attempt-1:revision-1
                 digest: sha256:7fe68121b9d8a7ec8a278ee920de82c8d8d8a4cc9ea42db0c289424ded98196b
                 room-ref: ./dev-46-unify-necessity-vocabulary/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:50c1y5wf7dzh0ww2a9qajn47:ideation:1
+                briefing: briefing:50c1y5wf7dzh0ww2a9qajn47:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-02T08:44:54.909102Z"
+                decision: approve
+                reason: 'Captain approved the DEV-46 shape: AC-4 bound as a loader-required field (declaration at ideation, evidence scalars at validation), 13 files / ~340 lines single slice against f9683a33, stops 16/500/180, reverse-recovery decision redesign.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
