@@ -1420,6 +1420,14 @@ README-POLICY-SENTINEL
             env.pop(name, None)
         return subprocess.run(command, text=True, capture_output=True, env=env)
 
+    package_version = json.loads(
+        (package_root / "plugin.json").read_text(encoding="utf-8")
+    )["version"]
+    version_match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", package_version)
+    require(version_match is not None, f"invalid package version: {package_version}")
+    major, minor, patch = (int(value) for value in version_match.groups())
+    compatible_version = f"{major}.{minor}.{patch + 1}"
+
     first = installed_run(
         LOADER, pin_item, pin=pin_path, attempt="ideation-1", write_pin=True
     )
@@ -1428,7 +1436,7 @@ README-POLICY-SENTINEL
     first_pin = json.loads(pin_path.read_text(encoding="utf-8"))
     require(
         first_document["schema"] == "kc-dev-flow-profile-contract/v3"
-        and first_document["plugin_version"] == "4.0.1"
+        and first_document["plugin_version"] == package_version
         and len(first_document["contract_digest"]) == 64
         and first_document["stage_pin"] == first_pin,
         f"installed first-stage binding is incomplete: {first_document}",
@@ -1460,7 +1468,7 @@ README-POLICY-SENTINEL
     compatible_metadata = json.loads(
         (compatible_root / "plugin.json").read_text(encoding="utf-8")
     )
-    compatible_metadata["version"] = "4.0.2"
+    compatible_metadata["version"] = compatible_version
     (compatible_root / "plugin.json").write_text(
         json.dumps(compatible_metadata, indent=2) + "\n", encoding="utf-8"
     )
@@ -1494,7 +1502,7 @@ README-POLICY-SENTINEL
     require(boundary_upgrade.returncode == 0, boundary_upgrade.stderr)
     boundary_document = json.loads(boundary_upgrade.stdout)
     require(
-        boundary_document["plugin_version"] == "4.0.2"
+        boundary_document["plugin_version"] == compatible_version
         and boundary_document["contract_digest"] != first_pin["contract_digest"]
         and json.loads(pin_path.read_text(encoding="utf-8"))["workflow_stage"]
         == "implementation",
