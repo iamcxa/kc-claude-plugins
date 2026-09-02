@@ -69,7 +69,7 @@ for name, text in texts.items():
 expected_routes = {
     "kc-pr-flow/scripts/review-runtime.sh": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime-safe-io.py": {"runtime", "shadow", "post", "evaluation"},
-    "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime", "evaluation"},
     "kc-pr-flow/scripts/review-plan.sh": {"runtime"},
     "kc-pr-flow/scripts/review-plan.test.sh": {"runtime"},
     "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl": {"runtime"},
@@ -78,8 +78,18 @@ expected_routes = {
     "kc-pr-flow/scripts/review-post.sh": {"post"},
     "kc-pr-flow/test/fixtures/review-post/reviews.json": {"post"},
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-latency-benchmark.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-latency-benchmark.test.sh": {"evaluation"},
+    "kc-pr-flow/scripts/review-real-pair-score.py": {"evaluation"},
+    "kc-pr-flow/scripts/review-real-pair-score.test.py": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
+    "kc-pr-flow/test/fixtures/review-plan/phase1-promotion-scenarios.jsonl": {
+        "evaluation",
+        "runtime",
+    },
+    "kc-pr-flow/test/fixtures/review-plan/phase1-promotion.jsonl": {"evaluation", "runtime"},
+    "kc-pr-flow/test/fixtures/review-evaluation/real-pair-score-shape.json": {"evaluation"},
     "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"runtime", "shadow", "evaluation", "cross_model"},
     "kc-pr-flow/reference/review-triage.md": {"runtime", "evaluation"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
@@ -106,8 +116,11 @@ expected_commands = {
     "shadow": ["bash kc-pr-flow/scripts/review-shadow.test.sh"],
     "post": ["bash kc-pr-flow/scripts/review-post.test.sh"],
     "evaluation": [
+        "bash kc-pr-flow/scripts/review-latency-benchmark.test.sh",
         "bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh",
+        "bash kc-pr-flow/scripts/review-runtime.test.sh --case review-timing",
         "bash kc-pr-flow/scripts/review-ablation.test.sh",
+        "python3 kc-pr-flow/scripts/review-real-pair-score.test.py",
     ],
     "cross_model": ["bash kc-pr-flow/scripts/cross-model.test.sh"],
 }
@@ -115,8 +128,9 @@ all_commands = [command for commands in expected_commands.values() for command i
 
 for name, text in texts.items():
     for command in all_commands:
+        present = any(line.strip() == f"run: {command}" for line in text.splitlines())
         require(
-            (command in text) == (command in expected_commands[name]),
+            present == (command in expected_commands[name]),
             f"{name}: wrong behavioral suite ownership for {command}",
         )
     for retired in (
