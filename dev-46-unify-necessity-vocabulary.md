@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: unify the necessity vocabulary across kernel and reverse-recovery, and bind the equivalence instrument"
-status: ideation
+status: implementation
 source: https://linear.app/duckbase-co/issue/DEV-46/kc-dev-flow-unify-the-necessity-vocabulary-across-kernel-and-reverse
 product: kc-dev-flow
 planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved the DEV-46 shape: AC-4 bound as a loader-required field (declaration at ideation, evidence scalars at validation), 13 files / ~340 lines single slice against f9683a33, stops 16/500/180, reverse-recovery decision redesign.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
