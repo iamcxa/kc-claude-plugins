@@ -102,7 +102,7 @@ The contract test grades the behaviour a rule produces, at two tiers, and every 
 
 - **AC-1** A table lists every phrase-pin loop site with its tier (1, 2, or wording-only) and one reason each.
 - **AC-2** Every tier-1 replacement has a recorded mutation run: rule removed, new assertion fails naming the rule, rule restored, assertion passes.
-- **AC-3** Every tier-2 case has a recorded run with and without the rule, plus one deliberately removed rule that the case flags; the wall-clock and token cost per case is measured and recorded.
+- **AC-3** Every tier-2 candidate rule is recorded as wording-only with its reason, carrying the evidence of the three probe cases run at build (both variants took the same action; divergence appeared only in citation and reasoning cost), and its pin stays in place; no behavior-diff case is required to redden. Captain ruling at the tier-2 checkpoint, 2026-09-02.
 - **AC-4** For each removed pin, the old assertion was run against the same mutation and its result recorded, so no regression the old check caught is lost without being named.
 - **AC-5** `python3 scripts/kc-dev-flow-contract-test.py` passes on the unchanged tree after the change, and the count of remaining wording-only pins is recorded with a reason each.
 
@@ -672,6 +672,10 @@ always reports the pipe's own exit code, not the command's) recurred three
 times early in this stage before being corrected to capture output to a
 file and check `$?` directly. All exit-code claims from that point forward
 in this report were captured that way.
+
+## Captain ruling: tier-2 checkpoint (2026-09-02T15:46:41Z)
+
+Route back accepted as a bounded planning delta. Changed premise: the shape's strict action-divergence RED did not fire on any of the three probe cases, so AC-3 as admitted was not dischargeable for tier-2. Affected evidence: AC-3 only; the accepted outcome and non-goals are unchanged, and the Linear Issue's AC-3 was updated to the same text. Ruling: DEV-51 completes tier-1 (the remaining five split halves and the release-proof boundary group, plus the two deferred classifications) and records every tier-2 candidate as wording-only with the probe evidence; no further behavior-diff case is run under this item. The negative result is a finding for DEV-52: a rule whose removal changes nothing because a duplicate survives elsewhere is a removal candidate signal.
 
 ## Stage Report: implementation
 
