@@ -20,7 +20,7 @@ LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
 RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
 RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
-LINEAR_ADMISSION = Path("scripts/kc-dev-flow/linear-admission.py")
+LINEAR_ADMISSION = Path("kc-dev-flow/scripts/linear-admission.py")
 
 
 class AblationError(RuntimeError):
@@ -51,8 +51,10 @@ def copy_repository_fixture(destination: Path) -> None:
         ).split(b"\0")
         if encoded
     }
-    # The runner must be able to prove itself before its first commit too.
+    # The runner and a newly packaged runtime must be provable before their
+    # first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
+    tracked.add(os.fsencode(LINEAR_ADMISSION))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
@@ -706,9 +708,11 @@ def main() -> int:
     run_manual_contract_mutant(
         "migration-3x-standalone-reconcile-removed",
         "kc-dev-flow/MIGRATION.md",
-        "   comparator with that exact source, window, and outcome. Standalone work skips\n"
+        "   adapter and the installed comparator with that exact source, window, and\n"
+        "   outcome. Standalone work skips\n"
         "   both and continues from the Captain-approved committed brief. For the\n",
-        "   comparator with that exact source, window, and outcome. All work runs the\n"
+        "   adapter and the installed comparator with that exact source, window, and\n"
+        "   outcome. All work runs the\n"
         "   comparator before continuing. For the\n",
         "3.x migration omits standalone planning branch: Standalone work skips both and continues from the Captain-approved committed brief",
     )
@@ -771,6 +775,13 @@ def main() -> int:
         "        if not key or not workspace_id:\n",
         "        if False:\n",
         "missing-workspace emitted an envelope",
+    )
+    run_manual_contract_mutant(
+        "linear-workspace-binding-removed",
+        str(LINEAR_ADMISSION),
+        '        if not isinstance(organization, dict) or organization.get("urlKey") != args.linear_workspace:\n',
+        "        if False:\n",
+        "wrong-org emitted an envelope",
     )
     run_manual_contract_mutant(
         "admission-loader-invocation-removed",

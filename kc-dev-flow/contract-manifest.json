@@ -35,6 +35,7 @@
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
     "scripts/engage-reconcile.py",
+    "scripts/linear-admission.py",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md"
   ]

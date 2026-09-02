@@ -31,9 +31,10 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    the repository's work-item and state authorities. The activated skill anchors
    its own package root and supplies `../../scripts/profile-contract-loader.py`
    for that invocation; do not persist an installation path. A
-   repository that supports Planning Receipts also binds its planning provider,
-   repository-local read-only planning reader, and the installed loader's sibling
-   read-only engage comparator. The reader normalizes the union of current Ready
+   repository that supports Planning Receipts binds its provider, read-only
+   reader, and installed engage comparator. Linear uses installed sibling
+   `linear-admission.py`; other providers keep a repository-local adapter. The
+   reader normalizes the union of current Ready
    items for one planning window/outcome and every currently Ready snapshot
    source even when it moved; it refuses a truncated result and exposes source
    identity, accepted goal, and non-goals without writing either system. A
@@ -44,9 +45,8 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    the contract interface, Local Profile interface, and exact plugin-owned
    runtime resources. Run its sibling installed loader from that same package;
    do not search host caches, inspect host names, copy canonical resources into
-   the repository, or add a repository fallback. A provider-backed adopter keeps
-   its provider adapter but uses the installed sibling `engage-reconcile.py`; a
-   standalone adopter installs neither a comparator nor a provider adapter. The
+   the repository, or add a repository fallback. Provider-backed work uses its
+   reader and installed `engage-reconcile.py`; standalone uses neither. The
    selected stage owns each typed conditional-reference trigger; installation
    does not load a reference. Local provider paths, README policy, local mods,
    and Spacedock state remain repository-owned.

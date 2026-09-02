@@ -135,9 +135,10 @@ configuration or rewrite its own records is Production.
 ## Distribution and adoption
 
 The script surface has four roles. Runtime helpers are the loader, POC close
-guard, provider-backed comparator, and conditional PR handoff. `*.test.py`
-files are package self-tests used by release proof. Adopters copy no canonical
-runtime file; repository adapters and release gates stay outside the plugin directory.
+guard, provider-backed comparator, optional workspace-neutral Linear admission
+guard, and conditional PR handoff. `*.test.py` files are package self-tests used
+by release proof. Adopters copy no canonical runtime file; adapters for other
+planning providers and release gates stay outside the plugin directory.
 The repository contract classifies every kc-dev-flow Python script into exactly
 one of these roles, so an unowned script fails the gate.
 
@@ -163,8 +164,10 @@ Development Brief and complete-or-absent Planning Receipt for a new Pilot or
 Production admission. Default loading does not inspect acceptance headings.
 
 Provider-backed adopters invoke the installed loader's sibling
-`scripts/engage-reconcile.py` as their read-only compare mechanism; standalone
-adopters install neither a provider reader nor adapter. It checks
+`scripts/engage-reconcile.py` as their read-only compare mechanism; a
+Linear-backed adopter may use the installed sibling `scripts/linear-admission.py`
+as its complete read-only admission guard. Standalone adopters invoke neither.
+The comparator checks
 ephemeral normalized admission and current Ready sets against the
 caller-supplied expected source, window, and outcome, then compares accepted
 goal and non-goals. A completed comparison returns `0` with a JSON
@@ -182,9 +185,11 @@ includes every still-Ready snapshot source outside the original window/outcome.
 The installed comparator classifies their difference. Any delta stops before new
 dispatch or mutation until the Captain admits it. A standalone item skips this
 provider path.
-An adopter may bind one repository-local read-only admission command that owns
-workspace authentication, current provider read, exact state snapshot,
-comparator invocation, and success-only dispatch-envelope emission. That seam
+An adopter may bind one read-only admission command that owns workspace
+authentication, current provider read, exact state snapshot, comparator
+invocation, and success-only dispatch-envelope emission. The package supplies
+that command for Linear; other providers may keep a repository-local adapter.
+That seam
 adds no provider, persistence, synchronization, or launch authority to the
 portable package.
 

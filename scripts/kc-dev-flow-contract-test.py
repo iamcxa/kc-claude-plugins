@@ -95,6 +95,7 @@ required = [
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/engage-reconcile.py",
     "kc-dev-flow/scripts/engage-reconcile.test.py",
+    "kc-dev-flow/scripts/linear-admission.py",
     "scripts/kc-dev-flow/linear-admission.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
@@ -146,6 +147,7 @@ script_roles = {
     "runtime": {
         "kc-dev-flow/scripts/profile-contract-loader.py",
         "kc-dev-flow/scripts/engage-reconcile.py",
+        "kc-dev-flow/scripts/linear-admission.py",
         "kc-dev-flow/scripts/poc-close-guard.py",
         "kc-dev-flow/scripts/pr-review-handoff.py",
     },
@@ -457,6 +459,7 @@ expected_manifest_resources = {
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
     "scripts/engage-reconcile.py",
+    "scripts/linear-admission.py",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md",
 } | {
@@ -1099,8 +1102,9 @@ for phrase in [
     "standalone adopter binds the Captain-approved committed brief",
     "A Planning Receipt is complete or absent",
     "Local `sprint` and `sprint-readiness` remain runtime grouping and readiness mechanics",
-    "repository-local read-only planning reader",
-    "installed loader's sibling read-only engage comparator",
+    "Linear uses installed sibling `linear-admission.py`",
+    "other providers keep a repository-local adapter",
+    "installed engage comparator",
     "every currently Ready snapshot source",
     "For a provider-backed adopter, run one clean, one delta, and one invalid-input comparator invocation",
     "A standalone adopter has no comparator to exercise",
@@ -1112,8 +1116,8 @@ for phrase in [
     "parsed `status: clean` result",
     "starts directly with `## The problem`",
     "omits both an `## Agent execution contract` section",
-    "A provider-backed adopter keeps its provider adapter",
-    "standalone adopter installs neither a comparator nor a provider adapter",
+    "Provider-backed work uses its reader",
+    "standalone uses neither",
     "preserve repository-local free text in a repository-owned field",
     "remove the canonical `source` field",
     "Do not reinterpret provenance as provider identity",
@@ -1562,7 +1566,8 @@ for name in ["chief-engineer", "science-officer", "science-officer-em"]:
     require(name in package_readme, f"package README omits {name}")
     require(name in root_readme, f"root README omits {name}")
 
-linear_admission = ROOT / "scripts/kc-dev-flow/linear-admission.py"
+linear_admission = PLUGIN / "scripts/linear-admission.py"
+repository_linear_admission = ROOT / "scripts/kc-dev-flow/linear-admission.py"
 linear_source = linear_admission.read_text(encoding="utf-8")
 for mechanism in [
     'os.environ.get("CONDUCTOR_WORKSPACE_ID"',
@@ -1633,7 +1638,7 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
             )
             item = {
                 "id": identifier.lower(), "identifier": reported_identifier,
-                "url": f"https://linear.app/duckbase-co/issue/{identifier}/fixture",
+                "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
                 "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
                 "state": {"type": state_type},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
@@ -1646,7 +1651,7 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         if "AdmissionIssue" in query:
             data = {
                 "viewer": {"organization": {"id": "org", "urlKey": (
-                    "wrong" if fixture.scenario == "wrong-org" else "duckbase-co"
+                    "wrong" if fixture.scenario == "wrong-org" else fixture.workspace
                 )}},
                 "issue": issue(str(variables["id"])),
             }
@@ -1679,7 +1684,8 @@ with tempfile.TemporaryDirectory(prefix="linear-admission-contract-") as tempora
     project_name, project_content = "Project One", "One accepted package."
     starts, ends = "2026-08-27T16:00:00.000Z", "2026-09-10T16:00:00.000Z"
     goal, non_goal = "Emit one exact envelope.", "No provider writes."
-    source = "https://linear.app/duckbase-co/issue/DEV-12/fixture"
+    workspace_slug = "qnow"
+    source = f"https://linear.app/{workspace_slug}/issue/DEV-12/fixture"
     project_digest = hashlib.sha256(f"{project_name}\n{project_content}".encode()).hexdigest()
     window = f"Linear Cycle {cycle_id} {starts}/{ends}"
     outcome = f"Linear Project {project_id} {project_name} sha256:{project_digest}"
@@ -1742,6 +1748,7 @@ Stop on any planning drift.
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), LinearFixture)
     server.scenario, server.queries, server.raced = "clean", [], False
     server.state, server.work_item = state, work_item
+    server.workspace = workspace_slug
     server.project_id, server.project_name, server.project_content = project_id, project_name, project_content
     server.cycle_id, server.starts, server.ends = cycle_id, starts, ends
     server.goal, server.non_goal = goal, non_goal
@@ -1768,7 +1775,7 @@ Stop on any planning drift.
              "--work-item", str(work_item),
              "--profile-loader", str(PLUGIN / "scripts/profile-contract-loader.py"),
              "--local-profile", str(ROOT / "docs/dev/README.md"),
-             "--linear-workspace", "duckbase-co", "--state-revision", revision,
+             "--linear-workspace", workspace_slug, "--state-revision", revision,
              "--timeout", timeout, "--graphql-url", f"http://127.0.0.1:{server.server_port}/graphql"],
             cwd=ROOT, env=env, text=True, capture_output=True,
         )
@@ -1797,6 +1804,12 @@ Stop on any planning drift.
         and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
+    )
+    bridge = admit("clean", reader=repository_linear_admission)
+    require(
+        bridge.returncode == 0
+        and json.loads(bridge.stdout).get("delivery") == envelope["delivery"],
+        f"repository Linear admission bridge failed: {bridge.stderr}",
     )
     with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
         mutant_root = Path(temporary)
