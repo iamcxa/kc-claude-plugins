@@ -1,6 +1,6 @@
 ---
 title: "POC: plan receipt in, packaged ship out — one Project, three dependent Issues, one UAT document"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, after confirming the two-question POC scope and plan-flow backlog
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
