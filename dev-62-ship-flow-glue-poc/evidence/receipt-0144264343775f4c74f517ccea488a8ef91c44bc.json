@@ -1,0 +1,32 @@
+{
+ "candidate": "0144264343775f4c74f517ccea488a8ef91c44bc",
+ "branch": "feature/dev-50-align-the-readme-linear-brief-heading-with-what-linear",
+ "base": "f47fd8ca34f54ada90e6292bcffcdb55a96ea44c",
+ "remote_head_at_verify": "0144264343775f4c74f517ccea488a8ef91c44bc",
+ "without_it": {
+  "fo_command": "python3 /tmp/dev50/verify/readme_block_parses.py (FO-authored; worker's .context/without-it-check.py was not retrievable)",
+  "removed_variant": "git checkout f47fd8ca -- docs/dev/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1,
+  "removed_reason": "planning description needs one Goal section"
+ },
+ "contract_test": {
+  "retained_exit": 0,
+  "removed_exit": 1,
+  "removed_reason": "manual admission Issue headings are missing or duplicated",
+  "ac2_duplicate_goal_exit": 1
+ },
+ "e2e": {
+  "mode": "cli-only",
+  "log": "/tmp/dev50/verify/e2e-0144264343775f4c74f517ccea488a8ef91c44bc.log",
+  "steps": [
+   "contract-test-green",
+   "readme-block-parses",
+   "readme-names-the-check"
+  ],
+  "all_pass": true,
+  "recording": "stdout log with timestamps; asciinema and script(1) both hung waiting on a pty under this harness"
+ },
+ "preflight_merge_tree": "834a9dded8ad39734d9c126247c67d1cc836e9ce",
+ "pass": true
+}

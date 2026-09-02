@@ -88,4 +88,41 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 
 ## Measurement
 
-Not yet measured. Build records per-step minutes and imputed cost, and the falsifier step if any.
+Dispatched 2026-09-02T14:48:57Z (workspace create); full task delivered 14:50:44Z (two WAF-blocked attempts first); worker commit 14:58:33Z; worker Evidence block 15:09Z; FO acceptance (pin, without-it x2, contract test x3, CLI e2e) complete 15:25Z. Worker imputed cost USD 0.158 over the first 100 transcript events (partial; later events not summed). Step reached: PR gate (awaiting Captain approval of the exact candidate).
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: proceed
+  admitted_at: 2026-09-02T14:44:00Z
+  decision_ready_at: 2026-09-02T15:25:07Z
+  decision_ready_elapsed_seconds: 2467
+  captain_interventions_before_decision_ready: 0
+  candidate: 0144264343775f4c74f517ccea488a8ef91c44bc
+  evidence: >-
+    One cloud worker, dispatched by message only, ran kc-dev-flow build on DEV-50,
+    pushed the branch without opening a PR, and returned an Evidence block whose
+    CANDIDATE_SHA equals the remote head the FO pinned. At that SHA the FO ran the
+    without-it check twice (retained exit 0, README restored to base exit 1
+    "needs one Goal section"), the contract test three ways (candidate PASS; base
+    README FAIL; duplicated Goal FAIL "headings are missing or duplicated"), and a
+    three-step CLI e2e flow (all pass, evidence/e2e-*.log). pr-merge preflight
+    merge-tree is clean. See evidence/receipt-*.json and evidence/worker-evidence-block.md.
+  strongest_limit: >-
+    Four glue defects, none needing a new mechanism: (1) Conductor's WAF blocks
+    dispatch messages carrying a bootstrap curl|tar line, so the task text had to
+    be committed to a throwaway branch and fetched by the worker; (2) the CLI
+    transcript truncates at 64 KB and --after rejects message ids, so the SQL
+    view is the reliable read path; (3) the worker's without-it script lived in
+    an untracked .context file and could not be retrieved, so the FO wrote its own
+    checker instead of running the worker's; (4) asciinema and script(1) hang
+    under this harness, so e2e evidence is a timestamped stdout log, not a cast.
+    The 15-minute decision limit was exceeded (41 min), mostly by the WAF detour
+    and transcript-reading retries.
+  reversal_fact: >-
+    A repeat where the worker cannot produce CANDIDATE_SHA, the pinned head moves
+    during verification, the without-it command cannot be run FO-side, or the
+    delivery unit's merge-tree preflight conflicts.
+  cleanup_status_at_decision: pending (worker workspace idle, throwaway branch poc/dev-62-dispatch on remote, candidate branch on remote, no PR yet)
+```
