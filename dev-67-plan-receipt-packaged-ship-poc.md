@@ -1,6 +1,6 @@
 ---
 title: "POC: plan receipt in, packaged ship out — one Project, three dependent Issues, one UAT document"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
