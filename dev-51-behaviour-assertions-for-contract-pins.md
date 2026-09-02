@@ -45,6 +45,17 @@ gates:
                 id: briefing:m29y546p4sh77vbs2dv09gkp:ideation:attempt-1:revision-1
                 digest: sha256:9a5e972f1052e45263bb9866fb6298fae584e5535f245e054cb20a44791645ff
                 room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:m29y546p4sh77vbs2dv09gkp:ideation:1
+                briefing: briefing:m29y546p4sh77vbs2dv09gkp:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-02T14:57:58.773435Z"
+                decision: approve
+                reason: 'Captain approved the DEV-51 shape: 31 pin sites tiered, tier-2 budget checkpoint at three measured cases against a cap of 8, own equivalence instrument named.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
