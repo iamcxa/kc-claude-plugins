@@ -452,6 +452,8 @@ The duplicate Mermaid node is repaired in one diagram-only commit, with plugin m
   AC-6 evidence: exact candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` passed the three-arbitrary-root loader matrix plus the invocation-local `KC_DEV_FLOW_LOADER` handoff; they fail if resolution needs host discovery or moving the package or worktree changes the selected contracts.
   AC-7 evidence: exact candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6` rejected all 57 named without-it mutants, retains only `docs/dev/_mods/pr-merge.md`, and measures 37 files/3,870 changed lines below the 44-file/4,800-line stops.
 
+Native stack exception: REJECTED — PR #323 already separates dependent green layers: `a91da873` adds the manifest/loader, `12ded46a` refits callers while old copies remain inert, and `2c5149dc` removes those copies; the first two boundaries pass focused loader/contract checks and the final deletion is verified at `61ce308d`, so local `pr-merge` requires bottom-to-top Draft PRs.
+
 ### Summary
 
 The one-line Mermaid repair is exact, closes the prior architecture failure, and leaves all AC-1 through AC-7 evidence green at corrected candidate `61ce308dfeaae40f05b997092eb3a3a359a61ff6`. The wrong-range RoboRev loader-path diagnostic does not reproduce when the activated skill's required invocation-local binding is honored; local validation passes, while PR creation and release authority remain pending with the Captain.
