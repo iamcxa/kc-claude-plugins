@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m29y546p4sh77vbs2dv09gkp:ideation:attempt-1:revision-1",
+  "question": "Approve the DEV-51 shape to enter Pilot implementation: 31 pin sites tiered (8 tier-1, 5 split, 13 tier-2, 5 wording-only), tier-2 budget checkpoint at three measured cases against a cap of 8?",
+  "artifacts": [
+    {
+      "id": "artifact:m29y546p4sh77vbs2dv09gkp:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/728239199f0ccc5bb4b1f56818e932cbd3d18ef4/dev-51-behaviour-assertions-for-contract-pins.md",
+      "rev": "sha256:b12411f2f9313a4c6552edb1f257d90dc2d8bc22e0f82cf998abba6cce07f5f1",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval with one Captain checkpoint carried into build. The shape corrected the pin count (31 positive phrase-pin loop sites, 245 pinned phrases, not 19 or 20), tiered every site, and exercised each tier-1 observable (comparator exit codes, loader loaded set and declared_receipts, validate-admission digest, guard credential refusal). The tier-2 budget does not close: 18 candidate rules against a proposed cap of 8 cases, so build measures three cases and hands the Captain raise-the-cap, narrow-to-kernel, or route-back. Environment limits recorded: the behavior-diff trial copy has no work item (state dir is gitignored), the trial agent cannot write, and the instrument (engram behavior-diff 0.1.0, jq, claude CLI) is outside the repo and CI. reverse_recovery decision use: extend the 125 existing mechanism assertions rather than build a parallel instrument. AC-5 baseline: contract test PASS 50.7 s at f47fd8ca in a clean clone."
+    }
+  ]
+}

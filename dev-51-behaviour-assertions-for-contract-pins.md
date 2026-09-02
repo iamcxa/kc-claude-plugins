@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:m29y546p4sh77vbs2dv09gkp:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:m29y546p4sh77vbs2dv09gkp-ideation-1
+              briefing:
+                id: briefing:m29y546p4sh77vbs2dv09gkp:ideation:attempt-1:revision-1
+                digest: sha256:9a5e972f1052e45263bb9866fb6298fae584e5535f245e054cb20a44791645ff
+                room-ref: ./dev-51-behaviour-assertions-for-contract-pins/review/ideation/briefing-1
 ---
 
 ## The problem
