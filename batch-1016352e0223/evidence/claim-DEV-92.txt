@@ -1,0 +1,9 @@
+issue=DEV-92 claim=dev-92.g1 token=7374515cd5918361 claimed_at=2026-09-03T14:42:42Z
+writer=21
+workspace=f47e07d4-6d35-4b7d-b6c9-71deb290c3c8
+session=8017d1d6-c89a-49db-a99b-17ede2e072d1 carrier=poc/dispatch-carrier-dev-92 dispatched_at=2026-09-03T14:43:07Z
+task_sent_at=2026-09-03T14:43:47Z
+task_acked_at=2026-09-03T14:43:58Z
+evidence_at=2026-09-03T14:48:14Z
+fix1_sent_at=2026-09-03T14:51:04Z finding=SURFACE free-text target; without-it prints instead of exits
+evidence_at=2026-09-03T14:51:40Z

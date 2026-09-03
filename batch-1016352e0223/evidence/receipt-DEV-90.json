@@ -1,0 +1,23 @@
+{
+ "issue": "DEV-90",
+ "claim": "dev-90.g1",
+ "candidate": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+ "branch": "feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the",
+ "base": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "remote_head": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+ "rounds": 1,
+ "intent": "adopted 4ad8722c by laptop#19 (read-back ok)",
+ "without_it": {
+  "command": "(worker one-liner: three (DEV-67) lines in docs/ship-flow/README.md and the pointer line in docs/dev/README.md)",
+  "removed_variant": "restore both READMEs from main",
+  "retained_exit": 0,
+  "removed_exit": 1
+ },
+ "surface_map_check": "OK (3 files)",
+ "codex": "no findings",
+ "contract_test_exit": 0,
+ "preflight_main": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "preflight_exit": 0,
+ "pass": true,
+ "residuals": []
+}

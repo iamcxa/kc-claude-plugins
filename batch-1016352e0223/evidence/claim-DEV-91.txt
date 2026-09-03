@@ -1,0 +1,9 @@
+issue=DEV-91 claim=dev-91.g1 token=4ca7217057de0726 claimed_at=2026-09-03T14:40:44Z
+writer=20
+workspace=0faf8b57-4946-4762-ba0a-122bdeae1aaf
+session=5f819ce2-c9e8-46f1-a4c2-c1f199f6c8c0 carrier=poc/dispatch-carrier-dev-91 dispatched_at=2026-09-03T14:41:08Z
+task_sent_at=2026-09-03T14:41:48Z
+task_acked_at=2026-09-03T14:42:21Z
+evidence_at=2026-09-03T14:47:43Z
+fix1_sent_at=2026-09-03T14:50:58Z finding=SURFACE two targets
+evidence_at=2026-09-03T14:51:39Z
