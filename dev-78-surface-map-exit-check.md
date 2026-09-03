@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow reads the candidate diff: a surface-to-obligation check at implementation exit"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-78
-pr:
+pr: 357
 mod-block:
 id: 1t3634tfkq3v9tr3r3gcbtw8
 gates:
