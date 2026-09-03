@@ -4,3 +4,6 @@ task_sent_at=2026-09-03T08:14:16Z
 task_acked_at=2026-09-03T08:14:59Z
 evidence_at=2026-09-03T08:53:10Z
 fix1_sent_at=2026-09-03T08:57:16Z findings=flock-not-on-macos(BLOCK),codex-P2-count-before-project-filter
+round1_evidence_at=2026-09-03T09:18:16Z
+fix2_sent_at=2026-09-03T09:21:35Z findings=trap-after-acquire,pid-liveness-not-host-safe,stale-rm-TOCTOU (final round)
+round2_blocked_at=2026-09-03T09:33:03Z reason=worker session usage limit; resets 2026-09-03T13:00Z (21:00 Asia/Taipei); workspace ad7f12c8 kept alive for resume

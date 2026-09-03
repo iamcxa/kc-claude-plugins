@@ -103,3 +103,9 @@ Deviation recorded: the First Officer authored the first two commits on this bra
 
 - DONE: shape recorded above; Codex rounds 5 and 6 (evidence/codex-round5.md, codex-round6.md) reviewed the FO-authored candidate and left three commission blockers: no process lock around the shared state checkout for parallel claims; intent and read-back not bound to project, base, and message hash; README paragraph and AC-5 mutation to be re-established by the worker.
 - NEXT: dispatch a cloud worker on branch head 3f263c3b with the Brief plus the three blockers as scope; the worker delivers one candidate with a fresh Evidence block; the FO verifies at the pinned SHA.
+
+## Stage Report: implementation (in progress)
+
+- Round 0 (98c723f8): lock via `flock`, intent bound to project/base/message hash, read-back by project. FO without-it retained 0 / removed 1; Codex one P2. Blocked on the FO host: `flock` is absent on macOS.
+- Round 1 (6573daaa): portable mkdir lock, reconcile filters by project before counting. FO macOS LOCK falsifier: two parallel commits serialized, duplicate exit 4, no lock residue. Codex: both prior findings closed; three new P1 in the lock block (trap installed after acquire; pid-liveness stale rule not host-safe; rm -rf stale TOCTOU).
+- Round 2 (final under the cap) dispatched with those three; the worker hit the Claude session usage limit before delivering (resets 2026-09-03T13:00Z). Workspace ad7f12c8 kept alive; the FO re-sends the same round-2 message after reset. No new dispatch.
