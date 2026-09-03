@@ -1,0 +1,5 @@
+issue=DEV-93 token=87e4b70ca37a56e0 claimed_at=2026-09-03T14:13:42Z
+workspace=a3054bf6-b3de-4e00-b647-d35dcbf5cf7a session=99768954-53d8-4f55-89c2-8784def38aa4 carrier=poc/dispatch-carrier-dev-93 dispatched_at=2026-09-03T14:13:49Z
+task_sent_at=2026-09-03T14:14:14Z
+task_acked_at=2026-09-03T14:15:09Z
+evidence_at=2026-09-03T14:21:41Z
