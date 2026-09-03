@@ -1,0 +1,11 @@
+2026-09-03T14:09:35Z laptop#17: start claim=dev-90.g1 message_sha256=5fa9b6d3b8f43062d812b31e06b074dd07f0a61ca2bccaf098c4f0ddb12f06e3
+intent: lock timeout on /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/.git/ship-lock.d
+2026-09-03T14:11:15Z laptop#17: intent not committed (exists or fenced); reconcile instead of create
+2026-09-03T14:31:50Z laptop#19: start claim=dev-90.g1 message_sha256=5fa9b6d3b8f43062d812b31e06b074dd07f0a61ca2bccaf098c4f0ddb12f06e3
+committed dev-90.g1
+2026-09-03T14:31:54Z laptop#19: intent committed token=7116d44f2fead8c7dfe84bbe0a92ba1f
+2026-09-03T14:31:54Z laptop#19: conductor workspace create name=dev-90.g1-7116d44f2fead8c7dfe84bbe0a92ba1f
+2026-09-03T14:31:57Z laptop#19: create returned 4ad8722c-e572-432e-a823-c13b5b8beac2
+2026-09-03T14:31:58Z laptop#19: read-back ok name=dev-90.g1-7116d44f2fead8c7dfe84bbe0a92ba1f
+adopted dev-90.g1 -> 4ad8722c-e572-432e-a823-c13b5b8beac2
+2026-09-03T14:32:05Z laptop#19: adopted 4ad8722c-e572-432e-a823-c13b5b8beac2

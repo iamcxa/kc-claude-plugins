@@ -1,0 +1,7 @@
+issue=DEV-90 claim=dev-90.g1 token=ffce2d8ff9ce7af1 claimed_at=2026-09-03T14:31:40Z
+writer=19
+workspace=4ad8722c-e572-432e-a823-c13b5b8beac2
+session=37a86ce8-7d2c-4a58-a20c-a9b71d2e4f70 carrier=poc/dispatch-carrier-dev-90 dispatched_at=2026-09-03T14:32:06Z
+task_sent_at=2026-09-03T14:32:45Z
+task_acked_at=2026-09-03T14:32:56Z
+evidence_at=2026-09-03T14:37:03Z
