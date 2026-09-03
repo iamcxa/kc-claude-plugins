@@ -1,0 +1,8 @@
+2026-09-03T03:27:13Z alwayson#4: start fence=1
+2026-09-03T03:27:15Z alwayson#4: conductor workspace create name=dev-79 probe fence-on
+2026-09-03T03:27:17Z alwayson#4: create returned 45f13eeb-8a89-4d90-8089-a07234da6a48
+2026-09-03T03:27:18Z alwayson#4: persisted 45f13eeb-8a89-4d90-8089-a07234da6a48
+2026-09-03T03:27:52Z alwayson#6: start fence=0
+2026-09-03T03:27:53Z alwayson#6: conductor workspace create name=dev-79 probe fence-off
+2026-09-03T03:27:55Z alwayson#6: create returned 99080074-8df5-498c-a5fc-cfb18b1ca61e
+2026-09-03T03:27:55Z alwayson#6: persisted 99080074-8df5-498c-a5fc-cfb18b1ca61e

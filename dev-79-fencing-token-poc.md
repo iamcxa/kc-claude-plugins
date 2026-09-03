@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-03T03:20:00Z
 completed:
 verdict:
 worktree:
@@ -92,4 +92,54 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 
 ## Measurement
 
-Not yet measured.
+AC-1 (claim, handover, fenced check on two state clones): 1 min. AC-2 (fence on, SIGSTOP before persist): 15 s wall, one probe workspace created by each process, A fenced after resume. AC-3 (fence off): 11 s, both processes persisted. Reconcile of A's orphan by claim name: 5 s. Total 8 min including probe archival. Candidate 72f5c2151e5c5d85c64ec7fc6d86520499f53b48.
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: change
+  admitted_at: 2026-09-03T03:20:00Z
+  decision_ready_at: 2026-09-03T03:29:00Z
+  decision_ready_elapsed_seconds: 540
+  captain_interventions_before_decision_ready: 0
+  candidate: 72f5c2151e5c5d85c64ec7fc6d86520499f53b48
+  evidence: >-
+    A writer number committed on the state branch, fetched before every check,
+    fences a resumed stale holder: with the fence on, process A (writer 3) created
+    a probe workspace, was SIGSTOPped before persisting its id, process B took
+    over (writer 4) and dispatched, and A on resume was refused before writing
+    its claim (evidence/run-laptop.log, exit 3). With the fence off (AC-3) both
+    processes persisted and two claim records exist for one name. Holder record
+    ends at writer 6 (evidence/holder-final.json).
+  strongest_limit: >-
+    The fence gates persistence and later actions, not the create call that was
+    already in flight when the holder slept: A's workspace 387f8506 existed on
+    Conductor as an orphan. Exactly-once therefore needs a second half the design
+    did not have: the new holder reconciles by listing Conductor workspaces by
+    claim name and archiving any it did not persist (evidence/reconcile.txt shows
+    this works; Conductor renames the second same-named workspace with a -v1
+    suffix, which is the detection signal). No lease with expiry is needed for
+    the laptop-never-wakes case because the old holder's number is simply never
+    current again; a lease would only be needed to let a new holder take over
+    without a human running handover.
+  reversal_fact: >-
+    A resumed stale holder performing any external action after handover, or a
+    reconcile that cannot find an orphan by claim name.
+  cleanup_status_at_decision: complete
+```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: 0
+  terminal_cleanup_seconds: 60
+  cleanup_status: complete
+```
+
+## Change returned to planning
+
+1. Ship-flow contract: every external action is `holder.sh check` then act; a claim is persisted only after a second check; the new holder's first action after handover is a reconcile pass that archives same-name workspaces it did not persist.
+2. Handover is a human action (`holder.sh handover`) in this POC; unattended takeover needs a lease, which is a separate decision.
+3. `_holder.json` lives on the state branch and is read through fetch, never from the local copy; `dev-flow-state-prereq.sh` should treat a mismatched writer number as exit 1.

@@ -1,0 +1,13 @@
+2026-09-03T03:27:04Z laptop#3: start fence=1
+2026-09-03T03:27:05Z laptop#3: conductor workspace create name=dev-79 probe fence-on
+2026-09-03T03:27:08Z laptop#3: create returned 387f8506-b671-43bc-b02e-2561fa5eec07
+2026-09-03T03:27:08Z laptop#3: SIGSTOP self before persisting id
+2026-09-03T03:27:18Z laptop#3: resumed
+fenced: current writer 4 (alwayson), caller 3 (laptop)
+2026-09-03T03:27:19Z laptop#3: fenced after resume; NOT persisting 387f8506-b671-43bc-b02e-2561fa5eec07 (orphan candidate: 387f8506-b671-43bc-b02e-2561fa5eec07)
+2026-09-03T03:27:44Z laptop#5: start fence=0
+2026-09-03T03:27:45Z laptop#5: conductor workspace create name=dev-79 probe fence-off
+2026-09-03T03:27:48Z laptop#5: create returned 9701f3c3-1fe4-4550-8b34-454b26f53722
+2026-09-03T03:27:48Z laptop#5: SIGSTOP self before persisting id
+2026-09-03T03:27:55Z laptop#5: resumed
+2026-09-03T03:27:55Z laptop#5: persisted 9701f3c3-1fe4-4550-8b34-454b26f53722
