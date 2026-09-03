@@ -1,6 +1,6 @@
 ---
 title: "POC: plan receipt in, packaged ship out — one Project, three dependent Issues, one UAT document"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
@@ -40,6 +40,28 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:t5nxcbfq1ynpff13kh3sdnga:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:t5nxcbfq1ynpff13kh3sdnga-validation-1
+              briefing:
+                id: briefing:t5nxcbfq1ynpff13kh3sdnga:validation:attempt-1:revision-1
+                digest: sha256:9fa4946c4a31acc36f8af1c915854f085d2481a710ae2442447e6ca9e905721d
+                room-ref: ./dev-67-plan-receipt-packaged-ship-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t5nxcbfq1ynpff13kh3sdnga:validation:1
+                briefing: briefing:t5nxcbfq1ynpff13kh3sdnga:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T02:44:44.211732Z"
+                decision: approve
+                reason: 'POC outcome recorded: plan proceed, ship change. Three layers accepted and delivered as native stack #350 for Captain UAT; nine contract changes and the Codex round-3 reversals returned to planning. Terminal close consumes the POC; stack merge authority stays with the Captain.'
+                conn:
+                    quote: a stack link
+                    source: Captain chat, this conversation, 2026-09-03, choosing native stack delivery for the three approved candidates; the POC's accepted outcome was that packaged delivery
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem

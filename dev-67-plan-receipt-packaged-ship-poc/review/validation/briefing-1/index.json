@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t5nxcbfq1ynpff13kh3sdnga:validation:attempt-1:revision-1",
+  "question": "Close DEV-67 POC: plan proceed, ship change; stack #350 delivered for UAT; nine contract changes returned to planning?",
+  "artifacts": [
+    {
+      "id": "artifact:t5nxcbfq1ynpff13kh3sdnga:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f3c9367ace9c1cdc4eb71ecd2aa568b6566a1dde/dev-67-plan-receipt-packaged-ship-poc/evidence/close-review.md",
+      "rev": "sha256:9ca250eec11ff71c538ec9835f58c84d10bba2e06015cd1f8c113800d6199f48",
+      "mediaType": "text/markdown",
+      "summary": "Two-direction outcome; three Draft PRs as native stack; Codex round-3 reversals accepted into the change list."
+    }
+  ]
+}
