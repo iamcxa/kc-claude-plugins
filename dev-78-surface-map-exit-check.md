@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-78
-pr: 357
+pr: pr-merge:357
 mod-block:
 id: 1t3634tfkq3v9tr3r3gcbtw8
 gates:
@@ -124,3 +124,7 @@ Dispatch 03:24Z (token acked in 32 s); round-0 candidate 6ecb4470 at ~03:37Z, re
 Fresh FO verification at the exact candidate c5dd7562 (evidence/receipt.json): remote head equals CANDIDATE_SHA; worker's without-it line run verbatim with credentials unset, retained exit 0, removed (script deleted) exit 1 naming the missing script; five committed fixtures each refused by the checker for the reason the Brief names (AC-1 missing SURFACE, AC-3 unknown AC, free-text target, true|true pair, POC retained-not-in-diff, shape mismatch); contract test PASS at the candidate; merge-tree preflight clean against main b1702a15; Draft PR #357 required checks green. AC-1 through AC-5 covered; `--ac-scan` target is this report.
 
 Residuals outside the Brief, dispositioned scope-outside-brief and listed in the PR body: default test/fixture exclusion skips undeclared paths; `--diff-filter` omits Git type changes; the declared without-it pair is bound to a path by substring only.
+
+## Residual returned to planning
+
+The ten fixtures under `kc-dev-flow/scripts/fixtures/surface-map/` each feed one contract-test case, so none fails without-it, but none needs to be a file: the test builds its own synthetic repo, the evidence fixtures carry DEV-66's real SHA and prose that the synthetic repo never reads, two are subsets of `full-coverage-evidence.md`, and the three work items differ by one receipt line. Slimming them to test literals plus one template is DEV-83. The three checker residuals (default exclusion, type changes, no-op pair) stay listed on PR #357.
