@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow reads the candidate diff: a surface-to-obligation check at implementation exit"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, approving dispatch of DEV-78 to a cloud worker and DEV-79 to the local FO
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
