@@ -1,6 +1,6 @@
 ---
 title: "Intent-commit fencing: at-most-one worker across holder handover, adopt-or-block reconcile"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, choosing item 1 (intent-commit fencing) as the next step
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
