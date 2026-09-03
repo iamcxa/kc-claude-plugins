@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:1t3634tfkq3v9tr3r3gcbtw8:validation:attempt-1:revision-1",
+  "question": "Accept DEV-78's validated candidate c5dd7562 (Draft PR #357) as satisfying the admitted outcome, leaving merge to the Captain?",
+  "artifacts": [
+    {
+      "id": "artifact:1t3634tfkq3v9tr3r3gcbtw8:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c882dbaf8d65f3e9ce94eb67de54e56987026c67/dev-78-surface-map-exit-check/evidence/validation-review.md",
+      "rev": "sha256:03d933b3770f5e651ff08e100966e863d2eda0cec79588a1ca3549efccf2f744",
+      "mediaType": "text/markdown",
+      "summary": "Pilot verify-deliver: fresh FO verification passed; three residuals outside the Brief listed."
+    }
+  ]
+}

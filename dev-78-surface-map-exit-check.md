@@ -40,6 +40,28 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:1t3634tfkq3v9tr3r3gcbtw8:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:1t3634tfkq3v9tr3r3gcbtw8-validation-1
+              briefing:
+                id: briefing:1t3634tfkq3v9tr3r3gcbtw8:validation:attempt-1:revision-1
+                digest: sha256:fce5ff73fb85083408c621a7f3c5349a8065d1019fa9adef69c5aa4efd42f135
+                room-ref: ./dev-78-surface-map-exit-check/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:1t3634tfkq3v9tr3r3gcbtw8:validation:1
+                briefing: briefing:1t3634tfkq3v9tr3r3gcbtw8:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T07:26:06.234202Z"
+                decision: approve
+                reason: 'Fresh FO verification at the exact candidate passed (pin, without-it retained 0 / removed 1, five fixture falsifiers, contract test, preflight); Draft PR #357 CI green; three residuals outside the Brief listed in the PR body. Merge authority stays with the Captain.'
+                conn:
+                    quote: approve
+                    source: Captain chat, this conversation, 2026-09-03, approving the DEV-78 delivery unit at c5dd7562 after the FO explained what opening the PR yields
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
