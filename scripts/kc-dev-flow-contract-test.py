@@ -1130,6 +1130,9 @@ for phrase in [
     "Do not reinterpret provenance as provider identity",
     "A missing delivery authority is a refit requirement",
     "do not invent direct Git delivery",
+    "adds no repository-owned reader, adapter, script, test, or check for a capability a declared resource already supplies",
+    "commit it only when the Captain names a consumer that reads it",
+    "a repository-local Linear planning reader",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
@@ -1153,6 +1156,7 @@ for phrase in [
     "move it to a repository-owned provenance field",
     "remove the canonical `source` field before either v4 admission validation or continuation",
     "do not reinterpret it as provider identity",
+    "retires its repository-local planning reader",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 for phrase in [
