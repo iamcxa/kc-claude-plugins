@@ -1,0 +1,7 @@
+issue=DEV-78 token=311f5a1bcda17d32 claimed_at=2026-09-03T03:24:03Z
+workspace=4938fe83-9e5f-45e3-8e08-d23574ed5f08 session=0bfe2f0a-65e4-4483-a7f2-c2c722d9973b carrier=poc/dispatch-carrier-dev-78 dispatched_at=2026-09-03T03:24:09Z
+task_sent_at=2026-09-03T03:24:55Z
+task_acked_at=2026-09-03T03:25:27Z
+nudge_sent_at=2026-09-03T03:33:05Z
+evidence_at=2026-09-03T03:44:37Z
+fix1_sent_at=2026-09-03T03:46:26Z findings=codex-P1x5-trust-caller,P2-no-behavioural-test

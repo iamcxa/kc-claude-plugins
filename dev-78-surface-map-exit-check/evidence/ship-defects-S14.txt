@@ -1,0 +1,1 @@
+S14 FO nudge quoted the carrier branch SHA as the worker's candidate; the worker verified against ls-remote and correctly refused the false claim. FO messages must never assert remote state the FO has not read from the same source the worker will check.

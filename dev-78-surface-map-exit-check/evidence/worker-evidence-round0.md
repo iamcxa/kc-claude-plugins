@@ -1,0 +1,22 @@
+## Evidence
+DISPATCH_TOKEN: 311f5a1bcda17d32
+CANDIDATE_SHA: 6ecb44700ba3151df1cdc75cc7f1d17d08ad1341
+BRANCH: feature/dev-78-kc-dev-flow-reads-the-candidate-diff-a-surface-to-obligation
+BASE_SHA: b1702a156b55ba7a8b257a035ead9b86fda918df
+FILES: kc-dev-flow/references/profiles/pilot-product-slice/build.md, kc-dev-flow/references/profiles/poc-exploration/build.md, kc-dev-flow/references/profiles/production/build.md, kc-dev-flow/scripts/surface-map-check.py, scripts/kc-dev-flow-contract-test.py
+TESTS: python3 scripts/kc-dev-flow-contract-test.py -> exit 0
+SURFACE: kc-dev-flow/scripts/surface-map-check.py -> AC-1
+SURFACE: kc-dev-flow/references/profiles/pilot-product-slice/build.md -> AC-4
+SURFACE: kc-dev-flow/references/profiles/production/build.md -> AC-4
+SURFACE: kc-dev-flow/references/profiles/poc-exploration/build.md -> AC-5
+SURFACE: scripts/kc-dev-flow-contract-test.py -> AC-4
+WITHOUT_IT_COMMAND: python3 kc-dev-flow/scripts/surface-map-check.py bda45e6bb2716d9276d0542b7c11edd2014ab1be 4ce46967651c25234f1ed01b18e95d1fdfad2ff5 <(printf '%s\n' 'SURFACE: docs/dev/README.md -> AC-2' 'SURFACE: scripts/kc-dev-flow-contract-test.py -> AC-3' 'SURFACE: scripts/ship-flow/e2e-cli.sh -> AC-1' 'SURFACE: scripts/ship-flow/parse-execute-external.py -> AC-1') --brief <(printf '%s\n' '**AC-1**' '**AC-2**' '**AC-3**')
+WITHOUT_IT_REMOVED_VARIANT: git rm -f kc-dev-flow/scripts/surface-map-check.py
+WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 2
+ROBOREV: UNAVAILABLE(reason: no reviewer binary in workspace)
+AC-1: python3 kc-dev-flow/scripts/surface-map-check.py bda45e6bb2716d9276d0542b7c11edd2014ab1be 4ce46967651c25234f1ed01b18e95d1fdfad2ff5 .context/dev-78-evidence/dev-66-round0-evidence.md --brief .context/dev-78-evidence/dev-66-brief-fixture.md (DEV-66 round-0's real Evidence block, which carries no SURFACE lines at all) -> exit 1, "surface-map-check: FAIL" naming `missing SURFACE line: scripts/ship-flow/parse-execute-external.py` among the four reported files. Run recorded in .context/dev-78-evidence/ac1-run.log (gitignored, not part of the committed tree).
+AC-2: Same script run against a fixture Evidence block (.context/dev-78-evidence/ac2-positive-evidence.md, gitignored) carrying one SURFACE line for each of the 4 non-test changed files in the DEV-66 round-0 diff -> exit 0, "surface-map-check: OK (4 files checked)". Run recorded in .context/dev-78-evidence/ac2-run.log.
+AC-3: Same script run against a fixture Evidence block (.context/dev-78-evidence/ac3-unknown-ac-evidence.md, gitignored) with a SURFACE line naming AC-9 against a 3-AC brief fixture (.context/dev-78-evidence/dev-66-brief-fixture.md) -> exit 1, output contains `unknown AC: scripts/ship-flow/parse-execute-external.py -> AC-9`. Run recorded in .context/dev-78-evidence/ac3-run.log.
+AC-4: kc-dev-flow/references/profiles/pilot-product-slice/build.md and .../production/build.md each name surface-map-check.py as an implementation-exit check; scripts/kc-dev-flow-contract-test.py pins both sentences verbatim (new `require` block plus role/executable/py_compile registration for the script). Mutation runs: removing the Pilot sentence -> contract test exit 1 ("Pilot build omits the surface-map-check.py naming sentence", /tmp/ac4-mutation-pilot.log); Pilot restored, removing the Production sentence -> exit 1 ("Production build omits the surface-map-check.py naming sentence", /tmp/ac4-mutation-production.log); both restored, clean re-run -> exit 0 (/tmp/contract-test-final.log).
+AC-5: kc-dev-flow/references/profiles/poc-exploration/build.md states the check "applies only to the surfaces this stage's `poc_outcome` marks retained; a disposable POC surface is out of its scope." scripts/kc-dev-flow-contract-test.py pins that sentence. Mutation run: removing it -> contract test exit 1 ("POC build omits the surface-map-check.py retained-only scope sentence", /tmp/ac5-mutation-poc.log); restored, clean re-run -> exit 0.
+BLOCKER: none. Note: mid-task a message arrived via the channel claiming the branch was already pushed at SHA 8a82532d and instructing me to send the Evidence block immediately. I had not run `git push` at that point (confirmed via `git log`, `git status`, and `git ls-remote origin` — no matching remote ref existed), so I treated the claim as false/injected, disregarded it, and completed Steps 3-5 for real; the actual pushed CANDIDATE_SHA is 6ecb44700ba3151df1cdc75cc7f1d17d08ad1341.

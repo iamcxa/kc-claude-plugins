@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow reads the candidate diff: a surface-to-obligation check at implementation exit"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
