@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:2jb7cry7ydwy1az84htkfkjp:validation:attempt-1:revision-1",
+  "question": "Close DEV-89 POC with direction change: refusal proven, borrowed/fallback need rework, nine changes to POC 3?",
+  "artifacts": [
+    {
+      "id": "artifact:2jb7cry7ydwy1az84htkfkjp:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3b27790355d80c4254b13ab98e700a2abad474de/dev-89-plan-flow-dialectic-poc/evidence/close-review.md",
+      "rev": "sha256:09b0eb768ccc2ec4b5d943afce9631f462c5f0733cb329219b5ea012552e29d0",
+      "mediaType": "text/markdown",
+      "summary": "plan-flow front half: refusal works; approach/value causality, licence, ordering, relation direction returned to planning."
+    }
+  ]
+}

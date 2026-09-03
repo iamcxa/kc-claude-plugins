@@ -40,6 +40,28 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:2jb7cry7ydwy1az84htkfkjp:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:2jb7cry7ydwy1az84htkfkjp-validation-1
+              briefing:
+                id: briefing:2jb7cry7ydwy1az84htkfkjp:validation:attempt-1:revision-1
+                digest: sha256:aae3bf241eae93c953e7b16e332eaa9131093e447ce3868cff5167452f19fb4f
+                room-ref: ./dev-89-plan-flow-dialectic-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:2jb7cry7ydwy1az84htkfkjp:validation:1
+                briefing: briefing:2jb7cry7ydwy1az84htkfkjp:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T13:49:21.888557Z"
+                decision: approve
+                reason: 'Captain accepted the DEV-89 POC outcome as change: refusal falsifier proceed, borrowed and fallback need rework, nine changes returned to plan-flow POC 3; the run-A Project stays in Linear as planned work.'
+                conn:
+                    quote: 89我們應該會再走好幾輪才會完成對嗎？如果是就 Ｂ
+                    source: Captain chat, this conversation, 2026-09-03 evening, choosing (b) and accepting that DEV-89 closes as change with further rounds
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
