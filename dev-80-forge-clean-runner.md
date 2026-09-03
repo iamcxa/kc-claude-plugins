@@ -1,6 +1,6 @@
 ---
 title: "Forge Phase 2 RED/GREEN runs in a clean runner with a scenario file slot"
-status: backlog
+status: ideation
 source:
 product: kc-plugin-forge
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: 'Captain chat, this conversation, 2026-09-03, after merging PR #359 ("合併了")'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
