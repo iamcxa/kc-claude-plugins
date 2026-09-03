@@ -50,7 +50,7 @@ Forge Phase 2 dispatches every RED and GREEN run through a clean runner selected
 - The learning loop (DEV-82) and its GitHub-issue sink.
 - Claiming the method generalizes beyond kc-dev-flow; a second plugin run is separate work.
 
-## Acceptance evidence
+## Acceptance criteria
 
 - **AC-1** Forge Phase 2 selects a runner (`cloud` or `bare`) and refuses to run RED as an in-session subagent; a contract test reddens when the in-session path is restored. Recorded.
 - **AC-2** Phase 2 on kc-dev-flow with the three DEV-80 scenarios on the cloud runner: RED fails on T1 and T4, GREEN passes on T1, T2, and T4; per-scenario outcomes recorded from `session message --offset`, not the sql view.
