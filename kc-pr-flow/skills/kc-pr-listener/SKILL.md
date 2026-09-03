@@ -70,7 +70,7 @@ existing review of that commit rather than dispatched here.
 | Icon gone after a reboot | The host is not launched at login. Toggle **Start at login** in the menu; if the row reads `unknown`, macOS refused Automation permission for System Events and the menu-bar app needs it granted. |
 | Icon shows `off` | `listening` is false. Click **Resume listening**. |
 | Icon shows `!` | `last_error` in state — usually `gh` auth expired. |
-| Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Clear one with the row's **retry**. |
+| Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Click the row's **review now** to dispatch that one regardless. |
 | A row is `❌` with "no project" | The repo has no project in that token's organization; a second organization needs its own token file. |
 | Review finished but no notification | Switch the notification channel from the menu (`terminal-notifier` ⇄ `osascript`); either may lack permission to post on this Mac, and only `terminal-notifier` carries a click action. |
 | A finished PR vanished from the list | Expected. GitHub drops a PR from review-requested once a review is submitted; look under **Finished reviews**. |

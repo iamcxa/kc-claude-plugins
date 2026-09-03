@@ -277,7 +277,11 @@ already_reviewed() { # <repo> <pr> <sha> <login>
   [[ -n "$found" ]]
 }
 
+# poll [<repo#number>] — with a key, dispatch just that one on the user's say-so:
+# the listening switch and the per-repo switch are the user's standing answer, and
+# clicking a row is them answering again for this one.
 poll() {
+  local only="${1:-}"
   local prs repo num url draft enabled status attempts fork n=0
   prs=$("$GH" search prs --review-requested=@me --state open --limit 40 \
           --json repository,number,title,url,isDraft 2>>"$LOG")
@@ -294,7 +298,7 @@ poll() {
     cfg_edit --arg r "$repo" 'if (.repos | has($r)) then . else .repos[$r] = {enabled:true} end'
   done < <("$JQ" -r '.open[].repository.nameWithOwner' "$STATE" 2>/dev/null)
 
-  [[ "$(cfg_get '.listening')" == "true" ]] || return 0
+  [[ -n "$only" || "$(cfg_get '.listening')" == "true" ]] || return 0
 
   local me head branch sha seen_sha
   me=$("$GH" api user --jq .login 2>>"$LOG")
@@ -306,10 +310,14 @@ poll() {
 
   while IFS=$'\t' read -r repo num url draft; do
     [[ -z "$repo" ]] && continue
-    (( n >= MAX_DISPATCH_PER_TICK )) && break
-    [[ "$draft" == "true" ]] && continue
-    enabled=$(cfg_get --arg r "$repo" '.repos[$r].enabled // false')
-    [[ "$enabled" == "true" ]] || continue
+    if [[ -n "$only" ]]; then
+      [[ "$repo#$num" == "$only" ]] || continue
+    else
+      (( n >= MAX_DISPATCH_PER_TICK )) && break
+      [[ "$draft" == "true" ]] && continue
+      enabled=$(cfg_get --arg r "$repo" '.repos[$r].enabled // false')
+      [[ "$enabled" == "true" ]] || continue
+    fi
 
     # What was reviewed is a commit, not a number: a re-request after a push has to
     # run again, and a re-request without one must not.
@@ -332,7 +340,7 @@ poll() {
     attempts=$(st_get --arg k "$repo#$num" '.seen[$k].attempts // 0')
     if [[ "$seen_sha" == "$sha" ]]; then
       [[ -n "$status" && "$status" != "error" ]] && continue
-      (( attempts >= MAX_ATTEMPTS )) && continue
+      [[ -z "$only" ]] && (( attempts >= MAX_ATTEMPTS )) && continue
     else
       # The head moved. Let the job already in flight finish rather than running two
       # reviews of the same pull request at once.
@@ -433,9 +441,9 @@ render() {
           echo "-- -- $(menu_label "$(st_get --arg k "$key" '.seen[$k].error // ""')")"
           echo "-- -- retry | bash=\"$SELF\" param1=forget param2=\"$key\" terminal=false refresh=true" ;;
         *)
-          echo "-- ○ #$num $title (not dispatched yet) | href=$url" ;;
+          echo "-- ○ #$num $title — review now | bash=\"$SELF\" param1=review-now param2=\"$key\" terminal=false refresh=true" ;;
       esac
-      [[ -n "$env" ]] && echo "-- -- open PR on GitHub | href=$url"
+      echo "-- -- open PR on GitHub | href=$url"
     done < <("$JQ" -r '.open[] | [.repository.nameWithOwner, (.number|tostring), .title, .url] | @tsv' "$STATE" 2>/dev/null)
   fi
 
@@ -487,6 +495,8 @@ case "${1:-}" in
   toggle-login)  login_toggle; exit 0 ;;
   poll-only)     lock_wait || { log "poll-only skipped: a tick holds the lock"; exit 0; }
                  check_completions; poll; exit $? ;;
+  review-now)    lock_wait || { log "review-now not applied: a tick holds the lock — click again"; exit 0; }
+                 log "review requested from the menu: $2"; poll "$2"; exit $? ;;
 esac
 
 if lock_acquire; then
