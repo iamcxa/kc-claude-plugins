@@ -1,6 +1,6 @@
 ---
 title: "intent.sh lock path breaks on a split-root state checkout (.git is a file)"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03 evening; the batch he authorized cannot dispatch without this fix
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
