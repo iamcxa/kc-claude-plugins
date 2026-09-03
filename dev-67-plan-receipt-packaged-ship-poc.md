@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-67
-pr: iamcxa/kc-claude-plugins#349
+pr: pr-merge:349
 mod-block:
 id: t5nxcbfq1ynpff13kh3sdnga
 gates:
