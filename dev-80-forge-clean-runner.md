@@ -48,6 +48,14 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-1:revision-1
                 digest: sha256:f5ddf1284a8afd0c1ade146804fcda39f97f2dad32cd10f359aafef18cb2af4d
                 room-ref: ./dev-80-forge-clean-runner/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:ideation:1
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-03T08:59:46.997473Z"
+                decision: revise
+                reason: 'Direction accepted (runner seam, scenario file, report fields, AC-1 falsifier). One correction before build: in the forge-skill-scenarios/v1 format, replace the prose pass_when with a deterministic assert: list over SCRATCH and the transcript (file_unchanged by hash, file_matches, frontmatter_field, output_contains, output_not_contains, same vocabulary as the existing smoke contains:); allow an optional judge: only when assert: is absent, evaluated by a different model than the runner, and reported as judged, never as passed. Rewrite T1, T2, T4 with assert: (T1 file_unchanged on the entity file plus output_contains gate; T4 file_matches selected: production). Accepted outcome and non-goals unchanged.'
 ---
 
 ## The problem
