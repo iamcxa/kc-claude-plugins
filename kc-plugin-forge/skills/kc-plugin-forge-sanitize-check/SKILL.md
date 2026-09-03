@@ -5,7 +5,7 @@ description: Use before making a public plugin feature PR ready or before a rele
 
 # Plugin Sanitize-Check
 
-Prepublish backstop. Greps a plugin's public files (`reference/*.md`, `skills/**/*.md`, `agents/**/*.md`, `README.md`, `CLAUDE.md`, `docs/*.md`) for **known leak patterns**. If any hit, block publish with a per-finding report so user can decide: fix, allowlist, or override.
+Prepublish backstop. Greps a plugin's public files (`reference/*.md`, `skills/**/*.md`, `agents/**/*.md`, `README.md`, `CLAUDE.md`, `docs/*.md`, `skill-scenarios/*.yaml`) for **known leak patterns**. If any hit, block publish with a per-finding report so user can decide: fix, allowlist, or override.
 
 **Position in the knowledge ladder**: this skill is the safety net AFTER Early-stage Dreaming. Early-stage Dreaming is the primary defense (sanitize at capture time). Sanitize-check exists only because Dreaming is human-gated and humans miss things.
 
@@ -86,6 +86,7 @@ If REJECT fires, **also** flag for journal entry — production secret in plugin
    <plugin>/docs/*.md
    <plugin>/README.md
    <plugin>/CLAUDE.md
+   <plugin>/skill-scenarios/*.yaml
    ```
    Exclude: `.git/`, `.private/`, anything in `.gitignore`.
 

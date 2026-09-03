@@ -50,6 +50,9 @@ jobs:
           ./kc-plugin-forge/scripts/plugin-release-contract.test.sh
           ./kc-plugin-forge/scripts/plugin-release-contract-check.sh --repo .
 
+      - name: Validate forge Phase 2 clean-runner contract
+        run: python3 ./kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py .
+
       - name: Validate dev-flow work-context adapter
         run: ./scripts/dev-flow-work-context-check.test.sh
 

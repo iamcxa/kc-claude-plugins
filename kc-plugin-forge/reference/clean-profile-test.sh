@@ -20,6 +20,12 @@
 # Assertions format:
 #   contains:<pattern>       — output must include pattern (case-insensitive)
 #   not_contains:<pattern>   — output must NOT include pattern (case-insensitive)
+#
+# Extended mode (used by reference/skill-runner.py, the Phase 2 clean runner):
+#   SKILL_RUNNER_MODEL        — pin the claude model via --model (unset = unpinned, unchanged default)
+#   SKILL_RUNNER_STREAM_JSON  — path to also write the full --output-format stream-json transcript
+#                                (tool calls + tool results), needed to score file-state assertions.
+#   Both are no-ops when unset — Phase 2.5's plain contains:/not_contains: callers are unaffected.
 
 set -uo pipefail
 
@@ -52,9 +58,38 @@ if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   exit 2
 fi
 
-JSON_OUTPUT=$(timeout "$TIMEOUT" claude --bare --effort low \
-  --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" --output-format json 2>/dev/null)
-CLAUDE_EXIT=$?
+MODEL_FLAG=()
+if [[ -n "${SKILL_RUNNER_MODEL:-}" ]]; then
+  MODEL_FLAG=(--model "$SKILL_RUNNER_MODEL")
+fi
+
+if [[ -n "${SKILL_RUNNER_STREAM_JSON:-}" ]]; then
+  RAW=$(timeout "$TIMEOUT" claude --bare --effort low "${MODEL_FLAG[@]}" \
+    --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" --output-format stream-json --verbose 2>/dev/null)
+  CLAUDE_EXIT=$?
+  printf '%s\n' "$RAW" > "$SKILL_RUNNER_STREAM_JSON"
+  # The stream is one JSON object per line; the final `type: result` line carries
+  # the same summary fields the plain `json` output-format returns as a whole.
+  JSON_OUTPUT=$(printf '%s\n' "$RAW" | python3 -c "
+import json, sys
+last = ''
+for line in sys.stdin:
+    line = line.strip()
+    if not line:
+        continue
+    try:
+        d = json.loads(line)
+    except Exception:
+        continue
+    if d.get('type') == 'result':
+        last = line
+print(last)
+")
+else
+  JSON_OUTPUT=$(timeout "$TIMEOUT" claude --bare --effort low "${MODEL_FLAG[@]}" \
+    --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" --output-format json 2>/dev/null)
+  CLAUDE_EXIT=$?
+fi
 if [[ $CLAUDE_EXIT -ne 0 ]]; then
   echo "ERROR: claude execution failed (exit $CLAUDE_EXIT)"
   exit 2
