@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-67
-pr: 347
+pr: iamcxa/kc-claude-plugins#349
 mod-block:
 id: t5nxcbfq1ynpff13kh3sdnga
 gates:
@@ -135,7 +135,7 @@ poc_outcome:
     field dispatch needs, a candidate head moves during verification, or the
     stack base rule cannot be enforced by freezing lower layers.
   cleanup_status_at_decision: pending
-  delivery: Draft PRs #347 (DEV-66), #348 (DEV-65), #349 (DEV-64), each against main, Captain-approved 2026-09-03
+  delivery: Draft PRs #347 (DEV-66), #348 (DEV-65), #349 (DEV-64), linked as native stack #350 via gh stack link, Captain-approved 2026-09-03
 ```
 
 ## POC close measurement
@@ -157,7 +157,8 @@ poc_close_measurement:
 6. A no-secrets sandbox strips credential variables and keeps HOME (S3).
 7. Code review (Codex or kc-pr-review) is load-bearing for script-producing Issues; findings outside the Brief's ACs are dispositioned as scope-outside-brief and listed for the Captain, not looped (S5, S6).
 8. Conductor MCP has run_sql but no wait primitive and dropped mid-session; the CLI sql path is the contract (S7).
-9. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.
+9. Reversed by Codex round 3 (evidence/codex-design-review-round3.md), accepted: dispatch a higher layer only after the lower layer is fully verified (replaces the freeze rule); a worker's without-it command runs in an isolated environment (temporary HOME, no agent, no network), not merely with credential variables unset; task delivery is acknowledged by reading a dispatch token back from the transcript, not by a grace period; security, data-loss, and compatibility findings outside the Brief block, only general improvements are scoped out; the four reproduced review findings become deterministic checks; holder transfer to an always-on host needs a fencing token, not a clone of the state branch. Commission falsifier: laptop sleeps between workspace create and id persistence, always-on host takes over, laptop wakes; exactly one workspace, one claim, and the old holder refused before any external action.
+10. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.
 
 ## Cleanup
 

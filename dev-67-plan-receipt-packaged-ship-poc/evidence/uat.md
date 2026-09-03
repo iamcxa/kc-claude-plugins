@@ -2,7 +2,7 @@
 
 Plan receipt `08c6798ba0223cf1` · Project `923b6c74-1176-413f-8e99-3f0ec73c0cde` · dispatch order DEV-66 -> DEV-65 -> DEV-64
 
-Each layer is one Draft PR at one pinned candidate. Layer N+1 was dispatched on layer N's candidate SHA, so merge bottom to top. All Linear state is untouched by the FO.
+Each layer is one Draft PR at one pinned candidate, linked as GitHub native stack #350 (#347 -> #348 -> #349). Merge the whole stack with `gh stack merge 350` after UAT; do not merge a layer alone. Known noise: layer 3 (#349) was dispatched on layer 2's round-0 candidate 353795c, so its stack diff carries layer 2's fix-round delta; Codex round 3 flagged this and the commission rule is now 'verify a layer fully before dispatching the next'. All Linear state is untouched by the FO.
 
 
 ## Layer 1: DEV-66 — Dispatch carrier and e2e evidence rules for cloud workers
