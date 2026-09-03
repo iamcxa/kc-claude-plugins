@@ -1384,7 +1384,7 @@ for phrase in [
 manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
 normalized_manual_issue_body = " ".join(manual_issue_body.split())
 manual_issue_headings = [
-    "## The problem", "## Accepted outcome", "## Non-goals",
+    "## The problem", "## Goal", "## Non-goals",
     "## Acceptance criteria", "## Route-back conditions",
 ]
 require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")

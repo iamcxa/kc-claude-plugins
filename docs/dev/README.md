@@ -268,7 +268,7 @@ A Linear Issue used for admission has this body shape without a
 ```markdown
 ## The problem
 
-## Accepted outcome
+## Goal
 
 ## Non-goals
 
