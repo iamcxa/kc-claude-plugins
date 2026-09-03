@@ -1,6 +1,6 @@
 ---
 title: "POC: fencing token for ship-flow holder handover — exactly-once dispatch across laptop sleep"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
