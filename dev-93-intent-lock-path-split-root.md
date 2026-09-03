@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:mw4wasfctgbd79ttr7trmk64:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:mw4wasfctgbd79ttr7trmk64-validation-1
+              briefing:
+                id: briefing:mw4wasfctgbd79ttr7trmk64:validation:attempt-1:revision-1
+                digest: sha256:746e69d8b8ecc3a38ff908c1be1ab6a34ab435f66af1a510961bd1b2549e3713
+                room-ref: ./dev-93-intent-lock-path-split-root/review/validation/briefing-1
 ---
 
 ## The problem

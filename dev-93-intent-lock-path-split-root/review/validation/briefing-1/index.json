@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:mw4wasfctgbd79ttr7trmk64:validation:attempt-1:revision-1",
+  "question": "Accept DEV-93's verified candidate 218d584e and authorize the Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:mw4wasfctgbd79ttr7trmk64:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3fee13b307a01ce7d0ea26dc45ea9f38034c8b06/dev-93-intent-lock-path-split-root/evidence/validation-review.md",
+      "rev": "sha256:ab118c91d615db37a4a45139bad2609bcddd6ec9bd9fed549914aca6db3eb66b",
+      "mediaType": "text/markdown",
+      "summary": "Lock path fix verified on the real state; no residuals."
+    }
+  ]
+}
