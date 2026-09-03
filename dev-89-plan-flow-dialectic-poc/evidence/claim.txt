@@ -1,0 +1,4 @@
+issue=DEV-89 token=eeb40d6d8019187f claimed_at=2026-09-03T09:55:13Z
+workspace=43c707f1-d4b5-45b8-a5b4-bac1a31cde59 session=09a28ba5-723f-4127-83e6-099753a0c9d4 carrier=poc/dispatch-carrier-dev-89 dispatched_at=2026-09-03T09:55:19Z
+task_sent_at=2026-09-03T09:55:44Z
+task_acked_at=2026-09-03T09:56:05Z
