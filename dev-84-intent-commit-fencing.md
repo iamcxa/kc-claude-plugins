@@ -1,6 +1,6 @@
 ---
 title: "Intent-commit fencing: at-most-one worker across holder handover, adopt-or-block reconcile"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
