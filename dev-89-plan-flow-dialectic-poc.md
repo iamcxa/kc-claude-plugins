@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-89
-pr:
+pr: local-merge:poc-decision-only-artifact-kept-on-branch
 mod-block:
 id: 2jb7cry7ydwy1az84htkfkjp
 gates:
