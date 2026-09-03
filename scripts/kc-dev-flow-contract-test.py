@@ -1916,7 +1916,25 @@ surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
 surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
 surface_map_round0_evidence = surface_map_fixtures / "dev-66-round0-evidence.md"
 surface_map_free_text_evidence = surface_map_fixtures / "free-text-target-evidence.md"
-for fixture in (surface_map_work_item, surface_map_round0_evidence, surface_map_free_text_evidence):
+surface_map_poc_not_in_diff_work_item = surface_map_fixtures / "poc-work-item-not-in-diff.md"
+surface_map_without_it_true_evidence = surface_map_fixtures / "without-it-true-true-evidence.md"
+surface_map_deletion_only_evidence = surface_map_fixtures / "deletion-only-evidence.md"
+surface_map_production_work_item = surface_map_fixtures / "production-work-item-fixture.md"
+surface_map_shape_mapping = surface_map_fixtures / "shape-mapping-fixture.txt"
+surface_map_shape_mismatch_evidence = surface_map_fixtures / "shape-mapping-mismatch-evidence.md"
+surface_map_full_coverage_evidence = surface_map_fixtures / "full-coverage-evidence.md"
+for fixture in (
+    surface_map_work_item,
+    surface_map_round0_evidence,
+    surface_map_free_text_evidence,
+    surface_map_poc_not_in_diff_work_item,
+    surface_map_without_it_true_evidence,
+    surface_map_deletion_only_evidence,
+    surface_map_production_work_item,
+    surface_map_shape_mapping,
+    surface_map_shape_mismatch_evidence,
+    surface_map_full_coverage_evidence,
+):
     require(fixture.is_file(), f"missing surface-map fixture: {fixture}")
 
 with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_map_repo_name:
@@ -1925,9 +1943,12 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
     git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
 
     (surface_map_repo / "docs/dev").mkdir(parents=True)
-    (surface_map_repo / "scripts").mkdir(parents=True)
+    (surface_map_repo / "scripts/ship-flow").mkdir(parents=True)
     (surface_map_repo / "docs/dev/README.md").write_text("base\n", encoding="utf-8")
     (surface_map_repo / "scripts/kc-dev-flow-contract-test.py").write_text("# base\n", encoding="utf-8")
+    (surface_map_repo / "scripts/ship-flow/legacy-runner.sh").write_text(
+        "#!/bin/sh\necho legacy\n", encoding="utf-8"
+    )
     subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"], check=True, capture_output=True)
     subprocess.run(
         ["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "base"],
@@ -1937,7 +1958,6 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True
     ).strip()
 
-    (surface_map_repo / "scripts/ship-flow").mkdir(parents=True)
     (surface_map_repo / "scripts/fixtures/ship-flow").mkdir(parents=True)
     (surface_map_repo / "docs/dev/README.md").write_text("candidate\n", encoding="utf-8")
     (surface_map_repo / "scripts/kc-dev-flow-contract-test.py").write_text("# candidate\n", encoding="utf-8")
@@ -1946,6 +1966,10 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
     (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow.yaml").write_text("steps: []\n", encoding="utf-8")
     (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml").write_text(
         "steps: []\n", encoding="utf-8"
+    )
+    subprocess.run(
+        ["git", "-C", str(surface_map_repo), "rm", "-q", "scripts/ship-flow/legacy-runner.sh"],
+        check=True, capture_output=True,
     )
     subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"], check=True, capture_output=True)
     subprocess.run(
@@ -1956,19 +1980,26 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True
     ).strip()
 
-    def run_surface_map_check(evidence: Path) -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            [
-                sys.executable, str(surface_map_check),
-                surface_map_base, surface_map_candidate,
-                str(evidence),
-                "--work-item", str(surface_map_work_item),
-                "--brief", str(surface_map_work_item),
-                "--repo", str(surface_map_repo),
-            ],
-            capture_output=True,
-            text=True,
-        )
+    def run_surface_map_check(
+        evidence: Path,
+        *,
+        work_item: Path = surface_map_work_item,
+        shape_mapping: Path | None = None,
+        extra_args: list[str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        command = [
+            sys.executable, str(surface_map_check),
+            surface_map_base, surface_map_candidate,
+            str(evidence),
+            "--work-item", str(work_item),
+            "--brief", str(work_item),
+            "--repo", str(surface_map_repo),
+        ]
+        if shape_mapping is not None:
+            command += ["--shape-mapping", str(shape_mapping)]
+        if extra_args:
+            command += extra_args
+        return subprocess.run(command, capture_output=True, text=True)
 
     round0 = run_surface_map_check(surface_map_round0_evidence)
     require(
@@ -1982,6 +2013,53 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         free_text.returncode == 1 and "invalid target" in free_text.stdout,
         "surface-map-check did not reject a free-text SURFACE target: "
         f"exit={free_text.returncode} stdout={free_text.stdout!r} stderr={free_text.stderr!r}",
+    )
+
+    poc_not_in_diff = run_surface_map_check(
+        surface_map_round0_evidence, work_item=surface_map_poc_not_in_diff_work_item
+    )
+    require(
+        poc_not_in_diff.returncode == 1 and "retained surface not in diff" in poc_not_in_diff.stdout,
+        "surface-map-check did not reject a POC retained surface absent from the diff: "
+        f"exit={poc_not_in_diff.returncode} stdout={poc_not_in_diff.stdout!r} stderr={poc_not_in_diff.stderr!r}",
+    )
+
+    without_it_stub = run_surface_map_check(surface_map_without_it_true_evidence)
+    require(
+        without_it_stub.returncode == 1 and "without-it pair does not bind" in without_it_stub.stdout,
+        "surface-map-check accepted a `true | true` without-it stub: "
+        f"exit={without_it_stub.returncode} stdout={without_it_stub.stdout!r} stderr={without_it_stub.stderr!r}",
+    )
+
+    deletion_only = run_surface_map_check(surface_map_deletion_only_evidence)
+    deletion_violations = (
+        "invalid target: scripts/ship-flow/legacy-runner.sh",
+        "without-it pair does not bind scripts/ship-flow/legacy-runner.sh",
+        "missing SURFACE line: scripts/ship-flow/legacy-runner.sh",
+    )
+    require(
+        deletion_only.returncode == 1
+        and not any(violation in deletion_only.stdout for violation in deletion_violations),
+        "surface-map-check flagged a deleted file declared `removal | - | -`: "
+        f"exit={deletion_only.returncode} stdout={deletion_only.stdout!r} stderr={deletion_only.stderr!r}",
+    )
+
+    shape_mismatch = run_surface_map_check(
+        surface_map_shape_mismatch_evidence,
+        work_item=surface_map_production_work_item,
+        shape_mapping=surface_map_shape_mapping,
+    )
+    require(
+        shape_mismatch.returncode == 1 and "shape mapping says" in shape_mismatch.stdout,
+        "surface-map-check did not reject a shape-mapping/evidence target mismatch: "
+        f"exit={shape_mismatch.returncode} stdout={shape_mismatch.stdout!r} stderr={shape_mismatch.stderr!r}",
+    )
+
+    full_coverage = run_surface_map_check(surface_map_full_coverage_evidence)
+    require(
+        full_coverage.returncode == 0,
+        "surface-map-check did not accept a fully-covering Evidence block for the DEV-66-shaped diff: "
+        f"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}",
     )
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")

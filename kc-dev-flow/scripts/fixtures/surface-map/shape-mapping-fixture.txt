@@ -1,0 +1,5 @@
+docs/dev/README.md -> AC-2
+scripts/kc-dev-flow-contract-test.py -> AC-3
+scripts/ship-flow/e2e-cli.sh -> AC-1
+scripts/ship-flow/parse-execute-external.py -> AC-1
+scripts/ship-flow/legacy-runner.sh -> removal

@@ -2,12 +2,13 @@
 """Check that a candidate's changed files map to declared obligations.
 
 Reads the real `git diff` between two revisions, then requires the worker's
-Evidence block to carry one `SURFACE:` line per non-excluded changed file,
-naming an AC declared in the Brief, a falsifier, a safety boundary, or a
-lifecycle obligation, each backed by its own without-it command and removed
-variant. Profile and (for POC) the retained-surface set are read from the
-work item's own receipt, not from caller-supplied flags: a caller-declared
-scope is exactly the kind of unchecked input this script exists to remove.
+Evidence block to carry one `SURFACE:` line per checked changed file, naming
+an AC declared in the Brief, a falsifier, a safety boundary, a lifecycle
+obligation, or (for a deleted file) removal — each backed by a without-it
+command and removed variant that actually binds the surface's path, not a
+stub. Profile and (for POC) the retained-surface set are read from the work
+item's own receipt, not from caller-supplied flags: a caller-declared scope
+is exactly the kind of unchecked input this script exists to remove.
 """
 
 from __future__ import annotations
@@ -45,6 +46,8 @@ EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts")
 AC_HEADING_RE = re.compile(r"\*\*AC-(\d+)\s*\*\*")
 AC_TARGET_RE = re.compile(r"^AC-(\d+)$")
 LIFECYCLE_TARGET_RE = re.compile(r"^lifecycle:[A-Za-z0-9_-]+$")
+LITERAL_TARGETS = {"falsifier", "safety-boundary"}
+FORBIDDEN_WITHOUT_IT = {"true", ":", "exit 0"}
 
 SURFACE_LINE_RE = re.compile(
     r"^SURFACE:\s*(?P<path>\S+)\s*->\s*(?P<target>[^|\n]+?)\s*\|"
@@ -60,7 +63,7 @@ def read_text(path: Path, *, label: str) -> str:
         raise CheckError(f"cannot read {label} {path}: {exc}") from exc
 
 
-def git_changed_files(base: str, candidate: str, *, repo: Path) -> list[str]:
+def git_changed_files(base: str, candidate: str, *, repo: Path) -> list[tuple[str, str]]:
     for sha in (base, candidate):
         verify = subprocess.run(
             ["git", "-C", str(repo), "rev-parse", "--verify", f"{sha}^{{commit}}"],
@@ -70,19 +73,20 @@ def git_changed_files(base: str, candidate: str, *, repo: Path) -> list[str]:
         if verify.returncode != 0:
             raise CheckError(f"unreachable revision: {sha}")
     result = subprocess.run(
-        ["git", "-C", str(repo), "diff", "--name-status", "--diff-filter=ACMR", base, candidate],
+        ["git", "-C", str(repo), "diff", "--name-status", "--diff-filter=ACMRD", base, candidate],
         capture_output=True,
         text=True,
     )
     if result.returncode != 0:
         raise CheckError(f"git diff failed: {result.stderr.strip()}")
-    files = []
+    entries: list[tuple[str, str]] = []
     for line in result.stdout.splitlines():
         if not line.strip():
             continue
+        parts = line.split("\t")
         # Renames carry old\tnew; the last column is always the current path.
-        files.append(line.split("\t")[-1])
-    return sorted(files)
+        entries.append((parts[0][0], parts[-1]))
+    return sorted(entries, key=lambda entry: entry[1])
 
 
 def is_excluded(path: str) -> bool:
@@ -135,15 +139,31 @@ def extract_retained_surfaces(work_item_text: str) -> list[str]:
     return items
 
 
-def outside_diff_reference(without_it_command: str, changed_files: list[str]) -> str | None:
-    changed = set(changed_files)
-    for token in without_it_command.split():
-        cleaned = token.strip("'\"()<>|;&,")
-        if not cleaned or cleaned.startswith("-") or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", cleaned):
-            continue
-        if "/" in cleaned and cleaned not in changed:
-            return cleaned
-    return None
+def target_problem(path: str, target: str, declared_acs: set[str], is_deleted: bool) -> str | None:
+    if AC_TARGET_RE.match(target):
+        if target not in declared_acs:
+            return f"unknown AC: {path} -> {target}"
+        return None
+    if target == "removal":
+        return None if is_deleted else f"invalid target: {path} -> {target}"
+    if target in LITERAL_TARGETS or LIFECYCLE_TARGET_RE.match(target):
+        return None
+    return f"invalid target: {path} -> {target}"
+
+
+def without_it_binds(target: str, without_it: str, removed_variant: str, path: str, changed_files: list[str]) -> bool:
+    if target == "removal":
+        return without_it.strip() == "-" and removed_variant.strip() == "-"
+    if not without_it or not removed_variant:
+        return False
+    if without_it.strip() in FORBIDDEN_WITHOUT_IT:
+        return False
+    if not any(candidate in without_it for candidate in changed_files):
+        return False
+    removed_tokens = removed_variant.strip().split()
+    if not removed_tokens or removed_tokens[0] != "git":
+        return False
+    return path in removed_variant
 
 
 def parse_args() -> argparse.Namespace:
@@ -159,6 +179,11 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="required for a production profile: `path -> obligation` lines from the shape contract",
     )
+    parser.add_argument(
+        "--no-exclude",
+        action="store_true",
+        help="check every changed file, ignoring the fixed test/fixture exclusion pattern",
+    )
     parser.add_argument("--repo", type=Path, default=None)
     return parser.parse_args()
 
@@ -167,7 +192,10 @@ def main() -> int:
     args = parse_args()
     repo = (args.repo or Path.cwd()).resolve()
 
-    changed = git_changed_files(args.base_sha, args.candidate_sha, repo=repo)
+    diff_entries = git_changed_files(args.base_sha, args.candidate_sha, repo=repo)
+    changed = [path for _, path in diff_entries]
+    deleted_paths = {path for status, path in diff_entries if status == "D"}
+
     evidence_text = read_text(args.evidence_file, label="evidence file")
     brief_text = read_text(args.brief, label="brief")
     declared_acs = parse_brief_acs(brief_text)
@@ -181,17 +209,24 @@ def main() -> int:
         raise CheckError(str(exc)) from exc
     profile = receipt["profile"]
 
+    violations: list[str] = []
     excluded: list[str] = []
+
     if profile == "poc-exploration":
         retained = extract_retained_surfaces(work_item_text)
         if not retained:
             raise CheckError("POC declares no retained surface")
-        retained_set = set(retained)
-        checked = [path for path in changed if path in retained_set]
+        changed_set = set(changed)
+        checked = []
+        for path in retained:
+            if path not in changed_set:
+                violations.append(f"retained surface not in diff: {path}")
+            else:
+                checked.append(path)
     else:
         checked = []
         for path in changed:
-            if is_excluded(path):
+            if not args.no_exclude and is_excluded(path) and path not in surface_map:
                 excluded.append(path)
             else:
                 checked.append(path)
@@ -202,31 +237,25 @@ def main() -> int:
             raise CheckError("--shape-mapping is required for production profile")
         shape_map = parse_mapping(read_text(args.shape_mapping, label="shape mapping"))
 
-    violations: list[str] = []
     for path in checked:
         entry = surface_map.get(path)
         if entry is None:
             violations.append(f"missing SURFACE line: {path}")
             continue
         target, without_it, removed_variant = entry
-        if not without_it or not removed_variant:
-            violations.append(f"surface has no without-it pair: {path}")
-        else:
-            outside = outside_diff_reference(without_it, changed)
-            if outside:
+        problem = target_problem(path, target, declared_acs, path in deleted_paths)
+        if problem:
+            violations.append(problem)
+        if not without_it_binds(target, without_it, removed_variant, path, changed):
+            violations.append(f"without-it pair does not bind {path}")
+        if shape_map is not None:
+            declared_obligation = shape_map.get(path)
+            if declared_obligation is None:
+                violations.append(f"unmapped in shape: {path}")
+            elif declared_obligation.strip() != target.strip():
                 violations.append(
-                    f"surface has no without-it pair: {path} "
-                    f"(without-it references {outside}, outside the diff)"
+                    f"shape mapping says {declared_obligation.strip()}, evidence says {target.strip()}"
                 )
-        if AC_TARGET_RE.match(target):
-            if target not in declared_acs:
-                violations.append(f"unknown AC: {path} -> {target}")
-        elif target in {"falsifier", "safety-boundary"} or LIFECYCLE_TARGET_RE.match(target):
-            pass
-        else:
-            violations.append(f"invalid target: {path} -> {target}")
-        if shape_map is not None and path not in shape_map:
-            violations.append(f"unmapped in shape: {path}")
 
     for path in excluded:
         print(f"excluded: {path}")
