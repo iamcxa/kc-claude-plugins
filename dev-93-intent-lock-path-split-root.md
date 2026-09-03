@@ -1,6 +1,6 @@
 ---
 title: "intent.sh lock path breaks on a split-root state checkout (.git is a file)"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
