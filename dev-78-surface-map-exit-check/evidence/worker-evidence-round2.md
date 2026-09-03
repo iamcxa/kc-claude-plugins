@@ -1,0 +1,26 @@
+## Evidence
+DISPATCH_TOKEN: 311f5a1bcda17d32
+CANDIDATE_SHA: c5dd75623fe8768993b82684409866cb9e293240
+BRANCH: feature/dev-78-kc-dev-flow-reads-the-candidate-diff-a-surface-to-obligation
+BASE_SHA: b1702a156b55ba7a8b257a035ead9b86fda918df
+FILES: kc-dev-flow/references/profiles/pilot-product-slice/build.md, kc-dev-flow/references/profiles/poc-exploration/build.md, kc-dev-flow/references/profiles/production/build.md, kc-dev-flow/scripts/fixtures/surface-map/deletion-only-evidence.md, kc-dev-flow/scripts/fixtures/surface-map/dev-66-round0-evidence.md, kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md, kc-dev-flow/scripts/fixtures/surface-map/free-text-target-evidence.md, kc-dev-flow/scripts/fixtures/surface-map/full-coverage-evidence.md, kc-dev-flow/scripts/fixtures/surface-map/poc-work-item-not-in-diff.md, kc-dev-flow/scripts/fixtures/surface-map/production-work-item-fixture.md, kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-fixture.txt, kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-mismatch-evidence.md, kc-dev-flow/scripts/fixtures/surface-map/without-it-true-true-evidence.md, kc-dev-flow/scripts/surface-map-check.py, scripts/kc-dev-flow-contract-test.py
+TESTS: python3 scripts/kc-dev-flow-contract-test.py -> exit 0
+SURFACE: kc-dev-flow/scripts/surface-map-check.py -> AC-1
+SURFACE: scripts/kc-dev-flow-contract-test.py -> AC-4
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/poc-work-item-not-in-diff.md -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/without-it-true-true-evidence.md -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/deletion-only-evidence.md -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/production-work-item-fixture.md -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-fixture.txt -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-mismatch-evidence.md -> AC-1
+SURFACE: kc-dev-flow/scripts/fixtures/surface-map/full-coverage-evidence.md -> AC-1
+WITHOUT_IT_COMMAND: python3 scripts/kc-dev-flow-contract-test.py
+WITHOUT_IT_REMOVED_VARIANT: git rm -f kc-dev-flow/scripts/surface-map-check.py
+WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 1 ("missing kc-dev-flow/scripts/surface-map-check.py")
+ROBOREV: UNAVAILABLE(reason: no reviewer binary in workspace)
+AC-1: Closed the four remaining bypasses verified by running the script directly, all re-run just now and confirmed: (1) POC `retained_surfaces` entry outside the diff: `kc-dev-flow/scripts/fixtures/surface-map/poc-work-item-not-in-diff.md` (retained_surfaces names `scripts/ship-flow/does-not-exist-in-diff.py`, absent from the diff) -> exit 1, "retained surface not in diff: scripts/ship-flow/does-not-exist-in-diff.py". (2) Stub without-it pair: `kc-dev-flow/scripts/fixtures/surface-map/without-it-true-true-evidence.md` (`true | true`) -> exit 1, "without-it pair does not bind docs/dev/README.md". (3) Exclusion tightened so a SURFACE-declared path is checked even if it matches the fixed pattern (verified: a `scripts/fixtures/...` path with its own SURFACE line moved out of the `excluded:` list and into normal checking), and `--no-exclude` forces the two DEV-50 fixture yamls into `checked` too (verified: they then show `missing SURFACE line`); every excluded path still prints `excluded: <path>`. (4) `--diff-filter=ACMRD` now surfaces deletions; a deleted file may target `removal` with a `-`/`-` without-it pair, verified isolated (`kc-dev-flow/scripts/fixtures/surface-map/deletion-only-evidence.md` against a synthetic repo with a real deletion of `scripts/ship-flow/legacy-runner.sh`: exit 1 from the other four uncovered files, but none of "invalid target", "without-it pair does not bind", or "missing SURFACE line" name the deleted path). (5) Production shape-mapping now checks string equality, not membership: `kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-mismatch-evidence.md` + `shape-mapping-fixture.txt` (shape says `AC-1` for `parse-execute-external.py`, evidence says `AC-2`) -> exit 1, "shape mapping says AC-1, evidence says AC-2". All five committed as fixtures under `kc-dev-flow/scripts/fixtures/surface-map/`, each with its own behavioral (not prose-pin) assertion in `scripts/kc-dev-flow-contract-test.py`, confirmed passing in the clean full-suite run above. Also added the requested positive case: `full-coverage-evidence.md` fully satisfies every rule (valid targets including `removal` for the deletion, real binding without-it pairs) for the DEV-66-shaped synthetic diff -> exit 0, confirmed both standalone and inside the contract test.
+AC-2: Unaffected by this round; `free-text-target-evidence.md` was updated only to replace its `true | true` stubs with binding pairs (needed once item 2 forbade stubs) so it still isolates a single "invalid target" violation, re-verified -> exit 1, "invalid target: scripts/ship-flow/parse-execute-external.py -> handles the fixture path", nothing else.
+AC-3: Unaffected by this round; `unknown AC` path untouched by items 1-5.
+AC-4: Unaffected by this round; pilot/production naming sentences and their mutation coverage from earlier rounds still hold (nothing in build.md changed this round).
+AC-5: Unaffected by this round; POC retained-only sentence and its mutation coverage from earlier rounds still hold.
+BLOCKER: non

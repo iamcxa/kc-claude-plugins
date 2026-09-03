@@ -5,3 +5,8 @@ task_acked_at=2026-09-03T03:25:27Z
 nudge_sent_at=2026-09-03T03:33:05Z
 evidence_at=2026-09-03T03:44:37Z
 fix1_sent_at=2026-09-03T03:46:26Z findings=codex-P1x5-trust-caller,P2-no-behavioural-test
+evidence_at=2026-09-03T03:47:00Z
+evidence_at=2026-09-03T03:47:16Z
+round1_evidence_at=2026-09-03T04:12:01Z candidate=596db9795ff0469a4451aac07342659e7d3d5235 codex=2-closed-4-open-2-new
+fix2_sent_at=2026-09-03T04:12:28Z findings=poc-retained-not-in-diff,true|true-pair,excluded-hides,deleted-omitted,shape-not-compared (final round)
+round2_evidence_at=2026-09-03T04:23:15Z
