@@ -29,7 +29,7 @@ work_profile:
   selected: poc-exploration
   recommended: poc-exploration
   basis: A search-tier inventory whose output is a record, not code; the result decides whether the slimming project opens removal items this cycle, and a stop is a valid outcome.
-  route: [build]
+  route: [build, prove]
   obligations:
     architecture: [Apply reverse-recovery-audit.md's two-axis classification to every kc-dev-flow surface with the search boundary named]
     implementation: [Record the reverse_recovery receipt in this work item only; edit no contract, skill, script, or test]
