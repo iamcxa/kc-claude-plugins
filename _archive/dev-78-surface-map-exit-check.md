@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow reads the candidate diff: a surface-to-obligation check at implementation exit"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-03T03:24:03Z
-completed:
-verdict:
+completed: 2026-09-03T07:55:23Z
+verdict: PASSED
 worktree:
 issue: DEV-78
 pr: pr-merge:357
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, approving the DEV-78 delivery unit at c5dd7562 after the FO explained what opening the PR yields
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T07:55:23Z
 ---
 
 ## The problem
