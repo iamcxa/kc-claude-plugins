@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-84
-pr:
+pr: 362
 mod-block:
 id: wxj20tk9h1ndssnehwd4d9ng
 gates:
