@@ -91,7 +91,13 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 
 ## Measurement
 
-Not yet measured.
+Dispatch 07:55Z, token acked 32 s. Round 0 (98c723f8) at ~08:34Z: FO without-it retained 0 / removed 1; blocked on `flock` absent on macOS. Round 1 (6573daaa) ~09:28Z: closed flock and count-filter; Codex opened three lock P1s. Cloud quota limit from ~09:30Z to 13:00Z (shared pool, S17/S18). Round 2 (a6ad0c49) after resend: trap-before-acquire and age-only stale closed; Codex keeps pid-only release and a theoretical TOCTOU open, neither reproduced by the FO's two-racer run on macOS. Active FO+worker time about 95 min across three rounds; the cap of two fix rounds held.
+
+## Stage Report: implementation
+
+- DONE: `intent.sh` (locked commit bound to project, base, message hash; fenced compare-and-swap adopt; reconcile adopt-or-block by exact name and project), `holder.sh` fail-closed, `fenced-dispatch.sh` intent-before-create with private message copy and read-back by id, README paragraph and three contract-test pins. Candidate a6ad0c49 on the FO-authored base 3f263c3b.
+- AC-1 duplicate claim refused before any Conductor call (exit 4); AC-2 SIGSTOP falsifier ends with one adopted workspace, B created nothing, A fenced; AC-3 late arrival blocks then adopts; AC-4 intent skipped yields two workspaces; AC-5 README pin reddens on removal; AC-6 probes archived, holder at its final writer.
+- Outside the Brief, for the Captain: release_lock compares pid only; stale takeover has a theoretical TOCTOU not reproduced; read-back is by workspace name via get-by-id rather than transcript. Commission-relevant limit: the guarantee is at most one create call per canonical claim; unattended failover needs a lease.
 
 ## Shape
 

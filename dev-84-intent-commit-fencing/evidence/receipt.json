@@ -1,0 +1,31 @@
+{
+ "issue": "DEV-84",
+ "candidate": "a6ad0c498e6fd5e38f84c6b4f8da48ac1d58829c",
+ "branch": "feature/dev-84-intent-commit-fencing-at-most-one-worker-across-holder",
+ "base": "3f263c3bb7e91144e3793e3d4f5cf1368906f436",
+ "remote_head": "a6ad0c498e6fd5e38f84c6b4f8da48ac1d58829c",
+ "rounds": 3,
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git checkout 3f263c3bb7e91144e3793e3d4f5cf1368906f436 -- docs/dev/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1,
+  "run_on": "round-0 candidate 98c723f8 by FO; README paragraph unchanged through rounds 1-2 (diffs touch intent.sh only)"
+ },
+ "fo_falsifiers": {
+  "parallel_commits_one_checkout": "both succeed, two commits, no lock residue (round 1 and round 2)",
+  "foreign_lock_same_pid_stale": "reclaimed by age; release compares pid only (residual)",
+  "two_racers_on_stale_lock": "both serialized, two intents, no double critical section observed (round 2)",
+  "fail_closed_fetch_dirty_malformed": "exit 6 x3 (FO round)",
+  "claim_schema_token_schema": "exit 2 x2 (FO round)",
+  "adopt_over_adopted": "exit 5 (FO round)"
+ },
+ "preflight_main": "216a29bc2cbaec19ca98e519025da4483b6be491",
+ "preflight_exit": 0,
+ "pass": true,
+ "open_findings_outside_brief": [
+  "release_lock compares pid only, not hostname:pid:epoch (Codex r2)",
+  "stale takeover mv-then-mkdir has a theoretical TOCTOU between age check and mv (Codex r2); not reproduced with two racers on macOS",
+  "token read-back is by workspace name via get-by-id, not transcript"
+ ]
+}
