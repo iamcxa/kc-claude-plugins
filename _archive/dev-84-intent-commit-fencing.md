@@ -1,6 +1,6 @@
 ---
 title: "Intent-commit fencing: at-most-one worker across holder handover, adopt-or-block reconcile"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-03T07:55:00Z
-completed:
-verdict:
+completed: 2026-09-03T14:03:12Z
+verdict: PASSED
 worktree:
 issue: DEV-84
 pr: pr-merge:362
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03 evening, approving the DEV-84 delivery unit at a6ad0c49
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T14:03:12Z
 ---
 
 ## The problem
