@@ -40,6 +40,28 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kw05rc5f26qkj8qxk5tcpzy4:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kw05rc5f26qkj8qxk5tcpzy4-validation-1
+              briefing:
+                id: briefing:kw05rc5f26qkj8qxk5tcpzy4:validation:attempt-1:revision-1
+                digest: sha256:7609c01e2deb4cc41a181f4c15a6ca32ea4280066a4ba38d3c49d63699ccc81b
+                room-ref: ./dev-79-fencing-token-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kw05rc5f26qkj8qxk5tcpzy4:validation:1
+                briefing: briefing:kw05rc5f26qkj8qxk5tcpzy4:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T03:33:29.344469Z"
+                decision: approve
+                reason: 'POC outcome change: writer fence proven for persistence, in-flight create escaped it, contract rewritten per Codex round 4 to intent-commit/adopt-or-block; candidate 72f5c215 retained on branch, PR creation stays a separate Captain decision.'
+                conn:
+                    quote: 現在派工，同意你的分工方式
+                    source: Captain chat, this conversation, 2026-09-03, authorizing the DEV-79 POC run by the local FO; the POC's accepted outcome was the recorded decision, not a merge
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem

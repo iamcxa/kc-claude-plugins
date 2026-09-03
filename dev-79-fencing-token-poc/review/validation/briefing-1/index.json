@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kw05rc5f26qkj8qxk5tcpzy4:validation:attempt-1:revision-1",
+  "question": "Close DEV-79 POC with direction change: fence protects the record not the effect; intent-commit/adopt-or-block contract returned to planning?",
+  "artifacts": [
+    {
+      "id": "artifact:kw05rc5f26qkj8qxk5tcpzy4:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3f906c617359df9971d88d75d90e50dbabe94ba4/dev-79-fencing-token-poc/evidence/close-review.md",
+      "rev": "sha256:26cfb68d60ac2804bcc0bf6a8112d2f4cd3b50379a079d43afd60d0caff51984",
+      "mediaType": "text/markdown",
+      "summary": "Writer fence held for persistence; in-flight create escaped it; Codex round 4 rewrote the contract; commission stays blocked until the adopt-or-block falsifier runs."
+    }
+  ]
+}
