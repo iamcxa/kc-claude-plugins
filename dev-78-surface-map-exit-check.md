@@ -15,6 +15,31 @@ issue: DEV-78
 pr:
 mod-block:
 id: 1t3634tfkq3v9tr3r3gcbtw8
+gates:
+    version: 1
+    records:
+        - id: gate:1t3634tfkq3v9tr3r3gcbtw8:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:1t3634tfkq3v9tr3r3gcbtw8-backlog-1
+              briefing:
+                id: briefing:1t3634tfkq3v9tr3r3gcbtw8:backlog:attempt-1:revision-1
+                digest: sha256:0aa69f172d444735b3b6298368ad389db6e61e73aeadb6427c496deaff973f02
+                room-ref: ./dev-78-surface-map-exit-check/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:1t3634tfkq3v9tr3r3gcbtw8:backlog:1
+                briefing: briefing:1t3634tfkq3v9tr3r3gcbtw8:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T03:22:42.790072Z"
+                decision: approve
+                reason: Captain admitted dev-78-surface-map-exit-check as a standalone item in sprint S9 and authorized its dispatch.
+                conn:
+                    quote: 現在派工，同意你的分工方式
+                    source: Captain chat, this conversation, 2026-09-03, approving dispatch of DEV-78 to a cloud worker and DEV-79 to the local FO
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

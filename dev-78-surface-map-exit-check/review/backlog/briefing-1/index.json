@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:1t3634tfkq3v9tr3r3gcbtw8:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-78 as a standalone Pilot (S9) into ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:1t3634tfkq3v9tr3r3gcbtw8:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/06cfac389fb79cc5d1c08bebe2be987ea57a2e6f/dev-78-surface-map-exit-check/review/backlog/admission.md",
+      "rev": "sha256:5234f42ea77bdc75360d9a69037ba1190c1c7e770de89c67e7d2035fa341b8ec",
+      "mediaType": "text/markdown",
+      "summary": "Pilot admission; cloud worker via ship-flow glue."
+    }
+  ]
+}
