@@ -208,7 +208,7 @@ now declares by disposition, not by filename alone:
 
 | Retired repository artifact | Upgrade disposition |
 |---|---|
-| a repository-local Linear planning reader, built as this skill instructed before the package declared `scripts/linear-admission.py` | Delete the reader and its tests. The installed sibling `linear-admission.py` owns the current Ready read, carried snapshot sources, and comparator invocation. It reads `LINEAR_API_KEY` from the environment only, so a key kept in a `.env` file moves into the invoking environment before the first engage. |
+| a repository-local Linear planning reader, built as this skill instructed before the package declared `scripts/linear-admission.py` | Delete the reader and its tests. The installed sibling `linear-admission.py` owns the current Ready read, carried snapshot sources, and comparator invocation. It reads `LINEAR_API_KEY` through `os.environ` in `linear-admission.py` and has no `.env` reader, so a key kept in a `.env` file moves into the invoking environment before the first engage. |
 | `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
 | `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
 

@@ -28,7 +28,7 @@ comparator only after the installed route is proven.
 3. A Linear-backed repository retires its repository-local planning reader and
    its tests; the installed sibling `linear-admission.py` owns the current Ready
    read, carried snapshot sources, and comparator invocation, and reads
-   `LINEAR_API_KEY` from the environment only. A repository on a provider the
+   `LINEAR_API_KEY` through `os.environ` with no `.env` reader. A repository on a provider the
    package does not support keeps its adapter and passes the installed loader
    path into it; that adapter invokes the loader's sibling
    `engage-reconcile.py`. A standalone repository keeps neither reader nor
@@ -217,7 +217,7 @@ reader, adapter, script, test, or check for a capability a declared resource
 already supplies, and a refit requirement against the package for a capability
 it lacks. An adopter holding such a reader deletes it and its tests at the next
 compatible upgrade and lets the installed guard own the read; the guard reads
-`LINEAR_API_KEY` from the environment only. Adoption evidence goes to the
+`LINEAR_API_KEY` through `os.environ` and has no `.env` reader. Adoption evidence goes to the
 delivery artifact and the workflow's debrief; an adoption record is committed
 only when the Captain names a consumer for it.
 
