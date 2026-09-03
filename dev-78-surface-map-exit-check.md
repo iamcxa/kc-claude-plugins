@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-03T03:24:03Z
 completed:
 verdict:
 worktree:
@@ -88,4 +88,11 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 
 ## Measurement
 
-Not yet measured.
+Dispatch 03:24Z (token acked in 32 s); round-0 candidate 6ecb4470 at ~03:37Z, rejected on five caller-trust bypasses (Codex) reproduced by the FO; round-1 candidate 596db979 closed 2 of 6; round-2 candidate c5dd7562 (cap) closed 5 of 6, left one open and surfaced two new, all three outside the Brief's ACs and listed for the Captain. FO acceptance: pin, worker's without-it line retained 0 / removed 1, five FO-run fixture falsifiers each exit 1, preflight clean against main. About 110 minutes wall from dispatch to accepted.
+
+## Stage Report: implementation
+
+- DONE: `kc-dev-flow/scripts/surface-map-check.py` reads `git diff --name-status base..candidate`, profile from the work item receipt, POC retained set from `poc_outcome.retained_surfaces`, requires one `SURFACE: path -> target | without-it | removed-variant` per non-excluded changed file, targets limited to AC-N present in the Brief, `falsifier`, `safety-boundary`, `lifecycle:<word>`, `removal`; production compares the target to the shape mapping by string.
+- DONE: Pilot and Production build contracts name the check; POC build scopes it to retained surfaces; contract test pins all three sentences and runs six behavioural cases (five negative, one positive) against committed fixtures.
+- AC-1 seen to fail on DEV-66 round-0 naming `parse-execute-external.py`; AC-2 positive fixture exit 0; AC-3 unknown-AC exit 1; AC-4 and AC-5 mutation runs recorded by the worker and the FO.
+- Outside the Brief, for the Captain: default exclusion still skips undeclared test/fixture paths (`--no-exclude` covers Production); `--diff-filter=ACMRD` omits type changes; the declared without-it pair is bound to a path by substring only, so a no-op like `git status -- <path>` passes the declaration check (execution is `without-it.sh`'s job, which would then fail it).

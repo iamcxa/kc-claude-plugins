@@ -1,0 +1,33 @@
+{
+ "issue": "DEV-78",
+ "candidate": "c5dd75623fe8768993b82684409866cb9e293240",
+ "branch": "feature/dev-78-kc-dev-flow-reads-the-candidate-diff-a-surface-to-obligation",
+ "base": "b1702a156b55ba7a8b257a035ead9b86fda918df",
+ "remote_head": "c5dd75623fe8768993b82684409866cb9e293240",
+ "rounds": 3,
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git rm -f kc-dev-flow/scripts/surface-map-check.py",
+  "retained_exit": 0,
+  "removed_exit": 1,
+  "removed_reason": "missing kc-dev-flow/scripts/surface-map-check.py"
+ },
+ "fo_falsifiers": {
+  "dev66_r0_no_surface": 1,
+  "free_text_target": 1,
+  "true_true_pair": 1,
+  "poc_retained_not_in_diff": 1,
+  "shape_mismatch": 1,
+  "positive_fixture": "present in contract test, not re-run by FO",
+  "codex_noop_git_status_pair": "0 (bypass reproduced; outside Brief ACs)"
+ },
+ "contract_test_exit": 0,
+ "preflight_exit": 0,
+ "preflight_main": "b1702a156b55ba7a8b257a035ead9b86fda918df",
+ "pass": true,
+ "open_findings_outside_brief": [
+  "default test/fixture exclusion skips undeclared paths (--no-exclude exists for Production)",
+  "--diff-filter omits Git type changes (T)",
+  "a no-op command naming a path satisfies the declared without-it pair; execution is without-it.sh's job"
+ ]
+}
