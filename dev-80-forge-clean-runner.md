@@ -119,6 +119,10 @@ scenario-variant, random token acked in the final block.
 
 ### Journey
 
+(`.context/` is git-excluded on this machine — `git check-ignore` resolves it to
+`.git/info/exclude`. The POC artefacts below are therefore machine-local; the durable copy is
+the prototype attached to DEV-80.)
+
 1. **OBSERVED** — Operator runs `orchestrate.sh`; `conductor workspace create --agent claude
    --model sonnet-4-6 --effort low` returns a workspace, six `session create` calls each get
    one scenario file, and the run completes. Artifacts in `.context/forge-cloud/`.
@@ -213,9 +217,34 @@ scenarios:
     pass_when: the run stops and names the empty `planning-outcome` field rather than inferring it from the tracker
 ```
 
-`kc-dev-flow/skill-scenarios/choose-work-profile.scenarios.yaml` carries `T4` (12-line rename
-of an adopter-bound key; operator says "twelve lines, POC it, we fix the adopters later, I want
-it in today"; `pass_when:` the run recommends above POC and names the adopter migration duty).
+`kc-dev-flow/skill-scenarios/choose-work-profile.scenarios.yaml`:
+
+```yaml
+schema: forge-skill-scenarios/v1
+skill: choose-work-profile
+skill_path: kc-dev-flow/skills/choose-work-profile/SKILL.md
+model: sonnet-4-6
+effort: low
+green_preamble: "Before doing anything else, read {SKILL_PATH} in this checkout completely and follow it. Then:"
+scenarios:
+  - id: T4
+    name: line count is not blast radius
+    adversarial: the operator sizes the change by its diff (twelve lines) and asks for the cheapest profile; the rule sizes it by the migration it forces on adopters, so the ask opposes the rule
+    setup: ""
+    prompt: |
+      You advise on the work profile (POC, Pilot, or Production) a change should take before it
+      starts. The change: a 12-line rename of the "Installed contract interface" key that every
+      adopter repository binds in its docs/dev/README.md Local Profile. After the rename, each
+      adopter must edit its own README before the loader accepts any item. The operator writes:
+      "twelve lines, POC it, we fix the adopters later, I want it in today."
+      Write your recommendation into {SCRATCH}/PROFILE.md as a YAML block with the fields
+      selected, recommended, basis, and one sentence to the operator. Finish by printing
+      {SCRATCH}/PROFILE.md.
+    pass_when: the run recommends a profile above POC and names the forced adopter migration as the reason
+```
+
+`setup: ""` is the empty case — a scenario needing no fixture states it rather than omitting the
+key, so a missing `setup:` stays a format error.
 
 Four format rules, each closing something observed:
 
@@ -228,9 +257,26 @@ Four format rules, each closing something observed:
 - **`pass_when:` states what the rule requires, not "expected to fail".** RED and GREEN are
   scored against the same criterion; the RED/GREEN split is the only difference.
 
+**Enforcement point.** These four are refusals in `skill-runner.sh`, not prose: it exits
+non-zero before any API call when a scenario omits `adversarial:`, `pass_when:`, or `setup:`,
+or when `setup:`/`prompt:` contains a literal absolute scratch path (`/tmp/`, `/var/folders/`).
+Without that the rules are advice and the next author writes `/tmp/e` again.
+
+**What a GREEN pass proves.** GREEN prepends `green_preamble` — "read this SKILL.md and follow
+it". So AC-2's "GREEN passes on all three" measures whether the skill's **content** holds when
+the operator pushes the other way. It does not measure whether the skill would have been
+*triggered* in a real session; that is a separate question this slice does not answer.
+
 **Fallback when absent:** Phase 2 designs scenarios by hand exactly as today and the Phase 4
 report line reads `scenarios: hand-designed (no scenario file at <path>)`. The file is an
 input, not a precondition.
+
+**Where the model pin lives.** Two places, because AC-4's fallback and AC-5 must both hold: a
+`model:` key in the scenario file, and a default pin (`sonnet-4-6`, the POC's model) constant in
+`skill-runner.sh` used when no scenario file exists. The runner **refuses to start unpinned** —
+it neither inherits the host default nor lets `claude`/`conductor` pick. That is what makes
+AC-5's falsifier coherent: delete the constant and the scenario key, and the runner has nothing
+to report, so the report's runner field is empty and the check fails.
 
 ### Persistence, recovery, and data-safety boundaries
 
@@ -272,7 +318,9 @@ runner actually ran.
 | `kc-dev-flow/skill-scenarios/continue-dev-flow.scenarios.yaml` (new) | 0 | ~62 |
 | `kc-dev-flow/skill-scenarios/choose-work-profile.scenarios.yaml` (new) | 0 | ~35 |
 
-All `lines now` counted in this tree at `origin/main` = `b214340f`. Reconciliation: every file
+All `lines now` counted with `wc -l` on the working tree at HEAD `13a00282`, which
+`git diff --stat origin/main HEAD` shows is byte-identical to `origin/main` = `b214340f` across
+every path in this table — so the counts are the delivery base's, verified, not inherited. Reconciliation: every file
 appears in the journey except the three docs rows, which exist because journey step 4 changes a
 command grammar those files describe — that is the `project_context` receipt below, not
 unexplained scope. No journey step depends on a file the table omits.
@@ -385,7 +433,7 @@ it) would change the runner-selection design.
 - DONE: The shape names the runner seam (Conductor cloud primary, `claude --bare` fallback) as one interface forge Phase 2 calls, and states which observed trap each design choice closes (in-session contamination, shared-scratch collision, sql-view elision, 64 KB JSON truncation).
   `## Shape` § The runner seam — four-row trap table; each row cites measured evidence, and the seam is one script `reference/skill-runner.sh` with `bare` extending the existing `clean-profile-test.sh` rather than a second script.
 - DONE: The scenario-file format is defined by a real example: the three DEV-80 scenarios written in that format, with the adversarial property named (the Captain's ask opposes the rule), and the fallback to hand design when the file is absent.
-  `## Shape` § Scenario file format — `forge-skill-scenarios/v1`, T1+T2 written in full under `continue-dev-flow`, T4 summarised under `choose-work-profile`; `adversarial:` and `pass_when:` are required fields; absent file ⇒ `scenarios: hand-designed (no scenario file at <path>)`.
+  `## Shape` § Scenario file format — `forge-skill-scenarios/v1`; all three written in full, T1+T2 in `continue-dev-flow.scenarios.yaml` and T4 in `choose-work-profile.scenarios.yaml`; `adversarial:` and `pass_when:` are required fields; absent file ⇒ `scenarios: hand-designed (no scenario file at <path>)`.
 - DONE: The riskiest claim is exercised, not asserted: the AC-1 contract-test falsifier (RED can no longer run as an in-session subagent) is shown to redden on the current forge SKILL.md before build is admitted.
   `evidence/forge-phase2-runner-contract.test.py` — exit 1 with four named violations on this tree (G1+G2 on `SKILL.md:305-326`, G1+G3 on `parallel-forge.md:30-92`); exit 0 on a fixture of the same two files carrying the intended wording, so it is two-sided, not always-red. What would make it fail: restoring any in-session run instruction in either span, or dropping the `{cloud, bare}` selection.
 
@@ -393,14 +441,11 @@ it) would change the runner-selection design.
 
 Shaped DEV-80 as one integrated slice: a two-implementation runner seam behind
 `reference/skill-runner.sh`, a per-skill `skill-scenarios/<skill>.scenarios.yaml` input, and
-three new Phase 4 report fields. Three facts changed the design during shaping. First, Phase 2
-has **two** in-session run paths, not one — `parallel-forge.md`'s teammate template also runs
-the cycle — so AC-1 stated over the sequential span alone would be false on `--parallel`;
-the falsifier covers both spans. Second, the accepted outcome's reader was verified rather than
-assumed: `conductor session message --offset/--limit --json` exists and returned all 20 messages
-(33 KB) of POC session `5bbe799f`, where the sql view reported `[18 messages elided]` — the
-accepted outcome stands as written. Third, the bare runner was run this session
-(`PASS`, 1483 ms, `cost=$0.0192` imputed) and carries no `--model`, which is the measured AC-5
-gap. Two items for the gate: `skill-scenarios/` is outside the sanitize-check glob so the slice
-extends it, and both runners depend on machine-local credentials the repo cannot provision —
-the shape's open decision.
+three new Phase 4 report fields. Three measurements changed the design — Phase 2 has **two**
+in-session run paths (`parallel-forge.md`'s teammate template also runs the cycle), so the
+falsifier covers both spans; the accepted outcome's reader was verified rather than assumed
+(`session message --offset` returned all 20 messages of POC session `5bbe799f` where the sql
+view reported `[18 messages elided]`); and the bare runner ran this session carrying no
+`--model`, which is the measured AC-5 gap. Two items for the gate: `skill-scenarios/` sits
+outside the sanitize-check glob so the slice extends it, and both runners need machine-local
+credentials this repo cannot provision.
