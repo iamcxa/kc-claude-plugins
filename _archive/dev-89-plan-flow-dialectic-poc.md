@@ -1,6 +1,6 @@
 ---
 title: "POC: plan-flow dialectic — borrowed PM skills versus kernel fallback fill the Brief from one raw requirement"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-03T09:50:00Z
-completed:
-verdict:
+completed: 2026-09-03T14:03:41Z
+verdict: PASSED
 worktree:
 issue: DEV-89
 pr: local-merge:a5937eb
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03 evening, choosing (b) and accepting that DEV-89 closes as change with further rounds
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T14:03:41Z
 ---
 
 ## The problem
