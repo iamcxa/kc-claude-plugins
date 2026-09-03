@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-2:revision-1",
+  "question": "Accept the corrected DEV-80 shape (assert: list replaces prose pass_when; judge: demoted to judged) and admit build? Rule T1's third assertion: ACTION.md must open with a decision: dispatch|hold frontmatter field, one prompt change, designed not observed. Confirm the credential default: fail loudly and record which runner ran.",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/36dac080c179c0bb856e246fa7f1628247139930/dev-80-forge-clean-runner.md",
+      "rev": "sha256:e13d3fef3c4fd1b1a35531a592e932108b78355171007e13e2425dfc4851362a",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 applied the Captain's format correction and scored the assertion sets host-side against the six recorded POC sessions (nothing re-run). Measured: T2 and T4 assertions discriminate (RED fail, GREEN pass); the prescribed T1 pair does not (RED never edited the entity file; it wrote the sed rewrite into ACTION.md and claimed it), so a third assertion is proposed: frontmatter_field decision: hold on ACTION.md, at the cost of one prompt change; designed, not observed; AC-2 falsifier now names it. Two cycle-1 claims corrected: the shared-scratch collision did occur (T2 GREEN read T2 RED's fixture; one workspace filesystem), and the first scorer compared a file to itself (fixed; mutation run flips it). Design consequences: file_unchanged needs a runner-appended sha256sum epilogue because the host cannot hash inside the sandbox; output_contains is scoped to the terminal result string. Round recorder refused: it requires folder-form entity; this workflow keeps flat entities and declares no Feedback Cycles projection, so the revise resolution in the gate record is the durable round record. Open: credential default."
+    }
+  ]
+}
