@@ -106,7 +106,7 @@ if [ "$CASE_FILTER" = 'skill-slimming' ]; then
 fi
 
 run_skill_slimming_handoff_tests() {
-  local original_prepare mock_root mock_runtime state prepared_file prepared_sha
+  local original_prepare mock_root mock_runtime state prepared_file prepared_sha native_os
   extract_shadow_skill fast
   if ! declare -F shadow_observation_prepare >/dev/null || [ ! -s "$SHADOW_TEST_HANDOFF" ]; then fail 'fast handoff exposes constructor and executable handoff'; return; fi
   original_prepare="$(declare -f shadow_observation_prepare | sed '1s/shadow_observation_prepare/shadow_observation_prepare_actual/')"; eval "$original_prepare"
@@ -136,12 +136,12 @@ printf 'mutate\t%s\t%s\t%s\n' "$input_mutated" "$SHADOW_OBSERVATION_FILE" "$SHAD
 printf '{"status":"mocked"}\n'
 MOCK
   chmod 0700 "$mock_runtime"
-  mock_os=Linux
+  native_os="$(uname -s)"; mock_os=Linux
   # shellcheck disable=SC2329 # exported into mock runtime
   uname() { printf '%s\n' "$mock_os"; }
   # shellcheck disable=SC2329 # exported into mock runtime
-  stat() { case "$1" in -f) printf 'GNU filesystem output\n' ;; -c) command stat -f '%Lp' "$3" ;; *) command stat "$@" ;; esac; }
-  export mock_os; export -f uname stat
+  stat() { case "$1" in -f) printf 'GNU filesystem output\n' ;; -c) case "$native_os" in Linux) command stat -c '%a' "$3" ;; *) command stat -f '%Lp' "$3" ;; esac ;; *) command stat "$@" ;; esac; }
+  export mock_os native_os; export -f uname stat
   state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-linux" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
   prepared_file="$(sed -n '1p' <<<"$state")"; prepared_sha="$(sed -n '3p' <<<"$state")"
   assert_eq 'fast runtime reads exact 0700/0600 private input and immutable bytes' "$(printf 'read\ttrue\ttrue\t%s\t%s\t700\t600' "$prepared_file" "$prepared_sha")" "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG")"
