@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-03T09:50:00Z
 completed:
 verdict:
 worktree:
@@ -99,7 +99,17 @@ The worker (cloud, no Linear) runs stations 1, 3, 4 twice (borrowed, fallback), 
 
 ## Measurement
 
-Not yet measured.
+Dispatch 09:55Z, token acked 21 s; blocked on the shared cloud quota from the first turn until 13:00Z; on resend the worker paused on three consent questions (S19), answered with the dispatch token; worker time for all three runs plus dialectic.md about 3 min of wall-clock writes (its own MINUTES line), evidence delivered at ~13:24Z but truncated at 10 K (S21), run files committed at a5937ebf on request. FO time: station 0 pain inventory, station 2 Q&A with the Captain, schema B, Codex rounds 7 and 8, about 3 h across the quota gap. Both Linear Projects and their lint receipts are not yet written (pending the Captain's ruling on the round-8 P0).
+
+## Stage Report: implementation
+
+- DONE (worker, a5937ebf): run A (borrowed skills, input A), run B (fallback, input A), run C (refusal, input B), compare.md, draft `kc-plan-flow/references/dialectic.md`.
+- DONE (FO): station 0 pain inventory (20 pains); station 2 Q1-Q4 with the Captain plus Phase 3 premises and Phase 4 alternatives; receipt v1 and approval v1 schemas with a validator seen to fail six ways; commission skeleton.
+- Run C: input B refused with the three named gaps, no profile, no Project, no Issues, no receipt; discovery assignment produced. Codex round 8 rates the refusal sound and the assignment half-formed (interview cannot yield an observation; willingness-to-pay is still stated intent).
+- Run A vs B: identical three-Issue cut and blockedBy graph; borrowed skills cost 2-3 rewritten sentences per field, fallback 0. Codex: the zero is definitional (fallback was written to the Brief shape) and the comparison is not independent (one worker, station 2 reused); direction should be fallback-with-borrowed-as-checklist.
+- Codex round 8 P0, accepted as a real finding: the Captain chose Alternative A (README sentences plus pins, no enforcement) while the produced `User value:` line says "because ship-flow enforces"; the accepted outcome measures Kent no longer asking, which a document can produce without any runtime guarantee. plan-flow accepted an approach that cannot causally reach its stated value. This is the front-half blocker: a premise falsifier that removes the chosen approach and asks whether the outcome can still hold.
+- Codex round 8 licence finding: dialectic.md station 3 questions mirror epic-hypothesis's if/then, tiny acts, validation measures; station 4 question 1 mirrors the splitting patterns (step, rule, data type). Rewording does not remove CC BY-NC-SA derivation. Stations 1 and 2 are sound (office-hours, MIT).
+- Codex round 8 ordering finding: the refusal seam sits after station 1 already produced persona, because, feels; the correct order is observe, WHY evidence and refusal check, then the problem statement.
 
 ## Design revisions from Codex round 7 (evidence/codex-plan-round7.md), accepted before the worker runs
 
