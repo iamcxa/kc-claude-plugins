@@ -10,7 +10,10 @@ All text output follows unified language preference. See plugin CLAUDE.md for qu
 
 The listener watches GitHub for pull requests where the user is a requested
 reviewer, starts a review for each new one, and reports it in the macOS menu bar.
-It never merges and never approves.
+A dispatched review acts under the user's GitHub identity and may apply a fix, push
+it to the branch under review, and approve — merging and force-pushing are the only
+forbidden actions. Treat widening the listened-to repository set as a trust decision,
+not a configuration one.
 
 Menu bar and listener are one script: the plugin's refresh interval is the poll
 interval, so there is nothing to supervise. Where a review actually runs is a
@@ -70,7 +73,7 @@ existing review of that commit rather than dispatched here.
 | Icon gone after a reboot | The host is not launched at login. Toggle **Start at login** in the menu; if the row reads `unknown`, macOS refused Automation permission for System Events and the menu-bar app needs it granted. |
 | Icon shows `off` | `listening` is false. Click **Resume listening**. |
 | Icon shows `!` | `last_error` in state — usually `gh` auth expired. |
-| Rows appear but nothing dispatches | The repo is toggled off, the PR is a draft, or `attempts` already reached 3. Click the row's **review now** to dispatch that one regardless. |
+| Rows appear but nothing dispatches | The repo is switched off — a newly-seen one reads `?` and stays off until answered — or the PR is a draft, or `attempts` already reached 3. Click the row's **review now** to dispatch that one regardless. |
 | A row is `❌` with "no project" | The repo has no project in that token's organization; a second organization needs its own token file. |
 | Review finished but no notification | Switch the notification channel from the menu (`terminal-notifier` ⇄ `osascript`); either may lack permission to post on this Mac, and only `terminal-notifier` carries a click action. |
 | A finished PR vanished from the list | Expected. GitHub drops a PR from review-requested once a review is submitted; look under **Finished reviews**. |

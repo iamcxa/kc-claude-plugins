@@ -299,11 +299,16 @@ poll() {
   fi
   st_edit --argjson p "$prs" '.open = $p | .last_poll = (now|todate) | .last_error = null'
 
-  # Register any newly-seen repo, listening by default: a review request should
-  # not need configuration before it is picked up.
+  # Enrol a newly-seen repository, switched OFF. Requesting a review is an action
+  # anyone with access can take, so it cannot also be what grants an agent this
+  # user's identity: enrolment is answered here, in the menu, once per repository.
   while IFS= read -r repo; do
     [[ -z "$repo" ]] && continue
-    cfg_edit --arg r "$repo" 'if (.repos | has($r)) then . else .repos[$r] = {enabled:true} end'
+    if [[ "$(cfg_get --arg r "$repo" '.repos | has($r)')" != "true" ]]; then
+      cfg_edit --arg r "$repo" '.repos[$r] = {enabled:false, seen_first:(now|todate)}'
+      notify "New repository asking for review" "$repo — enable it in the menu to review here" ""
+      log "enrolled $repo, switched off pending a decision"
+    fi
   done < <("$JQ" -r '.open[].repository.nameWithOwner' "$STATE" 2>/dev/null)
 
   [[ -n "$only" || "$(cfg_get '.listening')" == "true" ]] || return 0
@@ -398,7 +403,7 @@ login_toggle() {
 menu_label() { printf '%s' "${1//|/／}"; }   # a literal pipe would end the SwiftBar line
 
 render() {
-  local listening n_on n_open n_todo n_done last err key status target env title repo num fin on
+  local listening n_on n_open n_todo n_new n_done last err key status target env title repo num fin on
   listening=$(cfg_get '.listening')
   n_on=$(cfg_get '[.repos | to_entries[] | select(.value.enabled == true)] | length')
   n_open=$(st_get '.open | length')
@@ -408,6 +413,8 @@ render() {
   n_todo=$(st_get '. as $r | [$r.open[] | select(.isDraft != true)
              | ($r.seen[(.repository.nameWithOwner + "#" + (.number|tostring))].status // "new")
              | select(. != "reviewed")] | length')
+  n_new=$(cfg_get '[.repos | to_entries[] | select(.value.enabled != true) | select(.value.seen_first)] | length')
+  (( n_new > 0 )) && n_todo="$n_todo+$n_new?" 
   last=$(st_get '.last_poll // "never"')
   err=$(st_get '.last_error // empty')
 
@@ -469,12 +476,13 @@ render() {
   echo "Listening repos ($n_on) | refresh=true"
   while IFS=$'\t' read -r repo on; do
     [[ -z "$repo" ]] && continue
-    if [[ "$on" == "true" ]]; then
-      echo "-- ✓ $repo | bash=\"$SELF\" param1=toggle-repo param2=\"$repo\" terminal=false refresh=true"
-    else
-      echo "-- ✗ $repo | color=#888888 bash=\"$SELF\" param1=toggle-repo param2=\"$repo\" terminal=false refresh=true"
-    fi
-  done < <("$JQ" -r '.repos | to_entries[] | [.key, (.value.enabled|tostring)] | @tsv' "$CONFIG" 2>/dev/null)
+    case "$on" in
+      true)  echo "-- ✓ $repo | bash=\"$SELF\" param1=toggle-repo param2=\"$repo\" terminal=false refresh=true" ;;
+      new)   echo "-- ? $repo — review here? | color=orange bash=\"$SELF\" param1=toggle-repo param2=\"$repo\" terminal=false refresh=true" ;;
+      *)     echo "-- ✗ $repo | color=#888888 bash=\"$SELF\" param1=toggle-repo param2=\"$repo\" terminal=false refresh=true" ;;
+    esac
+  done < <("$JQ" -r '.repos | to_entries[]
+             | [.key, (if .value.enabled then "true" elif .value.seen_first then "new" else "false" end)] | @tsv' "$CONFIG" 2>/dev/null)
 
   echo "---"
   if [[ "$listening" == "true" ]]; then
@@ -496,7 +504,8 @@ migrate_config
 
 case "${1:-}" in
   toggle-listening) lock_wait; cfg_edit '.listening = (.listening | not)'; exit 0 ;;
-  toggle-repo)   lock_wait; cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
+  toggle-repo)   lock_wait; cfg_edit --arg r "$2" \
+                   '.repos[$r] = {enabled: ((.repos[$r].enabled // false) | not)}'; exit 0 ;;
   cycle-model)   lock_wait; cfg_edit --argjson c "$(cycle_list "$REVIEW_MODELS")" \
                    '(.review_model // "") as $cur | .review_model = $c[((($c|index($cur)) // -1) + 1) % ($c|length)]'; exit 0 ;;
   cycle-effort)  lock_wait; cfg_edit --argjson c "$(cycle_list "$REVIEW_EFFORTS")" \

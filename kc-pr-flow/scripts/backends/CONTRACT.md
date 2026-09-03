@@ -49,8 +49,9 @@ asks again next tick, so a transient API failure never fabricates a completion.
 
 ## Rules
 
-- **Never merge, never approve.** Whatever runs the review must be prompted or
-  configured so it cannot.
+- **Never merge and never force-push.** Whatever runs the review must be prompted or
+  configured so it cannot. Applying a fix, pushing it, and approving are the review
+  skill's own behaviour and are out of a backend's hands.
 - **Own your prerequisites.** Check for your CLI, credentials, and any mapping you
   need on first use, and fail with a message naming what is missing. The installer
   does not pre-validate backends it did not select.

@@ -1,8 +1,32 @@
 # Review-Request Listener (menu bar)
 
 Watches GitHub for pull requests where you are a requested reviewer, starts a
-review for each new one, and reports it in the macOS menu bar. It never merges and
-never approves.
+review for each new one, and reports it in the macOS menu bar.
+
+**A dispatched review acts under your GitHub identity.** The skill it runs may apply
+a fix, push it to the branch under review, and approve the pull request — that is
+its intended behaviour and this tool does not restrain it. Only merging and
+force-pushing are forbidden. Read the trust section below before widening the set of
+repositories this listens to.
+
+## Trust
+
+Requesting a review is an action anyone with repository access can take, and in a
+repository where you are a code owner GitHub requests it automatically on every
+matching pull request. That predicate therefore cannot also be what grants an agent
+your identity, so **a newly-seen repository is enrolled switched off** and asks in
+the menu once. Until you answer, nothing is dispatched from it.
+
+Two consequences worth holding onto:
+
+- The branch under review is written by its author, so anything in that tree —
+  `AGENTS.md`, the diff, a comment, a fixture — is untrusted input to the review. The
+  dispatch prompt says so explicitly and asks the reviewer to report an attempt to
+  direct it rather than comply. That is a prompt, not a control: it reduces the
+  exposure, it does not remove it.
+- The only structural limit on what a review can do is whatever credential the
+  dispatched environment actually holds. A capability-scoped token — no
+  `contents:write`, no approve — is the real version of "review only"; prose is not.
 
 ## Shape
 
@@ -62,7 +86,7 @@ by accident.
 - **The badge counts what wants attention**, not what GitHub still lists. A review request stays open on GitHub until a review is submitted, which can be long after this has reviewed that commit, so a reviewed row is not counted; drafts are not either.
 - **Review requests** — one row per open PR awaiting you. The row opens the review environment; **open PR on GitHub** is one item below it. A row that has not been dispatched reads **review now** and dispatches it on click — that runs even while listening is paused or the repository is switched off, because clicking the row is you answering for this one pull request. It also ignores a spent attempt budget, so it doubles as a retry. `⏳` running, `✅` reviewed, `❌` failed with the backend's reason and a **retry**, `○` not dispatched yet.
 - **Finished reviews** — the six most recent completed reviews, kept for thirty days. They are a record, not the source of truth: GitHub answers "was this commit reviewed", so an expired row changes nothing. Unfinished rows are never pruned. This section exists because a reviewed PR *disappears* from the request list: GitHub drops it from review-requested the moment a review is submitted.
-- **Listening repos** — every repo that has appeared, click to toggle. New repos start **on**, so a request in a new repo needs no configuration.
+- **Listening repos** — every repo that has appeared, click to toggle. A repo seen for the first time reads `?` and is **off**; the badge shows a pending count like `0+1?` until you answer. Answering either way — enable or leave off — settles it and the question does not come back.
 - **Model** and **Effort** — the model and thinking level a dispatched review runs at. Reviewing is the expensive judgement in this loop, so the default is `opus-5-1m` at `medium` rather than whatever the platform picks. The menu cycles a short list; any value the backend accepts can be set in the config by hand, and the backend's error names the accepted set.
 - **Pause / Resume listening** — polling and completion checks continue; only dispatch stops.
 - **Start at login** — toggles whether the menu-bar host is launched at login. The host's own preference is not scriptable, so this drives the login-item list, which needs Automation permission for System Events; the row reads `unknown` if that is refused. Use one mechanism or the other, not both.
