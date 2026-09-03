@@ -1,6 +1,6 @@
 ---
 title: "POC: ship-flow glue on one Issue — cloud dispatch, pinned-SHA verify, Captain-gated Draft PR"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-02T14:44:00Z
-completed:
-verdict:
+completed: 2026-09-03T03:18:24Z
+verdict: PASSED
 worktree:
 issue:
 pr: pr-merge:342
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, approving the DEV-50 delivery unit at base bda45e6b; the POC's accepted outcome was that exact delivery
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T03:18:25Z
 ---
 
 ## The problem
