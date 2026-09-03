@@ -1,0 +1,7 @@
+good+approval: exit 0
+order violates edge: exit 1 INVALID: dispatch_order violates edge DEV-90->DEV-91
+cycle: exit 1 (caught as order violation first)
+user_value == hypothesis: exit 1 INVALID: user_value must differ from hypothesis and name
+body tampered, hash stale: exit 1 INVALID: receipt_sha256 does not match canonical content
+name is a hypothesis: exit 1 INVALID: project name must be a headline, not the hypothesis
+approval=discover: exit 1 INVALID: approval decision is discover; no dispatch authority

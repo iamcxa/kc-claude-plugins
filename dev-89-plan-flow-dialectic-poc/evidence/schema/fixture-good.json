@@ -1,0 +1,67 @@
+{
+ "schema": "kc-plan-receipt/v1",
+ "code_repo": "iamcxa/kc-claude-plugins",
+ "base_branch": "main",
+ "project": {
+  "id": "726d6df7-25a4-4669-8d5e-914e97625f68",
+  "name": "Ship gates stop re-asking the three verification questions",
+  "user_value": "Kent at UAT obtains a candidate that already answered the three verification questions.",
+  "hypothesis": "If we pin the three rules in the Ship-flow runtime README then Kent and the FO stop re-asking them per PR.",
+  "wedge": "Kent, at UAT, who re-asks three questions on every PR; this week: three README sentences with contract-test pins.",
+  "outcome": "o",
+  "exit": [
+   "e1"
+  ],
+  "outcome_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+ },
+ "cycle": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "milestones": [],
+ "issues": {
+  "DEV-90": {
+   "id": "00000000-0000-0000-0000-000000000001",
+   "url": "https://linear.app/duckbase-co/issue/DEV-90/x",
+   "title": "t",
+   "branch": "feature/dev-90-x",
+   "close_line": "Fixes DEV-90",
+   "profile": "pilot-product-slice",
+   "milestone": null,
+   "body": "## The problem\n\nx\n\n## Goal\n\ny\n\n## Non-goals\n\n- a\n\n## Acceptance criteria\n\n- **AC-1** z\n\n## Route-back conditions\n\nr\n",
+   "body_sha256": "19a520796a724b026569cf26136f81b4bb81909f96b8fa216a070171076fa5d3"
+  },
+  "DEV-91": {
+   "id": "00000000-0000-0000-0000-000000000002",
+   "url": "https://linear.app/duckbase-co/issue/DEV-91/y",
+   "title": "t2",
+   "branch": "feature/dev-91-y",
+   "close_line": "Fixes DEV-91",
+   "profile": "pilot-product-slice",
+   "milestone": null,
+   "body": "## The problem\n\nx\n\n## Goal\n\ny\n\n## Non-goals\n\n- a\n\n## Acceptance criteria\n\n- **AC-1** z\n\n## Route-back conditions\n\nr\n",
+   "body_sha256": "19a520796a724b026569cf26136f81b4bb81909f96b8fa216a070171076fa5d3"
+  }
+ },
+ "edges": [
+  [
+   "DEV-90",
+   "DEV-91"
+  ]
+ ],
+ "dispatch_order": [
+  "DEV-90",
+  "DEV-91"
+ ],
+ "lint": {
+  "schema": "kc-plan-lint/v1",
+  "pass": true,
+  "digest": "1111111111111111111111111111111111111111111111111111111111111111"
+ },
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "doing nothing keeps the questions in the Captain's head",
+   "agreed": true
+  }
+ ],
+ "rationale_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+ "receipt_sha256": "4bfbc2a31c5d8054fa2c0baa9f0b07dd780dd4cf27ec5852e0059c1d52b5779f"
+}

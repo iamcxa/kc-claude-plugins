@@ -1,0 +1,12 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "4bfbc2a31c5d8054fa2c0baa9f0b07dd780dd4cf27ec5852e0059c1d52b5779f",
+ "approver": "person:captain",
+ "approved_at": "2026-09-03T12:00:00Z",
+ "decision": "go",
+ "max_workspaces": 2,
+ "concurrency": 2,
+ "repair_rounds": 2,
+ "quote": "\u4e09\u689d\u4e00\u8d77\uff0cPilot \u6df1\u5ea6",
+ "quote_source": "chat 2026-09-03"
+}

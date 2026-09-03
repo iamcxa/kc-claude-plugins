@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kc-plan-approval/v1",
+  "title": "kc-plan-approval v1",
+  "description": "The Captain's dispatch authorization for one receipt. Separate from the receipt so the receipt is content and the approval is authority. ship-flow refuses a receipt without a matching approval whose receipt_sha256 equals the receipt's.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "receipt_sha256", "approver", "approved_at", "decision", "max_workspaces", "concurrency", "repair_rounds", "quote", "quote_source"],
+  "properties": {
+    "schema": {"const": "kc-plan-approval/v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "approver": {"type": "string", "pattern": "^person:[a-z0-9-]+$"},
+    "approved_at": {"type": "string", "format": "date-time"},
+    "decision": {"enum": ["go", "discover", "stop"], "description": "go authorizes dispatch; discover and stop carry no dispatch authority and ship-flow refuses them"},
+    "max_workspaces": {"type": "integer", "minimum": 0},
+    "concurrency": {"type": "integer", "minimum": 1},
+    "repair_rounds": {"type": "integer", "minimum": 0, "maximum": 2},
+    "quote": {"type": "string", "minLength": 1, "description": "the Captain's authorizing words, verbatim"},
+    "quote_source": {"type": "string", "minLength": 1}
+  }
+}
