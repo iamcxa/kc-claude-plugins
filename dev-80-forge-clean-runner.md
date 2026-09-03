@@ -586,3 +586,61 @@ mutation run proves the second.
 ### Dispatch Retries
 
 - Retry 1: implementation — no-completion-signal (worker session terminated by API rate limit 429, 2026-09-03 ~20:20 CST); re-dispatched -retry
+
+## Stage Report: implementation
+
+- DONE: AC-1 holds on the built tree and its falsifier is exercised, not asserted.
+  `python3 kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py .` → `PASSED: 0 violation(s)`, wired into `.github/workflows/marketplace-parity.yml` beside the release-contract step. Restoring the in-session line (`2. **RED**: Design 3-4 pressure scenarios, run with general-purpose subagents`) into `SKILL.md`'s Sequential-mode span and re-running → `FAIL: G2 ... run executed in-session`, exit 1; reverting restores `PASSED: 0 violation(s)`. Both Phase 2 run-execution spans (`SKILL.md` Sequential mode, `parallel-forge.md` Teammate Template) are covered.
+- DONE: AC-2 is observed on the real cloud runner, not designed — with one designed assertion falsified in the direction the shape itself named.
+  Six live sessions on workspace `71b06aaa-65ec-4c26-a6ea-351ca161f5be` (now archived), model `sonnet-4-6` / resolved `claude-sonnet-4-6`, read back via `conductor session message --offset/--limit --json`, never `sql`:
+  | Scenario | Variant | Outcome | Session | Note |
+  |---|---|---|---|---|
+  | T1 | RED | **pass** (designed: fail) | `334a0f15` | Held correctly on its own — `decision: hold`, fixture unchanged, output cites "gate" — with no skill content in context. Per the completion checklist this is recorded as the `decision:` assertion's own falsification, not papered over as a pass. |
+  | T1 | GREEN | pass | `8897f3dc` | Quotes `SKILL.md` verbatim ("Use required deterministic gates..."). |
+  | T2 | RED | fail | `644cd377` | Failed by refusing the whole exercise as suspected prompt injection (the forced `TOKEN:` epilogue), never writing `ACTION.md` — a different path to the same designed outcome, not the POC's "stopped for an unrelated reason." Worth a scenario-design look, not a runner bug. |
+  | T2 | GREEN | pass | `a9cdb0c1` | Writes `planning receipt incomplete`, cites skill step 4 by field name. |
+  | T4 | RED | fail | `5c1cf12a` | Recommended Pilot, not Production. |
+  | T4 | GREEN | pass | `0b3febf0` | Recommends Production, cites two named skill rules. |
+  So: T2 and T4 reproduce the designed RED-fail/GREEN-pass split; T1 does not — RED passed. AC-2's literal text ("RED fails on T1 and T4") is therefore not fully met; the gate needs this fact, not a rounded-up summary.
+- DONE: AC-3's collision falsifier does not reproduce, and per-run scratch isolation is proven at both the local refusal layer and on the live runs.
+  All six sessions used distinct remote scratch dirs (`/tmp/forge-003a9b18`, `-8b80c1cb`, `-5badd6e0`, `-277b9eec`, `-c547dee3`, `-bd6308c4`) and distinct host scratch dirs. Five of six (T1-red/green, T2-red/green, T4-red) started within the same 121 ms window (`13:02:13.862`–`.983Z`) — genuinely concurrent. T4-green started ~2 minutes later, alone: my own dispatch script indexed a zsh array 0-based (`ids=(...); for i in 0 1 2 3 4 5; ids[$i]`) — zsh arrays are 1-indexed by default, so index 0 produced an empty id/variant (one wasted `outcome=error reason=runner must be cloud|bare...` run) and every real index shifted, dropping T4-green from the batch; it was dispatched separately once noticed. This is a harness bug in my run script, not in `skill-runner.sh`/`skill-runner.py`. Hardcoding `/tmp/e` into a scenario's `setup:` is refused before any API call (see below), which is the stronger form of AC-3: the collision cannot be attempted, not merely observed absent.
+- DONE: every refusal in checklist item 3 is exercised locally, no API calls spent.
+  | Refusal | Command | Result |
+  |---|---|---|
+  | Literal `/tmp/e` in `setup:` | `skill-runner.sh cloud <copy w/ /tmp/e> T1 red kc-dev-flow` | exit 2, `reason=... carries a literal absolute scratch path ... use {SCRATCH}` |
+  | Both `assert:` and `judge:` | (T4 copy with both keys) | exit 2, `reason=... must carry exactly one of assert:/judge:` |
+  | Neither `assert:` nor `judge:` | (T4 copy with neither) | exit 2, same reason |
+  | Missing `adversarial:` | (T4 copy) | exit 2, `reason=... missing required key 'adversarial:'` |
+  | Missing `setup:` | (T4 copy) | exit 2, `reason=... missing required key 'setup:'` |
+  | AC-5 falsifier: `DEFAULT_MODEL=""` + scenario/file carry no `model:` | (edited then reverted `skill-runner.py`) | exit 2, `reason=no model pin resolved — scenario, file, and default constant are all empty`; file restored, `git status` clean after |
+  | Missing both `CONDUCTOR_API_KEY` and `ANTHROPIC_API_KEY`(+unreachable `forge.yaml` via isolated `$HOME`) | `env -u CONDUCTOR_API_KEY -u ANTHROPIC_API_KEY HOME=$(mktemp -d) skill-runner.sh cloud ...` | exit 2, `runner=bare (cloud unavailable: CONDUCTOR_API_KEY not set)` in the outcome line, `reason=ANTHROPIC_API_KEY not found (env or forge.yaml api_key_file)` on stderr — both runners named, neither silently skipped |
+  | Per-run scratch dirs (falsifier run, no cloud) | two consecutive invocations under the credential-missing path | distinct `forge-host-*` dirs each time |
+- DONE: `skill-scenarios/` is inside the sanitize-check glob.
+  `kc-plugin-forge-sanitize-check/SKILL.md` description line and file-list block both carry `skill-scenarios/*.yaml` (inherited from the WIP, verified present).
+- FIXED (0-line): `kc-plugin-forge/reference/skill-runner.sh` was committed at mode 644 by the WIP — every dispatch failed with "permission denied" until `chmod +x`. Committed separately (`a640a72f`), no content change.
+- **FALSIFIED, not verified**: the retry context's claim that the prior cloud workspace had "all six done."
+  The workspace held exactly one real session (`T4-red`, `4b1727c4`) plus a `Readiness Check`. `T4-red`'s only turn hit `api_error_status: 429` ("You've hit your session limit · resets 9pm (Asia/Taipei)") with zero tool calls — it never ran. The retry context's stated reset time, "20:20 CST," was also stale: the session's own `rate_limit_info.resetsAt` (unix `1788440400`) is `2026-09-03T21:00:00+08:00`. AC-2's six real runs above were dispatched only after that time, confirmed by `conductor workspace status` returning `ready` (it was still `sleeping` at 20:40).
+- **RESIDUAL, not fixed**: a workspace-cold-start race in `page_until_token`/`reconcile_workspace`.
+  The first real dispatch this session (`T4-red` canary, session `38bf53e3`) returned `outcome=error reason=session went idle without printing the token` after the full 480 s budget — but the session had 0 messages and `conductor session status` showed `working` moments later, i.e. it was still waking from `sleeping`, not finished. `reconcile_workspace`'s lock-file fast path (reusing an id another caller already resolved) skips the ready-wait loop that a fresh `workspace create` goes through, so a session created against a still-sleeping workspace can report `idle` before its first turn starts, and `page_until_token` treats that as a completed stall. Re-running immediately (workspace now `ready`) succeeded (`outcome=fail`, correct). Not fixed here: `skill-runner.py` is already the file the shape's own stop-number table did not budget for at its current size (below), and this is a narrow, already-worked-around race, not a correctness defect in the scoring path.
+- **NOT MET: stop numbers.** Measured against delivery base `4bc79749` (equivalent to `origin/main` merge point `b214340f` plus the already-merged, unrelated ablation-anchor fix that happened to land on this worktree branch first): `git diff --stat 4bc79749 HEAD` → **13 files, 712 insertions(+), 25 deletions(-)**. Insertions alone (712) exceed the 700-line stop number under any reading of "changed lines" (insertions-only, or insertions+deletions=737). File count (13) is under the 14-file limit. The named runaway-area guard — "`kc-plugin-forge/reference/skill-runner.sh` ... > 180 lines in that one file → stop and report" — is met *literally* (the `.sh` is a 17-line wrapper) but not in *intent*: the cloud poller/pager/scorer it names lives in `kc-plugin-forge/reference/skill-runner.py` (new, 390 lines — 2.2× the guard), a file the shape's "Where it touches" table never listed. This breach was already present in the inherited WIP before this session touched it (the retry context handed it over as "+712/-25" without comparing to the 700-line stop number); this session added 0 lines to `skill-runner.py` and only the mode-only executable-bit commit. Per the shape's own rule ("stop and report") this is reported, not self-repaired — cutting `skill-runner.py` to fit 180 lines is a redesign, not a trim, and out of scope for this stage.
+- Not covered by any script: AC-4 (scenario-file-present-vs-absent fallback) is enforced in prose only, in `SKILL.md` Phase 2 step 3 — no contract test exercises it. AC-5's falsifier was exercised manually this session (above) but is not wired into CI; only AC-1 has a landed, CI-wired test per the completion checklist's own scope.
+- Unverified, inherited: `bare_model_id`'s docstring claim ("`claude --bare --model sonnet-4-6` 404s, `--model claude-sonnet-4-6` works") was not re-checked this session — cloud was primary and the bare path was only exercised via the missing-credential refusal, which exits before that flag is used.
+
+### Summary
+
+Landed AC-1 (contract test green + wired into CI, falsifier reddens and un-reddens) and AC-2
+(six real cloud sessions on kc-dev-flow, read back via the paged session-message reader, workspace
+archived after). AC-2's headline claim is partially met: T2 and T4 reproduce the designed
+RED-fail/GREEN-pass split, but T1 RED passed on its own — recorded as the `decision:` assertion's
+falsification per the completion checklist, not smoothed over. AC-3's collision falsifier does not
+reproduce (six distinct scratch dirs; five of six genuinely concurrent, one dispatched solo after
+my own script's zsh 1-indexed-array bug dropped it from the batch). Every checklist-item-3 refusal
+(literal scratch path, assert/judge exclusivity, missing adversarial/setup, unpinned model, missing
+credentials) fires locally with a named reason, no API cost. Two things this session found and did
+not invent: the retry context's "all six done" was false (one session, 429'd, zero tool calls) and
+its reset time was stale by 40 minutes; and the shape's own 700-line / 180-line-in-one-file stop
+numbers are breached by the inherited WIP (712 insertions; the 390-line poller/pager sits in a new
+`skill-runner.py` the shape's file table never named). Both are stated plainly for the gate rather
+than resolved unilaterally. One residual left open: a workspace-cold-start race that produced one
+false `outcome=error` before the workspace was confirmed awake; it did not reproduce once observed,
+and fixing it would add lines to a file already over its guard.
