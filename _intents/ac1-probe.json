@@ -2,6 +2,6 @@
  "claim": "ac1-probe",
  "token": "deadbeef0000",
  "writer": 7,
- "workspace": null,
+ "workspace": "none-synthetic-probe-resolved-at-cleanup",
  "committed_at": "2026-09-03T07:59:17Z"
 }
