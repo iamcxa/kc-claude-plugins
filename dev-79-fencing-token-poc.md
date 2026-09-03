@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-79
-pr:
+pr: local-merge:poc-retained-on-branch-72f5c215-no-pr-by-captain-decision
 mod-block:
 id: kw05rc5f26qkj8qxk5tcpzy4
 gates:
