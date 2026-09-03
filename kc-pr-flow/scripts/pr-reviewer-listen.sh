@@ -394,7 +394,7 @@ render() {
     echo "---"
   fi
 
-  echo "Review requests ($n_open)"
+  echo "Review requests ($n_open) | refresh=true"
   if [[ "$n_open" == "0" ]]; then
     echo "-- none"
   else
@@ -426,7 +426,7 @@ render() {
 
   echo "---"
   n_done=$(st_get '[.seen | to_entries[] | select(.value.status == "reviewed")] | length')
-  echo "Finished reviews ($n_done)"
+  echo "Finished reviews ($n_done) | refresh=true"
   while IFS=$'\t' read -r key target fin; do
     [[ -z "$key" ]] && continue
     echo "-- ✅ $(menu_label "${key##*/}") · ${fin:5:11} | bash=\"$SELF\" param1=open param2=\"$target\" terminal=false"
@@ -435,7 +435,7 @@ render() {
                      | [.key, (.value.open // .value.url // ""), (.value.finished // "")] | @tsv' "$STATE" 2>/dev/null)
 
   echo "---"
-  echo "Listening repos ($n_on)"
+  echo "Listening repos ($n_on) | refresh=true"
   while IFS=$'\t' read -r repo on; do
     [[ -z "$repo" ]] && continue
     if [[ "$on" == "true" ]]; then
