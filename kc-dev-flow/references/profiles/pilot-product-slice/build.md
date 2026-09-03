@@ -52,6 +52,10 @@ Stop here on crossing a stop number the shape contract declared. Run scoped
 tests while iterating and the relevant integrated checks at exit. Do not add
 production lifecycle surfaces or a standing review loop.
 
+At implementation exit, run `kc-dev-flow/scripts/surface-map-check.py` against
+the candidate diff and the Evidence block, checking every non-test changed
+file.
+
 ## Implementation exit observation
 
 ```json

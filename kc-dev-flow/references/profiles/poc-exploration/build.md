@@ -66,6 +66,10 @@ keeps the outcome and independent decision in validation. If time is exhausted,
 record `change` with the strongest evidence, limit, reversal fact, and cleanup
 status; do not kill an active tool call or continue silently.
 
+If run, `kc-dev-flow/scripts/surface-map-check.py` applies only to the surfaces
+this stage's `poc_outcome` marks retained; a disposable POC surface is out of
+its scope.
+
 ## Implementation exit observation
 
 ```json
