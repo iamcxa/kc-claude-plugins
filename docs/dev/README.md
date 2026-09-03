@@ -490,3 +490,12 @@ with no secrets. `scripts/ship-flow/without-it.sh <sha> <command>
 <removed-variant>` runs `<command>` retained, applies `<removed-variant>`, runs
 `<command>` again, and exits 0 only when the retained run passes and the
 removed run fails.
+
+The First Officer reads a worker's transcript through `conductor sql` against
+`session_transcripts_view`, not `conductor session message --after`: that CLI
+truncates its JSON response at 64 KB, which cuts off a long Evidence block, and
+its `--after` cursor rejects a sent message's id, which breaks polling from the
+FO's own last message. `scripts/ship-flow/worker-transcript.sh <session-id>`
+prints the session's last fenced `## Evidence` block, or exits 1 with `no
+evidence block` when the transcript has none. One read per invocation; no
+polling loop, retry, or daemon.

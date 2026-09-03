@@ -1911,6 +1911,15 @@ for phrase in [
     "First Officer runs it verbatim, unchanged, in a worktree with no secrets.",
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the WITHOUT_IT_COMMAND one-line rule: {phrase}")
+for phrase in [
+    "The First Officer reads a worker's transcript through `conductor sql` against "
+    "`session_transcripts_view`, not `conductor session message --after`",
+    "that CLI truncates its JSON response at 64 KB, which cuts off a long Evidence block, and "
+    "its `--after` cursor rejects a sent message's id, which breaks polling from the FO's own last message.",
+    "`scripts/ship-flow/worker-transcript.sh <session-id>` prints the session's last fenced "
+    "`## Evidence` block, or exits 1 with `no evidence block` when the transcript has none.",
+]:
+    require(phrase in normalized_workflow, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
