@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-03T14:12:00Z
 completed:
 verdict:
 worktree:
@@ -85,4 +85,10 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 
 ## Measurement
 
-Not yet measured.
+Dispatch 14:13Z, token acked 55 s, Evidence at 14:21Z (6.5 min worker), one round. FO: real-state falsifier 5 s (was 84 s timeout), without-it retained 0 / removed 6, Codex no findings, preflight clean. About 20 min end to end.
+
+## Stage Report: implementation
+
+- DONE: `intent.sh` lock dir from `git rev-parse --git-dir`; one contract-test case builds a linked-worktree state and reddens on the pre-fix script. Candidate 218d584e.
+- AC-1 pre-fix exit 6 / fixed exit 0 on a worktree state, no residue; AC-2 plain clone exit 0; AC-3 case `kc-dev-flow-intent-lock` reddens on pre-fix. FO repeated AC-1 on the repository's real split-root state.
+- Outside the Brief: none.

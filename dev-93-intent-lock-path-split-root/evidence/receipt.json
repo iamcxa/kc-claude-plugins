@@ -1,0 +1,22 @@
+{
+ "issue": "DEV-93",
+ "candidate": "218d584ecf1a2698afa4d4a3ae34f9fc17f14382",
+ "branch": "feature/dev-93-intentsh-lock-path-breaks-on-a-split-root-state-checkout-git",
+ "base": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "remote_head": "218d584ecf1a2698afa4d4a3ae34f9fc17f14382",
+ "rounds": 1,
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git rm -f scripts/ship-flow/intent.sh",
+  "retained_exit": 0,
+  "removed_exit": 6,
+  "removed_reason": "contract test refuses when intent.sh is missing (exit 6)"
+ },
+ "fo_falsifiers": {
+  "real_split_root_state_commit": "exit 0 in 5 s; pre-fix copy exit 6 after 84 s on the same state; no lock residue under git-dir"
+ },
+ "codex": "no findings: git-dir resolution correct for clone and worktree, per-checkout lock preserved, trap unchanged, test case builds a real worktree",
+ "preflight_main": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "preflight_exit": 0,
+ "pass": true
+}
