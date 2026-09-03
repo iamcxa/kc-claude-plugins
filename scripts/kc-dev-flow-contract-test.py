@@ -1473,6 +1473,12 @@ for phrase in [
 ]:
     require(phrase in workflow, f"self-adoption is missing: {phrase}")
 require_production_route(workflow, "Production", "`backlog -> ideation -> implementation -> validation -> done`")
+for phrase in [
+    "Dispatch a higher layer only after the lower layer is fully verified.",
+    "A worker's without-it command runs in an isolated environment (temporary HOME, no agent, no network).",
+    "Security, data-loss, and compatibility findings outside the Brief block the candidate while general improvements are scoped out.",
+]:
+    require(phrase in normalized_ship_readme, f"ship-flow README omits contracted guarantee: {phrase}")
 
 package_readme = read("kc-dev-flow/README.md")
 normalized_package_readme = " ".join(package_readme.split())
