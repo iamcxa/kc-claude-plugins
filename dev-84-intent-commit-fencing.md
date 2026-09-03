@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:wxj20tk9h1ndssnehwd4d9ng:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:wxj20tk9h1ndssnehwd4d9ng-validation-1
+              briefing:
+                id: briefing:wxj20tk9h1ndssnehwd4d9ng:validation:attempt-1:revision-1
+                digest: sha256:7a62df4ad1ecfcef5f08edad38dc4f3367452baaadf29333751fdb4a1da34d97
+                room-ref: ./dev-84-intent-commit-fencing/review/validation/briefing-1
 ---
 
 ## The problem

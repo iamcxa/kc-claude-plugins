@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wxj20tk9h1ndssnehwd4d9ng:validation:attempt-1:revision-1",
+  "question": "Accept DEV-84's verified candidate a6ad0c498e6fd5e38f84c6b4f8da48ac1d58829c as satisfying the admitted outcome and authorize the Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:wxj20tk9h1ndssnehwd4d9ng:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/477a95ce9c81bbdc44641f71e7d65f31d320e68d/dev-84-intent-commit-fencing/evidence/validation-review.md",
+      "rev": "sha256:a8902b2ac954752909141b4e3b1d21a0bf5e080ed3b8da4ff3169ac134cba585",
+      "mediaType": "text/markdown",
+      "summary": "Pilot verify-deliver: intent-commit fencing verified at the pinned SHA; three residuals listed."
+    }
+  ]
+}
