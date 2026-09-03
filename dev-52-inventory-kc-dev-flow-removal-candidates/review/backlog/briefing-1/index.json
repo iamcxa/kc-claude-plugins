@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:mbm3d94fcn4ks8vgf30rk2kh:backlog:attempt-1:revision-1",
+  "question": "Approve DEV-52 to enter POC implementation: one reverse-recovery inventory over kc-dev-flow surfaces, stop below five removal candidates, no edits?",
+  "artifacts": [
+    {
+      "id": "artifact:mbm3d94fcn4ks8vgf30rk2kh:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/97062c708e64fec17920f44db06a7d6f736757aa/dev-52-inventory-kc-dev-flow-removal-candidates.md",
+      "rev": "sha256:efd327aa7e50c8a6e77cba3d4a3baa49642f2a43e2d2a91f25de0f1e8bfd4828",
+      "mediaType": "text/markdown",
+      "summary": "Recommend approval: Linear DEV-52 bound (Todo, Cycle 2, Project kc-dev-flow slimming dogfood, sprint S8). POC receipt: decision is whether the slimming project opens removal items this cycle; falsifier is fewer than five NO_OBSERVED_CONSUMER surfaces with two-strategy evidence or an unnameable search boundary; budget one sonnet dispatch, no provider requests, no code edits; artifact no-code with no safety boundary, so proof is direct and recorded in build; decision-ready 15 minutes. DEV-51's inputs are in scope: 23 wording-only prose rules and the duplicate-rule signal. Scope excludes any removal, contract edit, size target, audit-mod change, or item creation."
+    }
+  ]
+}

@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: mbm3d94fcn4ks8vgf30rk2kh
+gates:
+    version: 1
+    records:
+        - id: gate:mbm3d94fcn4ks8vgf30rk2kh:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:mbm3d94fcn4ks8vgf30rk2kh-backlog-1
+              briefing:
+                id: briefing:mbm3d94fcn4ks8vgf30rk2kh:backlog:attempt-1:revision-1
+                digest: sha256:af1786749b9f43b2294ed5edf930d882fc1ccf12bf05ec39309180b9d90258eb
+                room-ref: ./dev-52-inventory-kc-dev-flow-removal-candidates/review/backlog/briefing-1
 ---
 
 ## The problem
