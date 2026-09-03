@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-03T08:10:18Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-dev-80-forge-clean-runner
 issue: DEV-80
 pr:
 mod-block:
