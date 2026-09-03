@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.2.0...kc-dev-flow-v4.3.0) (2026-09-03)
+
+
+### Features
+
+* **kc-dev-flow:** read the candidate diff for surface-to-obligation mapping at implementation exit ([#357](https://github.com/iamcxa/kc-claude-plugins/issues/357)) ([868c7f6](https://github.com/iamcxa/kc-claude-plugins/commit/868c7f6131c63c0615e6298d79f14f854ed98ef7))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** bound adoption additions by the manifest and retire the local Linear reader ([#360](https://github.com/iamcxa/kc-claude-plugins/issues/360)) ([b214340](https://github.com/iamcxa/kc-claude-plugins/commit/b214340f77335bcee6607b59c707a829ad09051c))
+
 ## [4.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.1.1...kc-dev-flow-v4.2.0) (2026-09-03)
 
 
