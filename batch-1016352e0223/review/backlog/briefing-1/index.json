@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ys8b2431y8vkpzy446txv694:backlog:attempt-1:revision-1",
+  "question": "Admit the first receipt-driven ship batch (DEV-90/91/92) into implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:ys8b2431y8vkpzy446txv694:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ff3a2086def74c879b5d798e78ea967070fceccc/batch-1016352e0223/review/backlog/admission.md",
+      "rev": "sha256:0f94384a25bf8326d4a0ca6ab22b9e05e7473f6603c9c70b8a5f76d40a40309e",
+      "mediaType": "text/markdown",
+      "summary": "Receipt 1016352e + approval go/3/2/2; consumes the plan-\u003eship seam for the first time."
+    }
+  ]
+}
