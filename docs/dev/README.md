@@ -492,18 +492,7 @@ with no secrets. `scripts/ship-flow/without-it.sh <sha> <command>
 `<command>` again, and exits 0 only when the retained run passes and the
 removed run fails.
 
-Ship-flow's dispatch guarantee is at most one automatically started worker per
-claim, never exactly-once: `conductor workspace create` is not idempotent and a
-holder can sleep between the call and its receipt. Every external action
-therefore follows one order: `scripts/ship-flow/intent.sh commit` writes the
-claim, dispatch token, and writer number to the state branch and pushes it;
-`holder.sh check` confirms the writer; the create is called once with the token
-in the workspace name; the token is read back; `holder.sh check` runs again;
-only then `intent.sh adopt` persists the workspace id. A holder that takes over
-runs `intent.sh reconcile` first: an unresolved intent whose token matches
-exactly one live workspace is adopted, zero matches block with `unresolved
-intent`, two or more block with `ambiguous intent`, and in no case does the new
-holder create a workspace for an intent it did not commit.
+
 
 The First Officer reads a worker's transcript through `conductor sql` against
 `session_transcripts_view`, not `conductor session message --after`: that CLI

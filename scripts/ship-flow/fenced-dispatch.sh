@@ -1,34 +1,28 @@
 #!/usr/bin/env bash
-# One external action under the intent-commit order:
-#   intent commit -> holder check -> conductor workspace create (once) -> token read-back -> holder check -> adopt/persist
-# Usage: fenced-dispatch.sh <state-dir> <holder-id> <writer> <claim> [--no-intent] [--no-fence] [--pause-before-persist] [--delay-create N]
-#   --no-intent           skip the intent commit (the without-it variant)
-#   --no-fence            skip both holder checks
-#   --pause-before-persist SIGSTOP self after create returns, before adopt (sleep-at-the-worst-moment)
-#   --delay-create N      sleep N seconds before calling create (late-arrival variant)
-set -uo pipefail
-state=$1; holder=$2; num=$3; claim=$4; shift 4; INTENT=1; FENCE=1; PAUSE=0; DELAY=0
-while [ $# -gt 0 ]; do case "$1" in --no-intent) INTENT=0;; --no-fence) FENCE=0;; --pause-before-persist) PAUSE=1;; --delay-create) DELAY=$2; shift;; esac; shift; done
-here=$(dirname "$0"); mkdir -p /tmp/poc4/run; log=/tmp/poc4/run/$holder.log; ts(){ date -u +%FT%TZ; }
-say(){ echo "$(ts) $holder#$num: $*" | tee -a "$log"; }
-say "start intent=$INTENT fence=$FENCE claim=$claim"
-TOKEN=$(python3 -c "import secrets; print(secrets.token_hex(6))")
-if [ $INTENT = 1 ]; then
-  "$here/intent.sh" commit "$state" "$claim" "$TOKEN" "$num" >>"$log" 2>&1 || { say "refused: intent exists for $claim (reconcile instead of create)"; exit 4; }
-  say "intent committed token=$TOKEN"
-else
-  say "no-intent mode (without-it variant)"
-fi
-if [ $FENCE = 1 ]; then "$here/holder.sh" check "$state" "$holder" "$num" 2>>"$log" || { say "fenced before create, no external action"; exit 3; }; fi
+# Production entry for one workspace create under the intent-commit order. No bypass flags.
+#   intent commit -> holder check -> create once -> read-back by id (name, project, token) -> holder check -> fenced adopt
+# Usage: fenced-dispatch.sh <state-dir> <holder-id> <writer> <claim> <project-id> <base-branch> <message-file> [--pause-before-adopt] [--delay-create N]
+# The two test-only flags exist so the falsifier can stop the process at the worst moment; they never weaken a guarantee.
+set -euo pipefail
+state=$1; holder=$2; num=$3; claim=$4; project=$5; base=$6; msg=$7; shift 7; PAUSE=0; DELAY=0
+while [ $# -gt 0 ]; do case "$1" in --pause-before-adopt) PAUSE=1;; --delay-create) DELAY=$2; shift;; *) echo "unknown flag $1" >&2; exit 2;; esac; shift; done
+here=$(cd "$(dirname "$0")" && pwd); run=$(mktemp -d "${TMPDIR:-/tmp}/ship-dispatch-XXXXXX"); chmod 700 "$run"; log=${SHIP_DISPATCH_LOG:-$run/dispatch.log}
+ts(){ date -u +%FT%TZ; }; say(){ echo "$(ts) $holder#$num: $*" | tee -a "$log"; }; die(){ say "$1"; exit "${2:-1}"; }
+[[ "$project" =~ ^[0-9a-f-]{36}$ ]] || die "project-id must be a uuid" 2; [ -f "$msg" ] || die "message file missing" 2
+TOKEN=$(python3 -c "import secrets; print(secrets.token_hex(16))"); NAME="$claim-$TOKEN"
+say "start claim=$claim"
+"$here/intent.sh" commit "$state" "$holder" "$num" "$claim" "$TOKEN" >>"$log" 2>&1 || die "intent not committed (exists or fenced); reconcile instead of create" 4
+say "intent committed token=$TOKEN"
 [ "$DELAY" -gt 0 ] && { say "delaying create ${DELAY}s"; sleep "$DELAY"; }
-PID=$(conductor project list --limit 100 --json | python3 -c "import json,sys; print(next(p['id'] for p in json.load(sys.stdin)['data'] if (p.get('gitRemote') or '').endswith('/iamcxa/kc-claude-plugins')))")
-printf '%s' 'Reply only: ok' > /tmp/poc4/run/hello.txt
-NAME="$claim-$TOKEN"; say "conductor workspace create name=$NAME"
-OUT=$(conductor workspace create --project-id "$PID" --branch main --name "$NAME" --agent claude --model haiku-4-5 --effort low --message-file /tmp/poc4/run/hello.txt --json 2>&1)
-WID=$(printf '%s' "$OUT" | python3 -c "import json,sys; print(json.load(sys.stdin)['workspaceId'])" 2>/dev/null || echo CREATE_FAILED)
+say "conductor workspace create name=$NAME"
+OUT=$(conductor workspace create --project-id "$project" --branch "$base" --name "$NAME" --agent claude --model haiku-4-5 --effort low --message-file "$msg" --json 2>>"$log") || { say "create call failed; intent stays unresolved for reconcile"; exit 7; }
+WID=$(printf '%s' "$OUT" | python3 -c "import json,sys,re; d=json.load(sys.stdin); w=d['workspaceId']; assert re.fullmatch(r'[0-9a-f-]{36}', w); print(w)" 2>/dev/null) || { say "create returned no valid workspace id; intent stays unresolved"; exit 7; }
 say "create returned $WID"
+# read-back by id: the workspace must exist, carry the exact name, and belong to the project
+RB=$(conductor workspace get "$WID" --json 2>>"$log" | python3 -c "import json,sys; d=json.load(sys.stdin); print('ok' if d.get('name')=='$NAME' else 'name-mismatch:'+str(d.get('name')))" 2>/dev/null || echo "get-failed")
+[ "$RB" = ok ] || die "read-back failed ($RB); intent stays unresolved for reconcile" 7
+say "read-back ok name=$NAME"
 if [ $PAUSE = 1 ]; then say "SIGSTOP self before adopt"; kill -STOP $$; say "resumed"; fi
-if [ $FENCE = 1 ]; then "$here/holder.sh" check "$state" "$holder" "$num" 2>>"$log" || { say "fenced after resume; NOT adopting $WID (intent stays unresolved for the new holder to reconcile)"; exit 3; }; fi
-if [ $INTENT = 1 ]; then "$here/intent.sh" adopt "$state" "$claim" "$WID" >>"$log" 2>&1 && say "adopted $WID" || { say "adopt failed"; exit 1; }
-else echo "workspace=$WID holder=$holder writer=$num" >> "/tmp/poc4/run/claim-$claim.txt"; say "persisted (no-intent) $WID"; fi
-exit 0
+"$here/intent.sh" adopt "$state" "$holder" "$num" "$claim" "$WID" >>"$log" 2>&1 || die "adopt refused (fenced or already adopted); leaving $WID for the current holder's reconcile" 3
+say "adopted $WID"
+echo "$WID"

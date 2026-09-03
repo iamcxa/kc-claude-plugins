@@ -1883,7 +1883,8 @@ for phrase in [
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
 for phrase in [
-    "Ship-flow's dispatch guarantee is at most one automatically started worker per claim, never exactly-once",
+    "the production entry issues at most one `conductor workspace create` call after a committed intent",
+    "It is not exactly-once and it covers workspace creation only",
     "in no case does the new holder create a workspace for an intent it did not commit",
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the intent-commit rule: {phrase}")
