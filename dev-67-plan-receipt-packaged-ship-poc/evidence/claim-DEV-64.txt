@@ -1,0 +1,5 @@
+issue=DEV-64 claimed_at=2026-09-03T00:56:22Z
+workspace=800ca798-db10-48fe-88cc-27ae24880ccf session=32effca3-984b-470c-9a44-74a1ff028fe2 carrier=poc/dev-67-carrier-dev-64 dispatched_at=2026-09-03T00:56:30Z
+task_sent_at=2026-09-03T00:57:34Z
+evidence_at=2026-09-03T01:21:32Z
+accepted_at=2026-09-03T01:36:00Z candidate=13484f73f4fa579baf79ef3617517e2ed2cdca6f rounds=1 codex_open="P1 fence regex may miss a fence opening earlier (not reproduced on 4 real sessions); P2 heading unpinned" disposition=scope-outside-brief,listed-for-captain

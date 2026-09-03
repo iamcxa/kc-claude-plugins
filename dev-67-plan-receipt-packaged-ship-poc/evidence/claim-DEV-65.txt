@@ -1,0 +1,8 @@
+issue=DEV-65 claimed_at=2026-09-02T17:20:48Z
+workspace=72109ebf-7404-4e8c-ac35-d28b30938da8 session=06cfb362-2922-48bf-aec0-30fe133afb9b carrier=poc/dev-67-carrier-dev-65 dispatched_at=2026-09-02T17:20:56Z
+task_sent_at=2026-09-02T17:22:01Z
+evidence_at=2026-09-03T00:51:32Z
+fix1_sent_at=2026-09-03T00:57:56Z findings=codex-P1-env-not-stripped,codex-P1-shared-worktree-leak; P2-prose-only-rule=scope-outside-brief
+evidence_at=2026-09-03T01:01:09Z
+accepted_at=2026-09-03T01:11:20Z candidate=09f1f72c70be703b6a8cc826a17d9137caadf3ec rounds=2 codex_open="P2 one-line/no-external-file rule is prose only" disposition=scope-outside-brief,listed-for-captain
+STACK_NOTE: layer 3 (DEV-64) was dispatched on round-0 candidate 353795c, not on 09f1f72c; see ship-defect S10

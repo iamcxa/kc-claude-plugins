@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-02T16:30:00Z
 completed:
 verdict:
 worktree:
@@ -94,4 +94,66 @@ Falsifier and stop, plan side: the receipt lacks a field ship-flow needs and the
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.
 ## Measurement
 
-Not yet measured. Build records per-station minutes for plan and ship separately, and the falsifier station if any.
+Plan side: lint plus receipt plus a deliberately broken fixture, 2.1 min. Ship side, three layers: DEV-66 dispatch to accepted 43.6 min (two rounds), DEV-65 19.8 min from evidence to accepted (two rounds; a 7-hour FO idle gap sits between dispatch and first evidence and is excluded), DEV-64 15 min evidence to accepted (one round). Active ship time about 104 min against a 60-minute limit. Worker cost not summed (transcripts read through SQL, which carries no cost field).
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: change
+  admitted_at: 2026-09-02T16:30:00Z
+  decision_ready_at: 2026-09-03T01:36:30Z
+  decision_ready_elapsed_seconds: 32790
+  captain_interventions_before_decision_ready: 0
+  plan_direction: proceed
+  ship_direction: change
+  evidence: >-
+    Plan: eight lint rules ran on the live Project, emitted one receipt
+    (evidence/plan-receipt.json, sha256 08c6798b), and the same lint refused a
+    deliberately broken Project on four rules (multi-line User value, no cycle,
+    empty Non-goals, vague AC); ship-flow dispatched all three Issues from the
+    receipt alone without reading Linear. Ship: three cloud workers dispatched
+    in receipt order, each layer on the previous layer's candidate; each
+    candidate pinned (remote head == CANDIDATE_SHA), the worker's without-it
+    line run verbatim with credentials stripped (retained 0, removed 1), the
+    contract test green, merge-tree preflight clean against main 56e3095d; one
+    package UAT document produced (evidence/uat.md); Codex review of each diff
+    found P1s the mechanical checks could not, two fix rounds closed them
+    within the cap of 2. No station needed a new mechanism.
+  strongest_limit: >-
+    Ship direction is change because thirteen glue defects were recorded
+    (evidence/ship-defects.txt); the load-bearing ones are S10 (a fix round on
+    layer N after layer N+1 was dispatched breaks the stack base: DEV-64 sits
+    on DEV-65's round-0 candidate, not its accepted one), S4 (three contract
+    runs in one call exceed the tool budget), S1 (a task sent before the
+    workspace is ready is silently dropped), and S8/S13 (evidence block
+    location must anchor on CANDIDATE_SHA, not on fences or headings). The
+    60-minute limit was exceeded; most of the overrun is fix rounds and reader
+    bugs, not worker time.
+  reversal_fact: >-
+    A repeat where a lint rule cannot be made to fail, the receipt lacks a
+    field dispatch needs, a candidate head moves during verification, or the
+    stack base rule cannot be enforced by freezing lower layers.
+  cleanup_status_at_decision: pending
+```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: 0
+  terminal_cleanup_seconds: 0
+  cleanup_status: not-applicable
+```
+
+## Change returned to planning
+
+1. Freeze a layer's candidate once a higher layer is dispatched on it; a lower-layer fix re-dispatches every higher layer (S10). Until then, stacks of depth greater than two must not run fix rounds on lower layers.
+2. Verify steps run as separate invocations with their own timeouts; receipts are written after each step (S4).
+3. Send the task only after workspace status is ready and session status is idle, then wait a grace period (S1).
+4. Locate the Evidence block by `CANDIDATE_SHA: <40hex>` following `## Evidence`, never by fences or the heading alone (S8, S13); write evidence files from python, never shell heredocs (S12).
+5. Pin on the receipt's exact Linear branchName; Linear truncates generated names (S11).
+6. A no-secrets sandbox strips credential variables and keeps HOME (S3).
+7. Code review (Codex or kc-pr-review) is load-bearing for script-producing Issues; findings outside the Brief's ACs are dispositioned as scope-outside-brief and listed for the Captain, not looped (S5, S6).
+8. Conductor MCP has run_sql but no wait primitive and dropped mid-session; the CLI sql path is the contract (S7).
+9. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.

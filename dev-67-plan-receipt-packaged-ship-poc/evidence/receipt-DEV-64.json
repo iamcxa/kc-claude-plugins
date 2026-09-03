@@ -1,0 +1,18 @@
+{
+ "issue": "DEV-64",
+ "candidate": "13484f73f4fa579baf79ef3617517e2ed2cdca6f",
+ "branch": "feature/dev-64-transcript-reads-go-through-conductor-sql-not-session",
+ "base": "353795cda1af04207a755796e669a00e08b063ee",
+ "remote_head": "13484f73f4fa579baf79ef3617517e2ed2cdca6f",
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git checkout 353795cda1af04207a755796e669a00e08b063ee -- docs/dev/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1
+ },
+ "contract_test_exit": 0,
+ "preflight_exit": 0,
+ "preflight_main": "56e3095d822606c18990e842704f53dbea1c94ae",
+ "pass": true,
+ "note": "steps run as separate invocations after the combined run exceeded the tool timeout (S4)"
+}

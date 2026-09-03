@@ -1,0 +1,117 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "923b6c74-1176-413f-8e99-3f0ec73c0cde",
+  "name": "Ship-flow glue closes its four POC defects",
+  "outcome_hash": "sha256:0036d6c292d039bdb4f895435944ea36e1df59712405b12c0f1dfc6e0beb328f"
+ },
+ "cycle": "d1c96803-02fa-4323-b3a8-2fc44cc43699",
+ "milestones": [],
+ "dispatch_order": [
+  "DEV-66",
+  "DEV-65",
+  "DEV-64"
+ ],
+ "edges": [
+  [
+   "DEV-66",
+   "DEV-65"
+  ],
+  [
+   "DEV-65",
+   "DEV-64"
+  ]
+ ],
+ "lint": [
+  {
+   "rule": "L1 one-line User value",
+   "pass": true,
+   "why": "'A First Officer can dispatch one admitted Issue to a cloud w'"
+  },
+  {
+   "rule": "L2 one cycle",
+   "pass": true,
+   "why": "{'d1c96803-02fa-4323-b3a8-2fc44cc43699'}"
+  },
+  {
+   "rule": "L3 milestone membership",
+   "pass": true,
+   "why": "no milestones -> implicit single MS"
+  },
+  {
+   "rule": "L4 admission DEV-66",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-65",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-64",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L5 initiative when >1 project",
+   "pass": true,
+   "why": "single project; not triggered"
+  },
+  {
+   "rule": "L6 blockedBy is a DAG",
+   "pass": true,
+   "why": "blocker->blocked [('DEV-66', 'DEV-65'), ('DEV-65', 'DEV-64')]; order ['DEV-66', 'DEV-65', 'DEV-64']"
+  },
+  {
+   "rule": "L7 split advisory (warn only)",
+   "pass": true,
+   "why": "3 issues, forked=False"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-66",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-65",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-64",
+   "pass": true,
+   "why": "3 ACs"
+  }
+ ],
+ "issues": {
+  "DEV-66": {
+   "id": "a738da1f-7156-4a34-9e23-b4f113753bcf",
+   "url": "https://linear.app/duckbase-co/issue/DEV-66/dispatch-carrier-and-e2e-evidence-rules-for-cloud-workers",
+   "branch": "feature/dev-66-dispatch-carrier-and-e2e-evidence-rules-for-cloud-workers",
+   "close_line": "Fixes DEV-66",
+   "body_sha256": "a92a05e2986aa8860068828fce12bec2931802ab4b731ae4bea89b86e768711e",
+   "description": "## The problem\n\nTwo of DEV-62's defects have no contract text: the Conductor WAF blocked a dispatch message containing a `curl | tar` bootstrap line, and both `asciinema` and `script(1)` hung without a pty, so e2e evidence was a timestamped stdout log. Both need one sentence each so the next dispatch does not rediscover them.\n\n## Goal\n\nThe README `## Ship-flow runtime` section states that dispatch messages carry no bootstrap or download line (the image preinstalls plugins and spacedock) and that a task body longer than the first message travels on a committed carrier the worker fetches by `git show`; and that CLI e2e evidence is a timestamped stdout log written by `scripts/ship-flow/e2e-cli.sh <sha> <flow.yaml>`, which runs each `Execute external` step at the pinned SHA and exits non-zero on the first failing step, seen to fail on a flow whose step exits 1.\n\n## Non-goals\n\n* Do not attempt to make asciinema work; recording is out of scope.\n* Do not change e2e-pipeline; the script consumes its `Execute external` step shape only.\n* Do not implement the preinstalled image.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/e2e-cli.sh` passes DEV-50's three-step CLI flow at `0144264343775f4c74f517ccea488a8ef91c44bc` and exits 1 on a flow with a `false` step; both logs recorded with timestamps.\n* **AC-2** README states the no-bootstrap-line rule and the committed-carrier rule, naming the WAF block as the reason.\n* **AC-3** The contract test reddens when either sentence is removed; the mutation runs are recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+   "title": "Dispatch carrier and e2e evidence rules for cloud workers"
+  },
+  "DEV-65": {
+   "id": "01914597-dc0c-46b7-9047-3816606c1987",
+   "url": "https://linear.app/duckbase-co/issue/DEV-65/without-it-command-is-one-verbatim-shell-line-the-fo-runs-unchanged",
+   "branch": "feature/dev-65-without_it_command-is-one-verbatim-shell-line-the-fo-runs",
+   "close_line": "Fixes DEV-65",
+   "body_sha256": "7626734a8aaf2ac0587907fd9b87c53364fe987d672cc7afed41ddf84e9e597a",
+   "description": "## The problem\n\nDEV-62's worker reported `WITHOUT_IT_COMMAND: python3 .context/without-it-check.py`, a path to an untracked file the First Officer could not retrieve, so the First Officer wrote its own checker instead of running the worker's. The kernel's minimal-necessity clause requires a task-owned command; the ship-flow evidence contract does not yet say what shape that command must have.\n\n## Goal\n\nThe README `## Ship-flow runtime` section defines the worker Evidence block, and in it `WITHOUT_IT_COMMAND` is one self-contained shell line that exits 0 on the candidate and non-zero after `WITHOUT_IT_REMOVED_VARIANT` is applied, references no file outside the candidate tree, and is run verbatim by the First Officer in a worktree with no secrets; `scripts/ship-flow/without-it.sh <sha> <command> <removed-variant>` runs both variants and exits 0 only when retained passes and removed fails, and it has been seen to exit non-zero on a command that passes both ways.\n\n## Non-goals\n\n* Do not add a generic without-it harness; the script only runs the two variants and compares exit codes.\n* Do not change the kernel's minimal-necessity wording.\n* Do not require a browser or recording.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/without-it.sh` exits 0 for DEV-50's candidate `0144264343775f4c74f517ccea488a8ef91c44bc` with a one-line command and the README-restore removed variant, and exits 1 for `true` as the command; both runs recorded.\n* **AC-2** README defines the Evidence block fields `CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, and states the one-line, no-external-file, run-verbatim rule.\n* **AC-3** The contract test reddens when the one-line rule sentence is removed; the mutation run is recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+   "title": "WITHOUT_IT_COMMAND is one verbatim shell line the FO runs unchanged"
+  },
+  "DEV-64": {
+   "id": "a8301d0c-d0e9-4b9b-8005-c23fdb468512",
+   "url": "https://linear.app/duckbase-co/issue/DEV-64/transcript-reads-go-through-conductor-sql-not-session-message-after",
+   "branch": "feature/dev-64-transcript-reads-go-through-conductor-sql-not-session",
+   "close_line": "Fixes DEV-64",
+   "body_sha256": "04a294d1435b71b96ca1c171f5bd6ccd9ddad94f1979abbf625f4acb7f9bf51d",
+   "description": "## The problem\n\nDuring DEV-62 the First Officer polled the worker with `conductor session message --after <id>`; the CLI truncates the JSON at 64 KB and `--after` rejects sent-message ids, so the Evidence block was found only by `conductor sql` on `session_transcripts_view`. Nothing in the repository records this.\n\n## Goal\n\nThe workflow README's ship-flow section (new, under a `## Ship-flow runtime` heading) states that worker transcripts are read through `conductor sql` against `session_transcripts_view`, names the two CLI failure modes, and ships one small script `scripts/ship-flow/worker-transcript.sh <session-id>` that prints the last fenced Evidence block or exits non-zero; the script has been seen to exit non-zero on a session with no Evidence block.\n\n## Non-goals\n\n* Do not change the Conductor CLI or file an upstream issue as part of this item.\n* Do not add polling loops, daemons, or retry budgets; one read per invocation.\n* Do not read or write Linear.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/worker-transcript.sh` prints the last `## Evidence` block for a session that has one, and exits 1 with `no evidence block` for a session that has none; both runs are recorded with the session ids.\n* **AC-2** README `## Ship-flow runtime` names `conductor sql` as the read path and names the 64 KB truncation and `--after` rejection as the reasons.\n* **AC-3** The contract test reddens when the README section is removed and passes when restored; the mutation run is recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+   "title": "Transcript reads go through conductor sql, not session message --after"
+  }
+ },
+ "receipt_sha256": "08c6798ba0223cf1fc7600131a77dd19f8e3f54446634ac165321d722e763605"
+}

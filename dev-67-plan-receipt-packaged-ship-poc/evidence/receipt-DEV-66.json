@@ -1,0 +1,17 @@
+{
+ "issue": "DEV-66",
+ "candidate": "b5adfba85b346f6605d507764c67ee19d412a95d",
+ "branch": "feature/dev-66-dispatch-carrier-and-e2e-evidence-rules-for-cloud-workers",
+ "base": "bda45e6bb2716d9276d0542b7c11edd2014ab1be",
+ "remote_head": "b5adfba85b346f6605d507764c67ee19d412a95d",
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git checkout bda45e6bb2716d9276d0542b7c11edd2014ab1be -- docs/dev/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1
+ },
+ "contract_test_exit": 0,
+ "preflight_exit": 0,
+ "preflight_main": "bda45e6bb2716d9276d0542b7c11edd2014ab1be",
+ "pass": true
+}

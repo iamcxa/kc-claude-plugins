@@ -1,0 +1,8 @@
+issue=DEV-66 claimed_at=2026-09-02T16:37:12Z
+workspace=a59b59cc-8b69-4786-9619-b738f1c37591 session=3c6a1d84-b7f0-474c-9e34-ec133b1a1326 carrier=poc/dev-67-carrier-dev-66 dispatched_at=2026-09-02T16:37:19Z
+task_sent_at=2026-09-02T16:37:31Z
+go_resent_at=2026-09-02T16:48:35Z reason=first go merged into hello during initializing
+evidence_at=2026-09-02T16:56:15Z
+fix1_sent_at=2026-09-02T17:09:29Z findings=codex-P1a-parser,codex-P1b-unpinned-paragraph,P2-expect-default,P2-parser-exit
+evidence_at=2026-09-02T17:15:12Z
+accepted_at=2026-09-02T17:20:47Z candidate=b5adfba85b346f6605d507764c67ee19d412a95d rounds=2 codex_open="P2 fixture cannot prove SHA pin; NEW P1 multiline run via tab transport; NEW P2 invalid UTF-8 traceback" disposition=scope-outside-brief,listed-for-captain

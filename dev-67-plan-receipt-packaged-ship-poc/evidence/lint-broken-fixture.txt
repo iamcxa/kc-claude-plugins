@@ -1,0 +1,15 @@
+broken fixture: 05880d07-1c1f-4f8c-9269-f43ee07d8213 DEV-68 DEV-69 (multi-line user value, B has no cycle, B empty non-goals, B vague AC, A<->B cycle)
+FAIL L1 one-line User value: ''
+FAIL L2 one cycle: {None}
+PASS L3 milestone membership: no milestones -> implicit single MS
+FAIL L4 admission DEV-69: planning description has invalid Non-goals
+PASS L4 admission DEV-68: 1 non-goals
+PASS L5 initiative when >1 project: single project; not triggered
+PASS L6 blockedBy is a DAG: blocker->blocked [('DEV-69', 'DEV-68')]; order ['DEV-69', 'DEV-68']
+PASS L7 split advisory (warn only): 2 issues, forked=False
+FAIL L8 e2e-able AC DEV-69: 1 ACs
+PASS L8 e2e-able AC DEV-68: 1 ACs
+LINT FAIL | receipt 49284a189ca2a6cc | order ['DEV-69', 'DEV-68']
+
+BROKEN_LINT_EXIT 1
+broken fixture deleted

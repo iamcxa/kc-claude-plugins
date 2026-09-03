@@ -1,0 +1,13 @@
+PASS L1 one-line User value: 'A First Officer can dispatch one admitted Issue to a cloud w'
+PASS L2 one cycle: {'d1c96803-02fa-4323-b3a8-2fc44cc43699'}
+PASS L3 milestone membership: no milestones -> implicit single MS
+PASS L4 admission DEV-66: 3 non-goals
+PASS L4 admission DEV-65: 3 non-goals
+PASS L4 admission DEV-64: 3 non-goals
+PASS L5 initiative when >1 project: single project; not triggered
+PASS L6 blockedBy is a DAG: blocker->blocked [('DEV-66', 'DEV-65'), ('DEV-65', 'DEV-64')]; order ['DEV-66', 'DEV-65', 'DEV-64']
+PASS L7 split advisory (warn only): 3 issues, forked=False
+PASS L8 e2e-able AC DEV-66: 3 ACs
+PASS L8 e2e-able AC DEV-65: 3 ACs
+PASS L8 e2e-able AC DEV-64: 3 ACs
+LINT PASS | receipt 08c6798ba0223cf1 | order ['DEV-66', 'DEV-65', 'DEV-64']
