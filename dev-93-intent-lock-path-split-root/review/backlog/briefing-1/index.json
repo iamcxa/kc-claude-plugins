@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:mw4wasfctgbd79ttr7trmk64:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-93 (intent.sh lock path on split-root state) as a Pilot blocking the ship batch?",
+  "artifacts": [
+    {
+      "id": "artifact:mw4wasfctgbd79ttr7trmk64:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9277c3496250ea04d98e5ca5fe138ca39cbcef77/dev-93-intent-lock-path-split-root/review/backlog/admission.md",
+      "rev": "sha256:2b6b438142087e22b4b2a403687885c6d0eaea3b67972b3606275661460947df",
+      "mediaType": "text/markdown",
+      "summary": "Fix the lock path so intent.sh works on the real state worktree."
+    }
+  ]
+}

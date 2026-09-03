@@ -15,6 +15,31 @@ issue: DEV-93
 pr:
 mod-block:
 id: mw4wasfctgbd79ttr7trmk64
+gates:
+    version: 1
+    records:
+        - id: gate:mw4wasfctgbd79ttr7trmk64:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:mw4wasfctgbd79ttr7trmk64-backlog-1
+              briefing:
+                id: briefing:mw4wasfctgbd79ttr7trmk64:backlog:attempt-1:revision-1
+                digest: sha256:cc8548a7672b8f2d1c9265ee4101451aec3fd678df57e52674759519615df5db
+                room-ref: ./dev-93-intent-lock-path-split-root/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:mw4wasfctgbd79ttr7trmk64:backlog:1
+                briefing: briefing:mw4wasfctgbd79ttr7trmk64:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T14:12:59.157098Z"
+                decision: approve
+                reason: FO admitted DEV-93 as the blocking fix inside the authorized batch's scope; Pilot; one cloud worker.
+                conn:
+                    quote: 那就按建議走2
+                    source: Captain chat, this conversation, 2026-09-03 evening; the batch he authorized cannot dispatch without this fix
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
