@@ -6,7 +6,7 @@ product: kc-plugin-forge
 planning-window:
 planning-outcome:
 sprint: S1
-sprint-readiness: defer
+sprint-readiness: ready
 started:
 completed:
 verdict:
