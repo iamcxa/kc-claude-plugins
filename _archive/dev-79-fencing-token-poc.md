@@ -1,6 +1,6 @@
 ---
 title: "POC: fencing token for ship-flow holder handover — exactly-once dispatch across laptop sleep"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-03T03:20:00Z
-completed:
-verdict:
+completed: 2026-09-03T07:30:59Z
+verdict: PASSED
 worktree:
 issue: DEV-79
 pr: local-merge:72f5c21
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, authorizing the DEV-79 POC run by the local FO; the POC's accepted outcome was the recorded decision, not a merge
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T07:30:59Z
 ---
 
 ## The problem
