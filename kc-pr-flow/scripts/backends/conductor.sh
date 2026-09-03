@@ -54,6 +54,7 @@ project_id_for() {
 
 cmd_create() {
   local repo="${1:-}" num="${2:-}" url="${3:-}" branch="${4:-}" prompt="${5:-}" sha="${6:-}"
+  local model effort
   [[ -n "$repo" && -n "$num" && -n "$url" && -n "$branch" && -n "$prompt" ]] \
     || die "usage: conductor.sh create <repo> <pr> <url> <branch> <prompt-file> [head-sha]"
   [[ -r "$prompt" ]] || die "prompt file not readable: $prompt"
@@ -67,8 +68,15 @@ cmd_create() {
   pid=$(project_id_for "$repo")
   [[ -n "$pid" ]] || die "no Conductor project for $repo in this token's organization"
 
+  # Reviewing is the expensive judgement in this loop, so the model is a choice
+  # rather than the platform default. Both values are validated by the CLI, which
+  # names the accepted set in its error.
+  model=$("$JQ" -r '.review_model // empty' "$CFG_DIR/reviewer-listen.config.json" 2>/dev/null)
+  effort=$("$JQ" -r '.review_effort // empty' "$CFG_DIR/reviewer-listen.config.json" 2>/dev/null)
+
   local out ws wsid sess
   out=$("$CONDUCTOR" workspace create \
+          ${model:+--model "$model"} ${effort:+--effort "$effort"} \
           --project-id "$pid" \
           --branch "$branch" \
           --name "review PR #$num${sha:+ @${sha:0:8}}" \

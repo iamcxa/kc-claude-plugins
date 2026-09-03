@@ -45,7 +45,7 @@ paused, because an install script must not dispatch an unattended review.
 | `scripts/backends/conformance.sh` | contract check for a new backend |
 | `scripts/backends/conductor-token.sh` | hidden-input token entry for a second organization |
 | `reference/reviewer-dispatch-prompt.md` | opening message for a dispatched review |
-| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | **intent**: the listening switch, backend, notification channel, per-repo switches |
+| `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.config.json` | **intent**: the listening switch, backend, review model and effort, notification channel, per-repo switches |
 | `~/.claude/kc-plugins-config/pr-flow/reviewer-listen.state.json` | **derived**: seen PRs, job ids, open targets, last poll |
 | `~/.claude/audit/pr-reviewer-listen.log` | dispatch log |
 
@@ -63,6 +63,7 @@ by accident.
 - **Review requests** — one row per open PR awaiting you. The row opens the review environment; **open PR on GitHub** is one item below it. A row that has not been dispatched reads **review now** and dispatches it on click — that runs even while listening is paused or the repository is switched off, because clicking the row is you answering for this one pull request. It also ignores a spent attempt budget, so it doubles as a retry. `⏳` running, `✅` reviewed, `❌` failed with the backend's reason and a **retry**, `○` not dispatched yet.
 - **Finished reviews** — the six most recent completed reviews, kept for thirty days. They are a record, not the source of truth: GitHub answers "was this commit reviewed", so an expired row changes nothing. Unfinished rows are never pruned. This section exists because a reviewed PR *disappears* from the request list: GitHub drops it from review-requested the moment a review is submitted.
 - **Listening repos** — every repo that has appeared, click to toggle. New repos start **on**, so a request in a new repo needs no configuration.
+- **Model** and **Effort** — the model and thinking level a dispatched review runs at. Reviewing is the expensive judgement in this loop, so the default is `opus-5-1m` at `medium` rather than whatever the platform picks. The menu cycles a short list; any value the backend accepts can be set in the config by hand, and the backend's error names the accepted set.
 - **Pause / Resume listening** — polling and completion checks continue; only dispatch stops.
 - **Start at login** — toggles whether the menu-bar host is launched at login. The host's own preference is not scriptable, so this drives the login-item list, which needs Automation permission for System Events; the row reads `unknown` if that is refused. Use one mechanism or the other, not both.
 

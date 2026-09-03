@@ -33,6 +33,12 @@ LOG="${PR_LISTEN_LOG:-$HOME/.claude/audit/pr-reviewer-listen.log}"
 MAX_DISPATCH_PER_TICK=1
 MAX_ATTEMPTS=3
 SEEN_RETENTION_DAYS=30
+
+# The menu cycles these; anything the backend accepts can be set in the config by
+# hand. Reviewing is the expensive judgement here, so the default is not the
+# platform's cheapest option.
+REVIEW_MODELS="opus-5-1m sonnet-5-1m fable-5-1"
+REVIEW_EFFORTS="medium high xhigh"
 LOCK_CLAIM_GRACE_SECONDS=10
 DISPATCH_STALE_SECONDS=300
 
@@ -42,7 +48,7 @@ log() { printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >>"$LOG"; }
 
 init_files() {
   mkdir -p "$CFG_DIR" "$(dirname "$LOG")"
-  [[ -s "$CONFIG" ]] || printf '%s\n' '{"listening":false,"backend":"conductor","notify_via":"terminal-notifier","repos":{}}' >"$CONFIG"
+  [[ -s "$CONFIG" ]] || printf '%s\n' '{"listening":false,"backend":"conductor","notify_via":"terminal-notifier","review_model":"opus-5-1m","review_effort":"medium","repos":{}}' >"$CONFIG"
   [[ -s "$STATE"  ]] || printf '%s\n' '{"seen":{},"open":[],"last_poll":null,"last_error":null}' >"$STATE"
 }
 
@@ -98,6 +104,8 @@ lock_wait() {
   log "applied a menu action while a tick held the lock"
   return 1
 }
+
+cycle_list() { printf '%s' "$1" | "$JQ" -R 'split(" ") | map(select(length > 0))'; }
 
 cfg_edit() { edit_json "$CONFIG" "$@"; }
 st_edit()  { edit_json "$STATE" "$@"; }
@@ -475,6 +483,8 @@ render() {
     echo "Resume listening | bash=\"$SELF\" param1=toggle-listening terminal=false refresh=true"
   fi
   echo "Refresh now | refresh=true"
+  echo "Model: $(cfg_get '.review_model // "(backend default)"') | bash=\"$SELF\" param1=cycle-model terminal=false refresh=true"
+  echo "Effort: $(cfg_get '.review_effort // "(backend default)"') | bash=\"$SELF\" param1=cycle-effort terminal=false refresh=true"
   echo "Backend: $(cfg_get '.backend // "conductor"') · notify via $(cfg_get '.notify_via // "terminal-notifier"') | bash=\"$SELF\" param1=toggle-notify terminal=false refresh=true"
   echo "Open log | bash=\"$SELF\" param1=log terminal=false"
   echo "Start at login: $(login_state) | bash=\"$SELF\" param1=toggle-login terminal=false refresh=true"
@@ -487,6 +497,10 @@ migrate_config
 case "${1:-}" in
   toggle-listening) lock_wait; cfg_edit '.listening = (.listening | not)'; exit 0 ;;
   toggle-repo)   lock_wait; cfg_edit --arg r "$2" '.repos[$r].enabled = ((.repos[$r].enabled // false) | not)'; exit 0 ;;
+  cycle-model)   lock_wait; cfg_edit --argjson c "$(cycle_list "$REVIEW_MODELS")" \
+                   '(.review_model // "") as $cur | .review_model = $c[((($c|index($cur)) // -1) + 1) % ($c|length)]'; exit 0 ;;
+  cycle-effort)  lock_wait; cfg_edit --argjson c "$(cycle_list "$REVIEW_EFFORTS")" \
+                   '(.review_effort // "") as $cur | .review_effort = $c[((($c|index($cur)) // -1) + 1) % ($c|length)]'; exit 0 ;;
   toggle-notify) lock_wait; cfg_edit '.notify_via = (if (.notify_via // "terminal-notifier") == "terminal-notifier" then "osascript" else "terminal-notifier" end)'; exit 0 ;;
   forget)        lock_wait || { log "retry not applied: a tick holds the lock — click again"; exit 0; }
                  st_edit --arg k "$2" 'del(.seen[$k])'; exit 0 ;;

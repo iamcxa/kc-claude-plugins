@@ -55,7 +55,7 @@ jq '{last_poll, last_error, open:(.open|length), seen}' ~/.claude/kc-plugins-con
 tail -20 ~/.claude/audit/pr-reviewer-listen.log
 ```
 
-Read `listening` for the switch, `repos` for which repositories are listened to, and
+Read `listening` for the switch, `review_model` / `review_effort` for what a dispatched review runs at, `repos` for which repositories are listened to, and
 each `seen` entry's `status`: `dispatching` → `running` → `reviewed`, or `error`
 with the backend's reason and an `attempts` count, or `unconfirmed` — a dispatch that
 may already exist remotely, which is never retried automatically. Every entry carries the
