@@ -96,3 +96,9 @@ Dispatch 03:24Z (token acked in 32 s); round-0 candidate 6ecb4470 at ~03:37Z, re
 - DONE: Pilot and Production build contracts name the check; POC build scopes it to retained surfaces; contract test pins all three sentences and runs six behavioural cases (five negative, one positive) against committed fixtures.
 - AC-1 seen to fail on DEV-66 round-0 naming `parse-execute-external.py`; AC-2 positive fixture exit 0; AC-3 unknown-AC exit 1; AC-4 and AC-5 mutation runs recorded by the worker and the FO.
 - Outside the Brief, for the Captain: default exclusion still skips undeclared test/fixture paths (`--no-exclude` covers Production); `--diff-filter=ACMRD` omits type changes; the declared without-it pair is bound to a path by substring only, so a no-op like `git status -- <path>` passes the declaration check (execution is `without-it.sh`'s job, which would then fail it).
+
+## Stage Report: validation
+
+Fresh FO verification at the exact candidate c5dd7562 (evidence/receipt.json): remote head equals CANDIDATE_SHA; worker's without-it line run verbatim with credentials unset, retained exit 0, removed (script deleted) exit 1 naming the missing script; five committed fixtures each refused by the checker for the reason the Brief names (AC-1 missing SURFACE, AC-3 unknown AC, free-text target, true|true pair, POC retained-not-in-diff, shape mismatch); contract test PASS at the candidate; merge-tree preflight clean against main b1702a15; Draft PR #357 required checks green. AC-1 through AC-5 covered; `--ac-scan` target is this report.
+
+Residuals outside the Brief, dispositioned scope-outside-brief and listed in the PR body: default test/fixture exclusion skips undeclared paths; `--diff-filter` omits Git type changes; the declared without-it pair is bound to a path by substring only.
