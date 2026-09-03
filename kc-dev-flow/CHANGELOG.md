@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.1.1...kc-dev-flow-v4.2.0) (2026-09-03)
+
+
+### Features
+
+* **kc-dev-flow:** unify the necessity vocabulary and bind the equivalence instrument ([#334](https://github.com/iamcxa/kc-claude-plugins/issues/334)) ([a6172ac](https://github.com/iamcxa/kc-claude-plugins/commit/a6172ac786f7c1b5de6e9dea246282aafe9f2e58))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** exclude terminal siblings from the admission snapshot set ([#339](https://github.com/iamcxa/kc-claude-plugins/issues/339)) ([67b4a75](https://github.com/iamcxa/kc-claude-plugins/commit/67b4a750b825f2058733706eb923ba7b96d21ccf))
+* **kc-dev-flow:** make installed runtime portable across worktrees ([#340](https://github.com/iamcxa/kc-claude-plugins/issues/340)) ([bda45e6](https://github.com/iamcxa/kc-claude-plugins/commit/bda45e6bb2716d9276d0542b7c11edd2014ab1be))
+
 ## [4.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.1.0...kc-dev-flow-v4.1.1) (2026-09-02)
 
 
