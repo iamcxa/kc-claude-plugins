@@ -1,0 +1,52 @@
+{
+ "schema": "kc-ship-close-receipt/v1",
+ "plan_receipt_sha256": "4bfbc2a31c5d8054fa2c0baa9f0b07dd780dd4cf27ec5852e0059c1d52b5779f",
+ "approval_receipt_sha256": "d28a2e4118d779cb72a5a3e9186332679c3e8d3514e57e75246a8745e3f5d5b5",
+ "batch": {
+  "entity": "batch-test",
+  "started_at": "2026-09-03T14:00:00Z",
+  "closed_at": "2026-09-03T15:00:00Z",
+  "holder": "laptop"
+ },
+ "issues": {
+  "DEV-90": {
+   "outcome": "merged",
+   "candidate": "0000000000000000000000000000000000000000",
+   "pr": "iamcxa/kc-claude-plugins#1",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1,
+    "build": 10,
+    "verify": 5
+   },
+   "cost_usd_imputed": 0.4,
+   "residuals": []
+  },
+  "DEV-91": {
+   "outcome": "captain_stopped",
+   "candidate": null,
+   "pr": null,
+   "rounds": 0,
+   "minutes": {},
+   "cost_usd_imputed": null,
+   "residuals": [
+    "stopped: lock bug"
+   ]
+  }
+ },
+ "defects_returned": [
+  {
+   "id": "S23",
+   "class": "holder",
+   "one_line": "lock path under .git fails on a worktree state",
+   "fix_ticket": "DEV-93"
+  }
+ ],
+ "totals": {
+  "workspaces_created": 1,
+  "workspaces_orphaned": 0,
+  "fix_rounds": 1,
+  "captain_gates": 2
+ },
+ "close_sha256": "b844f65f6c4eb85370bc504b29747b81d040b0306bdc398c4a163f3b5b33b180"
+}

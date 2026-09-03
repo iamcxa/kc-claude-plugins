@@ -50,3 +50,17 @@ if len(sys.argv) > 2:
     if a["decision"] != "go": fail(f"approval decision is {a['decision']}; no dispatch authority")
     if a["max_workspaces"] < len(ids): print(f"note: max_workspaces {a['max_workspaces']} < {len(ids)} issues; ship-flow will batch")
 print("OK", r["receipt_sha256"][:16], len(ids), "issues", len(r["edges"]), "edges")
+
+# ---- close receipt (optional third argument: close.json) ----
+if len(sys.argv) > 3:
+    c = json.load(open(sys.argv[3]))
+    if jsonschema: jsonschema.validate(c, json.load(open(HERE / "kc-ship-close-receipt.v1.schema.json")))
+    cc = dict(c); cc.pop("close_sha256", None)
+    if hashlib.sha256(canon(cc)).hexdigest() != c["close_sha256"]: fail("close_sha256 does not match canonical content")
+    if c["plan_receipt_sha256"] != r["receipt_sha256"]: fail("close receipt does not bind this plan receipt")
+    if set(c["issues"]) != ids: fail("close receipt must report every issue in the plan receipt exactly once")
+    if len(sys.argv) > 2:
+        aa = dict(json.load(open(sys.argv[2])))
+        if hashlib.sha256(canon(aa)).hexdigest() != c["approval_receipt_sha256"]: fail("close receipt does not bind this approval")
+        if c["totals"]["workspaces_created"] > aa["max_workspaces"]: fail("more workspaces created than approved")
+    print("CLOSE OK", c["close_sha256"][:16], {k: v["outcome"] for k, v in c["issues"].items()})
