@@ -492,6 +492,28 @@ with no secrets. `scripts/ship-flow/without-it.sh <sha> <command>
 `<command>` again, and exits 0 only when the retained run passes and the
 removed run fails.
 
+Ship-flow's workspace-create guarantee is that the production entry issues at
+most one `conductor workspace create` call after a committed intent:
+`conductor workspace create` is not idempotent and a holder can sleep between
+the call and its receipt, so every external action follows one order —
+`scripts/ship-flow/intent.sh commit` writes the claim, dispatch token,
+project, base branch, and message sha256 to the state branch and pushes it;
+`holder.sh check` confirms the writer; the create is called once with the
+token in the workspace name; the token, name, and project are read back;
+`holder.sh check` runs again; only then `intent.sh adopt` persists the
+workspace id. It is not exactly-once and it covers workspace creation only: a
+holder that takes over runs `intent.sh reconcile` first, adopting the one live
+workspace whose name carries the intent's token and whose project matches,
+blocking with `unresolved intent` on zero matches and `ambiguous intent` on
+two or more, and in no case does the new holder create a workspace for an
+intent it did not commit. `intent.sh commit` and `intent.sh adopt` hold an
+flock on `<state-dir>/.ship-lock` around their whole sync-write-commit-push
+sequence so two concurrent calls on the same checkout serialize instead of
+racing the shared working tree, and the intent binds the dispatched project,
+base branch, and message sha256 so reconcile and every adopt refuse a
+candidate workspace with `project mismatch` when its project id does not
+match the one committed.
+
 The First Officer reads a worker's transcript through `conductor sql` against
 `session_transcripts_view`, not `conductor session message --after`: that CLI
 truncates its JSON response at 64 KB, which cuts off a long Evidence block, and

@@ -1886,6 +1886,12 @@ for phrase in [
     "`## Evidence` block, or exits 1 with `no evidence block` when the transcript has none.",
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
+for phrase in [
+    "the production entry issues at most one `conductor workspace create` call after a committed intent",
+    "It is not exactly-once and it covers workspace creation only",
+    "in no case does the new holder create a workspace for an intent it did not commit",
+]:
+    require(phrase in normalized_workflow, f"Ship-flow runtime omits the intent-commit rule: {phrase}")
 
 pilot_build = read("kc-dev-flow/references/profiles/pilot-product-slice/build.md")
 production_build = read("kc-dev-flow/references/profiles/production/build.md")
