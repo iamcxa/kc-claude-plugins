@@ -1,6 +1,6 @@
 ---
 title: "POC: plan-flow dialectic — borrowed PM skills versus kernel fallback fill the Brief from one raw requirement"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
