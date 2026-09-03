@@ -7,3 +7,5 @@ fix1_sent_at=2026-09-03T08:57:16Z findings=flock-not-on-macos(BLOCK),codex-P2-co
 round1_evidence_at=2026-09-03T09:18:16Z
 fix2_sent_at=2026-09-03T09:21:35Z findings=trap-after-acquire,pid-liveness-not-host-safe,stale-rm-TOCTOU (final round)
 round2_blocked_at=2026-09-03T09:33:03Z reason=worker session usage limit; resets 2026-09-03T13:00Z (21:00 Asia/Taipei); workspace ad7f12c8 kept alive for resume
+resent_at=2026-09-03T13:05:25Z
+round2_evidence_at=2026-09-03T13:21:43Z
