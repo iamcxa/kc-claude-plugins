@@ -1,0 +1,3 @@
+issue=DEV-90 claim=dev-90.g1 token=86be2d026e0c8e57 claimed_at=2026-09-03T14:09:21Z
+writer=17
+workspace=2026-09-03T14:11:15Z laptop#17: intent not committed (exists or fenced); reconcile instead of create

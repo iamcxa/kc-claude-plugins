@@ -1,0 +1,3 @@
+2026-09-03T14:09:35Z laptop#17: start claim=dev-90.g1 message_sha256=5fa9b6d3b8f43062d812b31e06b074dd07f0a61ca2bccaf098c4f0ddb12f06e3
+intent: lock timeout on /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/.git/ship-lock.d
+2026-09-03T14:11:15Z laptop#17: intent not committed (exists or fenced); reconcile instead of create
