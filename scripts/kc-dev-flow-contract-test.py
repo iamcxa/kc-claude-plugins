@@ -103,6 +103,7 @@ required = [
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
     "kc-dev-flow/scripts/pr-review-handoff.test.py",
+    "kc-dev-flow/scripts/surface-map-check.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
@@ -152,6 +153,7 @@ script_roles = {
         "kc-dev-flow/scripts/linear-admission.py",
         "kc-dev-flow/scripts/poc-close-guard.py",
         "kc-dev-flow/scripts/pr-review-handoff.py",
+        "kc-dev-flow/scripts/surface-map-check.py",
     },
     "package-test": {
         "kc-dev-flow/scripts/profile-contract-loader.test.py",
@@ -340,6 +342,7 @@ for relative in [
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
+    "kc-dev-flow/scripts/surface-map-check.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
 ]:
     require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
@@ -1879,6 +1882,35 @@ for phrase in [
     "`## Evidence` block, or exits 1 with `no evidence block` when the transcript has none.",
 ]:
     require(phrase in normalized_workflow, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
+
+pilot_build = read("kc-dev-flow/references/profiles/pilot-product-slice/build.md")
+production_build = read("kc-dev-flow/references/profiles/production/build.md")
+poc_build = read("kc-dev-flow/references/profiles/poc-exploration/build.md")
+normalized_pilot_build = " ".join(pilot_build.split())
+normalized_production_build = " ".join(production_build.split())
+normalized_poc_build = " ".join(poc_build.split())
+require(
+    "run `kc-dev-flow/scripts/surface-map-check.py` against the candidate diff and "
+    "the Evidence block, checking every non-test changed file"
+    in normalized_pilot_build,
+    "Pilot build omits the surface-map-check.py naming sentence",
+)
+require(
+    "run `kc-dev-flow/scripts/surface-map-check.py` against the candidate diff and "
+    "the Evidence block, checking every changed file against the shape contract's "
+    "changed-file-to-obligation mapping"
+    in normalized_production_build,
+    "Production build omits the surface-map-check.py naming sentence",
+)
+require(
+    "kc-dev-flow/scripts/surface-map-check.py` applies only to the surfaces this "
+    "stage's `poc_outcome` marks retained"
+    in normalized_poc_build,
+    "POC build omits the surface-map-check.py retained-only scope sentence",
+)
+
+surface_map_check = ROOT / "kc-dev-flow/scripts/surface-map-check.py"
+run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-check compile")
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")

@@ -53,6 +53,10 @@ Stop here on crossing a stop number the shape contract declared. Use scoped
 iteration checks and one relevant exit suite. Return changed premises to their
 owner; do not start an unbounded reviewer loop.
 
+At implementation exit, run `kc-dev-flow/scripts/surface-map-check.py` against
+the candidate diff and the Evidence block, checking every changed file against
+the shape contract's changed-file-to-obligation mapping.
+
 ## Implementation exit observation
 
 ```json
