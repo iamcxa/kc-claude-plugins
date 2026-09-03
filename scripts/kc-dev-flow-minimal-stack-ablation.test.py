@@ -900,7 +900,7 @@ def main() -> int:
     run_manual_contract_mutant(
         "manual-issue-required-fields-removed",
         "docs/dev/README.md",
-        "```markdown\n## The problem\n\n## Accepted outcome\n\n## Non-goals\n\n## Acceptance criteria\n\n- **AC-1** <observable condition>\n\n## Route-back conditions\n",
+        "```markdown\n## The problem\n\n## Goal\n\n## Non-goals\n\n## Acceptance criteria\n\n- **AC-1** <observable condition>\n\n## Route-back conditions\n",
         "```markdown\n## The problem\n",
         "manual admission Issue headings are missing or duplicated",
     )
