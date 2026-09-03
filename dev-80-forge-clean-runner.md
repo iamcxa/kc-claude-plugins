@@ -582,3 +582,7 @@ actually happened (T2 GREEN read the fixture T2 RED wrote) rather than being hid
 sandboxes — the § runner seam row is corrected; and the first version of the scorer compared a
 file against itself, so `file_unchanged` could never return `False`. Both are fixed and the
 mutation run proves the second.
+
+### Dispatch Retries
+
+- Retry 1: implementation — no-completion-signal (worker session terminated by API rate limit 429, 2026-09-03 ~20:20 CST); re-dispatched -retry
