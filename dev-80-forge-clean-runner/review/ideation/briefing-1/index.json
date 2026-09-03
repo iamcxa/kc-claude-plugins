@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-1:revision-1",
+  "question": "Accept the DEV-80 shape (runner seam skill-runner.sh with cloud primary and bare fallback, forge-skill-scenarios/v1 per-skill file, three Phase 4 report fields, AC-1 falsifier already red on the current tree) and admit build? Also rule the open decision: build proceeds with 'fail loudly and record which runner ran' when a runner's machine-local credential is absent, or require cloud and fail hard.",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5741af215e3b493076fc9fa04f72f27a1231f364/dev-80-forge-clean-runner.md",
+      "rev": "sha256:2ff2520936212d04a1062b172c7135d2c3539d7e042a881fca252e404e4268c1",
+      "mediaType": "text/markdown",
+      "summary": "Shape delivered all three dispatch linchpins: a four-row trap table binding each runner design choice to measured evidence; the scenario format with the three DEV-80 scenarios written in full and the adversarial property required; the AC-1 falsifier exercised two-sided (exit 1 with four violations on the current tree across both Phase 2 run paths, exit 0 on the intended wording). Two measurements changed the design: parallel-forge.md is a second in-session run path, and the bare runner carries no --model pin. Stop numbers: 14 files, 700 lines, 180 lines in skill-runner.sh. Open for the Captain: runner credentials are machine-local; default is fail loudly and record which runner ran. Residual: skill-scenarios/ is outside the sanitize-check glob; the slice extends it by two lines."
+    }
+  ]
+}

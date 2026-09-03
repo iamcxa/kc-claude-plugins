@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kmt1mgvwqy0g9qmshemqtsn1:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kmt1mgvwqy0g9qmshemqtsn1-ideation-1
+              briefing:
+                id: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-1:revision-1
+                digest: sha256:f5ddf1284a8afd0c1ade146804fcda39f97f2dad32cd10f359aafef18cb2af4d
+                room-ref: ./dev-80-forge-clean-runner/review/ideation/briefing-1
 ---
 
 ## The problem
