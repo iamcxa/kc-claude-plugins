@@ -120,7 +120,7 @@ interface; it never dispatches the run itself.
 | Choice | Trap it closes | Evidence |
 |---|---|---|
 | Every RED/GREEN run leaves the session (cloud sandbox or `claude --bare`) | **in-session contamination** — the 2026-09-03 kc-dev-flow trial had 10/10 RED answers correct, one emitting the operator's own status block and one citing "the CLAUDE.md guardrail" | brief; `--bare` documented as skipping MEMORY.md, CLAUDE.md discovery, hooks, plugin sync (`reference/clean-profile-test.sh` header) |
-| Runner mints a per-run scratch dir and substitutes it for `{SCRATCH}` in the scenario | **shared-scratch collision** — all six POC scenarios wrote the same absolute `/tmp/e/ACTION.md`; six cloud sandboxes hid it, one host running the bare fallback would not | `grep -cE 'mktemp\|cd \|TMPDIR\|SCRATCH' reference/clean-profile-test.sh` = 0 — the bare runner has no scratch of its own and inherits the caller's `$PWD` |
+| Runner mints a per-run scratch dir and substitutes it for `{SCRATCH}` in the scenario | **shared-scratch collision, observed not hypothetical** — all six POC scenarios wrote the same absolute `/tmp/e/ACTION.md`, and the six sessions shared one workspace (`2bfb186a`), so one filesystem: T2 GREEN (`866bd372`) never ran its own setup heredoc and read the `dev-72-receipt.md` that T2 RED (`c26fd227`) had written. Cycle 1 recorded that the cloud sandboxes hid this; scoring the transcripts disproved it | `grep -cE 'mktemp\|cd \|TMPDIR\|SCRATCH' reference/clean-profile-test.sh` = 0 — the bare runner has no scratch of its own and inherits the caller's `$PWD` |
 | Cloud results read by paging `conductor session message --offset N --limit M --json` | **sql-view elision** — `session_transcripts_view` dropped the reasoning that decides pass/fail | measured this session on POC session `5bbe799f`: the sql-derived `T1-red.result.txt` says `[18 messages elided]`; the paged reader returned all 20 messages, 33 043 bytes, including the refusal reasoning and `TOKEN: FORGEb8a6e155` |
 | Reader pages instead of asking for the whole transcript | **64 KB JSON truncation** — a single `--json` call truncates mid-string and reads as "worker idle, no output" | one 20-message session is already 33 KB; `--limit`/`--offset` keep every call bounded, and `hasMore` terminates the loop |
 
@@ -303,7 +303,9 @@ harness returns RED fail / GREEN pass for T2 and for T4, so it is not scoring ev
 T1's three-assertion set returns fail on both variants, because the POC prompt had no `decision:`
 field to read — that assertion is the one build's AC-2 run has to observe. Harness committed at
 `docs/dev/.spacedock-state/dev-80-forge-clean-runner/evidence/poc-assert-scoring.py`; it reads the six
-sessions and creates none. They are kept because they close a real
+sessions and creates none. Its `file_unchanged` is falsifiable, not decorative:
+running it with `--mutate-t1-red` injects a rewrite of the T1 fixture and the assertion flips to
+`False`. They are kept because they close a real
 failure mode — a run that edits the work item to make the gate look accepted — which simply did
 not fire in this POC. The `decision:` frontmatter field carries the discrimination, at the cost of
 one prompt change: `ACTION.md` must now open with that field. It does not cue the answer; the
@@ -558,4 +560,9 @@ wrote `selected: production`. Nothing was re-run in the cloud; the three session
 executed. Two other design points the assertions forced into the shape: the host cannot hash a
 file inside a cloud sandbox, so `file_unchanged` needs a runner-appended epilogue, and
 `output_contains` must be scoped to the terminal result string or that same epilogue satisfies it
-trivially.
+trivially. Two things the scoring run turned up that cycle 1 had wrong: the
+POC's six sessions shared one workspace filesystem, so the shared-scratch collision AC-3 names
+actually happened (T2 GREEN read the fixture T2 RED wrote) rather than being hidden by the
+sandboxes — the § runner seam row is corrected; and the first version of the scorer compared a
+file against itself, so `file_unchanged` could never return `False`. Both are fixed and the
+mutation run proves the second.
