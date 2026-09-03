@@ -1,6 +1,6 @@
 ---
 title: "Forge Phase 2 RED/GREEN runs in a clean runner with a scenario file slot"
-status: implementation
+status: ideation
 source:
 product: kc-plugin-forge
 planning-window:
