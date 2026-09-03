@@ -8,6 +8,7 @@
   "packages": {
     "e2e-pipeline": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "e2e-pipeline",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
@@ -17,6 +18,7 @@
     },
     "kc-plugin-forge": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-plugin-forge",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
@@ -26,6 +28,7 @@
     },
     "kc-nightwatch": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-nightwatch",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
@@ -34,6 +37,7 @@
     },
     "kc-hyperfocus": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-hyperfocus",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
@@ -42,6 +46,7 @@
     },
     "kc-team-ops": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-team-ops",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
@@ -51,6 +56,7 @@
     },
     "kc-pr-flow": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-pr-flow",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
