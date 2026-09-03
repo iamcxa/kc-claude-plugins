@@ -15,6 +15,17 @@ issue: DEV-80
 pr:
 mod-block:
 id: kmt1mgvwqy0g9qmshemqtsn1
+gates:
+    version: 1
+    records:
+        - id: gate:kmt1mgvwqy0g9qmshemqtsn1:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kmt1mgvwqy0g9qmshemqtsn1-backlog-1
+              briefing:
+                id: briefing:kmt1mgvwqy0g9qmshemqtsn1:backlog:attempt-1:revision-1
+                digest: sha256:56f5c2ff471357e5a4dac5736de9722e6334695f3d085f7e2555268d1346bfc3
+                room-ref: ./dev-80-forge-clean-runner/review/backlog/briefing-1
 ---
 
 ## The problem

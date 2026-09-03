@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-80 as a standalone Pilot (kc-plugin-forge/S1) and start ideation (shape) on the route shape -\u003e build -\u003e verify-deliver?",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/158de43aaa623eb12f3929407217f0528ff0c9ff/dev-80-forge-clean-runner.md",
+      "rev": "sha256:0d3f932bd6751875ccb6c03b4fd8b3800a72baf93d3e12ec9d4a409d870699f4",
+      "mediaType": "text/markdown",
+      "summary": "Outcome: forge Phase 2 RED/GREEN runs through a clean runner (Conductor cloud primary, bare fallback), reads a per-skill scenario file before hand design, isolates each session's scratch dir, reads results via session message --offset, and reports runner/model/per-scenario outcome; reproduces the 2026-09-03 cloud POC on kc-dev-flow (RED fails T1,T4; GREEN passes T1,T2,T4). Scope: Phase 2 and the Phase 4 report fields only. Exclusions: Phases 1/1.5/2.5/2.7/3, absorbing writing-skills, learning loop, generality beyond kc-dev-flow. Ideation owes: the runner seam design, the scenario-file format, and the contract-test falsifier for AC-1 before build."
+    }
+  ]
+}
