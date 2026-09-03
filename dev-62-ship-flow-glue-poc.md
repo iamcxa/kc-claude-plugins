@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue:
-pr: 342
+pr: pr-merge:342
 mod-block:
 id: mavxcgkp974vpfe4wakx78mj
 gates:
