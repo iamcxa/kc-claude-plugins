@@ -61,6 +61,17 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-2:revision-1
                 digest: sha256:a17b8a8a886f70e651ce4ee8232980cdd84968db5d65f76baf99d25c16bcb6f9
                 room-ref: ./dev-80-forge-clean-runner/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:ideation:2
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-03T09:50:43.42895Z"
+                decision: approve
+                reason: 'Captain approved the corrected shape at attempt 2: assert: list replaces prose pass_when, judge: demoted to judged; T1 gains the frontmatter_field decision: dispatch|hold assertion (one prompt change, designed not observed, AC-2 falsifier names it); credential default is fail loudly and record which runner ran.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
