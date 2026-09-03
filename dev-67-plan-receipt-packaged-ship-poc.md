@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-67
-pr:
+pr: 347
 mod-block:
 id: t5nxcbfq1ynpff13kh3sdnga
 gates:
@@ -135,6 +135,7 @@ poc_outcome:
     field dispatch needs, a candidate head moves during verification, or the
     stack base rule cannot be enforced by freezing lower layers.
   cleanup_status_at_decision: pending
+  delivery: Draft PRs #347 (DEV-66), #348 (DEV-65), #349 (DEV-64), each against main, Captain-approved 2026-09-03
 ```
 
 ## POC close measurement
@@ -142,8 +143,8 @@ poc_outcome:
 ```yaml
 poc_close_measurement:
   captain_wait_seconds: 0
-  terminal_cleanup_seconds: 0
-  cleanup_status: not-applicable
+  terminal_cleanup_seconds: 300
+  cleanup_status: complete
 ```
 
 ## Change returned to planning
@@ -157,3 +158,7 @@ poc_close_measurement:
 7. Code review (Codex or kc-pr-review) is load-bearing for script-producing Issues; findings outside the Brief's ACs are dispositioned as scope-outside-brief and listed for the Captain, not looped (S5, S6).
 8. Conductor MCP has run_sql but no wait primitive and dropped mid-session; the CLI sql path is the contract (S7).
 9. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.
+
+## Cleanup
+
+Three worker workspaces and sessions archived; three carrier branches deleted from origin; acceptance worktrees pruned; fixture Project and Issues DEV-64/65/66 retained in Linear as real work. Retained on purpose: candidate branches and Draft PRs #347, #348, #349 for Captain UAT.
