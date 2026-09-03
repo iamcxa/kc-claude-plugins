@@ -1912,6 +1912,78 @@ require(
 surface_map_check = ROOT / "kc-dev-flow/scripts/surface-map-check.py"
 run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-check compile")
 
+surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
+surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
+surface_map_round0_evidence = surface_map_fixtures / "dev-66-round0-evidence.md"
+surface_map_free_text_evidence = surface_map_fixtures / "free-text-target-evidence.md"
+for fixture in (surface_map_work_item, surface_map_round0_evidence, surface_map_free_text_evidence):
+    require(fixture.is_file(), f"missing surface-map fixture: {fixture}")
+
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_map_repo_name:
+    surface_map_repo = Path(surface_map_repo_name)
+    subprocess.run(["git", "init", str(surface_map_repo)], check=True, capture_output=True)
+    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
+
+    (surface_map_repo / "docs/dev").mkdir(parents=True)
+    (surface_map_repo / "scripts").mkdir(parents=True)
+    (surface_map_repo / "docs/dev/README.md").write_text("base\n", encoding="utf-8")
+    (surface_map_repo / "scripts/kc-dev-flow-contract-test.py").write_text("# base\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "base"],
+        check=True, capture_output=True,
+    )
+    surface_map_base = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True
+    ).strip()
+
+    (surface_map_repo / "scripts/ship-flow").mkdir(parents=True)
+    (surface_map_repo / "scripts/fixtures/ship-flow").mkdir(parents=True)
+    (surface_map_repo / "docs/dev/README.md").write_text("candidate\n", encoding="utf-8")
+    (surface_map_repo / "scripts/kc-dev-flow-contract-test.py").write_text("# candidate\n", encoding="utf-8")
+    (surface_map_repo / "scripts/ship-flow/e2e-cli.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+    (surface_map_repo / "scripts/ship-flow/parse-execute-external.py").write_text("# candidate\n", encoding="utf-8")
+    (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow.yaml").write_text("steps: []\n", encoding="utf-8")
+    (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml").write_text(
+        "steps: []\n", encoding="utf-8"
+    )
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "candidate"],
+        check=True, capture_output=True,
+    )
+    surface_map_candidate = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True
+    ).strip()
+
+    def run_surface_map_check(evidence: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable, str(surface_map_check),
+                surface_map_base, surface_map_candidate,
+                str(evidence),
+                "--work-item", str(surface_map_work_item),
+                "--brief", str(surface_map_work_item),
+                "--repo", str(surface_map_repo),
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+    round0 = run_surface_map_check(surface_map_round0_evidence)
+    require(
+        round0.returncode == 1 and "parse-execute-external.py" in round0.stdout,
+        "surface-map-check did not redden on the DEV-66-shaped round-0 fixture: "
+        f"exit={round0.returncode} stdout={round0.stdout!r} stderr={round0.stderr!r}",
+    )
+
+    free_text = run_surface_map_check(surface_map_free_text_evidence)
+    require(
+        free_text.returncode == 1 and "invalid target" in free_text.stdout,
+        "surface-map-check did not reject a free-text SURFACE target: "
+        f"exit={free_text.returncode} stdout={free_text.stdout!r} stderr={free_text.stderr!r}",
+    )
+
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 
