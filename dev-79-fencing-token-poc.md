@@ -15,6 +15,31 @@ issue: DEV-79
 pr:
 mod-block:
 id: kw05rc5f26qkj8qxk5tcpzy4
+gates:
+    version: 1
+    records:
+        - id: gate:kw05rc5f26qkj8qxk5tcpzy4:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kw05rc5f26qkj8qxk5tcpzy4-backlog-1
+              briefing:
+                id: briefing:kw05rc5f26qkj8qxk5tcpzy4:backlog:attempt-1:revision-1
+                digest: sha256:2e718d8e6246673f9a7b7f42f3d714ee4e8d88d595848d37c26f7d66412a39f8
+                room-ref: ./dev-79-fencing-token-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kw05rc5f26qkj8qxk5tcpzy4:backlog:1
+                briefing: briefing:kw05rc5f26qkj8qxk5tcpzy4:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T03:22:50.83987Z"
+                decision: approve
+                reason: Captain admitted dev-79-fencing-token-poc as a standalone item in sprint S9 and authorized its dispatch.
+                conn:
+                    quote: 現在派工，同意你的分工方式
+                    source: Captain chat, this conversation, 2026-09-03, approving dispatch of DEV-78 to a cloud worker and DEV-79 to the local FO
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

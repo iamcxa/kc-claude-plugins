@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kw05rc5f26qkj8qxk5tcpzy4:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-79 as a standalone POC (S9) into implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:kw05rc5f26qkj8qxk5tcpzy4:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4d24c33acdfdb5d0509e15b909d9c7da23549463/dev-79-fencing-token-poc/review/backlog/admission.md",
+      "rev": "sha256:73acb59aa6a0e7458717d25b13182fcdec858b98671a93324dfd172fa3c2fe4a",
+      "mediaType": "text/markdown",
+      "summary": "POC admission; local FO runs the falsifier with two processes."
+    }
+  ]
+}
