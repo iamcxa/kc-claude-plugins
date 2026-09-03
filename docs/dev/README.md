@@ -455,3 +455,29 @@ mod-block:
 
 Keep stage reports to decision, evidence that changes the decision, and next
 action. Link raw artifacts instead of replaying the session narrative.
+
+## Ship-flow runtime
+
+This section applies only to a First Officer that dispatches build workers into
+Conductor cloud workspaces and reads them back through the `conductor` CLI. It
+is this repository's own runtime record, not a kc-dev-flow contract: an adopter
+running workers locally, on a Hermes runner, or on another host is not covered
+by it and must not treat these sentences as requirements.
+
+A dispatch message to a cloud build worker carries no bootstrap or download
+line: the Conductor WAF blocks a dispatch message containing a `curl | tar`
+bootstrap line, and the worker's image already preinstalls `kc-dev-flow` and
+`spacedock`, so no dispatch message needs to fetch and unpack them. A task
+body longer than the first message does not fit in that message either; it
+travels on a committed carrier — a file such as `DISPATCH.md` committed to a
+branch the worker fetches and reads with `git show <branch>:<path>` — rather
+than being pasted inline.
+
+CLI e2e evidence is a timestamped stdout log written by
+`scripts/ship-flow/e2e-cli.sh <sha> <flow.yaml>`. It runs each of the flow's
+`Execute external` steps (e2e-pipeline's `execute.cli` step shape, consumed
+read-only) at the pinned `<sha>` and exits non-zero on the first step whose
+command's exit code does not match its declared `expect`. `asciinema` and
+`script(1)` both hang without a pty, which cloud build workers do not have, so
+this stdout log — not a terminal recording — is the CLI e2e evidence of
+record for that context.

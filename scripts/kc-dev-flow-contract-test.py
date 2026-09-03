@@ -1851,6 +1851,19 @@ Stop on any planning drift.
     server.shutdown()
     server.server_close()
 
+for phrase in [
+    "A dispatch message to a cloud build worker carries no bootstrap or download line",
+    "the Conductor WAF blocks a dispatch message containing a `curl | tar` bootstrap line",
+    "it travels on a committed carrier",
+    "the worker fetches and reads with `git show <branch>:<path>`",
+]:
+    require(phrase in normalized_workflow, f"Ship-flow runtime omits a dispatch-carrier rule: {phrase}")
+for phrase in [
+    "CLI e2e evidence is a timestamped stdout log written by",
+    "exits non-zero on the first step whose command's exit code does not match its declared `expect`",
+]:
+    require(phrase in normalized_workflow, f"Ship-flow runtime omits the CLI e2e evidence rule: {phrase}")
+
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 
