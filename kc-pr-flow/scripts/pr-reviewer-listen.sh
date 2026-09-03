@@ -32,6 +32,7 @@ LOG="${PR_LISTEN_LOG:-$HOME/.claude/audit/pr-reviewer-listen.log}"
 
 MAX_DISPATCH_PER_TICK=1
 MAX_ATTEMPTS=3
+SEEN_RETENTION_DAYS=30
 LOCK_CLAIM_GRACE_SECONDS=10
 DISPATCH_STALE_SECONDS=300
 
@@ -188,6 +189,16 @@ dispatch() { # dispatch <repo> <pr-number> <pr-url> <head-branch> <head-sha>
 
 # A finished review cannot be read from the request list: GitHub drops the PR off
 # review-requested the moment a review is submitted. Ask the backend instead.
+
+# Finished rows are kept only as a record: GitHub is the durable answer to "was
+# this commit reviewed", so an old one can go. Anything unfinished stays.
+prune_seen() {
+  st_edit --argjson days "$SEEN_RETENTION_DAYS" \
+    '.seen |= with_entries(select(
+       (.value.status != "reviewed")
+       or ((.value.finished // .value.ts) == null)
+       or ((now - ((.value.finished // .value.ts) | fromdate)) < ($days * 86400))))'
+}
 
 check_completions() {
   local be key job verdict errf reason
@@ -371,7 +382,7 @@ login_toggle() {
 menu_label() { printf '%s' "${1//|/／}"; }   # a literal pipe would end the SwiftBar line
 
 render() {
-  local listening n_on n_open n_todo n_done last err key status target title repo num fin on
+  local listening n_on n_open n_todo n_done last err key status target env title repo num fin on
   listening=$(cfg_get '.listening')
   n_on=$(cfg_get '[.repos | to_entries[] | select(.value.enabled == true)] | length')
   n_open=$(st_get '.open | length')
@@ -406,6 +417,10 @@ render() {
       # click falls back to the pull request itself.
       target=$(st_get --arg k "$key" '.seen[$k].open // .seen[$k].url // empty')
       title=$(menu_label "${title:0:48}")
+      # The row opens the review; the pull request is one item down. A row with no
+      # review environment yet opens the pull request instead, and then says so
+      # rather than offering the same destination twice.
+      env=$(st_get --arg k "$key" '.seen[$k].open // empty')
       case "$status" in
         reviewed|running)
           echo "-- $([[ $status == reviewed ]] && echo ✅ || echo ⏳) #$num $title | bash=\"$SELF\" param1=open param2=\"$target\" terminal=false" ;;
@@ -418,9 +433,9 @@ render() {
           echo "-- -- $(menu_label "$(st_get --arg k "$key" '.seen[$k].error // ""')")"
           echo "-- -- retry | bash=\"$SELF\" param1=forget param2=\"$key\" terminal=false refresh=true" ;;
         *)
-          echo "-- ○ #$num $title | href=$url" ;;
+          echo "-- ○ #$num $title (not dispatched yet) | href=$url" ;;
       esac
-      echo "-- -- open PR on GitHub | href=$url"
+      [[ -n "$env" ]] && echo "-- -- open PR on GitHub | href=$url"
     done < <("$JQ" -r '.open[] | [.repository.nameWithOwner, (.number|tostring), .title, .url] | @tsv' "$STATE" 2>/dev/null)
   fi
 
@@ -477,5 +492,6 @@ esac
 if lock_acquire; then
   check_completions
   poll
+  prune_seen
 fi
 render
