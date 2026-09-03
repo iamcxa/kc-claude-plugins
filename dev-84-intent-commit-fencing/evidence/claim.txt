@@ -1,0 +1,6 @@
+issue=DEV-84 token=effeac9f1e5a79d2 claimed_at=2026-09-03T08:13:45Z
+workspace=ad7f12c8-c22a-4abe-a88f-bac678f8f0f5 session=c7fe38b9-2d4c-400b-b3cf-1566f6bc797e carrier=poc/dispatch-carrier-dev-84 dispatched_at=2026-09-03T08:13:52Z
+task_sent_at=2026-09-03T08:14:16Z
+task_acked_at=2026-09-03T08:14:59Z
+evidence_at=2026-09-03T08:53:10Z
+fix1_sent_at=2026-09-03T08:57:16Z findings=flock-not-on-macos(BLOCK),codex-P2-count-before-project-filter

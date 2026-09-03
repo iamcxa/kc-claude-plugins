@@ -1,0 +1,1 @@
+S15 poller anchor too strict (see /tmp/poc3/ship-defects.txt); S16 worker used flock, absent on macOS: the FO host is part of the runtime and a worker in a Linux sandbox cannot see that; the dispatch text must name the FO host OS and forbid GNU-only tools.
