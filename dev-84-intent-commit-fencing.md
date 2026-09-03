@@ -48,6 +48,20 @@ gates:
                 id: briefing:wxj20tk9h1ndssnehwd4d9ng:validation:attempt-1:revision-1
                 digest: sha256:7a62df4ad1ecfcef5f08edad38dc4f3367452baaadf29333751fdb4a1da34d97
                 room-ref: ./dev-84-intent-commit-fencing/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wxj20tk9h1ndssnehwd4d9ng:validation:1
+                briefing: briefing:wxj20tk9h1ndssnehwd4d9ng:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T13:45:32.430591Z"
+                decision: approve
+                reason: Captain accepted the verified candidate a6ad0c49 and authorized the Draft PR (#362); merge, release, and provider-write authority remain separate.
+                conn:
+                    quote: 84 開 PR
+                    source: Captain chat, this conversation, 2026-09-03 evening, approving the DEV-84 delivery unit at a6ad0c49
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
