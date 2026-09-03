@@ -25,10 +25,14 @@ comparator only after the installed route is proven.
    conditional-reference installation paths. The activated `adopt-dev-flow` or
    `continue-dev-flow` skill supplies its own sibling loader path for the current
    invocation; do not search host caches or persist that path.
-3. For a provider-backed repository, keep its provider reader/adapter and pass
-   the installed loader path into that adapter. The adapter invokes the loader's
-   sibling `engage-reconcile.py`. A standalone repository keeps neither reader
-   nor adapter and invokes no comparator.
+3. A Linear-backed repository retires its repository-local planning reader and
+   its tests; the installed sibling `linear-admission.py` owns the current Ready
+   read, carried snapshot sources, and comparator invocation, and reads
+   `LINEAR_API_KEY` from the environment only. A repository on a provider the
+   package does not support keeps its adapter and passes the installed loader
+   path into it; that adapter invokes the loader's sibling
+   `engage-reconcile.py`. A standalone repository keeps neither reader nor
+   adapter and invokes no comparator.
 4. From at least three arbitrary package roots with Claude, Codex, Hermes, and
    Conductor discovery variables absent, run every supported profile-stage
    combination. Require the installed manifest's version/digest envelope, the
@@ -202,6 +206,20 @@ cross-model gate, how a custom terminal state closes, whether RoboRev is
 available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
+
+## 2026-09-03 — adoption adds no repository-owned copy of a declared capability
+
+Before the package declared `scripts/linear-admission.py`, `adopt-dev-flow`
+instructed a Linear-backed adopter to build a repository-local read-only
+planning reader, and one adopter did, with its tests. The skill now bounds
+adoption additions by the manifest's `resources` list: no repository-owned
+reader, adapter, script, test, or check for a capability a declared resource
+already supplies, and a refit requirement against the package for a capability
+it lacks. An adopter holding such a reader deletes it and its tests at the next
+compatible upgrade and lets the installed guard own the read; the guard reads
+`LINEAR_API_KEY` from the environment only. Adoption evidence goes to the
+delivery artifact and the workflow's debrief; an adoption record is committed
+only when the Captain names a consumer for it.
 
 ## 2026-09-02 — Pilot and Production require `semantics_unchanged` at every stage after ideation
 

@@ -49,7 +49,13 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    reader and installed `engage-reconcile.py`; standalone uses neither. The
    selected stage owns each typed conditional-reference trigger; installation
    does not load a reference. Local provider paths, README policy, local mods,
-   and Spacedock state remain repository-owned.
+   and Spacedock state remain repository-owned. The manifest's `resources` list
+   is the boundary for what adoption adds to the repository: adoption binds
+   existing repository authorities and adds no repository-owned reader,
+   adapter, script, test, or check for a capability a declared resource already
+   supplies. A capability the package lacks is a refit requirement raised
+   against the package, with one exception: a planning provider the package
+   does not support keeps a repository-local adapter.
 3. Select a profile before the first working stage and store the v3 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
@@ -151,7 +157,13 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    README policy, local-mod bytes and modes, provider adapters, and state before
    migration; compare them after adoption and compatible upgrade. Delete
    byte-identical canonical repository copies and parity machinery only after
-   these proofs pass, then run the repository's normal gates.
+   these proofs pass, then run the repository's normal gates. Record the
+   matrix, falsifiers, and probe results in the delivery artifact and the
+   workflow's debrief or handoff mechanism. An adoption record written for the
+   Captain to read may exist in the working tree; commit it only when the
+   Captain names a consumer that reads it, because it pins one plugin version
+   and revision that the next compatible upgrade invalidates and no gate
+   re-checks.
 
 If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty
@@ -191,10 +203,12 @@ set the canonical route, and use the selected profile as the prior
 recommendation. A POC still requires all v3 decision fields. A missing,
 ambiguous, or stale element requires a new selection.
 
-Retire old source mods by disposition, not by filename alone:
+Retire old source mods and repository-local copies of a capability the package
+now declares by disposition, not by filename alone:
 
-| Retired source mod | Upgrade disposition |
+| Retired repository artifact | Upgrade disposition |
 |---|---|
+| a repository-local Linear planning reader, built as this skill instructed before the package declared `scripts/linear-admission.py` | Delete the reader and its tests. The installed sibling `linear-admission.py` owns the current Ready read, carried snapshot sources, and comparator invocation. It reads `LINEAR_API_KEY` from the environment only, so a key kept in a `.env` file moves into the invoking environment before the first engage. |
 | `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
 | `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
 
