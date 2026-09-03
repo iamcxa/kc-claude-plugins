@@ -1,0 +1,30 @@
+{
+ "project": {
+  "id": "61a8f8a9-f0d3-4690-9f29-807b76744db6",
+  "name": "The three ship-flow guarantees are written down and pinned",
+  "url": "https://linear.app/duckbase-co/project/the-three-ship-flow-guarantees-are-written-down-and-pinned-8b3a4d6c328b"
+ },
+ "issues": [
+  {
+   "id": "eff3b44e-3bee-4e87-9a2a-58314b0b7b17",
+   "identifier": "DEV-90",
+   "url": "https://linear.app/duckbase-co/issue/DEV-90/write-the-three-ship-flow-contract-sentences-into-the-runtime-readme",
+   "branchName": "feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the"
+  },
+  {
+   "id": "9f820da4-a767-4a63-bdef-c15a33cf5128",
+   "identifier": "DEV-91",
+   "url": "https://linear.app/duckbase-co/issue/DEV-91/pin-the-three-contract-sentences-to-the-contract-test",
+   "branchName": "feature/dev-91-pin-the-three-contract-sentences-to-the-contract-test"
+  },
+  {
+   "id": "b6be7475-8002-4fd3-9328-0b46347e2cf1",
+   "identifier": "DEV-92",
+   "url": "https://linear.app/duckbase-co/issue/DEV-92/observe-three-ship-flow-uats-for-re-derivation-of-the-three-guarantees",
+   "branchName": "feature/dev-92-observe-three-ship-flow-uats-for-re-derivation-of-the-three"
+  }
+ ],
+ "user_value": "Kent completes the next three ship-flow UATs without re-deriving the three declared guarantees from each PR.",
+ "hypothesis": "If we write the three DEV-67 sentences into the Ship-flow runtime README with contract-test pins for Kent at UAT then Kent stops re-deriving them from the diff.",
+ "wedge": "Kent, at UAT, who today re-asks three verification questions on every PR. This week's version: three sentences in the Ship-flow runtime README with contract-test pins; no enforcement script."
+}

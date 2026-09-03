@@ -120,3 +120,71 @@ Dispatch 09:55Z, token acked 21 s; blocked on the shared cloud quota from the fi
 - Station 1 output is marked unverified hypothesis until station 2 evidence exists; `feels` is dropped when no evidence supports it.
 - Receipt v1 adds: approval record (receipt hash, approver, time, max_workspaces, concurrency, retry budget) as a separate file; code_repo, base_branch, full Project user value / outcome / exit; canonical Issue body (renamed from description) with hash; canonical JSON with the hash field excluded from its own input. Captain verbatim answers move to a rationale file referenced by hash; receipt carries structured premise ids only.
 - Milestone journey definition and journey-step coverage lint are station 4 acceptance conditions for the worker, not decided here.
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: change
+  admitted_at: 2026-09-03T09:50:00Z
+  decision_ready_at: 2026-09-03T14:05:00Z
+  decision_ready_elapsed_seconds: 15300
+  captain_interventions_before_decision_ready: 0
+  borrowed_direction: change
+  fallback_direction: change
+  refusal_direction: proceed
+  evidence: >-
+    Refusal (run C): the evidence-free input B was refused at Seam 1 with the three
+    named gaps and no profile, Project, Issue, or receipt; Codex round 8 rates the
+    refusal sound. Borrowed (run A): the three pm-skills fill their fields but cost
+    2-3 rewritten sentences each because their templates target a different
+    artifact; the Issue cut and blockedBy transfer verbatim. Fallback (run B): zero
+    rewrites, identical cut, but the zero is definitional and the comparison was not
+    independent. The FO wrote run A's Project and three Issues to Linear with the
+    Captain-corrected user value (decision b); plan-lint passes all eight rules
+    (evidence/lint-runA.txt) after two FO corrections (cycle unset, relation
+    direction inverted); receipt v1 (evidence/receipt-runA.json) validates against
+    the schema with order DEV-90, DEV-91, DEV-92.
+  strongest_limit: >-
+    plan-flow accepted an approach that could not causally reach its stated value
+    (README-only approach, "enforces" value) until Codex round 8 caught it; the
+    Captain resolved it by narrowing the value (b). Relation direction: DEV-67's
+    fixture and this run's first write both created Linear relations inverted, and
+    the lint, consistent with the same wrong belief, passed; DEV-67's dispatch
+    order was therefore reversed (66, 65, 64 instead of 64, 65, 66) and nobody
+    noticed because each layer still verified (S22). dialectic.md stations 3 and 4
+    derive from CC BY-NC-SA templates by rewording; the refusal seam sits after
+    station 1 rather than before it; the discovery assignment asks rather than
+    observes. The 90-minute limit was exceeded by the shared cloud quota gap and the
+    truncated Evidence block (S21), not by station time (worker: ~3 min).
+  reversal_fact: >-
+    A repeat where the refusal run accepts input B, or where a borrowed-skill
+    output lands verbatim in its field, or where the fallback Project fails a lint
+    rule the borrowed one passed.
+  cleanup_status_at_decision: complete
+```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: 0
+  terminal_cleanup_seconds: 60
+  cleanup_status: complete
+```
+
+## Change returned to planning (plan-flow POC 3 scope)
+
+1. Premise falsifier before Issue cutting: remove the chosen approach and ask whether the accepted outcome can still hold; refuse when the approach builds no mechanism the value names (Codex r8 P0).
+2. Three distinct Project sentences (headline, user value as "[persona] obtains [observable outcome]", hypothesis if/then); the Linear description is projected from the user value; no "enforces" unless a runtime mechanism exists.
+3. Order: observe -> WHY evidence and refusal check -> frame -> hypothesize -> cut. No persona or "feels" is written before the refusal check passes.
+4. Fallback questions are the only artifact-producing path; installed borrowed skills act as a checklist. Rewrite dialectic.md stations 3 and 4 from this repository's own needs; do not carry CC BY-NC-SA template structure under other words.
+5. A discovery assignment names an observation or a payment to obtain this week, never another interview.
+6. Relation direction: `issueRelationCreate(issueId=X, relatedIssueId=Y, type=blocks)` means X blocks Y; the plan-lint L6 falsifier is a hand-made relation in the Linear UI whose edge must read (X, Y). DEV-67's reversed dispatch order is recorded as S22.
+7. Receipt v1 and approval v1 schemas (evidence/schema/) are the seam contract; the rationale file carries station tables and Captain verbatim answers by hash only.
+8. market-signal station ("market-seeker"): evidence supplier into Seam 1's demand-evidence field, threshold by `audience` (self/team/market), never a gate; its own falsifier is one known-dead and one known-alive idea told apart by web search alone.
+9. Worker Evidence blocks are capped at ~10 K by the harness; run artifacts go on the branch, the block carries paths and hashes (S21). A worker may stop on consent questions when the task arrives by carrier; the go message pre-answers them (S19).
+
+## Cleanup
+
+Worker workspace 43c707f1 and its session archived; carrier branch deleted; candidate branch feature/dev-89-… retained at a5937ebf (dialectic.md draft plus run files) for the Captain's decision on the POC artifact; Linear Project "The three ship-flow guarantees are written down and pinned" with DEV-90/91/92 retained as real planned work (Cycle 1). No run-B Project was written: the Captain's (b) ruling made run A's corrected Project the single canonical output, and run B's cut is identical.
