@@ -26,6 +26,20 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:backlog:attempt-1:revision-1
                 digest: sha256:56f5c2ff471357e5a4dac5736de9722e6334695f3d085f7e2555268d1346bfc3
                 room-ref: ./dev-80-forge-clean-runner/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:backlog:1
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T08:09:27.790654Z"
+                decision: approve
+                reason: 'Seed carries a complete standalone Pilot brief: v3 receipt, five concrete ascending AC with falsifiers, non-goals, route-back; loader --validate-admission accepted the brief; execution group kc-plugin-forge/S1 registered on main (PR #359); admission evidence is the 2026-09-03 cloud POC (RED 2/3 fail, GREEN 3/3 pass).'
+                conn:
+                    quote: 那就也把Forge專案改為本 cycle，繼續 dev-80，訂為pilot
+                    source: 'Captain chat, this conversation, 2026-09-03, after merging PR #359 ("合併了")'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
