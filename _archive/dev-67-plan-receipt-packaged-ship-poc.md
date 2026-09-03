@@ -1,6 +1,6 @@
 ---
 title: "POC: plan receipt in, packaged ship out — one Project, three dependent Issues, one UAT document"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-02T16:30:00Z
-completed:
-verdict:
+completed: 2026-09-03T03:18:28Z
+verdict: PASSED
 worktree:
 issue: DEV-67
 pr: pr-merge:349
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, choosing native stack delivery for the three approved candidates; the POC's accepted outcome was that packaged delivery
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-03T03:18:28Z
 ---
 
 ## The problem

@@ -1,0 +1,19 @@
+{
+ "issue": "DEV-65",
+ "candidate": "b7e0e64dc6057bede41268fbfde17c54444edf55",
+ "branch": "feature/dev-65-without_it_command-is-one-verbatim-shell-line-the-fo-runs",
+ "base": "f4cb7620330a6d3d51437a32684f4fb45105eda0",
+ "remote_head": "b7e0e64dc6057bede41268fbfde17c54444edf55",
+ "without_it": {
+  "command": "python3 scripts/kc-dev-flow-contract-test.py",
+  "removed_variant": "git checkout b5adfba85b346f6605d507764c67ee19d412a95d -- docs/dev/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1
+ },
+ "contract_test_exit": 0,
+ "preflight_exit": 0,
+ "preflight_main": "a6172ac786f7c1b5de6e9dea246282aafe9f2e58",
+ "pass": true,
+ "rebased_from": "09f1f72c70be703b6a8cc826a17d9137caadf3ec",
+ "rebase_equivalence": "git diff <old> <new> excluding docs/dev/README.md is empty (DEV-65) or equals layer 2's fix patch-id 3dfbea244225 (DEV-64); README delta is the Captain-approved premise sentence only; without-it and contract results carried over from the pre-rebase run"
+}
