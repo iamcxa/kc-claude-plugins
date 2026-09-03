@@ -301,7 +301,9 @@ message --offset`, nothing re-run — the pair `file_unchanged` + `output_contai
 **pass on RED and pass on GREEN**, so it scores T1 RED as a pass and inverts AC-2. The same
 harness returns RED fail / GREEN pass for T2 and for T4, so it is not scoring everything green.
 T1's three-assertion set returns fail on both variants, because the POC prompt had no `decision:`
-field to read — that assertion is the one build's AC-2 run has to observe. They are kept because they close a real
+field to read — that assertion is the one build's AC-2 run has to observe. Harness committed at
+`docs/dev/.spacedock-state/dev-80-forge-clean-runner/evidence/poc-assert-scoring.py`; it reads the six
+sessions and creates none. They are kept because they close a real
 failure mode — a run that edits the work item to make the gate look accepted — which simply did
 not fire in this POC. The `decision:` frontmatter field carries the discrimination, at the cost of
 one prompt change: `ACTION.md` must now open with that field. It does not cue the answer; the
