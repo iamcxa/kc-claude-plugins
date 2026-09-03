@@ -15,6 +15,31 @@ issue: DEV-84
 pr:
 mod-block:
 id: wxj20tk9h1ndssnehwd4d9ng
+gates:
+    version: 1
+    records:
+        - id: gate:wxj20tk9h1ndssnehwd4d9ng:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:wxj20tk9h1ndssnehwd4d9ng-backlog-1
+              briefing:
+                id: briefing:wxj20tk9h1ndssnehwd4d9ng:backlog:attempt-1:revision-1
+                digest: sha256:64974db207fd460a9122ad415bd55b8e6315722a9484b7f76c255f5b256a5cad
+                room-ref: ./dev-84-intent-commit-fencing/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wxj20tk9h1ndssnehwd4d9ng:backlog:1
+                briefing: briefing:wxj20tk9h1ndssnehwd4d9ng:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T07:58:01.724962Z"
+                decision: approve
+                reason: Captain admitted DEV-84 as a standalone Pilot in sprint S9 and authorized the local FO to execute it.
+                conn:
+                    quote: 好，由1繼續
+                    source: Captain chat, this conversation, 2026-09-03, choosing item 1 (intent-commit fencing) as the next step
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

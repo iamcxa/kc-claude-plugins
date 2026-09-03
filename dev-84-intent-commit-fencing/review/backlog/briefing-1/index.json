@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wxj20tk9h1ndssnehwd4d9ng:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-84 as a standalone Pilot (S9) into ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:wxj20tk9h1ndssnehwd4d9ng:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cd6c5535c3abfb3cf795461ce6d1fd13b51f0d3a/dev-84-intent-commit-fencing/review/backlog/admission.md",
+      "rev": "sha256:2090eeab5e54f560daf0c60a07ef84f0e2c264cc2813174e9d7ef5a147d68ab4",
+      "mediaType": "text/markdown",
+      "summary": "Pilot; local FO; closes the commission blocker from DEV-79."
+    }
+  ]
+}
