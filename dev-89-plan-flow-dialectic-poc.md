@@ -15,6 +15,31 @@ issue: DEV-89
 pr:
 mod-block:
 id: 2jb7cry7ydwy1az84htkfkjp
+gates:
+    version: 1
+    records:
+        - id: gate:2jb7cry7ydwy1az84htkfkjp:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:2jb7cry7ydwy1az84htkfkjp-backlog-1
+              briefing:
+                id: briefing:2jb7cry7ydwy1az84htkfkjp:backlog:attempt-1:revision-1
+                digest: sha256:64cce0f39162056794d8a3f01c0d82f4f3306bc332fc30e39159204130e51ade
+                room-ref: ./dev-89-plan-flow-dialectic-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:2jb7cry7ydwy1az84htkfkjp:backlog:1
+                briefing: briefing:2jb7cry7ydwy1az84htkfkjp:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-03T09:54:40.618597Z"
+                decision: approve
+                reason: Captain admitted DEV-89 as a standalone POC in sprint S9; POC route build -> prove; 90-minute limit carries its reason.
+                conn:
+                    quote: 可以，現在開
+                    source: Captain chat, this conversation, 2026-09-03, approving the plan-flow dialectic POC with the three ship contract sentences as its raw requirement
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem

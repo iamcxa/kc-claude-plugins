@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:2jb7cry7ydwy1az84htkfkjp:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-89 as a standalone POC (S9, 90-minute limit) into implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:2jb7cry7ydwy1az84htkfkjp:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/439390ea370485cd48de794a21621846b89f4b4e/dev-89-plan-flow-dialectic-poc/review/backlog/admission.md",
+      "rev": "sha256:c0d5c496a15b4c13870dfe18a73da3749471ca1edb4eb24f44936f1cb4a79e26",
+      "mediaType": "text/markdown",
+      "summary": "plan-flow dialectic POC; worker runs stations, FO owns Captain Q\u0026A and Linear."
+    }
+  ]
+}
