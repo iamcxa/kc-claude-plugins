@@ -1,0 +1,104 @@
+{
+ "schema": "kc-plan-receipt/v1",
+ "code_repo": "iamcxa/kc-claude-plugins",
+ "base_branch": "main",
+ "project": {
+  "id": "61a8f8a9-f0d3-4690-9f29-807b76744db6",
+  "name": "The three ship-flow guarantees are written down and pinned",
+  "user_value": "Kent completes the next three ship-flow UATs without re-deriving the three declared guarantees from each PR.",
+  "hypothesis": "If we write the three DEV-67 sentences into the Ship-flow runtime README with contract-test pins for Kent at UAT then Kent stops re-deriving them from the diff.",
+  "wedge": "Kent, at UAT, who today re-asks three verification questions on every PR. This week's version: three sentences in the Ship-flow runtime README with contract-test pins; no enforcement script.",
+  "outcome": "The three DEV-67 ship-flow guarantees (dispatch a higher layer only after the lower layer is fully verified; without-it runs in an isolated environment; security, data-loss, and compatibility findings outside the Brief block the candidate) are written verbatim in the Ship-flow runtime README, pinned by the contract test, and Kent's next three UATs are observed for re-derivation.",
+  "exit": [
+   "All three sentences present in `docs/dev/README.md` `## Ship-flow runtime`, attributable to DEV-67.",
+   "Contract test reddens when any of the three is edited or removed.",
+   "Three UAT observations recorded with a valid/invalidated verdict against the hypothesis."
+  ],
+  "outcome_hash": "sha256:8a4356122741fe871bbe184bdbd467d1388dd0847c22c10dd644d844d7bdfc09"
+ },
+ "cycle": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "milestones": [],
+ "issues": {
+  "DEV-92": {
+   "id": "b6be7475-8002-4fd3-9328-0b46347e2cf1",
+   "url": "https://linear.app/duckbase-co/issue/DEV-92/observe-three-ship-flow-uats-for-re-derivation-of-the-three-guarantees",
+   "title": "Observe three ship-flow UATs for re-derivation of the three guarantees",
+   "branch": "feature/dev-92-observe-three-ship-flow-uats-for-re-derivation-of-the-three",
+   "close_line": "Fixes DEV-92",
+   "profile": "pilot-product-slice",
+   "milestone": null,
+   "body": "## The problem\n\nThe hypothesis's validation measure (Kent does not re-derive any of the three guarantees across the next three ship-flow UATs) is only true if observed, not assumed.\n\n## Goal\n\nFor the next three ship-flow UATs after the README and pins land, the First Officer records whether Kent re-derives any of the three guarantees from the PR, and records a valid or invalidated verdict against the hypothesis.\n\n## Non-goals\n\n* No code change; observation only.\n* No prompting of Kent during UAT.\n\n## Acceptance criteria\n\n* **AC-1** Three UAT observation records exist in the DEV-89 successor entity under `evidence/uat-observations/`, one file per PR, each naming the PR number and `rederived: yes|no`; `ls evidence/uat-observations | wc -l` prints 3; recorded.\n\n\n* **AC-2** One explicit verdict line, valid or invalidated, with the count; a re-derivation routes back to planning as a falsifier hit.\n\n## Route-back conditions\n\nA re-derivation on any of the three PRs is the falsifier; stop and return the delta.",
+   "body_sha256": "3016d04c4a4c65e821e4c576091e8274b25241aab861098736ca1a9f03483ab7"
+  },
+  "DEV-91": {
+   "id": "9f820da4-a767-4a63-bdef-c15a33cf5128",
+   "url": "https://linear.app/duckbase-co/issue/DEV-91/pin-the-three-contract-sentences-to-the-contract-test",
+   "title": "Pin the three contract sentences to the contract test",
+   "branch": "feature/dev-91-pin-the-three-contract-sentences-to-the-contract-test",
+   "close_line": "Fixes DEV-91",
+   "profile": "pilot-product-slice",
+   "milestone": null,
+   "body": "## The problem\n\nProse in a README is not machine-checked; a future edit could silently drift the README from the guarantee it states.\n\n## Goal\n\n`scripts/kc-dev-flow-contract-test.py` asserts each of the three sentences is present in the README, and reddens with a message naming the missing guarantee when any is edited or removed.\n\n## Non-goals\n\n* Does not verify that the runtime behaves per the sentences; behaviour enforcement is the Production-round item.\n* No new fixture files; the pins are phrase assertions plus one mutation run per sentence recorded in the PR.\n\n## Acceptance criteria\n\n* **AC-1** Mutation run per sentence: removed -> contract test exit 1 naming that guarantee; restored -> exit 0; three runs recorded.\n* **AC-2** The contract test passes at the candidate after the README Issue lands; recorded.\n\n## Route-back conditions\n\nSame as the README Issue.",
+   "body_sha256": "eec5ed586ff4183af3c003a20225ce2927fa338ccaa7fb0d4697dd94ec9f655f"
+  },
+  "DEV-90": {
+   "id": "eff3b44e-3bee-4e87-9a2a-58314b0b7b17",
+   "url": "https://linear.app/duckbase-co/issue/DEV-90/write-the-three-ship-flow-contract-sentences-into-the-runtime-readme",
+   "title": "Write the three ship-flow contract sentences into the runtime README",
+   "branch": "feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the",
+   "close_line": "Fixes DEV-90",
+   "profile": "pilot-product-slice",
+   "milestone": null,
+   "body": "## The problem\n\nDEV-67's three contract sentences are prose in a Spacedock entity's change list, not in ship-flow's own README, so nothing next to the runtime states what a candidate is promised.\n\n## Goal\n\n`docs/dev/README.md` `## Ship-flow runtime` states, verbatim and each attributable to DEV-67, the three sentences: dispatch a higher layer only after the lower layer is fully verified; a worker's without-it command runs in an isolated environment (temporary HOME, no agent, no network); security, data-loss, and compatibility findings outside the Brief block the candidate while general improvements are scoped out.\n\n## Non-goals\n\n* No script enforcement; no change to `scripts/ship-flow/without-it.sh` or the review step.\n* No existing README section is removed or reworded to make room.\n\n## Acceptance criteria\n\n* **AC-1** The README contains all three sentences under `## Ship-flow runtime`, each followed by `(DEV-67)`; recorded by quoting the lines.\n* **AC-2 **`git diff` against base shows only additions inside that section; recorded.\n\n## Route-back conditions\n\nIf any sentence must change meaning to fit, stop and return a structured planning delta naming the changed premise, affected acceptance evidence, and recommended change or stop.",
+   "body_sha256": "6861e7df6260befc3d8b578c920750e8a44ae40a0a72477473f79f8e325c7038"
+  }
+ },
+ "edges": [
+  [
+   "DEV-91",
+   "DEV-92"
+  ],
+  [
+   "DEV-90",
+   "DEV-92"
+  ],
+  [
+   "DEV-90",
+   "DEV-91"
+  ]
+ ],
+ "dispatch_order": [
+  "DEV-90",
+  "DEV-91",
+  "DEV-92"
+ ],
+ "lint": {
+  "schema": "kc-plan-lint/v1",
+  "pass": true,
+  "digest": "29ab9bd5375eb2d005937b4a2ac173420e9280e2ad503a13d44d637d5679ffa6"
+ },
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing keeps the three questions in the Captain's head, re-paid per PR",
+   "agreed": true
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is kc-pr-review's security pass plus DEV-78's surface-map check",
+   "agreed": true
+  },
+  {
+   "id": "P3",
+   "statement": "Distribution is the README in this repository; no artifact to ship",
+   "agreed": true
+  },
+  {
+   "id": "P4",
+   "statement": "Removing Alternative A leaves nothing for Kent to point to, so the approach builds the mechanism the value names",
+   "agreed": true
+  }
+ ],
+ "rationale_sha256": "03a5652a427faced2d8aa601c92d1834f58aa5b90f6b8a102f8478d69c0c34b7",
+ "receipt_sha256": "9eb2f2bc4b0a9cf866f63f0d29f755a35052bc2c3ee78e66531698a939db27aa"
+}
