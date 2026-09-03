@@ -1,6 +1,6 @@
 ---
 title: "POC: plan-flow dialectic — borrowed PM skills versus kernel fallback fill the Brief from one raw requirement"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, approving the plan-flow dialectic POC with the three ship contract sentences as its raw requirement
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
