@@ -1,6 +1,6 @@
 ---
 title: "Forge Phase 2 RED/GREEN runs in a clean runner with a scenario file slot"
-status: ideation
+status: implementation
 source:
 product: kc-plugin-forge
 planning-window:
@@ -71,7 +71,7 @@ gates:
                 reason: 'Captain approved the corrected shape at attempt 2: assert: list replaces prose pass_when, judge: demoted to judged; T1 gains the frontmatter_field decision: dispatch|hold assertion (one prompt change, designed not observed, AC-2 falsifier names it); credential default is fail loudly and record which runner ran.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
