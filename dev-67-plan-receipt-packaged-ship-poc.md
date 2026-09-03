@@ -180,7 +180,10 @@ poc_close_measurement:
 7. Code review (Codex or kc-pr-review) is load-bearing for script-producing Issues; findings outside the Brief's ACs are dispositioned as scope-outside-brief and listed for the Captain, not looped (S5, S6).
 8. Conductor MCP has run_sql but no wait primitive and dropped mid-session; the CLI sql path is the contract (S7).
 9. Reversed by Codex round 3 (evidence/codex-design-review-round3.md), accepted: dispatch a higher layer only after the lower layer is fully verified (replaces the freeze rule); a worker's without-it command runs in an isolated environment (temporary HOME, no agent, no network), not merely with credential variables unset; task delivery is acknowledged by reading a dispatch token back from the transcript, not by a grace period; security, data-loss, and compatibility findings outside the Brief block, only general improvements are scoped out; the four reproduced review findings become deterministic checks; holder transfer to an always-on host needs a fencing token, not a clone of the state branch. Commission falsifier: laptop sleeps between workspace create and id persistence, always-on host takes over, laptop wakes; exactly one workspace, one claim, and the old holder refused before any external action.
-10. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.
+10. Surface-granularity without-it: one command and removed-variant pair per retained surface, depth by profile (POC only retained surfaces, Pilot every non-test surface, Production every changed file against the shape mapping); ship-flow rejects an Evidence block that lacks the mapping before review.
+11. kc-dev-flow reads the candidate diff at implementation exit and refuses an unmapped surface: DEV-78. In the POC all three workers self-reported the same contract-test line and a ship-side review found a P1 in each; the kernel's minimal-necessity clause had no enforcement point in the worker.
+12. Layer 1 received a Captain-approved docs commit (Conductor-only premise for the Ship-flow runtime section) after linking; native stack merge carries it without rebasing the upper layers.
+13. Plan-flow lint set: keep the eight rules; the relation direction must be read from inverseRelations (blocker -> blocked); L7 stays a warning.
 
 ## Cleanup
 
