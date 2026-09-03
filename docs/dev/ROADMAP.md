@@ -395,6 +395,19 @@ returns to planning; plan-flow and ship-flow admissions wait on it.
 
 - [DEV-62](https://linear.app/duckbase-co/issue/DEV-62/poc-ship-flow-glue-on-one-issue-cloud-dispatch-pinned-sha-verify)
 
+## `kc-plugin-forge`
+
+### Sprint S1 — clean-environment Phase 2
+
+Standalone Pilot group, no Planning Receipt. Forge's skill-TDD baseline moves out
+of the in-session subagent, which inherits the operator's global instructions and
+cannot fail, into a clean runner (Conductor cloud first, `claude --bare` as the
+fallback) with a per-skill scenario file slot, per-session scratch directories,
+and a result reader that survives the transcript view's elision. The 2026-09-03
+cloud POC on kc-dev-flow is the admission evidence.
+
+- [DEV-80](https://linear.app/duckbase-co/issue/DEV-80/kc-plugin-forge-phase-2-red-baseline-must-run-in-a-clean-environment)
+
 ## `kc-team-ops`
 
 ### Sprint S1 — make the rules audit trustworthy off this machine
