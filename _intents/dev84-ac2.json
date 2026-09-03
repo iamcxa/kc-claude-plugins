@@ -2,6 +2,7 @@
  "claim": "dev84-ac2",
  "token": "46c061164ebe",
  "writer": 8,
- "workspace": null,
- "committed_at": "2026-09-03T07:59:42Z"
+ "workspace": "fea49b04-3036-4c42-8e1b-1de0e264d2b7",
+ "committed_at": "2026-09-03T07:59:42Z",
+ "adopted_at": "2026-09-03T08:00:00Z"
 }
