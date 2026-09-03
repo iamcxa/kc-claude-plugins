@@ -3,6 +3,9 @@
  "token": "d6c7fc5e6b9fa0d92c1d6b274abc329f",
  "writer": 15,
  "holder": "laptop",
- "workspace": null,
- "committed_at": "2026-09-03T08:08:26Z"
+ "workspace": "e8fc552b-3e79-4181-ace8-6916645a7d9f",
+ "committed_at": "2026-09-03T08:08:26Z",
+ "adopted_at": "2026-09-03T08:08:43Z",
+ "adopted_by": "alwayson",
+ "adopted_writer": 16
 }
