@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S1
 sprint-readiness: ready
-started:
+started: 2026-09-03T08:10:18Z
 completed:
 verdict:
 worktree:
