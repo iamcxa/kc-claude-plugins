@@ -1,0 +1,25 @@
+{
+ "issue": "DEV-91",
+ "claim": "dev-91.g1",
+ "candidate": "00c4c05be6ea19a810e40606e6d0f3baad3f9af1",
+ "branch": "feature/dev-91-pin-the-three-contract-sentences-to-the-contract-test",
+ "base": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+ "remote_head": "00c4c05be6ea19a810e40606e6d0f3baad3f9af1",
+ "rounds": 1,
+ "evidence_rounds": 2,
+ "intent": "adopted 0faf8b57 by laptop#20",
+ "without_it": {
+  "command": "(worker one-liner greps the test file AND the README)",
+  "removed_variant": "restore only the test file from DEV-90",
+  "retained_exit": 0,
+  "removed_exit": 0,
+  "verdict": "cannot fail: the removed variant leaves the README grep passing (S24)"
+ },
+ "surface_map_check": "OK (1 file) after Evidence fix",
+ "fo_falsifier": "with DEV-91's loop removed and only DEV-90's pins present, deleting a guarantee sentence from docs/ship-flow/README.md still reddens the contract test naming it -> DEV-91 adds no new failure mode",
+ "review": "FO read (Codex 404): [P2] duplicate assertion of DEV-90's three pins minus the (DEV-67) suffix",
+ "preflight_main": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "preflight_exit": 0,
+ "pass": false,
+ "disposition": "minimal-necessity fail: the accepted outcome (a contract test that reddens when a sentence is removed) was already delivered by DEV-90; this candidate is not needed. Outcome accepted_no_pr; the Issue's goal is met by DEV-90."
+}

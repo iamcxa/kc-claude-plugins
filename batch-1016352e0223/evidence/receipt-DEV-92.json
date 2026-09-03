@@ -1,0 +1,23 @@
+{
+ "issue": "DEV-92",
+ "claim": "dev-92.g1",
+ "candidate": "9c05eaf86e74b608d5bef929e5772c931d6791b4",
+ "branch": "feature/dev-92-observe-three-ship-flow-uats-for-re-derivation-of-the-three",
+ "base": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+ "remote_head": "9c05eaf86e74b608d5bef929e5772c931d6791b4",
+ "rounds": 1,
+ "evidence_rounds": 2,
+ "intent": "adopted f47e07d4 by laptop#21",
+ "without_it": {
+  "command": "test -f docs/ship-flow/evidence/uat-observations/README.md",
+  "removed_variant": "git rm -f docs/ship-flow/evidence/uat-observations/README.md",
+  "retained_exit": 0,
+  "removed_exit": 1
+ },
+ "surface_map_check": "OK (1 file)",
+ "review": "FO read (Codex models endpoint 404): template matches Brief; no findings",
+ "preflight_main": "d98f40b5e2080cb884facf1734fc66052eff9982",
+ "preflight_exit": 0,
+ "pass": true,
+ "note": "observation-only Issue; deliverable is the template; the three records are produced by the FO at UAT time"
+}
