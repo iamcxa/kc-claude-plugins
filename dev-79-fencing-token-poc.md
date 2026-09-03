@@ -1,6 +1,6 @@
 ---
 title: "POC: fencing token for ship-flow holder handover — exactly-once dispatch across laptop sleep"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03, approving dispatch of DEV-78 to a cloud worker and DEV-79 to the local FO
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
