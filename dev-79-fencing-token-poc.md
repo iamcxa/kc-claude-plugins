@@ -140,6 +140,12 @@ poc_close_measurement:
 
 ## Change returned to planning
 
-1. Ship-flow contract: every external action is `holder.sh check` then act; a claim is persisted only after a second check; the new holder's first action after handover is a reconcile pass that archives same-name workspaces it did not persist.
-2. Handover is a human action (`holder.sh handover`) in this POC; unattended takeover needs a lease, which is a separate decision.
-3. `_holder.json` lives on the state branch and is read through fetch, never from the local copy; `dev-flow-state-prereq.sh` should treat a mismatched writer number as exit 1.
+Codex round 4 (evidence/codex-round4.md) overturned the first reading of this result: the fence protects the claim record, not the external effect. AC-2 produced two Conductor workspaces; the second check stopped A from persisting, not from creating. The contract returned to planning is therefore:
+
+1. The honest guarantee is "at most one automatically started worker; an uncertain create blocks and asks the Captain", not exactly-once effect. Exactly-once needs an idempotent create or provider-side fencing that Conductor does not offer.
+2. Order per external action: commit a durable pending intent (claim name, dispatch token, writer) -> check -> create once -> token read-back from the transcript -> check -> adopt and persist. A new holder that finds an unresolved intent reconciles only: it looks up by dispatch token, adopts the single matching workspace if one exists, blocks if ambiguous, and never creates a second.
+3. Reconcile matches on the dispatch token carried in the workspace name and first message, never on Conductor's "-v1" duplicate-name suffix.
+4. Planned handover drains first: the old holder stops issuing actions, waits for in-flight calls to return, then transfers. Crash handover follows the adopt-or-block rule above.
+5. `dev-flow-state-prereq.sh` treats a fetch failure, non-fast-forward, malformed holder record, writer mismatch, or holder-id mismatch as distinct fail-closed exits.
+6. Handover stays a human command; unattended failover needs a lease and is deferred.
+7. Commission is blocked until 1-5 have a falsifier run: the same SIGSTOP scenario must end with one adopted workspace and one intent, not one persisted and one archived.
