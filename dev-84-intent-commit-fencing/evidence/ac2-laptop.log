@@ -1,0 +1,12 @@
+2026-09-03T07:59:20Z laptop#7: start intent=1 fence=1 claim=ac1-probe
+intent exists for ac1-probe: unresolved
+2026-09-03T07:59:21Z laptop#7: refused: intent exists for ac1-probe (reconcile instead of create)
+2026-09-03T07:59:41Z laptop#8: start intent=1 fence=1 claim=dev84-ac2
+committed dev84-ac2 46c061164ebe
+2026-09-03T07:59:45Z laptop#8: intent committed token=46c061164ebe
+2026-09-03T07:59:46Z laptop#8: conductor workspace create name=dev84-ac2-46c061164ebe
+2026-09-03T07:59:49Z laptop#8: create returned fea49b04-3036-4c42-8e1b-1de0e264d2b7
+2026-09-03T07:59:49Z laptop#8: SIGSTOP self before adopt
+2026-09-03T08:00:04Z laptop#8: resumed
+fenced: current writer 9 (alwayson), caller 8 (laptop)
+2026-09-03T08:00:05Z laptop#8: fenced after resume; NOT adopting fea49b04-3036-4c42-8e1b-1de0e264d2b7 (intent stays unresolved for the new holder to reconcile)

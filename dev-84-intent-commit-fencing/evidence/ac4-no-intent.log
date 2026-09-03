@@ -1,0 +1,8 @@
+2026-09-03T08:00:11Z laptop-noi#10: start intent=0 fence=1 claim=dev84-ac4
+2026-09-03T08:00:12Z laptop-noi#10: no-intent mode (without-it variant)
+2026-09-03T08:00:13Z laptop-noi#10: conductor workspace create name=dev84-ac4-e7411dc90899
+2026-09-03T08:00:16Z laptop-noi#10: create returned 02f5746f-5eef-4c7e-ad50-bbb07d5cf058
+2026-09-03T08:00:16Z laptop-noi#10: SIGSTOP self before adopt
+2026-09-03T08:00:28Z laptop-noi#10: resumed
+fenced: current writer 11 (alwayson-noi), caller 10 (laptop-noi)
+2026-09-03T08:00:29Z laptop-noi#10: fenced after resume; NOT adopting 02f5746f-5eef-4c7e-ad50-bbb07d5cf058 (intent stays unresolved for the new holder to reconcile)

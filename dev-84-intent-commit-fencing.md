@@ -1,13 +1,13 @@
 ---
 title: "Intent-commit fencing: at-most-one worker across holder handover, adopt-or-block reconcile"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: S9
 sprint-readiness: ready
-started:
+started: 2026-09-03T07:55:00Z
 completed:
 verdict:
 worktree:
@@ -92,3 +92,14 @@ The accepted outcome or non-goals changed. Stop and return a structured planning
 ## Measurement
 
 Not yet measured.
+
+## Shape
+
+Working perspective: bounded user-journey owner. The journey is one holder handover during an in-flight `conductor workspace create`. Seams: the state branch (git fetch/ff-merge/push as the only authority), the Conductor CLI (create, get by id, list by exact name), and two OS processes standing in for two hosts. Persistent state: `_holder.json` and `_intents/<claim>.json` on the state branch. Recovery: `intent.sh reconcile` adopts by exact name or blocks. Data safety: no real Issue, probe workspaces only, archived at cleanup. Stop numbers: two fix rounds after the first candidate; more than four probe workspaces alive at once; any falsifier that needs a change to Conductor or spacedock.
+
+Deviation recorded: the First Officer authored the first two commits on this branch (0396916d, 3f263c3b) and ran AC-1 through AC-5 locally before the Captain corrected the seat. Those commits are the worker's starting point, not the worker's output; the worker owns every commit from here and re-verifies the FO-run ACs as its own evidence.
+
+## Stage Report: ideation
+
+- DONE: shape recorded above; Codex rounds 5 and 6 (evidence/codex-round5.md, codex-round6.md) reviewed the FO-authored candidate and left three commission blockers: no process lock around the shared state checkout for parallel claims; intent and read-back not bound to project, base, and message hash; README paragraph and AC-5 mutation to be re-established by the worker.
+- NEXT: dispatch a cloud worker on branch head 3f263c3b with the Brief plus the three blockers as scope; the worker delivers one candidate with a fresh Evidence block; the FO verifies at the pinned SHA.

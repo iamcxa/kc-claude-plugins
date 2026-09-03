@@ -1,0 +1,11 @@
+2026-09-03T08:08:24Z laptop#15: start claim=dev-84.v3a
+committed dev-84.v3a
+2026-09-03T08:08:28Z laptop#15: intent committed token=d6c7fc5e6b9fa0d92c1d6b274abc329f
+2026-09-03T08:08:28Z laptop#15: conductor workspace create name=dev-84.v3a-d6c7fc5e6b9fa0d92c1d6b274abc329f
+2026-09-03T08:08:31Z laptop#15: create returned e8fc552b-3e79-4181-ace8-6916645a7d9f
+2026-09-03T08:08:32Z laptop#15: read-back ok name=dev-84.v3a-d6c7fc5e6b9fa0d92c1d6b274abc329f
+2026-09-03T08:08:32Z laptop#15: SIGSTOP self before adopt
+2026-09-03T08:08:48Z laptop#15: resumed
+holder: fenced: current writer 16 (alwayson), caller 15 (laptop) 1
+intent: fenced
+2026-09-03T08:08:50Z laptop#15: adopt refused (fenced or already adopted); leaving e8fc552b-3e79-4181-ace8-6916645a7d9f for the current holder's reconcile

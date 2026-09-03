@@ -1,0 +1,10 @@
+2026-09-03T08:00:51Z laptop-late#12: start intent=1 fence=1 claim=dev84-ac3
+committed dev84-ac3 2cbb6a429d9c
+2026-09-03T08:00:55Z laptop-late#12: intent committed token=2cbb6a429d9c
+2026-09-03T08:00:56Z laptop-late#12: delaying create 25s
+2026-09-03T08:01:22Z laptop-late#12: conductor workspace create name=dev84-ac3-2cbb6a429d9c
+2026-09-03T08:01:24Z laptop-late#12: create returned 7bb483ac-e7fa-4fbf-8e8a-615c7668621a
+2026-09-03T08:01:24Z laptop-late#12: SIGSTOP self before adopt
+2026-09-03T08:01:36Z laptop-late#12: resumed
+fenced: current writer 13 (alwayson-late), caller 12 (laptop-late)
+2026-09-03T08:01:37Z laptop-late#12: fenced after resume; NOT adopting 7bb483ac-e7fa-4fbf-8e8a-615c7668621a (intent stays unresolved for the new holder to reconcile)
