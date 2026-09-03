@@ -481,3 +481,13 @@ command's exit code does not match its declared `expect`. `asciinema` and
 `script(1)` both hang without a pty, which cloud build workers do not have, so
 this stdout log — not a terminal recording — is the CLI e2e evidence of
 record for that context.
+
+The worker's Evidence block defines `CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`,
+`WITHOUT_IT_COMMAND`, and `WITHOUT_IT_REMOVED_VARIANT`. `WITHOUT_IT_COMMAND` is
+one self-contained shell line: it references no file outside the candidate
+tree, it exits 0 on the candidate and non-zero once `WITHOUT_IT_REMOVED_VARIANT`
+is applied, and the First Officer runs it verbatim, unchanged, in a worktree
+with no secrets. `scripts/ship-flow/without-it.sh <sha> <command>
+<removed-variant>` runs `<command>` retained, applies `<removed-variant>`, runs
+`<command>` again, and exits 0 only when the retained run passes and the
+removed run fails.
