@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t8cyxd55ve3dtcxb9r37z2a7:backlog:attempt-1:revision-1",
+  "question": "Admit the Captain-approved Lite capability-protocol Pilot into shape?",
+  "artifacts": [
+    {
+      "id": "artifact:t8cyxd55ve3dtcxb9r37z2a7:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/da7f3fae55bbcc369ff316db2b8159e8b6a702ac/profiled-pr-review-capability-protocol/index.md",
+      "rev": "sha256:aaad21df766d14d30a564581e73776c83762d0c8638a42507df0c5e8ce474765",
+      "mediaType": "text/markdown",
+      "summary": "Development Brief and Pilot receipt validated; old Draft stack remains unchanged; latest main is the independent delivery base."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:t8cyxd55ve3dtcxb9r37z2a7:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

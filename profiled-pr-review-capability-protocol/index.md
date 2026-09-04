@@ -15,6 +15,31 @@ issue:
 pr:
 mod-block:
 id: t8cyxd55ve3dtcxb9r37z2a7
+gates:
+    version: 1
+    records:
+        - id: gate:t8cyxd55ve3dtcxb9r37z2a7:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:t8cyxd55ve3dtcxb9r37z2a7-backlog-1
+              briefing:
+                id: briefing:t8cyxd55ve3dtcxb9r37z2a7:backlog:attempt-1:revision-1
+                digest: sha256:cc8f490db41b19620dc468c5eb42b6441fa863edc2ce700e273c7f4e21fe4b47
+                room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t8cyxd55ve3dtcxb9r37z2a7:backlog:1
+                briefing: briefing:t8cyxd55ve3dtcxb9r37z2a7:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-04T18:55:49.333513Z"
+                decision: approve
+                reason: Captain approved the recommended Pilot route after the V1 protocol passed fresh Claude Opus 5 xhigh review; admission changes no posting, merge, release, or paid-run authority.
+                conn:
+                    quote: 批准
+                    source: Captain chat, this conversation, 2026-09-05, approving kc-dev-flow Pilot progression
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
