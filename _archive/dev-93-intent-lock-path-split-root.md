@@ -1,6 +1,6 @@
 ---
 title: "intent.sh lock path breaks on a split-root state checkout (.git is a file)"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S9
 sprint-readiness: ready
 started: 2026-09-03T14:12:00Z
-completed:
-verdict:
+completed: 2026-09-04T19:02:22Z
+verdict: PASSED
 worktree:
 issue: DEV-93
 pr: pr-merge:363
@@ -61,7 +61,8 @@ gates:
                     source: Captain chat, this conversation, 2026-09-03 evening, approving the three delivery units including DEV-93
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-04T19:02:22Z
 ---
 
 ## The problem
