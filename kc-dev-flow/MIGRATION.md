@@ -226,7 +226,8 @@ Accepted outcome section` and admits nothing.
 `adopt-dev-flow` now carries the Issue template. It previously lived only in
 this repository's own workflow README, which the package's
 `contract-manifest.json` does not ship, so an adopter writing an Issue from the
-package alone was refused for a heading the package never printed.
+package alone was refused for a heading the package never printed. The template
+is pinned against that README, so the two cannot drift apart again.
 
 `linear-admission.py` no longer requires `CONDUCTOR_WORKSPACE_ID`. It gated
 admission on a host marker that it never validated beyond non-emptiness and that
