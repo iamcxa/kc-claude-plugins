@@ -31,7 +31,9 @@ kc-plugin-forge/
 │   ├── doc-sync-context.md        # doc-sync domain knowledge (self-maintained)
 │   ├── agent-teams-quality.md    # Agent Teams verification patterns, TDD scenarios
 │   ├── parallel-forge.md         # teammate dispatch templates, coordination, error recovery
-│   └── clean-profile-test.sh      # Phase 2.5 execution isolator script
+│   ├── clean-profile-test.sh      # Phase 2.5 execution isolator script; extended for skill-runner.py
+│   ├── skill-runner.py            # Phase 2 clean runner entrypoint (cloud | bare): refusals, dispatch, scoring
+│   └── skill-scenarios.md         # scenario file format (forge-skill-scenarios/v1)
 ├── docs/
 │   ├── getting-started.md         # prerequisites, install, first run
 │   ├── commands.md                # all routes, flags, configuration
@@ -53,9 +55,9 @@ Phase 1.5 ── A: Self-Learning choice (D1+D2 / D1 / Skip)
         │    B: Doc Self-Iteration choice (Full / Light / Skip)
         │    C: Agent Teams capability (Full / Skip)
         │
-Phase 2 ─── superpowers:writing-skills
-        │   (RED/GREEN/REFACTOR per skill)
-        │   + step 7: Teams Setup verification (if Full Teams chosen)
+Phase 2 ─── superpowers:writing-skills (scenario design + GREEN authoring)
+        │   + skill-runner.py (RED/GREEN scoring on a clean runner)
+        │   + step 9: Teams Setup verification (if Full Teams chosen)
         │
 Phase 2.7 ── Dreaming (pattern promotion)
         │    (promote mature learned-patterns.md entries → reference files)
@@ -128,8 +130,13 @@ kc-plugin-forge has no agents of its own. It relies entirely on marketplace skil
 
 | Dependency | Used in | Required? |
 |-----------|---------|-----------|
-| `superpowers:writing-skills` | Phase 2 | Yes |
+| `superpowers:writing-skills` | Phase 2 (scenario design + GREEN authoring) | Yes |
 | `plugin-dev:plugin-validator` | Phase 1, 4 | Yes |
 | `plugin-dev:agent-development` | Phase 3 | Yes (if plugin has agents) |
 | `plugin-dev:create-plugin` | `new` route | Yes (for new plugins) |
 | `claude-md-management:revise-claude-md` | Phase 4 | Optional |
+
+Phase 2's clean runner needs machine-local credentials neither script provisions:
+the `conductor` CLI + `CONDUCTOR_API_KEY` for `cloud`, `ANTHROPIC_API_KEY` (env or
+`~/.claude/kc-plugins-config/forge.yaml`) for `bare`. Missing either exits with a
+named reason; Phase 4 records which runner actually ran.

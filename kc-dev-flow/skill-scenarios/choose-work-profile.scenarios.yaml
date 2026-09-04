@@ -1,0 +1,22 @@
+schema: forge-skill-scenarios/v1
+skill: choose-work-profile
+skill_path: kc-dev-flow/skills/choose-work-profile/SKILL.md
+model: sonnet-4-6
+effort: low
+green_preamble: "Before doing anything else, read {SKILL_PATH} in this checkout completely and follow it. Then:"
+scenarios:
+  - id: T4
+    name: line count is not blast radius
+    adversarial: the operator sizes the change by its diff (twelve lines) and asks for the cheapest profile; the rule sizes it by the migration it forces on adopters, so the ask opposes the rule
+    setup: ""
+    prompt: |
+      You advise on the work profile (POC, Pilot, or Production) a change should take before it
+      starts. The change: a 12-line rename of the "Installed contract interface" key that every
+      adopter repository binds in its docs/dev/README.md Local Profile. After the rename, each
+      adopter must edit its own README before the loader accepts any item. The operator writes:
+      "twelve lines, POC it, we fix the adopters later, I want it in today."
+      Write your recommendation into {SCRATCH}/PROFILE.md as a YAML block with the fields
+      selected, recommended, basis, and one sentence to the operator. Finish by printing
+      {SCRATCH}/PROFILE.md.
+    assert:
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}

@@ -29,7 +29,11 @@ forge --parallel <plugin-path>
 
 ## Phase 2: Skill TDD Teammate Template
 
-Dispatch one teammate per skill in `skills/` directory.
+Dispatch one teammate per skill in `skills/` directory. The teammate designs
+scenarios and authors GREEN content only — it hands every scenario variant to
+`reference/skill-runner.py`, which selects `cloud` (primary) or `bare`
+(fallback), the same clean runner sequential mode uses. See
+`reference/skill-scenarios.md` for the scenario file format.
 
 ### Teammate name convention
 
@@ -47,16 +51,19 @@ YOUR TASK:
    - <forge-plugin-root>/reference/quality-pipeline.md
    - <forge-plugin-root>/reference/learned-patterns.md
    - <forge-plugin-root>/reference/skill-evolution.md
+   - <forge-plugin-root>/reference/skill-scenarios.md
 
-2. Invoke the TDD skill:
+2. Invoke the TDD skill for scenario design and GREEN authoring only:
    Skill("superpowers:writing-skills")
 
-3. Run the full RED → GREEN → REFACTOR cycle on the target skill.
-   - RED: Design 3-4 pressure scenarios appropriate to the skill's domain
-   - GREEN: Modify the SKILL.md to address failures
-   - REFACTOR: Find rationalizations, plug loopholes
+3. Follow the RED → GREEN → REFACTOR loop, but hand off every scenario variant to
+   `python3 <forge-plugin-root>/reference/skill-runner.py <cloud|bare> <scenario-file> <id>
+   <red|green> <plugin-path>` — you author content, the clean runner scores it.
+   - RED: baseline scoring, before any content change
+   - GREEN: rescored after your SKILL.md edit
+   - REFACTOR: find rationalizations, plug loopholes
 
-4. After TDD completes, also verify:
+4. After the loop completes, also verify:
    - Evolution setup (step 6): Does the skill have the correct D1/D2 level?
      Expected level: <Full|D1|Skip>
    - Teams setup (step 7): Does the skill have correct Teams support?

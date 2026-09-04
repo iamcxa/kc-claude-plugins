@@ -306,17 +306,19 @@ Reference: `${CLAUDE_PLUGIN_ROOT}/reference/parallel-forge.md`
 
 For EACH skill in the plugin's `skills/` directory:
 
-1. **Invoke `Skill: "superpowers:writing-skills"`** — follow its RED/GREEN/REFACTOR cycle
-2. **RED**: Design 3-4 pressure scenarios, run with general-purpose subagents
-3. **GREEN**: Write or refine skill content addressing baseline failures
-4. **REFACTOR**: Find new rationalizations, plug loopholes, add discipline guards
-5. **Verify token budget**: aim for <800 words; extract heavy content to `reference/`
-6. **Verify Evolution Setup** (if applicable):
+1. **Invoke `Skill: "superpowers:writing-skills"`** for scenario design and GREEN authoring — it never dispatches the run itself; every pressure scenario is dispatched through the clean runner below.
+2. **Select a runner**: `python3 ${CLAUDE_PLUGIN_ROOT}/reference/skill-runner.py` picks `cloud` (primary) or `bare` (fallback); a run that cannot resolve a credential for either exits with a named reason instead of silently skipping. See `${CLAUDE_PLUGIN_ROOT}/reference/skill-scenarios.md`.
+3. **Load scenarios**: read `<target-plugin>/skill-scenarios/<skill-name>.scenarios.yaml` if present — its scenarios take priority, by name. Absent → design 3-4 pressure scenarios by hand via writing-skills, each naming an `adversarial:` opposition, and note `scenarios: hand-designed (no scenario file at <path>)` in the Phase 4 report.
+4. **RED**: dispatch each scenario's baseline prompt through the selected runner and score its `assert:` list — this is the observation the loop corrects, not a step performed in this conversation.
+5. **GREEN**: write or refine skill content addressing what RED's scoring surfaced, then dispatch each scenario's GREEN prompt (skill content prepended) through the same runner.
+6. **REFACTOR**: Find new rationalizations, plug loopholes, add discipline guards
+7. **Verify token budget**: aim for <800 words; extract heavy content to `reference/`
+8. **Verify Evolution Setup** (if applicable):
    - **Determining level** (priority order): (a) Phase 1.5 choice from this session → use it. (b) Phase 1.5 did not run (e.g., `skill-tdd-only`) → auto-detect: plugin has `reference/learned-patterns.md` + skills have D2 gates → Full; has `learned-patterns.md` + D1 only → D1; no `learned-patterns.md` → Skip. (c) `self-forge` route → verify forge's own Full D1+D2 setup is intact.
    - **Full or D1**: Learning step present at end of skill? Setup reads `learned-patterns.md`? Rules include appropriate D1/D2 entries? "Nothing novel is valid" explicitly stated?
    - **Skip**: note in report, move on.
    - Reference: `${CLAUDE_PLUGIN_ROOT}/reference/skill-evolution.md`.
-7. **Verify Teams Setup** (if applicable):
+9. **Verify Teams Setup** (if applicable):
    - **Determining level**: (a) Phase 1.5 C choice from this session → use it. (b) Phase 1.5 C did not run → auto-detect: plugin has `references/agent-teams.md` + agents have Team Mode Protocol → Full; neither → Skip.
    - **Full**: For each skill that dispatches agents: Teams mode detection present? `--no-teams` flag documented? Fallback path explicit? Error handling covers TeamCreate failure? Add Teams-specific pressure scenarios (T1-T4 from `agent-teams-quality.md`) to the RED phase.
    - **Skip**: note in report, move on.
@@ -615,6 +617,10 @@ Plugin Forge Report: <plugin-name>
 ─────────────────────────────────
 Structure:  PASS/FAIL (N items fixed)
 Skills:     N skills tested (M scenarios, K passed)
+Phase 2 Runner: <cloud|bare> (<reason, when it fell back>)
+                Model pin: <model>
+                Scenarios: <scenario-file path> | hand-designed (no scenario file at <path>)
+                <ID>: RED <passed|failed|judged|error> / GREEN <passed|failed|judged|error>
 Clean Profile: N skills verified (K clean-pass, J context-dependent)
                Mode: clean / unavailable
                Key source: <env | path-to-file>
