@@ -1139,9 +1139,7 @@ for phrase in [
     "a VM, a CI runner, and a plain shell are all supported hosts",
     "Work with no planning provider at all records no Planning Receipt, invokes no reader, and needs no credential",
     "raise that layout as a refit requirement against the package and keep the repository-local adapter",
-    "The Issue and the committed work item carry the accepted goal under the same heading",
-    "accepts the superseded `## Goal` on the Issue and refuses a body carrying both",
-    "it is not a contract",
+    "The Issue and the committed work item carry the accepted goal under the same heading, and `linear-admission.py` reads no other name for it",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
@@ -1167,7 +1165,6 @@ for phrase in [
     "do not reinterpret it as provider identity",
     "retires its repository-local planning reader",
     "no longer requires `CONDUCTOR_WORKSPACE_ID`",
-    "deliberately not pinned as a retained mechanism",
     "work with no planning provider records no Planning Receipt and needs neither",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
@@ -1645,7 +1642,6 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
                 "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
                 "description": (
                     f"{goal_heading}\n\n{goal}\n\n"
-                    + (f"## Goal\n\n{goal}\n\n" if fixture.scenario == "both-goal-headings" else "")
                     + f"## Non-goals\n\n* {non_goal}\n"
                 ),
                 "state": {"type": issue_state},
@@ -1837,17 +1833,10 @@ Stop on any planning drift.
     )
     legacy_heading = admit("legacy-goal-heading")
     require(
-        legacy_heading.returncode == 0
-        and json.loads(legacy_heading.stdout)["live_read_sha256"]
-        == envelope["live_read_sha256"],
-        f"the superseded Goal heading was not admitted: {legacy_heading.stderr}",
-    )
-    both_headings = admit("both-goal-headings")
-    require(
-        both_headings.returncode == 2
-        and not both_headings.stdout
-        and "carries both" in both_headings.stderr,
-        f"a body carrying both headings was admitted: {both_headings.stderr}",
+        legacy_heading.returncode == 2
+        and not legacy_heading.stdout
+        and "needs one Accepted outcome section" in legacy_heading.stderr,
+        f"the retired Goal heading was still admitted: {legacy_heading.stderr}",
     )
     inline_workflow = fixture_root / "inline"
     inline_workflow.mkdir()
@@ -1872,35 +1861,19 @@ Stop on any planning drift.
             "linear-delivery-branch-read-removed mutant survived",
         )
 
-        goal_heading_mutant = mutant_root / "legacy-goal-heading-read-removed.py"
+        goal_heading_mutant = mutant_root / "retired-goal-heading-restored.py"
         goal_heading_source, goal_heading_count = re.subn(
-            r'"accepted-goal": accepted_goal\(description\),',
-            '"accepted-goal": section(description, "Accepted outcome"),',
+            r'"accepted-goal": section\(description, "Accepted outcome"\),',
+            '"accepted-goal": section(description, "Goal"),',
             linear_source,
             count=1,
         )
-        require(goal_heading_count == 1, "Linear legacy-goal-heading mutant anchor changed")
+        require(goal_heading_count == 1, "Linear goal-heading mutant anchor changed")
         goal_heading_mutant.write_text(goal_heading_source, encoding="utf-8")
         survived = admit("legacy-goal-heading", reader=goal_heading_mutant)
         require(
-            survived.returncode == 2 and not survived.stdout,
-            "legacy-goal-heading-read-removed mutant survived",
-        )
-
-        both_heading_mutant = mutant_root / "both-goal-heading-refusal-removed.py"
-        both_heading_source, both_heading_count = re.subn(
-            r"^    if len\(present\) > 1:\n",
-            "    if False:\n",
-            linear_source,
-            count=1,
-            flags=re.MULTILINE,
-        )
-        require(both_heading_count == 1, "Linear both-goal-heading mutant anchor changed")
-        both_heading_mutant.write_text(both_heading_source, encoding="utf-8")
-        survived = admit("both-goal-headings", reader=both_heading_mutant)
-        require(
             survived.returncode == 0,
-            f"both-goal-heading-refusal-removed mutant still refused: {survived.stderr}",
+            f"retired-goal-heading-restored mutant still refused: {survived.stderr}",
         )
 
         state_mutant = mutant_root / "state-authority-message-removed.py"

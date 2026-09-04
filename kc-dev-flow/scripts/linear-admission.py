@@ -21,8 +21,6 @@ from pathlib import Path
 API_URL = "https://api.linear.app/graphql"
 ACTIVE_TYPES = {"unstarted", "started"}
 FIELDS = ("source", "planning-window", "planning-outcome")
-ACCEPTED_GOAL_HEADING = "Accepted outcome"
-LEGACY_GOAL_HEADING = "Goal"
 
 
 class AdmissionError(RuntimeError):
@@ -85,21 +83,6 @@ def section(text: str, heading: str) -> str:
     if not value or re.fullmatch(r"(?:TBD|TODO|<[^>]+>)", value, re.IGNORECASE):
         raise AdmissionError(f"planning description has invalid {heading}")
     return value
-
-
-def accepted_goal(text: str) -> str:
-    present = [
-        heading
-        for heading in (ACCEPTED_GOAL_HEADING, LEGACY_GOAL_HEADING)
-        if re.search(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
-    ]
-    if len(present) > 1:
-        raise AdmissionError(
-            "planning description carries both '## Accepted outcome' and the legacy '## Goal'"
-        )
-    if not present:
-        raise AdmissionError("planning description needs one '## Accepted outcome' section")
-    return section(text, present[0])
 
 
 def normalized_item(text: str) -> dict[str, object]:
@@ -250,7 +233,7 @@ def live_item(issue: object) -> dict[str, object]:
         "source": issue["url"],
         "planning-window": window,
         "planning-outcome": outcome,
-        "accepted-goal": accepted_goal(description),
+        "accepted-goal": section(description, "Accepted outcome"),
         "non-goals": non_goals,
     }
 

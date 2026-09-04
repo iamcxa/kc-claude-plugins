@@ -215,11 +215,13 @@ reader's Issue branch was written to read `## Goal` while every document and the
 contract test said `## Accepted outcome`; the mismatch was later resolved by
 moving the Issue template to `## Goal`, which made the drift canonical. The
 Issue template's own Route-back sentence still said "The accepted outcome or
-non-goals changed", so the template contradicted its own heading. `## Goal` is
-still accepted on the Issue, and a body carrying both headings is refused. That
-compatibility path exists to carry Issues written before the headings converged
-and is deliberately not pinned as a retained mechanism, so it can be removed
-once no open Issue uses it.
+non-goals changed", so the template contradicted its own heading. `## Goal` is no
+longer read. A Linear-backed adopter migrates any Issue the reader can still
+reach before upgrading: the reader reads Issues whose state type is `unstarted`
+or `started`, so an Issue in any other state needs the heading only if it
+returns to one of those. Rewriting the single heading line is the whole
+migration; an unmigrated Issue is refused with `planning description needs one
+Accepted outcome section` and admits nothing.
 
 `adopt-dev-flow` now carries the Issue template. It previously lived only in
 this repository's own workflow README, which the package's

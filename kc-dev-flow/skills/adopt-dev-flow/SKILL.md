@@ -99,9 +99,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    ```
 
    The Issue and the committed work item carry the accepted goal under the same
-   heading. `linear-admission.py` also accepts the superseded `## Goal` on the
-   Issue and refuses a body carrying both; that path exists only until Issues
-   written before the headings converged are migrated, and it is not a contract.
+   heading, and `linear-admission.py` reads no other name for it.
    The reader takes Non-goals from `- ` or `* ` bullets, while
    `profile-contract-loader.py` takes the work item's from `- ` bullets, so a
    snapshot copied out of an Issue rewrites `* ` as `- `.
