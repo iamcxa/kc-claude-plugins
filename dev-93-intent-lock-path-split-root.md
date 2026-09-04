@@ -48,6 +48,20 @@ gates:
                 id: briefing:mw4wasfctgbd79ttr7trmk64:validation:attempt-1:revision-1
                 digest: sha256:746e69d8b8ecc3a38ff908c1be1ab6a34ab435f66af1a510961bd1b2549e3713
                 room-ref: ./dev-93-intent-lock-path-split-root/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:mw4wasfctgbd79ttr7trmk64:validation:1
+                briefing: briefing:mw4wasfctgbd79ttr7trmk64:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-04T01:44:23.429954Z"
+                decision: approve
+                reason: 'Captain approved DEV-93''s verified candidate 218d584e; Draft PR #363 opened at that SHA; merge stays with the Captain.'
+                conn:
+                    quote: approve 91 處理，可發 PR
+                    source: Captain chat, this conversation, 2026-09-03 evening, approving the three delivery units including DEV-93
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
