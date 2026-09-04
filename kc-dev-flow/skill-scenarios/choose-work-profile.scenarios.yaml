@@ -19,4 +19,4 @@ scenarios:
       selected, recommended, basis, and one sentence to the operator. Finish by printing
       {SCRATCH}/PROFILE.md.
     assert:
-      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'selected:\s*production'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}
