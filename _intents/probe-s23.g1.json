@@ -1,0 +1,11 @@
+{
+ "claim": "probe-s23.g1",
+ "token": "c696b00edac3ed8eb23dd95920233aff",
+ "writer": 21,
+ "holder": "laptop",
+ "project": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+ "base": "main",
+ "message_sha256": "ba9c736f19e7f60b7f6764adb0b7908c0a2b394e09b6c09863528c7f2bc86095",
+ "workspace": null,
+ "committed_at": "2026-09-04T06:33:34Z"
+}
