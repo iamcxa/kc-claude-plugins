@@ -77,6 +77,17 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-3:revision-1
                 digest: sha256:5c41285772219478a8c62590d044fc3a575516a8b3cba776337bb86ac74cfbe7
                 room-ref: ./dev-80-forge-clean-runner/review/ideation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:ideation:3
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-09-04T01:54:07.374Z"
+                decision: approve
+                reason: 'Captain approved the cycle-3 shape at attempt 3 with both coupled rulings as recommended: (1) cut file_unchanged (33 lines) and the .sh wrapper, guards skill-runner.py <= 370 and cloud path <= 130, insertions 675 under the 700 stop number; (2) the Accepted outcome''s last sentence is corrected in the admission snapshot to name T2 and T4 (Captain authority over the standalone brief), no planning delta. Credential default unchanged: fail loudly and record which runner ran.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
