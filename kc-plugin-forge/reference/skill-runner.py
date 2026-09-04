@@ -24,12 +24,13 @@ POLL_INTERVAL_S = 15
 ABS_SCRATCH_LITERAL = re.compile(r"/tmp/(?!\{SCRATCH\})\S|/var/folders/\S")
 
 
-def outcome_line(status, runner, model, scratch):
-    print(f"outcome={status} runner={runner} model={model or 'unpinned'} scratch={scratch}")
+def outcome_line(status, runner, model, scratch, token_source=None):
+    src = f" token_source={token_source}" if token_source else ""
+    print(f"outcome={status} runner={runner} model={model or 'unpinned'} scratch={scratch}{src}")
 
 
-def die(status, runner, model, scratch, reason):
-    outcome_line(status, runner, model, scratch)
+def die(status, runner, model, scratch, reason, token_source=None):
+    outcome_line(status, runner, model, scratch, token_source)
     print(f"reason={reason}", file=sys.stderr)
     sys.exit(2 if status == "error" else 1)
 
@@ -247,15 +248,33 @@ def reconcile_workspace(project_id, model):
     return ws_id, None
 
 
+def probe_cloud_auth():
+    """A present-but-rejected CONDUCTOR_API_KEY still satisfies `if env.get(...)`
+    (cycle-2 gate: presence, not authentication). Probes real auth via
+    `conductor auth whoami` and returns (ok, token_source, reason)."""
+    try:
+        proc = subprocess.run(["conductor", "auth", "whoami"], capture_output=True, text=True, timeout=15)
+    except Exception as e:
+        return False, "n/a", f"conductor auth whoami failed to run: {e}"
+    src = next((l.split(None, 2)[-1].strip() for l in proc.stdout.splitlines()
+                if l.startswith("Token source")), "unknown")
+    if proc.returncode == 0 and "✓" in proc.stdout:
+        return True, src, None
+    verify = next((l.strip() for l in proc.stdout.splitlines() if l.startswith("Verification")),
+                  f"conductor auth whoami exited {proc.returncode}")
+    return False, src, verify
+
+
 def run_cloud(prompt, model, plugin_dir, scratch, transcript_path, scenario_id, variant):
-    if not os.environ.get("CONDUCTOR_API_KEY"):
-        return None, "cloud", "CONDUCTOR_API_KEY not set"
+    ok, token_source, reason = probe_cloud_auth()
+    if not ok:
+        return None, "cloud", f"{reason} (token source: {token_source})", token_source
     project_id, reason = resolve_project_id(plugin_dir)
     if not project_id:
-        return None, "cloud", reason
+        return None, "cloud", reason, token_source
     ws_id, reason = reconcile_workspace(project_id, model)
     if not ws_id:
-        return None, "cloud", reason
+        return None, "cloud", reason, token_source
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
         f.write(prompt)
         prompt_file = f.name
@@ -265,9 +284,9 @@ def run_cloud(prompt, model, plugin_dir, scratch, transcript_path, scenario_id, 
             "--model", model, "--effort", DEFAULT_EFFORT, "--name", f"{scenario_id}-{variant}",
             "--message-file", prompt_file, "--json"]))
     except subprocess.CalledProcessError as e:
-        return None, "cloud", f"conductor session create failed: {e}"
+        return None, "cloud", f"conductor session create failed: {e}", token_source
     sid = sess.get("sessionId") or sess.get("id")
-    return sid, "cloud", None
+    return sid, "cloud", None, token_source
 
 
 def page_until_token(sid, token, budget_s):
@@ -322,14 +341,14 @@ def main():
     transcript_path = Path(host_scratch) / f"{scenario_id}-{variant}.json"
 
     runner_used = runner_req
-    messages, sid, reason = None, None, None
+    messages, sid, reason, token_source = None, None, None, None
     if runner_req == "cloud":
-        sid, runner_used, reason = run_cloud(prompt, model, plugin_dir, remote_scratch, transcript_path, scenario_id, variant)
+        sid, runner_used, reason, token_source = run_cloud(prompt, model, plugin_dir, remote_scratch, transcript_path, scenario_id, variant)
         if sid:
             messages, acked, stall_reason = page_until_token(sid, token, TOKEN_BUDGET_S)
             transcript_path.write_text(json.dumps(messages, indent=2))
             if not acked:
-                die("error", "cloud", model, host_scratch, stall_reason)
+                die("error", "cloud", model, host_scratch, stall_reason, token_source)
         else:
             runner_used = f'bare (cloud unavailable: {reason})'
             runner_req = "bare"
@@ -341,7 +360,7 @@ def main():
 
     bodies, result = extract(messages)
     status, detail = score(scen, bodies, result, remote_scratch)
-    outcome_line(status, runner_used, model, host_scratch)
+    outcome_line(status, runner_used, model, host_scratch, token_source)
     sys.exit(0 if status in ("pass", "judged") else 1)
 
 
