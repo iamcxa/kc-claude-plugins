@@ -1857,6 +1857,55 @@ Stop on any planning drift.
             "linear-delivery-branch-read-removed mutant survived",
         )
 
+        goal_heading_mutant = mutant_root / "dual-goal-heading-removed.py"
+        goal_heading_source, goal_heading_count = re.subn(
+            r'"accepted-goal": accepted_goal\(description\),',
+            '"accepted-goal": section(description, "Goal"),',
+            linear_source,
+            count=1,
+        )
+        require(goal_heading_count == 1, "Linear dual-goal-heading mutant anchor changed")
+        goal_heading_mutant.write_text(goal_heading_source, encoding="utf-8")
+        survived = admit("accepted-outcome-heading", reader=goal_heading_mutant)
+        require(
+            survived.returncode == 2 and not survived.stdout,
+            "dual-goal-heading-read-removed mutant survived",
+        )
+
+        both_heading_mutant = mutant_root / "both-goal-heading-refusal-removed.py"
+        both_heading_source, both_heading_count = re.subn(
+            r"^    if len\(present\) != 1:\n",
+            "    if not present:\n",
+            linear_source,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        require(both_heading_count == 1, "Linear both-goal-heading mutant anchor changed")
+        both_heading_mutant.write_text(both_heading_source, encoding="utf-8")
+        survived = admit("both-goal-headings", reader=both_heading_mutant)
+        require(
+            survived.returncode == 0,
+            f"both-goal-heading-refusal-removed mutant still refused: {survived.stderr}",
+        )
+
+        state_mutant = mutant_root / "state-authority-message-removed.py"
+        state_source, state_count = re.subn(
+            r'^        if not state\.is_dir\(\):\n'
+            r'            raise AdmissionError\("state authority is not <workflow-dir>/\.spacedock-state"\)\n',
+            "",
+            linear_source,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        require(state_count == 1, "Linear state-authority mutant anchor changed")
+        state_mutant.write_text(state_source, encoding="utf-8")
+        survived = admit("clean", reader=state_mutant, workflow_dir=inline_workflow)
+        require(
+            survived.returncode == 2
+            and "state authority is not <workflow-dir>/.spacedock-state" not in survived.stderr,
+            f"state-authority-message-removed mutant kept the message: {survived.stderr}",
+        )
+
         envelope_mutant = mutant_root / "delivery-envelope-removed.py"
         envelope_source, envelope_count = re.subn(
             r'^            "delivery": delivery,\n',
