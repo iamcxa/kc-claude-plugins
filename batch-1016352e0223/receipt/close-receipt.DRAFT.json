@@ -12,7 +12,7 @@
   "DEV-90": {
    "outcome": "pr_open",
    "candidate": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
-   "pr": null,
+   "pr": "iamcxa/kc-claude-plugins#364",
    "rounds": 1,
    "minutes": {
     "dispatch": 1,
@@ -42,7 +42,7 @@
   "DEV-92": {
    "outcome": "pr_open",
    "candidate": "9c05eaf86e74b608d5bef929e5772c931d6791b4",
-   "pr": null,
+   "pr": "iamcxa/kc-claude-plugins#365",
    "rounds": 1,
    "minutes": {
     "dispatch": 1,

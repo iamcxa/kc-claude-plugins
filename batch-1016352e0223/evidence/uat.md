@@ -7,7 +7,7 @@ Each accepted layer is one Draft PR at one pinned candidate on top of the previo
 
 ## Layer 1: DEV-90 — Write the three ship-flow contract sentences into the runtime README
 
-- PR: (pending Captain approval) · candidate `00d2dbf5d2a2` · base `d98f40b5e208` (main) · branch `feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the`
+- PR: https://github.com/iamcxa/kc-claude-plugins/pull/364 · candidate `00d2dbf5d2a2` · base `d98f40b5e208` (main) · branch `feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the`
 - Intent adopted on the state branch (first receipt-driven dispatch through intent-commit fencing)
 - Without-it (worker one-liner, FO ran verbatim): retained 0, removed 1 · surface-map-check OK (3 files) · contract test PASS · Codex no findings
 - How to verify: `docs/dev/README.md` has one pointer line where `## Ship-flow runtime` was; `docs/ship-flow/README.md` § Ship-flow runtime holds the section plus three `(DEV-67)` sentences; remove any of the three and `kc-dev-flow-contract-test.py` reddens naming it.
@@ -19,7 +19,7 @@ Each accepted layer is one Draft PR at one pinned candidate on top of the previo
 
 ## Layer 3: DEV-92 — Observe three ship-flow UATs for re-derivation
 
-- PR: (pending Captain approval) · candidate `9c05eaf86e74` · base `00d2dbf5d2a2` (DEV-90) · branch `feature/dev-92-observe-three-ship-flow-uats-for-re-derivation-of-the-three`
+- PR: https://github.com/iamcxa/kc-claude-plugins/pull/365 · candidate `9c05eaf86e74` · base `00d2dbf5d2a2` (DEV-90) · branch `feature/dev-92-observe-three-ship-flow-uats-for-re-derivation-of-the-three`
 - Deliverable is the observation template `docs/ship-flow/evidence/uat-observations/README.md`; the three records are produced by the FO at UAT time (this batch's own three PRs count if the Captain agrees).
 - Without-it: retained 0, removed 1 · surface-map-check OK · contract test PASS · FO review no findings (Codex endpoint 404 at review time, S25)
 - How to verify: file exists with the field list and the verdict rule (three files, zero `rederived: yes`).
@@ -30,6 +30,6 @@ Each accepted layer is one Draft PR at one pinned candidate on top of the previo
 
 ## For the Captain
 
-- Two delivery units to approve (DEV-90 on main; DEV-92 stacked on DEV-90). Suggested: `gh stack link` DEV-90 -> DEV-92 after both PRs exist, since DEV-92's base is DEV-90's candidate.
+- Two delivery units to approve (DEV-90 on main; DEV-92 stacked on DEV-90). Linked as native stack: merge with `gh stack merge <stack>` after UAT; do not merge #364 alone.
 - DEV-91: accept the disposition (goal met by DEV-90, no PR) or ask for a distinct deliverable.
 - Residual outside all three Briefs: the Codex reviewer produced empty output on two layers (endpoint 404); the FO read both diffs (6 and 39 lines) instead.

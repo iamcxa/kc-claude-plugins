@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue: DEV-93
-pr:
+pr: 363
 mod-block:
 id: mw4wasfctgbd79ttr7trmk64
 gates:
