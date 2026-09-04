@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-2:revision-1",
+  "question": "Approve the validation of DEV-80 (Forge Phase 2 clean runner + scenario slot) at candidate revision aafa538b, now that the implementation-exit surface map has been produced and independently checked, so it returns to Captain-authorized delivery on the existing Draft PR #368?",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/cf36313393ceb72d8a4d9d461efe4e6410913b88/dev-80-forge-clean-runner.md",
+      "rev": "sha256:e9366995fd24cd67d122ef3abf8ca67765f523ff851369e90163ad5e5c7f7ee5",
+      "mediaType": "text/markdown",
+      "summary": "The surface map that the earlier approval was missing now exists and passes 12 of 12 changed non-test files; validation ran the check itself and reddened it twice with its own falsifiers rather than reading the build stage's claim. No surface qualified for removal: the two candidates named at dispatch were refuted by their live callers, and the three documentation lines whose without-it command is only a grep were traced to the work item's own recorded project-context and machine-dependency obligations. All five acceptance criteria carry a verdict, each with a falsifier distinct from the prior attempt's; the six declared proof and delivery checks are green. Two things the Captain rules on: the acceptance-criteria text for AC-2 still reads T1 and T4 against the gate-3 correction, and the existing Draft PR body predates this work and omits four of the five open residuals."
+    }
+  ]
+}

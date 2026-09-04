@@ -107,6 +107,11 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:kmt1mgvwqy0g9qmshemqtsn1-validation-2
+              briefing:
+                id: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-2:revision-1
+                digest: sha256:7fce84a6fe88076559cca7489ed648608e67fa882ffde615367261d2f1157c02
+                room-ref: ./dev-80-forge-clean-runner/review/validation/briefing-2
 ---
 
 ## The problem
