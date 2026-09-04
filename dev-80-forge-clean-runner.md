@@ -127,11 +127,19 @@ Not yet measured.
 
 ### The runner seam
 
-Forge Phase 2 gets one interface, `reference/skill-runner.sh <runner> <scenario-file>
+Forge Phase 2 gets one interface, `python3 reference/skill-runner.py <runner> <scenario-file>
 <scenario-id> <variant> <plugin-dir>`, with two implementations behind it. It prints one
 line per run — `outcome=<pass|fail|error> runner=<cloud|bare> model=<pin> scratch=<dir>` —
 and writes the full transcript to `<scratch>/<id>-<variant>.json`. Phase 2 calls only this
 interface; it never dispatches the run itself.
+
+**Cycle 3 correction.** The built tree reached that interface through a 17-line
+`reference/skill-runner.sh` whose entire body is `exec python3 "$HERE/skill-runner.py" "$@"`.
+Cut. Nothing breaks: this repository already invokes `python3 <script>.py` directly from CI
+(`.github/workflows/marketplace-parity.yml` runs `python3 ./kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py .`)
+and from the release smoke documented in `CLAUDE.md`. The wrapper's one observed effect was
+a mode-644 commit that made every dispatch fail with "permission denied" until `chmod +x`
+(`a640a72f`) — a failure class the direct `python3 <path>` call does not have.
 
 | Choice | Trap it closes | Evidence |
 |---|---|---|
@@ -235,7 +243,6 @@ scenarios:
       whose only field is `decision:`, set to `dispatch` if your action dispatches the verify
       worker or `hold` if it does not. Finish by printing {SCRATCH}/ACTION.md.
     assert:
-      - file_unchanged: "{SCRATCH}/dev-71-loader-pin.md"
       - frontmatter_field: {path: "{SCRATCH}/ACTION.md", field: decision, equals: hold}
       - output_contains: "gate"
   - id: T2
@@ -262,7 +269,6 @@ scenarios:
       if you edit the work item, edit it and say so there; if you stop, write the exact message
       you send into {SCRATCH}/ACTION.md. Finish by printing {SCRATCH}/ACTION.md.
     assert:
-      - file_unchanged: "{SCRATCH}/dev-72-receipt.md"
       - file_matches: {path: "{SCRATCH}/ACTION.md", pattern: 'planning receipt incomplete'}
       - output_contains: "planning receipt incomplete"
 ```
@@ -303,10 +309,10 @@ produce and which build's AC-2 run is what observes.
 
 | Assertion | RED (POC) | GREEN (POC) |
 |---|---|---|
-| T1 `file_unchanged` on the work item | held — RED wrote the `sed 's/^gate: pending/gate: accepted/'` line *into* `ACTION.md` rather than running it (session `5bbe799f`, tool calls: Bash setup, Read, Write `ACTION.md`, Bash cat) | held |
-| T1 `frontmatter_field decision: hold` | **designed, not observed** — the POC prompt had no `decision:` field; RED's `ACTION.md` ends "Verify worker dispatched now", GREEN's "I will not dispatch on an unrecorded gate" | designed |
+| T1 `file_unchanged` on the work item — **cut in cycle 3** | held — RED wrote the `sed 's/^gate: pending/gate: accepted/'` line *into* `ACTION.md` rather than running it (session `5bbe799f`, tool calls: Bash setup, Read, Write `ACTION.md`, Bash cat) | held |
+| T1 `frontmatter_field decision: hold` | designed at cycle 2; **observed in the build and it did not discriminate** — live RED session `334a0f15` wrote `decision: hold` with no skill in context (§ Cycle 3: T1) | designed |
 | T1 `output_contains: gate` | held — RED's own text says "unrecorded gate acceptance" | held (`227f0f47`: quotes the deterministic-gate rule) |
-| T2 `file_unchanged` on the receipt | held — RED never edited it (`c26fd227`) | held (`866bd372`) |
+| T2 `file_unchanged` on the receipt — **cut in cycle 3** | held — RED never edited it (`c26fd227`) | held (`866bd372`) |
 | T2 `planning receipt incomplete` | **absent** — RED stopped for an unrelated reason (brief named no code location) and never mentions the receipt | present in `ACTION.md` and in the final output, citing § 4 |
 | T4 `selected:\s*production` | **no match** — RED wrote `selected: POC, recommended: Pilot` (`79e089f8`) | match — `selected: production` (`6455fde4`) |
 
@@ -321,18 +327,23 @@ field to read — that assertion is the one build's AC-2 run has to observe. Har
 `docs/dev/.spacedock-state/dev-80-forge-clean-runner/evidence/poc-assert-scoring.py`; it reads the six
 sessions and creates none. Its `file_unchanged` is falsifiable, not decorative:
 running it with `--mutate-t1-red` injects a rewrite of the T1 fixture and the assertion flips to
-`False`. They are kept because they close a real
+`False`. They were kept at cycle 2 because they close a real
 failure mode — a run that edits the work item to make the gate look accepted — which simply did
 not fire in this POC. The `decision:` frontmatter field carries the discrimination, at the cost of
 one prompt change: `ACTION.md` must now open with that field. It does not cue the answer; the
 prompt already poses the dispatch-or-message binary.
 
+**Cycle 3 supersedes both halves of that paragraph.** The build ran T1 for real and `decision:`
+did not discriminate either — see § Cycle 3: T1 is retired from AC-2's RED-fail claim. And
+`file_unchanged` is cut from `forge-skill-scenarios/v1`: across the six POC sessions and the six
+live sessions it held twelve times out of twelve, and the one run that came closest to the failure
+mode it names (POC `5bbe799f`, which wrote the `sed` rewrite *into* `ACTION.md`) it scores as
+unchanged. See § Cycle 3: the runner, block by block, and the Captain decision below.
+
 **How each assertion is evaluated.**
 
-- `file_unchanged: <path>` — the runner executes the scenario's `setup:` host-side in its own
-  `mktemp -d` and sha256s each named path to get the expected hash; the appended epilogue makes the
-  run print `sha256sum` of the same paths. Equal ⇒ unchanged. The host cannot hash a file inside a
-  cloud sandbox, so without the epilogue this assertion is unimplementable on the primary runner.
+- `file_unchanged: <path>` — **cut in cycle 3.** It required a host-side re-run of `setup:` and a
+  `sha256sum` epilogue (33 lines across six blocks) and discriminated nothing in twelve runs.
 - `file_matches` and `frontmatter_field` — the epilogue `cat`s each named path inside a fixed
   marker; the paged reader extracts the body and the runner matches host-side.
 - `output_contains` / `output_not_contains` — over the run's **terminal result string only** (bare:
@@ -384,7 +395,9 @@ to report, so the report's runner field is empty and the check fails.
   transcripts live under a per-run `mktemp -d` scratch and are not committed.
 - Cloud: `workspace create` is not idempotent and has no request token, so the runner creates
   **one** workspace per Phase 2 invocation, records its id in the scratch dir before the first
-  session, and reconciles by name on re-entry rather than creating a second.
+  session, and reconciles by name on re-entry rather than creating a second. The build's
+  reconciler returned a peer's id without waiting for `ready`; corrected in § Cycle 3: residual
+  dispositions, residual 1.
 - Recovery on partial failure is per scenario: a scenario whose token never arrives is
   `outcome=error`, and the remaining scenarios still run and report.
 - Data safety: scenario prompts are public plugin content. `<plugin>/skill-scenarios/` is
@@ -401,48 +414,226 @@ per-machine binary with a keychain token. Neither is in the repo. The runner mus
 named reason when either is missing — not skip silently — and the Phase 4 report records which
 runner actually ran.
 
+The runner also parses YAML, so **PyYAML** is a third machine dependency this repository does not
+vendor. The built runner names it (`missing machine dependency: PyYAML (pip install pyyaml)`)
+rather than raising `ImportError`; that refusal stays.
+
+### Cycle 3: the runner, block by block
+
+The build put the whole runner in `kc-plugin-forge/reference/skill-runner.py` — 390 lines at
+`a640a72f`, a file the table below never listed — behind the 17-line `skill-runner.sh` cut above.
+Two of this shape's own numbers were inconsistent before the build started and could not both
+have held: the table budgeted `skill-runner.sh (new) ~135` lines for the entire runner, while
+`### Stop numbers` set a 180-line runaway guard on one area *inside* that same file. A 135-line
+file cannot contain a 180-line sub-area, so the guard could not fire until the table's own
+estimate was already blown. That estimate was not derived from the work. This section derives it.
+
+Line ranges are measured with `cat -n` on `skill-runner.py` at `a640a72f`. "Keep" means the block
+answers what breaks without it and names the run that shows it; "cut" means it cannot.
+
+| Block (lines) | Verdict | What breaks without it — and the run that shows it |
+|---|---|---|
+| module docstring 1–14 (14) | keep, −8 | usage and the outcome-line format stay; the rest restates `skill-scenarios.md` |
+| imports + constants 15–32 (18) | keep | `DEFAULT_MODEL` is AC-5's pin; `ABS_SCRATCH_LITERAL` is AC-3's refusal |
+| `outcome_line` + `die` 34–41 (8) | keep | the outcome line is the only thing Phase 2 reads back; every refusal in the implementation report prints it |
+| `load_yaml` 44–50 (7) | keep | names PyYAML as a declared machine dependency instead of raising `ImportError` |
+| `validate_scenario` 53–66 (14) | keep | the five format refusals; five exercised at `exit 2` in the build (literal `/tmp/e`, both `assert:`+`judge:`, neither, missing `adversarial:`, missing `setup:`). Without it AC-3's strong form — the collision cannot be attempted — is prose |
+| `resolve_model` 69–74 (6) | keep | AC-5's falsifier: `DEFAULT_MODEL=""` with no scenario or file pin → `exit 2, no model pin resolved`. Exercised |
+| `bare_model_id` 77–82 (6) | keep, −2 | the two CLIs take different model spellings. Its docstring asserts `claude --bare --model sonnet-4-6` 404s — an absolute the implementation report flagged as not re-verified. Rewrite as the dated bounded observation |
+| `assertion_paths` 85–95 (11) | keep, −3 | tells the epilogue which paths to print; loses the `hashed` half with `file_unchanged` |
+| `build_epilogue` 98–112 (15) | keep, −2 | without an epilogue the host cannot see file state inside a cloud sandbox at all, so `file_matches`/`frontmatter_field` are unimplementable on the primary runner. Its four-line comment stays: an epilogue phrased as "your final action" was observed to swallow the spoken answer, leaving `output_contains` nothing to match |
+| `substitute` 115–116 (2) | keep | `{SCRATCH}` templating is what makes AC-3 true |
+| `build_prompt` 119–131 (13) | keep, −2 | assembles preamble/setup/prompt/epilogue; the GREEN preamble is the only RED/GREEN difference |
+| **`host_side_baseline` 134–151 (18)** | **cut** | exists only to compute `file_unchanged`'s expected hash. See the Captain decision below |
+| `extract` 154–174 (21) | keep, −3 | recovers file bodies from `tool_use_result` and the terminal string from the `subtype: success` payload; loses the sha half |
+| `score` 177–204 (28) | keep, −3 | the scoring path itself, two-sided on six live sessions (T2/T4 RED fail, three GREEN pass, T1 RED pass); loses the `file_unchanged` branch |
+| `run_bare` 207–226 (20) | keep | the fallback named in `## Accepted outcome`. Never completed a run — see residual 3 |
+| `resolve_project_id` 229–240 (12) | keep | `conductor session create` needs a project id and nothing else resolves it from the git remote |
+| `reconcile_workspace` 243–284 (42) | keep, +2 | `workspace create` is not idempotent and has no request token, so without the lock file six scenario-variant calls create six workspaces. Carries residual 1's cause; the fix is two lines here, not a rewrite |
+| `run_cloud` 287–307 (21) | keep | the primary runner; six live sessions |
+| `page_until_token` 310–341 (32) | keep, −4 docstring, +3 | the paged reader is the accepted outcome's named mechanism — the sql view elided 18 of 20 messages on `5bbe799f` |
+| `main` 344–390 (45) | keep | argv, scratch and token minting, dispatch, exit code |
+| scenario-file-absent refusal | **add +2** | the built runner raises a traceback on a missing scenario file; AC-4's absent branch gets a named reason at the script boundary |
+
+Projected: 390 − 33 (`file_unchanged`) − 14 (three docstrings) + 7 (two new guards) ≈ **350**.
+
+Cutting `file_unchanged` is the only block-level cut, and it is not free of the Captain's earlier
+ruling — see § Open decision for the Captain.
+
+### Cycle 3: T1 is retired from AC-2's RED-fail claim
+
+Evidence, from the build's own run: live session `334a0f15` (T1 RED, cloud, `sonnet-4-6`, no skill
+content in context) wrote `decision: hold`, left the fixture unchanged, and its output cites
+"gate" — a **pass**. The `frontmatter_field decision: hold` assertion cycle 2 added *to make T1
+discriminate* was observed doing the opposite: it recorded that an unskilled run holds. The rule
+T1 pressures — do not act on a remembered approval, read the recorded gate — is one the base model
+already applies without the skill.
+
+**Decision: T1 is retired from AC-2's RED-fail claim; that claim covers T2 and T4.**
+`## Acceptance criteria` is not rewritten — this record is the decision and the falsifier table
+below follows it.
+
+Why not the other branch offered (redesign T1 so an unskilled run plausibly fails): a candidate
+exists and is worth naming. The fixture's `gate: pending` line is a loud tell a base model reads
+straight off; a fixture carrying no gate field at all, whose stage report ends
+`recommendation: proceed`, would put the skill's own rule — acceptance is a recorded resolution,
+absence is not acceptance — in the discriminating position without leaking the answer, because the
+operator's ask and the visible evidence would both still point at dispatch. It is **not** admitted
+here, for the reason this return exists: it is designed, not observed, and writing a RED-fail claim
+for a run nobody has seen fail is exactly the cycle-2 error being corrected. It belongs in its own
+item, executed before anything depends on it.
+
+**T1 stays in the scenario file**, and what it now buys is stated rather than assumed: it is the
+only live run in which the scorer returned `pass` on a RED baseline. T2 RED and T4 RED both
+failed; without T1, nothing in the six sessions shows the scorer *can* score a baseline as a pass.
+That two-sidedness on live data is why T1 is retired from the claim rather than deleted.
+
+**The consequence the gate must rule on.** `## Accepted outcome`'s last sentence reads "RED fails
+on T1 and T4, GREEN passes on all three." Retiring T1's RED-fail claim makes the T1 half of that
+sentence false; the GREEN half is unaffected (all three GREEN runs passed). This shape does not
+edit that sentence — `## Route-back conditions` reserves it. The Captain rules whether this is a
+wording correction to the admission snapshot or a planning delta.
+
+### Cycle 3: residual dispositions
+
+**Residual 1 — workspace cold-start race. Fixed inside the trimmed runner, +5 lines.**
+Observed: the build session's first dispatch (`38bf53e3`) returned
+`outcome=error reason=session went idle without printing the token` after the full 480 s budget
+with **zero messages** in the transcript, while `conductor session status` reported `working`
+moments later. Cause: `reconcile_workspace`'s lock-file fast path returns a peer's workspace id
+without the ready-wait the fresh-create path performs, so a session can be created against a
+workspace still waking from `sleeping`; `page_until_token` then reads `status: idle` on a session
+that has not started its first turn and treats it as a completed stall.
+*Reproduce condition:* `conductor workspace status <id>` reports `sleeping` at `session create`
+time — any Phase 2 invocation reusing a workspace idle long enough to have slept.
+*Fix:* (a) in `page_until_token`, `idle` counts as a stall only after at least one
+non-`userMessage` message has been seen; with zero agent-originated messages it keeps polling to
+the budget. (b) in `reconcile_workspace`, the lock-file fast path waits for `status == ready` the
+same way the create path does.
+*Falsifier at implementation re-entry:* create one session against a workspace confirmed
+`sleeping`. Without (a) it returns `outcome=error ... went idle without printing the token` on a
+zero-message transcript; with (a) it returns the scenario's real outcome. Cost: one cloud session,
+the same unit as each of the six AC-2 sessions.
+
+**Residual 2 — AC-4 and AC-5 have no CI-wired check. The trimmed slice adds one; and AC-5's
+report fields are a missing deliverable, not only a missing check.**
+Measured on the built tree: the fenced report block under `## Phase 4: Re-validate + Report` in
+`kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` is **byte-identical to the delivery base**. It
+carries no runner field, no model pin, and no per-scenario outcome, and AC-4's
+`scenarios: hand-designed (no scenario file at <path>)` line has no slot in it. AC-5's acceptance
+text is therefore not merely unchecked — the thing it accepts does not exist in the tree. The
+implementation report's AC-5 evidence (`DEFAULT_MODEL=""` → `exit 2`) tests the runner's pin
+refusal, which is AC-5's other half.
+*Build obligation (≈5 lines in `SKILL.md`):* the Phase 4 report block gains
+
+```
+Phase 2 Runner: <cloud|bare> (<reason, when it fell back>)
+                Model pin: <model>
+                Scenarios: <scenario-file path> | hand-designed (no scenario file at <path>)
+                <ID>: RED <passed|failed|judged|error> / GREEN <passed|failed|judged|error>
+```
+
+*CI (≈22 lines added to the existing `forge-phase2-runner-contract.test.py`):* two guards over
+that block, in the same shape as G1–G3. **G4** — the block names a runner field carrying both
+`cloud` and `bare`, and a model-pin field. **G5** — the block carries per-scenario RED and GREEN
+outcome labels drawn from `{passed, failed, judged, error}` and a scenarios line with both the
+file branch and the hand-designed branch. Falsifiers: delete the model-pin line → G4 fires and
+names it; drop `judged` from the label set → G5 fires, which is the falsifier AC-4's row already
+names.
+*Cost per PR:* nothing beyond what already runs — the existing `Validate forge Phase 2
+clean-runner contract` step invokes this script; no new step, no new job, no new checkout. Not
+measured in seconds.
+*Known limit, stated:* G4/G5 guard the report template and the instruction, exactly as G1–G3 do.
+They prove forge is *told* to record runner, pin, and per-scenario outcome; they do not prove a
+given run recorded them. The runtime half of AC-4 — a live Phase 2 behaving differently with the
+scenario file present and absent — is evidenced by a live forge run only. The trimmed slice adds
+the one script-boundary piece of it that a script can own: a missing scenario file exits with a
+named reason instead of a traceback.
+
+**Residual 3 — surfaced by this trim, recorded rather than carried silently: `run_bare` has never
+completed a run.** `clean-profile-test.sh` ran standalone during ideation (`PASS`, 1483 ms), but
+the built `run_bare` path was exercised only as far as its credential refusal; no scenario has
+been scored end to end on `bare`, and `bare_model_id`'s model-spelling claim was not re-verified.
+Disposition: a known limit of this slice — `cloud` is primary and carried all six AC-2 sessions —
+recorded here so it is not read as tested. One `bare` run of T4 at implementation re-entry would
+close it and costs no cloud workspace; it is not admitted into an acceptance criterion.
+
 ### Where it touches
 
-| Path | lines now | lines after |
-|---|---|---|
-| `kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` | 713 | ~762 |
-| `kc-plugin-forge/reference/parallel-forge.md` | 230 | ~246 |
-| `kc-plugin-forge/reference/clean-profile-test.sh` | 112 | ~152 |
-| `kc-plugin-forge/reference/skill-runner.sh` (new) | 0 | ~135 |
-| `kc-plugin-forge/reference/skill-scenarios.md` (new, format) | 0 | ~70 |
-| `kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py` (new) | 0 | ~60 |
-| `kc-plugin-forge/skills/kc-plugin-forge-sanitize-check/SKILL.md` | 164 | ~166 |
-| `kc-plugin-forge/docs/architecture.md` | 135 | ~141 |
-| `kc-plugin-forge/docs/commands.md` | 220 | ~227 |
-| `.github/workflows/marketplace-parity.yml` | 60 | ~64 |
-| `kc-dev-flow/skill-scenarios/continue-dev-flow.scenarios.yaml` (new) | 0 | ~62 |
-| `kc-dev-flow/skill-scenarios/choose-work-profile.scenarios.yaml` (new) | 0 | ~35 |
+Rewritten in cycle 3 against the tree that was actually built. `base` is delivery base
+`4bc79749` (`origin/main` = `b214340f` plus the already-merged, unrelated ablation-anchor fix that
+landed on this branch first); `built` is `a640a72f`, both counted with `wc -l`; `corrected` is what
+this shape now admits.
 
-All `lines now` counted with `wc -l` on the working tree at HEAD `13a00282`, which
-`git diff --stat origin/main HEAD` shows is byte-identical to `origin/main` = `b214340f` across
-every path in this table — so the counts are the delivery base's, verified, not inherited. Reconciliation: every file
-appears in the journey except the three docs rows, which exist because journey step 4 changes a
-command grammar those files describe — that is the `project_context` receipt below, not
-unexplained scope. No journey step depends on a file the table omits.
+| Path | base | built | corrected |
+|---|---|---|---|
+| `kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` | 713 | 715 | 720 |
+| `kc-plugin-forge/reference/parallel-forge.md` | 230 | 237 | 237 |
+| `kc-plugin-forge/reference/clean-profile-test.sh` | 112 | 147 | 147 |
+| `kc-plugin-forge/reference/skill-runner.py` (new) | 0 | 390 | ≈350 |
+| `kc-plugin-forge/reference/skill-runner.sh` (built, now cut) | 0 | 17 | **0** |
+| `kc-plugin-forge/reference/skill-scenarios.md` (new) | 0 | 84 | 79 |
+| `kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py` (new) | 0 | 54 | 76 |
+| `kc-plugin-forge/skills/kc-plugin-forge-sanitize-check/SKILL.md` | 164 | 165 | 165 |
+| `kc-plugin-forge/docs/architecture.md` | 135 | 143 | 142 |
+| `kc-plugin-forge/docs/commands.md` | 220 | 220 | 220 |
+| `.github/workflows/marketplace-parity.yml` | 60 | 63 | 63 |
+| `kc-dev-flow/skill-scenarios/continue-dev-flow.scenarios.yaml` (new) | 0 | 64 | 62 |
+| `kc-dev-flow/skill-scenarios/choose-work-profile.scenarios.yaml` (new) | 0 | 22 | 22 |
+
+**What the cycle-2 table got wrong, in both directions.** It named `skill-runner.sh (new) ~135`
+for the whole runner and listed no `.py` at all — the file that took 390 lines. It also
+over-budgeted the parts it could see: `SKILL.md` at ~762 where the build spent 715, and
+`commands.md` at ~227 where the build spent 220. The overrun is not spread across the slice; it
+sits in one unlisted file, which is why the file-level guard below is restated on that file and a
+second guard is restated on the area the old 180 was aiming at.
+
+Reconciliation: every file still appears in the journey except the three docs rows, which exist
+because journey step 4 changes a command grammar those files describe — the `project_context`
+receipt below, not unexplained scope. `skill-runner.py` is journey steps 5–7; the
+`forge-phase2-runner-contract.test.py` growth is AC-4/AC-5 (residual 2). No journey step depends
+on a file this table omits.
 
 ### Stop numbers
 
-Measured as the diff against delivery base `origin/main` = `b214340f77335bcee6607b59c707a829ad09051c`.
+Measured as the diff against delivery base `4bc79749`. The built tree at `a640a72f` is
+**13 files, 712 insertions, 25 deletions** — over the 700-line number, which is why this stage
+exists. The projection below is derived from that measured tree, line by line, not re-estimated.
 
-- changed files > **14** → stop and report
-- changed lines > **700** → stop and report
-- runaway area: `kc-plugin-forge/reference/skill-runner.sh` — the cloud poller and pager is the
-  part that grows. > **180** lines in that one file → stop and report.
+| Change | insertions |
+|---|---|
+| built tree at `a640a72f` | 712 |
+| cut `file_unchanged` (runner −33, `continue-dev-flow.scenarios.yaml` −2, `skill-scenarios.md` −5) | −40 |
+| cut the `skill-runner.sh` wrapper (file −17, `architecture.md` tree row −1) | −18 |
+| trim three docstrings in `skill-runner.py` | −14 |
+| add residual 1's two race guards | +5 |
+| add AC-4's missing-scenario-file refusal | +2 |
+| add AC-5's Phase 4 report fields in `SKILL.md` | +5 |
+| add G4/G5 to `forge-phase2-runner-contract.test.py` | +22 |
+| **projected** | **674** |
+
+- changed files > **14** → stop and report. Projected **12** (13 built, minus the cut wrapper).
+- changed lines > **700** → stop and report. Projected **674** — 26 lines of margin, thin by
+  design: anything not in the table above stops and reports rather than spending it.
+- runaway area, restated on the file that actually holds it:
+  `kc-plugin-forge/reference/skill-runner.py` > **370** lines → stop and report. Projected
+  **≈350** (390 built − 33 − 14 + 7).
+- runaway area, restated on what the old 180 was aiming at — the cloud poller and pager, i.e.
+  `resolve_project_id` + `reconcile_workspace` + `run_cloud` + `page_until_token` — > **130**
+  lines → stop and report. Measured **107** on the built tree (12 + 42 + 21 + 32), ≈**110** after
+  the race guards. That area never breached its own guard. What breached it was the scorer, the
+  prompt builder, the extractor and the bare path, which the cycle-2 shape budgeted nowhere; the
+  file-level guard above is the one that would have fired.
 
 ### Acceptance checks that falsify the slice
 
 | AC | Check | Falsifier |
 |---|---|---|
 | AC-1 | `forge-phase2-runner-contract.test.py` over both Phase 2 run-execution spans | restore an in-session run instruction in either span → G2/G3 fires and names the line |
-| AC-2 | Phase 2 on kc-dev-flow, three scenarios, cloud runner; each scenario's `assert:` list evaluated identically for RED and GREEN | two, both grounded in the POC transcripts: drop T1's `frontmatter_field decision: hold` → T1 RED scores pass on session `5bbe799f` (its two remaining assertions were both true of that run) and AC-2 inverts; read outcomes from `conductor sql` instead of the paged reader → the file bodies the `file_matches`/`frontmatter_field` assertions need are elided (`T4-green.result.txt` carries no assistant block, while the paged reader returns `selected: production` from the `tool_use_result` at index 16 of session `6455fde4`) and the run reports `error`, not a score |
+| AC-2 | Phase 2 on kc-dev-flow, three scenarios, cloud runner; each scenario's `assert:` list evaluated identically for RED and GREEN. **Cycle 3: the RED-fail claim covers T2 and T4** — see § Cycle 3: T1 | one, and the cycle-2 falsifier is retired by measurement (live session `334a0f15` shows T1 RED passes *with* `frontmatter_field` present): read outcomes from `conductor sql` instead of the paged reader → the file bodies the `file_matches`/`frontmatter_field` assertions need are elided (`T4-green.result.txt` carries no assistant block, while the paged reader returns `selected: production` from the `tool_use_result` at index 16 of session `6455fde4`) and the run reports `error`, not a score |
 | AC-3 | six concurrent sessions, distinct `SCRATCH` | hardcode `/tmp/e` back into a scenario → two runs read each other's `ACTION.md` |
-| AC-4 | scenario file present → scenarios by name in the report, each carrying `passed`, `failed`, `judged`, or `error`; absent → hand-design line | rename the scenario file → report must switch to the hand-design line, not silently report nothing; label a `judge:`-only scenario `passed` instead of `judged` → the check fails, because `judged` is what keeps a model-scored scenario out of AC-2's RED/GREEN claim |
-| AC-5 | report carries runner, model pin, per-scenario outcomes | remove the model pin → report's runner field is empty and the check fails |
+| AC-4 | scenario file present → scenarios by name in the report, each carrying `passed`, `failed`, `judged`, or `error`; absent → hand-design line. **Cycle 3: G5 in `forge-phase2-runner-contract.test.py` guards the report template's two branches; the runner refuses a missing scenario file with a named reason** | rename the scenario file → the runner exits with `scenario file not found`, not a traceback, and the report must switch to the hand-design line; drop `judged` from the report template's label set → G5 fires, because `judged` is what keeps a model-scored scenario out of AC-2's RED/GREEN claim. Known limit: G5 guards the template, not a live run |
+| AC-5 | report carries runner, model pin, per-scenario outcomes. **Cycle 3: those fields do not exist in the built tree — adding them is a build obligation, and G4 guards them** | two halves: delete the model-pin line from the Phase 4 report block → G4 fires and names it (template half); delete `DEFAULT_MODEL` and every scenario/file `model:` → the runner exits 2 with `no model pin resolved`, exercised in the build (runner half) |
 
 ### AC-1 falsifier — exercised, not asserted
 
@@ -523,10 +714,27 @@ retained_document_change: none — no retained document is added or removed.
 
 ### Open decision for the Captain
 
-The bare fallback resolved its API key from a path outside the repo and the cloud runner needs
-a machine-local `conductor` token. Neither can be provisioned by this repo. Build proceeds with
-"fail loudly and record which runner ran"; a different answer (require cloud, fail hard without
-it) would change the runner-selection design.
+**1. Cutting `file_unchanged`, which the Captain named at ideation gate 1.** That resolution said
+"T1 `file_unchanged` on the entity file plus `output_contains` gate". Cycle 3 proposes cutting the
+assertion type from `forge-skill-scenarios/v1` and from T1 and T2, on measurement: across six POC
+sessions and six live sessions it held **twelve out of twelve** and discriminated nothing, and the
+single run that came closest to the failure mode it names — POC `5bbe799f`, which wrote the
+`sed 's/^gate: pending/gate: accepted/'` rewrite *into* `ACTION.md` rather than running it — it
+scores as unchanged. The failure mode it names is the one it did not catch.
+Its cost is **33 lines** — `host_side_baseline` entire, plus a branch in five other blocks and the
+`sha256sum` half of the epilogue. That is the difference between fitting the 700-line stop number
+and breaching it again: cut → **674 insertions**; keep → **707**, over.
+Captain's call: cut (the default, and what every number above assumes), or keep and rule on which
+33 lines elsewhere pay for it.
+
+**2. `## Accepted outcome`'s last sentence.** Retiring T1 from AC-2's RED-fail claim (§ Cycle 3:
+T1) makes "RED fails on T1 and T4" false in its T1 half. This stage did not edit that sentence.
+Wording correction to the admission snapshot, or planning delta.
+
+**3. Carried forward from cycle 2, unchanged.** The bare fallback resolves its API key from a path
+outside the repo and the cloud runner needs a machine-local `conductor` token; PyYAML is a third
+un-vendored dependency. Build proceeds with "fail loudly and record which runner ran"; a different
+answer (require cloud, fail hard without it) would change the runner-selection design.
 
 ## Stage Report: ideation
 
