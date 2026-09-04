@@ -778,11 +778,11 @@ def main() -> int:
         "clean Linear admission failed",
     )
     run_manual_contract_mutant(
-        "workspace-auth-guard-removed",
+        "linear-credential-guard-removed",
         str(LINEAR_ADMISSION),
-        "        if not key or not workspace_id:\n",
+        "        if not key:\n",
         "        if False:\n",
-        "missing-workspace emitted an envelope",
+        "missing-key emitted an envelope",
     )
     run_manual_contract_mutant(
         "linear-workspace-binding-removed",
@@ -900,14 +900,14 @@ def main() -> int:
     run_manual_contract_mutant(
         "manual-issue-required-fields-removed",
         "docs/dev/README.md",
-        "```markdown\n## The problem\n\n## Goal\n\n## Non-goals\n\n## Acceptance criteria\n\n- **AC-1** <observable condition>\n\n## Route-back conditions\n",
+        "```markdown\n## The problem\n\n## Accepted outcome\n\n## Non-goals\n\n## Acceptance criteria\n\n- **AC-1** <observable condition>\n\n## Route-back conditions\n",
         "```markdown\n## The problem\n",
         "manual admission Issue headings are missing or duplicated",
     )
     run_manual_contract_mutant(
         "adopter-issue-template-removed",
         "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
-        "   ## Goal\n",
+        "   ## Accepted outcome\n",
         "",
         "adopter Issue template drifted from the workflow README template",
     )

@@ -21,7 +21,8 @@ from pathlib import Path
 API_URL = "https://api.linear.app/graphql"
 ACTIVE_TYPES = {"unstarted", "started"}
 FIELDS = ("source", "planning-window", "planning-outcome")
-GOAL_HEADINGS = ("Goal", "Accepted outcome")
+ACCEPTED_GOAL_HEADING = "Accepted outcome"
+LEGACY_GOAL_HEADING = "Goal"
 
 
 class AdmissionError(RuntimeError):
@@ -89,13 +90,15 @@ def section(text: str, heading: str) -> str:
 def accepted_goal(text: str) -> str:
     present = [
         heading
-        for heading in GOAL_HEADINGS
+        for heading in (ACCEPTED_GOAL_HEADING, LEGACY_GOAL_HEADING)
         if re.search(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
     ]
-    if len(present) != 1:
+    if len(present) > 1:
         raise AdmissionError(
-            "planning description needs one '## Goal' or '## Accepted outcome' section"
+            "planning description carries both '## Accepted outcome' and the legacy '## Goal'"
         )
+    if not present:
+        raise AdmissionError("planning description needs one '## Accepted outcome' section")
     return section(text, present[0])
 
 
@@ -298,8 +301,8 @@ def main() -> int:
         deadline = started + args.timeout
         key = os.environ.get("LINEAR_API_KEY", "")
         workspace_id = os.environ.get("CONDUCTOR_WORKSPACE_ID", "")
-        if not key or not workspace_id:
-            raise AdmissionError("workspace authentication is unavailable")
+        if not key:
+            raise AdmissionError("LINEAR_API_KEY is unavailable")
         if args.graphql_url != API_URL:
             host = urllib.parse.urlparse(args.graphql_url).hostname
             if not key.startswith("test-") or host not in {"127.0.0.1", "localhost"}:
@@ -453,7 +456,6 @@ def main() -> int:
         ]
         envelope = {
             "schema": "kc-dev-flow-dispatch-envelope/v1",
-            "conductor_workspace_id": workspace_id,
             "linear_organization": organization["urlKey"],
             "delivery": delivery,
             "work_item_sha256": hashlib.sha256(committed).hexdigest(),
@@ -468,6 +470,8 @@ def main() -> int:
             "profile_contract_hashes": contract_hashes,
             "command_elapsed_ms": round((time.monotonic() - started) * 1000),
         }
+        if workspace_id:
+            envelope["conductor_workspace_id"] = workspace_id
         sys.stdout.write(json.dumps(envelope, sort_keys=True, separators=(",", ":")) + "\n")
         return 0
     except AdmissionError as exc:

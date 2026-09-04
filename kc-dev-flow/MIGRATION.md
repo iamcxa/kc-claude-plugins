@@ -207,24 +207,41 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
-## 2026-09-04 — the installed Linear reader states its Issue shape and host preconditions
+## 2026-09-04 — one name for the accepted goal, and no host variable gates admission
 
-The Development Brief that `linear-admission.py` reads from a Linear Issue was
-documented only in this repository's own workflow README, which the
-package's `contract-manifest.json` does not ship. The one section list the package did ship,
-`DEVELOPMENT_BRIEF_SECTIONS` in `profile-contract-loader.py`, names the work
-item's `## Accepted outcome`, so an adopter writing an Issue from the package
-alone was refused for a heading the package never printed. `adopt-dev-flow` now
-carries the Issue heading block, and the reader accepts the accepted goal under
-`## Goal` or `## Accepted outcome` while refusing a body carrying both.
+The Linear Issue and the committed work item now carry the accepted goal under
+the same heading, `## Accepted outcome`. They had drifted apart because the
+reader's Issue branch was written to read `## Goal` while every document and the
+contract test said `## Accepted outcome`; the mismatch was later resolved by
+moving the Issue template to `## Goal`, which made the drift canonical. The
+Issue template's own Route-back sentence still said "The accepted outcome or
+non-goals changed", so the template contradicted its own heading. `## Goal` is
+still accepted on the Issue, and a body carrying both headings is refused. That
+compatibility path exists to carry Issues written before the headings converged
+and is deliberately not pinned as a retained mechanism, so it can be removed
+once no open Issue uses it.
 
-The same reader requires `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` in the
-invoking process environment and a state authority at
+`adopt-dev-flow` now carries the Issue template. It previously lived only in
+this repository's own workflow README, which the package's
+`contract-manifest.json` does not ship, so an adopter writing an Issue from the
+package alone was refused for a heading the package never printed.
+
+`linear-admission.py` no longer requires `CONDUCTOR_WORKSPACE_ID`. It gated
+admission on a host marker that it never validated beyond non-emptiness and that
+nothing read back, while the Linear workspace was already bound by the
+`--linear-workspace` argument checked against the authenticated organization.
+The envelope still carries `conductor_workspace_id` when the variable is set and
+omits it otherwise, so a VM, a CI runner, and a plain shell can all run an
+engage. `LINEAR_API_KEY` remains required on the Linear branch, as the
+credential for the read itself; work with no planning provider records no
+Planning Receipt and needs neither.
+
+The reader does still require a state authority at
 `<workflow-dir>/.spacedock-state` that is its own committed git root. An adopter
 whose state lives inline in the workflow directory was told to retire its
-repository-local reader and received one that cannot run there. Confirm all
-three preconditions before deleting that reader; without the split-root state
-authority, raise the layout as a refit requirement and keep the adapter.
+repository-local reader and received one that cannot run there. Confirm that
+before deleting the reader; without the split-root state authority, raise the
+layout as a refit requirement and keep the adapter.
 
 ## 2026-09-03 — adoption adds no repository-owned copy of a declared capability
 

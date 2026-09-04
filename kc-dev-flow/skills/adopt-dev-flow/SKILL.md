@@ -34,13 +34,16 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    repository that supports Planning Receipts binds its provider, read-only
    reader, and installed engage comparator. Linear uses installed sibling
    `linear-admission.py`; other providers keep a repository-local adapter. That
-   sibling runs against three host preconditions: `LINEAR_API_KEY` and
-   `CONDUCTOR_WORKSPACE_ID` in the invoking process environment, and a state
-   authority at `<workflow-dir>/.spacedock-state` that is its own committed git
-   root. A repository whose state lives inline in the workflow directory has no
-   such root; the reader refuses it with `state authority is not
-   <workflow-dir>/.spacedock-state`, so raise that layout as a refit requirement
-   against the package and keep the repository-local adapter until then. The
+   sibling needs `LINEAR_API_KEY` in the invoking process environment, which is
+   provider credential rather than host binding, and a state authority at
+   `<workflow-dir>/.spacedock-state` that is its own committed git root. It reads
+   no other environment variable to decide whether to run, so a VM, a CI runner,
+   and a plain shell are all supported hosts. A repository whose state lives
+   inline in the workflow directory has no such root; the reader refuses it with
+   `state authority is not <workflow-dir>/.spacedock-state`, so raise that layout
+   as a refit requirement against the package and keep the repository-local
+   adapter until then. Work with no planning provider at all records no Planning
+   Receipt, invokes no reader, and needs no credential. The
    reader normalizes the union of current Ready
    items for one planning window/outcome and every currently Ready snapshot
    source even when it moved; it refuses a truncated result and exposes source
@@ -80,7 +83,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    ```markdown
    ## The problem
 
-   ## Goal
+   ## Accepted outcome
 
    ## Non-goals
 
@@ -95,11 +98,12 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    recommended change or stop.
    ```
 
-   `linear-admission.py` reads the accepted goal from `## Goal` or from
-   `## Accepted outcome` and refuses a body carrying both; it reads Non-goals
-   from `- ` or `* ` bullets. The committed work item is the separate document
-   whose Development Brief heading is `## Accepted outcome`, and
-   `profile-contract-loader.py` reads its Non-goals from `- ` bullets, so a
+   The Issue and the committed work item carry the accepted goal under the same
+   heading. `linear-admission.py` also accepts the superseded `## Goal` on the
+   Issue and refuses a body carrying both; that path exists only until Issues
+   written before the headings converged are migrated, and it is not a contract.
+   The reader takes Non-goals from `- ` or `* ` bullets, while
+   `profile-contract-loader.py` takes the work item's from `- ` bullets, so a
    snapshot copied out of an Issue rewrites `* ` as `- `.
 4. For a complete Planning Receipt, the engage reconcile is read-only: invoke
    the reader and normalize the provider's current Ready set and committed
