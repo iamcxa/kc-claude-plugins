@@ -2151,6 +2151,62 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         f"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}",
     )
 
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-intent-lock-") as intent_lock_root_name:
+    # DEV-93: a split-root state checkout (`git worktree add`) has `.git` as a FILE, not a
+    # directory; a lock path hardcoded as `<state>/.git/...` can never `mkdir` there. This
+    # case fails on the pre-fix script (SystemExit-worthy `lock timeout`, exit 6) and only
+    # passes once the lock path is resolved through `git rev-parse --git-dir`.
+    intent_lock_root = Path(intent_lock_root_name)
+    intent_lock_origin = intent_lock_root / "origin.git"
+    intent_lock_seed = intent_lock_root / "seed"
+    intent_lock_bare = intent_lock_root / "bare-clone"
+    intent_lock_state_wt = intent_lock_root / "state-wt"
+    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
+    subprocess.run(["git", "init", "-q", "--bare", str(intent_lock_origin)], check=True, capture_output=True)
+    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_seed)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "checkout", "-q", "-b", "spacedock-state/dev"], check=True, capture_output=True)
+    (intent_lock_seed / "_holder.json").write_text(json.dumps({"writer": 1, "holder": "laptop", "at": "x"}), encoding="utf-8")
+    subprocess.run(["git", "-C", str(intent_lock_seed), "add", "_holder.json"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "commit", "-q", "-m", "seed holder"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(intent_lock_seed), "push", "-q", "origin", "spacedock-state/dev"], check=True, capture_output=True)
+    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_bare)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(intent_lock_bare), "worktree", "add", "-q", str(intent_lock_state_wt), "spacedock-state/dev"],
+        check=True, capture_output=True,
+    )
+    require((intent_lock_state_wt / ".git").is_file(), "DEV-93 fixture: worktree .git is not a file")
+
+    def run_intent_commit(script: Path, claim: str) -> subprocess.CompletedProcess:
+        env = dict(os.environ, SHIP_LOCK_STALE_S="3")
+        return subprocess.run(
+            [
+                str(script), "commit", str(intent_lock_state_wt), "laptop", "1", claim,
+                "0123456789abcdef0123456789abcdef",
+                "11111111-1111-1111-1111-111111111111",
+                "d98f40b5e2080cb884facf1734fc66052eff998",
+                hashlib.sha256(claim.encode()).hexdigest(),
+            ],
+            capture_output=True, text=True, env=env, timeout=60,
+        )
+
+    fixed_result = run_intent_commit(ROOT / "scripts/ship-flow/intent.sh", "dev-93-contract-case")
+    require(
+        fixed_result.returncode == 0,
+        "intent.sh commit did not succeed on a worktree-style state checkout (`.git` is a file): "
+        f"exit={fixed_result.returncode} stdout={fixed_result.stdout!r} stderr={fixed_result.stderr!r}",
+    )
+    intent_lock_git_dir_raw = subprocess.run(
+        ["git", "-C", str(intent_lock_state_wt), "rev-parse", "--git-dir"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    intent_lock_git_dir = Path(intent_lock_git_dir_raw)
+    if not intent_lock_git_dir.is_absolute():
+        intent_lock_git_dir = intent_lock_state_wt / intent_lock_git_dir
+    require(
+        not list(intent_lock_git_dir.glob("ship-lock.d*")),
+        "intent.sh left lock residue under the worktree's git dir",
+    )
+
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 

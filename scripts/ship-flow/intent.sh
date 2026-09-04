@@ -6,7 +6,7 @@
 #   intent.sh reconcile <state-dir> <holder-id> <writer>                            (adopt exactly one live workspace whose exact name is <claim>-<token> and whose project matches the intent; else block)
 #   intent.sh show      <state-dir> <claim>
 # claim schema: ^[a-z0-9][a-z0-9.-]{2,63}$ (e.g. dev-84.g1). token: 32 hex (128-bit). project: uuid. message-sha256: 64 hex (sha256 of the exact message file handed to `conductor workspace create`). All sync failures are fatal.
-# commit and adopt hold a portable mkdir-based lock at <state-dir>/.git/ship-lock.d across their whole sync -> write -> commit -> push sequence: two invocations on the same checkout serialize instead of racing `git add`/commit/push on the shared working tree. `mkdir` is the atomic acquire (POSIX-portable, no `flock`/`lockf`/GNU-only flags, so it works on the First Officer's macOS host too); the lock dir lives under .git (git metadata, not the working tree) so it never itself makes the checkout dirty. The release trap is armed at script start, before any acquire is attempted, and only ever removes a lock this process itself created (never `rm -rf` one found already held). Staleness is judged by the lock directory's own mtime (age > 120s by default, no liveness probe: a remote holder's pid is meaningless on this host, and mtime survives a holder that was killed before it ever wrote its own marker), and a stale lock is reclaimed by an atomic rename to a `.stale.<epoch>.<pid>` side path — never by deleting it out from under whoever might still hold it — followed by a fresh `mkdir` retry. Once held, an `owner=<host>:<pid>:<epoch>` marker is written inside for audit and for the release trap's own-lock check.
+# commit and adopt hold a portable mkdir-based lock at ship-lock.d under `git -C <state-dir> rev-parse --git-dir` across their whole sync -> write -> commit -> push sequence: two invocations on the same checkout serialize instead of racing `git add`/commit/push on the shared working tree. Resolving the git dir through `rev-parse` (rather than assuming `<state-dir>/.git` is a directory) keeps the lock working when the state checkout is a `git worktree` whose `.git` is a file pointing elsewhere. `mkdir` is the atomic acquire (POSIX-portable, no `flock`/`lockf`/GNU-only flags, so it works on the First Officer's macOS host too); the lock dir lives under the git dir (git metadata, not the working tree) so it never itself makes the checkout dirty. The release trap is armed at script start, before any acquire is attempted, and only ever removes a lock this process itself created (never `rm -rf` one found already held). Staleness is judged by the lock directory's own mtime (age > 120s by default, no liveness probe: a remote holder's pid is meaningless on this host, and mtime survives a holder that was killed before it ever wrote its own marker), and a stale lock is reclaimed by an atomic rename to a `.stale.<epoch>.<pid>` side path — never by deleting it out from under whoever might still hold it — followed by a fresh `mkdir` retry. Once held, an `owner=<host>:<pid>:<epoch>` marker is written inside for audit and for the release trap's own-lock check.
 set -euo pipefail
 cmd=${1:-}; state=${2:-}; branch=spacedock-state/dev; dir="$state/_intents"; here=$(cd "$(dirname "$0")" && pwd)
 die() { echo "intent: $1" >&2; exit "${2:-1}"; }
@@ -31,7 +31,9 @@ release_lock() {
 }
 trap release_lock EXIT
 lock() {
-  LOCK_DIR="$state/.git/ship-lock.d"
+  local gitdir; gitdir=$(git -C "$state" rev-parse --git-dir)
+  case "$gitdir" in /*) : ;; *) gitdir="$state/$gitdir" ;; esac
+  LOCK_DIR="$gitdir/ship-lock.d"
   local waited=0 stale_s=${SHIP_LOCK_STALE_S:-120} age stale_name tmp
   while ! mkdir "$LOCK_DIR" 2>/dev/null; do
     # Age comes from the lock DIRECTORY's own mtime, not from parsing the owner marker inside it: a
