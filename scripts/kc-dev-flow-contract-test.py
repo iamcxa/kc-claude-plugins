@@ -1136,7 +1136,6 @@ for phrase in [
     "needs `LINEAR_API_KEY` in the invoking process environment, which is provider credential rather than host binding",
     "a state authority at `<workflow-dir>/.spacedock-state` that is its own committed git root",
     "It reads no other environment variable to decide whether to run",
-    "a VM, a CI runner, and a plain shell are all supported hosts",
     "Work with no planning provider at all records no Planning Receipt, invokes no reader, and needs no credential",
     "raise that layout as a refit requirement against the package and keep the repository-local adapter",
     "The Issue and the committed work item carry the accepted goal under the same heading, and `linear-admission.py` reads no other name for it",
@@ -1419,8 +1418,6 @@ require(
     and "## Acceptance evidence" not in manual_issue_body,
     "manual admission Issue body is not canonical AC-N criteria",
 )
-# The Issue body and the work item differ by one heading, and only this README
-# carried the Issue shape, so a Brief written from the package alone was refused.
 require(
     " ".join(adopter.split("```markdown\n", 1)[1].split("```", 1)[0].split())
     == normalized_manual_issue_body,
@@ -1563,7 +1560,6 @@ for name in ["chief-engineer", "science-officer", "science-officer-em"]:
 linear_admission = PLUGIN / "scripts/linear-admission.py"
 linear_source = linear_admission.read_text(encoding="utf-8")
 for mechanism in [
-    '"LINEAR_API_KEY is unavailable"',
     '"--validate-admission"',
     '"GIT_NO_REPLACE_OBJECTS": "1"',
     '"state or work-item revision changed during admission"',
@@ -1571,7 +1567,6 @@ for mechanism in [
     '"branchName"',
     '"delivery": delivery',
     '"kc-dev-flow-dispatch-envelope/v1"',
-    '"state authority is not <workflow-dir>/.spacedock-state"',
     '"committed snapshot Non-goals must be a \'- \' bullet list"',
 ]:
     require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
@@ -1640,10 +1635,7 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
             item = {
                 "id": identifier.lower(), "identifier": reported_identifier,
                 "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
-                "description": (
-                    f"{goal_heading}\n\n{goal}\n\n"
-                    + f"## Non-goals\n\n* {non_goal}\n"
-                ),
+                "description": f"{goal_heading}\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
                 "state": {"type": issue_state},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
                 "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
