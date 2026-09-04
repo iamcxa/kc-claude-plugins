@@ -249,9 +249,7 @@ def reconcile_workspace(project_id, model):
 
 
 def probe_cloud_auth():
-    """A present-but-rejected CONDUCTOR_API_KEY still satisfies `if env.get(...)`
-    (cycle-2 gate: presence, not authentication). Probes real auth via
-    `conductor auth whoami` and returns (ok, token_source, reason)."""
+    """Real auth via `conductor auth whoami` — CONDUCTOR_API_KEY presence alone is not authentication (cycle-2 gate). Returns (ok, token_source, reason)."""
     try:
         proc = subprocess.run(["conductor", "auth", "whoami"], capture_output=True, text=True, timeout=15)
     except Exception as e:
@@ -266,15 +264,12 @@ def probe_cloud_auth():
 
 
 def run_cloud(prompt, model, plugin_dir, scratch, transcript_path, scenario_id, variant):
-    ok, token_source, reason = probe_cloud_auth()
-    if not ok:
-        return None, "cloud", f"{reason} (token source: {token_source})", token_source
     project_id, reason = resolve_project_id(plugin_dir)
     if not project_id:
-        return None, "cloud", reason, token_source
+        return None, "cloud", reason
     ws_id, reason = reconcile_workspace(project_id, model)
     if not ws_id:
-        return None, "cloud", reason, token_source
+        return None, "cloud", reason
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
         f.write(prompt)
         prompt_file = f.name
@@ -284,9 +279,9 @@ def run_cloud(prompt, model, plugin_dir, scratch, transcript_path, scenario_id, 
             "--model", model, "--effort", DEFAULT_EFFORT, "--name", f"{scenario_id}-{variant}",
             "--message-file", prompt_file, "--json"]))
     except subprocess.CalledProcessError as e:
-        return None, "cloud", f"conductor session create failed: {e}", token_source
+        return None, "cloud", f"conductor session create failed: {e}"
     sid = sess.get("sessionId") or sess.get("id")
-    return sid, "cloud", None, token_source
+    return sid, "cloud", None
 
 
 def page_until_token(sid, token, budget_s):
@@ -343,7 +338,8 @@ def main():
     runner_used = runner_req
     messages, sid, reason, token_source = None, None, None, None
     if runner_req == "cloud":
-        sid, runner_used, reason, token_source = run_cloud(prompt, model, plugin_dir, remote_scratch, transcript_path, scenario_id, variant)
+        auth_ok, token_source, reason = probe_cloud_auth()
+        sid, runner_used, reason = run_cloud(prompt, model, plugin_dir, remote_scratch, transcript_path, scenario_id, variant) if auth_ok else (None, "cloud", f"{reason} (token source: {token_source})")
         if sid:
             messages, acked, stall_reason = page_until_token(sid, token, TOKEN_BUDGET_S)
             transcript_path.write_text(json.dumps(messages, indent=2))
