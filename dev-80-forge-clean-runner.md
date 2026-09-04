@@ -855,3 +855,28 @@ and fixing it would add lines to a file already over its guard.
 - Retry 1: ideation (cycle 3) — agent-error (API 500 server_error at first action, 2026-09-03 ~21:45 CST); re-dispatched -retry
 - Hold: ideation (cycle 3) — second consecutive agent-error (API 529 overloaded on the -retry dispatch, ~21:50 CST); entity held un-dispatched pending Captain instruction
 - Resume: ideation (cycle 3) — Captain instructed re-dispatch after Claude status cleared (09:30 CST); fresh -cycle3-r2 dispatch on Opus
+
+## Stage Report: ideation (cycle 3)
+
+- DONE: `kc-plugin-forge/reference/skill-runner.py` (390 lines) is either cut to the shape's own 180-line runaway guard or each remaining block is justified by name against the without-it test; blocks that cannot answer are cut. The `### Where it touches` table and `### Stop numbers` are rewritten to name the actual files and the new guard, and the total insertions fit the stated line number.
+  `## Shape` § Cycle 3: the runner, block by block — all 21 blocks measured by `cat -n` line range, each with what breaks without it and the run that shows it. Cut to 180 is unreachable without deleting `run_bare`, which `## Accepted outcome` names, so branch 2 was taken: two cuts (`host_side_baseline` + the whole `file_unchanged` path, 33 lines; the `skill-runner.sh` wrapper, 17 lines) and 14 lines of docstring trim. The old 180 guard is shown to have been aimed at the cloud poller/pager, measured at **107** lines on the built tree — that area never breached it; the scorer, prompt builder, extractor and bare path, budgeted nowhere, did. Restated: `skill-runner.py` > 370 (projected ≈350), cloud path > 130 (projected ≈110). Total insertions derived line by line from the built tree: 712 → **674**, under the unchanged 700 stop number with 26 lines of margin; files 13 → 12.
+- DONE: The T1 `frontmatter_field decision: hold` assertion is resolved from the build's own evidence (session 334a0f15).
+  `## Shape` § Cycle 3: T1 is retired from AC-2's RED-fail claim. Branch 2 of the two offered: the claim now covers T2 and T4; `## Acceptance criteria` untouched; the AC-2 falsifier row follows the decision and the retired cycle-2 falsifier is marked retired by measurement. The redesign branch is named in full (drop the `gate: pending` tell so the skill's recorded-resolution rule does the discriminating) and explicitly not admitted, because admitting a RED-fail claim for a run nobody has seen fail is the cycle-2 error being corrected. T1 stays in the scenario file: it is the only live run where the scorer returned `pass` on a RED, which is the harness's two-sidedness on live data.
+- DONE: The two open residuals are dispositioned by name.
+  `## Shape` § Cycle 3: residual dispositions. Residual 1 (workspace cold-start race) is **fixed inside the trimmed runner**, +5 lines, both halves named (`page_until_token` requires ≥1 non-`userMessage` message before `idle` counts as a stall; `reconcile_workspace`'s lock-file fast path gains the ready-wait), with the reproduce condition (`workspace status` = `sleeping` at `session create`) and a one-session falsifier. Residual 2 (AC-4/AC-5 not CI-wired) — the trimmed slice **adds** G4/G5 to the existing contract test (no new CI step, no new job; seconds not measured), and the disposition corrects the premise: AC-5's report fields do not exist in the tree at all.
+- FINDING, not in the checklist: **AC-5's deliverable is missing, not just its check.** Verified byte-identically — the fenced report block under `## Phase 4: Re-validate + Report` in `kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` has the same md5 (`c5ecfffd…`) at delivery base `4bc79749` and at built HEAD `a640a72f`; `git diff -U0` shows SKILL.md's only hunks are at lines 309 and 319, both inside Phase 2. There is no runner field, no model pin, no per-scenario outcome, and no slot for AC-4's hand-designed line. The build obligation is now in the shape (≈5 lines) and in the AC-4/AC-5 falsifier rows.
+- FINDING: **residual 3, surfaced by the trim** — `run_bare` has never completed a run; it was exercised only to its credential refusal, and `bare_model_id`'s "`--model sonnet-4-6` 404s" docstring is an unverified absolute the implementation report already flagged. Recorded as a known limit with the closing run named, not admitted into an AC.
+
+### Summary
+
+Corrected the shape; no code touched (worktree clean at `a640a72f`). Two decisions need the
+Captain and both are in `### Open decision for the Captain`. First: cutting `file_unchanged`,
+which the Captain himself named at ideation gate 1 — it held 12 of 12 across the six POC and six
+live sessions, discriminated nothing, and the one run closest to the failure mode it names (POC
+`5bbe799f`, which wrote the `sed` rewrite *into* `ACTION.md`) it scores as unchanged. Its 33 lines
+are exactly the difference between 674 insertions and 707, i.e. between fitting the 700-line stop
+number and breaching it again. Second: retiring T1 from AC-2's RED-fail claim makes the T1 half of
+`## Accepted outcome`'s last sentence false — wording correction to the admission snapshot, or
+planning delta. Everything else is derived arithmetic from the measured tree rather than a new
+estimate; the cycle-2 numbers were shown to be internally impossible (a ~135-line file budget with
+a 180-line guard on an area inside it), which is why they never fired.
