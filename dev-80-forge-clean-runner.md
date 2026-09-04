@@ -1,6 +1,6 @@
 ---
 title: "Forge Phase 2 RED/GREEN runs in a clean runner with a scenario file slot"
-status: ideation
+status: implementation
 source:
 product: kc-plugin-forge
 planning-window:
@@ -87,7 +87,7 @@ gates:
                 reason: 'Captain approved the cycle-3 shape at attempt 3 with both coupled rulings as recommended: (1) cut file_unchanged (33 lines) and the .sh wrapper, guards skill-runner.py <= 370 and cloud path <= 130, insertions 675 under the 700 stop number; (2) the Accepted outcome''s last sentence is corrected in the admission snapshot to name T2 and T4 (Captain authority over the standalone brief), no planning delta. Credential default unchanged: fail loudly and record which runner ran.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
