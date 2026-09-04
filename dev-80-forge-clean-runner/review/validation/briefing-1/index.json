@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-1:revision-1",
+  "question": "Approve the validation of DEV-80 (Forge Phase 2 clean runner + scenario slot) at candidate revision aafa538b, so it proceeds to Captain-authorized Draft PR creation?",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a34a986c43b36e9e8098627bf74bd3d5488a3a99/dev-80-forge-clean-runner.md",
+      "rev": "sha256:6197a24cebc6d5c0f06e703c91e401fa48b74eada271e7a2c8f936b268bafee4",
+      "mediaType": "text/markdown",
+      "summary": "All five acceptance criteria re-verified independently at aafa538b with fresh falsifier runs that reddened and reverted clean; AC-2 scored against the gate-3 ruling (T2 and T4), reusing cycle 3's cloud observation at this same revision rather than re-purchasing four cloud sessions. Six declared proof and delivery checks green. Three residuals the Captain rules on: the acceptance-criteria text for AC-2 still reads T1 and T4 against the gate-3 correction; no automated guard reddens if the cloud auth precondition regresses to checking that an environment variable is merely present; and the insertion count sits at exactly 700 against a 700 stop-loss, so any added guard spends against that number."
+    }
+  ]
+}

@@ -88,6 +88,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kmt1mgvwqy0g9qmshemqtsn1:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kmt1mgvwqy0g9qmshemqtsn1-validation-1
+              briefing:
+                id: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-1:revision-1
+                digest: sha256:3274dcb8ca618e9f2878fcaff3f68d51b3b64d9c0704055a914f741d94a93e83
+                room-ref: ./dev-80-forge-clean-runner/review/validation/briefing-1
 ---
 
 ## The problem
