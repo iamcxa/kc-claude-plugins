@@ -904,3 +904,4 @@ planning delta. Everything else is derived arithmetic from the measured tree rat
 estimate; the cycle-2 numbers were shown to be internally impossible (a ~135-line file budget with
 a 180-line guard on an area inside it), which is why they never fired.
 - Nudge: implementation (cycle 2) — worker stalled 600s after committing, before its stage report; Captain instructed continue (09-04 10:56 CST); nudged via SendMessage to resume from transcript
+- Retry: implementation (cycle 2) — nudge target unreachable (worker dead after 600s stall); re-dispatched -cycle2-retry on Captain instruction (09-04 10:57 CST)
