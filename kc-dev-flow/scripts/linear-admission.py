@@ -96,7 +96,9 @@ def normalized_item(text: str) -> dict[str, object]:
         line[2:].strip() for line in section(text, "Non-goals").splitlines()
         if line.startswith("- ")
     ]
-    if not all((source, window, outcome)) or not non_goals or any(not item for item in non_goals):
+    if not non_goals or any(not item for item in non_goals):
+        raise AdmissionError("committed snapshot Non-goals must be a '- ' bullet list")
+    if not all((source, window, outcome)):
         raise AdmissionError("committed snapshot has incomplete five-field data")
     return {
         "source": source,
@@ -231,7 +233,7 @@ def live_item(issue: object) -> dict[str, object]:
         "source": issue["url"],
         "planning-window": window,
         "planning-outcome": outcome,
-        "accepted-goal": section(description, "Goal"),
+        "accepted-goal": section(description, "Accepted outcome"),
         "non-goals": non_goals,
     }
 
@@ -282,14 +284,16 @@ def main() -> int:
         deadline = started + args.timeout
         key = os.environ.get("LINEAR_API_KEY", "")
         workspace_id = os.environ.get("CONDUCTOR_WORKSPACE_ID", "")
-        if not key or not workspace_id:
-            raise AdmissionError("workspace authentication is unavailable")
+        if not key:
+            raise AdmissionError("LINEAR_API_KEY is unavailable")
         if args.graphql_url != API_URL:
             host = urllib.parse.urlparse(args.graphql_url).hostname
             if not key.startswith("test-") or host not in {"127.0.0.1", "localhost"}:
                 raise AdmissionError("test endpoint requires a synthetic key and loopback host")
 
         state = (args.workflow_dir / ".spacedock-state").resolve()
+        if not state.is_dir():
+            raise AdmissionError("state authority is not <workflow-dir>/.spacedock-state")
         work_item = args.work_item.resolve()
         profile_loader = args.profile_loader.expanduser().resolve()
         comparator = profile_loader.parent / "engage-reconcile.py"
@@ -435,7 +439,6 @@ def main() -> int:
         ]
         envelope = {
             "schema": "kc-dev-flow-dispatch-envelope/v1",
-            "conductor_workspace_id": workspace_id,
             "linear_organization": organization["urlKey"],
             "delivery": delivery,
             "work_item_sha256": hashlib.sha256(committed).hexdigest(),
@@ -450,6 +453,8 @@ def main() -> int:
             "profile_contract_hashes": contract_hashes,
             "command_elapsed_ms": round((time.monotonic() - started) * 1000),
         }
+        if workspace_id:
+            envelope["conductor_workspace_id"] = workspace_id
         sys.stdout.write(json.dumps(envelope, sort_keys=True, separators=(",", ":")) + "\n")
         return 0
     except AdmissionError as exc:

@@ -1133,6 +1133,12 @@ for phrase in [
     "adds no repository-owned reader, adapter, script, test, or check for a capability a declared resource already supplies",
     "commit it only when the Captain names a consumer that reads it",
     "a repository-local Linear planning reader",
+    "needs `LINEAR_API_KEY` in the invoking process environment, which is provider credential rather than host binding",
+    "a state authority at `<workflow-dir>/.spacedock-state` that is its own committed git root",
+    "It reads no other environment variable to decide whether to run",
+    "Work with no planning provider at all records no Planning Receipt, invokes no reader, and needs no credential",
+    "raise that layout as a refit requirement against the package and keep the repository-local adapter",
+    "The Issue and the committed work item carry the accepted goal under the same heading, and `linear-admission.py` reads no other name for it",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
@@ -1157,6 +1163,8 @@ for phrase in [
     "remove the canonical `source` field before either v4 admission validation or continuation",
     "do not reinterpret it as provider identity",
     "retires its repository-local planning reader",
+    "no longer requires `CONDUCTOR_WORKSPACE_ID`",
+    "work with no planning provider records no Planning Receipt and needs neither",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 for phrase in [
@@ -1391,7 +1399,7 @@ for phrase in [
 manual_issue_body = workflow.split("```markdown\n", 1)[1].split("```", 1)[0]
 normalized_manual_issue_body = " ".join(manual_issue_body.split())
 manual_issue_headings = [
-    "## The problem", "## Goal", "## Non-goals",
+    "## The problem", "## Accepted outcome", "## Non-goals",
     "## Acceptance criteria", "## Route-back conditions",
 ]
 require(all(manual_issue_body.count(heading) == 1 for heading in manual_issue_headings), "manual admission Issue headings are missing or duplicated")
@@ -1409,6 +1417,11 @@ require(
     "- **AC-1** <observable condition>" in manual_issue_body
     and "## Acceptance evidence" not in manual_issue_body,
     "manual admission Issue body is not canonical AC-N criteria",
+)
+require(
+    " ".join(adopter.split("```markdown\n", 1)[1].split("```", 1)[0].split())
+    == normalized_manual_issue_body,
+    "adopter Issue template drifted from the workflow README template",
 )
 for phrase in [
     "The accepted outcome or non-goals changed",
@@ -1547,7 +1560,6 @@ for name in ["chief-engineer", "science-officer", "science-officer-em"]:
 linear_admission = PLUGIN / "scripts/linear-admission.py"
 linear_source = linear_admission.read_text(encoding="utf-8")
 for mechanism in [
-    'os.environ.get("CONDUCTOR_WORKSPACE_ID"',
     '"--validate-admission"',
     '"GIT_NO_REPLACE_OBJECTS": "1"',
     '"state or work-item revision changed during admission"',
@@ -1555,6 +1567,7 @@ for mechanism in [
     '"branchName"',
     '"delivery": delivery',
     '"kc-dev-flow-dispatch-envelope/v1"',
+    '"committed snapshot Non-goals must be a \'- \' bullet list"',
 ]:
     require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
 
@@ -1592,6 +1605,11 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         content = fixture.project_content
         cycle_id = fixture.cycle_id
         goal, non_goal = fixture.goal, fixture.non_goal
+        goal_heading = (
+            "## Goal"
+            if fixture.scenario == "legacy-goal-heading"
+            else "## Accepted outcome"
+        )
         if fixture.scenario == "project-drift":
             content += " changed"
         if fixture.scenario == "cycle-drift":
@@ -1617,7 +1635,7 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
             item = {
                 "id": identifier.lower(), "identifier": reported_identifier,
                 "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
-                "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
+                "description": f"{goal_heading}\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
                 "state": {"type": issue_state},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
                 "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
@@ -1750,6 +1768,7 @@ Stop on any planning drift.
         conductor: str | None = "workspace",
         timeout: str = "5",
         reader: Path = linear_admission,
+        workflow_dir: Path = workflow,
     ) -> subprocess.CompletedProcess[str]:
         server.scenario, server.raced = scenario, False
         env = os.environ.copy()
@@ -1759,7 +1778,7 @@ Stop on any planning drift.
             else:
                 env[name] = value
         return subprocess.run(
-            [sys.executable, str(reader), "--workflow-dir", str(workflow),
+            [sys.executable, str(reader), "--workflow-dir", str(workflow_dir),
              "--work-item", str(work_item),
              "--profile-loader", str(PLUGIN / "scripts/profile-contract-loader.py"),
              "--local-profile", str(ROOT / "docs/dev/README.md"),
@@ -1770,10 +1789,14 @@ Stop on any planning drift.
 
     before = (revision, work_item.read_bytes())
     requests_before = len(server.queries)
-    for name, key, conductor in (("missing-key", None, "workspace"), ("missing-workspace", "test-key", None)):
-        refused = admit(name, key=key, conductor=conductor)
-        require(refused.returncode == 2 and not refused.stdout, f"{name} emitted an envelope")
-    require(len(server.queries) == requests_before, "missing authentication reached Linear")
+    refused = admit("missing-key", key=None)
+    require(
+        refused.returncode == 2
+        and not refused.stdout
+        and "LINEAR_API_KEY is unavailable" in refused.stderr,
+        f"missing-key was not refused for the credential: {refused.stderr}",
+    )
+    require(len(server.queries) == requests_before, "a missing credential reached Linear")
     started_at = time.monotonic()
     clean = admit("clean")
     journey_ms = round((time.monotonic() - started_at) * 1000)
@@ -1790,8 +1813,31 @@ Stop on any planning drift.
         and envelope["plugin_version"] == installed_package["version"]
         and envelope["contract_digest"] == installed_package["contract_digest"]
         and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
+        and envelope["conductor_workspace_id"] == "workspace"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
+    )
+    hostless = admit("clean", conductor=None)
+    require(
+        hostless.returncode == 0
+        and "conductor_workspace_id" not in json.loads(hostless.stdout),
+        f"admission without a Conductor workspace was refused: {hostless.stderr}",
+    )
+    legacy_heading = admit("legacy-goal-heading")
+    require(
+        legacy_heading.returncode == 2
+        and not legacy_heading.stdout
+        and "needs one Accepted outcome section" in legacy_heading.stderr,
+        f"the retired Goal heading was still admitted: {legacy_heading.stderr}",
+    )
+    inline_workflow = fixture_root / "inline"
+    inline_workflow.mkdir()
+    inline = admit("clean", workflow_dir=inline_workflow)
+    require(
+        inline.returncode == 2
+        and not inline.stdout
+        and "state authority is not <workflow-dir>/.spacedock-state" in inline.stderr,
+        f"inline state layout was not named in the refusal: {inline.stderr}",
     )
     with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
         mutant_root = Path(temporary)
@@ -1805,6 +1851,39 @@ Stop on any planning drift.
         require(
             refused.returncode == 2 and not refused.stdout,
             "linear-delivery-branch-read-removed mutant survived",
+        )
+
+        goal_heading_mutant = mutant_root / "retired-goal-heading-restored.py"
+        goal_heading_source, goal_heading_count = re.subn(
+            r'"accepted-goal": section\(description, "Accepted outcome"\),',
+            '"accepted-goal": section(description, "Goal"),',
+            linear_source,
+            count=1,
+        )
+        require(goal_heading_count == 1, "Linear goal-heading mutant anchor changed")
+        goal_heading_mutant.write_text(goal_heading_source, encoding="utf-8")
+        survived = admit("legacy-goal-heading", reader=goal_heading_mutant)
+        require(
+            survived.returncode == 0,
+            f"retired-goal-heading-restored mutant still refused: {survived.stderr}",
+        )
+
+        state_mutant = mutant_root / "state-authority-message-removed.py"
+        state_source, state_count = re.subn(
+            r'^        if not state\.is_dir\(\):\n'
+            r'            raise AdmissionError\("state authority is not <workflow-dir>/\.spacedock-state"\)\n',
+            "",
+            linear_source,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        require(state_count == 1, "Linear state-authority mutant anchor changed")
+        state_mutant.write_text(state_source, encoding="utf-8")
+        survived = admit("clean", reader=state_mutant, workflow_dir=inline_workflow)
+        require(
+            survived.returncode == 2
+            and "state authority is not <workflow-dir>/.spacedock-state" not in survived.stderr,
+            f"state-authority-message-removed mutant kept the message: {survived.stderr}",
         )
 
         envelope_mutant = mutant_root / "delivery-envelope-removed.py"

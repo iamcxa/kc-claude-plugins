@@ -65,7 +65,7 @@ standalone Captain-approved brief leaves `source`, `planning-window`, and
 | Planning items | Linear Issues in team `dev`; new provider-backed admissions only |
 | Planning window | Linear Cycle |
 | Planning outcome | Linear Project as one user-value release package |
-| Planning reader and admission guard | Installed sibling `linear-admission.py`; organization `duckbase-co`; read `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` only from Conductor env, accept no credential argument or prompt, reconcile exact Project/Cycle active Issues, and emit the engaged Issue's exact `branchName` plus `Fixes DEV-N` |
+| Planning reader and admission guard | Installed sibling `linear-admission.py`; organization `duckbase-co`; read `LINEAR_API_KEY` only from the process environment, accept no credential argument or prompt, reconcile exact Project/Cycle active Issues, and emit the engaged Issue's exact `branchName` plus `Fixes DEV-N` |
 | Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
@@ -268,7 +268,7 @@ A Linear Issue used for admission has this body shape without a
 ```markdown
 ## The problem
 
-## Goal
+## Accepted outcome
 
 ## Non-goals
 
