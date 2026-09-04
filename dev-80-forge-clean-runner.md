@@ -96,6 +96,17 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-1:revision-1
                 digest: sha256:3274dcb8ca618e9f2878fcaff3f68d51b3b64d9c0704055a914f741d94a93e83
                 room-ref: ./dev-80-forge-clean-runner/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:validation:1
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-04T04:17:20.418973Z"
+                decision: approve
+                reason: 'Captain approved the validation at attempt 1. All five acceptance criteria carry evidence at candidate revision aafa538b, four of them re-verified by fresh falsifier runs that reddened on mutation and reverted clean; the six declared proof and delivery checks are green. AC-2 is scored against the gate-3 ruling (T2 and T4) on cycle 3''s live cloud observation at the same revision, with validation independently confirming only that the credential path is still live — the FO named that reduced independence as the one risk that could change the vote, and the Captain approved with it on the record. Three residuals stand disclosed: the AC-2 acceptance-criteria sentence still reads T1 and T4, no automated guard reddens if the cloud auth precondition regresses to environment-variable presence, and the insertion count sits at exactly 700 against the 700 stop-loss.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
