@@ -646,3 +646,4 @@ false `outcome=error` before the workspace was confirmed awake; it did not repro
 and fixing it would add lines to a file already over its guard.
 - Retry 1: ideation (cycle 3) — agent-error (API 500 server_error at first action, 2026-09-03 ~21:45 CST); re-dispatched -retry
 - Hold: ideation (cycle 3) — second consecutive agent-error (API 529 overloaded on the -retry dispatch, ~21:50 CST); entity held un-dispatched pending Captain instruction
+- Resume: ideation (cycle 3) — Captain instructed re-dispatch after Claude status cleared (09:30 CST); fresh -cycle3-r2 dispatch on Opus
