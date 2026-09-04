@@ -112,6 +112,17 @@ gates:
                 id: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-2:revision-1
                 digest: sha256:7fce84a6fe88076559cca7489ed648608e67fa882ffde615367261d2f1157c02
                 room-ref: ./dev-80-forge-clean-runner/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kmt1mgvwqy0g9qmshemqtsn1:validation:2
+                briefing: briefing:kmt1mgvwqy0g9qmshemqtsn1:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-04T06:35:34.101803Z"
+                decision: approve
+                reason: 'Captain approved the validation at attempt 2, after the first approval was superseded for missing the Pilot build contract''s implementation-exit surface map. That map now exists and passes 12 of 12 changed non-test files; validation ran the check itself and reddened it with two falsifiers of its own rather than reading the build stage''s claim, and executed all twelve without-it commands. No surface qualified for removal: the two candidates named at dispatch were refuted by their live callers, and the three documentation lines whose without-it command is only a grep were traced to the work item''s own recorded project-context and machine-dependency obligations, making them real obligations weakly evidenced rather than removal findings. All five acceptance criteria carry a verdict with a falsifier distinct from the prior attempt''s, and the six declared proof and delivery checks are green at aafa538b. The FO named the one risk that could change the vote: AC-2''s four cloud observations are still cycle 3''s, reused at the same revision rather than re-purchased, so the slice''s central claim has not been observed by an independent stage; the Captain approved with that on the record. Two residuals stand for the Captain: the acceptance-criteria text for AC-2 still reads T1 and T4 against the gate-3 correction, and Draft PR #368''s body predates cycle 4 and omits four of the five open residuals.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
