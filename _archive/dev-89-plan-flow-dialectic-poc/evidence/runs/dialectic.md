@@ -4,7 +4,7 @@ name: kc-plan-flow-dialectic
 
 # plan-flow dialectic (draft)
 
-Four stations turn one raw requirement into a Development Brief. Each station names the borrowed skill it
+Five stations turn one raw requirement into a Development Brief. Each station names the borrowed skill it
 prefers when installed, the Brief field it fills, and a fallback of at most three questions — in this plugin's
 own wording, not copied from the borrowed skill's text — that a First Officer asks when that skill is absent.
 pm-skills (`problem-statement`, `epic-hypothesis`, `user-story-splitting`) is CC BY-NC-SA 4.0: call it when
@@ -12,6 +12,32 @@ installed, never vendor its text into this repository. gstack `office-hours` is 
 
 This is a draft produced by a DEV-89 POC run comparing the borrowed-skill path against the fallback path on one
 real requirement; see that work item's evidence for the comparison.
+
+## Station 0 — re-verify the observation
+
+Every candidate a plan cuts an Issue from rests on an observation recorded earlier. An observation
+decays: the code it describes keeps moving while the record does not. This station refuses a
+candidate whose observation no longer reproduces.
+
+- **Borrowed skill (when installed):** none. This station reads this repository's own records.
+- **Brief field filled:** `Re-verified:` — one command, its output, and the date, per admitted candidate.
+- **Scope:** only candidates this plan intends to cut Issues from. Candidates left in the backlog are
+  not re-verified here; an unchecked backlog entry carries no claim that its observation still holds.
+- **The check:** for each candidate, run one command today that reproduces the recorded pain, and
+  record the command with its output. A candidate whose command shows the pain is gone is dropped
+  from the plan with a one-line disposition, not silently re-scoped into something else. A candidate
+  whose observation cannot be reduced to a command is admitted only with the Captain's explicit
+  ruling on that gap, recorded.
+- **Refusal:** no `Re-verified:` line, no Issue cut from that candidate.
+
+**Why this station exists.** On 2026-09-04 a plan round selected "tests run nowhere in CI" from four
+recorded observations dated 2026-07-26 to 2026-08-20. Checked against the tree that day, two of the
+four had already been fixed by intervening PRs (#173 and #181 wired the e2e-pipeline suite; the
+hardcoded corpus path became a skip with an environment override), one was a measurement error in
+the plan round itself, and the largest remaining block belonged to a plugin the Captain had ruled
+out of investment. The backlog held 69 entries whose observations spanned six weeks, during which
+200 PRs merged. Without this station the plan would have dispatched workers to repair work that was
+already done, and the resulting failure would have been recorded against those workers.
 
 ## Station 1 — the problem
 
