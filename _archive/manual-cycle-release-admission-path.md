@@ -1,7 +1,7 @@
 ---
 id: w8z5xrcexs9k1qq7xrwzx5bk
 title: Add a manual Cycle-Release admission path
-status: validation
+status: done
 source: https://github.com/iamcxa/kc-claude-plugins/issues/305
 product: kc-dev-flow
 planning-window: Iteration 2
@@ -9,8 +9,8 @@ planning-outcome: kc-dev-flow Cycle-Release Admission Pilot
 sprint: S6
 sprint-readiness: ready
 started: 2026-08-28T00:05:28Z
-completed:
-verdict:
+completed: 2026-09-04T03:44:30Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-manual-cycle-release-admission-path
 issue: "#305"
 pr: pr-merge:306
@@ -97,7 +97,8 @@ gates:
                 reason: 'Captain approved the validated exact candidate as satisfying Issue #305''s admitted outcome and closing this SD execution as proceed; pull-request, merge, release, publication, and provider-write authority remain separate.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-04T03:44:30Z
 ---
 
 ## Problem
