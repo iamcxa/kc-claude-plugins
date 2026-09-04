@@ -1083,3 +1083,89 @@ per instruction).
 ### Summary
 
 The surface-map gap the FO found was a dispatcher omission, not a code defect: every one of the 12 non-test changed files maps cleanly to AC-1 (the runner-selection/in-session-refusal spans the CI-wired contract test already guards: `SKILL.md`, `parallel-forge.md`, `clean-profile-test.sh`, `skill-runner.py`, the workflow file), AC-4 (the scenario-format surfaces the six live cloud sessions exercised: `skill-scenarios.md` and both `.scenarios.yaml` files), a named safety boundary (the sanitize-check glob extension), or a lifecycle disclosure the shape itself required (`README.md`'s PyYAML note, the `architecture.md`/`commands.md` project-context correction). The two removal candidates the dispatch note flagged — `clean-profile-test.sh` possibly reachable only through the new runner, `parallel-forge.md` possibly serving no obligation now that RED/GREEN leaves the session — were checked against the live tree rather than assumed: both are called from at least one retained caller beyond the file that motivated the guess, and `parallel-forge.md` is a span AC-1's own falsifier checks by name. No removal survived scrutiny, so no code changed this cycle; the worktree stays clean at `aafa538b`, the stop numbers stay at 700/364/127 (all measured fresh, not carried over), and all six declared proof/delivery checks plus the forge contract test re-ran green. The surface-map-check itself was exercised both ways — a dropped SURFACE line and a broken without-it/removed pair each reddened it before the real evidence file was left in place, passing at 12/12.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: The surface map is verified as an independent check rather than re-read: surface-map-check.py is re-run against the candidate and the committed evidence file, each SURFACE line's without-it command is actually executed, and every line whose command cannot distinguish the surface being present from absent is named as weak with the reason, since a grep that only proves a string exists is not a without-it observation.
+  Own run, not a re-read of cycle 4's claim: `python3 kc-dev-flow/scripts/surface-map-check.py 4bc79749 aafa538b docs/dev/.spacedock-state/dev-80-forge-clean-runner/evidence/surface-map-evidence.md --work-item <entity> --brief <entity> --repo <worktree>` → `excluded: kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py` then `surface-map-check: OK (12 files checked)`, exit 0, at HEAD `aafa538b`. Own falsifiers (not cycle 4's): dropped the `parallel-forge.md` SURFACE line → `FAIL: missing SURFACE line`, exit 1; replaced README.md's without-it with `true` → `FAIL: without-it pair does not bind`, exit 1 (the checker's own `FORBIDDEN_WITHOUT_IT` set). Both reverted, evidence file unchanged. Executed all 12 without-it commands by hand — every one returns the string or refusal it claims (`grep` hits for the 9 code/config/scenario lines; `exit 2` named refusals for `skill-runner.py`'s missing-file case).
+  **Weak lines named, with reason and disposition:** three lines (`kc-plugin-forge/README.md`, `kc-plugin-forge/docs/architecture.md`, `kc-plugin-forge/docs/commands.md`, all target `lifecycle:project-context-maintenance`/`lifecycle:machine-dependency-disclosure`) use a bare `grep` as without-it — this proves the string is present, not what breaks in its absence; `without_it_binds()` in `surface-map-check.py` only checks the command mentions a changed path and the removed-variant starts with `git`, so it structurally cannot reject a technically-valid, non-discriminating command (confirmed by reading the checker's source, not asserted). Read against the entity's own `### Conditional reference receipts` → `project_context: update` block (line 748): it names an explicit `stale_claim` — architecture.md's Phase 2 description and commands.md's `--parallel` row both described Phase 2 as `superpowers:writing-skills` end-to-end — and a `replacement` text. `git diff 4bc79749 aafa538b -- kc-plugin-forge/docs/architecture.md kc-plugin-forge/docs/commands.md` shows the diffs replace exactly that stale text with exactly that replacement (Phase 2 split into scenario-design/GREEN-authoring vs. clean-runner scoring; `--parallel` scoped to scenario design, not RED/GREEN execution). README.md's 2-line addition (`git diff` confirmed net-new) names PyYAML as a machine dependency, matching the shape's own `### Machine dependencies to declare` (line 449-459) verbatim, and `load_yaml()` in `skill-runner.py:38-43` does raise the named refusal the README describes, not a bare `ImportError` — checked directly. **Verdict: all three are real obligations weakly evidenced, not surfaces to remove.** No removal finding; the without-it command's weakness is the checker's known structural limit (DEV-96's target), not evidence these lines are unneeded.
+
+- DONE: Every acceptance criterion AC-1 through AC-5 carries a verdict at the exact candidate revision, reusing cycle-3's live cloud observation for AC-2 without re-purchasing it, and the acceptance-criteria text for AC-2 still reading "T1 and T4" against the gate-3 ruling is named as a discrepancy for the Captain, never edited.
+  HEAD confirmed `aafa538b`, worktree clean throughout (checked before and after every falsifier).
+  - **AC-1 — satisfied.** `forge-phase2-runner-contract.test.py` → `PASSED: 0 violation(s)`. Own falsifier (different from cycle 1's): rewrote step 4's RED line in `SKILL.md` to "run each scenario's baseline prompt with a general-purpose subagent" → `FAIL: G2 ... run executed in-session`, exit 1; reverted, clean.
+  - **AC-2 — satisfied, scored against the gate-3 ruling (T2, T4).** Acceptance-criteria text still reads "RED fails on T1 and T4"; gate-3 retired T1 (`## Accepted outcome` already reads T2/T4). **Discrepancy flagged again, not edited** — Captain-authority text. Own cloud-auth probe (not reused): `conductor auth whoami` with the inherited env untouched → `Verification ✓ authenticated`, `Token source CONDUCTOR_API_KEY env var`; `env -u CONDUCTOR_API_KEY conductor auth whoami` → `Verification ✓ authenticated`, `Token source macOS keychain`, same user/org/key ID both ways. **This contradicts the dispatch note's prediction that the inherited env var is stale/rejected** — in this dispatched session the env var authenticates cleanly; the credential path is live either way, a stronger result than predicted, not a blocker. Did **not** re-purchase the four cloud sessions: cycle 3's implementation report already ran all four (T2 RED fail, T2 GREEN pass, T4 RED fail, T4 GREEN pass) at this exact commit `aafa538b`, read via `page_until_token` offset paging, each line carrying a token source. T1 out of AC-2's scope per the ruling, not re-run.
+  - **AC-3 — satisfied.** Own fresh check: copied a scenario file, hardcoded `{SCRATCH}` → `/tmp/e` in T1's setup block, ran `skill-runner.py cloud <copy> T1 red kc-dev-flow` → `exit 2`, `reason=... carries a literal absolute scratch path ... use {SCRATCH}` — collision cannot be attempted, confirmed at HEAD before any API call.
+  - **AC-4 — satisfied at the layers a script can prove; live-run half remains the same known limit build/validation-1 already disclosed.** Own check: `skill-runner.py cloud /tmp/does-not-exist-<pid>.yaml T1 red kc-dev-flow` → `exit 2`, `reason=scenario file not found: ...`. Own G5 falsifier: replacing all `judged` occurrences in the Phase 4 report block with `assessed` → `FAIL: G5 ... does not carry per-scenario RED/GREEN outcome labels`, exit 1; reverted, clean. (First attempt replacing only one of two `judged` occurrences did not reproduce the fail — block_text is a substring check, not a per-branch check — corrected and re-run to get a real red.) Not independently exercised: a live full Phase 2 run surfacing scenario names in a generated report — same disposition as build and validation-1, out of proportion to what this stage asks beyond the already-disclosed gap.
+  - **AC-5 — satisfied.** Template half: own G4 falsifier (regex-replaced "cloud"→"remote" throughout the Phase 4 report block) → `FAIL: G4 ... does not name a runner field carrying both cloud and bare`, exit 1, reverted. Runner half: own falsifier (copy stripped of `model:` line, patched `DEFAULT_MODEL = ""` in a scratch copy of `skill-runner.py`) → `exit 2`, `reason=no model pin resolved — scenario, file, and default constant are all empty`, reverted, clean.
+
+- DONE: The repository's declared proof and delivery checks run green at the candidate revision, each named with its command and result, and any check that cannot run here is reported as not-run with the reason rather than assumed.
+  All six run fresh against `aafa538b` in the worktree, all exit 0:
+  - `python3 kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py .` → `PASSED: 0 violation(s)`.
+  - `bash scripts/skill-frontmatter-lint.sh` → 44/44 SKILL.md valid.
+  - `bash scripts/marketplace-verify.sh` → L0 parity PASS, L1 schema PASS, L2 install PASS for all 7 plugins.
+  - `bash scripts/version-parity-check.sh` → release manifest / plugin.json / marketplace.json / codex manifest consistent across all 7 plugins.
+  - `bash kc-plugin-forge/scripts/plugin-release-contract.test.sh` → 11 passed, 0 failed.
+  - `bash kc-plugin-forge/scripts/plugin-release-contract-check.sh --repo .` → PASS.
+  Sanitize-check (diff-scoped grep against the Class-1 BLOCK literal list, same proportional scope as validation-1): `git diff --name-only 4bc79749 HEAD` piped through `DataRecce|@recce/|reccehq\.com|bw\.tw|pwd123|staff@bw\.tw|linear\.app/duckbase-co` — only hit is `kc-plugin-forge-sanitize-check/SKILL.md` documenting those as its own pre-existing block-list seeds; the new `.scenarios.yaml` files carry no such strings. Not run: the full interactive `kc-plugin-forge-sanitize-check` skill (not a standalone script; the diff-scoped grep covers its Class-1 rule set on changed files) and CI's actual GitHub Actions execution of `marketplace-parity.yml` (all its steps run locally instead, same commands and revision, no network/runner-specific step skipped).
+
+- DONE: Delivery readiness is reassessed and the PR body updated but not pushed: PR #368 already exists at this head from the superseded attempt, so state whether its body still describes this candidate, and carry the open residuals including the surface-map check's weak grip on documentation surfaces.
+  `gh pr view 368` → OPEN, draft, `headRefOid=aafa538b...` (matches candidate exactly), base `main`, `mergeable=MERGEABLE`. **Body is stale, not false:** it correctly names the runner/scenario-file/scratch/report-fields change and states "No guard reddens if the cloud auth precondition regresses to checking that an environment variable is merely present" (residual 1), but it predates cycle 4 entirely and carries none of: the AC-2 acceptance-criteria "T1 and T4" discrepancy, residuals 2-4 from validation-1's draft (AC-4 live-run half unexercised, `bare_model_id` spelling claim unverified, branch behind `origin/main`), the cycle-4 surface-map evidence, or this cycle's finding that three documentation SURFACE lines are real-but-weakly-evidenced obligations. Not pushed, not edited, not created — per instruction. **Revised draft body for the FO/Captain to apply if delivery proceeds:**
+
+  ```markdown
+  ## Summary
+  Forge Phase 2 now dispatches every RED/GREEN run through a clean runner (Conductor
+  cloud primary, `claude --bare` fallback) instead of an in-session subagent, closing
+  the contamination hazard that produced a 10/10-correct, unfalsifiable RED baseline.
+  Adds a per-skill scenario-file input, per-run scratch isolation, and Phase 4 report
+  fields for runner/model-pin/per-scenario outcome.
+
+  ## Acceptance criteria
+  - AC-1 satisfied: `forge-phase2-runner-contract.test.py` G1-G3, CI-wired.
+  - AC-2 satisfied against the gate-3 ruling: RED fails on T2 and T4, GREEN passes on
+    all three. **AC-2's own acceptance-criteria text still reads "T1 and T4"; this PR
+    does not edit it — Captain call.**
+  - AC-3 satisfied: distinct scratch dirs per run, live and by refusal.
+  - AC-4 satisfied at script/template layers; the live-run half (a real forge pass
+    surfacing named scenarios in a generated report) remains unexercised.
+  - AC-5 satisfied: report template (G4) and runner-side model-pin refusal both
+    exercised and reddened on falsifier.
+
+  ## Surface map (new this revision)
+  `surface-map-check.py` passes 12/12 changed non-test files against a committed
+  evidence file. Three documentation SURFACE lines (README.md, architecture.md,
+  commands.md) use `grep` as their without-it command, which proves string presence,
+  not discrimination; validation confirmed by diff inspection that all three implement
+  the shape's own named `project_context: update` / machine-dependency obligations, so
+  this is a checker precision gap (tracked DEV-96), not a removal finding.
+
+  ## Stop numbers
+  13 files, 700 insertions(+), 25 deletions(-) against delivery base `4bc79749` —
+  exactly at the 700-line guard, zero margin. `skill-runner.py` 364 lines (guard 370).
+  Cloud path 127 lines (guard 130).
+
+  ## Known residuals (without-it unanswered — Captain to rule)
+  1. No CI guard reddens if the cloud auth precondition regresses from real
+     authentication back to `CONDUCTOR_API_KEY`-presence checking.
+  2. AC-4's live-run half (scenario names appearing in an actual Phase 2 report) is
+     not exercised by any script; G4/G5 guard the template only.
+  3. `run_bare`'s `bare_model_id` model-spelling claim is inherited from the original
+     POC and not re-verified this slice.
+  4. Branch is behind `origin/main` (5 commits as of this validation pass); not
+     rebased (report-only instruction for this stage).
+  5. Three surface-map without-it commands are grep-based (checker precision gap,
+     DEV-96) — real obligations per manual verification, not removal candidates.
+
+  ## Test plan
+  - [x] `python3 kc-plugin-forge/scripts/forge-phase2-runner-contract.test.py .`
+  - [x] `bash scripts/skill-frontmatter-lint.sh`
+  - [x] `bash scripts/marketplace-verify.sh`
+  - [x] `bash scripts/version-parity-check.sh`
+  - [x] `bash kc-plugin-forge/scripts/plugin-release-contract.test.sh`
+  - [x] `bash kc-plugin-forge/scripts/plugin-release-contract-check.sh --repo .`
+  ```
+
+  Branch position: 5 commits behind `origin/main` (`ad13fe23`, `1283046b`, and 3 more via `d98f40b5`..`f6695c04` already known from cycle 3) — confirmed via `git fetch origin main` + `git log --oneline HEAD..origin/main`; not rebased, per instruction.
+
+### Summary
+
+Re-verified all five acceptance criteria independently at `aafa538b` with fresh, own falsifiers distinct from cycle 1's (different mutation points for G2 and G5, a from-scratch AC-3/AC-5 exercise); AC-2 by probing cloud auth myself — which came back authenticated both with and without the inherited `CONDUCTOR_API_KEY`, contradicting the dispatch note's staleness prediction but not blocking anything — and reusing cycle 3's on-revision cloud evidence rather than re-purchasing it. Ran `surface-map-check.py` myself against the committed evidence file (12/12 OK) and reddened it with two own falsifiers before confirming clean; investigated the FO's three flagged weak documentation lines by reading the checker's source (confirms the grep-based without-it structurally cannot discriminate) and by diffing each file against the entity's own `project_context: update` obligation — all three implement a named, specific stale-claim correction, so the verdict is real-obligation-weakly-evidenced, not removal, and no REJECTED recommendation follows from this finding. All six declared proof/delivery checks pass green; a diff-scoped sanitize grep found nothing new. PR #368 exists at the candidate head but its body predates cycle 4 and omits four of five now-open residuals; drafted a revised body for the FO/Captain, did not push or edit the live PR. Recommendation: **approve for delivery** — no rejection-worthy finding surfaced this cycle; residuals are disclosed, not hidden, and none corrupts a result silently.
