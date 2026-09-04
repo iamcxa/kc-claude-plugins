@@ -10,7 +10,7 @@
   "removed_variant": "git rm -f scripts/ship-flow/intent.sh",
   "retained_exit": 0,
   "removed_exit": 6,
-  "removed_reason": "contract test refuses when intent.sh is missing (exit 6)"
+  "removed_reason": "intent.sh missing -> contract-test case exit 6"
  },
  "fo_falsifiers": {
   "real_split_root_state_commit": "exit 0 in 5 s; pre-fix copy exit 6 after 84 s on the same state; no lock residue under git-dir"
