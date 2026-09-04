@@ -837,6 +837,7 @@ mutation run proves the second.
 
 - Retry 1: implementation — no-completion-signal (worker session terminated by API rate limit 429, 2026-09-03 ~20:20 CST); re-dispatched -retry
 - Retry 2: implementation — no-completion-signal (cycle-3 worker terminated by API ConnectionRefused mid-run, 2026-09-04; 33-line WIP preserved as 88f932e0); re-dispatched -retry
+- Retry 3: implementation — no-completion-signal (cycle-4 worker terminated by session-limit 429 before any commit, 2026-09-04; worktree clean, nothing preserved); re-dispatched -retry on Captain instruction ("重派") ahead of the 14:20 reset
 
 ## Stage Report: implementation
 
