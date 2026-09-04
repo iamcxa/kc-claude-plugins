@@ -113,7 +113,7 @@ work_profile:
 
 ## Accepted outcome
 
-Forge Phase 2 dispatches every RED and GREEN run through a clean runner selected by the caller (Conductor cloud primary, `claude --bare` fallback), never through an in-session subagent. Before designing scenarios by hand, Phase 2 reads a per-skill scenario file in the target plugin and uses its scenarios first. Each session gets its own scratch directory, and results are read with `conductor session message --offset` (cloud) or the JSON result (bare), because the sql transcript view elides middle messages and `--json` truncates at 64 KB. The Phase 4 report records the runner, the pinned model, and each scenario's RED and GREEN outcome. Running Phase 2 on kc-dev-flow with the three DEV-80 scenarios reproduces the POC: RED fails on T1 and T4, GREEN passes on all three.
+Forge Phase 2 dispatches every RED and GREEN run through a clean runner selected by the caller (Conductor cloud primary, `claude --bare` fallback), never through an in-session subagent. Before designing scenarios by hand, Phase 2 reads a per-skill scenario file in the target plugin and uses its scenarios first. Each session gets its own scratch directory, and results are read with `conductor session message --offset` (cloud) or the JSON result (bare), because the sql transcript view elides middle messages and `--json` truncates at 64 KB. The Phase 4 report records the runner, the pinned model, and each scenario's RED and GREEN outcome. Running Phase 2 on kc-dev-flow with the three DEV-80 scenarios reproduces the POC: RED fails on T2 and T4, GREEN passes on all three (T1 RED passes on its own; see § Cycle 3: T1 is retired from AC-2's RED-fail claim — corrected per the gate-3 ruling, cycle 3, attempt 3).
 
 ## Non-goals
 
@@ -903,3 +903,4 @@ number and breaching it again. Second: retiring T1 from AC-2's RED-fail claim ma
 planning delta. Everything else is derived arithmetic from the measured tree rather than a new
 estimate; the cycle-2 numbers were shown to be internally impossible (a ~135-line file budget with
 a 180-line guard on an area inside it), which is why they never fired.
+- Nudge: implementation (cycle 2) — worker stalled 600s after committing, before its stage report; Captain instructed continue (09-04 10:56 CST); nudged via SendMessage to resume from transcript
