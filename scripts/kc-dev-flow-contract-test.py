@@ -1765,18 +1765,16 @@ Stop on any planning drift.
         scenario: str,
         *,
         key: str | None = "test-key",
-        conductor: str | None = "workspace",
         timeout: str = "5",
         reader: Path = linear_admission,
         workflow_dir: Path = workflow,
     ) -> subprocess.CompletedProcess[str]:
         server.scenario, server.raced = scenario, False
         env = os.environ.copy()
-        for name, value in (("LINEAR_API_KEY", key), ("CONDUCTOR_WORKSPACE_ID", conductor)):
-            if value is None:
-                env.pop(name, None)
-            else:
-                env[name] = value
+        if key is None:
+            env.pop("LINEAR_API_KEY", None)
+        else:
+            env["LINEAR_API_KEY"] = key
         return subprocess.run(
             [sys.executable, str(reader), "--workflow-dir", str(workflow_dir),
              "--work-item", str(work_item),
@@ -1803,6 +1801,15 @@ Stop on any planning drift.
     require(clean.returncode == 0, f"clean Linear admission failed: {clean.stderr}")
     envelope = json.loads(clean.stdout)
     require(
+        set(envelope) == {
+            "schema", "linear_organization", "delivery", "work_item_sha256",
+            "state_revision", "snapshot_sha256", "live_read_sha256", "reconcile",
+            "development_brief_sha256", "plugin_version", "contract_digest",
+            "local_profile_interface", "profile_contract_hashes", "command_elapsed_ms",
+        },
+        f"dispatch envelope key set drifted: {sorted(envelope)}",
+    )
+    require(
         envelope["schema"] == "kc-dev-flow-dispatch-envelope/v1"
         and envelope.get("delivery") == {
             "branch": "feature/dev-12-fixture",
@@ -1813,15 +1820,8 @@ Stop on any planning drift.
         and envelope["plugin_version"] == installed_package["version"]
         and envelope["contract_digest"] == installed_package["contract_digest"]
         and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
-        and envelope["conductor_workspace_id"] == "workspace"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
-    )
-    hostless = admit("clean", conductor=None)
-    require(
-        hostless.returncode == 0
-        and "conductor_workspace_id" not in json.loads(hostless.stdout),
-        f"admission without a Conductor workspace was refused: {hostless.stderr}",
     )
     legacy_heading = admit("legacy-goal-heading")
     require(
