@@ -1371,6 +1371,8 @@ require(
 
 workflow = read("docs/dev/README.md")
 normalized_workflow = " ".join(workflow.split())
+ship_readme = read("docs/ship-flow/README.md")
+normalized_ship_readme = " ".join(ship_readme.split())
 for phrase in [
     "Linear is this repository's planning provider for new provider-backed admissions, not an iteration authority.",
     "`source` links the accepted Linear Issue.",
@@ -1943,19 +1945,19 @@ for phrase in [
     "it travels on a committed carrier",
     "the worker fetches and reads with `git show <branch>:<path>`",
 ]:
-    require(phrase in normalized_workflow, f"Ship-flow runtime omits a dispatch-carrier rule: {phrase}")
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits a dispatch-carrier rule: {phrase}")
 for phrase in [
     "CLI e2e evidence is a timestamped stdout log written by",
     "exits non-zero on the first step whose command's exit code does not match its declared `expect`",
 ]:
-    require(phrase in normalized_workflow, f"Ship-flow runtime omits the CLI e2e evidence rule: {phrase}")
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits the CLI e2e evidence rule: {phrase}")
 for phrase in [
     "`CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, and `WITHOUT_IT_REMOVED_VARIANT`",
     "`WITHOUT_IT_COMMAND` is one self-contained shell line: it references no file outside the candidate "
     "tree, it exits 0 on the candidate and non-zero once `WITHOUT_IT_REMOVED_VARIANT` is applied, and the "
     "First Officer runs it verbatim, unchanged, in a worktree with no secrets.",
 ]:
-    require(phrase in normalized_workflow, f"Ship-flow runtime omits the WITHOUT_IT_COMMAND one-line rule: {phrase}")
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits the WITHOUT_IT_COMMAND one-line rule: {phrase}")
 for phrase in [
     "The First Officer reads a worker's transcript through `conductor sql` against "
     "`session_transcripts_view`, not `conductor session message --after`",
@@ -1964,13 +1966,28 @@ for phrase in [
     "`scripts/ship-flow/worker-transcript.sh <session-id>` prints the session's last fenced "
     "`## Evidence` block, or exits 1 with `no evidence block` when the transcript has none.",
 ]:
-    require(phrase in normalized_workflow, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
 for phrase in [
     "the production entry issues at most one `conductor workspace create` call after a committed intent",
     "It is not exactly-once and it covers workspace creation only",
     "in no case does the new holder create a workspace for an intent it did not commit",
 ]:
-    require(phrase in normalized_workflow, f"Ship-flow runtime omits the intent-commit rule: {phrase}")
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits the intent-commit rule: {phrase}")
+
+for phrase in [
+    "Dispatch a higher layer only after the lower layer is fully verified. (DEV-67)",
+]:
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits dispatch-layer-verification DEV-67: {phrase}")
+
+for phrase in [
+    "A worker's without-it command runs in an isolated environment (temporary HOME, no agent, no network). (DEV-67)",
+]:
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits without-it-isolation DEV-67: {phrase}")
+
+for phrase in [
+    "Security, data-loss, and compatibility findings outside the Brief block the candidate while general improvements are scoped out. (DEV-67)",
+]:
+    require(phrase in normalized_ship_readme, f"Ship-flow runtime omits finding-classification DEV-67: {phrase}")
 
 pilot_build = read("kc-dev-flow/references/profiles/pilot-product-slice/build.md")
 production_build = read("kc-dev-flow/references/profiles/production/build.md")
