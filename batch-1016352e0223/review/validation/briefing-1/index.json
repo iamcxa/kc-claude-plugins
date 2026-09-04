@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ys8b2431y8vkpzy446txv694:validation:attempt-1:revision-1",
+  "question": "Accept the first receipt-driven ship batch (DEV-90/92 PRs open, DEV-91 no-PR) as verified, leaving merge and the close receipt's final hash to the merge ceremony?",
+  "artifacts": [
+    {
+      "id": "artifact:ys8b2431y8vkpzy446txv694:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4214b26534a2a9adcc94735a2777617a7df6ddce/batch-1016352e0223/evidence/validation-review.md",
+      "rev": "sha256:9f3458db3a7db84aa94c71ae82d6e7b7a1ff2da0ce75f1f7fc8f0faacd7a3cd0",
+      "mediaType": "text/markdown",
+      "summary": "Batch verified; awaiting Captain UAT and merge of #363, #364, stack #366."
+    }
+  ]
+}
