@@ -15,6 +15,17 @@ issue: DEV-94
 pr:
 mod-block:
 id: xhjz5zq7mk9jbhh54ag2x8qq
+gates:
+    version: 1
+    records:
+        - id: gate:xhjz5zq7mk9jbhh54ag2x8qq:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:xhjz5zq7mk9jbhh54ag2x8qq-backlog-1
+              briefing:
+                id: briefing:xhjz5zq7mk9jbhh54ag2x8qq:backlog:attempt-1:revision-1
+                digest: sha256:d1200ff3b58189e24df0a63354be2831aef644fb3215d83291a22f57eacb76d1
+                room-ref: ./dev-94-ship-flow-thin-wrapper/review/backlog/briefing-1
 ---
 
 ## The problem

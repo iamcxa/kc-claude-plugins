@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:xhjz5zq7mk9jbhh54ag2x8qq:backlog:attempt-1:revision-1",
+  "question": "Admit DEV-94 (ship-flow four stations, zero questions per batch) as a standalone POC, worker scoped to AC-1/AC-2 until six Issues are named?",
+  "artifacts": [
+    {
+      "id": "artifact:xhjz5zq7mk9jbhh54ag2x8qq:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/dc447c864182b43166e2cfadafcdc8be382fc7c2/dev-94-ship-flow-thin-wrapper/review/backlog/admission.md",
+      "rev": "sha256:d435adf98a453b1d978bf7583abf3dd5b07ad29c39b7d4eba22284f103a6320f",
+      "mediaType": "text/markdown",
+      "summary": "Thin ship wrapper POC; batch run blocked on the Captain naming six Issues."
+    }
+  ]
+}
