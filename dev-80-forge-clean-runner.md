@@ -177,7 +177,7 @@ the prototype attached to DEV-80.)
    `<target-plugin>/skill-scenarios/<skill>.scenarios.yaml`. Present → its scenarios run first,
    by name. Absent → Phase 2 designs scenarios by hand and the Phase 4 report says
    `scenarios: hand-designed (no scenario file)`.
-5. **DESIGNED** — For each scenario, `skill-runner.sh` mints `SCRATCH=$(mktemp -d
+5. **DESIGNED** — For each scenario, `skill-runner.py` mints `SCRATCH=$(mktemp -d
    "${TMPDIR:-/tmp}/forge-XXXXXX")`, substitutes `{SCRATCH}`, injects a fresh token, and runs
    RED (prompt alone) then GREEN (`green_preamble` + prompt).
 6. **DESIGNED** — The reader pages until the token appears or the budget expires, writes the
@@ -367,7 +367,7 @@ Five format rules, each closing something observed:
   `judged`, never as `passed`, so a judged scenario can never be counted toward AC-2's RED/GREEN
   claim without a human reading it.
 
-**Enforcement point.** These are refusals in `skill-runner.sh`, not prose: it exits non-zero
+**Enforcement point.** These are refusals in `skill-runner.py`, not prose: it exits non-zero
 before any API call when a scenario omits `adversarial:` or `setup:`, when it carries neither
 `assert:` nor `judge:`, when it carries both, or when `setup:`/`prompt:` contains a literal
 absolute scratch path (`/tmp/`, `/var/folders/`). Without that the rules are advice and the next
@@ -380,11 +380,16 @@ the operator pushes the other way. It does not measure whether the skill would h
 
 **Fallback when absent:** Phase 2 designs scenarios by hand exactly as today and the Phase 4
 report line reads `scenarios: hand-designed (no scenario file at <path>)`. The file is an
-input, not a precondition.
+input, not a precondition. **How a hand-designed scenario reaches the runner** — one clause in
+`SKILL.md` Phase 2 step 3, added in cycle 3 because AC-1 forbids an in-session run and the runner
+reads only scenario files, so without it the next implementer invents a second input path: Phase 2
+writes the hand-designed scenarios to a `forge-skill-scenarios/v1` file under its own scratch dir
+and calls the runner with that path. They pass the same refusals as a checked-in file; only the
+report line distinguishes them.
 
 **Where the model pin lives.** Two places, because AC-4's fallback and AC-5 must both hold: a
 `model:` key in the scenario file, and a default pin (`sonnet-4-6`, the POC's model) constant in
-`skill-runner.sh` used when no scenario file exists. The runner **refuses to start unpinned** —
+`skill-runner.py` used when no scenario file exists. The runner **refuses to start unpinned** —
 it neither inherits the host default nor lets `claude`/`conductor` pick. That is what makes
 AC-5's falsifier coherent: delete the constant and the scenario key, and the runner has nothing
 to report, so the report's runner field is empty and the check fails.
@@ -444,7 +449,7 @@ answers what breaks without it and names the run that shows it; "cut" means it c
 | `build_epilogue` 98–112 (15) | keep, −2 | without an epilogue the host cannot see file state inside a cloud sandbox at all, so `file_matches`/`frontmatter_field` are unimplementable on the primary runner. Its four-line comment stays: an epilogue phrased as "your final action" was observed to swallow the spoken answer, leaving `output_contains` nothing to match |
 | `substitute` 115–116 (2) | keep | `{SCRATCH}` templating is what makes AC-3 true |
 | `build_prompt` 119–131 (13) | keep, −2 | assembles preamble/setup/prompt/epilogue; the GREEN preamble is the only RED/GREEN difference |
-| **`host_side_baseline` 134–151 (18)** | **cut** | exists only to compute `file_unchanged`'s expected hash. See the Captain decision below |
+| **`host_side_baseline` 134–151 (18)** | **cut, −19** (block + its blank separator) | exists only to compute `file_unchanged`'s expected hash. See the Captain decision below |
 | `extract` 154–174 (21) | keep, −3 | recovers file bodies from `tool_use_result` and the terminal string from the `subtype: success` payload; loses the sha half |
 | `score` 177–204 (28) | keep, −3 | the scoring path itself, two-sided on six live sessions (T2/T4 RED fail, three GREEN pass, T1 RED pass); loses the `file_unchanged` branch |
 | `run_bare` 207–226 (20) | keep | the fallback named in `## Accepted outcome`. Never completed a run — see residual 3 |
@@ -452,10 +457,11 @@ answers what breaks without it and names the run that shows it; "cut" means it c
 | `reconcile_workspace` 243–284 (42) | keep, +2 | `workspace create` is not idempotent and has no request token, so without the lock file six scenario-variant calls create six workspaces. Carries residual 1's cause; the fix is two lines here, not a rewrite |
 | `run_cloud` 287–307 (21) | keep | the primary runner; six live sessions |
 | `page_until_token` 310–341 (32) | keep, −4 docstring, +3 | the paged reader is the accepted outcome's named mechanism — the sql view elided 18 of 20 messages on `5bbe799f` |
-| `main` 344–390 (45) | keep | argv, scratch and token minting, dispatch, exit code |
+| `main` 344–390 (45) | keep, −1 | argv, scratch and token minting, dispatch, exit code; loses the `baseline =` call |
 | scenario-file-absent refusal | **add +2** | the built runner raises a traceback on a missing scenario file; AC-4's absent branch gets a named reason at the script boundary |
 
-Projected: 390 − 33 (`file_unchanged`) − 14 (three docstrings) + 7 (two new guards) ≈ **350**.
+Projected: 390 − 33 (`file_unchanged`) − 14 (three docstrings) + 7 (new guards) = **350** — the
+per-block deltas in the column above sum to −40, which is the same number.
 
 Cutting `file_unchanged` is the only block-level cut, and it is not free of the Captain's earlier
 ruling — see § Open decision for the Captain.
@@ -567,7 +573,7 @@ this shape now admits.
 
 | Path | base | built | corrected |
 |---|---|---|---|
-| `kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` | 713 | 715 | 720 |
+| `kc-plugin-forge/skills/kc-plugin-forge/SKILL.md` | 713 | 715 | 721 |
 | `kc-plugin-forge/reference/parallel-forge.md` | 230 | 237 | 237 |
 | `kc-plugin-forge/reference/clean-profile-test.sh` | 112 | 147 | 147 |
 | `kc-plugin-forge/reference/skill-runner.py` (new) | 0 | 390 | ≈350 |
@@ -609,11 +615,12 @@ exists. The projection below is derived from that measured tree, line by line, n
 | add residual 1's two race guards | +5 |
 | add AC-4's missing-scenario-file refusal | +2 |
 | add AC-5's Phase 4 report fields in `SKILL.md` | +5 |
+| add the hand-designed-scenario clause to `SKILL.md` Phase 2 step 3 | +1 |
 | add G4/G5 to `forge-phase2-runner-contract.test.py` | +22 |
-| **projected** | **674** |
+| **projected** | **675** |
 
 - changed files > **14** → stop and report. Projected **12** (13 built, minus the cut wrapper).
-- changed lines > **700** → stop and report. Projected **674** — 26 lines of margin, thin by
+- changed lines > **700** → stop and report. Projected **675** — 25 lines of margin, thin by
   design: anything not in the table above stops and reports rather than spending it.
 - runaway area, restated on the file that actually holds it:
   `kc-plugin-forge/reference/skill-runner.py` > **370** lines → stop and report. Projected
@@ -723,7 +730,7 @@ single run that came closest to the failure mode it names — POC `5bbe799f`, wh
 scores as unchanged. The failure mode it names is the one it did not catch.
 Its cost is **33 lines** — `host_side_baseline` entire, plus a branch in five other blocks and the
 `sha256sum` half of the epilogue. That is the difference between fitting the 700-line stop number
-and breaching it again: cut → **674 insertions**; keep → **707**, over.
+and breaching it again: cut → **675 insertions**; keep → **708**, over.
 Captain's call: cut (the default, and what every number above assumes), or keep and rule on which
 33 lines elsewhere pay for it.
 
@@ -859,7 +866,7 @@ and fixing it would add lines to a file already over its guard.
 ## Stage Report: ideation (cycle 3)
 
 - DONE: `kc-plugin-forge/reference/skill-runner.py` (390 lines) is either cut to the shape's own 180-line runaway guard or each remaining block is justified by name against the without-it test; blocks that cannot answer are cut. The `### Where it touches` table and `### Stop numbers` are rewritten to name the actual files and the new guard, and the total insertions fit the stated line number.
-  `## Shape` § Cycle 3: the runner, block by block — all 21 blocks measured by `cat -n` line range, each with what breaks without it and the run that shows it. Cut to 180 is unreachable without deleting `run_bare`, which `## Accepted outcome` names, so branch 2 was taken: two cuts (`host_side_baseline` + the whole `file_unchanged` path, 33 lines; the `skill-runner.sh` wrapper, 17 lines) and 14 lines of docstring trim. The old 180 guard is shown to have been aimed at the cloud poller/pager, measured at **107** lines on the built tree — that area never breached it; the scorer, prompt builder, extractor and bare path, budgeted nowhere, did. Restated: `skill-runner.py` > 370 (projected ≈350), cloud path > 130 (projected ≈110). Total insertions derived line by line from the built tree: 712 → **674**, under the unchanged 700 stop number with 26 lines of margin; files 13 → 12.
+  `## Shape` § Cycle 3: the runner, block by block — all 21 blocks measured by `cat -n` line range, each with what breaks without it and the run that shows it. Cut to 180 is unreachable without deleting outcome-bound blocks — the cloud path alone measures 107 and the scorer plus extractor another ~45 before `bare` is counted — so branch 2 was taken: two cuts (`host_side_baseline` + the whole `file_unchanged` path, 33 lines; the `skill-runner.sh` wrapper, 17 lines) and 14 lines of docstring trim. The old 180 guard is shown to have been aimed at the cloud poller/pager, measured at **107** lines on the built tree — that area never breached it; the scorer, prompt builder, extractor and bare path, budgeted nowhere, did. Restated: `skill-runner.py` > 370 (projected ≈350), cloud path > 130 (projected ≈110). Total insertions derived line by line from the built tree: 712 → **675**, under the unchanged 700 stop number with 25 lines of margin; files 13 → 12.
 - DONE: The T1 `frontmatter_field decision: hold` assertion is resolved from the build's own evidence (session 334a0f15).
   `## Shape` § Cycle 3: T1 is retired from AC-2's RED-fail claim. Branch 2 of the two offered: the claim now covers T2 and T4; `## Acceptance criteria` untouched; the AC-2 falsifier row follows the decision and the retired cycle-2 falsifier is marked retired by measurement. The redesign branch is named in full (drop the `gate: pending` tell so the skill's recorded-resolution rule does the discriminating) and explicitly not admitted, because admitting a RED-fail claim for a run nobody has seen fail is the cycle-2 error being corrected. T1 stays in the scenario file: it is the only live run where the scorer returned `pass` on a RED, which is the harness's two-sidedness on live data.
 - DONE: The two open residuals are dispositioned by name.
@@ -874,7 +881,7 @@ Captain and both are in `### Open decision for the Captain`. First: cutting `fil
 which the Captain himself named at ideation gate 1 — it held 12 of 12 across the six POC and six
 live sessions, discriminated nothing, and the one run closest to the failure mode it names (POC
 `5bbe799f`, which wrote the `sed` rewrite *into* `ACTION.md`) it scores as unchanged. Its 33 lines
-are exactly the difference between 674 insertions and 707, i.e. between fitting the 700-line stop
+are exactly the difference between 675 insertions and 708, i.e. between fitting the 700-line stop
 number and breaching it again. Second: retiring T1 from AC-2's RED-fail claim makes the T1 half of
 `## Accepted outcome`'s last sentence false — wording correction to the admission snapshot, or
 planning delta. Everything else is derived arithmetic from the measured tree rather than a new
