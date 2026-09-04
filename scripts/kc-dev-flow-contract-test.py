@@ -1802,7 +1802,12 @@ Stop on any planning drift.
     before = (revision, work_item.read_bytes())
     requests_before = len(server.queries)
     refused = admit("missing-key", key=None)
-    require(refused.returncode == 2 and not refused.stdout, "missing-key emitted an envelope")
+    require(
+        refused.returncode == 2
+        and not refused.stdout
+        and "LINEAR_API_KEY is unavailable" in refused.stderr,
+        f"missing-key was not refused for the credential: {refused.stderr}",
+    )
     require(len(server.queries) == requests_before, "a missing credential reached Linear")
     started_at = time.monotonic()
     clean = admit("clean")

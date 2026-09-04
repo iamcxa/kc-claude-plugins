@@ -782,7 +782,7 @@ def main() -> int:
         str(LINEAR_ADMISSION),
         "        if not key:\n",
         "        if False:\n",
-        "missing-key emitted an envelope",
+        "missing-key was not refused for the credential",
     )
     run_manual_contract_mutant(
         "linear-workspace-binding-removed",
@@ -824,7 +824,7 @@ def main() -> int:
         str(LINEAR_ADMISSION),
         '        print(f"linear admission: {exc}", file=sys.stderr)\n',
         '        print(f"linear admission: {exc}")\n',
-        "missing-key emitted an envelope",
+        "missing-key was not refused for the credential",
     )
     run_kernel_contract_mutant(
         "required-development-brief-removed",
