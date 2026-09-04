@@ -21,6 +21,7 @@ from pathlib import Path
 API_URL = "https://api.linear.app/graphql"
 ACTIVE_TYPES = {"unstarted", "started"}
 FIELDS = ("source", "planning-window", "planning-outcome")
+GOAL_HEADINGS = ("Goal", "Accepted outcome")
 
 
 class AdmissionError(RuntimeError):
@@ -85,6 +86,19 @@ def section(text: str, heading: str) -> str:
     return value
 
 
+def accepted_goal(text: str) -> str:
+    present = [
+        heading
+        for heading in GOAL_HEADINGS
+        if re.search(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
+    ]
+    if len(present) != 1:
+        raise AdmissionError(
+            "planning description needs one '## Goal' or '## Accepted outcome' section"
+        )
+    return section(text, present[0])
+
+
 def normalized_item(text: str) -> dict[str, object]:
     fields = frontmatter(text)
     try:
@@ -96,7 +110,9 @@ def normalized_item(text: str) -> dict[str, object]:
         line[2:].strip() for line in section(text, "Non-goals").splitlines()
         if line.startswith("- ")
     ]
-    if not all((source, window, outcome)) or not non_goals or any(not item for item in non_goals):
+    if not non_goals or any(not item for item in non_goals):
+        raise AdmissionError("committed snapshot Non-goals must be a '- ' bullet list")
+    if not all((source, window, outcome)):
         raise AdmissionError("committed snapshot has incomplete five-field data")
     return {
         "source": source,
@@ -231,7 +247,7 @@ def live_item(issue: object) -> dict[str, object]:
         "source": issue["url"],
         "planning-window": window,
         "planning-outcome": outcome,
-        "accepted-goal": section(description, "Goal"),
+        "accepted-goal": accepted_goal(description),
         "non-goals": non_goals,
     }
 
@@ -290,6 +306,8 @@ def main() -> int:
                 raise AdmissionError("test endpoint requires a synthetic key and loopback host")
 
         state = (args.workflow_dir / ".spacedock-state").resolve()
+        if not state.is_dir():
+            raise AdmissionError("state authority is not <workflow-dir>/.spacedock-state")
         work_item = args.work_item.resolve()
         profile_loader = args.profile_loader.expanduser().resolve()
         comparator = profile_loader.parent / "engage-reconcile.py"

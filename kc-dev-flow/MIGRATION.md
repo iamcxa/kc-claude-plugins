@@ -207,6 +207,25 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-09-04 — the installed Linear reader states its Issue shape and host preconditions
+
+The Development Brief that `linear-admission.py` reads from a Linear Issue was
+documented only in this repository's own workflow README, which the
+package's `contract-manifest.json` does not ship. The one section list the package did ship,
+`DEVELOPMENT_BRIEF_SECTIONS` in `profile-contract-loader.py`, names the work
+item's `## Accepted outcome`, so an adopter writing an Issue from the package
+alone was refused for a heading the package never printed. `adopt-dev-flow` now
+carries the Issue heading block, and the reader accepts the accepted goal under
+`## Goal` or `## Accepted outcome` while refusing a body carrying both.
+
+The same reader requires `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` in the
+invoking process environment and a state authority at
+`<workflow-dir>/.spacedock-state` that is its own committed git root. An adopter
+whose state lives inline in the workflow directory was told to retire its
+repository-local reader and received one that cannot run there. Confirm all
+three preconditions before deleting that reader; without the split-root state
+authority, raise the layout as a refit requirement and keep the adapter.
+
 ## 2026-09-03 — adoption adds no repository-owned copy of a declared capability
 
 Before the package declared `scripts/linear-admission.py`, `adopt-dev-flow`

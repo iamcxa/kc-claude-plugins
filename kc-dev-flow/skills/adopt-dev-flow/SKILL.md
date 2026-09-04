@@ -33,7 +33,14 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    for that invocation; do not persist an installation path. A
    repository that supports Planning Receipts binds its provider, read-only
    reader, and installed engage comparator. Linear uses installed sibling
-   `linear-admission.py`; other providers keep a repository-local adapter. The
+   `linear-admission.py`; other providers keep a repository-local adapter. That
+   sibling runs against three host preconditions: `LINEAR_API_KEY` and
+   `CONDUCTOR_WORKSPACE_ID` in the invoking process environment, and a state
+   authority at `<workflow-dir>/.spacedock-state` that is its own committed git
+   root. A repository whose state lives inline in the workflow directory has no
+   such root; the reader refuses it with `state authority is not
+   <workflow-dir>/.spacedock-state`, so raise that layout as a refit requirement
+   against the package and keep the repository-local adapter until then. The
    reader normalizes the union of current Ready
    items for one planning window/outcome and every currently Ready snapshot
    source even when it moved; it refuses a truncated result and exposes source
@@ -68,7 +75,32 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    planning evidence. When the provider uses Issue bodies as admission packets,
    each body starts directly with `## The problem` and omits both an
    `## Agent execution contract` section and a `## Human-readable release brief`
-   wrapper.
+   wrapper, carrying these headings in this order:
+
+   ```markdown
+   ## The problem
+
+   ## Goal
+
+   ## Non-goals
+
+   ## Acceptance criteria
+
+   - **AC-1** <observable condition>
+
+   ## Route-back conditions
+
+   The accepted outcome or non-goals changed. Stop and return a structured planning
+   delta that names the changed premise, affected acceptance evidence, and
+   recommended change or stop.
+   ```
+
+   `linear-admission.py` reads the accepted goal from `## Goal` or from
+   `## Accepted outcome` and refuses a body carrying both; it reads Non-goals
+   from `- ` or `* ` bullets. The committed work item is the separate document
+   whose Development Brief heading is `## Accepted outcome`, and
+   `profile-contract-loader.py` reads its Non-goals from `- ` bullets, so a
+   snapshot copied out of an Issue rewrites `* ` as `- `.
 4. For a complete Planning Receipt, the engage reconcile is read-only: invoke
    the reader and normalize the provider's current Ready set and committed
    execution snapshot into ephemeral comparator inputs. Refuse a snapshot whose

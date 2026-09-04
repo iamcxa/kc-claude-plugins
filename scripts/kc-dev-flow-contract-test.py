@@ -1133,6 +1133,11 @@ for phrase in [
     "adds no repository-owned reader, adapter, script, test, or check for a capability a declared resource already supplies",
     "commit it only when the Captain names a consumer that reads it",
     "a repository-local Linear planning reader",
+    "three host preconditions: `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` in the invoking process environment",
+    "a state authority at `<workflow-dir>/.spacedock-state` that is its own committed git root",
+    "raise that layout as a refit requirement against the package and keep the repository-local adapter",
+    "reads the accepted goal from `## Goal` or from `## Accepted outcome` and refuses a body carrying both",
+    "reads its Non-goals from `- ` bullets",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
 adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
@@ -1157,6 +1162,8 @@ for phrase in [
     "remove the canonical `source` field before either v4 admission validation or continuation",
     "do not reinterpret it as provider identity",
     "retires its repository-local planning reader",
+    "requires `LINEAR_API_KEY` and `CONDUCTOR_WORKSPACE_ID` in the invoking process environment",
+    "Confirm all three preconditions before deleting that reader",
 ]:
     require(phrase in normalized_migration, f"v4 migration omits: {phrase}")
 for phrase in [
@@ -1410,6 +1417,13 @@ require(
     and "## Acceptance evidence" not in manual_issue_body,
     "manual admission Issue body is not canonical AC-N criteria",
 )
+# The Issue body and the work item differ by one heading, and only this README
+# carried the Issue shape, so a Brief written from the package alone was refused.
+require(
+    " ".join(adopter.split("```markdown\n", 1)[1].split("```", 1)[0].split())
+    == normalized_manual_issue_body,
+    "adopter Issue template drifted from the workflow README template",
+)
 for phrase in [
     "The accepted outcome or non-goals changed",
     "structured planning delta",
@@ -1555,6 +1569,9 @@ for mechanism in [
     '"branchName"',
     '"delivery": delivery',
     '"kc-dev-flow-dispatch-envelope/v1"',
+    'GOAL_HEADINGS = ("Goal", "Accepted outcome")',
+    '"state authority is not <workflow-dir>/.spacedock-state"',
+    '"committed snapshot Non-goals must be a \'- \' bullet list"',
 ]:
     require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
 
@@ -1592,6 +1609,11 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
         content = fixture.project_content
         cycle_id = fixture.cycle_id
         goal, non_goal = fixture.goal, fixture.non_goal
+        goal_heading = (
+            "## Accepted outcome"
+            if fixture.scenario == "accepted-outcome-heading"
+            else "## Goal"
+        )
         if fixture.scenario == "project-drift":
             content += " changed"
         if fixture.scenario == "cycle-drift":
@@ -1617,7 +1639,11 @@ class LinearFixture(http.server.BaseHTTPRequestHandler):
             item = {
                 "id": identifier.lower(), "identifier": reported_identifier,
                 "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
-                "description": f"## Goal\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
+                "description": (
+                    f"{goal_heading}\n\n{goal}\n\n"
+                    + (f"## Accepted outcome\n\n{goal}\n\n" if fixture.scenario == "both-goal-headings" else "")
+                    + f"## Non-goals\n\n* {non_goal}\n"
+                ),
                 "state": {"type": issue_state},
                 "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
                 "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
@@ -1750,6 +1776,7 @@ Stop on any planning drift.
         conductor: str | None = "workspace",
         timeout: str = "5",
         reader: Path = linear_admission,
+        workflow_dir: Path = workflow,
     ) -> subprocess.CompletedProcess[str]:
         server.scenario, server.raced = scenario, False
         env = os.environ.copy()
@@ -1759,7 +1786,7 @@ Stop on any planning drift.
             else:
                 env[name] = value
         return subprocess.run(
-            [sys.executable, str(reader), "--workflow-dir", str(workflow),
+            [sys.executable, str(reader), "--workflow-dir", str(workflow_dir),
              "--work-item", str(work_item),
              "--profile-loader", str(PLUGIN / "scripts/profile-contract-loader.py"),
              "--local-profile", str(ROOT / "docs/dev/README.md"),
@@ -1792,6 +1819,29 @@ Stop on any planning drift.
         and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
         and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
         f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
+    )
+    accepted_outcome = admit("accepted-outcome-heading")
+    require(
+        accepted_outcome.returncode == 0
+        and json.loads(accepted_outcome.stdout)["live_read_sha256"]
+        == envelope["live_read_sha256"],
+        f"Accepted outcome heading was not admitted: {accepted_outcome.stderr}",
+    )
+    both_headings = admit("both-goal-headings")
+    require(
+        both_headings.returncode == 2
+        and not both_headings.stdout
+        and "'## Goal' or '## Accepted outcome'" in both_headings.stderr,
+        f"a body carrying both goal headings was admitted: {both_headings.stderr}",
+    )
+    inline_workflow = fixture_root / "inline"
+    inline_workflow.mkdir()
+    inline = admit("clean", workflow_dir=inline_workflow)
+    require(
+        inline.returncode == 2
+        and not inline.stdout
+        and "state authority is not <workflow-dir>/.spacedock-state" in inline.stderr,
+        f"inline state layout was not named in the refusal: {inline.stderr}",
     )
     with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
         mutant_root = Path(temporary)

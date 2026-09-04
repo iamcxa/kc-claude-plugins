@@ -905,6 +905,13 @@ def main() -> int:
         "manual admission Issue headings are missing or duplicated",
     )
     run_manual_contract_mutant(
+        "adopter-issue-template-removed",
+        "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+        "   ## Goal\n",
+        "",
+        "adopter Issue template drifted from the workflow README template",
+    )
+    run_manual_contract_mutant(
         "poc-route-back-removed",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
         "return the POC outcome to planning",
