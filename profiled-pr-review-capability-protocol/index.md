@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: kc-pr-review/profiled-capability-pilot
 sprint-readiness: ready
-started:
+started: 2026-09-04T18:58:31Z
 completed:
 verdict:
 worktree:
