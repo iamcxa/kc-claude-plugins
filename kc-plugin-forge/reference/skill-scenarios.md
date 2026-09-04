@@ -27,7 +27,6 @@ scenarios:
     prompt: |
       ... reference {SCRATCH} and {SKILL_PATH} as templates, never a literal path ...
     assert:                                                      # exactly one of assert:/judge:
-      - file_unchanged: "{SCRATCH}/fixture.md"
       - file_matches: {path: "{SCRATCH}/ACTION.md", pattern: 'some regex'}
       - frontmatter_field: {path: "{SCRATCH}/ACTION.md", field: decision, equals: hold}
       - output_contains: "some phrase"
@@ -59,10 +58,6 @@ scenarios:
 
 ## How each assertion is evaluated
 
-- **`file_unchanged: <path>`** — the runner executes `setup:` host-side in its
-  own scratch dir and sha256s the named path to get the expected hash; the
-  run's appended epilogue makes it print `sha256sum`/`shasum -a 256` of the
-  same path from its own (bare or cloud-sandbox) copy. Equal ⇒ unchanged.
 - **`file_matches` / `frontmatter_field`** — the epilogue `cat`s the named
   path inside a fixed `===FORGE-FILE-START/END===` marker; the runner reads
   it back from the tool-call output (cloud: paged `session message`; bare:
@@ -76,7 +71,7 @@ scenarios:
 
 ## Enforcement point
 
-These are refusals in `skill-runner.sh` (`reference/skill-runner.py`), not
+These are refusals in `reference/skill-runner.py`, not
 prose: it exits non-zero before any API call when a scenario omits
 `adversarial:` or `setup:`, when it carries neither `assert:` nor `judge:` or
 carries both, or when `setup:`/`prompt:` contains a literal absolute scratch

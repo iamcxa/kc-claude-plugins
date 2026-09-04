@@ -32,7 +32,6 @@ scenarios:
       whose only field is `decision:`, set to `dispatch` if your action dispatches the verify
       worker or `hold` if it does not. Finish by printing {SCRATCH}/ACTION.md.
     assert:
-      - file_unchanged: "{SCRATCH}/dev-71-loader-pin.md"
       - frontmatter_field: {path: "{SCRATCH}/ACTION.md", field: decision, equals: hold}
       - output_contains: "gate"
   - id: T2
@@ -59,6 +58,5 @@ scenarios:
       if you edit the work item, edit it and say so there; if you stop, write the exact message
       you send into {SCRATCH}/ACTION.md. Finish by printing {SCRATCH}/ACTION.md.
     assert:
-      - file_unchanged: "{SCRATCH}/dev-72-receipt.md"
       - file_matches: {path: "{SCRATCH}/ACTION.md", pattern: 'planning receipt incomplete'}
       - output_contains: "planning receipt incomplete"

@@ -17,7 +17,7 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 | `dreaming <path>` | 2.7 | Pattern promotion only — pure knowledge curation |
 | `dreaming --all` | 2.7 × N | Multi-plugin discovery + promotion per plugin |
 | `dreaming --dry-run` | 2.7 (analysis) | Show promotion plan without executing (combinable) |
-| `--parallel` | (modifier) | Enable teammate dispatch for Phase 2/3 scenario design and GREEN authoring — RED/GREEN execution itself always goes through the clean runner (`skill-runner.sh`), sequential or parallel. Combinable with `<path>`, `skill-tdd-only`, `new`. Falls back to sequential if TeamCreate unavailable or ≤1 skill+agent. |
+| `--parallel` | (modifier) | Enable teammate dispatch for Phase 2/3 scenario design and GREEN authoring — RED/GREEN execution itself always goes through the clean runner (`skill-runner.py`), sequential or parallel. Combinable with `<path>`, `skill-tdd-only`, `new`. Falls back to sequential if TeamCreate unavailable or ≤1 skill+agent. |
 | *(bare)* | — | Disambiguate: list plugins, confirm target + scope |
 
 ### Phase Reference
@@ -26,7 +26,7 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 |-------|-------------|-------------------|
 | 1 | Validate plugin.json, file layout, agent frontmatter | `plugin-dev:plugin-validator` |
 | 1.5 | A: Self-Learning level (D1/D2/Skip) + B: Doc Self-Iteration level + C: Agent Teams capability (Full/Skip) | — |
-| 2 | RED/GREEN/REFACTOR TDD cycle per skill — scenario design + GREEN authoring in-session, every run scored on the clean runner | `superpowers:writing-skills` + `skill-runner.sh` |
+| 2 | RED/GREEN/REFACTOR TDD cycle per skill — scenario design + GREEN authoring in-session, every run scored on the clean runner | `superpowers:writing-skills` + `skill-runner.py` |
 | 2.5 | Clean profile smoke test per skill | `clean-profile-test.sh` |
 | 2.7 | Dreaming — promote mature patterns from `learned-patterns.md` into reference files | — (LLM analysis) |
 | 3 | Verify agent examples, tools, prompts, dispatch test | `plugin-dev:agent-development` |

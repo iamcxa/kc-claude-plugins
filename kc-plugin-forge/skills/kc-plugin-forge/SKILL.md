@@ -307,7 +307,7 @@ Reference: `${CLAUDE_PLUGIN_ROOT}/reference/parallel-forge.md`
 For EACH skill in the plugin's `skills/` directory:
 
 1. **Invoke `Skill: "superpowers:writing-skills"`** for scenario design and GREEN authoring — it never dispatches the run itself; every pressure scenario is dispatched through the clean runner below.
-2. **Select a runner**: `${CLAUDE_PLUGIN_ROOT}/reference/skill-runner.sh` picks `cloud` (primary) or `bare` (fallback); a run that cannot resolve a credential for either exits with a named reason instead of silently skipping. See `${CLAUDE_PLUGIN_ROOT}/reference/skill-scenarios.md`.
+2. **Select a runner**: `python3 ${CLAUDE_PLUGIN_ROOT}/reference/skill-runner.py` picks `cloud` (primary) or `bare` (fallback); a run that cannot resolve a credential for either exits with a named reason instead of silently skipping. See `${CLAUDE_PLUGIN_ROOT}/reference/skill-scenarios.md`.
 3. **Load scenarios**: read `<target-plugin>/skill-scenarios/<skill-name>.scenarios.yaml` if present — its scenarios take priority, by name. Absent → design 3-4 pressure scenarios by hand via writing-skills, each naming an `adversarial:` opposition, and note `scenarios: hand-designed (no scenario file at <path>)` in the Phase 4 report.
 4. **RED**: dispatch each scenario's baseline prompt through the selected runner and score its `assert:` list — this is the observation the loop corrects, not a step performed in this conversation.
 5. **GREEN**: write or refine skill content addressing what RED's scoring surfaced, then dispatch each scenario's GREEN prompt (skill content prepended) through the same runner.
@@ -617,6 +617,10 @@ Plugin Forge Report: <plugin-name>
 ─────────────────────────────────
 Structure:  PASS/FAIL (N items fixed)
 Skills:     N skills tested (M scenarios, K passed)
+Phase 2 Runner: <cloud|bare> (<reason, when it fell back>)
+                Model pin: <model>
+                Scenarios: <scenario-file path> | hand-designed (no scenario file at <path>)
+                <ID>: RED <passed|failed|judged|error> / GREEN <passed|failed|judged|error>
 Clean Profile: N skills verified (K clean-pass, J context-dependent)
                Mode: clean / unavailable
                Key source: <env | path-to-file>

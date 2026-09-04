@@ -48,6 +48,39 @@ for label, path, start, end in SPANS:
         failures.append(f"G3 {label} ({where}): in-session worker template still "
                         f"carries the RED/GREEN run instruction")
 
+# AC-4/AC-5: the Phase 4 report template names runner, model pin, per-scenario
+# outcomes, and the hand-designed fallback — the deliverable G4/G5 guard.
+REPORT_START = r"^## Phase 4: Re-validate \+ Report"
+REPORT_END = r"^## Rules"
+MODEL_PIN = re.compile(r"model\s*pin", re.I)
+OUTCOME_LABELS = ("passed", "failed", "judged", "error")
+SKILL_MD = FORGE / "skills/kc-plugin-forge/SKILL.md"
+
+lines = SKILL_MD.read_text().splitlines()
+i = next(n for n, l in enumerate(lines) if re.match(REPORT_START, l))
+j = next((n for n, l in enumerate(lines[i+1:], i+1) if re.match(REPORT_END, l)), len(lines))
+section = lines[i:j]
+fences = [n for n, l in enumerate(section) if l.strip() == "```"]
+block = section[fences[0]+1:fences[1]] if len(fences) >= 2 else []
+block_text = "\n".join(block)
+where = f"{SKILL_MD.relative_to(ROOT)}:{i+1}-{j}"
+
+# G4 (positive) — the report block names a runner field carrying both cloud
+# and bare, and a model-pin field.
+if not (RUNNER.search(block_text) and all(k.search(block_text) for k in RUNNER_KINDS)
+        and MODEL_PIN.search(block_text)):
+    failures.append(f"G4 Phase 4 report ({where}): block does not name a runner "
+                    f"field carrying both cloud and bare, and a model-pin field")
+
+# G5 (positive) — per-scenario RED/GREEN outcome labels from {passed, failed,
+# judged, error}, and a scenarios line with both the file and hand-designed branches.
+if not (all(lbl in block_text.lower() for lbl in OUTCOME_LABELS)
+        and re.search(r"\bscenarios\b", block_text, re.I)
+        and re.search(r"hand-designed", block_text, re.I)):
+    failures.append(f"G5 Phase 4 report ({where}): block does not carry per-scenario "
+                    f"RED/GREEN outcome labels {{passed,failed,judged,error}} and a "
+                    f"scenarios line with both the file and hand-designed branches")
+
 for f in failures:
     print("FAIL:", f)
 print(f"{'FAILED' if failures else 'PASSED'}: {len(failures)} violation(s)")

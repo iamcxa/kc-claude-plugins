@@ -32,8 +32,7 @@ kc-plugin-forge/
 │   ├── agent-teams-quality.md    # Agent Teams verification patterns, TDD scenarios
 │   ├── parallel-forge.md         # teammate dispatch templates, coordination, error recovery
 │   ├── clean-profile-test.sh      # Phase 2.5 execution isolator script; extended for skill-runner.py
-│   ├── skill-runner.sh            # Phase 2 clean runner entrypoint (cloud | bare)
-│   ├── skill-runner.py            # skill-runner.sh implementation: refusals, dispatch, scoring
+│   ├── skill-runner.py            # Phase 2 clean runner entrypoint (cloud | bare): refusals, dispatch, scoring
 │   └── skill-scenarios.md         # scenario file format (forge-skill-scenarios/v1)
 ├── docs/
 │   ├── getting-started.md         # prerequisites, install, first run
@@ -57,7 +56,7 @@ Phase 1.5 ── A: Self-Learning choice (D1+D2 / D1 / Skip)
         │    C: Agent Teams capability (Full / Skip)
         │
 Phase 2 ─── superpowers:writing-skills (scenario design + GREEN authoring)
-        │   + skill-runner.sh (RED/GREEN scoring on a clean runner)
+        │   + skill-runner.py (RED/GREEN scoring on a clean runner)
         │   + step 9: Teams Setup verification (if Full Teams chosen)
         │
 Phase 2.7 ── Dreaming (pattern promotion)

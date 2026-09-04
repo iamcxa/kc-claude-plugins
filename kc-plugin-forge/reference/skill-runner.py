@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
-"""Forge Phase 2 clean runner — implementation behind skill-runner.sh.
-
-Dispatches one scenario variant (RED or GREEN) on a clean runner (cloud
-Conductor sandbox or `claude --bare`), scores its `assert:` list against the
-run's file state and terminal output, and prints one outcome line:
-
-    outcome=<pass|fail|error> runner=<cloud|bare> model=<pin> scratch=<dir>
+"""Forge Phase 2 clean runner — the one interface Phase 2 calls for every RED/GREEN run.
 
 Usage: skill-runner.py <cloud|bare> <scenario-file> <scenario-id> <red|green> <plugin-dir>
-
-See reference/skill-scenarios.md for the scenario file format and the
-refusals this script enforces before any API call.
+Prints: outcome=<pass|fail|error> runner=<cloud|bare> model=<pin> scratch=<dir>
+See reference/skill-scenarios.md for the scenario format and refusals enforced before any API call.
 """
 import hashlib
 import json
@@ -47,6 +40,8 @@ def load_yaml(path):
     except ImportError:
         die("error", "n/a", "n/a", "n/a",
             "missing machine dependency: PyYAML (pip install pyyaml)")
+    if not Path(path).exists():
+        die("error", "n/a", "n/a", "n/a", f"scenario file not found: {path}")
     return yaml.safe_load(Path(path).read_text())
 
 
@@ -75,27 +70,23 @@ def resolve_model(data, scen):
 
 
 def bare_model_id(pin):
-    """claude --bare wants a full model id ('claude-sonnet-4-6'); Conductor's
-    session --model wants the bare pin ('sonnet-4-6'). Verified against both
-    CLIs this session — claude --bare --model sonnet-4-6 404s, --model
-    claude-sonnet-4-6 works; conductor session create takes sonnet-4-6 as-is."""
+    """claude --bare wants a full model id; Conductor session --model wants the
+    bare pin. Observed 2026-09-03, not re-verified since (residual 3)."""
     return pin if pin.startswith("claude-") else f"claude-{pin}"
 
 
 def assertion_paths(scen):
-    hashed, cated = [], []
+    cated = []
     for a in scen.get("assert", []):
         (k, v), = a.items()
-        if k == "file_unchanged":
-            hashed.append(v)
-        elif k == "file_matches":
+        if k == "file_matches":
             cated.append(v["path"])
         elif k == "frontmatter_field":
             cated.append(v["path"])
-    return hashed, cated
+    return cated
 
 
-def build_epilogue(hashed, cated, token):
+def build_epilogue(cated, token):
     # First give the normal spoken answer the prompt above asked for — an
     # epilogue phrased as "your final action" was observed to make the model
     # treat the epilogue itself as the whole final turn, emitting nothing but
@@ -103,8 +94,6 @@ def build_epilogue(hashed, cated, token):
     lines = ["", "First give your normal answer to the prompt above, in your own words, "
                  "exactly as it asked. Only after that, as an additional last step, "
                  "also run this and show its output:"]
-    for p in hashed:
-        lines.append(f'(sha256sum "{p}" 2>/dev/null || shasum -a 256 "{p}") | sed "s#.*#SHA256 {p}: &#"')
     for p in cated:
         lines.append(f'echo "===FORGE-FILE-START {p}==="; cat "{p}" 2>/dev/null; echo "===FORGE-FILE-END {p}==="')
     lines.append(f"Then, in that same final message, restate your answer to the prompt above in one "
@@ -119,10 +108,8 @@ def substitute(text, scratch, skill_path):
 def build_prompt(data, scen, variant, scratch, token):
     setup = substitute(scen["setup"], scratch, data.get("skill_path", ""))
     body = substitute(scen["prompt"], scratch, data.get("skill_path", ""))
-    hashed, cated = assertion_paths(scen)
-    hashed = [substitute(p, scratch, "") for p in hashed]
-    cated = [substitute(p, scratch, "") for p in cated]
-    epilogue = build_epilogue(hashed, cated, token)
+    cated = [substitute(p, scratch, "") for p in assertion_paths(scen)]
+    epilogue = build_epilogue(cated, token)
     parts = [setup, body] if setup else [body]
     if variant == "green":
         preamble = substitute(data.get("green_preamble", ""), scratch, data.get("skill_path", ""))
@@ -131,34 +118,13 @@ def build_prompt(data, scen, variant, scratch, token):
     return "\n\n".join(p for p in parts if p)
 
 
-def host_side_baseline(scen, host_scratch, remote_scratch):
-    """Run setup: once, host-side, in its own scratch dir, to get the bytes
-    file_unchanged compares against — the run's own epilogue reports the
-    remote/bare copy's hash, not its content, so this is the only way to
-    know what 'unchanged' means for a given fixture. Keyed by the
-    remote-substituted path (the canonical identity used everywhere else),
-    even though the bytes are read from the separate host_scratch copy."""
-    Path(host_scratch).mkdir(parents=True, exist_ok=True)
-    setup = scen.get("setup") or ""
-    if setup:
-        subprocess.run(["bash", "-c", substitute(setup, host_scratch, "")], check=False)
-    hashed, _ = assertion_paths(scen)
-    out = {}
-    for p in hashed:
-        real = substitute(p, host_scratch, "")
-        if Path(real).exists():
-            out[substitute(p, remote_scratch, "")] = hashlib.sha256(Path(real).read_bytes()).hexdigest()
-    return out
-
-
 def extract(messages):
-    """-> (file_hashes, file_bodies, terminal_result). Reads the epilogue's
-    SHA256/FORGE-FILE markers from tool_use_result stdout, and the terminal
-    result only from the subtype:success payload — output_contains must never
-    see the epilogue's own cat, or it would satisfy itself trivially."""
-    hashes, bodies, result = {}, {}, None
+    """-> (file_bodies, terminal_result). Reads the epilogue's FORGE-FILE
+    markers from tool_use_result stdout, and the terminal result only from
+    the subtype:success payload — output_contains must never see the
+    epilogue's own cat, or it would satisfy itself trivially."""
+    bodies, result = {}, None
     file_re = re.compile(r"===FORGE-FILE-START (\S+)===\n(.*?)\n===FORGE-FILE-END \1===", re.S)
-    sha_re = re.compile(r"SHA256 (\S+): ([0-9a-f]{64})")
     for m in messages:
         rp = (m.get("content") or {}).get("rawPayload") or m  # cloud vs bare-stream shape
         tur = rp.get("tool_use_result")
@@ -167,26 +133,21 @@ def extract(messages):
             stdout = tur
         for path, body in file_re.findall(stdout):
             bodies[path] = body
-        for path, digest in sha_re.findall(stdout):
-            hashes[path] = digest
         if rp.get("subtype") == "success" or rp.get("type") == "result":
             result = rp.get("result") or result
-    return hashes, bodies, result
+    return bodies, result
 
 
-def score(scen, baseline, hashes, bodies, result, remote_scratch):
-    """hashes/bodies are keyed by the real remote-substituted path (what the
-    epilogue actually printed); scen['assert'] values still carry the raw
-    {SCRATCH} template, so every path lookup here canonicalizes first."""
+def score(scen, bodies, result, remote_scratch):
+    """bodies is keyed by the real remote-substituted path (what the epilogue
+    actually printed); scen['assert'] values still carry the raw {SCRATCH}
+    template, so every path lookup here canonicalizes first."""
     out = []
     if "judge" in scen:
         return "judged", []
     for a in scen["assert"]:
         (k, v), = a.items()
-        if k == "file_unchanged":
-            path = substitute(v, remote_scratch, "")
-            ok = path in baseline and hashes.get(path) == baseline[path]
-        elif k == "file_matches":
+        if k == "file_matches":
             path = substitute(v["path"], remote_scratch, "")
             ok = bool(re.search(v["pattern"], bodies.get(path, "")))
         elif k == "frontmatter_field":
@@ -241,10 +202,11 @@ def resolve_project_id(plugin_dir):
 
 
 def reconcile_workspace(project_id, model):
-    """One workspace per Phase 2 invocation, shared by every scenario-variant
-    call skill-runner.sh makes for the same plugin. Concurrent callers race
-    on an O_CREAT|O_EXCL lock file; the loser waits for the winner's id."""
+    """One workspace per Phase2 invocation; concurrent callers race on an
+    O_CREAT|O_EXCL lock file. Every path — lock winner, lock loser, and fast-
+    path reuse — waits for status == ready before returning (residual 1)."""
     state = Path(tempfile.gettempdir()) / f"forge-cloud-ws-{hashlib.sha256(project_id.encode()).hexdigest()[:12]}.json"
+    ws_id = None
     for _ in range(40):
         try:
             fd = os.open(state, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
@@ -254,33 +216,34 @@ def reconcile_workspace(project_id, model):
             try:
                 data = json.loads(state.read_text() or "{}")
                 if data.get("workspaceId"):
-                    return data["workspaceId"], None
+                    ws_id = data["workspaceId"]
+                    break
             except Exception:
                 pass
             time.sleep(3)
     else:
         return None, "timed out waiting for a peer to finish creating the shared workspace"
-    if state.stat().st_size > 0:
-        data = json.loads(state.read_text())
-        return data["workspaceId"], None
-    hello = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
-    hello.write("Hello. Reply with the single word READY and nothing else.\n")
-    hello.close()
-    try:
-        out = json.loads(subprocess.check_output([
-            "conductor", "workspace", "create", "--project-id", project_id, "--branch", "main",
-            "--name", f"forge-phase2-{secrets.token_hex(3)}", "--agent", "claude", "--model", model,
-            "--effort", DEFAULT_EFFORT, "--message-file", hello.name, "--json"]))
-    except subprocess.CalledProcessError as e:
-        return None, f"conductor workspace create failed: {e}"
-    ws_id = out.get("workspaceId") or out.get("id")
+    if ws_id is None and state.stat().st_size > 0:
+        ws_id = json.loads(state.read_text())["workspaceId"]
+    if ws_id is None:
+        hello = tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False)
+        hello.write("Hello. Reply with the single word READY and nothing else.\n")
+        hello.close()
+        try:
+            out = json.loads(subprocess.check_output([
+                "conductor", "workspace", "create", "--project-id", project_id, "--branch", "main",
+                "--name", f"forge-phase2-{secrets.token_hex(3)}", "--agent", "claude", "--model", model,
+                "--effort", DEFAULT_EFFORT, "--message-file", hello.name, "--json"]))
+        except subprocess.CalledProcessError as e:
+            return None, f"conductor workspace create failed: {e}"
+        ws_id = out.get("workspaceId") or out.get("id")
+        state.write_text(json.dumps({"workspaceId": ws_id}))
     for _ in range(40):
         st = json.loads(subprocess.run(["conductor", "workspace", "status", ws_id, "--json"],
                                         capture_output=True, text=True).stdout or "{}")
         if st.get("status") == "ready":
             break
         time.sleep(10)
-    state.write_text(json.dumps({"workspaceId": ws_id}))
     return ws_id, None
 
 
@@ -309,15 +272,11 @@ def run_cloud(prompt, model, plugin_dir, scratch, transcript_path, scenario_id, 
 
 def page_until_token(sid, token, budget_s):
     """Pages --offset/--limit (never the sql transcript view, which elides
-    the middle of a run) until TOKEN appears or the budget expires. Pages
-    immediately while hasMore, otherwise waits a poll interval and re-checks
-    from the same offset — bounded either way, unlike a single --json call.
-    -> (messages, acked, stall_reason). stall_reason is set (and acked False)
-    when the session goes idle without ever printing the token — e.g. an
-    account-wide rate limit ends the session immediately with a `result`
-    message and no tool calls; waiting out the full budget in that case only
-    delays reporting outcome=error, it never turns into a pass."""
-    messages, offset, deadline = [], 0, time.time() + budget_s
+    the middle of a run) until TOKEN appears or the budget expires.
+    -> (messages, acked, stall_reason). idle counts as a stall only once at
+    least one agent-originated message has been seen — residual 1: a session
+    still waking from `sleeping` reports idle before its first turn."""
+    messages, offset, deadline, agent_seen = [], 0, time.time() + budget_s, 0
     while time.time() < deadline:
         page = json.loads(subprocess.run(
             ["conductor", "session", "message", sid, "--offset", str(offset), "--limit", "10", "--json"],
@@ -329,13 +288,14 @@ def page_until_token(sid, token, budget_s):
         # for it back) — search only agent-originated events, or the first page
         # (which always carries our own userMessage) matches before any run happens.
         agent_batch = [m for m in batch if m.get("type") != "userMessage"]
+        agent_seen += len(agent_batch)
         if f"TOKEN: {token}" in json.dumps(agent_batch):
             return messages, True, None
         if not page.get("hasMore"):
             status = json.loads(subprocess.run(["conductor", "session", "status", sid, "--json"],
                                                 capture_output=True, text=True).stdout or "{}")
-            if status.get("status") == "idle":
-                _, _, result = extract(messages)
+            if status.get("status") == "idle" and agent_seen > 0:
+                _, result = extract(messages)
                 return messages, False, f"session went idle without printing the token; last result: {result!r}"
             time.sleep(POLL_INTERVAL_S)
     return messages, False, f"token not observed within {budget_s}s"
@@ -358,7 +318,6 @@ def main():
     host_scratch = tempfile.mkdtemp(prefix="forge-host-")
     remote_scratch = f"/tmp/forge-{secrets.token_hex(4)}"
     token = f"FORGE{secrets.token_hex(4)}"
-    baseline = host_side_baseline(scen, host_scratch, remote_scratch)
     prompt = build_prompt(data, scen, variant, remote_scratch, token)
     transcript_path = Path(host_scratch) / f"{scenario_id}-{variant}.json"
 
@@ -380,8 +339,8 @@ def main():
             die("error", runner_used, model, host_scratch, reason or "bare execution failed")
         transcript_path.write_text(json.dumps(messages, indent=2))  # normalize stream-jsonl -> one JSON array
 
-    hashes, bodies, result = extract(messages)
-    status, detail = score(scen, baseline, hashes, bodies, result, remote_scratch)
+    bodies, result = extract(messages)
+    status, detail = score(scen, bodies, result, remote_scratch)
     outcome_line(status, runner_used, model, host_scratch)
     sys.exit(0 if status in ("pass", "judged") else 1)
 

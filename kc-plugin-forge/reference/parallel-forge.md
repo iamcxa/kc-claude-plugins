@@ -31,7 +31,7 @@ forge --parallel <plugin-path>
 
 Dispatch one teammate per skill in `skills/` directory. The teammate designs
 scenarios and authors GREEN content only — it hands every scenario variant to
-`reference/skill-runner.sh`, which selects `cloud` (primary) or `bare`
+`reference/skill-runner.py`, which selects `cloud` (primary) or `bare`
 (fallback), the same clean runner sequential mode uses. See
 `reference/skill-scenarios.md` for the scenario file format.
 
@@ -57,7 +57,7 @@ YOUR TASK:
    Skill("superpowers:writing-skills")
 
 3. Follow the RED → GREEN → REFACTOR loop, but hand off every scenario variant to
-   `<forge-plugin-root>/reference/skill-runner.sh <cloud|bare> <scenario-file> <id>
+   `python3 <forge-plugin-root>/reference/skill-runner.py <cloud|bare> <scenario-file> <id>
    <red|green> <plugin-path>` — you author content, the clean runner scores it.
    - RED: baseline scoring, before any content change
    - GREEN: rescored after your SKILL.md edit

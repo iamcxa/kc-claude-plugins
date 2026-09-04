@@ -54,6 +54,8 @@ Required marketplace plugins (runtime dependencies):
 - **plugin-dev** — provides `plugin-dev:plugin-validator`, `plugin-dev:plugin-structure`, `plugin-dev:agent-development`
 - **claude-md-management** (optional) — provides `claude-md-management:revise-claude-md` for self-improvement loop
 
+Machine dependency (not vendored): **PyYAML** (`pip install pyyaml`) — `reference/skill-runner.py` needs it to parse `skill-scenarios/*.yaml`; it refuses with a named reason instead of a bare `ImportError` when missing.
+
 ## Quick Start
 
 ```bash
