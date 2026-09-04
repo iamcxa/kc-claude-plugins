@@ -1,6 +1,6 @@
 ---
 title: "Pilot a profiled PR review capability protocol"
-status: backlog
+status: ideation
 source:
 product: kc-pr-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat, this conversation, 2026-09-05, approving kc-dev-flow Pilot progression
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
