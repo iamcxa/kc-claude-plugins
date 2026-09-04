@@ -13,7 +13,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-manual-cycle-release-admission-path
 issue: "#305"
-pr: "#306"
+pr: pr-merge:306
 mod-block:
 gates:
     version: 1
