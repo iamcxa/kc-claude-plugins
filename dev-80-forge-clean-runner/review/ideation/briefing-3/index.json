@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-3:revision-1",
+  "question": "Accept the cycle-3 shape (skill-runner.py justified block by block; cut file_unchanged and the .sh wrapper to fit 675 insertions under the 700 stop number; T1 retired from AC-2's RED-fail claim; cold-start race fixed in-runner; G4/G5 added to the contract test; AC-5 report fields added as a build obligation) and re-enter implementation? Rule: (1) cut file_unchanged despite naming it at gate 1; (2) correct the Accepted outcome's last sentence to name T2 and T4 as the admission-snapshot wording, or issue a planning delta.",
+  "artifacts": [
+    {
+      "id": "artifact:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/b9685f71ebcdad2690340e6e2a928c7efbc83e59/dev-80-forge-clean-runner.md",
+      "rev": "sha256:a342e20b6d80e47c09a0bd7075503571f8f3eb0b8bf8dc78b8eff48626ff0d8a",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3 measured rather than estimated: cutting to 180 is unreachable (the cloud path alone is 107 lines), so every block of skill-runner.py is justified against without-it; two blocks fail the test and are cut (file_unchanged, 33 lines, held 12/12 across POC and live sessions and did not catch the one run closest to its named failure; the 17-line .sh wrapper). New guards: skill-runner.py \u003e 370, cloud path \u003e 130. Insertions 712 to 675, files 13 to 12; the cycle-2 guard is shown to have been internally impossible. T1 retired from the AC-2 RED-fail claim on session 334a0f15; redesign branch named and deliberately not admitted. Findings: AC-5's report fields do not exist in the built tree (byte-identical report block at base and HEAD), now a build obligation; run_bare has never completed a run, recorded as a known limit; PyYAML is a third un-vendored dependency. Credential default carried forward: fail loudly and record which runner ran."
+    }
+  ]
+}

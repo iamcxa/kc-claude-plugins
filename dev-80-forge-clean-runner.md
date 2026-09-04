@@ -72,6 +72,11 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+            - id: gate-attempt:kmt1mgvwqy0g9qmshemqtsn1-ideation-3
+              briefing:
+                id: briefing:kmt1mgvwqy0g9qmshemqtsn1:ideation:attempt-3:revision-1
+                digest: sha256:5c41285772219478a8c62590d044fc3a575516a8b3cba776337bb86ac74cfbe7
+                room-ref: ./dev-80-forge-clean-runner/review/ideation/briefing-3
 ---
 
 ## The problem
