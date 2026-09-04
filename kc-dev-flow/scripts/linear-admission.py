@@ -283,7 +283,6 @@ def main() -> int:
             raise AdmissionError("timeout must be between 0 and 60 seconds")
         deadline = started + args.timeout
         key = os.environ.get("LINEAR_API_KEY", "")
-        workspace_id = os.environ.get("CONDUCTOR_WORKSPACE_ID", "")
         if not key:
             raise AdmissionError("LINEAR_API_KEY is unavailable")
         if args.graphql_url != API_URL:
@@ -453,8 +452,6 @@ def main() -> int:
             "profile_contract_hashes": contract_hashes,
             "command_elapsed_ms": round((time.monotonic() - started) * 1000),
         }
-        if workspace_id:
-            envelope["conductor_workspace_id"] = workspace_id
         sys.stdout.write(json.dumps(envelope, sort_keys=True, separators=(",", ":")) + "\n")
         return 0
     except AdmissionError as exc:

@@ -233,9 +233,10 @@ is pinned against that README, so the two cannot drift apart again.
 admission on a host marker that it never validated beyond non-emptiness and that
 nothing read back, while the Linear workspace was already bound by the
 `--linear-workspace` argument checked against the authenticated organization.
-The envelope still carries `conductor_workspace_id` when the variable is set and
-omits it otherwise, so a VM, a CI runner, and a plain shell can all run an
-engage. `LINEAR_API_KEY` remains required on the Linear branch, as the
+The envelope carries no host identifier at all, so a VM, a CI runner, and a
+plain shell can all run an engage. A caller that needs to correlate an engage
+with its host reads its own environment; the reader neither requires nor
+reports one. `LINEAR_API_KEY` remains required on the Linear branch, as the
 credential for the read itself; work with no planning provider records no
 Planning Receipt and needs neither.
 
