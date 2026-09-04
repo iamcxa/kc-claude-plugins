@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-80-forge-clean-runner
 issue: DEV-80
-pr: "#368"
+pr: pr-merge:368
 mod-block:
 id: kmt1mgvwqy0g9qmshemqtsn1
 gates:
