@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ast
 import importlib.util
 import hashlib
 import http.server
@@ -495,6 +496,61 @@ for relative in [
             retired not in normalized,
             f"{relative} still instructs the retired `release` state: {retired}",
         )
+
+# The ablation only runs at the release gate, so a mutant whose anchor text was
+# edited out of its target fails there, after every check a PR ran was green,
+# and the cases after it never run. Four such anchors have gone stale this way.
+# The guard itself cannot run in --ablation-check: a mutant removes anchor text
+# on purpose, so it would fire inside every mutated copy and fail them for the
+# wrong reason. Full mode is what marketplace-parity runs on every PR.
+if not require_ablation_only:
+    ablation_source = read("scripts/kc-dev-flow-minimal-stack-ablation.test.py")
+    ablation_constants = {
+        name: value.value
+        for node in ast.parse(ablation_source).body
+        if isinstance(node, ast.Assign)
+        and isinstance(node.targets[0], ast.Name)
+        and isinstance(node.value, ast.Call)
+        and getattr(node.value.func, "id", "") == "Path"
+        and node.value.args
+        and isinstance(value := node.value.args[0], ast.Constant)
+        for name in [node.targets[0].id]
+    }
+
+
+    def ablation_literal(node: ast.expr) -> str | None:
+        """Resolve a mutant argument that is a literal or `str(MODULE_CONSTANT)`."""
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        if (
+            isinstance(node, ast.Call)
+            and getattr(node.func, "id", "") == "str"
+            and len(node.args) == 1
+            and isinstance(node.args[0], ast.Name)
+        ):
+            return ablation_constants.get(node.args[0].id)
+        return None
+
+
+    unresolved = []
+    checked = 0
+    for call in ast.walk(ast.parse(ablation_source)):
+        if not (isinstance(call, ast.Call) and getattr(call.func, "id", "") == "run_manual_contract_mutant"):
+            continue
+        name, target, before = (ablation_literal(argument) for argument in call.args[:3])
+        if target is None or before is None:
+            unresolved.append((call.lineno, name, "arguments are not statically resolvable"))
+            continue
+        checked += 1
+        found = read(target).count(before)
+        if found != 1:
+            unresolved.append((call.lineno, name, f"anchor appears {found}x in {target}"))
+    require(
+        checked and not unresolved,
+        "ablation mutation anchors no longer bind their target: "
+        + "; ".join(f"line {line} {name}: {reason}" for line, name, reason in unresolved),
+    )
+
 
 release_gate = read(".github/workflows/kc-dev-flow-release-gate.yml")
 require(
