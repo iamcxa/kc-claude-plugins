@@ -10,7 +10,12 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-plan.sh"
+      - "kc-pr-flow/scripts/review-plan.test.sh"
       - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -19,7 +24,12 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-plan.sh"
+      - "kc-pr-flow/scripts/review-plan.test.sh"
       - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/test/fixtures/review-plan/**"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
 
@@ -31,10 +41,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  review-runtime:
+  review-runtime-core:
     name: typed review runtime contract
     runs-on: ubuntu-latest
-    # Exact-head local full suite: 468.61s; hosted duration remains unmeasured.
+    # Exact-head local core suite: 468.61s; hosted duration remains unmeasured.
     timeout-minutes: 12
     steps:
       - name: Checkout
@@ -49,3 +59,33 @@ jobs:
 
       - name: Run core contract
         run: bash kc-pr-flow/scripts/review-runtime.test.sh
+
+  review-delta-planner:
+    name: delta planner (${{ matrix.planner_case }})
+    runs-on: ubuntu-latest
+    # Exact-head local closed selectors total 534.79s serially; each runs independently here.
+    timeout-minutes: 4
+    strategy:
+      fail-fast: false
+      matrix:
+        planner_case:
+          - receipt-contract
+          - mode-router
+          - trust-boundary
+          - skill-wiring
+          - s02-capability
+          - s02-boundary
+          - s02-gitlink
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Require planner tools
+        run: |
+          command -v bash
+          command -v jq
+          command -v python3
+          command -v sha256sum
+
+      - name: Run closed planner contract
+        run: bash kc-pr-flow/scripts/review-plan.test.sh --case "${{ matrix.planner_case }}"
