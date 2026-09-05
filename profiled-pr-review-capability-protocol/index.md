@@ -48,6 +48,17 @@ gates:
                 id: briefing:t8cyxd55ve3dtcxb9r37z2a7:ideation:attempt-1:revision-1
                 digest: sha256:6e214e25449a4c4cdaa14964bed82dd0972daeeec250c704d6801e3d172fa529
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t8cyxd55ve3dtcxb9r37z2a7:ideation:1
+                briefing: briefing:t8cyxd55ve3dtcxb9r37z2a7:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-05T02:07:00.346029Z"
+                decision: approve
+                reason: Captain chat 核准 on 2026-09-05 accepts the presented default-off Lite build, zero executable expansion reserve, and stop limits of 20 changed files / 4100 total changed lines / 1800 focused schema-catalog-fixture-test lines. Paid blind runs require a separately measured budget. Preserve pinned delivery base and existing Draft PRs 352-355.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
