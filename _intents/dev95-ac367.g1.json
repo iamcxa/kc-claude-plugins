@@ -1,0 +1,11 @@
+{
+ "claim": "dev95-ac367.g1",
+ "token": "5b06b93b5901025b4b9a201142cfc873",
+ "writer": 21,
+ "holder": "laptop",
+ "project": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+ "base": "main",
+ "message_sha256": "82f1afa6424c82f74c2d45e6ae660d9a689afa8e41c1721c785a46a9e377c62c",
+ "workspace": null,
+ "committed_at": "2026-09-05T23:29:42Z"
+}
