@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T23:29:42Z",
  "adopted_at": "2026-09-05T23:29:52Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-05T23:42:59Z",
+ "note": "rules right; Evidence unparseable (bullet SURFACE), pair exits 0 both sides, variant is prose; round 2 evidence-only"
 }

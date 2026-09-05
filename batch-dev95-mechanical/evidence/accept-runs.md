@@ -8,6 +8,12 @@ The finding that matters is AC-2: **the real checker (92 six-word windows agains
 
 Delta for planning: DEV-95 AC-4's acceptance test ("grep over the pm-skills install") is the wrong instrument. Either the licence question is answered by a human or Codex read with the two texts side by side, or the test changes to something that can distinguish the original from the rewrite. The rewritten `docs/plan-flow/dialectic.md` itself (station 0, refusal seam before station 1, by-product question, borrowed skills as checklist) may still be wanted on its own merits — the Captain decides at UAT whether to land it without a mechanical licence check.
 
-## AC-3/6/7 round 1 (`405c7309` pushed) — no Evidence block emitted
+## AC-3/6/7 round 1 (`405c7309`) — rules accepted, Evidence REFUSED
 
-The branch exists with a commit; the transcript's only `## Evidence` is the template from the dispatch. See the transcript tail in this directory's notes before deciding re-send vs redispatch (S17: a usage-limit banner means keep the workspace and re-send after reset).
+Correction to an earlier note: the worker did emit a real Evidence block; the FO's first extraction took the last `## Evidence` in the transcript, which was the dispatch template echoed after it. Extract by the block that carries a 40-hex `CANDIDATE_SHA`.
+
+Rules verified by the FO at the candidate: L6 direction FAILs the inverted fixture (signal: identifier order) and PASSes the correct one; L9 FAILs DEV-91 on both DEV-89 fixtures; L10 FAILs both recorded fixtures and PASSes the `-reverified` copy; contract-test pin moved to the `-reverified` fixture.
+
+Evidence refused, four defects: `SURFACE` as a bullet list with prose in command slots (the accept station exited 2, unparseable); `WITHOUT_IT_COMMAND` a python one-liner writing `/tmp/m.py` (out of tree) that exits 0 at BOTH the base and the candidate; `WITHOUT_IT_REMOVED_VARIANT` a sentence; one `SURFACE` for three files. Round 2 dispatched evidence-only with a worked example of a valid pair.
+
+Residual to carry: L6's independent signal is identifier order (DEV-64 < DEV-65 < DEV-66). It catches S22, but a Project whose intended order is not numeric would false-fail; L9's message should name the Issue that already claims the surface.
