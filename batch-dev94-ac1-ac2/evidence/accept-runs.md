@@ -55,3 +55,10 @@ with "not a git repository". The runs above are in a real `git worktree`. A chec
 shells out to git must be exercised where git works.
 
 Residual: one `SURFACE` line for the script, none for the six fixture files.
+
+## Outcome
+
+- AC-1 merged as #372 (`0958df75`), 2026-09-05T02:22Z.
+- AC-2 merged as #373 (`1b61997b`), 2026-09-05T02:28Z, retitled `feat(ship-flow)` before squash.
+- Round-1 branch deleted from origin after merge; its refusal and Evidence stay in this directory.
+- Captain questions between first dispatch and this record: 0 mid-batch. Two asked at batch boundaries (S23 unblock, scope name) — outside the AC-3 window, which opens at dispatch and closes at the UAT message.
