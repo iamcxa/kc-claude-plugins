@@ -103,3 +103,49 @@ Stop and return a structured planning delta before implementation if correctness
 ## Measurement
 
 Primary measure: exact-head review-to-confirmation-ready wall time, with evidence acquisition charged to the arm that uses it. Quality is frozen before timing. Record per pair: PR identity and shape, selected questions and capabilities, evidence bytes, capability terminals, accepted findings by severity, false positives, model and harness identity, tokens, retries, wall time, and human intervention. Structural fixtures validate the protocol but cannot promote it.
+
+## Stage Report: ideation
+
+- DONE: Freeze one implementation-ready protocol shape at the pinned delivery base.
+  Design: `docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md`.
+  Feature commit: `41186709` on `feature/kc-pr-review-capability-protocol-pilot`.
+  Delivery base remains `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`.
+- DONE: Define Lite, Standard, Full, and Custom contracts while keeping execution Lite-only.
+  The executable path is default-off and requires exact typed/profiled `on` switches.
+  Standard, Full, and Custom remain documented contracts and route-back conditions.
+- DONE: Separate Planner, Evidence Builder, typed capabilities, and General Reviewer authority.
+  JSON Schema owns object shape; one catalog owns requiredness, signals, and manifests.
+  `InteractiveCollationDecision/v1` remains the sole approval authority.
+  Existing confirmation and `review-post.sh` posting ownership remain unchanged.
+- DONE: Close required coverage, evidence, identity, receipt, and terminal behavior.
+  Missing required evidence is fail-closed and cannot become a clean answer.
+  Zero-attempt skips emit no runtime lane, preserving the existing attempt/lane bijection.
+  All-skipped zero-lane review ends `ABORTED_INCOMPLETE: receipt_incomplete`.
+- DONE: Recover the existing `review-ablation` harness instead of creating a second runner.
+  The design adds only whole-tree Pilot arms and a bounded Pilot comparator.
+  Five effective primary slots, quality-first blind adjudication, and exact-head provenance are fixed.
+  Control is the current legacy route; treatment is the combined typed plus profiled route.
+- DONE: Complete independent architecture review through fresh Claude Opus 5 xhigh passes.
+  Thirty fresh review rounds were run; every blocking and optional issue was resolved or disproved by base evidence.
+  Final round verdict: PASS with no optional refinements.
+- VERIFIED: Pinned-base mechanical checks remain green.
+  `review-runtime.test.sh`: 372 passed, 0 failed.
+  `review-post.test.sh`: 156 passed, 0 failed.
+  `review-ablation.test.sh`: 82 passed, 0 failed with the repository venv active.
+- DELTA FOR CAPTAIN: Executable Lite expansion reserve is exactly zero.
+  Any `ExpansionRequest/v1` ends `ABORTED_INCOMPLETE: unsupported_expansion`.
+  The add-only expansion contract remains documented for a later accepted route only.
+  This narrows the Brief's executable bounded-expansion wording and requires ideation-gate acceptance.
+- PROJECT CONTEXT RECEIPT: PRODUCT and ARCHITECTURE headings are exact and overlap-checked.
+  The shape retains runtime event-envelope and approval authority claims while adding the external Planner.
+  No new posting owner, CI workflow, persistent service, Nightwatch, or Forge integration is introduced.
+- LIMITATION: No protocol implementation or blind treatment run exists yet.
+  Hosted CI cost per PR is unmeasured, so no CI cost or 33.3% speed claim is authorized.
+  Paid admission and experiment calls remain behind a separate measured budget approval.
+
+### Ideation summary
+
+The smallest integrated route is ready for a Captain gate: 18 estimated changed files, about 4,010
+changed lines against a 4,100 stop, and 1,700 focused schema/catalog/fixture/test lines against a
+1,800 stop. Build must stop on threshold breach or any need for executable expansion, broader
+profiles, new CI/posting ownership, or pre-plan full-catalog evidence.
