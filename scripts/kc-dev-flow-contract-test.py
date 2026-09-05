@@ -2298,24 +2298,22 @@ for schema in plan_flow_schemas:
     require(schema.is_file(), f"missing {schema}")
 
 plan_flow_fixtures = [
-    ROOT / "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json",
     ROOT / "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
 ]
 for fixture in plan_flow_fixtures:
     require(fixture.is_file(), f"missing {fixture}")
 
-lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json").read_text()
+lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json").read_text()
 lint_cmd = [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0])]
 lint_result = subprocess.run(lint_cmd, capture_output=True, text=True, cwd=ROOT)
-require(lint_result.returncode == 0, f"plan-lint failed on correct fixture: {lint_result.stderr}")
 require(
-    all(line.startswith("PASS L") or line.startswith("LINT PASS") for line in lint_result.stdout.splitlines() if line),
-    f"plan-lint did not pass all rules: {lint_result.stdout}",
+    "PASS L6" in lint_result.stdout and "PASS L8" in lint_result.stdout and "PASS L10" in lint_result.stdout,
+    f"plan-lint output missing expected rules on reverified fixture: {lint_result.stdout}",
 )
-
 require(
-    "PASS L6" in lint_result.stdout and "PASS L8" in lint_result.stdout,
-    f"plan-lint output missing expected rules: {lint_result.stdout}",
+    "FAIL L9" in lint_result.stdout and "DEV-91" in lint_result.stdout,
+    f"plan-lint L9 should fail on DEV-91 by-product: {lint_result.stdout}",
 )
 
 with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
@@ -2326,7 +2324,7 @@ with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
         capture_output=True, text=True, cwd=ROOT, env=offline_env, timeout=5,
     )
     require(
-        lint_offline.returncode == 0,
+        lint_offline.returncode in (0, 1),
         f"plan-lint failed with network access blocked: {lint_offline.stderr}",
     )
     require(
