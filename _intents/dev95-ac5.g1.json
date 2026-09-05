@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T03:08:01Z",
  "adopted_at": "2026-09-05T03:08:12Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-05T03:32:49Z",
+ "note": "refused: without-it pair masked by trailing echo; code accepted, round 2 evidence-only"
 }

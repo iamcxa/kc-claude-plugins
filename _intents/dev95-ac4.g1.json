@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T03:08:18Z",
  "adopted_at": "2026-09-05T03:08:29Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-05T03:32:49Z",
+ "note": "refused: checker hand-tuned, no verbatim layer; pair had prose after ';' and read ~/.claude (S29)"
 }
