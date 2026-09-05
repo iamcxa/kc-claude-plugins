@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kc-plan-receipt/v1",
+  "title": "kc-plan-receipt v1",
+  "description": "What plan-flow hands to ship-flow. Canonical JSON: keys sorted, UTF-8, no trailing whitespace, ensure_ascii=false, null kept. receipt_sha256 is computed over the canonical form with the receipt_sha256 key removed. Captain rationale (verbatim answers, station tables) lives in a separate rationale file referenced by rationale_sha256; it is not part of this receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "code_repo", "base_branch", "project", "cycle", "milestones", "issues", "edges", "dispatch_order", "lint", "premises", "rationale_sha256", "receipt_sha256"],
+  "properties": {
+    "schema": {"const": "kc-plan-receipt/v1"},
+    "code_repo": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "description": "owner/name of the repository the Issues deliver into"},
+    "base_branch": {"type": "string", "minLength": 1},
+    "project": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "user_value", "hypothesis", "wedge", "outcome", "exit", "outcome_hash"],
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "name": {"type": "string", "minLength": 6, "maxLength": 80, "description": "press-release headline: benefit-focused, no 'If we'"},
+        "user_value": {"type": "string", "maxLength": 200, "pattern": "^[^\\n]+$", "description": "'[persona] obtains [observable outcome]', one line, under 30 words; the Linear description's first sentence is projected from this"},
+        "hypothesis": {"type": "string", "pattern": "^If we .+ then .+$", "description": "epic-hypothesis if/then; the bet, distinct from user_value"},
+        "wedge": {"type": "string", "minLength": 20, "description": "office-hours Target User & Narrowest Wedge: one named human and one this-week version"},
+        "outcome": {"type": "string", "minLength": 1},
+        "exit": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "outcome_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "description": "sha256(name + '\\n' + content) as linear-admission.py computes planning-outcome"}
+      }
+    },
+    "cycle": {"type": "string", "format": "uuid"},
+    "milestones": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "name", "journey"], "properties": {
+        "id": {"type": "string", "format": "uuid"}, "name": {"type": "string"},
+        "journey": {"type": "object", "required": ["persona", "start", "end", "observable"], "properties": {"persona": {"type": "string"}, "start": {"type": "string"}, "end": {"type": "string"}, "observable": {"type": "string"}}, "description": "the recordable journey this milestone completes; empty milestones array means one implicit milestone = the project"}
+      }}
+    },
+    "issues": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"},
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "url", "title", "branch", "close_line", "profile", "milestone", "body", "body_sha256"],
+        "properties": {
+          "id": {"type": "string", "format": "uuid"},
+          "url": {"type": "string", "format": "uri"},
+          "title": {"type": "string", "minLength": 1},
+          "branch": {"type": "string", "minLength": 1, "maxLength": 240, "description": "Linear's exact branchName (it truncates); pin on this value only"},
+          "close_line": {"type": "string", "pattern": "^Fixes [A-Z][A-Z0-9]*-[0-9]+$"},
+          "profile": {"enum": ["poc-exploration", "pilot-product-slice", "production"]},
+          "milestone": {"type": ["string", "null"], "description": "milestone id or null when the project is the implicit milestone"},
+          "body": {"type": "string", "minLength": 1, "description": "the canonical Development Brief body exactly as admitted; the worker receives this verbatim"},
+          "body_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "edges": {"type": "array", "items": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string"}], "minItems": 2, "maxItems": 2}, "description": "[blocker, blocked] pairs from Linear blockedBy; must be a DAG"},
+    "dispatch_order": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "description": "topological order of every issue key exactly once; each edge's blocker precedes its blocked"},
+    "lint": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "pass", "digest"],
+      "properties": {"schema": {"type": "string"}, "pass": {"const": true}, "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the full lint report kept in the rationale file"}}
+    },
+    "premises": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "statement", "agreed"], "properties": {"id": {"type": "string", "pattern": "^P[0-9]+$"}, "statement": {"type": "string"}, "agreed": {"type": "boolean"}}},
+      "description": "office-hours Phase 3 premises the Captain agreed to; structured ids only, prose lives in the rationale file"
+    },
+    "market_signal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["audience", "score", "sources_sha256"],
+      "properties": {"audience": {"enum": ["self", "team", "market"]}, "score": {"type": ["integer", "null"], "minimum": 0, "maximum": 5}, "sources_sha256": {"type": ["string", "null"]}},
+      "description": "optional; audience=self may carry score null; the rating agent's report lives in the rationale file"
+    },
+    "rationale_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the rationale file: station tables, Captain verbatim answers, full lint output, market-signal report"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
