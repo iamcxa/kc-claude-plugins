@@ -170,3 +170,53 @@ The smallest integrated route is ready for a Captain gate: 18 estimated changed 
 changed lines against a 4,100 stop, and 1,700 focused schema/catalog/fixture/test lines against a
 1,800 stop. Build must stop on threshold breach or any need for executable expansion, broader
 profiles, new CI/posting ownership, or pre-plan full-catalog evidence.
+
+## Stage Report: implementation
+
+- FAILED: Implement the approved default-off Lite journey through existing runtime and posting seams, with closed schemas, deterministic selected evidence, required coverage, and zero executable expansion.
+  Partial working diff exercises clean selected evidence through existing start/project/replay/rehydrate; the integrated feature is incomplete and not a delivery candidate.
+- FAILED: Demonstrate meaningful positive, refusal, mutation, rollback and integration tests; map AC-1 through AC-10 honestly and leave paid blind outcomes unclaimed.
+  Clean-path proof exists; required negative, retry/fallback, blocker, posting-projection, rollback, and blind-harness proof remains incomplete. No paid calls or promotion claim.
+- FAILED: Commit the smallest mapped implementation within 20 files / 4100 total changed lines / 1800 focused lines; complete documentation and implementation-exit observation, and record evidence in the state-owned stage report.
+  Product work paused on measured row growth; FO explicitly directed preserving the product diff uncommitted. Approved limits and status remain unchanged; no implementation-exit candidate or observation exists.
+- DONE: Record the Captain-approved zero-expansion narrowing before product work.
+  State commit `588a7a82` records the consumed ideation resolution in outcome, AC-3, non-goal, and route-back wording; prior reports and stage pin are preserved.
+- DONE: Exercise the current receipt seam and the clean exact-head journey.
+  Public project-receipt test went from 3 failures/1 pass to 4/0: removing the new entry loses minted-run reuse and complete replay. Python integration is 2/0 (118.109 s): dropping rev2 identity/parent binding or complete rehydration breaks its assertions. This is not the full required without-it experiment.
+- DONE: Check existing affected regressions and formatting.
+  Existing runtime 372/0 and shadow 213/0 passed; their malformed-input fixtures retain their expected diagnostics. Ruff check and git diff --check pass. Changing shadow fail-open behavior or existing replay/confirmation semantics is covered by these suites; new authority refusal mutations remain owed.
+- AC mapping: AC-1 is shaped, not fully documented as delivered; AC-2 through AC-7 are partial; AC-8/AC-9 are not run and remain budget-gated; AC-10 has partial code but not the required complete terminal/mutation proof.
+- Current count: 7 changed files, 2,404 total changed lines, 462 focused lines. Definition: additions plus deletions from delivery base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, including the 950-line retained spec and complete untracked-file line counts; focused is schema + catalog + protocol test + fixture paths.
+- Exact product HEAD remains `4118670919840fec859b139f580fdd47e4f912f8` on `feature/kc-pr-review-capability-protocol-pilot`. The partial diff is dirty, uncommitted, and unfit for validation: High finding-id composition differs from the current runtime helper, and retry/fallback, CLI activation, terminal schemas, sidecar metrics, and ablation recovery are not complete.
+
+### Remaining ledger and proposed stop revision
+
+All ranges below are additional formatted changed lines, including their negative tests where stated; they are planning estimates, not passing proof or new authorization. No product/document deletion or dependency change was made for this estimate.
+
+| Remaining obligation | Existing owner / reuse and new seam | Required negative proof | Low-high lines |
+|---|---|---|---:|
+| Complete adapter | review-capability.py: retain planner/evidence/rehydration; add retry, manual fallback, CLI sampling, audit metrics, semantic closure | Wrong hash/ref, second contributor, missing required class, bad fallback, stale identity, false blocker, unsupported expansion | 290-480 |
+| Complete closed objects | Existing new schema/catalog files: add terminals, decisions, confirmation, posting and audit definitions | Every status/reason mismatch, unknown field/version, invalid-intake echo misuse | 220-340 |
+| Protocol proof corpus | Existing new protocol test file plus planned JSONL fixture file | Real rehydrate High merge, partial skip/no-lane, all-skipped abort, required-gap COMMENT, confidence boundaries, rollback and without-it | 580-780 |
+| Runtime refusals | review-runtime.sh/test.sh: reuse append/replay and new existing-start entry | Wrong start identity, failed lane candidate, uncertain candidate, interrupted append, seal mismatch | 55-95 |
+| Entry/docs/CI | Existing skill, PRODUCT, ARCHITECTURE, runtime docs, plugin README/CLAUDE and existing workflow | Exact-on switches sampled once, default-off parity, changed claim matches behavior; measure added local wall time | 160-240 |
+| Whole-tree arms | ablation-core.py cmd_arm/arm_manifest: reuse manifest hashing; add committed tracked-tree/mode/commit pins | Uncommitted input, changed non-skill blob or executable mode, stale manifest | 90-130 |
+| Corpus/admission/backup | ablation-core.py cmd_corpus: retain exact PR tuple; add five primary plus designated backup and dual six-mode admission | Missing/duplicate slot, non-Lite mode, changed corpus hash, second/one-sided substitution | 70-105 |
+| Launcher policy/provenance | ablation.sh run: reuse pristine checkout and runtime-model readback; add explicit effort/host/tool/timeout/switch pins | Inherited token, wrong activation pair, mismatched effort/host/tools/timeout, mutation, resumed/human-input run | 105-150 |
+| Driver/v4 receipt | Existing identical driver and runner wrapper: move stop to confirmation request, add symmetric config and closed treatment outcome | Missing/mismatched config, non-Lite treatment, decision plus terminal, unexplained missing receipt, early stop | 85-130 |
+| Sidecar telemetry | Existing runner receipt wrap plus protocol sidecar: derive evidence bytes, lane critical path and treatment retries | Missing/malformed/non-monotonic telemetry, forged model counters, retry-source mismatch | 75-110 |
+| Joined blind provenance | ablation.sh join/guard: reuse nonce/PR/prompt/model binding; add sealed normalized envelopes/adjudication binding | Swapped/stale adjudication, duplicate receipt, revealed labels, mutated joined provenance | 60-80 |
+| Pilot comparator | ablation-core.py: keep old comparator unchanged; add five-slot quality-first wall-time rule | Lost control High/Critical, extra treatment FP, incomplete slot, either 33.3% rule failing | 80-110 |
+| Cost admission | Existing daemon ledger read-only plus ablation runner launch guard | Fewer than five numeric completed REVIEW records, malformed selected entry, absent/mismatched approved budget | 40-65 |
+| Ablation plumbing | Existing CLI/test fixture builders and planned corpus path; no second runner | Old arm/run/compare regressions, unsupported new options and missing pins | 35-50 |
+
+- Ablation subtotal is 640-930; complete remaining estimate is 1,945-2,865, giving 4,349-5,269 total. Actual real corpus rows/admission calls remain deferred to the separately approved paid budget; synthetic fixtures do not impersonate admitted PRs.
+- Proposed Captain decision: raise only total changed-line stop from 4,100 to 5,600; retain 20 files and 1,800 focused. The 5,269 upper estimate leaves 331 explicit risk allowance: runtime/fallback repairs 120, launcher/terminal correlation 90, schema/mutation repairs 80, documentation/count repairs 41. It is a stopping line, not a guarantee of sufficiency.
+- File map remains the original 18 changed paths plus plugin README/CLAUDE (20 maximum); focused upper estimate is 1,582 plus 80 schema/test repair allowance = 1,662, leaving 138 before its unchanged stop. Exceeding any limit or adding a new surface returns to shape.
+- Read-only reuse findings: the schema evaluator is 97 formatted lines; no declared generic JSON Schema dependency exists in kc-pr-flow. Marketplace L1 invokes the Claude marketplace installer; sibling Bun-lock Ajv entries are not this plugin's runtime seam. Host CLI help supports effort/MCP/tool-list flags; a stubbed launcher must prove their environment/argument isolation without model calls. This is not an OS-wide network-isolation claim.
+- Documentation findings: about 60 retained-spec lines are clear metadata/history/maintenance-state candidates; another 66 ledger/stop lines own accepted scope. None was deleted or moved, and no hundreds-line equivalent was found. Such relocation alone does not establish a compliant 4,100-line route.
+- Project context receipt remains `impact: update`, authority PRODUCT.md and ARCHITECTURE.md at their named kc-pr-flow headings; approved change is the external default-off Planner with unchanged runtime approval/posting owners. `landed_change: pending`; planned_check remains exact-head protocol tests plus authority-row comparison; `validation_evidence: pending`. No delivered-context update or RoboRev observation is claimed.
+
+### Summary
+
+Implementation is paused with a verified clean receipt journey and an incomplete, preserved product diff. The proposed 5,600 total-line stop changes neither outcome nor executable surface scope, but requires Captain approval before further product work; status remains implementation and the approved 4,100 stop is still in force.
