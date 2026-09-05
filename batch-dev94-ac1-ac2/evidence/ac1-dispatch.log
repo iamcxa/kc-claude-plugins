@@ -1,0 +1,8 @@
+2026-09-04T06:36:09Z laptop#21: start claim=dev94-ac1.g1 message_sha256=fd86e1e75bf063ed24ebb67a16671799d9d5d4f8dc31cadc4b211f34fadc09ea
+committed dev94-ac1.g1
+2026-09-04T06:36:14Z laptop#21: intent committed token=17cb77d86e551ac3104f4d5b201fe73d
+2026-09-04T06:36:14Z laptop#21: conductor workspace create name=dev94-ac1.g1-17cb77d86e551ac3104f4d5b201fe73d
+2026-09-04T06:36:16Z laptop#21: create returned d509970d-e415-4161-b7c2-ee7afeb96973
+2026-09-04T06:36:17Z laptop#21: read-back ok name=dev94-ac1.g1-17cb77d86e551ac3104f4d5b201fe73d
+adopted dev94-ac1.g1 -> d509970d-e415-4161-b7c2-ee7afeb96973
+2026-09-04T06:36:24Z laptop#21: adopted d509970d-e415-4161-b7c2-ee7afeb96973
