@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T23:42:47Z",
  "adopted_at": "2026-09-05T23:42:56Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "accepted",
+ "resolved_at": "2026-09-05T23:52:19Z",
+ "note": "accepted: three rules, evidence valid; PR stacked on AC-5"
 }

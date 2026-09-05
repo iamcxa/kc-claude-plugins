@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T23:40:33Z",
  "adopted_at": "2026-09-05T23:40:43Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "accepted",
+ "resolved_at": "2026-09-05T23:52:19Z",
+ "note": "accepted: S29 fail-closed; PR to follow"
 }
