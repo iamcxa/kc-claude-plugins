@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T03:31:06Z",
  "adopted_at": "2026-09-05T03:31:15Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-05T23:30:13Z",
+ "note": "variant was a negation not a removal; AC-2 never run on the original; round 3 is the last repair"
 }

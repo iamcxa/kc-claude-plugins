@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T03:30:52Z",
  "adopted_at": "2026-09-05T03:31:01Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "accepted",
+ "resolved_at": "2026-09-05T23:30:13Z",
+ "note": "PR opened; same commit as round 1"
 }
