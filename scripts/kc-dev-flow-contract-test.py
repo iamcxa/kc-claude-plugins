@@ -120,6 +120,10 @@ required = [
     "scripts/kc-dev-flow-published-tag-smoke.test.py",
     "scripts/roborev-implementation-exit-contract.test.py",
     "scripts/pr-merge-portable-delivery.test.py",
+    "docs/plan-flow/plan-lint.py",
+    "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
+    "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
+    "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
 ]
 for relative in required:
     require((ROOT / relative).is_file(), f"missing {relative}")
@@ -2282,5 +2286,52 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-intent-lock-") as intent_lo
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
+
+plan_lint = ROOT / "docs/plan-flow/plan-lint.py"
+require(plan_lint.is_file(), f"missing {plan_lint}")
+require(plan_lint.stat().st_mode & 0o111, f"not executable: docs/plan-flow/plan-lint.py")
+
+plan_flow_schemas = [
+    ROOT / "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
+]
+for schema in plan_flow_schemas:
+    require(schema.is_file(), f"missing {schema}")
+
+plan_flow_fixtures = [
+    ROOT / "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
+]
+for fixture in plan_flow_fixtures:
+    require(fixture.is_file(), f"missing {fixture}")
+
+lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json").read_text()
+lint_cmd = [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0])]
+lint_result = subprocess.run(lint_cmd, capture_output=True, text=True, cwd=ROOT)
+require(lint_result.returncode == 0, f"plan-lint failed on correct fixture: {lint_result.stderr}")
+require(
+    all(line.startswith("PASS L") or line.startswith("LINT PASS") for line in lint_result.stdout.splitlines() if line),
+    f"plan-lint did not pass all rules: {lint_result.stdout}",
+)
+
+require(
+    "PASS L6" in lint_result.stdout and "PASS L8" in lint_result.stdout,
+    f"plan-lint output missing expected rules: {lint_result.stdout}",
+)
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
+    offline_env = os.environ.copy()
+    offline_env["https_proxy"] = "http://127.0.0.1:9"
+    lint_offline = subprocess.run(
+        lint_cmd,
+        capture_output=True, text=True, cwd=ROOT, env=offline_env, timeout=5,
+    )
+    require(
+        lint_offline.returncode == 0,
+        f"plan-lint failed with network access blocked: {lint_offline.stderr}",
+    )
+    require(
+        "PASS L" in lint_offline.stdout,
+        f"plan-lint offline did not emit rules: {lint_offline.stdout}",
+    )
 
 print("kc-dev-flow contract: PASS")
