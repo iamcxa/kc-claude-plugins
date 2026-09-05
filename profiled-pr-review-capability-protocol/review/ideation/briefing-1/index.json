@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t8cyxd55ve3dtcxb9r37z2a7:ideation:attempt-1:revision-1",
+  "question": "是否核准以零 expansion reserve 的 default-off Lite shape 進入 build？",
+  "artifacts": [
+    {
+      "id": "artifact:t8cyxd55ve3dtcxb9r37z2a7:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/805bcc5ec219f117d321b728b8821a420593c838/profiled-pr-review-capability-protocol/review/ideation/review.md",
+      "rev": "sha256:49572f9c95acb31401639c8c17c19f27bd425e0cfeeed3e93781230bea40438e",
+      "mediaType": "text/markdown",
+      "summary": "核准後只實作 default-off Lite；接受零 expansion delta 與 20 files / 4100 lines / 1800 focused lines 停止線。"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:t8cyxd55ve3dtcxb9r37z2a7:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/805bcc5ec219f117d321b728b8821a420593c838/profiled-pr-review-capability-protocol/index.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ed3619b6dea52ad1b55090c91d7a1f2192def82e98200fa510e5eff7a4cc098c"
+    }
+  ]
+}
