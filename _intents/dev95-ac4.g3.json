@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T23:29:57Z",
  "adopted_at": "2026-09-05T23:30:07Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-05T23:40:46Z",
+ "note": "S29 shape (base exit 127, out-of-tree path) and the checker passes the original: AC-4 returned to planning as change; no PR"
 }
