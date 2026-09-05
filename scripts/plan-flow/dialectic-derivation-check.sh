@@ -12,12 +12,13 @@
 
 set -u
 
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 <pm-skills-install-dir>" >&2
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+    echo "Usage: $0 <pm-skills-install-dir> [dialectic-file]" >&2
     exit 2
 fi
 
 PM_SKILLS_DIR="$1"
+DIALECTIC_FILE="${2:-docs/plan-flow/dialectic.md}"
 
 if [[ ! -d "$PM_SKILLS_DIR" ]]; then
     echo "Error: pm-skills install directory does not exist: $PM_SKILLS_DIR" >&2
@@ -33,8 +34,6 @@ if [[ ! -f "$PROBLEM_STATEMENT_SKILL" ]] || [[ ! -f "$EPIC_HYPOTHESIS_SKILL" ]] 
     echo "Error: pm-skills install directory missing required SKILL.md files" >&2
     exit 2
 fi
-
-DIALECTIC_FILE="docs/plan-flow/dialectic.md"
 
 if [[ ! -f "$DIALECTIC_FILE" ]]; then
     echo "Error: $DIALECTIC_FILE not found" >&2
