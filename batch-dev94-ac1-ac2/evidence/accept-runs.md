@@ -62,3 +62,7 @@ Residual: one `SURFACE` line for the script, none for the six fixture files.
 - AC-2 merged as #373 (`1b61997b`), 2026-09-05T02:28Z, retitled `feat(ship-flow)` before squash.
 - Round-1 branch deleted from origin after merge; its refusal and Evidence stay in this directory.
 - Captain questions between first dispatch and this record: 0 mid-batch. Two asked at batch boundaries (S23 unblock, scope name) — outside the AC-3 window, which opens at dispatch and closes at the UAT message.
+
+## Note on commit bca55597
+
+Its subject says "dispatch round 4"; the dispatch in that same script failed closed with `intent: state checkout dirty` (S30 had been appended before the commit ran), left no intent, and was retried after the commit. The retry is the dispatch of record; see `ac2-r4-dispatch.log`.

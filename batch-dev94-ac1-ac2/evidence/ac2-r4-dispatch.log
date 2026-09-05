@@ -1,0 +1,11 @@
+2026-09-05T23:54:53Z laptop#21: start claim=dev94-ac2.g4 message_sha256=5ba0456715f28d5771cb81e9824cec9ce6457fd714432c382ac2f7e52b9d6551
+intent: state checkout dirty
+2026-09-05T23:54:53Z laptop#21: intent not committed (exists or fenced); reconcile instead of create
+2026-09-05T23:55:42Z laptop#21: start claim=dev94-ac2.g4 message_sha256=5ba0456715f28d5771cb81e9824cec9ce6457fd714432c382ac2f7e52b9d6551
+committed dev94-ac2.g4
+2026-09-05T23:55:46Z laptop#21: intent committed token=2534d96780a6951b400380144e235974
+2026-09-05T23:55:46Z laptop#21: conductor workspace create name=dev94-ac2.g4-2534d96780a6951b400380144e235974
+2026-09-05T23:55:48Z laptop#21: create returned 476b6be8-17fb-4af1-867c-cedf2bca2570
+2026-09-05T23:55:49Z laptop#21: read-back ok name=dev94-ac2.g4-2534d96780a6951b400380144e235974
+adopted dev94-ac2.g4 -> 476b6be8-17fb-4af1-867c-cedf2bca2570
+2026-09-05T23:55:55Z laptop#21: adopted 476b6be8-17fb-4af1-867c-cedf2bca2570
