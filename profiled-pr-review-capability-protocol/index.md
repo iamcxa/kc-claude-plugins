@@ -87,7 +87,9 @@ work_profile:
 
 ## Accepted outcome
 
-Define the complete V1 protocol for Lite, Standard, Full, and Custom selection, then implement one default-off Lite end-to-end path. A deterministic planner consumes exact-head PR shape and mechanically acquired evidence, selects typed review capabilities, and may make one bounded add-only expansion. Independent capability calls return closed schema results. A General Reviewer host consumes only the accepted evidence and capability results, resolves every required review question exactly once, and projects the existing user-facing review and confirmation shape without gaining posting, merge, or release authority.
+Define the complete V1 protocol for Lite, Standard, Full, and Custom selection, then implement one default-off Lite end-to-end path. A deterministic planner consumes exact-head PR shape and mechanically acquired evidence and selects typed review capabilities. Executable Lite has zero expansion reserve: every ExpansionRequest ends ABORTED_INCOMPLETE with reason unsupported_expansion; bounded add-only expansion is a documented forward contract only. Independent capability calls return closed schema results. A General Reviewer host consumes only the accepted evidence and capability results, resolves every required review question exactly once, and projects the existing user-facing review and confirmation shape without gaining posting, merge, or release authority.
+
+This narrowing is accepted by consumed ideation resolution `resolution:spacedock:t8cyxd55ve3dtcxb9r37z2a7:ideation:1` (Captain's 核准, 2026-09-05). It changes executable expansion only; historical ideation reports remain unchanged.
 
 The Pilot is successful only if a sealed blind comparison against the current full review preserves the accepted quality floor and reduces median review-to-confirmation-ready wall time by at least 33.3%, including evidence acquisition, planning, capability execution, and synthesis. Human waiting and actual GitHub posting are excluded from both arms.
 
@@ -98,7 +100,7 @@ The Pilot is successful only if a sealed blind comparison against the current fu
 - Do not change the existing human confirmation, GitHub posting, merge, release, or versioning authorities.
 - Do not integrate Nightwatch or `kc-plugin-forge` in this slice.
 - Do not perform live browser or runtime probing, performance or resource-exhaustion review, or cross-run duplicate suppression in V1.
-- Do not acquire evidence for unselected capabilities unless the bounded expansion reserve explicitly activates them.
+- Do not acquire evidence for unselected capabilities or execute any expansion.
 - Do not claim a general quality or speed improvement from synthetic fixtures, structural timings, or fewer than five valid real PR pairs.
 - Do not launch paid model runs until a measured per-run pilot cost and an explicit experiment budget are recorded.
 
@@ -106,7 +108,7 @@ The Pilot is successful only if a sealed blind comparison against the current fu
 
 - **AC-1** One versioned protocol document names the Planner, Evidence Builder, capability plugins, General Reviewer host, confirmation projection, and posting adapter; it assigns exactly one authority owner to every lifecycle decision and records Lite, Standard, Full, and Custom selection semantics.
 - **AC-2** Versioned JSON Schemas are the source of truth for plugin metadata, planner input and output, evidence bundles, capability requests and results, review decisions, confirmation projections, and posting outcomes; closed fixtures prove valid examples and reject unknown fields, missing identity, malformed evidence, and unsupported versions.
-- **AC-3** The Lite planner is deterministic for the same exact-head input, freezes a question bank and requiredness before dispatch, activates only profile-required or signal-required capabilities, and permits at most one add-only expansion whose requested questions and evidence are explicitly budgeted.
+- **AC-3** The Lite planner is deterministic for the same exact-head input, freezes a question bank and requiredness before dispatch, activates only profile-required or signal-required capabilities, and fixes executable expansion reserve at zero. Every ExpansionRequest ends ABORTED_INCOMPLETE with reason unsupported_expansion; the bounded add-only expansion contract is documented only.
 - **AC-4** Mechanical checks and repository facts are acquired once by the Evidence Builder and content-bound to the exact base and head. A capability cannot fetch undeclared evidence or treat missing evidence as a clean result.
 - **AC-5** Each capability is invokable through a provider-neutral typed contract, sees only its declared input, and returns one terminal result for each assigned question. A missing, invalid, stale, timed-out, or contradictory required result remains visible and prevents approval.
 - **AC-6** The General Reviewer host resolves each required question exactly once from accepted typed inputs, preserves blockers and unresolved coverage, cannot silently suppress a known problem, and cannot turn model silence into positive evidence.
@@ -117,7 +119,7 @@ The Pilot is successful only if a sealed blind comparison against the current fu
 
 ## Route-back conditions
 
-Stop and return a structured planning delta before implementation if correctness requires full-catalog evidence acquisition before planning, more than one expansion, a new GitHub posting owner, a new CI workflow, a compatibility action by existing adopters, persistent cross-run state, live runtime or browser probing, or implementation of Standard, Full, or Custom UI. Stop before paid evaluation if its measured cost or frozen corpus differs from the separately approved budget and experiment record.
+Stop and return a structured planning delta before implementation if correctness requires full-catalog evidence acquisition before planning, any executable expansion, a new GitHub posting owner, a new CI workflow, a compatibility action by existing adopters, persistent cross-run state, live runtime or browser probing, or implementation of Standard, Full, or Custom UI. Stop before paid evaluation if its measured cost or frozen corpus differs from the separately approved budget and experiment record.
 
 ## Measurement
 
