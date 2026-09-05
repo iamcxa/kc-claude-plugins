@@ -1,0 +1,183 @@
+{
+ "id": "923b6c74-1176-413f-8e99-3f0ec73c0cde",
+ "name": "Ship-flow glue closes its four POC defects",
+ "content": "## User value\n\nA First Officer can dispatch one admitted Issue to a cloud worker, verify the returned candidate at a pinned SHA, and present a Captain-approved Draft PR inside the 15-minute POC decision limit, using only the documented ship-flow contract.\n\n## Outcome\n\nThe four glue defects recorded by DEV-62 (dispatch text blocked by the Conductor WAF, transcript reads that truncate, a without-it command that is not one verbatim shell line, and e2e evidence that needs a pty) are closed by contract text and one script, each with a check that was seen to fail.\n\n## Exit\n\n* Dispatch text carries no bootstrap line and any long task body travels on a committed carrier.\n* The First Officer reads worker transcripts through `conductor sql` and never through `conductor session message --after`.\n* `WITHOUT_IT_COMMAND` is one self-contained shell line the worker supplies and the First Officer runs verbatim.\n* CLI e2e evidence is a timestamped stdout log.",
+ "initiatives": {
+  "nodes": [
+   {
+    "id": "3e6f6e85-ceea-42ba-8332-ceaaed7dd063"
+   }
+  ]
+ },
+ "projectMilestones": {
+  "nodes": [
+   {
+    "id": "7aaf4773-4d41-48ed-9868-cad44428984a",
+    "name": "Release · 09/10"
+   }
+  ]
+ },
+ "issues": {
+  "nodes": [
+   {
+    "id": "40794644-45a8-4f54-ae5e-d70e0c05d920",
+    "identifier": "DEV-93",
+    "url": "https://linear.app/duckbase-co/issue/DEV-93/intentsh-lock-path-breaks-on-a-split-root-state-checkout-git-is-a-file",
+    "description": "## The problem\n\n`scripts/ship-flow/intent.sh` (merged in #362, DEV-84) derives its process lock as `<state-dir>/.git/ship-lock.d` and acquires it with `mkdir`. In the repository's real split-root Spacedock checkout `docs/dev/.spacedock-state/.git` is a gitdir file, not a directory, so `mkdir` can never succeed; every `intent.sh commit` waits 150 x 0.2 s and dies with `lock timeout`. DEV-84's falsifiers all ran on plain `git clone`s of the state branch, where `.git` is a directory, so the bug was invisible. The first receipt-driven dispatch (batch 1016352e, DEV-90, 2026-09-03 14:09Z) failed closed at intent commit: no intent written, no workspace created, which is the correct failure shape, but ship-flow cannot dispatch at all from the real holder.\n\n## Accepted outcome\n\n`intent.sh` and `holder.sh` place the lock under the path `git -C <state-dir> rev-parse --git-dir` returns (a directory in both plain clones and worktrees), or beside the state directory; `intent.sh commit` succeeds on the repository's real split-root checkout; a contract-test case runs `intent.sh commit` against a temporary worktree-style state (`.git` as a file) and is seen to fail on the pre-fix script.\n\n## Non-goals\n\n* No change to the intent order, the fence, the reconcile rule, or the README paragraph.\n* No change to lock semantics beyond the path; the mkdir/rename/age rules stay.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1 **`intent.sh commit` on a `git worktree`-style state checkout (`.git` is a file) succeeds and leaves no lock residue; the same call on the pre-fix script exits 6 with `lock timeout`; both runs recorded with `SHIP_LOCK_STALE_S=3` and a 5-iteration wait so the negative run finishes in seconds.\n* **AC-2 **`intent.sh commit` on a plain clone still succeeds (regression); recorded.\n* **AC-3** The contract test gains one behavioural case for AC-1 against a temporary worktree state and reddens on the pre-fix script; recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta.",
+    "branchName": "feature/dev-93-intentsh-lock-path-breaks-on-a-split-root-state-checkout-git",
+    "cycle": null,
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "496ed64f-6dac-4cf8-b81b-07dce1e91ff7",
+    "identifier": "DEV-88",
+    "url": "https://linear.app/duckbase-co/issue/DEV-88/release-kc-dev-flow-430-with-surface-mapping-and-bounded-adoption",
+    "description": "Update kc-dev-flow to 4.3.0 so surface-to-obligation mapping works at exit and adoption additions are bounded by the manifest.",
+    "branchName": "feature/dev-88-release-kc-dev-flow-430-with-surface-mapping-and-bounded",
+    "cycle": null,
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "fd66af02-6ea3-4a37-901d-e39e10bbc45c",
+    "identifier": "DEV-84",
+    "url": "https://linear.app/duckbase-co/issue/DEV-84/intent-commit-fencing-at-most-one-worker-across-holder-handover-adopt",
+    "description": "## The problem\n\nDEV-79 proved that a writer-number fence on the state branch stops a resumed stale holder from persisting a claim, but not from the `conductor workspace create` it had already sent: process A slept after the create returned and before persisting, process B took over and created a second workspace, and A's workspace stayed on Conductor as an orphan. Codex round 4 (DEV-79 evidence) ruled check-act-check unsound for external effect and named the contract that can hold: commit a durable intent before the external call, make the new holder reconcile by dispatch token and adopt-or-block, and never create a second workspace for an unresolved intent. Nothing in the repository implements that order, and it is the last blocker before plan-flow and ship-flow can be commissioned.\n\n## Accepted outcome\n\n`scripts/ship-flow/holder.sh` and a new `scripts/ship-flow/intent.sh` implement the order intent-commit -> check -> create once -> token read-back -> check -> adopt/persist. An intent is a file on the state branch keyed by claim name carrying the dispatch token and writer number, committed and pushed before the create call; `fenced-dispatch.sh` refuses to call `conductor workspace create` without a committed intent for the claim and names every probe workspace `<claim>-<token>`. On handover the new holder runs `intent.sh reconcile`: for each intent without a persisted workspace id it lists Conductor workspaces whose name carries that token, adopts exactly one (persists its id under the intent), blocks with `ambiguous intent` on two or more, and blocks with `unresolved intent` on zero rather than creating. The DEV-79 falsifier (A creates, SIGSTOP before persist, B handover, B dispatches, A SIGCONT) now ends with exactly one workspace adopted under the one intent, B having created nothing, and A refused before any external action. The honest guarantee stated in the ship-flow runtime README is \"at most one automatically started worker; an uncertain create blocks and asks the Captain\", not exactly-once.\n\nFalsifier and stop: B creates a workspace while an unresolved intent exists; or A's in-flight create lands after B's reconcile and is not found by a second reconcile; or two intents exist for one claim.\n\n## Non-goals\n\n* No lease or unattended failover; handover stays a human command.\n* No change to Conductor, spacedock, the kernel, or kc-dev-flow scripts.\n* No real Issue dispatched; probe workspaces are archived at cleanup.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1 **`intent.sh commit|reconcile|adopt` exists; `fenced-dispatch.sh` exits 2 with `no committed intent` when invoked without one; the run is recorded.\n* **AC-2** The DEV-79 falsifier re-run: exactly one Conductor workspace whose name carries the intent token exists at the end, its id is persisted under the intent by B's reconcile, B's own create was never called (log shows `adopted` not `created`), and A's post-resume check logs `fenced` before any Conductor call. Logs recorded.\n* **AC-3** The late-arrival variant: B reconciles before A's create is visible (simulated by delaying A's create with a wrapper), B blocks with `unresolved intent` and creates nothing; a second reconcile after A's create lands adopts it. Logs recorded.\n* **AC-4** The without-it run: with intent-commit disabled (`--no-intent`), the same falsifier produces two workspaces; recorded.\n* **AC-5 **`docs/dev/README.md` `## Ship-flow runtime` states the at-most-one guarantee and the intent order; the contract test pins the sentence and reddens when it is removed; recorded.\n* **AC-6** Cleanup recorded: probe workspaces archived, intents resolved or removed, holder record at its final writer number.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-84-intent-commit-fencing-at-most-one-worker-across-holder",
+    "cycle": null,
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "7ffa6b76-22c1-498a-b6fc-907a6d6965a6",
+    "identifier": "DEV-83",
+    "url": "https://linear.app/duckbase-co/issue/DEV-83/surface-map-check-fixtures-become-test-literals-fixture-directory",
+    "description": "## The problem\n\nDEV-78 landed `kc-dev-flow/scripts/surface-map-check.py` with ten fixtures under `kc-dev-flow/scripts/fixtures/surface-map/`. Every fixture is consumed by one contract-test case, so none fails the without-it question, but none answers why it is a separate file: the test already builds its own synthetic repo in a tempdir, yet the evidence fixtures carry DEV-66's real CANDIDATE_SHA, branch name, and AC prose that the synthetic repo never reads; two fixtures are subsets or one-word variants of `full-coverage-evidence.md`; three work-item fixtures differ only in the receipt's `selected:` line. Total 6,992 bytes of fixture for six assertions.\n\n## Accepted outcome\n\nThe six behavioural surface-map cases keep their assertions and their seen-to-fail runs, with the evidence inputs written as string literals inside the test (each 1 to 7 lines) and the three work items generated from one template plus a `selected:` parameter; `kc-dev-flow/scripts/fixtures/surface-map/` holds at most that one template. The contract test still reddens on every case it reddened on before (recorded mutation runs), and the fixture directory's byte count and file count are recorded before and after.\n\n## Non-goals\n\n* Do not change `surface-map-check.py` behaviour or its CLI.\n* Do not weaken any assertion; a case whose input cannot be expressed inline stays a file with the reason recorded.\n* Do not touch the three residuals listed on PR #357 (default exclusion, type changes, no-op pair); they are separate items.\n\n## Acceptance criteria\n\n* **AC-1** The contract test passes with the fixture directory reduced to at most one file; `ls kc-dev-flow/scripts/fixtures/surface-map/ | wc -l` before and after is recorded.\n* **AC-2** Each of the six cases is shown to still fail on its mutation (a recorded run per case): missing SURFACE, free-text target, true|true pair, POC retained-not-in-diff, shape mismatch, and the positive case passing.\n* **AC-3** No evidence literal in the test carries a real commit SHA, branch name, or session id; `grep -c '[0-9a-f]\\{40\\}' scripts/kc-dev-flow-contract-test.py` for the surface-map block is 0 and recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-83-surface-map-check-fixtures-become-test-literals-fixture",
+    "cycle": null,
+    "projectMilestone": null,
+    "state": {
+     "type": "backlog"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "16b96915-e28d-4274-a10d-4f055a4f1e56",
+    "identifier": "DEV-79",
+    "url": "https://linear.app/duckbase-co/issue/DEV-79/poc-fencing-token-for-ship-flow-holder-handover-exactly-once-dispatch",
+    "description": "## The problem\n\nThe ship-flow design says ship may run on an always-on host (holding only a Conductor API token and gh credentials) while plan stays on the Captain's laptop. The DEV-67 POC ran ship on the laptop; a 7-hour sleep gap showed workers and pushed candidates survive but the FO's poll loop dies. Codex round 3 (2026-09-03) ruled the holder-transfer design unsound: cloning the Spacedock state branch to another host does not transfer sole writer authority, and a laptop that wakes with its old loop still running can create a second workspace, a second claim, or a duplicate message before the git push conflict reveals the split. The prerequisite script `scripts/dev-flow-state-prereq.sh` requires a unique holder but has no notion of a holder changing. Nothing in the repository fences an old holder out.\n\n## Accepted outcome\n\nA fencing token proves exactly-once dispatch across a holder handover. A holder record in the state branch carries a monotonically increasing writer number; every external action in ship (workspace create, message send, branch push, PR create) reads the record first and refuses when its own number is not the current one. A handover increments the number and pushes it before the new host acts. The decision is whether this is enough, on real Conductor and git, for the single commission falsifier: the laptop FO issues a workspace create, sleeps before persisting the returned id, an always-on host takes over with a new writer number, the laptop wakes and its loop resumes. The run must end with one workspace, one claim, one dispatch message, and the laptop refused before any external action, all observable from Conductor and the state branch.\n\nFalsifier and stop: the laptop performs any external action after handover; or two workspaces exist for one claim; or the only way to reach exactly-once is a lock the state branch cannot express (then the design changes to a lease with expiry, and this POC records stop). The always-on host in this POC may be a second local process with its own clone of the state branch; it need not be a separate machine.\n\n## Non-goals\n\n* No Hermes, mini-dispatch, or cron integration; the always-on host is simulated by a second process.\n* No change to spacedock, the kernel, or kc-dev-flow scripts beyond a new script under scripts/ship-flow/ and a holder record file in the state branch.\n* No worker dispatch of real Issues; the workspace create in the falsifier is a probe workspace archived at cleanup.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/holder.sh claim|check|handover` exists; `check` exits 0 only when the caller's writer number equals the state branch's current number and exits 1 with `fenced` otherwise; the exit-1 run is recorded.\n* **AC-2** The falsifier run is recorded: process A creates a workspace and is suspended (SIGSTOP) before writing the id; process B performs handover and dispatches; process A is resumed (SIGCONT); Conductor lists exactly one workspace for the claim and process A's next external action logs `fenced` and exits before calling Conductor.\n* **AC-3** The same run with the fence disabled (a `--no-fence` flag or the check removed) produces two workspaces; the run is recorded as the without-it observation.\n* **AC-4 **`poc_outcome` records proceed, change, or stop with minutes per station, and names whether a lease with expiry is required for the case where the laptop never wakes to release the holder.\n* **AC-5** Cleanup recorded: probe workspaces archived, holder record left at the final writer number.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-79-poc-fencing-token-for-ship-flow-holder-handover-exactly-once",
+    "cycle": {
+     "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "322eab75-f3a7-4316-838c-70d37efe1426",
+    "identifier": "DEV-78",
+    "url": "https://linear.app/duckbase-co/issue/DEV-78/kc-dev-flow-reads-the-candidate-diff-a-surface-to-obligation-check-at",
+    "description": "## The problem\n\nkc-dev-flow's kernel requires minimal necessity: every retained surface maps to an accepted goal, a falsifier, a safety boundary, or a lifecycle obligation, and a check is evidence only once seen to fail. Nothing in kc-dev-flow reads the candidate diff, so this is enforced by worker self-report only. In the DEV-67 POC (2026-09-03) three cloud workers each reported the same self-check (`python3 scripts/kc-dev-flow-contract-test.py`) as TESTS and WITHOUT_IT_COMMAND, none mapped a new file to an AC, and a ship-side Codex review found a P1 in every candidate (a regex YAML parser skipping quoted values, prose pins covering half a change, credentials not stripped, a shared worktree leaking state, a fence regex missing evidence). The five scripts in `kc-dev-flow/scripts/` validate receipts, contracts, and planning snapshots; none reads `git diff`.\n\n## Accepted outcome\n\nOne script, `kc-dev-flow/scripts/surface-map-check.py <base-sha> <candidate-sha> <evidence-file>`, lists every file the candidate adds or changes (excluding tests and fixtures under a declared pattern) and requires the worker's Evidence block to carry one `SURFACE:` line per file naming the AC, falsifier, safety boundary, or lifecycle obligation it serves plus one without-it command and removed-variant pair for that surface; a surface with no line, or a line naming an AC that does not exist in the Brief, exits 1 naming the surface. Profile depth: POC checks only surfaces the receipt marks retained; Pilot checks every non-test surface; Production checks every changed file against the shape contract's changed-file-to-obligation mapping. The build contracts for Pilot and Production name this script as an implementation-exit check, and the check has been seen to fail on a DEV-67 candidate (DEV-66 at 4ce46967, whose PyYAML parser mapped to no AC).\n\n## Non-goals\n\n* Do not run the without-it commands; `scripts/ship-flow/without-it.sh` owns execution. This script checks that each surface declares one.\n* Do not change the kernel wording; the kernel already states the obligation, this is its enforcement point.\n* Do not add a generic harness, a code-review call, or a model call; deterministic file-list comparison only.\n* Do not enforce on POC surfaces the receipt marks disposable.\n\n## Acceptance criteria\n\n* **AC-1 **`surface-map-check.py` exits 1 naming `scripts/ship-flow/parse-execute-external.py` when run on DEV-66's round-0 candidate 4ce46967651c25234f1ed01b18e95d1fdfad2ff5 against base bda45e6bb2716d9276d0542b7c11edd2014ab1be with that round's Evidence block; the run is recorded.\n* **AC-2** The same script exits 0 on a candidate whose Evidence block carries a `SURFACE:` line for every non-test changed file; a fixture Evidence block and its run are recorded.\n* **AC-3** A `SURFACE:` line naming `AC-9` on a Brief that has three ACs exits 1 with `unknown AC`; the run is recorded.\n* **AC-4** Pilot and Production build contracts name the script at implementation exit, and the contract test reddens when either naming sentence is removed; the mutation runs are recorded.\n* **AC-5** The POC build contract states that the check applies only to retained surfaces; the contract test pins that sentence.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-78-kc-dev-flow-reads-the-candidate-diff-a-surface-to-obligation",
+    "cycle": {
+     "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "a738da1f-7156-4a34-9e23-b4f113753bcf",
+    "identifier": "DEV-66",
+    "url": "https://linear.app/duckbase-co/issue/DEV-66/dispatch-carrier-and-e2e-evidence-rules-for-cloud-workers",
+    "description": "## The problem\n\nTwo of DEV-62's defects have no contract text: the Conductor WAF blocked a dispatch message containing a `curl | tar` bootstrap line, and both `asciinema` and `script(1)` hung without a pty, so e2e evidence was a timestamped stdout log. Both need one sentence each so the next dispatch does not rediscover them.\n\n## Accepted outcome\n\nThe README `## Ship-flow runtime` section states that dispatch messages carry no bootstrap or download line (the image preinstalls plugins and spacedock) and that a task body longer than the first message travels on a committed carrier the worker fetches by `git show`; and that CLI e2e evidence is a timestamped stdout log written by `scripts/ship-flow/e2e-cli.sh <sha> <flow.yaml>`, which runs each `Execute external` step at the pinned SHA and exits non-zero on the first failing step, seen to fail on a flow whose step exits 1.\n\n## Non-goals\n\n* Do not attempt to make asciinema work; recording is out of scope.\n* Do not change e2e-pipeline; the script consumes its `Execute external` step shape only.\n* Do not implement the preinstalled image.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/e2e-cli.sh` passes DEV-50's three-step CLI flow at `0144264343775f4c74f517ccea488a8ef91c44bc` and exits 1 on a flow with a `false` step; both logs recorded with timestamps.\n* **AC-2** README states the no-bootstrap-line rule and the committed-carrier rule, naming the WAF block as the reason.\n* **AC-3** The contract test reddens when either sentence is removed; the mutation runs are recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-66-dispatch-carrier-and-e2e-evidence-rules-for-cloud-workers",
+    "cycle": {
+     "id": "d1c96803-02fa-4323-b3a8-2fc44cc43699"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "01914597-dc0c-46b7-9047-3816606c1987",
+    "identifier": "DEV-65",
+    "url": "https://linear.app/duckbase-co/issue/DEV-65/without-it-command-is-one-verbatim-shell-line-the-fo-runs-unchanged",
+    "description": "## The problem\n\nDEV-62's worker reported `WITHOUT_IT_COMMAND: python3 .context/without-it-check.py`, a path to an untracked file the First Officer could not retrieve, so the First Officer wrote its own checker instead of running the worker's. The kernel's minimal-necessity clause requires a task-owned command; the ship-flow evidence contract does not yet say what shape that command must have.\n\n## Accepted outcome\n\nThe README `## Ship-flow runtime` section defines the worker Evidence block, and in it `WITHOUT_IT_COMMAND` is one self-contained shell line that exits 0 on the candidate and non-zero after `WITHOUT_IT_REMOVED_VARIANT` is applied, references no file outside the candidate tree, and is run verbatim by the First Officer in a worktree with no secrets; `scripts/ship-flow/without-it.sh <sha> <command> <removed-variant>` runs both variants and exits 0 only when retained passes and removed fails, and it has been seen to exit non-zero on a command that passes both ways.\n\n## Non-goals\n\n* Do not add a generic without-it harness; the script only runs the two variants and compares exit codes.\n* Do not change the kernel's minimal-necessity wording.\n* Do not require a browser or recording.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/without-it.sh` exits 0 for DEV-50's candidate `0144264343775f4c74f517ccea488a8ef91c44bc` with a one-line command and the README-restore removed variant, and exits 1 for `true` as the command; both runs recorded.\n* **AC-2** README defines the Evidence block fields `CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, and states the one-line, no-external-file, run-verbatim rule.\n* **AC-3** The contract test reddens when the one-line rule sentence is removed; the mutation run is recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-65-without_it_command-is-one-verbatim-shell-line-the-fo-runs",
+    "cycle": {
+     "id": "d1c96803-02fa-4323-b3a8-2fc44cc43699"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": [
+      {
+       "type": "blocks",
+       "issue": {
+        "identifier": "DEV-66"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "id": "a8301d0c-d0e9-4b9b-8005-c23fdb468512",
+    "identifier": "DEV-64",
+    "url": "https://linear.app/duckbase-co/issue/DEV-64/transcript-reads-go-through-conductor-sql-not-session-message-after",
+    "description": "## The problem\n\nDuring DEV-62 the First Officer polled the worker with `conductor session message --after <id>`; the CLI truncates the JSON at 64 KB and `--after` rejects sent-message ids, so the Evidence block was found only by `conductor sql` on `session_transcripts_view`. Nothing in the repository records this.\n\n## Accepted outcome\n\nThe workflow README's ship-flow section (new, under a `## Ship-flow runtime` heading) states that worker transcripts are read through `conductor sql` against `session_transcripts_view`, names the two CLI failure modes, and ships one small script `scripts/ship-flow/worker-transcript.sh <session-id>` that prints the last fenced Evidence block or exits non-zero; the script has been seen to exit non-zero on a session with no Evidence block.\n\n## Non-goals\n\n* Do not change the Conductor CLI or file an upstream issue as part of this item.\n* Do not add polling loops, daemons, or retry budgets; one read per invocation.\n* Do not read or write Linear.\n\n## Acceptance criteria\n\n* **AC-1 **`scripts/ship-flow/worker-transcript.sh` prints the last `## Evidence` block for a session that has one, and exits 1 with `no evidence block` for a session that has none; both runs are recorded with the session ids.\n* **AC-2** README `## Ship-flow runtime` names `conductor sql` as the read path and names the 64 KB truncation and `--after` rejection as the reasons.\n* **AC-3** The contract test reddens when the README section is removed and passes when restored; the mutation run is recorded.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.",
+    "branchName": "feature/dev-64-transcript-reads-go-through-conductor-sql-not-session",
+    "cycle": {
+     "id": "d1c96803-02fa-4323-b3a8-2fc44cc43699"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "completed"
+    },
+    "inverseRelations": {
+     "nodes": [
+      {
+       "type": "blocks",
+       "issue": {
+        "identifier": "DEV-65"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ }
+}
