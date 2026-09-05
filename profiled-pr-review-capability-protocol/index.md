@@ -220,3 +220,9 @@ All ranges below are additional formatted changed lines, including their negativ
 ### Summary
 
 Implementation is paused with a verified clean receipt journey and an incomplete, preserved product diff. The proposed 5,600 total-line stop changes neither outcome nor executable surface scope, but requires Captain approval before further product work; status remains implementation and the approved 4,100 stop is still in force.
+
+## Accepted implementation limit revision
+
+Captain chat `核准` on 2026-09-05 approves the exact proposed total changed-line revision from 4,100 to 5,600. The 20-file and 1,800-focused-line stops, zero expansion reserve, default-off Lite-only execution, every accepted criterion, and all other scope, spend, confirmation, posting, release, and ownership boundaries remain unchanged. This authorizes resuming the preserved partial implementation, not paid blind admission/evaluation or PR publication/merge.
+
+The revised estimate is 5,269 total changed lines plus 331 named risk allowance: runtime/fallback authority repairs 120, launcher/terminal correlation repairs 90, schema/mutation coverage repairs 80, and documentation/count repairs 41. The current stop is 5,600, measured from the unchanged delivery base; this is a risk allowance and stopping line, not a guarantee that the implementation fits. The prior stop report remains historical, and the existing implementation-1 stage pin is not rewritten for this same-stage authority update.
