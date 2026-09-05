@@ -1,0 +1,96 @@
+{
+  "schema": "kc-pr-flow.capability-catalog/v1",
+  "questions": [
+    {"id": "goal_alignment", "version": 1, "waivable": false, "requiredness": {"lite": "always", "standard": "always", "full": "always"}},
+    {"id": "code_correctness", "version": 1, "waivable": false, "requiredness": {"lite": "always", "standard": "always", "full": "always"}},
+    {"id": "test_evidence", "version": 1, "waivable": false, "requiredness": {"lite": "code_change", "standard": "always", "full": "always"}},
+    {"id": "security_risk", "version": 1, "waivable": false, "requiredness": {"lite": "always", "standard": "always", "full": "always"}},
+    {"id": "minimal_change", "version": 1, "waivable": true, "requiredness": {"lite": "stacked_pr_shape", "standard": "always", "full": "always"}},
+    {"id": "silent_failure", "version": 1, "waivable": false, "requiredness": {"lite": "always", "standard": "always", "full": "always"}},
+    {"id": "type_design", "version": 1, "waivable": false, "requiredness": {"lite": "contract_change", "standard": "always", "full": "always"}},
+    {"id": "documentation_accuracy", "version": 1, "waivable": false, "requiredness": {"lite": "always", "standard": "always", "full": "always"}},
+    {"id": "dependency_supply_chain", "version": 1, "waivable": false, "requiredness": {"lite": "dependency_change", "standard": "dependency_change", "full": "always"}},
+    {"id": "ci_workflow_safety", "version": 1, "waivable": false, "requiredness": {"lite": "workflow_change", "standard": "workflow_change", "full": "always"}}
+  ],
+  "signals": {
+    "code_change": {"path_pattern": "\\.(py|sh|js|jsx|ts|tsx|go|rs|java|rb|c|h|cpp)$", "minimum_paths": 1},
+    "contract_change": {"path_pattern": "(^|/)(schemas?|types?|migrations?)(/|\\.)|\\.d\\.ts$", "minimum_paths": 1},
+    "dependency_change": {"path_pattern": "(^|/)(package(-lock)?\\.json|pnpm-lock\\.yaml|requirements[^/]*\\.txt|Cargo\\.(toml|lock)|go\\.(mod|sum)|uv\\.lock)$", "minimum_paths": 1},
+    "workflow_change": {"path_pattern": "^\\.github/workflows/", "minimum_paths": 1},
+    "security_change": {"path_pattern": "(^|/)(auth|security|permissions?|secrets?)(/|\\.)", "minimum_paths": 1},
+    "stacked_pr_shape": {"path_pattern": ".", "minimum_paths": 11}
+  },
+  "capabilities": [
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "goal_alignment", "version": 1,
+      "questions": ["goal_alignment"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["pr_body", "issue", "review_comment"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "code_correctness", "version": 1,
+      "questions": ["code_correctness"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["repository_rules", "related_source"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "test_evidence", "version": 1,
+      "questions": ["test_evidence"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["mechanical_tests"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "security_risk", "version": 1,
+      "questions": ["security_risk"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["repository_rules"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "minimal_change", "version": 1,
+      "questions": ["minimal_change"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": [], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "silent_failure", "version": 1,
+      "questions": ["silent_failure"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["related_source"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "type_design", "version": 1,
+      "questions": ["type_design"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["related_source"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "documentation_accuracy", "version": 1,
+      "questions": ["documentation_accuracy"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": ["repository_rules"], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "dependency_supply_chain", "version": 1,
+      "questions": ["dependency_supply_chain"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": [], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1", "id": "ci_workflow_safety", "version": 1,
+      "questions": ["ci_workflow_safety"], "required_evidence": ["diff_hunks"],
+      "optional_evidence": [], "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    }
+  ],
+  "blocker_severities": ["CRITICAL", "HIGH"]
+}

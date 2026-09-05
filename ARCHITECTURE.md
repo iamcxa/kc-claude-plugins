@@ -204,6 +204,31 @@ The state root is configurable and defaults to the platform state directory unde
 | Remote mutation | GitHub review identity, reconciled to a deterministic local intent |
 | Provider-specific invocation | Adapter only; it cannot mutate core lifecycle state directly |
 
+### Profiled Lite adapter
+
+`review-capability.py` owns deterministic planning, selected evidence acquisition,
+bounded parallel calls, one transient retry, and question-level collation. Its
+closed schema and catalog live under `kc-pr-flow/schemas`; requiredness is read
+from that catalog, never copied into skill prose. Shape-only evidence revision 1
+binds the intake; revision 2 binds the runtime-minted review identity and selected
+materials. Evidence gaps remain explicit and pre-dispatch skips mint no lane.
+
+The adapter projects accepted candidates through the runtime's `project-receipt`
+operation, then rehydrates the existing typed decision. The projection uses the
+same append/replay owner as shadow observation but is fail-closed; ordinary
+shadow observation remains diagnostic and fail-open. Cross-capability defects
+use the runtime's canonical finding identity. Only confirmed High or Critical
+findings populate blocker references; they force REQUEST_CHANGES. Side-car
+invocation timing and provider reports have no approval authority and do not
+add runtime event types. Private invocation artifacts are distinct from the
+durable metadata-only runtime log.
+
+The existing ablation runner owns committed whole-plugin arms, frozen six-row
+admission, host/tool/effort/timeout pins, symmetric configuration reports, and
+sealed arm-hidden adjudication. Its Pilot comparison is separate from the
+historical permutation statistic. Outer and capability-attempt costs share one
+per-run reservation; missing provider usage cannot become an exact cost claim.
+
 ### Interactive components and data flow
 
 ```mermaid

@@ -100,6 +100,22 @@ The paired scorer evaluates promotion in fixed G1–G5 order: valid bound inputs
 
 Increment 2.3 remains the owner of crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume and retention, once-only posting, remote reconciliation, and daemon mutation.
 
+### Default-off profiled Lite Pilot
+
+The profiled adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on` and
+`KC_PR_FLOW_PROFILED_REVIEW=on`. A deterministic plan selects required questions
+from one catalog before collecting evidence or running tests. Required coverage
+cannot disappear when a capability fails, lacks evidence, or requests expansion.
+Standard/Full retain the ordinary review route; Custom and executable expansion
+are unavailable. The existing typed decision, human confirmation, and posting
+owners remain authoritative.
+
+Promotion is a separate, still-unclaimed five-pair blind experiment: no lost
+accepted High/Critical control defect, no increased false positives, at least
+33.3% median wall-time reduction and at least three qualifying individual pairs.
+Synthetic tests prove contracts, not review quality or speed. Historical daemon
+costs bound a separately approved experiment budget, not current-model cost.
+
 ### Non-goals
 
 - Rewriting reviewer intelligence or prompts before the runtime contract is measurable.

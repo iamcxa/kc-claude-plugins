@@ -335,3 +335,40 @@ after rollback.
 | local efficiency branch is ineligible | Confirm the measurement receipt binds the paired terminal run, review key, receipt ID/content hash, and recomputed decision, and records a fresh collator-only operation with zero model and remote calls. |
 
 For schemas, identities, storage rules, command contracts, and failure semantics, see the [normative runtime reference](../reference/review-runtime.md).
+
+## Opt-in profiled Lite review
+
+```mermaid
+flowchart LR
+  intake[Exact-head intake] --> plan[Required-question plan]
+  plan --> evidence[Selected evidence and tests] --> calls[Bounded capability calls]
+  calls --> receipt[Existing receipt projection] --> decision[Existing typed decision]
+  decision --> confirm[Human confirmation] --> posting[Existing posting owner]
+```
+
+Both typed and profiled flags must be exactly `on` for the new adapter. Use a
+private, invocation-scoped run directory: it contains selected source material,
+provider reports and a non-authoritative audit, not only runtime metadata. Do
+not publish these artifacts or copy them into the durable event log. Normal
+confirmation/posting retention remains owned by the existing runtime.
+
+Run `python3 scripts/review-capability.py --help` for the exact-head entry point.
+The adapter returns either legacy routing, an explicit RunTerminal, or a bound
+decision plus confirmation projection. Never treat an absent result as clean.
+No executable evidence expansion is available. A manual fallback may satisfy a
+failed attempt only with bound clean/not-applicable evidence; manual findings
+remain unconfirmed notes and required coverage stays incomplete.
+Read-only posting projections bind the reviewed repository, base, head and
+configuration but retain the posting owner's independent run ID; posting events
+cannot extend the sealed review receipt. An absent terminal outcome stays absent.
+
+For interactive manual fallback, start with `--defer-confirmation`. This stops
+after bounded calls and writes `dispatched.json`; it does not return approval.
+After recording a bound `ManualFallback` array, use `--finalize-dir RUN_DIR
+--fallbacks-file FILE`. Finalization never re-dispatches or re-samples route flags,
+and a sealed receipt cannot be finalized twice. Blind runs refuse this pause.
+
+One real local fixture observed about 1 second of prepare work, 93 seconds of
+receipt projection and 7 seconds of rehydration. This is mechanical overhead,
+not measured review speed or hosted CI cost. Repeated append validation is a
+source-backed explanation to investigate, not a reason to weaken integrity.

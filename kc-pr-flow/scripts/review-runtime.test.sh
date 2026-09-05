@@ -113,6 +113,47 @@ CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
 
+run_profiled_receipt_tests() {
+  local start observation result event_file run_id rc mutated
+  start="$TEST_INPUT_ROOT/profiled-start.json"
+  observation="$TEST_INPUT_ROOT/profiled-observation.json"
+  review_runtime_start "$REPOSITORY" "$PR_NUMBER" "$BASE_SHA" "$HEAD_SHA" "$CONFIG_HASH" "$OCCURRED_AT" >"$start"
+  run_id="$(jq -r '.run_id' "$start")"
+  event_file="$KC_PR_FLOW_STATE_DIR/$(review_runtime_repo_key "$REPOSITORY")/pr-$PR_NUMBER/$run_id/events.jsonl"
+  jq -n --slurpfile start "$start" --arg hash "$CONFIG_HASH" '
+    {schema:"kc-pr-flow.shadow-observation/v1",
+     identity:($start[0] | {repository,pr_number,base_sha,head_sha,config_hash,occurred_at}),
+     behavior_hashes:({body_sha256:$hash,confirmation_input_sha256:$hash,
+       event_sha256:$hash,github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}),
+     lanes:[{lane_id:"correctness-1",capability:"code_correctness",terminal_status:"succeeded",
+       candidates:[],usage:{input_tokens:null,output_tokens:null,total_tokens:null,
+       scope:"lane",provider_family:null,provenance:"unavailable"}}],
+     synthesis:{findings:[],uncertain_candidate_refs:[]}}' >"$observation"
+  mutated="$TEST_INPUT_ROOT/profiled-mutated.json"
+  jq '.synthesis.uncertain_candidate_refs=[{lane_id:"correctness-1",ordinal:1}]' "$observation" >"$mutated"
+  bash "$RUNTIME" project-receipt "$start" "$mutated" "$HEAD_SHA" >/dev/null 2>&1
+  assert_eq "profiled projection refuses uncertain candidates" 3 "$?"
+  jq '.identity.head_sha="dddddddddddddddddddddddddddddddddddddddd"' "$observation" >"$mutated"
+  bash "$RUNTIME" project-receipt "$start" "$mutated" "$HEAD_SHA" >/dev/null 2>&1
+  assert_eq "profiled projection refuses observation identity drift" 3 "$?"
+  assert_eq "profiled refusal appends no partial lane" 1 "$(wc -l <"$event_file" | tr -d ' ')"
+  result="$(bash "$RUNTIME" project-receipt "$start" "$observation" "$HEAD_SHA" 2>/dev/null)"
+  rc=$?
+  assert_eq "profiled projection succeeds after the caller started its run" 0 "$rc"
+  assert_eq "profiled projection preserves the minted run identity" "$run_id" "$(jq -r '.run_id' <<<"$result")"
+  assert_eq "profiled projection seals a replay-complete receipt" true "$(review_runtime_replay "$event_file" | jq -r '.lifecycle.complete')"
+  assert_eq "profiled projection never adds a head.observed event" 0 "$(jq -s '[.[] | select(.event_type == "head.observed")] | length' "$event_file")"
+  bash "$RUNTIME" project-receipt "$start" "$observation" "$HEAD_SHA" >/dev/null 2>&1
+  assert_eq "profiled projection refuses a reused sealed start" 3 "$?"
+}
+
+if [ "$CASE_FILTER" = 'profiled-receipt' ]; then
+  run_profiled_receipt_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
 run_merge_readiness_tests() {
   local receipt="$1" ready_policy="$2" blocked_policy="$3" repo="$4"
   local base_sha="$5" head_sha="$6" config_hash="$7" review_key="$8" run_id="$9"

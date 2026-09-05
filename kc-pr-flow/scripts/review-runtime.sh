@@ -2703,6 +2703,7 @@ review_runtime_shadow_observation_valid() {
 review_runtime_collect_shadow_observation() (
   local observation_file="$1"
   local live_head="$2"
+  local existing_start="${3:-}"
   local snapshot_dir='' observation_snapshot='' pending_events='' candidate_refs=''
   local repository pr_number base_sha head_sha config_hash occurred_at review_key
   local start_event run_id state_root repo_key event_file sequence=1 event payload
@@ -2749,10 +2750,14 @@ review_runtime_collect_shadow_observation() (
     review_runtime_shadow_status not_observed collector_error
     return 0
   }
-  start_event="$(review_runtime_start "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$occurred_at" '' '')" || {
+  if [ -n "$existing_start" ]; then
+    start_event="$existing_start"
+  else
+    start_event="$(review_runtime_start "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$occurred_at" '' '')" || {
     review_runtime_shadow_status not_observed collector_error
     return 0
-  }
+    }
+  fi
   trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$observation_snapshot" "$pending_events" "$candidate_refs"; if [ "$collector_status_emitted" != "true" ]; then review_runtime_shadow_status not_observed collector_error; fi; trap - EXIT; exit 0' EXIT
   run_id="$(printf '%s' "$start_event" | jq -r '.run_id')" || return
   state_root="$(review_runtime_state_root)" || return
@@ -2889,6 +2894,36 @@ review_runtime_collect_shadow_observation() (
     review_runtime_shadow_status not_observed incomplete_receipt
   fi
   return 0
+)
+
+# Authority-bearing callers provide an already-minted start. The collector's
+# diagnostic status is not authority: this entry requires observed completion.
+review_runtime_project_receipt() (
+  [ "$#" -eq 3 ] || return 2
+  local snapshot_dir start observation result event_file run_id repository pr_number
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  start="$snapshot_dir/start.json"
+  observation="$snapshot_dir/observation.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$start" "$observation"' EXIT
+  review_runtime_snapshot_regular_file "$1" "$start" 'profiled start' 65536 || return 3
+  review_runtime_snapshot_regular_file "$2" "$observation" 'profiled receipt' 1048576 || return 3
+  review_runtime_validate_file "$start" >/dev/null || return 3
+  review_runtime_shadow_observation_valid "$observation" || return 3
+  jq -e -s 'length == 1 and .[0].sequence == 1 and .[0].event_type == "run.started"' "$start" >/dev/null || return 3
+  jq -e --slurpfile start "$start" '
+    .identity == ($start[0] | {repository,pr_number,base_sha,head_sha,config_hash,occurred_at}) and
+    .synthesis.uncertain_candidate_refs == [] and
+    all(.lanes[]; .terminal_status == "succeeded" or .candidates == [])
+  ' "$observation" >/dev/null || return 3
+  run_id="$(jq -r '.run_id' "$start")" || return
+  repository="$(jq -r '.repository' "$start")" || return
+  pr_number="$(jq -r '.pr_number' "$start")" || return
+  event_file="$(review_runtime_state_root)/$(review_runtime_repo_key "$repository")/pr-$pr_number/$run_id/events.jsonl"
+  review_runtime_validate_file "$event_file" >/dev/null || return 3
+  jq -e -s --slurpfile start "$start" '. == $start' "$event_file" >/dev/null || return 3
+  result="$(review_runtime_collect_shadow_observation "$observation" "$3" "$(cat "$start")")" || return 3
+  printf '%s' "$result" | jq -e --arg run_id "$run_id" '.status == "observed" and .run_id == $run_id' >/dev/null || return 3
+  printf '%s\n' "$result"
 )
 
 # Production shadow seam: one closed input, one local collector, no model,
@@ -3293,6 +3328,7 @@ review_runtime_main() {
     rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
     decide-merge-readiness) review_runtime_main_decide_merge_readiness "$@" ;;
     shadow) review_runtime_main_shadow "$@" ;;
+    project-receipt) review_runtime_project_receipt "$@" ;;
     verify-evidence) review_runtime_main_verify_evidence "$@" ;;
     compare-usage) review_runtime_main_compare_usage "$@" ;;
     *)

@@ -82,4 +82,8 @@ jobs:
           command -v sha256sum
 
       - name: Run ablation harness contract
-        run: bash kc-pr-flow/scripts/review-ablation.test.sh
+        # Historical span pins must resolve against their original committed text.
+        # Fetch only that object; the current checkout stays on the tested head.
+        run: |
+          git fetch --no-tags --depth=1 origin 3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8
+          bash kc-pr-flow/scripts/review-ablation.test.sh

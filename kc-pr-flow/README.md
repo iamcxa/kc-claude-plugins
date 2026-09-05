@@ -60,6 +60,16 @@ head without checking out or deleting any branch.
 
 ### Typed Review Runtime
 
+The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
+and `KC_PR_FLOW_PROFILED_REVIEW=on`. It plans required questions before collecting
+selected evidence, then returns to the existing typed confirmation and posting
+owners. Standard/Full remain on the ordinary route; Custom is unavailable.
+See [runtime usage](docs/review-runtime.md#opt-in-profiled-lite-review) and the
+closed contracts in `schemas/review-capability-v1.schema.json`; the matching
+catalog is the sole requiredness authority. `review-ablation.sh pilot-arm` and
+`pilot-compare` recover the existing experiment harness, not a new review service.
+No blind promotion or measured review-speed improvement is claimed.
+
 `KC_PR_FLOW_REVIEW_SHADOW=on` enables one fail-open observer after final review collation and before
 the existing confirmation gate. The local Bash 3.2 + `jq` runtime uses a Python 3.8+ fail-closed
 safe-I/O helper to consume one closed `ShadowObservation/v1`

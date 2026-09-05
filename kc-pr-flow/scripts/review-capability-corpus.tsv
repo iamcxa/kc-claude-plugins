@@ -1,0 +1,7 @@
+# slot role repository pr_number base_sha head_sha control_modes treatment_modes
+# Data rows are tab-separated; both mode columns contain canonical JSON objects.
+# Not admitted: no paid control-triage or blind experiment has been authorized.
+# Freeze exactly five primary rows (slots 1-5) plus one backup (slot 6).
+# Both admissions must independently report Lite/mixed and all four modes false.
+# Never fill this file with synthetic snapshots or reuse timing-selected inputs.
+# The runner fails closed while the required six admitted rows are absent.

@@ -30,15 +30,23 @@ on disk while the keyword post-condition reported it clean.
 from __future__ import annotations
 
 import argparse
+import datetime
+import fcntl
 import hashlib
+import importlib.util
 import itertools
 import json
 import math
+import os
 import pathlib
 import re
 import shutil
+import signal
 import statistics
+import subprocess
 import sys
+import tempfile
+import time
 
 # ------------------------------------------------------------------ span table
 
@@ -613,9 +621,1054 @@ def cmd_stats(args):
     return 0
 
 
+PILOT_MODES = {
+    "agent_tier": "lite",
+    "pr_archetype": "mixed",
+    "full_pass": False,
+    "probe_required": False,
+    "cross_model": False,
+    "noise_filter": False,
+}
+PILOT_POLICY = {
+    "tools": ["Read", "Glob", "Grep", "Bash", "Write"],
+    "mcpServers": {},
+    "github_credentials": "reject",
+    "github_config": "empty",
+    "resume": False,
+    "stop": "confirmation_ready",
+    "web_tools": False,
+}
+
+
+def pilot_bytes(value):
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    ).encode()
+
+
+def pilot_hash(value):
+    return hashlib.sha256(pilot_bytes(value)).hexdigest()
+
+
+def pilot_read(path):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                die("duplicate JSON member")
+            result[key] = value
+        return result
+
+    return json.loads(pathlib.Path(path).read_text(), object_pairs_hook=unique)
+
+
+def pilot_write(path, value):
+    with pathlib.Path(path).open("xb") as stream:
+        stream.write(pilot_bytes(value) + b"\n")
+    return value
+
+
+def pilot_git(repo, *args):
+    return subprocess.check_output(["git", "-C", str(repo), *args])
+
+
+def pilot_tree(directory):
+    result = []
+    for path in sorted(pathlib.Path(directory).rglob("*")):
+        if path.is_symlink():
+            die("whole-plugin arm contains a symlink")
+        if path.is_file() and path.name != ".pilot-arm.json":
+            result.append(
+                {
+                    "path": path.relative_to(directory).as_posix(),
+                    "executable": bool(path.stat().st_mode & 0o111),
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                }
+            )
+    return result
+
+
+def cmd_pilot_arm(args):
+    if not re.fullmatch(r"[a-f0-9]{40}", args.commit):
+        die("whole-plugin arms require a full committed SHA")
+    if (
+        pilot_git(args.source_repo, "rev-parse", args.commit + "^{commit}")
+        .decode()
+        .strip()
+        != args.commit
+    ):
+        die("arm commit unavailable")
+    destination = pathlib.Path(args.dest)
+    destination.mkdir(mode=0o700)
+    rows = pilot_git(
+        args.source_repo, "ls-tree", "-rz", args.commit, "--", "kc-pr-flow"
+    ).split(b"\0")
+    for row in filter(None, rows):
+        metadata, raw_path = row.split(b"\t", 1)
+        mode, kind, blob = metadata.decode().split()
+        path = pathlib.PurePosixPath(raw_path.decode())
+        if (
+            mode not in ("100644", "100755")
+            or kind != "blob"
+            or path.parts[0] != "kc-pr-flow"
+            or ".." in path.parts
+        ):
+            die("unsupported tracked plugin entry")
+        target = destination.joinpath(*path.parts[1:])
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(pilot_git(args.source_repo, "cat-file", "blob", blob))
+        target.chmod(0o755 if mode == "100755" else 0o644)
+    files = pilot_tree(destination)
+    if not files or not (destination / "skills/kc-pr-review/SKILL.md").is_file():
+        die("committed plugin is incomplete")
+    return pilot_write(
+        destination / ".pilot-arm.json",
+        {
+            "schema": "kc-pr-flow.pilot-arm/v1",
+            "arm": args.arm,
+            "commit": args.commit,
+            "files": files,
+            "tree_sha256": pilot_hash(files),
+        },
+    )
+
+
+def pilot_arm_guard(directory, arm):
+    manifest = pilot_read(pathlib.Path(directory) / ".pilot-arm.json")
+    files = pilot_tree(directory)
+    if (
+        set(manifest) != {"schema", "arm", "commit", "files", "tree_sha256"}
+        or manifest["schema"] != "kc-pr-flow.pilot-arm/v1"
+        or manifest["arm"] != arm
+        or manifest["files"] != files
+        or manifest["tree_sha256"] != pilot_hash(files)
+    ):
+        die("whole-plugin arm drift")
+    return manifest
+
+
+def pilot_corpus(path):
+    rows = []
+    for line in pathlib.Path(path).read_text().splitlines():
+        if not line or line.startswith("#"):
+            continue
+        fields = line.split("\t")
+        if len(fields) != 8:
+            die("Pilot corpus needs eight columns")
+        slot, role, repository, number, base, head, control, treatment = fields
+        if (
+            not slot.isdigit()
+            or role not in ("primary", "backup")
+            or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository)
+            or not number.isdigit()
+            or int(number) < 1
+            or not all(re.fullmatch(r"[a-f0-9]{40}", x) for x in (base, head))
+        ):
+            die("invalid Pilot corpus identity")
+        modes = [json.loads(control), json.loads(treatment)]
+        if any(pilot_bytes(m) != pilot_bytes(PILOT_MODES) for m in modes):
+            die("both frozen admissions must be Lite mixed with all four modes false")
+        rows.append(
+            {
+                "slot": int(slot),
+                "role": role,
+                "repository": repository,
+                "pr_number": int(number),
+                "base_sha": base,
+                "head_sha": head,
+                "control_modes": modes[0],
+                "treatment_modes": modes[1],
+            }
+        )
+    if (
+        len(rows) != 6
+        or sorted(r["slot"] for r in rows if r["role"] == "primary") != [1, 2, 3, 4, 5]
+        or [r["slot"] for r in rows if r["role"] == "backup"] != [6]
+        or len({(r["repository"], r["pr_number"], r["head_sha"]) for r in rows}) != 6
+    ):
+        die("Pilot corpus requires five unique primary rows and one designated backup")
+    return rows
+
+
+def pilot_cost(path):
+    rows = [
+        json.loads(line)
+        for line in pathlib.Path(path).read_text().splitlines()
+        if line.strip()
+    ]
+    completed = [
+        r
+        for r in rows
+        if isinstance(r.get("action"), str)
+        and r["action"].startswith("Action taken: REVIEW")
+        and type(r.get("cost")) in (int, float)
+        and math.isfinite(r["cost"])
+        and r["cost"] >= 0
+        and type(r.get("duration_ms")) in (int, float)
+        and math.isfinite(r["duration_ms"])
+        and r["duration_ms"] > 0
+    ]
+    if len(completed) < 5:
+        die("cost admission requires at least five completed review-bearing iterations")
+    return {
+        "count": len(completed),
+        "max_cost_usd": max(r["cost"] for r in completed),
+        "latest_timestamp": max(str(r.get("ts", "")) for r in completed),
+        "ledger_sha256": hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest(),
+        "attribution": "historical composite daemon iterations; not current-model assurance",
+    }
+
+
+def pilot_telemetry(directory, model_id=None):
+    events = pilot_read(pathlib.Path(directory) / "audit.json")
+    prior = None
+    invocations = []
+    prepared = pilot_read(pathlib.Path(directory) / "prepared.json")
+    identity = prepared["identity"]
+    spec = importlib.util.spec_from_file_location(
+        "pilot_protocol", pathlib.Path(__file__).with_name("review-capability.py")
+    )
+    protocol = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(protocol)
+    requests = {r["capability"]: r for r in protocol.requests(prepared)}
+    provider_cost, provider_tokens = 0, 0
+    for ordinal, event in enumerate(events, 1):
+        protocol.validate(event, "AuditEvent")
+        if (
+            event["sequence"] != ordinal
+            or event["prior_hash"] != prior
+            or event["identity"] != identity
+            or event["self_hash"]
+            != pilot_hash({k: v for k, v in event.items() if k != "self_hash"})
+        ):
+            die("side-car identity or hash chain mismatch")
+        prior = event["self_hash"]
+        if event["event_type"] == "invoked":
+            envelope = pilot_read(
+                pathlib.Path(directory)
+                / f"provider-{event['capability']}-{event['attempt']}.json"
+            )
+            if event["payload_sha256"] != pilot_hash(
+                {
+                    "request": requests[event["capability"]],
+                    "provider_envelope": envelope,
+                }
+            ):
+                die("provider report does not bind invocation")
+            if event["evidence_payload_bytes"] != len(
+                pilot_bytes(requests[event["capability"]]["evidence"])
+            ):
+                die("evidence payload byte count mismatch")
+            usage = envelope.get("usage", {}) if isinstance(envelope, dict) else {}
+            reported = (
+                list(envelope.get("modelUsage", {}))
+                if isinstance(envelope, dict)
+                else []
+            )
+            if len(reported) != 1 or (model_id is not None and reported != [model_id]):
+                die("capability actual model provenance mismatch")
+            cost = (
+                envelope.get("total_cost_usd") if isinstance(envelope, dict) else None
+            )
+            if (
+                type(cost) not in (int, float)
+                or not math.isfinite(cost)
+                or cost < 0
+                or any(
+                    type(usage.get(k)) is not int or usage[k] < 0
+                    for k in (
+                        "input_tokens",
+                        "output_tokens",
+                        "cache_creation_input_tokens",
+                        "cache_read_input_tokens",
+                    )
+                )
+            ):
+                die("capability provider cost or usage unavailable")
+            provider_cost += cost
+            provider_tokens += sum(
+                usage[k]
+                for k in (
+                    "input_tokens",
+                    "output_tokens",
+                    "cache_creation_input_tokens",
+                    "cache_read_input_tokens",
+                )
+            )
+            if (
+                type(event["started_ns"]) is not int
+                or type(event["finished_ns"]) is not int
+                or event["finished_ns"] < event["started_ns"]
+                or type(event["evidence_payload_bytes"]) is not int
+                or event["evidence_payload_bytes"] < 0
+            ):
+                die("invalid invocation telemetry")
+            invocations.append(event)
+    if not events or events[-1]["event_type"] != "collated":
+        die("side-car does not seal a collated run")
+    policy = pilot_read(pathlib.Path(directory) / "policy.json")
+    expected = {
+        (o["capability"], a["ordinal"], a["result"])
+        for o in policy["obligations"]
+        for a in o["adapter_attempts"]
+    }
+    actual = [(e["capability"], e["attempt"], e["result"]) for e in invocations]
+    if len(actual) != len(set(actual)) or set(actual) != expected:
+        die("side-car attempts differ from capability policy")
+    return {
+        "capability_cost_usd": provider_cost,
+        "capability_tokens": provider_tokens,
+        "capability_count": len(policy["obligations"]),
+        "evidence_payload_bytes": sum(e["evidence_payload_bytes"] for e in invocations),
+        "lane_critical_path_ms": (
+            max(e["finished_ns"] for e in invocations)
+            - min(e["started_ns"] for e in invocations)
+        )
+        / 1e6
+        if invocations
+        else 0,
+        "retry_count": sum(e["attempt"] == 2 for e in invocations),
+        "audit_hash": prior,
+    }
+
+
+def cmd_pilot_run(args):
+    arm = pilot_arm_guard(args.arm_dir, args.arm)
+    corpus = pilot_corpus(args.corpus)
+    row = next((r for r in corpus if r["slot"] == args.slot), None)
+    if row is None:
+        die("run is outside frozen corpus")
+    origin = subprocess.run(
+        [
+            "bash",
+            "-c",
+            '. "$1"; review_runtime_github_repository_identity "$2"',
+            "repository-identity",
+            str(pathlib.Path(__file__).with_name("review-runtime.sh")),
+            args.source_repo,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if origin.returncode or origin.stdout.strip() != row["repository"]:
+        die("source repository differs from frozen corpus")
+    cost = pilot_cost(args.cost_ledger)
+    budget = pilot_read(args.budget)
+    if (
+        budget.get("approved_by") != "captain"
+        or budget.get("ledger_sha256") != cost["ledger_sha256"]
+        or budget.get("per_run_ceiling_usd") != cost["max_cost_usd"]
+        or type(budget.get("total_budget_usd")) not in (int, float)
+        or not math.isfinite(budget["total_budget_usd"])
+        or budget["total_budget_usd"] < cost["max_cost_usd"]
+    ):
+        die("missing approved fixed experiment budget")
+    if any(
+        os.environ.get(key)
+        for key in (
+            "GH_TOKEN",
+            "GITHUB_TOKEN",
+            "GH_ENTERPRISE_TOKEN",
+            "GITHUB_ENTERPRISE_TOKEN",
+        )
+    ):
+        die("inherited GitHub credentials are forbidden")
+    output = pathlib.Path(args.out_dir).resolve()
+    output.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if (
+        budget.get("experiment_dir") != str(output)
+        or args.timeout <= 0
+        or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]*", args.model)
+    ):
+        die("budget directory or timeout binding mismatch")
+    run = output / (str(row["slot"]) + "-" + args.arm)
+    run.mkdir(mode=0o700)
+    checkout = run / "checkout"
+    available = all(
+        subprocess.run(
+            ["git", "-C", args.source_repo, "cat-file", "-e", row[key] + "^{commit}"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+        for key in ("base_sha", "head_sha")
+    )
+    if available:
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--quiet",
+                "--shared",
+                "--no-checkout",
+                args.source_repo,
+                str(checkout),
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(checkout),
+                "checkout",
+                "--quiet",
+                "--detach",
+                row["head_sha"],
+            ],
+            check=True,
+        )
+        pilot_git(
+            checkout,
+            "remote",
+            "set-url",
+            "origin",
+            "https://github.com/" + row["repository"] + ".git",
+        )
+        if pilot_git(checkout, "rev-parse", "HEAD").decode().strip() != row[
+            "head_sha"
+        ] or pilot_git(checkout, "status", "--porcelain"):
+            die("Pilot checkout is not clean exact head")
+    executable = pathlib.Path(shutil.which(args.host) or args.host).resolve()
+    driver = pathlib.Path(__file__).with_name("review-ablation-driver-prompt.md")
+    flags = {
+        key: "on" if args.arm == "treatment" else "off"
+        for key in ("KC_PR_FLOW_REVIEW_TYPED", "KC_PR_FLOW_PROFILED_REVIEW")
+    }
+    manifest = {
+        "schema": "kc-pr-flow.pilot-manifest/v1",
+        "arm": args.arm,
+        "slot": args.slot,
+        "pr": row,
+        "arm_manifest": arm,
+        "corpus_sha256": pilot_hash(corpus),
+        "budget_sha256": pilot_hash(budget),
+        "driver_sha256": hashlib.sha256(driver.read_bytes()).hexdigest(),
+        "requested_model": args.model,
+        "effort": args.effort,
+        "host_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
+        "tool_policy_sha256": pilot_hash(PILOT_POLICY),
+        "timeout_seconds": args.timeout,
+        "activation_environment": flags,
+        "diff_sha256": hashlib.sha256(
+            pilot_git(checkout, "diff", "--binary", row["base_sha"], row["head_sha"])
+        ).hexdigest()
+        if available
+        else None,
+        "started_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+    with (output / ".budget.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        previous = list(output.glob("*/manifest.json"))
+        if (len(previous) + 1) * cost["max_cost_usd"] > budget["total_budget_usd"]:
+            die("fixed experiment budget exhausted")
+        pilot_write(run / "manifest.json", manifest)
+    if not available:
+        result = {
+            "schema": "kc-pr-flow.ablation-run/v4",
+            "manifest_sha256": pilot_hash(manifest),
+            "model_id": None,
+            "wallclock_ms": 0,
+            "usage": {
+                key: 0
+                for key in (
+                    "input_tokens",
+                    "output_tokens",
+                    "cache_creation_input_tokens",
+                    "cache_read_input_tokens",
+                )
+            },
+            "cost_usd": 0,
+            "protocol_mode": "legacy" if args.arm == "control" else "profiled",
+            "driver": None,
+            "human_intervention_count": None,
+            "run_terminal": {
+                "schema": "kc-pr-flow.ablation-input-terminal/v1",
+                "pr": row,
+                "reason": "frozen_input_unavailable",
+            },
+        }
+        if args.arm == "control":
+            result.update(coverage="not_applicable", retry_count=0)
+        pilot_receipt_guard(result)
+        return pilot_write(run / "receipt.json", result)
+    receipt_path = run / "driver.json"
+    protocol_dir = run / "protocol"
+    environment = {
+        **os.environ,
+        **flags,
+        "KC_PR_FLOW_ABLATION_RECEIPT": str(receipt_path),
+        "KC_PR_FLOW_ABLATION_PILOT": "on",
+        "KC_PR_FLOW_ABLATION_PROTOCOL_DIR": str(protocol_dir),
+        "KC_PR_FLOW_ABLATION_ARM": args.arm,
+        "KC_PR_FLOW_ABLATION_SLOT_INDEX": str(args.slot),
+        "KC_PR_FLOW_ABLATION_BASE_SHA": row["base_sha"],
+        "KC_PR_FLOW_ABLATION_HEAD_SHA": row["head_sha"],
+        "KC_PR_FLOW_ABLATION_REPOSITORY": row["repository"],
+        "KC_PR_FLOW_ABLATION_PR_NUMBER": str(row["pr_number"]),
+        "KC_PR_FLOW_ABLATION_CAPABILITY_BUDGET_USD": str(cost["max_cost_usd"] / 2),
+        "KC_PR_FLOW_ABLATION_EFFORT": args.effort,
+        "KC_PR_FLOW_ABLATION_EXPERIMENT_ID": pilot_hash(budget),
+        "KC_PR_FLOW_ABLATION_NONCE": pilot_hash(manifest),
+        "KC_PR_FLOW_ABLATION_RUN_INDEX": "1",
+        "KC_PR_FLOW_ABLATION_SKILL_SHA256": hashlib.sha256(
+            (pathlib.Path(args.arm_dir) / SKILL).read_bytes()
+        ).hexdigest(),
+        "KC_PR_FLOW_ABLATION_ARM_MANIFEST_SHA256": pilot_hash(arm),
+        "KC_PR_FLOW_ABLATION_DRIVER_PROMPT_SHA256": manifest["driver_sha256"],
+    }
+    command = [
+        str(executable),
+        "--print",
+        driver.read_text(),
+        "--plugin-dir",
+        str(pathlib.Path(args.arm_dir).resolve()),
+        "--add-dir",
+        str(run),
+        "--model",
+        args.model,
+        "--effort",
+        args.effort,
+        "--output-format",
+        "json",
+        "--tools",
+        ",".join(PILOT_POLICY["tools"]),
+        "--strict-mcp-config",
+        "--mcp-config",
+        '{"mcpServers":{}}',
+        "--max-budget-usd",
+        str(
+            cost["max_cost_usd"] / 2
+            if args.arm == "treatment"
+            else cost["max_cost_usd"]
+        ),
+    ]
+    started = time.monotonic_ns()
+    with tempfile.TemporaryDirectory() as empty_config:
+        environment["GH_CONFIG_DIR"] = empty_config
+        process = subprocess.Popen(
+            command,
+            cwd=checkout,
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            start_new_session=True,
+        )
+        try:
+            stdout, stderr = process.communicate(timeout=args.timeout)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            stdout, stderr = process.communicate()
+            pilot_write(
+                run / "failure.json",
+                {"reason": "timeout", "elapsed_ns": time.monotonic_ns() - started},
+            )
+            die("Pilot runner timed out")
+        finally:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait()
+    elapsed_ms = (time.monotonic_ns() - started) / 1e6
+    pilot_write(
+        run / "host-output.json",
+        {
+            "stdout": stdout.decode(errors="replace"),
+            "stderr": stderr.decode(errors="replace"),
+            "returncode": process.returncode,
+        },
+    )
+    if (
+        process.returncode
+        or pilot_git(checkout, "status", "--porcelain")
+        or pilot_git(checkout, "rev-parse", "HEAD").decode().strip() != row["head_sha"]
+    ):
+        die("Pilot failed or mutated frozen checkout")
+    pilot_arm_guard(args.arm_dir, args.arm)
+    runtime = json.loads(stdout)
+    models = list(runtime.get("modelUsage", {}))
+    if (
+        runtime.get("is_error")
+        or len(models) != 1
+        or type(runtime.get("total_cost_usd")) not in (int, float)
+        or runtime["total_cost_usd"] > cost["max_cost_usd"]
+    ):
+        die("host model/cost provenance is invalid")
+    terminal = None
+    protocol_result = (
+        pilot_read(protocol_dir / "result.json")
+        if args.arm == "treatment" and (protocol_dir / "result.json").is_file()
+        else None
+    )
+    if (
+        protocol_result
+        and protocol_result.get("schema") == "kc-pr-flow.run-terminal/v1"
+    ):
+        terminal = protocol_result
+    if not receipt_path.is_file() and not terminal:
+        die("unexplained missing driver receipt")
+    receipt = pilot_read(receipt_path) if receipt_path.is_file() else None
+    if receipt and (
+        receipt.get("schema") != "kc-pr-flow.ablation-driver-receipt/v1"
+        or receipt.get("review_config", {}).get("modes") != row[args.arm + "_modes"]
+        or receipt.get("stop") != "confirmation_ready"
+        or receipt.get("resumed") is not False
+        or receipt.get("human_input_count") != 0
+    ):
+        die("driver configuration or confirmation boundary mismatch")
+    result = {
+        "schema": "kc-pr-flow.ablation-run/v4",
+        "manifest_sha256": pilot_hash(manifest),
+        "model_id": models[0],
+        "wallclock_ms": elapsed_ms,
+        "usage": runtime.get("usage"),
+        "cost_usd": runtime["total_cost_usd"],
+        "protocol_mode": "legacy" if args.arm == "control" else "profiled",
+        "driver": receipt,
+        "human_intervention_count": 0 if receipt else None,
+        "run_terminal": terminal,
+    }
+    if terminal:
+        result["cost_usd"] = None
+    if args.arm == "control":
+        result.update(coverage="not_applicable", retry_count=receipt["retry_count"])
+    elif not terminal:
+        if protocol_result is None:
+            die("treatment has no derived protocol result")
+        result.update(
+            coverage=protocol_result["decision"]["coverage"],
+            approve_eligible=protocol_result["decision"]["approve_eligible"],
+            **pilot_telemetry(protocol_dir, models[0]),
+        )
+        result["cost_usd"] += result["capability_cost_usd"]
+        if result["cost_usd"] > cost["max_cost_usd"]:
+            die("whole-run cost ceiling exceeded")
+    pilot_receipt_guard(result)
+    return pilot_write(run / "receipt.json", result)
+
+
+def pilot_receipt_guard(receipt):
+    common = {
+        "schema",
+        "manifest_sha256",
+        "model_id",
+        "wallclock_ms",
+        "usage",
+        "cost_usd",
+        "protocol_mode",
+        "driver",
+        "human_intervention_count",
+        "run_terminal",
+    }
+    control = {"coverage", "retry_count"}
+    treatment = {
+        "coverage",
+        "approve_eligible",
+        "capability_count",
+        "evidence_payload_bytes",
+        "lane_critical_path_ms",
+        "retry_count",
+        "audit_hash",
+        "capability_cost_usd",
+        "capability_tokens",
+    }
+    terminal = receipt.get("run_terminal") is not None
+    extra = (
+        control
+        if receipt.get("protocol_mode") == "legacy"
+        else set()
+        if terminal
+        else treatment
+    )
+    if (
+        set(receipt) != common | extra
+        or receipt.get("schema") != "kc-pr-flow.ablation-run/v4"
+    ):
+        die("closed v4 receipt branch mismatch")
+    if not (receipt["cost_usd"] is None and terminal) and (
+        type(receipt["cost_usd"]) not in (int, float)
+        or not math.isfinite(receipt["cost_usd"])
+        or receipt["cost_usd"] < 0
+    ):
+        die("invalid whole-run cost")
+    usage = receipt["usage"]
+    if not isinstance(usage, dict) or any(
+        type(usage.get(k)) is not int or usage[k] < 0
+        for k in (
+            "input_tokens",
+            "output_tokens",
+            "cache_creation_input_tokens",
+            "cache_read_input_tokens",
+        )
+    ):
+        die("outer provider usage unavailable")
+    if extra == treatment and (
+        any(
+            type(receipt[k]) is not int or receipt[k] < 0
+            for k in (
+                "capability_count",
+                "evidence_payload_bytes",
+                "retry_count",
+                "capability_tokens",
+            )
+        )
+        or type(receipt["capability_cost_usd"]) not in (int, float)
+        or not 0 <= receipt["capability_cost_usd"] <= receipt["cost_usd"]
+    ):
+        die("invalid treatment telemetry")
+
+
+def pilot_join(directory, corpus, substitution):
+    records = []
+    for path in sorted(pathlib.Path(directory).glob("*/manifest.json")):
+        manifest = pilot_read(path)
+        receipt = pilot_read(path.with_name("receipt.json"))
+        pilot_receipt_guard(receipt)
+        if (
+            receipt.get("schema") != "kc-pr-flow.ablation-run/v4"
+            or receipt.get("manifest_sha256") != pilot_hash(manifest)
+            or manifest.get("corpus_sha256") != pilot_hash(corpus)
+        ):
+            die("Pilot receipt/manifest provenance mismatch")
+        row = next((r for r in corpus if r["slot"] == manifest["slot"]), None)
+        if manifest["pr"] != row or manifest["arm"] not in ("control", "treatment"):
+            die("receipt is outside frozen corpus")
+        expected_flags = {
+            key: "on" if manifest["arm"] == "treatment" else "off"
+            for key in ("KC_PR_FLOW_REVIEW_TYPED", "KC_PR_FLOW_PROFILED_REVIEW")
+        }
+        if manifest["activation_environment"] != expected_flags or manifest[
+            "tool_policy_sha256"
+        ] != pilot_hash(PILOT_POLICY):
+            die("Pilot activation or tool policy drift")
+        records.append(
+            {
+                "manifest": manifest,
+                "receipt": receipt,
+                "sha256": pilot_hash({"manifest": manifest, "receipt": receipt}),
+            }
+        )
+    for field in (
+        "corpus_sha256",
+        "budget_sha256",
+        "driver_sha256",
+        "requested_model",
+        "effort",
+        "host_sha256",
+        "tool_policy_sha256",
+        "timeout_seconds",
+    ):
+        if len({pilot_hash(r["manifest"][field]) for r in records}) != 1:
+            die("experiment launch provenance changed")
+    for arm in ("control", "treatment"):
+        if (
+            len(
+                {
+                    pilot_hash(r["manifest"].get("arm_manifest"))
+                    for r in records
+                    if r["manifest"]["arm"] == arm
+                }
+            )
+            != 1
+        ):
+            die("committed arm changed between pairs")
+    slots = {n: n for n in range(1, 6)}
+    if substitution is not None:
+        if (
+            set(substitution)
+            != {
+                "slot",
+                "replacement_slot",
+                "reason",
+                "control_terminal",
+                "treatment_terminal",
+            }
+            or substitution["slot"] not in slots
+            or substitution["replacement_slot"] != 6
+            or substitution["reason"] != "exact_input_unavailable_both_arms"
+            or any(
+                substitution[k].get("reason") != "frozen_input_unavailable"
+                for k in ("control_terminal", "treatment_terminal")
+            )
+        ):
+            die("invalid designated backup substitution")
+        originals = [
+            r for r in records if r["manifest"]["slot"] == substitution["slot"]
+        ]
+        if (
+            len(originals) != 2
+            or {r["manifest"]["arm"] for r in originals} != {"control", "treatment"}
+            or any(
+                r["receipt"].get("run_terminal")
+                != substitution[r["manifest"]["arm"] + "_terminal"]
+                for r in originals
+            )
+        ):
+            die("backup substitution lost original attempted pair")
+        slots[substitution["slot"]] = 6
+    if len(records) != (12 if substitution else 10):
+        die("Pilot needs every attempted pair and exactly five effective slots")
+    effective = []
+    for slot, actual_slot in slots.items():
+        pair = [r for r in records if r["manifest"]["slot"] == actual_slot]
+        if len(pair) != 2 or {r["manifest"]["arm"] for r in pair} != {
+            "control",
+            "treatment",
+        }:
+            die("missing or duplicate effective pair")
+        left, right = sorted(pair, key=lambda r: r["manifest"]["arm"])
+        for field in (
+            "corpus_sha256",
+            "budget_sha256",
+            "driver_sha256",
+            "requested_model",
+            "effort",
+            "host_sha256",
+            "tool_policy_sha256",
+            "timeout_seconds",
+            "diff_sha256",
+        ):
+            if left["manifest"][field] != right["manifest"][field]:
+                die("paired launch provenance differs: " + field)
+        if left["receipt"]["model_id"] != right["receipt"]["model_id"]:
+            die("paired actual model differs")
+        for record in pair:
+            receipt, arm = record["receipt"], record["manifest"]["arm"]
+            driver = receipt.get("driver")
+            if (
+                not driver
+                or driver.get("review_config", {}).get("modes") != PILOT_MODES
+                or driver.get("stop") != "confirmation_ready"
+                or driver.get("resumed") is not False
+                or driver.get("human_input_count") != 0
+                or receipt.get("human_intervention_count") != 0
+                or receipt.get("run_terminal") is not None
+            ):
+                die("invalid or incomplete effective sample")
+            if (
+                receipt.get("coverage")
+                != ("complete" if arm == "treatment" else "not_applicable")
+                or receipt.get("protocol_mode")
+                != ("profiled" if arm == "treatment" else "legacy")
+                or type(receipt.get("wallclock_ms")) not in (int, float)
+                or not math.isfinite(receipt["wallclock_ms"])
+                or receipt["wallclock_ms"] <= 0
+            ):
+                die("invalid coverage or timing sample")
+            if arm == "treatment" and (
+                type(receipt.get("approve_eligible")) is not bool
+                or type(receipt.get("retry_count")) is not int
+            ):
+                die("treatment decision branch is incomplete")
+            effective.append({**record, "effective_slot": slot})
+    return effective
+
+
+def pilot_normalize(records):
+    envelopes, mapping = [], {}
+    for record in records:
+        sample = pilot_hash({"record": record["sha256"], "domain": "blind-sample"})
+        driver = record["receipt"]["driver"]
+        findings = []
+        for finding in driver["findings"]:
+            normalized = {
+                key: finding[key]
+                for key in (
+                    "path",
+                    "side",
+                    "anchor_sha256",
+                    "evidence_sha256",
+                    "category",
+                    "claim_key",
+                    "severity",
+                    "confidence",
+                    "line",
+                )
+            }
+            if normalized["severity"] not in SEVERITIES:
+                die("unknown normalized severity")
+            findings.append({"finding_id": pilot_hash(normalized), **normalized})
+        envelopes.append(
+            {
+                "sample_id": sample,
+                "summary": driver["summary"],
+                "recommendation": driver["recommendation"],
+                "findings": findings,
+            }
+        )
+        mapping[sample] = {
+            "record_sha256": record["sha256"],
+            "slot": record["effective_slot"],
+            "arm": record["manifest"]["arm"],
+        }
+    return sorted(envelopes, key=lambda e: e["sample_id"]), mapping
+
+
+def cmd_pilot_compare(args):
+    corpus = pilot_corpus(args.corpus)
+    records = pilot_join(
+        args.manifest_dir,
+        corpus,
+        pilot_read(args.substitution) if args.substitution else None,
+    )
+    envelopes, mapping = pilot_normalize(records)
+    root = pathlib.Path(args.blind_dir)
+    if args.phase == "blind":
+        root.mkdir(mode=0o700)
+        pilot_write(root / "sealed-mapping.json", mapping)
+        return pilot_write(
+            root / "adjudicator-input.json",
+            {"schema": "kc-pr-flow.pilot-blind-input/v1", "samples": envelopes},
+        )
+    if (
+        pilot_read(root / "sealed-mapping.json") != mapping
+        or pilot_read(root / "adjudicator-input.json")["samples"] != envelopes
+    ):
+        die("blinded inputs or joined receipts changed")
+    judgments = pilot_read(args.adjudication)
+    if (
+        set(judgments) != {"schema", "input_sha256", "findings"}
+        or judgments["schema"] != "kc-pr-flow.pilot-adjudication/v1"
+        or judgments["input_sha256"]
+        != pilot_hash(pilot_read(root / "adjudicator-input.json"))
+    ):
+        die("adjudication schema/input drift")
+    expected = {
+        (s["sample_id"], f["finding_id"]) for s in envelopes for f in s["findings"]
+    }
+    actual = []
+    for finding in judgments["findings"]:
+        if (
+            set(finding)
+            != {"sample_id", "finding_id", "defect_id", "accepted", "severity"}
+            or type(finding["accepted"]) is not bool
+            or finding["severity"] not in SEVERITIES
+            or not isinstance(finding["defect_id"], str)
+            or not finding["defect_id"]
+        ):
+            die("invalid adjudication finding")
+        actual.append((finding["sample_id"], finding["finding_id"]))
+    if set(actual) != expected or len(actual) != len(expected):
+        die("adjudication must resolve every normalized finding exactly once")
+    seal = {
+        "schema": "kc-pr-flow.pilot-adjudication-seal/v1",
+        "adjudication_sha256": pilot_hash(judgments),
+        "mapping_sha256": pilot_hash(mapping),
+        "input_sha256": judgments["input_sha256"],
+    }
+    if args.phase == "seal":
+        return pilot_write(root / "adjudication-seal.json", seal)
+    if pilot_read(root / "adjudication-seal.json") != seal:
+        die("adjudication changed after sealing")
+    pilot_write(
+        root / "timing-opened.json",
+        {
+            "seal_sha256": pilot_hash(seal),
+            "opened_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        },
+    )
+    missed, false_positives = [], {"control": 0, "treatment": 0}
+    accepted = {}
+    for finding in judgments["findings"]:
+        owner = mapping[finding["sample_id"]]
+        key = (owner["slot"], finding["defect_id"])
+        if finding["accepted"]:
+            entry = accepted.setdefault(
+                key, {"arms": set(), "severity": finding["severity"]}
+            )
+            entry["arms"].add(owner["arm"])
+            entry["severity"] = min(
+                entry["severity"], finding["severity"], key=SEVERITIES.index
+            )
+        else:
+            false_positives[owner["arm"]] += 1
+    missed = [
+        key
+        for key, value in accepted.items()
+        if value["severity"] in ("CRITICAL", "HIGH")
+        and "control" in value["arms"]
+        and "treatment" not in value["arms"]
+    ]
+    timings = {
+        arm: [
+            next(
+                r["receipt"]["wallclock_ms"]
+                for r in records
+                if r["effective_slot"] == slot and r["manifest"]["arm"] == arm
+            )
+            for slot in range(1, 6)
+        ]
+        for arm in ("control", "treatment")
+    }
+    reduction = 1 - statistics.median(timings["treatment"]) / statistics.median(
+        timings["control"]
+    )
+    individual = [1 - t / c for c, t in zip(timings["control"], timings["treatment"])]
+    rules = {
+        "complete_five_pairs": True,
+        "no_high_critical_misses": not missed,
+        "false_positives_not_increased": false_positives["treatment"]
+        <= false_positives["control"],
+        "median_reduction": reduction >= 0.333,
+        "three_individual_reductions": sum(x >= 0.333 for x in individual) >= 3,
+    }
+    return {
+        "schema": "kc-pr-flow.pilot-verdict/v1",
+        "promote": all(rules.values()),
+        "rules": rules,
+        "median_reduction": reduction,
+        "individual_reductions": individual,
+        "false_positives": false_positives,
+        "missed_high_critical": missed,
+        "seal_sha256": pilot_hash(seal),
+        "scope": "combined typed-plus-profiled Lite route only; five pairs are not a general quality claim",
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(prog="review-ablation-core.py")
     sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p = sub.add_parser("pilot-arm")
+    p.add_argument("--source-repo", required=True)
+    p.add_argument("--commit", required=True)
+    p.add_argument("--dest", required=True)
+    p.add_argument("--arm", choices=("control", "treatment"), required=True)
+    p.set_defaults(fn=lambda args: print(json.dumps(cmd_pilot_arm(args))))
+
+    p = sub.add_parser("pilot-run")
+    for name in (
+        "arm-dir",
+        "source-repo",
+        "corpus",
+        "cost-ledger",
+        "budget",
+        "out-dir",
+        "model",
+    ):
+        p.add_argument("--" + name, required=True)
+    p.add_argument("--arm", choices=("control", "treatment"), required=True)
+    p.add_argument("--slot", type=int, required=True)
+    p.add_argument("--effort", choices=("low", "medium", "high"), required=True)
+    p.add_argument("--timeout", type=int, required=True)
+    p.add_argument("--host", default="claude")
+    p.set_defaults(fn=lambda args: print(json.dumps(cmd_pilot_run(args))))
+
+    p = sub.add_parser("pilot-compare")
+    for name in ("corpus", "manifest-dir", "blind-dir"):
+        p.add_argument("--" + name, required=True)
+    p.add_argument("--phase", choices=("blind", "seal", "compare"), required=True)
+    p.add_argument("--adjudication")
+    p.add_argument("--substitution")
+    p.set_defaults(fn=lambda args: print(json.dumps(cmd_pilot_compare(args))))
 
     a = sub.add_parser("arm")
     a.add_argument("--tree", required=True)

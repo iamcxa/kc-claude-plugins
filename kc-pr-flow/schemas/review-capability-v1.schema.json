@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kc-pr-flow.invalid/review-capability-v1.schema.json",
+  "$ref": "#/$defs/Protocol",
+  "$defs": {
+    "Token": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$", "maxLength": 64},
+    "Text": {"type": "string", "maxLength": 16384},
+    "Hash": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
+    "Commit": {"type": "string", "pattern": "^[0-9a-f]{40}$", "maxLength": 40},
+    "Repository": {"type": "string", "pattern": "^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$", "maxLength": 256},
+    "Positive": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+    "Tokens": {"type": "array", "items": {"$ref": "#/$defs/Token"}, "maxItems": 64, "uniqueItems": true},
+    "Signal": {"enum": ["always", "code_change", "contract_change", "dependency_change", "workflow_change", "security_change", "stacked_pr_shape"]},
+    "EvidenceClass": {"enum": ["diff_hunks", "repository_rules", "related_source", "mechanical_tests", "pr_body", "issue", "review_comment"]},
+    "EvidenceClasses": {"type": "array", "items": {"$ref": "#/$defs/EvidenceClass"}, "maxItems": 7, "uniqueItems": true},
+    "IntakeIdentity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "repository", "pr_number", "base_sha", "head_sha", "intake_id"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.intake-identity/v1"},
+        "repository": {"$ref": "#/$defs/Repository"}, "pr_number": {"$ref": "#/$defs/Positive"},
+        "base_sha": {"$ref": "#/$defs/Commit"}, "head_sha": {"$ref": "#/$defs/Commit"},
+        "intake_id": {"$ref": "#/$defs/Token"}
+      }
+    },
+    "QuestionDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "version", "waivable", "requiredness"],
+      "properties": {
+        "id": {"$ref": "#/$defs/Token"}, "version": {"const": 1}, "waivable": {"type": "boolean"},
+        "requiredness": {
+          "type": "object", "additionalProperties": false, "required": ["lite", "standard", "full"],
+          "properties": {"lite": {"$ref": "#/$defs/Signal"}, "standard": {"$ref": "#/$defs/Signal"}, "full": {"$ref": "#/$defs/Signal"}}
+        }
+      }
+    },
+    "CapabilityManifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "id", "version", "questions", "required_evidence", "optional_evidence", "trust_tier", "input_schema_ref", "output_schema_ref"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.capability-manifest/v1"},
+        "id": {"$ref": "#/$defs/Token"}, "version": {"const": 1}, "questions": {"$ref": "#/$defs/Tokens"},
+        "required_evidence": {"$ref": "#/$defs/EvidenceClasses"}, "optional_evidence": {"$ref": "#/$defs/EvidenceClasses"},
+        "trust_tier": {"const": "repository-read-only"},
+        "input_schema_ref": {"const": "review-capability-v1.schema.json#/$defs/CapabilityRequest"},
+        "output_schema_ref": {"const": "review-capability-v1.schema.json#/$defs/CapabilityResult"}
+      }
+    },
+    "SignalPredicate": {
+      "type": "object", "additionalProperties": false, "required": ["path_pattern", "minimum_paths"],
+      "properties": {"path_pattern": {"type": "string", "maxLength": 1024}, "minimum_paths": {"$ref": "#/$defs/Positive"}}
+    },
+    "Catalog": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "questions", "signals", "capabilities", "blocker_severities"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.capability-catalog/v1"},
+        "questions": {"type": "array", "items": {"$ref": "#/$defs/QuestionDefinition"}, "minItems": 1, "maxItems": 64},
+        "capabilities": {"type": "array", "items": {"$ref": "#/$defs/CapabilityManifest"}, "minItems": 1, "maxItems": 64},
+        "blocker_severities": {"const": ["CRITICAL", "HIGH"]},
+        "signals": {
+          "type": "object", "additionalProperties": false,
+          "required": ["code_change", "contract_change", "dependency_change", "workflow_change", "security_change", "stacked_pr_shape"],
+          "properties": {
+            "code_change": {"$ref": "#/$defs/SignalPredicate"}, "contract_change": {"$ref": "#/$defs/SignalPredicate"},
+            "dependency_change": {"$ref": "#/$defs/SignalPredicate"}, "workflow_change": {"$ref": "#/$defs/SignalPredicate"},
+            "security_change": {"$ref": "#/$defs/SignalPredicate"}, "stacked_pr_shape": {"$ref": "#/$defs/SignalPredicate"}
+          }
+        }
+      }
+    },
+    "PathShape": {
+      "type": "object", "additionalProperties": false, "required": ["path", "added", "deleted", "binary"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "added": {"type": "integer", "minimum": 0}, "deleted": {"type": "integer", "minimum": 0}, "binary": {"type": "boolean"}
+      }
+    },
+    "TestCommand": {
+      "type": "object", "additionalProperties": false, "required": ["id", "argv", "cwd", "timeout_seconds"],
+      "properties": {
+        "id": {"$ref": "#/$defs/Token"}, "argv": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "minItems": 1, "maxItems": 64},
+        "cwd": {"type": "string", "maxLength": 1024}, "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 120}
+      }
+    },
+    "ReviewIdentity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "pr_number", "base_sha", "head_sha", "run_id", "config_hash", "review_key"],
+      "properties": {
+        "repository": {"$ref": "#/$defs/Repository"}, "pr_number": {"$ref": "#/$defs/Positive"},
+        "base_sha": {"$ref": "#/$defs/Commit"}, "head_sha": {"$ref": "#/$defs/Commit"},
+        "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9._-]+$", "maxLength": 128},
+        "config_hash": {"$ref": "#/$defs/Hash"}, "review_key": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "IdentityBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "intake_identity", "review_identity", "plan_hash", "recorded_at"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.identity-binding/v1"}, "intake_identity": {"$ref": "#/$defs/IntakeIdentity"},
+        "review_identity": {"$ref": "#/$defs/ReviewIdentity"}, "plan_hash": {"$ref": "#/$defs/Hash"}, "recorded_at": {"$ref": "#/$defs/Text"}
+      }
+    },
+    "ReviewConfig": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "capabilities", "modes"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.review-config/v1"}, "capabilities": {"$ref": "#/$defs/Tokens"},
+        "modes": {"const": {"agent_tier": "lite", "pr_archetype": "mixed", "full_pass": false, "probe_required": false, "cross_model": false, "noise_filter": false}}
+      }
+    },
+    "ReviewPlan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "plan_rev", "profile", "requested", "recommended", "signals", "questions", "manifests", "expansion_reserve", "timeout_seconds", "retry_cap", "test_commands", "review_config", "plan_hash"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.review-plan/v1"}, "identity": {"$ref": "#/$defs/IntakeIdentity"},
+        "plan_rev": {"const": 1}, "profile": {"const": "lite"}, "requested": {"enum": ["auto", "lite"]},
+        "recommended": {"enum": ["lite", "standard", "full"]}, "signals": {"$ref": "#/$defs/Tokens"},
+        "questions": {"$ref": "#/$defs/Tokens"}, "manifests": {"type": "array", "items": {"$ref": "#/$defs/CapabilityManifest"}, "maxItems": 64},
+        "expansion_reserve": {"const": 0}, "timeout_seconds": {"const": 120}, "retry_cap": {"const": 1},
+        "test_commands": {"type": "array", "items": {"$ref": "#/$defs/TestCommand"}, "maxItems": 16},
+        "review_config": {"$ref": "#/$defs/ReviewConfig"}, "plan_hash": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "EvidencePointer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "kind", "repository", "review_key", "base_sha", "head_sha", "object_sha", "path", "side", "line", "locator", "content_sha256"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.evidence-pointer/v1"}, "kind": {"const": "git_blob"},
+        "repository": {"$ref": "#/$defs/Repository"}, "review_key": {"$ref": "#/$defs/Hash"},
+        "base_sha": {"$ref": "#/$defs/Commit"}, "head_sha": {"$ref": "#/$defs/Commit"}, "object_sha": {"$ref": "#/$defs/Commit"},
+        "path": {"type": "string", "minLength": 1, "maxLength": 1024}, "side": {"enum": ["LEFT", "RIGHT", "FILE"]},
+        "line": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]}, "locator": {"type": "null"}, "content_sha256": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "Hashes": {"type": "array", "items": {"$ref": "#/$defs/Hash"}, "maxItems": 10000, "uniqueItems": true},
+    "EvidenceClassBinding": {
+      "type": "object", "additionalProperties": false, "required": ["evidence_class", "refs", "missing"],
+      "properties": {
+        "evidence_class": {"$ref": "#/$defs/EvidenceClass"}, "refs": {"$ref": "#/$defs/Hashes"},
+        "missing": {"enum": [null, "unavailable", "not_found", "timed_out", "unsupported"]}
+      }
+    },
+    "EvidenceMaterial": {
+      "type": "object", "additionalProperties": false, "required": ["id", "evidence_class", "pointer", "material"],
+      "properties": {
+        "id": {"$ref": "#/$defs/Hash"}, "evidence_class": {"$ref": "#/$defs/EvidenceClass"},
+        "pointer": {"$ref": "#/$defs/EvidencePointer"}, "material": {"type": "string", "maxLength": 1048576}
+      }
+    },
+    "TestObservation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "command", "head_sha", "status", "exit_code", "started_at", "finished_at", "stdout_sha256", "stderr_sha256"],
+      "properties": {
+        "id": {"$ref": "#/$defs/Hash"}, "command": {"$ref": "#/$defs/TestCommand"}, "head_sha": {"$ref": "#/$defs/Commit"},
+        "status": {"enum": ["completed", "timed_out", "unavailable"]}, "exit_code": {"anyOf": [{"type": "integer"}, {"type": "null"}]},
+        "started_at": {"$ref": "#/$defs/Text"}, "finished_at": {"$ref": "#/$defs/Text"},
+        "stdout_sha256": {"$ref": "#/$defs/Hash"}, "stderr_sha256": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "EvidenceBundle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "revision", "identity", "parent_hash", "shape", "pointers", "test_observations", "bindings", "bundle_hash"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.evidence-bundle/v1"}, "revision": {"enum": [1, 2]},
+        "identity": {"oneOf": [{"$ref": "#/$defs/IntakeIdentity"}, {"$ref": "#/$defs/ReviewIdentity"}]},
+        "parent_hash": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Hash"}]},
+        "shape": {"type": "array", "items": {"$ref": "#/$defs/PathShape"}, "maxItems": 10000},
+        "pointers": {"type": "array", "items": {"$ref": "#/$defs/EvidenceMaterial"}, "maxItems": 10000},
+        "test_observations": {"type": "array", "items": {"$ref": "#/$defs/TestObservation"}, "maxItems": 16},
+        "bindings": {"type": "array", "items": {"$ref": "#/$defs/EvidenceClassBinding"}, "maxItems": 7}, "bundle_hash": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "RequestEvidence": {
+      "type": "object", "additionalProperties": false, "required": ["evidence_class", "refs", "missing", "material", "test_observations"],
+      "properties": {
+        "evidence_class": {"$ref": "#/$defs/EvidenceClass"}, "refs": {"$ref": "#/$defs/Hashes"},
+        "missing": {"enum": [null, "unavailable", "not_found", "timed_out", "unsupported"]},
+        "material": {"type": "array", "items": {"$ref": "#/$defs/EvidenceMaterial"}, "maxItems": 10000},
+        "test_observations": {"type": "array", "items": {"$ref": "#/$defs/TestObservation"}, "maxItems": 16}
+      }
+    },
+    "CapabilityView": {
+      "type": "object", "additionalProperties": false, "required": ["manifest", "operating_instructions"],
+      "properties": {"manifest": {"$ref": "#/$defs/CapabilityManifest"}, "operating_instructions": {"$ref": "#/$defs/Text"}}
+    },
+    "CapabilityRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "capability", "question_ids", "capability_view", "evidence"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.capability-request/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"},
+        "plan_rev": {"const": 1}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_revision": {"const": 2}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "capability": {"$ref": "#/$defs/Token"}, "question_ids": {"$ref": "#/$defs/Tokens"},
+        "capability_view": {"$ref": "#/$defs/CapabilityView"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/RequestEvidence"}, "maxItems": 7}
+      }
+    },
+    "Contribution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_ref", "category", "claim_key", "severity", "confidence", "quote", "summary"],
+      "properties": {
+        "evidence_ref": {"$ref": "#/$defs/Hash"}, "category": {"$ref": "#/$defs/Token"}, "claim_key": {"$ref": "#/$defs/Token"},
+        "severity": {"enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NIT"]},
+        "confidence": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 1, "maximum": 10}]},
+        "quote": {"$ref": "#/$defs/Text"}, "summary": {"$ref": "#/$defs/Text"}
+      }
+    },
+    "Answer": {
+      "type": "object", "additionalProperties": false, "required": ["question_id", "assessment", "evidence_refs", "contributions"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/Token"}, "assessment": {"enum": ["clean", "findings", "evidence_backed_na"]},
+        "evidence_refs": {"$ref": "#/$defs/Hashes"}, "contributions": {"type": "array", "items": {"$ref": "#/$defs/Contribution"}, "maxItems": 128}
+      }
+    },
+    "Usage": {
+      "type": "object", "additionalProperties": false, "required": ["input_tokens", "output_tokens", "total_tokens"],
+      "properties": {
+        "input_tokens": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
+        "output_tokens": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
+        "total_tokens": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]}
+      }
+    },
+    "CapabilityResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "capability", "answers", "status", "usage"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.capability-result/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"},
+        "plan_rev": {"const": 1}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_revision": {"const": 2}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "capability": {"$ref": "#/$defs/Token"}, "answers": {"type": "array", "items": {"$ref": "#/$defs/Answer"}, "minItems": 1, "maxItems": 64},
+        "status": {"const": "succeeded"}, "usage": {"$ref": "#/$defs/Usage"}
+      }
+    },
+    "ExpansionRequest": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "cause", "question_ids", "evidence_classes", "reserve_charge"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.expansion-request/v1"}, "cause": {"$ref": "#/$defs/Text"},
+        "question_ids": {"$ref": "#/$defs/Tokens"}, "evidence_classes": {"$ref": "#/$defs/EvidenceClasses"}, "reserve_charge": {"type": "integer", "minimum": 0}
+      }
+    },
+    "InvalidIntakeEcho": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "repository": {"$ref": "#/$defs/EchoScalar"}, "pr_number": {"$ref": "#/$defs/EchoScalar"},
+        "base_sha": {"$ref": "#/$defs/EchoScalar"}, "head_sha": {"$ref": "#/$defs/EchoScalar"}, "intake_id": {"$ref": "#/$defs/EchoScalar"}
+      }
+    },
+    "EchoScalar": {"anyOf": [{"type": "null"}, {"type": "boolean"}, {"type": "number"}, {"type": "string", "maxLength": 256}]},
+    "RunTerminal": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "identity", "status", "reason", "disposition"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.run-terminal/v1"}, "identity": {"type": "object"},
+        "status": {"type": "string"}, "reason": {"type": "string"}, "disposition": {"const": "non-posting"}
+      },
+      "oneOf": [
+        {"properties": {"status": {"const": "REQUEST_INVALID"}, "reason": {"enum": ["schema_failure", "invalid_identity"]}, "identity": {"oneOf": [{"$ref": "#/$defs/IntakeIdentity"}, {"$ref": "#/$defs/ReviewIdentity"}, {"$ref": "#/$defs/InvalidIntakeEcho"}]}}},
+        {"properties": {"status": {"const": "REQUEST_INVALID"}, "reason": {"const": "unsupported_major"}, "identity": {"$ref": "#/$defs/IntakeIdentity"}}},
+        {"properties": {"status": {"const": "NEEDS_CLARIFICATION"}, "reason": {"const": "missing_intent"}, "identity": {"$ref": "#/$defs/IntakeIdentity"}}},
+        {"properties": {"status": {"const": "ABORTED_STALE"}, "reason": {"const": "stale_head"}, "identity": {"$ref": "#/$defs/IntakeIdentity"}}},
+        {"properties": {"status": {"const": "INVALIDATED"}, "reason": {"enum": ["identity_change", "configuration_change"]}, "identity": {"$ref": "#/$defs/ReviewIdentity"}}},
+        {"properties": {"status": {"const": "ABORTED_INCOMPLETE"}, "reason": {"enum": ["required_gap", "contradiction", "unsupported_expansion", "receipt_incomplete", "projection_mismatch"]}, "identity": {"$ref": "#/$defs/ReviewIdentity"}}}
+      ]
+    },
+    "QuestionTerminal": {
+      "type": "object", "additionalProperties": false, "required": ["question_id", "state", "finding_refs", "evidence_refs", "gap_refs"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/Token"}, "state": {"enum": ["clean", "findings", "evidence_backed_na", "incomplete_required", "contradictory_required"]},
+        "finding_refs": {"$ref": "#/$defs/Hashes"}, "evidence_refs": {"$ref": "#/$defs/Hashes"}, "gap_refs": {"$ref": "#/$defs/Tokens"}
+      }
+    },
+    "ProtocolFinding": {
+      "type": "object", "additionalProperties": false, "required": ["finding_id", "severity", "summaries", "evidence_refs"],
+      "properties": {
+        "finding_id": {"$ref": "#/$defs/Hash"}, "severity": {"enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NIT"]},
+        "summaries": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "minItems": 1, "maxItems": 128}, "evidence_refs": {"$ref": "#/$defs/Hashes"}
+      }
+    },
+    "ReviewDecision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "terminals", "findings", "gaps", "event", "confirmation_input"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.review-decision/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"},
+        "plan_rev": {"const": 1}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_revision": {"const": 2}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "terminals": {"type": "array", "items": {"$ref": "#/$defs/QuestionTerminal"}, "maxItems": 64},
+        "findings": {"type": "array", "items": {"$ref": "#/$defs/ProtocolFinding"}, "maxItems": 128}, "gaps": {"$ref": "#/$defs/Tokens"},
+        "event": {"enum": ["APPROVE", "COMMENT", "REQUEST_CHANGES"]}, "confirmation_input": {"$ref": "#/$defs/ConfirmationInput"}
+      }
+    },
+    "ConfirmationInput": {
+      "type": "object", "additionalProperties": false, "required": ["identity_summary", "coverage_summary", "verdict_summary", "blocker_refs", "gap_refs"],
+      "properties": {
+        "identity_summary": {"const": "typed-derived"}, "coverage_summary": {"const": "typed-derived"}, "verdict_summary": {"const": "typed-derived"},
+        "blocker_refs": {"$ref": "#/$defs/Hashes"}, "gap_refs": {"$ref": "#/$defs/Tokens"}
+      }
+    },
+    "ConfirmationProjection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "effective_event", "decision_hash", "confirmation_required", "confirmed_blocker_refs", "capability_gap_refs", "approve_eligible"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.confirmation-projection/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"},
+        "effective_event": {"enum": ["APPROVE", "COMMENT", "REQUEST_CHANGES"]}, "decision_hash": {"$ref": "#/$defs/Hash"}, "confirmation_required": {"const": true},
+        "confirmed_blocker_refs": {"$ref": "#/$defs/Hashes"}, "capability_gap_refs": {"$ref": "#/$defs/Tokens"}, "approve_eligible": {"type": "boolean"}
+      }
+    },
+    "PostingOutcome": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "review_key", "head_sha", "run_id", "payload_sha256", "idempotency_key", "outcome", "remote_review_id"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.posting-outcome/v1"}, "review_key": {"$ref": "#/$defs/Hash"}, "head_sha": {"$ref": "#/$defs/Commit"},
+        "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9._-]+$", "maxLength": 128},
+        "payload_sha256": {"$ref": "#/$defs/Hash"}, "idempotency_key": {"$ref": "#/$defs/Hash"},
+        "outcome": {"enum": ["posted", "posted_reconciled", "failed"]}, "remote_review_id": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]}
+      },
+      "oneOf": [
+        {"properties": {"outcome": {"const": "failed"}, "remote_review_id": {"type": "null"}}},
+        {"properties": {"outcome": {"enum": ["posted", "posted_reconciled"]}, "remote_review_id": {"$ref": "#/$defs/Positive"}}}
+      ]
+    },
+    "PostingInvalidation": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "review_key", "head_sha", "run_id", "reason"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.posting-invalidation/v1"}, "review_key": {"$ref": "#/$defs/Hash"}, "head_sha": {"$ref": "#/$defs/Commit"},
+        "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9._-]+$", "maxLength": 128}, "reason": {"enum": ["head_moved", "payload_changed", "identity_changed", "expired"]}
+      }
+    },
+    "ManualResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "capability", "review_identity", "terminal_assessment", "candidate_ids", "evidence", "recorded_by", "recorded_at"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.manual-capability-result/v1"}, "capability": {"$ref": "#/$defs/Token"},
+        "review_identity": {"$ref": "#/$defs/ReviewIdentity"}, "terminal_assessment": {"enum": ["clean", "evidence_backed_na"]},
+        "candidate_ids": {"type": "array", "maxItems": 0},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/EvidencePointer"}, "minItems": 1, "uniqueItems": true},
+        "recorded_by": {"const": "interactive-human"}, "recorded_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"}
+      }
+    },
+    "ManualFallback": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "bundle_hash", "human_note", "result"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.manual-fallback/v1"}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "human_note": {"type": "string", "maxLength": 20000}, "result": {"$ref": "#/$defs/ManualResult"}
+      }
+    },
+    "AuditEvent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "sequence", "event_type", "payload_sha256", "prior_hash", "self_hash", "occurred_at", "started_ns", "finished_ns", "capability", "attempt", "result", "evidence_payload_bytes"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.protocol-audit/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"}, "sequence": {"$ref": "#/$defs/Positive"},
+        "event_type": {"enum": ["identity_bound", "invoked", "accepted", "rejected", "collated", "expanded"]},
+        "payload_sha256": {"$ref": "#/$defs/Hash"}, "prior_hash": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Hash"}]}, "self_hash": {"$ref": "#/$defs/Hash"},
+        "occurred_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+00:00$", "maxLength": 64},
+        "started_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]}, "finished_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]},
+        "capability": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Token"}]}, "attempt": {"enum": [null, 1, 2]},
+        "result": {"enum": [null, "succeeded", "transient_failure", "terminal_failure", "unavailable"]},
+        "evidence_payload_bytes": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]}
+      }
+    },
+    "Protocol": {"oneOf": [
+      {"$ref": "#/$defs/IntakeIdentity"}, {"$ref": "#/$defs/ReviewIdentity"}, {"$ref": "#/$defs/IdentityBinding"},
+      {"$ref": "#/$defs/Catalog"}, {"$ref": "#/$defs/CapabilityManifest"}, {"$ref": "#/$defs/PlannerInput"},
+      {"$ref": "#/$defs/ReviewPlan"}, {"$ref": "#/$defs/EvidenceBundle"}, {"$ref": "#/$defs/CapabilityRequest"},
+      {"$ref": "#/$defs/CapabilityResult"}, {"$ref": "#/$defs/ExpansionRequest"}, {"$ref": "#/$defs/ReviewDecision"},
+      {"$ref": "#/$defs/ConfirmationProjection"}, {"$ref": "#/$defs/PostingOutcome"}, {"$ref": "#/$defs/PostingInvalidation"},
+      {"$ref": "#/$defs/RunTerminal"}, {"$ref": "#/$defs/AuditEvent"}
+    ]},
+    "PlannerInput": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "identity", "protocol_major", "requested", "full_pass", "shape", "test_commands", "concerns"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.planner-input/v1"}, "identity": {"$ref": "#/$defs/IntakeIdentity"},
+        "protocol_major": {"$ref": "#/$defs/Positive"}, "requested": {"enum": ["auto", "lite", "standard", "full", "custom"]},
+        "full_pass": {"type": "boolean"}, "shape": {"type": "array", "items": {"$ref": "#/$defs/PathShape"}, "maxItems": 10000},
+        "test_commands": {"type": "array", "items": {"$ref": "#/$defs/TestCommand"}, "maxItems": 16},
+        "concerns": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "maxItems": 64}
+      }
+    }
+  }
+}

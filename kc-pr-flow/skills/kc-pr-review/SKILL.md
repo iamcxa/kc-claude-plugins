@@ -97,6 +97,41 @@ digraph review_pr {
 
 ## Step 1: Detect PR
 
+### Default-off profiled Lite route
+
+Before any dispatch, sample `KC_PR_FLOW_REVIEW_TYPED` and
+`KC_PR_FLOW_PROFILED_REVIEW` once. Only two exact `on` values select the profiled
+adapter. Retain the sampled values for this invocation; every other pairing
+keeps the existing review route. Never use the shadow observation switch to
+enable the profiled route. Custom is unavailable before intake; Standard and
+Full use the existing route without capability dispatch.
+
+After resolving exact repository, PR, base, head and a safe local checkout,
+write `kc-pr-flow.intake-identity/v1` with those fields and a fresh `intake_id`.
+For the profiled route, call the repository-owned adapter once:
+
+```bash
+KC_PR_FLOW_REVIEW_TYPED=on KC_PR_FLOW_PROFILED_REVIEW=on \
+  python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
+    --identity-file intake.json --repo-worktree "$REVIEW_WORKTREE" \
+    --run-dir "$REVIEW_RUN_DIR" --profile auto --model "$REVIEW_MODEL"
+```
+
+Use the requested profile instead of `auto` when explicit; pass `--full-pass`
+for that request. Pass only already-authorized mechanical commands via
+`--test-commands-file`; evidence acquisition and tests happen after the frozen
+plan and before parallel capability calls. Do not run the legacy agent/test
+fan-out as well. The catalog is the sole required-question/manifest authority;
+do not invent requirements, waive coverage, or request executable expansion.
+
+A `route: legacy` response resumes ordinary triage. A RunTerminal stops this
+invocation without posting or falling back to legacy approval. Otherwise render
+the returned body, options and confirmation input without rewriting the typed
+event, blocker/gap references, or approval eligibility; present Step 6c directly.
+The existing `InteractiveCollationDecision/v1` and unchanged `review-post.sh`
+remain the confirmation and posting owners. No capability may call GitHub or
+receive tools. Removing either flag selects rollback only for a fresh invocation.
+
 Accept PR number (`962`), PR URL (`https://github.com/owner/repo/pull/962` or `/changes` suffix), or no input (detect from current branch). Extract `owner/repo` dynamically — never hardcode.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "PR Detection"
