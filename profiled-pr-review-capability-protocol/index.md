@@ -1,6 +1,6 @@
 ---
 title: "Pilot a profiled PR review capability protocol"
-status: ideation
+status: implementation
 source:
 product: kc-pr-flow
 planning-window:
@@ -58,7 +58,7 @@ gates:
                 reason: Captain chat 核准 on 2026-09-05 accepts the presented default-off Lite build, zero executable expansion reserve, and stop limits of 20 changed files / 4100 total changed lines / 1800 focused schema-catalog-fixture-test lines. Paid blind runs require a separately measured budget. Preserve pinned delivery base and existing Draft PRs 352-355.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
