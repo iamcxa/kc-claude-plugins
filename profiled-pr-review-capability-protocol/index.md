@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-04T18:58:31Z
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-capability-pilot
 issue:
 pr:
 mod-block:
