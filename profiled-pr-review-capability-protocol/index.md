@@ -1,6 +1,6 @@
 ---
 title: "Pilot a profiled PR review capability protocol"
-status: implementation
+status: validation
 source:
 product: kc-pr-flow
 planning-window:
