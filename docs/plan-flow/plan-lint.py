@@ -89,9 +89,16 @@ elif mode == "lint":
             prior_surfaces = set().union(*(claimed_surfaces.get(order[j], set()) for j in range(idx)))
             unique_to_current = current_surfaces - prior_surfaces
             if not unique_to_current:
-                l9_violations.append(issue_id)
+                non_unique = current_surfaces & prior_surfaces
+                first_claimer = None
+                for j in range(idx):
+                    if non_unique & claimed_surfaces.get(order[j], set()):
+                        first_claimer = order[j]
+                        break
+                violation_msg = f"{issue_id}: only surface {', '.join(sorted(non_unique)[:1])} already claimed by {first_claimer}" if first_claimer else issue_id
+                l9_violations.append(violation_msg)
                 l9_ok = False
-    rule("L9 by-product Issue check", l9_ok, f"issues with no unique surface: {', '.join(l9_violations) if l9_violations else 'none'}")
+    rule("L9 by-product Issue check", l9_ok, f"issues with no unique surface: {'; '.join(l9_violations) if l9_violations else 'none'}")
     # L10: every Issue must have a Re-verified line with command, exit code, and recent date
     from datetime import datetime, timedelta
     l10_ok = True; l10_violations = []
