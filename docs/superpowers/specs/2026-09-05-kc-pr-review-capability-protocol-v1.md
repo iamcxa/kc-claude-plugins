@@ -863,7 +863,7 @@ Measure from `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`. Stop and report before
 continuing when any threshold is crossed:
 
 - more than 20 changed files;
-- more than 4,100 total changed lines; or
+- more than 5,600 total changed lines; or
 - more than 1,800 changed lines across the schema, catalog, protocol fixtures, and their
   focused tests.
 
@@ -871,14 +871,18 @@ These bounds were re-derived after adding the previously missing catalog,
 runtime documentation, posting assertion target, retained shape file, and
 fail-closed receipt-projection operation. They now also count the smallest
 recovery of the existing ablation runner instead of a second measurement
-harness. The current estimate is 18 changed files, about 4,025 changed
-lines including this retained shape, and about 1,700 lines in the focused
-schema/catalog/fixture/test bucket. These are ceilings, not targets; without-it
-review must still remove unnecessary surfaces.
+harness. The current estimate is at most 20 changed files, 5,269 changed lines
+including this retained shape, and 1,582 focused schema/catalog/fixture/test
+lines. The file map includes the original 18 paths plus the plugin README and
+CLAUDE context. These are ceilings, not targets; without-it review must still
+remove unnecessary surfaces.
 
-Edits to this retained shape also consume the total-line ceiling. The roughly
-75-line remaining headroom is intentional: any material growth over a row
-estimate must return to shape instead of silently expanding the Pilot.
+Edits to this retained shape also consume the total-line ceiling. The 331-line
+risk allowance covers runtime/fallback authority repairs (120), launcher and
+terminal correlation repairs (90), schema/mutation coverage repairs (80), and
+documentation/count repairs (41). The focused estimate plus its 80-line repair
+allowance is 1,662, leaving 138 before the unchanged 1,800-line stop. These
+allowances do not guarantee sufficiency; a breached stop returns to shape.
 
 Also stop immediately if correctness needs full-catalog evidence before
 planning, any executable expansion, a new CI workflow, a new posting owner,
