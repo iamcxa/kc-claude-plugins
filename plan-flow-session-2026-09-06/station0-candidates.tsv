@@ -5,3 +5,5 @@ DEV-106	ship-flow handoff: one UAT document and one Slack message, generated fro
 DEV-107	ship-flow close: the close receipt refuses an undispositioned defect and carries
 DEV-108	kc-dev-flow build contract: a worker runs its own Evidence block through the acc
 DEV-109	plan-flow validator: fail closed when jsonschema is absent, and install it in CI
+DEV-110	ship-flow dispatch: route a job to a cloud worker or a subagent by its size, not
+DEV-111	ship-flow accept station: prove necessity per changed line, and ask the reviewer
