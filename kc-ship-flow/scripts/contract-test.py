@@ -362,6 +362,11 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
 
 run([sys.executable, str(SCRIPTS / "prose-placement-check.py")], "kc-ship-flow prose-placement-check.py")
 
+run(
+    [sys.executable, str(SCRIPTS / "local-profile-check.py"), str(ROOT / "docs" / "ship" / "README.md")],
+    "kc-ship-flow local-profile-check.py",
+)
+
 # DEV-117 repair round 1: a placement.tsv row is not "placed" just because its
 # destination file exists -- it must also carry that segment's hash marker.
 # Repoint one real row to a different real destination that lacks its hash
