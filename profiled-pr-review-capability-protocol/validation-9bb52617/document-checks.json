@@ -1,0 +1,22 @@
+{
+  "historical_blocks": 8,
+  "all_eight_exactly_preserved_from_rejected_source": true,
+  "diagram_matches_rendered_input": true,
+  "render_source_sha256": "1ad36f5f9a236541c19cd2610eeac5a17f5628306a737fa17e2818073c6db05e",
+  "document_drift_red_then_green": [
+    {
+      "mutated": true,
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "output": "d\\n  prose-table/catalog parity.\\n- Measurement fixtures must prove committed whole-tree arm drift rejection,\\n  exact five-primary-plus-one-designated-backup corpus enforcement, dual-router\\n  full-six-mode admission, failure of promotion when any effective primary control sample is\\n  excluded, exact Lite/mixed/all-four-false control-mode\\n  enforcement, rejection of a missing or admission-mismatching corroborative\\n  driver receipt config, retry-source and zero-human-intervention enforcement,\\n  effort/host/tools/timeout parity, exact\\n  control-off/treatment-on activation switch enforcement, sealed\\n  adjudication input, exact Pilot driver-receipt schema, non-Lite treatment\\n  failure before `oneOf` evaluation, v4\\n  receipt coverage/terminal and runner-derived treatment\\n  telemetry, unexplained missing-receipt failure, both quality gates, the 33.3%\\n  median and three-of-five gates, mechanical no-posting policy, and rejection of\\n  absent, unparseable, or non-monotonic side-car byte/timing telemetry, plus an\\n  insufficient or malformed historical cost ledger.\\n\"\n\n----------------------------------------------------------------------\nRan 1 test in 0.002s\n\nFAILED (failures=1)\n"
+    },
+    {
+      "mutated": false,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nOK\n"
+    }
+  ]
+}

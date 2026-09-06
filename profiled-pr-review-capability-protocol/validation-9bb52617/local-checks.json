@@ -1,0 +1,121 @@
+{
+  "candidate": "9bb526170156a44cff90e2a2fab9eeab081e0eb1",
+  "runtime": "3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]",
+  "started_at": "2026-09-06T03:28:25.558086+00:00",
+  "checks": [
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_document_tables_are_generated_from_their_authorities"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.105,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.002s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_sampled_skill_command_stays_off_and_tokens_are_closed"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.175,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.077s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_unsupported_material_is_missing_not_invalid_caller_schema"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 3.699,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 3.605s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_malformed_cli_artifacts_always_return_valid_terminals"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.313,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 1.223s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_failed_and_retried_provider_usage_is_never_skipped"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 2.957,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 2.863s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_selected_material_tampering_and_unassigned_answers_refuse"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.323,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 1.229s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_cross_capability_high_finding_merges_and_forces_request_changes"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 122.847,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 122.751s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "kc-pr-flow/scripts/review-capability.test.py",
+        "PlannerTests.test_actual_rehydrate_projection_mismatch_is_terminal"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 104.695,
+      "stdout": "",
+      "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 104.572s\n\nOK\n"
+    },
+    {
+      "command": [
+        "bash",
+        "kc-pr-flow/scripts/review-ablation.test.sh",
+        "--case",
+        "pilot"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.532,
+      "stdout": "{\"schema\": \"kc-pr-flow.pilot-arm/v1\", \"arm\": \"control\", \"commit\": \"737cb282f7ea7ef1a540c4577a621b0b76be9045\", \"files\": [{\"path\": \"schemas/review-capability-catalog-v1.json\", \"executable\": false, \"sha256\": \"d2e0e42f8a9b71a681a3e84069ce532014f15439ee7ccf888b4957f5bdd5f92c\"}, {\"path\": \"schemas/review-capability-v1.schema.json\", \"executable\": false, \"sha256\": \"769ae3a1b99cb527b2d470866e2894f7e61939f771459e1e63927427daf6a4c5\"}, {\"path\": \"scripts/review-capability.py\", \"executable\": true, \"sha256\": \"4565ca05519326c44d29961d495d39373aad440b0e2a1d6ee5fc9a4c40680d16\"}, {\"path\": \"scripts/runtime.sh\", \"executable\": true, \"sha256\": \"306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb\"}, {\"path\": \"skills/kc-pr-review/SKILL.md\", \"executable\": false, \"sha256\": \"bce310165e258af7d682ea83c8deeb70225aaf09fa09dc052847fec8e801d135\"}], \"tree_sha256\": \"96136a9b569ab96b50e77953297a4da76acdbb0dfc9a6baeb0b34e4739a6c1d1\"}\nPilot committed tree, cost, six-row admission, blind seal, five-pair comparator and refusal fixtures passed\nUncorrected local clone rejected by actual repository identity helper\nPilot launcher policy, runtime cost, inherited credential and stalled-host fixtures passed\n\nreview-ablation.test.sh: 1 passed, 0 failed\n",
+      "stderr": "review-ablation: whole-plugin arm drift\nreview-ablation: cost admission requires at least five completed review-bearing iterations\nreview-ablation: both frozen admissions must be Lite mixed with all four modes false\nreview-ablation: malformed normalized finding\nreview-ablation: Pilot needs every attempted pair and exactly five effective slots\nreview-ablation: invalid designated backup substitution\nreview-ablation: invalid designated backup substitution\nreview-ablation: closed protocol terminal mismatch\nreview-ablation: closed Pilot unit manifest mismatch\nreview-ablation: closed protocol terminal mismatch\nreview-ablation: closed Pilot unit manifest mismatch\nreview-ablation: invalid coverage or timing sample\nreview-ablation: closed protocol terminal mismatch\nreview-ablation: closed v4 receipt branch mismatch\nreview-ablation: invalid or incomplete effective sample\nreview-ablation: Pilot activation or tool policy drift\nreview-ablation: control arm contains profiled protocol artifacts\nreview-ablation: attempt recorded as non-passing: 1\nreview-ablation: Pilot runner timed out\nreview-ablation: attempt recorded as non-passing: 1\nreview-ablation: closed attempted-unit terminal mismatch\nreview-ablation: Pilot host failed\nreview-ablation: attempt recorded as non-passing: 1\nreview-ablation: fixed experiment budget exhausted\nreview-ablation: fixed experiment budget exhausted\nreview-ablation: inherited GitHub credentials are forbidden\n"
+    },
+    {
+      "command": [
+        "bash",
+        "kc-pr-flow/scripts/review-runtime.test.sh",
+        "--case",
+        "profiled-receipt"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 19.942,
+      "stdout": "\n9 passed, 0 failed\n",
+      "stderr": ""
+    }
+  ],
+  "final_head": "9bb526170156a44cff90e2a2fab9eeab081e0eb1",
+  "final_status": ""
+}

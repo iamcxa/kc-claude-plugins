@@ -1,0 +1,54 @@
+{
+  "F10_missing_unit_input": {
+    "exception": "TypeError",
+    "message": "argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'",
+    "stderr": ""
+  },
+  "F6_schema_valid_planted_receipt": {
+    "runner_finalize": {
+      "exception": "FileExistsError",
+      "message": "[Errno 17] File exists: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg1tux5ox/pilot-runs/1-control/receipt.json'",
+      "stderr": ""
+    },
+    "joined_count": 10,
+    "accepted_wallclock_ms": 1,
+    "scope": "Synthetic collision at real finalizer + real join; no paid child/network. Command source grants Write and add-dir to this exact owner directory."
+  },
+  "F8_recommendation_marker": {
+    "accepted_recommendations": [
+      "APPROVE",
+      "APPROVE (profiled treatment)"
+    ],
+    "scope": "Accepted free-form field can reveal an arm; no claim that real legacy model necessarily emits a different vocabulary."
+  },
+  "F11_repeat_blind_phase": {
+    "first_success": true,
+    "second": {
+      "exception": "FileExistsError",
+      "message": "[Errno 17] File exists: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg1tux5ox/blind'",
+      "stderr": ""
+    }
+  },
+  "F7_runner_catalog_drift": {
+    "same_runner": {
+      "value": {
+        "capability_cost_usd": 0.060000000000000005,
+        "capability_cost_status": "complete",
+        "capability_unknown_attempts": 0,
+        "capability_tokens": 12,
+        "capability_count": 6,
+        "evidence_payload_bytes": 7773,
+        "lane_critical_path_ms": 54.801917,
+        "retry_count": 0,
+        "audit_hash": "64e9a178208ad37fdd2ab42be233bfe44010c38d3d8e5b9ca7e805d3697e0a04"
+      },
+      "stderr": ""
+    },
+    "different_runner_only": {
+      "exception": "Invalid",
+      "message": "plan or shape authority drift",
+      "stderr": ""
+    },
+    "arm_prepared_and_provider_bytes_unchanged": true
+  }
+}

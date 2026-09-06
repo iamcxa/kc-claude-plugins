@@ -1,0 +1,103 @@
+{
+  "F1_post_identity_echo": {
+    "exit": 2,
+    "minted_identity": {
+      "repository": "acme/widgets",
+      "pr_number": 42,
+      "base_sha": "b812f5da392d6503cb9b7e92d2a670fa57fd0fbe",
+      "head_sha": "ec02c585cb22d0854820f69eaa26375d20d51cdd",
+      "run_id": "run-AHuTFq",
+      "config_hash": "d9401f2144c2d86c3a01c2c0394a04224755fd40121eb29314c0e953f55be8d9",
+      "review_key": "96ce810daad7604b0a272866e34f585bb3d96773b3046f7d6b13b3169c3addc6"
+    },
+    "terminal": {
+      "disposition": "non-posting",
+      "identity": {
+        "base_sha": "b812f5da392d6503cb9b7e92d2a670fa57fd0fbe",
+        "head_sha": "ec02c585cb22d0854820f69eaa26375d20d51cdd",
+        "pr_number": 42,
+        "repository": "acme/widgets"
+      },
+      "reason": "schema_failure",
+      "schema": "kc-pr-flow.run-terminal/v1",
+      "status": "REQUEST_INVALID"
+    },
+    "stderr": "malformed manual fallback collection\n",
+    "identity_equal": false
+  },
+  "F2_null": {
+    "exception": "AttributeError",
+    "message": "'NoneType' object has no attribute 'get'",
+    "stderr": "",
+    "provider_files": 0,
+    "invoked_events": 0
+  },
+  "F2_nan": {
+    "exception": "ValueError",
+    "message": "Out of range float values are not JSON compliant: nan",
+    "stderr": "",
+    "provider_files": 6,
+    "invoked_events": 0
+  },
+  "F3_clock_valid": {
+    "result": null,
+    "stderr": ""
+  },
+  "F3_clock_overflow": {
+    "exception": "Invalid",
+    "message": "schema union mismatch",
+    "stderr": ""
+  },
+  "F4_terminal_telemetry": {
+    "terminal": {
+      "schema": "kc-pr-flow.run-terminal/v1",
+      "identity": {
+        "repository": "acme/widgets",
+        "pr_number": 42,
+        "base_sha": "de4e9087b92d9393ca6992f7d05a43cf86257902",
+        "head_sha": "21f56377800bab453c6b8fee469c2331b7759560",
+        "run_id": "run-jfeAZy",
+        "config_hash": "d9401f2144c2d86c3a01c2c0394a04224755fd40121eb29314c0e953f55be8d9",
+        "review_key": "aaa046094411979c4c63b2222b88db6f23fdb98f29bbafd3301e09f8e8b1df30"
+      },
+      "status": "INVALIDATED",
+      "reason": "identity_change",
+      "disposition": "non-posting"
+    },
+    "telemetry": {
+      "exception": "SystemExit",
+      "message": "1",
+      "stderr": "review-ablation: side-car does not seal a collated run\n"
+    },
+    "actual_attempt_wrapper": {
+      "exception": "SystemExit",
+      "message": "1",
+      "stderr": "review-ablation: side-car does not seal a collated run\nreview-ablation: attempt recorded as non-passing: 1\n"
+    },
+    "retained_run_terminal": {
+      "pr": null,
+      "reason": "attempt_failed",
+      "schema": "kc-pr-flow.ablation-input-terminal/v1"
+    }
+  },
+  "F6_planted_receipt": {
+    "exception": "FileExistsError",
+    "message": "[Errno 17] File exists: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp95peembo/receipt.json'",
+    "stderr": "",
+    "retained": {
+      "untrusted_child_written": true
+    },
+    "note": "This collision probe proves retained child bytes and uncaught error, not comparator acceptance of this deliberately non-schema payload."
+  },
+  "F12_duplicate_quote": {
+    "result": [
+      {
+        "path": "example.py",
+        "line": 1,
+        "side": "RIGHT",
+        "body": "HIGH: The second assignment is incorrect.\n\n> value = 2"
+      }
+    ],
+    "stderr": ""
+  }
+}

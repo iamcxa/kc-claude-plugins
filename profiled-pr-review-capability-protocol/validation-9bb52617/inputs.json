@@ -1,0 +1,9 @@
+{
+  "base": "3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8",
+  "head": "9bb526170156a44cff90e2a2fab9eeab081e0eb1",
+  "prompt_sha256": "e266849e209301db08a3e2636777af5a1f84850840add84b492c9b048e81e3b8",
+  "diff_sha256": "c9b2fe0b003b73e1c231628090fdf99b03ca7919225a8cdd311c6fc3424b58d4",
+  "prompt_bytes": 339534,
+  "requested_model": "claude-opus-5",
+  "requested_effort": "xhigh"
+}
