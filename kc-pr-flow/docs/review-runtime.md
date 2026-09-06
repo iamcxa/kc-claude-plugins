@@ -368,7 +368,22 @@ After recording a bound `ManualFallback` array, use `--finalize-dir RUN_DIR
 --fallbacks-file FILE`. Finalization never re-dispatches or re-samples route flags,
 and a sealed receipt cannot be finalized twice. Blind runs refuse this pause.
 
-One real local fixture observed about 1 second of prepare work, 93 seconds of
-receipt projection and 7 seconds of rehydration. This is mechanical overhead,
-not measured review speed or hosted CI cost. Repeated append validation is a
-source-backed explanation to investigate, not a reason to weaken integrity.
+The existing `review-ablation.sh run --pilot` also owns non-scored experiment
+units. `--unit-kind admission --arm control --unit-input FILE` accepts the six
+candidate identity fields (`slot`, `role`, `repository`, `pr_number`, `base_sha`,
+`head_sha`) before corpus freeze; `--planner-arm-dir` pins the independent
+treatment Planner. Both admissions must observe the complete Lite mode tuple.
+`--unit-kind adjudication --unit-input FILE` receives only one normalized
+two-sample blind envelope, never its mapping directory, and uses no tools.
+Both use the same `--cost-ledger`, `--budget`, `--out-dir`, model, effort and
+timeout reservation/finalization owner as arms. The comparison requires six
+costed admissions and five matching costed adjudications; backup attempts stay
+in the same directory and budget. Findings retain their canonical comparison
+fields; the blind summary is uniformly generated from their count.
+
+Every attempted unit retains a v4 receipt. `known_cost_usd` preserves reported
+subtotals; incomplete usage leaves `cost_usd: null` and is never scoreable.
+Unknown costs keep the full reservation, and reported overspend increases the
+charge used for later admission. Per-call `--max-budget-usd` is requested, not a
+claim that a provider cannot exceed it: post-call checks reject such samples
+and subsequent over-budget launches, but cannot undo incurred cost.

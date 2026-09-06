@@ -111,8 +111,7 @@ write `kc-pr-flow.intake-identity/v1` with those fields and a fresh `intake_id`.
 For the profiled route, call the repository-owned adapter once:
 
 ```bash
-KC_PR_FLOW_REVIEW_TYPED=on KC_PR_FLOW_PROFILED_REVIEW=on \
-  python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
     --identity-file intake.json --repo-worktree "$REVIEW_WORKTREE" \
     --run-dir "$REVIEW_RUN_DIR" --profile auto --model "$REVIEW_MODEL"
 ```

@@ -180,6 +180,46 @@ def catalog():
     return value
 
 
+def contract_tables():
+    bank = catalog()
+    owners = {q: c["id"] for c in bank["capabilities"] for q in c["questions"]}
+    questions = [
+        "| Question | Lite | Standard | Full | Non-waivable | Default capability |",
+        "|---|---|---|---|---|---|",
+    ]
+    for q in bank["questions"]:
+        required = [
+            "required"
+            if q["requiredness"][p] == "always"
+            else f"`{q['requiredness'][p]}` signal"
+            for p in ("lite", "standard", "full")
+        ]
+        waiver = (
+            "no"
+            if q["waivable"]
+            else "yes"
+            if q["requiredness"]["lite"] == "always"
+            else "yes when activated"
+        )
+        questions.append(
+            "| "
+            + " | ".join([f"`{q['id']}`", *required, waiver, f"`{owners[q['id']]}`"])
+            + " |"
+        )
+    reasons = {}
+    for branch in SCHEMA["$defs"]["RunTerminal"]["oneOf"]:
+        fields = branch["properties"]
+        reasons.setdefault(fields["status"]["const"], []).extend(
+            fields["reason"].get("enum", [fields["reason"].get("const")])
+        )
+    statuses = ["| Status | Permitted reasons |", "|---|---|"]
+    statuses.extend(
+        f"| `{status}` | " + ", ".join(f"`{reason}`" for reason in values) + " |"
+        for status, values in reasons.items()
+    )
+    return "\n".join(questions), "\n".join(statuses)
+
+
 def plan(request):
     validate(request, "PlannerInput")
     if request["protocol_major"] != 1:
@@ -417,7 +457,23 @@ def prepare(
         "plan_hash": frozen["plan_hash"],
         "recorded_at": start["occurred_at"],
     }
-    pointers = []
+    pointers, unsupported = [], set()
+
+    def material_text(content, evidence_class):
+        try:
+            material = content.decode()
+            if (
+                len(material)
+                <= SCHEMA["$defs"]["EvidenceMaterial"]["properties"]["material"][
+                    "maxLength"
+                ]
+            ):
+                return material
+        except UnicodeDecodeError:
+            pass
+        unsupported.add(evidence_class)
+        return None
+
     for row in shape:
         if row["binary"]:
             continue
@@ -433,16 +489,21 @@ def prepare(
                 continue
         else:
             continue
-        patch = git(
-            repo,
-            "diff",
-            "--no-ext-diff",
-            "--unified=3",
-            identity["base_sha"],
-            identity["head_sha"],
-            "--",
-            path,
-        ).decode()
+        patch = material_text(
+            git(
+                repo,
+                "diff",
+                "--no-ext-diff",
+                "--unified=3",
+                identity["base_sha"],
+                identity["head_sha"],
+                "--",
+                path,
+            ),
+            "diff_hunks",
+        )
+        if patch is None:
+            continue
         pointer = {
             "schema": "kc-pr-flow.evidence-pointer/v1",
             "kind": "git_blob",
@@ -486,8 +547,10 @@ def prepare(
         for path in paths:
             try:
                 content = git(repo, "show", f"{identity['head_sha']}:{path}")
-                material = content.decode()
-            except (subprocess.CalledProcessError, UnicodeDecodeError):
+                material = material_text(content, evidence_class)
+            except subprocess.CalledProcessError:
+                continue
+            if material is None:
                 continue
             pointer = {
                 "schema": "kc-pr-flow.evidence-pointer/v1",
@@ -565,6 +628,7 @@ def prepare(
         observations.append({**observation, "id": digest(observation)})
     if git(repo, "rev-parse", "HEAD").decode().strip() != identity["head_sha"]:
         return terminal(review_identity, "INVALIDATED", "identity_change")
+    pointers = [p for p in pointers if p["evidence_class"] not in unsupported]
     bindings = []
     for evidence_class in classes:
         refs = [p["id"] for p in pointers if p["evidence_class"] == evidence_class]
@@ -574,7 +638,11 @@ def prepare(
             {
                 "evidence_class": evidence_class,
                 "refs": sorted(refs),
-                "missing": None if refs else "unavailable",
+                "missing": "unsupported"
+                if evidence_class in unsupported
+                else None
+                if refs
+                else "unavailable",
             }
         )
     bundle = {
@@ -933,6 +1001,11 @@ def dispatch(prepared, command, budget_usd=None):
 
 
 def collate(prepared, results, fallbacks=()):
+    if not isinstance(fallbacks, (list, tuple)) or any(
+        not isinstance(f, dict) or not isinstance(f.get("result"), dict)
+        for f in fallbacks
+    ):
+        raise Invalid("malformed manual fallback collection")
     identity = prepared["identity"]
     if (
         git(prepared["repository_path"], "rev-parse", "HEAD").decode().strip()
@@ -946,7 +1019,7 @@ def collate(prepared, results, fallbacks=()):
         r.get("capability") not in prepared["plan"]["review_config"]["capabilities"]
         for r in results
     ):
-        return terminal(identity, "ABORTED_INCOMPLETE", "required_gap")
+        return terminal(identity, "REQUEST_INVALID", "schema_failure")
     pointers = {p["id"]: p["pointer"] for p in prepared["bundle"]["pointers"]}
     lanes, obligations, findings, advisories, human_notes = [], [], {}, [], []
     for manifest in prepared["plan"]["manifests"]:
@@ -1093,6 +1166,16 @@ def collate(prepared, results, fallbacks=()):
                     "runtime": {k: v for k, v in candidate.items() if k != "ordinal"},
                     "severity": severity,
                     "summaries": [],
+                    "quote": contribution["quote"],
+                    "line": git(
+                        prepared["repository_path"],
+                        "show",
+                        f"{candidate['evidence']['object_sha']}:{candidate['path']}",
+                    )
+                    .decode()
+                    .splitlines()
+                    .index(contribution["quote"])
+                    + 1,
                 }
                 findings[merge_tuple]["runtime"]["candidate_refs"] = []
             record = findings[merge_tuple]
@@ -1199,7 +1282,11 @@ def collate(prepared, results, fallbacks=()):
     }
     body = "Required coverage incomplete" if gaps else "Required questions resolved"
     body += "\n" + "\n".join(
-        f["severity"] + ": " + "; ".join(f["summaries"]) for f in findings.values()
+        f"{f['runtime']['path']}:{f['line']} {f['severity']}: "
+        + "; ".join(f["summaries"])
+        + "\n> "
+        + f["quote"]
+        for f in findings.values()
     )
     body += "\n" + "\n".join("Advisory: " + a["summary"] for a in advisories)
     body += "\n" + "\n".join(
@@ -1207,7 +1294,19 @@ def collate(prepared, results, fallbacks=()):
     )
     rendered = {
         "body": body,
-        "inline_comments": [],
+        "inline_comments": [
+            {
+                "path": f["runtime"]["path"],
+                "line": f["line"],
+                "side": f["runtime"]["side"],
+                "body": f["severity"]
+                + ": "
+                + "; ".join(f["summaries"])
+                + "\n\n> "
+                + f["quote"],
+            }
+            for f in findings.values()
+        ],
         "event": event,
         "options": ["REQUEST_CHANGES"]
         if blockers
@@ -1543,6 +1642,13 @@ def main():
     try:
         if args.finalize_dir:
             pending = read_json(pathlib.Path(args.finalize_dir) / "dispatched.json")
+            if (
+                not isinstance(pending, dict)
+                or set(pending) != {"prepared", "results"}
+                or not isinstance(pending["prepared"], dict)
+                or not isinstance(pending["results"], list)
+            ):
+                raise Invalid("malformed dispatched artifact")
             prepared = pending["prepared"]
             if (
                 pathlib.Path(prepared["directory"]).resolve()
@@ -1629,18 +1735,23 @@ def main():
             store(pathlib.Path(args.run_dir) / "result.json", result)
         print(canonical(result).decode())
         return 0
-    except (Invalid, OSError, ValueError, subprocess.CalledProcessError) as error:
-        echo = (
-            {
-                key: value
-                for key, value in identity.items()
-                if key
-                in ("repository", "pr_number", "base_sha", "head_sha", "intake_id")
-                and isinstance(value, (str, int, bool, type(None)))
-            }
-            if isinstance(identity, dict)
-            else {}
-        )
+    except (
+        Invalid,
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        AttributeError,
+        subprocess.CalledProcessError,
+    ) as error:
+        echo = {}
+        if isinstance(identity, dict):
+            for key in SCHEMA["$defs"]["InvalidIntakeEcho"]["properties"]:
+                if key in identity:
+                    try:
+                        echo[key] = validate(identity[key], "EchoScalar")
+                    except Invalid:
+                        pass
         print(canonical(terminal(echo, "REQUEST_INVALID", "schema_failure")).decode())
         print(str(error), file=sys.stderr)
         return 2

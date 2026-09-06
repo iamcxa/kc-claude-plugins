@@ -923,6 +923,8 @@ script = source / "kc-pr-flow/scripts/runtime.sh"
 script.parent.mkdir()
 script.write_text("#!/bin/sh\nexit 0\n")
 script.chmod(0o755)
+shutil.copy(here / 'review-capability.py', script.parent / 'review-capability.py')
+shutil.copytree(here.parent / 'schemas', source / 'kc-pr-flow/schemas')
 def git(*args):
     return subprocess.check_output(["git", "-C", str(source), *args], text=True).strip()
 git("init", "-q")
@@ -962,12 +964,15 @@ for row in rows[:5]:
         directory = runs / (str(row["slot"]) + "-" + name)
         directory.mkdir()
         manifest = {"schema": "kc-pr-flow.pilot-manifest/v1", "slot": row["slot"], "arm": name, "pr": row,
+                    "unit_kind":"arm", "unit_input_sha256":core.pilot_hash(None), "planner_manifest":None,
+                    "arm_manifest":None, "started_at":"2026-09-05T00:00:00Z",
                     "corpus_sha256": core.pilot_hash(rows), "budget_sha256": "c" * 64, "driver_sha256": "d" * 64,
                     "requested_model": "fixture", "effort": "low", "host_sha256": "e" * 64,
                     "tool_policy_sha256": core.pilot_hash(core.PILOT_POLICY), "timeout_seconds": 600, "diff_sha256": "f" * 64,
                     "activation_environment": {key: "off" if name == "control" else "on" for key in ("KC_PR_FLOW_REVIEW_TYPED", "KC_PR_FLOW_PROFILED_REVIEW")}}
         receipt = {"schema": "kc-pr-flow.ablation-run/v4", "manifest_sha256": core.pilot_hash(manifest), "model_id": "fixture",
                    "usage": {"input_tokens":1,"output_tokens":1,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}, "cost_usd":0.1,
+                   "cost_status":"complete", "known_cost_usd":0.1,
                    "wallclock_ms": 100 if name == "control" else 60, "coverage": "not_applicable" if name == "control" else "complete",
                    "protocol_mode": "legacy" if name == "control" else "profiled", "human_intervention_count": 0,
                    "run_terminal": None, "retry_count": 0,
@@ -978,11 +983,34 @@ for row in rows[:5]:
                            audit_hash="a"*64, capability_cost_usd=0.05, capability_tokens=4)
         core.pilot_write(directory / "manifest.json", manifest)
         core.pilot_write(directory / "receipt.json", receipt)
+def unit_record(directory, kind, slot, payload, subject=None):
+    target = directory / (str(slot) + '-' + kind)
+    target.mkdir(exist_ok=True)
+    manifest = {**core.pilot_read(directory / '1-control/manifest.json'), 'schema':'kc-pr-flow.pilot-manifest/v1','unit_kind':kind,'slot':slot,'pr':subject,
+                'arm_manifest':None,'planner_manifest':None,'budget_sha256':'c'*64,
+                'unit_input_sha256':payload.get('input_sha256')}
+    manifest['unit_input_sha256'] = payload.get('input_sha256', core.pilot_hash(subject))
+    if kind == 'adjudication':
+        for key in ('arm', 'pr', 'arm_manifest', 'planner_manifest', 'corpus_sha256', 'activation_environment', 'diff_sha256', 'started_at'):
+            manifest.pop(key)
+    receipt = copy.deepcopy(core.pilot_read(directory / '1-control/receipt.json'))
+    receipt.update(manifest_sha256=core.pilot_hash(manifest), driver=payload)
+    (target / 'manifest.json').write_text(json.dumps(manifest))
+    (target / 'receipt.json').write_text(json.dumps(receipt))
+for row in rows:
+    unit_record(runs, 'admission', row['slot'], {'review_config':{'modes':core.PILOT_MODES}, 'planner_modes':core.PILOT_MODES},
+                {k:v for k,v in row.items() if k not in ('control_modes','treatment_modes')})
 joined = core.pilot_join(runs, rows, None)
 assert len(joined) == 10
+equivalent = copy.deepcopy(joined)
+for record in equivalent:
+    record['receipt']['driver']['summary'] = 'Required questions resolved' if record['manifest']['arm'] == 'treatment' else 'Clean'
+assert len({s['summary'] for s in core.pilot_normalize(equivalent)[0]}) == 1
+equivalent[0]['receipt']['driver']['findings'] = [{}]
+refuses(lambda: core.pilot_normalize(equivalent))
 backup_runs = root / "backup-runs"
 shutil.copytree(runs, backup_runs)
-unavailable = {"status":"ABORTED_INCOMPLETE", "reason":"frozen_input_unavailable"}
+unavailable = {"schema":"kc-pr-flow.ablation-input-terminal/v1", "pr":rows[0], "reason":"frozen_input_unavailable"}
 substitution = {"slot":1, "replacement_slot":6, "reason":"exact_input_unavailable_both_arms",
                 "control_terminal":unavailable, "treatment_terminal":unavailable}
 for name in ("control", "treatment"):
@@ -996,7 +1024,7 @@ for name in ("control", "treatment"):
     (replacement / "manifest.json").write_text(json.dumps(manifest))
     (replacement / "receipt.json").write_text(json.dumps(receipt))
     receipt = core.pilot_read(original_dir / "receipt.json")
-    receipt.update(run_terminal=unavailable, driver=None, model_id=None, cost_usd=0)
+    receipt.update(run_terminal=unavailable, driver=None, model_id=None, cost_usd=0, known_cost_usd=0)
     if name == "treatment":
         for key in ("coverage", "approve_eligible", "capability_count", "evidence_payload_bytes",
                     "lane_critical_path_ms", "retry_count", "audit_hash", "capability_cost_usd", "capability_tokens"):
@@ -1011,16 +1039,44 @@ blinded = core.cmd_pilot_compare(args)
 assert all("arm" not in sample and "coverage" not in sample and "wallclock_ms" not in sample for sample in blinded["samples"])
 judgments = root / "judgments.json"
 core.pilot_write(judgments, {"schema": "kc-pr-flow.pilot-adjudication/v1", "input_sha256": core.pilot_hash(blinded), "findings": []})
+def costed_judgments(directory, inputs, mapping, judgments):
+    for slot in range(1, 6):
+        pair = {'schema':inputs['schema'], 'samples':[s for s in inputs['samples'] if mapping[s['sample_id']]['slot'] == slot]}
+        ids = {s['sample_id'] for s in pair['samples']}
+        unit_record(directory, 'adjudication', slot, {**judgments, 'input_sha256':core.pilot_hash(pair),
+                    'findings':[f for f in judgments['findings'] if f['sample_id'] in ids]})
+costed_judgments(runs, blinded, core.pilot_read(root / 'blind/sealed-mapping.json'), core.pilot_read(judgments))
 args.adjudication, args.phase = str(judgments), "seal"
 core.cmd_pilot_compare(args)
 args.phase = "compare"
 assert core.cmd_pilot_compare(args)["promote"] is True
+for unit in ('1-admission', '1-adjudication'):
+    path = runs / unit / 'receipt.json'
+    saved, manifest = core.pilot_read(path), core.pilot_read(path.with_name('manifest.json'))
+    path.rename(path.with_suffix('.saved'))
+    try:
+        core.cmd_pilot_compare(args)
+    except (SystemExit, OSError):
+        pass
+    else:
+        raise AssertionError('missing costed unit was accepted')
+    path.with_suffix('.saved').rename(path)
+    path.write_text(json.dumps({**saved,'cost_usd':None,'cost_status':'incomplete','run_terminal':{'reason':'attempt_failed'}}))
+    refuses(lambda: core.cmd_pilot_compare(args))
+    changed = {**manifest, 'unaccounted_extension':True}
+    path.with_name('manifest.json').write_text(json.dumps(changed))
+    path.write_text(json.dumps({**saved, 'manifest_sha256':core.pilot_hash(changed)}))
+    refuses(lambda: core.cmd_pilot_compare(args))
+    path.with_name('manifest.json').write_text(json.dumps(manifest))
+    path.write_text(json.dumps(saved))
 
 def compare_variant(name, mutate, accepted=True):
     variant = root / name
     shutil.copytree(runs, variant)
     for path in variant.glob('*/receipt.json'):
         manifest, receipt = core.pilot_read(path.with_name('manifest.json')), core.pilot_read(path)
+        if manifest.get('unit_kind', 'arm') != 'arm':
+            continue
         mutate(manifest, receipt)
         path.write_text(json.dumps(receipt))
     options = argparse.Namespace(corpus=str(corpus), manifest_dir=str(variant), substitution=None,
@@ -1031,6 +1087,7 @@ def compare_variant(name, mutate, accepted=True):
                               'accepted':accepted,'severity':f['severity']} for s in inputs['samples'] for f in s['findings']]}
     judgment_path = root / (name + '-judgments.json')
     core.pilot_write(judgment_path, judgments)
+    costed_judgments(variant, inputs, core.pilot_read(pathlib.Path(options.blind_dir) / 'sealed-mapping.json'), judgments)
     options.adjudication, options.phase = str(judgment_path), 'seal'
     core.cmd_pilot_compare(options)
     options.phase = 'compare'
@@ -1078,8 +1135,16 @@ assert os.environ['KC_PR_FLOW_PROFILED_REVIEW'] == 'off'
 import subprocess
 assert subprocess.check_output(['git','remote','get-url','origin'], text=True).strip() == 'https://github.com/acme/widgets.git'
 assert list(pathlib.Path(os.environ['GH_CONFIG_DIR']).iterdir()) == []
+assert subprocess.run(['git','config','--get-all','credential.helper'], capture_output=True).returncode != 0
+assert 'SSH_AUTH_SOCK' not in os.environ
+assert os.environ['ANTHROPIC_API_KEY'] == 'synthetic-model-auth'
+assert subprocess.run(['git','push',os.environ['SYNTHETIC_PUSH_TARGET'],'HEAD:refs/heads/probe'], capture_output=True).returncode != 0
 assert '--strict-mcp-config' in sys.argv and '{"mcpServers":{}}' in sys.argv
 assert not any('WebFetch' in value or 'WebSearch' in value for value in sys.argv)
+if os.environ.get('SYNTHETIC_PROFILED_ARTIFACT'):
+    protocol = pathlib.Path(os.environ['KC_PR_FLOW_ABLATION_PROTOCOL_DIR'])
+    protocol.mkdir()
+    (protocol / 'prepared.json').write_text('{}')
 receipt = {'schema':'kc-pr-flow.ablation-driver-receipt/v1', 'review_config':{'modes':MODES},
            'stop':'confirmation_ready', 'resumed':False, 'human_input_count':0, 'retry_count':0,
            'findings':[], 'summary':'Clean', 'recommendation':'APPROVE'}
@@ -1099,13 +1164,93 @@ subprocess.run(["git", "clone", "--quiet", "--shared", str(source), str(unbound_
 assert subprocess.run(["bash", "-c", '. "$1"; review_runtime_github_repository_identity "$2"',
                        "identity", str(here / "review-runtime.sh"), str(unbound_clone)], capture_output=True).returncode != 0
 print("Uncorrected local clone rejected by actual repository identity helper")
-launched = core.cmd_pilot_run(launch_args)
+credential_config, push_target = root / 'synthetic-gitconfig', root / 'synthetic-remote.git'
+subprocess.run(['git','init','--bare','-q',str(push_target)], check=True)
+credential_config.write_text('[credential]\n helper = synthetic-never-use\n')
+synthetic_environment = {'GIT_CONFIG_GLOBAL':str(credential_config),'SSH_AUTH_SOCK':'synthetic-agent',
+                         'ANTHROPIC_API_KEY':'synthetic-model-auth','SYNTHETIC_PUSH_TARGET':str(push_target)}
+previous_environment = {k:os.environ.get(k) for k in synthetic_environment}
+try:
+    os.environ.update(synthetic_environment)
+    launched = core.cmd_pilot_run(launch_args)
+    contaminated = copy.copy(launch_args)
+    contaminated.out_dir, contaminated.budget = str(root / 'contaminated'), str(root / 'contaminated-budget.json')
+    core.pilot_write(contaminated.budget, {**core.pilot_read(budget_path), 'experiment_dir':str(pathlib.Path(contaminated.out_dir).resolve())})
+    os.environ['SYNTHETIC_PROFILED_ARTIFACT'] = 'on'
+    refuses(lambda: core.cmd_pilot_run(contaminated))
+    assert core.pilot_read(pathlib.Path(contaminated.out_dir) / '1-control/receipt.json')['known_cost_usd'] == 0.1
+finally:
+    os.environ.pop('SYNTHETIC_PROFILED_ARTIFACT', None)
+    for key, value in previous_environment.items():
+        if value is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = value
+assert not subprocess.run(['git','--git-dir',str(push_target),'show-ref'], capture_output=True).stdout
 assert launched['coverage'] == 'not_applicable' and launched['cost_usd'] == 0.1
 assert git("remote", "get-url", "origin") == "https://github.com/acme/widgets.git"
 stub.write_text("#!" + sys.executable + "\nimport time\ntime.sleep(10)\n")
 launch_args.slot, launch_args.timeout = 2, 1
 refuses(lambda: core.cmd_pilot_run(launch_args))
 assert core.pilot_read(out / "2-control/failure.json")['reason'] == 'timeout'
+failed = core.pilot_read(out / "2-control/receipt.json")
+assert failed['cost_status'] == 'incomplete' and failed['cost_usd'] is None
+assert failed['known_cost_usd'] == 0 and failed['run_terminal']['reason'] == 'attempt_failed'
+refuses(lambda: core.pilot_receipt_guard({**failed, 'run_terminal':{**failed['run_terminal'], 'invented':True}}))
+unit_input = root / 'admission-input.json'
+core.pilot_write(unit_input, {k:v for k,v in rows[2].items() if k not in ('control_modes','treatment_modes')})
+unit_args = copy.copy(launch_args)
+unit_args.unit_kind, unit_args.unit_input, unit_args.slot = 'admission', str(unit_input), 3
+planner_arm = root / 'planner-arm'
+core.cmd_pilot_arm(argparse.Namespace(source_repo=str(source), commit=commit, dest=str(planner_arm), arm='treatment'))
+unit_args.planner_arm_dir = str(planner_arm)
+unit_input.write_text(unit_input.read_text().replace('a'*40, commit).replace('b'*40, commit))
+stub.write_text('#!' + sys.executable + '\n' + '''
+import json, os, pathlib
+assert os.environ['KC_PR_FLOW_ABLATION_UNIT_KIND'] == 'admission'
+pathlib.Path(os.environ['KC_PR_FLOW_ABLATION_RECEIPT']).write_text(json.dumps({'review_config':{'modes':MODES}}))
+print(json.dumps({'modelUsage':{'fixture':{}},'total_cost_usd':0.1,'usage':{'input_tokens':1,'output_tokens':1,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
+'''.replace('MODES', repr(core.PILOT_MODES)))
+unit_args.timeout = 5
+admission = core.cmd_pilot_run(unit_args)
+assert admission['cost_usd'] == 0.1 and admission['run_terminal'] is None
+assert core.pilot_read(out / '3-admission/manifest.json')['unit_kind'] == 'admission'
+assert admission['driver']['review_config']['modes'] == core.PILOT_MODES
+assert admission['driver']['planner_modes'] == core.PILOT_MODES
+unit_args.unit_kind, unit_args.slot = 'adjudication', 1
+core.pilot_write(root / 'pair-input.json', {'schema':'kc-pr-flow.pilot-blind-input/v1', 'samples':blinded['samples'][:2]})
+unit_args.unit_input = str(root / 'pair-input.json')
+stub.write_text('#!' + sys.executable + '\n' + '''
+import json, sys
+assert sys.argv[sys.argv.index('--tools') + 1] == ''
+assert '--plugin-dir' not in sys.argv and '--add-dir' not in sys.argv
+schema = json.loads(sys.argv[sys.argv.index('--json-schema') + 1])
+assert schema['properties']['input_sha256']['const'] == HASH
+assert schema['additionalProperties'] is False
+payload = json.loads(sys.argv[sys.argv.index('--print') + 1].split('\\n', 1)[1])
+print(json.dumps({'structured_output':{'schema':'kc-pr-flow.pilot-adjudication/v1','input_sha256':HASH,'findings':[]},
+                  'modelUsage':{'fixture':{}},'total_cost_usd':0.1,'usage':{'input_tokens':1,'output_tokens':1,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
+'''.replace('HASH', repr(core.pilot_hash(core.pilot_read(unit_args.unit_input)))))
+adjudicated = core.cmd_pilot_run(unit_args)
+assert adjudicated['cost_usd'] == 0.1 and adjudicated['run_terminal'] is None
+assert len(list(out.glob('*/manifest.json'))) == 4
+stub.write_text('#!' + sys.executable + '\nprint(\'{"total_cost_usd":0.05}\')\nraise SystemExit(1)\n')
+unit_args.slot = 2
+refuses(lambda: core.cmd_pilot_run(unit_args))
+assert len(list(out.glob('*/manifest.json'))) == 5
+assert core.pilot_read(out / '2-adjudication/receipt.json')['known_cost_usd'] == 0.05
+over = root / 'reported-overspend'
+(over / 'prior').mkdir(parents=True)
+(over / 'next').mkdir()
+over_budget = {**core.pilot_read(budget_path), 'experiment_dir':str(over.resolve()), 'total_budget_usd':0.8}
+over_manifest = {**core.pilot_read(out / '2-adjudication/manifest.json'), 'budget_sha256':core.pilot_hash(over_budget)}
+core.pilot_write(over / 'prior/manifest.json', over_manifest)
+core.pilot_write(over / 'prior/receipt.json', {**core.pilot_read(out / '2-adjudication/receipt.json'),
+                 'manifest_sha256':core.pilot_hash(over_manifest), 'known_cost_usd':0.7})
+refuses(lambda: core.pilot_reserve(over, over / 'next', over_manifest, core.pilot_cost(ledger), over_budget))
+unit_args.slot = 3
+refuses(lambda: core.cmd_pilot_run(unit_args))
+assert len(list(out.glob('*/manifest.json'))) == 5
 old_token = os.environ.get('GH_TOKEN')
 os.environ['GH_TOKEN'] = 'fixture-must-not-be-forwarded'
 try:

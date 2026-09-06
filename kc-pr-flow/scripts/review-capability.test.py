@@ -4,7 +4,10 @@
 import contextlib
 import copy
 import importlib.util
+import json
+import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -21,6 +24,179 @@ SPEC.loader.exec_module(protocol)
 
 
 class PlannerTests(unittest.TestCase):
+    def test_actual_rehydrate_projection_mismatch_is_terminal(self):
+        with self.prepared_results() as (prepared, results):
+            private = pathlib.Path(prepared["directory"]) / "boundary-probe"
+            (private / "scripts").mkdir(parents=True)
+            shutil.copytree(HERE.parent / "schemas", private / "schemas")
+            shutil.copy(
+                HERE / "review-capability.py", private / "scripts/review-capability.py"
+            )
+            wrapper = private / "scripts/review-runtime.sh"
+            wrapper.write_text(
+                '#!/usr/bin/env bash\nset -o pipefail\nif [ "$1" = rehydrate-interactive ]; then\n'
+                + "bash "
+                + str(HERE / "review-runtime.sh")
+                + " \"$@\" | jq ' .approve_eligible = (.approve_eligible | not) '\n"
+                + "else\nbash "
+                + str(HERE / "review-runtime.sh")
+                + ' "$@"\nfi\n'
+            )
+            spec = importlib.util.spec_from_file_location(
+                "boundary_probe", private / "scripts/review-capability.py"
+            )
+            probe = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(probe)
+            result = probe.finish(prepared, results)
+            self.assertEqual(result["reason"], "projection_mismatch")
+            protocol.validate(result, "RunTerminal")
+
+    def test_document_tables_are_generated_from_their_authorities(self):
+        document = (
+            HERE.parents[1]
+            / "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md"
+        ).read_text()
+        for table in protocol.contract_tables():
+            self.assertIn(table, document)
+            self.assertNotIn(
+                table,
+                document.replace(table.splitlines()[2], "| deliberately wrong |", 1),
+            )
+
+    def test_sampled_skill_command_stays_off_and_tokens_are_closed(self):
+        skill = (HERE.parent / "skills/kc-pr-review/SKILL.md").read_text()
+        command = (
+            skill.split(
+                "For the profiled route, call the repository-owned adapter once:", 1
+            )[1]
+            .split("```bash\n", 1)[1]
+            .split("```", 1)[0]
+        )
+        with tempfile.TemporaryDirectory() as root:
+            root = pathlib.Path(root)
+            stub = root / "claude"
+            stub.write_text('#!/bin/sh\ntouch "' + str(root / "called") + '"\nexit 1\n')
+            stub.chmod(0o755)
+            result = subprocess.run(
+                ["bash", "-c", command],
+                check=False,
+                cwd=root,
+                capture_output=True,
+                text=True,
+                env={
+                    **os.environ,
+                    "PATH": str(root) + os.pathsep + os.environ["PATH"],
+                    "CLAUDE_PLUGIN_ROOT": str(HERE.parent),
+                    "KC_PR_FLOW_REVIEW_TYPED": "off",
+                    "KC_PR_FLOW_PROFILED_REVIEW": "off",
+                    "REVIEW_WORKTREE": str(root),
+                    "REVIEW_RUN_DIR": str(root / "run"),
+                    "REVIEW_MODEL": "fixture",
+                },
+            )
+            self.assertEqual(json.loads(result.stdout)["route"], "legacy")
+            self.assertFalse((root / "called").exists())
+        with self.assertRaises(protocol.Invalid):
+            protocol.validate("abc\n", "Token")
+
+    def test_unsupported_material_is_missing_not_invalid_caller_schema(self):
+        for content in (b"value = '\xe9'\n", b"x" * 1048577 + b"\n"):
+            with (
+                self.subTest(size=len(content)),
+                self.prepared_results() as (prepared, _),
+            ):
+                repo = prepared["repository_path"]
+                (pathlib.Path(repo) / "example.py").write_bytes(content)
+                protocol.git(repo, "commit", "-qam", "unsupported material")
+                identity = {
+                    **self.identity,
+                    "head_sha": protocol.git(repo, "rev-parse", "HEAD")
+                    .decode()
+                    .strip(),
+                }
+                result = protocol.prepare(
+                    repo,
+                    identity,
+                    pathlib.Path(prepared["directory"]).with_name("unsupported"),
+                    "lite",
+                )
+                binding = next(
+                    b
+                    for b in result["bundle"]["bindings"]
+                    if b["evidence_class"] == "diff_hunks"
+                )
+                self.assertEqual(
+                    binding,
+                    {
+                        "evidence_class": "diff_hunks",
+                        "refs": [],
+                        "missing": "unsupported",
+                    },
+                )
+                self.assertEqual(protocol.requests(result), [])
+                self.assertEqual(
+                    protocol.finish(result, [])["reason"], "receipt_incomplete"
+                )
+
+    def test_malformed_cli_artifacts_always_return_valid_terminals(self):
+        with self.prepared_results() as (prepared, results):
+            directory = pathlib.Path(prepared["directory"])
+            intake = directory / "invalid-intake.json"
+            intake.write_text(
+                protocol.canonical({**self.identity, "repository": "x" * 257}).decode()
+            )
+            fallback = directory / "fallback.json"
+            fallback.write_text("[null]")
+            pending = directory / "dispatched.json"
+            cases = [
+                (
+                    [
+                        "--identity-file",
+                        str(intake),
+                        "--repo-worktree",
+                        prepared["repository_path"],
+                        "--run-dir",
+                        str(directory / "new"),
+                        "--model",
+                        "unused",
+                    ],
+                    {},
+                ),
+                (["--finalize-dir", str(directory)], {}),
+                (
+                    [
+                        "--finalize-dir",
+                        str(directory),
+                        "--fallbacks-file",
+                        str(fallback),
+                    ],
+                    {"prepared": prepared, "results": results},
+                ),
+            ]
+            for arguments, dispatched in cases:
+                with self.subTest(arguments=arguments):
+                    pending.write_text(protocol.canonical(dispatched).decode())
+                    run = subprocess.run(
+                        [
+                            sys.executable,
+                            str(HERE / "review-capability.py"),
+                            *arguments,
+                        ],
+                        check=False,
+                        env={
+                            **os.environ,
+                            "KC_PR_FLOW_REVIEW_TYPED": "on",
+                            "KC_PR_FLOW_PROFILED_REVIEW": "on",
+                        },
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(run.returncode, 2, run.stderr)
+                    terminal = protocol.json.loads(run.stdout)
+                    protocol.validate(terminal, "RunTerminal")
+                    self.assertEqual(terminal["reason"], "schema_failure")
+                    self.assertNotIn("Traceback", run.stderr)
+
     def test_closed_protocol_fixtures(self):
         fixtures = """\
 {"name":"valid evidence absence","definition":"EvidenceClassBinding","valid":true,"value":{"evidence_class":"diff_hunks","refs":[],"missing":"unavailable"}}
@@ -339,6 +515,15 @@ class PlannerTests(unittest.TestCase):
                         "summary": "The value violates the accepted contract.",
                     }
                 ]
+            rendered = protocol.collate(prepared, results)["rendered"]
+            self.assertEqual(len(rendered["inline_comments"]), 1)
+            inline = rendered["inline_comments"][0]
+            self.assertEqual(
+                (inline["path"], inline["line"], inline["side"]),
+                ("example.py", 1, "RIGHT"),
+            )
+            self.assertIn("value = 2", inline["body"])
+            self.assertIn("example.py:1", rendered["body"])
             finished = protocol.finish(prepared, results)
             self.assertIn("decision", finished, finished)
             decision = finished["decision"]
@@ -392,6 +577,10 @@ class PlannerTests(unittest.TestCase):
             results[0]["answers"][0]["question_id"] = "not_assigned"
             self.assertEqual(
                 protocol.collate(prepared, results)["rendered"]["event"], "COMMENT"
+            )
+            results[0]["capability"] = "not_selected"
+            self.assertEqual(
+                protocol.collate(prepared, results)["reason"], "schema_failure"
             )
 
     def test_question_decision_and_confirmation_are_derived_not_model_supplied(self):
@@ -593,6 +782,56 @@ print(json.dumps({'structured_output':result, 'modelUsage':{'fixture':{}}, 'tota
                         {"request": request, "provider_envelope": envelope}
                     ),
                 )
+
+    def test_failed_and_retried_provider_usage_is_never_skipped(self):
+        spec = importlib.util.spec_from_file_location(
+            "ablation", HERE / "review-ablation-core.py"
+        )
+        core = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(core)
+        for recover in (False, True):
+            with (
+                self.subTest(recover=recover),
+                self.prepared_results() as (prepared, results),
+            ):
+                directory = pathlib.Path(prepared["directory"])
+                program = """
+import json, pathlib, sys
+r = json.load(sys.stdin)
+marker = pathlib.Path(sys.argv[1]) / (r['capability'] + '.attempted')
+if not marker.exists():
+    marker.touch()
+    print('null')
+    sys.exit(75)
+if not RECOVER:
+    print('null')
+    sys.exit(1)
+answer = next(x for x in RESULTS if x['capability'] == r['capability'])
+print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01,
+                  'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
+""".replace("RECOVER", repr(recover)).replace("RESULTS", repr(results))
+                returned = protocol.dispatch(
+                    prepared, [sys.executable, "-c", program, str(directory)]
+                )
+                collated = protocol.collate(prepared, returned)
+                protocol.audit(prepared, "collated", collated)
+                for name, value in (
+                    ("prepared", prepared),
+                    ("audit", prepared["audit"]),
+                    ("policy", collated["policy"]),
+                ):
+                    protocol.store(directory / (name + ".json"), value)
+                metrics = core.pilot_telemetry(directory, "fixture")
+                count = len(protocol.requests(prepared))
+                self.assertEqual(metrics["capability_cost_status"], "incomplete")
+                self.assertEqual(
+                    metrics["capability_unknown_attempts"],
+                    count if recover else 2 * count,
+                )
+                self.assertAlmostEqual(
+                    metrics["capability_cost_usd"], count * 0.01 if recover else 0
+                )
+                self.assertEqual(metrics["retry_count"], count)
 
     def test_unquoted_critical_is_advisory_not_a_blocker(self):
         with self.prepared_results() as (prepared, results):

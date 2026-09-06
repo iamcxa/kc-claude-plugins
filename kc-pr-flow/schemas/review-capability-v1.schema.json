@@ -3,11 +3,11 @@
   "$id": "https://kc-pr-flow.invalid/review-capability-v1.schema.json",
   "$ref": "#/$defs/Protocol",
   "$defs": {
-    "Token": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$", "maxLength": 64},
+    "Token": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}(?![\\s\\S])", "maxLength": 64},
     "Text": {"type": "string", "maxLength": 16384},
     "Hash": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
     "Commit": {"type": "string", "pattern": "^[0-9a-f]{40}$", "maxLength": 40},
-    "Repository": {"type": "string", "pattern": "^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$", "maxLength": 256},
+    "Repository": {"type": "string", "pattern": "^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+(?![\\s\\S])", "maxLength": 256},
     "Positive": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
     "Tokens": {"type": "array", "items": {"$ref": "#/$defs/Token"}, "maxItems": 64, "uniqueItems": true},
     "Signal": {"enum": ["always", "code_change", "contract_change", "dependency_change", "workflow_change", "security_change", "stacked_pr_shape"]},

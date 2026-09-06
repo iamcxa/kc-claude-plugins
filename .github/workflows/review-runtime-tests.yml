@@ -12,6 +12,9 @@ on:
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-capability*"
       - "kc-pr-flow/schemas/review-capability*"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -22,6 +25,9 @@ on:
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-capability*"
       - "kc-pr-flow/schemas/review-capability*"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
 

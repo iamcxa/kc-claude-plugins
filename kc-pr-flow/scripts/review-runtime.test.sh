@@ -136,6 +136,12 @@ run_profiled_receipt_tests() {
   jq '.identity.head_sha="dddddddddddddddddddddddddddddddddddddddd"' "$observation" >"$mutated"
   bash "$RUNTIME" project-receipt "$start" "$mutated" "$HEAD_SHA" >/dev/null 2>&1
   assert_eq "profiled projection refuses observation identity drift" 3 "$?"
+  jq --slurpfile start "$start" --arg hash "$CONFIG_HASH" '.lanes[0].terminal_status="failed" |
+    .lanes[0].candidates=[{ordinal:1,path:"example.py",side:"RIGHT",anchor_sha256:$hash,category:"correctness",claim_key:"wrong-value",
+      evidence:({schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",path:"example.py",side:"RIGHT",line:1,locator:null,
+        content_sha256:$hash,object_sha:$start[0].head_sha} + ($start[0] | {repository,review_key,base_sha,head_sha}))}]' "$observation" >"$mutated"
+  bash "$RUNTIME" project-receipt "$start" "$mutated" "$HEAD_SHA" >/dev/null 2>&1
+  assert_eq "profiled projection refuses candidate-bearing failed lanes" 3 "$?"
   assert_eq "profiled refusal appends no partial lane" 1 "$(wc -l <"$event_file" | tr -d ' ')"
   result="$(bash "$RUNTIME" project-receipt "$start" "$observation" "$HEAD_SHA" 2>/dev/null)"
   rc=$?

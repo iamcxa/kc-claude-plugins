@@ -8,6 +8,13 @@ substitute GitHub's current PR head for the frozen revision.
 This is a measurement run, so the following constraints override anything the
 skill says. Where they conflict with the skill, they win.
 
+When `KC_PR_FLOW_ABLATION_UNIT_KIND` is `admission`, execute only the frozen
+control skill's ordinary intake and triage. Stop before review capabilities or
+confirmation. Write exactly `{"review_config":{"modes":{...}}}` to the receipt
+path, with all six modes actually observed. Do not force Lite or infer modes
+from the desired corpus. The runner retains this separately from scored arms.
+The no-posting, frozen-head and no-working-tree-mutation rules below still apply.
+
 1. Do not post anything to GitHub. No review, no comment, no reaction, no
    status. Do not call `gh pr review`, `gh pr comment`, or the GitHub API with
    any non-GET method.
