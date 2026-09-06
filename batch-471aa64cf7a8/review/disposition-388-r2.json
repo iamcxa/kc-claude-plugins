@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "all 5 r1 findings closed in r2; FO verified: three station pages exist and are cited, marker count/order enforced (FO duplicate-marker mutation exit 2), two contract-test mutations, 'Read only' absolutes gone; CI green"
+}
