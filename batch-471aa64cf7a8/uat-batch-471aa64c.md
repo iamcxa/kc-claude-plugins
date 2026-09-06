@@ -13,7 +13,7 @@ Six PRs, all merged by the Captain on 2026-09-06, in this order: #383 (DEV-122 r
 ## Known residuals
 
 - **S38**: #385 merged three commits past the FO-accepted head (Captain-directed Codex repair); no Evidence block exists for the merged head. Rule candidate in DEV-114.
-- **Workspace count**: the approval allowed 5 workspaces; six items (five B tickets plus the DEV-122 rider) each got a local worktree, so the close receipt records 6 and the validator refuses it (`more workspaces created than approved`). The Captain decides: re-sign the approval at 6, or record the sixth as a defect with the receipt closed at the approved 5 and the overrun named.
+- **Workspace count**: the approval allowed 5 workspaces; six items (five B tickets plus the DEV-122 rider) each got a local worktree, the Captain re-signed the approval at 6 on 2026-09-07 (「approve A」); the receipt records 6 and S39 names the bookkeeping miss.
 - **e2e gate**: milestone has no CLI flow file → `e2e: not applicable` with reason; a flow for the ship workflow itself belongs to the next batch's dogfood.
 - **Enforcement decision outside defaults**: the FO moved the ship contract test into the required job and deleted the path-filtered workflow (DEV-116 r2). One more step per PR; CI time not measured.
 - DEV-119 AC-2 (a real batch through the skill) is the next batch.
@@ -26,7 +26,7 @@ Three moved_base merges last batch; zero this batch — every PR landed at its a
 
 # UAT: Ship-flow hands the Captain one UAT message instead of a chat to read
 
-Plan receipt `471aa64cf7a8d77b` · approval go/5/2/2 · dispatch order DEV-115 -> DEV-122 -> DEV-116 -> DEV-118 -> DEV-117 -> DEV-119 · batch `batch-471aa64cf7a8`
+Plan receipt `471aa64cf7a8d77b` · approval go/6/2/2 · dispatch order DEV-115 -> DEV-122 -> DEV-116 -> DEV-118 -> DEV-117 -> DEV-119 · batch `batch-471aa64cf7a8`
 
 Each accepted layer is one Draft PR at one pinned candidate on top of the previous layer's candidate. All Linear state untouched by the FO.
 
@@ -137,5 +137,6 @@ Each accepted layer is one Draft PR at one pinned candidate on top of the previo
 - 2026-09-06T14:49:28Z — **DEV-119 accepted** \(station 4095e5fc, ACCEPT with AC-3 WARN: variant restores only the script, README untouched — partial by design\); Draft PR #388. AC-2 \(a real batch through the skill\) is the FO's post-merge action: the next batch \(QNow tickets\) is the dogfood. Review: code-reviewer dispatched.
 - 2026-09-06T14:55:07Z — **review station on #388 \(DEV-119\)**: 5 findings \(4 correctness, 1 test-coverage; disposition \`listed\`, none in the block set\), all within the Brief \(dangling station citations, marker uniqueness, refusal path untested, an unenforced absolute\) → repair round 1 sent.
 - 2026-09-06T15:02:00Z — **DEV-119 round 2 accepted** \(043eb7e6\): station pages for accept-evidence, dev-debrief, ship-debrief; Local Profile marker count/order enforced \(FO duplicate-marker mutation → exit 2\); two contract-test mutations; the two 'Read only' absolutes rewritten as bounded claims. All 5 findings closed. #388 ready for the Captain's merge — the last PR of the batch.
+- 2026-09-06T15:13:33Z — **#388 merged by the Captain \(ac60ebe4\); batch close started.** r1 blocks moved to evidence/superseded/, r2 blocks are the accepted ones; debrief writers run from main \(dev: 6 issues, 5 with 2 rounds; ship: 21 defaults decisions, minutes build 74 / review 65 / repair 30 / verify 17 / dispatch 6\); e2e gate: not applicable \(no flow file for this milestone\). Close receipt DRAFT refused by the validator: workspaces_created 6 > approved 5 \(the DEV-122 rider's worktree\) — **S39**, Captain to rule \(re-sign at 6, or close at 5 with the overrun as a defect\). UAT document assembled.
 
-(21 defaults decisions listed above.)
+(22 defaults decisions listed above.)

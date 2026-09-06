@@ -1,11 +1,11 @@
 {
  "schema": "kc-ship-close-receipt/v1",
  "plan_receipt_sha256": "471aa64cf7a8d77bfe2057358d55870503f63c15202f59b1ff66771fd8fb3df5",
- "approval_receipt_sha256": "c10c8d5b1de6c9104a6bd5c232fc66513a34eeb248766a07f2cab0c0a96b67d7",
+ "approval_receipt_sha256": "bd79f73ca2984d54669a23f78c2668a921f5831c25cfd4ebb90a4f9be5abd024",
  "batch": {
   "entity": "batch-471aa64cf7a8",
   "started_at": "2026-09-06T08:40:00Z",
-  "closed_at": "2026-09-06T15:12:35Z",
+  "closed_at": "2026-09-06T17:05:20Z",
   "holder": "laptop"
  },
  "issues": {
@@ -126,6 +126,13 @@
    "id": "S38",
    "class": "delivery",
    "one_line": "#385 merged three commits past the FO-accepted candidate under a Captain-directed handoff; no Evidence block for the merged head",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
+  },
+  {
+   "id": "S39",
+   "class": "dispatch",
+   "one_line": "six worktrees against an approval of five: the rider item was added to the batch without raising max_workspaces; approval re-signed at 6 by the Captain",
    "fix_ticket": "DEV-114",
    "accepted_residual": null
   }
@@ -300,5 +307,5 @@
    "verify": 17
   }
  },
- "close_sha256": "726e40a5a63322544da4bfe0ca5eae4995dc6b3ef2d3a79a669c7e9a82780f1e"
+ "close_sha256": "70958436a9d25c6fc7e6189a2d509d64d6f43c8424c2035156b5f4b930d1370b"
 }

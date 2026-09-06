@@ -13,7 +13,7 @@ Six PRs, all merged by the Captain on 2026-09-06, in this order: #383 (DEV-122 r
 ## Known residuals
 
 - **S38**: #385 merged three commits past the FO-accepted head (Captain-directed Codex repair); no Evidence block exists for the merged head. Rule candidate in DEV-114.
-- **Workspace count**: the approval allowed 5 workspaces; six items (five B tickets plus the DEV-122 rider) each got a local worktree, so the close receipt records 6 and the validator refuses it (`more workspaces created than approved`). The Captain decides: re-sign the approval at 6, or record the sixth as a defect with the receipt closed at the approved 5 and the overrun named.
+- **Workspace count**: the approval allowed 5 workspaces; six items (five B tickets plus the DEV-122 rider) each got a local worktree, the Captain re-signed the approval at 6 on 2026-09-07 (「approve A」); the receipt records 6 and S39 names the bookkeeping miss.
 - **e2e gate**: milestone has no CLI flow file → `e2e: not applicable` with reason; a flow for the ship workflow itself belongs to the next batch's dogfood.
 - **Enforcement decision outside defaults**: the FO moved the ship contract test into the required job and deleted the path-filtered workflow (DEV-116 r2). One more step per PR; CI time not measured.
 - DEV-119 AC-2 (a real batch through the skill) is the next batch.

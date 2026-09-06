@@ -2,13 +2,13 @@
  "schema": "kc-plan-approval/v1",
  "receipt_sha256": "471aa64cf7a8d77bfe2057358d55870503f63c15202f59b1ff66771fd8fb3df5",
  "approver": "person:captain",
- "approved_at": "2026-09-06T08:42:54Z",
+ "approved_at": "2026-09-06T17:05:20Z",
  "decision": "go",
- "max_workspaces": 5,
+ "max_workspaces": 6,
  "concurrency": 2,
  "repair_rounds": 2,
- "quote": "批准",
- "quote_source": "Captain, chat, 2026-09-06: 「批准」 in reply to the FO's gate line recommending 'go · 5 workspaces · concurrency 2 · repair 2 · Pilot · 122 進'; the parameters are the FO's recommendation, approved by that word",
+ "quote": "批准 · approve A",
+ "quote_source": "Captain, chat, 2026-09-06 「批准」 on the FO's line 'go · 5 workspaces · concurrency 2 · repair 2 · Pilot · 122 進'; re-signed 2026-09-07 「approve A」 raising max_workspaces to 6 after S39 (the DEV-122 rider's worktree was never counted)",
  "defaults": {
   "findings_outside_brief": [
    "security",
