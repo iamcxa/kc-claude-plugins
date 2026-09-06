@@ -343,14 +343,18 @@ polling loop, retry, or daemon.
 
 A Milestone's CLI journey lives at `docs/ship-flow/flows/<milestone-slug>.yaml`
 in e2e-pipeline's `Execute external` step shape, consumed read-only by
-`scripts/ship-flow/e2e-cli.sh`; the slug is the milestone name lowercased with
-runs of non-alphanumeric characters collapsed to a single hyphen.
+`scripts/ship-flow/e2e-cli.sh`; the slug lowercases the milestone name, keeps
+every Unicode letter and digit, collapses every other run of characters
+(including underscore) to a single hyphen, and strips leading/trailing
+hyphens -- a name that slugifies to empty refuses with exit 2.
 `scripts/ship-flow/e2e-gate.py <plan-receipt.json> <close-receipt.json>` reads
 the plan receipt's `dispatch_order` and `milestones` for the batch's named
-milestone and the close receipt's per-issue `candidate` for the stacked head
-(the last dispatch-order issue that carries each, since an
-accepted-without-PR layer carries neither), then picks the batch's UAT-ready
-shape: a milestone with a flow file runs `e2e-cli.sh` at the stacked head and
-reports its log path and exit code; a milestone with no flow file records
-`e2e: not applicable` with the reason and exits 0; no milestone named exits
-non-zero and the batch is not UAT-ready.
+milestone (the last dispatch-order issue whose entry carries one) and,
+independently, the close receipt's per-issue `candidate` for the stacked head
+(the last dispatch-order issue whose entry carries one -- not necessarily the
+same issue; an issue accepted without a PR carries neither field, so both
+lookups skip it), resolves that head to a fixed commit, then picks the
+batch's UAT-ready shape: a milestone with a flow file runs `e2e-cli.sh` at
+the resolved head and reports its log path and exit code; a milestone with
+no flow file records `e2e: not applicable` with the reason and exits 0; no
+milestone named exits non-zero and the batch is not UAT-ready.

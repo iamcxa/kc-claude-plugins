@@ -12,6 +12,10 @@
 # zero `Execute external` steps, or a step whose `expect` is not the
 # recognized `exit code <N>` form. All `expect` values are validated before
 # any step runs, so a config error never runs a command past it.
+#
+# A step's command runs in the candidate tree with LINEAR_API_KEY, GH_TOKEN,
+# GITHUB_TOKEN, CONDUCTOR_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, and
+# CODEX_API_KEY stripped -- the same list without-it.sh strips.
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
@@ -29,6 +33,12 @@ if [ ! -f "$flow_abs" ]; then
 fi
 
 timestamp() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
+
+run_stripped() {
+  env -u LINEAR_API_KEY -u GH_TOKEN -u GITHUB_TOKEN -u CONDUCTOR_API_KEY \
+    -u ANTHROPIC_API_KEY -u OPENAI_API_KEY -u CODEX_API_KEY \
+    bash -c "$1"
+}
 
 parsed_file="$(mktemp)"
 parsed_err="$(mktemp)"
@@ -86,7 +96,7 @@ for i in "${!steps_run[@]}"; do
 
   echo "$(timestamp) step $step_num: $run_cmd (expect: $expect)"
   set +e
-  (cd "$worktree_dir" && eval "$run_cmd")
+  (cd "$worktree_dir" && run_stripped "$run_cmd")
   actual_code=$?
   set -e
 
