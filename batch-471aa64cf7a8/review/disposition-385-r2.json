@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "all 4 r1 findings closed in r2; FO ran pin.test.py at 94c2696e: all checks passed"
+}

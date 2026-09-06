@@ -9,7 +9,8 @@
    "category": "security",
    "quote": "        digest.update(b\"resource\\0\")",
    "summary": "Digest concatenates path and bytes without length prefixes; two different content pairs on the same paths collide (verified computationally).",
-   "failure_scenario": "Bytes redistributed between kernel.md and plugin.json keep contract_digest constant while kernel.md changes."
+   "failure_scenario": "Bytes redistributed between kernel.md and plugin.json keep contract_digest constant while kernel.md changes.",
+   "status": "closed in r2 (94c2696e): length-prefixed digest + test; write refuses regression/unreadable/batch mismatch + test"
   },
   {
    "file": "kc-ship-flow/scripts/pin.py",
@@ -17,7 +18,8 @@
    "category": "data-loss",
    "quote": "        pin_path.write_text(text + \"\\n\", encoding=\"utf-8\")",
    "summary": "write overwrites a later-station pin with an earlier one, no monotonicity check.",
-   "failure_scenario": "A retried earlier step rewinds the pin; merged check then fails or tooling reads a regressed batch."
+   "failure_scenario": "A retried earlier step rewinds the pin; merged check then fails or tooling reads a regressed batch.",
+   "status": "closed in r2 (94c2696e): length-prefixed digest + test; write refuses regression/unreadable/batch mismatch + test"
   },
   {
    "file": "kc-ship-flow/scripts/pin.py",
@@ -25,7 +27,8 @@
    "category": "correctness",
    "quote": "        pin_path.write_text(text + \"\\n\", encoding=\"utf-8\")",
    "summary": "cmd_write never reads the existing pin, so write --station <earlier> over a later-station pin silently regresses the chain (verified: merged then accepted both exit 0).",
-   "failure_scenario": "A rerun of an earlier station's write rewinds the pin; downstream checks read a valid-looking wrong lineage."
+   "failure_scenario": "A rerun of an earlier station's write rewinds the pin; downstream checks read a valid-looking wrong lineage.",
+   "status": "closed in r2 (94c2696e): length-prefixed digest + test; write refuses regression/unreadable/batch mismatch + test"
   },
   {
    "file": "kc-ship-flow/scripts/pin.test.py",
@@ -33,7 +36,9 @@
    "category": "test-coverage",
    "quote": "    test_wrong_previous_station_is_refused(sandbox, pin_path)",
    "summary": "No test covers write overwriting an existing pin with an earlier station.",
-   "failure_scenario": "The write/overwrite contract is unverified either way."
+   "failure_scenario": "The write/overwrite contract is unverified either way.",
+   "status": "closed in r2 (94c2696e): length-prefixed digest + test; write refuses regression/unreadable/batch mismatch + test"
   }
- ]
+ ],
+ "head_r2": "94c2696e277a10b213de04796aa2f7598c8a2a02"
 }
