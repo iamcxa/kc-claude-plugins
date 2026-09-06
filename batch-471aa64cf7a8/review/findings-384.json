@@ -1,0 +1,31 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#384",
+ "head_r1": "690c5b6180f565ac8ab00b7b71071ef3629f0d34",
+ "reviewers": [
+  "tob-actions-auditor: []",
+  "code-reviewer: 2"
+ ],
+ "findings": [
+  {
+   "file": "kc-ship-flow/references/kernel.md",
+   "line": 3,
+   "category": "correctness",
+   "quote": "plan-flow, kc-dev-flow and kc-ship-flow are independent units connected only by versioned input/output contracts; this kernel cites neither of the others.",
+   "summary": "The sentence claims it cites neither sibling while naming both; FO-authored wording in the Brief.",
+   "failure_scenario": "A doc check reads the literal claim as proof of no cross-reference.",
+   "disposition": "repair round 2 (sentence replaced: names the siblings, adopts no rule)",
+   "status": "closed in r2 (054ce409)"
+  },
+  {
+   "file": "kc-ship-flow/scripts/contract-test.py",
+   "line": 2,
+   "category": "test-coverage",
+   "quote": "print(\"kc-ship-flow contract-test: no contracts registered yet\")",
+   "summary": "Placeholder always exits 0; by B1 design, B2 (DEV-116) registers the real tests.",
+   "failure_scenario": "A later PR under kc-ship-flow/ shows a green job that asserted nothing.",
+   "disposition": "listed \u2014 residual until DEV-116 lands"
+  }
+ ],
+ "head_r2": "054ce4092b297f6cfbda458938f731cd6b6a09b7"
+}
