@@ -1,0 +1,5 @@
+{
+  "dispatch_order": ["DEV-000"],
+  "milestones": [{"id": "m1", "name": "A journey not yet built"}],
+  "issues": {"DEV-000": {"milestone": "m1"}}
+}

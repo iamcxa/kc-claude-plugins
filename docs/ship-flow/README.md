@@ -341,6 +341,24 @@ prints the session's last fenced `## Evidence` block, or exits 1 with `no
 evidence block` when the transcript has none. One read per invocation; no
 polling loop, retry, or daemon.
 
+A Milestone's CLI journey lives at `docs/ship-flow/flows/<milestone-slug>.yaml`
+in e2e-pipeline's `Execute external` step shape, consumed read-only by
+`scripts/ship-flow/e2e-cli.sh`; the slug lowercases the milestone name, keeps
+every Unicode letter and digit, collapses every other run of characters
+(including underscore) to a single hyphen, and strips leading/trailing
+hyphens -- a name that slugifies to empty refuses with exit 2.
+`scripts/ship-flow/e2e-gate.py <plan-receipt.json> <close-receipt.json>` reads
+the plan receipt's `dispatch_order` and `milestones` for the batch's named
+milestone (the last dispatch-order issue whose entry carries one) and,
+independently, the close receipt's per-issue `candidate` for the stacked head
+(the last dispatch-order issue whose entry carries one -- not necessarily the
+same issue; an issue accepted without a PR carries neither field, so both
+lookups skip it), resolves that head to a fixed commit, then picks the
+batch's UAT-ready shape: a milestone with a flow file runs `e2e-cli.sh` at
+the resolved head and reports its log path and exit code; a milestone with
+no flow file records `e2e: not applicable` with the reason and exits 0; no
+milestone named exits non-zero and the batch is not UAT-ready.
+
 `kc-pr-review` is a skill; the repository's own
 `kc-pr-flow/scripts/review-ablation.sh` runs it headless for its ablation
 harness, but this station does not -- it runs `kc-pr-review` only inside a
