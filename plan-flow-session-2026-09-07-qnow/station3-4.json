@@ -1,0 +1,58 @@
+{
+ "project_id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+ "project_name": "架構收斂與 POC 瘦身",
+ "code_repo": "iamcxa/qnow",
+ "cycle_id": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "user_value": "Kent obtains a revision-bound, secret-safe QNow PoC acceptance receipt: three hosted actors prove assignment, tenant isolation, exact-once claim and readback, with cleanup to zero remainder.",
+ "hypothesis": "If we land the three green PRs through the ship stations and then run DEV-37 as one dispatched, recorded acceptance, then the QNow PoC closes with a receipt an independent validation can read, instead of staying blocked behind unmerged prerequisites.",
+ "wedge": "Kent as FO on iamcxa/qnow only, kc-ship-flow installed locally from main. This batch: (1) DEV-25, DEV-35, DEV-36 — existing PRs #1177/#1175/#1174 taken through review → e2e → merge → close with a batch record (no new build); (2) DEV-37 rewritten into an admissible Brief (Accepted outcome, Non-goals, ACs from its own 完成條件/單次執行範圍) and dispatched once DEV-35/36 land. Not in it: DEV-17..23 (architecture tickets, one paragraph each — a separate plan session), DEV-23 (blocked by DEV-37), qnow's own docs/ship commission and retiring qnow's docs/ship-flow (next batch).",
+ "outcome": "The three prerequisite PRs are merged with review dispositions and an e2e result in a qnow batch record; DEV-37 produces the acceptance receipt its 完成條件 names (revision-bound, secret-safe, handed to independent validation) in a single run with cleanup verified to zero remainder; the batch closes with a validated close receipt.",
+ "falsifier": "Any of: a prerequisite PR is merged without a review disposition in the batch record; DEV-37 needs a second deploy or a retry to pass; the acceptance receipt names a secret, PII, URL or raw provider error; cleanup leaves a non-zero census.",
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing leaves #1174/#1175/#1177 open (green since 2026-09-01) and DEV-37 blocked; the PoC has no acceptance receipt.",
+   "agreed": false
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is hand merges from the building chat plus DEV-37's detailed run script in its own body; kc-ship-flow's stations exist on main and can run on an existing PR without a worker Evidence block only at the review/e2e/merge/close stations (accept needs a block — recorded as not applicable for pre-built PRs).",
+   "agreed": false
+  },
+  {
+   "id": "P3",
+   "statement": "Premise falsifier — remove the approach (ship stations + one dispatched DEV-37): the outcome cannot hold, because without a recorded run the receipt is a chat transcript, and without merging the prerequisites DEV-37 cannot start.",
+   "agreed": false
+  }
+ ],
+ "exit": [
+  "DEV-25, DEV-35, DEV-36 merged with review dispositions and an e2e result recorded in a qnow batch.",
+  "DEV-37's acceptance receipt exists and its cleanup census is zero; DEV-37 Done.",
+  "One question to the Captain inside the batch at most: who holds the six secrets for the DEV-37 run (a cloud worker with provisioned env, or Kent's own machine)."
+ ],
+ "journey": {
+  "persona": "Kent (FO)",
+  "start": "three green PRs idle and DEV-37 blocked",
+  "end": "acceptance receipt in hand, PoC closable",
+  "observable": "the batch record lists three merges with dispositions, one DEV-37 run log, one receipt, cleanup census 0"
+ },
+ "issue_cut": {
+  "order": [
+   "DEV-25",
+   "DEV-35",
+   "DEV-36",
+   "DEV-37"
+  ],
+  "deferred": [
+   "DEV-17",
+   "DEV-18",
+   "DEV-19",
+   "DEV-20",
+   "DEV-21",
+   "DEV-22",
+   "DEV-23"
+  ],
+  "note": "DEV-25/35/36 need Accepted outcome/Non-goals/AC sections added from their existing 目的/範圍/驗收 text to pass L4; DEV-37 the same. Rewrites are conversions of existing text, shown to the Captain before admission."
+ },
+ "material_risk": "DEV-37 runs against real hosted infrastructure with six production/functions secrets held in memory and allows exactly one deploy; a local subagent cannot hold those secrets. The run needs either a Conductor cloud worker whose image/env carries them, or Kent running it. This is the one decision the batch needs before dispatching DEV-37."
+}
