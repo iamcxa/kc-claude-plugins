@@ -3,7 +3,7 @@
  "project": {
   "id": "6072d592-8704-448b-bb8d-66471b0557f9",
   "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
-  "content": "## User value\n\nKent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.\n\n**Hypothesis:** If we run review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.\n\n**Wedge:** Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).\n\n**Accepted outcome:** ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.\n\n**Falsifier:** The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates.\n\n**Premises**\n\n* P1: Doing nothing keeps the Captain reading the chat and pressing 繼續 to advance a batch; on 2026-09-05 that was about ten nudges and the laptop stayed open.\n* P2: The existing partial solution is the accept station (#373, #377) plus a hand-written uat.md; kc-pr-review exists and ship-flow never calls it.\n* P3: Premise falsifier — remove the approach (scripts for the three stations and the close): the outcome (one message, zero questions) cannot hold, because without the scripts the FO writes by hand and the Captain waits; the value depends on the mechanism, not on a document.\n\n**Exit**\n\n* DEV-104, DEV-105, DEV-106, DEV-107 accepted by the accept station and merged.\n* The next batch's record shows kc-pr-review dispositions, an e2e artifact or a written reason, one generated UAT document, exactly one Slack message, and a validated close receipt with every defect dispositioned.\n* Captain questions between first dispatch and the UAT message: zero (DEV-94 AC-3).\n\nPlan session 2026-09-06; stations 0–4 recorded on the state branch under plan-flow-session-2026-09-06/.",
+  "content": "## User value\n\nKent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.\n\n**Hypothesis:** If we run review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.\n\n**Wedge:** Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).\n\n**Accepted outcome:** ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.\n\n**Falsifier:** The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates.\n\n**Premises**\n\n* P1: Doing nothing keeps the Captain reading the chat and pressing \u7e7c\u7e8c to advance a batch; on 2026-09-05 that was about ten nudges and the laptop stayed open.\n* P2: The existing partial solution is the accept station (#373, #377) plus a hand-written uat.md; kc-pr-review exists and ship-flow never calls it.\n* P3: Premise falsifier \u2014 remove the approach (scripts for the three stations and the close): the outcome (one message, zero questions) cannot hold, because without the scripts the FO writes by hand and the Captain waits; the value depends on the mechanism, not on a document.\n\n**Exit**\n\n* DEV-104, DEV-105, DEV-106, DEV-107 accepted by the accept station and merged.\n* The next batch's record shows kc-pr-review dispositions, an e2e artifact or a written reason, one generated UAT document, exactly one Slack message, and a validated close receipt with every defect dispositioned.\n* Captain questions between first dispatch and the UAT message: zero (DEV-94 AC-3).\n\nPlan session 2026-09-06; stations 0\u20134 recorded on the state branch under plan-flow-session-2026-09-06/.",
   "initiatives": {
    "nodes": []
   },
@@ -26,16 +26,34 @@
   "issues": {
    "nodes": [
     {
-     "id": "5a0e79c0-acf7-4e72-a60a-596ee0b1fac3",
-     "identifier": "DEV-122",
-     "url": "https://linear.app/duckbase-co/issue/DEV-122/plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un-cycled",
-     "branchName": "feature/dev-122-plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un",
+     "id": "66c48ebe-f7c6-4322-8dac-481dde653545",
+     "identifier": "DEV-123",
+     "url": "https://linear.app/duckbase-co/issue/DEV-123/plan-lint-l2-must-fail-when-nothing-is-admitted-and-the-dev89-l9",
+     "branchName": "feature/dev-123-plan-lint-l2-must-fail-when-nothing-is-admitted-and-the",
      "cycle": null,
      "projectMilestone": {
       "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f"
      },
      "state": {
       "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "5a0e79c0-acf7-4e72-a60a-596ee0b1fac3",
+     "identifier": "DEV-122",
+     "url": "https://linear.app/duckbase-co/issue/DEV-122/plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un-cycled",
+     "branchName": "feature/dev-122-plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f"
+     },
+     "state": {
+      "type": "completed"
      },
      "inverseRelations": {
       "nodes": []
@@ -121,7 +139,7 @@
      "id": "770673e8-c347-453c-8197-0c657b3660ba",
      "identifier": "DEV-118",
      "url": "https://linear.app/duckbase-co/issue/DEV-118/b4-poc-kc-ship-flow-a-batch-station-pin-loader-with-its-own-digest",
-     "branchName": "feature/dev-118-b4-poc-kc-ship-flow-a-batch-×-station-pin-loader-with-its",
+     "branchName": "feature/dev-118-b4-poc-kc-ship-flow-a-batch-\u00d7-station-pin-loader-with-its",
      "cycle": {
       "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
      },
@@ -306,13 +324,18 @@
   },
   {
    "rule": "L2 one cycle",
-   "pass": false,
-   "why": "{'b788c52d-8370-475f-be4f-8fcd88dd03d6', None}"
+   "pass": true,
+   "why": "{'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 3"
   },
   {
    "rule": "L3 milestone membership",
    "pass": true,
    "why": ""
+  },
+  {
+   "rule": "L4 admission DEV-123",
+   "pass": true,
+   "why": "2 non-goals"
   },
   {
    "rule": "L4 admission DEV-122",
@@ -382,17 +405,22 @@
   {
    "rule": "L6 blockedBy is a DAG",
    "pass": true,
-   "why": "blocker->blocked [('DEV-119', 'DEV-120'), ('DEV-117', 'DEV-120'), ('DEV-116', 'DEV-119'), ('DEV-118', 'DEV-119'), ('DEV-115', 'DEV-117'), ('DEV-115', 'DEV-116'), ('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']"
+   "why": "blocker->blocked [('DEV-119', 'DEV-120'), ('DEV-117', 'DEV-120'), ('DEV-116', 'DEV-119'), ('DEV-118', 'DEV-119'), ('DEV-115', 'DEV-117'), ('DEV-115', 'DEV-116'), ('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-123', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']"
   },
   {
    "rule": "L6 blockedBy direction agrees with identifier order",
    "pass": true,
-   "why": "intent order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107', 'DEV-115', 'DEV-116', 'DEV-117', 'DEV-118', 'DEV-119', 'DEV-120', 'DEV-121', 'DEV-122']; violations none"
+   "why": "intent order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107', 'DEV-115', 'DEV-116', 'DEV-117', 'DEV-118', 'DEV-119', 'DEV-120', 'DEV-121', 'DEV-122', 'DEV-123']; violations none"
   },
   {
    "rule": "L7 split advisory (warn only)",
    "pass": true,
-   "why": "12 issues, forked=True; consider Milestones"
+   "why": "13 issues, forked=True; consider Milestones"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-123",
+   "pass": true,
+   "why": "3 ACs"
   },
   {
    "rule": "L8 e2e-able AC DEV-122",
@@ -456,8 +484,8 @@
   },
   {
    "rule": "L9 by-product Issue check",
-   "pass": false,
-   "why": "issues with no unique surface: DEV-107: only surface docs/plan-flow/schema/validate-receipt.py already claimed by DEV-104"
+   "pass": true,
+   "why": "issues with no unique surface: none"
   },
   {
    "rule": "L10 re-verified presence and age",
@@ -472,6 +500,7 @@
   "DEV-118",
   "DEV-121",
   "DEV-122",
+  "DEV-123",
   "DEV-106",
   "DEV-116",
   "DEV-117",
@@ -517,5 +546,5 @@
    "DEV-106"
   ]
  ],
- "receipt_sha256": "e7cb978711a047bbd72682be2b0a1e65cc77cb44ba632ef446e13fdd2517a06c"
+ "receipt_sha256": "b594edc187c40e23f4c589019681ee8519a514f364f610bb5500340ac6a38735"
 }

@@ -26,17 +26,36 @@
   "issues": {
    "nodes": [
     {
-     "id": "5a0e79c0-acf7-4e72-a60a-596ee0b1fac3",
-     "identifier": "DEV-122",
-     "url": "https://linear.app/duckbase-co/issue/DEV-122/plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un-cycled",
-     "description": "## The problem\n\n`plan-lint.py` L9 (by-product surface) and L2 (one cycle) run over every Issue in the Project snapshot, including Done ones. On 2026-09-06, with DEV-104..107 merged and seven B candidates filed, the lint reported `L9 DEV-107: only surface validate-receipt.py already claimed by DEV-104` \u2014 two closed tickets \u2014 and `L2 one cycle {cycle-1, None}` because Backlog candidates have no cycle before admission. Both hide the signal the lint exists for: a live plan with a real by-product or a real cycle split.\n\n## Accepted outcome\n\nL9 and L2 consider only Issues whose state type is not `completed`/`canceled`; Backlog candidates without a cycle are reported by L2 as `unadmitted: N` (warn), and the rule fails only when admitted Issues span more than one cycle. A fixture snapshot with one Done pair sharing a surface and one un-cycled Backlog candidate lints PASS; the same snapshot with the pair set to In Progress lints FAIL on L9.\n\n## Non-goals\n\n* Changing L1, L3\u2013L8, L10.\n* Deciding which candidates get admitted (plan session).\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/plan-lint.py lint <fixture-done-pair.json>` exits 0 and its log prints `L9 \u2026 PASS` and `L2 \u2026 unadmitted: 1`.\n* **AC-2** The same fixture with the pair's state changed to `started` exits non-zero and the log names DEV-107's shared surface.\n* **AC-3** `scripts/kc-dev-flow-contract-test.py` runs both fixtures and exits 0 on main.\n\nRe-verified: `grep -q 'Done' docs/plan-flow/plan-lint.py` exit 1 2026-09-06",
-     "branchName": "feature/dev-122-plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un",
+     "id": "66c48ebe-f7c6-4322-8dac-481dde653545",
+     "identifier": "DEV-123",
+     "url": "https://linear.app/duckbase-co/issue/DEV-123/plan-lint-l2-must-fail-when-nothing-is-admitted-and-the-dev89-l9",
+     "description": "## The problem\n\nAfter DEV-122 (#383), plan-lint L2 passes when no active Issue has a cycle at all (`admitted_cycles` empty \u2192 `len <= 1`), where the pre-change rule failed with `{None}`. Two reviewers confirmed it empirically on 2026-09-06 by clearing every cycle in the dev122 fixtures: `PASS L2 one cycle: set(); unadmitted: 4`. A wholly unplanned project can clear L2; the only signal is free text inside a PASS line. Also, the retained dev89 assertion (`\"PASS L9\" in lint_result.stdout`) is vacuous because all its Issues are completed.\n\n## Accepted outcome\n\nL2 fails with `no admitted Issue` when active Issues exist and none carries a cycle, and keeps passing with `unadmitted: N` when at least one is admitted; a fixture with every Issue un-cycled asserts FAIL L2; the dev89 L9 assertion is replaced by one that exercises the comparison (an active pair sharing a surface in that fixture, or the assertion removed with the dev122-started-pair fixture named as the L9 proof).\n\n## Non-goals\n\n* Changing L9's rule.\n* Any plan-receipt schema change.\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev123-all-unadmitted.snapshot.json` exits non-zero and prints `FAIL L2 one cycle: no admitted Issue`.\n* **AC-2** `python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json` still exits 0 and prints `unadmitted: 1`.\n* **AC-3** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 with the vacuous dev89 L9 assertion gone or made live.\n\nRe-verified: `grep -q 'no admitted Issue' docs/plan-flow/plan-lint.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-123-plan-lint-l2-must-fail-when-nothing-is-admitted-and-the",
      "cycle": null,
      "projectMilestone": {
       "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f"
      },
      "state": {
       "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "5a0e79c0-acf7-4e72-a60a-596ee0b1fac3",
+     "identifier": "DEV-122",
+     "url": "https://linear.app/duckbase-co/issue/DEV-122/plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un-cycled",
+     "description": "## The problem\n\n`plan-lint.py` L9 (by-product surface) and L2 (one cycle) run over every Issue in the Project snapshot, including Done ones. On 2026-09-06, with DEV-104..107 merged and seven B candidates filed, the lint reported `L9 DEV-107: only surface validate-receipt.py already claimed by DEV-104` \u2014 two closed tickets \u2014 and `L2 one cycle {cycle-1, None}` because Backlog candidates have no cycle before admission. Both hide the signal the lint exists for: a live plan with a real by-product or a real cycle split.\n\n## Accepted outcome\n\nL9 and L2 consider only Issues whose state type is not `completed`/`canceled`; Backlog candidates without a cycle are reported by L2 as `unadmitted: N` (warn), and the rule fails only when admitted Issues span more than one cycle. A fixture snapshot with one Done pair sharing a surface and one un-cycled Backlog candidate lints PASS; the same snapshot with the pair set to In Progress lints FAIL on L9.\n\n## Non-goals\n\n* Changing L1, L3\u2013L8, L10.\n* Deciding which candidates get admitted (plan session).\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/plan-lint.py lint <fixture-done-pair.json>` exits 0 and its log prints `L9 \u2026 PASS` and `L2 \u2026 unadmitted: 1`.\n* **AC-2** The same fixture with the pair's state changed to `started` exits non-zero and the log names DEV-107's shared surface.\n* **AC-3** `scripts/kc-dev-flow-contract-test.py` runs both fixtures and exits 0 on main.\n\nRe-verified: `grep -q 'Done' docs/plan-flow/plan-lint.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-122-plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f"
+     },
+     "state": {
+      "type": "completed"
      },
      "inverseRelations": {
       "nodes": []

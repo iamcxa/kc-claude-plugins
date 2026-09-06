@@ -1,3 +1,36 @@
-FAIL L2 one cycle: {'b788c52d-8370-475f-be4f-8fcd88dd03d6', None}
-FAIL L9 by-product Issue check: issues with no unique surface: DEV-107: only surface docs/plan-flow/schema/validate-receipt.py already claimed by DEV-104
-LINT FAIL | receipt e7cb978711a047bb | order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']
+PASS L1 one-line User value: 'Kent dispatches a batch, leaves, and returns to one Slack me'
+PASS L2 one cycle: {'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 3
+PASS L3 milestone membership
+PASS L4 admission DEV-123: 2 non-goals
+PASS L4 admission DEV-122: 2 non-goals
+PASS L4 admission DEV-121: 2 non-goals
+PASS L4 admission DEV-120: 2 non-goals
+PASS L4 admission DEV-119: 2 non-goals
+PASS L4 admission DEV-118: 2 non-goals
+PASS L4 admission DEV-117: 2 non-goals
+PASS L4 admission DEV-116: 2 non-goals
+PASS L4 admission DEV-115: 3 non-goals
+PASS L4 admission DEV-107: 3 non-goals
+PASS L4 admission DEV-106: 3 non-goals
+PASS L4 admission DEV-105: 3 non-goals
+PASS L4 admission DEV-104: 4 non-goals
+PASS L5 initiative when >1 project: single project; not triggered
+PASS L6 blockedBy is a DAG: blocker->blocked [('DEV-119', 'DEV-120'), ('DEV-117', 'DEV-120'), ('DEV-116', 'DEV-119'), ('DEV-118', 'DEV-119'), ('DEV-115', 'DEV-117'), ('DEV-115', 'DEV-116'), ('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-123', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']
+PASS L6 blockedBy direction agrees with identifier order: intent order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107', 'DEV-115', 'DEV-116', 'DEV-117', 'DEV-118', 'DEV-119', 'DEV-120', 'DEV-121', 'DEV-122', 'DEV-123']; violations none
+PASS L7 split advisory (warn only): 13 issues, forked=True; consider Milestones
+PASS L8 e2e-able AC DEV-123: 3 ACs
+PASS L8 e2e-able AC DEV-122: 3 ACs
+PASS L8 e2e-able AC DEV-121: 3 ACs
+PASS L8 e2e-able AC DEV-120: 3 ACs
+PASS L8 e2e-able AC DEV-119: 3 ACs
+PASS L8 e2e-able AC DEV-118: 3 ACs
+PASS L8 e2e-able AC DEV-117: 3 ACs
+PASS L8 e2e-able AC DEV-116: 3 ACs
+PASS L8 e2e-able AC DEV-115: 3 ACs
+PASS L8 e2e-able AC DEV-107: 6 ACs
+PASS L8 e2e-able AC DEV-106: 4 ACs
+PASS L8 e2e-able AC DEV-105: 5 ACs
+PASS L8 e2e-able AC DEV-104: 4 ACs
+PASS L9 by-product Issue check: issues with no unique surface: none
+PASS L10 re-verified presence and age: 14-day bound; violations: none
+LINT PASS | receipt b594edc187c40e23 | order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-123', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']
