@@ -1,0 +1,1010 @@
+diff --git a/kc-pr-flow/docs/review-runtime.md b/kc-pr-flow/docs/review-runtime.md
+index 884f584f..460e0e80 100644
+--- a/kc-pr-flow/docs/review-runtime.md
++++ b/kc-pr-flow/docs/review-runtime.md
+@@ -348,7 +348,8 @@ flowchart LR
+ 
+ Both typed and profiled flags must be exactly `on` for the new adapter. Use a
+ private, invocation-scoped run directory: it contains selected source material,
+-provider reports and a non-authoritative audit, not only runtime metadata. Do
++provider reports (including exact stdout in `provider-*.raw`) and a
++non-authoritative audit, not only runtime metadata. Do
+ not publish these artifacts or copy them into the durable event log. Normal
+ confirmation/posting retention remains owned by the existing runtime.
+ 
+@@ -379,7 +380,13 @@ Both use the same `--cost-ledger`, `--budget`, `--out-dir`, model, effort and
+ timeout reservation/finalization owner as arms. The comparison requires six
+ costed admissions and five matching costed adjudications; backup attempts stay
+ in the same directory and budget. Findings retain their canonical comparison
+-fields; the blind summary is uniformly generated from their count.
++fields; the blind summary is uniformly generated from their count, and the
++recommendation must be APPROVE, COMMENT or REQUEST_CHANGES. Repeated blind,
++seal and compare phases refuse without replacing existing sealed artifacts.
++
++Ambiguous repeated quote anchors stay in the review body without an invented
++inline line. Audit clocks remain Python integer nanoseconds without a floating
++point safe-integer bound; their differences, not their epoch, measure elapsed time.
+ 
+ Every attempted unit retains a v4 receipt. `known_cost_usd` preserves reported
+ subtotals; incomplete usage leaves `cost_usd: null` and is never scoreable.
+diff --git a/kc-pr-flow/schemas/review-capability-v1.schema.json b/kc-pr-flow/schemas/review-capability-v1.schema.json
+index 4f32173f..f79cbba6 100644
+--- a/kc-pr-flow/schemas/review-capability-v1.schema.json
++++ b/kc-pr-flow/schemas/review-capability-v1.schema.json
+@@ -9,6 +9,7 @@
+     "Commit": {"type": "string", "pattern": "^[0-9a-f]{40}$", "maxLength": 40},
+     "Repository": {"type": "string", "pattern": "^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+(?![\\s\\S])", "maxLength": 256},
+     "Positive": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
++    "MonotonicNs": {"type": "integer", "minimum": 1},
+     "Tokens": {"type": "array", "items": {"$ref": "#/$defs/Token"}, "maxItems": 64, "uniqueItems": true},
+     "Signal": {"enum": ["always", "code_change", "contract_change", "dependency_change", "workflow_change", "security_change", "stacked_pr_shape"]},
+     "EvidenceClass": {"enum": ["diff_hunks", "repository_rules", "related_source", "mechanical_tests", "pr_body", "issue", "review_comment"]},
+@@ -346,7 +347,7 @@
+         "event_type": {"enum": ["identity_bound", "invoked", "accepted", "rejected", "collated", "expanded"]},
+         "payload_sha256": {"$ref": "#/$defs/Hash"}, "prior_hash": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Hash"}]}, "self_hash": {"$ref": "#/$defs/Hash"},
+         "occurred_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+00:00$", "maxLength": 64},
+-        "started_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]}, "finished_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Positive"}]},
++        "started_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/MonotonicNs"}]}, "finished_ns": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/MonotonicNs"}]},
+         "capability": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Token"}]}, "attempt": {"enum": [null, 1, 2]},
+         "result": {"enum": [null, "succeeded", "transient_failure", "terminal_failure", "unavailable"]},
+         "evidence_payload_bytes": {"anyOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]}
+diff --git a/kc-pr-flow/scripts/review-ablation-core.py b/kc-pr-flow/scripts/review-ablation-core.py
+index 790657c1..20fe8984 100755
+--- a/kc-pr-flow/scripts/review-ablation-core.py
++++ b/kc-pr-flow/scripts/review-ablation-core.py
+@@ -668,8 +668,11 @@ def pilot_read(path):
+ 
+ 
+ def pilot_write(path, value):
+-    with pathlib.Path(path).open("xb") as stream:
+-        stream.write(pilot_bytes(value) + b"\n")
++    try:
++        with pathlib.Path(path).open("xb") as stream:
++            stream.write(pilot_bytes(value) + b"\n")
++    except FileExistsError:
++        die("sealed artifact already exists: " + str(path))
+     return value
+ 
+ 
+@@ -824,14 +827,15 @@ def pilot_cost(path):
+     }
+ 
+ 
+-def pilot_telemetry(directory, model_id=None):
++def pilot_telemetry(directory, model_id=None, arm_dir=None, terminal=None):
+     events = pilot_read(pathlib.Path(directory) / "audit.json")
+     prior = None
+     invocations = []
+     prepared = pilot_read(pathlib.Path(directory) / "prepared.json")
+     identity = prepared["identity"]
+     spec = importlib.util.spec_from_file_location(
+-        "pilot_protocol", pathlib.Path(__file__).with_name("review-capability.py")
++        "pilot_protocol", pathlib.Path(arm_dir) / "scripts/review-capability.py"
++        if arm_dir else pathlib.Path(__file__).with_name("review-capability.py")
+     )
+     protocol = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(protocol)
+@@ -899,6 +903,11 @@ def pilot_telemetry(directory, model_id=None):
+             ):
+                 die("invalid invocation telemetry")
+             invocations.append(event)
++    if terminal:
++        protocol.validate(terminal, "RunTerminal")
++        if terminal["identity"] != identity:
++            die("terminal telemetry identity mismatch")
++        return {"capability_cost_usd": provider_cost, "capability_cost_status": "incomplete"}
+     if not events or events[-1]["event_type"] != "collated":
+         die("side-car does not seal a collated run")
+     policy = pilot_read(pathlib.Path(directory) / "policy.json")
+@@ -1111,6 +1120,10 @@ def pilot_reserve(output, run, manifest, cost, budget):
+ 
+ def cmd_pilot_run(args):
+     unit_kind = getattr(args, "unit_kind", "arm")
++    if unit_kind != "arm" and not getattr(args, "unit_input", None):
++        die(unit_kind + " requires unit_input")
++    if unit_kind == "admission" and not getattr(args, "planner_arm_dir", None):
++        die("admission requires planner_arm_dir")
+     cost, budget, output = pilot_budget(args)
+     if unit_kind == "adjudication":
+         return pilot_adjudication_run(args, cost, budget, output)
+@@ -1633,7 +1646,7 @@ def pilot_execute(
+         "run_terminal": terminal,
+     }
+     if terminal:
+-        telemetry = pilot_telemetry(protocol_dir, models[0])
++        telemetry = pilot_telemetry(protocol_dir, models[0], args.arm_dir, terminal)
+         result["known_cost_usd"] += telemetry["capability_cost_usd"]
+         result["cost_usd"] = result["known_cost_usd"]
+         if telemetry["capability_cost_status"] != "complete":
+@@ -1647,7 +1660,7 @@ def pilot_execute(
+     elif not terminal:
+         if protocol_result is None:
+             die("treatment has no derived protocol result")
+-        telemetry = pilot_telemetry(protocol_dir, models[0])
++        telemetry = pilot_telemetry(protocol_dir, models[0], args.arm_dir)
+         if telemetry.pop("capability_cost_status") != "complete":
+             die("whole-run usage includes unknown capability attempts")
+         telemetry.pop("capability_unknown_attempts")
+@@ -1993,6 +2006,8 @@ def pilot_normalize(records):
+     for record in records:
+         sample = pilot_hash({"record": record["sha256"], "domain": "blind-sample"})
+         driver = record["receipt"]["driver"]
++        if driver.get("recommendation") not in ("APPROVE", "COMMENT", "REQUEST_CHANGES"):
++            die("invalid blind recommendation")
+         findings = []
+         for finding in driver["findings"]:
+             if (
+@@ -2059,6 +2074,8 @@ def cmd_pilot_compare(args):
+     envelopes, mapping = pilot_normalize(records)
+     root = pathlib.Path(args.blind_dir)
+     if args.phase == "blind":
++        if root.exists():
++            die("blind directory already exists")
+         root.mkdir(mode=0o700)
+         pilot_write(root / "sealed-mapping.json", mapping)
+         return pilot_write(
+diff --git a/kc-pr-flow/scripts/review-ablation.test.sh b/kc-pr-flow/scripts/review-ablation.test.sh
+index 429571be..267852ff 100644
+--- a/kc-pr-flow/scripts/review-ablation.test.sh
++++ b/kc-pr-flow/scripts/review-ablation.test.sh
+@@ -900,17 +900,23 @@ import subprocess
+ import sys
+ import os
+ import shutil
++import contextlib
++import io
+ 
+ here, root = map(pathlib.Path, sys.argv[1:])
+ spec = importlib.util.spec_from_file_location("ablation", here / "review-ablation-core.py")
+ core = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(core)
+ 
+-def refuses(call):
++def refuses(call, diagnostic=None):
++    errors = io.StringIO()
+     try:
+-        call()
++        with contextlib.redirect_stderr(errors):
++            call()
+     except SystemExit as error:
+         assert error.code != 0
++        if diagnostic:
++            assert diagnostic in errors.getvalue(), errors.getvalue()
+     else:
+         raise AssertionError("invalid fixture was accepted")
+ 
+@@ -1006,6 +1012,9 @@ equivalent = copy.deepcopy(joined)
+ for record in equivalent:
+     record['receipt']['driver']['summary'] = 'Required questions resolved' if record['manifest']['arm'] == 'treatment' else 'Clean'
+ assert len({s['summary'] for s in core.pilot_normalize(equivalent)[0]}) == 1
++equivalent[0]['receipt']['driver']['recommendation'] = 'APPROVE (profiled treatment)'
++refuses(lambda: core.pilot_normalize(equivalent), 'recommendation')
++equivalent[0]['receipt']['driver']['recommendation'] = 'APPROVE'
+ equivalent[0]['receipt']['driver']['findings'] = [{}]
+ refuses(lambda: core.pilot_normalize(equivalent))
+ backup_runs = root / "backup-runs"
+@@ -1036,6 +1045,9 @@ refuses(lambda: core.pilot_join(backup_runs, rows, {**substitution, "replacement
+ refuses(lambda: core.pilot_join(backup_runs, rows, {**substitution, "control_terminal":{"reason":"timeout"}}))
+ args = argparse.Namespace(corpus=str(corpus), manifest_dir=str(runs), substitution=None, blind_dir=str(root / "blind"), phase="blind", adjudication=None)
+ blinded = core.cmd_pilot_compare(args)
++sealed_bytes = {p.name:p.read_bytes() for p in pathlib.Path(args.blind_dir).iterdir()}
++refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
++assert sealed_bytes == {p.name:p.read_bytes() for p in pathlib.Path(args.blind_dir).iterdir()}
+ assert all("arm" not in sample and "coverage" not in sample and "wallclock_ms" not in sample for sample in blinded["samples"])
+ judgments = root / "judgments.json"
+ core.pilot_write(judgments, {"schema": "kc-pr-flow.pilot-adjudication/v1", "input_sha256": core.pilot_hash(blinded), "findings": []})
+@@ -1048,8 +1060,10 @@ def costed_judgments(directory, inputs, mapping, judgments):
+ costed_judgments(runs, blinded, core.pilot_read(root / 'blind/sealed-mapping.json'), core.pilot_read(judgments))
+ args.adjudication, args.phase = str(judgments), "seal"
+ core.cmd_pilot_compare(args)
++refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
+ args.phase = "compare"
+ assert core.cmd_pilot_compare(args)["promote"] is True
++refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
+ for unit in ('1-admission', '1-adjudication'):
+     path = runs / unit / 'receipt.json'
+     saved, manifest = core.pilot_read(path), core.pilot_read(path.with_name('manifest.json'))
+@@ -1204,6 +1218,11 @@ unit_args.unit_kind, unit_args.unit_input, unit_args.slot = 'admission', str(uni
+ planner_arm = root / 'planner-arm'
+ core.cmd_pilot_arm(argparse.Namespace(source_repo=str(source), commit=commit, dest=str(planner_arm), arm='treatment'))
+ unit_args.planner_arm_dir = str(planner_arm)
++for field in ('unit_input', 'planner_arm_dir'):
++    saved = getattr(unit_args, field)
++    setattr(unit_args, field, None)
++    refuses(lambda: core.cmd_pilot_run(unit_args), 'requires ' + field)
++    setattr(unit_args, field, saved)
+ unit_input.write_text(unit_input.read_text().replace('a'*40, commit).replace('b'*40, commit))
+ stub.write_text('#!' + sys.executable + '\n' + '''
+ import json, os, pathlib
+@@ -1218,6 +1237,8 @@ assert core.pilot_read(out / '3-admission/manifest.json')['unit_kind'] == 'admis
+ assert admission['driver']['review_config']['modes'] == core.PILOT_MODES
+ assert admission['driver']['planner_modes'] == core.PILOT_MODES
+ unit_args.unit_kind, unit_args.slot = 'adjudication', 1
++unit_args.unit_input = None
++refuses(lambda: core.cmd_pilot_run(unit_args), 'requires unit_input')
+ core.pilot_write(root / 'pair-input.json', {'schema':'kc-pr-flow.pilot-blind-input/v1', 'samples':blinded['samples'][:2]})
+ unit_args.unit_input = str(root / 'pair-input.json')
+ stub.write_text('#!' + sys.executable + '\n' + '''
+diff --git a/kc-pr-flow/scripts/review-capability.py b/kc-pr-flow/scripts/review-capability.py
+index 8d976cea..635e42a9 100755
+--- a/kc-pr-flow/scripts/review-capability.py
++++ b/kc-pr-flow/scripts/review-capability.py
+@@ -29,6 +29,10 @@ class Invalid(ValueError):
+     pass
+ 
+ 
++class ConfigurationChanged(Invalid):
++    pass
++
++
+ def unique_object(pairs):
+     result = {}
+     for key, value in pairs:
+@@ -305,11 +309,11 @@ def git(repo, *args):
+     )
+ 
+ 
+-def store(path, value):
++def store(path, value, raw=False):
+     path = pathlib.Path(path)
+     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+     with os.fdopen(descriptor, "wb") as output:
+-        output.write(canonical(value) + b"\n")
++        output.write(value if raw else canonical(value) + b"\n")
+     return str(path)
+ 
+ 
+@@ -727,8 +731,9 @@ def requests(prepared):
+         recomputed != frozen
+         or bundle["shape"] != prepared["shape_bundle"]["shape"]
+         or prepared["binding"]["plan_hash"] != frozen["plan_hash"]
++        or prepared["identity"]["config_hash"] != digest(frozen["review_config"])
+     ):
+-        raise Invalid("plan or shape authority drift")
++        raise ConfigurationChanged("plan or configuration authority drift")
+     bindings = {b["evidence_class"]: b for b in bundle["bindings"]}
+     expected = {
+         e
+@@ -887,7 +892,7 @@ def dispatch(prepared, command, budget_usd=None):
+         attempts, final = [], None
+         for ordinal in (1, 2):
+             started, process = time.monotonic_ns(), None
+-            envelope = None
++            envelope, output = None, b""
+             outcome = "unavailable"
+             with tempfile.TemporaryDirectory(dir=prepared["directory"]) as working:
+                 environment = {
+@@ -930,10 +935,13 @@ def dispatch(prepared, command, budget_usd=None):
+                             envelope = json.loads(
+                                 output, object_pairs_hook=unique_object
+                             )
++                            canonical(envelope)
+                         except ValueError:
+-                            envelope = None
++                            envelope = {"invalid_response_sha256": raw_hash(output)}
+                     if process.returncode == 0 and isinstance(envelope, dict):
+                         payload = envelope.get("structured_output", envelope)
++                        if not isinstance(payload, dict):
++                            raise Invalid("provider structured output is not an object")
+                         if payload.get("schema") == "kc-pr-flow.expansion-request/v1":
+                             validate(payload, "ExpansionRequest")
+                         else:
+@@ -961,6 +969,12 @@ def dispatch(prepared, command, budget_usd=None):
+                     "provider_envelope": envelope,
+                 }
+             )
++            store(
++                pathlib.Path(prepared["directory"])
++                / f"provider-{request['capability']}-{ordinal}.raw",
++                output,
++                raw=True,
++            )
+             store(
+                 pathlib.Path(prepared["directory"])
+                 / f"provider-{request['capability']}-{ordinal}.json",
+@@ -1014,7 +1028,10 @@ def collate(prepared, results, fallbacks=()):
+         return terminal(identity, "INVALIDATED", "identity_change")
+     if any(r.get("schema") == "kc-pr-flow.expansion-request/v1" for r in results):
+         return terminal(identity, "ABORTED_INCOMPLETE", "unsupported_expansion")
+-    called = {r["capability"]: r for r in requests(prepared)}
++    try:
++        called = {r["capability"]: r for r in requests(prepared)}
++    except ConfigurationChanged:
++        return terminal(identity, "INVALIDATED", "configuration_change")
+     if any(
+         r.get("capability") not in prepared["plan"]["review_config"]["capabilities"]
+         for r in results
+@@ -1162,20 +1179,18 @@ def collate(prepared, results, fallbacks=()):
+                 key=["CRITICAL", "HIGH", "MEDIUM", "LOW", "NIT"].index,
+             )
+             if merge_tuple not in findings:
++                source = git(
++                    prepared["repository_path"], "show",
++                    f"{candidate['evidence']['object_sha']}:{candidate['path']}",
++                ).decode().splitlines()
++                locations = [n for n, line in enumerate(source, 1)
++                             if line == contribution["quote"]]
+                 findings[merge_tuple] = {
+                     "runtime": {k: v for k, v in candidate.items() if k != "ordinal"},
+                     "severity": severity,
+                     "summaries": [],
+                     "quote": contribution["quote"],
+-                    "line": git(
+-                        prepared["repository_path"],
+-                        "show",
+-                        f"{candidate['evidence']['object_sha']}:{candidate['path']}",
+-                    )
+-                    .decode()
+-                    .splitlines()
+-                    .index(contribution["quote"])
+-                    + 1,
++                    "line": locations[0] if len(locations) == 1 else None,
+                 }
+                 findings[merge_tuple]["runtime"]["candidate_refs"] = []
+             record = findings[merge_tuple]
+@@ -1282,7 +1297,7 @@ def collate(prepared, results, fallbacks=()):
+     }
+     body = "Required coverage incomplete" if gaps else "Required questions resolved"
+     body += "\n" + "\n".join(
+-        f"{f['runtime']['path']}:{f['line']} {f['severity']}: "
++        f"{f['runtime']['path']}:{f['line'] or 'ambiguous location'} {f['severity']}: "
+         + "; ".join(f["summaries"])
+         + "\n> "
+         + f["quote"]
+@@ -1306,6 +1321,7 @@ def collate(prepared, results, fallbacks=()):
+                 + f["quote"],
+             }
+             for f in findings.values()
++            if f["line"] is not None
+         ],
+         "event": event,
+         "options": ["REQUEST_CHANGES"]
+@@ -1687,6 +1703,7 @@ def main():
+         ):
+             result = prepared
+         else:
++            identity = prepared["identity"]
+             command = [
+                 "claude",
+                 "--print",
+@@ -1752,7 +1769,14 @@ def main():
+                         echo[key] = validate(identity[key], "EchoScalar")
+                     except Invalid:
+                         pass
+-        print(canonical(terminal(echo, "REQUEST_INVALID", "schema_failure")).decode())
++        try:
++            echo = validate(identity, "ReviewIdentity")
++        except Invalid:
++            pass
++        status, reason = ("INVALIDATED", "configuration_change") if isinstance(
++            error, ConfigurationChanged
++        ) else ("REQUEST_INVALID", "schema_failure")
++        print(canonical(terminal(echo, status, reason)).decode())
+         print(str(error), file=sys.stderr)
+         return 2
+ 
+diff --git a/kc-pr-flow/scripts/review-capability.test.py b/kc-pr-flow/scripts/review-capability.test.py
+index 62abacf0..a5a7e9d1 100755
+--- a/kc-pr-flow/scripts/review-capability.test.py
++++ b/kc-pr-flow/scripts/review-capability.test.py
+@@ -13,14 +13,19 @@ import sys
+ import tempfile
+ import time
+ import unittest
++from types import SimpleNamespace
+ from unittest.mock import patch
+ 
+ HERE = pathlib.Path(__file__).resolve().parent
+-SPEC = importlib.util.spec_from_file_location(
+-    "capability", HERE / "review-capability.py"
+-)
+-protocol = importlib.util.module_from_spec(SPEC)
+-SPEC.loader.exec_module(protocol)
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    result = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(result)
++    return result
++
++
++protocol = module("capability", HERE / "review-capability.py")
++core = module("ablation", HERE / "review-ablation-core.py")
+ 
+ 
+ class PlannerTests(unittest.TestCase):
+@@ -42,11 +47,7 @@ class PlannerTests(unittest.TestCase):
+                 + str(HERE / "review-runtime.sh")
+                 + ' "$@"\nfi\n'
+             )
+-            spec = importlib.util.spec_from_file_location(
+-                "boundary_probe", private / "scripts/review-capability.py"
+-            )
+-            probe = importlib.util.module_from_spec(spec)
+-            spec.loader.exec_module(probe)
++            probe = module("boundary_probe", private / "scripts/review-capability.py")
+             result = probe.finish(prepared, results)
+             self.assertEqual(result["reason"], "projection_mismatch")
+             protocol.validate(result, "RunTerminal")
+@@ -138,64 +139,47 @@ class PlannerTests(unittest.TestCase):
+                     protocol.finish(result, [])["reason"], "receipt_incomplete"
+                 )
+ 
++    def cli(self, **options):
++        arguments = [
++            part for key, value in options.items()
++            for part in ("--" + key.replace("_", "-"), str(value))
++        ]
++        run = subprocess.run(
++            [sys.executable, str(HERE / "review-capability.py"), *arguments],
++            env={**os.environ, "KC_PR_FLOW_REVIEW_TYPED": "on",
++                 "KC_PR_FLOW_PROFILED_REVIEW": "on"},
++            capture_output=True, text=True, check=False,
++        )
++        self.assertNotIn("Traceback", run.stderr)
++        return run, json.loads(run.stdout)
++
+     def test_malformed_cli_artifacts_always_return_valid_terminals(self):
+         with self.prepared_results() as (prepared, results):
+             directory = pathlib.Path(prepared["directory"])
+-            intake = directory / "invalid-intake.json"
+-            intake.write_text(
+-                protocol.canonical({**self.identity, "repository": "x" * 257}).decode()
++            intake = protocol.store(
++                directory / "invalid-intake.json",
++                {**self.identity, "repository": "x" * 257},
+             )
+-            fallback = directory / "fallback.json"
+-            fallback.write_text("[null]")
+-            pending = directory / "dispatched.json"
++            fallback = protocol.store(directory / "fallback.json", [None])
+             cases = [
+-                (
+-                    [
+-                        "--identity-file",
+-                        str(intake),
+-                        "--repo-worktree",
+-                        prepared["repository_path"],
+-                        "--run-dir",
+-                        str(directory / "new"),
+-                        "--model",
+-                        "unused",
+-                    ],
+-                    {},
+-                ),
+-                (["--finalize-dir", str(directory)], {}),
+-                (
+-                    [
+-                        "--finalize-dir",
+-                        str(directory),
+-                        "--fallbacks-file",
+-                        str(fallback),
+-                    ],
+-                    {"prepared": prepared, "results": results},
+-                ),
++                (dict(identity_file=intake, repo_worktree=prepared["repository_path"],
++                      run_dir=directory / "new", model="unused"), {}, None),
++                (dict(finalize_dir=directory), {}, None),
++                (dict(finalize_dir=directory, fallbacks_file=fallback),
++                 {"prepared": prepared, "results": results}, prepared["identity"]),
+             ]
+-            for arguments, dispatched in cases:
++            for arguments, dispatched, expected_identity in cases:
+                 with self.subTest(arguments=arguments):
+-                    pending.write_text(protocol.canonical(dispatched).decode())
+-                    run = subprocess.run(
+-                        [
+-                            sys.executable,
+-                            str(HERE / "review-capability.py"),
+-                            *arguments,
+-                        ],
+-                        check=False,
+-                        env={
+-                            **os.environ,
+-                            "KC_PR_FLOW_REVIEW_TYPED": "on",
+-                            "KC_PR_FLOW_PROFILED_REVIEW": "on",
+-                        },
+-                        capture_output=True,
+-                        text=True,
+-                    )
+-                    self.assertEqual(run.returncode, 2, run.stderr)
+-                    terminal = protocol.json.loads(run.stdout)
++                    (directory / "dispatched.json").write_bytes(protocol.canonical(dispatched))
++                    run, terminal = self.cli(**arguments)
++                    self.assertEqual(run.returncode, 2)
+                     protocol.validate(terminal, "RunTerminal")
+-                    self.assertEqual(terminal["reason"], "schema_failure")
+-                    self.assertNotIn("Traceback", run.stderr)
++                    self.assertEqual(
++                        (terminal["status"], terminal["reason"]),
++                        ("REQUEST_INVALID", "schema_failure"),
++                    )
++                    if expected_identity:
++                        self.assertEqual(terminal["identity"], expected_identity)
+ 
+     def test_closed_protocol_fixtures(self):
+         fixtures = """\
+@@ -217,6 +201,58 @@ class PlannerTests(unittest.TestCase):
+                     with self.assertRaises(protocol.Invalid):
+                         protocol.validate(fixture["value"], fixture["definition"])
+ 
++
++    def posting_log(self, prepared, payloads):
++        identity = prepared["identity"]
++        start = protocol.runtime(
++            prepared, "start", "--repo", identity["repository"],
++            "--pr", identity["pr_number"], "--base", identity["base_sha"],
++            "--head", identity["head_sha"], "--config-hash", identity["config_hash"],
++        )
++        identity = {**identity, "run_id": start["run_id"]}
++        arguments = [identity[k] for k in (
++            "run_id", "review_key", "repository", "pr_number",
++            "base_sha", "head_sha", "config_hash",
++        )]
++        events = [protocol.canonical(start).decode()]
++        for kind, payload in payloads:
++            events.append(subprocess.check_output(
++                ["bash", "-c", '. "$1"; shift; review_runtime_build_event "$@"',
++                 "fixture", str(HERE / "review-runtime.sh"), *map(str, arguments),
++                 str(len(events) + 1), start["occurred_at"], kind,
++                 protocol.canonical(payload).decode()], text=True,
++            ).strip())
++        path = pathlib.Path(prepared["directory"]) / "posting-fixture.jsonl"
++        path.write_text("\n".join(events) + "\n")
++        return path, start
++
++    def contribution(self, result, **changes):
++        answer = result["answers"][0]
++        answer.update(assessment="findings", contributions=[{
++            "evidence_ref": answer["evidence_refs"][0], "category": "correctness",
++            "claim_key": "wrong-value", "severity": "HIGH", "confidence": 9,
++            "quote": "value = 2", "summary": "The value violates the contract.",
++            **changes,
++        }])
++        return answer
++
++    def fallback(self, prepared, capability):
++        return {
++            "schema": "kc-pr-flow.manual-fallback/v1",
++            "bundle_hash": prepared["bundle"]["bundle_hash"],
++            "human_note": "",
++            "result": {
++                "schema": "kc-pr-flow.manual-capability-result/v1",
++                "capability": capability,
++                "review_identity": prepared["identity"],
++                "terminal_assessment": "clean",
++                "candidate_ids": [],
++                "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
++                "recorded_by": "interactive-human",
++                "recorded_at": "2026-09-05T00:00:00Z",
++            },
++        }
++
+     def setUp(self):
+         self.identity = {
+             "schema": "kc-pr-flow.intake-identity/v1",
+@@ -304,7 +340,7 @@ class PlannerTests(unittest.TestCase):
+             )
+ 
+     @contextlib.contextmanager
+-    def prepared_results(self, commands=()):
++    def prepared_results(self, commands=(), head_content="value = 2\n"):
+         with tempfile.TemporaryDirectory() as temporary:
+             repo = pathlib.Path(temporary) / "repo"
+             repo.mkdir()
+@@ -322,7 +358,7 @@ class PlannerTests(unittest.TestCase):
+             git("add", "example.py")
+             git("commit", "-qm", "base")
+             self.identity["base_sha"] = git("rev-parse", "HEAD")
+-            (repo / "example.py").write_text("value = 2\n")
++            (repo / "example.py").write_text(head_content)
+             git("commit", "-qam", "head")
+             self.identity["head_sha"] = git("rev-parse", "HEAD")
+             prepared = protocol.prepare(
+@@ -383,18 +419,34 @@ class PlannerTests(unittest.TestCase):
+                 + repr(results)
+                 + "; print(json.dumps({'structured_output':next(x for x in results if x['capability']==r['capability']), 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01, 'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))"
+             )
+-            results = protocol.dispatch(prepared, [sys.executable, "-c", program])
++            program = (
++                "assert __import__('sys').argv[1] == '--max-budget-usd'; "
++                "assert 0 < float(__import__('sys').argv[2]) <= 0.5; " + program
++            )
++            results = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
++            self.assertEqual(len(results), len(protocol.requests(prepared)))
++            for event in prepared["audit"][1:]:
++                envelope = protocol.read_json(
++                    pathlib.Path(prepared["directory"])
++                    / f"provider-{event['capability']}-1.json"
++                )
++                request = next(
++                    r
++                    for r in protocol.requests(prepared)
++                    if r["capability"] == event["capability"]
++                )
++                self.assertEqual(
++                    event["payload_sha256"],
++                    protocol.digest(
++                        {"request": request, "provider_envelope": envelope}
++                    ),
++                )
+             finished = protocol.finish(prepared, results)
+             self.assertEqual(finished["decision"]["coverage"], "complete")
+             self.assertTrue(finished["decision"]["approve_eligible"])
+             directory = pathlib.Path(prepared["directory"])
+             protocol.store(directory / "prepared.json", prepared)
+             protocol.store(directory / "audit.json", prepared["audit"])
+-            spec = importlib.util.spec_from_file_location(
+-                "ablation", HERE / "review-ablation-core.py"
+-            )
+-            core = importlib.util.module_from_spec(spec)
+-            spec.loader.exec_module(core)
+             metrics = core.pilot_telemetry(directory, "fixture")
+             self.assertAlmostEqual(metrics["capability_cost_usd"], len(requests) * 0.01)
+             self.assertEqual(metrics["capability_tokens"], len(requests) * 12)
+@@ -408,27 +460,11 @@ class PlannerTests(unittest.TestCase):
+             provider.write_bytes(envelope)
+             event_file = next((directory / "state").rglob("events.jsonl"))
+             identity = prepared["identity"]
+-            posting_start = protocol.runtime(
+-                prepared,
+-                "start",
+-                "--repo",
+-                identity["repository"],
+-                "--pr",
+-                identity["pr_number"],
+-                "--base",
+-                identity["base_sha"],
+-                "--head",
+-                identity["head_sha"],
+-                "--config-hash",
+-                identity["config_hash"],
+-            )
+-            identity = {**identity, "run_id": posting_start["run_id"]}
+             payload_hash = "f" * 64
+             idempotency = protocol.raw_hash(
+                 f"{identity['review_key']}|{identity['head_sha']}|{payload_hash}".encode()
+             )
+-            events = [protocol.canonical(posting_start).decode()]
+-            for kind, payload in (
++            payloads = (
+                 ("head.observed", {"head_sha": identity["head_sha"]}),
+                 (
+                     "authorization.granted",
+@@ -455,38 +491,8 @@ class PlannerTests(unittest.TestCase):
+                         "remote_review_id": 42,
+                     },
+                 ),
+-            ):
+-                arguments = [
+-                    identity[k]
+-                    for k in (
+-                        "run_id",
+-                        "review_key",
+-                        "repository",
+-                        "pr_number",
+-                        "base_sha",
+-                        "head_sha",
+-                        "config_hash",
+-                    )
+-                ]
+-                events.append(
+-                    subprocess.check_output(
+-                        [
+-                            "bash",
+-                            "-c",
+-                            '. "$1"; shift; review_runtime_build_event "$@"',
+-                            "fixture",
+-                            str(HERE / "review-runtime.sh"),
+-                            *map(str, arguments),
+-                            str(len(events) + 1),
+-                            "2026-09-06T00:00:00Z",
+-                            kind,
+-                            protocol.canonical(payload).decode(),
+-                        ],
+-                        text=True,
+-                    ).strip()
+-                )
+-            projected_file = directory / "posted-fixture.jsonl"
+-            projected_file.write_text("\n".join(events) + "\n")
++            )
++            projected_file, posting_start = self.posting_log(prepared, payloads)
+             projected = protocol.posting_projection(prepared, projected_file)
+             self.assertEqual(projected["outcome"], "posted_reconciled")
+             self.assertEqual(projected["remote_review_id"], 42)
+@@ -502,19 +508,7 @@ class PlannerTests(unittest.TestCase):
+     def test_cross_capability_high_finding_merges_and_forces_request_changes(self):
+         with self.prepared_results() as (prepared, results):
+             for result, severity in zip(results[:2], ("HIGH", "MEDIUM")):
+-                answer = result["answers"][0]
+-                answer["assessment"] = "findings"
+-                answer["contributions"] = [
+-                    {
+-                        "evidence_ref": answer["evidence_refs"][0],
+-                        "category": "correctness",
+-                        "claim_key": "wrong-value",
+-                        "severity": severity,
+-                        "confidence": 9,
+-                        "quote": "value = 2",
+-                        "summary": "The value violates the accepted contract.",
+-                    }
+-                ]
++                self.contribution(result, severity=severity)
+             rendered = protocol.collate(prepared, results)["rendered"]
+             self.assertEqual(len(rendered["inline_comments"]), 1)
+             inline = rendered["inline_comments"][0]
+@@ -533,6 +527,15 @@ class PlannerTests(unittest.TestCase):
+             self.assertEqual(finished["receipt"]["counts"]["findings"], 1)
+             self.assertEqual(finished["receipt"]["counts"]["candidates"], 2)
+ 
++    def test_ambiguous_inline_retains_finding_without_guessing_a_line(self):
++        with self.prepared_results(head_content="value = 2\nvalue = 2\n") as (prepared, results):
++            self.contribution(results[0])
++            rendered = protocol.collate(prepared, results)["rendered"]
++            self.assertEqual(rendered["inline_comments"], [])
++            self.assertEqual(rendered["event"], "REQUEST_CHANGES")
++            self.assertIn("value = 2", rendered["body"])
++            self.assertIn("ambiguous location", rendered["body"])
++
+     def test_transient_adapter_retry_is_bounded_and_timed(self):
+         with self.prepared_results() as (prepared, _results):
+             command = ["/bin/sh", "-c", "exit 75"]
+@@ -561,6 +564,63 @@ class PlannerTests(unittest.TestCase):
+             )
+             self.assertEqual(len(collated["observation"]["lanes"]), len(invocations))
+ 
++    def test_provider_shapes_and_large_monotonic_readings_keep_attempts(self):
++        for raw in ('{"structured_output":null}', '{"total_cost_usd":NaN}'):
++            with self.subTest(raw=raw), self.prepared_results() as (prepared, _):
++                returned = protocol.dispatch(
++                    prepared, [sys.executable, "-c", "print(" + repr(raw) + ")"]
++                )
++                self.assertEqual(returned, [])
++                events = [e for e in prepared["audit"] if e["event_type"] == "invoked"]
++                self.assertEqual(len(events), len(protocol.requests(prepared)))
++                self.assertTrue(all(e["result"] == "terminal_failure" for e in events))
++                for path in pathlib.Path(prepared["directory"]).glob("provider-*.raw"):
++                    self.assertEqual(path.read_text(), raw + "\n")
++                self.assertEqual(len(list(pathlib.Path(prepared["directory"]).glob("provider-*.raw"))), len(events))
++        with self.prepared_results() as (prepared, _):
++            for ns in (100, 2**53, 2**63):
++                protocol.audit(prepared, "accepted", {}, ns, ns + 1)
++                self.assertEqual(prepared["audit"][-1]["started_ns"], ns)
++            for ns in (True, 0, -1):
++                with self.assertRaises(protocol.Invalid):
++                    protocol.audit(prepared, "accepted", {}, ns, ns)
++
++    def test_configuration_mismatch_is_invalidated_at_collation(self):
++        with self.prepared_results() as (prepared, results):
++            prepared["binding"]["plan_hash"] = "f" * 64
++            terminal = protocol.collate(prepared, results)
++            self.assertEqual((terminal["status"], terminal["reason"]),
++                             ("INVALIDATED", "configuration_change"))
++            self.assertEqual(terminal["identity"], prepared["identity"])
++
++    def test_terminal_attempt_keeps_identity_and_partial_cost_without_a_seal(self):
++        with self.prepared_results() as (prepared, _):
++            protocol.dispatch(prepared, [sys.executable, "-c", "print('null')"])
++            repo, directory = prepared["repository_path"], pathlib.Path(prepared["directory"])
++            protocol.git(repo, "checkout", "--detach", self.identity["base_sha"])
++            terminal = protocol.collate(prepared, [])
++            protocol.git(repo, "checkout", "--detach", self.identity["head_sha"])
++            for name, value in (("prepared", prepared), ("audit", prepared["audit"]), ("result", terminal)):
++                protocol.store(directory / (name + ".json"), value)
++            run = directory.parent / "terminal-arm"
++            run.mkdir()
++            (run / "protocol").symlink_to(directory, target_is_directory=True)
++            args = SimpleNamespace(arm="treatment", arm_dir=HERE.parent, slot=1, effort="low", model="fixture")
++            manifest = {"pr":self.identity, "arm_manifest":{}, "activation_environment":{},
++                        "unit_kind":"arm", "arm":"treatment", "driver_sha256":"f" * 64}
++            host = {"modelUsage":{"fixture":{}}, "total_cost_usd":0.1,
++                    "usage":{"input_tokens":1,"output_tokens":1,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}
++            with patch.object(core, "pilot_invoke", return_value=(host, 10)), patch.object(core, "pilot_arm_guard", return_value={}):
++                result = core.pilot_attempt(manifest, run, lambda: core.pilot_execute(
++                    args, manifest, {"max_cost_usd":1}, {}, run, repo, True,
++                    pathlib.Path(sys.executable), HERE / "review-ablation-driver-prompt.md",
++                ))
++            self.assertEqual(result["run_terminal"], terminal)
++            self.assertEqual(terminal["reason"], "identity_change")
++            self.assertEqual(result["known_cost_usd"], 0.1)
++            self.assertEqual(result["cost_status"], "incomplete")
++            self.assertIsNone(result["cost_usd"])
++
+     def test_selected_material_tampering_and_unassigned_answers_refuse(self):
+         with self.prepared_results() as (prepared, results):
+             self.assertIn(
+@@ -630,24 +690,14 @@ class PlannerTests(unittest.TestCase):
+                 routed["route"], "unavailable" if profile == "custom" else "legacy"
+             )
+ 
+-    def test_failed_final_attempt_accepts_only_bound_clean_manual_fallback(self):
++    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(
++        self,
++    ):
++        started = time.monotonic()
+         with self.prepared_results() as (prepared, results):
++            print("Mechanical prepare seconds:", time.monotonic() - started, flush=True)
+             capability = results[0]["capability"]
+-            fallback = {
+-                "schema": "kc-pr-flow.manual-fallback/v1",
+-                "bundle_hash": prepared["bundle"]["bundle_hash"],
+-                "human_note": "",
+-                "result": {
+-                    "schema": "kc-pr-flow.manual-capability-result/v1",
+-                    "capability": capability,
+-                    "review_identity": prepared["identity"],
+-                    "terminal_assessment": "clean",
+-                    "candidate_ids": [],
+-                    "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
+-                    "recorded_by": "interactive-human",
+-                    "recorded_at": "2026-09-05T00:00:00Z",
+-                },
+-            }
++            fallback = self.fallback(prepared, results[0]["capability"])
+             results[0]["unexpected"] = True
+             ordinary = protocol.collate(prepared, results)
+             self.assertEqual(ordinary["rendered"]["event"], "COMMENT")
+@@ -672,28 +722,7 @@ class PlannerTests(unittest.TestCase):
+                 )
+                 refused = protocol.collate(prepared, results, [mutated])
+                 self.assertEqual(refused["rendered"]["event"], "COMMENT")
+-
+-    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(
+-        self,
+-    ):
+-        started = time.monotonic()
+-        with self.prepared_results() as (prepared, results):
+-            print("Mechanical prepare seconds:", time.monotonic() - started, flush=True)
+-            fallback = {
+-                "schema": "kc-pr-flow.manual-fallback/v1",
+-                "bundle_hash": prepared["bundle"]["bundle_hash"],
+-                "human_note": "",
+-                "result": {
+-                    "schema": "kc-pr-flow.manual-capability-result/v1",
+-                    "capability": results[0]["capability"],
+-                    "review_identity": prepared["identity"],
+-                    "terminal_assessment": "clean",
+-                    "candidate_ids": [],
+-                    "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
+-                    "recorded_by": "interactive-human",
+-                    "recorded_at": "2026-09-05T00:00:00Z",
+-                },
+-            }
++            del results[0]["unexpected"]
+             results[0]["unknown"] = True
+             missing_capability = results.pop()["capability"]
+             directory = pathlib.Path(prepared["directory"])
+@@ -749,46 +778,7 @@ class PlannerTests(unittest.TestCase):
+                 protocol.finish(prepared, [])["reason"], "receipt_incomplete"
+             )
+ 
+-    def test_provider_attempt_budget_and_raw_usage_bind_audit(self):
+-        with self.prepared_results() as (prepared, _results):
+-            program = """
+-import json, sys
+-request = json.load(sys.stdin)
+-assert sys.argv[1] == '--max-budget-usd'
+-assert 0 < float(sys.argv[2]) <= 0.5
+-answer = {'question_id': request['question_ids'][0], 'assessment': 'clean',
+-          'evidence_refs': [request['evidence'][0]['material'][0]['id']], 'contributions': []}
+-result = {k: request[k] for k in ('identity','plan_rev','plan_hash','bundle_revision','bundle_hash','capability')}
+-result.update(schema='kc-pr-flow.capability-result/v1', answers=[answer], status='succeeded',
+-              usage={'input_tokens':None,'output_tokens':None,'total_tokens':None})
+-print(json.dumps({'structured_output':result, 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01,
+-                  'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
+-"""
+-            returned = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
+-            self.assertEqual(len(returned), len(protocol.requests(prepared)))
+-            for event in prepared["audit"][1:]:
+-                envelope = protocol.read_json(
+-                    pathlib.Path(prepared["directory"])
+-                    / f"provider-{event['capability']}-1.json"
+-                )
+-                request = next(
+-                    r
+-                    for r in protocol.requests(prepared)
+-                    if r["capability"] == event["capability"]
+-                )
+-                self.assertEqual(
+-                    event["payload_sha256"],
+-                    protocol.digest(
+-                        {"request": request, "provider_envelope": envelope}
+-                    ),
+-                )
+-
+     def test_failed_and_retried_provider_usage_is_never_skipped(self):
+-        spec = importlib.util.spec_from_file_location(
+-            "ablation", HERE / "review-ablation-core.py"
+-        )
+-        core = importlib.util.module_from_spec(spec)
+-        spec.loader.exec_module(core)
+         for recover in (False, True):
+             with (
+                 self.subTest(recover=recover),
+@@ -822,6 +812,11 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
+                 ):
+                     protocol.store(directory / (name + ".json"), value)
+                 metrics = core.pilot_telemetry(directory, "fixture")
++                with patch.object(core, "__file__", "/nonexistent/other-runner.py"):
++                    self.assertEqual(
++                        core.pilot_telemetry(directory, "fixture", arm_dir=HERE.parent),
++                        metrics,
++                    )
+                 count = len(protocol.requests(prepared))
+                 self.assertEqual(metrics["capability_cost_status"], "incomplete")
+                 self.assertEqual(
+@@ -835,20 +830,8 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
+ 
+     def test_unquoted_critical_is_advisory_not_a_blocker(self):
+         with self.prepared_results() as (prepared, results):
+-            answer = results[0]["answers"][0]
+-            answer.update(
+-                assessment="findings",
+-                contributions=[
+-                    {
+-                        "evidence_ref": answer["evidence_refs"][0],
+-                        "category": "correctness",
+-                        "claim_key": "bad-value",
+-                        "severity": "CRITICAL",
+-                        "confidence": 1,
+-                        "quote": "invented line",
+-                        "summary": "Unverified critical claim",
+-                    }
+-                ],
++            answer = self.contribution(
++                results[0], severity="CRITICAL", confidence=1, quote="invented line"
+             )
+             collated = protocol.collate(prepared, results)
+             self.assertEqual(collated["policy"]["confirmed_blocker_refs"], [])
+@@ -956,50 +939,9 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
+             )
+             original = event_file.read_bytes()
+             self.assertIsNone(protocol.posting_projection(prepared, event_file))
+-            identity = prepared["identity"]
+-            event = protocol.runtime(
+-                prepared,
+-                "start",
+-                "--repo",
+-                identity["repository"],
+-                "--pr",
+-                identity["pr_number"],
+-                "--base",
+-                identity["base_sha"],
+-                "--head",
+-                identity["head_sha"],
+-                "--config-hash",
+-                identity["config_hash"],
+-            )
+-            identity = {**identity, "run_id": event["run_id"]}
+-            arguments = [
+-                identity[k]
+-                for k in (
+-                    "run_id",
+-                    "review_key",
+-                    "repository",
+-                    "pr_number",
+-                    "base_sha",
+-                    "head_sha",
+-                    "config_hash",
+-                )
+-            ]
+-            invalidated = subprocess.check_output(
+-                [
+-                    "bash",
+-                    "-c",
+-                    '. "$1"; shift; review_runtime_build_event "$@"',
+-                    "fixture",
+-                    str(HERE / "review-runtime.sh"),
+-                    *map(str, arguments),
+-                    "2",
+-                    event["occurred_at"],
+-                    "run.invalidated",
+-                    '{"reason":"head_moved"}',
+-                ]
++            snapshot, event = self.posting_log(
++                prepared, [("run.invalidated", {"reason": "head_moved"})]
+             )
+-            snapshot = pathlib.Path(prepared["directory"]) / "invalidated.jsonl"
+-            snapshot.write_bytes(protocol.canonical(event) + b"\n" + invalidated)
+             self.assertEqual(
+                 protocol.posting_projection(prepared, snapshot)["reason"], "head_moved"
+             )

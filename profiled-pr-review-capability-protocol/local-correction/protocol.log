@@ -1,0 +1,13 @@
+..........Mechanical prepare seconds: 0.9478569589555264
+Mechanical runtime timing (ns): {'projection': 81335512125, 'rehydrate': 6472965625}
+.......review-ablation: capability actual model provenance mismatch
+review-ablation: provider report does not bind invocation
+Mechanical runtime timing (ns): {'projection': 83186963542, 'rehydrate': 6645278625}
+........
+----------------------------------------------------------------------
+Ran 25 tests in 434.246s
+
+OK
+real 434.47
+user 179.43
+sys 207.98

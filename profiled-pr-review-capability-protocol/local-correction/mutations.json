@@ -1,0 +1,57 @@
+[
+  {
+    "case": "admission-unit",
+    "exit": 1,
+    "observed": "TypeError",
+    "command": [
+      "bash",
+      "/tmp/capability-correction.CGT81m/tmps1hvf9sx/kc-pr-flow/scripts/review-ablation.test.sh",
+      "--case",
+      "pilot"
+    ]
+  },
+  {
+    "case": "admission-planner",
+    "exit": 1,
+    "observed": "TypeError",
+    "command": [
+      "bash",
+      "/tmp/capability-correction.CGT81m/tmp0unhvmoo/kc-pr-flow/scripts/review-ablation.test.sh",
+      "--case",
+      "pilot"
+    ]
+  },
+  {
+    "case": "adjudication-unit",
+    "exit": 1,
+    "observed": "TypeError",
+    "command": [
+      "bash",
+      "/tmp/capability-correction.CGT81m/tmpvtuhnrfv/kc-pr-flow/scripts/review-ablation.test.sh",
+      "--case",
+      "pilot"
+    ]
+  },
+  {
+    "case": "seal-repeat",
+    "exit": 1,
+    "observed": "FileExistsError",
+    "command": [
+      "bash",
+      "/tmp/capability-correction.CGT81m/tmpqr0wclfe/kc-pr-flow/scripts/review-ablation.test.sh",
+      "--case",
+      "pilot"
+    ]
+  },
+  {
+    "case": "compare-repeat",
+    "exit": 1,
+    "observed": "FileExistsError",
+    "command": [
+      "bash",
+      "/tmp/capability-correction.CGT81m/tmpxd15lrs5/kc-pr-flow/scripts/review-ablation.test.sh",
+      "--case",
+      "pilot"
+    ]
+  }
+]

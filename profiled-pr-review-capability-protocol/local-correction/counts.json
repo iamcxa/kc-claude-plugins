@@ -1,0 +1,172 @@
+{
+  "base": "3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8",
+  "product_head": "9bb526170156a44cff90e2a2fab9eeab081e0eb1",
+  "candidate": "uncommitted working tree",
+  "branch": "feature/kc-pr-review-capability-protocol-pilot",
+  "total": 6443,
+  "files": 20,
+  "focused": 1903,
+  "limits": [
+    6600,
+    20,
+    1800
+  ],
+  "focused_excess": 103,
+  "batch_diff_sha256": "fa9108f8bb0646139be7a8e222daeaa1a990d732706af6702d835931c779ee1e",
+  "cumulative_diff_sha256": "cde4e8ec5e63ea1e517236a000158c81eb68323d955313d753b1e08af7d962eb",
+  "rows": [
+    {
+      "path": ".github/workflows/review-evaluation-tests.yml",
+      "added": 5,
+      "deleted": 1,
+      "focused": false,
+      "sha256": "2d3d14d24c84c501d9527453c6a949becf68fb6ad7e268d385fd57f56a3aae9b"
+    },
+    {
+      "path": ".github/workflows/review-runtime-tests.yml",
+      "added": 23,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "6795fc9175bd85b1653656682aad077a1f9671625d5042300b6236263eb81c03"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "added": 25,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "eacc8420606e2236296da5407ab27c263c5d3252d6c00d64271fc3a6a8a20db0"
+    },
+    {
+      "path": "PRODUCT.md",
+      "added": 16,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "e55f0e7377fb6e16f6d6e77b2e234155fd4a40d2db903a0eb6a5e803fa28fae5"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md",
+      "added": 858,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "966921f1892dcebc84292cc9a7a408dd5e6227955b656f0e6988e17c0f8c13df"
+    },
+    {
+      "path": "kc-pr-flow/CLAUDE.md",
+      "added": 10,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "2571b53f87dba665c7a9fcdd5315baa377bf51b28264c74e6f1840135b4684a7"
+    },
+    {
+      "path": "kc-pr-flow/README.md",
+      "added": 10,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "38cf9d5d5fc4dbb5f94bac140f06f5a789e7314cc5a44a33c372622391f579a9"
+    },
+    {
+      "path": "kc-pr-flow/docs/review-runtime.md",
+      "added": 59,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "c7a29f7d160453eee759b3adebb02203511bcc421a55a0cc2e3039c23731d221"
+    },
+    {
+      "path": "kc-pr-flow/schemas/review-capability-catalog-v1.json",
+      "added": 96,
+      "deleted": 0,
+      "focused": true,
+      "sha256": "d2e0e42f8a9b71a681a3e84069ce532014f15439ee7ccf888b4957f5bdd5f92c"
+    },
+    {
+      "path": "kc-pr-flow/schemas/review-capability-v1.schema.json",
+      "added": 376,
+      "deleted": 0,
+      "focused": true,
+      "sha256": "e17bef16a18730d7f8b9ea5e001ca3f80b935f2c9cc7539c372859993c078c8b"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-ablation-core.py",
+      "added": 1641,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "8b4b22179f00335f7c9aaef9d0ead8e1b98705c7ffa4b6dc19a2019258237673"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-ablation-driver-prompt.md",
+      "added": 23,
+      "deleted": 1,
+      "focused": false,
+      "sha256": "02576a5dd5d1417454472d0354da8b23d479c000096759c298b8149d5b907bca"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-ablation.sh",
+      "added": 8,
+      "deleted": 1,
+      "focused": false,
+      "sha256": "f804eb6903728916629d58af6e44a66e667924097719d0d63aef99c4f3488230"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-ablation.test.sh",
+      "added": 408,
+      "deleted": 3,
+      "focused": true,
+      "sha256": "5273d2e3109b6fd0c2a847dfa7454f5c92680e74576cebf52c6ae00eb47db21c"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability-corpus.tsv",
+      "added": 7,
+      "deleted": 0,
+      "focused": true,
+      "sha256": "01c747bbda74529232a3ec9e5aa922e947ac79c4dd61a240db02a19718a775bc"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability.py",
+      "added": 1785,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "0e361382a3ee9470a79b5e3b0719a759dc93aae522e1183e556feb6e142c500b"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability.test.py",
+      "added": 966,
+      "deleted": 0,
+      "focused": true,
+      "sha256": "5e217face35e302c54ea3ce085f11654c063b6b7ad772383251f1c770d3185a9"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-runtime.sh",
+      "added": 38,
+      "deleted": 2,
+      "focused": false,
+      "sha256": "1c9c097b4efed6e655589e7b9314ee422b9d71e89d39172a977e15c439b0ccf1"
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-runtime.test.sh",
+      "added": 47,
+      "deleted": 0,
+      "focused": true,
+      "sha256": "18ce75db73dc4c0fec9df69ba7c5c98dabb22e504e335da06b8b8aaf5d48663a"
+    },
+    {
+      "path": "kc-pr-flow/skills/kc-pr-review/SKILL.md",
+      "added": 34,
+      "deleted": 0,
+      "focused": false,
+      "sha256": "12b19049b125dcae65bc38834bf60a3ef906c5583de923beea612da3bbdd9199"
+    }
+  ],
+  "changed_batch_paths": [
+    "kc-pr-flow/docs/review-runtime.md",
+    "kc-pr-flow/schemas/review-capability-v1.schema.json",
+    "kc-pr-flow/scripts/review-ablation-core.py",
+    "kc-pr-flow/scripts/review-ablation.test.sh",
+    "kc-pr-flow/scripts/review-capability.py",
+    "kc-pr-flow/scripts/review-capability.test.py"
+  ],
+  "untracked": [],
+  "unchanged_owners": {
+    "kc-pr-flow/scripts/review-runtime.sh": "1c9c097b4efed6e655589e7b9314ee422b9d71e89d39172a977e15c439b0ccf1",
+    "kc-pr-flow/scripts/review-runtime.test.sh": "18ce75db73dc4c0fec9df69ba7c5c98dabb22e504e335da06b8b8aaf5d48663a"
+  }
+}

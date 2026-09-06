@@ -1,0 +1,24 @@
+{"schema": "kc-pr-flow.pilot-arm/v1", "arm": "control", "commit": "69a300502b4cc28b93c665d978667e25acedd9fc", "files": [{"path": "schemas/review-capability-catalog-v1.json", "executable": false, "sha256": "d2e0e42f8a9b71a681a3e84069ce532014f15439ee7ccf888b4957f5bdd5f92c"}, {"path": "schemas/review-capability-v1.schema.json", "executable": false, "sha256": "e17bef16a18730d7f8b9ea5e001ca3f80b935f2c9cc7539c372859993c078c8b"}, {"path": "scripts/review-capability.py", "executable": true, "sha256": "0e361382a3ee9470a79b5e3b0719a759dc93aae522e1183e556feb6e142c500b"}, {"path": "scripts/runtime.sh", "executable": true, "sha256": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb"}, {"path": "skills/kc-pr-review/SKILL.md", "executable": false, "sha256": "bce310165e258af7d682ea83c8deeb70225aaf09fa09dc052847fec8e801d135"}], "tree_sha256": "017528432672393aaa7ef7e02f8703622b50e5ba195d729f2de53eafe46756f6"}
+Pilot committed tree, cost, six-row admission, blind seal, five-pair comparator and refusal fixtures passed
+Uncorrected local clone rejected by actual repository identity helper
+FAIL: Pilot recovery fixtures
+
+review-ablation.test.sh: 0 passed, 1 failed
+Traceback (most recent call last):
+  File "<stdin>", line 331, in <module>
+  File "<stdin>", line 22, in refuses
+  File "<stdin>", line 331, in <lambda>
+  File "/tmp/capability-correction.CGT81m/tmp0unhvmoo/kc-pr-flow/scripts/review-ablation-core.py", line 1238, in cmd_pilot_run
+    "planner_manifest": pilot_arm_guard(args.planner_arm_dir, "treatment")
+                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/capability-correction.CGT81m/tmp0unhvmoo/kc-pr-flow/scripts/review-ablation-core.py", line 745, in pilot_arm_guard
+    manifest = pilot_read(pathlib.Path(directory) / ".pilot-arm.json")
+                          ~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 503, in __init__
+    super().__init__(*args)
+    ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 132, in __init__
+    raise TypeError(
+    ...<2 lines>...
+        f"not {type(path).__name__!r}")
+TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'
