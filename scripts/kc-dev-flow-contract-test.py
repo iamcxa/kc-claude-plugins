@@ -2078,6 +2078,10 @@ require(
 surface_map_check = ROOT / "kc-dev-flow/scripts/surface-map-check.py"
 run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-check compile")
 
+if not require_ablation_only:
+    run([sys.executable, "scripts/ship-flow/uat-doc.test.py"], "ship-flow UAT doc")
+    run(["bash", "scripts/ship-flow/notify.test.sh"], "ship-flow notify")
+
 surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
 surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
 surface_map_round0_evidence = surface_map_fixtures / "dev-66-round0-evidence.md"

@@ -358,3 +358,15 @@ batch's UAT-ready shape: a milestone with a flow file runs `e2e-cli.sh` at
 the resolved head and reports its log path and exit code; a milestone with
 no flow file records `e2e: not applicable` with the reason and exits 0; no
 milestone named exits non-zero and the batch is not UAT-ready.
+
+`scripts/ship-flow/uat-doc.py <batch-dir>` builds the batch's UAT document from
+its durable records only -- `receipt/plan-receipt.json`,
+`receipt/plan-approval.json`, `receipt/close-receipt(.DRAFT).json`,
+`evidence/worker-evidence-<ISSUE>*.md`, and, when present, the `README.md`
+`## Decisions made under \`defaults\`` bullets -- so the document lists what
+the batch already recorded rather than deciding anything new.
+`scripts/ship-flow/notify.sh <channel> <batch-id> <doc-path> --dry-run
+--state-dir <dir>` sends one UAT-ready message per batch id: a deterministic
+message id keyed on the batch id makes a second call for the same batch id
+and state dir a no-op instead of a duplicate send. It has no real-send path;
+the First Officer sends the real message.
