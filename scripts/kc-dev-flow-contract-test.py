@@ -2336,4 +2336,143 @@ with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
         f"plan-lint offline did not emit rules: {lint_offline.stdout}",
     )
 
+# --- ship-flow review station: open-pr.sh BRANCH binding + disposition.py category handling ---
+ship_flow_fixtures = ROOT / "scripts/fixtures/ship-flow"
+open_pr_script = ROOT / "scripts/ship-flow/open-pr.sh"
+disposition_script = ROOT / "scripts/ship-flow/disposition.py"
+
+
+def run_disposition(fixture: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(disposition_script), str(fixture)], capture_output=True, text=True,
+    )
+
+
+disposition_security_cased = run_disposition(ship_flow_fixtures / "findings-security-cased.json")
+require(
+    disposition_security_cased.returncode == 0 and '"disposition": "block"' in disposition_security_cased.stdout,
+    "disposition.py did not block a case-varied 'Security' category after normalization: "
+    f"exit={disposition_security_cased.returncode} stdout={disposition_security_cased.stdout!r}",
+)
+
+disposition_unrecognized = run_disposition(ship_flow_fixtures / "findings-unrecognized-category.json")
+require(
+    disposition_unrecognized.returncode == 0
+    and '"disposition": "block"' in disposition_unrecognized.stdout
+    and "unrecognized-category" in disposition_unrecognized.stdout,
+    "disposition.py did not fail closed (block) on an unrecognized category: "
+    f"exit={disposition_unrecognized.returncode} stdout={disposition_unrecognized.stdout!r}",
+)
+
+disposition_malformed = run_disposition(ship_flow_fixtures / "findings-malformed-entry.json")
+require(
+    disposition_malformed.returncode == 2,
+    "disposition.py did not refuse a findings list with a non-dict entry: "
+    f"exit={disposition_malformed.returncode} stdout={disposition_malformed.stdout!r} stderr={disposition_malformed.stderr!r}",
+)
+
+open_pr_fork_branch = subprocess.run(
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md")],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_fork_branch.returncode == 2 and "fork syntax refused" in open_pr_fork_branch.stderr,
+    "open-pr.sh did not refuse a BRANCH containing ':' (fork syntax): "
+    f"exit={open_pr_fork_branch.returncode} stderr={open_pr_fork_branch.stderr!r}",
+)
+
+open_pr_double_block = subprocess.run(
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-double-block.md")],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_double_block.returncode == 2 and "'## Evidence' headings" in open_pr_double_block.stderr,
+    "open-pr.sh did not refuse an evidence file with more than one '## Evidence' heading: "
+    f"exit={open_pr_double_block.returncode} stderr={open_pr_double_block.stderr!r}",
+)
+
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-open-pr-") as open_pr_dir_name:
+    open_pr_dir = Path(open_pr_dir_name)
+    open_pr_origin = open_pr_dir / "origin.git"
+    open_pr_repo = open_pr_dir / "repo"
+    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
+    subprocess.run(["git", "init", "-q", "--bare", str(open_pr_origin)], check=True, capture_output=True)
+    subprocess.run(["git", "clone", "-q", str(open_pr_origin), str(open_pr_repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(open_pr_repo), *git_user, "commit", "-q", "--allow-empty", "-m", "feat(fixture): seed"],
+        check=True, capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(open_pr_repo), "push", "-q", "origin", "HEAD:refs/heads/main"],
+        check=True, capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(open_pr_repo), *git_user, "checkout", "-q", "-b", "feature/fixture-branch"],
+        check=True, capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(open_pr_repo), "push", "-q", "origin", "feature/fixture-branch"],
+        check=True, capture_output=True,
+    )
+    open_pr_sha = subprocess.check_output(
+        ["git", "-C", str(open_pr_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    def write_open_pr_evidence(name: str, branch: str) -> Path:
+        evidence = open_pr_dir / name
+        evidence.write_text(
+            "## Evidence\n"
+            f"CANDIDATE_SHA: {open_pr_sha}\n"
+            f"BRANCH: {branch}\n"
+            f"BASE_SHA: {open_pr_sha}\n"
+            "SELF_CHECK: fixture accept-evidence: ACCEPT\n"
+            "WITHOUT_IT_COMMAND: true\n"
+            "WITHOUT_IT_REMOVED_VARIANT: true\n",
+            encoding="utf-8",
+        )
+        return evidence
+
+    open_pr_bound_evidence = write_open_pr_evidence("bound-evidence.md", "feature/fixture-branch")
+    open_pr_unbound_evidence = write_open_pr_evidence("unbound-evidence.md", "feature/does-not-exist-on-origin")
+
+    fake_gh_dir = open_pr_dir / "fake-gh"
+    fake_gh_dir.mkdir()
+    fake_gh_sentinel = open_pr_dir / "gh-called"
+    fake_gh_path = fake_gh_dir / "gh"
+    fake_gh_path.write_text(
+        "#!/usr/bin/env bash\n"
+        f"touch '{fake_gh_sentinel}'\n"
+        "echo 'warning: 999 deprecation notice' >&2\n"
+        "echo 'https://github.com/example/example/pull/777'\n",
+        encoding="utf-8",
+    )
+    fake_gh_path.chmod(0o755)
+
+    def run_open_pr(evidence: Path) -> subprocess.CompletedProcess[str]:
+        if fake_gh_sentinel.exists():
+            fake_gh_sentinel.unlink()
+        open_pr_env = dict(os.environ)
+        open_pr_env["PATH"] = f"{fake_gh_dir}:{open_pr_env.get('PATH', '')}"
+        return subprocess.run(
+            ["bash", str(open_pr_script), str(evidence)],
+            cwd=open_pr_repo, capture_output=True, text=True, env=open_pr_env,
+        )
+
+    open_pr_bound = run_open_pr(open_pr_bound_evidence)
+    require(
+        open_pr_bound.returncode == 0
+        and open_pr_bound.stdout.strip() == "777"
+        and fake_gh_sentinel.exists(),
+        "open-pr.sh did not open a PR (parsing 777 from stdout only, ignoring stderr's 999) "
+        f"for a BRANCH whose remote head matches CANDIDATE_SHA: exit={open_pr_bound.returncode} "
+        f"stdout={open_pr_bound.stdout!r} stderr={open_pr_bound.stderr!r}",
+    )
+
+    open_pr_unbound = run_open_pr(open_pr_unbound_evidence)
+    require(
+        open_pr_unbound.returncode == 2 and not fake_gh_sentinel.exists(),
+        "open-pr.sh did not refuse a BRANCH absent from origin before calling gh: "
+        f"exit={open_pr_unbound.returncode} stderr={open_pr_unbound.stderr!r}",
+    )
+
 print("kc-dev-flow contract: PASS")
