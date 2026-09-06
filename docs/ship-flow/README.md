@@ -341,9 +341,11 @@ prints the session's last fenced `## Evidence` block, or exits 1 with `no
 evidence block` when the transcript has none. One read per invocation; no
 polling loop, retry, or daemon.
 
-`kc-pr-review` is a skill and runs only inside a Claude session, never
-headless, so the review station is two scripts either side of that session
-run. `scripts/ship-flow/open-pr.sh <evidence-file>` opens the Draft PR from a
+`kc-pr-review` is a skill; the repository's own
+`kc-pr-flow/scripts/review-ablation.sh` runs it headless for its ablation
+harness, but this station does not -- it runs `kc-pr-review` only inside a
+Claude session, so the review station is two scripts either side of that
+session run. `scripts/ship-flow/open-pr.sh <evidence-file>` opens the Draft PR from a
 worker's accepted Evidence block: title is the `CANDIDATE_SHA` commit's
 subject, body carries `BASE_SHA`, `CANDIDATE_SHA`, the without-it pair, and
 the block's own `SELF_CHECK` line, and it prints the opened PR number.

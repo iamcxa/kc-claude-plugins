@@ -13,13 +13,23 @@ unreadable/invalid file, or a `findings` list with zero entries are all
 must never read as "no findings" -- the two are indistinguishable from this
 script's input alone, and only the FO's own diff read can tell them apart.
 
-Blocking categories match `kc-plan-approval/v1`'s `findings_outside_brief`
-enum (`docs/plan-flow/schema/kc-plan-approval.v1.schema.json`): security,
-data-loss, and compatibility findings block; every other category is listed
-for the UAT document.
+A non-empty `findings` list whose entries are not all dicts with a string
+`category` is refused outright (exit 2, not a disposition) -- a malformed
+writer output must not silently read as a normal `listed` finding.
+
+`category` is normalized (stripped, casefolded) before comparison, so a
+differently-cased category (`Security`) still matches. Blocking categories
+match `kc-plan-approval/v1`'s `findings_outside_brief` enum
+(`docs/plan-flow/schema/kc-plan-approval.v1.schema.json`): security,
+data-loss, and compatibility findings block. A fixed set of other categories
+this station has actually seen from kc-pr-review (correctness, docs, style,
+test-coverage) are listed for the UAT document. Any category outside both
+sets is unrecognized and blocks -- fail closed like the reviewer-absent path,
+rather than let an unreviewed category class through as merely `listed`.
 
 Exit codes: 0 disposition computed and printed as JSON on stdout (block,
-listed, or reviewer-absent); 2 usage error.
+listed, or reviewer-absent); 2 usage error, or a findings list with a
+non-dict entry or an entry whose `category` is not a string.
 """
 from __future__ import annotations
 
@@ -27,8 +37,19 @@ import json
 import sys
 
 SCHEMA = "kc-dev-flow-ship-flow-disposition/v1"
-BLOCKING_CATEGORIES = ("security", "data-loss", "compatibility")
+BLOCKING_CATEGORIES = frozenset({"security", "data-loss", "compatibility"})
+NON_BLOCKING_CATEGORIES = frozenset({"correctness", "docs", "style", "test-coverage"})
+KNOWN_CATEGORIES = BLOCKING_CATEGORIES | NON_BLOCKING_CATEGORIES
 FALLBACK_MARKER = "fallback_to_fo_diff_read"
+UNRECOGNIZED_REASON = "unrecognized-category"
+
+
+class MalformedFindings(ValueError):
+    """A non-empty `findings` list has an entry that is not a dict with a string `category`."""
+
+
+def normalize_category(raw: str) -> str:
+    return raw.strip().casefold()
 
 
 def load_findings(path: str) -> list[dict] | None:
@@ -42,17 +63,34 @@ def load_findings(path: str) -> list[dict] | None:
     findings = document.get("findings")
     if not isinstance(findings, list):
         return None
+    if findings and not all(
+        isinstance(finding, dict) and isinstance(finding.get("category"), str)
+        for finding in findings
+    ):
+        raise MalformedFindings(path)
     return findings
 
 
 def disposition(findings: list[dict] | None) -> dict:
     if not findings:
         return {"schema": SCHEMA, "disposition": "reviewer-absent", "marker": FALLBACK_MARKER, "findings_count": 0}
-    blocking = sorted({
-        finding.get("category")
-        for finding in findings
-        if isinstance(finding, dict) and finding.get("category") in BLOCKING_CATEGORIES
+
+    normalized = [normalize_category(finding["category"]) for finding in findings]
+    unrecognized = sorted({
+        finding["category"]
+        for finding, category in zip(findings, normalized)
+        if category not in KNOWN_CATEGORIES
     })
+    if unrecognized:
+        return {
+            "schema": SCHEMA,
+            "disposition": "block",
+            "reason": UNRECOGNIZED_REASON,
+            "unrecognized_categories": unrecognized,
+            "findings_count": len(findings),
+        }
+
+    blocking = sorted({category for category in normalized if category in BLOCKING_CATEGORIES})
     if blocking:
         return {"schema": SCHEMA, "disposition": "block", "blocking_categories": blocking, "findings_count": len(findings)}
     return {"schema": SCHEMA, "disposition": "listed", "findings_count": len(findings)}
@@ -62,7 +100,15 @@ def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print("usage: disposition.py <findings.json>", file=sys.stderr)
         return 2
-    result = disposition(load_findings(argv[1]))
+    try:
+        findings = load_findings(argv[1])
+    except MalformedFindings:
+        print(
+            f"disposition.py: refusing malformed findings (non-dict or non-string category entry): {argv[1]}",
+            file=sys.stderr,
+        )
+        return 2
+    result = disposition(findings)
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
