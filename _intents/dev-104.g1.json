@@ -6,6 +6,9 @@
  "project": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
  "base": "main",
  "message_sha256": "f5c8ee11de8a77a652c4023f54a023a963b3b8bcae3bd9992443a14b0fd53212",
- "workspace": null,
- "committed_at": "2026-09-06T01:33:13Z"
+ "workspace": "915a9d68-3f53-49be-ba98-5e8111bafd98",
+ "committed_at": "2026-09-06T01:33:13Z",
+ "adopted_at": "2026-09-06T01:33:22Z",
+ "adopted_by": "laptop",
+ "adopted_writer": 21
 }
