@@ -367,6 +367,55 @@ run(
     "kc-ship-flow local-profile-check.py",
 )
 
+# DEV-119 repair round 1: local-profile-check.py must refuse a Local Profile table
+# missing a required row, and refuse (rather than silently pick) a duplicated
+# marker pair, naming which failure it hit. Both run against a temporary copy of
+# the real README, never the tracked file itself.
+local_profile_check = SCRIPTS / "local-profile-check.py"
+ship_readme_path = ROOT / "docs" / "ship" / "README.md"
+ship_readme_text = ship_readme_path.read_text(encoding="utf-8")
+
+
+def run_local_profile_check(contents: str) -> subprocess.CompletedProcess[str]:
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".md", delete=False, encoding="utf-8"
+    ) as handle:
+        handle.write(contents)
+        temp_readme = Path(handle.name)
+    try:
+        return subprocess.run(
+            [sys.executable, str(local_profile_check), str(temp_readme)],
+            cwd=ROOT, text=True, capture_output=True,
+        )
+    finally:
+        temp_readme.unlink(missing_ok=True)
+
+
+missing_runtime_text = "\n".join(
+    line for line in ship_readme_text.splitlines() if "| Runtime |" not in line
+) + "\n"
+require(
+    missing_runtime_text != ship_readme_text,
+    "local-profile-check mutation fixture: no '| Runtime |' row found in docs/ship/README.md",
+)
+missing_runtime_result = run_local_profile_check(missing_runtime_text)
+require(
+    missing_runtime_result.returncode != 0
+    and "LOCAL_PROFILE_MISSING_ROW: Runtime" in missing_runtime_result.stderr,
+    "local-profile-check.py did not refuse a Local Profile table missing the Runtime row, "
+    f"naming it: exit={missing_runtime_result.returncode} stderr={missing_runtime_result.stderr!r}",
+)
+
+duplicated_marker_text = ship_readme_text + "\n" + ship_readme_text
+duplicated_marker_result = run_local_profile_check(duplicated_marker_text)
+require(
+    duplicated_marker_result.returncode != 0
+    and "LOCAL_PROFILE_MARKER_COUNT" in duplicated_marker_result.stderr,
+    "local-profile-check.py did not refuse a Local Profile block whose start/end markers are "
+    f"duplicated, naming the marker error: exit={duplicated_marker_result.returncode} "
+    f"stderr={duplicated_marker_result.stderr!r}",
+)
+
 # DEV-117 repair round 1: a placement.tsv row is not "placed" just because its
 # destination file exists -- it must also carry that segment's hash marker.
 # Repoint one real row to a different real destination that lacks its hash

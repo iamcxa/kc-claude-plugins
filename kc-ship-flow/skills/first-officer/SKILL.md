@@ -5,9 +5,9 @@ description: Use when running the commissioned docs/ship batch workflow end to e
 
 # kc-ship-flow first officer
 
-Read only `docs/ship/README.md`'s `## Local Profile` table before resolving or dispatching a batch;
-do not read that README as a policy bundle beyond that table and the per-stage script lines below
-it.
+`docs/ship/README.md`'s `## Local Profile` table is this skill's declared input before resolving
+or dispatching a batch, not the full README as a policy bundle. `local-profile-check.py` below
+verifies the table's required rows; nothing checks what else this skill reads.
 
 ## Refuse before dispatch
 

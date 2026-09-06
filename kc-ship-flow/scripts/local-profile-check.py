@@ -5,7 +5,8 @@ required row before the first-officer skill dispatches a batch.
 usage: local-profile-check.py <readme.md>
 exit 0: every required row present.
 exit 1: at least one required row is missing; stderr names each missing row.
-exit 2: usage error, unreadable file, or no Local Profile block found.
+exit 2: usage error, unreadable file, or a Local Profile block that is missing, duplicated, or
+out of order (a start/end marker must each occur exactly once, start before end).
 """
 from __future__ import annotations
 
@@ -57,12 +58,22 @@ def main(argv: list[str]) -> int:
         print(f"LOCAL_PROFILE_UNREADABLE: {readme_path}: {exc}", file=sys.stderr)
         return 2
 
+    start_count = text.count(START_MARKER)
+    end_count = text.count(END_MARKER)
+    if start_count != 1 or end_count != 1:
+        print(
+            f"LOCAL_PROFILE_MARKER_COUNT: {readme_path} has {start_count} start marker(s) and "
+            f"{end_count} end marker(s); exactly one of each is required",
+            file=sys.stderr,
+        )
+        return 2
+
     start = text.find(START_MARKER)
     end = text.find(END_MARKER)
-    if start == -1 or end == -1 or end < start:
+    if end < start:
         print(
-            f"LOCAL_PROFILE_MARKER_MISSING: {readme_path} has no matched "
-            f"{START_MARKER} .. {END_MARKER} block",
+            f"LOCAL_PROFILE_MARKER_ORDER: {readme_path} has the end marker before the start "
+            "marker",
             file=sys.stderr,
         )
         return 2

@@ -32,7 +32,7 @@ closed`.
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
 
-Read only this section before dispatching a batch. Do not read this full README as a policy bundle.
+This table is the first-officer skill's declared input before dispatching a batch, not the full README as a policy bundle. `kc-ship-flow/scripts/local-profile-check.py` verifies the table's required rows; nothing checks what else the skill reads.
 
 | Role | Bound local authority |
 |---|---|
@@ -44,9 +44,6 @@ Read only this section before dispatching a batch. Do not read this full README 
 | E2E flows | `docs/ship/flows/` |
 | Pin | `kc-ship-flow/scripts/pin.py` record per batch |
 | Installed contract interface | `kc-ship-flow-batch-pin/v1` |
-
-`kc-ship-flow/scripts/local-profile-check.py` reads this table and refuses when a required row is
-absent, naming the missing row.
 <!-- kc-ship-flow-static-local-profile:end -->
 
 ## Stages
@@ -58,21 +55,27 @@ enforcing script.
 ### `dispatched` — kick off the batch
 
 Script: `kc-ship-flow/scripts/fenced-dispatch.sh`
+(station: `kc-ship-flow/references/stations/fenced-dispatch.md`)
 
 ### `accepted` — accept a worker's Evidence block
 
 Script: `kc-ship-flow/scripts/accept-evidence.sh`
+(station: `kc-ship-flow/references/stations/accept-evidence.md`)
 
 ### `reviewed` — Draft PR and disposition
 
-Scripts: `kc-ship-flow/scripts/open-pr.sh` (opens the Draft PR before the `kc-pr-review` session),
-`kc-ship-flow/scripts/disposition.py` (dispositions that session's findings after it)
+Scripts: `kc-ship-flow/scripts/open-pr.sh` (opens the Draft PR before the `kc-pr-review` session;
+station: `kc-ship-flow/references/stations/open-pr.md`),
+`kc-ship-flow/scripts/disposition.py` (dispositions that session's findings after it;
+station: `kc-ship-flow/references/stations/disposition.md`)
 
 ### `uat` — e2e gate and UAT handoff
 
 Scripts: `kc-ship-flow/scripts/e2e-gate.py` (runs `kc-ship-flow/scripts/e2e-cli.sh` at the resolved
-head), `kc-ship-flow/scripts/uat-doc.py` (writes the UAT document), `kc-ship-flow/scripts/notify.sh`
-(sends the UAT-ready message)
+head; stations: `kc-ship-flow/references/stations/e2e-gate.md`,
+`kc-ship-flow/references/stations/e2e-cli.md`), `kc-ship-flow/scripts/uat-doc.py` (writes the UAT
+document; station: `kc-ship-flow/references/stations/uat-doc.md`), `kc-ship-flow/scripts/notify.sh`
+(sends the UAT-ready message; station: `kc-ship-flow/references/stations/notify.md`)
 
 ### `merged` — GitHub merge observed
 
@@ -81,4 +84,6 @@ Spacedock's own `pr-merge` mod.
 
 ### `closed` — debrief and close receipt
 
-Scripts: `kc-ship-flow/scripts/dev-debrief.py`, `kc-ship-flow/scripts/ship-debrief.py`
+Scripts: `kc-ship-flow/scripts/dev-debrief.py`
+(station: `kc-ship-flow/references/stations/dev-debrief.md`), `kc-ship-flow/scripts/ship-debrief.py`
+(station: `kc-ship-flow/references/stations/ship-debrief.md`)
