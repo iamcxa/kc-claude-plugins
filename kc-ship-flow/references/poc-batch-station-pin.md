@@ -2,38 +2,47 @@
 
 ## Verdict: proceed
 
-A standalone `kc-ship-flow/scripts/pin.py` holds the guarantee ship needs — the plugin
-bytes a batch ran under are pinned by sha256 — without importing kc-dev-flow's
-`profile-contract-loader.py`. Measured:
+The standalone `kc-ship-flow/scripts/pin.py` records the declared plugin bytes for
+one station without importing kc-dev-flow's `profile-contract-loader.py`.
+`verify_record` binds the recorded digest and plugin version to the current
+plugin for both `check` and same-station replay. Measured:
 
-- `pin.py` is 186 lines; `pin.test.py` is 110 lines. Both stay under the ~200-line
-  standalone budget this POC was scoped against, without sharing code with the
-  dev-flow loader (`grep -c 'import.*profile_contract_loader' kc-ship-flow/scripts/pin.py`
-  prints 0).
-- `write` computes a sha256 digest over the bytes of every path declared in
-  `kc-ship-flow/schemas/resources.json`, plus the plugin version read from
-  `kc-ship-flow/.claude-plugin/plugin.json`, and emits a `kc-ship-flow-batch-pin/v1`
-  record with a 64-hex `contract_digest`.
-- `check` refuses two independent mutations, each in its own `pin.test.py` case:
-  one declared resource's bytes changing (names the resource:
-  `CONTRACT_DIGEST_MISMATCH: changed resource: references/kernel.md`), and the
-  record's `previous_station` not matching the fixed station order (names the
-  expected station: `PREVIOUS_STATION_MISMATCH: ... expected 'dispatched'`).
+- `pin.py` is 229 lines; `pin.test.py` is 288 lines. The implementation remains
+  near the ~200-line POC target; the expanded regression suite exceeds it.
+  Neither imports `profile_contract_loader`.
+- `write` computes a length-prefixed sha256 digest over each declared path and
+  its bytes in `kc-ship-flow/schemas/resources.json` (currently the plugin
+  manifest and `references/kernel.md`). It separately records the manifest's
+  version and emits a `kc-ship-flow-batch-pin/v1` record with a 64-hex digest.
+- `check` refuses changed resource bytes (`CONTRACT_DIGEST_MISMATCH`, naming
+  the resource), a wrong `previous_station` (`PREVIOUS_STATION_MISMATCH`, naming
+  the expected station), and a missing or wrong recorded plugin version
+  (`PLUGIN_VERSION_MISMATCH`, naming the recorded and expected versions).
+- Replaying `write` for the same batch and station calls `verify_record` before
+  returning the existing record. It does not rewrite the pin file or timestamp;
+  a refused replay leaves the existing bytes intact. Regression tests cover
+  resource drift, altered digest, wrong predecessor, and wrong/missing version,
+  alongside first writes, unchanged replay, forward writes, and existing guards.
+- `python3 kc-ship-flow/scripts/pin.test.py` passes locally in 3.713 seconds.
+  It fails against the original implementation and when either the replay
+  verification call or the recorded-version comparison is removed in a temporary
+  copy. CI integration is pending separately; hosted CI duration and cost per
+  PR are unmeasured.
 
 ## What the shape does not cover yet
 
+- Writing a later station retains the existing behavior: it creates a new record
+  from the current plugin, even if resource bytes or the version have changed.
+  The tests exercise an unchanged transition and a transition with changed bytes
+  and version. This does not enforce one unchanged digest across the whole batch.
 - `previous_station` is checked against a fixed order table
   (`dispatched, accepted, reviewed, uat, merged, closed`), not against an actual
-  prior pin record's own digest. A batch could still present a forged
-  `previous_station` label without ever having produced the record it claims to
-  follow. Chaining `check` against a real prior `--pin` file (not just a label)
-  is a B5 decision, not solved by this POC.
-- No lock or atomicity around `write`/`check` — concurrent batches touching the
-  same `--pin` path is unhandled, matching this POC's scope (one batch, one
-  station, one pin file).
+  prior pin record's own digest. The label does not prove a prior record existed;
+  chaining actual records remains outside this POC.
+- No lock or atomicity around `write`/`check`; concurrent access to the same
+  `--pin` path remains outside this POC.
 
 ## Non-goals held
 
 - No code or import shared with `kc-dev-flow/scripts/profile-contract-loader.py`.
-- No byte-pinning of plan-flow schemas — those stay pinned by `schema` string,
-  unchanged by this POC.
+- No byte-pinning of plan-flow schemas; those remain pinned by `schema` string.

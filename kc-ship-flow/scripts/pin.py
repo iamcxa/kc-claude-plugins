@@ -106,7 +106,9 @@ def build_record(batch: str, station: str) -> dict[str, object]:
     }
 
 
-def check_no_station_regression(pin_path: Path, batch: str, station: str) -> None:
+def check_no_station_regression(
+    pin_path: Path, batch: str, station: str,
+) -> dict[str, object] | None:
     if not pin_path.exists():
         return
     try:
@@ -127,12 +129,17 @@ def check_no_station_regression(pin_path: Path, batch: str, station: str) -> Non
         raise PinError(
             f"PIN_REGRESSION_REFUSED: existing {existing_station!r} is later than {station!r}"
         )
+    return existing
 
 
 def cmd_write(args: argparse.Namespace) -> int:
     pin_path = Path(args.pin).expanduser().resolve() if args.pin else None
     if pin_path is not None:
-        check_no_station_regression(pin_path, args.batch, args.station)
+        existing = check_no_station_regression(pin_path, args.batch, args.station)
+        if existing is not None and existing["station"] == args.station:
+            verify_record(existing, args.station)
+            print(json.dumps(existing, indent=2, sort_keys=True))
+            return 0
     record = build_record(args.batch, args.station)
     text = json.dumps(record, indent=2, sort_keys=True)
     print(text)
@@ -142,22 +149,20 @@ def cmd_write(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_check(args: argparse.Namespace) -> int:
-    pin_path = Path(args.pin).expanduser().resolve()
-    try:
-        raw = pin_path.read_bytes()
-    except OSError as exc:
-        raise PinError(f"cannot read pin {pin_path}: {exc}") from exc
-    try:
-        record = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise PinError(f"pin {pin_path} is not valid JSON: {exc}") from exc
+def verify_record(record: dict[str, object], station: str) -> None:
     if not isinstance(record, dict) or record.get("schema") != PIN_SCHEMA:
-        raise PinError(f"pin {pin_path} schema must be {PIN_SCHEMA}")
-    if record.get("station") != args.station:
+        raise PinError(f"pin schema must be {PIN_SCHEMA}")
+    if record.get("station") != station:
         raise PinError(
             f"STATION_MISMATCH: pin is for {record.get('station')!r}, "
-            f"expected {args.station!r}"
+            f"expected {station!r}"
+        )
+
+    version = read_plugin_version()
+    if record.get("plugin_version") != version:
+        raise PinError(
+            "PLUGIN_VERSION_MISMATCH: recorded plugin_version is "
+            f"{record.get('plugin_version')!r}, expected {version!r}"
         )
 
     resources = load_declared_resources()
@@ -174,13 +179,25 @@ def cmd_check(args: argparse.Namespace) -> int:
         detail = ", ".join(changed) if changed else "the declared resource set itself"
         raise PinError(f"CONTRACT_DIGEST_MISMATCH: changed resource: {detail}")
 
-    expected = expected_previous_station(args.station)
+    expected = expected_previous_station(station)
     if record.get("previous_station") != expected:
         raise PinError(
             "PREVIOUS_STATION_MISMATCH: recorded previous_station is "
             f"{record.get('previous_station')!r}, expected {expected!r}"
         )
 
+
+def cmd_check(args: argparse.Namespace) -> int:
+    pin_path = Path(args.pin).expanduser().resolve()
+    try:
+        raw = pin_path.read_bytes()
+    except OSError as exc:
+        raise PinError(f"cannot read pin {pin_path}: {exc}") from exc
+    try:
+        record = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise PinError(f"pin {pin_path} is not valid JSON: {exc}") from exc
+    verify_record(record, args.station)
     print(f"PIN_CHECK_OK: batch={record.get('batch')!r} station={args.station!r}")
     return 0
 

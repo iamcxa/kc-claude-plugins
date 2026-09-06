@@ -87,9 +87,56 @@ def test_check_passes_on_unmodified_sandbox(sandbox: Path, pin_path: Path) -> No
     check(result.returncode == 0, f"check refused an unmodified sandbox: {result.stderr}")
 
 
+def assert_refused_without_rewrite(
+    sandbox: Path, pin_path: Path, args: list[str], reason: str, case: str,
+) -> None:
+    before = pin_path.read_bytes()
+    result = run_pin(sandbox, args)
+    check(result.returncode != 0, f"{case}: command accepted the invalid pin")
+    check(reason in result.stderr, f"{case}: expected {reason}, got {result.stderr!r}")
+    check(pin_path.read_bytes() == before, f"{case}: command rewrote the refused pin")
+
+
+def test_same_station_replay_preserves_record(sandbox: Path, pin_path: Path) -> None:
+    record = json.loads(pin_path.read_bytes())
+    record["written_at"] = "2026-01-01T00:00:00Z"
+    pin_path.write_text(json.dumps(record, indent=4) + "\n", encoding="utf-8")
+    before = pin_path.read_bytes()
+    result = run_pin(sandbox, ["write", "--batch", "b1", "--station", "accepted", "--pin", str(pin_path)])
+    check(result.returncode == 0, f"unchanged replay was refused: {result.stderr}")
+    if result.returncode == 0:
+        check(json.loads(result.stdout) == record, "unchanged replay replaced the existing record")
+    check(pin_path.read_bytes() == before, "unchanged replay rewrote the existing pin bytes")
+
+
+def test_record_mutations_are_refused(sandbox: Path, pin_path: Path) -> None:
+    original = pin_path.read_bytes()
+    for field, value, reason in [
+        ("plugin_version", "999.999.999", "PLUGIN_VERSION_MISMATCH"),
+        ("plugin_version", None, "PLUGIN_VERSION_MISMATCH"),
+        ("contract_digest", "0" * 64, "CONTRACT_DIGEST_MISMATCH"),
+        ("previous_station", "uat", "PREVIOUS_STATION_MISMATCH"),
+    ]:
+        record = json.loads(original)
+        if value is None:
+            del record[field]
+        else:
+            record[field] = value
+        for command in ["check", "write"]:
+            pin_path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+            args = [command, "--station", "accepted", "--pin", str(pin_path)]
+            if command == "write":
+                args += ["--batch", "b1"]
+            assert_refused_without_rewrite(
+                sandbox, pin_path, args, reason, f"{command} with {field}={value!r}",
+            )
+    pin_path.write_bytes(original)
+
+
 def test_mutated_resource_byte_is_refused(sandbox: Path, pin_path: Path) -> None:
     kernel = sandbox / "references" / "kernel.md"
     original = kernel.read_bytes()
+    original_pin = pin_path.read_bytes()
     kernel.write_bytes(original + b"x")
     try:
         result = run_pin(sandbox, ["check", "--pin", str(pin_path), "--station", "accepted"])
@@ -98,8 +145,17 @@ def test_mutated_resource_byte_is_refused(sandbox: Path, pin_path: Path) -> None
             "references/kernel.md" in result.stderr,
             f"check did not name the mutated resource: {result.stderr!r}",
         )
+        assert_refused_without_rewrite(
+            sandbox, pin_path,
+            ["write", "--batch", "b1", "--station", "accepted", "--pin", str(pin_path)],
+            "CONTRACT_DIGEST_MISMATCH: changed resource: references/kernel.md",
+            "same-station replay after resource drift",
+        )
+        result = run_pin(sandbox, ["check", "--pin", str(pin_path), "--station", "accepted"])
+        check(result.returncode != 0, "same-station replay made a drifted contract pass check")
     finally:
         kernel.write_bytes(original)
+        pin_path.write_bytes(original_pin)
 
 
 def test_wrong_previous_station_is_refused(sandbox: Path, pin_path: Path) -> None:
@@ -154,15 +210,71 @@ def test_write_refuses_a_station_regression() -> None:
     check(result.returncode == 0, f"re-writing the same station was refused: {result.stderr}")
 
 
+def test_write_preserves_batch_and_station_guards() -> None:
+    sandbox = make_sandbox()
+    pin_path = sandbox / "guards.pin.json"
+    test_write_produces_valid_record(sandbox, pin_path)
+    original = pin_path.read_bytes()
+    for updates, batch, reason in [
+        ({}, "other-batch", "PIN_BATCH_MISMATCH"),
+        ({"station": "unknown"}, "b1", "PIN_UNREADABLE"),
+        ({"schema": "unknown"}, "b1", "PIN_UNREADABLE"),
+        ({"station": "merged"}, "b1", "PIN_REGRESSION_REFUSED"),
+    ]:
+        record = json.loads(original)
+        record.update(updates)
+        pin_path.write_text(json.dumps(record), encoding="utf-8")
+        assert_refused_without_rewrite(
+            sandbox, pin_path,
+            ["write", "--batch", batch, "--station", "accepted", "--pin", str(pin_path)],
+            reason, f"write guard {reason}",
+        )
+    pin_path.write_bytes(original)
+    assert_refused_without_rewrite(
+        sandbox, pin_path, ["check", "--pin", str(pin_path), "--station", "reviewed"],
+        "STATION_MISMATCH", "check with another station",
+    )
+
+
+def test_forward_write_remains_compatible() -> None:
+    sandbox = make_sandbox()
+    pin_path = sandbox / "forward.pin.json"
+    test_write_produces_valid_record(sandbox, pin_path)
+    result = run_pin(sandbox, ["write", "--batch", "b1", "--station", "reviewed", "--pin", str(pin_path)])
+    check(result.returncode == 0, f"unchanged forward write was refused: {result.stderr}")
+    result = run_pin(sandbox, ["check", "--pin", str(pin_path), "--station", "reviewed"])
+    check(result.returncode == 0, f"unchanged forward pin failed check: {result.stderr}")
+    record = json.loads(pin_path.read_bytes())
+    check(record.get("previous_station") == "accepted", "forward write recorded the wrong predecessor")
+
+    kernel = sandbox / "references" / "kernel.md"
+    kernel.write_bytes(kernel.read_bytes() + b"x")
+    manifest_path = sandbox / ".claude-plugin" / "plugin.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["version"] = "0.2.0"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    result = run_pin(sandbox, ["write", "--batch", "b1", "--station", "uat", "--pin", str(pin_path)])
+    check(result.returncode == 0, f"forward write refused an updated contract: {result.stderr}")
+    updated = json.loads(pin_path.read_bytes())
+    check(updated.get("contract_digest") != record.get("contract_digest"), "forward write kept the old digest")
+    check(updated.get("plugin_version") == "0.2.0", "forward write kept the old plugin version")
+    result = run_pin(sandbox, ["check", "--pin", str(pin_path), "--station", "uat"])
+    check(result.returncode == 0, f"updated forward pin failed check: {result.stderr}")
+
+
 def main() -> int:
     sandbox = make_sandbox()
     pin_path = sandbox / "batch.pin.json"
     test_write_produces_valid_record(sandbox, pin_path)
     test_check_passes_on_unmodified_sandbox(sandbox, pin_path)
+    test_same_station_replay_preserves_record(sandbox, pin_path)
+    test_record_mutations_are_refused(sandbox, pin_path)
     test_mutated_resource_byte_is_refused(sandbox, pin_path)
     test_wrong_previous_station_is_refused(sandbox, pin_path)
     test_digest_is_length_prefixed_not_delimiter_joined()
     test_write_refuses_a_station_regression()
+    test_write_preserves_batch_and_station_guards()
+    test_forward_write_remains_compatible()
     if FAILURES:
         for failure in FAILURES:
             print(f"FAIL: {failure}", file=sys.stderr)
