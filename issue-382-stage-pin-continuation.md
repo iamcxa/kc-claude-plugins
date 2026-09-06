@@ -429,3 +429,40 @@ Rollout remains blocked on the unfulfilled compatibility requirement and Captain
 ### Summary
 
 The original unauthorized-scope transition is fixed, and AC-1 through AC-4 remain supported at the corrected candidate. Final re-verification nevertheless finds two legitimate legacy status-only forms blocked by the new matching regex; NEEDS_FIXES remains, with no automatic next correction, new review or Captain approval asserted.
+
+## Stage Report: implementation (cycle 4)
+
+Author: /root/spacedock_ensign_issue_382_stage_pin_continuation_implementation. This is the additional authorized status-format correction response, not a new independent verdict.
+
+- DONE: Restore legitimate status-only legacy transitions using the existing accepted status parsing semantics while retaining exact raw-byte refusal for every other change, within only the approved loader and its existing test.
+  Signed-off `1d5139568122a3af97cbc28333171df3bc2e27be` shares the existing status pattern and scalar value-span parser; complete reconstructed UTF-8 bytes must still match the legacy pinned hash. Only the two approved paths changed.
+- DONE: Demonstrate the new compatibility regression failing on the rejected candidate and passing after correction; verify relevant continuation, scope, history and replay boundaries with exact-candidate evidence and preserved pins.
+  New public-CLI formats fail on unchanged `bece455c`, then pass with the shared parser; fresh loader/full-contract and scoped checks pass. Actual validation pin and original evidence/canonical inputs remain unchanged.
+- DONE: Commit only the two-file correction and an honest own implementation report with all three checklist dispositions, leaving physical validation, final independent review and Captain authority intact without product push or additional review.
+  Accounting: 3 DONE / 0 SKIPPED / 0 FAILED for implementation outputs. This own report is appended through the supported state-only transaction; no new provider observation, worker, round registration, product push or delivery action.
+
+### Exact authority, candidate and verification
+
+Rejected candidate `bece455c5ef5e0298a3ca40bde4684b982b6e4b9`; final candidate `1d5139568122a3af97cbc28333171df3bc2e27be`; frozen base `dc4c8b13c0d86d81e4d79679d8ccb735117a9e52`. Worktree/branch remain the originally dispatched ones and clean after signed-off commit.
+Correction diff SHA-256: `753a64125eafd267cd821a42be35ba02bbd2b19924b9768f2cf36c5d740f3718`; full fixed-base diff SHA-256: `dcd419c015cb27343d9fda7a7ad6fa5776f65a22d21ef528b8ee0639a53eabee`.
+Re-read Captain `format-correction-exception` at state `260971957fc9ed92064bc89f77dcc34834945375` before product changes. Original finding/report `6c478660416796d9686a379625115536436fceb3` and `.context/validation-382/raw-bytes-final.py/log` remain untouched. State prerequisite integrated only unrelated peer files to `770b99c97728bac9c5d59bc0cf8afe8a45d5c34f`; task authority did not change.
+Physical status remains validation; original stage-pin SHA-256 `cb30cbfd097aa8561dffe999d74fee23d870d06666ff4066618d27e85d30eb13` is unchanged. The unsupported installed-4.1.1 re-entry and flat-task recorder steps are waived only by the recorded extension; neither a loader acceptance nor a registered round is fabricated. No original-task or original-source-worktree operation occurred.
+Evidence is the code worktree's `.context/status-format-382/README.md` and logs. Python commands used the activated dispatch-declared Brussels venv and verified interpreter; no installed package substitution.
+- `loader-red.log`: new test with rejected loader unchanged, exit 1 in 9.06s. Both independently proven formats and the equivalent single-quoted/Unicode whitespace forms fail forward after successful seed/exact-resume; this is the actual missing-fix falsifier.
+- `loader-green.log`: exit 0 in 22.00s. Five formats each seed, exact-resume and advance with preserved bytes/predecessor; fifteen paired body/final-newline/status-spacing mutations refuse without envelope or pin/work-item writes. A narrower recognizer or normalized surrounding bytes fails these cases.
+- The same loader run retains plain legacy scope/report/runtime and same-stage refusal, new-pin reports, authorized correction, history and replay checks. `contract-green.log`: fresh full relevant contract suite PASS, exit 0 in 59.52s. Accepting scope drift, losing predecessor history or reusing old authorization breaks those assertions.
+- `ruff-errors.log`: scoped E4/E7/E9/F PASS; `sanitize.log`: zero REJECT/BLOCK, unchanged 28 WARN matches, no suppression. Whitespace check passes. Existing root-script F541/default-Ruff caveats remain, not a global clean-lint claim.
+- Reused `.context/correction-382/` frontmatter/release/marketplace logs support unchanged skill/manifest/installation-definition/release-configuration surfaces only; no fresh whole-candidate marketplace install is claimed. Fresh installed-fixture loader checks cover the changed runtime. No second badge or whole-review rerun.
+
+Retained mapping: loader's shared pattern/value-span helper removes the second narrower grammar while preserving the existing trim semantics and complete pinned-hash enforcement; the existing loader test supplies the actual rejected-code failure and working positive/refusal pairs. No shipped file, dependency, documentation, architecture, manifest, version, CI lane or standing rule was added. No production comment was added or retained in edited blocks.
+AC-1 through AC-4 retain their earlier independent findings plus fresh implementation regressions; the original scope-smuggling finding was independently closed at `bece455c`. AC-5's separate format regression is now addressed by implementation evidence, pending the retained reviewer's exact-candidate verdict.
+
+### Context and remaining boundaries
+
+For this format-only correction, project-context impact is `none`: root PRODUCT.md/ARCHITECTURE.md and the routed MIGRATION.md claim remain unchanged; the described surface is existing status-only legacy continuation with full-byte refusal. No stale/replacement/landed documentation claim is introduced. Planned check is accepted-parser status-only positives paired with raw-byte refusals; implementation logs above pass, independent final correspondence remains pending. Earlier overall-task `update` receipts are preserved, not reclassified or overwritten.
+Prior canonical input hashes remain `8cf99b961b06d93dec7ef4573915d86f3fc5f82ffbe5c4254a574e963b7eb147` and `5efac3b563f13c1f4a4a1b031d59acb3cce83f0b437f971c782109f36f5db10b`; no new canonical room files or round pointer. No paid observation, model review or cloud experiment; RoboRev stays UNKNOWN(stale), request 1 / confirmation 0, with missing identity fields uninferred.
+No product push, PR, merge, release, installation, task relocation, pin rewrite, terminalization or automatic further loop. Main-tip integration and dependency-aware PR #321 overlap remain future delivery checks, not fixed-base acceptance evidence. Per-PR CI cost was not measured; no CI configuration changed.
+
+### Summary
+
+The two-file correction restores the observed accepted status formats through the existing parser while preserving the raw-byte/hash refusal boundary. Actual rejected-code failure and corrected-code/full-suite results are retained at the exact committed candidate. Return to the FO for the retained validator's one final independent re-verification; implementation self-checks do not pass that gate or replace Captain authority.
