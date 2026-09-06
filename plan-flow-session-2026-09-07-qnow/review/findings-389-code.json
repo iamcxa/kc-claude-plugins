@@ -1,0 +1,3 @@
+[
+ {"file":"docs/plan-flow/plan-lint.py","line":49,"category":"correctness","quote":"        rule(f\"L4 admission {i['identifier']}\", ok, why)","summary":"With zero admitted Issues L4 prints no line and L8 is silent; L9/L10 print vacuous PASS; the summary reads LINT PASS with only L2's 'unadmitted: N' as signal (verified).","failure_scenario":"An entirely un-admitted plan lints PASS.","disposition":"listed — the Brief excluded the zero-admitted rule; tracked as DEV-123 (L2 must fail when nothing is admitted)"}
+]

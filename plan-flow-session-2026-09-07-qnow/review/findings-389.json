@@ -1,0 +1,52 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#389",
+ "head_r2": "4ad2ada49f40b7beee810c948a02221d3e7035c1",
+ "findings": [
+  {
+   "file": "docs/plan-flow/plan-lint.py",
+   "line": 49,
+   "category": "correctness",
+   "quote": "        rule(f\"L4 admission {i['identifier']}\", ok, why)",
+   "summary": "With zero admitted Issues L4 prints no line and L8 is silent; L9/L10 print vacuous PASS; the summary reads LINT PASS with only L2's 'unadmitted: N' as signal (verified).",
+   "failure_scenario": "An entirely un-admitted plan lints PASS.",
+   "disposition": "listed \u2014 the Brief excluded the zero-admitted rule; tracked as DEV-123 (L2 must fail when nothing is admitted)"
+  },
+  {
+   "file": "docs/plan-flow/plan-lint.py",
+   "line": 40,
+   "category": "correctness",
+   "quote": "    admitted_issues = [i for i in active_issues if i[\"cycle\"]]",
+   "summary": "Zero admitted \u2192 L4/L8/L9/L10 print nothing, LINT PASS.",
+   "failure_scenario": "Un-admitted plan passes.",
+   "disposition": "listed \u2014 DEV-123"
+  },
+  {
+   "file": "docs/plan-flow/plan-lint.py",
+   "line": 41,
+   "category": "correctness",
+   "quote": "    admitted_cycles = {i[\"cycle\"][\"id\"] for i in active_issues if i[\"cycle\"]}",
+   "summary": "Admission by truthiness of cycle, not cycle.id; unreachable via the fetch path.",
+   "failure_scenario": "Hand-edited snapshot with cycle {id:null} counts as admitted.",
+   "disposition": "listed \u2014 folded into DEV-123 (validate cycle.id)"
+  },
+  {
+   "file": "docs/plan-flow/plan-lint.py",
+   "line": 71,
+   "category": "correctness",
+   "quote": "            print(f\"WARN L6 id-order advisory: intent order {l6_intent}; violations {', '.join(l6_violations)}\")",
+   "summary": "Advisory via print(): absent from the receipt's lint array; silent when clean.",
+   "failure_scenario": "'ran clean' and 'deleted' indistinguishable.",
+   "disposition": "repair round 2 sent"
+  },
+  {
+   "file": "scripts/kc-dev-flow-contract-test.py",
+   "line": 2310,
+   "category": "test-coverage",
+   "quote": "    \"WARN L6 id-order advisory\" in lint_dev129_rough.stdout,",
+   "summary": "Only the prefix is asserted.",
+   "failure_scenario": "Garbled advisory content stays green.",
+   "disposition": "repair round 2 sent"
+  }
+ ]
+}
