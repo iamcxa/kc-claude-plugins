@@ -1,0 +1,28 @@
+name: kc-ship-flow contract test
+
+# Runs the plugin's own contract test. Path-filtered (not a required check)
+# so it never blocks a PR outside kc-ship-flow/.
+
+on:
+  pull_request:
+    paths:
+      - "kc-ship-flow/**"
+  push:
+    branches: [main]
+    paths:
+      - "kc-ship-flow/**"
+
+permissions:
+  contents: read
+
+jobs:
+  contract-test:
+    name: kc-ship-flow/scripts/contract-test.py
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run contract test
+        run: python3 kc-ship-flow/scripts/contract-test.py
