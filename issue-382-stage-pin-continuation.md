@@ -30,6 +30,7 @@ gates:
                 state: consumed
 started: 2026-09-06T14:29:01Z
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/issue-382-flow.hNPqy3/.worktrees/spacedock-ensign-issue-382-stage-pin-continuation
+continuation-exception: Kent replied 批准 in this session after the exact one-time exception proposal; captured 2026-09-06T15:12:32Z (capture time, not the unavailable message timestamp). Applies only to one implementation correction and one re-verification of rejected candidate 3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d, validation report commit 636dd6908abe158cb9e241bdd5ae3387bb9a4030, and the existing seven-file task boundary. Preserve legitimate legacy status-only advancement and same-stage exact-byte refusal; reject accepted-scope drift. Retain recorded status validation and pin SHA256 cb30cbfd097aa8561dffe999d74fee23d870d06666ff4066618d27e85d30eb13. Use the same isolated implementation owner and validator through existing Spacedock handoffs without the unsupported kc-dev-flow 4.1.1 re-entry envelope for those two handoffs only. Preserve all rejection evidence. No package update, pin rewrite, new file/workflow/migration interface, broader scope, acceptance weakening, original-task migration, PR creation, merge or release is granted. Final Captain gate remains required.
 ---
 
 Resume valid report updates and explicitly authorized corrections without
