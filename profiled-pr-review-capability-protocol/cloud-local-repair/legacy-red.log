@@ -1,0 +1,51 @@
+test_controller_failure_is_nonzero (__main__.LegacyRegressions.test_controller_failure_is_nonzero) ... FAIL
+test_final_transcript_failure_cannot_skip_archive (__main__.LegacyRegressions.test_final_transcript_failure_cannot_skip_archive) ... FAIL
+test_invalid_json_is_classified_not_keyerror (__main__.LegacyRegressions.test_invalid_json_is_classified_not_keyerror) ... ERROR
+test_trailing_echo_preserves_actual_failure (__main__.LegacyRegressions.test_trailing_echo_preserves_actual_failure) ... FAIL
+
+======================================================================
+ERROR: test_invalid_json_is_classified_not_keyerror (__main__.LegacyRegressions.test_invalid_json_is_classified_not_keyerror)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/legacy-red.test.py", line 42, in test_invalid_json_is_classified_not_keyerror
+    ns['call']('session', 'message', 'synthetic-session')
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-once/monitor-once.py", line 44, in call
+    return record['response']
+           ~~~~~~^^^^^^^^^^^^
+KeyError: 'response'
+
+======================================================================
+FAIL: test_controller_failure_is_nonzero (__main__.LegacyRegressions.test_controller_failure_is_nonzero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/legacy-red.test.py", line 35, in test_controller_failure_is_nonzero
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_final_transcript_failure_cannot_skip_archive (__main__.LegacyRegressions.test_final_transcript_failure_cannot_skip_archive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/legacy-red.test.py", line 54, in test_final_transcript_failure_cannot_skip_archive
+    self.assertIn(('workspace', 'archive', 'synthetic-workspace'), calls)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('workspace', 'archive', 'synthetic-workspace') not found in [('session', 'cancel', 'synthetic-session'), ('session', 'status', 'synthetic-session'), ('session', 'get', 'synthetic-session'), ('session', 'message', 'synthetic-session', '--limit', '100')]
+
+======================================================================
+FAIL: test_trailing_echo_preserves_actual_failure (__main__.LegacyRegressions.test_trailing_echo_preserves_actual_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/legacy-red.test.py", line 59, in test_trailing_echo_preserves_actual_failure
+    self.assertEqual(result.returncode, 7)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 7
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.090s
+
+FAILED (failures=3, errors=1)
+real 0.16
+user 0.10
+sys 0.04

@@ -1,0 +1,78 @@
+test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) ... 
+  test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content=None) ... ERROR
+  test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content=[]) ... ERROR
+  test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content={'rawPayload': None}) ... ERROR
+  test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content={'rawPayload': []}) ... ERROR
+
+======================================================================
+ERROR: test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 92, in test_malformed_nested_event_persists_failure_and_cleans_up
+    code, result, monitor = self.run_case(data)
+                            ~~~~~~~~~~~~~^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 54, in run_case
+    code, result = monitor.run()
+                   ~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 179, in run
+    terminal = self.terminal()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 124, in terminal
+    value = row.get('content', {}).get('rawPayload', {})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 92, in test_malformed_nested_event_persists_failure_and_cleans_up
+    code, result, monitor = self.run_case(data)
+                            ~~~~~~~~~~~~~^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 54, in run_case
+    code, result = monitor.run()
+                   ~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 179, in run
+    terminal = self.terminal()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 124, in terminal
+    value = row.get('content', {}).get('rawPayload', {})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content={'rawPayload': None})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 92, in test_malformed_nested_event_persists_failure_and_cleans_up
+    code, result, monitor = self.run_case(data)
+                            ~~~~~~~~~~~~~^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 54, in run_case
+    code, result = monitor.run()
+                   ~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 179, in run
+    terminal = self.terminal()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 125, in terminal
+    if value.get('type') == 'result' and value.get('session_id') == self.session:
+       ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_nested_event_persists_failure_and_cleans_up (__main__.LocalMonitorTests.test_malformed_nested_event_persists_failure_and_cleans_up) (content={'rawPayload': []})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 92, in test_malformed_nested_event_persists_failure_and_cleans_up
+    code, result, monitor = self.run_case(data)
+                            ~~~~~~~~~~~~~^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 54, in run_case
+    code, result = monitor.run()
+                   ~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 179, in run
+    terminal = self.terminal()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.py", line 125, in terminal
+    if value.get('type') == 'result' and value.get('session_id') == self.session:
+       ^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (errors=4)

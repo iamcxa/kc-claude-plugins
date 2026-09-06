@@ -1,0 +1,43 @@
+test_delayed_start_does_not_renew_window (__main__.LocalMonitorTests.test_delayed_start_does_not_renew_window) ... 
+  test_delayed_start_does_not_renew_window (__main__.LocalMonitorTests.test_delayed_start_does_not_renew_window) (now=250) ... FAIL
+  test_delayed_start_does_not_renew_window (__main__.LocalMonitorTests.test_delayed_start_does_not_renew_window) (now=310) ... FAIL
+test_prestart_tamper_is_not_blessed_as_baseline (__main__.LocalMonitorTests.test_prestart_tamper_is_not_blessed_as_baseline) ... FAIL
+
+======================================================================
+FAIL: test_delayed_start_does_not_renew_window (__main__.LocalMonitorTests.test_delayed_start_does_not_renew_window) (now=250)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 95, in test_delayed_start_does_not_renew_window
+    self.assertLess(canceled_at, 300 if now < 300 else now + 1)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 515.6000000000022 not less than 300
+
+======================================================================
+FAIL: test_delayed_start_does_not_renew_window (__main__.LocalMonitorTests.test_delayed_start_does_not_renew_window) (now=310)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 95, in test_delayed_start_does_not_renew_window
+    self.assertLess(canceled_at, 300 if now < 300 else now + 1)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 575.6000000000024 not less than 311
+
+======================================================================
+FAIL: test_prestart_tamper_is_not_blessed_as_baseline (__main__.LocalMonitorTests.test_prestart_tamper_is_not_blessed_as_baseline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/profiled-pr-review-capability-protocol/cloud-local-repair/monitor.test.py", line 102, in test_prestart_tamper_is_not_blessed_as_baseline
+    self.assertEqual((code, result['reason']), (1, 'canary_changed'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, 'terminal_complete') != (1, 'canary_changed')
+
+First differing element 0:
+0
+1
+
+- (0, 'terminal_complete')
++ (1, 'canary_changed')
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.010s
+
+FAILED (failures=3)
