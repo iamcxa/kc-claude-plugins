@@ -1,0 +1,19 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 380,
+ "head": "b6d503470d3736bad8761e148dea159d9040ca78",
+ "findings": [],
+ "fixed_in_r2": [
+  "scripts/ship-flow/uat-doc.py:161",
+  "scripts/ship-flow/uat-doc.py:199",
+  "scripts/ship-flow/uat-doc.py:181",
+  "scripts/ship-flow/uat-doc.py:164",
+  "scripts/ship-flow/uat-doc.py:161",
+  "scripts/ship-flow/uat-doc.py:156",
+  "scripts/ship-flow/uat-doc.py:62",
+  "scripts/ship-flow/uat-doc.py:14",
+  "scripts/ship-flow/notify.sh:32",
+  "scripts/ship-flow/uat-doc.py:55",
+  "scripts/fixtures/ship-flow/uat-doc/batch-1016352e0223/evidence/uat.md.reference:1"
+ ]
+}
