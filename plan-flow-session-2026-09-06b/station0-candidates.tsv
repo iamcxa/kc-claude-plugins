@@ -1,0 +1,8 @@
+DEV-115	B1 kc-ship-flow plugin skeleton	test -d kc-ship-flow	exit 1 (absent)	2026-09-06
+DEV-116	B2 move station scripts into the plugin	test -f scripts/ship-flow/accept-evidence.sh	exit 0 (still repo-local)	2026-09-06
+DEV-117	B3 sort runtime prose by enforcement point	grep -q '^## Ship-flow runtime' docs/ship-flow/README.md	exit 0 (section exists)	2026-09-06
+DEV-118	B4 POC batch×station pin loader	grep -q batch-pin kc-dev-flow/scripts/profile-contract-loader.py	exit 1 (no such pin)	2026-09-06
+DEV-119	B5 commission docs/ship	test -f docs/ship/README.md	exit 1 (absent)	2026-09-06
+DEV-120	B6 retire docs/ship-flow	git grep -q scripts/ship-flow -- docs/ship-flow/README.md	exit 0 (old README names the scripts)	2026-09-06
+DEV-121	B7 plan-flow as its own plugin	test -d kc-plan-flow	exit 1 (absent)	2026-09-06
+DEV-122	plan-lint L9/L2 scope	grep -q 'Done' docs/plan-flow/plan-lint.py	exit 1 (lint never checks state)	2026-09-06
