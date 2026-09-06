@@ -26,8 +26,9 @@ plugin for both `check` and same-station replay. Measured:
 - `python3 kc-ship-flow/scripts/pin.test.py` passes locally in 3.713 seconds.
   It fails against the original implementation and when either the replay
   verification call or the recorded-version comparison is removed in a temporary
-  copy. CI integration is pending separately; hosted CI duration and cost per
-  PR are unmeasured.
+  copy. The existing required contract runner now includes this test; local
+  integration has passed. Hosted CI verification is pending, and hosted duration
+  and cost per PR are unmeasured.
 
 ## What the shape does not cover yet
 
