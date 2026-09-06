@@ -70,3 +70,7 @@ Its subject says "dispatch round 4"; the dispatch in that same script failed clo
 ## AC-2 round 4 (`e9b04927`) — code accepted, Evidence REFUSED
 
 S30 regression at the candidate: real AC5-r2 ACCEPT (WARN, 1 of 3 changed read paths restored); real AC367-r2 ACCEPT; real AC4-r3 (S29) REFUSE out-of-tree; round-3 block ACCEPT. The station on main refused the round-4 block itself: `WITHOUT_IT_COMMAND` was the whole contract test, which exits 0 at `BASE_SHA` — the block claimed exit 1, which did not happen (worker-conduct: a reported exit that was not observed). Also `AC-3 SKIP` on that command, a refusal under round 3's own rule. Round 5 dispatched evidence-only with a pair that flips on `mutant-drop-path`'s WARN.
+
+## AC-2 round 5 (`e9b04927`, same commit as round 4) — ACCEPTED
+
+Pair flips: base exit 1, candidate exit 0; the candidate station accepts its own block; the main station accepts it too (with its old AC-3 SKIP). SHA equals remote head. Residual: `SELF_CHECK` line omitted; AC lines restated loosely. PR opened.
