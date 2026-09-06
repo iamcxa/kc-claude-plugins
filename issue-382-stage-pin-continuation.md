@@ -206,3 +206,12 @@ to the six-file-only edit boundary, not permission to create new architecture,
 behavior, or acceptance criteria. Preserve existing pins, installed packages,
 legacy task state, and prior reports; no migration, state reset, stage change,
 validation approval, PR action, merge, release, or issue-close authority is added.
+
+## Stage Report: implementation observation claim
+
+- Observation identity: `05521198f5a9be757aed2ac5576dbde964e098d3d573837979b5cf894bb9e2fd`
+- Claimant: `/root/spacedock_ensign_issue_382_stage_pin_continuation_implementation`
+- Observed state revision: `e3649058299a1381b8e58659458f60c411eb2149`
+- State: claimed
+- Candidate: `3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d`; base: `dc4c8b13c0d86d81e4d79679d8ccb735117a9e52`.
+- Canonical input: dispatched code worktree `.context/implementation-382/roborev-final-input.json`; Production observe-only, Codex `gpt-5.6-terra`, medium reasoning/severity, panel none, 1200 seconds, one request / at most one changed-tip confirmation.
