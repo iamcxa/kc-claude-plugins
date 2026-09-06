@@ -1,0 +1,15 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 379,
+ "head": "ba96da4ecd8b1b4b26f7f7302fd2c00c02dba681",
+ "findings": [],
+ "fixed_in_r2": [
+  "scripts/ship-flow/e2e-gate.py:97",
+  "scripts/ship-flow/e2e-gate.py:56",
+  "scripts/ship-flow/e2e-gate.py:41",
+  "scripts/ship-flow/e2e-gate.py:60",
+  "scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac2.json:1",
+  "scripts/ship-flow/e2e-gate.py:22",
+  "scripts/ship-flow/e2e-gate.py:11"
+ ]
+}
