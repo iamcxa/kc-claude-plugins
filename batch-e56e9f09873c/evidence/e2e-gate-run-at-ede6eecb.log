@@ -1,0 +1,77 @@
+2026-09-06T06:06:57Z e2e-cli: sha=ede6eecbf2bbff9b4cdb2d553151d237f18012d9 flow=/private/tmp/wt-main/docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml worktree=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.KI8BE0MTN2
+2026-09-06T06:06:57Z step 1: bash scripts/ship-flow/accept-evidence.sh scripts/fixtures/ship-flow/e2e-gate/recorded-evidence-block.txt (expect: exit code 0)
+2026-09-06T06:06:57Z checking Evidence block: CANDIDATE=00d2dbf5d2a2778da500a6580849dc89c2e782ba BASE=d98f40b5e2080cb884facf1734fc66052eff9982
+2026-09-06T06:06:57Z checking AC-4: CANDIDATE_SHA is valid
+2026-09-06T06:06:57Z AC-4 PASS: CANDIDATE_SHA is valid and reachable
+2026-09-06T06:06:57Z AC-4: branch feature/dev-90-write-the-three-ship-flow-contract-sentences-into-the not found on remote (likely deleted after merge)
+2026-09-06T06:06:57Z checking for out-of-tree paths and masked exits
+2026-09-06T06:06:57Z checking AC-3: static path consistency
+2026-09-06T06:06:58Z AC-3 PASS: all changed read paths are restored by variant
+2026-09-06T06:06:58Z checking AC-1: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA d98f40b5e2080cb884facf1734fc66052eff9982
+2026-09-06T06:06:58Z created worktree at /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.iPRgE1V0g1 for BASE_SHA
+2026-09-06T06:06:58Z WITHOUT_IT_COMMAND at BASE_SHA exited 1
+2026-09-06T06:06:58Z AC-1 PASS: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA (exit code 1)
+2026-09-06T06:06:58Z accept-evidence: ACCEPT
+2026-09-06T06:06:58Z PASS step 1: 'bash scripts/ship-flow/accept-evidence.sh scripts/fixtures/ship-flow/e2e-gate/recorded-evidence-block.txt' exited 0
+2026-09-06T06:06:58Z step 2: python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json (expect: exit code 0)
+e2e: not applicable (reason: milestone 'A journey not yet built' has no flow file at docs/ship-flow/flows/a-journey-not-yet-built.yaml)
+2026-09-06T06:06:58Z PASS step 2: 'python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json' exited 0
+2026-09-06T06:06:58Z step 3: python3 scripts/ship-flow/uat-doc.py scripts/fixtures/ship-flow/uat-doc/batch-e56e9f09873c (expect: exit code 0)
+# UAT: Ship-flow hands the Captain one UAT message instead of a chat to read
+
+Plan receipt `e56e9f09873c5297` · approval go/4/2/2 · dispatch order DEV-104 -> DEV-105 -> DEV-106 -> DEV-107 · batch `batch-e56e9f09873c`
+
+Each accepted layer is one Draft PR at one pinned candidate on top of the previous layer's candidate. All Linear state untouched by the FO.
+
+## Layer 1: DEV-104 — DEV-104
+
+- Outcome: **no PR**. candidate `3a733578afbd` · base `4300eee610a1` (main) · branch `feature/dev-104-ship-flow-review-station-open-the-draft-pr-and-run-kc-pr`
+- Without-it (worker self-report): retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1 · contract test (worker self-report) PASS
+- FO accept station: 2026-09-06T02:20:47Z accept-evidence: ACCEPT
+- How to verify: run `python3 scripts/ship-flow/disposition.py scripts/fixtures/ship-flow/findings-empty.json | grep -q '"disposition": "reviewer-absent"'` (expect the retained exit above); apply `git rm -f scripts/ship-flow/disposition.py`; run it again (expect the removed exit above).
+
+## Layer 2: DEV-105 — DEV-105
+
+- Outcome: **no PR**. candidate `470b3e412632` · base `4300eee610a1` (main) · branch `feature/dev-105-ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked`
+- Without-it (worker self-report): retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2 · contract test (worker self-report) PASS
+- FO accept station: 2026-09-06T02:21:12Z accept-evidence: ACCEPT
+- How to verify: run `bash scripts/ship-flow/e2e-cli.sh $\(git rev-parse HEAD\) docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml` (expect the retained exit above); apply `rm -f docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml`; run it again (expect the removed exit above).
+
+## Layer 3: DEV-106 — DEV-106
+
+
+## Layer 4: DEV-107 — DEV-107
+
+
+## Unaccounted
+
+- DEV-106: no Evidence file and no close-receipt entry.
+- DEV-107: no Evidence file and no close-receipt entry.
+
+## Not handed off
+
+- none dispositioned as stuck; see Unaccounted above for DEV-106, DEV-107.
+
+## For the Captain
+
+- Nothing recorded in the close receipt yet.
+
+## Decisions made under `defaults`
+
+- 2026-09-06T01:35Z — quota pause \(S17/S18\) on the first cut; carried here: dispatch waits for the 04:20Z reset.
+- 2026-09-06T02:06:49Z — **routing: Captain directed local subagents for layer 1** \("如果有可以在派 subagent 直接做的，應該可以本地先派以便靈活調度"\). DEV-104 and DEV-105 run as Sonnet subagents in isolated worktrees from the same Briefs; same Evidence contract, same accept station. Cloud dispatch for these two is cancelled; the 04:20Z timer now only re-checks. Dispatch-to-Evidence minutes recorded for DEV-110.
+- 2026-09-06T02:23:34Z — **layer 1 accepted.** DEV-104 \(\`3a733578\`\) and DEV-105 \(\`470b3e41\`\) both ACCEPT at the accept station on main, SHAs equal remote heads, S29 guard clean; each ran its own block through the station \(SELF_CHECK\). Subagent dispatch-to-Evidence: 14 min each \(167K / 180K tokens\) versus ~5 min of workspace overhead before a cloud worker starts — recorded for DEV-110.
+- 2026-09-06T02:23:34Z — **PRs opened with DEV-104's own \`open-pr.sh\`** from its candidate \(dogfood of the station under build\): DEV-104 → #378, DEV-105 → #379. Default \`pr_creation: batch_approve_draft\`.
+- 2026-09-06T02:23:34Z — **DEV-106 base = main**, not a merge of the two layer-1 candidates: its Brief consumes batch records, not their code. DEV-107 will stack on DEV-105's candidate because it appends to that flow file.
+
+(5 defaults decisions listed above.)
+2026-09-06T06:06:58Z PASS step 3: 'python3 scripts/ship-flow/uat-doc.py scripts/fixtures/ship-flow/uat-doc/batch-e56e9f09873c' exited 0
+2026-09-06T06:06:58Z step 4: python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.DRAFT.json (expect: exit code 1)
+OK 1016352e02231945 3 issues 3 edges
+INVALID: defects_returned missing fix_ticket or accepted_residual: S24, S25, S26
+2026-09-06T06:06:58Z PASS step 4: 'python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.DRAFT.json' exited 1
+2026-09-06T06:06:58Z step 5: python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.dispositioned.json (expect: exit code 0)
+OK 1016352e02231945 3 issues 3 edges
+CLOSE OK 8c079687c3739678 {'DEV-90': 'pr_open', 'DEV-91': 'accepted_no_pr', 'DEV-92': 'pr_open'}
+2026-09-06T06:06:58Z PASS step 5: 'python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.dispositioned.json' exited 0
+2026-09-06T06:06:58Z e2e-cli: exit 0
