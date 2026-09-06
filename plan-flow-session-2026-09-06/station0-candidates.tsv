@@ -1,0 +1,7 @@
+DEV-103	ship-flow accept station: refuse a changed file whose own removal breaks nothing
+DEV-104	ship-flow review station: open the Draft PR and run kc-pr-review, treating empty
+DEV-105	ship-flow e2e station: a passing CLI journey at the stacked head is the conditio
+DEV-106	ship-flow handoff: one UAT document and one Slack message, generated from the ba
+DEV-107	ship-flow close: the close receipt refuses an undispositioned defect and carries
+DEV-108	kc-dev-flow build contract: a worker runs its own Evidence block through the acc
+DEV-109	plan-flow validator: fail closed when jsonschema is absent, and install it in CI
