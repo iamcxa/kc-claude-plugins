@@ -1,0 +1,24 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "67990a07c79ce674a9776d1c2bb8bcab876d343da7ffe2e51736e720dd80f93c",
+ "approver": "person:captain",
+ "approved_at": "2026-09-06T08:42:54Z",
+ "decision": "go",
+ "max_workspaces": 5,
+ "concurrency": 2,
+ "repair_rounds": 2,
+ "quote": "批准",
+ "quote_source": "Captain, chat, 2026-09-06: 「批准」 in reply to the FO's gate line recommending 'go · 5 workspaces · concurrency 2 · repair 2 · Pilot · 122 進'; the parameters are the FO's recommendation, approved by that word",
+ "defaults": {
+  "findings_outside_brief": [
+   "security",
+   "data-loss",
+   "compatibility"
+  ],
+  "minimal_necessity_fail": "accepted_no_pr",
+  "moved_base": "rebase_and_accept",
+  "worker_blocker": "skip_issue_continue_batch",
+  "empty_reviewer": "fallback_to_fo_diff_read",
+  "pr_creation": "batch_approve_draft"
+ }
+}
