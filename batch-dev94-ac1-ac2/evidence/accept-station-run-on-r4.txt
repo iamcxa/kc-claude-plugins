@@ -1,0 +1,12 @@
+== accept station (main) on R4 ==
+2026-09-06T00:06:52Z checking Evidence block: CANDIDATE=e9b04927c24411a57617522ce4d55c32a74ab2f5 BASE=030a0bb763463bed8c97ff1f1af9c00c2565cd5f
+2026-09-06T00:06:52Z checking AC-4: CANDIDATE_SHA is valid
+2026-09-06T00:06:52Z AC-4 PASS: CANDIDATE_SHA is valid and reachable
+2026-09-06T00:06:53Z AC-4: branch feature/dev-94-ac2-r4-static-check-weakest-sufficient HEAD is e9b04927c24411a57617522ce4d55c32a74ab2f5 (matches CANDIDATE_SHA)
+2026-09-06T00:06:53Z checking AC-3: static path consistency
+2026-09-06T00:06:53Z AC-3 SKIP: cannot extract paths from WITHOUT_IT_COMMAND
+2026-09-06T00:06:53Z checking AC-1: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA 030a0bb763463bed8c97ff1f1af9c00c2565cd5f
+2026-09-06T00:06:53Z created worktree at /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.FmMIe4zuyZ for BASE_SHA
+2026-09-06T00:07:43Z WITHOUT_IT_COMMAND at BASE_SHA exited 0
+2026-09-06T00:07:43Z accept-evidence: REFUSE: AC-1: WITHOUT_IT_COMMAND already exits 0 at BASE_SHA 030a0bb763463bed8c97ff1f1af9c00c2565cd5f - pair cannot fail
+station exit=1

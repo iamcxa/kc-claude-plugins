@@ -66,3 +66,7 @@ Residual: one `SURFACE` line for the script, none for the six fixture files.
 ## Note on commit bca55597
 
 Its subject says "dispatch round 4"; the dispatch in that same script failed closed with `intent: state checkout dirty` (S30 had been appended before the commit ran), left no intent, and was retried after the commit. The retry is the dispatch of record; see `ac2-r4-dispatch.log`.
+
+## AC-2 round 4 (`e9b04927`) — code accepted, Evidence REFUSED
+
+S30 regression at the candidate: real AC5-r2 ACCEPT (WARN, 1 of 3 changed read paths restored); real AC367-r2 ACCEPT; real AC4-r3 (S29) REFUSE out-of-tree; round-3 block ACCEPT. The station on main refused the round-4 block itself: `WITHOUT_IT_COMMAND` was the whole contract test, which exits 0 at `BASE_SHA` — the block claimed exit 1, which did not happen (worker-conduct: a reported exit that was not observed). Also `AC-3 SKIP` on that command, a refusal under round 3's own rule. Round 5 dispatched evidence-only with a pair that flips on `mutant-drop-path`'s WARN.

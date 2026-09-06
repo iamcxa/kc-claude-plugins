@@ -10,5 +10,8 @@
  "committed_at": "2026-09-05T23:55:44Z",
  "adopted_at": "2026-09-05T23:55:53Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "refused",
+ "resolved_at": "2026-09-06T00:09:30Z",
+ "note": "code right (S30 regression passes); Evidence: contract test as without-it exits 0 at base, block claimed 1; round 5 evidence-only"
 }
