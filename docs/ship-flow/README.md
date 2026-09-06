@@ -340,3 +340,17 @@ FO's own last message. `scripts/ship-flow/worker-transcript.sh <session-id>`
 prints the session's last fenced `## Evidence` block, or exits 1 with `no
 evidence block` when the transcript has none. One read per invocation; no
 polling loop, retry, or daemon.
+
+A Milestone's CLI journey lives at `docs/ship-flow/flows/<milestone-slug>.yaml`
+in e2e-pipeline's `Execute external` step shape, consumed read-only by
+`scripts/ship-flow/e2e-cli.sh`; the slug is the milestone name lowercased with
+runs of non-alphanumeric characters collapsed to a single hyphen.
+`scripts/ship-flow/e2e-gate.py <plan-receipt.json> <close-receipt.json>` reads
+the plan receipt's `dispatch_order` and `milestones` for the batch's named
+milestone and the close receipt's per-issue `candidate` for the stacked head
+(the last dispatch-order issue that carries each, since an
+accepted-without-PR layer carries neither), then picks the batch's UAT-ready
+shape: a milestone with a flow file runs `e2e-cli.sh` at the stacked head and
+reports its log path and exit code; a milestone with no flow file records
+`e2e: not applicable` with the reason and exits 0; no milestone named exits
+non-zero and the batch is not UAT-ready.

@@ -1,0 +1,22 @@
+name: from-dispatch-to-one-slack-message
+description: |
+  CLI e2e journey for the Milestone "From dispatch to one Slack message":
+  over a fixture batch record, run the stations that exist at this item's
+  base, each with its declared expected exit. Later layers append their
+  stations' steps to this same file rather than starting a new one.
+steps:
+  - id: accept-recorded-evidence
+    action: "Execute external"
+    description: "accept-evidence.sh accepts an already-verified, real recorded Evidence block"
+    execute:
+      cli:
+        - run: "bash scripts/ship-flow/accept-evidence.sh scripts/fixtures/ship-flow/e2e-gate/recorded-evidence-block.txt"
+          expect: "exit code 0"
+
+  - id: e2e-gate-not-applicable
+    action: "Execute external"
+    description: "the e2e gate records 'e2e: not applicable' for a milestone with no flow file"
+    execute:
+      cli:
+        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json"
+          expect: "exit code 0"
