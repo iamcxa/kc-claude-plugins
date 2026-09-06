@@ -1,0 +1,3 @@
+FAIL L2 one cycle: {'b788c52d-8370-475f-be4f-8fcd88dd03d6', None}
+FAIL L9 by-product Issue check: issues with no unique surface: DEV-107: only surface docs/plan-flow/schema/validate-receipt.py already claimed by DEV-104
+LINT FAIL | receipt e7cb978711a047bb | order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-107', 'DEV-119', 'DEV-120']

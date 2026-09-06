@@ -1,0 +1,313 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "6072d592-8704-448b-bb8d-66471b0557f9",
+  "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
+  "content": "## User value\n\nKent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.\n\n**Hypothesis:** If we run review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.\n\n**Wedge:** Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).\n\n**Accepted outcome:** ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.\n\n**Falsifier:** The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates.\n\n**Premises**\n\n* P1: Doing nothing keeps the Captain reading the chat and pressing \u7e7c\u7e8c to advance a batch; on 2026-09-05 that was about ten nudges and the laptop stayed open.\n* P2: The existing partial solution is the accept station (#373, #377) plus a hand-written uat.md; kc-pr-review exists and ship-flow never calls it.\n* P3: Premise falsifier \u2014 remove the approach (scripts for the three stations and the close): the outcome (one message, zero questions) cannot hold, because without the scripts the FO writes by hand and the Captain waits; the value depends on the mechanism, not on a document.\n\n**Exit**\n\n* DEV-104, DEV-105, DEV-106, DEV-107 accepted by the accept station and merged.\n* The next batch's record shows kc-pr-review dispositions, an e2e artifact or a written reason, one generated UAT document, exactly one Slack message, and a validated close receipt with every defect dispositioned.\n* Captain questions between first dispatch and the UAT message: zero (DEV-94 AC-3).\n\nPlan session 2026-09-06; stations 0\u20134 recorded on the state branch under plan-flow-session-2026-09-06/.",
+  "initiatives": {
+   "nodes": []
+  },
+  "projectMilestones": {
+   "nodes": [
+    {
+     "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f",
+     "name": "plan-flow lint maintenance"
+    },
+    {
+     "id": "5d613d5e-16d7-47af-9db1-21884436c346",
+     "name": "B: kc-ship-flow as its own plugin"
+    },
+    {
+     "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a",
+     "name": "From dispatch to one Slack message"
+    }
+   ]
+  },
+  "issues": {
+   "nodes": [
+    {
+     "id": "5a0e79c0-acf7-4e72-a60a-596ee0b1fac3",
+     "identifier": "DEV-122",
+     "url": "https://linear.app/duckbase-co/issue/DEV-122/plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un-cycled",
+     "description": "## The problem\n\n`plan-lint.py` L9 (by-product surface) and L2 (one cycle) run over every Issue in the Project snapshot, including Done ones. On 2026-09-06, with DEV-104..107 merged and seven B candidates filed, the lint reported `L9 DEV-107: only surface validate-receipt.py already claimed by DEV-104` \u2014 two closed tickets \u2014 and `L2 one cycle {cycle-1, None}` because Backlog candidates have no cycle before admission. Both hide the signal the lint exists for: a live plan with a real by-product or a real cycle split.\n\n## Accepted outcome\n\nL9 and L2 consider only Issues whose state type is not `completed`/`canceled`; Backlog candidates without a cycle are reported by L2 as `unadmitted: N` (warn), and the rule fails only when admitted Issues span more than one cycle. A fixture snapshot with one Done pair sharing a surface and one un-cycled Backlog candidate lints PASS; the same snapshot with the pair set to In Progress lints FAIL on L9.\n\n## Non-goals\n\n* Changing L1, L3\u2013L8, L10.\n* Deciding which candidates get admitted (plan session).\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/plan-lint.py lint <fixture-done-pair.json>` exits 0 and its log prints `L9 \u2026 PASS` and `L2 \u2026 unadmitted: 1`.\n* **AC-2** The same fixture with the pair's state changed to `started` exits non-zero and the log names DEV-107's shared surface.\n* **AC-3** `scripts/kc-dev-flow-contract-test.py` runs both fixtures and exits 0 on main.\n\nRe-verified: `grep -q 'Done' docs/plan-flow/plan-lint.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-122-plan-lint-l9-and-l2-must-ignore-done-issues-and-report-un",
+     "cycle": null,
+     "projectMilestone": {
+      "id": "cbc2f753-9621-4c9a-b74a-46556e1a5e2f"
+     },
+     "state": {
+      "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "550c1aee-b026-4da4-be71-290de502938a",
+     "identifier": "DEV-121",
+     "url": "https://linear.app/duckbase-co/issue/DEV-121/b7-plan-flow-become-its-own-plugin-so-its-receipt-and-approval-schemas",
+     "description": "## The problem\n\nplan-receipt and plan-approval schemas live in `docs/plan-flow/schema/` of one repository; ship pins them by the `schema` string (`kc-plan-receipt/v1`) with no installable, versioned source, and dev-flow's Linear admission reads the same tickets without a contract. Captain ruling 2026-09-06: plan, dev and ship are independent and must each be usable alone.\n\n## Accepted outcome\n\nA `kc-plan-flow` plugin owning `plan-lint.py`, the three schemas' plan half (receipt, approval), the dialectic station notes, and its own contract test; ship's B2 reads the schemas from the installed plan-flow plugin when present and refuses (not guesses) when absent. Falsifier: removing the installed plan-flow plugin makes ship's close-receipt validation exit non-zero naming the missing schema.\n\n## Non-goals\n\n* Changing any schema field.\n* Merging plan-flow into kc-dev-flow or kc-ship-flow.\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-plan-flow/scripts/contract-test.py` exits 0 on main and its log names plan-lint and the two schemas\n* **AC-2** with the installed plan-flow plugin removed, ship's `validate-receipt.py` exits non-zero and prints the missing schema name\n* **AC-3** `kc-plan-flow/scripts/plan-lint.py lint <snapshot>` runs from any cwd and prints the same receipt hash as the repo copy did before the move\n\nRe-verified: `test -d kc-plan-flow` exit 1 2026-09-06",
+     "branchName": "feature/dev-121-b7-plan-flow-become-its-own-plugin-so-its-receipt-and",
+     "cycle": null,
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "42778d78-fe06-48cc-a9a2-c86c1c1643ec",
+     "identifier": "DEV-120",
+     "url": "https://linear.app/duckbase-co/issue/DEV-120/b6-kc-ship-flow-retire-docsship-flow-and-the-old-runtime-section-land",
+     "description": "## The problem\n\nThe deprecated ship-flow workflow (`docs/ship-flow/`, 8 stages, its own diverged `_mods/pr-merge.md`) still carries the runtime section and two flows yaml; three open tickets (DEV-112 open-pr title, DEV-113 Subspace delivery, DEV-114 merge station) target the old script paths.\n\n## Accepted outcome\n\n`docs/ship-flow/` is deleted after B3 has placed every sentence; the two flow yaml files move to `docs/ship/flows/`; DEV-112, DEV-113 and DEV-114 are implemented as `kc-ship-flow/scripts/` stations with tests and closed. Falsifier: `git grep scripts/ship-flow` on main returns nothing.\n\n## Non-goals\n\n* Uninstalling the old ship-flow plugin from the Captain's machines (operator action).\n* Changing plan-flow.\n\n## Acceptance criteria\n\n* **AC-1** `git grep scripts/ship-flow` on main prints nothing and exits 1\n* **AC-2** `test -e docs/ship-flow` exits 1 and `ls docs/ship/flows` prints the two moved flow files\n* **AC-3** DEV-112, DEV-113 and DEV-114 each close with a `kc-ship-flow/scripts/*.test.*` run logged exit 0\n\nRe-verified: `git grep -q scripts/ship-flow -- docs/ship-flow/README.md` exit 0 2026-09-06",
+     "branchName": "feature/dev-120-b6-kc-ship-flow-retire-docsship-flow-and-the-old-runtime",
+     "cycle": null,
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-119"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-117"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "c196f71b-72af-4461-8f3f-600f13fec0f3",
+     "identifier": "DEV-119",
+     "url": "https://linear.app/duckbase-co/issue/DEV-119/b5-kc-ship-flow-commission-docsship-as-a-spacedock-workflow-with",
+     "description": "## The problem\n\nThere is no ship workflow of its own: batch e56e9f09 ran on hand-built records under `docs/dev/.spacedock-state/batch-*/` with the station chain in the FO's head.\n\n## Accepted outcome\n\n`docs/ship/README.md` commissioned by spacedock (entity `batch`, stages dispatched \u2192 accepted \u2192 reviewed \u2192 uat \u2192 merged \u2192 closed, state on `spacedock-state/dev`), containing only frontmatter, a marked `## Local Profile` table (holder, runtime Conductor-or-local-subagent, planning provider, UAT delivery = Subspace, approval-defaults path, e2e flow dir) and one line per stage naming the installed script; a `kc-ship-flow:first-officer` skill that reads that table and runs the chain; the next batch runs through it end to end with a close receipt validated by the plugin. Falsifier: deleting the Local Profile row for the runtime makes the skill refuse to dispatch.\n\n## Non-goals\n\n* Retiring docs/ship-flow (B6).\n* Any change to kc-dev-flow's route the worker runs.\n\n## Acceptance criteria\n\n* **AC-1** `spacedock status --workflow-dir docs/ship` runs and prints the batch entity with the six stages\n* **AC-2** the `kc-ship-flow:first-officer` skill runs one batch end to end and `validate-receipt.py` exits 0 on its close receipt\n* **AC-3** removing the runtime row from the Local Profile table makes the skill's dispatch step exit non-zero naming the missing row (mutation run recorded)\n\nRe-verified: `test -f docs/ship/README.md` exit 1 2026-09-06",
+     "branchName": "feature/dev-119-b5-kc-ship-flow-commission-docsship-as-a-spacedock-workflow",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-116"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-118"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "770673e8-c347-453c-8197-0c657b3660ba",
+     "identifier": "DEV-118",
+     "url": "https://linear.app/duckbase-co/issue/DEV-118/b4-poc-kc-ship-flow-a-batch-station-pin-loader-with-its-own-digest",
+     "description": "## The problem\n\nShip needs the same guarantee dev-flow has \u2014 the plugin bytes a batch ran under are pinned by sha256 \u2014 but kc-dev-flow's `profile-contract-loader.py` binds profile \u00d7 dev stage per work item (`kc-dev-flow-stage-pin/v1`), and importing it would couple the two flows the Captain ruled independent. Whether a small standalone loader is enough is an unexecuted assumption.\n\n## Accepted outcome\n\nA POC `kc-ship-flow/scripts/pin.py` that computes a contract digest over the plugin's declared resources, writes `kc-ship-flow-batch-pin/v1` (batch id, station, plugin version, digest, previous station) and refuses a station whose digest or previous station does not match; one test file with a mutation per refusal; a written verdict (proceed / change) on whether the ~200-line standalone shape holds before B5 depends on it.\n\n## Non-goals\n\n* Sharing code with kc-dev-flow's loader.\n* Pinning plan-flow schemas by bytes (they are pinned by `schema` string).\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/pin.py write --batch <id> --station accepted` prints a `kc-ship-flow-batch-pin/v1` record with a 64-hex digest and exits 0\n* **AC-2** `pin.py check` exits non-zero when one declared plugin resource byte changes, and when the previous station in the record is not the expected one (two mutations, both logged in `pin.test.py`)\n* **AC-3** `grep -c 'import.*profile_contract_loader' kc-ship-flow/scripts/pin.py` prints 0\n\nRe-verified: `grep -q batch-pin kc-dev-flow/scripts/profile-contract-loader.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-118-b4-poc-kc-ship-flow-a-batch-\u00d7-station-pin-loader-with-its",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "cca74079-3444-4d31-b0dd-80447ee8b613",
+     "identifier": "DEV-117",
+     "url": "https://linear.app/duckbase-co/issue/DEV-117/b3-kc-ship-flow-sort-the-ship-flow-runtime-prose-into-kernel-station",
+     "description": "## The problem\n\n`## Ship-flow runtime` in the deprecated `docs/ship-flow/README.md` (~300 lines) mixes four kinds of sentence: principles, formats, script behaviour, and host-specific notes. Prose cannot be tested or merged across adopters.\n\n## Accepted outcome\n\nEvery sentence of that section is placed by one rule \u2014 a sentence that names an enforcement point (script, schema, check) moves to that layer; one that cannot either gets an enforcement point or stays as a declared residual: `kc-ship-flow/references/kernel.md` (principles: accept by evidence never re-run, zero Captain questions inside a batch with decisions by approval defaults, FO never authors a candidate, moved_base is an FO merge of main, defects are filed then decided in a plan session, e2e is UAT admission), `references/stations/<station>.md` one page each (input, output, refusal, enforcing script), `schemas/evidence-block.md` (grammar) and `schemas/findings.schema.json`, and `docs/ship/runbooks/conductor-cloud.md` for host notes marked non-normative. A table in the PR body lists each original paragraph and its destination; unplaced sentences are listed as residuals. Falsifier: `grep -c` of the original section's sentences left in any README is zero except the residual list.\n\n## Non-goals\n\n* Enforcing a principle that has no script today (file a ticket per principle instead).\n* Editing kc-dev-flow's kernel.md.\n\n## Acceptance criteria\n\n* **AC-1** `grep -c '' kc-ship-flow/references/kernel.md` prints a count greater than 20 and `ls kc-ship-flow/references/stations` prints one file per station\n* **AC-2** a script `kc-ship-flow/scripts/prose-placement-check.py` runs over the original section's sentences and exits 0 only when each is placed or listed as a residual\n* **AC-3** the PR body table lists every original paragraph with its destination; the residual list is reproduced by the script's log\n\nRe-verified: `grep -q '^## Ship-flow runtime' docs/ship-flow/README.md` exit 0 2026-09-06",
+     "branchName": "feature/dev-117-b3-kc-ship-flow-sort-the-ship-flow-runtime-prose-into-kernel",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-115"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "104f4976-0ec3-4c0a-bba2-4ddc88112e51",
+     "identifier": "DEV-116",
+     "url": "https://linear.app/duckbase-co/issue/DEV-116/b2-kc-ship-flow-move-the-fourteen-station-scripts-and-their-tests-into",
+     "description": "## The problem\n\n`scripts/ship-flow/*` ([accept-evidence.sh](<http://accept-evidence.sh>), [without-it.sh](<http://without-it.sh>), [intent.sh](<http://intent.sh>), [holder.sh](<http://holder.sh>), [fenced-dispatch.sh](<http://fenced-dispatch.sh>), [worker-transcript.sh](<http://worker-transcript.sh>), [open-pr.sh](<http://open-pr.sh>), [disposition.py](<http://disposition.py>), [e2e-cli.sh](<http://e2e-cli.sh>), [e2e-gate.py](<http://e2e-gate.py>), [parse-execute-external.py](<http://parse-execute-external.py>), [uat-doc.py](<http://uat-doc.py>), [notify.sh](<http://notify.sh>), [dev-debrief.py](<http://dev-debrief.py>), [ship-debrief.py](<http://ship-debrief.py>)) and `docs/plan-flow/schema/validate-receipt.py`'s close-receipt half are repo-local; an adopter cannot install them and they are tested only by `scripts/kc-dev-flow-contract-test.py`, which belongs to another flow.\n\n## Accepted outcome\n\nThe station scripts and every `*.test.*` move under `kc-ship-flow/scripts/` (git mv, history kept); `kc-ship-flow/scripts/contract-test.py` runs all of them and is what the B1 CI job executes; the ship-flow sections leave `scripts/kc-dev-flow-contract-test.py`; fixtures move to `kc-ship-flow/scripts/fixtures/`. The close-receipt validation stays callable as `validate-receipt.py` but reads `kc-ship-close-receipt.v1.schema.json` from the plugin, while plan-receipt/approval schemas stay in plan-flow and are referenced by their `schema` string only. Falsifier: the moved contract test fails when any one station script is deleted.\n\n## Non-goals\n\n* Changing any station's behaviour.\n* Touching plan-receipt / plan-approval schemas (plan-flow owns them).\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 on main and its log names every moved station\n* **AC-2** `test -e scripts/ship-flow` exits 1 on main\n* **AC-3** deleting any one station script makes the contract test exit non-zero (mutation run recorded in the PR body)\n\nRe-verified: `test -f scripts/ship-flow/accept-evidence.sh` exit 0 2026-09-06",
+     "branchName": "feature/dev-116-b2-kc-ship-flow-move-the-fourteen-station-scripts-and-their",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-115"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "443c7163-f197-4d3d-b6ad-a915f6c1edc4",
+     "identifier": "DEV-115",
+     "url": "https://linear.app/duckbase-co/issue/DEV-115/b1-kc-ship-flow-plugin-skeleton-manifests-marketplace-entry-release",
+     "description": "## The problem\n\nShip-flow's stations live as loose repo scripts under `scripts/ship-flow/` with their principles in a prose section of the deprecated `docs/ship-flow/README.md`; nothing versions them, so a principle change is a README edit per adopter (Captain ruling 2026-09-06: ship, dev, plan are three independent units connected only by input/output contracts).\n\n## Accepted outcome\n\nA `kc-ship-flow/` plugin directory exists on `main` with `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, a marketplace entry, a release-please component (`initial-version` policy 0.1.0, `exclude-paths` set so a path-less commit cannot bump it), a CI job triggered only on `kc-ship-flow/**` that runs `kc-ship-flow/scripts/contract-test.py` (initially empty but exit 0), and `references/kernel.md` holding only the heading and the three-flow independence sentence. `scripts/version-parity-check.sh` passes with the eighth plugin. Falsifier: remove the marketplace entry \u2192 parity check fails closed.\n\n## Non-goals\n\n* Moving any station script (B2).\n* Writing kernel principles (B3).\n* A skill (comes with B5's commission).\n\n## Acceptance criteria\n\n* **AC-1** `test -d kc-ship-flow` exits 0 on main and `scripts/version-parity-check.sh` exits 0 with eight plugins\n* **AC-2** the B1 CI job runs `kc-ship-flow/scripts/contract-test.py` on a PR touching only `kc-ship-flow/` and its log shows exit 0\n* **AC-3** a PR touching only `docs/` does not run the kc-ship-flow job (workflow run list prints none)\n\nRe-verified: `test -d kc-ship-flow` exit 1 2026-09-06",
+     "branchName": "feature/dev-115-b1-kc-ship-flow-plugin-skeleton-manifests-marketplace-entry",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "5d613d5e-16d7-47af-9db1-21884436c346"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "6cbc6602-5e5b-40f3-8985-199384d8f507",
+     "identifier": "DEV-107",
+     "url": "https://linear.app/duckbase-co/issue/DEV-107/ship-flow-close-the-close-receipt-refuses-an-undispositioned-defect",
+     "description": "## The problem\n\n`validate-receipt.py` already binds a close receipt to its plan receipt and approval and checks the issue set (2026-09-06, lines 65-77), but it never reads `defects_returned`: S24, S25, S26 sat with `fix_ticket: null` for two days and nothing complained. DEV-94 AC-6 and AC-7 ask for two things the validator does not know about: an entry must carry a `fix_ticket` or an `accepted_residual`, and the close receipt carries a dev debrief (written at UAT-ready from the Evidence blocks and refusals) and a ship debrief (written after merge from the Captain's overturns).\n\n## Accepted outcome\n\nThe close-receipt schema gains `accepted_residual` as the alternative to `fix_ticket`, and two debrief fields with fixed minimum shapes. The dev debrief is written at UAT-ready and addressed to dev-flow: per Issue, rounds, Evidence refusals with their shape, code refusals, and one candidate correction to the build contract. The ship debrief is written after the Captain merges and addressed to ship-flow: every `defaults` decision and whether the Captain overturned it, defects returned with disposition, minutes per station, and one candidate correction to ship-flow. `validate-receipt.py` refuses a `defects_returned` entry with neither disposition, names it, and refuses a close receipt missing either debrief or any of a debrief's minimum fields. Two small writers draft each debrief from the batch record into that shape; the FO edits, never writes from scratch. This item also appends the `uat-doc` and close-receipt validation steps to `docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml`, which DEV-105 created.\n\n## Non-goals\n\n* No change to the plan receipt or approval schemas.\n* No automatic Linear ticket creation for a defect; `fix_ticket` is filled by plan-flow.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** The recorded `close-receipt.DRAFT.json` from batch 1016352e0223 is refused naming S24, S25, S26; exit and message recorded.\n* **AC-2** The same receipt with `accepted_residual` filled on those three and both debriefs present is accepted; recorded.\n* **AC-3** A close receipt with no dev debrief, and one whose dev debrief lacks the per-Issue rounds field, are each refused naming the field; recorded.\n* **AC-4** The two writers, run on batch 1016352e0223's record, produce drafts carrying every minimum field; recorded.\n* **AC-5** The flow file carries the appended steps and `e2e-cli.sh` at the candidate exits 0 over the whole flow; recorded.\n* **AC-6** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: printed 0 matches: the validator does not read defects_returned\n\nRe-verified: `grep -c 'defects_returned\\|fix_ticket' docs/plan-flow/schema/validate-receipt.py` exit 0 2026-09-06",
+     "branchName": "feature/dev-107-ship-flow-close-the-close-receipt-refuses-an-undispositioned",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-106"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "6dee3b3c-3b76-446e-9363-1c61a5efb556",
+     "identifier": "DEV-106",
+     "url": "https://linear.app/duckbase-co/issue/DEV-106/ship-flow-handoff-one-uat-document-and-one-slack-message-generated",
+     "description": "## The problem\n\nThe UAT document for batch 1016352e0223 was written by hand; `uat-doc.py` survives only in DEV-67's evidence directory on the state branch. No Slack message has ever been sent by ship-flow; the Captain learned a batch was ready by reading the chat. The Captain's stated day shape ends with 'one UAT document and one Slack ping'.\n\n## Accepted outcome\n\n`scripts/ship-flow/uat-doc.py` moves into the repository and reads the batch record (accepted blocks, PR numbers and SHAs, review dispositions, e2e artifact, every decision the `defaults` made) into one markdown document; `scripts/ship-flow/notify.sh` sends exactly one Slack message carrying the document link, idempotent on the batch id so a re-run sends nothing.\n\n## Non-goals\n\n* No Slack for anything other than UAT-ready.\n* No change to the UAT document's meaning: it lists, it does not decide.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** Run on batch 1016352e0223's recorded evidence the generator reproduces the hand-written `uat.md` section for section; diff recorded.\n* **AC-2** The generated document lists every `defaults` decision from the batch record; count recorded against the record.\n* **AC-3** `notify.sh` run twice for the same batch id sends one message; both runs and the message id recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: the generator is not in the repository; grep -rqi slack scripts/ship-flow/ also exits 1\n\nRe-verified: `test -f scripts/ship-flow/uat-doc.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-106-ship-flow-handoff-one-uat-document-and-one-slack-message",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-105"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-104"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "5ddc957e-ab7a-4b71-849e-ba615f885841",
+     "identifier": "DEV-105",
+     "url": "https://linear.app/duckbase-co/issue/DEV-105/ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked-head-is-the",
+     "description": "## The problem\n\nDEV-94 AC-4 was relaxed on 2026-09-04 to three shapes: an e2e-flow recording where the Milestone names a journey, otherwise the `e2e-cli.sh` stdout log at the stacked head, otherwise `e2e: not applicable` with a reason. `scripts/ship-flow/e2e-cli.sh` exists and runs `Execute external` steps at a pinned SHA, but nothing selects the shape, runs it at the stacked head, or refuses to call a batch UAT-ready without one of the three.\n\n## Accepted outcome\n\nA Milestone's CLI journey lives at `docs/ship-flow/flows/<milestone-slug>.yaml` in e2e-pipeline's `Execute external` step shape, consumed read-only by `scripts/ship-flow/e2e-cli.sh`; the slug is derived from the receipt's milestone name, so the receipt needs no new field. One script takes the batch's accepted candidates in dispatch order, computes the stacked head, and picks the shape: flow file present \u2192 run `e2e-cli.sh` at that head and record the stdout log path; journey named but no flow file \u2192 record `e2e: not applicable` with the reason; neither \u2192 exit non-zero and the batch is not UAT-ready. This item also writes the flow for this batch's own Milestone, `From dispatch to one Slack message`: over a fixture batch record it runs the stations that exist at its base \u2014 `accept-evidence.sh` on a recorded block, then this e2e gate \u2014 with each step's expected exit declared; later layers append their stations' steps to the same file.\n\n## Non-goals\n\n* No browser e2e in this item; the e2e-flow recording shape is recorded as delegated to e2e-pipeline.\n* No change to `e2e-cli.sh` step semantics.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** `docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml` exists and `e2e-cli.sh <candidate-sha> <that flow>` runs every step and exits 0 at the candidate; the stdout log is recorded.\n* **AC-2** With a fixture receipt whose milestone has a flow file, the script runs `e2e-cli.sh` at the stacked head and records the log path; exit 0 recorded.\n* **AC-3** With a fixture receipt naming a journey but no flow file, the script records `e2e: not applicable` with the reason text; recorded.\n* **AC-4** With no artifact and no reason, the script exits non-zero and the batch is not marked UAT-ready; recorded.\n* **AC-5** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: the three-shape rule exists only in DEV-94's text\n\nRe-verified: `grep -rq 'not applicable' scripts/ship-flow/` exit 1 2026-09-06",
+     "branchName": "feature/dev-105-ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "34e67189-96a8-4b48-93af-4bb8bc9dc484",
+     "identifier": "DEV-104",
+     "url": "https://linear.app/duckbase-co/issue/DEV-104/ship-flow-review-station-open-the-draft-pr-and-run-kc-pr-review",
+     "description": "## The problem\n\nFive PRs were opened by the First Officer on 2026-09-05/06 and none was reviewed by `kc-pr-review`; the FO read each diff by hand. S25 recorded a cross-model reviewer returning empty output that was nearly recorded as 'no findings'. The approval `defaults` now name the rule (`empty_reviewer: fallback_to_fo_diff_read`) but nothing executes the station.\n\n## Accepted outcome\n\nTwo pieces, because `kc-pr-review` is a skill and runs only inside a Claude session. `scripts/ship-flow/open-pr.sh <evidence-block>` opens the Draft PR from an accepted Evidence block (title from the commit subject; body from a template fed by the block: SHAs, the without-it pair, the accept station's line) and prints the PR number. `scripts/ship-flow/disposition.py <findings.json>` reads the findings the First Officer's own session wrote to disk after running the skill on that PR, and dispositions them by the approval `defaults`: security, data-loss, and compatibility findings block; others are listed for the UAT document; an empty or missing findings file is recorded as `reviewer-absent` with the fallback marker, never as `no findings`. The skill runs in the FO session, never headless, so the station costs one review per PR and its logic is testable on fixtures.\n\n## Non-goals\n\n* No headless `claude -p` invocation of the review skill; the FO session runs it.\n* No change to kc-pr-review itself.\n* No auto-merge, no marking ready.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** Run on a real accepted block, `open-pr.sh` opens a Draft PR whose title equals the commit subject and whose body carries the block's SHAs, and prints the PR number; the run log is recorded.\n* **AC-2** A fixture findings file with one `security` finding produces disposition `block`; one with only a `style` finding produces `listed`; both runs recorded.\n* **AC-3** An empty findings file and a missing findings file each produce `reviewer-absent` and the fallback marker, not `no findings`; recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: no ship-flow script or runtime doc invokes the review skill\n\nRe-verified: `grep -rq 'kc-pr-review' scripts/ship-flow/ docs/ship-flow/README.md` exit 1 2026-09-06",
+     "branchName": "feature/dev-104-ship-flow-review-station-open-the-draft-pr-and-run-kc-pr",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    }
+   ]
+  }
+ }
+}
