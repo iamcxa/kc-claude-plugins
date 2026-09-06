@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1",
+  "question": "Admit the six-file continuation repair to the selected Production recovery route?",
+  "artifacts": [
+    {
+      "id": "artifact:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/dda89b2c02ee6f1b8e9b4dc19842645abf6cd958/issue-382-stage-pin-continuation.md",
+      "rev": "sha256:a31e68841bb357db19739470bb638c022dfa49d17529e8eb777376c82348b121",
+      "mediaType": "text/markdown",
+      "summary": "Reuse the reviewed continuation repair, verify its accepted-authority and correction boundaries independently, and keep legacy migration separate. No merge or release authority."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/dc4c8b13c0d86d81e4d79679d8ccb735117a9e52/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

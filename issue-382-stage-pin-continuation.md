@@ -6,6 +6,17 @@ sprint: S7
 sprint-readiness: ready
 provenance: https://github.com/iamcxa/kc-claude-plugins/issues/382
 id: dntn9z2nd2gkdcsjbbc9m4pv
+gates:
+    version: 1
+    records:
+        - id: gate:dntn9z2nd2gkdcsjbbc9m4pv:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:dntn9z2nd2gkdcsjbbc9m4pv-backlog-1
+              briefing:
+                id: briefing:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1
+                digest: sha256:406f5d8b6c966567084943c9514f76aba8cf505ca86915c4ee2626230f8e58e5
+                room-ref: ./issue-382-stage-pin-continuation/review/backlog/briefing-1
 ---
 
 Resume valid report updates and explicitly authorized corrections without
