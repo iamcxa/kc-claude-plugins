@@ -63,8 +63,13 @@ PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_PATH = PACKAGE_ROOT / "contract-manifest.json"
 MANIFEST_SCHEMA = "kc-dev-flow-contract-manifest/v1"
 STAGE_PIN_SCHEMA = "kc-dev-flow-stage-pin/v1"
+STATUS_FIELD_PATTERN = r"^status:[ \t]*([^\n#]+?)[ \t]*$"
 LOCAL_PROFILE_START = "<!-- kc-dev-flow-static-local-profile:start -->"
 LOCAL_PROFILE_END = "<!-- kc-dev-flow-static-local-profile:end -->"
+RUNTIME_FIELDS = {
+    "status", "started", "completed", "verdict", "worktree", "pr", "mod-block",
+    "gates", "review-round",
+}
 
 
 class ContractError(RuntimeError):
@@ -227,6 +232,73 @@ def read_stage_pin(path: Path) -> dict[str, object] | None:
     return pin
 
 
+def json_digest(value: dict[str, object]) -> str:
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def read_feedback_context(
+    path: Path, previous: dict[str, object] | None, work_item: Path, attempt: str | None
+) -> dict[str, object]:
+    """Validate an operator-supplied authorization binding, not the actor's identity."""
+    try:
+        feedback = _json_object(path.read_bytes(), "feedback context")
+    except OSError as exc:
+        raise ContractError(f"cannot read feedback context {path}: {exc}") from exc
+    fields = {
+        "schema", "from_stage", "to_stage", "attempt", "rejected_pin_sha256",
+        "rejected_work_item_sha256", "rejected_revision", "rejection", "repair_scope",
+        "authorization",
+    }
+    authorization = feedback.get("authorization")
+    scope = feedback.get("repair_scope")
+    if (
+        set(feedback) != fields
+        or feedback.get("schema") != "kc-dev-flow-feedback/v1"
+        or feedback.get("from_stage") != "validation"
+        or feedback.get("to_stage") != "implementation"
+        or feedback.get("attempt") != attempt
+        or not isinstance(scope, list) or not scope
+        or any(not isinstance(item, str) or is_placeholder_scalar(item) for item in scope)
+        or len(set(scope)) != len(scope)
+        or not isinstance(authorization, dict)
+        or set(authorization) != {"decision", "by", "reference"}
+        or authorization.get("decision") != "revise"
+    ):
+        raise ContractError("FEEDBACK_CONTEXT_MISMATCH: incomplete authorized correction")
+    for value in (feedback.get("rejection"), authorization.get("by"), authorization.get("reference")):
+        if not isinstance(value, str) or is_placeholder_scalar(value):
+            raise ContractError("FEEDBACK_CONTEXT_MISMATCH: rejection and authorization required")
+    for field, pattern in (
+        ("rejected_revision", r"[0-9a-f]{40}(?:[0-9a-f]{24})?"),
+        ("rejected_work_item_sha256", r"[0-9a-f]{64}"),
+        ("rejected_pin_sha256", r"[0-9a-f]{64}"),
+    ):
+        if not isinstance(feedback[field], str) or not re.fullmatch(pattern, feedback[field]):
+            raise ContractError(f"FEEDBACK_CONTEXT_MISMATCH: invalid {field}")
+    if previous is None:
+        raise ContractError("FEEDBACK_CONTEXT_MISMATCH: rejected pin required")
+    resuming = "feedback_context" in previous
+    rejected = previous.get("previous_pin") if resuming else previous
+    if (
+        not isinstance(rejected, dict)
+        or rejected.get("workflow_stage") != "validation"
+        or "work_item_authority_sha256" not in rejected
+        or feedback["rejected_pin_sha256"] != json_digest(rejected)
+        or (resuming and previous["feedback_context"] != feedback)
+    ):
+        raise ContractError("FEEDBACK_CONTEXT_MISMATCH: rejected pin or repair scope changed")
+    receipt = resolve_work_item(work_item)
+    if (
+        receipt["workflow_stage"] != "validation"
+        or receipt["authority_sha256"] != rejected["work_item_authority_sha256"]
+        or (not resuming and receipt["sha256"] != feedback["rejected_work_item_sha256"])
+    ):
+        raise ContractError("FEEDBACK_CONTEXT_MISMATCH: rejected work item or authority changed")
+    return feedback
+
+
 def bind_stage_pin(
     contract: dict[str, object],
     package: dict[str, object],
@@ -235,6 +307,7 @@ def bind_stage_pin(
     previous: dict[str, object] | None,
     *,
     accept_local_profile_refit: bool = False,
+    feedback_context: dict[str, object] | None = None,
 ) -> dict[str, object]:
     if not attempt or len(attempt.encode("utf-8")) > 160:
         raise ContractError("stage attempt must be a non-empty bounded identifier")
@@ -247,28 +320,68 @@ def bind_stage_pin(
             recorded.parent.name if recorded.name == "index.md" else recorded.stem
         )
     interface = str(package["local_profile_interface"]["schema"])
+    if feedback_context is not None and previous is not None:
+        for key, value in (
+            ("plugin_version", package["version"]),
+            ("contract_digest", package["contract_digest"]),
+            ("local_profile_interface", interface),
+            ("local_profile_sha256", local_profile["sha256"]),
+        ):
+            if previous.get(key) != value:
+                raise ContractError("FEEDBACK_CONTEXT_MISMATCH: restore the pinned package and Local Profile")
     if previous is not None and previous.get("workflow_stage") == current_stage:
         exact = {
             "attempt": attempt,
             "plugin_version": package["version"],
             "contract_digest": package["contract_digest"],
-            "work_item_sha256": contract["work_item_sha256"],
             "local_profile_interface": interface,
+            "local_profile_sha256": local_profile["sha256"],
         }
+        authority_key = (
+            "work_item_authority_sha256"
+            if "work_item_authority_sha256" in previous
+            else "work_item_sha256"
+        )
+        exact[authority_key] = contract[authority_key]
         if previous_work_item != current_work_item or any(
             previous.get(key) != value for key, value in exact.items()
         ):
             raise ContractError(
-                "ACTIVE_STAGE_PIN_MISMATCH: restore the pinned plugin version and bytes"
+                "ACTIVE_STAGE_PIN_MISMATCH: attempt, accepted authority, or pinned "
+                "package/Local Profile changed; legacy pins require exact work-item bytes"
             )
         return previous
     if previous is not None:
-        if previous.get("next_workflow_stage") != current_stage:
+        if previous.get("next_workflow_stage") != current_stage and feedback_context is None:
             raise ContractError(
                 "STAGE_PIN_TRANSITION_MISMATCH: current stage is not the pinned next stage"
             )
         if previous_work_item != current_work_item:
             raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item identity changed")
+        boundary_key = (
+            "work_item_boundary_sha256"
+            if "work_item_boundary_sha256" in previous
+            else "work_item_authority_sha256"
+        )
+        if boundary_key in previous and previous[boundary_key] != contract[boundary_key]:
+            raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: accepted authority changed")
+        if boundary_key not in previous:
+            try:
+                raw = Path(str(contract["work_item"])).read_bytes()
+            except OSError as exc:
+                raise ContractError(f"cannot read legacy work item: {exc}") from exc
+            if hashlib.sha256(raw).hexdigest() != contract["work_item_sha256"]:
+                raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item changed during loading")
+            frontmatter, delimiter, body = raw.decode("utf-8").partition("\n---\n")
+            start, end = _one_field_span(frontmatter, STATUS_FIELD_PATTERN, "frontmatter status")
+            restored = (
+                frontmatter[:start] + str(previous.get("workflow_stage", ""))
+                + frontmatter[end:] + delimiter + body
+            ).encode("utf-8")
+            if frontmatter[start:end] != current_stage or hashlib.sha256(restored).hexdigest() != previous.get("work_item_sha256"):
+                raise ContractError(
+                    "STAGE_PIN_TRANSITION_MISMATCH: legacy transition must change only the status value"
+                )
         if (
             previous.get("local_profile_interface") != interface
             and not accept_local_profile_refit
@@ -278,10 +391,12 @@ def bind_stage_pin(
                 f"{local_profile['path']} Installed contract interface and declared "
                 f"Local mods {local_profile['local_mods']} require review before dispatch"
             )
-    return {
+    pin = {
         "schema": STAGE_PIN_SCHEMA,
         "work_item": current_work_item,
         "work_item_sha256": contract["work_item_sha256"],
+        "work_item_authority_sha256": contract["work_item_authority_sha256"],
+        "work_item_boundary_sha256": contract["work_item_boundary_sha256"],
         "profile": contract["profile"],
         "workflow_stage": current_stage,
         "logical_stage": contract["logical_stage"],
@@ -292,10 +407,17 @@ def bind_stage_pin(
         "local_profile_interface": interface,
         "local_profile_sha256": local_profile["sha256"],
     }
+    if previous is not None:
+        pin["previous_pin"] = previous
+    if feedback_context is not None:
+        pin["feedback_context"] = feedback_context
+    return pin
 
 
 def write_stage_pin(path: Path, pin: dict[str, object]) -> None:
     path = path.expanduser().resolve()
+    if read_stage_pin(path) == pin:
+        return
     if not path.parent.is_dir():
         raise ContractError(f"stage pin parent does not exist: {path.parent}")
     raw = (json.dumps(pin, sort_keys=True, separators=(",", ":")) + "\n").encode(
@@ -323,11 +445,21 @@ def write_stage_pin(path: Path, pin: dict[str, object]) -> None:
                 pass
 
 
-def _one_field(text: str, pattern: str, label: str) -> str:
-    matches = re.findall(pattern, text, flags=re.MULTILINE)
+def _one_field_span(text: str, pattern: str, label: str) -> tuple[int, int]:
+    matches = list(re.finditer(pattern, text, flags=re.MULTILINE))
     if len(matches) != 1:
         raise ContractError(f"work item must contain exactly one {label}")
-    return matches[0].strip().strip("\"'").strip()
+    start, end = matches[0].span(1)
+    for chars in (None, "\"'", None):
+        value = text[start:end]
+        start += len(value) - len(value.lstrip(chars))
+        end = start + len(value.strip(chars))
+    return start, end
+
+
+def _one_field(text: str, pattern: str, label: str) -> str:
+    start, end = _one_field_span(text, pattern, label)
+    return text[start:end]
 
 
 def is_placeholder_scalar(value: str) -> bool:
@@ -433,6 +565,39 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
     return hashlib.sha256("\n\n".join(sections).encode("utf-8")).hexdigest()
 
 
+def work_item_authority(text: str) -> str:
+    """Keep non-report/non-runtime bytes, including unknown authority fields."""
+    frontmatter_end = text.index("\n---\n", 4)
+    retained: list[str] = []
+    runtime = False
+    for line in text[4:frontmatter_end].splitlines(keepends=True):
+        field = re.match(r"^([^\s:]+):", line)
+        if field:
+            runtime = field.group(1) in RUNTIME_FIELDS
+        if not runtime:
+            retained.append(line)
+    retained = ["".join(retained).rstrip(), "\n---\n"]
+    report = False
+    fence = ""
+    for line in text[frontmatter_end + 5:].splitlines(keepends=True):
+        delimiter = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\n"))
+        if delimiter and not fence:
+            fence = delimiter.group(1)
+        elif delimiter and fence and (
+            delimiter.group(1)[0] == fence[0]
+            and len(delimiter.group(1)) >= len(fence)
+            and not delimiter.group(2).strip()
+        ):
+            fence = ""
+        elif not fence and re.match(r"^ {0,3}#{1,2}(?:[ \t]+|$)", line):
+            report = re.fullmatch(r"## Stage Report(?:: [^\n]+)?\n?", line) is not None
+        if not report:
+            retained.append(line)
+    if fence:
+        raise ContractError("work item has an unterminated code fence")
+    return hashlib.sha256("".join(retained).rstrip().encode("utf-8")).hexdigest()
+
+
 def resolve_work_item(path: Path) -> dict[str, str]:
     path = path.expanduser().resolve()
     try:
@@ -448,7 +613,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         raise ContractError("work item frontmatter is unterminated")
     frontmatter = text[4:frontmatter_end]
     workflow_stage = _one_field(
-        frontmatter, r"^status:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter status"
+        frontmatter, STATUS_FIELD_PATTERN, "frontmatter status"
     )
 
     headings = list(re.finditer(r"^## Work profile receipt\s*$", text, re.MULTILINE))
@@ -605,10 +770,17 @@ def resolve_work_item(path: Path) -> dict[str, str]:
                     raise ContractError(f"{field} must be a concrete scalar")
                 necessity_values[field] = value
 
+    boundary_block = re.sub(
+        r"^  (?:equivalence_instrument|equivalence_instrument_failure):[^\n]*\n?",
+        "", block, flags=re.MULTILINE,
+    )
+    boundary_text = text[:start] + section.replace(block, boundary_block, 1) + text[end:]
     return {
         "path": path.as_posix(),
         "identity": path.parent.name if path.name == "index.md" else path.stem,
         "sha256": hashlib.sha256(raw).hexdigest(),
+        "authority_sha256": work_item_authority(text),
+        "boundary_sha256": work_item_authority(boundary_text),
         "schema": schema,
         "profile": profile,
         "workflow_stage": workflow_stage,
@@ -688,7 +860,8 @@ def check_conditional_references(
 
 
 def load_contracts(
-    root: Path, work_item: Path, *, validate_admission: bool = False
+    root: Path, work_item: Path, *, validate_admission: bool = False,
+    dispatch_stage: str | None = None,
 ) -> dict[str, object]:
     root = root.expanduser().resolve()
     receipt = resolve_work_item(work_item)
@@ -698,7 +871,7 @@ def load_contracts(
         else None
     )
     profile = receipt["profile"]
-    workflow_stage = receipt["workflow_stage"]
+    workflow_stage = dispatch_stage or receipt["workflow_stage"]
     route = ROUTES[profile]
     if "recovery_failure" in receipt and workflow_stage == "ideation":
         return {
@@ -706,6 +879,8 @@ def load_contracts(
             "work_item": receipt["path"],
             "work_item_identity": receipt["identity"],
             "work_item_sha256": receipt["sha256"],
+            "work_item_authority_sha256": receipt["authority_sha256"],
+            "work_item_boundary_sha256": receipt["boundary_sha256"],
             "receipt_schema": receipt["schema"],
             "profile": profile,
             "workflow_stage": workflow_stage,
@@ -755,6 +930,8 @@ def load_contracts(
         "work_item": receipt["path"],
         "work_item_identity": receipt["identity"],
         "work_item_sha256": receipt["sha256"],
+        "work_item_authority_sha256": receipt["authority_sha256"],
+        "work_item_boundary_sha256": receipt["boundary_sha256"],
         "receipt_schema": receipt["schema"],
         "profile": profile,
         "workflow_stage": workflow_stage,
@@ -789,9 +966,17 @@ def load_installed_contracts(
     stage_attempt: str | None = None,
     persist_stage_pin: bool = False,
     accept_local_profile_refit: bool = False,
+    feedback_context_path: Path | None = None,
 ) -> dict[str, object]:
     """Load contracts from this installed package and optionally bind a stage pin."""
     previous = read_stage_pin(stage_pin_path) if stage_pin_path is not None else None
+    feedback_context = None
+    if feedback_context_path is not None:
+        if local_profile_path is None or stage_pin_path is None or stage_attempt is None or validate_admission:
+            raise ContractError("feedback requires existing stage pinning, not admission")
+        feedback_context = read_feedback_context(
+            feedback_context_path, previous, work_item, stage_attempt
+        )
     try:
         package = load_installed_package()
     except ContractError as exc:
@@ -807,6 +992,7 @@ def load_installed_contracts(
         PACKAGE_ROOT / "references",
         work_item,
         validate_admission=validate_admission,
+        dispatch_stage="implementation" if feedback_context is not None else None,
     )
     contract.update(
         {
@@ -816,6 +1002,9 @@ def load_installed_contracts(
             "local_profile_interface": package["local_profile_interface"]["schema"],
         }
     )
+    if feedback_context is not None:
+        contract["recorded_workflow_stage"] = "validation"
+        contract["feedback_context"] = feedback_context
     if local_profile_path is None:
         if stage_pin_path is not None or stage_attempt is not None or persist_stage_pin:
             raise ContractError("stage pinning requires --local-profile")
@@ -835,6 +1024,7 @@ def load_installed_contracts(
         stage_attempt,
         previous,
         accept_local_profile_refit=accept_local_profile_refit,
+        feedback_context=feedback_context,
     )
     contract["stage_pin"] = pin
     if persist_stage_pin:
@@ -865,6 +1055,8 @@ def render_text(contract: dict[str, object]) -> str:
         "local_profile_interface",
         "local_profile",
         "stage_pin",
+        "recorded_workflow_stage",
+        "feedback_context",
         "skip_to_workflow_stage",
         "review_risks",
         "implementation_exit_observation_declared",
@@ -893,6 +1085,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stage-attempt")
     parser.add_argument("--write-stage-pin", action="store_true")
     parser.add_argument("--accept-local-profile-refit", action="store_true")
+    parser.add_argument("--feedback-context", type=Path)
     parser.add_argument("--format", choices=("text", "json"), default="text")
     parser.add_argument("--validate-admission", action="store_true")
     return parser.parse_args()
@@ -909,6 +1102,7 @@ def main() -> int:
             stage_attempt=args.stage_attempt,
             persist_stage_pin=args.write_stage_pin,
             accept_local_profile_refit=args.accept_local_profile_refit,
+            feedback_context_path=args.feedback_context,
         )
     except ContractError as exc:
         print(f"profile contract: {exc}", file=sys.stderr)
