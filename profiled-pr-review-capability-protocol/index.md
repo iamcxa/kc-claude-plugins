@@ -384,3 +384,13 @@ Historical shape estimates, pending context records and local timing records are
 ### Summary
 
 Six rejected implementation boundaries were repaired through the accepted owners, with explicit failed-attempt cost retention and no new lifecycle surface. Historical records were preserved before relocation; the actual newly added runtime-usage diagram was rendered, withdrawing the earlier mistaken two-file source-disproof. Paid quality/speed and hosted CI cost remain unmeasured; prior UNKNOWN(stale) exit observation and rejected validation are preserved, and the First Officer owns the retained independent validation and neutral round-record boundary.
+
+## Captain-approved one-round review-format deferral
+
+Captain chat `同意` approves this exact question, as routed by the First Officer: `是否同意本輪明確延後格式轉換，以已提交的原始審查與逐項修復證據繼續 Claude 重審，不豁免任何缺陷或測試？`
+
+For this corrected-candidate review round only, feedback-rejection-flow step 2 canonical two-file conversion (`briefing.json` plus `briefing.review.jsonl`) and the corresponding neutral recorder publication are **DEFERRED, NOT DONE**. Existing committed `validation-55b7cd28/findings.md`, `validation-55b7cd28/claude-result.json`, `validation-55b7cd28/local-checks.json`, `validation-55b7cd28/findings-repros.json`, and `correction-9bb52617.md` are the review evidence for a fresh Claude re-review of candidate `9bb526170156a44cff90e2a2fab9eeab081e0eb1` against base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`.
+
+This permits fresh re-review only after this approval is committed, synchronized, reread, and the First Officer confirms that readback. It waives no defect or test and authorizes no automatic gate approval, status/pin/review-round mutation, task closure, paid blind corpus admission/arms/adjudication, product branch push or PR publication, merge, or release. Do not fabricate the canonical two files, reuse an older gate room, add a ledger/CLI/workflow, or repair the missing converter under this exception.
+
+All historical findings, reports, and approvals remain preserved. The accepted 6,600 total changed-line stop, 20 product-path stop, 1,800 focused-line stop, default-off executable Lite, zero expansion reserve, validation status, and historical validation-1 stage pin remain unchanged. The retained validator stops at this preparatory authority checkpoint until the First Officer confirms readback; no Claude call precedes that confirmation.
