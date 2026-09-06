@@ -1,0 +1,84 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 380,
+ "head": "dea62ed6965132607120821860bae9fbb897bc7e",
+ "findings": [
+  {
+   "category": "security",
+   "summary": "worker-controlled BRANCH/CANDIDATE break out of backtick spans; markdown link injection into the Captain's document",
+   "location": "scripts/ship-flow/uat-doc.py:161",
+   "severity": "HIGH",
+   "confidence": 6
+  },
+  {
+   "category": "correctness",
+   "summary": "issue with no evidence and no close entry vanishes; 'none stuck.' asserted",
+   "location": "scripts/ship-flow/uat-doc.py:199",
+   "severity": "CRITICAL",
+   "confidence": 10
+  },
+  {
+   "category": "correctness",
+   "summary": "worker self-reported TESTS/WITHOUT_IT rendered as 'FO ran verbatim' / contract test PASS",
+   "location": "scripts/ship-flow/uat-doc.py:181",
+   "severity": "HIGH",
+   "confidence": 8
+  },
+  {
+   "category": "correctness",
+   "summary": "missing evidence renders literal None with a confident (main) base label",
+   "location": "scripts/ship-flow/uat-doc.py:164",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "(a and b) or b \u2014 branch selection is dead code",
+   "location": "scripts/ship-flow/uat-doc.py:161",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "security",
+   "summary": "receipt title with an embedded newline forges a second 'For the Captain' section",
+   "location": "scripts/ship-flow/uat-doc.py:156",
+   "severity": "MEDIUM",
+   "confidence": 7
+  },
+  {
+   "category": "correctness",
+   "summary": "decisions parser drops non '- ' bullets and wrapped lines silently",
+   "location": "scripts/ship-flow/uat-doc.py:62",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "docs",
+   "summary": "exit-code docstring: malformed JSON/missing key exits 1 with traceback",
+   "location": "scripts/ship-flow/uat-doc.py:14",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "docs",
+   "summary": "'sends exactly one' is check-then-act; dry-run marker blocks a future real send",
+   "location": "scripts/ship-flow/notify.sh:32",
+   "severity": "MEDIUM",
+   "confidence": 7
+  },
+  {
+   "category": "correctness",
+   "summary": "unanchored evidence glob: DEV-9 matches DEV-90",
+   "location": "scripts/ship-flow/uat-doc.py:55",
+   "severity": "LOW",
+   "confidence": 7
+  },
+  {
+   "category": "test-coverage",
+   "summary": "uat.md.reference has no reader and diverges; scripts unreferenced by contract test/CI",
+   "location": "scripts/fixtures/ship-flow/uat-doc/batch-1016352e0223/evidence/uat.md.reference:1",
+   "severity": "MEDIUM",
+   "confidence": 7
+  }
+ ]
+}
