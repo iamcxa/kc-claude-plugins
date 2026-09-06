@@ -1,0 +1,8 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "go · 5 workspaces · concurrency 2 · repair 2 · Pilot · DEV-122 rider (Captain: 「批准」)",
+ "lint_full": "lint.txt",
+ "station0": "station0-candidates.tsv",
+ "falsifier": "Any of: a station rule change in this batch requires editing README prose to take effect; the next merge station after B5 produces a conflict in docs/ship/README.md; the B4 POC needs to import kc-dev-flow's loader to work; version-parity or the kc-ship-flow CI job is green while a station script is deleted.",
+ "lint_residual": "L2 and L9 fail for the reasons DEV-122 fixes (un-cycled Backlog candidates read as a split; Done issues counted in the by-product check)"
+}
