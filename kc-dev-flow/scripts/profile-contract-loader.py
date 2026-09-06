@@ -364,6 +364,25 @@ def bind_stage_pin(
         )
         if boundary_key in previous and previous[boundary_key] != contract[boundary_key]:
             raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: accepted authority changed")
+        if boundary_key not in previous:
+            try:
+                raw = Path(str(contract["work_item"])).read_bytes()
+            except OSError as exc:
+                raise ContractError(f"cannot read legacy work item: {exc}") from exc
+            if hashlib.sha256(raw).hexdigest() != contract["work_item_sha256"]:
+                raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item changed during loading")
+            frontmatter, delimiter, body = raw.partition(b"\n---\n")
+            restored, count = re.subn(
+                rb"^(status:[ \t]*[\"']?)" + re.escape(current_stage.encode("utf-8"))
+                + rb"([\"']?[ \t]*)$",
+                lambda match: match[1]
+                + str(previous.get("workflow_stage", "")).encode("utf-8") + match[2],
+                frontmatter, count=1, flags=re.MULTILINE,
+            )
+            if count != 1 or hashlib.sha256(restored + delimiter + body).hexdigest() != previous.get("work_item_sha256"):
+                raise ContractError(
+                    "STAGE_PIN_TRANSITION_MISMATCH: legacy transition must change only the status value"
+                )
         if (
             previous.get("local_profile_interface") != interface
             and not accept_local_profile_refit

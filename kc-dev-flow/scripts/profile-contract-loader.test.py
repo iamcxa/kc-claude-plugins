@@ -1845,6 +1845,63 @@ README-POLICY-SENTINEL
     legacy_drift = installed_run(LOADER, pin_item, pin=old_pin_path, attempt="ideation-1", write_pin=True)
     require(legacy_drift.returncode == 2 and not legacy_drift.stdout, "legacy pin silently lost its whole-file guard")
     pin_item.write_text(report_baseline, encoding="utf-8")
+
+    legacy_pin_bytes = old_pin_path.read_bytes()
+    legacy_forward = report_baseline.replace("status: ideation\n", "status: implementation\n", 1)
+    pin_item.write_text(legacy_forward, encoding="utf-8")
+    legacy_advance = installed_run(
+        LOADER, pin_item, pin=old_pin_path, attempt="implementation-1", write_pin=True
+    )
+    require(
+        legacy_advance.returncode == 0
+        and json.loads(legacy_advance.stdout)["stage_pin"]["previous_pin"] == old_pin,
+        f"status-only legacy advance failed or lost its predecessor: {legacy_advance.stderr}",
+    )
+    for label, changed in (
+        ("accepted scope", legacy_forward + "\n## Accepted outcome\n\nReplace the accepted goal.\n"),
+        ("report bytes", legacy_forward + "\n## Stage Report: ideation\n\nExtra evidence.\n"),
+        ("runtime bytes", legacy_forward.replace("status: implementation\n", "status: implementation\nstarted: now\n", 1)),
+    ):
+        old_pin_path.write_bytes(legacy_pin_bytes)
+        pin_item.write_text(changed, encoding="utf-8")
+        refused = installed_run(
+            LOADER, pin_item, pin=old_pin_path, attempt="implementation-1", write_pin=True
+        )
+        require(
+            refused.returncode == 2 and not refused.stdout
+            and old_pin_path.read_bytes() == legacy_pin_bytes,
+            f"legacy forward transition accepted changed {label}: {refused.stderr}",
+        )
+
+    formatted_legacy = (
+        report_baseline.replace("status: ideation\n", 'status:  "ideation" \t\n', 1)
+        + "\n## Example\n\n```yaml\nstatus: implementation\n```\n"
+    )
+    formatted_pin = state / "formatted-legacy-pin.json"
+    pin_item.write_text(formatted_legacy, encoding="utf-8")
+    formatted_seed = installed_run(
+        LOADER, pin_item, pin=formatted_pin, attempt="ideation-1", write_pin=True
+    )
+    require(formatted_seed.returncode == 0, formatted_seed.stderr)
+    formatted_old_pin = {
+        key: value for key, value in json.loads(formatted_pin.read_bytes()).items()
+        if key not in {"work_item_authority_sha256", "work_item_boundary_sha256"}
+    }
+    formatted_pin.write_text(json.dumps(formatted_old_pin), encoding="utf-8")
+    pin_item.write_text(
+        formatted_legacy.replace('status:  "ideation"', 'status:  "implementation"', 1),
+        encoding="utf-8",
+    )
+    formatted_advance = installed_run(
+        LOADER, pin_item, pin=formatted_pin, attempt="implementation-1", write_pin=True
+    )
+    require(
+        formatted_advance.returncode == 0
+        and json.loads(formatted_advance.stdout)["stage_pin"]["previous_pin"] == formatted_old_pin,
+        f"legacy status-only matching changed formatting or body bytes: {formatted_advance.stderr}",
+    )
+    pin_item.write_text(report_baseline, encoding="utf-8")
+    print("profile contract loader test: legacy status-only forward and scope refusal PASS")
     print("profile contract loader test: report/authority/correction regressions PASS")
 
     arbitrary_loaders: list[Path] = []

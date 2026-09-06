@@ -67,8 +67,11 @@ boundary. Never rewrite active work-item history or unrelated Spacedock state.
 Existing stage-pin/v1 records without `work_item_authority_sha256` retain the
 whole-document equality rule; the loader does not infer an accepted brief from
 a changed historical record. An unchanged legacy pin can resume on its original
-package, or advance at its already-authorized ordinary boundary to create a
-new pin. The new pin retains its predecessor. Do not silently repin an active
+package, or advance at its already-authorized ordinary boundary with only its
+frontmatter status value changed. At that boundary, `bind_stage_pin` restores
+the predecessor status value in memory and requires the complete bytes to match
+the legacy pin's original work-item hash; formatting and body bytes are not
+normalized. The new pin retains its predecessor. Do not silently repin an active
 legacy record or edit installed package bytes to adopt this fix. A stranded
 legacy stage that cannot reach its normal boundary needs a separately recorded
 Captain-authorized migration with the original snapshot and pin preserved;
