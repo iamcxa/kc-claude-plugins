@@ -1,0 +1,36 @@
+{
+  "historical_cost": {
+    "count": 6,
+    "max_cost_usd": 4.9612,
+    "latest_timestamp": "2026-03-15T20:00:05Z",
+    "ledger_sha256": "a6e8fc70c891f2840300cc132a2fa15fbe8c00080b9a95fe1fc1e90b20a7872c",
+    "attribution": "historical composite daemon iterations; not current-model assurance"
+  },
+  "cli_default_off": {
+    "reason": "profiled_review_disabled",
+    "route": "legacy"
+  },
+  "cli_custom_refusal": {
+    "reason": "custom_not_implemented",
+    "route": "unavailable"
+  },
+  "removed_runtime_exit": 2,
+  "removed_runtime_stderr": "usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}\n",
+  "without_projector_result": {
+    "schema": "kc-pr-flow.run-terminal/v1",
+    "identity": {
+      "repository": "acme/widgets",
+      "pr_number": 42,
+      "base_sha": "fbacd676f69c65e57f279ce8705e83c368e815fa",
+      "head_sha": "6712761f768635240920ede5dc0e0939a9433470",
+      "run_id": "run-TpvwnI",
+      "config_hash": "d9401f2144c2d86c3a01c2c0394a04224755fd40121eb29314c0e953f55be8d9",
+      "review_key": "e98f6d75cae28c50ece755466b49b02cbf3c59cccdfec7342197b68fb0547f6a"
+    },
+    "status": "ABORTED_INCOMPLETE",
+    "reason": "receipt_incomplete",
+    "disposition": "non-posting"
+  },
+  "without_projector_clean_acceptance": "FAIL: no complete approve-eligible decision",
+  "elapsed_seconds": 1.197
+}

@@ -1,0 +1,53 @@
+{
+  "overlong_identity": {
+    "exit": 1,
+    "stdout": "",
+    "stderr_last": [
+      "Invalid: schema union mismatch"
+    ]
+  },
+  "missing_prepared": {
+    "exit": 1,
+    "stdout": "",
+    "stderr_last": [
+      "KeyError: 'prepared'"
+    ]
+  },
+  "nonobject_fallback": {
+    "exit": 1,
+    "stdout": "",
+    "stderr_last": [
+      "AttributeError: 'NoneType' object has no attribute 'get'"
+    ]
+  },
+  "unknown_capability": {
+    "schema": "kc-pr-flow.run-terminal/v1",
+    "identity": {
+      "repository": "acme/widgets",
+      "pr_number": 42,
+      "base_sha": "4d5402e98e62b2747368a2da5bfc421fe8408530",
+      "head_sha": "e2126373fb936e69f11597375b41d005b974ef39",
+      "run_id": "run-3gBLbU",
+      "config_hash": "d9401f2144c2d86c3a01c2c0394a04224755fd40121eb29314c0e953f55be8d9",
+      "review_key": "56b9f4ff51ad9c900d7e677ad2fd1751b98be87fd4a47b9164c2facda37f6874"
+    },
+    "status": "ABORTED_INCOMPLETE",
+    "reason": "required_gap",
+    "disposition": "non-posting"
+  },
+  "confirmed_high_projection": {
+    "event": "REQUEST_CHANGES",
+    "inline_comments": [],
+    "body": "Required questions resolved\nHIGH: Value violates the contract.\n\n"
+  },
+  "newline_token": "ACCEPTED",
+  "latin1_changed_text": {
+    "exit": 2,
+    "stdout": "{\"disposition\":\"non-posting\",\"identity\":{\"base_sha\":\"4d5402e98e62b2747368a2da5bfc421fe8408530\",\"head_sha\":\"3b261fc49e6c1058f4eef8006ae28cc802022591\",\"intake_id\":\"intake-test\",\"pr_number\":42,\"repository\":\"acme/widgets\"},\"reason\":\"schema_failure\",\"schema\":\"kc-pr-flow.run-terminal/v1\",\"status\":\"REQUEST_INVALID\"}\n",
+    "stderr_last": [
+      "'utf-8' codec can't decode byte 0xe9 in position 134: invalid continuation byte"
+    ]
+  },
+  "blind_marker": "Required questions resolved",
+  "malformed_blind_finding": "KeyError: 'path'"
+}
