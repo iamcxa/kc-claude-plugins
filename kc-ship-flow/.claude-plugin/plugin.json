@@ -1,0 +1,19 @@
+{
+  "name": "kc-ship-flow",
+  "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "keywords": [
+    "delivery",
+    "dispatch",
+    "evidence",
+    "review",
+    "e2e",
+    "uat",
+    "close-receipt"
+  ],
+  "license": "MIT"
+}

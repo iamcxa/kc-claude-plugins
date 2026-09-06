@@ -143,6 +143,21 @@
         "claude-code",
         "codex"
       ]
+    },
+    {
+      "name": "kc-ship-flow",
+      "source": "./kc-ship-flow",
+      "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
+      "version": "0.1.0",
+      "keywords": [
+        "delivery",
+        "dispatch",
+        "evidence",
+        "review",
+        "e2e",
+        "uat",
+        "close-receipt"
+      ]
     }
   ]
 }
