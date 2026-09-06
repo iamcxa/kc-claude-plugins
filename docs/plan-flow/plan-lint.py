@@ -51,12 +51,82 @@ elif mode == "lint":
         for b in sorted(adj[n]):
             indeg[b]-=1
             if indeg[b]==0: q.append(b)
-    rule("L6 blockedBy is a DAG", len(order)==len(ids), f"blocker->blocked {edges}; order {order}")
+    dag_ok = len(order)==len(ids); rule("L6 blockedBy is a DAG", dag_ok, f"blocker->blocked {edges}; order {order}")
+    # L6 (replaced): verify blocks-edge direction matches an independent signal of intended order
+    if dag_ok:
+        l6_intent = sorted(ids)
+        l6_violations = []
+        for a, b in edges:
+            a_idx = l6_intent.index(a) if a in l6_intent else -1
+            b_idx = l6_intent.index(b) if b in l6_intent else -1
+            if a_idx >= b_idx and a_idx >= 0 and b_idx >= 0:
+                l6_violations.append(f"({a}, {b})")
+        l6_ok = not l6_violations
+        rule("L6 blockedBy direction agrees with identifier order", l6_ok, f"intent order {l6_intent}; violations {', '.join(l6_violations) if l6_violations else 'none'}")
     forked=any(len(v)>1 for v in adj.values()); rule("L7 split advisory (warn only)", True, f"{len(ids)} issues, forked={forked}" + ("; consider Milestones" if (len(ids)>=4 or forked) else ""))
     AC=re.compile(r"^[-*] \*\*AC-\d+\s*\*\*")
     for i in d["issues"]["nodes"]:
         acs=[l for l in i["description"].splitlines() if AC.match(l)]
         rule(f"L8 e2e-able AC {i['identifier']}", bool(acs) and any(re.search(r"exit|script|log|run|prints", a) for a in acs), f"{len(acs)} ACs")
+    # L9: for every Issue after the first, at least one claimed surface must be unique to it
+    l9_ok = True; l9_violations = []
+    def extract_surfaces(desc):
+        surfaces = set()
+        if not desc: return surfaces
+        for match in re.finditer(r'`([^`]*(?:\.(py|md|sh|json|txt|yml|yaml|js|ts|tsx|jsx)|/)[^`]*)`', desc):
+            text = match.group(1)
+            for path_match in re.finditer(r'(?:^|[^\w/])([a-zA-Z_][a-zA-Z0-9_-]*(?:/[a-zA-Z_][a-zA-Z0-9_./\-]*)+\.[a-zA-Z0-9]+)', text):
+                surfaces.add(path_match.group(1))
+            if re.match(r'^(?:docs|scripts|kc-dev-flow|kc-pr-flow|evidence)/', text):
+                surfaces.add(text.split()[0] if ' ' in text else text)
+        return surfaces
+    claimed_surfaces = {}
+    for i in d["issues"]["nodes"]:
+        claimed_surfaces[i['identifier']] = extract_surfaces(i.get('description') or '')
+    for idx, issue_id in enumerate(order):
+        if idx > 0:
+            current_surfaces = claimed_surfaces.get(issue_id, set())
+            prior_surfaces = set().union(*(claimed_surfaces.get(order[j], set()) for j in range(idx)))
+            unique_to_current = current_surfaces - prior_surfaces
+            if not unique_to_current:
+                non_unique = current_surfaces & prior_surfaces
+                first_claimer = None
+                for j in range(idx):
+                    if non_unique & claimed_surfaces.get(order[j], set()):
+                        first_claimer = order[j]
+                        break
+                violation_msg = f"{issue_id}: only surface {', '.join(sorted(non_unique)[:1])} already claimed by {first_claimer}" if first_claimer else issue_id
+                l9_violations.append(violation_msg)
+                l9_ok = False
+    rule("L9 by-product Issue check", l9_ok, f"issues with no unique surface: {'; '.join(l9_violations) if l9_violations else 'none'}")
+    # L10: every Issue must have a Re-verified line with command, exit code, and recent date
+    from datetime import datetime, timedelta
+    l10_ok = True; l10_violations = []
+    today = datetime.utcnow().date()
+    for i in d["issues"]["nodes"]:
+        desc = i.get('description') or ''
+        reverified_lines = [l for l in desc.split('\n') if l.strip().startswith('Re-verified:')]
+        if not reverified_lines:
+            l10_violations.append(f"{i['identifier']}: no Re-verified line")
+            l10_ok = False
+        else:
+            line = reverified_lines[0]
+            try:
+                parts = line.split(':')[1].strip().split()
+                if len(parts) < 3:
+                    l10_violations.append(f"{i['identifier']}: Re-verified format invalid")
+                    l10_ok = False
+                else:
+                    date_str = parts[-1]
+                    rv_date = datetime.fromisoformat(date_str).date()
+                    age_days = (today - rv_date).days
+                    if age_days > 14:
+                        l10_violations.append(f"{i['identifier']}: Re-verified date too old ({age_days} days)")
+                        l10_ok = False
+            except (ValueError, IndexError):
+                l10_violations.append(f"{i['identifier']}: Re-verified date parse error")
+                l10_ok = False
+    rule("L10 re-verified presence and age", l10_ok, f"14-day bound; violations: {', '.join(l10_violations) if l10_violations else 'none'}")
     snap={"schema":"kc-plan-receipt/v0","project":d,"lint":results,"dispatch_order":order,"edges":edges}
     core=json.loads(json.dumps(snap)); core.pop("lint",None); core["project"].pop("content",None); [v.pop("description",None) for v in d["issues"]["nodes"]]
     snap["receipt_sha256"]=hashlib.sha256(json.dumps(core,sort_keys=True).encode()).hexdigest()
