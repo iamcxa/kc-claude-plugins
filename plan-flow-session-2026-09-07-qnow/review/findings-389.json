@@ -51,5 +51,7 @@
    "status": "closed in r3 (a0a6c440)"
   }
  ],
- "head_r3": "a0a6c4409e90313f6cee85f8ec898f422d1ad05c"
+ "head_r3": "a0a6c4409e90313f6cee85f8ec898f422d1ad05c",
+ "head_r4": "2c7363d75e67c3cda2053dbc7d5a827c105f951a",
+ "fixture_hygiene": "r4: fixture neutral-named, no org URLs, missing-Non-goals case derived in the test (S41)"
 }
