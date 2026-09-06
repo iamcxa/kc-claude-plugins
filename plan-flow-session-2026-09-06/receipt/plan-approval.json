@@ -2,13 +2,13 @@
  "schema": "kc-plan-approval/v1",
  "receipt_sha256": "3f3354ec66522befd83f22a8cab3c1f18f840b6796084e6e82ed296179e9a120",
  "approver": "person:captain",
- "approved_at": "PENDING",
+ "approved_at": "2026-09-06T01:31:10Z",
  "decision": "go",
  "max_workspaces": 4,
  "concurrency": 2,
  "repair_rounds": 2,
- "quote": "PENDING",
- "quote_source": "PENDING",
+ "quote": "go · 4 workspaces · concurrency 2 · repair 2 · Pilot",
+ "quote_source": "Captain, Ask UI in this conversation, 2026-09-06, answering the approval gate; profile pilot-product-slice for all four Issues",
  "defaults": {
   "findings_outside_brief": [
    "security",
