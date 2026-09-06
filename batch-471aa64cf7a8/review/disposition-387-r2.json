@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "all 6 r1 findings closed in r2; FO verified: SELF_CHECK in grammar, accept-evidence.sh named as enforcer, 'no secrets' gone, fenced-dispatch exit-3 collapse stated, intent commit exit 4 named, placement check binds the hash marker (FO repoint mutation exits 1 naming the file); CI green"
+}
