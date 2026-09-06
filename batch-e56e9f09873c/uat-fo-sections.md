@@ -4,10 +4,10 @@
 
 Four Draft PRs that make ship-flow's last three stations and its close step scripts fed by the batch record. Merge order matters because #381 carries the two layers below it until they land:
 
-1. **#378** DEV-104 — review station: `open-pr.sh` + `disposition.py` (head `55d06579`, CI green)
-2. **#379** DEV-105 — e2e gate: `e2e-gate.py`, credential-stripped `e2e-cli.sh`, this batch's flow (head `ba96da4e`, CI green)
-3. **#380** DEV-106 — handoff: `uat-doc.py` + dry-run `notify.sh` (head `b6d50347`, CI green)
-4. **#381** DEV-107 — close: schema + validator + debrief writers (head `ede6eecb`, all 9 findings closed, CI pending at write time)
+1. **#378** DEV-104 — review station: `open-pr.sh` + `disposition.py` (merged 8b393484)
+2. **#379** DEV-105 — e2e gate: `e2e-gate.py`, credential-stripped `e2e-cli.sh`, this batch's flow (merged b7462457)
+3. **#380** DEV-106 — handoff: `uat-doc.py` + dry-run `notify.sh` (merged a729caee)
+4. **#381** DEV-107 — close: schema + validator + debrief writers (merged d75b92da)
 
 After #379 and #380 squash-merge, #381 will show a conflict; the FO merges main into it under `moved_base` — no action from you.
 

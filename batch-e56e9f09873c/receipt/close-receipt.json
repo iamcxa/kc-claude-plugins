@@ -5,12 +5,12 @@
  "batch": {
   "entity": "batch-e56e9f09873c",
   "started_at": "2026-09-06T02:06:51Z",
-  "closed_at": "UAT-READY 2026-09-06T04:17:49Z",
+  "closed_at": "2026-09-06T06:04:33Z",
   "holder": "laptop"
  },
  "issues": {
   "DEV-104": {
-   "outcome": "pr_open",
+   "outcome": "merged",
    "candidate": "55d0657973b7fd06a9f9eb333c80df4f297c1af8",
    "pr": "iamcxa/kc-claude-plugins#378",
    "rounds": 3,
@@ -23,11 +23,12 @@
    },
    "cost_usd_imputed": null,
    "residuals": [
-    "S34: PR title taken from a merge head after moved_base — DEV-112"
+    "S34: PR title taken from a merge head after moved_base — DEV-112",
+    "merged as 8b393484 (#378) after an FO moved_base merge"
    ]
   },
   "DEV-105": {
-   "outcome": "pr_open",
+   "outcome": "merged",
    "candidate": "ba96da4ecd8b1b4b26f7f7302fd2c00c02dba681",
    "pr": "iamcxa/kc-claude-plugins#379",
    "rounds": 2,
@@ -40,11 +41,12 @@
    },
    "cost_usd_imputed": null,
    "residuals": [
-    "two of three repair resumes were FO-caused (retracted templating ruling)"
+    "two of three repair resumes were FO-caused (retracted templating ruling)",
+    "merged as b7462457 (#379) after an FO moved_base merge"
    ]
   },
   "DEV-106": {
-   "outcome": "pr_open",
+   "outcome": "merged",
    "candidate": "b6d503470d3736bad8761e148dea159d9040ca78",
    "pr": "iamcxa/kc-claude-plugins#380",
    "rounds": 2,
@@ -58,11 +60,12 @@
    "cost_usd_imputed": null,
    "residuals": [
     "UAT delivery via Subspace (/r, Apple Terminal, run.2103079855, no annotations); Slack retired by the Captain 2026-09-06 — DEV-113 retargeted",
-    "fixtures copy two real batch records into main (retention: Captain's call)"
+    "fixtures copy two real batch records into main (retention: Captain's call)",
+    "merged as a729caee (#380), landed first (S36)"
    ]
   },
   "DEV-107": {
-   "outcome": "pr_open",
+   "outcome": "merged",
    "candidate": "ede6eecbf2bbff9b4cdb2d553151d237f18012d9",
    "pr": "iamcxa/kc-claude-plugins#381",
    "rounds": 2,
@@ -75,7 +78,8 @@
    },
    "cost_usd_imputed": null,
    "residuals": [
-    "rebased by the FO under moved_base after the lower layers' repairs; writers' defects fixed in round 2"
+    "rebased by the FO under moved_base after the lower layers' repairs; writers' defects fixed in round 2",
+    "merged as d75b92da (#381) after an FO moved_base merge; sat Draft until a visible retry (S37)"
    ]
   }
  },
@@ -128,6 +132,20 @@
    "one_line": "open-pr.sh titles from a merge head after moved_base",
    "fix_ticket": "DEV-112",
    "accepted_residual": null
+  },
+  {
+   "id": "S36",
+   "class": "delivery",
+   "one_line": "merge queue landed out of order: gh pr merge refused #378/#379 seconds after ready while #380 merged; three moved_base merges followed",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
+  },
+  {
+   "id": "S37",
+   "class": "delivery",
+   "one_line": "FO wait-and-merge loop never marked #381 ready and swallowed the merge refusal; PR sat Draft until a visible retry",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
   }
  ],
  "totals": {
@@ -174,7 +192,7 @@
     "evidence_refusals": [
      "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 2"
     ],
-    "rounds": 1
+    "rounds": 2
    }
   }
  },
@@ -288,6 +306,18 @@
    {
     "decision": "2026-09-06T04:17:08Z — **DEV-107 round 2 accepted** (`ede6eecb`, station ACCEPT at main 4300eee6; shallow-clone test 0). FO delta checks: the three new test files pass; a blank residual is refused even under `python3 -S`; the writers now fail loud on missing inputs and select the accepted evidence file; schema requires both debriefs. All 9 findings closed; #381 fast-forwarded. 32 min, 270K tokens.",
     "overturned": false
+   },
+   {
+    "decision": "2026-09-06T05:05:30Z — **Captain-directed (outside `defaults`): UAT delivery moved from Slack to Subspace.** Captain: 「不要用slack了，把 slack 改成用 subspce v0 or web 送出，等於這個簡報應該用 subspace 呈現」. The FO opened `uat-batch-e56e9f09.md` through the `subspace:r` skill in question mode; no caller pane exists in a Conductor session, so the terminal was Apple Terminal (explicit). Receiver returned `result` with zero annotations (run `run.2103079855`, artifact rev `sha256:e3b9074e…`). DEV-113 retargeted from \"Slack send path\" to \"deliver through Subspace\"; `notify.sh` (#380) untouched — it never had a real send path. Close-receipt residual reworded accordingly. The UAT document itself was not edited (pinned by the review).",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T05:44:04Z — **merge station (Captain: 「幫我依序合併」)**: #380 landed first (a729caee) because GitHub refused #378/#379 on the first `gh pr merge` right after `gh pr ready` (S36). `moved_base` → FO merged main into #378 (7c57a30c, README both-sides keep), auto-merge armed; #379 and #381 follow the same path in order.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T06:01:33Z — **merge station, continued**: #378 merged 8b393484 (after FO moved_base merge 7c57a30c); #379 merged b7462457 after FO moved_base merge 6ac488a3 (README + contract-test keep-both); #381 FO moved_base merge db3d19dd (README, flows yaml, contract-test ×2 — every hunk add-vs-empty, keep-both; yaml 5 steps no dup, py_compile ok), CI pending, squash on green. `gh pr merge --auto` is not enabled on this repository (S36 addendum).",
+    "overturned": false
    }
   ],
   "defects_disposition": [
@@ -318,15 +348,23 @@
    {
     "disposition": "DEV-112",
     "id": "S34"
+   },
+   {
+    "disposition": "DEV-114",
+    "id": "S36"
+   },
+   {
+    "disposition": "DEV-114",
+    "id": "S37"
    }
   ],
   "minutes_per_station": {
    "build": 60,
    "dispatch": 4,
-   "repair": 86,
-   "review": 33,
+   "repair": 118,
+   "review": 46,
    "verify": 25
   }
  },
- "close_sha256": "0f36be403fa1e48898ef1284a1cd0f6e5df36fb885f5ebf0496f0a521443bcba"
+ "close_sha256": "12659a7a542c432c0df0aa451577b1490cfe0092981d9507a2a8f4b68a2ccc19"
 }
