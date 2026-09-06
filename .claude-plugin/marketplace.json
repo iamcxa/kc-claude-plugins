@@ -31,7 +31,7 @@
       "name": "kc-plugin-forge",
       "source": "./kc-plugin-forge",
       "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration, two-stage Dreaming (LOCAL→public sanitize gate + public→structured taxonomy gate), prepublish sanitize-check",
-      "version": "1.9.1",
+      "version": "1.10.0",
       "keywords": [
         "plugin",
         "quality",
@@ -133,7 +133,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
-      "version": "4.3.0",
+      "version": "4.4.0",
       "keywords": [
         "development-workflow",
         "sprint",
@@ -148,7 +148,7 @@
       "name": "kc-ship-flow",
       "source": "./kc-ship-flow",
       "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "keywords": [
         "delivery",
         "dispatch",

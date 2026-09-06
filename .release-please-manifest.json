@@ -1,10 +1,10 @@
 {
   "e2e-pipeline": "3.3.5",
-  "kc-plugin-forge": "1.9.1",
+  "kc-plugin-forge": "1.10.0",
   "kc-nightwatch": "0.5.1",
   "kc-hyperfocus": "1.6.4",
   "kc-team-ops": "1.7.0",
   "kc-pr-flow": "1.12.0",
-  "kc-dev-flow": "4.3.0",
-  "kc-ship-flow": "0.1.0"
+  "kc-dev-flow": "4.4.0",
+  "kc-ship-flow": "0.2.0"
 }

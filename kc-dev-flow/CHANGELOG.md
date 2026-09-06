@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.3.0...kc-dev-flow-v4.4.0) (2026-09-06)
+
+
+### Features
+
+* **kc-dev-flow:** pin the advisory seats to opus + xhigh, and add the ship-flow UAT observation template ([#365](https://github.com/iamcxa/kc-claude-plugins/issues/365)) ([3b37000](https://github.com/iamcxa/kc-claude-plugins/commit/3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8))
+* **kc-plugin-forge:** run Phase 2 RED/GREEN in a clean runner with a scenario file slot ([#368](https://github.com/iamcxa/kc-claude-plugins/issues/368)) ([90cd4fc](https://github.com/iamcxa/kc-claude-plugins/commit/90cd4fca6f1bd8337090e3012b52020b0d6fb89f))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** drop the unread host field from the dispatch envelope ([#370](https://github.com/iamcxa/kc-claude-plugins/issues/370)) ([1283046](https://github.com/iamcxa/kc-claude-plugins/commit/1283046b605285f259da0a2a728cfa37bf1cf3dd))
+* **kc-dev-flow:** unify the accepted-goal heading and stop gating admission on a host variable ([#367](https://github.com/iamcxa/kc-claude-plugins/issues/367)) ([ad13fe2](https://github.com/iamcxa/kc-claude-plugins/commit/ad13fe23e620f42844b34cb8d535e3466060c5ab))
+
 ## [4.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.2.0...kc-dev-flow-v4.3.0) (2026-09-03)
 
 
