@@ -1,0 +1,6 @@
+{
+  "disposition": "reviewer-absent",
+  "findings_count": 0,
+  "marker": "fallback_to_fo_diff_read",
+  "schema": "kc-dev-flow-ship-flow-disposition/v1"
+}

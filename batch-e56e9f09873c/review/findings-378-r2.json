@@ -1,0 +1,16 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 378,
+ "head": "0fd7ad471e6657007aeb011c96a0e8a597fb7ea5",
+ "findings": [],
+ "fixed_in_r2": [
+  "scripts/ship-flow/open-pr.sh:72",
+  "scripts/ship-flow/disposition.py:52",
+  "scripts/ship-flow/open-pr.sh:80",
+  "scripts/ship-flow/open-pr.sh:18",
+  "scripts/ship-flow/open-pr.sh:31",
+  "docs/ship-flow/README.md:344",
+  "scripts/ship-flow/disposition.py:54",
+  "scripts/ship-flow/open-pr.sh:1"
+ ]
+}
