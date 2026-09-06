@@ -500,3 +500,16 @@ The specifically measured filesystem boundary is feasible locally with native en
 ### Summary
 
 The single existing-tool alternative is insufficient as configured: broad temporary-directory writes defeat an exact owner-tree path deny through ancestor rename. Product remains clean and unchanged at `9bb52617`, counts remain 6,431 / 20 / 1,939, and all original repairs/count/CI-sequence/paid-outcome obligations remain pending. No installation, settings mutation, credential disclosure, real host/model call, new standing component, product integration or self-advancement occurred.
+
+## Stage Report: implementation (cycle 7)
+
+- DONE: Record and reread the Captain-approved bounded isolation-route validation in the existing task before any experiment, preserving the accepted outcome, complete counting denominator, limits and historical state.
+  Reused and reread approval `087047c577d4f58003f6833478c345c50f7b377e` under the First Officer's final existing-container assignment; no new Captain approval inferred. Earlier native and Safehouse results are preserved.
+- DONE: Use an existing local enforcement primitive to prove, with synthetic fixtures and a failing unisolated control, that the measured Bash child and its descendants cannot alter authoritative current or previous measurement records while normal workspace work and runner-owned recording still succeed.
+  [Container proof](container-feasibility/report.md): corrected five-case instrument exits 0 in 7.011 seconds; prior unisolated failure retained. Existing hardlink/symlink inputs refuse before launch; nine owner-write routes plus an independently grouped live descendant are denied, normal work succeeds, actual parent finalization/join accepts unchanged prior measurements. Exit 7 and timeout record incomplete failures and join refuses. Exact CID/label cleanup proves no owned container remains, including the timeout container observed running after CLI kill. Initial error-message parser failure is retained, not green.
+- DONE: Commit a concise evidence-backed minimal integration proposal or exact blocker, with lifecycle/surface mapping, platform and compatibility limits, and estimated counts; leave product unchanged and return to FO without paid work or self-advancement.
+  State-only report/inputs/raw results record immutable image, mount topology, cleanup identity, synthetic-only costs, new Docker/image/container lifecycle obligations and unproven real-model compatibility. Low focused estimate after maximum mapped savings is 1,928, still 128 over 1,800 before other repairs; no fit or product-integration approval claimed.
+
+### Summary
+
+The bounded local filesystem/process and container-cleanup proof passed; it does not complete the Pilot implementation or establish an approved/cap-compliant real-model runtime. Product remains clean at `9bb526170156a44cff90e2a2fab9eeab081e0eb1`, counts 6,431 / 20 / 1,939 with unchanged 6,600 / 20 / 1,800 stops; all five repairs, reduction, F14, fresh review and AC8/9 remain pending. No product edit, model/auth request, image change, new standing service, gate/status/pin/PR action or additional alternative was performed; the First Officer receives the next route decision.
