@@ -487,3 +487,16 @@ Product HEAD remains `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-p
 ### Summary
 
 The specifically measured filesystem boundary is feasible locally with native enforced policy plus a prelaunch alias check; it is not yet a sufficient full review-host isolation result or a repaired F6. All five product repairs, reduction, F14 sequence evidence, fresh review and paid outcome evidence remain pending, and the First Officer receives the exact residuals and count gap before any product-integration decision. No dependency, global configuration, user, daemon, service, ledger, paid model, browser, product commit, publication or stage/gate mutation occurred.
+
+## Stage Report: implementation (cycle 6)
+
+- DONE: Record and reread the Captain-approved bounded isolation-route validation in the existing task before any experiment, preserving the accepted outcome, complete counting denominator, limits and historical state.
+  Reused and reread exact approval `087047c577d4f58003f6833478c345c50f7b377e` under the First Officer's one-existing-tool alternative assignment; no new approval, status, pin or route inferred. Native report `c7673f29` is preserved.
+- FAILED: Use an existing local enforcement primitive to prove, with synthetic fixtures and a failing unisolated control, that the measured Bash child and its descendants cannot alter authoritative current or previous measurement records while normal workspace work and runner-owned recording still succeed.
+  [Safehouse alternative evidence](safehouse-alternative/report.md): exact owner deny blocks direct/alias/new-link/internal rename/unlink and detached descendant writes, but a parent-directory rename/write/restore bypass succeeds and real join accepts the forged earlier 1-ms record. Strict instrument exits 1; no further patch or auth probe followed this concrete stop condition.
+- DONE: Commit a concise evidence-backed minimal integration proposal or exact blocker, with lifecycle/surface mapping, platform and compatibility limits, and estimated counts; leave product unchanged and return to FO without paid work or self-advancement.
+  Report includes effective generated policy, failed startup-binding trial explicitly excluded from pass evidence, actual attack result, existing-owner-only necessary condition and provisional 70–120 code / 90–140 test estimate. Mapped reduction is insufficient to promise 1,800; Claude startup/auth/provider compatibility remain NOT RUN, not failed or passed.
+
+### Summary
+
+The single existing-tool alternative is insufficient as configured: broad temporary-directory writes defeat an exact owner-tree path deny through ancestor rename. Product remains clean and unchanged at `9bb52617`, counts remain 6,431 / 20 / 1,939, and all original repairs/count/CI-sequence/paid-outcome obligations remain pending. No installation, settings mutation, credential disclosure, real host/model call, new standing component, product integration or self-advancement occurred.

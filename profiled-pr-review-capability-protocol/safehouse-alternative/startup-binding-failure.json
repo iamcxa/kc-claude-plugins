@@ -1,0 +1,75 @@
+[
+  {
+    "isolated": true,
+    "mode": "normal",
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/pilot-isolation-proof.68ALze/safehouse-normal/owner/effective.sb",
+      "/bin/bash",
+      "-c",
+      "exec \"$1\" \"$2\" --child \"$3\" --mode \"$4\"",
+      "proof",
+      "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.py",
+      "/private/tmp/pilot-isolation-proof.68ALze/safehouse-normal",
+      "normal"
+    ],
+    "finalization": "SystemExit: 1",
+    "child": {},
+    "descendant": {
+      "error": "descendant did not finish"
+    },
+    "prior_unchanged": true,
+    "descendant_sentinel_unchanged": true,
+    "join_refusal": "SystemExit: 1",
+    "current_receipt": {
+      "cost_status": "incomplete",
+      "cost_usd": null,
+      "coverage": "not_applicable",
+      "driver": null,
+      "human_intervention_count": null,
+      "known_cost_usd": 0,
+      "manifest_sha256": "9e4ea4b17481290d89aa2db453c4507a88720ad5a4ec2c010ecf887f13d335a9",
+      "model_id": null,
+      "protocol_mode": "legacy",
+      "retry_count": 0,
+      "run_terminal": {
+        "pr": {
+          "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          },
+          "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "pr_number": 1,
+          "repository": "acme/widgets",
+          "role": "primary",
+          "slot": 1,
+          "treatment_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          }
+        },
+        "reason": "attempt_failed",
+        "schema": "kc-pr-flow.ablation-input-terminal/v1"
+      },
+      "schema": "kc-pr-flow.ablation-run/v4",
+      "usage": null,
+      "wallclock_ms": null
+    },
+    "host_output": {
+      "returncode": 126,
+      "stderr": "proof: /Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python: Operation not permitted\nproof: line 0: exec: /Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python: cannot execute: Operation not permitted\n",
+      "stdout": ""
+    }
+  }
+]

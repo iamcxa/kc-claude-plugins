@@ -1,0 +1,159 @@
+[
+  {
+    "isolated": true,
+    "mode": "normal",
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/effective.sb",
+      "/bin/bash",
+      "-c",
+      "exec \"$1\" \"$2\" --child \"$3\" --mode \"$4\"",
+      "proof",
+      "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/bin/python3.13",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.py",
+      "/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal",
+      "normal"
+    ],
+    "finalization": "success",
+    "child": {
+      "checks": [
+        {
+          "case": "current-preplant",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/pilot-runs/1-control/receipt.json'"
+        },
+        {
+          "case": "prior-absolute-chmod",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-traversal",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/work/../owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-symlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/work/owner-alias/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "child-create-hardlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/pilot-runs/2-control/receipt.json' -> '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/work/child-link.json'"
+        },
+        {
+          "case": "protected-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/unlink-sentinel'"
+        },
+        {
+          "case": "protected-directory-rename",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/rename-target' -> '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/work/moved-owner'"
+        },
+        {
+          "case": "protected-directory-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/empty-target'"
+        },
+        {
+          "case": "workspace-write",
+          "write_allowed": true
+        },
+        {
+          "case": "output-write",
+          "write_allowed": true
+        },
+        {
+          "case": "temp-write",
+          "write_allowed": true
+        },
+        {
+          "case": "ancestor-rename-restore",
+          "write_allowed": true
+        }
+      ],
+      "descendant_pid": 29486,
+      "pid": 29480,
+      "pgid": 29480
+    },
+    "descendant": {
+      "case": "detached-descendant",
+      "write_allowed": false,
+      "errno": 1,
+      "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/descendant-sentinel'",
+      "pid": 29486,
+      "pgid": 29486,
+      "observed_parent_finalization": true
+    },
+    "prior_unchanged": false,
+    "descendant_sentinel_unchanged": true,
+    "joined_count": 10,
+    "joined_wallclock_ms": {
+      "1-control": 134.459584,
+      "1-treatment": 60,
+      "2-control": 1,
+      "2-treatment": 60,
+      "3-control": 100,
+      "3-treatment": 60,
+      "4-control": 100,
+      "4-treatment": 60,
+      "5-control": 100,
+      "5-treatment": 60
+    },
+    "current_receipt": {
+      "cost_status": "complete",
+      "cost_usd": 0.1,
+      "coverage": "not_applicable",
+      "driver": {
+        "findings": [],
+        "human_input_count": 0,
+        "recommendation": "APPROVE",
+        "resumed": false,
+        "review_config": {
+          "modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          }
+        },
+        "schema": "kc-pr-flow.ablation-driver-receipt/v1",
+        "stop": "confirmation_ready",
+        "summary": "No findings"
+      },
+      "human_intervention_count": 0,
+      "known_cost_usd": 0.1,
+      "manifest_sha256": "9e4ea4b17481290d89aa2db453c4507a88720ad5a4ec2c010ecf887f13d335a9",
+      "model_id": "fixture",
+      "protocol_mode": "legacy",
+      "retry_count": 0,
+      "run_terminal": null,
+      "schema": "kc-pr-flow.ablation-run/v4",
+      "usage": {
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 1,
+        "output_tokens": 1
+      },
+      "wallclock_ms": 134.459584
+    },
+    "host_output": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"synthetic\": true}\n"
+    }
+  }
+]
