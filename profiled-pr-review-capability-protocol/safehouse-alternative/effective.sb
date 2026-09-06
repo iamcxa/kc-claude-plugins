@@ -1244,3 +1244,4 @@
 ;; #safehouse-test-id:append-profile# Appended profile from --append-profile: /private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner/deny-owner.sb
 
 (deny file-write* (subpath "/private/tmp/pilot-isolation-proof.68ALze/safehouse-v2-normal/owner"))
+
