@@ -10,8 +10,10 @@ what names the refusal.
 """
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -84,5 +86,40 @@ require_refusal("close-receipt.malformed-defect-id.json", "malformed id")
 # --- finding #7: per_issue and defects_disposition completeness ----------
 require_refusal("close-receipt.per-issue-mismatch.json", "dev_debrief.per_issue")
 require_refusal("close-receipt.disposition-mismatch.json", "ship_debrief.defects_disposition")
+
+# --- validate-receipt.py refuses when the plugin's close-receipt schema is
+# --- not installed (HERE.parents[2]/kc-ship-flow/schemas/ absent), before
+# --- ever reaching jsonschema.validate -----------------------------------
+with tempfile.TemporaryDirectory(prefix="close-receipt-absent-schema-") as absent_root_name:
+    absent_root = Path(absent_root_name)
+    absent_module_dir = absent_root / "docs" / "plan-flow" / "schema"
+    absent_module_dir.mkdir(parents=True)
+    absent_module = absent_module_dir / "validate-receipt.py"
+    shutil.copy(MODULE_PATH, absent_module)
+    # validate-receipt.py loads kc-plan-approval.v1.schema.json unconditionally
+    # (only the jsonschema.validate() call on it is gated), so the copy needs it too.
+    shutil.copy(HERE / "kc-plan-approval.v1.schema.json", absent_module_dir / "kc-plan-approval.v1.schema.json")
+    absent_fixtures = absent_root / "fixtures"
+    absent_fixtures.mkdir()
+    absent_plan_receipt = shutil.copy(PLAN_RECEIPT, absent_fixtures / "plan-receipt.json")
+    absent_plan_approval = shutil.copy(PLAN_APPROVAL, absent_fixtures / "plan-approval.json")
+    absent_close_receipt = shutil.copy(
+        FIXTURES / "close-receipt.dispositioned.json", absent_fixtures / "close-receipt.json"
+    )
+    absent = subprocess.run(
+        [
+            sys.executable, "-S", str(absent_module),
+            absent_plan_receipt, absent_plan_approval, absent_close_receipt,
+        ],
+        capture_output=True, text=True,
+    )
+    require(
+        absent.returncode == 1,
+        f"absent close-receipt schema: expected exit 1, got {absent.returncode}: {absent.stdout}{absent.stderr}",
+    )
+    require(
+        "close-receipt schema not installed" in absent.stdout,
+        f"absent close-receipt schema refusal must name it: {absent.stdout!r}",
+    )
 
 print("close-receipt test: all checks passed")

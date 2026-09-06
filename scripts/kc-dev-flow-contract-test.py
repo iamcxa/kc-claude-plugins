@@ -121,7 +121,6 @@ required = [
     "scripts/roborev-implementation-exit-contract.test.py",
     "scripts/pr-merge-portable-delivery.test.py",
     "docs/plan-flow/plan-lint.py",
-    "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
     "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
     "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
     "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
@@ -2239,12 +2238,6 @@ run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admissi
 plan_lint = ROOT / "docs/plan-flow/plan-lint.py"
 require(plan_lint.is_file(), f"missing {plan_lint}")
 require(plan_lint.stat().st_mode & 0o111, f"not executable: docs/plan-flow/plan-lint.py")
-
-plan_flow_schemas = [
-    ROOT / "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
-]
-for schema in plan_flow_schemas:
-    require(schema.is_file(), f"missing {schema}")
 
 plan_flow_fixtures = [
     ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json",
