@@ -62,17 +62,21 @@ for field_name in CANDIDATE_SHA BASE_SHA BRANCH WITHOUT_IT_COMMAND WITHOUT_IT_RE
   [ -n "${!field_name}" ] || die "incomplete Evidence block: missing $field_name"
 done
 
-git -C "$repo_root" rev-parse --verify "${CANDIDATE_SHA}^{commit}" >/dev/null 2>&1 \
-  || die "CANDIDATE_SHA unreachable: $CANDIDATE_SHA"
-
-# Bind BRANCH to CANDIDATE_SHA before ever calling `gh`: `gh pr create --head`
-# accepts `user:branch` fork syntax, and a branch whose remote head differs
-# from the reviewed commit would open a PR whose diff is not what was
-# accepted. Fail closed on any ambiguity.
+# Refuse cheap, string-only shapes before any git object lookup: a shallow
+# clone (CI's actions/checkout@v4 default depth 1) may not have CANDIDATE_SHA
+# as a local object, so the fork-syntax refusal below must fire first and for
+# its own reason, not be masked by a SHA-lookup failure. `gh pr create --head`
+# accepts `user:branch` fork syntax; refuse it outright.
 case "$BRANCH" in
   *:*) die "BRANCH contains ':' (fork syntax refused): $BRANCH" ;;
 esac
 
+git -C "$repo_root" rev-parse --verify "${CANDIDATE_SHA}^{commit}" >/dev/null 2>&1 \
+  || die "CANDIDATE_SHA unreachable: $CANDIDATE_SHA"
+
+# Bind BRANCH to CANDIDATE_SHA before ever calling `gh`: a branch whose remote
+# head differs from the reviewed commit would open a PR whose diff is not
+# what was accepted. Fail closed on any ambiguity.
 branch_refs="$(git -C "$repo_root" ls-remote origin "refs/heads/$BRANCH" 2>/dev/null || true)"
 branch_ref_count="$(printf '%s\n' "$branch_refs" | grep -c '^[0-9a-f]\{40\}[[:space:]]' || true)"
 [ "$branch_ref_count" -eq 1 ] \
