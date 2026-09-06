@@ -1,6 +1,6 @@
 # Bounded filesystem isolation feasibility
 
-Result: **local filesystem proof passes with a hard-link admission check; product integration is NOT approved or implemented, and full child-threat/CLI compatibility is NOT proven.** Product remains clean at `9bb526170156a44cff90e2a2fab9eeab081e0eb1`. Approval `087047c577d4f58003f6833478c345c50f7b377e` was committed, synchronized and reread before experiments.
+Result: **file protection proof passes, but the overall isolation proposal is NOT ready for integration.** The tested deny-default profile does not permit the real host's network/Mach/authentication needs, and reopening those channels has not been proven safe. Hard-link admission is required; full child-threat/CLI compatibility is NOT proven. Product remains clean at `9bb526170156a44cff90e2a2fab9eeab081e0eb1`. Approval `087047c577d4f58003f6833478c345c50f7b377e` was committed, synchronized and reread before experiments.
 
 ## Instrument and observed results
 
@@ -50,7 +50,7 @@ Thus the missing filesystem primitive has a concrete local candidate, but the en
 
 ## Readable count estimate and reduction evidence
 
-Current measured cumulative count remains **6,431 / 20 files / 1,939 complete focused lines**; no reduction or integration edit has occurred. A readable integration of the demonstrated filesystem part is estimated at **60–100 implementation lines** (policy/launch wrapper 25–40, canonical placement/alias/prelaunch checks 20–35, existing provenance/failure binding 15–25) and **80–120 focused test lines** by reusing the existing real Pilot fixture rather than copying this 220-line standalone diagnostic. These are net cumulative estimates, not last-commit churn, and do not include unresolved platform/auth/IPC work or the other four repair groups. Test-only helpers count as focused wherever located.
+Current measured cumulative count remains **6,431 / 20 files / 1,939 complete focused lines**; no reduction or integration edit has occurred. A readable integration of the demonstrated filesystem part is estimated at **60–100 implementation lines** (policy/launch wrapper 25–40, canonical placement/alias/prelaunch checks 20–35, existing provenance/failure binding 15–25) and **80–120 focused test lines** by reusing the existing real Pilot fixture rather than copying this 206-line standalone diagnostic. These are net cumulative estimates, not last-commit churn, and do not include unresolved platform/auth/IPC work or the other four repair groups. Test-only helpers count as focused wherever located.
 
 Concrete same-file reuse candidates inspected, with **estimated** net savings after readable helpers and no deleted unique assertions:
 
