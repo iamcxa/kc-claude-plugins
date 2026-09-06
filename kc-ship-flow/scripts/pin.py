@@ -64,7 +64,7 @@ def compute_contract_digest(
 ) -> tuple[str, list[dict[str, str]]]:
     digest = hashlib.sha256()
     resource_hashes: list[dict[str, str]] = []
-    for declared in resources:
+    for declared in sorted(resources):
         relative = Path(declared)
         if relative.is_absolute() or ".." in relative.parts:
             raise PinError(f"declared resource escapes the package: {declared!r}")
@@ -75,9 +75,10 @@ def compute_contract_digest(
             raw = path.read_bytes()
         except OSError as exc:
             raise PinError(f"declared resource unreadable: {declared}: {exc}") from exc
-        digest.update(b"resource\0")
-        digest.update(declared.encode("utf-8"))
-        digest.update(b"\0")
+        path_bytes = declared.encode("utf-8")
+        digest.update(len(path_bytes).to_bytes(8, "big"))
+        digest.update(path_bytes)
+        digest.update(len(raw).to_bytes(8, "big"))
         digest.update(raw)
         resource_hashes.append({"path": declared, "sha256": hashlib.sha256(raw).hexdigest()})
     return digest.hexdigest(), resource_hashes
@@ -105,12 +106,37 @@ def build_record(batch: str, station: str) -> dict[str, object]:
     }
 
 
+def check_no_station_regression(pin_path: Path, batch: str, station: str) -> None:
+    if not pin_path.exists():
+        return
+    try:
+        existing = json.loads(pin_path.read_bytes())
+    except (OSError, ValueError) as exc:
+        raise PinError(f"PIN_UNREADABLE: cannot read {pin_path}: {exc}") from exc
+    if not isinstance(existing, dict) or existing.get("schema") != PIN_SCHEMA:
+        raise PinError(f"PIN_UNREADABLE: {pin_path} is not a {PIN_SCHEMA} record")
+    if existing.get("batch") != batch:
+        raise PinError(
+            f"PIN_BATCH_MISMATCH: {pin_path} records batch {existing.get('batch')!r}, "
+            f"requested {batch!r}"
+        )
+    existing_station = existing.get("station")
+    if existing_station not in STATIONS or station not in STATIONS:
+        raise PinError(f"PIN_UNREADABLE: {pin_path} records an unrecognized station")
+    if STATIONS.index(existing_station) > STATIONS.index(station):
+        raise PinError(
+            f"PIN_REGRESSION_REFUSED: existing {existing_station!r} is later than {station!r}"
+        )
+
+
 def cmd_write(args: argparse.Namespace) -> int:
+    pin_path = Path(args.pin).expanduser().resolve() if args.pin else None
+    if pin_path is not None:
+        check_no_station_regression(pin_path, args.batch, args.station)
     record = build_record(args.batch, args.station)
     text = json.dumps(record, indent=2, sort_keys=True)
     print(text)
-    if args.pin:
-        pin_path = Path(args.pin).expanduser().resolve()
+    if pin_path is not None:
         pin_path.parent.mkdir(parents=True, exist_ok=True)
         pin_path.write_text(text + "\n", encoding="utf-8")
     return 0

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -42,6 +43,29 @@ def make_sandbox() -> Path:
         sandbox / ".claude-plugin" / "plugin.json",
     )
     return sandbox
+
+
+def make_digest_sandbox() -> Path:
+    sandbox = Path(tempfile.mkdtemp()) / "kc-ship-flow"
+    (sandbox / "scripts").mkdir(parents=True)
+    (sandbox / "schemas").mkdir(parents=True)
+    (sandbox / ".claude-plugin").mkdir(parents=True)
+    shutil.copy(PACKAGE_ROOT / "scripts" / "pin.py", sandbox / "scripts" / "pin.py")
+    (sandbox / "schemas" / "resources.json").write_text(
+        json.dumps({"schema": "kc-ship-flow-resources/v1", "resources": ["a", "b"]}),
+        encoding="utf-8",
+    )
+    (sandbox / ".claude-plugin" / "plugin.json").write_text(
+        json.dumps({"version": "0.1.0"}), encoding="utf-8"
+    )
+    return sandbox
+
+
+def load_pin_module(sandbox: Path):
+    spec = importlib.util.spec_from_file_location("pin_under_test", sandbox / "scripts" / "pin.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_write_produces_valid_record(sandbox: Path, pin_path: Path) -> None:
@@ -90,6 +114,46 @@ def test_wrong_previous_station_is_refused(sandbox: Path, pin_path: Path) -> Non
     )
 
 
+def test_digest_is_length_prefixed_not_delimiter_joined() -> None:
+    # Content for "a" below is byte-identical to the delimiter-joined
+    # concatenation of resource "b" in the second pair, so an unprefixed join
+    # of these two pairs collides; a length-prefixed join must not.
+    sandbox = make_digest_sandbox()
+    module = load_pin_module(sandbox)
+
+    (sandbox / "a").write_bytes(b"resource\x00b\x00PREFIX")
+    (sandbox / "b").write_bytes(b"SUFFIX")
+    digest_1, _ = module.compute_contract_digest(["a", "b"])
+
+    (sandbox / "a").write_bytes(b"")
+    (sandbox / "b").write_bytes(b"PREFIXresource\x00b\x00SUFFIX")
+    digest_2, _ = module.compute_contract_digest(["a", "b"])
+
+    check(
+        digest_1 != digest_2,
+        "contract digest collided across two different resource content pairs "
+        "(delimiter-joined digest, not length-prefixed)",
+    )
+
+
+def test_write_refuses_a_station_regression() -> None:
+    sandbox = make_sandbox()
+    pin_path = sandbox / "regression.pin.json"
+
+    result = run_pin(sandbox, ["write", "--batch", "b2", "--station", "merged", "--pin", str(pin_path)])
+    check(result.returncode == 0, f"seeding a merged pin failed: {result.stderr}")
+
+    result = run_pin(sandbox, ["write", "--batch", "b2", "--station", "accepted", "--pin", str(pin_path)])
+    check(result.returncode != 0, "write let an existing merged pin rewind to accepted")
+    check(
+        "PIN_REGRESSION_REFUSED" in result.stderr and "merged" in result.stderr,
+        f"write did not name the regression: {result.stderr!r}",
+    )
+
+    result = run_pin(sandbox, ["write", "--batch", "b2", "--station", "merged", "--pin", str(pin_path)])
+    check(result.returncode == 0, f"re-writing the same station was refused: {result.stderr}")
+
+
 def main() -> int:
     sandbox = make_sandbox()
     pin_path = sandbox / "batch.pin.json"
@@ -97,6 +161,8 @@ def main() -> int:
     test_check_passes_on_unmodified_sandbox(sandbox, pin_path)
     test_mutated_resource_byte_is_refused(sandbox, pin_path)
     test_wrong_previous_station_is_refused(sandbox, pin_path)
+    test_digest_is_length_prefixed_not_delimiter_joined()
+    test_write_refuses_a_station_regression()
     if FAILURES:
         for failure in FAILURES:
             print(f"FAIL: {failure}", file=sys.stderr)
