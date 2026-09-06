@@ -37,7 +37,8 @@
    "quote": "            print(f\"WARN L6 id-order advisory: intent order {l6_intent}; violations {', '.join(l6_violations)}\")",
    "summary": "Advisory via print(): absent from the receipt's lint array; silent when clean.",
    "failure_scenario": "'ran clean' and 'deleted' indistinguishable.",
-   "disposition": "repair round 2 sent"
+   "disposition": "repair round 2 sent",
+   "status": "closed in r3 (a0a6c440)"
   },
   {
    "file": "scripts/kc-dev-flow-contract-test.py",
@@ -46,7 +47,9 @@
    "quote": "    \"WARN L6 id-order advisory\" in lint_dev129_rough.stdout,",
    "summary": "Only the prefix is asserted.",
    "failure_scenario": "Garbled advisory content stays green.",
-   "disposition": "repair round 2 sent"
+   "disposition": "repair round 2 sent",
+   "status": "closed in r3 (a0a6c440)"
   }
- ]
+ ],
+ "head_r3": "a0a6c4409e90313f6cee85f8ec898f422d1ad05c"
 }

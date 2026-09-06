@@ -35,7 +35,9 @@
      "identifier": "DEV-37",
      "url": "https://linear.app/duckbase-co/issue/DEV-37/\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claimreadback-\u9a57\u6536",
      "branchName": "feature/dev-37-\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claim\uff0freadback-\u9a57\u6536",
-     "cycle": null,
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
      "projectMilestone": null,
      "state": {
       "type": "unstarted"
@@ -62,7 +64,9 @@
      "identifier": "DEV-36",
      "url": "https://linear.app/duckbase-co/issue/DEV-36/\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
      "branchName": "feature/dev-36-\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
-     "cycle": null,
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
      "projectMilestone": null,
      "state": {
       "type": "started"
@@ -76,7 +80,9 @@
      "identifier": "DEV-35",
      "url": "https://linear.app/duckbase-co/issue/DEV-35/\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
      "branchName": "feature/dev-35-\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
-     "cycle": null,
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
      "projectMilestone": null,
      "state": {
       "type": "started"
@@ -90,7 +96,9 @@
      "identifier": "DEV-25",
      "url": "https://linear.app/duckbase-co/issue/DEV-25/\u9a57\u8b49-netlify-dbauth-\u8207-rls-\u79df\u6236\u9694\u96e2",
      "branchName": "feature/dev-25-\u9a57\u8b49-netlify-db\u3001auth-\u8207-rls-\u79df\u6236\u9694\u96e2",
-     "cycle": null,
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
      "projectMilestone": null,
      "state": {
       "type": "started"
@@ -289,12 +297,32 @@
   {
    "rule": "L2 one cycle",
    "pass": true,
-   "why": "set(); unadmitted: 11"
+   "why": "{'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 7"
   },
   {
    "rule": "L3 milestone membership",
    "pass": true,
    "why": "no milestones -> implicit single MS"
+  },
+  {
+   "rule": "L4 admission DEV-37",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-36",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-35",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-25",
+   "pass": true,
+   "why": "2 non-goals"
   },
   {
    "rule": "L5 initiative when >1 project",
@@ -307,9 +335,34 @@
    "why": "blocker->blocked [('DEV-35', 'DEV-37'), ('DEV-36', 'DEV-37'), ('DEV-37', 'DEV-23'), ('DEV-22', 'DEV-23'), ('DEV-21', 'DEV-23'), ('DEV-19', 'DEV-22'), ('DEV-19', 'DEV-21'), ('DEV-20', 'DEV-21'), ('DEV-18', 'DEV-20'), ('DEV-18', 'DEV-19'), ('DEV-17', 'DEV-19')]; order ['DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-36', 'DEV-39', 'DEV-19', 'DEV-20', 'DEV-37', 'DEV-22', 'DEV-21', 'DEV-23']"
   },
   {
+   "rule": "L6 id-order advisory",
+   "pass": true,
+   "why": "violations (DEV-37, DEV-23)"
+  },
+  {
    "rule": "L7 split advisory (warn only)",
    "pass": true,
    "why": "13 issues, forked=True; consider Milestones"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-37",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-36",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-35",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-25",
+   "pass": true,
+   "why": "3 ACs"
   },
   {
    "rule": "L9 by-product Issue check",
@@ -383,5 +436,5 @@
    "DEV-19"
   ]
  ],
- "receipt_sha256": "8c09e5e06faff9c97e33c87ff93096714ce6bafb825c1de407e40b59a30c7dde"
+ "receipt_sha256": "3801341d076e2cd7a563f824a7e5dd5e0d8552ff8524e7040f45eb7bb7679562"
 }
