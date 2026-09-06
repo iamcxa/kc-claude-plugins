@@ -3,7 +3,7 @@
  "project": {
   "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
   "name": "\u67b6\u69cb\u6536\u6582\u8207 POC \u7626\u8eab",
-  "content": "\u78ba\u7acb\u55ae\u4e00 API\u3001\u8cc7\u6599\u5eab\u3001\u8eab\u5206\u8207\u90e8\u7f72\u8def\u5f91\uff1b\u4fdd\u7559 Hono\u3001Zod/OpenAPI\u3001Drizzle \u8207\u53ef\u9a57\u8b49\u7684 POC \u6838\u5fc3\u6a21\u5f0f\u3002\u79fb\u9664\u672a\u63a1\u7528\u7684 UI\u3001API \u8207\u8eab\u5206\u9a57\u8b49\u5be6\u9a57\u3002",
+  "content": "## User value\n\nKent obtains a revision-bound, secret-safe QNow PoC acceptance receipt: three hosted actors prove assignment, tenant isolation, exact-once claim and readback, with cleanup to zero remainder.\n\n\u78ba\u7acb\u55ae\u4e00 API\u3001\u8cc7\u6599\u5eab\u3001\u8eab\u5206\u8207\u90e8\u7f72\u8def\u5f91\uff1b\u4fdd\u7559 Hono\u3001Zod/OpenAPI\u3001Drizzle \u8207\u53ef\u9a57\u8b49\u7684 POC \u6838\u5fc3\u6a21\u5f0f\u3002\u79fb\u9664\u672a\u63a1\u7528\u7684 UI\u3001API \u8207\u8eab\u5206\u9a57\u8b49\u5be6\u9a57\u3002",
   "initiatives": {
    "nodes": [
     {
@@ -283,8 +283,8 @@
  "lint": [
   {
    "rule": "L1 one-line User value",
-   "pass": false,
-   "why": "''"
+   "pass": true,
+   "why": "'Kent obtains a revision-bound, secret-safe QNow PoC acceptan'"
   },
   {
    "rule": "L2 one cycle",
@@ -297,71 +297,6 @@
    "why": "no milestones -> implicit single MS"
   },
   {
-   "rule": "L4 admission DEV-39",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-37",
-   "pass": true,
-   "why": "2 non-goals"
-  },
-  {
-   "rule": "L4 admission DEV-36",
-   "pass": true,
-   "why": "2 non-goals"
-  },
-  {
-   "rule": "L4 admission DEV-35",
-   "pass": true,
-   "why": "2 non-goals"
-  },
-  {
-   "rule": "L4 admission DEV-25",
-   "pass": true,
-   "why": "2 non-goals"
-  },
-  {
-   "rule": "L4 admission DEV-24",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-23",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-22",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-21",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-20",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-19",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-18",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
-   "rule": "L4 admission DEV-17",
-   "pass": false,
-   "why": "planning description needs one Non-goals section"
-  },
-  {
    "rule": "L5 initiative when >1 project",
    "pass": true,
    "why": "single project; not triggered"
@@ -372,89 +307,19 @@
    "why": "blocker->blocked [('DEV-35', 'DEV-37'), ('DEV-36', 'DEV-37'), ('DEV-37', 'DEV-23'), ('DEV-22', 'DEV-23'), ('DEV-21', 'DEV-23'), ('DEV-19', 'DEV-22'), ('DEV-19', 'DEV-21'), ('DEV-20', 'DEV-21'), ('DEV-18', 'DEV-20'), ('DEV-18', 'DEV-19'), ('DEV-17', 'DEV-19')]; order ['DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-36', 'DEV-39', 'DEV-19', 'DEV-20', 'DEV-37', 'DEV-22', 'DEV-21', 'DEV-23']"
   },
   {
-   "rule": "L6 blockedBy direction agrees with identifier order",
-   "pass": false,
-   "why": "intent order ['DEV-17', 'DEV-18', 'DEV-19', 'DEV-20', 'DEV-21', 'DEV-22', 'DEV-23', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-36', 'DEV-37', 'DEV-39']; violations (DEV-37, DEV-23)"
-  },
-  {
    "rule": "L7 split advisory (warn only)",
    "pass": true,
    "why": "13 issues, forked=True; consider Milestones"
   },
   {
-   "rule": "L8 e2e-able AC DEV-39",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-37",
-   "pass": true,
-   "why": "4 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-36",
-   "pass": true,
-   "why": "3 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-35",
-   "pass": true,
-   "why": "3 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-25",
-   "pass": true,
-   "why": "3 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-24",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-23",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-22",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-21",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-20",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-19",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-18",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
-   "rule": "L8 e2e-able AC DEV-17",
-   "pass": false,
-   "why": "0 ACs"
-  },
-  {
    "rule": "L9 by-product Issue check",
-   "pass": false,
-   "why": "issues with no unique surface: DEV-18; DEV-19; DEV-20; DEV-37; DEV-22; DEV-21; DEV-23"
+   "pass": true,
+   "why": "issues with no unique surface: none"
   },
   {
    "rule": "L10 re-verified presence and age",
-   "pass": false,
-   "why": "14-day bound; violations: DEV-39: no Re-verified line, DEV-24: no Re-verified line, DEV-23: no Re-verified line, DEV-22: no Re-verified line, DEV-21: no Re-verified line, DEV-20: no Re-verified line, DEV-19: no Re-verified line, DEV-18: no Re-verified line, DEV-17: no Re-verified line"
+   "pass": true,
+   "why": "14-day bound; violations: none"
   }
  ],
  "dispatch_order": [
@@ -518,5 +383,5 @@
    "DEV-19"
   ]
  ],
- "receipt_sha256": "f58d281766aac64c5aa386ac17a3aad632f37abaa7042719ff3919c1fac2a2e6"
+ "receipt_sha256": "8c09e5e06faff9c97e33c87ff93096714ce6bafb825c1de407e40b59a30c7dde"
 }
