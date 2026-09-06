@@ -1,0 +1,93 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "Captain chose wedge (a): DEV-104..107, 2026-09-06",
+ "lint_full": [
+  {
+   "rule": "L1 one-line User value",
+   "pass": true,
+   "why": "'Kent dispatches a batch, leaves, and returns to one Slack me'"
+  },
+  {
+   "rule": "L2 one cycle",
+   "pass": true,
+   "why": "{'b788c52d-8370-475f-be4f-8fcd88dd03d6'}"
+  },
+  {
+   "rule": "L3 milestone membership",
+   "pass": true,
+   "why": ""
+  },
+  {
+   "rule": "L4 admission DEV-107",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-106",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-105",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-104",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L5 initiative when >1 project",
+   "pass": true,
+   "why": "single project; not triggered"
+  },
+  {
+   "rule": "L6 blockedBy is a DAG",
+   "pass": true,
+   "why": "blocker->blocked [('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']"
+  },
+  {
+   "rule": "L6 blockedBy direction agrees with identifier order",
+   "pass": true,
+   "why": "intent order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']; violations none"
+  },
+  {
+   "rule": "L7 split advisory (warn only)",
+   "pass": true,
+   "why": "4 issues, forked=False; consider Milestones"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-107",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-106",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-105",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-104",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L9 by-product Issue check",
+   "pass": true,
+   "why": "issues with no unique surface: none"
+  },
+  {
+   "rule": "L10 re-verified presence and age",
+   "pass": true,
+   "why": "14-day bound; violations: none"
+  }
+ ],
+ "station0": "station0-candidates.tsv",
+ "falsifier": "The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates."
+}

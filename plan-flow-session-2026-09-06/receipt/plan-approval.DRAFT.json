@@ -1,0 +1,24 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "eeb452b164c0d3bd829612c8ed2fd6c979b7529d365bec85d6c281d4e4a8bc7a",
+ "approver": "person:captain",
+ "approved_at": "PENDING",
+ "decision": "go",
+ "max_workspaces": 4,
+ "concurrency": 2,
+ "repair_rounds": 2,
+ "quote": "PENDING",
+ "quote_source": "PENDING",
+ "defaults": {
+  "findings_outside_brief": [
+   "security",
+   "data-loss",
+   "compatibility"
+  ],
+  "minimal_necessity_fail": "accepted_no_pr",
+  "moved_base": "rebase_and_accept",
+  "worker_blocker": "skip_issue_continue_batch",
+  "empty_reviewer": "fallback_to_fo_diff_read",
+  "pr_creation": "batch_approve_draft"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "6072d592-8704-448b-bb8d-66471b0557f9",
+  "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
+  "content": "## User value\n\nKent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.\n\n**Hypothesis:** If ship-flow runs review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.\n\n**Wedge:** Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).\n\n**Accepted outcome:** ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.\n\n**Falsifier:** The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates.\n\n**Premises**\n\n* P1: Doing nothing keeps the Captain reading the chat and pressing \u7e7c\u7e8c to advance a batch; on 2026-09-05 that was about ten nudges and the laptop stayed open.\n* P2: The existing partial solution is the accept station (#373, #377) plus a hand-written uat.md; kc-pr-review exists and ship-flow never calls it.\n* P3: Premise falsifier \u2014 remove the approach (scripts for the three stations and the close): the outcome (one message, zero questions) cannot hold, because without the scripts the FO writes by hand and the Captain waits; the value depends on the mechanism, not on a document.\n\n**Exit**\n\n* DEV-104, DEV-105, DEV-106, DEV-107 accepted by the accept station and merged.\n* The next batch's record shows kc-pr-review dispositions, an e2e artifact or a written reason, one generated UAT document, exactly one Slack message, and a validated close receipt with every defect dispositioned.\n* Captain questions between first dispatch and the UAT message: zero (DEV-94 AC-3).\n\nPlan session 2026-09-06; stations 0\u20134 recorded on the state branch under plan-flow-session-2026-09-06/.",
+  "initiatives": {
+   "nodes": []
+  },
+  "projectMilestones": {
+   "nodes": [
+    {
+     "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a",
+     "name": "From dispatch to one Slack message"
+    }
+   ]
+  },
+  "issues": {
+   "nodes": [
+    {
+     "id": "6cbc6602-5e5b-40f3-8985-199384d8f507",
+     "identifier": "DEV-107",
+     "url": "https://linear.app/duckbase-co/issue/DEV-107/ship-flow-close-the-close-receipt-refuses-an-undispositioned-defect",
+     "description": "## The problem\n\n`validate-receipt.py` already binds a close receipt to its plan receipt and approval and checks the issue set (2026-09-06, lines 65-77), but it never reads `defects_returned`: S24, S25, S26 sat with `fix_ticket: null` for two days and nothing complained. DEV-94 AC-6 and AC-7 ask for two things the validator does not know about: an entry must carry a `fix_ticket` or an `accepted_residual`, and the close receipt carries a dev debrief (written at UAT-ready from the Evidence blocks and refusals) and a ship debrief (written after merge from the Captain's overturns).\n\n## Accepted outcome\n\nThe close-receipt schema gains `accepted_residual` as the alternative to `fix_ticket` and two `debrief` fields; `validate-receipt.py` refuses an entry with neither disposition, names it, and refuses a close receipt missing either debrief. Two small writers draft each debrief from the batch record; the FO edits, never writes from scratch.\n\n## Non-goals\n\n* No change to the plan receipt or approval schemas.\n* No automatic Linear ticket creation for a defect; `fix_ticket` is filled by plan-flow.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** The recorded `close-receipt.DRAFT.json` from batch 1016352e0223 is refused naming S24, S25, S26; exit and message recorded.\n* **AC-2** The same receipt with `accepted_residual` filled on those three is accepted; recorded.\n* **AC-3** A close receipt with no dev debrief is refused naming the field; recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: printed 0 matches: the validator does not read defects_returned\n\nRe-verified: `grep -c 'defects_returned\\|fix_ticket' docs/plan-flow/schema/validate-receipt.py` exit 0 2026-09-06",
+     "branchName": "feature/dev-107-ship-flow-close-the-close-receipt-refuses-an-undispositioned",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-106"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "6dee3b3c-3b76-446e-9363-1c61a5efb556",
+     "identifier": "DEV-106",
+     "url": "https://linear.app/duckbase-co/issue/DEV-106/ship-flow-handoff-one-uat-document-and-one-slack-message-generated",
+     "description": "## The problem\n\nThe UAT document for batch 1016352e0223 was written by hand; `uat-doc.py` survives only in DEV-67's evidence directory on the state branch. No Slack message has ever been sent by ship-flow; the Captain learned a batch was ready by reading the chat. The Captain's stated day shape ends with 'one UAT document and one Slack ping'.\n\n## Accepted outcome\n\n`scripts/ship-flow/uat-doc.py` moves into the repository and reads the batch record (accepted blocks, PR numbers and SHAs, review dispositions, e2e artifact, every decision the `defaults` made) into one markdown document; `scripts/ship-flow/notify.sh` sends exactly one Slack message carrying the document link, idempotent on the batch id so a re-run sends nothing.\n\n## Non-goals\n\n* No Slack for anything other than UAT-ready.\n* No change to the UAT document's meaning: it lists, it does not decide.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** Run on batch 1016352e0223's recorded evidence the generator reproduces the hand-written `uat.md` section for section; diff recorded.\n* **AC-2** The generated document lists every `defaults` decision from the batch record; count recorded against the record.\n* **AC-3** `notify.sh` run twice for the same batch id sends one message; both runs and the message id recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: the generator is not in the repository; grep -rqi slack scripts/ship-flow/ also exits 1\n\nRe-verified: `test -f scripts/ship-flow/uat-doc.py` exit 1 2026-09-06",
+     "branchName": "feature/dev-106-ship-flow-handoff-one-uat-document-and-one-slack-message",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-105"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-104"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "5ddc957e-ab7a-4b71-849e-ba615f885841",
+     "identifier": "DEV-105",
+     "url": "https://linear.app/duckbase-co/issue/DEV-105/ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked-head-is-the",
+     "description": "## The problem\n\nDEV-94 AC-4 was relaxed on 2026-09-04 to three shapes: an e2e-flow recording where the Milestone names a journey, otherwise the `e2e-cli.sh` stdout log at the stacked head, otherwise `e2e: not applicable` with a reason. `scripts/ship-flow/e2e-cli.sh` exists and runs `Execute external` steps at a pinned SHA, but nothing selects the shape, runs it at the stacked head, or refuses to call a batch UAT-ready without one of the three.\n\n## Accepted outcome\n\nOne script takes the batch's accepted candidates in dispatch order, computes the stacked head, picks the shape from the receipt (journey named or not, CLI flow present or not), runs `e2e-cli.sh` at that head when the CLI shape applies, and writes the artifact path or the `not applicable` reason into the batch record. UAT-ready is refused when none of the three is present.\n\n## Non-goals\n\n* No browser e2e in this item; the e2e-flow recording shape is recorded as delegated to e2e-pipeline.\n* No change to `e2e-cli.sh` step semantics.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** With a fixture receipt naming a CLI flow, the script runs `e2e-cli.sh` at the stacked head and the stdout log path is recorded; exit 0 recorded.\n* **AC-2** With a fixture receipt naming no journey and no CLI flow, the script records `e2e: not applicable` with the reason text; recorded.\n* **AC-3** With no artifact and no reason, the script exits non-zero and the batch is not marked UAT-ready; recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: the three-shape rule exists only in DEV-94's text\n\nRe-verified: `grep -rq 'not applicable' scripts/ship-flow/` exit 1 2026-09-06",
+     "branchName": "feature/dev-105-ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "34e67189-96a8-4b48-93af-4bb8bc9dc484",
+     "identifier": "DEV-104",
+     "url": "https://linear.app/duckbase-co/issue/DEV-104/ship-flow-review-station-open-the-draft-pr-and-run-kc-pr-review",
+     "description": "## The problem\n\nFive PRs were opened by the First Officer on 2026-09-05/06 and none was reviewed by `kc-pr-review`; the FO read each diff by hand. S25 recorded a cross-model reviewer returning empty output that was nearly recorded as 'no findings'. The approval `defaults` now name the rule (`empty_reviewer: fallback_to_fo_diff_read`) but nothing executes the station.\n\n## Accepted outcome\n\nOne script opens the Draft PR from an accepted Evidence block (title from the commit subject, body from a template fed by the block), runs the `kc-pr-review` skill on it, and dispositions findings by the approval `defaults`: security, data-loss, and compatibility findings block; others are listed for the UAT document. Empty reviewer output is recorded as reviewer-absent and falls back to the FO diff read, never as 'no findings'.\n\n## Non-goals\n\n* No change to kc-pr-review itself.\n* No auto-merge, no marking ready.\n* No Linear write.\n\n## Acceptance criteria\n\n* **AC-1** Run on a real accepted block the script opens a Draft PR whose title equals the commit subject and whose body carries the block's SHAs; the run log is recorded.\n* **AC-2** A fixture review output with one `security` finding produces disposition `block`; one with only a `style` finding produces `listed`; both runs recorded.\n* **AC-3** An empty reviewer output produces `reviewer-absent` and the fallback marker, not `no findings`; recorded.\n* **AC-4** `python3 scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate.\n\n## Route-back conditions\n\nThe accepted outcome or non-goals changed. Stop and return a structured planning delta that names the changed premise, affected acceptance evidence, and recommended change or stop.\n\nRe-verified observation: no ship-flow script or runtime doc invokes the review skill\n\nRe-verified: `grep -rq 'kc-pr-review' scripts/ship-flow/ docs/ship-flow/README.md` exit 1 2026-09-06",
+     "branchName": "feature/dev-104-ship-flow-review-station-open-the-draft-pr-and-run-kc-pr",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    }
+   ]
+  }
+ }
+}
