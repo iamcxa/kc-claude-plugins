@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavior contract for scripts/ship-flow/uat-doc.py."""
+"""Behavior contract for kc-ship-flow/scripts/uat-doc.py."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MODULE_PATH = HERE / "uat-doc.py"
-FIXTURES = HERE.parent / "fixtures" / "ship-flow" / "uat-doc"
+FIXTURES = HERE / "fixtures" / "uat-doc"
 
 
 def require(condition: bool, message: str) -> None:

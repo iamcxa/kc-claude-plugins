@@ -10,7 +10,7 @@ steps:
     description: "accept-evidence.sh accepts an already-verified, real recorded Evidence block"
     execute:
       cli:
-        - run: "bash scripts/ship-flow/accept-evidence.sh scripts/fixtures/ship-flow/e2e-gate/recorded-evidence-block.txt"
+        - run: "bash kc-ship-flow/scripts/accept-evidence.sh kc-ship-flow/scripts/fixtures/e2e-gate/recorded-evidence-block.txt"
           expect: "exit code 0"
 
   - id: e2e-gate-not-applicable
@@ -18,7 +18,7 @@ steps:
     description: "the e2e gate records 'e2e: not applicable' for a milestone with no flow file"
     execute:
       cli:
-        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json"
+        - run: "python3 kc-ship-flow/scripts/e2e-gate.py kc-ship-flow/scripts/fixtures/e2e-gate/plan-receipt.ac3.json kc-ship-flow/scripts/fixtures/e2e-gate/close-receipt.ac3.json"
           expect: "exit code 0"
 
   - id: uat-doc-builds-batch-document
@@ -26,7 +26,7 @@ steps:
     description: "uat-doc.py builds the batch UAT document from durable records only"
     execute:
       cli:
-        - run: "python3 scripts/ship-flow/uat-doc.py scripts/fixtures/ship-flow/uat-doc/batch-e56e9f09873c"
+        - run: "python3 kc-ship-flow/scripts/uat-doc.py kc-ship-flow/scripts/fixtures/uat-doc/batch-e56e9f09873c"
           expect: "exit code 0"
 
   - id: close-receipt-refuses-undispositioned-defect
@@ -34,7 +34,7 @@ steps:
     description: "validate-receipt.py refuses the recorded close-receipt.DRAFT.json naming S24, S25, S26 with no fix_ticket or accepted_residual"
     execute:
       cli:
-        - run: "python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.DRAFT.json"
+        - run: "python3 docs/plan-flow/schema/validate-receipt.py kc-ship-flow/scripts/fixtures/close-receipt/plan-receipt.json kc-ship-flow/scripts/fixtures/close-receipt/plan-approval.json kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.DRAFT.json"
           expect: "exit code 1"
 
   - id: close-receipt-accepts-dispositioned-with-debriefs
@@ -42,5 +42,5 @@ steps:
     description: "validate-receipt.py accepts the same receipt once S24, S25, S26 carry accepted_residual and both debriefs carry their minimum fields"
     execute:
       cli:
-        - run: "python3 docs/plan-flow/schema/validate-receipt.py scripts/fixtures/ship-flow/close-receipt/plan-receipt.json scripts/fixtures/ship-flow/close-receipt/plan-approval.json scripts/fixtures/ship-flow/close-receipt/close-receipt.dispositioned.json"
+        - run: "python3 docs/plan-flow/schema/validate-receipt.py kc-ship-flow/scripts/fixtures/close-receipt/plan-receipt.json kc-ship-flow/scripts/fixtures/close-receipt/plan-approval.json kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.dispositioned.json"
           expect: "exit code 0"

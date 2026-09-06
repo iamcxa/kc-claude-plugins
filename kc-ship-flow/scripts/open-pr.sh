@@ -6,7 +6,7 @@
 # CANDIDATE_SHA, the WITHOUT_IT_COMMAND/WITHOUT_IT_REMOVED_VARIANT pair, and
 # the block's own SELF_CHECK line (the accept station's verdict, carried
 # rather than re-derived: this script trusts the block was already accepted
-# by scripts/ship-flow/accept-evidence.sh before it runs). BRANCH is bound to
+# by kc-ship-flow/scripts/accept-evidence.sh before it runs). BRANCH is bound to
 # CANDIDATE_SHA against origin before `gh pr create` runs, so a fork branch
 # (`user:branch`) or a branch whose remote head differs from the reviewed
 # commit is refused rather than opened under a misleading title. Progress is

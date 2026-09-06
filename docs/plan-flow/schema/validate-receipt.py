@@ -131,7 +131,9 @@ if len(sys.argv) > 3:
         disposition_ids.add(did)
     if disposition_ids != defect_ids: fail(f"ship_debrief.defects_disposition ids {sorted(disposition_ids)} do not match defects_returned ids {sorted(defect_ids)}")
 
-    if jsonschema: jsonschema.validate(c, json.load(open(HERE / "kc-ship-close-receipt.v1.schema.json")))
+    close_schema_path = HERE.parents[2] / "kc-ship-flow" / "schemas" / "kc-ship-close-receipt.v1.schema.json"
+    if not close_schema_path.is_file(): fail(f"close-receipt schema not installed: {close_schema_path}")
+    if jsonschema: jsonschema.validate(c, json.load(open(close_schema_path)))
     cc = dict(c); cc.pop("close_sha256", None)
     if hashlib.sha256(canon(cc)).hexdigest() != c["close_sha256"]: fail("close_sha256 does not match canonical content")
     if c["plan_receipt_sha256"] != r["receipt_sha256"]: fail("close receipt does not bind this plan receipt")

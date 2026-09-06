@@ -13,7 +13,7 @@ steps:
     description: "e2e-gate records 'e2e: not applicable' for a milestone with no flow file"
     execute:
       cli:
-        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json"
+        - run: "python3 kc-ship-flow/scripts/e2e-gate.py kc-ship-flow/scripts/fixtures/e2e-gate/plan-receipt.ac3.json kc-ship-flow/scripts/fixtures/e2e-gate/close-receipt.ac3.json"
           expect: "exit code 0"
 
   - id: not-applicable-chinese-milestone
@@ -21,5 +21,5 @@ steps:
     description: "e2e-gate derives a Unicode flow path and records 'e2e: not applicable' for it"
     execute:
       cli:
-        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.chinese-milestone.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.chinese-milestone.json"
+        - run: "python3 kc-ship-flow/scripts/e2e-gate.py kc-ship-flow/scripts/fixtures/e2e-gate/plan-receipt.chinese-milestone.json kc-ship-flow/scripts/fixtures/e2e-gate/close-receipt.chinese-milestone.json"
           expect: "exit code 0"

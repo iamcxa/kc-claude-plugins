@@ -1,6 +1,6 @@
 name: quoted-run-fixture
 description: |
-  Regression fixture for scripts/ship-flow/parse-execute-external.py: a
+  Regression fixture for kc-ship-flow/scripts/parse-execute-external.py: a
   single-quoted `run` value must be found by the PyYAML-based parser, not
   silently skipped the way a regex scoped to `run: "..."` would skip it.
 

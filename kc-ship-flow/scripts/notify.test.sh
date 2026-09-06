@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Behavior contract for scripts/ship-flow/notify.sh.
+# Behavior contract for kc-ship-flow/scripts/notify.sh.
 
 set -u
 
