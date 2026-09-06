@@ -17,6 +17,17 @@ gates:
                 id: briefing:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1
                 digest: sha256:406f5d8b6c966567084943c9514f76aba8cf505ca86915c4ee2626230f8e58e5
                 room-ref: ./issue-382-stage-pin-continuation/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dntn9z2nd2gkdcsjbbc9m4pv:backlog:1
+                briefing: briefing:dntn9z2nd2gkdcsjbbc9m4pv:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-06T14:28:31.950404Z"
+                decision: approve
+                reason: 'Kent explicitly approved the presented initial briefing 406f5d8b6c: admit the same six-file Production recovery repair; legacy migration remains separate, with no merge or release grant.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Resume valid report updates and explicitly authorized corrections without
