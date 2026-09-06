@@ -1,0 +1,9 @@
+{
+  "blocking_categories": [
+    "data-loss",
+    "security"
+  ],
+  "disposition": "block",
+  "findings_count": 4,
+  "schema": "kc-dev-flow-ship-flow-disposition/v1"
+}

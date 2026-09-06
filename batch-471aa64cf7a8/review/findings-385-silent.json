@@ -1,0 +1,4 @@
+[
+ {"file":"kc-ship-flow/scripts/pin.py","line":115,"category":"correctness","quote":"        pin_path.write_text(text + \"\\n\", encoding=\"utf-8\")","summary":"cmd_write never reads the existing pin, so write --station <earlier> over a later-station pin silently regresses the chain (verified: merged then accepted both exit 0).","failure_scenario":"A rerun of an earlier station's write rewinds the pin; downstream checks read a valid-looking wrong lineage."},
+ {"file":"kc-ship-flow/scripts/pin.test.py","line":99,"category":"test-coverage","quote":"    test_wrong_previous_station_is_refused(sandbox, pin_path)","summary":"No test covers write overwriting an existing pin with an earlier station.","failure_scenario":"The write/overwrite contract is unverified either way."}
+]
