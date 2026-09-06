@@ -1,0 +1,63 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 378,
+ "head": "3a733578afbdc3a3e784c9484861e9b9dc5eb83b",
+ "findings": [
+  {
+   "category": "security",
+   "summary": "BRANCH unbound to CANDIDATE_SHA; gh accepts <user>:<branch>; upstream ls-remote check soft-passes on empty",
+   "location": "scripts/ship-flow/open-pr.sh:72",
+   "severity": "HIGH",
+   "confidence": 7
+  },
+  {
+   "category": "security",
+   "summary": "case-sensitive exact category match; 'Security' is listed not blocked (gate fails open)",
+   "location": "scripts/ship-flow/disposition.py:52",
+   "severity": "HIGH",
+   "confidence": 8
+  },
+  {
+   "category": "correctness",
+   "summary": "PR number = last digit run in merged stdout+stderr",
+   "location": "scripts/ship-flow/open-pr.sh:80",
+   "severity": "HIGH",
+   "confidence": 8
+  },
+  {
+   "category": "correctness",
+   "summary": "exit-code contract: header promises 1 for gh failure, die always exits 2",
+   "location": "scripts/ship-flow/open-pr.sh:18",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "first of several Evidence blocks is used; no guard for a second block",
+   "location": "scripts/ship-flow/open-pr.sh:31",
+   "severity": "MEDIUM",
+   "confidence": 6
+  },
+  {
+   "category": "docs",
+   "summary": "'never headless' is false: review-ablation.sh runs the skill headless",
+   "location": "docs/ship-flow/README.md:344",
+   "severity": "MEDIUM",
+   "confidence": 7
+  },
+  {
+   "category": "correctness",
+   "summary": "non-dict findings dropped from blocking check but counted",
+   "location": "scripts/ship-flow/disposition.py:54",
+   "severity": "MEDIUM",
+   "confidence": 7
+  },
+  {
+   "category": "test-coverage",
+   "summary": "no contract-test or CI reference to either script or the fixtures",
+   "location": "scripts/ship-flow/open-pr.sh:1",
+   "severity": "MEDIUM",
+   "confidence": 8
+  }
+ ]
+}
