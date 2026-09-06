@@ -1,0 +1,52 @@
+{
+ "project_id": "6072d592-8704-448b-bb8d-66471b0557f9",
+ "milestone_id": "5d613d5e-16d7-47af-9db1-21884436c346",
+ "cycle_id": null,
+ "user_value": "Kent changes a ship-flow rule once, in a versioned plugin with a test, and the next batch on kc-claude-plugins runs under it without editing any README prose.",
+ "hypothesis": "If ship-flow's principles, contracts and stations live in their own plugin and the adopter README keeps only frontmatter, a Local Profile table and one line per station, then a rule change is one plugin PR plus a re-pin and a merge station produces zero prose conflicts.",
+ "wedge": "Kent as FO on kc-claude-plugins only. This batch: B1 skeleton, B2 scripts moved, B3 prose sorted by enforcement point, B4 pin-loader POC, B5 docs/ship commissioned and one batch run through it. Not in it: retiring docs/ship-flow (DEV-120), plan-flow as a plugin (DEV-121), adopters.",
+ "outcome": "kc-ship-flow exists as the eighth plugin with release-please, marketplace and a CI job; the fourteen station scripts and their tests live under it and the repository calls the installed copy; the ~300-line runtime section is placed sentence by sentence into kernel, station contracts, schemas or a non-normative runbook with residuals listed; a standalone batch×station pin loader is proven or refuted as a POC; docs/ship is a spacedock workflow (entity batch) whose README is frontmatter + Local Profile + one line per station, and one batch runs through it end to end with a validated close receipt.",
+ "falsifier": "Any of: a station rule change in this batch requires editing README prose to take effect; the next merge station after B5 produces a conflict in docs/ship/README.md; the B4 POC needs to import kc-dev-flow's loader to work; version-parity or the kc-ship-flow CI job is green while a station script is deleted.",
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing keeps rules in prose and FO memory files: on 2026-09-06 three moved_base merges each conflicted in the README prose section and nothing tests a rule such as S36.",
+   "agreed": true
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is repo-local scripts under scripts/ship-flow plus vendoring by hand (the _mods pattern); kc-dev-flow already shows the kernel/contract/loader/Local-Profile shape that works.",
+   "agreed": true
+  },
+  {
+   "id": "P3",
+   "statement": "Premise falsifier — remove the approach (own plugin with versioned kernel, contracts, stations, pin): the outcome cannot hold, because without a versioned unit a rule change has nowhere to land except prose, and without a pin a batch cannot say which rules it ran under.",
+   "agreed": true
+  }
+ ],
+ "exit": [
+  "DEV-115, DEV-116, DEV-117, DEV-118, DEV-119 accepted by the accept station and merged.",
+  "The batch after B5 runs from docs/ship with the installed kc-ship-flow scripts; its merge station records zero README conflicts.",
+  "DEV-118's POC verdict (proceed / change) is written before DEV-119 is dispatched."
+ ],
+ "journey": {
+  "persona": "Kent (FO)",
+  "start": "a ship-flow rule needs to change",
+  "end": "one kc-ship-flow PR merged, the next batch re-pinned",
+  "observable": "the rule's test runs in the kc-ship-flow CI job; docs/ship/README.md diff is empty; the batch's pin record names the new plugin version"
+ },
+ "issue_cut": {
+  "admitted": [
+   "DEV-115",
+   "DEV-116",
+   "DEV-118",
+   "DEV-117",
+   "DEV-119"
+  ],
+  "deferred": [
+   "DEV-120",
+   "DEV-121"
+  ],
+  "rider_proposed": "DEV-122 (plan-lint scope) — unblocks a passing receipt; Captain decides at approval"
+ }
+}
