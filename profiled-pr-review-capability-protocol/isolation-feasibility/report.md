@@ -1,0 +1,69 @@
+# Bounded filesystem isolation feasibility
+
+Result: **local filesystem proof passes with a hard-link admission check; product integration is NOT approved or implemented, and full child-threat/CLI compatibility is NOT proven.** Product remains clean at `9bb526170156a44cff90e2a2fab9eeab081e0eb1`. Approval `087047c577d4f58003f6833478c345c50f7b377e` was committed, synchronized and reread before experiments.
+
+## Instrument and observed results
+
+Existing local primitive: `/usr/bin/sandbox-exec`, macOS 26.5.2 / Darwin 25.5.0 arm64. Local `man sandbox-exec` and `man sandbox_init` mark it **DEPRECATED**. Local `man sandbox` states restrictions are inherited by new processes and generally apply on resource acquisition, not to already-open writable file descriptors. Existing Safehouse 0.9.0 skill and installed policy source were read for syntax and process permissions; Safehouse was not installed, configured or used as a new runtime dependency.
+
+All experiment files and attacked targets were inside `/tmp/pilot-isolation-proof.68ALze` (canonical `/private/tmp/...`). The [10-line policy](proof.sb) denies by default, permits filesystem reads, process fork/exec and sysctl reads, and permits writes only under that case's workspace/output/temp plus `/dev/null`. Network, Mach services, process-debugging and other operations were not granted. No public network, real credential, OS user, global setting, sudo, image, daemon, model or product mutation was used.
+
+The [instrument](proof.py) loads the unchanged real ablation core and reuses its existing shell test's valid ten-record setup. It invokes the real `pilot_invoke`, `pilot_attempt`, `pilot_write` and `pilot_join`, not a replacement receipt checker. Its child is Bash-capable, executes nested Bash/Python, writes normal workspace/output/temp files, and retains only a synthetic model-auth assertion. A separate descendant uses `start_new_session=True`, redirects inherited pipes, waits for a parent-finalized marker and attempts a protected sentinel write only after the direct child's lifetime/finalization. It has a distinct process group and exits itself within eight seconds; all exact recorded child/descendant PIDs were subsequently absent from `ps`.
+
+| Case | Actual result |
+|---|---|
+| Unisolated control | Current receipt preplant and earlier receipt overwrite/chmod succeed; parent finalization raises FileExistsError; real join accepts ten records with both current and prior control wallclock_ms=1. Detached descendant also rewrites the sentinel after parent finalization. Strict protection assertion exits 1. |
+| Sandbox alone, pre-existing hard-link alias | Direct absolute/traversal/symlink writes, new hard-link creation, protected rename/unlink and detached descendant write receive errno 1 (Operation not permitted). **But an alias already hard-linked into the permitted workspace remains writable; prior wallclock_ms=1 is accepted by real join. This failed variant is retained, not called green.** |
+| Guarded pre-existing alias | Before launching anything, the parent checks its owner tree for symlinks and regular files with link count other than one. The planted hard link is refused, no child is launched, no child marker exists and original data remains unchanged. This is refusal, not automatic unlink/repair. |
+| Guarded normal run, no pre-existing alias | Current preplant, prior absolute/chmod/traversal/symlink, attempted new hard link and protected file unlink/directory rename/rmdir all receive errno 1. Workspace/output/temp writes and nested child execution succeed. Detached descendant in a different group gets errno 1 after parent finalization. The parent writes a measured current receipt; real join accepts ten records with earlier wallclock_ms unchanged at 100, not 1. |
+| Guarded child exit 7 | Same protected operations denied and normal work succeeds; the actual parent failure path writes a closed incomplete-cost failed receipt, and real join refuses it. The detached descendant remains denied after finalization. |
+| Guarded one-second timeout | Same protections; real `pilot_invoke` kills its direct process group, records timeout/raw host output and the existing failure wrapper writes a non-passing receipt. Join refuses it. The separately grouped descendant survives that cleanup long enough to attempt its sentinel write and is still denied by inherited sandbox policy. |
+
+Raw outputs: [initial control and failed sandbox-only variants](results.json), [guarded alias/normal/failure/timeout variants](guarded-results.json). The guarded instrument exited **0**, printing `GUARDED FILESYSTEM INSTRUMENT PASS (4 cases)`. The initial observational script also exited 0 while collecting failures; its exit alone was never used as a protection pass. The separate assertion over the unisolated result exited **1**, with `UNISOLATED CONTROL FAIL: actual join accepted forged current and prior records; detached child wrote sentinel`.
+
+Commands actually used after venv activation and `which python`:
+
+```sh
+python -B /tmp/pilot-isolation-proof.68ALze/proof.py
+python -B /tmp/pilot-isolation-proof.68ALze/proof.py --guarded
+```
+
+The second command's output was captured in the same disposable directory's `guarded-run.log`. Every raw result carries its exact launch command. For reproduction, place the two source files in a fresh `mktemp -d` directory, use the declared existing Python environment, and run once without and once with `--guarded`; the script derives its fixture root from its own path and intentionally refuses existing case directories. Its source checkout binding is the explicit constant `SOURCE`; the test relies on the pinned candidate's existing fixture setup. No full product suite was rerun.
+
+SHA-256: proof.py `38e2c89a27f5b6e918a84646170c5347a8aeba5937f9d92bfe6cae8b61289bcb`; proof.sb `68df0f70591086a78cbd52e34ae5f4bf543890c5a68e49e1dece283701e16639`; initial results `dcf083fda32be9fd6616e458e24f377c548cadf80f4c683dda27d2cac6368fa1`; guarded results `7798ea3b5e5aa530a4a850edc51ee2763ba1dc67b75837fdab1f536b6a98e5a1`.
+
+## Minimal integration shape — proposal only
+
+The existing `pilot_invoke` would wrap the child launch with the declared sandbox policy. Existing `pilot_execute` would give the model its intended checkout and a separate child-output/temp area, never a writable ancestor of runner-owned manifests, receipts or raw host measurement output. The existing parent remains the timer, manifest/receipt writer and budget owner; its own writes stay outside the sandbox. Before launch, canonical containment and owner-file alias checks must fail closed, and no writable owner descriptor may be inherited (Python's current subprocess default closes non-standard descriptors; the proof passes pipes rather than owner file handles). Existing success, nonzero and timeout finalization remain with `pilot_attempt`; this proof does not fix their other retained terminal/usage defects.
+
+No additional daemon, service, ledger, CLI command or permanent sandbox instance is proposed. There is nevertheless a **real policy/platform surface delta**: a mandatory process launch policy plus its capability/admission checks and supported-host requirement. It cannot be called just a path rename. The current and proposed lifecycle owners are the same runner (prepare → reserve → launch → timeout/finalize → compare); child filesystem rights change. Both control and treatment, including admissions, must use exactly the same policy bytes and declared write-area topology, pinned in existing launch/tool provenance. Adjudication must not silently receive broader rights. Unsupported/missing/failing policy must refuse before any spend, never run unsandboxed. Keeping policy text in the existing runner and cases in the existing shell-hosted test preserves the 20 product-path shape; product integration is not authorized by this proposal.
+
+## Limits that prevent an unconditional integration claim
+
+- **Platform:** macOS-only execution observed. The installed primitive is deprecated. Linux/Ubuntu CI and hosted/cloud enforcement have not been demonstrated. A macOS-only fail-closed availability rule would be a real support/route choice for Captain approval, not portable proof. No Linux primitive or new dependency was selected or installed.
+- **Actual host/authentication:** no Claude process, model call, real auth material, Keychain, provider endpoint or local auth proxy was exercised. The proof policy denies network/Mach services; a real review host is therefore not shown runnable under it. Any necessary auth/network/cache allowance must be enumerated and tested separately, preserving both-arm parity and the owner write boundary. The synthetic key only proves selected environment propagation, not authentication.
+- **Proxy/IPC/daemon routes:** default-deny contains no network or Mach grants, but no adversarial local IPC/proxy/daemon mediation experiment was performed. Reopening such channels for actual host compatibility could let a child ask an unsandboxed intermediary to write owner data. That would defeat the outcome even when direct open is denied; it remains a concrete unverified premise, not a waived child capability.
+- **Process control/memory and inherited resources:** no debugger, task-port, parent-memory attack, passed owner FD or privileged-actor experiment was performed. No such grants are in this proof profile, and non-standard FDs were not passed. Local manual documentation explicitly warns that already-open writable FDs can bypass later acquisition checks; integration must preserve this boundary. Same-sandbox signalling needed by nested review cancellation is not yet a compatibility test here; the unsandboxed parent handles the measured timeout.
+- **Aliases/concurrency:** policy alone does not protect a pre-existing writable hard-link alias. The proof refuses such input before launch, and proves the isolated child cannot create a new alias afterward. It does not protect against a separate trusted/outside unsandboxed writer deliberately creating an alias concurrently, nor against filesystem/kernel bugs or privileged actors. No claim of OS-wide hostile-process containment follows.
+
+Thus the missing filesystem primitive has a concrete local candidate, but the entire declared Bash child threat and real review-host execution are not yet jointly proven. Do not treat this as resolution of F6 or as authority to resume the five product repairs.
+
+## Readable count estimate and reduction evidence
+
+Current measured cumulative count remains **6,431 / 20 files / 1,939 complete focused lines**; no reduction or integration edit has occurred. A readable integration of the demonstrated filesystem part is estimated at **60–100 implementation lines** (policy/launch wrapper 25–40, canonical placement/alias/prelaunch checks 20–35, existing provenance/failure binding 15–25) and **80–120 focused test lines** by reusing the existing real Pilot fixture rather than copying this 220-line standalone diagnostic. These are net cumulative estimates, not last-commit churn, and do not include unresolved platform/auth/IPC work or the other four repair groups. Test-only helpers count as focused wherever located.
+
+Concrete same-file reuse candidates inspected, with **estimated** net savings after readable helpers and no deleted unique assertions:
+
+| Existing blocks | Equivalent reuse and retained falsifiers | Candidate savings |
+|---|---|---:|
+| protocol tests: posting start/event assembly in `test_selected_evidence_binds_the_runtime_identity_and_rehydrates` and `test_posting_invalidation_and_absent_outcome_are_read_only` | Shared actual runtime start/event builder; retain independent posting run_id, result, invalidation and every wrong-identity rejection. | 30–40 |
+| protocol tests: manual fallback constructors in both fallback tests | One bound fallback fixture constructor; retain malformed bundle/assessment rejection and real incomplete runtime journey. | 12–16 |
+| protocol tests: repeated CLI launch and output plumbing in malformed/default-off/manual-finalization tests | One subprocess helper with explicit environment/arguments; retain each actual command, status, stdout terminal and no-call assertion. | 18–25 |
+| protocol tests: repeated fixture provider envelopes and repeated module loading | Shared readable provider template/import helper; retain raw-envelope hash, usage/model/budget checks and failed-then-success distinction. | 15–25 |
+| ablation Pilot tests: initial blind/seal/compare setup and `compare_variant` phase plumbing | Reuse the same phase helper and retain each quality/cost/backup refusal. | 10–15 |
+
+Only **85–121 lines** of defensible candidate reduction are mapped here; none is observed deletion credit. Even the lowest filesystem-test addition and greatest mapped saving give `1,939 + 80 − 121 = 1,898`, **98 over 1,800 before the other required repairs**. Therefore a within-stop corrected candidate is **not demonstrated**. This is not an assertion that no deeper equivalent restructuring can fit; it identifies exactly why the currently mapped proposal cannot responsibly promise it. No higher cap is proposed, no schema/test is minified, and no unique behavior is omitted.
+
+## Handoff
+
+Smallest next action: First Officer presents the local proof plus unresolved host/IPC/platform and count premises before requesting any product-integration authority. Keep the product frozen. The existing five repair groups, complete-count reduction, F14 pre-trigger timing sequence, independent Claude re-review and paid AC8/9 remain pending; prior UNKNOWN(stale) RoboRev and historical review-format deferral are unchanged. A filesystem-only green instrument is not a repaired or accepted Pilot outcome.

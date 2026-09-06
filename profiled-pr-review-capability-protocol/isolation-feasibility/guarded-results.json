@@ -1,0 +1,471 @@
+[
+  {
+    "isolated": true,
+    "mode": "alias",
+    "preflight_refused": "linked owner file",
+    "launched": false,
+    "prior_unchanged": true,
+    "child_marker_absent": true
+  },
+  {
+    "isolated": true,
+    "mode": "normal",
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.sb",
+      "-D",
+      "WORK=/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/work",
+      "-D",
+      "OUTPUT=/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/output",
+      "-D",
+      "TEMP=/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/temp",
+      "/bin/bash",
+      "-c",
+      "exec \"$1\" \"$2\" --child \"$3\" --mode \"$4\"",
+      "proof",
+      "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.py",
+      "/private/tmp/pilot-isolation-proof.68ALze/guarded-normal",
+      "normal"
+    ],
+    "finalization": "success",
+    "child": {
+      "checks": [
+        {
+          "case": "current-preplant",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/pilot-runs/1-control/receipt.json'"
+        },
+        {
+          "case": "prior-absolute-chmod",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-traversal",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/work/../owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-symlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/work/owner-alias/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "child-create-hardlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/pilot-runs/2-control/receipt.json' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/work/child-link.json'"
+        },
+        {
+          "case": "protected-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/unlink-sentinel'"
+        },
+        {
+          "case": "protected-directory-rename",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/rename-target' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/work/moved-owner'"
+        },
+        {
+          "case": "protected-directory-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/empty-target'"
+        },
+        {
+          "case": "workspace-write",
+          "write_allowed": true
+        },
+        {
+          "case": "output-write",
+          "write_allowed": true
+        },
+        {
+          "case": "temp-write",
+          "write_allowed": true
+        }
+      ],
+      "descendant_pid": 6374,
+      "pid": 6372,
+      "pgid": 6372
+    },
+    "descendant": {
+      "case": "detached-descendant",
+      "write_allowed": false,
+      "errno": 1,
+      "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-normal/owner/descendant-sentinel'",
+      "pid": 6374,
+      "pgid": 6374,
+      "observed_parent_finalization": true
+    },
+    "prior_unchanged": true,
+    "descendant_sentinel_unchanged": true,
+    "joined_count": 10,
+    "joined_wallclock_ms": {
+      "1-control": 67.746417,
+      "1-treatment": 60,
+      "2-control": 100,
+      "2-treatment": 60,
+      "3-control": 100,
+      "3-treatment": 60,
+      "4-control": 100,
+      "4-treatment": 60,
+      "5-control": 100,
+      "5-treatment": 60
+    },
+    "current_receipt": {
+      "cost_status": "complete",
+      "cost_usd": 0.1,
+      "coverage": "not_applicable",
+      "driver": {
+        "findings": [],
+        "human_input_count": 0,
+        "recommendation": "APPROVE",
+        "resumed": false,
+        "review_config": {
+          "modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          }
+        },
+        "schema": "kc-pr-flow.ablation-driver-receipt/v1",
+        "stop": "confirmation_ready",
+        "summary": "No findings"
+      },
+      "human_intervention_count": 0,
+      "known_cost_usd": 0.1,
+      "manifest_sha256": "9e4ea4b17481290d89aa2db453c4507a88720ad5a4ec2c010ecf887f13d335a9",
+      "model_id": "fixture",
+      "protocol_mode": "legacy",
+      "retry_count": 0,
+      "run_terminal": null,
+      "schema": "kc-pr-flow.ablation-run/v4",
+      "usage": {
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 1,
+        "output_tokens": 1
+      },
+      "wallclock_ms": 67.746417
+    },
+    "host_output": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"synthetic\": true}\n"
+    }
+  },
+  {
+    "isolated": true,
+    "mode": "failure",
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.sb",
+      "-D",
+      "WORK=/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/work",
+      "-D",
+      "OUTPUT=/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/output",
+      "-D",
+      "TEMP=/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/temp",
+      "/bin/bash",
+      "-c",
+      "exec \"$1\" \"$2\" --child \"$3\" --mode \"$4\"",
+      "proof",
+      "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.py",
+      "/private/tmp/pilot-isolation-proof.68ALze/guarded-failure",
+      "failure"
+    ],
+    "finalization": "SystemExit: 1",
+    "child": {
+      "checks": [
+        {
+          "case": "current-preplant",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/pilot-runs/1-control/receipt.json'"
+        },
+        {
+          "case": "prior-absolute-chmod",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-traversal",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/work/../owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-symlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/work/owner-alias/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "child-create-hardlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/pilot-runs/2-control/receipt.json' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/work/child-link.json'"
+        },
+        {
+          "case": "protected-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/unlink-sentinel'"
+        },
+        {
+          "case": "protected-directory-rename",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/rename-target' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/work/moved-owner'"
+        },
+        {
+          "case": "protected-directory-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/empty-target'"
+        },
+        {
+          "case": "workspace-write",
+          "write_allowed": true
+        },
+        {
+          "case": "output-write",
+          "write_allowed": true
+        },
+        {
+          "case": "temp-write",
+          "write_allowed": true
+        }
+      ],
+      "descendant_pid": 6377,
+      "pid": 6375,
+      "pgid": 6375
+    },
+    "descendant": {
+      "case": "detached-descendant",
+      "write_allowed": false,
+      "errno": 1,
+      "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-failure/owner/descendant-sentinel'",
+      "pid": 6377,
+      "pgid": 6377,
+      "observed_parent_finalization": true
+    },
+    "prior_unchanged": true,
+    "descendant_sentinel_unchanged": true,
+    "join_refusal": "SystemExit: 1",
+    "current_receipt": {
+      "cost_status": "incomplete",
+      "cost_usd": null,
+      "coverage": "not_applicable",
+      "driver": null,
+      "human_intervention_count": null,
+      "known_cost_usd": 0,
+      "manifest_sha256": "9e4ea4b17481290d89aa2db453c4507a88720ad5a4ec2c010ecf887f13d335a9",
+      "model_id": null,
+      "protocol_mode": "legacy",
+      "retry_count": 0,
+      "run_terminal": {
+        "pr": {
+          "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          },
+          "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "pr_number": 1,
+          "repository": "acme/widgets",
+          "role": "primary",
+          "slot": 1,
+          "treatment_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          }
+        },
+        "reason": "attempt_failed",
+        "schema": "kc-pr-flow.ablation-input-terminal/v1"
+      },
+      "schema": "kc-pr-flow.ablation-run/v4",
+      "usage": null,
+      "wallclock_ms": null
+    },
+    "host_output": {
+      "returncode": 7,
+      "stderr": "",
+      "stdout": "{\"synthetic\": true}\n"
+    }
+  },
+  {
+    "isolated": true,
+    "mode": "timeout",
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.sb",
+      "-D",
+      "WORK=/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/work",
+      "-D",
+      "OUTPUT=/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/output",
+      "-D",
+      "TEMP=/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/temp",
+      "/bin/bash",
+      "-c",
+      "exec \"$1\" \"$2\" --child \"$3\" --mode \"$4\"",
+      "proof",
+      "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+      "/private/tmp/pilot-isolation-proof.68ALze/proof.py",
+      "/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout",
+      "timeout"
+    ],
+    "finalization": "SystemExit: 1",
+    "child": {
+      "checks": [
+        {
+          "case": "current-preplant",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/pilot-runs/1-control/receipt.json'"
+        },
+        {
+          "case": "prior-absolute-chmod",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-traversal",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/work/../owner/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "prior-symlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/work/owner-alias/pilot-runs/2-control/receipt.json'"
+        },
+        {
+          "case": "child-create-hardlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/pilot-runs/2-control/receipt.json' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/work/child-link.json'"
+        },
+        {
+          "case": "protected-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/unlink-sentinel'"
+        },
+        {
+          "case": "protected-directory-rename",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/rename-target' -> '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/work/moved-owner'"
+        },
+        {
+          "case": "protected-directory-unlink",
+          "write_allowed": false,
+          "errno": 1,
+          "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/empty-target'"
+        },
+        {
+          "case": "workspace-write",
+          "write_allowed": true
+        },
+        {
+          "case": "output-write",
+          "write_allowed": true
+        },
+        {
+          "case": "temp-write",
+          "write_allowed": true
+        }
+      ],
+      "descendant_pid": 6380,
+      "pid": 6378,
+      "pgid": 6378
+    },
+    "descendant": {
+      "case": "detached-descendant",
+      "write_allowed": false,
+      "errno": 1,
+      "error": "[Errno 1] Operation not permitted: '/private/tmp/pilot-isolation-proof.68ALze/guarded-timeout/owner/descendant-sentinel'",
+      "pid": 6380,
+      "pgid": 6380,
+      "observed_parent_finalization": true
+    },
+    "prior_unchanged": true,
+    "descendant_sentinel_unchanged": true,
+    "join_refusal": "SystemExit: 1",
+    "current_receipt": {
+      "cost_status": "incomplete",
+      "cost_usd": null,
+      "coverage": "not_applicable",
+      "driver": null,
+      "human_intervention_count": null,
+      "known_cost_usd": 0,
+      "manifest_sha256": "9e4ea4b17481290d89aa2db453c4507a88720ad5a4ec2c010ecf887f13d335a9",
+      "model_id": null,
+      "protocol_mode": "legacy",
+      "retry_count": 0,
+      "run_terminal": {
+        "pr": {
+          "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "control_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          },
+          "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "pr_number": 1,
+          "repository": "acme/widgets",
+          "role": "primary",
+          "slot": 1,
+          "treatment_modes": {
+            "agent_tier": "lite",
+            "cross_model": false,
+            "full_pass": false,
+            "noise_filter": false,
+            "pr_archetype": "mixed",
+            "probe_required": false
+          }
+        },
+        "reason": "attempt_failed",
+        "schema": "kc-pr-flow.ablation-input-terminal/v1"
+      },
+      "schema": "kc-pr-flow.ablation-run/v4",
+      "usage": null,
+      "wallclock_ms": null
+    },
+    "host_output": {
+      "returncode": -9,
+      "stderr": "",
+      "stdout": ""
+    }
+  }
+]

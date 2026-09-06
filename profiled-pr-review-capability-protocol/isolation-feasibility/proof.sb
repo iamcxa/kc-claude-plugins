@@ -1,0 +1,10 @@
+(version 1)
+(deny default)
+(allow file-read*)
+(allow process-exec process-fork)
+(allow sysctl-read)
+(allow file-write*
+    (subpath (param "WORK"))
+    (subpath (param "OUTPUT"))
+    (subpath (param "TEMP"))
+    (literal "/dev/null"))
