@@ -1,0 +1,27 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "workspace",
+    "create",
+    "--project-id",
+    "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+    "--branch",
+    "main",
+    "--name",
+    "t8cyxd55ve-cloud-isolation-once",
+    "--session-name",
+    "Synthetic isolation once",
+    "--agent",
+    "claude",
+    "--model",
+    "opus-5-1m",
+    "--effort",
+    "medium"
+  ],
+  "exit": 0,
+  "stdout": "{\n  \"workspaceId\": \"1ce42532-398a-492e-a442-b0f00e302dbe\",\n  \"sessionId\": \"a151f107-915b-4f78-894f-325470c8b7f0\",\n  \"deepLink\": \"conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe\"\n}\n",
+  "stderr": "",
+  "finished_monotonic": 1117629.880320125,
+  "finished_utc": "2026-09-06T04:54:25.263606+00:00"
+}

@@ -1,0 +1,919 @@
+[
+  {
+    "args": [
+      "workspace",
+      "get",
+      "1ce42532-398a-492e-a442-b0f00e302dbe"
+    ],
+    "start_utc": "2026-09-06T04:56:01.706057+00:00",
+    "start_monotonic": 1117726.321293875,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "id": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "projectId": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+      "name": "t8cyxd55ve-cloud-isolation-once",
+      "state": "ready",
+      "repoUrl": "https://github.com/iamcxa/kc-claude-plugins",
+      "createdAt": "2026-09-06T04:54:25.149Z",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe",
+      "creatorId": "c097ac7c-a860-4cfa-a58f-e3af57e891a6",
+      "creatorName": "Kent Chen",
+      "lastActivityAt": "2026-09-06T04:54:25.198Z"
+    },
+    "end_utc": "2026-09-06T04:56:02.738652+00:00",
+    "end_monotonic": 1117727.353926583,
+    "source_file": "api-001.json"
+  },
+  {
+    "args": [
+      "workspace",
+      "session",
+      "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "--include-archived",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:02.739155+00:00",
+    "start_monotonic": 1117727.354381375,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "data": [
+        {
+          "id": "a151f107-915b-4f78-894f-325470c8b7f0",
+          "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe&session=a151f107-915b-4f78-894f-325470c8b7f0",
+          "name": "Synthetic isolation once",
+          "model": "opus-5-1m",
+          "resolvedModel": "claude-opus-5[1m]",
+          "effort": "medium"
+        }
+      ],
+      "offset": 0,
+      "hasMore": false
+    },
+    "end_utc": "2026-09-06T04:56:03.772853+00:00",
+    "end_monotonic": 1117728.38810375,
+    "source_file": "api-002.json"
+  },
+  {
+    "args": [
+      "session",
+      "get",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:03.773793+00:00",
+    "start_monotonic": 1117728.389008375,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "id": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe&session=a151f107-915b-4f78-894f-325470c8b7f0",
+      "name": "Synthetic isolation once",
+      "model": "opus-5-1m",
+      "resolvedModel": "claude-opus-5[1m]",
+      "effort": "medium"
+    },
+    "end_utc": "2026-09-06T04:56:04.679626+00:00",
+    "end_monotonic": 1117729.294894916,
+    "source_file": "api-003.json"
+  },
+  {
+    "args": [
+      "message",
+      "create",
+      "--session",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--message-file",
+      "/private/tmp/pilot-cloud-controller.3eDzbW/prompt.md"
+    ],
+    "start_utc": "2026-09-06T04:56:04.680491+00:00",
+    "start_monotonic": 1117729.295694291,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "messageId": "b43c2e42-45e5-4b33-9eec-f56fd071bf02",
+      "state": "sent",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe&session=a151f107-915b-4f78-894f-325470c8b7f0"
+    },
+    "end_utc": "2026-09-06T04:56:05.871547+00:00",
+    "end_monotonic": 1117730.48676875,
+    "source_file": "api-004.json"
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:05.871946+00:00",
+    "start_monotonic": 1117730.48713625,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:06.940499+00:00",
+    "end_monotonic": 1117731.555741125,
+    "source_file": "api-005.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:06.940962+00:00",
+    "start_monotonic": 1117731.55613725,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:07.844518+00:00",
+    "end_monotonic": 1117732.45976,
+    "source_file": "api-006.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399"
+      ],
+      "hasMore": false,
+      "response_sha256": "01966675c234fc25b67329db8d0a704f3e93c7cd256e18f0d397382e6d166dcb"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:12.850957+00:00",
+    "start_monotonic": 1117737.466059375,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:13.783784+00:00",
+    "end_monotonic": 1117738.398935,
+    "source_file": "api-007.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:13.784194+00:00",
+    "start_monotonic": 1117738.399292958,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:14.691091+00:00",
+    "end_monotonic": 1117739.306232541,
+    "source_file": "api-008.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4"
+      ],
+      "hasMore": false,
+      "response_sha256": "15fd6d2f6ff2fd04ca2c99434dde59a63e5f9575233b07a25eafd9acead8e379"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:19.695217+00:00",
+    "start_monotonic": 1117744.310242833,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:20.559089+00:00",
+    "end_monotonic": 1117745.174205083,
+    "source_file": "api-009.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:20.559626+00:00",
+    "start_monotonic": 1117745.1746485,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:21.491684+00:00",
+    "end_monotonic": 1117746.106758458,
+    "source_file": "api-010.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4"
+      ],
+      "hasMore": false,
+      "response_sha256": "15fd6d2f6ff2fd04ca2c99434dde59a63e5f9575233b07a25eafd9acead8e379"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:26.497760+00:00",
+    "start_monotonic": 1117751.112713416,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:27.435861+00:00",
+    "end_monotonic": 1117752.050894666,
+    "source_file": "api-011.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:27.436383+00:00",
+    "start_monotonic": 1117752.051328416,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:28.414830+00:00",
+    "end_monotonic": 1117753.029827166,
+    "source_file": "api-012.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270"
+      ],
+      "hasMore": false,
+      "response_sha256": "e33baded4b4320586cb0879a9738cbf504bc7faefedab546c439c20135b2193f"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:33.421085+00:00",
+    "start_monotonic": 1117758.035960875,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:34.253235+00:00",
+    "end_monotonic": 1117758.868152125,
+    "source_file": "api-013.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:34.253695+00:00",
+    "start_monotonic": 1117758.868561916,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:35.102877+00:00",
+    "end_monotonic": 1117759.717786708,
+    "source_file": "api-014.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270"
+      ],
+      "hasMore": false,
+      "response_sha256": "e33baded4b4320586cb0879a9738cbf504bc7faefedab546c439c20135b2193f"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:40.107661+00:00",
+    "start_monotonic": 1117764.722456208,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:41.000385+00:00",
+    "end_monotonic": 1117765.615262041,
+    "source_file": "api-015.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:41.000891+00:00",
+    "start_monotonic": 1117765.615682958,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:42.121402+00:00",
+    "end_monotonic": 1117766.736233625,
+    "source_file": "api-016.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f"
+      ],
+      "hasMore": false,
+      "response_sha256": "36fe514247a405c0ae4f5ee8269324fd934e68754a7f5b1e58af2f06055280cd"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:47.127776+00:00",
+    "start_monotonic": 1117771.74249325,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:47.962195+00:00",
+    "end_monotonic": 1117772.576978958,
+    "source_file": "api-017.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:47.962612+00:00",
+    "start_monotonic": 1117772.577327041,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:48.876091+00:00",
+    "end_monotonic": 1117773.490851375,
+    "source_file": "api-018.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71"
+      ],
+      "hasMore": false,
+      "response_sha256": "600a140d3404d27494e60ccba782a6c5fba07cd970e070014b0868fbe57db069"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:56:53.882864+00:00",
+    "start_monotonic": 1117778.497502541,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:56:54.874987+00:00",
+    "end_monotonic": 1117779.489703708,
+    "source_file": "api-019.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:56:54.875446+00:00",
+    "start_monotonic": 1117779.490084041,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:56:55.716083+00:00",
+    "end_monotonic": 1117780.330779541,
+    "source_file": "api-020.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71",
+        "76b5e915-c9eb-43b9-9fd5-c60d236d3616",
+        "29ffeaa6-79e3-4947-beab-d8d63a8922a2"
+      ],
+      "hasMore": false,
+      "response_sha256": "a10469691aa60e9e44d5e1f33620e0918b28bf188b0aa978af3f97512ef796db"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:00.723072+00:00",
+    "start_monotonic": 1117785.337642375,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:57:01.647380+00:00",
+    "end_monotonic": 1117786.262029333,
+    "source_file": "api-021.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:01.647985+00:00",
+    "start_monotonic": 1117786.262545041,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:02.505444+00:00",
+    "end_monotonic": 1117787.12005675,
+    "source_file": "api-022.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71",
+        "76b5e915-c9eb-43b9-9fd5-c60d236d3616",
+        "29ffeaa6-79e3-4947-beab-d8d63a8922a2",
+        "65c96291-6611-4e51-ac11-5e8931c19c24"
+      ],
+      "hasMore": false,
+      "response_sha256": "ac06326f486095620cd4fcadc9dc670e13fcc03e7631c5c0bef63a1837017611"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:07.511962+00:00",
+    "start_monotonic": 1117792.1264305,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:56:05.982Z"
+    },
+    "end_utc": "2026-09-06T04:57:08.387232+00:00",
+    "end_monotonic": 1117793.001791083,
+    "source_file": "api-023.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:08.387804+00:00",
+    "start_monotonic": 1117793.002289958,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:09.336670+00:00",
+    "end_monotonic": 1117793.951224666,
+    "source_file": "api-024.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71",
+        "76b5e915-c9eb-43b9-9fd5-c60d236d3616",
+        "29ffeaa6-79e3-4947-beab-d8d63a8922a2",
+        "65c96291-6611-4e51-ac11-5e8931c19c24",
+        "f0ff5ae2-a81a-4580-860c-3197cc0bb594",
+        "ea2f761e-63cc-4d2f-9573-70e9d3946f03"
+      ],
+      "hasMore": false,
+      "response_sha256": "1bff66d7bd88895a88f5d79688c4e0124700ff3ed9b98b4050c79f24068d3b89"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:14.339543+00:00",
+    "start_monotonic": 1117798.953961083,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:57:14.185Z"
+    },
+    "end_utc": "2026-09-06T04:57:15.185858+00:00",
+    "end_monotonic": 1117799.800332166,
+    "source_file": "api-025.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:15.186319+00:00",
+    "start_monotonic": 1117799.800729958,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:16.158867+00:00",
+    "end_monotonic": 1117800.773317416,
+    "source_file": "api-026.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71",
+        "76b5e915-c9eb-43b9-9fd5-c60d236d3616",
+        "29ffeaa6-79e3-4947-beab-d8d63a8922a2",
+        "65c96291-6611-4e51-ac11-5e8931c19c24",
+        "f0ff5ae2-a81a-4580-860c-3197cc0bb594",
+        "ea2f761e-63cc-4d2f-9573-70e9d3946f03",
+        "99e9200c-192b-4a53-a3ce-d754cd19cad8",
+        "d25fb6ee-2406-485c-a490-cc378b27411e",
+        "514d7950-33e1-49f4-ab3e-70381fd71c1a"
+      ],
+      "hasMore": false,
+      "response_sha256": "e142be4a0a84d5a893c3230b2cbb8c67a44e78b3b5803f842373f0e778ec2999"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:21.165072+00:00",
+    "start_monotonic": 1117805.779413583,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:57:14.185Z"
+    },
+    "end_utc": "2026-09-06T04:57:22.109982+00:00",
+    "end_monotonic": 1117806.724368833,
+    "source_file": "api-027.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:22.110393+00:00",
+    "start_monotonic": 1117806.724726291,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:22.959010+00:00",
+    "end_monotonic": 1117807.573393125,
+    "source_file": "api-028.json",
+    "transcript_observation": {
+      "ids": [
+        "86a7b43a-3a85-4690-9ba2-85c0b6aebdeb",
+        "f2cb4c7b-c2ed-4304-bec5-e217f340cc3c",
+        "cab45440-63c4-43fc-9bde-e03d3d7d6399",
+        "eb612760-6ed4-4702-ac15-9797675c0850",
+        "219757fd-5134-429d-bb59-0038029f7c40",
+        "13e2ca2f-820d-444e-9b6a-e5776a6ac1c4",
+        "6807b7d5-8657-482e-94b7-0220bc47600b",
+        "a2c6e2ee-0c1d-4a03-a173-e363f2435270",
+        "ab887725-95cf-4cf1-adb1-3c6accec5112",
+        "a588e9d8-48e6-4981-a362-82d74553233f",
+        "2a9621cc-5097-4e20-8470-ec28ae4f4d71",
+        "76b5e915-c9eb-43b9-9fd5-c60d236d3616",
+        "29ffeaa6-79e3-4947-beab-d8d63a8922a2",
+        "65c96291-6611-4e51-ac11-5e8931c19c24",
+        "f0ff5ae2-a81a-4580-860c-3197cc0bb594",
+        "ea2f761e-63cc-4d2f-9573-70e9d3946f03",
+        "99e9200c-192b-4a53-a3ce-d754cd19cad8",
+        "d25fb6ee-2406-485c-a490-cc378b27411e",
+        "514d7950-33e1-49f4-ab3e-70381fd71c1a"
+      ],
+      "hasMore": false,
+      "response_sha256": "e142be4a0a84d5a893c3230b2cbb8c67a44e78b3b5803f842373f0e778ec2999"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:27.965611+00:00",
+    "start_monotonic": 1117812.579877541,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "working",
+      "updatedAt": "2026-09-06T04:57:14.185Z"
+    },
+    "end_utc": "2026-09-06T04:57:28.833931+00:00",
+    "end_monotonic": 1117813.44825525,
+    "source_file": "api-029.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:28.834425+00:00",
+    "start_monotonic": 1117813.448682208,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:29.904713+00:00",
+    "end_monotonic": 1117814.51900025,
+    "source_file": "api-030.json",
+    "invalid_json": {
+      "source_chars": 65510,
+      "source_sha256": "23c8bb58feee8989e1c45aaa31432d76265108f7ce7f5aef273dafc5c100c685"
+    }
+  },
+  {
+    "args": [
+      "workspace",
+      "get",
+      "1ce42532-398a-492e-a442-b0f00e302dbe"
+    ],
+    "start_utc": "2026-09-06T04:57:29.905335+00:00",
+    "start_monotonic": 1117814.519585125,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "id": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "projectId": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+      "name": "t8cyxd55ve-cloud-isolation-once",
+      "state": "ready",
+      "repoUrl": "https://github.com/iamcxa/kc-claude-plugins",
+      "createdAt": "2026-09-06T04:54:25.149Z",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe",
+      "creatorId": "c097ac7c-a860-4cfa-a58f-e3af57e891a6",
+      "creatorName": "Kent Chen",
+      "lastActivityAt": "2026-09-06T04:57:29.430Z"
+    },
+    "end_utc": "2026-09-06T04:57:30.942537+00:00",
+    "end_monotonic": 1117815.556825833,
+    "source_file": "api-031.json"
+  },
+  {
+    "args": [
+      "workspace",
+      "session",
+      "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "--include-archived",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:30.942927+00:00",
+    "start_monotonic": 1117815.557164458,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "data": [
+        {
+          "id": "a151f107-915b-4f78-894f-325470c8b7f0",
+          "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe&session=a151f107-915b-4f78-894f-325470c8b7f0",
+          "name": "Synthetic isolation once",
+          "model": "opus-5-1m",
+          "resolvedModel": "claude-opus-5[1m]",
+          "effort": "medium"
+        }
+      ],
+      "offset": 0,
+      "hasMore": false
+    },
+    "end_utc": "2026-09-06T04:57:31.895158+00:00",
+    "end_monotonic": 1117816.509424416,
+    "source_file": "api-032.json"
+  },
+  {
+    "args": [
+      "session",
+      "cancel",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:31.895707+00:00",
+    "start_monotonic": 1117816.509933666,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "idle",
+      "canceledQueuedMessages": 0
+    },
+    "end_utc": "2026-09-06T04:57:32.904094+00:00",
+    "end_monotonic": 1117817.518361875,
+    "source_file": "api-033.json"
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:32.904499+00:00",
+    "start_monotonic": 1117817.518714875,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "idle",
+      "updatedAt": "2026-09-06T04:57:29.273Z"
+    },
+    "end_utc": "2026-09-06T04:57:33.831794+00:00",
+    "end_monotonic": 1117818.446032,
+    "source_file": "api-034.json"
+  },
+  {
+    "args": [
+      "session",
+      "get",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "start_utc": "2026-09-06T04:57:33.832234+00:00",
+    "start_monotonic": 1117818.446439125,
+    "exit": 0,
+    "stderr": "",
+    "response": {
+      "id": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe&session=a151f107-915b-4f78-894f-325470c8b7f0",
+      "name": "Synthetic isolation once",
+      "model": "opus-5-1m",
+      "resolvedModel": "claude-opus-5[1m]",
+      "effort": "medium"
+    },
+    "end_utc": "2026-09-06T04:57:34.727275+00:00",
+    "end_monotonic": 1117819.341521,
+    "source_file": "api-035.json"
+  },
+  {
+    "args": [
+      "session",
+      "message",
+      "a151f107-915b-4f78-894f-325470c8b7f0",
+      "--limit",
+      "100"
+    ],
+    "start_utc": "2026-09-06T04:57:34.727909+00:00",
+    "start_monotonic": 1117819.342102833,
+    "exit": 0,
+    "stderr": "",
+    "end_utc": "2026-09-06T04:57:35.681457+00:00",
+    "end_monotonic": 1117820.295703666,
+    "source_file": "api-036.json",
+    "invalid_json": {
+      "source_chars": 65510,
+      "source_sha256": "23c8bb58feee8989e1c45aaa31432d76265108f7ce7f5aef273dafc5c100c685"
+    }
+  }
+]

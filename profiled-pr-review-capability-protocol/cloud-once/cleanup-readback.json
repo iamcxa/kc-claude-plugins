@@ -1,0 +1,49 @@
+[
+  {
+    "args": [
+      "workspace",
+      "get",
+      "1ce42532-398a-492e-a442-b0f00e302dbe"
+    ],
+    "utc_unix": 1788670694.838372,
+    "response": {
+      "id": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "projectId": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+      "name": "t8cyxd55ve-cloud-isolation-once",
+      "state": "archived",
+      "repoUrl": "https://github.com/iamcxa/kc-claude-plugins",
+      "createdAt": "2026-09-06T04:54:25.149Z",
+      "deepLink": "conductor://workspace?id=1ce42532-398a-492e-a442-b0f00e302dbe",
+      "creatorId": "c097ac7c-a860-4cfa-a58f-e3af57e891a6",
+      "creatorName": "Kent Chen",
+      "lastActivityAt": "2026-09-06T04:57:29.430Z"
+    }
+  },
+  {
+    "args": [
+      "workspace",
+      "status",
+      "1ce42532-398a-492e-a442-b0f00e302dbe"
+    ],
+    "utc_unix": 1788670695.774305,
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "status": "archived",
+      "updatedAt": "2026-09-06T04:54:25.149Z"
+    }
+  },
+  {
+    "args": [
+      "session",
+      "status",
+      "a151f107-915b-4f78-894f-325470c8b7f0"
+    ],
+    "utc_unix": 1788670696.669353,
+    "response": {
+      "workspaceId": "1ce42532-398a-492e-a442-b0f00e302dbe",
+      "sessionId": "a151f107-915b-4f78-894f-325470c8b7f0",
+      "status": "idle",
+      "updatedAt": "2026-09-06T04:57:55.415Z"
+    }
+  }
+]

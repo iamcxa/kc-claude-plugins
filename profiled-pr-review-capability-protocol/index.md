@@ -546,3 +546,16 @@ Execute at most one new workspace, its initial session and one initial user mess
 Local controller/canary/monitor/raw timing remain outside all synced workspaces. Only exact synthetic attack targets and fixture bytes may enter the prompt. Stop on a concrete local-command bridge or measurement-write falsifier; absent trusted agent-tool/credential inventory remains unverified. Preserve raw evidence, cancel if needed and recoverably archive only the exact owned workspace after identity readback on every exit; archive state is not independent descendant termination proof. No secrets/settings/install/product/branch/PR/stage/status/pin/gate/review-round change is permitted.
 
 Product stays clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-pr-review-capability-protocol-pilot`; cumulative base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, actual 6,431 / 20 / 1,939 and limits 6,600 / 20 / 1,800 are unchanged. Earlier proofs/failures and all five repair groups, reduction, F14 and real quality/speed evidence remain pending. This approval is supported-committed/synced/reread before cloud creation or any model message.
+
+## Stage Report: implementation (cycle 9)
+
+- DONE: Record, sync and reread the exact Captain approval for one Claude Opus 5 medium cloud synthetic test, maximum five minutes and no retry, without inventing a dollar ceiling.
+  Approval `f268b348fd4acb408a832f72bb5f9a3ef0bd2e9f` was durable/reread before the one workspace/session/message; exact Opus/medium/off request and external deadline recorded, no dollar cap inferred.
+- DONE: Execute that one bounded cloud attempt with external authoritative timing/canaries and actual tool, exit, failure, timeout evidence where available; stop on a concrete isolation falsifier and do not change settings or product.
+  [Attempt report](cloud-once/report.md): three Bash cases and unchanged actual external canaries; normal and tool timeout positive, nonzero outer exit masked, complete bridge/credential exclusion unverified. Provider turn completed, not whole-proof PASS. SDK list-based cost $0.483311 includes extra provider-reported Haiku, not worker fallback or invoiced spend; no retry.
+- DONE: Preserve raw evidence, cancel/archive only the owned cloud workspace on every path, read back its terminal lifecycle and record precise pass/fail/unverified findings and remaining integration limits in the existing task.
+  Sanitized raw events and failed monitor preserved. Transcript JSON parse failure also interrupted monitor cleanup; independent exact-identity archive recovery timed out locally but subsequent workspace get/status confirm archived and session idle. Terminal tail recovered read-only; monitor PID absent. Descendant termination and general external-deadline/all-error-path robustness remain unverified.
+
+### Summary
+
+The one authorized attempt is over and its exact workspace is recoverably archived; no new inference, product work or workflow advancement followed it. Product remains clean at `9bb52617`, count/limit unchanged; partial filesystem evidence does not resolve the remaining permission, nonzero, controller-lifecycle or product obligations. The First Officer receives the failures and limits, not an integration or speed/fit recommendation.
