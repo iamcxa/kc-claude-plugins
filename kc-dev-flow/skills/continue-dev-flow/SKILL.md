@@ -178,11 +178,14 @@ python3 <activated-skill-package>/scripts/profile-contract-loader.py \
   --write-stage-pin
 ```
 
-Same-stage drift returns `ACTIVE_STAGE_PIN_MISMATCH`; restore the pinned plugin.
-At the next boundary, an unchanged `local_profile_interface` may bind an
-upgrade. `LOCAL_PROFILE_REFIT_REQUIRED` emits no envelope or pin and names the
-README/local mods for Captain review; after the accepted refit, add
-`--accept-local-profile-refit`. Use `--format json` only for a machine consumer.
+`ACTIVE_STAGE_PIN_MISMATCH` requires restoring the changed pinned input.
+An unchanged `local_profile_interface` permits a next-boundary upgrade.
+`LOCAL_PROFILE_REFIT_REQUIRED` emits no envelope/pin: obtain Captain acceptance
+of its named README/mod refit, then add `--accept-local-profile-refit`.
+`--format json` selects machine output.
+
+For report resume or authorized feedback, read only
+`../../MIGRATION.md#stage-pin-continuation`. Never replace a pin to clear a refusal.
 
 At Production `ideation`, `skip_to_workflow_stage: implementation` loads no
 contract and authorizes only that existing state transition: re-read the same

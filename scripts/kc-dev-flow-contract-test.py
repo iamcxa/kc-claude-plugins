@@ -458,6 +458,7 @@ def write_profile_work_item(
 installed_package = loader.load_installed_package()
 manifest = json.loads((PLUGIN / "contract-manifest.json").read_text(encoding="utf-8"))
 expected_manifest_resources = {
+    "MIGRATION.md",
     "references/kernel.md",
     "references/reverse-recovery-audit.md",
     "references/journey-slicing.md",

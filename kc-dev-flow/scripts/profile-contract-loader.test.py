@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import concurrent.futures
+import hashlib
 import importlib.util
 import json
 import os
@@ -1511,6 +1512,7 @@ README-POLICY-SENTINEL
         write_pin: bool = False,
         accept_refit: bool = False,
         profile_path: Path = local_profile,
+        feedback_path: Path | None = None,
     ) -> subprocess.CompletedProcess[str]:
         command = [
             sys.executable,
@@ -1530,6 +1532,8 @@ README-POLICY-SENTINEL
             command.append("--write-stage-pin")
         if accept_refit:
             command.append("--accept-local-profile-refit")
+        if feedback_path is not None:
+            command.extend(["--feedback-context", str(feedback_path)])
         env = os.environ.copy()
         for name in (
             "CLAUDECODE",
@@ -1614,6 +1618,234 @@ README-POLICY-SENTINEL
         and "work item identity changed" in rejected_rebind.stderr,
         "stage pin accepted a different work-item slug after relocation",
     )
+
+    report_baseline = pin_item.read_text(encoding="utf-8")
+    pin_item.write_text(
+        report_baseline + "\n## Stage Report: ideation\n\nReview completed.\n",
+        encoding="utf-8",
+    )
+    report_resume = installed_run(
+        LOADER, pin_item, pin=pin_path, attempt="ideation-1", write_pin=True
+    )
+    require(
+        report_resume.returncode == 0
+        and json.loads(report_resume.stdout)["stage_pin"] == first_pin
+        and json.loads(pin_path.read_bytes()) == first_pin,
+        f"report-only continuation changed or refused its pin: {report_resume.stderr}",
+    )
+    pin_item.write_text(
+        pin_item.read_text(encoding="utf-8").replace(
+            "status: ideation\n", "status: ideation\nstarted: 2026-09-06T00:00:00Z\n", 1
+        ),
+        encoding="utf-8",
+    )
+    runtime_resume = installed_run(LOADER, pin_item, pin=pin_path, attempt="ideation-1")
+    require(runtime_resume.returncode == 0, f"runtime stamp blocked resume: {runtime_resume.stderr}")
+    pin_item.write_text(report_baseline, encoding="utf-8")
+
+    for stage in ("ideation", "implementation"):
+        pin_item.write_text(
+            report_baseline.replace("status: ideation", f"status: {stage}", 1)
+            + "\n## Accepted outcome\n\nUnapproved replacement goal.\n",
+            encoding="utf-8",
+        )
+        scope_drift = installed_run(
+            LOADER, pin_item, pin=pin_path, attempt=f"{stage}-1", write_pin=True
+        )
+        require(
+            scope_drift.returncode == 2 and not scope_drift.stdout
+            and json.loads(pin_path.read_bytes()) == first_pin,
+            f"{stage} accepted authority drift: {scope_drift.stderr}",
+        )
+    pin_item.write_text(report_baseline, encoding="utf-8")
+
+    fenced_item = write_work_item(
+        root, "production", "ideation", "fenced-authority",
+        body="\n## Example\n\n```markdown\n## Stage Report\nBound requirement.\n```\n",
+    )
+    fenced_pin = state / "fenced-pin.json"
+    seeded = installed_run(LOADER, fenced_item, pin=fenced_pin, attempt="ideation-1", write_pin=True)
+    require(seeded.returncode == 0, seeded.stderr)
+    fenced_item.write_text(
+        fenced_item.read_text(encoding="utf-8").replace("Bound requirement.", "Changed requirement."),
+        encoding="utf-8",
+    )
+    fenced_drift = installed_run(LOADER, fenced_item, pin=fenced_pin, attempt="ideation-1", write_pin=True)
+    require(fenced_drift.returncode == 2 and not fenced_drift.stdout, "a report heading inside code hid authority drift")
+
+    evolving_pin = state / "evolving-evidence-pin.json"
+    for stage in ("ideation", "implementation", "validation"):
+        evidence_fields = {"semantics_unchanged": "true"}
+        if stage == "validation":
+            evidence_fields.update({
+                "equivalence_instrument": "python equivalent.py",
+                "equivalence_instrument_failure": "A changed result must fail the comparison.",
+            })
+        evolving_item = write_work_item(
+            root, "production", stage, "evolving-evidence", necessity_fields=evidence_fields,
+        )
+        evolution = installed_run(LOADER, evolving_item, pin=evolving_pin, attempt=f"{stage}-1", write_pin=True)
+        require(evolution.returncode == 0, f"declared validation evidence blocked {stage}: {evolution.stderr}")
+    evolving_item.write_text(
+        evolving_item.read_text(encoding="utf-8").replace("python equivalent.py", "python other.py"),
+        encoding="utf-8",
+    )
+    evidence_drift = installed_run(LOADER, evolving_item, pin=evolving_pin, attempt="validation-1", write_pin=True)
+    require(evidence_drift.returncode == 2 and not evidence_drift.stdout, "same-stage evidence lost its binding")
+
+    correction_item = write_work_item(
+        root, "pilot-product-slice", "validation", "correction-item", body=canonical_brief
+    )
+    correction_pin = state / "correction-pin.json"
+    rejected = installed_run(
+        LOADER, correction_item, pin=correction_pin, attempt="validation-1", write_pin=True
+    )
+    require(rejected.returncode == 0, rejected.stderr)
+    rejected_pin = json.loads(correction_pin.read_bytes())
+    feedback = {
+        "schema": "kc-dev-flow-feedback/v1",
+        "from_stage": "validation",
+        "to_stage": "implementation",
+        "attempt": "implementation-correction-1",
+        "rejected_pin_sha256": hashlib.sha256(
+            json.dumps(rejected_pin, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest(),
+        "rejected_work_item_sha256": hashlib.sha256(correction_item.read_bytes()).hexdigest(),
+        "rejected_revision": "a" * 40,
+        "rejection": "REJECTED: the report-only regression fails at the reviewed revision.",
+        "repair_scope": ["Repair report continuation without changing the accepted outcome."],
+        "authorization": {
+            "decision": "revise",
+            "by": "person:captain",
+            "reference": "Fixture approval of the exact repair scope and rejected revision.",
+        },
+    }
+    feedback_path = state / "feedback.json"
+    feedback_path.write_text(json.dumps(feedback), encoding="utf-8")
+    correction_before = correction_item.read_bytes()
+    corrected = installed_run(
+        LOADER, correction_item, pin=correction_pin,
+        attempt="implementation-correction-1", write_pin=True, feedback_path=feedback_path,
+    )
+    require(corrected.returncode == 0, f"authorized feedback refused: {corrected.stderr}")
+    correction_document = json.loads(corrected.stdout)
+    require(
+        correction_document["workflow_stage"] == "implementation"
+        and correction_document["recorded_workflow_stage"] == "validation"
+        and correction_document["logical_stage"] == "build"
+        and correction_document["stage_pin"]["previous_pin"] == rejected_pin
+        and correction_document["feedback_context"] == feedback
+        and correction_item.read_bytes() == correction_before,
+        "feedback did not retain the rejected pin or changed the entity state",
+    )
+    correction_pin_bytes = correction_pin.read_bytes()
+    for report_number in (1, 2):
+        with correction_item.open("a", encoding="utf-8") as stream:
+            stream.write(f"\n## Stage Report: implementation ({report_number})\n\nRepair evidence.\n")
+        resumed = installed_run(
+            LOADER, correction_item, pin=correction_pin,
+            attempt=feedback["attempt"], write_pin=True, feedback_path=feedback_path,
+        )
+        require(
+            resumed.returncode == 0 and correction_pin.read_bytes() == correction_pin_bytes,
+            f"report after correction refused or rewrote history: {resumed.stderr}",
+        )
+
+    feedback_baseline = correction_item.read_text(encoding="utf-8")
+    for label, field, replacement in (
+        ("changed repair scope", "repair_scope", ["Also replace the accepted outcome."]),
+        ("changed revision", "rejected_revision", "b" * 40),
+        ("changed rejected pin", "rejected_pin_sha256", "0" * 64),
+        ("changed rejected snapshot", "rejected_work_item_sha256", "0" * 64),
+        ("missing approval", "authorization", {}),
+        ("placeholder approval", "authorization", {"decision": "revise", "by": "captain", "reference": "TBD"}),
+        ("unsupported target", "to_stage", "ideation"),
+        ("attempt alone", "attempt", "implementation-correction-2"),
+    ):
+        changed_feedback = {**feedback, field: replacement}
+        feedback_path.write_text(json.dumps(changed_feedback), encoding="utf-8")
+        refused = installed_run(
+            LOADER, correction_item, pin=correction_pin,
+            attempt=changed_feedback["attempt"], write_pin=True, feedback_path=feedback_path,
+        )
+        require(
+            refused.returncode == 2 and not refused.stdout
+            and correction_pin.read_bytes() == correction_pin_bytes,
+            f"feedback accepted {label}: {refused.stderr}",
+        )
+    feedback_path.write_text(json.dumps(feedback), encoding="utf-8")
+    for addition in (
+        "## Accepted outcome\nReplace the goal.",
+        "## Non-goals\nRemove all exclusions.",
+        "## Acceptance criteria\n- **AC-99** New acceptance condition.",
+        "## Accepted correction limit revision\nPermit a larger patch.",
+    ):
+        correction_item.write_text(feedback_baseline + "\n" + addition + "\n", encoding="utf-8")
+        refused = installed_run(
+            LOADER, correction_item, pin=correction_pin,
+            attempt=feedback["attempt"], write_pin=True, feedback_path=feedback_path,
+        )
+        require(
+            refused.returncode == 2 and not refused.stdout
+            and correction_pin.read_bytes() == correction_pin_bytes,
+            f"feedback accepted added authority: {addition}: {refused.stderr}",
+        )
+    correction_item.write_text(feedback_baseline, encoding="utf-8")
+    kernel_path = package_root / "references/kernel.md"
+    kernel_before = kernel_path.read_bytes()
+    kernel_path.write_bytes(kernel_before + b"changed package bytes\n")
+    package_drift = installed_run(
+        LOADER, correction_item, pin=correction_pin,
+        attempt=feedback["attempt"], write_pin=True, feedback_path=feedback_path,
+    )
+    require(
+        package_drift.returncode == 2 and not package_drift.stdout
+        and correction_pin.read_bytes() == correction_pin_bytes,
+        "feedback accepted changed package bytes",
+    )
+    kernel_path.write_bytes(kernel_before)
+    returned = installed_run(
+        LOADER, correction_item, pin=correction_pin, attempt="validation-2", write_pin=True
+    )
+    require(returned.returncode == 0, f"return to review failed: {returned.stderr}")
+    returned_pin = json.loads(correction_pin.read_bytes())
+    require(
+        returned_pin["previous_pin"]["feedback_context"] == feedback
+        and returned_pin["previous_pin"]["previous_pin"] == rejected_pin,
+        "return to review discarded rejection/authorization history",
+    )
+    replay = installed_run(
+        LOADER, correction_item, pin=correction_pin,
+        attempt=feedback["attempt"], write_pin=True, feedback_path=feedback_path,
+    )
+    require(replay.returncode == 2 and not replay.stdout, "old correction authorization was replayable")
+
+    for field in ("title", "source", "id", "unknown-authority"):
+        changed_item = report_baseline.replace("---\n", f"---\n{field}: changed\n", 1)
+        pin_item.write_text(changed_item, encoding="utf-8")
+        refused = installed_run(LOADER, pin_item, pin=pin_path, attempt="ideation-1", write_pin=True)
+        require(refused.returncode == 2 and not refused.stdout, f"accepted changed {field}")
+    pin_item.write_text(report_baseline, encoding="utf-8")
+    local_profile.write_text(
+        preserved["readme"].decode().replace("local-pr-merge.md", "other-mod.md"), encoding="utf-8"
+    )
+    refused = installed_run(LOADER, pin_item, pin=pin_path, attempt="ideation-1", write_pin=True)
+    require(refused.returncode == 2 and not refused.stdout, "active Local Profile change accepted")
+    local_profile.write_bytes(preserved["readme"])
+    no_authorization = installed_run(LOADER, pin_item, pin=pin_path, attempt="ideation-2", write_pin=True)
+    require(no_authorization.returncode == 2 and not no_authorization.stdout, "attempt alone granted authority")
+
+    old_pin = {key: value for key, value in first_pin.items()
+               if key not in {"work_item_authority_sha256", "work_item_boundary_sha256"}}
+    old_pin_path = state / "old-pin.json"
+    old_pin_path.write_text(json.dumps(old_pin), encoding="utf-8")
+    legacy_resume = installed_run(LOADER, pin_item, pin=old_pin_path, attempt="ideation-1", write_pin=True)
+    require(legacy_resume.returncode == 0, f"exact legacy pin refused: {legacy_resume.stderr}")
+    pin_item.write_text(report_baseline + "\n## Stage Report\n\nNew report.\n", encoding="utf-8")
+    legacy_drift = installed_run(LOADER, pin_item, pin=old_pin_path, attempt="ideation-1", write_pin=True)
+    require(legacy_drift.returncode == 2 and not legacy_drift.stdout, "legacy pin silently lost its whole-file guard")
+    pin_item.write_text(report_baseline, encoding="utf-8")
+    print("profile contract loader test: report/authority/correction regressions PASS")
 
     arbitrary_loaders: list[Path] = []
     for index in range(3):
@@ -1790,6 +2022,7 @@ WORKFLOW_STATES_BLOCK = """  states:
     - name: implementation
     - name: validation
       gate: true
+      feedback-to: implementation
     - name: done
       terminal: true
 """
@@ -2144,6 +2377,81 @@ else:
             and re.search(r"^completed: \S+", archived_prod, re.MULTILINE) is not None,
             f"merge guard did not populate completed on finalize: {archived_prod}",
         )
+        feedback_slug = "feedback-" + hashlib.sha256(str(route_root).encode()).hexdigest()[:12]
+        sd_new_entity(
+            spacedock_binary, route_repo, route_workflow, feedback_slug,
+            "pilot-product-slice", ["shape", "build", "verify-deliver"],
+        )
+        for stage in ("backlog", "ideation"):
+            sd_gate_consume(spacedock_binary, route_repo, route_workflow, feedback_slug, route_artifact, stage)
+        sd_set(spacedock_binary, route_repo, route_workflow, feedback_slug, "status=validation")
+        holder = route_workflow / ".spacedock-state"
+        live_item = holder / f"{feedback_slug}.md"
+        live_pin = holder / "feedback-pin.json"
+        live_profile = route_workflow / "README.md"
+        with live_profile.open("a", encoding="utf-8") as stream:
+            marker = "<!-- kc-dev-flow-static-local-profile:start -->"
+            stream.write("\n" + marker + preserved["readme"].decode().split(marker, 1)[1])
+            stream.write("\n## Stages\n\n### `implementation` — build\n\nRepair the authorized findings and return evidence.\n")
+        live_loader = HERE / "profile-contract-loader.py"
+        rejected = installed_run(
+            live_loader, live_item, pin=live_pin, attempt="validation-1", write_pin=True,
+            profile_path=live_profile,
+        )
+        require(rejected.returncode == 0, f"live validation pin: {rejected.stderr}")
+        with live_item.open("a", encoding="utf-8") as stream:
+            stream.write("\n## Stage Report: validation\n\nREJECTED: repair report continuation.\n")
+        live_feedback = {
+            **feedback,
+            "rejected_pin_sha256": hashlib.sha256(
+                json.dumps(json.loads(live_pin.read_bytes()), sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest(),
+            "rejected_work_item_sha256": hashlib.sha256(live_item.read_bytes()).hexdigest(),
+            "rejected_revision": sd_git(route_repo, "rev-parse", "HEAD").stdout.strip(),
+        }
+        live_feedback_path = holder / "feedback-context.json"
+        live_feedback_path.write_text(json.dumps(live_feedback), encoding="utf-8")
+        live_correction = installed_run(
+            live_loader, live_item, pin=live_pin, attempt=live_feedback["attempt"],
+            write_pin=True, profile_path=live_profile, feedback_path=live_feedback_path,
+        )
+        require(live_correction.returncode == 0, f"live feedback pin: {live_correction.stderr}")
+        loaded_correction = json.loads(live_correction.stdout)
+        checklist = holder / "feedback-checklist.md"
+        checklist.write_text("Repair only the authorized scope; return evidence for re-review.\n", encoding="utf-8")
+        before_dispatch = live_item.read_bytes()
+        built = subprocess.run(
+            [str(spacedock_binary), "dispatch", "build", "--workflow-dir", str(route_workflow),
+             "--entity-path", str(live_item), "--stage", loaded_correction["workflow_stage"],
+             "--checklist-file", str(checklist), "--feedback-context-file", str(live_feedback_path),
+             "--feedback-reflow", "--host", "codex"],
+            cwd=route_repo, text=True, capture_output=True,
+            check=False,
+        )
+        require(built.returncode == 0, f"live feedback handoff: {built.stdout}{built.stderr}")
+        require(live_item.read_bytes() == before_dispatch, "feedback handoff mutated the rejected entity")
+        dispatch_envelope = json.loads(built.stdout)
+        dispatch_path = Path(dispatch_envelope["dispatch_file_path"])
+        expected_name = f"spacedock-ensign-{feedback_slug}-implementation"
+        require(dispatch_envelope["name"] == expected_name and dispatch_path.name == f"{expected_name}.md",
+                f"feedback artifact does not belong to {expected_name}: {dispatch_envelope}")
+        assignment = dispatch_path.read_text(encoding="utf-8")
+        require(
+            "Stage: implementation\n" in assignment
+            and live_feedback_path.read_text(encoding="utf-8") in assignment,
+            "Spacedock handoff omitted or changed the validated correction package",
+        )
+        dispatch_path.unlink()
+        for number in (1, 2):
+            with live_item.open("a", encoding="utf-8") as stream:
+                stream.write(f"\n## Stage Report: implementation ({number})\n\nCorrection evidence.\n")
+            resumed = installed_run(
+                live_loader, live_item, pin=live_pin, attempt=live_feedback["attempt"],
+                write_pin=True, profile_path=live_profile, feedback_path=live_feedback_path,
+            )
+            require(resumed.returncode == 0, f"live correction report resume: {resumed.stderr}")
+        require(sd_status(route_workflow, feedback_slug) == "validation", "correction consumed validation")
+        print("profile contract loader test: live feedback handoff and two report resumes PASS")
         print("profile contract loader test: route mechanism PASS")
 
 print("profile contract loader test: PASS")

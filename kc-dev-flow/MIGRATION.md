@@ -40,8 +40,10 @@ comparator only after the installed route is proven.
 5. Create the state authority's stage-pin sidecar. Before dispatch, the First
    Officer writes and commits one `kc-dev-flow-stage-pin/v1` record, reruns the
    loader to read it back, and dispatches only that envelope. Same-stage re-entry
-   accepts only the pinned plugin version, contract digest, work-item hash, and
-   attempt. Restore missing or changed pinned bytes; do not fall back to the
+   binds the pinned plugin version, contract digest, accepted-authority digest,
+   Local Profile, and attempt. Report-only updates follow
+   [Stage-pin continuation](#stage-pin-continuation) below.
+   Restore missing or changed pinned bytes; do not fall back to the
    repository copies.
 6. Exercise one compatible upgrade by changing package version/digest without
    changing `local_profile_interface`: the active stage must return
@@ -61,6 +63,104 @@ Rollback before a new-stage pin restores the old installed plugin and the
 atomic Local Profile/deletion commit. After a new stage is pinned, keep that
 version through the active stage and schedule any downgrade for the following
 boundary. Never rewrite active work-item history or unrelated Spacedock state.
+
+Existing stage-pin/v1 records without `work_item_authority_sha256` retain the
+whole-document equality rule; the loader does not infer an accepted brief from
+a changed historical record. An unchanged legacy pin can resume on its original
+package, or advance at its already-authorized ordinary boundary to create a
+new pin. The new pin retains its predecessor. Do not silently repin an active
+legacy record or edit installed package bytes to adopt this fix. A stranded
+legacy stage that cannot reach its normal boundary needs a separately recorded
+Captain-authorized migration with the original snapshot and pin preserved;
+this loader provides no blanket migration override. Source tests of the new
+behavior are not evidence that an adopter's active legacy task has migrated.
+
+## Stage-pin continuation
+
+New pins include `work_item_authority_sha256`. The loader's
+`work_item_authority` projection retains non-runtime frontmatter and non-report
+body bytes, including unknown fields and headings. It excludes these runtime
+fields: `status`, `started`, `completed`, `verdict`, `worktree`, `pr`, `mod-block`,
+`gates`, and `review-round`. It excludes a column-zero `## Stage Report` or
+`## Stage Report: <label>` section through the next level-one/two heading
+outside a code fence. Reports and runtime metadata carry evidence, not permission
+to change the goal, non-goals, criteria, or repair scope. Record authority changes
+outside reports; a report cannot override the accepted brief. Unknown sections
+remain bound. Unterminated code fences refuse loading.
+
+Ordinary forward transitions compare `work_item_boundary_sha256`, the same
+projection with the two stage-evidence receipt fields `equivalence_instrument`
+and `equivalence_instrument_failure` omitted. These may be supplied when entering
+validation; its active pin then binds them through `work_item_authority_sha256`.
+This exception does not apply to same-stage or feedback re-entry.
+
+For report-only continuation, rerun the ordinary pin command with the same
+attempt. Its emitted `work_item_sha256` binds the current complete record; the
+pin remains unchanged. Before dispatch, re-read the committed work item and pin
+and require their hashes to match the envelope. A new attempt alone does not
+authorize re-entry. Legacy pins without the authority digest still require their
+exact original work-item bytes; do not add the digest, delete the pin, or use
+refit as a bypass. The compatibility boundary above still applies.
+
+For an already-authorized validation-to-implementation correction, keep the
+entity at `validation`. The First Officer verifies the rejected code revision,
+finding evidence, concrete repair scope, and the existing authorization from the
+actor who owns that decision. Record that package as one state-owned JSON file,
+commit it and re-read it. This is a receipt of an existing decision, not another
+approval gate. The closed `kc-dev-flow-feedback/v1` object has these fields:
+
+```json
+{
+  "schema": "kc-dev-flow-feedback/v1",
+  "from_stage": "validation",
+  "to_stage": "implementation",
+  "attempt": "implementation-correction-1",
+  "rejected_pin_sha256": "<sha256 of rejected pin canonical JSON>",
+  "rejected_work_item_sha256": "<sha256 of complete rejected work item>",
+  "rejected_revision": "<full reviewed code commit SHA>",
+  "rejection": "<finding evidence and rejected disposition, unchanged>",
+  "repair_scope": ["<concrete authorized revise assignment>"],
+  "authorization": {
+    "decision": "revise",
+    "by": "<authorized decision actor>",
+    "reference": "<durable source of approval for this revision and scope>"
+  }
+}
+```
+
+Canonical JSON here means Python `json.dumps(pin, sort_keys=True,
+separators=(",", ":"))`, UTF-8, no trailing newline. SHA-256 fields require 64
+lowercase hex characters; the reviewed commit requires 40 or 64. Placeholders,
+missing/extra keys, empty scope, and missing decision evidence are refused by
+`read_feedback_context`. The loader verifies the binding, not the human identity,
+truth of cited evidence, or ancestry of the reviewed commit. A worker-written
+JSON claim is not approval; the First Officer must resolve the cited decision
+through the existing authority before invoking the loader.
+
+Add `--feedback-context <committed-json-file>` to the ordinary loader command,
+using the receipt's exact attempt and existing pin. It emits the `build` contract
+with `workflow_stage: implementation`, `recorded_workflow_stage: validation`,
+and the validated `feedback_context`. Commit and re-read the new pin before
+dispatch. The pin embeds `previous_pin` and the receipt, preserving the rejected
+pin and rejection/authorization evidence across subsequent transitions. Repeated
+loads require the same receipt; changed scope, revision, attempt, package, or
+Local Profile refuses with no envelope or pin write.
+
+Pass that same validated file unchanged to the existing handoff:
+
+```bash
+spacedock dispatch build --workflow-dir <workflow-dir> \
+  --entity-path <same-committed-work-item> --stage implementation \
+  --checklist-file <repair-checklist> \
+  --feedback-context-file <same-committed-json-file> --feedback-reflow
+```
+
+Use the bound host's ordinary transport; this does not spawn a worker by itself.
+Spacedock checks the workflow's declared `feedback-to`. On a loader refusal,
+do not invoke the handoff. After repair, load `validation` with a fresh review
+attempt and without `--feedback-context`; this requests re-review, not approval
+or completion. The prior receipt cannot be reused against that new validation
+pin. Keep the workflow's existing rejection-cycle and human gate rules.
 
 ## Migrating from 3.x to 4.x
 
