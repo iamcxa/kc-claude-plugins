@@ -2315,6 +2315,46 @@ require(
     f"plan-lint L9 should judge only the admitted Issue and ignore the surface-less rough Backlog candidates: {lint_dev129_rough.stdout}",
 )
 
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_violations_path = Path(receipt_dir) / "dev129-rough-backlog.receipt.json"
+    lint_receipt_violations = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[4]), str(receipt_violations_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_violations.returncode == 0,
+        f"plan-lint should still pass while writing the receipt: {lint_receipt_violations.stdout}",
+    )
+    receipt_violations = json.loads(receipt_violations_path.read_text())
+    l6_advisory_entries = [e for e in receipt_violations["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_entries) == 1 and l6_advisory_entries[0]["pass"] is True,
+        f"lint receipt should record one passing L6 id-order advisory entry: {receipt_violations['lint']}",
+    )
+    require(
+        "(DEV-912, DEV-911)" in l6_advisory_entries[0]["why"],
+        f"L6 id-order advisory receipt entry should name the violation pair: {l6_advisory_entries[0]}",
+    )
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_clean_path = Path(receipt_dir) / "dev89-runA-reverified.receipt.json"
+    lint_receipt_clean = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0]), str(receipt_clean_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_clean.returncode == 0,
+        f"plan-lint should pass on the reverified fixture while writing the receipt: {lint_receipt_clean.stdout}",
+    )
+    receipt_clean = json.loads(receipt_clean_path.read_text())
+    l6_advisory_clean_entries = [e for e in receipt_clean["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_clean_entries) == 1
+        and l6_advisory_clean_entries[0]["pass"] is True
+        and l6_advisory_clean_entries[0]["why"] == "violations none",
+        f"lint receipt should record a clean L6 id-order advisory entry on a fixture with no violations: {l6_advisory_clean_entries}",
+    )
+
 lint_dev129_missing_nongoals = subprocess.run(
     [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[5])],
     capture_output=True, text=True, cwd=ROOT,

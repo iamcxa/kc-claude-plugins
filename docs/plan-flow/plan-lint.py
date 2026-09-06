@@ -69,6 +69,7 @@ elif mode == "lint":
                 l6_violations.append(f"({a}, {b})")
         if l6_violations:
             print(f"WARN L6 id-order advisory: intent order {l6_intent}; violations {', '.join(l6_violations)}")
+        rule("L6 id-order advisory", True, f"violations {', '.join(l6_violations)}" if l6_violations else "violations none")
     forked=any(len(v)>1 for v in adj.values()); rule("L7 split advisory (warn only)", True, f"{len(ids)} issues, forked={forked}" + ("; consider Milestones" if (len(ids)>=4 or forked) else ""))
     AC=re.compile(r"^[-*] \*\*AC-\d+\s*\*\*")
     for i in admitted_issues:
