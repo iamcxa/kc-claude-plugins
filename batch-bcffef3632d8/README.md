@@ -6,3 +6,4 @@ Runtime: local subagents in git worktrees (Captain present), per the 2026-09-06 
 
 ## Decisions made under `defaults`
 
+- 2026-09-06T08:55:24Z — DEV-122 accepted (station of record d75b92da, ACCEPT with AC-3 WARN: variant restores only plan-lint.py, fixtures untouched — partial by design); Draft PR #383 opened by open-pr.sh (`pr_creation=batch_approve_draft`). Review station next.
