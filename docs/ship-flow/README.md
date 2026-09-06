@@ -355,3 +355,15 @@ and dispositions them by `kc-plan-approval/v1`'s `defaults.findings_outside_brie
 rule stated above: an empty or missing findings file is `reviewer-absent`
 with the `fallback_to_fo_diff_read` marker, never read as "no findings",
 because the two are indistinguishable from a findings file alone.
+
+`scripts/ship-flow/uat-doc.py <batch-dir>` builds the batch's UAT document from
+its durable records only -- `receipt/plan-receipt.json`,
+`receipt/plan-approval.json`, `receipt/close-receipt(.DRAFT).json`,
+`evidence/worker-evidence-<ISSUE>*.md`, and, when present, the `README.md`
+`## Decisions made under \`defaults\`` bullets -- so the document lists what
+the batch already recorded rather than deciding anything new.
+`scripts/ship-flow/notify.sh <channel> <batch-id> <doc-path> --dry-run
+--state-dir <dir>` sends one UAT-ready message per batch id: a deterministic
+message id keyed on the batch id makes a second call for the same batch id
+and state dir a no-op instead of a duplicate send. It has no real-send path;
+the First Officer sends the real message.
