@@ -4,15 +4,15 @@ PASS L3 milestone membership
 PASS L4 admission DEV-107: 3 non-goals
 PASS L4 admission DEV-106: 3 non-goals
 PASS L4 admission DEV-105: 3 non-goals
-PASS L4 admission DEV-104: 3 non-goals
+PASS L4 admission DEV-104: 4 non-goals
 PASS L5 initiative when >1 project: single project; not triggered
 PASS L6 blockedBy is a DAG: blocker->blocked [('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']
 PASS L6 blockedBy direction agrees with identifier order: intent order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']; violations none
 PASS L7 split advisory (warn only): 4 issues, forked=False; consider Milestones
-PASS L8 e2e-able AC DEV-107: 4 ACs
+PASS L8 e2e-able AC DEV-107: 6 ACs
 PASS L8 e2e-able AC DEV-106: 4 ACs
-PASS L8 e2e-able AC DEV-105: 4 ACs
+PASS L8 e2e-able AC DEV-105: 5 ACs
 PASS L8 e2e-able AC DEV-104: 4 ACs
 PASS L9 by-product Issue check: issues with no unique surface: none
 PASS L10 re-verified presence and age: 14-day bound; violations: none
-LINT PASS | receipt 2f8b440979efe83a | order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']
+LINT PASS | receipt 64d54d0606dc495b | order ['DEV-104', 'DEV-105', 'DEV-106', 'DEV-107']

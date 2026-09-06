@@ -1,6 +1,6 @@
 {
  "captain_answers_file": "station2-captain-answers.md",
- "decision": "Captain chose wedge (a): DEV-104..107, 2026-09-06",
+ "decision": "Captain chose wedge (a): DEV-104..107, 2026-09-06 ; Captain reviewed the four Briefs and changed 104/105/107 (Ask UI, 2026-09-06); 106 unchanged",
  "lint_full": [
   {
    "rule": "L1 one-line User value",
@@ -35,7 +35,7 @@
   {
    "rule": "L4 admission DEV-104",
    "pass": true,
-   "why": "3 non-goals"
+   "why": "4 non-goals"
   },
   {
    "rule": "L5 initiative when >1 project",
@@ -60,7 +60,7 @@
   {
    "rule": "L8 e2e-able AC DEV-107",
    "pass": true,
-   "why": "4 ACs"
+   "why": "6 ACs"
   },
   {
    "rule": "L8 e2e-able AC DEV-106",
@@ -70,7 +70,7 @@
   {
    "rule": "L8 e2e-able AC DEV-105",
    "pass": true,
-   "why": "4 ACs"
+   "why": "5 ACs"
   },
   {
    "rule": "L8 e2e-able AC DEV-104",

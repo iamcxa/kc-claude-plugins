@@ -10,5 +10,8 @@
  "committed_at": "2026-09-06T01:33:27Z",
  "adopted_at": "2026-09-06T01:33:36Z",
  "adopted_by": "laptop",
- "adopted_writer": 21
+ "adopted_writer": 21,
+ "outcome": "superseded",
+ "resolved_at": "2026-09-06T02:03:48Z",
+ "note": "session limit before any push; Brief re-cut by the Captain; workspace archived"
 }
