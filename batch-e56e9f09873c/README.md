@@ -48,3 +48,5 @@ The first cut's two layer-1 workers hit the shared session limit before any push
 - 2026-09-06T03:33:08Z — **DEV-107 moved_base** (default): lower layers repaired, so the FO merged 105 r2 + 106 r2 into a new base `89839673` (README: both paragraphs kept), merged it into 107 (README taken from the base; 107 never touched it), contract test exit 0, the 5-step flow exit 0, 107's pair exit 1 at the new base and 0 at the head. Pushed `9282343c`; station ACCEPT; PR #381 opened via open-pr.sh. Its diff against main includes the two lower layers until #379/#380 merge (merge order: 378, 379, 380, then this one).
 
 - 2026-09-06T03:36:10Z — #381 CI green on `9282343c`.
+
+- 2026-09-06T03:39:02Z — UAT document generated from the record (84 lines): close receipt draft validates (`CLOSE OK`); all four layers carry PR, candidate, base. Observation for the document's residuals: `base_label()` still prints `(main)` for a base that is a sibling candidate or the FO's merge (it only distinguishes "not recorded"); the DEV-106 r2 fix covered missing bases, not non-main ones. Listed against DEV-106, not blocking.
