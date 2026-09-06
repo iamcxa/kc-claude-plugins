@@ -6,7 +6,7 @@ Consumes e2e-pipeline's flow YAML step shape (`action: "Execute external"`,
 that shape only, with no dependency on e2e-pipeline.
 
 Prints one shell-quoted `<run>\\t<expect>` pair per line, in step order, for
-scripts/ship-flow/e2e-cli.sh to consume. `expect` is the empty string when a
+kc-ship-flow/scripts/e2e-cli.sh to consume. `expect` is the empty string when a
 `cli` entry omits it; e2e-cli.sh treats anything other than `exit code <N>`
 as an unrecognized expect and fails the run, so this parser does not invent
 a default.

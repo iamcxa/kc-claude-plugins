@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavior contract for scripts/ship-flow/dev-debrief.py."""
+"""Behavior contract for kc-ship-flow/scripts/dev-debrief.py."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MODULE_PATH = HERE / "dev-debrief.py"
-FIXTURES = HERE.parent / "fixtures" / "ship-flow" / "debrief-writer"
+FIXTURES = HERE / "fixtures" / "debrief-writer"
 
 
 def require(condition: bool, message: str) -> None:

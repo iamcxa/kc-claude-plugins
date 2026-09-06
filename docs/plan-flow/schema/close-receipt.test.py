@@ -16,7 +16,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MODULE_PATH = HERE / "validate-receipt.py"
-FIXTURES = HERE.parent.parent.parent / "scripts" / "fixtures" / "ship-flow" / "close-receipt"
+FIXTURES = HERE.parent.parent.parent / "kc-ship-flow" / "scripts" / "fixtures" / "close-receipt"
 
 PLAN_RECEIPT = FIXTURES / "plan-receipt.json"
 PLAN_APPROVAL = FIXTURES / "plan-approval.json"

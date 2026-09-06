@@ -1,6 +1,6 @@
 name: dev-50-cli-flow
 description: |
-  DEV-50's three-step CLI flow. Fixture for scripts/ship-flow/e2e-cli.sh:
+  DEV-50's three-step CLI flow. Fixture for kc-ship-flow/scripts/e2e-cli.sh:
   every step is `action: "Execute external"`, consuming e2e-pipeline's
   `execute.cli` step shape without depending on e2e-pipeline itself.
 
