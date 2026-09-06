@@ -1,0 +1,12 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "1016352e0223194577fab44e5cd3b5ba2c1d4bc7fbe9543bf33c814294467264",
+ "approver": "person:captain",
+ "approved_at": "2026-09-03T14:06:59Z",
+ "decision": "go",
+ "max_workspaces": 3,
+ "concurrency": 2,
+ "repair_rounds": 2,
+ "quote": "go · 3 workspaces · concurrency 2 · repair 2",
+ "quote_source": "Captain, Ask UI in this conversation, 2026-09-03 evening, after 那就按建議走2"
+}
