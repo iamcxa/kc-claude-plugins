@@ -1,3 +1,3 @@
 # kc-ship-flow kernel
 
-plan-flow, kc-dev-flow and kc-ship-flow are independent units connected only by versioned input/output contracts; this kernel cites neither of the others.
+kc-ship-flow is one of three independent units — plan-flow, kc-dev-flow and kc-ship-flow — connected only by versioned input/output contracts; this kernel adopts no rule from the other two.
