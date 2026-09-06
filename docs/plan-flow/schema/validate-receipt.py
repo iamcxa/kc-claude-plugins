@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
-"""Validate a kc-plan-receipt v1 (and optionally its approval): schema, canonical hash, DAG, order, body hashes, distinct sentences.
-usage: validate-receipt.py <receipt.json> [approval.json]   exit 0 ok, 1 invalid, 2 usage"""
+"""Validate a kc-plan-receipt v1 (and optionally its approval, and optionally
+a kc-ship-close-receipt v1): schema, canonical hash, DAG, order, body hashes,
+distinct sentences; on a close receipt: every defect has a non-blank
+fix_ticket or accepted_residual, dev_debrief and ship_debrief carry their
+minimum non-blank fields, dev_debrief.per_issue matches the plan receipt's
+issue set, and ship_debrief.defects_disposition ids match defects_returned
+ids. Every close-receipt check above runs in plain Python whether or not
+the `jsonschema` package is installed (`python3 -S` drops it from
+sys.path without touching the stdlib this script otherwise needs).
+usage: validate-receipt.py <receipt.json> [approval.json] [close.json]
+exit 0 ok, 1 invalid (see the INVALID: line for what and why), 2 usage or a
+missing/unparseable input file (uncaught OSError/JSONDecodeError)."""
 import json, sys, hashlib, re, collections, pathlib
 HERE = pathlib.Path(__file__).resolve().parent
 def canon(o): return json.dumps(o, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
@@ -63,8 +73,64 @@ if len(sys.argv) > 2:
 print("OK", r["receipt_sha256"][:16], len(ids), "issues", len(r["edges"]), "edges")
 
 # ---- close receipt (optional third argument: close.json) ----
+# Every check below runs whether or not `jsonschema` is installed, and all of
+# them run before jsonschema.validate() -- so a name-the-field refusal fires
+# first even when jsonschema is present (a ValidationError traceback does not
+# name a defect id the way `fail()` does).
+DEFECT_ID_RE = re.compile(r"^S[0-9]+$")
+FIX_TICKET_RE = re.compile(r"^[A-Z][A-Z0-9]*-[0-9]+$")
+
+
+def nonblank(v):
+    """A disposition, decision, or correction counts only if it has a
+    non-whitespace character; "   " is the same as absent."""
+    return isinstance(v, str) and v.strip() != ""
+
+
 if len(sys.argv) > 3:
     c = json.load(open(sys.argv[3]))
+
+    defect_ids = set()
+    undispositioned = []
+    for d in c.get("defects_returned", []):
+        did = d.get("id")
+        if not (isinstance(did, str) and DEFECT_ID_RE.match(did)): fail(f"defects_returned entry has a malformed id (want S<n>): {did!r}")
+        defect_ids.add(did)
+        fix_ticket = d.get("fix_ticket")
+        has_fix = False
+        if fix_ticket is not None and nonblank(fix_ticket):
+            if not FIX_TICKET_RE.match(fix_ticket.strip()): fail(f"{did} fix_ticket is not a valid issue id: {fix_ticket!r}")
+            has_fix = True
+        if not has_fix and not nonblank(d.get("accepted_residual")):
+            undispositioned.append(did)
+    if undispositioned: fail(f"defects_returned missing fix_ticket or accepted_residual: {', '.join(undispositioned)}")
+
+    if "dev_debrief" not in c: fail("close receipt missing dev_debrief")
+    dev_debrief = c["dev_debrief"]
+    for field in ("per_issue", "candidate_correction"):
+        if field not in dev_debrief: fail(f"dev_debrief missing required field: {field}")
+    if not nonblank(dev_debrief.get("candidate_correction")): fail("dev_debrief.candidate_correction is blank")
+    per_issue = dev_debrief["per_issue"]
+    if set(per_issue) != ids: fail(f"dev_debrief.per_issue issues {sorted(per_issue)} do not match the plan receipt's issues {sorted(ids)}")
+    for issue_id, entry in per_issue.items():
+        for field in ("rounds", "evidence_refusals", "code_refusals"):
+            if field not in entry: fail(f"dev_debrief.per_issue.{issue_id} missing required field: {field}")
+
+    if "ship_debrief" not in c: fail("close receipt missing ship_debrief")
+    ship_debrief = c["ship_debrief"]
+    for field in ("defaults_decisions", "defects_disposition", "minutes_per_station", "candidate_correction"):
+        if field not in ship_debrief: fail(f"ship_debrief missing required field: {field}")
+    if not nonblank(ship_debrief.get("candidate_correction")): fail("ship_debrief.candidate_correction is blank")
+    for dd in ship_debrief["defaults_decisions"]:
+        if not nonblank(dd.get("decision")): fail(f"ship_debrief.defaults_decisions entry has a blank decision: {dd!r}")
+    disposition_ids = set()
+    for dd in ship_debrief["defects_disposition"]:
+        did = dd.get("id")
+        if not (isinstance(did, str) and DEFECT_ID_RE.match(did)): fail(f"ship_debrief.defects_disposition entry has a malformed id (want S<n>): {did!r}")
+        if not nonblank(dd.get("disposition")): fail(f"ship_debrief.defects_disposition.{did} disposition is blank")
+        disposition_ids.add(did)
+    if disposition_ids != defect_ids: fail(f"ship_debrief.defects_disposition ids {sorted(disposition_ids)} do not match defects_returned ids {sorted(defect_ids)}")
+
     if jsonschema: jsonschema.validate(c, json.load(open(HERE / "kc-ship-close-receipt.v1.schema.json")))
     cc = dict(c); cc.pop("close_sha256", None)
     if hashlib.sha256(canon(cc)).hexdigest() != c["close_sha256"]: fail("close_sha256 does not match canonical content")

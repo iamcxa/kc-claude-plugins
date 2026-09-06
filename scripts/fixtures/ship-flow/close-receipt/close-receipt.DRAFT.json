@@ -1,0 +1,153 @@
+{
+ "schema": "kc-ship-close-receipt/v1",
+ "plan_receipt_sha256": "1016352e0223194577fab44e5cd3b5ba2c1d4bc7fbe9543bf33c814294467264",
+ "approval_receipt_sha256": "a089ad9d6ef046b11fda8827b68765eeb742f3e26dffae1d90f3ae8afe55fd22",
+ "batch": {
+  "entity": "batch-1016352e0223",
+  "started_at": "2026-09-03T14:05:00Z",
+  "closed_at": "2026-09-03T15:40:00Z",
+  "holder": "laptop"
+ },
+ "issues": {
+  "DEV-90": {
+   "outcome": "pr_open",
+   "candidate": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+   "pr": "iamcxa/kc-claude-plugins#364",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1,
+    "build": 4,
+    "verify": 6,
+    "review": 2
+   },
+   "cost_usd_imputed": null,
+   "residuals": []
+  },
+  "DEV-91": {
+   "outcome": "accepted_no_pr",
+   "candidate": "00c4c05be6ea19a810e40606e6d0f3baad3f9af1",
+   "pr": null,
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1,
+    "build": 4,
+    "verify": 9,
+    "review": 3
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "minimal-necessity fail: goal met by DEV-90 (S26)"
+   ]
+  },
+  "DEV-92": {
+   "outcome": "pr_open",
+   "candidate": "9c05eaf86e74b608d5bef929e5772c931d6791b4",
+   "pr": "iamcxa/kc-claude-plugins#365",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1,
+    "build": 3,
+    "verify": 5,
+    "review": 2
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "review by FO read; Codex endpoint 404 (S25)"
+   ]
+  }
+ },
+ "defects_returned": [
+  {
+   "id": "S23",
+   "class": "holder",
+   "one_line": "intent.sh lock dir under .git fails on a worktree state",
+   "fix_ticket": "DEV-93"
+  },
+  {
+   "id": "S24",
+   "class": "verify",
+   "one_line": "a without-it pair whose removed variant restores fewer files than the command reads cannot fail",
+   "fix_ticket": null,
+   "accepted_residual": null
+  },
+  {
+   "id": "S25",
+   "class": "verify",
+   "one_line": "Codex CLI models endpoint 404; empty reviewer output must trigger a fallback, not 'no findings'",
+   "fix_ticket": null,
+   "accepted_residual": null
+  },
+  {
+   "id": "S26",
+   "class": "seam",
+   "one_line": "an Issue split whose deliverable is a by-product of an earlier split; plan-flow must check this at station 4",
+   "fix_ticket": null,
+   "accepted_residual": null
+  }
+ ],
+ "totals": {
+  "workspaces_created": 3,
+  "workspaces_orphaned": 0,
+  "fix_rounds": 0,
+  "captain_gates": 2
+ },
+ "dev_debrief": {
+  "per_issue": {
+   "DEV-90": {
+    "rounds": 1,
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1"
+    ],
+    "code_refusals": []
+   },
+   "DEV-91": {
+    "rounds": 1,
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 2"
+    ],
+    "code_refusals": [
+     "minimal-necessity fail: goal met by DEV-90 (S26)"
+    ]
+   },
+   "DEV-92": {
+    "rounds": 1,
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1"
+    ],
+    "code_refusals": [
+     "review by FO read; Codex endpoint 404 (S25)"
+    ]
+   }
+  },
+  "candidate_correction": "Pin WITHOUT_IT_REMOVED_VARIANT to a single altered read path per SURFACE line; DEV-91's chained-removal shape (S24) needs two variants, not one."
+ },
+ "ship_debrief": {
+  "defaults_decisions": [],
+  "defects_disposition": [
+   {
+    "id": "S23",
+    "disposition": "DEV-93"
+   },
+   {
+    "id": "S24",
+    "disposition": "known station defect S24, fixed independently in #377 after this batch closed; accepted without a fix ticket on this batch's own receipt"
+   },
+   {
+    "id": "S25",
+    "disposition": "Codex CLI models endpoint 404 on the day; FO fallback-read the diff per defaults.empty_reviewer, no further fix needed on this batch"
+   },
+   {
+    "id": "S26",
+    "disposition": "seam later closed in #376 (plan-flow refuses a by-product Issue at station 4); this batch's occurrence needs no separate fix"
+   }
+  ],
+  "minutes_per_station": {
+   "dispatch": 3,
+   "build": 11,
+   "verify": 20,
+   "review": 7
+  },
+  "candidate_correction": "Require an approval fixture to carry `defaults` before it is reused past the PR that introduced the requirement (#372)."
+ },
+ "close_sha256": "ac837d2bf3856f6eb6e84159ad8eeb451f66227d6bf1b1f9328130c7c385a4d7"
+}
