@@ -55,12 +55,12 @@ work_profile:
     architecture: [Separate accepted authority from reports, preserve predecessor and rejection evidence, keep authorization verification with its existing owner]
     implementation: [Reuse the accepted six-file candidate, repair only concrete in-scope findings, preserve legacy exact-byte checks]
     testing: [Fresh independent exact-candidate validation, public CLI positive and refusal cases, real dispatch artifact handoff, without-it evidence, repository pre-merge checks]
-  scope_boundary: Only kc-dev-flow/scripts/profile-contract-loader.py, kc-dev-flow/scripts/profile-contract-loader.test.py, kc-dev-flow/skills/continue-dev-flow/SKILL.md, kc-dev-flow/MIGRATION.md, kc-dev-flow/contract-manifest.json, and scripts/kc-dev-flow-contract-test.py; no legacy task migration or installation change.
+  scope_boundary: Only kc-dev-flow/scripts/profile-contract-loader.py, kc-dev-flow/scripts/profile-contract-loader.test.py, kc-dev-flow/skills/continue-dev-flow/SKILL.md, kc-dev-flow/MIGRATION.md, kc-dev-flow/contract-manifest.json, and scripts/kc-dev-flow-contract-test.py, plus ARCHITECTURE.md solely for the Captain-approved same-stage refusal clause clarification recorded below; no legacy task migration or installation change.
   recovery_failure: Valid report updates and explicitly authorized validation correction are refused before the existing dispatch handoff.
   recovery_falsifier: python kc-dev-flow/scripts/profile-contract-loader.test.py and python scripts/kc-dev-flow-contract-test.py must accept the in-scope continuations and refuse authority drift; an accepted unauthorized change falsifies recovery.
   recovery_rollback: Before release or adoption, revert only the repair commit if validation fails; preserve legacy pins and snapshots. After consumer adoption, require a separately reviewed compatibility rollback rather than rewriting pins.
   review_risks: [behavior, contract-schema, state-concurrency, security-privacy, runtime-platform, delivery]
-  promote_when: [Any need for legacy migration, shared-state rewrites, new authentication infrastructure, a new workflow, or changes outside the six-file repair]
+  promote_when: [Any need for legacy migration, shared-state rewrites, new authentication infrastructure, a new workflow, or changes outside the six-file repair and the one approved ARCHITECTURE.md clause clarification]
   decision:
     authority: Kent
     at: 2026-09-06T14:20:45Z
@@ -114,7 +114,8 @@ https://github.com/iamcxa/kc-claude-plugins/issues/382#issuecomment-5559766497
 Stop and return to Kent if the accepted outcome or non-goals change, any
 criterion requires legacy migration or shared-state rewrites, authentication or
 ancestry infrastructure becomes necessary, a new workflow is proposed, or the
-repair must expand beyond the six-file boundary. No automatic full-route change.
+repair must expand beyond the six-file boundary except the one Captain-approved
+ARCHITECTURE.md clause clarification recorded below. No automatic full-route change.
 
 ## Existing candidate and evidence
 
@@ -183,3 +184,25 @@ Delivery caveat from the First Officer: open PR #321 shares five files; it was n
 ### Summary
 
 The six-file source candidate is preserved, signed off, and freshly exercised, including an actual without-it failure. Implementation remains scope-blocked until Kent decides the one-paragraph ARCHITECTURE.md delta; independent validation and build observation remain pending. No code push, PR creation, package upgrade, legacy migration, merge, release, issue close, or stage advancement occurred.
+
+## Captain scope clarification (2026-09-06)
+
+Kent replied exactly "確認" to the First Officer's narrowed proposal to clarify
+only the original ARCHITECTURE.md same-stage refusal sentence. This records the
+actual Captain decision routed to the retained implementation worker, not a new
+stage or an approval inferred from the earlier full-paragraph proposal.
+
+The authorized additional file is ARCHITECTURE.md, solely to replace
+"Same-stage drift fails closed" with "Same-stage drift in accepted authority or
+pinned contracts fails closed; ordinary report updates do not change that
+authority". Preserve the remaining paragraph except the punctuation needed to
+join this clause. The earlier full replacement paragraph was narrowed and was
+not approved; do not add its legacy/version details or correction-flow prose.
+
+The accepted six-file source outcome, all five acceptance criteria, non-goals,
+Production recovery route, risk selection, original base, and code commit
+587ca1ef07b7e2edcc1eec89d34b89305e1800bf are unchanged. This is the sole exception
+to the six-file-only edit boundary, not permission to create new architecture,
+behavior, or acceptance criteria. Preserve existing pins, installed packages,
+legacy task state, and prior reports; no migration, state reset, stage change,
+validation approval, PR action, merge, release, or issue-close authority is added.
