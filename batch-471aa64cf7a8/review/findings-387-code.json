@@ -1,0 +1,3 @@
+[
+ {"file":"kc-ship-flow/scripts/prose-placement-check.py","line":109,"category":"correctness","quote":"        if not target.is_file():","summary":"A placed row is accepted once the destination file exists; the checker never verifies the segment's hash marker or text is in that file (verified: repointing a row to an unrelated file still PLACED, exit 0).","failure_scenario":"A sentence silently dropped from every doc keeps the gate green."}
+]

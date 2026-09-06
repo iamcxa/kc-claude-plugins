@@ -1,0 +1,61 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#387",
+ "head_r1": "3d5f5c2c7ecd4204762618b2e34660c577d706b5",
+ "findings": [
+  {
+   "file": "kc-ship-flow/scripts/prose-placement-check.py",
+   "line": 109,
+   "category": "correctness",
+   "quote": "        if not target.is_file():",
+   "summary": "A placed row is accepted once the destination file exists; the checker never verifies the segment's hash marker or text is in that file (verified: repointing a row to an unrelated file still PLACED, exit 0).",
+   "failure_scenario": "A sentence silently dropped from every doc keeps the gate green.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/schemas/evidence-block.md",
+   "line": 3,
+   "category": "correctness",
+   "quote": "A worker's Evidence block defines `CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, and",
+   "summary": "Field list omits SELF_CHECK, which open-pr.sh requires.",
+   "failure_scenario": "A worker writing from the grammar omits SELF_CHECK and open-pr.sh refuses.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/schemas/evidence-block.md",
+   "line": 6,
+   "category": "correctness",
+   "quote": "`WITHOUT_IT_COMMAND` is one self-contained shell line: it references no file outside the candidate",
+   "summary": "Out-of-tree rule attributed to without-it.sh; it lives in accept-evidence.sh.",
+   "failure_scenario": "Reader concludes the rule is unenforced.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/schemas/evidence-block.md",
+   "line": 8,
+   "category": "correctness",
+   "quote": "First Officer runs it verbatim, unchanged, in a worktree with no secrets.",
+   "summary": "'no secrets' is an absolute; without-it.sh strips seven named variables only.",
+   "failure_scenario": "A differently named secret survives the run.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/references/stations/fenced-dispatch.md",
+   "line": 15,
+   "category": "correctness",
+   "quote": "`adopt refused` (exit 3) when `intent.sh adopt` itself is fenced.",
+   "summary": "exit 3 fires on any non-zero intent.sh adopt (fenced / already adopted / project mismatch).",
+   "failure_scenario": "Operator debugs holder contention on a project mismatch.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/references/stations/intent.md",
+   "line": 13,
+   "category": "style",
+   "quote": "its project id does not match the one committed. In no case does a new holder create a workspace for",
+   "summary": "Absolute names no check; basis is intent.sh commit's duplicate-intent refusal (exit 4).",
+   "failure_scenario": "A relaxed commit path silently invalidates the claim.",
+   "status": "repair round 1 sent"
+  }
+ ]
+}
