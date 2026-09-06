@@ -371,3 +371,16 @@ No real paid admission/arm/adjudication, product branch push or publication, ver
 The prior UNAPPROVED sizing addendum, both historical stage reports, rejected validation evidence and historical stage pin remain unchanged. The 6,600 stop is the recorded 5,428 candidate plus 1,001 upper added-line estimate and 171 named integration allowance; no deletion credit is assumed. The previous RoboRev UNKNOWN(stale), zero-request observation is retained without retry. Only the First Officer controls correction-round lifecycle and the retained independent validator's next review.
 
 Historical shape estimates, pending context records and local timing records are preserved verbatim in [implementation-record-relocation.md](implementation-record-relocation.md) before their removal from retained product documentation. This is record placement only, not a status, pin, acceptance, scope or limit change.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Record and re-read the Captain-approved total-limit revision before product edits, then repair all six confirmed findings groups through the existing owners without expanding executable scope or authority.
+  Approval state `d60869b0`; all six existing-owner repairs committed as `9bb526170156a44cff90e2a2fab9eeab081e0eb1`; [per-group evidence and necessity mapping](correction-9bb52617.md).
+- DONE: Prove each repair with the named falsifier and relevant regressions, including complete failed/unknown-cost records, isolated synthetic credential tests, correct inline projection and actual document rendering; preserve all known unresolved evidence.
+  Exact sampled command, malformed CLI, all-failed/retry receipts, total reservation/unknown refusal, synthetic push refusal, real HIGH inline and rehydrate-mismatch cases exercised; generated table parity and [actual runtime-usage render](runtime-usage-render.svg) completed. Split 21 + 1 + 1 protocol coverage and 83-case ablation then affected Pilot RED→GREEN are reported without inventing one final full run.
+- DONE: Commit one clean corrected exact-revision candidate within 6600 total changed lines, 20 files and 1800 focused lines; durably record the correction evidence and return to the retained independent validator without self-advancing or paid blind runs.
+  Candidate `9bb52617`: 6,431 total / 20 files / 1,495 focused (1,502 including corpus), product worktree clean after commit. This state report is handed back through the First Officer; it is not a validation result or a status/pin update.
+
+### Summary
+
+Six rejected implementation boundaries were repaired through the accepted owners, with explicit failed-attempt cost retention and no new lifecycle surface. Historical records were preserved before relocation; the actual newly added runtime-usage diagram was rendered, withdrawing the earlier mistaken two-file source-disproof. Paid quality/speed and hosted CI cost remain unmeasured; prior UNKNOWN(stale) exit observation and rejected validation are preserved, and the First Officer owns the retained independent validation and neutral round-record boundary.
