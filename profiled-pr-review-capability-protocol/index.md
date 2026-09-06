@@ -523,3 +523,16 @@ This accepts bounded cloud-workspace feasibility validation instead of Docker pr
 The current dispatched step stops at preflight: record/sync/reread this approval and prepare only synthetic inputs, with no cloud creation, messaging, execution or model session. A terminal filesystem proof cannot certify agent-specific RunLocalCommand/MCP restrictions; missing tool-inventory evidence remains unverified. All cloud-returned bytes are untrusted; authoritative elapsed time and canary bytes stay with the local controller outside synced workspaces. Session cancel or archive status alone cannot prove descendant termination.
 
 Product remains unchanged at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-pr-review-capability-protocol-pilot`, cumulative base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`; actual counts 6,431 / 20 / 1,939 and limits 6,600 / 20 / 1,800 remain unchanged. Preserve stage/status/pin/review round and native, Safehouse and container reports including failures. All five original repair groups, focused reduction, F14 sequence and real quality/speed evidence remain pending. The supported state prerequisite must pass, then this approval is committed/synced and reread before synthetic preparation.
+
+## Stage Report: implementation (cycle 8)
+
+- DONE: Record and reread the exact Captain-approved cloud-workspace feasibility scope, preserving product, limits, rejected stage, historical pin and earlier evidence.
+  Supported prerequisite exited 0; approval `87940eae3dae61a041949208a7d6e3360fd4f6f1` was committed/synced/reread before preparing synthetic inputs. No product/status/pin change.
+- DONE: Resolve the real cloud execution, permission and external-measurement surfaces without starting a model or changing settings; return one bounded executable probe plan or a concrete preflight blocker.
+  [Preflight report](cloud-preflight/report.md) records FO's native-UI startup failure and no terminal executor in public API/MCP; supported no-model execution, effective agent permissions and terminal/workspace termination evidence are unavailable/unverified. This is a concrete execution preflight blocker, not CLOUD_ISOLATION_FAILED. The minimum model-session alternative has no demonstrated dollar cap and was not launched.
+- DONE: Prepare only owned synthetic proof inputs and report the ready-to-run commands, exact targets, lifecycle cleanup and cost/authorization limits to FO before any cloud creation or execution.
+  One Bash/Python payload syntax-checks without execution; exact local canary hash and absent-current target are recorded outside sync. Normal/exit-7/5-second external-timeout commands are conditional on a verified terminal and exact owned workspace; no unsupported API, cloud write or model was used. External timing/canary authority and unresolved descendant/agent-tool evidence are explicit.
+
+### Summary
+
+Cloud preflight and synthetic input preparation are complete, but no cloud isolation run or model request occurred. Product remains clean at `9bb52617`, counts and limits unchanged; no cloud-execution-ready claim, full implementation completion or workflow advancement is made. FO receives the supported-execution and billing/permission gaps before any launch.
