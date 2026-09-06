@@ -1,6 +1,6 @@
 {
   "name": "kc-ship-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
   "author": {
     "name": "Kent Chen",
