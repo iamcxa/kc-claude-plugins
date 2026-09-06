@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Idempotent UAT-ready ping. Usage: notify.sh <channel> <batch-id> <doc-path> --dry-run --state-dir <dir>
 #
-# Sends exactly one message per batch id: the message id is deterministic
-# (sha256 of the batch id), and a second call for the same batch id and
-# state dir finds the existing marker and skips instead of writing a second
-# message. --dry-run is mandatory -- this script has no real-send path; a
-# real Slack call is the First Officer's own action, not this script's.
+# One marker file per (batch id, state dir) claims a dry-run send; a second
+# dry-run call for the same batch id and state dir finds that marker and
+# skips. The marker records whether it was a dry run. This script has no
+# real-send path -- a real Slack call is the First Officer's own action, not
+# this script's -- so a non-dry-run call that finds a dry-run-only marker
+# refuses instead of treating that marker as proof a real message was sent.
+# The `mkdir` lock below is the enforcement point for "one marker write per
+# batch id": two racing dry-run calls cannot both win the mkdir.
 set -euo pipefail
 ts() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
 die() { echo "$(ts) notify: $*" >&2; exit 2; }
@@ -21,13 +24,30 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-[ "$dry_run" -eq 1 ] || die "--dry-run is required; this script has no real-send path"
 [ -n "$state_dir" ] || die "--state-dir is required"
 [ -f "$doc_path" ] || die "doc-path not found: $doc_path"
 
 mkdir -p "$state_dir"
 message_id="msg-$(printf '%s' "$batch_id" | sha256sum | cut -c1-12)"
 marker="$state_dir/sent-$batch_id.json"
+lock_dir="$state_dir/sent-$batch_id.lock"
+
+if [ -f "$marker" ]; then
+  existing_id=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['message_id'])" "$marker")
+  existing_dry_run=$(python3 -c "import json,sys; print('1' if json.load(open(sys.argv[1])).get('dry_run') else '0')" "$marker")
+  if [ "$dry_run" -eq 0 ] && [ "$existing_dry_run" -eq 1 ]; then
+    die "refusing: existing marker for batch=$batch_id was dry_run; no real-send path exists to fulfill a non-dry-run call"
+  fi
+  echo "$(ts) notify: DRY-RUN skip (already sent) batch=$batch_id message_id=$existing_id"
+  exit 0
+fi
+
+[ "$dry_run" -eq 1 ] || die "--dry-run is required; this script has no real-send path"
+
+if ! mkdir "$lock_dir" 2>/dev/null; then
+  die "concurrent notify in progress for batch=$batch_id"
+fi
+trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
 
 if [ -f "$marker" ]; then
   existing_id=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['message_id'])" "$marker")

@@ -2078,6 +2078,10 @@ require(
 surface_map_check = ROOT / "kc-dev-flow/scripts/surface-map-check.py"
 run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-check compile")
 
+if not require_ablation_only:
+    run([sys.executable, "scripts/ship-flow/uat-doc.test.py"], "ship-flow UAT doc")
+    run(["bash", "scripts/ship-flow/notify.test.sh"], "ship-flow notify")
+
 surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
 surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
 surface_map_round0_evidence = surface_map_fixtures / "dev-66-round0-evidence.md"
@@ -2331,5 +2335,91 @@ with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
         "PASS L" in lint_offline.stdout,
         f"plan-lint offline did not emit rules: {lint_offline.stdout}",
     )
+
+e2e_gate = ROOT / "scripts/ship-flow/e2e-gate.py"
+e2e_gate_fixtures = ROOT / "scripts/fixtures/ship-flow/e2e-gate"
+
+
+def run_e2e_gate(
+    plan_fixture: str,
+    close_fixture: str,
+    *,
+    offline: bool = False,
+    close_receipt_override: dict | None = None,
+) -> subprocess.CompletedProcess:
+    env = os.environ.copy()
+    if offline:
+        env["https_proxy"] = "http://127.0.0.1:9"
+        env["http_proxy"] = "http://127.0.0.1:9"
+    close_path = e2e_gate_fixtures / close_fixture
+    override_path: Path | None = None
+    if close_receipt_override is not None:
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as handle:
+            json.dump(close_receipt_override, handle)
+            override_path = Path(handle.name)
+        close_path = override_path
+    try:
+        return subprocess.run(
+            [sys.executable, str(e2e_gate), str(e2e_gate_fixtures / plan_fixture), str(close_path)],
+            cwd=ROOT, text=True, capture_output=True, env=env, timeout=30,
+        )
+    finally:
+        if override_path is not None:
+            override_path.unlink(missing_ok=True)
+
+
+# The committed ac2 fixture carries a placeholder candidate (a real SHA
+# would go unreachable under a shallow CI checkout); this is the only
+# gate scenario that runs e2e-cli.sh, so it needs a commit that both
+# resolves and contains the fixtures its flow's own steps reference --
+# this checkout's own HEAD always satisfies both.
+current_head = subprocess.run(
+    ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, capture_output=True, check=True,
+).stdout.strip()
+ac2_close_receipt = json.loads((e2e_gate_fixtures / "close-receipt.ac2.json").read_text(encoding="utf-8"))
+ac2_issue_key = next(iter(ac2_close_receipt["issues"]))
+ac2_close_receipt["issues"][ac2_issue_key]["candidate"] = current_head
+
+e2e_gate_ac2 = run_e2e_gate(
+    "plan-receipt.ac2.json", "close-receipt.ac2.json", offline=True, close_receipt_override=ac2_close_receipt,
+)
+require(
+    e2e_gate_ac2.returncode == 0 and re.search(r"CLI e2e:.*at [0-9a-f]{40},", e2e_gate_ac2.stdout),
+    f"e2e-gate ac2 (run branch) did not exit 0 with a resolved-SHA report line: "
+    f"exit {e2e_gate_ac2.returncode}, stdout {e2e_gate_ac2.stdout!r}, stderr {e2e_gate_ac2.stderr!r}",
+)
+
+e2e_gate_ac3 = run_e2e_gate("plan-receipt.ac3.json", "close-receipt.ac3.json")
+require(
+    e2e_gate_ac3.returncode == 0 and "e2e: not applicable" in e2e_gate_ac3.stdout,
+    f"e2e-gate ac3 (not-applicable branch) failed: exit {e2e_gate_ac3.returncode}, stdout {e2e_gate_ac3.stdout!r}",
+)
+
+e2e_gate_ac4 = run_e2e_gate("plan-receipt.ac4.json", "close-receipt.ac4.json")
+require(
+    e2e_gate_ac4.returncode == 1,
+    f"e2e-gate ac4 (no milestone named) should exit 1: exit {e2e_gate_ac4.returncode}, stderr {e2e_gate_ac4.stderr!r}",
+)
+
+e2e_gate_dangling = run_e2e_gate("plan-receipt.dangling-milestone.json", "close-receipt.dangling-milestone.json")
+require(
+    e2e_gate_dangling.returncode == 2,
+    f"e2e-gate dangling milestone id should exit 2: exit {e2e_gate_dangling.returncode}, stderr {e2e_gate_dangling.stderr!r}",
+)
+
+e2e_gate_empty_slug = run_e2e_gate("plan-receipt.empty-slug.json", "close-receipt.empty-slug.json")
+require(
+    e2e_gate_empty_slug.returncode == 2,
+    f"e2e-gate punctuation-only milestone name should exit 2 (empty slug): "
+    f"exit {e2e_gate_empty_slug.returncode}, stderr {e2e_gate_empty_slug.stderr!r}",
+)
+
+e2e_gate_chinese = run_e2e_gate("plan-receipt.chinese-milestone.json", "close-receipt.chinese-milestone.json")
+require(
+    e2e_gate_chinese.returncode == 0
+    and "docs/ship-flow/flows/从派工到一条-slack-消息.yaml" in e2e_gate_chinese.stdout,
+    f"e2e-gate Chinese milestone name should derive its Unicode flow path: "
+    f"exit {e2e_gate_chinese.returncode}, stdout {e2e_gate_chinese.stdout!r}",
+)
 
 print("kc-dev-flow contract: PASS")
