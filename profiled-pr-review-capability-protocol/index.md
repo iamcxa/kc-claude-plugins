@@ -430,3 +430,39 @@ The complete focused denominator is 375 schema + 96 catalog + 1,024 protocol tes
 This authorizes one retained owner to reduce actual duplicate test/setup structure and repair the five existing-owner groups in the latest dispatch: adapter terminal/provider/audit closure; terminal telemetry/pinned-arm evaluation; runner-owned measurement integrity; blind/inline projection; existing unit-kind and duplicate-phase diagnostics. Outcome, non-goals, default-off executable Lite, zero expansion reserve and existing posting authority remain unchanged. A sufficient repair needing a new surface, authority or lifecycle returns to the First Officer before implementation. F5 outer retry is not assigned; F13 remains conditional; F14 requires honest historical sequence evidence or an explicitly unmet precondition.
 
 Rejected candidate `9bb526170156a44cff90e2a2fab9eeab081e0eb1`, latest rejection state `f7f34d39c5caf1ad0a0ba4456295627721d51863`, earlier reports, validation status and stage pin are preserved. No paid blind work, self-review, publication, branch push, workflow tooling, gate/status/pin change or new observation is authorized. The prior one-round review-format deferral is historical and is not expanded by this decision. This decision is committed/synced and reread before product edits.
+
+## Stage Report: implementation (cycle 4)
+
+- FAILED: Record and reread the Captain-approved complete focused-test counting scope, then reduce duplication without weakening any accepted behavior or falsifier until the existing 6600 total / 20 files / 1800 complete focused-line stops are met.
+  Approval was committed/synced and reread at `73b108d5fe17cd4c3e5471491f0e9aee98e49d10` before any product edit. Reduction remains NOT DONE: complete focused count is still 1,939, 139 over 1,800; total remains 6,431 / 20 files. No deletion credit or green count is claimed.
+- FAILED: Repair the five confirmed existing-owner defect groups using structural fixes and RED-to-Green falsifiers, with special proof that child-written measurement records cannot be accepted and post-identity failures preserve identity and terminal meaning.
+  Measurement-integrity diagnostic reproduced a missing protection premise; the First Officer explicitly stopped product work before a partial remedy. All five repair groups remain unimplemented; exact blocker and observed evidence follow.
+- FAILED: Commit one clean exact-revision candidate with complete scope counts, required regressions, retained-document/context evidence, and every unresolved or conditional finding preserved; return to FO without self-review, paid blind work, publication, or gate changes.
+  No corrected candidate exists. Product is unchanged and clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1`; this is a state-only stop report. Prior render, raw reviews, conditional/disproved findings, status and stage pin remain untouched.
+
+### Exact missing premise and new reproduction
+
+The accepted outcome requires trustworthy runner-owned measurement, but the existing process and filesystem permissions do not isolate the model's Bash child from existing experiment authority files. `pilot_join` in `review-ablation-core.py` reads manifests/receipts from that same writable tree and checks closed schemas and recomputable hashes; there is no independently trusted authentication root. The existing Git credential isolation does not protect local measurement files.
+
+One new synthetic local diagnostic was actually run with activated Python 3.13.2 against unchanged candidate bytes (process exit 0, 0.499 s; no network or provider). It reused only the existing valid ten-record fixture setup from `review-ablation.test.sh`, created a temporary experiment, set `1-control/receipt.json` to mode 0400, and launched a separate Bash child from `2-treatment`. That child invoked Python to change the earlier receipt back to mode 0600 and set its `wallclock_ms` to 1; the parent then called the real `pilot_join`. Observed output:
+
+```json
+{"child_cwd_unit":"2-treatment","modified_prior_unit":"1-control","initial_mode":"0400","child_exit":0,"real_join_count":10,"accepted_wallclock_ms":1,"network":false}
+```
+
+The child operation was `p.chmod(0o600); v=json.loads(p.read_text()); v["wallclock_ms"]=1; p.write_text(json.dumps(v))`, with the exact temporary prior-receipt path passed as an argument. The fixture and child were disposable, and product/state authority files were never child targets. This supplements the preserved independent F6 reproduction where actual finalization raises FileExistsError on a preplant and real join accepts it; it does not replace or rewrite that evidence.
+
+### Cheaper remedies and boundaries
+
+- Moving current child output to a subdirectory or making receipts read-only is insufficient: the new diagnostic crosses unit directories and reverses mode 0400 under the same UID. Neither pathname placement nor same-owner chmod establishes a write boundary.
+- Replacing only the current unit's receipt after the child exits would not protect an earlier unit: the observed mutation targets `1-control` while the child runs in `2-treatment`. Catching FileExistsError alone would fix a diagnostic while leaving forged data eligible for join.
+- Extra unkeyed hashes or a seal in the same child-writable tree supply consistency, not an independent producer identity; the verifier and all inputs remain reconstructible by the child. No such partial repair was implemented.
+- A parent-memory snapshot, full-lifetime advisory lock and parent-only final write were considered, not implemented or certified. They would require limiting the child threat to the runner's controlled lifetime. Existing `killpg` is not evidence that arbitrary Bash cannot leave a writer outside that process group; no detached-process exploit was run and no stronger guarantee is claimed. The First Officer explicitly rejected silently narrowing that premise.
+
+A sufficient solution needs a protection premise not currently present: an enforced write boundary for owner measurements, or an independent trusted verification root that the child cannot rewrite. Introducing that premise may change the accepted authority/surface allocation and is outside this correction's explicit no-sandbox/service/ledger expansion boundary. The First Officer is taking a bounded route revision to the Captain; no implementation, new key store, sandbox, service, workflow or ledger was started.
+
+### Remaining work and summary
+
+Paused, not complete: equivalent focused-test reduction; adapter terminal/provider/audit closure (F1/F2/F3/F9); treatment terminal telemetry and pinned-arm evaluation (F4/F7); measurement integrity (F6); blind/inline projection (F8/F12); missing-input/re-entry diagnostics (F10/F11); and their actual regressions. Existing CI sequence issue F14 remains unresolved; no timing history or Captain-owned precondition was rewritten. F5 outer retry remains unassigned/disproved, F13 remains conditional, and all other unverified questions retain their original disposition.
+
+Only the counting approval and this evidence report were changed in task state. No product edits, new tests in product, paid review/model, browser probing, new render, RoboRev retry, publication, gate/status/pin or branch changes occurred. The prior stage's passing tests are historical evidence, not proof of these still-open repairs. Product work stops pending the Captain-owned route decision; the retained worker remains addressable.
