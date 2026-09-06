@@ -33,3 +33,5 @@ The first cut's two layer-1 workers hit the shared session limit before any push
 - 2026-09-06T03:07:34Z — **DEV-104 r2 CI fix accepted** (`55d06579`, station ACCEPT with WARN at main 4300eee6): fork-syntax refusal now precedes the SHA lookup; fixtures use a synthetic SHA. #378 fast-forwarded; CI is the shallow-clone authority (FO shallow run in progress). DEV-104 repair budget spent (2 of 2).
 
 - 2026-09-06T03:08:36Z — #378 CI green on `55d06579` (multi-profile, version parity, GitGuardian). DEV-104 is UAT-ready pending the batch document.
+
+- 2026-09-06T03:11:52Z — **DEV-105 r2 returned with a BLOCKER** (`afc2cd21`, all 7 findings fixed, station ACCEPT): the flow's step 1 runs `accept-evidence.sh` on the recorded DEV-90 block, whose SHA is absent in a depth-1 CI clone, so the newly wired contract test fails in CI. Default applied (FO ruling, not a Captain question): keep the real block shape, template its SHAs at test time from the checkout — the same technique already used for the ac2 candidate; no CI-depth change (cost) and no synthetic block (AC-1 intent). Sent as the last repair round on the same branch.
