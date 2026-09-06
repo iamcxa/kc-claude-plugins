@@ -7,3 +7,4 @@ Runtime: local subagents in git worktrees (Captain present), per the 2026-09-06 
 ## Decisions made under `defaults`
 
 - 2026-09-06T08:55:24Z — DEV-122 accepted (station of record d75b92da, ACCEPT with AC-3 WARN: variant restores only plan-lint.py, fixtures untouched — partial by design); Draft PR #383 opened by open-pr.sh (`pr_creation=batch_approve_draft`). Review station next.
+- 2026-09-06T09:06:14Z — **review station on #383 (DEV-122): disposition `listed`** (4 findings, all `test-coverage`, none in `findings_outside_brief` block set). Two reviewers (code-reviewer, silent-failure-hunter, Sonnet) agree on one substantive gap: L2 passes when nothing is admitted; plus the dev89 L9 assertion is now vacuous. Both filed as a Backlog ticket under the lint-maintenance milestone rather than a repair round (the Brief said "fails only when admitted Issues span more than one cycle", so this is a Brief gap, not a worker defect). #383 is ready for the Captain's merge.
