@@ -57,7 +57,7 @@
    },
    "cost_usd_imputed": null,
    "residuals": [
-    "Slack half not built: planning delta — DEV-113",
+    "UAT delivery via Subspace (/r, Apple Terminal, run.2103079855, no annotations); Slack retired by the Captain 2026-09-06 — DEV-113 retargeted",
     "fixtures copy two real batch records into main (retention: Captain's call)"
    ]
   },
@@ -328,5 +328,5 @@
    "verify": 25
   }
  },
- "close_sha256": "c32729db7bd353f0e00cc6396b02a4a19eebc455cd5d594297e9f6ed7cd17e6e"
+ "close_sha256": "0f36be403fa1e48898ef1284a1cd0f6e5df36fb885f5ebf0496f0a521443bcba"
 }
