@@ -50,3 +50,5 @@ The first cut's two layer-1 workers hit the shared session limit before any push
 - 2026-09-06T03:36:10Z — #381 CI green on `9282343c`.
 
 - 2026-09-06T03:39:02Z — UAT document generated from the record (84 lines): close receipt draft validates (`CLOSE OK`); all four layers carry PR, candidate, base. Observation for the document's residuals: `base_label()` still prints `(main)` for a base that is a sibling candidate or the FO's merge (it only distinguishes "not recorded"); the DEV-106 r2 fix covered missing bases, not non-main ones. Listed against DEV-106, not blocking.
+
+- 2026-09-06T03:43:05Z — **review station on #381 (DEV-107): disposition `block`.** 9 findings; one `security` (whitespace dispositions a defect and the close gate says OK); the writers produce plausible zeros from missing inputs, pick a refused round over the accepted one, and mark "overturned" by a substring. Default applied: repair round 1 of 2. The close receipt draft for this batch was FO-edited by hand and does not depend on the writers' defects.

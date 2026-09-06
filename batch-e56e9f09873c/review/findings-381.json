@@ -1,0 +1,70 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 381,
+ "head": "9282343c43afada5e50ff2a282a7b36102d3cfc8",
+ "findings": [
+  {
+   "category": "security",
+   "summary": "whitespace-only accepted_residual dispositions a defect; CLOSE OK",
+   "location": "docs/plan-flow/schema/validate-receipt.py:68",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "jsonschema-absent path: new debrief checks are presence-only",
+   "location": "docs/plan-flow/schema/validate-receipt.py:70",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "writers default missing inputs to zeros silently; code_refusals copies residuals (S35)",
+   "location": "scripts/ship-flow/dev-debrief.py:73",
+   "severity": "HIGH",
+   "confidence": 8
+  },
+  {
+   "category": "correctness",
+   "summary": "sorted(glob)[0] picks a refused round over the accepted one",
+   "location": "scripts/ship-flow/dev-debrief.py:38",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "overturned = substring 'correction'; bullet parser drops * and wrapped lines",
+   "location": "scripts/ship-flow/ship-debrief.py:43",
+   "severity": "HIGH",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "debriefs not in schema required; disposition/decision lack minLength",
+   "location": "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json:8",
+   "severity": "MEDIUM",
+   "confidence": 9
+  },
+  {
+   "category": "correctness",
+   "summary": "per_issue and defects_disposition completeness never checked",
+   "location": "docs/plan-flow/schema/validate-receipt.py:74",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "test-coverage",
+   "summary": "refuse step satisfied by unrelated causes; negative fixtures and writers unwired",
+   "location": "docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml:22",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "docs",
+   "summary": "'accept-station refusals' never captured; exit-code and overturn docstrings overclaim",
+   "location": "scripts/ship-flow/dev-debrief.py:7",
+   "severity": "MEDIUM",
+   "confidence": 7
+  }
+ ]
+}
