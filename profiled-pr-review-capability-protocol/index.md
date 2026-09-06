@@ -536,3 +536,13 @@ Product remains unchanged at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1`
 ### Summary
 
 Cloud preflight and synthetic input preparation are complete, but no cloud isolation run or model request occurred. Product remains clean at `9bb52617`, counts and limits unchanged; no cloud-execution-ready claim, full implementation completion or workflow advancement is made. FO receives the supported-execution and billing/permission gaps before any launch.
+
+## Accepted one-off cloud agent synthetic attempt
+
+Captain replied `確認` to the exact question: `是否批准一次 Claude Opus 5、中等推理、最多 5 分鐘、無重試的合成測試？費用尚未量測，不含正式 PR 盲測。` The preceding explanation explicitly stated that the Conductor API has no hard-dollar cap. This is one bounded feasibility/model-usage exception, not a real-PR blind budget, known per-PR cost, zero-charge promise or new dollar ceiling.
+
+Execute at most one new workspace, its initial session and one initial user message in approved project `8f58f9d4-cb71-443a-b64d-c2a225248c7b`, specifying `claude` / `opus-5-1m` / `medium`, no fast mode. No follow-up prompt, retry, fallback provider, remote subagent or real repository review. Setup is separately bounded at 180 seconds; message submission begins a 300-second externally monitored model-attempt window, including queue/tools, with cancellation control-call margin. Requested stop and actual observed stop remain distinct; local deadlines cannot guarantee a remote hard stop.
+
+Local controller/canary/monitor/raw timing remain outside all synced workspaces. Only exact synthetic attack targets and fixture bytes may enter the prompt. Stop on a concrete local-command bridge or measurement-write falsifier; absent trusted agent-tool/credential inventory remains unverified. Preserve raw evidence, cancel if needed and recoverably archive only the exact owned workspace after identity readback on every exit; archive state is not independent descendant termination proof. No secrets/settings/install/product/branch/PR/stage/status/pin/gate/review-round change is permitted.
+
+Product stays clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-pr-review-capability-protocol-pilot`; cumulative base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, actual 6,431 / 20 / 1,939 and limits 6,600 / 20 / 1,800 are unchanged. Earlier proofs/failures and all five repair groups, reduction, F14 and real quality/speed evidence remain pending. This approval is supported-committed/synced/reread before cloud creation or any model message.
