@@ -1,0 +1,25 @@
+name: contract-test-journey
+description: |
+  Shallow-safe CLI e2e journey for kc-dev-flow-contract-test.py's own ac2
+  (run-branch) scenario: both steps only read committed fixtures -- never
+  git history beyond the checked-out tree, never the network -- so a
+  depth-1 CI checkout can run them. The production journey lives in
+  from-dispatch-to-one-slack-message.yaml and runs only in the First
+  Officer's full clone, per its own recorded-evidence-block.txt fixture
+  needing real history.
+steps:
+  - id: not-applicable-ac3
+    action: "Execute external"
+    description: "e2e-gate records 'e2e: not applicable' for a milestone with no flow file"
+    execute:
+      cli:
+        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.ac3.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac3.json"
+          expect: "exit code 0"
+
+  - id: not-applicable-chinese-milestone
+    action: "Execute external"
+    description: "e2e-gate derives a Unicode flow path and records 'e2e: not applicable' for it"
+    execute:
+      cli:
+        - run: "python3 scripts/ship-flow/e2e-gate.py scripts/fixtures/ship-flow/e2e-gate/plan-receipt.chinese-milestone.json scripts/fixtures/ship-flow/e2e-gate/close-receipt.chinese-milestone.json"
+          expect: "exit code 0"

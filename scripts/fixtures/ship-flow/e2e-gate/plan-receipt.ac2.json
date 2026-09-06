@@ -1,5 +1,5 @@
 {
   "dispatch_order": ["DEV-000"],
-  "milestones": [{"id": "m1", "name": "From dispatch to one Slack message"}],
+  "milestones": [{"id": "m1", "name": "Contract test journey"}],
   "issues": {"DEV-000": {"milestone": "m1"}}
 }
