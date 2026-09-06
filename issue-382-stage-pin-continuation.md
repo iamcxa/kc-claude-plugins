@@ -215,3 +215,54 @@ validation approval, PR action, merge, release, or issue-close authority is adde
 - State: claimed
 - Candidate: `3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d`; base: `dc4c8b13c0d86d81e4d79679d8ccb735117a9e52`.
 - Canonical input: dispatched code worktree `.context/implementation-382/roborev-final-input.json`; Production observe-only, Codex `gpt-5.6-terra`, medium reasoning/severity, panel none, 1200 seconds, one request / at most one changed-tip confirmation.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Retain the approved six-file continuation candidate, bind a clean code commit to AC-1 through AC-5, and map each retained change to its obligation without changing installed packages or legacy state.
+  Preserved signed-off code `587ca1ef07b7e2edcc1eec89d34b89305e1800bf`; final candidate `3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d` adds the separately approved ARCHITECTURE.md clause only. Base remains `dc4c8b13c0d86d81e4d79679d8ccb735117a9e52`.
+- DONE: Prove the correction/report journey and refusal boundaries with actual checks and a without-it failure, preserve exact commands/results and candidate identity, and apply the selected Production build obligations.
+  Prior fresh loader/full-contract/marketplace runs and the actual removed-loader failure remain bound to the unchanged six-file tree. Fresh docs word-diff and whitespace checks pass; observation is UNKNOWN(stale), with an unresolved HIGH diagnostic below, not a technical approval.
+- DONE: Write and durably commit the implementation Stage Report with checklist accounting, AC evidence, project-context classification, bounded build observation and remaining evidence; do not push code, create a PR, merge, release or mark validation passed.
+  Accounting: 3 DONE / 0 SKIPPED / 0 FAILED for implementation outputs. Independent acceptance validation and the HIGH diagnostic disposition remain outstanding; the prior scope-blocked report is preserved as history.
+
+### Candidate and evidence accounting
+
+Worktree/branch are unchanged from the first implementation report. Final diff SHA-256: `a009e1c430e990abdb2a090b630d9e968895c7c254dd4dc37ec077d1ca569e8a`; the original six-file patch remains `f4a57ae605125f45bc105bf654eada7c6a1e82a14d7c6c81aab435c130a240bc`. Post-commit worktree is clean.
+Evidence remains in the dispatched code worktree's `.context/implementation-382/`: `README.md`, `loader-green.log`, `contract-green.log`, `without-loader.log`, `marketplace.log`, and `docs-clause.diff`. No unchanged code-suite rerun is claimed.
+- AC-1–AC-4: implementation evidence and falsifiers are unchanged from the preceding report; the docs-only amendment does not alter those tested files. Fresh independent validation is pending.
+- AC-5: the existing test proves same-stage legacy exact-byte acceptance/refusal; the ordinary-forward legacy transition finding below remains unresolved and must not be represented as covered or dismissed.
+- The six-file changed-file-to-obligation mapping is unchanged. ARCHITECTURE.md maps solely to project-context correspondence with AC-1, without another product behavior or lifecycle surface.
+- Kent's exact narrowed decision was committed/re-read in state `e3649058299a1381b8e58659458f60c411eb2149` before product edit; the earlier whole-paragraph proposal was not applied. Fresh word-diff contains only the approved authority/pinned-contract qualification and ordinary-report clarification.
+- Existing F541/default-Ruff caveats and sanitize WARN accounting remain as previously recorded; no unrelated cleanup was included.
+
+### Project-context receipt
+
+```yaml
+project_context:
+  impact: update
+  authority: "Root PRODUCT.md, ARCHITECTURE.md, and CLAUDE.md (Local Profile binding)"
+  claim_locator: "ARCHITECTURE.md: kc-dev-flow profile-native loading, same-stage refusal clause"
+  surface: "New-pin same-stage continuation"
+  stale_claim: "Same-stage drift fails closed"
+  approved_change: "Same-stage drift in accepted authority or pinned contracts fails closed; ordinary report updates do not change that authority"
+  landed_change: "3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d:ARCHITECTURE.md, lines 38-40"
+  planned_check: "Compare the landed clause with report-resume and same-stage authority refusal behavior; confirm the word diff changes only the authorized clause"
+  validation_evidence: pending
+```
+
+### Bounded implementation-exit observation
+
+`review_convergence`, observe mode, Production, RoboRev: **UNKNOWN(reason: stale)**. Claim `05521198f5a9be757aed2ac5576dbde964e098d3d573837979b5cf894bb9e2fd` was durably committed and remote-read back at state `973849fa73fdddb1b2adea0d67e66c04aa10856d`; expected candidate configuration hash is `ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1`, not provider-attested evidence.
+One request / zero confirmations; Codex `gpt-5.6-terra`, medium reasoning/severity, panel none, 1200s ceiling. Native job 296 / UUID `ec7aaef3-2e14-4ad3-835d-9c016f27fee9` matches the exact base..tip range and reviewer fields but is diagnostic-only.
+Native JSON omits configuration object/hash, selected profile, implementation family, provider version/JSON contract, caps/timeout, explicit panel identity, and complete stable member population. These are not filled from the expected record; terminal status cannot repair the missing identity fields.
+The First Officer's later `roborev show --job 296 --json` read reports job done, review UUID `d1943b0f-fb96-4afe-a140-f03965243d69`, and one HIGH finding. No second request, cancellation, or code-changing response occurred.
+Provider cost query: approximate USD 0.0487008; jobs_with_cost 1 / jobs_total 1; complete true (`roborev-cost.json`). This is review cost coverage, not per-PR CI cost or an exact-dollar ceiling.
+
+### Unresolved diagnostic and validation handoff
+
+**HIGH, loader line 359:** the provider reports that legacy pins without authority/boundary hashes do not compare work-item bytes on an ordinary forward-stage transition, allowing changed scope plus the next status. Its suggested repair is normalized prior-hash checking or refusal pending migration. The First Officer directed preserving this finding without implementation; the fresh validator must reproduce candidate versus base and decide whether it violates AC-5/the legacy claim or is unchanged scoped behavior. Existing same-stage negative coverage does not resolve that question.
+Latest integration information from the First Officer: main `4095e5fcae1d3181abd6cf65379ccd3a21c998be` is two commits ahead of the approved base, touching only `kc-ship-flow/**` and `docs/ship/runbooks/conductor-cloud.md`, with no overlap in these seven paths. This is not main-tip validation; open PR #321 still shares five files, and eventual delivery must recheck overlap/base.
+
+### Summary
+
+The retained candidate now includes only the Captain-approved one-clause context clarification, and implementation outputs are committed with their evidence. Fresh independent validation owns the unresolved legacy-forward-transition diagnostic; this report does not claim all technical risks resolved, validation PASS, or delivery authority.
