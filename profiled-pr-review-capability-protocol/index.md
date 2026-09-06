@@ -420,3 +420,13 @@ All historical findings, reports, and approvals remain preserved. The accepted 6
 ### Summary
 
 REJECTED: concrete adapter and measurement-authority defects remain despite green targeted repair checks. FO receives the deduplicated repair batch plus Captain-owned focused-count/CI-precondition questions; no repair, new limit, paid blind run, gate approval, publication or terminalization is authorized by this report.
+
+## Accepted complete counting and reduction decision
+
+Captain replied `同意` to: `Claude 重審未通過；已重現假耗時紀錄被接受、失敗身分遺失等問題。納入新增 shell 測試後，相關行數是 1,939，不是先前窄口徑的 1,502。建議採完整口徑，維持原上限與驗收要求，先縮減並修復，再送 Claude；是否同意？`
+
+The complete focused denominator is 375 schema + 96 catalog + 1,024 protocol tests/inline fixtures + 7 corpus + 47 runtime integration/refusal tests + 390 ablation Pilot tests/enabling edits = **1,939**. Historical 1,502 remains a narrow prior report, not current acceptance. The unchanged stops are **6,600 total changed lines / 20 product paths / 1,800 complete focused lines**, counting additions plus deletions against `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`; test content counts by role wherever placed. Current excess is authorized for equivalent reduction, not general growth, hidden relocation, weakened falsifiers or another cap increase.
+
+This authorizes one retained owner to reduce actual duplicate test/setup structure and repair the five existing-owner groups in the latest dispatch: adapter terminal/provider/audit closure; terminal telemetry/pinned-arm evaluation; runner-owned measurement integrity; blind/inline projection; existing unit-kind and duplicate-phase diagnostics. Outcome, non-goals, default-off executable Lite, zero expansion reserve and existing posting authority remain unchanged. A sufficient repair needing a new surface, authority or lifecycle returns to the First Officer before implementation. F5 outer retry is not assigned; F13 remains conditional; F14 requires honest historical sequence evidence or an explicitly unmet precondition.
+
+Rejected candidate `9bb526170156a44cff90e2a2fab9eeab081e0eb1`, latest rejection state `f7f34d39c5caf1ad0a0ba4456295627721d51863`, earlier reports, validation status and stage pin are preserved. No paid blind work, self-review, publication, branch push, workflow tooling, gate/status/pin change or new observation is authorized. The prior one-round review-format deferral is historical and is not expanded by this decision. This decision is committed/synced and reread before product edits.
