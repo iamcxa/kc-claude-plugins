@@ -36,7 +36,7 @@ python -B /tmp/pilot-isolation-proof.68ALze/proof.py --safehouse
 
 It generated the profile through `/opt/homebrew/bin/safehouse --workdir=<synthetic work> --trust-workdir-config=false --append-profile=<owner>/deny-owner.sb --explain --stdout -- claude --version`, then executed the synthetic Bash child with `/usr/bin/sandbox-exec -f <owner>/effective.sb`. Here `--stdout` is generation-only: **no Claude command was executed**. For reproduction, copy the retained instrument into a fresh temporary directory with the prior proof's `proof.sb`; its explicit `SOURCE` points at the pinned product checkout. The script refuses existing case directories.
 
-Artifacts: [complete actual result](results.json), [instrument](proof.py), [effective policy](effective.sb). SHA-256 respectively: `674e6e202cb6a2f4ed63707188617184b33c2722c14d4f3d192477a7a1b74d4b`, `05ee548e825b37bae2007a6685b99e165f64272b24bbabe36815444afa41dfb`, `75886df6d74204d76b0eaee39aa86d4d2d8bb1e351fb7521be615cd848dae38d`.
+Artifacts: [complete actual result](results.json), [instrument](proof.py), [effective policy](effective.sb). SHA-256 respectively: `674e6e202cb6a2f4ed63707188617184b33c2722c14d4f3d192477a7a1b74d4b`, `05ee548e825b37bae2007a6685b99e165f64272b24dbbabe36815444afa41dfb`, `75886df6d74204d76b0eaee39aa86d4d2d8bb1e351fb7521be615cd848dae38d`.
 
 ## Compatibility and remaining authority
 
