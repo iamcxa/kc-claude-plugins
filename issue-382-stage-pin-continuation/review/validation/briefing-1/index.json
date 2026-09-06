@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dntn9z2nd2gkdcsjbbc9m4pv:validation:attempt-1:revision-1",
+  "question": "是否批准 issue #382 在提交 1d513956 的來源驗證結果？本次只確認程式已通過驗收，不授權 PR 建立、合併、發布或原任務遷移。",
+  "artifacts": [
+    {
+      "id": "artifact:dntn9z2nd2gkdcsjbbc9m4pv:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cb8e981a7b26acbec2e5384a6089bed1a40fdd6f/issue-382-stage-pin-continuation.md",
+      "rev": "sha256:0c9daecd4a8fabd255f32c9da66875d5c3c33769882a848e16b334c4af0f3650",
+      "mediaType": "text/markdown",
+      "summary": "建議批准來源驗證。原驗收者在 1d513956 確認五項驗收全部通過，三項清單完成、零略過、零失敗；範圍偷渡及狀態格式兩項問題均關閉。本輪僅改 loader 與既有測試，架構與鎖定不變。主分支整合、PR 平台檢查、發布及原任務恢復尚未驗證；兩項流程例外僅用於本輪，未宣稱一般流程已無缺陷。"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:dntn9z2nd2gkdcsjbbc9m4pv:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/dc4c8b13c0d86d81e4d79679d8ccb735117a9e52/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
