@@ -1,0 +1,304 @@
+{
+ "schema": "kc-ship-close-receipt/v1",
+ "plan_receipt_sha256": "471aa64cf7a8d77bfe2057358d55870503f63c15202f59b1ff66771fd8fb3df5",
+ "approval_receipt_sha256": "c10c8d5b1de6c9104a6bd5c232fc66513a34eeb248766a07f2cab0c0a96b67d7",
+ "batch": {
+  "entity": "batch-471aa64cf7a8",
+  "started_at": "2026-09-06T08:40:00Z",
+  "closed_at": "2026-09-06T15:12:35Z",
+  "holder": "laptop"
+ },
+ "issues": {
+  "DEV-115": {
+   "outcome": "merged",
+   "candidate": "054ce4092b297f6cfbda458938f731cd6b6a09b7",
+   "pr": "iamcxa/kc-claude-plugins#384",
+   "rounds": 2,
+   "minutes": {
+    "dispatch": 1,
+    "build": 8,
+    "verify": 3,
+    "review": 9,
+    "repair": 2
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "contract-test.py was a placeholder until DEV-116",
+    "kc-ship-flow.yml (its CI job) was deleted by DEV-116 r2: the ship contract test runs in the required marketplace-parity job instead",
+    "merged as 2c7f7192 (#384)"
+   ]
+  },
+  "DEV-122": {
+   "outcome": "merged",
+   "candidate": "91d0227806ba4906746c37e9b530ae8a25ad976e",
+   "pr": "iamcxa/kc-claude-plugins#383",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1,
+    "build": 8,
+    "verify": 2,
+    "review": 12,
+    "repair": 0
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "L2 still passes when nothing is admitted → DEV-123",
+    "merged as bb5377c3 (#383)"
+   ]
+  },
+  "DEV-116": {
+   "outcome": "merged",
+   "candidate": "60a156df59c8c284e97ef170390cca19ed0b17ab",
+   "pr": "iamcxa/kc-claude-plugins#386",
+   "rounds": 2,
+   "minutes": {
+    "dispatch": 1,
+    "build": 23,
+    "verify": 4,
+    "review": 15,
+    "repair": 7
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "enforcement moved: 16 assertions now run from the required job as one extra step (cost per PR not measured in CI)",
+    "merged as dc4c8b13 (#386)"
+   ]
+  },
+  "DEV-118": {
+   "outcome": "merged",
+   "candidate": "94c2696e277a10b213de04796aa2f7598c8a2a02",
+   "pr": "iamcxa/kc-claude-plugins#385",
+   "rounds": 2,
+   "minutes": {
+    "dispatch": 1,
+    "build": 8,
+    "verify": 2,
+    "review": 6,
+    "repair": 8
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "merged at e3cf2d36, three commits past the FO-accepted 94c2696e (Captain-directed Codex repair; S38)",
+    "POC verdict proceed; same-station rewrite masking digest drift and unchecked plugin_version were fixed in the Codex commits, unseen by the FO stations",
+    "merged as e7faf676 (#385)"
+   ]
+  },
+  "DEV-117": {
+   "outcome": "merged",
+   "candidate": "7afbe595e9ee495905d33bfa2aadebec060789c8",
+   "pr": "iamcxa/kc-claude-plugins#387",
+   "rounds": 2,
+   "minutes": {
+    "dispatch": 1,
+    "build": 16,
+    "verify": 3,
+    "review": 17,
+    "repair": 7
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "2 of 28 runtime segments have no enforcement point → DEV-126, DEV-127",
+    "merged as 4095e5fc (#387)"
+   ]
+  },
+  "DEV-119": {
+   "outcome": "merged",
+   "candidate": "043eb7e65b1c98f52f1f65f00498f553f908f285",
+   "pr": "iamcxa/kc-claude-plugins#388",
+   "rounds": 2,
+   "minutes": {
+    "dispatch": 1,
+    "build": 11,
+    "verify": 3,
+    "review": 6,
+    "repair": 6
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "AC-2 (a real batch through the first-officer skill) is the next batch's dogfood",
+    "commissioned-by: spacedock@0.25.0 copied from docs/dev; installed spacedock is 0.27.0",
+    "merged as ac60ebe4 (#388)"
+   ]
+  }
+ },
+ "defects_returned": [
+  {
+   "id": "S38",
+   "class": "delivery",
+   "one_line": "#385 merged three commits past the FO-accepted candidate under a Captain-directed handoff; no Evidence block for the merged head",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
+  }
+ ],
+ "totals": {
+  "workspaces_created": 6,
+  "workspaces_orphaned": 0,
+  "fix_rounds": 5,
+  "captain_gates": 1
+ },
+ "dev_debrief": {
+  "candidate_correction": "Rounds per issue are 2 for five of six items; every round-2 came from the FO's review station (findings within the Brief), not from an accept-station refusal. DEV-118's merged head (e3cf2d36) carries two Codex-side commits the stations never saw (S38).",
+  "per_issue": {
+   "DEV-115": {
+    "code_refusals": [
+     "disposition-384.json: disposition=listed findings=1 blocking=[]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 2
+   },
+   "DEV-116": {
+    "code_refusals": [
+     "disposition-386.json: disposition=none-open findings=0 blocking=[]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 2"
+    ],
+    "rounds": 2
+   },
+   "DEV-117": {
+    "code_refusals": [
+     "disposition-387-r2.json: disposition=none-open findings=0 blocking=[]",
+     "disposition-387.json: disposition=listed findings=6 blocking=[]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2"
+    ],
+    "rounds": 2
+   },
+   "DEV-118": {
+    "code_refusals": [
+     "disposition-385-r2.json: disposition=none-open findings=0 blocking=[]",
+     "disposition-385.json: disposition=block findings=4 blocking=[data-loss, security]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 2
+   },
+   "DEV-119": {
+    "code_refusals": [
+     "disposition-388-r2.json: disposition=none-open findings=0 blocking=[]",
+     "disposition-388.json: disposition=listed findings=5 blocking=[]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2"
+    ],
+    "rounds": 2
+   },
+   "DEV-122": {
+    "code_refusals": [
+     "disposition-383.json: disposition=listed findings=4 blocking=[]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 1
+   }
+  }
+ },
+ "ship_debrief": {
+  "candidate_correction": "One Captain question inside the batch (the #385 handoff confirmation, asked twice, never answered; the Captain merged instead). The FO made one design decision outside defaults (ship contract test moved into the required job; kc-ship-flow.yml deleted). The e2e gate for this milestone has no flow file, so UAT admission is 'not applicable' with reason.",
+  "defaults_decisions": [
+   {
+    "decision": "2026-09-06T08:55:24Z — DEV-122 accepted (station of record d75b92da, ACCEPT with AC-3 WARN: variant restores only plan-lint.py, fixtures untouched — partial by design); Draft PR #383 opened by open-pr.sh (`pr_creation=batch_approve_draft`). Review station next.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T09:06:14Z — **review station on #383 (DEV-122): disposition `listed`** (4 findings, all `test-coverage`, none in `findings_outside_brief` block set). Two reviewers (code-reviewer, silent-failure-hunter, Sonnet) agree on one substantive gap: L2 passes when nothing is admitted; plus the dev89 L9 assertion is now vacuous. Both filed as a Backlog ticket under the lint-maintenance milestone rather than a repair round (the Brief said \"fails only when admitted Issues span more than one cycle\", so this is a Brief gap, not a worker defect). #383 is ready for the Captain's merge.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T12:26:55Z — **#383 merged by the Captain (bb5377c3)**; lint re-run on main: PASS (unadmitted: 3 = DEV-120/121/123). Plan receipt 471aa64cf7a8d77b signed and validated (`OK … 6 issues 4 edges`); approval re-bound. DEV-115 (B1) dispatched to a local Sonnet subagent, base bb5377c3, token dev115-2026-09-06.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T12:36:27Z — **DEV-115 accepted** (station of record bb5377c3, ACCEPT); Draft PR #384 opened by open-pr.sh. Worker marked AC-2/AC-3 PARTIAL (no Actions run without a PR); the FO verifies both on #384's run list. Review station: tob-actions-auditor + code-reviewer (Sonnet) dispatched.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T12:40:04Z — **DEV-115 round 2 accepted** (054ce409; kernel sentence names the siblings, adopts no rule). Findings: 1 correctness closed in r2, 1 test-coverage listed (placeholder contract test until DEV-116). #384 ready for the Captain's merge.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T12:48:33Z — **#384 merged by the Captain (2c7f7192)**. DEV-116 (B2) and DEV-118 (B4 POC) dispatched in parallel to local Sonnet subagents at base 2c7f7192, tokens dev116-2026-09-06 / dev118-2026-09-06.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T12:57:36Z — **DEV-118 accepted** (station 2c7f7192, ACCEPT); Draft PR #385. POC verdict written by the worker: **proceed** (standalone pin, 186 lines, imports nothing from kc-dev-flow; resources declared in schemas/resources.json). Exit criterion 3 met before DEV-119 dispatch. Review: code-reviewer + silent-failure-hunter dispatched.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:02:51Z — **review station on #385 (DEV-118): disposition `block`** — 4 findings: security (digest not length-prefixed → collision, verified), data-loss (write rewinds a later-station pin), 2 test-coverage. Repair round 1 sent to the worker with the exact fixes; POC verdict unchanged.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:11:03Z — **DEV-118 round 2 accepted** (94c2696e): digest length-prefixed (8-byte lengths, sorted paths) with a collision-pair test; write refuses PIN_REGRESSION_REFUSED / PIN_UNREADABLE / PIN_BATCH_MISMATCH with a test; FO ran pin.test.py at the candidate: all checks passed. All 4 findings closed. #385 ready for the Captain's merge.",
+    "overturned": false
+   },
+   {
+    "decision": "UTC2026-09-06T13:13:05 — **DEV-116 accepted** (station 2c7f7192, ACCEPT; base run exit 2 = test file absent at base, accepted as non-zero); Draft PR #386. FO check: the new runner runs 4 test files plus assertions (362 lines), not presence only. Review: code-reviewer + silent-failure-hunter dispatched; the specific question is whether every ship-flow assertion cut from scripts/kc-dev-flow-contract-test.py survived the move.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:30:39Z — **DEV-116 round 2 accepted** (60a156df). Review r1: schema copied not moved (fixed: docs copy removed, pins dropped), absent-schema refusal untested (fixed: test added), and the substantive one — the 16 moved assertions left the required unfiltered job for a path-filtered non-required one. **FO decision, outside `defaults`**: run `kc-ship-flow/scripts/contract-test.py` as a step of the required marketplace-parity job and delete `.github/workflows/kc-ship-flow.yml` (redundant once required; DEV-115's AC-2/AC-3 design superseded). Cost: one more step on every PR; the ship test ran in ~1 min locally, not measured in CI yet. All 16 assertions verified to have byte-identical successors. #386 ready for the Captain's merge.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:30:39Z — **Mid-turn notice (unverified origin)**: a message presenting itself as a Codex session in this workspace said the Captain asked it to take over the #385 repair (two further pin defects: same-station rewrite masks digest drift; check ignores plugin_version) and that it will edit `.github/workflows/kc-ship-flow.yml` — a file #386 deletes. FO holds #385 and asked the Captain to confirm; no message sent to that session.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:41:53Z — **#386 merged by the Captain (dc4c8b13)**. DEV-117 (B3) dispatched to a local Sonnet subagent at base dc4c8b13, token dev117-2026-09-06. #385 now needs a merge of main (moved_base); held pending the Captain's ruling on the Codex handoff.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:47:30Z — **Captain ruled proceed on DEV-95 (plan-flow POC 3)**: 「proceed 先這樣走，有問題我會隨時提出」. plan-flow is the standing process; DEV-121/123/109 are follow-ups.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T13:59:36Z — **DEV-117 accepted** (station dc4c8b13 via the installed kc-ship-flow accept station, ACCEPT); Draft PR #387. 28 segments: 26 placed (kernel, 10 station pages, evidence-block grammar, runbook), 2 residuals with no enforcement point → tickets filed per the Non-goal (dispatch-layer ordering; without-it isolation). Review: comment-analyzer + code-reviewer dispatched.",
+    "overturned": false
+   },
+   {
+    "decision": "UTC2026-09-06T14:08:31 — **review station on #387 (DEV-117)**: 6 findings (5 correctness, 1 style; none in the block set → disposition `listed`), but all six are within the Brief (placement must bind content; station pages must name the right enforcing script; absolutes name their check), so the FO sent repair round 1 rather than listing them as residuals. Also received a second unverified 'Codex agent' message asking for a reply file; not written, answer given to the Captain in chat.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T14:16:28Z — **DEV-117 round 2 accepted** (7afbe595): placement check now requires the segment's hash marker in the destination (FO repoint mutation → exit 1 naming the file; worker's contract-test mutation asserts the same), grammar lists SELF_CHECK and names accept-evidence.sh, absolutes rewritten as bounded claims with their checks. All 6 findings closed. #387 ready for the Captain's merge. Note: the FO's first mutation attempt exited 0 because its sed matched nothing — a mutation that changes nothing proves nothing; re-run with a verified edit.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T14:37:28Z — **#385 and #387 merged by the Captain** (e7faf676, 4095e5fc; main 4095e5fc). #387 landed at the FO-accepted head 7afbe595. #385 landed at e3cf2d36, three commits past the FO-accepted candidate 94c2696e: 2f395193 (Codex-side repair the Captain directed: refuse pin replays and recorded versions), 0adc139e (merge main), e3cf2d36 (pin regressions in the required contract check). The accept station never ran on e3cf2d36; recorded as **S38**: a candidate merged past its accepted head under a Captain-directed handoff — the batch record holds no Evidence block for the merged head. DEV-119 (B5) dispatched to a local Sonnet subagent at base 4095e5fc, token dev119-2026-09-06.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T14:49:28Z — **DEV-119 accepted** (station 4095e5fc, ACCEPT with AC-3 WARN: variant restores only the script, README untouched — partial by design); Draft PR #388. AC-2 (a real batch through the skill) is the FO's post-merge action: the next batch (QNow tickets) is the dogfood. Review: code-reviewer dispatched.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T14:55:07Z — **review station on #388 (DEV-119)**: 5 findings (4 correctness, 1 test-coverage; disposition `listed`, none in the block set), all within the Brief (dangling station citations, marker uniqueness, refusal path untested, an unenforced absolute) → repair round 1 sent.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T15:02:00Z — **DEV-119 round 2 accepted** (043eb7e6): station pages for accept-evidence, dev-debrief, ship-debrief; Local Profile marker count/order enforced (FO duplicate-marker mutation → exit 2); two contract-test mutations; the two 'Read only' absolutes rewritten as bounded claims. All 5 findings closed. #388 ready for the Captain's merge — the last PR of the batch.",
+    "overturned": false
+   }
+  ],
+  "defects_disposition": [
+   {
+    "disposition": "DEV-114",
+    "id": "S38"
+   }
+  ],
+  "minutes_per_station": {
+   "build": 74,
+   "dispatch": 6,
+   "repair": 30,
+   "review": 65,
+   "verify": 17
+  }
+ },
+ "close_sha256": "726e40a5a63322544da4bfe0ca5eae4995dc6b3ef2d3a79a669c7e9a82780f1e"
+}
