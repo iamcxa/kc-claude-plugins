@@ -36,6 +36,17 @@ gates:
                 id: briefing:dntn9z2nd2gkdcsjbbc9m4pv:validation:attempt-1:revision-1
                 digest: sha256:0d710119742226c46631fee1370bda9388130e19e8d2eb31a8252147713d25f6
                 room-ref: ./issue-382-stage-pin-continuation/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dntn9z2nd2gkdcsjbbc9m4pv:validation:1
+                briefing: briefing:dntn9z2nd2gkdcsjbbc9m4pv:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-06T17:54:49.259011Z"
+                decision: approve
+                reason: Kent 在已呈現的 validation 第 1 次第 1 版快照（digest 0d710119）後回覆 ok，接受提交 1d5139568122a3af97cbc28333171df3bc2e27be 的來源驗收結果與已披露的引用索引限制。本次批准只確認程式已通過驗收，不授權 PR 建立、合併、發布、原任務遷移或自動追加修復／驗證。
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-06T14:29:01Z
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/issue-382-flow.hNPqy3/.worktrees/spacedock-ensign-issue-382-stage-pin-continuation
 continuation-exception: Kent replied 批准 in this session after the exact one-time exception proposal; captured 2026-09-06T15:12:32Z (capture time, not the unavailable message timestamp). Applies only to one implementation correction and one re-verification of rejected candidate 3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d, validation report commit 636dd6908abe158cb9e241bdd5ae3387bb9a4030, and the existing seven-file task boundary. Preserve legitimate legacy status-only advancement and same-stage exact-byte refusal; reject accepted-scope drift. Retain recorded status validation and pin SHA256 cb30cbfd097aa8561dffe999d74fee23d870d06666ff4066618d27e85d30eb13. Use the same isolated implementation owner and validator through existing Spacedock handoffs without the unsupported kc-dev-flow 4.1.1 re-entry envelope for those two handoffs only. Preserve all rejection evidence. No package update, pin rewrite, new file/workflow/migration interface, broader scope, acceptance weakening, original-task migration, PR creation, merge or release is granted. Final Captain gate remains required.
