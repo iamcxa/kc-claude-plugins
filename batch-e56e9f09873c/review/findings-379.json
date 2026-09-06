@@ -1,0 +1,56 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 379,
+ "head": "470b3e412632652e7c758102ceb2c9cecb169a90",
+ "findings": [
+  {
+   "category": "security",
+   "summary": "candidate-tree scripts run under e2e-cli with the FO's full credentials; no env stripping (without-it.sh strips seven vars)",
+   "location": "scripts/ship-flow/e2e-gate.py:97",
+   "severity": "HIGH",
+   "confidence": 7
+  },
+  {
+   "category": "correctness",
+   "summary": "dangling milestone id silently reuses the previous issue's milestone name",
+   "location": "scripts/ship-flow/e2e-gate.py:56",
+   "severity": "HIGH",
+   "confidence": 7
+  },
+  {
+   "category": "correctness",
+   "summary": "slugify is ASCII-only; Chinese milestone names collapse or become empty",
+   "location": "scripts/ship-flow/e2e-gate.py:41",
+   "severity": "HIGH",
+   "confidence": 8
+  },
+  {
+   "category": "correctness",
+   "summary": "candidate not validated as a fixed commit; report prints the raw ref",
+   "location": "scripts/ship-flow/e2e-gate.py:60",
+   "severity": "MEDIUM",
+   "confidence": 9
+  },
+  {
+   "category": "test-coverage",
+   "summary": "run branch and error branches have fixtures but nothing wired runs them",
+   "location": "scripts/fixtures/ship-flow/e2e-gate/close-receipt.ac2.json:1",
+   "severity": "MEDIUM",
+   "confidence": 9
+  },
+  {
+   "category": "docs",
+   "summary": "exit-2 label covers e2e-cli's own exit 2 under a different meaning",
+   "location": "scripts/ship-flow/e2e-gate.py:22",
+   "severity": "MEDIUM",
+   "confidence": 8
+  },
+  {
+   "category": "docs",
+   "summary": "'since \u2026 carries neither' states an unenforced pairing assumption",
+   "location": "scripts/ship-flow/e2e-gate.py:11",
+   "severity": "MEDIUM",
+   "confidence": 6
+  }
+ ]
+}
