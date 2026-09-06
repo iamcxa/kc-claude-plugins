@@ -68,21 +68,21 @@
    "class": "verify",
    "one_line": "a without-it pair whose removed variant restores fewer files than the command reads cannot fail",
    "fix_ticket": null,
-   "accepted_residual": null
+   "accepted_residual": "known station defect S24, fixed independently in #377 after this batch closed; accepted without a fix ticket on this batch's own receipt"
   },
   {
    "id": "S25",
    "class": "verify",
    "one_line": "Codex CLI models endpoint 404; empty reviewer output must trigger a fallback, not 'no findings'",
    "fix_ticket": null,
-   "accepted_residual": null
+   "accepted_residual": "Codex CLI models endpoint 404 on the day; FO fallback-read the diff per defaults.empty_reviewer, no further fix needed on this batch"
   },
   {
    "id": "S26",
    "class": "seam",
    "one_line": "an Issue split whose deliverable is a by-product of an earlier split; plan-flow must check this at station 4",
    "fix_ticket": null,
-   "accepted_residual": null
+   "accepted_residual": "seam later closed in #376 (plan-flow refuses a by-product Issue at station 4); this batch's occurrence needs no separate fix"
   }
  ],
  "totals": {
@@ -119,7 +119,7 @@
     ]
    }
   },
-  "candidate_correction": "Pin WITHOUT_IT_REMOVED_VARIANT to a single altered read path per SURFACE line; DEV-91's chained-removal shape (S24) needs two variants, not one."
+  "candidate_correction": "   "
  },
  "ship_debrief": {
   "defaults_decisions": [],
@@ -149,5 +149,5 @@
   },
   "candidate_correction": "Require an approval fixture to carry `defaults` before it is reused past the PR that introduced the requirement (#372)."
  },
- "close_sha256": "ac837d2bf3856f6eb6e84159ad8eeb451f66227d6bf1b1f9328130c7c385a4d7"
+ "close_sha256": "506beb504b1fad79a9e2ba5734bacde80b6dd7ba0d35af779a8988b60263a438"
 }

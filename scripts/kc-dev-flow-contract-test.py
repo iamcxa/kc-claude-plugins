@@ -2081,6 +2081,9 @@ run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-c
 if not require_ablation_only:
     run([sys.executable, "scripts/ship-flow/uat-doc.test.py"], "ship-flow UAT doc")
     run(["bash", "scripts/ship-flow/notify.test.sh"], "ship-flow notify")
+    run([sys.executable, "scripts/ship-flow/dev-debrief.test.py"], "ship-flow dev debrief")
+    run([sys.executable, "scripts/ship-flow/ship-debrief.test.py"], "ship-flow ship debrief")
+    run([sys.executable, "docs/plan-flow/schema/close-receipt.test.py"], "plan-flow close-receipt validation")
 
 surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
 surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
