@@ -1,1 +1,2 @@
-2026-09-06T02:39:25Z open-pr: evidence file not found: /tmp/batch3/acc/DEV-106.md
+2026-09-06T02:41:35Z open-pr: opening Draft PR: branch=feature/dev-106-ship-flow-handoff-one-uat-document-and-one-slack-message base=main title=feat(ship-flow): generate the batch UAT document and send one idempotent Slack ping
+2026-09-06T02:41:38Z open-pr: gh pr create output: https://github.com/iamcxa/kc-claude-plugins/pull/380
