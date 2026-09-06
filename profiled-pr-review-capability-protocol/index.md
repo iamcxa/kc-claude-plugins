@@ -559,3 +559,11 @@ Product stays clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `f
 ### Summary
 
 The one authorized attempt is over and its exact workspace is recoverably archived; no new inference, product work or workflow advancement followed it. Product remains clean at `9bb52617`, count/limit unchanged; partial filesystem evidence does not resolve the remaining permission, nonzero, controller-lifecycle or product obligations. The First Officer receives the failures and limits, not an integration or speed/fit recommendation.
+
+## Accepted local monitor and exit-code repair only
+
+Captain replied `批准` to the exact recommendation/question: `建議保留雲端方向。是否批准先修正本地監控腳本與退出碼檢查，不啟動下一次雲端測試、不修改產品？` This permits only a small state-owned diagnostic revision and bounded local synthetic tests; it does not authorize another cloud run, real PR batch, product isolation integration or the original five repairs.
+
+Preserve the original cloud-once monitor, prompt, reports and failures byte-identically. The new revision uses structurally fake-only injected transport/clock and owned local scratch; no real Conductor/API/model command, cloud create/start/unarchive/message/cancel/archive, settings, networked experiment, installation or reviewer. Local checks must reproduce malformed JSON and cleanup coupling, retain precise failure/unknown outcomes and exact structured identity checks, preserve child exit codes and return a nonzero controller result for failed/incomplete observations. Idle alone is not terminal proof. Cloud tool/credential exclusion, live deadline/descendant termination and whole-cloud proof remain unverified.
+
+Product remains clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-pr-review-capability-protocol-pilot`, base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`; counts 6,431 / 20 / 1,939 and limits 6,600 / 20 / 1,800 are unchanged. Existing stage/status/pin/gate/review round and historical evidence remain unchanged, with all original repairs, focused reduction, F14 and real speed/quality pending. Preserve unrelated holder files and peer state. This approval is supported-committed/synced/reread before implementation; no new cloud/model cost is authorized.
