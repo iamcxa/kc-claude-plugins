@@ -1,0 +1,2 @@
+2026-09-06T02:23:28Z open-pr: opening Draft PR: branch=feature/dev-104-ship-flow-review-station-open-the-draft-pr-and-run-kc-pr base=main title=feat(ship-flow): open the Draft PR and disposition kc-pr-review findings, refusing empty output as absence
+2026-09-06T02:23:30Z open-pr: gh pr create output: https://github.com/iamcxa/kc-claude-plugins/pull/378

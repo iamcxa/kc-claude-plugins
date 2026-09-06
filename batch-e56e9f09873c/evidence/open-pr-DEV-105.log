@@ -1,0 +1,2 @@
+2026-09-06T02:23:31Z open-pr: opening Draft PR: branch=feature/dev-105-ship-flow-e2e-station-a-passing-cli-journey-at-the-stacked base=main title=feat(ship-flow): pick a batch's UAT-ready CLI e2e shape from its milestone
+2026-09-06T02:23:33Z open-pr: gh pr create output: https://github.com/iamcxa/kc-claude-plugins/pull/379
