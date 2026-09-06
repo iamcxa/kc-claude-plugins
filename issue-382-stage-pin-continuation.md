@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): resume pinned reports and authorized corrections"
-status: implementation
+status: validation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
