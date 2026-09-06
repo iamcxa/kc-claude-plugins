@@ -1,1 +1,1 @@
-issue=DEV-107 route=subagent model=sonnet dispatched_at=2026-09-06T02:40Z evidence_at=2026-09-06T02:59:11Z pr=pending-moved-base
+issue=DEV-107 route=subagent model=sonnet dispatched_at=2026-09-06T02:40Z evidence_at=2026-09-06T02:59:11Z rebased=9282343c43afada5e50ff2a282a7b36102d3cfc8 pr=381

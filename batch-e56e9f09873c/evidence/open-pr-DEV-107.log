@@ -1,0 +1,2 @@
+2026-09-06T03:33:04Z open-pr: opening Draft PR: branch=feature/dev-107-ship-flow-close-the-close-receipt-refuses-an-undispositioned base=main title=chore: merge the repaired lower layers (DEV-105 r2, DEV-106 r2) into DEV-107 (moved_base)
+2026-09-06T03:33:06Z open-pr: gh pr create stdout: https://github.com/iamcxa/kc-claude-plugins/pull/381
