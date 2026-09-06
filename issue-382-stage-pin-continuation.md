@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): resume pinned reports and authorized corrections"
-status: backlog
+status: ideation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -27,7 +27,7 @@ gates:
                 reason: 'Kent explicitly approved the presented initial briefing 406f5d8b6c: admit the same six-file Production recovery repair; legacy migration remains separate, with no merge or release grant.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Resume valid report updates and explicitly authorized corrections without
