@@ -1,0 +1,17 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": 381,
+ "head": "ede6eecbf2bbff9b4cdb2d553151d237f18012d9",
+ "findings": [],
+ "fixed_in_r2": [
+  "docs/plan-flow/schema/validate-receipt.py:68",
+  "docs/plan-flow/schema/validate-receipt.py:70",
+  "scripts/ship-flow/dev-debrief.py:73",
+  "scripts/ship-flow/dev-debrief.py:38",
+  "scripts/ship-flow/ship-debrief.py:43",
+  "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json:8",
+  "docs/plan-flow/schema/validate-receipt.py:74",
+  "docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml:22",
+  "scripts/ship-flow/dev-debrief.py:7"
+ ]
+}
