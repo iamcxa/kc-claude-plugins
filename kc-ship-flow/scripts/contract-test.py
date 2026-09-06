@@ -60,6 +60,7 @@ STATION_TESTS = [
     ("notify.test.sh", ["bash", str(SCRIPTS / "notify.test.sh")]),
     ("dev-debrief.test.py", [sys.executable, str(SCRIPTS / "dev-debrief.test.py")]),
     ("ship-debrief.test.py", [sys.executable, str(SCRIPTS / "ship-debrief.test.py")]),
+    ("pin.test.py", [sys.executable, str(SCRIPTS / "pin.test.py")]),
 ]
 for test_name, test_command in STATION_TESTS:
     require((SCRIPTS / test_name).is_file(), f"missing station test: {test_name}")

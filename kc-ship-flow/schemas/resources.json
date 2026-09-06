@@ -1,0 +1,7 @@
+{
+  "schema": "kc-ship-flow-resources/v1",
+  "resources": [
+    ".claude-plugin/plugin.json",
+    "references/kernel.md"
+  ]
+}
