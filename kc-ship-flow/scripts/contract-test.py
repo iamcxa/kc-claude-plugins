@@ -359,4 +359,6 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
         f"exit={open_pr_unbound.returncode} stderr={open_pr_unbound.stderr!r}",
     )
 
+run([sys.executable, str(SCRIPTS / "prose-placement-check.py")], "kc-ship-flow prose-placement-check.py")
+
 print("kc-ship-flow contract: PASS")
