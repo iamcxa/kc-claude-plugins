@@ -63,6 +63,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_PATH = PACKAGE_ROOT / "contract-manifest.json"
 MANIFEST_SCHEMA = "kc-dev-flow-contract-manifest/v1"
 STAGE_PIN_SCHEMA = "kc-dev-flow-stage-pin/v1"
+STATUS_FIELD_PATTERN = r"^status:[ \t]*([^\n#]+?)[ \t]*$"
 LOCAL_PROFILE_START = "<!-- kc-dev-flow-static-local-profile:start -->"
 LOCAL_PROFILE_END = "<!-- kc-dev-flow-static-local-profile:end -->"
 RUNTIME_FIELDS = {
@@ -371,15 +372,13 @@ def bind_stage_pin(
                 raise ContractError(f"cannot read legacy work item: {exc}") from exc
             if hashlib.sha256(raw).hexdigest() != contract["work_item_sha256"]:
                 raise ContractError("STAGE_PIN_TRANSITION_MISMATCH: work item changed during loading")
-            frontmatter, delimiter, body = raw.partition(b"\n---\n")
-            restored, count = re.subn(
-                rb"^(status:[ \t]*[\"']?)" + re.escape(current_stage.encode("utf-8"))
-                + rb"([\"']?[ \t]*)$",
-                lambda match: match[1]
-                + str(previous.get("workflow_stage", "")).encode("utf-8") + match[2],
-                frontmatter, count=1, flags=re.MULTILINE,
-            )
-            if count != 1 or hashlib.sha256(restored + delimiter + body).hexdigest() != previous.get("work_item_sha256"):
+            frontmatter, delimiter, body = raw.decode("utf-8").partition("\n---\n")
+            start, end = _one_field_span(frontmatter, STATUS_FIELD_PATTERN, "frontmatter status")
+            restored = (
+                frontmatter[:start] + str(previous.get("workflow_stage", ""))
+                + frontmatter[end:] + delimiter + body
+            ).encode("utf-8")
+            if frontmatter[start:end] != current_stage or hashlib.sha256(restored).hexdigest() != previous.get("work_item_sha256"):
                 raise ContractError(
                     "STAGE_PIN_TRANSITION_MISMATCH: legacy transition must change only the status value"
                 )
@@ -446,11 +445,21 @@ def write_stage_pin(path: Path, pin: dict[str, object]) -> None:
                 pass
 
 
-def _one_field(text: str, pattern: str, label: str) -> str:
-    matches = re.findall(pattern, text, flags=re.MULTILINE)
+def _one_field_span(text: str, pattern: str, label: str) -> tuple[int, int]:
+    matches = list(re.finditer(pattern, text, flags=re.MULTILINE))
     if len(matches) != 1:
         raise ContractError(f"work item must contain exactly one {label}")
-    return matches[0].strip().strip("\"'").strip()
+    start, end = matches[0].span(1)
+    for chars in (None, "\"'", None):
+        value = text[start:end]
+        start += len(value) - len(value.lstrip(chars))
+        end = start + len(value.strip(chars))
+    return start, end
+
+
+def _one_field(text: str, pattern: str, label: str) -> str:
+    start, end = _one_field_span(text, pattern, label)
+    return text[start:end]
 
 
 def is_placeholder_scalar(value: str) -> bool:
@@ -604,7 +613,7 @@ def resolve_work_item(path: Path) -> dict[str, str]:
         raise ContractError("work item frontmatter is unterminated")
     frontmatter = text[4:frontmatter_end]
     workflow_stage = _one_field(
-        frontmatter, r"^status:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter status"
+        frontmatter, STATUS_FIELD_PATTERN, "frontmatter status"
     )
 
     headings = list(re.finditer(r"^## Work profile receipt\s*$", text, re.MULTILINE))

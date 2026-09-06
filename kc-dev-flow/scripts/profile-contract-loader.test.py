@@ -1873,33 +1873,69 @@ README-POLICY-SENTINEL
             f"legacy forward transition accepted changed {label}: {refused.stderr}",
         )
 
-    formatted_legacy = (
-        report_baseline.replace("status: ideation\n", 'status:  "ideation" \t\n', 1)
-        + "\n## Example\n\n```yaml\nstatus: implementation\n```\n"
-    )
-    formatted_pin = state / "formatted-legacy-pin.json"
-    pin_item.write_text(formatted_legacy, encoding="utf-8")
-    formatted_seed = installed_run(
-        LOADER, pin_item, pin=formatted_pin, attempt="ideation-1", write_pin=True
-    )
-    require(formatted_seed.returncode == 0, formatted_seed.stderr)
-    formatted_old_pin = {
-        key: value for key, value in json.loads(formatted_pin.read_bytes()).items()
-        if key not in {"work_item_authority_sha256", "work_item_boundary_sha256"}
-    }
-    formatted_pin.write_text(json.dumps(formatted_old_pin), encoding="utf-8")
-    pin_item.write_text(
-        formatted_legacy.replace('status:  "ideation"', 'status:  "implementation"', 1),
-        encoding="utf-8",
-    )
-    formatted_advance = installed_run(
-        LOADER, pin_item, pin=formatted_pin, attempt="implementation-1", write_pin=True
-    )
-    require(
-        formatted_advance.returncode == 0
-        and json.loads(formatted_advance.stdout)["stage_pin"]["previous_pin"] == formatted_old_pin,
-        f"legacy status-only matching changed formatting or body bytes: {formatted_advance.stderr}",
-    )
+    format_failures = []
+    for label, status in (
+        ("outer-spacing", 'status:  "ideation" \t\n'),
+        ("inner-spacing", 'status: " ideation "\n'),
+        ("status-crlf", "status: ideation\r\n"),
+        ("single-quoted-whitespace", "status:\t' \tideation\t '\r\n"),
+        ("unicode-whitespace", "status:\u2003ideation\u00a0\n"),
+    ):
+        formatted_legacy = (
+            report_baseline.replace("status: ideation\n", status, 1)
+            + "\n## Example\n\n```yaml\nstatus: implementation\n```\n保留內容\r\n\n\n"
+        ).encode("utf-8")
+        formatted_pin = state / f"formatted-legacy-{label}.json"
+        pin_item.write_bytes(formatted_legacy)
+        formatted_seed = installed_run(
+            LOADER, pin_item, pin=formatted_pin, attempt="ideation-1", write_pin=True
+        )
+        require(formatted_seed.returncode == 0, formatted_seed.stderr)
+        formatted_old_pin = {
+            key: value for key, value in json.loads(formatted_pin.read_bytes()).items()
+            if key not in {"work_item_authority_sha256", "work_item_boundary_sha256"}
+        }
+        formatted_pin_bytes = json.dumps(formatted_old_pin).encode("utf-8")
+        formatted_pin.write_bytes(formatted_pin_bytes)
+        exact_resume = installed_run(
+            LOADER, pin_item, pin=formatted_pin, attempt="ideation-1", write_pin=True
+        )
+        require(
+            exact_resume.returncode == 0 and formatted_pin.read_bytes() == formatted_pin_bytes
+            and pin_item.read_bytes() == formatted_legacy,
+            f"legacy exact resume changed {label}: {exact_resume.stderr}",
+        )
+        formatted_forward = formatted_legacy.replace(
+            status.encode("utf-8"), status.replace("ideation", "implementation").encode("utf-8"), 1
+        )
+        pin_item.write_bytes(formatted_forward)
+        formatted_advance = installed_run(
+            LOADER, pin_item, pin=formatted_pin, attempt="implementation-1", write_pin=True
+        )
+        require(pin_item.read_bytes() == formatted_forward, f"loader rewrote {label} work-item bytes")
+        if formatted_advance.returncode != 0:
+            format_failures.append(f"{label}: {formatted_advance.stderr.strip()}")
+            continue
+        require(
+            json.loads(formatted_advance.stdout)["stage_pin"]["previous_pin"] == formatted_old_pin,
+            f"legacy status-only advance lost {label} predecessor",
+        )
+        for mutation, mutated in (
+            ("body", formatted_forward.replace("保留內容".encode(), "內容已改".encode())),
+            ("final newline", formatted_forward[:-1]),
+            ("status spacing", formatted_forward.replace(b"status:", b"status: ", 1)),
+        ):
+            formatted_pin.write_bytes(formatted_pin_bytes)
+            pin_item.write_bytes(mutated)
+            refused = installed_run(
+                LOADER, pin_item, pin=formatted_pin, attempt="implementation-1", write_pin=True
+            )
+            require(
+                refused.returncode == 2 and not refused.stdout
+                and formatted_pin.read_bytes() == formatted_pin_bytes and pin_item.read_bytes() == mutated,
+                f"legacy {label} accepted changed {mutation}: {refused.stderr}",
+            )
+    require(not format_failures, "legacy status-only format regression: " + "; ".join(format_failures))
     pin_item.write_text(report_baseline, encoding="utf-8")
     print("profile contract loader test: legacy status-only forward and scope refusal PASS")
     print("profile contract loader test: report/authority/correction regressions PASS")
