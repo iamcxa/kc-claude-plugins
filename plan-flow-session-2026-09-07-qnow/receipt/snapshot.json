@@ -1,0 +1,296 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+  "name": "\u67b6\u69cb\u6536\u6582\u8207 POC \u7626\u8eab",
+  "content": "\u78ba\u7acb\u55ae\u4e00 API\u3001\u8cc7\u6599\u5eab\u3001\u8eab\u5206\u8207\u90e8\u7f72\u8def\u5f91\uff1b\u4fdd\u7559 Hono\u3001Zod/OpenAPI\u3001Drizzle \u8207\u53ef\u9a57\u8b49\u7684 POC \u6838\u5fc3\u6a21\u5f0f\u3002\u79fb\u9664\u672a\u63a1\u7528\u7684 UI\u3001API \u8207\u8eab\u5206\u9a57\u8b49\u5be6\u9a57\u3002",
+  "initiatives": {
+   "nodes": [
+    {
+     "id": "7d7f5b16-8a2d-4220-905a-763b3d7ec67e"
+    }
+   ]
+  },
+  "projectMilestones": {
+   "nodes": []
+  },
+  "issues": {
+   "nodes": [
+    {
+     "id": "48e58f7b-46b6-4e4e-8c6f-dc9604df5e9e",
+     "identifier": "DEV-39",
+     "url": "https://linear.app/duckbase-co/issue/DEV-39/classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "description": "Retire the unused loader-eval surface and enforce that every kc-dev-flow Python script has a single declared runtime/test/adapter/role.",
+     "branchName": "feature/dev-39-classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "1989cfdc-dda5-468a-a297-7b45f31afe46",
+     "identifier": "DEV-37",
+     "url": "https://linear.app/duckbase-co/issue/DEV-37/\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claimreadback-\u9a57\u6536",
+     "description": "## \u76ee\u7684\n\n\u5b8c\u6210 QNow hosted infrastructure \u5df2\u901a\u904e\u5f8c\u4ecd\u7f3a\u5c11\u7684\u7522\u54c1\u9a57\u6536\uff1a\u4ee5\u4e09\u500b\u771f\u5be6 hosted Identity actors \u8b49\u660e assignment\u3001tenant isolation\u3001exact-once claim race\u3001\u907a\u5931\u56de\u61c9\u5f8c readback\uff0c\u4ee5\u53ca\u5b8c\u6574\u6e05\u7406\u3002\n\n## \u524d\u7f6e\n\n* DEV-35\uff1aConductor Cloud headed Playwright preflight \u901a\u904e\u3002\n* DEV-36\uff1apackage-scoped ESM full runner \u901a\u904e\u6240\u6709\u96f6 provider gates\u3002\n* fresh authorization receipt\u3001exact site\uff0frollback\uff0fruntime\uff0fzero remainder \u7d81\u5b9a\u3002\n\n## \u55ae\u6b21\u57f7\u884c\u7bc4\u570d\n\n* \u6700\u591a 1 \u500b\u65b0 candidate\u30011 \u6b21 deploy\uff1b\u7981\u6b62 retry \u6216\u7b2c\u4e8c\u6b21 deploy\u3002\n* \u516d\u500b production/functions secrets \u50c5\u5728 memory \u4e2d\u6301\u6709\uff1breadback \u63a1 safe structural receipt\u3002\n* \u5efa\u7acb 3 \u500b synthetic non-PII Identity users\u30013 assignments\u30012 tenants\u30012 branches\u30011 scheduled order\u3002\n* headed browser \u5efa\u7acb 3 \u500b isolated contexts\u3002\n* \u9a57\u8b49 missing/malformed identity denial\u3001inactive assignment 403\u3001tenant-B denial\u3002\n* reception A/B \u540c\u6b65 claim\uff0c\u7d50\u679c\u5fc5\u9808\u6070\u597d\u4e00\u6b21 HTTP 200\u3001\u4e00\u6b21 HTTP 409\u3002\n* \u8f49\u9001\u771f\u5be6 winner POST \u5f8c\u53ea\u4e1f\u68c4 browser response\uff1b\u4e0d\u5f97\u91cd\u9001 POST\u3002\n* winner \u5fc5\u9808\u7531 Mine\u3001Detail \u8207 reload \u8b80\u56de\uff1bDB \u6070\u597d 1 owner\u30011 immutable audit\u3002\n* safe canary scan \u4e0d\u5f97\u51fa\u73fe secret\u3001PII\u3001URL \u6216 raw provider error\u3002\n\n## \u6e05\u7406\u9a57\u6536\n\nfirst failure \u5f8c\u53ea\u5141\u8a31 cleanup\uff1a\n\n1. \u522a\u9664\uff0freset exact run-owned rows \u8207 audit\uff0ccensus 0\u3002\n2. \u522a\u9664 exact 3 users\uff0ccensus 0\uff1bstale token \u56de 401\u3002\n3. \u522a\u9664 exact 6 environment keys\u4e26\u8b49\u660e absent\u3002\n4. pointer \u7d81\u5b9a\u6b63\u78ba\u6642 restore admitted bootstrap-free rollback\u3002\n5. \u522a\u9664 exact new candidate\uff0cAPI NotFound\u3001immutable routes unavailable\u3002\n6. link\u3001clone\u3001evidence\u3001QNow containers \u8207 owned processes remainder 0\u3002\n\n## \u5b8c\u6210\u689d\u4ef6\n\n\u7522\u51fa revision-bound\u3001secret-safe acceptance receipt\uff0c\u72c0\u614b\u53ef\u4ea4\u7d66\u7368\u7acb validation\uff1b\u672c\u7968\u4e0d\u81ea\u884c\u5ba3\u544a\u6b63\u5f0f\u7522\u54c1\u4e0a\u7dda\u3002\n\n## \u4e0d\u5305\u542b\n\nOTP\uff0finvitation\u3001\u5ba2\u6236 SMS\u3001LINE\u3001credential rotation\u3001snapshot restore\u3001Supabase\u3001production rollout\u3001\u7b2c\u4e8c\u500b order \u6216\u7b2c\u4e8c\u8f2a journey\u3002\n\n## Accepted outcome\n\nOne recorded run, in a Conductor cloud workspace whose environment carries the six production/functions secrets, executes the \u55ae\u6b21\u57f7\u884c\u7bc4\u570d above exactly once (one candidate, one deploy, no retry) and produces the revision-bound, secret-safe acceptance receipt named in \u5b8c\u6210\u689d\u4ef6, then performs the \u6e05\u7406\u9a57\u6536 steps to zero remainder; the receipt and the run log are stored in the qnow batch record and handed to independent validation. This ticket does not declare production launch.\n\n## Non-goals\n\n* Everything listed under \u4e0d\u5305\u542b above.\n* A second deploy, a retry, or a second journey \u2014 a first failure ends the run and only cleanup follows.\n\n## Acceptance criteria\n\n* **AC-1** The run log records exactly one candidate and one deploy, the claim race outcome as one HTTP 200 and one HTTP 409, and the winner read back from Mine, Detail and reload; exit 0.\n* **AC-2** The acceptance receipt file exists in the batch record and a safe canary scan of it (script named in the run) prints zero hits for secret, PII, URL or raw provider error patterns.\n* **AC-3** The cleanup census script prints 0 for rows, users, environment keys and containers, and the stale token check returns 401; each logged.\n* **AC-4** `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state` and the same for 1175 print MERGED before the run starts (prerequisite gate).\n\nRe-verified: `test -f /dev/null && gh api repos/iamcxa/qnow/contents/docs/evidence --jq 'map(.name)|join(\" \")' | grep -qi 'acceptance-receipt'` exit 1 2026-09-07",
+     "branchName": "feature/dev-37-\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claim\uff0freadback-\u9a57\u6536",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-35"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-36"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "4e5efffe-07d8-4b98-a512-1e9e646a7e73",
+     "identifier": "DEV-36",
+     "url": "https://linear.app/duckbase-co/issue/DEV-36/\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "description": "## \u76ee\u7684\n\n\u628a Cycle 84 \u7684 `/tmp/*.ts` runner \u5931\u6557\u6536\u6582\u6210 repository \u5167\u6b63\u5f0f\u3001\u53ef\u6e2c\u8a66\u3001\u53ef\u91cd\u8907\u547c\u53eb\u7684 ESM entrypoint\uff0c\u907f\u514d tsx \u5c07 out-of-package TypeScript \u5224\u70ba CommonJS\u3002\n\n## \u7bc4\u570d\n\n* \u5728 `qnow-next` package \u5167\u65b0\u589e `.mts` \u6216 `.mjs` full-runner entrypoint \u8207 npm script\u3002\n* \u53ea\u7d44\u88dd\u65e2\u6709 secret-safe environment\u3001Netlify session\u3001fixture controller \u8207 headed journey adapters\u3002\n* \u4f7f\u7528 package-scoped ESM semantics\uff1b\u7981\u6b62\u4f9d\u8cf4 `/tmp/*.ts` top-level await\u3002\n* \u52a0\u5165\u96f6 provider contract test\uff1amodule \u53ef instantiate\u3001Playwright CommonJS-compatible load \u53ef\u7528\u3001provider clients\uff0fbrowser\uff0fdeploy \u90fd\u672a\u57f7\u884c\u3002\n* \u4fdd\u7559 exact revision\u3001one-deploy\u3001first-failure cleanup \u8207 safe receipt contract\u3002\n\n## \u9a57\u6536\n\n* \u5f9e\u4efb\u610f cwd \u547c\u53eb\u6b63\u5f0f npm command \u7686\u53ef\u5b8c\u6210 self-check\u3002\n* `providerCalls: 0`\uff0c\u6c92\u6709 credential\uff0fURL\uff0fPII\uff0fraw error \u8f38\u51fa\u3002\n* package\u3001type-check\u3001Node 24 artifact\u3001fresh-clone parity \u8207 relevant gates \u901a\u904e\u3002\n\n## \u4e0d\u5305\u542b\n\n\u672c\u7968\u4e0d\u57f7\u884c Netlify deploy \u6216\u6b63\u5f0f\u4e09\u89d2\u8272 hosted journey\u3002\n\n## Accepted outcome\n\nThe package-scoped ESM hosted journey runner in PR iamcxa/qnow#1174 is merged with a review disposition and an e2e result recorded; its npm script runs from main with zero provider gates, as the PR's \u9a57\u6536 states.\n\n## Non-goals\n\n* Adding journeys or actors beyond the runner entrypoint.\n* Any change to secrets handling.\n\n## Acceptance criteria\n\n* **AC-1** `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state` prints MERGED and `review/disposition-1174.json` exists in the batch record.\n* **AC-2** The runner's npm script named in the PR body runs at the merge head and exits 0 with its log recorded.\n* **AC-3** `git log --oneline origin/main | grep -c '#1174'` prints 1.\n\nRe-verified: `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state | grep -q OPEN` exit 0 2026-09-07",
+     "branchName": "feature/dev-36-\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "57b80be9-5958-41c3-99c1-79add1ec5c37",
+     "identifier": "DEV-35",
+     "url": "https://linear.app/duckbase-co/issue/DEV-35/\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "description": "## \u76ee\u7684\n\n\u78ba\u8a8d Conductor Cloud Linux sandbox \u80fd\u57f7\u884c QNow hosted acceptance \u6240\u9700\u7684 Playwright 1.56.1 headed Chromium\uff1b\u9019\u662f\u6b63\u5f0f\u4e09\u89d2\u8272 journey \u7684\u74b0\u5883\u524d\u7f6e\uff0c\u4e0d\u662f\u7522\u54c1\u9a57\u6536\u672c\u8eab\u3002\n\n\u4f9d\u8cf4\u672a\u9810\u88dd\u5c6c\u65bc\u74b0\u5883\u4f48\u5efa\u5de5\u4f5c\uff0c\u4e0d\u8996\u70ba\u5e73\u53f0\u80fd\u529b blocker\u3002\u5148\u5728 Conductor Cloud \u9810\u5148\u63d0\u4f9b\u6216\u5b89\u88dd\u6240\u9700\u76f8\u4f9d\uff0c\u518d\u57f7\u884c\u672c ticket \u7684 preflight \u9a57\u8b49\u3002\n\nConductor Cloud \u7684\u74b0\u5883\u8a2d\u5b9a\u6216 image \u8ca0\u8cac\u63d0\u4f9b\u7cfb\u7d71 Chrome \u8207 Xvfb\uff1brepository \u7684\u53ef\u91cd\u8907 setup script \u8ca0\u8cac\u9396\u5b9a Playwright \u7248\u672c\u3001\u5b89\u88dd workspace \u4f9d\u8cf4\u8207\u57f7\u884c preflight self-check\u3002\n\n## \u7bc4\u570d\n\n* \u56fa\u5b9a `spacedock-ensign/qnow-next-hosted-staging-qualification@36a8bef4a3a6e5e8acbe3bf552e06d2e7765bab3`\u3002\n* \u5340\u5206 base image \u9810\u88dd\u8207 workspace \u5167\u5f8c\u7e8c\u5b89\u88dd\u3002\n* \u9a57\u8b49 QNow \u7368\u7acb `npm ci`\u3001Playwright-managed Chromium\u3001Xvfb \u8207 `headless: false`\u3002\n* \u5efa\u7acb\u4e09\u500b isolated browser contexts\uff0c\u53ea\u958b `data:` \u9801\u9762\uff0c\u4e0d\u9023 provider\u3002\n* \u57f7\u884c committed self-check\uff0c\u8981\u6c42 `providerCalls: 0`\u3002\n* \u9a57\u8b49 browser\uff0fXvfb owned process remainder \u70ba\u96f6\u3002\n\n## \u9a57\u6536\n\n* \u56de\u5831 `CLOUD_HEADED_PLAYWRIGHT_READY` \u6216 `CLOUD_HEADED_PLAYWRIGHT_INSTALLABLE`\u3002\n* \u82e5 blocked\uff0c\u7559\u4e0b\u5b89\u5168 failing phase \u8207\u7f3a\u5c11\u80fd\u529b\u3002\n* \u4e0d\u8b80\u53d6\uff0f\u8f38\u51fa credential value\uff0c\u4e0d\u90e8\u7f72\uff0c\u4e0d\u5efa\u7acb users\uff0frows\uff0fenv vars\u3002\n* Supabase \u4e0d\u662f QNow gate\uff1bgeneric setup \u82e5\u66fe\u81ea\u52d5\u555f\u52d5\uff0c\u50c5\u8a18\u9304 side effect\uff0c\u4e0d\u4f7f\u7528\u5b83\u3002\n\n## \u4e0d\u5305\u542b\n\nNetlify deploy\u3001hosted journey\u3001Supabase \u8a3a\u65b7\u3001\u7522\u54c1\u8cc7\u6599 mutation\u3002\n\n## Accepted outcome\n\nThe Conductor Cloud headed-Playwright preflight in PR iamcxa/qnow#1175 is merged with a review disposition and an e2e result recorded; its preflight script is runnable from main and is the environment gate DEV-37 cites.\n\n## Non-goals\n\n* Running the three-actor journey (DEV-37).\n* Installing dependencies into the cloud image beyond what the PR already does.\n\n## Acceptance criteria\n\n* **AC-1** `gh pr view 1175 --repo iamcxa/qnow --json state --jq .state` prints MERGED and `review/disposition-1175.json` exists in the batch record.\n* **AC-2** The preflight command the PR body names runs at the merge head in a Conductor cloud workspace and its log with exit 0 is recorded.\n* **AC-3** `git log --oneline origin/main | grep -c '#1175'` prints 1.\n\nRe-verified: `gh pr view 1175 --repo iamcxa/qnow --json state --jq .state | grep -q OPEN` exit 0 2026-09-07",
+     "branchName": "feature/dev-35-\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "d9ab7db7-53c1-4755-9f9f-ab752bab06a4",
+     "identifier": "DEV-25",
+     "url": "https://linear.app/duckbase-co/issue/DEV-25/\u9a57\u8b49-netlify-dbauth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "description": "\u4ee5\u6700\u5c0f\u7aef\u5230\u7aef\u9a57\u8b49\u6b63\u5f0f\u57fa\u790e\uff1aNetlify Auth \u8eab\u5206\u8207 claims\u3001Hono API \u7684 tenant\uff0f\u9580\u5e02\uff0fsubject context\u3001Netlify DB migration\u3001RLS\u3001\u9023\u7dda\u6c60 context \u6e05\u7406\u8207\u7a3d\u6838\u3002\n\n\u9a57\u8b49\u8eca\u4e3b\u624b\u6a5f OTP \u7684\u76f8\u5bb9\u6027\uff1a\u624b\u6a5f\u4f5c\u70ba\u4e3b\u8b58\u5225\u3001\u767c\u9001\u8207\u9a57\u8b49 OTP\u3001\u4f3a\u670d\u5668\u53ef\u9a57\u8b49\u7684\u96fb\u8a71\u8b49\u64da\u3001session \u5efa\u7acb\uff0frefresh\uff0frevoke\u3001Expo Web \u8207 tenant\uff0frole claims\u3002\u4e0d\u53ef\u5047\u8a2d Netlify Auth \u8207\u65e2\u6709 Supabase OTP \u884c\u70ba\u7b49\u50f9\uff1b\u82e5\u4e0d\u76f8\u5bb9\uff0c\u8a18\u9304\u53ef\u884c provider seam \u8207\u9700\u4eba\u5de5\u6c7a\u7b56\u7684\u904e\u6e21\u65b9\u6848\u3002\n\n\u9a57\u6536\uff1a\u8de8\u79df\u6236\u8cc7\u6599\u7121\u6cd5\u8b80\u53d6\u6216\u5beb\u5165\uff1b\u89d2\u8272\u8207\u9580\u5e02\u7bc4\u570d\u5728 API \u8207\u8cc7\u6599\u5eab\u5c64\u7686\u88ab\u62d2\u7d55\uff1bcontext \u4e0d\u56e0\u9023\u7dda\u91cd\u7528\u6d29\u6f0f\uff1bmigration\u3001\u6e2c\u8a66\u8207\u90e8\u7f72\u6d41\u7a0b\u53ef\u5728 preview \u6216 staging \u57f7\u884c\u3002\n\n## Accepted outcome\n\nThe Netlify DB / Netlify Auth / Hono tenant-context / RLS / phone-OTP verification that PR iamcxa/qnow#1177 carries is merged to main with a review disposition and an e2e result recorded in the qnow batch record; the existing tests in that PR are the evidence.\n\n## Non-goals\n\n* Re-implementing or extending the verification (the PR is taken as built).\n* Supabase OTP parity beyond what the PR already asserts.\n\n## Acceptance criteria\n\n* **AC-1** `gh pr view 1177 --repo iamcxa/qnow --json state --jq .state` prints MERGED and the batch record's `review/disposition-1177.json` exists with a disposition.\n* **AC-2** The PR's own test command (named in its body) is run by the e2e station at the merge head and its exit code is recorded in the batch record.\n* **AC-3** `git log --oneline origin/main | grep -c '#1177'` prints 1.\n\nRe-verified: `gh pr view 1177 --repo iamcxa/qnow --json state --jq .state | grep -q OPEN` exit 0 2026-09-07",
+     "branchName": "feature/dev-25-\u9a57\u8b49-netlify-db\u3001auth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "0c8ddcfd-5286-4d88-afad-2888bca87e3b",
+     "identifier": "DEV-24",
+     "url": "https://linear.app/duckbase-co/issue/DEV-24/enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "description": "Refactor kc-dev-flow release gating to load fewer mandatory instructions and enforce an absolute 40,000-byte static ceiling with strict Local Profile markers.",
+     "branchName": "feature/dev-24-enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "389c0fe8-1e12-4d7e-a8c1-be1ce617d582",
+     "identifier": "DEV-23",
+     "url": "https://linear.app/duckbase-co/issue/DEV-23/\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "description": "\u5b9a\u7fa9\u820a\u5be6\u9a57\u8def\u5f91\u7684\u505c\u7528\u689d\u4ef6\u3001\u672a\u9077\u79fb\u529f\u80fd\u3001\u5df2\u77e5\u98a8\u96aa\u8207\u5f8c\u7e8c\u8ca0\u8cac\u7bc4\u570d\uff0c\u4f5c\u70ba\u5207\u63db\u8207\u8ffd\u8e64\u4f9d\u64da\u3002",
+     "branchName": "feature/dev-23-\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-37"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-22"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-21"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "64c1705c-762e-41a0-b244-0ffd371fc8f0",
+     "identifier": "DEV-22",
+     "url": "https://linear.app/duckbase-co/issue/DEV-22/\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "description": "\u5efa\u7acb preview \u8207\u6b63\u5f0f\u74b0\u5883\u3001\u8cc7\u6599 migration\u3001\u74b0\u5883\u8b8a\u6578\u7ba1\u7406\u3001CI \u8207\u57fa\u672c\u7aef\u5c0d\u7aef\u9a57\u8b49\u3002",
+     "branchName": "feature/dev-22-\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "deb48ca1-2159-447b-a811-3a2634b3ba3b",
+     "identifier": "DEV-21",
+     "url": "https://linear.app/duckbase-co/issue/DEV-21/\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "description": "\u5c07\u9810\u7d04\u3001\u9818\u55ae\u3001\u65bd\u5de5\u3001\u81ea\u6aa2\u8207\u5be9\u6838\u6d41\u7a0b\u79fb\u690d\u81f3\u6b63\u5f0f\u67b6\u69cb\uff0c\u4fdd\u7559\u51aa\u7b49\u56de\u61c9\u3001\u50f9\u683c\u5feb\u7167\u8207\u4e0d\u53ef\u8b8a\u7a3d\u6838\u6b77\u7a0b\u3002",
+     "branchName": "feature/dev-21-\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-20"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "82408970-59ef-4dfd-b6c4-5269fdaf0a01",
+     "identifier": "DEV-20",
+     "url": "https://linear.app/duckbase-co/issue/DEV-20/\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "description": "\u5efa\u7acb Hono\u3001Zod \u8207 OpenAPI \u7684\u7248\u672c\u3001\u932f\u8aa4\u683c\u5f0f\u3001\u8a8d\u8b49\u8207 tenant context \u898f\u7bc4\uff0c\u4f7f Expo Web \u8207 Refine \u53ef\u5171\u7528\u7a69\u5b9a API \u5408\u7d04\u3002\n\n\u6536\u6582\u820a\u7248 contract-support\u3001Drizzle helper \u8207 Refine provider \u70ba\u552f\u4e00\u7248\u672c\u5316 QueryV1 JSON AST\uff0c\u652f\u63f4\u516c\u958b\u6b04\u4f4d allowlist\u3001\u7be9\u9078\u3001\u6392\u5e8f\u8207\u5206\u9801\u3002\u672a\u77e5\u6b04\u4f4d\u6216 operator \u5fc5\u9808\u62d2\u7d55\uff0c\u4e0d\u53ef\u975c\u9ed8\u5ffd\u7565\uff1b\u4e0d\u66b4\u9732 snake_case\u3001SQL\u3001JSON path \u6216\u8cc7\u6599\u5eab\u7279\u6709\u67e5\u8a62\u8a9e\u610f\u3002\n\n\u7b2c\u4e00\u500b\u9a57\u8b49 resource \u70ba\u670d\u52d9\u5206\u985e\u3002\u516c\u958b\u6b04\u4f4d\u70ba id\u3001name\u3001isActive\u3001createdAt\u3001updatedAt\uff1b\u652f\u63f4\u540d\u7a31\u5305\u542b\u3001\u555f\u7528\u72c0\u614b\u8207\u65e5\u671f\u5340\u9593\u7be9\u9078\uff0c\u4ee5\u53ca\u540d\u7a31\u3001\u5efa\u7acb\u6642\u9593\u8207\u66f4\u65b0\u6642\u9593\u6392\u5e8f\u3002\u5b8c\u6210\u5f8c\u4ee5\u540c\u4e00\u80fd\u529b\u76ee\u9304\u6a21\u5f0f\u5ef6\u4f38\u81f3\u9810\u7d04\u3001\u5de5\u55ae\u3001\u5ba2\u6236\u8207\u8eca\u8f1b\uff0c\u4e26\u70ba\u654f\u611f\u6b04\u4f4d\u5b9a\u7fa9\u89d2\u8272\u5c0e\u5411\u7684\u53ef\u67e5\u8a62\u8207\u53ef\u986f\u793a\u7bc4\u570d\u3002\n\n\u5217\u8868\u56de\u61c9\u7d71\u4e00\u70ba `{ items, page: { limit, offset, total } }`\uff0c\u4f9b Refine\u3001Expo Web \u8207 agent \u5171\u7528\uff1b\u79fb\u9664\u820a\u7248 `{ data, pagination }` \u7b49\u5176\u4ed6\u683c\u5f0f\u3002\n\n\u9996\u7248\u63a1\u55ae\u4e00\u8a9e\u7cfb\uff0c\u4e0d\u5be6\u4f5c Accept-Language\u3001\u4f7f\u7528\u8005\u8a9e\u7cfb\u504f\u597d\u3001\u7ffb\u8b6f\u8cc7\u6e90\u6216\u591a\u8a9e\u696d\u52d9\u5167\u5bb9\u3002\u65e5\u671f\u8207\u91d1\u984d\u4ecd\u4ee5 canonical \u683c\u5f0f\u50b3\u8f38\u4e26\u7531\u5ba2\u6236\u7aef\u683c\u5f0f\u5316\uff0c\u4fdd\u7559\u672a\u4f86\u64f4\u5145\u591a\u8a9e\u7684\u7a7a\u9593\u3002\n\n\u932f\u8aa4\u56de\u61c9\u7d71\u4e00\u63d0\u4f9b\u7a69\u5b9a\u7684 code\u3001message\u3001params\u3001\u516c\u958b QueryV1 path \u7684 details \u8207 requestId\uff1b\u4e0d\u6d29\u6f0f SQL\u3001\u5167\u90e8\u6b04\u4f4d\u6216\u654f\u611f\u8f38\u5165\u3002\u672a\u4f86\u5c0e\u5165\u591a\u8a9e\u6642\u518d\u52a0\u5165 i18nKey\u3002QueryV1 \u8a9e\u610f\u4e0d\u53d7 locale \u5f71\u97ff\u3002",
+     "branchName": "feature/dev-20-\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "589d56fa-b3ac-4002-9a4e-f06168081dc8",
+     "identifier": "DEV-19",
+     "url": "https://linear.app/duckbase-co/issue/DEV-19/\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "description": "\u4f9d\u67b6\u69cb ADR \u6574\u4f75\u6b63\u5f0f workspace \u8207\u5957\u4ef6\u908a\u754c\uff0c\u79fb\u9664\u672a\u63a1\u7528\u7684 Chakra\u3001Mantine\u3001API candidate\u3001\u91cd\u8907 lockfile \u8207\u539f\u578b\u8cc7\u7522\u3002\n\n\u5728\u65e2\u6709 monorepo \u5efa\u7acb\u6b63\u5f0f\u7684 apps/admin\u3001apps/operations\u3001apps/api\u3001packages/contracts\u3001packages/domain\u3001packages/db \u8207 packages/ui \u7d50\u69cb\u3002\u73fe\u6709 experiments \u50c5\u4f5c\u79fb\u690d\u53c3\u8003\uff1b\u529f\u80fd\u5b8c\u6210\u7b49\u50f9\u9a57\u8b49\u5f8c\u518d\u4f9d\u6dd8\u6c70\u6e05\u55ae\u79fb\u9664\u3002\n\n\u7d71\u4e00\u70ba pnpm workspaces \u8207\u55ae\u4e00 lockfile\uff1b\u4ee5 Turborepo \u6536\u6582 lint\u3001typecheck\u3001test \u8207 build \u4efb\u52d9\u3002GitHub Actions \u6539\u70ba\u547c\u53eb Turborepo \u4efb\u52d9\u4e26\u8ca0\u8cac\u90e8\u7f72\u8207\u74b0\u5883\u6d41\u7a0b\u3002",
+     "branchName": "feature/dev-19-\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-17"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "562be1c8-077d-468f-a4cf-7a389ad3625b",
+     "identifier": "DEV-18",
+     "url": "https://linear.app/duckbase-co/issue/DEV-18/\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "description": "\u8a18\u9304\u4e26\u5b9a\u6848\u6b63\u5f0f Auth\u3001\u8cc7\u6599\u5eab\u8207 RLS\u3001Hono API\u3001Netlify \u90e8\u7f72\u3001Expo Web \u8207 Refine \u7ba1\u7406\u5f8c\u53f0\u7684\u8cac\u4efb\u908a\u754c\u8207\u53d6\u6368\u3002\n\n\u5df2\u5b9a\u6848\uff1a\u9000\u5f79 Supabase\uff0c\u6539\u4ee5 Netlify DB \u70ba\u8cc7\u6599\u5eab\u57fa\u790e\uff0c\u4e26\u4f7f\u7528 Netlify Auth \u4f5c\u70ba\u6b63\u5f0f\u8eab\u5206\u9a57\u8b49\u65b9\u6848\u3002\n\n\u5df2\u5b9a\u6848\uff1aExpo Web \u8207 Refine \u7ba1\u7406\u5f8c\u53f0\u4e00\u5f8b\u7d93\u7531 Hono API \u5b58\u53d6\u8cc7\u6599\uff1b\u4e0d\u5141\u8a31\u5ba2\u6236\u7aef\u76f4\u9023 Netlify DB\u3002Hono API \u70ba\u79df\u6236\u8108\u7d61\u3001\u6388\u6b0a\u3001\u7a3d\u6838\u8207\u5546\u696d\u898f\u5247\u7684\u552f\u4e00\u57f7\u884c\u908a\u754c\u3002\n\n\u5df2\u5b9a\u6848\uff1a\u4e00\u500b\u79df\u6236\u53ef\u64c1\u6709\u591a\u500b\u9580\u5e02\uff1b\u540c\u4e00\u4f7f\u7528\u8005\u53ef\u5728\u540c\u4e00\u79df\u6236\u5167\u53d6\u5f97\u591a\u500b\u9580\u5e02\u8207\u89d2\u8272\u3002\u5e73\u53f0\u7ba1\u7406\u54e1\u53ef\u8de8\u79df\u6236\u7ba1\u7406\uff0c\u79df\u6236\u7ba1\u7406\u54e1\u53ef\u8de8\u6240\u5c6c\u79df\u6236\u7684\u9580\u5e02\u7ba1\u7406\uff0c\u9580\u5e02\u89d2\u8272\u50c5\u80fd\u5b58\u53d6\u6240\u5c6c\u9580\u5e02\u3002\n\n\u8a02\u95b1\u65b9\u6848\u5fc5\u9808\u4f5c\u70ba\u79df\u6236\u80fd\u529b\u6a21\u578b\u7684\u4e00\u90e8\u5206\uff0c\u81f3\u5c11\u53ef\u9650\u5236\u53ef\u7528\u9580\u5e02\u6578\u91cf\uff0c\u4e26\u4fdd\u7559\u529f\u80fd\u958b\u95dc\u8207\u984d\u5ea6\u64f4\u5145\u7a7a\u9593\uff1b\u65b9\u6848\u5224\u65b7\u7531 API \u7d71\u4e00\u57f7\u884c\u3002\n\n\u9996\u7248\u63a1\u4eba\u5de5\u4f48\u5efa\uff1a\u5e73\u53f0\u7ba1\u7406\u54e1\u624b\u52d5\u6307\u6d3e\u79df\u6236\u65b9\u6848\u8207\u9580\u5e02\u984d\u5ea6\uff0c\u5148\u4ee5\u55ae\u4e00\u9810\u8a2d\u65b9\u6848\u8207\u9580\u5e02\u6578\u91cf\u9650\u5236\u9a57\u8b49\u5546\u696d\u6a21\u578b\u3002\u4e0d\u63d0\u4f9b\u81ea\u52a9\u8a02\u95b1\u3001\u4ed8\u6b3e\u9801\u3001\u5e33\u55ae\u3001\u5347\u964d\u7d1a\u3001\u9000\u6b3e\u6216\u652f\u4ed8 webhook\u3002\n\n\u9996\u7248\u4f7f\u7528\u8005\u9032\u5165\u65b9\u5f0f\uff1a\u5e73\u53f0\u7ba1\u7406\u54e1\u5efa\u7acb\u79df\u6236\u8207\u9996\u4f4d\u79df\u6236\u7ba1\u7406\u54e1\uff1b\u79df\u6236\u7ba1\u7406\u54e1\u4ee5\u9080\u8acb\u5236\u5efa\u7acb\u9580\u5e02\u4e3b\u7ba1\u8207\u670d\u52d9\u4eba\u54e1\u5e33\u865f\uff0c\u7ba1\u7406\u8207\u54e1\u5de5\u89d2\u8272\u4f7f\u7528 Netlify Auth \u767b\u5165\u3002\u8eca\u4e3b\u4e0d\u8981\u6c42\u5e33\u865f\uff0c\u4ee5\u59d3\u540d\u3001\u96fb\u8a71\u8207\u8eca\u724c\u5efa\u7acb\u5ba2\u6236\u53ca\u8eca\u8f1b\u8cc7\u6599\uff1b\u8eca\u4e3b\u81ea\u52a9\u767b\u5165\u3001\u5171\u540c\u7ba1\u7406\u8005\u8207 LINE \u8eab\u5206\u7d81\u5b9a\u5217\u70ba\u5f8c\u7e8c\u968e\u6bb5\u3002\n\n\u9996\u7248\u767b\u5165\u89d2\u8272\u70ba\u5e73\u53f0\u7ba1\u7406\u54e1\u3001\u79df\u6236\u7ba1\u7406\u54e1\u3001\u9580\u5e02\u4e3b\u7ba1\u8207\u670d\u52d9\u4eba\u54e1\u3002\u5be9\u6838\u4e3b\u7ba1\u4ee5\u53ef\u6388\u4e88\u7684\u9580\u5e02\u6b0a\u9650\u5be6\u4f5c\uff0c\u4e0d\u5efa\u7acb\u7368\u7acb\u5e33\u865f\u89d2\u8272\uff1b\u8eca\u4e3b\u8207\u7279\u7d04\u5546\u5e97\u4e0d\u63d0\u4f9b\u767b\u5165\u3002\n\n\u5ba2\u6236\u7aef\u63a1\u7d14\u7dda\u4e0a\u6a21\u5f0f\uff1a\u96e2\u7dda\u6642\u7cfb\u7d71\u4e0d\u53ef\u7528\uff0c\u4e0d\u4fdd\u7559\u96e2\u7dda\u8349\u7a3f\u3001\u5beb\u5165\u4f47\u5217\u6216\u80cc\u666f\u540c\u6b65\u6a5f\u5236\u3002\u96e2\u7dda\u53ef\u7528\u8207\u540c\u6b65\u885d\u7a81\u8655\u7406\u4e0d\u7d0d\u5165\u9996\u7248\u3002\n\n\u5de5\u55ae\u5a92\u9ad4\u9996\u7248\u50c5\u652f\u63f4\u7167\u7247\u4e0a\u50b3\u8207\u6aa2\u8996\uff0c\u4f5c\u70ba SOP \u8207\u54c1\u8cea\u7a3d\u6838\u8b49\u64da\u3002\u5f71\u7247\u4e0a\u50b3\u3001\u58d3\u7e2e\u3001\u8f49\u6a94\u8207\u64ad\u653e\u8655\u7406\u5217\u70ba\u5f8c\u7e8c\u968e\u6bb5\u3002\n\n\u9996\u7248\u7167\u7247\u6a94\u6848\u4f7f\u7528 Netlify Blobs \u5132\u5b58\uff0c\u8cc7\u6599\u5eab\u50c5\u4fdd\u5b58\u5a92\u9ad4\u4e2d\u7e7c\u8cc7\u6599\u3001\u6b78\u5c6c\u3001\u6b0a\u9650\u8207\u5f15\u7528\u3002\u4ee5\u53ef\u66ff\u63db\u7684\u5a92\u9ad4\u5132\u5b58\u4ecb\u9762\u9694\u96e2\u4f9b\u61c9\u5546\uff0c\u672a\u4f86\u53ef\u9077\u79fb\u81f3 S3 \u6216 Cloudflare \u7b49\u7269\u4ef6\u5132\u5b58\u670d\u52d9\u3002\n\nagent-native \u9996\u7248\u4ee5\u7406\u89e3\u4f7f\u7528\u8005\u610f\u5716\u8207\u81ea\u7136\u8a9e\u8a00\u8a2d\u5b9a Refine \u7be9\u9078\u70ba\u4e3b\u3002Agent \u50c5\u8f38\u51fa\u7b26\u5408 schema \u7684\u552f\u8b80\u67e5\u8a62\u8207 UI action contract\uff1bRefine \u9a57\u8b49\u3001\u5957\u7528\u7be9\u9078\u4e26\u900f\u904e Hono API \u53d6\u5f97\u8cc7\u6599\u3002Agent \u4e0d\u53ef\u76f4\u63a5\u7522\u751f\u8cc7\u6599\u5eab\u67e5\u8a62\u6216\u57f7\u884c\u5beb\u5165\u64cd\u4f5c\u3002\n\n\u8de8\u524d\u5f8c\u7aef\u67e5\u8a62\u5951\u7d04\u63a1\u55ae\u4e00\u7248\u672c\u5316 QueryV1 JSON AST\u3002Refine data provider \u5c07 UI filter\u3001sort \u8207\u5206\u9801\u8f49\u8b6f\u70ba QueryV1\uff1bHono \u4f9d resource \u7684\u516c\u958b\u6b04\u4f4d\u80fd\u529b\u76ee\u9304\u3001\u578b\u5225\u3001RBAC \u8207\u67e5\u8a62\u9650\u5236\u9a57\u8b49\uff1bapplication \u5c64\u63a5\u6536 domain query\uff1bDrizzle adapter \u50c5\u4ee5\u660e\u78ba\u6b04\u4f4d\u6620\u5c04\u8f49\u8b6f\u3002Agent \u53ea\u80fd\u7522\u751f\u76f8\u540c QueryV1 \u8207\u5141\u8a31\u7684 UI action\uff0c\u4e0d\u53ef\u4f7f\u7528\u8cc7\u6599\u8868\u3001\u6b04\u4f4d\u540d\u7a31\u3001SQL \u6216\u8cc7\u6599\u5eab\u7279\u6709\u8a9e\u610f\u3002\n\n\u6b63\u5f0f\u7522\u54c1\u7dad\u6301\u65bc\u65e2\u6709 monorepo\uff0c\u4e0d\u5efa\u7acb\u65b0 repository\u3002\u5efa\u7acb\u660e\u78ba\u7684 apps/admin\u3001apps/operations\u3001apps/api\u3001packages/contracts\u3001packages/domain\u3001packages/db \u8207 packages/ui \u908a\u754c\uff1b\u65e2\u6709 POC \u7559\u5728 experiments \u4f5c\u70ba\u79fb\u690d\u53c3\u8003\uff0c\u5f85\u5c0d\u61c9\u80fd\u529b\u9a57\u8b49\u5f8c\u9010\u6b65\u6dd8\u6c70\u3002\n\nmonorepo \u63a1 pnpm workspaces \u8207\u55ae\u4e00 lockfile \u7ba1\u7406\u4f9d\u8cf4\uff0c\u63a1 Turborepo \u5b9a\u7fa9 lint\u3001typecheck\u3001test \u8207 build \u7684\u4efb\u52d9\u4f9d\u8cf4\u3001\u5feb\u53d6\u8207\u53d7\u5f71\u97ff\u7bc4\u570d\u3002GitHub Actions \u50c5\u8ca0\u8cac\u89f8\u767c\u4efb\u52d9\u3001\u90e8\u7f72\u8207\u74b0\u5883\u6d41\u7a0b\uff0c\u907f\u514d\u91cd\u8907\u7dad\u8b77 package \u7de8\u6392\u908f\u8f2f\u3002\n\n\u4e0b\u4e00\u968e\u6bb5\u898f\u5283\u5b8c\u6574\u8a02\u95b1\u8207\u652f\u4ed8\uff1a\u65b9\u6848\u76ee\u9304\u3001\u81ea\u52a9 checkout\u3001\u8a02\u95b1\u751f\u547d\u9031\u671f\u3001\u5347\u964d\u7d1a\u3001\u652f\u4ed8 webhook ledger\u3001\u5c0d\u5e33\u8207\u9000\u6b3e\uff1b\u652f\u4ed8 provider \u9078\u578b\u5728\u8a72\u968e\u6bb5\u9a57\u8b49\u3002\n\n\u4e0d\u5305\u542b LINE OA POC\u3002",
+     "branchName": "feature/dev-18-\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "related",
+        "issue": {
+         "identifier": "DEV-25"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "5a37cf2f-a111-4d65-bdb6-8a20e389d36b",
+     "identifier": "DEV-17",
+     "url": "https://linear.app/duckbase-co/issue/DEV-17/\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "description": "\u76e4\u9ede `netlify-refine-poc` \u8207 `qnow-next` \u7684\u76ee\u9304\u3001\u5957\u4ef6\u3001\u8cc7\u6599\u6a21\u578b\u8207\u71df\u904b\u6d41\u7a0b\uff0c\u9010\u9805\u6a19\u8a18\u70ba\u4fdd\u7559\u3001\u91cd\u69cb\u3001\u79fb\u9664\u6216\u7f3a\u53e3\u3002\n\n\u4e0d\u5305\u542b LINE OA POC\u3002\n\n\u76ee\u524d\u5df2\u77e5\uff1a`netlify-refine-poc` \u63d0\u4f9b React\u3001Refine\u3001Ant Design\u3001Netlify Functions\u3001Drizzle \u8207 Hono \u7684\u90e8\u7f72\u5be6\u9a57\uff0c\u4f46\u50c5\u5b8c\u6210\u670d\u52d9\u5206\u985e\u7684 list/create\uff0c\u4e14\u73fe\u6709 tenant scope \u672a\u5177\u5099\u6b63\u5f0f RLS\u3002`qnow-next` \u63d0\u4f9b\u672c\u6a5f PostgreSQL\u3001Drizzle\u3001Hono \u8207 Ant Design \u7684\u71df\u904b\u5782\u76f4\u5207\u7247\uff0c\u5df2\u9a57\u8b49\u9810\u7d04\u3001\u9818\u55ae\u3001\u65bd\u5de5\u3001\u81ea\u6aa2\u3001\u5be9\u6838\u3001\u50f9\u683c\u51cd\u7d50\u8207\u4e0d\u53ef\u8b8a\u7a3d\u6838\u6b77\u7a0b\uff0c\u4f46\u4f7f\u7528\u5047 JWT \u8207\u672c\u6a5f\u8cc7\u6599\u3002\n\n\u512a\u5148\u4fdd\u7559 Hono + Zod/OpenAPI\u3001Drizzle\u3001\u516c\u958b\u67e5\u8a62 contract\u3001RLS transaction context\u3001\u51aa\u7b49\u8655\u7406\u3001\u50f9\u683c\u5feb\u7167\u8207\u4e0d\u53ef\u8b8a\u7a3d\u6838\u6a21\u5f0f\u3002\u512a\u5148\u6dd8\u6c70 Chakra\uff0fMantine UI bakeoff\u3001\u672a\u63a1\u7528 API candidate\u3001Netlify Identity \u5c08\u5c6c\u5c64\u3001\u91cd\u8907\u539f\u578b\u8207 lockfile\u3002",
+     "branchName": "feature/dev-17-\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    }
+   ]
+  }
+ }
+}

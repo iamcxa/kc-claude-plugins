@@ -1,0 +1,522 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+  "name": "\u67b6\u69cb\u6536\u6582\u8207 POC \u7626\u8eab",
+  "content": "\u78ba\u7acb\u55ae\u4e00 API\u3001\u8cc7\u6599\u5eab\u3001\u8eab\u5206\u8207\u90e8\u7f72\u8def\u5f91\uff1b\u4fdd\u7559 Hono\u3001Zod/OpenAPI\u3001Drizzle \u8207\u53ef\u9a57\u8b49\u7684 POC \u6838\u5fc3\u6a21\u5f0f\u3002\u79fb\u9664\u672a\u63a1\u7528\u7684 UI\u3001API \u8207\u8eab\u5206\u9a57\u8b49\u5be6\u9a57\u3002",
+  "initiatives": {
+   "nodes": [
+    {
+     "id": "7d7f5b16-8a2d-4220-905a-763b3d7ec67e"
+    }
+   ]
+  },
+  "projectMilestones": {
+   "nodes": []
+  },
+  "issues": {
+   "nodes": [
+    {
+     "id": "48e58f7b-46b6-4e4e-8c6f-dc9604df5e9e",
+     "identifier": "DEV-39",
+     "url": "https://linear.app/duckbase-co/issue/DEV-39/classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "branchName": "feature/dev-39-classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "1989cfdc-dda5-468a-a297-7b45f31afe46",
+     "identifier": "DEV-37",
+     "url": "https://linear.app/duckbase-co/issue/DEV-37/\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claimreadback-\u9a57\u6536",
+     "branchName": "feature/dev-37-\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claim\uff0freadback-\u9a57\u6536",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-35"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-36"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "4e5efffe-07d8-4b98-a512-1e9e646a7e73",
+     "identifier": "DEV-36",
+     "url": "https://linear.app/duckbase-co/issue/DEV-36/\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "branchName": "feature/dev-36-\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "57b80be9-5958-41c3-99c1-79add1ec5c37",
+     "identifier": "DEV-35",
+     "url": "https://linear.app/duckbase-co/issue/DEV-35/\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "branchName": "feature/dev-35-\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "d9ab7db7-53c1-4755-9f9f-ab752bab06a4",
+     "identifier": "DEV-25",
+     "url": "https://linear.app/duckbase-co/issue/DEV-25/\u9a57\u8b49-netlify-dbauth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "branchName": "feature/dev-25-\u9a57\u8b49-netlify-db\u3001auth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "0c8ddcfd-5286-4d88-afad-2888bca87e3b",
+     "identifier": "DEV-24",
+     "url": "https://linear.app/duckbase-co/issue/DEV-24/enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "branchName": "feature/dev-24-enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "389c0fe8-1e12-4d7e-a8c1-be1ce617d582",
+     "identifier": "DEV-23",
+     "url": "https://linear.app/duckbase-co/issue/DEV-23/\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "branchName": "feature/dev-23-\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-37"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-22"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-21"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "64c1705c-762e-41a0-b244-0ffd371fc8f0",
+     "identifier": "DEV-22",
+     "url": "https://linear.app/duckbase-co/issue/DEV-22/\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "branchName": "feature/dev-22-\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "deb48ca1-2159-447b-a811-3a2634b3ba3b",
+     "identifier": "DEV-21",
+     "url": "https://linear.app/duckbase-co/issue/DEV-21/\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "branchName": "feature/dev-21-\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-20"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "82408970-59ef-4dfd-b6c4-5269fdaf0a01",
+     "identifier": "DEV-20",
+     "url": "https://linear.app/duckbase-co/issue/DEV-20/\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "branchName": "feature/dev-20-\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "589d56fa-b3ac-4002-9a4e-f06168081dc8",
+     "identifier": "DEV-19",
+     "url": "https://linear.app/duckbase-co/issue/DEV-19/\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "branchName": "feature/dev-19-\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-17"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "562be1c8-077d-468f-a4cf-7a389ad3625b",
+     "identifier": "DEV-18",
+     "url": "https://linear.app/duckbase-co/issue/DEV-18/\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "branchName": "feature/dev-18-\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "related",
+        "issue": {
+         "identifier": "DEV-25"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "5a37cf2f-a111-4d65-bdb6-8a20e389d36b",
+     "identifier": "DEV-17",
+     "url": "https://linear.app/duckbase-co/issue/DEV-17/\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "branchName": "feature/dev-17-\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    }
+   ]
+  }
+ },
+ "lint": [
+  {
+   "rule": "L1 one-line User value",
+   "pass": false,
+   "why": "''"
+  },
+  {
+   "rule": "L2 one cycle",
+   "pass": true,
+   "why": "set(); unadmitted: 11"
+  },
+  {
+   "rule": "L3 milestone membership",
+   "pass": true,
+   "why": "no milestones -> implicit single MS"
+  },
+  {
+   "rule": "L4 admission DEV-39",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-37",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-36",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-35",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-25",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-24",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-23",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-22",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-21",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-20",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-19",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-18",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L4 admission DEV-17",
+   "pass": false,
+   "why": "planning description needs one Non-goals section"
+  },
+  {
+   "rule": "L5 initiative when >1 project",
+   "pass": true,
+   "why": "single project; not triggered"
+  },
+  {
+   "rule": "L6 blockedBy is a DAG",
+   "pass": true,
+   "why": "blocker->blocked [('DEV-35', 'DEV-37'), ('DEV-36', 'DEV-37'), ('DEV-37', 'DEV-23'), ('DEV-22', 'DEV-23'), ('DEV-21', 'DEV-23'), ('DEV-19', 'DEV-22'), ('DEV-19', 'DEV-21'), ('DEV-20', 'DEV-21'), ('DEV-18', 'DEV-20'), ('DEV-18', 'DEV-19'), ('DEV-17', 'DEV-19')]; order ['DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-36', 'DEV-39', 'DEV-19', 'DEV-20', 'DEV-37', 'DEV-22', 'DEV-21', 'DEV-23']"
+  },
+  {
+   "rule": "L6 blockedBy direction agrees with identifier order",
+   "pass": false,
+   "why": "intent order ['DEV-17', 'DEV-18', 'DEV-19', 'DEV-20', 'DEV-21', 'DEV-22', 'DEV-23', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-36', 'DEV-37', 'DEV-39']; violations (DEV-37, DEV-23)"
+  },
+  {
+   "rule": "L7 split advisory (warn only)",
+   "pass": true,
+   "why": "13 issues, forked=True; consider Milestones"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-39",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-37",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-36",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-35",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-25",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-24",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-23",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-22",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-21",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-20",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-19",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-18",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-17",
+   "pass": false,
+   "why": "0 ACs"
+  },
+  {
+   "rule": "L9 by-product Issue check",
+   "pass": false,
+   "why": "issues with no unique surface: DEV-18; DEV-19; DEV-20; DEV-37; DEV-22; DEV-21; DEV-23"
+  },
+  {
+   "rule": "L10 re-verified presence and age",
+   "pass": false,
+   "why": "14-day bound; violations: DEV-39: no Re-verified line, DEV-24: no Re-verified line, DEV-23: no Re-verified line, DEV-22: no Re-verified line, DEV-21: no Re-verified line, DEV-20: no Re-verified line, DEV-19: no Re-verified line, DEV-18: no Re-verified line, DEV-17: no Re-verified line"
+  }
+ ],
+ "dispatch_order": [
+  "DEV-17",
+  "DEV-18",
+  "DEV-24",
+  "DEV-25",
+  "DEV-35",
+  "DEV-36",
+  "DEV-39",
+  "DEV-19",
+  "DEV-20",
+  "DEV-37",
+  "DEV-22",
+  "DEV-21",
+  "DEV-23"
+ ],
+ "edges": [
+  [
+   "DEV-35",
+   "DEV-37"
+  ],
+  [
+   "DEV-36",
+   "DEV-37"
+  ],
+  [
+   "DEV-37",
+   "DEV-23"
+  ],
+  [
+   "DEV-22",
+   "DEV-23"
+  ],
+  [
+   "DEV-21",
+   "DEV-23"
+  ],
+  [
+   "DEV-19",
+   "DEV-22"
+  ],
+  [
+   "DEV-19",
+   "DEV-21"
+  ],
+  [
+   "DEV-20",
+   "DEV-21"
+  ],
+  [
+   "DEV-18",
+   "DEV-20"
+  ],
+  [
+   "DEV-18",
+   "DEV-19"
+  ],
+  [
+   "DEV-17",
+   "DEV-19"
+  ]
+ ],
+ "receipt_sha256": "f58d281766aac64c5aa386ac17a3aad632f37abaa7042719ff3919c1fac2a2e6"
+}

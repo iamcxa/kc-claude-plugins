@@ -5,3 +5,7 @@ Last time: three PRs (#1174 DEV-36, #1175 DEV-35, #1177 DEV-25) have sat OPEN, M
 Today instead: PRs are merged from whichever chat built them (Conductor/Codex), with no accept/review/close record; the batch record that exists for kc-claude-plugins does not exist for qnow.
 Cost: six idle days on three green PRs; the acceptance journey (three hosted actors) is blocked behind them.
 Fact vs assumption: facts — the three PR states (probed), DEV-37's stated prerequisites, seven Todo tickets with one-paragraph bodies that L4 would refuse. Assumption — that kc-ship-flow can be installed into qnow before its first release (needs a local install from main; kc-ship-flow-v0.1.0 is not tagged, DEV-128 pending).
+
+## Lint on the project (2026-09-07, main ac60ebe4)
+
+LINT FAIL: L1 (project had no `## User value` — added, additive), L4/L8/L10 on the seven un-admitted architecture tickets and two Done ones, L6 identifier-order on DEV-37 → DEV-23 (a legitimate relation), L9 on tickets without surfaces. The four batch tickets (DEV-25/35/36/37) PASS L4 and L8 after the section conversion. The receipt schema requires lint.pass, so DEV-129 (L4/L8/L10 admitted-only; L6 id-order advisory) is dispatched as a pre-batch blocker, the same pattern as DEV-122 last session. DEV-37 executor: Conductor cloud worker (Captain: secrets are present locally and in Conductor cloud).
