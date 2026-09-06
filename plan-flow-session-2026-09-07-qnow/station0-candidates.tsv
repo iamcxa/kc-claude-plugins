@@ -1,0 +1,12 @@
+# candidate	title	probe (iamcxa/qnow @ 902341b0, 2026-09-07)	result	reading
+DEV-36	package-scoped ESM hosted journey runner	gh pr view 1174 --json state,mergeable	OPEN MERGEABLE, CI green, last update 2026-09-01	built, unmerged for 6 days: ship stations (review/e2e/merge/close) can run on it
+DEV-35	Conductor Cloud headed Playwright preflight	gh pr view 1175 --json state,mergeable	OPEN MERGEABLE, CI green, 2026-09-01	same as DEV-36
+DEV-25	Netlify DB/Auth/RLS tenancy + phone OTP	gh pr view 1177 --json state,mergeable	OPEN MERGEABLE, CI green (one NEUTRAL), 2026-09-01	same; body has no sections (L4 would refuse the ticket as written)
+DEV-37	three-actor hosted claim/readback acceptance	body '## 前置' names DEV-35, DEV-36	blocked until #1174/#1175 merge	dispatchable only after the three PRs land
+DEV-19	consolidate monorepo, remove Chakra/Mantine	grep -rl '@mantine|@chakra-ui' --include=package.json	1 hit (experiments/netlify-refine-poc/apps/web); 2 lockfiles	observation reproduces; body lacks outcome/non-goals/AC
+DEV-18	architecture ADR	ls docs/adr docs/decisions	absent	reproduces; body is a list of decisions, no AC
+DEV-20	API contract + tenant context skeleton	ls packages | grep contract	api-contract, contract-support both exist	partially done already; body lacks AC
+DEV-17	inventory POC assets	ls experiments	netlify-refine-poc present	reproduces; body lacks AC
+DEV-21	port operations vertical slice	ls apps	deno-api, expo-app, refine-app, supabase	45-char body; not admissible as written
+DEV-22	deploy + verification pipeline	ls .github/workflows	deploy-release, deploy-staging, pr, … already exist	observation partly stale; 49-char body
+DEV-23	POC retirement list	(no probe possible)	41-char body	not admissible as written
