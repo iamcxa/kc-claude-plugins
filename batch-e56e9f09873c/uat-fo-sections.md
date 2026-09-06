@@ -7,7 +7,7 @@ Four Draft PRs that make ship-flow's last three stations and its close step scri
 1. **#378** DEV-104 — review station: `open-pr.sh` + `disposition.py` (head `55d06579`, CI green)
 2. **#379** DEV-105 — e2e gate: `e2e-gate.py`, credential-stripped `e2e-cli.sh`, this batch's flow (head `ba96da4e`, CI green)
 3. **#380** DEV-106 — handoff: `uat-doc.py` + dry-run `notify.sh` (head `b6d50347`, CI green)
-4. **#381** DEV-107 — close: schema + validator + debrief writers (head pending repair round 2; do not merge before it lands)
+4. **#381** DEV-107 — close: schema + validator + debrief writers (head `ede6eecb`, all 9 findings closed, CI pending at write time)
 
 After #379 and #380 squash-merge, #381 will show a conflict; the FO merges main into it under `moved_base` — no action from you.
 

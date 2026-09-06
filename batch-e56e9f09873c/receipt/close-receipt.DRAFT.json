@@ -5,7 +5,7 @@
  "batch": {
   "entity": "batch-e56e9f09873c",
   "started_at": "2026-09-06T02:06:51Z",
-  "closed_at": "DRAFT",
+  "closed_at": "UAT-READY 2026-09-06T04:17:49Z",
   "holder": "laptop"
  },
  "issues": {
@@ -63,19 +63,19 @@
   },
   "DEV-107": {
    "outcome": "pr_open",
-   "candidate": "9282343c43afada5e50ff2a282a7b36102d3cfc8",
+   "candidate": "ede6eecbf2bbff9b4cdb2d553151d237f18012d9",
    "pr": "iamcxa/kc-claude-plugins#381",
-   "rounds": 1,
+   "rounds": 2,
    "minutes": {
     "dispatch": 1,
     "build": 17,
     "verify": 8,
-    "review": 0,
-    "repair": 0
+    "review": 13,
+    "repair": 32
    },
    "cost_usd_imputed": null,
    "residuals": [
-    "review station result pending at draft time; rebased by the FO under moved_base"
+    "rebased by the FO under moved_base after the lower layers' repairs; writers' defects fixed in round 2"
    ]
   }
  },
@@ -137,39 +137,46 @@
   "captain_gates": 2
  },
  "dev_debrief": {
+  "candidate_correction": "Local subagents in this batch produced zero Evidence refusals (four accepts, one CI-only resend) against six of eleven the day before on cloud workers; keep the self-check clause (DEV-108) and the SELF_CHECK field mandatory. The findings that blocked were all security/correctness in code the Brief did not name — add to the build contract: a worker must run the repository's own accept station AND the contract test in a depth-1 clone before replying.",
   "per_issue": {
    "DEV-104": {
-    "rounds": 3,
-    "evidence_refusals": [],
     "code_refusals": [
-     "r1 review: 8 findings, 2 security (fork-syntax BRANCH unbound; case-sensitive category)",
-     "r2: CI red — fixture named a main SHA absent in a depth-1 clone"
-    ]
+     "disposition-378-r2.json: disposition=reviewer-absent findings=0 blocking=[]",
+     "disposition-378.json: disposition=block findings=8 blocking=[security]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 3
    },
    "DEV-105": {
-    "rounds": 2,
-    "evidence_refusals": [],
     "code_refusals": [
-     "r1 review: 7 findings, 1 security (candidate-tree scripts ran with FO credentials)",
-     "r2 blocker: production flow's recorded block unreachable in a depth-1 clone — resolved by a CI-safe test journey"
-    ]
+     "disposition-379.json: disposition=block findings=7 blocking=[security]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 2
    },
    "DEV-106": {
-    "rounds": 2,
-    "evidence_refusals": [],
     "code_refusals": [
-     "r1 review: 11 findings, 2 security (markdown injection; newline heading forgery), 1 CRITICAL (a dead worker's issue vanished)"
-    ]
+     "disposition-380.json: disposition=block findings=11 blocking=[security]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+    ],
+    "rounds": 2
    },
    "DEV-107": {
-    "rounds": 1,
-    "evidence_refusals": [],
     "code_refusals": [
-     "review pending at draft time"
-    ]
+     "disposition-381.json: disposition=block findings=9 blocking=[security]"
+    ],
+    "evidence_refusals": [
+     "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 2"
+    ],
+    "rounds": 1
    }
-  },
-  "candidate_correction": "Local subagents in this batch produced zero Evidence refusals (four accepts, one CI-only resend) against six of eleven the day before on cloud workers; keep the self-check clause (DEV-108) and the SELF_CHECK field mandatory. The findings that blocked were all security/correctness in code the Brief did not name — add to the build contract: a worker must run the repository's own accept station AND the contract test in a depth-1 clone before replying."
+  }
  },
  "ship_debrief": {
   "candidate_correction": "The station of record must be origin/main's accept-evidence.sh, and the batch record must name its commit (S33); the FO's own worktree lagged main for the whole batch. Second: a moved_base rebase must retitle from the feature commit, not the merge head (S34, DEV-112).",
@@ -200,7 +207,7 @@
    },
    {
     "decision": "2026-09-06T02:40:21Z — **Correction.** The previous commit's line 'DEV-106 accepted, PR opened' was written from an empty block: the FO's extractor read the subagent's JSONL transcript instead of its reply, so the station ran on nothing (exit 2) and `open-pr.sh` was invoked on a missing file (no PR was created; the number shown was the launching branch's own PR). Re-run from the reply text: station exit 1; PR not opened. Residual for the UAT doc: the fixtures copy two real batch records from the state branch into `scripts/fixtures/ship-flow/uat-doc/` (15 files), no secrets.",
-    "overturned": true
+    "overturned": false
    },
    {
     "decision": "2026-09-06T02:41:38Z — **DEV-106 FO-accepted** (`dea62ed6`) over a station false-refusal (S32: the variant extractor drops the first of two chained `git rm -f`). FO ran the one execution: base exit 1, candidate 0, after-variant 1; WARN stands (README.md read but not restored). PR #380 opened via open-pr.sh. Default applied: a station defect is recorded and fixed in its own round, not charged to the worker.",
@@ -216,7 +223,7 @@
    },
    {
     "decision": "2026-09-06T02:51:15Z — correction: the previous line's \"PR #378 fast-forwarded\" happened only now; the first push failed because zsh read `$SHA:refs` as a `:r` modifier (S33-class, tooling). #378 head is now `0fd7ad47`. The r2 disposition file reads `reviewer-absent` because no new review ran on r2: the FO delta-verified the eight fixes by execution instead (fallback marker applies).",
-    "overturned": true
+    "overturned": false
    },
    {
     "decision": "2026-09-06T02:54:12Z — **review station on #380 (DEV-106): disposition `block`** (r2 station). 11 findings; two `security` (markdown injection from worker fields into the UAT document; newline forgery from a receipt title), one CRITICAL correctness (a dead worker's issue vanishes and the doc says none stuck). Also a planning delta, not a worker fault: the Slack half cannot be built without a channel and a credential the plan never named; `notify.sh` is dry-run-only by the dispatch's own instruction. Default applied: repair round 1 of 2 for the document; the message half goes to the UAT document as a Captain input.",
@@ -228,7 +235,7 @@
    },
    {
     "decision": "2026-09-06T03:01:41Z — **Correction (S33).** Every \"accept station (main)\" run in this batch until now used the FO worktree's copy of accept-evidence.sh, three commits behind origin/main (pre-#377). After syncing, the hardened station accepts DEV-105, DEV-106 (WARN: README.md not restored), DEV-107, and DEV-104 r2 (WARN). The DEV-106 \"station false-refusal\" and S32 are retracted: the station was right, the FO ran the wrong copy. From here the station of record is main's `accept-evidence.sh` at `4300eee6`.",
-    "overturned": true
+    "overturned": false
    },
    {
     "decision": "2026-09-06T03:07:34Z — **DEV-104 r2 CI fix accepted** (`55d06579`, station ACCEPT with WARN at main 4300eee6): fork-syntax refusal now precedes the SHA lookup; fixtures use a synthetic SHA. #378 fast-forwarded; CI is the shallow-clone authority (FO shallow run in progress). DEV-104 repair budget spent (2 of 2).",
@@ -268,6 +275,18 @@
    },
    {
     "decision": "2026-09-06T03:36:10Z — #381 CI green on `9282343c`.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T03:39:02Z — UAT document generated from the record (84 lines): close receipt draft validates (`CLOSE OK`); all four layers carry PR, candidate, base. Observation for the document's residuals: `base_label()` still prints `(main)` for a base that is a sibling candidate or the FO's merge (it only distinguishes \"not recorded\"); the DEV-106 r2 fix covered missing bases, not non-main ones. Listed against DEV-106, not blocking.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T03:43:05Z — **review station on #381 (DEV-107): disposition `block`.** 9 findings; one `security` (whitespace dispositions a defect and the close gate says OK); the writers produce plausible zeros from missing inputs, pick a refused round over the accepted one, and mark \"overturned\" by a substring. Default applied: repair round 1 of 2. The close receipt draft for this batch was FO-edited by hand and does not depend on the writers' defects.",
+    "overturned": false
+   },
+   {
+    "decision": "2026-09-06T04:17:08Z — **DEV-107 round 2 accepted** (`ede6eecb`, station ACCEPT at main 4300eee6; shallow-clone test 0). FO delta checks: the three new test files pass; a blank residual is refused even under `python3 -S`; the writers now fail loud on missing inputs and select the accepted evidence file; schema requires both debriefs. All 9 findings closed; #381 fast-forwarded. 32 min, 270K tokens.",
     "overturned": false
    }
   ],
@@ -309,5 +328,5 @@
    "verify": 25
   }
  },
- "close_sha256": "db65cadfdeb85d3638c100a7dadb6364e9ce0ec073776f5605c7f351380661c7"
+ "close_sha256": "c32729db7bd353f0e00cc6396b02a4a19eebc455cd5d594297e9f6ed7cd17e6e"
 }
