@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): resume pinned reports and authorized corrections"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -28,6 +28,8 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-06T14:29:01Z
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/issue-382-flow.hNPqy3/.worktrees/spacedock-ensign-issue-382-stage-pin-continuation
 ---
 
 Resume valid report updates and explicitly authorized corrections without
