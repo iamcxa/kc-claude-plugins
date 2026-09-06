@@ -318,3 +318,58 @@ Rollout is source-only and blocked on repair/re-verification plus separate deliv
 ### Summary
 
 The narrow source delta and new-pin continuation/correction journeys are supported, but the accepted legacy-forward refusal claim is not. Return this one concrete requirement to the retained implementation owner; preserve the existing compatibility route and seek one final exact-candidate re-verification after repair. This report is a validation finding, not Captain gate approval or release authority.
+
+## Stage Report: implementation (cycle 3)
+
+Author: /root/spacedock_ensign_issue_382_stage_pin_continuation_implementation. This is the single authorized correction response for validation/1, not a fresh validation verdict.
+
+- DONE: Close the legacy forward-stage scope gap at the existing loader seam without losing legitimate status-only advancement or same-stage exact-byte refusal, and without expanding the approved product or exception scope.
+  Signed-off correction `bece455c5ef5e0298a3ca40bde4684b982b6e4b9` changes only the loader, its existing test and MIGRATION.md. It restores only the known predecessor status value in raw frontmatter and compares the complete reconstructed bytes with the legacy pinned hash; it neither normalizes other bytes nor infers accepted authority. Status-only advancement, original predecessor and same-stage exact-byte refusal remain.
+- DONE: Prove the rejected-candidate regression fails and the corrected public CLI behavior passes; retain exact candidate and required relevant exit-check evidence with unchanged original pins and history.
+  The new regression failed on the unchanged rejected loader, then passed after correction. Fresh loader/full-contract/marketplace and required scoped checks completed; the actual validation-stage pin and original source patch hashes are unchanged. Original rejection evidence remains intact.
+- DONE: Commit only the bounded product correction and your durable correction report with all three checklist dispositions; preserve the physical validation stage and original pin, and return to the retained reviewer without push, PR or release actions.
+  Accounting: 3 DONE / 0 SKIPPED / 0 FAILED for correction outputs. Only this own report is appended through the supported state-only transaction; no product push or gate record, frontmatter mutation, new worker, PR, merge, release or installation upgrade.
+
+### Exact candidate, authority and evidence
+
+Base remains `dc4c8b13c0d86d81e4d79679d8ccb735117a9e52`; rejected candidate `3ffb3cf30a5bd0d196623faffff3bdbf9b9c6c8d`; corrected candidate `bece455c5ef5e0298a3ca40bde4684b982b6e4b9`. Code worktree/branch are unchanged and clean after commit. Correction diff SHA-256 is `a3af7085666e3e6f872151d6e0cc474706655ed6feaa973ed3da8708b3ef6b07`; whole fixed-base-to-final diff SHA-256 is `d18c3f0a7bc501657d31d95db82e572c3e23cbff52bf28dc7a5de2aba367089c`.
+Authority is the re-read one-time `continuation-exception` at state `c6d18cbc15f981becd3569d6d899753e3c7acec2`, transported by the original retained-worker advance assignment. It preserves the physical validation stage and unsupported installed-4.1.1 re-entry refusal, authorizing only this correction and one retained-reviewer re-verification. No pin or workflow reset was used.
+Validation report `636dd6908abe158cb9e241bdd5ae3387bb9a4030` remains the original NEEDS_FIXES source. State prerequisite fast-forwarded only unrelated peer state to `4418c376`; this task authority did not change.
+Preserved task stage-pin SHA-256: `cb30cbfd097aa8561dffe999d74fee23d870d06666ff4066618d27e85d30eb13`. Original read-only source patch remains `f4a57ae605125f45bc105bf654eada7c6a1e82a14d7c6c81aab435c130a240bc`; original six-file commit and narrowed architecture commit are retained ancestors. No original legacy-task action occurred.
+
+Evidence directory: the dispatched code worktree's `.context/correction-382/`; `README.md` records commands, environment, identities and bounds.
+- `legacy-regression-red.log`: actual newly added public-CLI regression with rejected loader unchanged, exit 1 in 7.45s: legacy forward transition accepted changed accepted scope. This expected missing-fix failure is not a failed required positive.
+- `loader-green.log`: exit 0 in 22.56s, including legacy status-only success, scope/report/runtime drift refusal with unchanged pin, preserved quoted/whitespace status and body bytes, existing same-stage refusal, report/correction journeys and real fixture dispatch transport.
+- `contract-green.log`: fresh full relevant suite PASS, exit 0 in 64.54s. `marketplace.log`: parity/schema/eight disposable install fixtures PASS, exit 0 in 11.77s.
+- `ruff-errors.log`, `frontmatter.log`, `release-contract.log`: scoped E4/E7/E9/F checks, 44 skill frontmatters and release contract PASS. Fresh whitespace check passes. `sanitize.log`: zero REJECT/BLOCK, unchanged 28 WARN matches; no suppression. Existing baseline F541/default-Ruff caveats remain, not a globally clean lint claim.
+- All positive runs used the exact product contents committed at the final candidate. Python used the activated dispatch-declared Brussels venv with verified interpreter. No installed runtime substitution or additional provider observation occurred.
+
+Changed-file obligations: loader closes AC-5's ordinary-forward legacy comparison gap; existing loader test supplies the rejected-code falsifier, compatibility positives and no-write refusals; MIGRATION.md states the exact status-only/full-byte rule without a new migration interface. AC-1 through AC-4 retain earlier independent PASS evidence plus the fresh regression suite; AC-5 is now implemented with fresh positive/refusal evidence, pending independent confirmation at this exact candidate. The worker does not issue a new validator verdict.
+
+### Canonical correction record and project context
+
+Prepared `.context/correction-382/briefing.json` (SHA-256 `8cf99b961b06d93dec7ef4573915d86f3fc5f82ffbe5c4254a574e963b7eb147`) and `briefing.review.jsonl` (SHA-256 `5efac3b563f13c1f4a4a1b031d59acb3cce83f0b437f971c782109f36f5db10b`) using the installed feedback-rejection-flow canonical schema. Basic JSON/entry/actor/final-resolution checks pass.
+All entries are self-attributed. The original revise Resolution is explicitly a transcription of the committed validator report; every timestamp is this worker's capture time. The last revise Resolution closes only the correction response, pending independent re-verification, never Captain approval. The manifest hash-binds the correction diff and original report/exception/FO transport captures; the transport copy differs only by a disclosed terminal newline. The FO owns the single existing `gate record --round validation/1` action before re-verification; do not append later reviewer results into this frozen round.
+
+```yaml
+project_context:
+  impact: update
+  authority: "Root PRODUCT.md, ARCHITECTURE.md, and CLAUDE.md (Local Profile binding)"
+  claim_locator: "ARCHITECTURE.md: same-stage refusal clause; MIGRATION.md: legacy equality paragraph"
+  surface: "Pinned continuation and legacy ordinary forward-stage transition"
+  stale_claim: "Unqualified same-stage refusal, plus legacy equality promise unsupported at the forward boundary"
+  approved_change: "Retain the Captain-approved architecture clause; enforce and explain status-only legacy forward matching at the existing seam"
+  landed_change: "ARCHITECTURE.md unchanged from 3ffb3cf; bece455c updates only the existing MIGRATION legacy paragraph and loader/test seam"
+  planned_check: "Preserve clause-only architecture correspondence; prove legacy status-only success and changed-byte refusal"
+  validation_evidence: "Earlier independent docs receipt remains bound to unchanged ARCHITECTURE.md; fresh correction loader/full-contract checks pass; retained reviewer confirmation of final candidate pending"
+```
+
+### Remaining review and delivery boundaries
+
+RoboRev stays **UNKNOWN(reason: stale)**, request 1 / confirmation 0. Missing configuration/profile/family/provider-contract/caps/panel/member identity fields remain absent; no extra request or confirmation was issued. Its HIGH diagnostic became the independently reproduced correction target; this implementation report does not independently close the finding. Prior approximate provider cost USD 0.0487008 with 1/1 cost coverage is not measured CI cost per PR.
+FO's latest read-only delivery observation: remote main `ac60ebe462a9177dbfcaa61f29db98444f4a384d` changes only `kc-ship-flow/**` and `docs/ship/**` beyond the frozen base, outside these seven paths; main-tip integration is unverified. Open PR #321 at `abbe926929af915c2bbb8bb243eca0f6e3ac11f2` still shares five candidate paths. No code fetch/rebase/absorption or candidate PR occurred. Recheck exact delivery base/overlap only when delivery is authorized.
+The retained reviewer owns one exact-candidate re-verification after the FO records this correction round; the final Captain gate remains. No all-risks-resolved, formal validation PASS, original-task recovery or delivery claim is made.
+
+### Summary
+
+The bounded legacy-forward correction is committed with actual rejected-code failure and corrected-code checks. The physical validation stage, original pin and history are preserved. Return this exact candidate and the self-attributed correction record to the existing FO/retained reviewer; no additional worker or observation is requested.
