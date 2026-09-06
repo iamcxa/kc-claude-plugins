@@ -29,8 +29,74 @@
     },
     "defects_returned": {
       "type": "array",
-      "items": {"type": "object", "additionalProperties": false, "required": ["id", "class", "one_line", "fix_ticket"], "properties": {"id": {"type": "string", "pattern": "^S[0-9]+$"}, "class": {"enum": ["dispatch", "read-path", "verify", "delivery", "holder", "quota", "seam", "worker-conduct"]}, "one_line": {"type": "string"}, "fix_ticket": {"type": ["string", "null"], "pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"}}},
-      "description": "ship-flow runtime defects this batch surfaced; the next plan round decides which become Issues"
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "class", "one_line"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^S[0-9]+$"},
+          "class": {"enum": ["dispatch", "read-path", "verify", "delivery", "holder", "quota", "seam", "worker-conduct"]},
+          "one_line": {"type": "string"},
+          "fix_ticket": {"type": ["string", "null"], "pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"},
+          "accepted_residual": {"type": ["string", "null"], "description": "why the defect is disposed with no fix ticket; the alternative disposition to fix_ticket"}
+        }
+      },
+      "description": "ship-flow runtime defects this batch surfaced; each entry needs a fix_ticket or an accepted_residual before close (validate-receipt.py refuses one with neither)"
+    },
+    "dev_debrief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["per_issue", "candidate_correction"],
+      "description": "written at UAT-ready from the batch's Evidence blocks and refusals, addressed to dev-flow",
+      "properties": {
+        "per_issue": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"},
+          "additionalProperties": {
+            "type": "object", "additionalProperties": false,
+            "required": ["rounds", "evidence_refusals", "code_refusals"],
+            "properties": {
+              "rounds": {"type": "integer", "minimum": 0},
+              "evidence_refusals": {"type": "array", "items": {"type": "string"}, "description": "each accept-station or without-it refusal this Issue hit, with its shape"},
+              "code_refusals": {"type": "array", "items": {"type": "string"}, "description": "review findings that blocked or held back a candidate"}
+            }
+          }
+        },
+        "candidate_correction": {"type": "string", "minLength": 1, "description": "one candidate correction to the build contract"}
+      }
+    },
+    "ship_debrief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["defaults_decisions", "defects_disposition", "minutes_per_station", "candidate_correction"],
+      "description": "written after the Captain merges, addressed to ship-flow",
+      "properties": {
+        "defaults_decisions": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["decision", "overturned"],
+            "properties": {
+              "decision": {"type": "string"},
+              "overturned": {"type": "boolean"}
+            }
+          },
+          "description": "every `defaults` decision the batch record made and whether the Captain overturned it"
+        },
+        "defects_disposition": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "disposition"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^S[0-9]+$"},
+              "disposition": {"type": "string"}
+            }
+          }
+        },
+        "minutes_per_station": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+        "candidate_correction": {"type": "string", "minLength": 1, "description": "one candidate correction to ship-flow"}
+      }
     },
     "totals": {"type": "object", "additionalProperties": false, "required": ["workspaces_created", "workspaces_orphaned", "fix_rounds", "captain_gates"], "properties": {"workspaces_created": {"type": "integer"}, "workspaces_orphaned": {"type": "integer"}, "fix_rounds": {"type": "integer"}, "captain_gates": {"type": "integer"}}},
     "close_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}

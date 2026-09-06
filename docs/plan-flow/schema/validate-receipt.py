@@ -65,6 +65,19 @@ print("OK", r["receipt_sha256"][:16], len(ids), "issues", len(r["edges"]), "edge
 # ---- close receipt (optional third argument: close.json) ----
 if len(sys.argv) > 3:
     c = json.load(open(sys.argv[3]))
+    undispositioned = [d["id"] for d in c.get("defects_returned", []) if not d.get("fix_ticket") and not d.get("accepted_residual")]
+    if undispositioned: fail(f"defects_returned missing fix_ticket or accepted_residual: {', '.join(undispositioned)}")
+    if "dev_debrief" not in c: fail("close receipt missing dev_debrief")
+    dev_debrief = c["dev_debrief"]
+    for field in ("per_issue", "candidate_correction"):
+        if field not in dev_debrief: fail(f"dev_debrief missing required field: {field}")
+    for issue_id, entry in dev_debrief["per_issue"].items():
+        for field in ("rounds", "evidence_refusals", "code_refusals"):
+            if field not in entry: fail(f"dev_debrief.per_issue.{issue_id} missing required field: {field}")
+    if "ship_debrief" not in c: fail("close receipt missing ship_debrief")
+    ship_debrief = c["ship_debrief"]
+    for field in ("defaults_decisions", "defects_disposition", "minutes_per_station", "candidate_correction"):
+        if field not in ship_debrief: fail(f"ship_debrief missing required field: {field}")
     if jsonschema: jsonschema.validate(c, json.load(open(HERE / "kc-ship-close-receipt.v1.schema.json")))
     cc = dict(c); cc.pop("close_sha256", None)
     if hashlib.sha256(canon(cc)).hexdigest() != c["close_sha256"]: fail("close_sha256 does not match canonical content")
