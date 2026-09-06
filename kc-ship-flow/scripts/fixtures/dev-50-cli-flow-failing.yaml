@@ -1,6 +1,6 @@
 name: dev-50-cli-flow-failing
 description: |
-  Negative fixture for scripts/ship-flow/e2e-cli.sh: same as
+  Negative fixture for kc-ship-flow/scripts/e2e-cli.sh: same as
   dev-50-cli-flow.yaml, but the third step's command is `false`, so its
   exit code never matches the declared `expect`.
 

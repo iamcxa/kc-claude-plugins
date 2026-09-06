@@ -15,7 +15,7 @@ PR carries neither field, so both lookups simply skip it).
 
 Shape:
   milestone named, docs/ship-flow/flows/<slug>.yaml exists -> resolve the
-    stacked head to a fixed commit and run scripts/ship-flow/e2e-cli.sh
+    stacked head to a fixed commit and run kc-ship-flow/scripts/e2e-cli.sh
     there, exit its exit code.
   milestone named, no flow file                            -> print
     "e2e: not applicable" with the reason, exit 0.
@@ -42,7 +42,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 FLOWS_DIR = ROOT / "docs/ship-flow/flows"
-E2E_CLI = ROOT / "scripts/ship-flow/e2e-cli.sh"
+E2E_CLI = ROOT / "kc-ship-flow/scripts/e2e-cli.sh"
 
 
 def slugify(name: str) -> str:
