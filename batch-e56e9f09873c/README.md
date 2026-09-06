@@ -31,3 +31,5 @@ The first cut's two layer-1 workers hit the shared session limit before any push
 - 2026-09-06T03:01:41Z — **Correction (S33).** Every "accept station (main)" run in this batch until now used the FO worktree's copy of accept-evidence.sh, three commits behind origin/main (pre-#377). After syncing, the hardened station accepts DEV-105, DEV-106 (WARN: README.md not restored), DEV-107, and DEV-104 r2 (WARN). The DEV-106 "station false-refusal" and S32 are retracted: the station was right, the FO ran the wrong copy. From here the station of record is main's `accept-evidence.sh` at `4300eee6`.
 
 - 2026-09-06T03:07:34Z — **DEV-104 r2 CI fix accepted** (`55d06579`, station ACCEPT with WARN at main 4300eee6): fork-syntax refusal now precedes the SHA lookup; fixtures use a synthetic SHA. #378 fast-forwarded; CI is the shallow-clone authority (FO shallow run in progress). DEV-104 repair budget spent (2 of 2).
+
+- 2026-09-06T03:08:36Z — #378 CI green on `55d06579` (multi-profile, version parity, GitGuardian). DEV-104 is UAT-ready pending the batch document.
