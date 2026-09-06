@@ -1,0 +1,81 @@
+{
+ "id": "00000000-0000-0000-0000-000000000900",
+ "name": "DEV-122 fixture: Done pair ignored, unadmitted reported",
+ "content": "## User value\n\nDEV-122 fixture project value: plan-lint L2/L9 correctly ignore Done issues and report un-cycled candidates.\n\n## Hypothesis\n\nIf L9 and L2 only consider active Issues then a Done pair sharing a surface and an un-cycled Backlog candidate no longer produce false-positive FAILs.\n\n## Wedge\n\nSynthetic fixture only; not a real delivery item.\n\n## Outcome\n\nTwo fixtures prove the filtering: a Done pair + unadmitted candidate lints PASS, and the same pair set to started lints FAIL naming the shared surface.\n\n## Exit\n\n* Fixture snapshots committed under scripts/fixtures/plan-flow/.\n* Contract test asserts both outcomes.\n\n## Plan receipt\n\nkc-plan-receipt/v0 sha256 `0000000000000000000000000000000000000000000000000000000000000000`; synthetic fixture, no real approval.",
+ "initiatives": {
+  "nodes": []
+ },
+ "projectMilestones": {
+  "nodes": []
+ },
+ "issues": {
+  "nodes": [
+   {
+    "id": "00000000-0000-0000-0000-0000000009901",
+    "identifier": "DEV-901",
+    "url": "https://linear.app/duckbase-co/issue/DEV-901/dev122-fixture-issue-901",
+    "description": "## The problem\n\nSynthetic DEV-122 fixture problem statement for issue 901, used only to exercise plan-lint L2/L9 filtering.\n\n## Accepted outcome\n\nSynthetic accepted outcome for DEV-901: the fixture claims surface `docs/plan-flow/dev122-fixture-shared-surface.py` and nothing else.\n\n## Non-goals\n\n- Not a real change; fixture data only.\n- No production surface is touched.\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/dev122-fixture-shared-surface.py` exit 0; recorded.\n\nRe-verified: python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json exit 0 2026-09-06",
+    "branchName": "feature/dev-901-dev122-fixture-issue-901",
+    "cycle": {
+     "id": "cycle-1"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "started"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "00000000-0000-0000-0000-0000000009902",
+    "identifier": "DEV-902",
+    "url": "https://linear.app/duckbase-co/issue/DEV-902/dev122-fixture-issue-902",
+    "description": "## The problem\n\nSynthetic DEV-122 fixture problem statement for issue 902, used only to exercise plan-lint L2/L9 filtering.\n\n## Accepted outcome\n\nSynthetic accepted outcome for DEV-902: the fixture claims surface `docs/plan-flow/dev122-fixture-shared-surface.py` and nothing else.\n\n## Non-goals\n\n- Not a real change; fixture data only.\n- No production surface is touched.\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/dev122-fixture-shared-surface.py` exit 0; recorded.\n\nRe-verified: python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json exit 0 2026-09-06",
+    "branchName": "feature/dev-902-dev122-fixture-issue-902",
+    "cycle": {
+     "id": "cycle-1"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "started"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "00000000-0000-0000-0000-0000000009903",
+    "identifier": "DEV-903",
+    "url": "https://linear.app/duckbase-co/issue/DEV-903/dev122-fixture-issue-903",
+    "description": "## The problem\n\nSynthetic DEV-122 fixture problem statement for issue 903, used only to exercise plan-lint L2/L9 filtering.\n\n## Accepted outcome\n\nSynthetic accepted outcome for DEV-903: the fixture claims surface `docs/plan-flow/dev122-fixture-903-surface.py` and nothing else.\n\n## Non-goals\n\n- Not a real change; fixture data only.\n- No production surface is touched.\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/dev122-fixture-903-surface.py` exit 0; recorded.\n\nRe-verified: python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json exit 0 2026-09-06",
+    "branchName": "feature/dev-903-dev122-fixture-issue-903",
+    "cycle": {
+     "id": "cycle-1"
+    },
+    "projectMilestone": null,
+    "state": {
+     "type": "started"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   },
+   {
+    "id": "00000000-0000-0000-0000-0000000009904",
+    "identifier": "DEV-904",
+    "url": "https://linear.app/duckbase-co/issue/DEV-904/dev122-fixture-issue-904",
+    "description": "## The problem\n\nSynthetic DEV-122 fixture problem statement for issue 904, used only to exercise plan-lint L2/L9 filtering.\n\n## Accepted outcome\n\nSynthetic accepted outcome for DEV-904: the fixture claims surface `docs/plan-flow/dev122-fixture-904-surface.py` and nothing else.\n\n## Non-goals\n\n- Not a real change; fixture data only.\n- No production surface is touched.\n\n## Acceptance criteria\n\n* **AC-1** `python3 docs/plan-flow/dev122-fixture-904-surface.py` exit 0; recorded.\n\nRe-verified: python3 docs/plan-flow/plan-lint.py lint scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json exit 0 2026-09-06",
+    "branchName": "feature/dev-904-dev122-fixture-issue-904",
+    "cycle": null,
+    "projectMilestone": null,
+    "state": {
+     "type": "backlog"
+    },
+    "inverseRelations": {
+     "nodes": []
+    }
+   }
+  ]
+ }
+}

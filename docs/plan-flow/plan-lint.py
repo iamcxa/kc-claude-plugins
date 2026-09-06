@@ -33,8 +33,13 @@ elif mode == "lint":
         results.append({"rule":name,"pass":bool(ok),"why":why}); print(("PASS " if ok else "FAIL ")+name+(": "+why if why else "")); ok or fails.append(name)
     m = re.search(r"^## User value\n\n(.+?)\n\n", d["content"] or "", re.S); uv = m.group(1) if m else ""
     rule("L1 one-line User value", bool(uv) and "\n" not in uv.strip(), repr(uv[:60]))
-    cyc = {i["cycle"]["id"] if i["cycle"] else None for i in d["issues"]["nodes"]}
-    rule("L2 one cycle", len(cyc)==1 and None not in cyc, str(cyc))
+    def is_active(issue):
+        st = issue.get("state") or {}
+        return st.get("type") not in ("completed", "canceled")
+    active_issues = [i for i in d["issues"]["nodes"] if is_active(i)]
+    admitted_cycles = {i["cycle"]["id"] for i in active_issues if i["cycle"]}
+    unadmitted = sum(1 for i in active_issues if not i["cycle"])
+    rule("L2 one cycle", len(admitted_cycles) <= 1, f"{admitted_cycles}; unadmitted: {unadmitted}")
     ms = d["projectMilestones"]["nodes"]
     rule("L3 milestone membership", (not ms) or all(i["projectMilestone"] for i in d["issues"]["nodes"]), "no milestones -> implicit single MS" if not ms else "")
     for i in d["issues"]["nodes"]:
@@ -83,17 +88,19 @@ elif mode == "lint":
     claimed_surfaces = {}
     for i in d["issues"]["nodes"]:
         claimed_surfaces[i['identifier']] = extract_surfaces(i.get('description') or '')
-    for idx, issue_id in enumerate(order):
+    active_ids = {i['identifier'] for i in active_issues}
+    l9_order = [x for x in order if x in active_ids]
+    for idx, issue_id in enumerate(l9_order):
         if idx > 0:
             current_surfaces = claimed_surfaces.get(issue_id, set())
-            prior_surfaces = set().union(*(claimed_surfaces.get(order[j], set()) for j in range(idx)))
+            prior_surfaces = set().union(*(claimed_surfaces.get(l9_order[j], set()) for j in range(idx)))
             unique_to_current = current_surfaces - prior_surfaces
             if not unique_to_current:
                 non_unique = current_surfaces & prior_surfaces
                 first_claimer = None
                 for j in range(idx):
-                    if non_unique & claimed_surfaces.get(order[j], set()):
-                        first_claimer = order[j]
+                    if non_unique & claimed_surfaces.get(l9_order[j], set()):
+                        first_claimer = l9_order[j]
                         break
                 violation_msg = f"{issue_id}: only surface {', '.join(sorted(non_unique)[:1])} already claimed by {first_claimer}" if first_claimer else issue_id
                 l9_violations.append(violation_msg)
