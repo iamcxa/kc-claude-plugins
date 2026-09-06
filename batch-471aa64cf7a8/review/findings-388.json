@@ -1,0 +1,52 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#388",
+ "head_r1": "531145e47974a6e5900ae28440ad6532a454cb07",
+ "findings": [
+  {
+   "file": "docs/ship/README.md",
+   "line": 64,
+   "category": "correctness",
+   "quote": "Script: `kc-ship-flow/scripts/accept-evidence.sh`",
+   "summary": "accepted stage cites a script with no station page.",
+   "failure_scenario": "Stage defined only by reading source.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "docs/ship/README.md",
+   "line": 84,
+   "category": "correctness",
+   "quote": "Scripts: `kc-ship-flow/scripts/dev-debrief.py`, `kc-ship-flow/scripts/ship-debrief.py`",
+   "summary": "closed stage cites two scripts with no station pages.",
+   "failure_scenario": "Same gap; 4 of 6 stages documented.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/scripts/local-profile-check.py",
+   "line": 60,
+   "category": "correctness",
+   "quote": "    start = text.find(START_MARKER)",
+   "summary": "Marker pair uniqueness not enforced; a duplicate block is silently ignored or the wrong one read (verified).",
+   "failure_scenario": "A stale duplicate block passes or refuses dispatch wrongly.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/scripts/contract-test.py",
+   "line": 366,
+   "category": "test-coverage",
+   "quote": "    [sys.executable, str(SCRIPTS / \"local-profile-check.py\"), str(ROOT / \"docs\" / \"ship\" / \"README.md\")],",
+   "summary": "Only a happy-path run; no mutation for missing row / malformed markers.",
+   "failure_scenario": "The refusal path regresses silently.",
+   "status": "repair round 1 sent"
+  },
+  {
+   "file": "kc-ship-flow/skills/first-officer/SKILL.md",
+   "line": 8,
+   "category": "correctness",
+   "quote": "Read only `docs/ship/README.md`'s `## Local Profile` table before resolving or dispatching a batch;",
+   "summary": "'Read only' names no enforcement point (also README line 35).",
+   "failure_scenario": "Treated as a guarantee; nothing checks it.",
+   "status": "repair round 1 sent"
+  }
+ ]
+}
