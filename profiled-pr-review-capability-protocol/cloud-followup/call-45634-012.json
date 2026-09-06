@@ -1,0 +1,26 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "message",
+    "create",
+    "--session",
+    "81c917e1-f805-4444-b87a-df8a01a66449",
+    "--message-id",
+    "0f22551a-814a-44e4-bbc7-f4fc55ae48db",
+    "--message-file",
+    "/private/tmp/pilot-cloud-followup.Cjh5w4/prompt.md"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:41.000399+00:00",
+    "monotonic": 1121305.632754791
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"messageId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\",\"state\":\"sent\",\"deepLink\":\"conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62&session=81c917e1-f805-4444-b87a-df8a01a66449\"}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:42.154865+00:00",
+    "monotonic": 1121306.787249083
+  }
+}

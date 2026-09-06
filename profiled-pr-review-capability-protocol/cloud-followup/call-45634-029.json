@@ -1,0 +1,25 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "message",
+    "81c917e1-f805-4444-b87a-df8a01a66449",
+    "--limit",
+    "10",
+    "--after",
+    "e15f623b-89c4-4047-a963-1bc25bc57582"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:56:31.855101+00:00",
+    "monotonic": 1121356.487302833
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"data\":[{\"id\":\"576a0a54-2c7e-4652-99c0-5ae032a93ab9\",\"sessionId\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"sessionIndex\":18,\"type\":\"agent\",\"content\":{\"eventId\":\"576a0a54-2c7e-4652-99c0-5ae032a93ab9\",\"type\":\"agent\",\"rawPayload\":{\"type\":\"system\",\"subtype\":\"task_started\",\"task_id\":\"bkl5604wf\",\"tool_use_id\":\"toolu_01VGiKjsdG5fstzJdNPb4G97\",\"description\":\"Run payload in wait mode, foreground\",\"is_backgrounded\":false,\"task_type\":\"local_bash\",\"uuid\":\"c192b0af-6a10-400c-b435-4e60ec8b0d50\",\"session_id\":\"81c917e1-f805-4444-b87a-df8a01a66449\"},\"userMessageId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\",\"turnId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\"},\"receivedAt\":\"2026-09-06T05:56:28.013Z\"}],\"offset\":0,\"hasMore\":false}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:56:32.749931+00:00",
+    "monotonic": 1121357.382168458
+  }
+}

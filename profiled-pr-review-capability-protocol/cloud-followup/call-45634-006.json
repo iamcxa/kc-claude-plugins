@@ -1,0 +1,34 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "workspace",
+    "create",
+    "--project-id",
+    "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+    "--branch",
+    "main",
+    "--name",
+    "t8cyxd55ve-cloud-followup-cjh5w4",
+    "--session-name",
+    "Synthetic exit and external stop",
+    "--agent",
+    "claude",
+    "--model",
+    "opus-5-1m",
+    "--effort",
+    "medium"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:31.686091+00:00",
+    "monotonic": 1121296.318481166
+  },
+  "timeout": 25,
+  "exit": 0,
+  "stdout": "{\"workspaceId\":\"c5d8ac57-5594-4726-adcf-289159d36f62\",\"sessionId\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"deepLink\":\"conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62\"}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:33.430360+00:00",
+    "monotonic": 1121298.062790125
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "core_sha256": "54d55e640c85b7957173cc3b66a23751fe3be2d515389265669447a82c8f890b",
+  "retry_count": 0,
+  "start": {
+    "utc": "2026-09-06T05:55:29.295383+00:00",
+    "monotonic": 1121293.927778416
+  },
+  "remote_base": "a729caee100e68ec0f39e975680ee0808213e401",
+  "setup_observed": {
+    "session": {
+      "id": "81c917e1-f805-4444-b87a-df8a01a66449",
+      "deepLink": "conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62&session=81c917e1-f805-4444-b87a-df8a01a66449",
+      "name": "Synthetic exit and external stop",
+      "model": "opus-5-1m",
+      "resolvedModel": "claude-opus-5[1m]",
+      "effort": "medium"
+    },
+    "ready": {
+      "utc": "2026-09-06T05:55:40.997104+00:00",
+      "monotonic": 1121305.629461625
+    },
+    "seconds": 9.311349499970675
+  },
+  "message": {
+    "messageId": "0f22551a-814a-44e4-bbc7-f4fc55ae48db",
+    "state": "sent",
+    "deepLink": "conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62&session=81c917e1-f805-4444-b87a-df8a01a66449"
+  },
+  "monitor_exit": 1,
+  "monitor_reason": "deadline_incomplete",
+  "archived": true,
+  "end": {
+    "utc": "2026-09-06T06:00:33.830761+00:00",
+    "monotonic": 1121598.415531166
+  },
+  "prior_sha256": "6cc61c7395e7719f9738f3076d5efbbd13c7a9eb75743f838cb3698f73fc8608",
+  "current_exists": false
+}

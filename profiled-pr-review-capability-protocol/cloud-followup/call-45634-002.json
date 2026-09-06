@@ -1,0 +1,21 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "project",
+    "get",
+    "8f58f9d4-cb71-443a-b64d-c2a225248c7b"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:29.585470+00:00",
+    "monotonic": 1121294.217868625
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"id\":\"8f58f9d4-cb71-443a-b64d-c2a225248c7b\",\"name\":\"kc-claude-plugins\",\"gitRemote\":\"https://github.com/iamcxa/kc-claude-plugins\"}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:30.545367+00:00",
+    "monotonic": 1121295.177803
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "git",
+    "-C",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-capability-pilot",
+    "ls-tree",
+    "--name-only",
+    "a729caee100e68ec0f39e975680ee0808213e401",
+    "--",
+    ".conductor",
+    "conductor.json",
+    ".worktreeinclude"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:53:21.679665+00:00",
+    "monotonic": 1121166.312470166
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:53:21.705664+00:00",
+    "monotonic": 1121166.338540416
+  }
+}

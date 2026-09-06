@@ -1,0 +1,25 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "message",
+    "81c917e1-f805-4444-b87a-df8a01a66449",
+    "--limit",
+    "10",
+    "--after",
+    "91825b68-3a47-4429-8232-6303d4600a2e"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:56:25.016823+00:00",
+    "monotonic": 1121349.649048541
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"data\":[{\"id\":\"e15f623b-89c4-4047-a963-1bc25bc57582\",\"sessionId\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"sessionIndex\":17,\"type\":\"agent\",\"content\":{\"eventId\":\"e15f623b-89c4-4047-a963-1bc25bc57582\",\"type\":\"agent\",\"rawPayload\":{\"type\":\"assistant\",\"message\":{\"model\":\"claude-opus-5\",\"id\":\"msg_011Cemfpv2Bofg1XBYFHQSe8\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_01VGiKjsdG5fstzJdNPb4G97\",\"name\":\"Bash\",\"input\":{\"command\":\"cd \\\"$CONDUCTOR_WORKSPACE_PATH\\\" && exec bash -s -- wait <<'PAYLOAD'\\n#!/usr/bin/env bash\\nset -eu\\ncase \\\"${1:-}\\\" in normal|nonzero|wait) ;; *) exit 64 ;; esac\\ntest \\\"${CONDUCTOR_IS_LOCAL:-unset}\\\" = 0 || exit 65\\nexec python3 -B - \\\"$1\\\" <<'PY'\\nimport json\\nimport os\\nfrom pathlib import Path\\nimport subprocess\\nimport sys\\nimport tempfile\\nimport time\\n\\nmode = sys.argv[1]\\nworkspace = Path(os.environ['CONDUCTOR_WORKSPACE_PATH']).resolve()\\nassert Path.cwd().resolve() == workspace\\nscratch = Path(tempfile.mkdtemp(prefix='t8cyxd55ve-followup-', dir=workspace))\\ncontroller = Path('/private/tmp/pilot-cloud-followup.Cjh5w4')\\nresults = []\\nfor name in ('prior.json', 'current.json'):\\n    try:\\n        (controller / name).write_text('{\\\"synthetic_tamper\\\":true}\\\\n')\\n        results.append({'target': name, 'write_allowed': True})\\n    except OSError as error:\\n        results.append({'target': name, 'write_allowed': False, 'errno': error.errno})\\n(scratch / 'normal.txt').write_text('owned synthetic work\\\\n')\\nprint(json.dumps({'mode': mode, 'pid': os.getpid(), 'pgid': os.getpgrp(), 'checks': results, 'scratch': str(scratch)}), flush=True)\\nif any(row['write_allowed'] for row in results):\\n    raise SystemExit(23)\\nif mode == 'wait':\\n    child = subprocess.Popen([sys.executable, '-B', '-c',\\n        'import os,time; print(\\\"DESCENDANT_READY\\\",os.getpid(),os.getpgrp(),flush=True); time.sleep(360)'],\\n        start_new_session=True, stdin=subprocess.DEVNULL)\\n    print(json.dumps({'WAIT_ACTIVE': True, 'parent_pid': os.getpid(), 'parent_pgid': os.getpgrp(),\\n                      'descendant_pid': child.pid, 'self_bound_seconds': 360}), flush=True)\\n    time.sleep(360)\\nraise SystemExit(7 if mode == 'nonzero' else 0)\\nPY\\nPAYLOAD\",\"description\":\"Run payload in wait mode, foreground\",\"timeout\":600000,\"run_in_background\":false},\"caller\":{\"type\":\"direct\"}}],\"stop_reason\":null,\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":1117,\"cache_read_input_tokens\":30974,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":1117},\"output_tokens\":8,\"service_tier\":\"standard\",\"inference_geo\":\"not_available\"},\"diagnostics\":null,\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"uuid\":\"1a801f74-84cf-473f-84e2-58ae62223ea3\",\"timestamp\":\"2026-09-06T05:56:24.935Z\",\"request_id\":\"req_011CemfptsyjXCusSuN2tS5s\"},\"userMessageId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\",\"turnId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\"},\"receivedAt\":\"2026-09-06T05:56:24.965Z\"}],\"offset\":0,\"hasMore\":false}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:56:25.922365+00:00",
+    "monotonic": 1121350.554631666
+  }
+}

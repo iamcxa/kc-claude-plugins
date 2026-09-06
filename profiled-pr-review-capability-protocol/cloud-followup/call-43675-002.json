@@ -1,0 +1,22 @@
+{
+  "command": [
+    "git",
+    "-C",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-capability-pilot",
+    "ls-remote",
+    "origin",
+    "refs/heads/main"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:53:20.977623+00:00",
+    "monotonic": 1121165.610434875
+  },
+  "timeout": 20,
+  "exit": 0,
+  "stdout": "a729caee100e68ec0f39e975680ee0808213e401\trefs/heads/main\n",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:53:21.679359+00:00",
+    "monotonic": 1121166.312192083
+  }
+}

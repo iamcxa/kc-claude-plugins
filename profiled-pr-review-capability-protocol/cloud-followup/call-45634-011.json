@@ -1,0 +1,21 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "get",
+    "81c917e1-f805-4444-b87a-df8a01a66449"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:40.171656+00:00",
+    "monotonic": 1121304.804014041
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"id\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"deepLink\":\"conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62&session=81c917e1-f805-4444-b87a-df8a01a66449\",\"name\":\"Synthetic exit and external stop\",\"model\":\"opus-5-1m\",\"resolvedModel\":\"claude-opus-5[1m]\",\"effort\":\"medium\"}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:40.996499+00:00",
+    "monotonic": 1121305.628882833
+  }
+}

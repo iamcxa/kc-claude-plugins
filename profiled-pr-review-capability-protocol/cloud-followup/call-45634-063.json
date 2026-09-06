@@ -1,0 +1,25 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "message",
+    "81c917e1-f805-4444-b87a-df8a01a66449",
+    "--limit",
+    "10",
+    "--after",
+    "1f34e5a1-b9c0-47b6-b2e5-673442775a35"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:58:27.898069+00:00",
+    "monotonic": 1121472.484783875
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"data\":[{\"id\":\"c537e05d-03f3-4692-ba62-8414da2a1bad\",\"sessionId\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"sessionIndex\":22,\"type\":\"agent\",\"content\":{\"eventId\":\"c537e05d-03f3-4692-ba62-8414da2a1bad\",\"type\":\"agent\",\"rawPayload\":{\"type\":\"tool_progress\",\"tool_use_id\":\"toolu_01VGiKjsdG5fstzJdNPb4G97-heartbeat-3\",\"tool_name\":\"Bash\",\"parent_tool_use_id\":\"toolu_01VGiKjsdG5fstzJdNPb4G97\",\"elapsed_time_seconds\":120,\"heartbeat\":true,\"session_id\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"uuid\":\"05d6e21b-40a7-4f12-a9f4-fddee2a739d5\"},\"userMessageId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\",\"turnId\":\"0f22551a-814a-44e4-bbc7-f4fc55ae48db\"},\"receivedAt\":\"2026-09-06T05:58:24.971Z\"}],\"offset\":0,\"hasMore\":false}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:58:28.789438+00:00",
+    "monotonic": 1121473.37614
+  }
+}

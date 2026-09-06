@@ -1,0 +1,33 @@
+{
+  "start": {
+    "utc": "2026-09-06T06:00:28.588183+00:00",
+    "monotonic": 1121593.173020958
+  },
+  "label": "final-cleanup",
+  "actions": {
+    "cancel": "already_archived_or_attempted_no_retry",
+    "archive": "already_archived_or_attempted_no_retry"
+  },
+  "workspace": {
+    "id": "c5d8ac57-5594-4726-adcf-289159d36f62",
+    "projectId": "8f58f9d4-cb71-443a-b64d-c2a225248c7b",
+    "name": "t8cyxd55ve-cloud-followup-cjh5w4",
+    "state": "archived",
+    "repoUrl": "https://github.com/iamcxa/kc-claude-plugins",
+    "createdAt": "2026-09-06T05:55:33.349Z",
+    "deepLink": "conductor://workspace?id=c5d8ac57-5594-4726-adcf-289159d36f62",
+    "creatorId": "c097ac7c-a860-4cfa-a58f-e3af57e891a6",
+    "creatorName": "Kent Chen",
+    "lastActivityAt": "2026-09-06T06:00:13.302Z"
+  },
+  "session": {
+    "workspaceId": "c5d8ac57-5594-4726-adcf-289159d36f62",
+    "sessionId": "81c917e1-f805-4444-b87a-df8a01a66449",
+    "status": "idle",
+    "updatedAt": "2026-09-06T06:00:16.841Z"
+  },
+  "end": {
+    "utc": "2026-09-06T06:00:33.830620+00:00",
+    "monotonic": 1121598.415387916
+  }
+}

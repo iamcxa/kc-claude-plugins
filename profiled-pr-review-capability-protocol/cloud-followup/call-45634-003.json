@@ -1,0 +1,19 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "model"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:30.545902+00:00",
+    "monotonic": 1121295.178295291
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"agents\":[{\"agent\":\"claude\",\"models\":[\"fable-5-1\",\"fable-5\",\"opus-5-1m\",\"opus-4-8-1m\",\"opus-4-8\",\"opus-4-7-1m\",\"opus-4-7\",\"opus-4-6-1m\",\"sonnet-5-1m\",\"sonnet-4-6-1m\",\"sonnet-4-6\",\"haiku-4-5\"],\"efforts\":[\"low\",\"medium\",\"high\",\"xhigh\",\"max\"],\"fastModeModels\":[\"opus-5-1m\",\"opus-4-8-1m\",\"opus-4-8\",\"opus-4-7-1m\",\"opus-4-7\",\"opus-4-6-1m\"],\"defaultModel\":\"sonnet-4-6\",\"defaultEffort\":\"high\"},{\"agent\":\"codex\",\"models\":[\"gpt-5.5\",\"gpt-5.4\",\"gpt-5.6-sol\",\"gpt-5.6-terra\",\"gpt-5.6-luna\",\"gpt-5.3-codex-spark\",\"gpt-5.3-codex\",\"gpt-5.2-codex\",\"gpt-6-astra\",\"daybreak-blue-latest\"],\"efforts\":[\"none\",\"low\",\"medium\",\"high\",\"xhigh\",\"max\",\"ultra\"],\"fastModeModels\":[\"gpt-5.5\",\"gpt-5.4\",\"gpt-5.6-sol\",\"gpt-5.6-terra\",\"gpt-5.6-luna\",\"gpt-5.3-codex-spark\",\"gpt-5.3-codex\",\"gpt-5.2-codex\",\"gpt-6-astra\",\"daybreak-blue-latest\"],\"defaultModel\":\"gpt-5.5\",\"defaultEffort\":\"high\"},{\"agent\":\"cursor\",\"models\":[\"auto\",\"composer-2.5\",\"grok-4.6\",\"grok-4.5\"],\"efforts\":[\"low\",\"medium\",\"high\",\"xhigh\"],\"fastModeModels\":[\"auto\",\"composer-2.5\",\"grok-4.6\",\"grok-4.5\"],\"defaultModel\":\"composer-2.5\",\"defaultEffort\":\"high\"}]}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:30.806382+00:00",
+    "monotonic": 1121295.438801791
+  }
+}

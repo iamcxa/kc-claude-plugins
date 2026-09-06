@@ -1,0 +1,8 @@
+{
+  "utc": "2026-09-06T05:55:40.997316+00:00",
+  "monotonic": 1121305.629676333,
+  "deadline_monotonic": 1121605.629676333,
+  "deadline_utc": "2026-09-06T06:00:40.997316+00:00",
+  "expected_prior_sha256": "6cc61c7395e7719f9738f3076d5efbbd13c7a9eb75743f838cb3698f73fc8608",
+  "message_id": "0f22551a-814a-44e4-bbc7-f4fc55ae48db"
+}

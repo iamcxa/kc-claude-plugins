@@ -1,0 +1,25 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "message",
+    "81c917e1-f805-4444-b87a-df8a01a66449",
+    "--limit",
+    "10",
+    "--after",
+    "95922f77-2b49-4883-b6e1-dbf3991abddc"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:56:04.567683+00:00",
+    "monotonic": 1121329.199984
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"data\":[],\"offset\":0,\"hasMore\":false}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:56:05.472080+00:00",
+    "monotonic": 1121330.1043865
+  }
+}

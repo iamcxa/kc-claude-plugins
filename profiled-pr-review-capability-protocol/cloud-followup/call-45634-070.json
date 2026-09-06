@@ -1,0 +1,21 @@
+{
+  "command": [
+    "conductor",
+    "--json",
+    "session",
+    "status",
+    "81c917e1-f805-4444-b87a-df8a01a66449"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:58:49.317616+00:00",
+    "monotonic": 1121493.903777291
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "{\"workspaceId\":\"c5d8ac57-5594-4726-adcf-289159d36f62\",\"sessionId\":\"81c917e1-f805-4444-b87a-df8a01a66449\",\"status\":\"working\",\"updatedAt\":\"2026-09-06T05:56:27.976Z\"}",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:58:50.293508+00:00",
+    "monotonic": 1121494.879705708
+  }
+}

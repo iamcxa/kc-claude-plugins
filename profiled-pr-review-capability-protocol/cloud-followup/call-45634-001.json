@@ -1,0 +1,19 @@
+{
+  "command": [
+    "conductor",
+    "auth",
+    "status"
+  ],
+  "start": {
+    "utc": "2026-09-06T05:55:29.295392+00:00",
+    "monotonic": 1121293.927782583
+  },
+  "timeout": 10,
+  "exit": 0,
+  "stdout": "[authentication response omitted; exit retained]",
+  "stderr": "",
+  "end": {
+    "utc": "2026-09-06T05:55:29.584940+00:00",
+    "monotonic": 1121294.2173635
+  }
+}

@@ -590,3 +590,16 @@ This authorizes exactly one additional synthetic cloud workspace, its initial se
 Normal and intended exit-7 evidence must retain actual outer shell status. A lightweight finite waiting workload may be deliberately interrupted while active to exercise the existing external cancellation/archive path; canceled/incomplete monitor status is not relabeled as a review success. Exact-owned cancellation/archive/readbacks remain bounded with unknown responses preserved and no blind mutation retries. Provider lifecycle does not prove descendant death; missing authority evidence remains unverified. Preserve old cloud workspace/session and all historical cloud-once/cloud-local-repair bytes; no unarchive, second message or additional experiment.
 
 The retained author remains sole execution/report owner (FO corrected only the generated fresh-owner premise). Product stays clean at rejected `9bb526170156a44cff90e2a2fab9eeab081e0eb1` on `feature/kc-pr-review-capability-protocol-pilot`, base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`; actual 6,431 / 20 / 1,939 and limits 6,600 / 20 / 1,800 unchanged. Status remains held validation; no product/branch/PR/settings/install/CI/gate/status/pin/review-round or original-repair changes. This approval is supported-committed/synced/reread before cloud creation or model work. FO owns the next decision after the single attempt and durable cleanup report.
+
+## Stage Report: implementation (cycle 11)
+
+- DONE: Record, sync and reread the exact Captain approval and freeze one owned cloud attempt, model, setup/execution bounds and external evidence before launch.
+  Approval `1e32bb69a198002f25853d66e56f528e4c8a746c` durable/reread before one exact workspace/session/message; Opus 5 medium, 9.311-second setup, caller-frozen 300-second deadline/canary and independent cleanup armed before submission.
+- DONE: Run one synthetic cloud request using the repaired monitor and real raw exits; exercise external stop while work is observed active, with no retry or product change.
+  [Follow-up report](cloud-followup/report.md): raw normal success and genuine exit-7 error, pending third Bash plus working status before cancel, then exact idle/archived before deadline. Immutable core returns `deadline_incomplete`/1; no successful model-turn or whole-isolation claim.
+- DONE: Preserve evidence and cost, read back exact owned cleanup, separate pass/fail/unverified conclusions, commit the state-only report and stop.
+  Sanitized raw/manifest retain archive timeout as unknown followed by archived readback; local canary unchanged/current absent, both controller PIDs gone. No SDK result/cost receipt or direct descendant proof, so neither is invented; prior evidence/product/status/pin preserved.
+
+### Summary
+
+The single authorized follow-up completed its bounded execution/reporting checklist (3 DONE / 0 SKIPPED / 0 FAILED), not a full cloud/product proof. Actual error propagation and external active-to-idle/archive lifecycle are now observed; archive call uncertainty, missing descendant/authority/cost evidence and all original product obligations remain explicit. Product stays clean at `9bb52617`, counts 6,431 / 20 / 1,939 unchanged; no retry, additional inference or self-advancement follows.
