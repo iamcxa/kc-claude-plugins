@@ -6,7 +6,7 @@
   "id": "6072d592-8704-448b-bb8d-66471b0557f9",
   "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
   "user_value": "Kent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.",
-  "hypothesis": "If ship-flow runs review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.",
+  "hypothesis": "If we run review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.",
   "wedge": "Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).",
   "outcome": "ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.",
   "exit": [
@@ -118,5 +118,5 @@
   }
  ],
  "rationale_sha256": "eb57f9c0e6e41f12f51646d8de7df85031831a5d73ab108f6e0af0e13cbd1dcb",
- "receipt_sha256": "eeb452b164c0d3bd829612c8ed2fd6c979b7529d365bec85d6c281d4e4a8bc7a"
+ "receipt_sha256": "3f3354ec66522befd83f22a8cab3c1f18f840b6796084e6e82ed296179e9a120"
 }
