@@ -1,0 +1,39 @@
+{
+ "project_id": "6072d592-8704-448b-bb8d-66471b0557f9",
+ "project_url": "https://linear.app/duckbase-co/project/ship-flow-hands-the-captain-one-uat-message-instead-of-a-chat-to-read-8c9241ca9967",
+ "milestone_id": "6b210c32-99ae-43f8-b0b8-1c531e56e90a",
+ "cycle_id": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "user_value": "Kent dispatches a batch, leaves, and returns to one Slack message linking one UAT document that already carries the review dispositions and the e2e result.",
+ "hypothesis": "If ship-flow runs review, e2e, and handoff as scripts fed by the batch record, then Kent's next batch needs zero mid-batch questions and one message to reach UAT.",
+ "wedge": "Kent, after a noon dispatch, who today reads the chat to learn a PR is ready. This batch: a review station, an e2e gate, one generated document plus one message, and a close receipt that refuses an undispositioned defect. Not in it: verification depth (DEV-103, DEV-111), dispatch routing (DEV-110), worker self-check (DEV-108), jsonschema fail-closed (DEV-109).",
+ "outcome": "ship-flow's three unbuilt stations and its close step exist as scripts fed by the batch record: review (open the Draft PR, run kc-pr-review, disposition by the approval defaults, empty output is absence), e2e (pick the artifact shape from the receipt, run e2e-cli at the stacked head, refuse UAT-ready without one of the three), handoff (one generated UAT document, one idempotent Slack message), close (the close receipt refuses an entry with neither fix_ticket nor accepted_residual and carries the dev and ship debriefs). The batch that builds them is itself run under these rules as far as they exist at each step, and its record is DEV-94's AC-3 to AC-7 evidence.",
+ "falsifier": "The batch that builds these four asks the Captain anything between the first dispatch and the UAT message; or the UAT document is written by hand; or the Slack message is sent more than once or not at all; or a close receipt with an undispositioned defect validates.",
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing keeps the Captain reading the chat and pressing \u7e7c\u7e8c to advance a batch; on 2026-09-05 that was about ten nudges and the laptop stayed open.",
+   "agreed": true
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is the accept station (#373, #377) plus a hand-written uat.md; kc-pr-review exists and ship-flow never calls it.",
+   "agreed": true
+  },
+  {
+   "id": "P3",
+   "statement": "Premise falsifier \u2014 remove the approach (scripts for the three stations and the close): the outcome (one message, zero questions) cannot hold, because without the scripts the FO writes by hand and the Captain waits; the value depends on the mechanism, not on a document.",
+   "agreed": true
+  }
+ ],
+ "exit": [
+  "DEV-104, DEV-105, DEV-106, DEV-107 accepted by the accept station and merged.",
+  "The next batch's record shows kc-pr-review dispositions, an e2e artifact or a written reason, one generated UAT document, exactly one Slack message, and a validated close receipt with every defect dispositioned.",
+  "Captain questions between first dispatch and the UAT message: zero (DEV-94 AC-3)."
+ ],
+ "journey": {
+  "persona": "Kent (Captain)",
+  "start": "approval signed after the noon dispatch",
+  "end": "one Slack message with the UAT document link",
+  "observable": "the message arrives once; the document lists every PR with SHA, every review disposition, the e2e artifact or reason, every defaults decision; the close receipt validates with every defect dispositioned"
+ }
+}
