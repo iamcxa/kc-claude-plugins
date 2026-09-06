@@ -1,0 +1,7 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 400,
+  "findings": [
+    {"category": "security", "summary": "unauthenticated write path", "location": "scripts/example.py:12"}
+  ]
+}

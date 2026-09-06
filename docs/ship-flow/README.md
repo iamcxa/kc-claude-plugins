@@ -340,3 +340,16 @@ FO's own last message. `scripts/ship-flow/worker-transcript.sh <session-id>`
 prints the session's last fenced `## Evidence` block, or exits 1 with `no
 evidence block` when the transcript has none. One read per invocation; no
 polling loop, retry, or daemon.
+
+`kc-pr-review` is a skill and runs only inside a Claude session, never
+headless, so the review station is two scripts either side of that session
+run. `scripts/ship-flow/open-pr.sh <evidence-file>` opens the Draft PR from a
+worker's accepted Evidence block: title is the `CANDIDATE_SHA` commit's
+subject, body carries `BASE_SHA`, `CANDIDATE_SHA`, the without-it pair, and
+the block's own `SELF_CHECK` line, and it prints the opened PR number.
+`scripts/ship-flow/disposition.py <findings.json>` then reads the findings
+the FO's own session wrote to disk after running `kc-pr-review` on that PR
+and dispositions them by `kc-plan-approval/v1`'s `defaults.findings_outside_brief`
+rule stated above: an empty or missing findings file is `reviewer-absent`
+with the `fallback_to_fo_diff_read` marker, never read as "no findings",
+because the two are indistinguishable from a findings file alone.
