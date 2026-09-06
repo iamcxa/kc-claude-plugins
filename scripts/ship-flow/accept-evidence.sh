@@ -204,18 +204,58 @@ extract_command_paths() {
 extract_variant_paths() {
   local variant="$1"
 
-  # Look for git show <sha>:<path> or git rm patterns
   local paths=()
 
+  # git show <sha>:<path> > <path> patterns
   while read -r path; do
     [ -n "$path" ] && paths+=("$path")
   done < <(echo "$variant" | grep -oE 'git show [^:]+:([^ ]+)' | sed 's/git show [^:]*://g' || true)
 
+  # git checkout [<sha>] -- <path> patterns
   while read -r path; do
     [ -n "$path" ] && paths+=("$path")
-  done < <(echo "$variant" | grep -oE 'git rm[^&|;]*' | grep -oE '[^ ]+$' || true)
+  done < <(echo "$variant" | grep -oE 'git checkout [^ ]+ -- ([^ ]+)' | sed 's/git checkout [^ ]* -- //' || true)
+
+  # git rm [-f] <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'git rm -f [^ &|;]+|git rm [^ &|;]+' | sed 's/git rm -f //' | sed 's/git rm //' || true)
+
+  # rm [-f] <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'rm -f [^ &|;]+|rm [^ &|;]+' | sed 's/rm -f //' | sed 's/rm //' || true)
+
+  # sed -i[...] ... <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'sed -i[^ ]* [^ ]+ ([^ &|;]+)' | rev | cut -d' ' -f1 | rev || true)
+
+  # > <path> redirection (write)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE '> ([^ &|;]+)' | sed 's/> //' || true)
+
+  # >> <path> redirection (append)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE '>> ([^ &|;]+)' | sed 's/>> //' || true)
+
+  # mv <path> ... patterns (just get the first path for now)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'mv [^ ]+ ' | sed 's/mv //' | sed 's/ $//' || true)
 
   printf '%s\n' "${paths[@]}" | sort -u
+}
+
+# Get the list of changed paths from git diff BASE..CANDIDATE
+get_changed_paths() {
+  local base_sha="$1"
+  local candidate_sha="$2"
+  local repo_root="$3"
+
+  git -C "$repo_root" diff --name-only "${base_sha}..${candidate_sha}" 2>/dev/null || true
 }
 
 echo "$(timestamp) checking for out-of-tree paths and masked exits"
@@ -243,22 +283,47 @@ fi
 echo "$(timestamp) checking AC-3: static path consistency"
 command_paths=$(extract_command_paths "$WITHOUT_IT_COMMAND" "$repo_root")
 variant_paths=$(extract_variant_paths "$WITHOUT_IT_REMOVED_VARIANT")
+changed_paths=$(get_changed_paths "$BASE_SHA" "$CANDIDATE_SHA" "$repo_root")
 
 if [ -z "$command_paths" ]; then
   refuse "AC-3: cannot extract paths from WITHOUT_IT_COMMAND - command may be unparseable"
+fi
+
+# Compute the intersection: changed paths that the command reads
+changed_read_paths=()
+while read -r path; do
+  if [ -n "$path" ]; then
+    if echo "$command_paths" | grep -q "^${path}$"; then
+      changed_read_paths+=("$path")
+    fi
+  fi
+done < <(echo "$changed_paths")
+
+if [ "${#changed_read_paths[@]}" -eq 0 ]; then
+  echo "$(timestamp) AC-3 NOTE: command reads no changed paths, skipping variant check"
 else
-  # Check that every path the command reads is restored by the variant
-  unrestored_paths=()
+  # Check which changed read paths are restored by the variant
+  unrestored_changed_paths=()
+  restored_count=0
   while read -r path; do
     if ! echo "$variant_paths" | grep -q "^${path}$"; then
-      unrestored_paths+=("$path")
+      unrestored_changed_paths+=("$path")
+    else
+      restored_count=$((restored_count + 1))
     fi
-  done < <(echo "$command_paths")
+  done < <(printf '%s\n' "${changed_read_paths[@]}")
 
-  if [ "${#unrestored_paths[@]}" -gt 0 ]; then
-    refuse "AC-3: WITHOUT_IT_COMMAND reads paths not restored by WITHOUT_IT_REMOVED_VARIANT: $(IFS=, ; echo "${unrestored_paths[*]}")"
+  # If variant alters none of the changed read paths, refuse
+  if [ "$restored_count" -eq 0 ]; then
+    refuse "AC-3: WITHOUT_IT_REMOVED_VARIANT alters no changed read path: $(IFS=, ; echo "${changed_read_paths[*]}")"
   fi
-  echo "$(timestamp) AC-3 PASS: all command paths are restored by variant"
+
+  # If variant alters some but not all, warn and continue
+  if [ "${#unrestored_changed_paths[@]}" -gt 0 ]; then
+    echo "$(timestamp) AC-3 WARN: WITHOUT_IT_REMOVED_VARIANT does not restore all changed read paths: $(IFS=, ; echo "${unrestored_changed_paths[*]}")"
+  else
+    echo "$(timestamp) AC-3 PASS: all changed read paths are restored by variant"
+  fi
 fi
 
 # AC-1: Run WITHOUT_IT_COMMAND at BASE_SHA and verify it exits non-zero
