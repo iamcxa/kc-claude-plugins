@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kc-ship-close-receipt/v1",
+  "title": "kc-ship-close-receipt v1",
+  "description": "What ship-flow hands back to plan-flow when a batch closes. One per batch. Canonical JSON as kc-plan-receipt/v1; close_sha256 computed with its own key removed. The next plan-flow round reads this before station 0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "plan_receipt_sha256", "approval_receipt_sha256", "batch", "issues", "defects_returned", "totals", "close_sha256"],
+  "properties": {
+    "schema": {"const": "kc-ship-close-receipt/v1"},
+    "plan_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "approval_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the canonical approval file"},
+    "batch": {"type": "object", "additionalProperties": false, "required": ["entity", "started_at", "closed_at", "holder"], "properties": {"entity": {"type": "string"}, "started_at": {"type": "string", "format": "date-time"}, "closed_at": {"type": "string", "format": "date-time"}, "holder": {"type": "string"}}},
+    "issues": {
+      "type": "object", "minProperties": 1, "propertyNames": {"pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"},
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["outcome", "rounds", "minutes"],
+        "properties": {
+          "outcome": {"enum": ["merged", "pr_open", "accepted_no_pr", "captain_stopped", "carried", "drift", "failed"]},
+          "candidate": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+          "pr": {"type": ["string", "null"], "description": "owner/repo#N"},
+          "rounds": {"type": "integer", "minimum": 0},
+          "minutes": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}, "description": "per station: dispatch, build, verify, review, deliver; wall-clock excluding quota gaps"},
+          "cost_usd_imputed": {"type": ["number", "null"]},
+          "residuals": {"type": "array", "items": {"type": "string"}, "description": "review findings outside the Brief, listed for the Captain"}
+        }
+      }
+    },
+    "defects_returned": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "class", "one_line", "fix_ticket"], "properties": {"id": {"type": "string", "pattern": "^S[0-9]+$"}, "class": {"enum": ["dispatch", "read-path", "verify", "delivery", "holder", "quota", "seam", "worker-conduct"]}, "one_line": {"type": "string"}, "fix_ticket": {"type": ["string", "null"], "pattern": "^[A-Z][A-Z0-9]*-[0-9]+$"}}},
+      "description": "ship-flow runtime defects this batch surfaced; the next plan round decides which become Issues"
+    },
+    "totals": {"type": "object", "additionalProperties": false, "required": ["workspaces_created", "workspaces_orphaned", "fix_rounds", "captain_gates"], "properties": {"workspaces_created": {"type": "integer"}, "workspaces_orphaned": {"type": "integer"}, "fix_rounds": {"type": "integer"}, "captain_gates": {"type": "integer"}}},
+    "close_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

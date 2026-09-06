@@ -11,6 +11,89 @@ timestamp() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
 die() { echo "$(timestamp) accept-evidence: $*" >&2; exit 2; }
 refuse() { echo "$(timestamp) accept-evidence: REFUSE: $*"; exit 1; }
 
+# Check if a command has a masked exit code (trailing || or ; true)
+check_masked_exit() {
+  local cmd="$1"
+  # Match: "something || anything" or "something ; true"
+  if echo "$cmd" | grep -qE '\|\| |; true($| )'; then
+    return 0  # exit 0 means MASKED
+  fi
+  return 1  # exit 1 means NOT MASKED
+}
+
+# Check if a path is outside the repository
+is_out_of_tree_path() {
+  local path="$1"
+  local repo_root="$2"
+
+  # Check for absolute paths
+  if [[ "$path" =~ ^/ ]]; then
+    return 0  # OUT OF TREE
+  fi
+
+  # Check for ~ or $HOME
+  if [[ "$path" =~ ^~ ]] || [[ "$path" =~ ^\$HOME ]]; then
+    return 0  # OUT OF TREE
+  fi
+
+  # Check for .. that escapes the repo root
+  local normalized_path
+  if normalized_path=$(cd "$repo_root" && cd "$path" 2>/dev/null && pwd); then
+    if [[ ! "$normalized_path" =~ ^"$repo_root" ]]; then
+      return 0  # OUT OF TREE
+    fi
+  fi
+
+  return 1  # IN TREE
+}
+
+# Extract all paths (including fragments) from a command
+extract_all_paths_from_command() {
+  local cmd="$1"
+  # Extract anything that looks like a path:
+  # - git show <sha>:<path>
+  # - File arguments to commands
+  # - Any tokens with / or . in them that aren't flags
+
+  local paths=()
+
+  # Extract git show <sha>:<path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$cmd" | grep -oE 'git show [^:]+:([^ ]+)' | sed 's/git show [^:]*://g' || true)
+
+  # Extract any token that looks like a file path
+  # Match: file.ext, dir/file, ./path, ../path, etc.
+  while read -r token; do
+    # Skip common shell operators and flags
+    if [[ ! "$token" =~ ^- ]] && [[ ! "$token" =~ ^'(' ]] && [[ ! "$token" =~ ^')' ]] && [[ ! "$token" =~ ^'&' ]] && [[ ! "$token" =~ ^'|' ]] && [[ ! "$token" =~ ^';' ]] && [[ "$token" =~ '/' ]]; then
+      paths+=("$token")
+    fi
+  done < <(echo "$cmd" | tr ' ' '\n' | grep -E '[a-zA-Z0-9_./~$-]+' || true)
+
+  printf '%s\n' "${paths[@]}" | sort -u
+}
+
+# Check if command contains any out-of-tree paths
+check_command_for_out_of_tree() {
+  local cmd="$1"
+  local repo_root="$2"
+
+  local paths
+  paths=$(extract_all_paths_from_command "$cmd")
+
+  while read -r path; do
+    if [ -n "$path" ]; then
+      if is_out_of_tree_path "$path" "$repo_root"; then
+        echo "$path"
+        return 0  # FOUND OUT OF TREE
+      fi
+    fi
+  done < <(echo "$paths")
+
+  return 1  # NO OUT OF TREE PATHS
+}
+
 if [ "$#" -lt 1 ]; then
   echo "usage: accept-evidence.sh <evidence-file> [--repo <repo-path>]" >&2
   exit 2
@@ -108,6 +191,11 @@ extract_command_paths() {
     [ -n "$path" ] && [ "$path" != "-q" ] && paths+=("$path")
   done < <(echo "$cmd" | grep -oE '(grep|test|find) [^&|;]*' | sed 's/^grep[^"]* \|^test[^"]*[)]//' | tr ' ' '\n' | grep -E '\.(py|md|sh|json|yaml|yml|txt)$' || true)
 
+  # Extract any token with common file extensions
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$cmd" | grep -oE '[a-zA-Z0-9_./-]+\.(py|md|sh|json|yaml|yml|txt)' || true)
+
   # Print unique paths
   printf '%s\n' "${paths[@]}" | sort -u
 }
@@ -116,39 +204,126 @@ extract_command_paths() {
 extract_variant_paths() {
   local variant="$1"
 
-  # Look for git show <sha>:<path> or git rm patterns
   local paths=()
 
+  # git show <sha>:<path> > <path> patterns
   while read -r path; do
     [ -n "$path" ] && paths+=("$path")
   done < <(echo "$variant" | grep -oE 'git show [^:]+:([^ ]+)' | sed 's/git show [^:]*://g' || true)
 
+  # git checkout [<sha>] -- <path> patterns
   while read -r path; do
     [ -n "$path" ] && paths+=("$path")
-  done < <(echo "$variant" | grep -oE 'git rm[^&|;]*' | grep -oE '[^ ]+$' || true)
+  done < <(echo "$variant" | grep -oE 'git checkout [^ ]+ -- ([^ ]+)' | sed 's/git checkout [^ ]* -- //' || true)
+
+  # git rm [-f] <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'git rm -f [^ &|;]+|git rm [^ &|;]+' | sed 's/git rm -f //' | sed 's/git rm //' || true)
+
+  # rm [-f] <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'rm -f [^ &|;]+|rm [^ &|;]+' | sed 's/rm -f //' | sed 's/rm //' || true)
+
+  # sed -i[...] ... <path> patterns
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'sed -i[^ ]* [^ ]+ ([^ &|;]+)' | rev | cut -d' ' -f1 | rev || true)
+
+  # > <path> redirection (write)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE '> ([^ &|;]+)' | sed 's/> //' || true)
+
+  # >> <path> redirection (append)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE '>> ([^ &|;]+)' | sed 's/>> //' || true)
+
+  # mv <path> ... patterns (just get the first path for now)
+  while read -r path; do
+    [ -n "$path" ] && paths+=("$path")
+  done < <(echo "$variant" | grep -oE 'mv [^ ]+ ' | sed 's/mv //' | sed 's/ $//' || true)
 
   printf '%s\n' "${paths[@]}" | sort -u
 }
 
+# Get the list of changed paths from git diff BASE..CANDIDATE
+get_changed_paths() {
+  local base_sha="$1"
+  local candidate_sha="$2"
+  local repo_root="$3"
+
+  git -C "$repo_root" diff --name-only "${base_sha}..${candidate_sha}" 2>/dev/null || true
+}
+
+echo "$(timestamp) checking for out-of-tree paths and masked exits"
+
+# Check WITHOUT_IT_COMMAND for out-of-tree paths
+if out_of_tree=$(check_command_for_out_of_tree "$WITHOUT_IT_COMMAND" "$repo_root"); then
+  refuse "WITHOUT_IT_COMMAND reads out-of-tree path: $out_of_tree"
+fi
+
+# Check WITHOUT_IT_REMOVED_VARIANT for out-of-tree paths
+if out_of_tree=$(check_command_for_out_of_tree "$WITHOUT_IT_REMOVED_VARIANT" "$repo_root"); then
+  refuse "WITHOUT_IT_REMOVED_VARIANT reads out-of-tree path: $out_of_tree"
+fi
+
+# Check if WITHOUT_IT_COMMAND has masked exit code
+if check_masked_exit "$WITHOUT_IT_COMMAND"; then
+  refuse "WITHOUT_IT_COMMAND has masked exit code (trailing || or ; true)"
+fi
+
+# Check if WITHOUT_IT_REMOVED_VARIANT has masked exit code
+if check_masked_exit "$WITHOUT_IT_REMOVED_VARIANT"; then
+  refuse "WITHOUT_IT_REMOVED_VARIANT has masked exit code (trailing || or ; true)"
+fi
+
 echo "$(timestamp) checking AC-3: static path consistency"
 command_paths=$(extract_command_paths "$WITHOUT_IT_COMMAND" "$repo_root")
 variant_paths=$(extract_variant_paths "$WITHOUT_IT_REMOVED_VARIANT")
+changed_paths=$(get_changed_paths "$BASE_SHA" "$CANDIDATE_SHA" "$repo_root")
 
 if [ -z "$command_paths" ]; then
-  echo "$(timestamp) AC-3 SKIP: cannot extract paths from WITHOUT_IT_COMMAND"
+  refuse "AC-3: cannot extract paths from WITHOUT_IT_COMMAND - command may be unparseable"
+fi
+
+# Compute the intersection: changed paths that the command reads
+changed_read_paths=()
+while read -r path; do
+  if [ -n "$path" ]; then
+    if echo "$command_paths" | grep -q "^${path}$"; then
+      changed_read_paths+=("$path")
+    fi
+  fi
+done < <(echo "$changed_paths")
+
+if [ "${#changed_read_paths[@]}" -eq 0 ]; then
+  echo "$(timestamp) AC-3 NOTE: command reads no changed paths, skipping variant check"
 else
-  # Check that every path the command reads is restored by the variant
-  unrestored_paths=()
+  # Check which changed read paths are restored by the variant
+  unrestored_changed_paths=()
+  restored_count=0
   while read -r path; do
     if ! echo "$variant_paths" | grep -q "^${path}$"; then
-      unrestored_paths+=("$path")
+      unrestored_changed_paths+=("$path")
+    else
+      restored_count=$((restored_count + 1))
     fi
-  done < <(echo "$command_paths")
+  done < <(printf '%s\n' "${changed_read_paths[@]}")
 
-  if [ "${#unrestored_paths[@]}" -gt 0 ]; then
-    refuse "AC-3: WITHOUT_IT_COMMAND reads paths not restored by WITHOUT_IT_REMOVED_VARIANT: $(IFS=, ; echo "${unrestored_paths[*]}")"
+  # If variant alters none of the changed read paths, refuse
+  if [ "$restored_count" -eq 0 ]; then
+    refuse "AC-3: WITHOUT_IT_REMOVED_VARIANT alters no changed read path: $(IFS=, ; echo "${changed_read_paths[*]}")"
   fi
-  echo "$(timestamp) AC-3 PASS: all command paths are restored by variant"
+
+  # If variant alters some but not all, warn and continue
+  if [ "${#unrestored_changed_paths[@]}" -gt 0 ]; then
+    echo "$(timestamp) AC-3 WARN: WITHOUT_IT_REMOVED_VARIANT does not restore all changed read paths: $(IFS=, ; echo "${unrestored_changed_paths[*]}")"
+  else
+    echo "$(timestamp) AC-3 PASS: all changed read paths are restored by variant"
+  fi
 fi
 
 # AC-1: Run WITHOUT_IT_COMMAND at BASE_SHA and verify it exits non-zero
@@ -177,6 +352,11 @@ base_exit_code=$?
 set -e
 
 echo "$(timestamp) WITHOUT_IT_COMMAND at BASE_SHA exited $base_exit_code"
+
+# Check for command not found errors (exit 126 or 127)
+if [ "$base_exit_code" -eq 126 ] || [ "$base_exit_code" -eq 127 ]; then
+  refuse "AC-1: WITHOUT_IT_COMMAND did not run at BASE_SHA (exit $base_exit_code - command not found)"
+fi
 
 if [ "$base_exit_code" -eq 0 ]; then
   refuse "AC-1: WITHOUT_IT_COMMAND already exits 0 at BASE_SHA $BASE_SHA - pair cannot fail"
