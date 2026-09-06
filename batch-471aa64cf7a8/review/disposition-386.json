@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "r1: 3 findings (correctness: schema copied not moved; test-coverage \u00d72: absent-schema refusal untested, enforcement downgraded to advisory) all closed in r2; FO verified: docs copy gone, kc-ship-flow.yml gone, required job runs kc-ship-flow contract test, absent-schema test present; CI green"
+}

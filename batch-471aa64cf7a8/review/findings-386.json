@@ -1,0 +1,44 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#386",
+ "head_r1": "1645da96c44c5cf9b4e8b5aa1d377031b2cee660",
+ "head_r2": "60a156df59c8c284e97ef170390cca19ed0b17ab",
+ "findings": [
+  {
+   "file": "scripts/kc-dev-flow-contract-test.py",
+   "line": 2244,
+   "category": "correctness",
+   "quote": "    ROOT / \"docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json\",",
+   "summary": "The close-receipt schema was copied, not moved: the docs/plan-flow/schema copy is now dead (validate-receipt.py resolves kc-ship-flow/schemas/) yet two existence pins still assert it.",
+   "failure_scenario": "The two copies drift; only the enforced one is edited; tests keep passing.",
+   "status": "closed in r2 (60a156df)"
+  },
+  {
+   "file": "docs/plan-flow/schema/validate-receipt.py",
+   "line": 135,
+   "category": "test-coverage",
+   "quote": "    if not close_schema_path.is_file(): fail(f\"close-receipt schema not installed: {close_schema_path}\")",
+   "summary": "The fail-closed branch for an absent close-receipt schema has no test.",
+   "failure_scenario": "A refactor of kc-ship-flow/schemas/ breaks the resolution silently while the suite passes.",
+   "status": "closed in r2 (60a156df)"
+  },
+  {
+   "file": "ACCOUNTING",
+   "line": 0,
+   "category": "style",
+   "quote": "n/a",
+   "summary": "All 16 assertions removed from scripts/kc-dev-flow-contract-test.py have byte-identical successors in kc-ship-flow/scripts/contract-test.py (lines listed by the reviewer); the runner's 21 = 16 + 5 new (helper, run(), station presence loop, test presence loop, schema presence).",
+   "failure_scenario": "none",
+   "status": "accounting only: all 16 removed assertions have identical successors"
+  },
+  {
+   "file": "scripts/kc-dev-flow-contract-test.py",
+   "line": 2083,
+   "category": "test-coverage",
+   "quote": "if not require_ablation_only:",
+   "summary": "Assertions moved out of the required, unfiltered marketplace-parity job into the path-filtered, non-required kc-ship-flow.yml: enforcement downgraded from blocking to advisory (branch protection verified: only two required contexts).",
+   "failure_scenario": "A regression in disposition.py / open-pr.sh / e2e-gate.py no longer blocks merge.",
+   "status": "closed in r2 (60a156df): ship contract test added as a step of the required marketplace-parity job; kc-ship-flow.yml deleted (FO decision, redundant once required)"
+  }
+ ]
+}
