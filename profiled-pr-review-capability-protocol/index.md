@@ -308,3 +308,56 @@ The accepted implementation is committed as a tested candidate within all three 
 ### Summary
 
 Validation rejects the exact candidate for the mapped repair batch while preserving passing real-seam and actual-removal evidence; missing blind authorization is not mislabeled a product defect. Next is a read-only repair plan from the original author under the remaining 172-line allowance; no fit is promised and no document-deletion credit assumed, so any needed scope/limit delta goes to the Captain before product edits.
+
+## UNAPPROVED repair-sizing addendum
+
+This is author sizing at the existing validation checkpoint, not an accepted route revision, implementation dispatch, gate decision, or permission to edit product files. Candidate remains `55b7cd28fbf73095bd3f6982e1ab3db00a0c9071`; the rejected validation report and stage pin remain unchanged. The approved stops are still 20 files / 5,600 total / 1,800 focused. No test, model call, product edit, branch change, or status change was performed for this estimate.
+
+### Six-group estimate
+
+These ranges estimate new source lines, including necessary negative-test lines, before replacement credit. Code includes closed schema/guard changes. They are not added again to the tests column.
+
+| Confirmed repair group | Code / schema | Negative tests | Documentation | Added-line total | Replaced/deleted existing lines, estimate only |
+|---|---:|---:|---:|---:|---:|
+| 1. Preserve sampled routing and refuse contaminated control | 10–16 | 18–30 | 2–4 | 30–50 | 4–8 |
+| 2. Malformed input, unsupported material and closed refusals | 48–80 | 55–85 | 4–6 | 107–171 | 15–30 |
+| 3. Failed-run receipts and whole-experiment cost | 190–275 | 100–145 | 15–25 | 305–445 | 55–90 |
+| 4. Inherited Git credential isolation | 20–35 | 30–45 | 2–5 | 52–85 | 3–8 |
+| 5. Inline finding projection and arm-hidden input | 35–55 | 35–55 | 5–10 | 75–120 | 10–20 |
+| 6. Generated views, authority tests and rendering | 25–45 | 45–70 | 8–15 | 78–130 | 5–10 |
+| Total | 328–506 | 283–430 | 36–65 | 647–1,001 | 92–166 |
+
+### Smallest concrete repair within existing owners
+
+1. Reuse the skill invocation, `enabled()` and `cmd_pilot_run()`: remove forced `on` values and reject control runs leaving protocol artifacts. Execute the exact skill command under control-off flags with a local model stub; it must remain legacy with no capability invocation.
+2. Reuse `main`, `terminal`, `prepare`, `collate` and `pilot_normalize`: validate dispatched/fallback object shape before access; bound the invalid-input echo per field; put unsupported encoding/size into the existing missing-evidence partition; close Token suffix acceptance and normalized finding failures. Invalid out-of-plan results must not consume the one-trigger `required_gap` reason. Reproduce overlong identity, missing prepared, null fallback, Latin-1, oversized material, newline Token and malformed finding as named non-passing outcomes without traceback-only exits.
+3. Reuse `pilot_telemetry`, the existing experiment `.budget.lock`, manifests and receipt guard. Preserve every failed/retried call, known-cost subtotal and unknown-usage status; unknown usage must never be skipped, released as unused budget or scored. Route pre-freeze admission, arm, adjudication and designated-backup consumption through the same experiment reservation/finalization owner. The proposed mechanism is a closed unit-kind branch of existing `run --pilot`, not a new standalone CLI command, ledger, service or workflow; its new invocation branches and manifest/receipt fields are included above, not hidden by sharing a file. Test first failure then success, all failures, timeout, null usage, budget exhaustion and duplicate consumption without paid calls. A genuinely independent surface discovered while implementing this remains a route-back, not authorized by the estimate.
+4. Reuse the existing child-environment construction: isolate global/system/injected Git configuration, credential helpers, askpass, SSH agent and GitHub credentials; restrict child Git transport while preserving required model authentication. Use only synthetic inherited helpers and local push targets to prove they are not invoked. This is not an OS-wide arbitrary-Bash/egress isolation guarantee and proposes no sandbox product or dependency.
+5. Reuse `collate()` and `pilot_normalize()`: derive path/side/line from the already verified quote/blob/diff and produce the existing location-bound inline shape. Normalize both arms from the same structured findings instead of verbatim protocol summary prose; preserve all findings. Test left/right locations, quote mismatch, retained High blockers and treatment-only marker absence.
+6. Generate the question table from the catalog and status matrix from the schema using the existing adapter/test owners, with checks reading and falsifying the retained table. Execute rehydrate projection mismatch and candidate-bearing non-succeeded-lane refusals, not enum-only fixtures. Render the Mermaid with an existing browser renderer, inspect it against the implementation, and retain the render evidence in task state. Read-only executable discovery found no `mmdc`; no dependency installation is proposed, and actual rendering remains owed.
+
+### Counting and mapped relocation candidates
+
+The final count remains additions plus deletions from delivery base `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, not churn from the latest commit. Rewriting a newly added file does not count the removed intermediate lines twice. The ceiling proposal below takes zero replacement or document-relocation credit; actual final diff counting must still be recomputed after any separately authorized repair.
+
+Seventy existing added lines have concrete replacement targets at candidate `55b7cd28`: adapter echo lines 1633–1643 (11); ablation telemetry 866–901 (36); reservation 1066–1071 (6); timeout 1166–1173 (8); terminal-cost 1239–1240 (2); skill forced flags line 114 (1); normalized summary line 1502 (1); adapter body 1200–1203 and empty inline line 1210 (5). Even deducting those mapped replacements from the low estimate yields `5,428 + 647 - 70 = 6,005`, above 5,600. Optimistically deducting all estimated replacements (166) and all gross relocation candidates below (106, before replacement links) still yields about 5,803; neither larger deduction is approved or guaranteed.
+
+| Candidate record-only block at 55b7cd28 | Gross lines | Existing second home / preservation requirement |
+|---|---:|---|
+| Spec lines 5–8 and 32–35: task metadata and historical shape delta | 8 | Existing entity accepted-outcome and acceptance-history sections; preserve exact accepted zero-expansion boundary in the retained contract. |
+| Spec lines 776–801: dated reverse-recovery audit and completeness labels | 26 | Existing entity ideation/audit history; copy the historical evidence without erasing the durable authority map. |
+| Spec lines 814–825: pending project-context receipt | 12 | Existing entity implementation/validation context receipt; preserve original historical record and current validation result. |
+| Spec lines 827–858: historical per-file implementation estimates | 32 | Existing entity shape-sizing history; preserve actual owner mapping in durable architecture/contract and update the inline-fixture disposition there. |
+| Spec lines 870–885: superseded estimate and risk allowance narration | 16 | Existing entity accepted-limit revision/history; retain the actual approved stopping conditions and scope boundaries. |
+| Spec lines 897–904 and runtime usage lines 371–374: historical tests and measured timing | 12 | Existing entity implementation/validation evidence; retain exact source revision, commands/results and attribution caveats. |
+| Total gross candidate movement | 106 | No deletion permission or net line credit; any replacement links/durable wording consume lines. |
+
+These are record-placement candidates, not unnecessary product surfaces or approval to delete accepted outcomes, limits, proof obligations or historical evidence. No relocation was performed. Protocol authority, profiles, question rules, schemas, evidence semantics, confirmation/posting boundaries and required falsifiers remain in the retained contract.
+
+### Sole proposed Captain delta — NOT APPROVED
+
+Raise only the total changed-line stop from **5,600 to 6,600**. Preserve 20 files, 1,800 focused lines, every confirmed repair obligation and accepted outcome, default-off Lite-only execution, zero executable expansion, current runtime/posting authority, no independent ledger/CLI/workflow/service/dependency, and all paid-budget/publication/merge restrictions.
+
+The proposed 6,600 stop is `5,428 + 1,001 + 171`: current measured candidate, upper added-line estimate with no deletion credit, and 171 named integration allowance (cost/receipt integration 80, evidence/inline repairs 50, schema/proof repairs 41). Focused upper estimate is approximately 1,631 including conservatively counted corpus and proof risk, below unchanged 1,800. All proposed product edits reuse the existing 20 paths; state evidence/render artifacts do not create another product file.
+
+This is a stopping line and risk allowance, not a guarantee of sufficiency. The 5,600 stop remains in force until the Captain explicitly approves the exact delta and its owning authority records it. Fresh validation remains rejected; no repair starts from this addendum, and the distinct paid blind budget remains unapproved.
