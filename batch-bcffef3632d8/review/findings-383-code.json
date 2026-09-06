@@ -1,4 +1,0 @@
-[
- {"file":"docs/plan-flow/plan-lint.py","line":42,"category":"test-coverage","quote":"    rule(\"L2 one cycle\", len(admitted_cycles) <= 1, f\"{admitted_cycles}; unadmitted: {unadmitted}\")","summary":"Neither new fixture exercises the branch where every active Issue lacks a cycle, which now PASSes instead of failing as before.","failure_scenario":"All-Backlog project → PASS L2 'set(); unadmitted: N'; verified by clearing DEV-903's cycle in the dev122-done-pair fixture."},
- {"file":"scripts/kc-dev-flow-contract-test.py","line":2326,"category":"test-coverage","quote":"    \"PASS L9\" in lint_result.stdout,","summary":"The retained dev89 assertion is vacuous: all three Issues are completed, l9_order is empty, so PASS L9 is trivial; dev122-started-pair is the only assertion exercising a real FAIL L9.","failure_scenario":"A regression breaking L9's comparison still prints PASS L9 on the dev89 fixture."}
-]
