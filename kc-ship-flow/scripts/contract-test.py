@@ -361,4 +361,30 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
 
 run([sys.executable, str(SCRIPTS / "prose-placement-check.py")], "kc-ship-flow prose-placement-check.py")
 
+# DEV-117 repair round 1: a placement.tsv row is not "placed" just because its
+# destination file exists -- it must also carry that segment's hash marker.
+# Repoint one real row to a different real destination that lacks its hash
+# and confirm the check refuses (before the fix this mutation stayed exit 0).
+prose_placement_check = SCRIPTS / "prose-placement-check.py"
+placement_tsv = PLUGIN / "references" / "placement.tsv"
+original_placement = placement_tsv.read_text(encoding="utf-8")
+mutated_placement = original_placement.replace(
+    "97b2ae0b2cc8\tkc-ship-flow/references/stations/notify.md",
+    "97b2ae0b2cc8\tkc-ship-flow/references/stations/uat-doc.md",
+)
+require(mutated_placement != original_placement, "prose-placement-check mutation fixture: target row not found in placement.tsv")
+try:
+    placement_tsv.write_text(mutated_placement, encoding="utf-8")
+    mutated_result = subprocess.run(
+        [sys.executable, str(prose_placement_check)], cwd=ROOT, text=True, capture_output=True,
+    )
+finally:
+    placement_tsv.write_text(original_placement, encoding="utf-8")
+require(
+    mutated_result.returncode != 0,
+    "prose-placement-check.py did not refuse a row repointed to an unrelated existing "
+    f"destination lacking the segment's hash marker: exit={mutated_result.returncode} "
+    f"stdout={mutated_result.stdout!r}",
+)
+
 print("kc-ship-flow contract: PASS")

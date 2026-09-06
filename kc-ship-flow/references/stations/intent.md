@@ -10,8 +10,10 @@ workspace whose name carries the intent's token and whose project matches.
 
 **Refusal:** `reconcile` blocks with `unresolved intent` on zero matching live workspaces and
 `ambiguous intent` on two or more; `adopt` refuses a candidate workspace with `project mismatch` when
-its project id does not match the one committed. In no case does a new holder create a workspace for
-an intent it did not commit.
+its project id does not match the one committed; `commit` refuses `intent exists for <claim>
+(<workspace-or-unresolved>); reconcile, do not create` (exit 4) whenever a claim already has an
+intent file, which is the basis for "a new holder never creates a workspace for an intent it did not
+commit" -- the second call for the same claim hits this `commit` refusal, not a fresh create.
 
 `intent.sh commit` and `intent.sh adopt` hold a lock on the state directory around their whole
 sync-write-commit-push sequence, so two concurrent calls on the same checkout serialize instead of

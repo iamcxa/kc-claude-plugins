@@ -9,11 +9,17 @@ letter or backtick) -- and checks each segment's hash against
 `kc-ship-flow/references/placement.tsv`.
 
 A segment is placed only when its row's destination is either the literal
-string `residual` (with a non-empty reason) or an existing file path
-relative to the repository root. Exits 0 only when every segment in the
-fixture has exactly one row, every row's segment still exists in the
-fixture, and every non-residual destination file exists on disk. The
-residual list is printed to stdout for the PR body table to reproduce.
+string `residual` (with a non-empty reason) or an existing file path,
+relative to the repository root, that itself contains a backtick-quoted
+`<hash>` marker for that segment (the "Placed segments ... `<hash>`"
+convention used throughout references/stations/*.md, kernel.md,
+schemas/evidence-block.md, and the conductor-cloud runbook) -- a row whose
+destination file exists but never names the hash is not actually a proof
+the segment landed there, so it is refused, not accepted. Exits 0 only when
+every segment in the fixture has exactly one row, every row's segment still
+exists in the fixture, and every non-residual destination file exists on
+disk and carries the segment's hash marker. The residual list is printed to
+stdout for the PR body table to reproduce.
 """
 from __future__ import annotations
 
@@ -109,6 +115,9 @@ def main() -> int:
         target = ROOT / destination
         if not target.is_file():
             die(f"{h}: destination file does not exist: {destination}")
+        marker = f"`{h}`"
+        if marker not in target.read_text(encoding="utf-8"):
+            die(f"{h}: destination file {destination} exists but has no {marker} marker")
         print(f"prose-placement-check: PLACED {h} -> {destination}")
 
     print(

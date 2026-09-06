@@ -11,6 +11,8 @@ call from this plugin — so the station is two scripts either side of that sess
 repository's own `kc-pr-flow/scripts/review-ablation.sh` runs `kc-pr-review` headless for its
 ablation harness, but that script belongs to `kc-pr-flow`, not this station.
 
+Placed segments (`references/placement.tsv`): `2f1d305eccd5`.
+
 ## Residuals (no enforcement script today)
 
 Two `## Ship-flow runtime` sentences name no script, schema, or check and are not given one here —

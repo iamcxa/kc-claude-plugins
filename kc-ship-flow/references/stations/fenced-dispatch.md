@@ -12,7 +12,11 @@ as a file, hashed — rather than pasted inline or fetched by a bootstrap line.
 intent already exists for the claim; `create call failed` or `create returned no valid workspace id`
 (exit 7, intent left unresolved for reconcile) when `conductor workspace create` itself fails;
 `read-back failed (<reason>)` (exit 7) when the created workspace's name or project does not match;
-`adopt refused` (exit 3) when `intent.sh adopt` itself is fenced.
+`adopt refused (fenced, already adopted, or project mismatch)` (exit 3) on *any* non-zero exit from
+`intent.sh adopt` -- fenced-dispatch.sh collapses all of `intent.sh adopt`'s own exits (1 no intent
+for claim, 3 fenced, 5 already adopted under a different workspace id, 7 could not read the
+workspace's project, 8 project mismatch) into this one exit 3, leaving `$WID` for the current
+holder's reconcile in every case.
 
 **Sequence enforced:** `intent.sh commit` (writes the claim, token, project, base branch, message
 sha256) → `holder.sh check` (confirms the writer) → `conductor workspace create` (called once) →
