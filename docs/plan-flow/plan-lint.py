@@ -89,8 +89,8 @@ elif mode == "lint":
     claimed_surfaces = {}
     for i in d["issues"]["nodes"]:
         claimed_surfaces[i['identifier']] = extract_surfaces(i.get('description') or '')
-    active_ids = {i['identifier'] for i in active_issues}
-    l9_order = [x for x in order if x in active_ids]
+    admitted_ids = {i['identifier'] for i in admitted_issues}
+    l9_order = [x for x in order if x in admitted_ids]
     for idx, issue_id in enumerate(l9_order):
         if idx > 0:
             current_surfaces = claimed_surfaces.get(issue_id, set())

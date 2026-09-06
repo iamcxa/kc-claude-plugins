@@ -2310,6 +2310,10 @@ require(
     "WARN L6 id-order advisory" in lint_dev129_rough.stdout,
     f"plan-lint L6 identifier-order agreement should warn, not fail, on a higher-id-blocks-lower-id relation: {lint_dev129_rough.stdout}",
 )
+require(
+    "PASS L9" in lint_dev129_rough.stdout,
+    f"plan-lint L9 should judge only the admitted Issue and ignore the surface-less rough Backlog candidates: {lint_dev129_rough.stdout}",
+)
 
 lint_dev129_missing_nongoals = subprocess.run(
     [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[5])],
