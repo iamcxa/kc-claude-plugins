@@ -124,6 +124,8 @@ required = [
     "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
     "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
     "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
+    "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
+    "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
 ]
 for relative in required:
     require((ROOT / relative).is_file(), f"missing {relative}")
@@ -2307,6 +2309,8 @@ for schema in plan_flow_schemas:
 plan_flow_fixtures = [
     ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json",
     ROOT / "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
 ]
 for fixture in plan_flow_fixtures:
     require(fixture.is_file(), f"missing {fixture}")
@@ -2319,8 +2323,34 @@ require(
     f"plan-lint output missing expected rules on reverified fixture: {lint_result.stdout}",
 )
 require(
-    "FAIL L9" in lint_result.stdout and "DEV-91" in lint_result.stdout,
-    f"plan-lint L9 should fail on DEV-91 by-product: {lint_result.stdout}",
+    "PASS L9" in lint_result.stdout,
+    f"plan-lint L9 should ignore this fixture's Done issues sharing a surface: {lint_result.stdout}",
+)
+
+lint_dev122_unadmitted = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[2])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_dev122_unadmitted.returncode == 0,
+    f"plan-lint should pass the Done-pair/unadmitted-candidate fixture: {lint_dev122_unadmitted.stdout}",
+)
+require(
+    "PASS L9" in lint_dev122_unadmitted.stdout and "unadmitted: 1" in lint_dev122_unadmitted.stdout,
+    f"plan-lint should ignore the Done pair in L9 and report the un-cycled candidate as unadmitted in L2: {lint_dev122_unadmitted.stdout}",
+)
+
+lint_dev122_started = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[3])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_dev122_started.returncode != 0,
+    f"plan-lint should fail once the shared-surface pair is active: {lint_dev122_started.stdout}",
+)
+require(
+    "FAIL L9" in lint_dev122_started.stdout and "dev122-fixture-shared-surface.py" in lint_dev122_started.stdout,
+    f"plan-lint L9 should name the shared surface once the pair is active: {lint_dev122_started.stdout}",
 )
 
 with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
