@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "all 8 r1 findings closed in b5d87ed8; station refused on AC-3 (S43/DEV-134); FO verified: pair retained 0 / removed 1, type-check 0, test:unit 180, test:netlify-package 106, self-check 0. Note: bootstrap window widened to 15 min (the shared ceiling) rather than re-stamped after deploy \u2014 a 20-minute deploy would still expire; recorded as residual for DEV-37's run (deploy must finish under 15 min)."
+}

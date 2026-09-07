@@ -1,0 +1,12 @@
+== FO verification #1174 r1 head b5d87ed8 2026-09-07T03:23:49Z ==
+npm ci exit=0
+without-it retained exit=0
+variant applied: 1
+without-it removed exit=1
+type-check exit=0
+test:unit exit=0
+      Tests  180 passed (180)
+test:netlify-package exit=0
+ℹ pass 106
+self-check exit=0
+== done 2026-09-07T03:25:08Z ==
