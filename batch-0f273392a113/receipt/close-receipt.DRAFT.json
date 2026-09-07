@@ -275,6 +275,10 @@
    {
     "disposition": "harness behaviour; resume-first rule recorded",
     "id": "S42"
+   },
+   {
+    "disposition": "DEV-135",
+    "id": "S47"
    }
   ],
   "minutes_per_station": {
@@ -285,5 +289,5 @@
    "verify": 13
   }
  },
- "close_sha256": "9751f6afbf8a1ac2d18fe56c5554cc99b9cf3ae3dc8697cf46307f7ac2105197"
+ "close_sha256": "3d65b439b3fe4f498d79e638a834c41a6907f9d0034abac1b4936a7a1a804fb9"
 }
