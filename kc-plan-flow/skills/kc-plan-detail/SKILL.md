@@ -124,23 +124,30 @@ Report both as limits of the linter with the receipt, and leave the plan alone.
 
 ## Return
 
+`kc-plan-detail/v1`, in `schemas/`. Validate with
+`schemas/validate-contract.py` before writing anything to the tracker — it
+catches the three format traps above without a round trip through Linear.
+
 ```yaml
-plan_detail:
-  value_issue: <the parent>
-  archaeology:
-    - question: <as asked>
-      finding: <classification and ref>
-  sub_issues:
-    - title: <the gap it closes>
-      gap: <what the archaeologist found missing or broken>
-      acceptance: [<- **AC-n** — …>]
-      non_goals: [<…>]
-      re_verified: <command, ISO date>
-      supersedes: <issue, or none with the search>
-  lint:
-    receipt: <sha>
-    result: PASS | FAIL
-    unjudged: <issues the linter did not examine, and why>
+schema: kc-plan-detail/v1
+value_issue: <the parent>
+archaeology:
+  - question: <as asked>
+    classification: <the tier it came back as>
+    ref: <the ref it was answered against>
+sub_issues:
+  - title: <the gap it closes>
+    gap: <what the archaeologist found missing or broken>
+    accepted_outcome: <the section plan-lint requires, alongside non-goals>
+    acceptance: [<"- **AC-1** — …", one string per criterion, bullet included>]
+    non_goals: [<…>]
+    re_verified: <command then ISO date, no colon and no issue identifier>
+    supersedes: <issue, or "none, searched: …">
+lint:
+  receipt: <sha>
+  result: PASS | FAIL
+  unjudged: [<issues the linter did not examine, and why>]
+  known_limits: [<L2-single-cycle | L9-value-issue-has-no-file-surface>]
 ```
 
 ## Boundaries

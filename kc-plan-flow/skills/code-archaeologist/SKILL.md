@@ -83,7 +83,10 @@ mechanism behaves. How a neighbouring repo drives it is not its contract.
 
 ## Return
 
+`kc-archaeology-report/v1`, in `schemas/`.
+
 ```yaml
+schema: kc-archaeology-report/v1
 code_archaeologist_report:
   question: <the bounded question, as asked>
   embedded_assumption: <what the question presupposes, or none>

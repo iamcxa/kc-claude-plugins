@@ -1,0 +1,39 @@
+{
+  "schema": "kc-plan-detail/v1",
+  "value_issue": "A terminal user publishes a file and gets a link",
+  "archaeology": [
+    {
+      "question": "What draws the consent prompt and starts the publish, and where does it reach for a destination?",
+      "classification": "LOCATED",
+      "ref": "1ea84f8e"
+    }
+  ],
+  "sub_issues": [
+    {
+      "title": "The reader's publish key calls the client",
+      "gap": "The key resolves the destination itself, in two places that cannot share one resolution",
+      "accepted_outcome": "A reader presses one key, sees what publishing will do, confirms, and gets a working link",
+      "acceptance": [
+        "- **AC-1** - The key publishes through the client and the status row shows the returned link",
+        "**AC-2** - The reader composes its prompt without resolving a destination"
+      ],
+      "non_goals": [
+        "The disclosure wording",
+        "Where the returned link opens"
+      ],
+      "re_verified": "git show origin/main:cmd/subspace-tui/publish.go 2026-09-07",
+      "supersedes": "none, searched the project for publish key and consent prompt"
+    }
+  ],
+  "lint": {
+    "receipt": "7638e9d53de20c44",
+    "result": "FAIL",
+    "unjudged": [
+      "issues outside the admitted cycle"
+    ],
+    "known_limits": [
+      "L9-value-issue-has-no-file-surface",
+      "L2-single-cycle"
+    ]
+  }
+}

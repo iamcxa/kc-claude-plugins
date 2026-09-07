@@ -1,0 +1,46 @@
+{
+  "schema": "kc-plan-value/v1",
+  "project": {
+    "name": "Share artifacts publicly from the terminal",
+    "user_value": "A terminal user hands one link to a reviewer and reads every comment back where they started.",
+    "hypothesis": "If we let a reader publish what they are looking at and read the replies in place then they will ask for review before the work hardens",
+    "wedge": "The publish path is the one broken link; everything downstream of it already works.",
+    "outcome": "A person who installed from the tap publishes a file and hands out a link that opens for anyone.",
+    "exit": [
+      "A tap install publishes to production and returns a working link",
+      "A reviewer comments in a browser and the owner reads it back in the terminal"
+    ]
+  },
+  "milestones": [
+    {
+      "name": "A - Publishing works from the terminal",
+      "target": "2026-09-13",
+      "description": "A terminal user publishes a file and gets a link that works for anyone. Ships on a tap install, not from a checkout.",
+      "integration_proof": {
+        "proof": "One tap install produces the same working link both from the command line and from the reader's publish key",
+        "owner": "captain"
+      }
+    }
+  ],
+  "issues": [
+    {
+      "title": "A terminal user publishes a file and gets a link",
+      "acceptance": "A user runs the client against a local file and gets back a link that works for anyone holding it",
+      "milestone": "A - Publishing works from the terminal",
+      "kind": "value"
+    },
+    {
+      "title": "Credential minting does not widen permissions outside the publish path",
+      "acceptance": "Publishing a file whose path holds no state-root ancestor leaves unrelated parent directories untouched",
+      "milestone": "A - Publishing works from the terminal",
+      "kind": "defect",
+      "protects": "A terminal user publishes a file and gets a link"
+    }
+  ],
+  "questions_for_the_archaeologist": [
+    "What does the trunk carry today for publishing a local file to a remote destination?"
+  ],
+  "needs_a_ruling": [
+    "Whether the architectural parent whose children span three milestones stays open as an issue"
+  ]
+}

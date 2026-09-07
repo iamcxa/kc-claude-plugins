@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kc-archaeology-report/v1",
+  "title": "kc-archaeology-report v1",
+  "description": "One bounded question about what a codebase holds, answered with the command and the ref behind every finding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "question", "embedded_assumption", "assumption_holds", "ref", "ref_vs_trunk", "findings", "did_not_check"],
+  "properties": {
+    "schema": { "const": "kc-archaeology-report/v1" },
+    "question": { "type": "string", "minLength": 1 },
+    "embedded_assumption": { "type": "string", "minLength": 1 },
+    "assumption_holds": { "enum": [true, false, "not-checked"] },
+    "ref": { "type": "string", "minLength": 1 },
+    "ref_vs_trunk": { "enum": ["trunk", "ancestor-of-trunk", "diverged", "closed-branch"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["subject", "classification", "command", "evidence"],
+        "properties": {
+          "subject": { "type": "string", "minLength": 1 },
+          "stratum": { "type": "string" },
+          "classification": { "enum": ["WORKING", "WORKING_UNIT_UNPROVEN", "EXISTS_BROKEN", "STUB", "MISSING", "LOCATED"] },
+          "command": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "absence_proof": { "type": ["string", "null"] },
+    "did_not_check": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}

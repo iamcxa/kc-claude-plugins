@@ -96,25 +96,43 @@ Never write the answer you expect into the question.
 
 ## Return
 
+`kc-plan-value/v1`, in `schemas/`. Validate with
+`schemas/validate-contract.py` before handing it on.
+
 ```yaml
-plan_value:
+schema: kc-plan-value/v1
+project:
+  name: <80 characters or fewer>
+  user_value: <200 characters, one line>
+  hypothesis: <must read "If we ... then ..."; the shape is the contract>
+  wedge: <the one place to push first, and why it is that one>
   outcome: <what a person can do afterwards that they cannot do now>
-  milestones:
-    - name: <letter · the outcome, in the user's words>
-      target: <date>
-      description: <140 characters or fewer>
-      integration_proof: <what joins the layers, and who owns it>
-  issues:
-    - title: <one value point>
-      acceptance: <something a person does>
-      milestone: <name>
-      kind: value | defect | measurement
-      protects: <for defect and measurement: the value issue>
-  questions_for_the_archaeologist:
-    - <a question, carrying no expected answer>
-  needs_a_ruling:
-    - <what the captain must decide before issues are written>
+  exit: [<what has to be true to call it done>]
+milestones:
+  - name: <letter · the outcome, in the user's words>
+    target: <YYYY-MM-DD>
+    description: <140 characters or fewer, one line>
+    integration_proof:
+      proof: <what joins the layers>
+      owner: <who runs it>
+issues:
+  - title: <one value point>
+    acceptance: <something a person does>
+    milestone: <name>
+    kind: value | defect | measurement
+    protects: <for defect and measurement: the title of the value issue>
+questions_for_the_archaeologist:
+  - <a question, carrying no expected answer>
+needs_a_ruling:
+  - <what the captain must decide before issues are written>
 ```
+
+**The `project` block is not this skill's invention.** Every field and bound in
+it belongs to `kc-plan-receipt/v1`, which `plan-lint` emits and `kc-ship-flow`
+consumes, so what you write here lifts across unchanged. `hypothesis` really is
+matched against `If we ... then ...` and `user_value` really is cut off at 200;
+a plan that fills them loosely fails at the receipt, one station later, where
+the failure is expensive to trace back.
 
 ## Boundaries
 

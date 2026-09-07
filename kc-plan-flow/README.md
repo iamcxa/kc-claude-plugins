@@ -59,6 +59,24 @@ It writes in the format `plan-lint.py` reads, and runs it. That format is not
 negotiable and a near miss is silent: seven acceptance criteria once reported as
 `0 ACs` for want of a bullet marker.
 
+## Contracts
+
+Each seat's output is a named contract in `schemas/`, validated by
+`schemas/validate-contract.py` and covered by `schemas/contract.test.py`:
+`kc-archaeology-report/v1`, `kc-plan-value/v1`, `kc-plan-detail/v1`.
+
+The validator carries the rules a JSON Schema cannot state — proof of absence
+behind every `MISSING`, a subject named by symbol rather than by path, a defect
+that names what it protects, and a re-verified line free of colons and issue
+identifiers.
+
+`kc-plan-value`'s `project` block is `kc-plan-receipt/v1`'s, field for field and
+bound for bound, so a shaped plan lifts into the receipt `plan-lint` emits and
+`kc-ship-flow` consumes. The receipt and approval schemas stay where they are,
+under `docs/plan-flow/schema/`: `kc-ship-flow` pins them by string in its
+contract test, which runs in the required marketplace-parity job, so they move
+only in a change that re-pins it.
+
 ## What is not here yet
 
 Four rules for `plan-lint`, each earned by a defect in the same session:
