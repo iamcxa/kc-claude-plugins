@@ -1,0 +1,9 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "pending — Captain's approval line",
+ "lint_full": "lint.txt",
+ "station0": "station0-candidates.tsv",
+ "falsifier": "Any of: a PR in the set needs a credential to pass its own checks; a merge lands outside merge-station.sh or on a non-trunk base; DEV-37 needs a second deploy or retry; the receipt names a secret, PII, URL or raw provider error; cleanup census non-zero.",
+ "pre_batch_blocker": "DEV-114 (merge station script) dispatched before any merge in this batch",
+ "dev37_executor": "Conductor cloud worker, one deploy, Captain watching"
+}

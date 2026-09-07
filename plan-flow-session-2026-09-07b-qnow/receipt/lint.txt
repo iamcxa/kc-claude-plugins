@@ -1,6 +1,6 @@
 PASS L1 one-line User value: 'Kent obtains a revision-bound, secret-safe QNow PoC acceptan'
 PASS L2 one cycle: {'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 9
-FAIL L3 milestone membership
+PASS L3 milestone membership
 PASS L4 admission DEV-137: 2 non-goals
 PASS L4 admission DEV-136: 3 non-goals
 PASS L4 admission DEV-37: 2 non-goals
@@ -14,6 +14,6 @@ PASS L8 e2e-able AC DEV-137: 3 ACs
 PASS L8 e2e-able AC DEV-136: 3 ACs
 PASS L8 e2e-able AC DEV-37: 4 ACs
 PASS L8 e2e-able AC DEV-36: 3 ACs
-FAIL L9 by-product Issue check: issues with no unique surface: DEV-137: only surface origin/main...origin already claimed by DEV-136
+PASS L9 by-product Issue check: issues with no unique surface: none
 PASS L10 re-verified presence and age: 14-day bound; violations: none
-LINT FAIL | receipt 745e01d4e63847b1 | order ['DEV-132', 'DEV-133', 'DEV-136', 'DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-39', 'DEV-137', 'DEV-19', 'DEV-20', 'DEV-36', 'DEV-22', 'DEV-21', 'DEV-37', 'DEV-23']
+LINT PASS | receipt 4d72e5c5391e7a32 | order ['DEV-132', 'DEV-133', 'DEV-136', 'DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-39', 'DEV-137', 'DEV-19', 'DEV-20', 'DEV-36', 'DEV-22', 'DEV-21', 'DEV-37', 'DEV-23']

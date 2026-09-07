@@ -14,6 +14,10 @@
   "projectMilestones": {
    "nodes": [
     {
+     "id": "665d659b-e3a7-46c3-a169-288fda08151b",
+     "name": "Unplanned (not admitted to a batch)"
+    },
+    {
      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
      "name": "QNow PoC acceptance: three hosted actors, one recorded run"
     }
@@ -70,7 +74,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-133/phone-identity-port-revoke-by-subject-for-the-lost-handset-case-and",
      "branchName": "feature/dev-133-phone-identity-port-revoke-by-subject-for-the-lost-handset",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "backlog"
      },
@@ -84,7 +90,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-132/decide-customer-phone-identity-on-the-netlify-target-keep-supabase",
      "branchName": "feature/dev-132-decide-customer-phone-identity-on-the-netlify-target-keep",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "backlog"
      },
@@ -98,7 +106,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-39/classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
      "branchName": "feature/dev-39-classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "completed"
      },
@@ -222,7 +232,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-24/enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
      "branchName": "feature/dev-24-enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "completed"
      },
@@ -236,7 +248,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-23/\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
      "branchName": "feature/dev-23-\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -269,7 +283,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-22/\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
      "branchName": "feature/dev-22-\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -290,7 +306,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-21/\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
      "branchName": "feature/dev-21-\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -317,7 +335,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-20/\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
      "branchName": "feature/dev-20-\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -338,7 +358,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-19/\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
      "branchName": "feature/dev-19-\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -365,7 +387,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-18/\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
      "branchName": "feature/dev-18-\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -386,7 +410,9 @@
      "url": "https://linear.app/duckbase-co/issue/DEV-17/\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
      "branchName": "feature/dev-17-\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
      "cycle": null,
-     "projectMilestone": null,
+     "projectMilestone": {
+      "id": "665d659b-e3a7-46c3-a169-288fda08151b"
+     },
      "state": {
       "type": "unstarted"
      },
@@ -410,7 +436,7 @@
   },
   {
    "rule": "L3 milestone membership",
-   "pass": false,
+   "pass": true,
    "why": ""
   },
   {
@@ -475,8 +501,8 @@
   },
   {
    "rule": "L9 by-product Issue check",
-   "pass": false,
-   "why": "issues with no unique surface: DEV-137: only surface origin/main...origin already claimed by DEV-136"
+   "pass": true,
+   "why": "issues with no unique surface: none"
   },
   {
    "rule": "L10 re-verified presence and age",
@@ -569,5 +595,5 @@
    "DEV-19"
   ]
  ],
- "receipt_sha256": "745e01d4e63847b1d4fc675958eadec6b2655e55e396cfba276633d2eafc54be"
+ "receipt_sha256": "4d72e5c5391e7a32510fcc0ec9d83d2cb635840e39edadad2b560d5ca656934b"
 }
