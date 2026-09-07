@@ -52,6 +52,9 @@ malformed structure, unsafe constructs, breakout payloads, and size caps.
 
 ### Typed Review Runtime
 
+Arm timing covers local preparation through confirmation-ready validation; trusted
+measurement admission remains blocked (see docs/review-runtime.md).
+
 **Profiled Lite trigger:** both typed and profiled review flags must be exact
 `on` before dispatch. The skill calls `scripts/review-capability.py`; schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and

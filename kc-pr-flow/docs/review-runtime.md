@@ -348,7 +348,8 @@ flowchart LR
 
 Both typed and profiled flags must be exactly `on` for the new adapter. Use a
 private, invocation-scoped run directory: it contains selected source material,
-provider reports and a non-authoritative audit, not only runtime metadata. Do
+provider reports (including exact stdout in `provider-*.raw`) and a
+non-authoritative audit, not only runtime metadata. Do
 not publish these artifacts or copy them into the durable event log. Normal
 confirmation/posting retention remains owned by the existing runtime.
 
@@ -379,7 +380,13 @@ Both use the same `--cost-ledger`, `--budget`, `--out-dir`, model, effort and
 timeout reservation/finalization owner as arms. The comparison requires six
 costed admissions and five matching costed adjudications; backup attempts stay
 in the same directory and budget. Findings retain their canonical comparison
-fields; the blind summary is uniformly generated from their count.
+fields; the blind summary is uniformly generated from their count, and the
+recommendation must be APPROVE, COMMENT or REQUEST_CHANGES. Repeated blind,
+seal and compare phases refuse without replacing existing sealed artifacts.
+
+Ambiguous repeated quote anchors stay in the review body without an invented
+inline line. Audit clocks remain Python integer nanoseconds without a floating
+point safe-integer bound; their differences, not their epoch, measure elapsed time.
 
 Every attempted unit retains a v4 receipt. `known_cost_usd` preserves reported
 subtotals; incomplete usage leaves `cost_usd: null` and is never scoreable.
@@ -387,3 +394,9 @@ Unknown costs keep the full reservation, and reported overspend increases the
 charge used for later admission. Per-call `--max-budget-usd` is requested, not a
 claim that a provider cannot exceed it: post-call checks reject such samples
 and subsequent over-budget launches, but cannot undo incurred cost.
+
+Arm wallclock_ms covers local input/checkout/material preparation, host execution,
+and confirmation-ready validation; pilot_invoke measures only the host interval.
+Budget setup, receipt writing, human waits, posting and adjudication are excluded.
+Worker-proof records remain unverified, so the integrity blocker still prevents
+speed claims. Do not backfill or mix historical host-only and full-arm timings.

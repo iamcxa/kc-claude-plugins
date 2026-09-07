@@ -2,6 +2,64 @@
 
 - **Date:** 2026-09-05
 - **Product:** `kc-pr-flow`
+- **Design revision accepted:** 2026-09-07, Captain chat `確認`, following the complete revised flow plan.
+
+## Revision authority and delivery sequence
+
+This document guides the implementer and reviewer of the default-off Lite route.
+The September 7 confirmation accepts the design deltas below, not an execution
+restart. These are target requirements, not claims about the current prototype.
+Schema, catalog, runtime, and fixture changes remain to be implemented and verified.
+Historical reports retain their original meaning; earlier review PASS results do
+not validate this revision. The work item's validation status and historical stage
+pin remain unchanged, and the expired pin exception is not renewed.
+
+| Accepted design delta | Preserved boundary |
+|---|---|
+| Separate capability contracts from model-process grouping; measure batching and parallel execution before fixing the arrangement. | Every required question retains an accountable capability and validated answer. |
+| Give the General Reviewer evidence-bound accept/reject/unresolved judgment, with retained raw contributions and reasons. | Deterministic coverage, confirmed-blocker, confirmation, and posting authority remain in place. |
+| Supply explicit goal evidence and substantive blind-adjudication material. | Missing support remains incomplete; no undeclared retrieval or executable expansion. |
+| Admit ordinary Lite-eligible fixes, features, and refactors without the mixed-only classification restriction. | Unmodified legacy control, frozen per-arm configuration, five effective pairs, and all quality/time gates. |
+| Calibrate measurement, then test saving mechanisms, integrate Lite, and run the held-out blind evaluation. | Development samples cannot count as final blind samples or justify promotion. |
+
+The approved outcome remains at least five ordinary PR pairs, median time reduced
+by at least 33.3%, at least three pairs individually meeting that threshold, no
+missed accepted Critical/High control findings, no increase in false positives,
+and complete required coverage. The bounded first evaluation retains exactly five
+effective primary slots plus one predesignated backup under the rules below.
+No new isolation scheme, paid call, legacy-pin migration, default activation,
+publication, merge, release, or implementation-limit increase is authorized here.
+
+Delivery proceeds in this order; these are evidence dependencies, not new approval gates:
+
+1. **Calibrate the instrument.** Demonstrate that the measured worker cannot forge,
+   overwrite, preplant, or substitute authoritative timing/identity/outcome records.
+   Test failure, timeout, and cancellation as well as success. Same-authority file
+   hashes are insufficient; name and test the protecting boundary before crediting
+   a run. The existing integrity blocker stays open until that proof exists. Any
+   remedy requiring new isolation authority returns a bounded proposal first.
+   Calibrate the independent judge on known defects, false alarms, and insufficient
+   evidence, including human-checked examples, before using it for promotion.
+2. **Test the saving mechanism.** Use separate development samples to compare shared
+   material, batching/parallel arrangements, and fixed preparation/projection costs
+   without deleting required questions. Record quality, full elapsed time, tokens,
+   calls, and cost. Fix or stop an arrangement whose overhead erases the saving;
+   claim only the smallest adequate arrangement actually compared, not a universal
+   minimum. Development model calls require their own recorded budget coverage.
+3. **Integrate the measured Lite slice.** Implement the accepted input, grouping,
+   judgment, and validation changes at the existing seams. Map removed duplicate
+   work to retained obligations and run regression/mutation checks. Other profiles,
+   Custom UI, Nightwatch, Forge, and executable expansion stay out of this slice.
+4. **Freeze and run the held-out evaluation.** Fix versions, ordinary PR inputs,
+   admission rules, run order, tool/model conditions, budgets, and failure handling
+   before outcomes. Apply the blind quality decision before opening timing. Retain
+   every attempt; do not tune on or replace unsuccessful held-out samples.
+5. **Review and deliver.** Bind independent Claude review and actual verification to
+   the final revision. Resolve known required findings and re-review, or record an
+   explicit Captain-approved deferral; an earlier clean round cannot erase them.
+   Recheck against current main without absorbing unrelated work. Report passed,
+   failed, and unverified evidence separately; acceptance does not merge or enable
+   Lite. Paid review remains subject to its recorded spend authority.
 
 ## Outcome and boundary
 
@@ -42,7 +100,7 @@ request ends executable Lite as `ABORTED_INCOMPLETE` with reason
 | Authority-bearing runtime receipt | Deterministic Receipt Projector | Fail-closed existing event append/replay seam; shadow mode remains diagnostic only. |
 | Human evidence-bound capability fallback | Existing interactive human | `manual-capability-result/v1` with verified frozen-identity evidence. |
 | Blind experiment execution and provenance | Existing `review-ablation` runner | Frozen corpus, whole-tree arm manifests, identical driver, runtime receipts. |
-| Blind quality adjudication | Independent adjudicator | Sealed normalized envelopes and arm-hidden adjudication record. |
+| Blind quality adjudication | Independent adjudicator | Sealed substantive evidence, arm-hidden envelopes, and quality-before-timing record. |
 | Review confirmation | Existing human confirmation gate | Existing `InteractiveConfirmation` boundary. |
 | GitHub posting and readback | Existing posting adapter | Existing authorization and once-only posting boundary. |
 | Merge, release, spend, and profile promotion | Captain | Outside every V1 protocol object. |
@@ -67,7 +125,7 @@ non-green. No model-authored field can grant an authority in this table.
    assignments, evidence needs, mechanical tests, and timeouts before model
    dispatch. Executable Lite records an expansion reserve of zero.
 4. **DESIGNED:** The plan pins the full current review configuration: Lite tier,
-   `mixed` PR archetype, `full_pass: false`, `probe_required: false`,
+   declared PR archetype, `full_pass: false`, `probe_required: false`,
    `cross_model: false`, `noise_filter: false`, and the effective capability
    set. The caller computes the canonical hash through `review-runtime.sh
    config-hash`, then invokes `review-runtime.sh start` with that hash; `start`
@@ -83,9 +141,10 @@ non-green. No model-authored field can grant an authority in this table.
    and materializes only declared evidence into bundle revision 2. Every
    observation is bound to the exact base/head and a content hash; missing
    evidence stays missing.
-6. **DESIGNED:** The capability adapter invokes each selected capability in
-   parallel with a typed request. Each capability sees only the declared
-   evidence and returns terminal answers for its assigned questions.
+6. **DESIGNED:** The adapter executes the frozen capability arrangement, which
+   may batch compatible typed requests or run independent workers in parallel.
+   Each request/result keeps its capability identity, declared material, and
+   assigned answers; a shared model call grants no undeclared tools or evidence.
 7. **DESIGNED:** The validator accepts a schema-valid, identity-, plan-, and
    evidence-bundle-matching result only when it carries exactly one terminal
    answer for every question in its request and every non-incomplete answer has
@@ -94,10 +153,11 @@ non-green. No model-authored field can grant an authority in this table.
    make the invocation failed. Emitting any `ExpansionRequest/v1` ends
    executable Lite as `ABORTED_INCOMPLETE` with reason `unsupported_expansion`,
    whether it asks for a question, evidence, or both.
-8. **DESIGNED:** The General Reviewer consumes only accepted evidence and
-   results. It produces one canonical terminal per required question, retains
-   every blocker and unresolved gap, and renders the current summary, findings,
-   recommendation, event, and confirmation input.
+8. **DESIGNED:** The General Reviewer judges schema-accepted contributions against
+   the frozen goal and evidence. It records accept/reject/unresolved dispositions
+   with reasons, retains raw contributions, and produces one canonical terminal
+   per required question. The validator preserves confirmed blockers and gaps
+   before projection into the existing report and confirmation vocabulary.
 9. **DESIGNED:** After rendering, the deterministic Receipt Projector starts
    after the existing `run.started` and converts accepted capability results and
    failed/unavailable outcomes of invoked capabilities into the remaining closed sequence:
@@ -116,7 +176,7 @@ non-green. No model-authored field can grant an authority in this table.
    `receipt_incomplete`; the existing fail-open shadow collector is never used
    as authority. An invoked lane that failed or was unavailable emits zero `finding.observed`
    events and contributes no candidate or finding. Every gate-eligible runtime candidate from an
-   accepted result is promoted into exactly one finding; candidates with the
+   accepted reviewer disposition is promoted into exactly one finding; candidates with the
    same path, side, evidence content hash, category, and claim key merge into
    one finding. Executable Lite seals `uncertain_candidate_ids: []`.
    Capability-terminal projection reads only the final attempt's lane, so an
@@ -249,9 +309,11 @@ contradictory answers maps to `incomplete_required` in executable Lite. Lite
 assigns exactly one capability to each required question and emits no active
 optional obligation. `contradictory_required` is a new forward-contract state;
 the current runtime's `incomplete_optional` state is retained but neither is
-emitted by executable Lite without a runtime-contract route-back. The executable Lite catalog enforces a question-to-capability
-bijection: no capability owns two active required questions and no question has
-two contributors. The catalog's requiredness rule includes a closed `waivable`
+emitted by executable Lite without a runtime-contract route-back. The existing
+Lite catalog's question-to-capability bijection remains a valid content mapping,
+not a one-model-call-per-capability requirement. Compatible requests may share a
+worker while retaining per-question results; no required answer may be omitted.
+The catalog's requiredness rule includes a closed `waivable`
 flag; the Planner cannot override it.
 For executable Lite, the `test_evidence` manifest requires `diff_hunks` and
 lists `mechanical_tests` as optional evidence. Absence of a discoverable test
@@ -277,15 +339,15 @@ stricter for safe I/O but may not accept an instance the schema rejects.
 | `QuestionDefinition` | Stable question catalog entry | id, version, requiredness rule, closed `waivable` flag |
 | `CapabilityManifest` | Skill-as-API public contract | id, version, questions, required/optional evidence classes, output ref, trust tier; no activation field |
 | `PlannerInput` | Deterministic routing input | intake identity, requested mode, PR shape, deterministic signals, concerns |
-| `ReviewPlan` | Frozen obligations and budgets | intake identity, plan rev, full review config, profile, questions, assignments, reserve |
+| `ReviewPlan` | Frozen obligations and budgets | intake identity, plan rev, full review config, profile, questions, assignments, execution grouping, reserve |
 | `EvidencePointer` | Content-addressed repository fact | identity, source kind, object, path/locator, hash |
 | `EvidenceClassBinding` | Manifest-class coverage | evidence class plus class-tagged pointer/test refs or one missing reason |
 | `EvidenceBundle` | Selected mechanical material | rev 1 intake identity or rev 2 review identity, revision/hash, parent hash, pointers, test observations, missing list |
-| `CapabilityRequest` | One typed invocation | identity, plan rev/hash, bundle revision/hash, capability, question ids, exact evidence material and refs grouped by manifest class |
-| `CapabilityResult` | One typed terminal response | identity, plan rev/hash, bundle revision/hash, capability, question answers, usage, status |
+| `CapabilityRequest` | One logical capability request | identity, plan rev/hash, bundle revision/hash, capability, question ids, exact evidence material and refs grouped by manifest class |
+| `CapabilityResult` | One logical capability response | identity, plan rev/hash, bundle revision/hash, capability, question answers, usage, status |
 | `ExpansionRequest` | Bounded add-only request | cause, added questions/evidence, reserve charge |
 | `QuestionTerminal` | One canonical collation | question id, state, finding/evidence/gap refs |
-| `ReviewDecision` | General Reviewer result | identity, plan rev/hash, bundle revision/hash, terminals, findings, gaps, event, confirmation input |
+| `ReviewDecision` | Validated General Reviewer result | identity, plan rev/hash, bundle revision/hash, contribution dispositions/reasons/evidence, terminals, findings, gaps, event, confirmation input |
 | `ConfirmationProjection` | Existing user gate input | identity, effective event, decision hash, confirmation required |
 | `PostingOutcome` | Read-only `post.result` projection | review key and exact head, run id, payload hash, idempotency key, outcome, remote id when verified |
 | `PostingInvalidation` | Read-only `run.invalidated` projection | review key and exact head, run id, closed invalidation reason |
@@ -344,8 +406,9 @@ Every protocol object names its schema major. Unsupported majors fail closed.
 Canonical JSON uses UTF-8, duplicate-key rejection, sorted object keys, array
 ordering defined per field, and SHA-256 over the canonical bytes. Set-valued
 arrays are sorted and unique; ordered event and finding arrays retain their
-declared order. Models never author signals, review keys, evidence hashes, plan
-or bundle revision, requiredness, or terminal state.
+declared order. Models propose analyses and dispositions; validators derive final
+coverage and eligibility. Models do not author signals, review keys, evidence
+hashes, plan or bundle revision, or requiredness.
 
 The protocol validator additionally enforces rules JSON Schema alone cannot
 express:
@@ -361,14 +424,15 @@ express:
    `clean` and `evidence_backed_na` have none. Otherwise the result is rejected,
    and the invocation lane projects `failed`; `unavailable` is reserved for an
    adapter or provider that produced no result;
-3. an executable required obligation is satisfied if and only if its final
-   adapter attempt returned a fully accepted result, or a verified `provided` exact-keyed
+3. a required obligation needs both a valid capability result/fallback and a
+   resolved, validated reviewer disposition. The final adapter attempt must have
+   returned a fully accepted result, or a verified `provided` exact-keyed
    `manual-capability-result/v1` for the same one-to-one assigned capability is
    provided with terminal assessment `clean` or `evidence_backed_na` and
-   non-empty resolvable `git_blob` evidence at the frozen review identity. A
-   satisfied obligation and question end in the accepted result or fallback
-   assessment; otherwise both end `incomplete_required` and fallback is
-   `declined`, `failed`, or `unavailable`, never `not_needed`. Lane status
+   non-empty resolvable `git_blob` evidence at the frozen review identity. Without
+   valid capability support, fallback is `declined`, `failed`, or `unavailable`,
+   never `not_needed`. Valid support with unresolved judgment still leaves the
+   obligation `incomplete_required`; it does not rewrite the attempt/fallback history. Lane status
    remains per invocation. A Lite `findings` manual fallback is rejected;
 4. every emitted required obligation uses the existing activation condition
    `configured`; signal-gated questions are resolved deterministically before
@@ -400,12 +464,12 @@ express:
    unavailable status is obligation-side only: a skipped capability emits
    no runtime `lane.started` or `lane.finished`, keeping replayed lanes in exact
    bijection with recorded adapter attempts.
-   Catalog validation also forbids an
-   executable-Lite manifest from listing `pr_body`, `issue`, or
-   `review_comment` intent material as `required_evidence`; and
+   For `goal_alignment`, the plan must also declare explicit goal material from
+   `pr_body`, `issue`, or `review_comment`; absent or insufficient goal support
+   prevents a clean answer. Diff-only inference cannot satisfy that obligation; and
 7. as an explicit protocol-side narrowing of the existing runtime, failed or
    unavailable lanes have no contributions, candidates, or findings;
-   accepted-result gate-eligible runtime candidates each enter exactly one finding, identical runtime merge tuples
+   reviewer-accepted gate-eligible runtime candidates each enter exactly one finding, identical runtime merge tuples
    collapse into one finding, and executable Lite has no uncertain candidates.
 
 `incomplete_required` is validator-derived only and is never a
@@ -460,13 +524,15 @@ no network, GitHub mutation, lifecycle, synthesis, or authorization authority.
 Planning is a pure function of `PlannerInput` plus the versioned catalog. The
 same canonical input produces the same canonical plan. Profile selection,
 question requiredness, capability mapping, evidence selection, test selection,
-timeouts, the six current runtime modes, and the zero Lite expansion reserve are
-part of the plan hash. Executable Lite pins `agent_tier: lite`,
-`pr_archetype: mixed`, and the four boolean modes to false. The canonical
+timeouts, frozen execution grouping, the six current runtime modes, and the zero
+Lite expansion reserve are part of the plan hash. Executable Lite pins
+`agent_tier: lite` and the four boolean modes to false. The canonical
 configuration hash consumes all six modes plus the plan's effective capability
 set after sorting and deduplicating it; plan capability ordering is not
-hash-bearing. The executable Lite Planner derives `pr_archetype` as the constant
-`mixed`; it performs no title or model-based archetype classification.
+hash-bearing. The prototype's constant `mixed` value is not an admission rule:
+each arm's archetype is recorded and frozen without forcing the control to change
+its normal triage. Archetype differences must be reported, not hidden as savings
+from plugin grouping alone.
 
 Evidence acquisition is profile-scoped:
 
@@ -491,6 +557,12 @@ Evidence acquisition is profile-scoped:
    `unsupported_expansion`; the request is recorded in the side-car only, and
    no bundle revision 3 exists in the executable Lite Pilot.
 
+Goal material includes the substantive accepted objective, not merely a locator.
+The Evidence Builder freezes its source and content; the reviewer must support a
+goal-alignment answer with that material and relevant code. Missing or ambiguous
+intent leaves the question incomplete under the existing report/confirmation
+shape, rather than inventing intent or adding a new user interaction gate.
+
 This ordering prevents the weak profile from paying for Full evidence before it
 is selected. Mechanical tests record command, cwd, exit status, started/finished
 time, stdout/stderr digest, and exact head. Requests, results, and decisions bind
@@ -508,6 +580,16 @@ is `succeeded`, `terminal_failure`, or `unavailable`. Manual fallback follows
 the existing closed runtime contract. Excluding `transient_failure` as a final
 retry outcome is a third explicit protocol-side narrowing of the base runtime.
 
+Batch only compatible requests within their frozen evidence/tool permissions.
+Transport grouping does not merge logical attempts or obligations: the adapter
+validates each result separately and records each logical lane, while recording
+physical model calls and shared usage once. Missing members remain incomplete;
+partial batch success cannot satisfy them. Freeze the grouping before dispatch,
+preserve the retry limits, and charge General Reviewer work and all retries
+to the measured route; that role need not add a separate agent process.
+No grouping is claimed faster until development evidence
+supports it; deterministic collation remains validation, not a substitute judge.
+
 For the documented future expansion contract, the window opens only after all
 plan-revision-1 capability results bound to evidence-bundle revision 2 are
 accepted or terminal. Requests are collected
@@ -518,36 +600,42 @@ requires a new accepted route and changes to current requiredness rules.
 
 ## General Reviewer rules
 
-The General Reviewer is the sole synthesis host but not a super-capability. It
-may compare results, identify contradictions, select the highest supported
-severity only among non-contradictory contributions, merge same-candidate
-contributions, and render the closed result. Authoring an
-`ExpansionRequest/v1` is a forward contract only; in executable Lite it is the
-`unsupported_expansion` terminal, not a permitted synthesis step. The General
-Reviewer may not inspect
-undeclared repository content, dispatch an unplanned capability, downgrade
-requiredness, delete a finding, infer clean from silence, or produce
-authorization.
+The General Reviewer performs an evidence-bound model judgment, not merely
+deterministic concatenation. It compares schema-accepted capability contributions
+with the explicit goal, selected code, and test observations; records an
+accept/reject/unresolved disposition, reason, and resolvable evidence for each;
+and proposes one terminal per required question. Raw contributions remain bound
+to the decision, including rejected or advisory items. Rejection needs a reason
+supported by the frozen material; silence is not rejection or evidence of clean.
+Unresolved support or contradictions leave affected coverage incomplete.
 
-Candidate severity is carried by the accepted `CapabilityResult`; synthesis may
-select the maximum supported severity across merged contributions but cannot
-invent or silently lower it. Capability contributions first retain the existing
-quote-survives verification gate: a claim without a motivating source line that
-survives inspection is forced to confidence 4-5 and demoted to advisory. Before typed candidate creation, the deterministic
+The validator checks disposition completeness, identity, evidence, and coverage
+before projection. A model cannot make a failed/skipped capability complete,
+remove a confirmed blocker, lower requiredness, or authorize posting. The reviewer
+cannot inspect undeclared material or invoke an unplanned capability. Any
+`ExpansionRequest/v1` retains the `unsupported_expansion` terminal. A raw High
+claim is not automatically a confirmed defect, but rejecting it requires the
+same retained evidence/reason and remains visible to independent adjudication.
+
+Accepted contributions retain their supported severity; merged contributions
+use the maximum, with no silent lowering. Existing quote-survives verification
+still applies: a claim without a motivating source line that survives inspection
+is forced to confidence 4-5 and demoted to advisory. Before typed candidate creation, the deterministic
 adapter applies the existing confidence destination gate: 7-10 become ordinary
 candidates; 5-6 become candidates whose summary appends `Medium confidence —
 verify`; 3-4 become separately typed advisory observations rendered in the
-summary/body but never runtime candidates or blockers; and 1-2 are dropped
+summary/body but never runtime candidates or blockers; and 1-2 are omitted from published findings
 unless severity is `CRITICAL`. An unscored observation defaults to 6, and a
 multi-source observation takes the maximum score and receives the existing
-multi-source summary prefix. For question-state purposes, `clean` means no
-gate-eligible candidate; retained advisories are still rendered and included in
+multi-source summary prefix. For question-state purposes, `clean` requires
+resolved coverage and no gate-eligible candidate; retained advisories are rendered and included in
 the sealed body hash, so they are not hidden as silence.
 
-Here, a **capability contribution** is the pre-confidence-gate item returned in
-`CapabilityResult`; a **runtime candidate** is the post-gate typed item eligible
-for `finding.observed`. Dropped contributions and retained advisories are never
-runtime candidates. Unqualified `candidate` below means runtime candidate.
+Here, a **capability contribution** is the raw item returned in `CapabilityResult`;
+a **runtime candidate** is a reviewer-accepted, post-confidence-gate item eligible
+for `finding.observed`. Rejected/unresolved items and advisories are not runtime
+candidates, but remain in the bound review record; unresolved questions retain
+gaps. Unqualified `candidate` below means runtime candidate.
 
 Within the frozen exact-head run, candidate merge identity is the existing
 runtime tuple of source path, side, evidence content hash, category, and claim
@@ -666,14 +754,14 @@ path with its unmodified triage at a frozen exact revision, not a forced Full
 tier. Before freezing the corpus, both the frozen control triage and the new
 deterministic Planner independently evaluate every candidate and record their
 complete six-key `review_config.modes` values in the corpus row. A primary or backup
-row is admissible only when both report `agent_tier: lite`,
-`pr_archetype: mixed`, and `full_pass`, `probe_required`, `cross_model`, and
-`noise_filter` as false. The
+row is admissible only when both report `agent_tier: lite` and `full_pass`,
+`probe_required`, `cross_model`, and `noise_filter` as false. Each arm's actual
+`pr_archetype` is frozen, but `mixed` is not an eligibility requirement. The
 frozen admission record is the sole authority for those expected values. The
 primary Pilot corpus contains exactly five such PRs.
-The Planner independently contributes the deterministic profile/tier decision;
-its `mixed` archetype is a fixed Pilot value, while the control triage supplies
-the independent archetype observation used for admission.
+The eligible pool includes ordinary fixes, features, and refactors; it does not
+require stacked PRs or exclude candidates solely for conventional title prefixes.
+Record PR shape and applicability; do not claim coverage of non-Lite populations.
 The PR corpus and exact heads are pre-registered and hash-frozen before the first
 run as five `primary` rows plus one designated `backup` row. Every attempted pair
 remains in the record. The backup may replace exactly one primary only when that
@@ -693,19 +781,27 @@ an unchanged-path substitute. Non-Lite control tiers remain reported separately
 as audit evidence, never as credited samples.
 
 Pairs use the same PR input, model family, reasoning level, host, tool
-availability, and timeout policy. Each pair records the actual control tier.
+availability, and timeout policy. Freeze run order and environment/cache policy
+before outcomes; do not give one arm an uncharged warmed preparation. Each pair
+records the actual control tier.
 The runner validates the control receipt's corroborative `review_config`
 against its frozen corpus admission record, including `agent_tier`,
 `pr_archetype`, and all four boolean modes: `full_pass`, `probe_required`,
-`cross_model`, and `noise_filter`. Any control value other than
-`agent_tier: lite`, `pr_archetype: mixed`, and all four booleans false invalidates the
-pair and makes that primary pair a promotion failure rather than crediting the
-extra control work as protocol savings.
+`cross_model`, and `noise_filter`. Any mismatch with that arm's frozen record,
+non-Lite tier, or true boolean invalidates the pair and fails promotion, rather
+than crediting extra control work or silently discarding a failed sample.
 Before adjudication, both arms are normalized into the same current review
 summary/finding/recommendation envelope, with capability and terminal provenance
-hidden. Pair-to-arm labels stay sealed from the adjudicator. Independent
-adjudication freezes accepted findings, same-defect partitions, false positives,
-and maximum severity before timing is opened.
+hidden. Preserve each substantive claim, motivating quote, relevant frozen code,
+explicit goal, and cited test observations; hashes identify material but do not
+replace its contents. Both arms use the same evidence-availability policy.
+Pair-to-arm labels and timing stay sealed from the independent adjudicator,
+which is separate from the treatment's General Reviewer. Retain raw contribution
+dispositions for later audit without leaking capability or arm identity into the
+blind packet. Calibrated adjudication freezes accepted findings, same-defect
+partitions, false positives, and maximum severity before timing is opened.
+Insufficient adjudication evidence cannot count as a quality pass. The judge is
+blinded, not the workers operating their own route; no double-blind claim is made.
 
 Review-to-confirmation-ready includes intake, evidence acquisition, planning,
 mechanical tests, capability calls, validation, synthesis, rendering, receipt
@@ -740,20 +836,21 @@ and a fixed total experiment budget are recorded and Captain-approved.
 The pre-freeze control-triage admission pass is itself a control-arm model call,
 occurs only after that approval, and is charged against the same fixed total.
 It uses the identical pinned tool policy, frozen checkout, and exact head as the
-corresponding control run. Because exact `pr_archetype: mixed` admission excludes
-conventional `feat:` or `fix:` commit-message prefixes and other named-archetype cues, the eligible pool is deliberately
-narrower than ordinary Lite. If the budgeted admission pass cannot fill five
+corresponding control run. If the budgeted admission pass cannot fill five
 primary rows plus the backup, the Pilot stops without weakening the predicate,
 reselecting after results, or claiming promotion.
 
-Pre-registration records the hypothesized saving mechanism: smaller
-per-capability evidence payloads and parallel critical-path execution must
-offset the treatment's higher capability count and charged mechanical tests.
+Pre-registration records the saving mechanism selected on development samples:
+shared evidence and measured execution grouping must offset mechanical tests,
+General Reviewer judgment, and protocol overhead. A higher capability count
+does not prescribe more physical model calls. Freeze the selected arrangement
+before held-out runs; development results do not satisfy promotion.
 It also records the fixed arm coupling: treatment is typed plus profiled while
 control is the current legacy route, so timing supports the combined-route
 effect and cannot be attributed to profiled plugins alone.
 Both arms record token totals and outer wall time. Treatment additionally
-records capability count, evidence payload bytes, and lane critical-path time
+records logical capability count, physical model calls and grouping, evidence
+payload bytes, and lane critical-path time
 from the side-car, so a miss cannot be explained away after timing opens.
 
 The cost ceiling reads only numeric completed-review entries from the existing
@@ -790,8 +887,12 @@ continuing when any threshold is crossed:
 
 - more than 20 changed files;
 - more than 6,600 total changed lines; or
-- more than 1,800 changed lines across the schema, catalog, protocol fixtures, and their
+- more than 1,903 changed lines across the schema, catalog, protocol fixtures, and their
   focused tests.
+
+The focused limit reflects the previously recorded Captain approval in the work
+item, not a new increase in this revision. Include all relevant runtime/ablation
+tests and corpus changes; historical over-limit reports are not rewritten.
 
 
 Also stop immediately if correctness needs full-catalog evidence before
@@ -820,8 +921,8 @@ wall time before any cost claim or workflow-trigger widening.
   `terminal_state: incomplete_required`, `fallback.status: unavailable`, zero
   attempts, and no runtime lane when a required class is listed
   missing, catalog rejection of a manifest carrying an
-  `activation_signals` field or requiring intent-kind evidence in executable
-  Lite, bounded invalid-intake echo acceptance only for its two permitted
+  `activation_signals` field, rejection of goal-alignment success without explicit
+  goal support, bounded invalid-intake echo acceptance only for its two permitted
   `REQUEST_INVALID` reasons, a failed-final-attempt plus verified `provided` fallback yielding a
   valid non-incomplete obligation, the same failure plus declined fallback
   yielding no approval, rejection of a Lite `findings` manual fallback,
@@ -840,11 +941,15 @@ wall time before any cost claim or workflow-trigger widening.
   pairs including zero-lane-all-skipped `receipt_incomplete` and
   `projection_mismatch`, zero
   `git_blob` pointers in bundle revision 1, and
-  prose-table/catalog parity.
+  prose-table/catalog parity. Grouping fixtures must retain every logical answer,
+  reject missing batch members and cross-request evidence, and avoid double-counted
+  physical-call cost. Reviewer fixtures must reject missing dispositions/reasons,
+  unresolved-to-clean conversion, and suppressed confirmed blockers; retain raw
+  rejected contributions and prove an evidence-supported rejection.
 - Measurement fixtures must prove committed whole-tree arm drift rejection,
   exact five-primary-plus-one-designated-backup corpus enforcement, dual-router
   full-six-mode admission, failure of promotion when any effective primary control sample is
-  excluded, exact Lite/mixed/all-four-false control-mode
+  excluded, Lite/all-four-false and per-arm frozen-archetype
   enforcement, rejection of a missing or admission-mismatching corroborative
   driver receipt config, retry-source and zero-human-intervention enforcement,
   effort/host/tools/timeout parity, exact
@@ -855,4 +960,8 @@ wall time before any cost claim or workflow-trigger widening.
   telemetry, unexplained missing-receipt failure, both quality gates, the 33.3%
   median and three-of-five gates, mechanical no-posting policy, and rejection of
   absent, unparseable, or non-monotonic side-car byte/timing telemetry, plus an
-  insufficient or malformed historical cost ledger.
+  insufficient or malformed historical cost ledger. Add successful admission of
+  ordinary non-mixed Lite PRs, development/holdout separation, a substantive
+  arm-hidden judge packet with known-defect/false-alarm calibration, and rejection
+  of forged/preplanted timing, identity substitution, and false success after
+  failure, timeout, or cancellation at the demonstrated measurement boundary.

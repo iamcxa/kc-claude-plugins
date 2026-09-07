@@ -13,14 +13,19 @@ import sys
 import tempfile
 import time
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 HERE = pathlib.Path(__file__).resolve().parent
-SPEC = importlib.util.spec_from_file_location(
-    "capability", HERE / "review-capability.py"
-)
-protocol = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(protocol)
+def module(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    result = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(result)
+    return result
+
+
+protocol = module("capability", HERE / "review-capability.py")
+core = module("ablation", HERE / "review-ablation-core.py")
 
 
 class PlannerTests(unittest.TestCase):
@@ -42,11 +47,7 @@ class PlannerTests(unittest.TestCase):
                 + str(HERE / "review-runtime.sh")
                 + ' "$@"\nfi\n'
             )
-            spec = importlib.util.spec_from_file_location(
-                "boundary_probe", private / "scripts/review-capability.py"
-            )
-            probe = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(probe)
+            probe = module("boundary_probe", private / "scripts/review-capability.py")
             result = probe.finish(prepared, results)
             self.assertEqual(result["reason"], "projection_mismatch")
             protocol.validate(result, "RunTerminal")
@@ -96,8 +97,7 @@ class PlannerTests(unittest.TestCase):
             )
             self.assertEqual(json.loads(result.stdout)["route"], "legacy")
             self.assertFalse((root / "called").exists())
-        with self.assertRaises(protocol.Invalid):
-            protocol.validate("abc\n", "Token")
+        self.assertRaises(protocol.Invalid, protocol.validate, "abc\n", "Token")
 
     def test_unsupported_material_is_missing_not_invalid_caller_schema(self):
         for content in (b"value = '\xe9'\n", b"x" * 1048577 + b"\n"):
@@ -138,64 +138,47 @@ class PlannerTests(unittest.TestCase):
                     protocol.finish(result, [])["reason"], "receipt_incomplete"
                 )
 
+    def cli(self, environment=None, **options):
+        arguments = [
+            part for key, value in options.items()
+            for part in ("--" + key.replace("_", "-"), str(value))
+        ]
+        run = subprocess.run(
+            [sys.executable, str(HERE / "review-capability.py"), *arguments],
+            env=environment if environment is not None else {**os.environ, "KC_PR_FLOW_REVIEW_TYPED": "on",
+                 "KC_PR_FLOW_PROFILED_REVIEW": "on"},
+            capture_output=True, text=True, check=False,
+        )
+        self.assertNotIn("Traceback", run.stderr)
+        return run, json.loads(run.stdout)
+
     def test_malformed_cli_artifacts_always_return_valid_terminals(self):
         with self.prepared_results() as (prepared, results):
             directory = pathlib.Path(prepared["directory"])
-            intake = directory / "invalid-intake.json"
-            intake.write_text(
-                protocol.canonical({**self.identity, "repository": "x" * 257}).decode()
+            intake = protocol.store(
+                directory / "invalid-intake.json",
+                {**self.identity, "repository": "x" * 257},
             )
-            fallback = directory / "fallback.json"
-            fallback.write_text("[null]")
-            pending = directory / "dispatched.json"
+            fallback = protocol.store(directory / "fallback.json", [None])
             cases = [
-                (
-                    [
-                        "--identity-file",
-                        str(intake),
-                        "--repo-worktree",
-                        prepared["repository_path"],
-                        "--run-dir",
-                        str(directory / "new"),
-                        "--model",
-                        "unused",
-                    ],
-                    {},
-                ),
-                (["--finalize-dir", str(directory)], {}),
-                (
-                    [
-                        "--finalize-dir",
-                        str(directory),
-                        "--fallbacks-file",
-                        str(fallback),
-                    ],
-                    {"prepared": prepared, "results": results},
-                ),
+                (dict(identity_file=intake, repo_worktree=prepared["repository_path"],
+                      run_dir=directory / "new", model="unused"), {}, None),
+                (dict(finalize_dir=directory), {}, None),
+                (dict(finalize_dir=directory, fallbacks_file=fallback),
+                 {"prepared": prepared, "results": results}, prepared["identity"]),
             ]
-            for arguments, dispatched in cases:
+            for arguments, dispatched, expected_identity in cases:
                 with self.subTest(arguments=arguments):
-                    pending.write_text(protocol.canonical(dispatched).decode())
-                    run = subprocess.run(
-                        [
-                            sys.executable,
-                            str(HERE / "review-capability.py"),
-                            *arguments,
-                        ],
-                        check=False,
-                        env={
-                            **os.environ,
-                            "KC_PR_FLOW_REVIEW_TYPED": "on",
-                            "KC_PR_FLOW_PROFILED_REVIEW": "on",
-                        },
-                        capture_output=True,
-                        text=True,
-                    )
-                    self.assertEqual(run.returncode, 2, run.stderr)
-                    terminal = protocol.json.loads(run.stdout)
+                    (directory / "dispatched.json").write_bytes(protocol.canonical(dispatched))
+                    run, terminal = self.cli(**arguments)
+                    self.assertEqual(run.returncode, 2)
                     protocol.validate(terminal, "RunTerminal")
-                    self.assertEqual(terminal["reason"], "schema_failure")
-                    self.assertNotIn("Traceback", run.stderr)
+                    self.assertEqual(
+                        (terminal["status"], terminal["reason"]),
+                        ("REQUEST_INVALID", "schema_failure"),
+                    )
+                    if expected_identity:
+                        self.assertEqual(terminal["identity"], expected_identity)
 
     def test_closed_protocol_fixtures(self):
         fixtures = """\
@@ -214,8 +197,59 @@ class PlannerTests(unittest.TestCase):
                 if fixture["valid"]:
                     protocol.validate(fixture["value"], fixture["definition"])
                 else:
-                    with self.assertRaises(protocol.Invalid):
-                        protocol.validate(fixture["value"], fixture["definition"])
+                    self.assertRaises(protocol.Invalid, protocol.validate, fixture["value"], fixture["definition"])
+
+
+    def posting_log(self, prepared, payloads):
+        identity = prepared["identity"]
+        start = protocol.runtime(
+            prepared, "start", "--repo", identity["repository"],
+            "--pr", identity["pr_number"], "--base", identity["base_sha"],
+            "--head", identity["head_sha"], "--config-hash", identity["config_hash"],
+        )
+        identity = {**identity, "run_id": start["run_id"]}
+        arguments = [identity[k] for k in (
+            "run_id", "review_key", "repository", "pr_number",
+            "base_sha", "head_sha", "config_hash",
+        )]
+        events = [protocol.canonical(start).decode()]
+        for kind, payload in payloads:
+            events.append(subprocess.check_output(
+                ["bash", "-c", '. "$1"; shift; review_runtime_build_event "$@"',
+                 "fixture", str(HERE / "review-runtime.sh"), *map(str, arguments),
+                 str(len(events) + 1), start["occurred_at"], kind,
+                 protocol.canonical(payload).decode()], text=True,
+            ).strip())
+        path = pathlib.Path(prepared["directory"]) / "posting-fixture.jsonl"
+        path.write_text("\n".join(events) + "\n")
+        return path, start
+
+    def contribution(self, result, **changes):
+        answer = result["answers"][0]
+        answer.update(assessment="findings", contributions=[{
+            "evidence_ref": answer["evidence_refs"][0], "category": "correctness",
+            "claim_key": "wrong-value", "severity": "HIGH", "confidence": 9,
+            "quote": "value = 2", "summary": "The value violates the contract.",
+            **changes,
+        }])
+        return answer
+
+    def fallback(self, prepared, capability):
+        return {
+            "schema": "kc-pr-flow.manual-fallback/v1",
+            "bundle_hash": prepared["bundle"]["bundle_hash"],
+            "human_note": "",
+            "result": {
+                "schema": "kc-pr-flow.manual-capability-result/v1",
+                "capability": capability,
+                "review_identity": prepared["identity"],
+                "terminal_assessment": "clean",
+                "candidate_ids": [],
+                "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
+                "recorded_by": "interactive-human",
+                "recorded_at": "2026-09-05T00:00:00Z",
+            },
+        }
 
     def setUp(self):
         self.identity = {
@@ -286,10 +320,8 @@ class PlannerTests(unittest.TestCase):
                     value = protocol.terminal(identity, status, reason)
                     protocol.validate(value, "RunTerminal")
                     for other_status in pairs.keys() - {status}:
-                        with self.assertRaises(protocol.Invalid):
-                            protocol.validate(
-                                {**value, "status": other_status}, "RunTerminal"
-                            )
+                        self.assertRaises(protocol.Invalid, protocol.validate,
+                                          {**value, "status": other_status}, "RunTerminal")
         for reason in ("schema_failure", "invalid_identity"):
             protocol.validate(
                 protocol.terminal({"pr_number": "bad"}, "REQUEST_INVALID", reason),
@@ -304,7 +336,7 @@ class PlannerTests(unittest.TestCase):
             )
 
     @contextlib.contextmanager
-    def prepared_results(self, commands=()):
+    def prepared_results(self, commands=(), head_content="value = 2\n"):
         with tempfile.TemporaryDirectory() as temporary:
             repo = pathlib.Path(temporary) / "repo"
             repo.mkdir()
@@ -322,7 +354,7 @@ class PlannerTests(unittest.TestCase):
             git("add", "example.py")
             git("commit", "-qm", "base")
             self.identity["base_sha"] = git("rev-parse", "HEAD")
-            (repo / "example.py").write_text("value = 2\n")
+            (repo / "example.py").write_text(head_content)
             git("commit", "-qam", "head")
             self.identity["head_sha"] = git("rev-parse", "HEAD")
             prepared = protocol.prepare(
@@ -379,74 +411,60 @@ class PlannerTests(unittest.TestCase):
         with self.prepared_results() as (prepared, results):
             requests = protocol.requests(prepared)
             program = (
+                "assert __import__('sys').argv[1] == '--max-budget-usd'; "
+                "assert 0 < float(__import__('sys').argv[2]) <= 0.5; "
                 "import json,sys; r=json.load(sys.stdin); results="
                 + repr(results)
                 + "; print(json.dumps({'structured_output':next(x for x in results if x['capability']==r['capability']), 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01, 'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))"
             )
-            results = protocol.dispatch(prepared, [sys.executable, "-c", program])
+            results = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
+            self.assertEqual(len(results), len(protocol.requests(prepared)))
+            for event in prepared["audit"][1:]:
+                envelope = protocol.read_json(
+                    pathlib.Path(prepared["directory"])
+                    / f"provider-{event['capability']}-1.json"
+                )
+                request = next(
+                    r
+                    for r in protocol.requests(prepared)
+                    if r["capability"] == event["capability"]
+                )
+                self.assertEqual(
+                    event["payload_sha256"],
+                    protocol.digest(
+                        {"request": request, "provider_envelope": envelope}
+                    ),
+                )
             finished = protocol.finish(prepared, results)
             self.assertEqual(finished["decision"]["coverage"], "complete")
             self.assertTrue(finished["decision"]["approve_eligible"])
             directory = pathlib.Path(prepared["directory"])
             protocol.store(directory / "prepared.json", prepared)
             protocol.store(directory / "audit.json", prepared["audit"])
-            spec = importlib.util.spec_from_file_location(
-                "ablation", HERE / "review-ablation-core.py"
-            )
-            core = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(core)
             metrics = core.pilot_telemetry(directory, "fixture")
             self.assertAlmostEqual(metrics["capability_cost_usd"], len(requests) * 0.01)
             self.assertEqual(metrics["capability_tokens"], len(requests) * 12)
-            with self.assertRaises(SystemExit):
-                core.pilot_telemetry(directory, "different-model")
+            self.assertRaises(SystemExit, core.pilot_telemetry, directory, "different-model")
             provider = next(directory.glob("provider-*.json"))
             envelope = provider.read_bytes()
             provider.write_text("null")
-            with self.assertRaises(SystemExit):
-                core.pilot_telemetry(directory, "fixture")
+            self.assertRaises(SystemExit, core.pilot_telemetry, directory, "fixture")
             provider.write_bytes(envelope)
             event_file = next((directory / "state").rglob("events.jsonl"))
             identity = prepared["identity"]
-            posting_start = protocol.runtime(
-                prepared,
-                "start",
-                "--repo",
-                identity["repository"],
-                "--pr",
-                identity["pr_number"],
-                "--base",
-                identity["base_sha"],
-                "--head",
-                identity["head_sha"],
-                "--config-hash",
-                identity["config_hash"],
-            )
-            identity = {**identity, "run_id": posting_start["run_id"]}
             payload_hash = "f" * 64
             idempotency = protocol.raw_hash(
                 f"{identity['review_key']}|{identity['head_sha']}|{payload_hash}".encode()
             )
-            events = [protocol.canonical(posting_start).decode()]
-            for kind, payload in (
+            posting_binding = {
+                "commit_id": identity["head_sha"],
+                "payload_sha256": payload_hash,
+                "idempotency_key": idempotency,
+            }
+            payloads = (
                 ("head.observed", {"head_sha": identity["head_sha"]}),
-                (
-                    "authorization.granted",
-                    {
-                        "commit_id": identity["head_sha"],
-                        "event": "APPROVE",
-                        "payload_sha256": payload_hash,
-                        "idempotency_key": idempotency,
-                    },
-                ),
-                (
-                    "post.intent",
-                    {
-                        "commit_id": identity["head_sha"],
-                        "payload_sha256": payload_hash,
-                        "idempotency_key": idempotency,
-                    },
-                ),
+                ("authorization.granted", {**posting_binding, "event": "APPROVE"}),
+                ("post.intent", posting_binding),
                 (
                     "post.result",
                     {
@@ -455,38 +473,8 @@ class PlannerTests(unittest.TestCase):
                         "remote_review_id": 42,
                     },
                 ),
-            ):
-                arguments = [
-                    identity[k]
-                    for k in (
-                        "run_id",
-                        "review_key",
-                        "repository",
-                        "pr_number",
-                        "base_sha",
-                        "head_sha",
-                        "config_hash",
-                    )
-                ]
-                events.append(
-                    subprocess.check_output(
-                        [
-                            "bash",
-                            "-c",
-                            '. "$1"; shift; review_runtime_build_event "$@"',
-                            "fixture",
-                            str(HERE / "review-runtime.sh"),
-                            *map(str, arguments),
-                            str(len(events) + 1),
-                            "2026-09-06T00:00:00Z",
-                            kind,
-                            protocol.canonical(payload).decode(),
-                        ],
-                        text=True,
-                    ).strip()
-                )
-            projected_file = directory / "posted-fixture.jsonl"
-            projected_file.write_text("\n".join(events) + "\n")
+            )
+            projected_file, posting_start = self.posting_log(prepared, payloads)
             projected = protocol.posting_projection(prepared, projected_file)
             self.assertEqual(projected["outcome"], "posted_reconciled")
             self.assertEqual(projected["remote_review_id"], 42)
@@ -502,19 +490,7 @@ class PlannerTests(unittest.TestCase):
     def test_cross_capability_high_finding_merges_and_forces_request_changes(self):
         with self.prepared_results() as (prepared, results):
             for result, severity in zip(results[:2], ("HIGH", "MEDIUM")):
-                answer = result["answers"][0]
-                answer["assessment"] = "findings"
-                answer["contributions"] = [
-                    {
-                        "evidence_ref": answer["evidence_refs"][0],
-                        "category": "correctness",
-                        "claim_key": "wrong-value",
-                        "severity": severity,
-                        "confidence": 9,
-                        "quote": "value = 2",
-                        "summary": "The value violates the accepted contract.",
-                    }
-                ]
+                self.contribution(result, severity=severity)
             rendered = protocol.collate(prepared, results)["rendered"]
             self.assertEqual(len(rendered["inline_comments"]), 1)
             inline = rendered["inline_comments"][0]
@@ -532,6 +508,15 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(len(decision["confirmed_blocker_refs"]), 1)
             self.assertEqual(finished["receipt"]["counts"]["findings"], 1)
             self.assertEqual(finished["receipt"]["counts"]["candidates"], 2)
+
+    def test_ambiguous_inline_retains_finding_without_guessing_a_line(self):
+        with self.prepared_results(head_content="value = 2\nvalue = 2\n") as (prepared, results):
+            self.contribution(results[0])
+            rendered = protocol.collate(prepared, results)["rendered"]
+            self.assertEqual(rendered["inline_comments"], [])
+            self.assertEqual(rendered["event"], "REQUEST_CHANGES")
+            self.assertIn("value = 2", rendered["body"])
+            self.assertIn("ambiguous location", rendered["body"])
 
     def test_transient_adapter_retry_is_bounded_and_timed(self):
         with self.prepared_results() as (prepared, _results):
@@ -561,6 +546,63 @@ class PlannerTests(unittest.TestCase):
             )
             self.assertEqual(len(collated["observation"]["lanes"]), len(invocations))
 
+    def test_provider_shapes_and_large_monotonic_readings_keep_attempts(self):
+        for raw in ('{"structured_output":null}', '{"total_cost_usd":NaN}'):
+            with self.subTest(raw=raw), self.prepared_results() as (prepared, _):
+                returned = protocol.dispatch(
+                    prepared, [sys.executable, "-c", "print(" + repr(raw) + ")"]
+                )
+                self.assertEqual(returned, [])
+                events = [e for e in prepared["audit"] if e["event_type"] == "invoked"]
+                self.assertEqual(len(events), len(protocol.requests(prepared)))
+                self.assertTrue(all(e["result"] == "terminal_failure" for e in events))
+                for path in pathlib.Path(prepared["directory"]).glob("provider-*.raw"):
+                    self.assertEqual(path.read_text(), raw + "\n")
+                self.assertEqual(len(list(pathlib.Path(prepared["directory"]).glob("provider-*.raw"))), len(events))
+        with self.prepared_results() as (prepared, _):
+            for ns in (100, 2**53, 2**63):
+                protocol.audit(prepared, "accepted", {}, ns, ns + 1)
+                self.assertEqual(prepared["audit"][-1]["started_ns"], ns)
+            for ns in (True, 0, -1):
+                self.assertRaises(protocol.Invalid, protocol.audit, prepared, "accepted", {}, ns, ns)
+
+    def test_configuration_mismatch_is_invalidated_at_collation(self):
+        with self.prepared_results() as (prepared, results):
+            prepared["binding"]["plan_hash"] = "f" * 64
+            terminal = protocol.collate(prepared, results)
+            self.assertEqual((terminal["status"], terminal["reason"]),
+                             ("INVALIDATED", "configuration_change"))
+            self.assertEqual(terminal["identity"], prepared["identity"])
+
+    def test_terminal_attempt_keeps_identity_and_partial_cost_without_a_seal(self):
+        with self.prepared_results() as (prepared, _):
+            protocol.dispatch(prepared, [sys.executable, "-c", "print('null')"])
+            repo, directory = prepared["repository_path"], pathlib.Path(prepared["directory"])
+            protocol.git(repo, "checkout", "--detach", self.identity["base_sha"])
+            terminal = protocol.collate(prepared, [])
+            protocol.git(repo, "checkout", "--detach", self.identity["head_sha"])
+            for name, value in (("prepared", prepared), ("audit", prepared["audit"]), ("result", terminal)):
+                protocol.store(directory / (name + ".json"), value)
+            run = directory.parent / "terminal-arm"
+            run.mkdir()
+            (run / "protocol").symlink_to(directory, target_is_directory=True)
+            args = SimpleNamespace(arm="treatment", arm_dir=HERE.parent, slot=1, effort="low", model="fixture")
+            manifest = {"pr":self.identity, "arm_manifest":{}, "activation_environment":{},
+                        "unit_kind":"arm", "arm":"treatment", "driver_sha256":"f" * 64}
+            host = {"modelUsage":{"fixture":{}}, "total_cost_usd":0.1,
+                    "usage":{"input_tokens":1,"output_tokens":1,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}
+            with patch.object(core, "pilot_invoke", return_value=(host, 10)), patch.object(core, "pilot_arm_guard", return_value={}):
+                result = core.pilot_attempt(manifest, run, lambda: core.pilot_execute(
+                    args, manifest, {"max_cost_usd":1}, {}, run, repo, True,
+                    pathlib.Path(sys.executable), HERE / "review-ablation-driver-prompt.md",
+                    review_started_ns=core.time.monotonic_ns(),
+                ))
+            self.assertEqual(result["run_terminal"], terminal)
+            self.assertEqual(terminal["reason"], "identity_change")
+            self.assertEqual(result["known_cost_usd"], 0.1)
+            self.assertEqual(result["cost_status"], "incomplete")
+            self.assertIsNone(result["cost_usd"])
+
     def test_selected_material_tampering_and_unassigned_answers_refuse(self):
         with self.prepared_results() as (prepared, results):
             self.assertIn(
@@ -572,8 +614,7 @@ class PlannerTests(unittest.TestCase):
             changed["bundle"]["bundle_hash"] = protocol.digest(
                 {k: v for k, v in changed["bundle"].items() if k != "bundle_hash"}
             )
-            with self.assertRaises(protocol.Invalid):
-                protocol.requests(changed)
+            self.assertRaises(protocol.Invalid, protocol.requests, changed)
             results[0]["answers"][0]["question_id"] = "not_assigned"
             self.assertEqual(
                 protocol.collate(prepared, results)["rendered"]["event"], "COMMENT"
@@ -630,24 +671,14 @@ class PlannerTests(unittest.TestCase):
                 routed["route"], "unavailable" if profile == "custom" else "legacy"
             )
 
-    def test_failed_final_attempt_accepts_only_bound_clean_manual_fallback(self):
+    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(
+        self,
+    ):
+        started = time.monotonic()
         with self.prepared_results() as (prepared, results):
+            print("Mechanical prepare seconds:", time.monotonic() - started, flush=True)
             capability = results[0]["capability"]
-            fallback = {
-                "schema": "kc-pr-flow.manual-fallback/v1",
-                "bundle_hash": prepared["bundle"]["bundle_hash"],
-                "human_note": "",
-                "result": {
-                    "schema": "kc-pr-flow.manual-capability-result/v1",
-                    "capability": capability,
-                    "review_identity": prepared["identity"],
-                    "terminal_assessment": "clean",
-                    "candidate_ids": [],
-                    "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
-                    "recorded_by": "interactive-human",
-                    "recorded_at": "2026-09-05T00:00:00Z",
-                },
-            }
+            fallback = self.fallback(prepared, results[0]["capability"])
             results[0]["unexpected"] = True
             ordinary = protocol.collate(prepared, results)
             self.assertEqual(ordinary["rendered"]["event"], "COMMENT")
@@ -672,28 +703,7 @@ class PlannerTests(unittest.TestCase):
                 )
                 refused = protocol.collate(prepared, results, [mutated])
                 self.assertEqual(refused["rendered"]["event"], "COMMENT")
-
-    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(
-        self,
-    ):
-        started = time.monotonic()
-        with self.prepared_results() as (prepared, results):
-            print("Mechanical prepare seconds:", time.monotonic() - started, flush=True)
-            fallback = {
-                "schema": "kc-pr-flow.manual-fallback/v1",
-                "bundle_hash": prepared["bundle"]["bundle_hash"],
-                "human_note": "",
-                "result": {
-                    "schema": "kc-pr-flow.manual-capability-result/v1",
-                    "capability": results[0]["capability"],
-                    "review_identity": prepared["identity"],
-                    "terminal_assessment": "clean",
-                    "candidate_ids": [],
-                    "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
-                    "recorded_by": "interactive-human",
-                    "recorded_at": "2026-09-05T00:00:00Z",
-                },
-            }
+            del results[0]["unexpected"]
             results[0]["unknown"] = True
             missing_capability = results.pop()["capability"]
             directory = pathlib.Path(prepared["directory"])
@@ -702,17 +712,10 @@ class PlannerTests(unittest.TestCase):
                 {"prepared": prepared, "results": results},
             )
             fallback_file = protocol.store(directory / "fallbacks.json", [fallback])
-            output = subprocess.check_output(
-                [
-                    sys.executable,
-                    str(HERE / "review-capability.py"),
-                    "--finalize-dir",
-                    str(directory),
-                    "--fallbacks-file",
-                    fallback_file,
-                ]
+            run, finished = self.cli(
+                environment=os.environ, finalize_dir=directory, fallbacks_file=fallback_file,
             )
-            finished = protocol.json.loads(output)
+            self.assertEqual(run.returncode, 0)
             self.assertIn("decision", finished, finished)
             self.assertEqual(
                 finished["decision"]["capability_gap_refs"], [missing_capability]
@@ -749,46 +752,7 @@ class PlannerTests(unittest.TestCase):
                 protocol.finish(prepared, [])["reason"], "receipt_incomplete"
             )
 
-    def test_provider_attempt_budget_and_raw_usage_bind_audit(self):
-        with self.prepared_results() as (prepared, _results):
-            program = """
-import json, sys
-request = json.load(sys.stdin)
-assert sys.argv[1] == '--max-budget-usd'
-assert 0 < float(sys.argv[2]) <= 0.5
-answer = {'question_id': request['question_ids'][0], 'assessment': 'clean',
-          'evidence_refs': [request['evidence'][0]['material'][0]['id']], 'contributions': []}
-result = {k: request[k] for k in ('identity','plan_rev','plan_hash','bundle_revision','bundle_hash','capability')}
-result.update(schema='kc-pr-flow.capability-result/v1', answers=[answer], status='succeeded',
-              usage={'input_tokens':None,'output_tokens':None,'total_tokens':None})
-print(json.dumps({'structured_output':result, 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01,
-                  'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
-"""
-            returned = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
-            self.assertEqual(len(returned), len(protocol.requests(prepared)))
-            for event in prepared["audit"][1:]:
-                envelope = protocol.read_json(
-                    pathlib.Path(prepared["directory"])
-                    / f"provider-{event['capability']}-1.json"
-                )
-                request = next(
-                    r
-                    for r in protocol.requests(prepared)
-                    if r["capability"] == event["capability"]
-                )
-                self.assertEqual(
-                    event["payload_sha256"],
-                    protocol.digest(
-                        {"request": request, "provider_envelope": envelope}
-                    ),
-                )
-
     def test_failed_and_retried_provider_usage_is_never_skipped(self):
-        spec = importlib.util.spec_from_file_location(
-            "ablation", HERE / "review-ablation-core.py"
-        )
-        core = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(core)
         for recover in (False, True):
             with (
                 self.subTest(recover=recover),
@@ -822,6 +786,11 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 ):
                     protocol.store(directory / (name + ".json"), value)
                 metrics = core.pilot_telemetry(directory, "fixture")
+                with patch.object(core, "__file__", "/nonexistent/other-runner.py"):
+                    self.assertEqual(
+                        core.pilot_telemetry(directory, "fixture", arm_dir=HERE.parent),
+                        metrics,
+                    )
                 count = len(protocol.requests(prepared))
                 self.assertEqual(metrics["capability_cost_status"], "incomplete")
                 self.assertEqual(
@@ -835,20 +804,8 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
 
     def test_unquoted_critical_is_advisory_not_a_blocker(self):
         with self.prepared_results() as (prepared, results):
-            answer = results[0]["answers"][0]
-            answer.update(
-                assessment="findings",
-                contributions=[
-                    {
-                        "evidence_ref": answer["evidence_refs"][0],
-                        "category": "correctness",
-                        "claim_key": "bad-value",
-                        "severity": "CRITICAL",
-                        "confidence": 1,
-                        "quote": "invented line",
-                        "summary": "Unverified critical claim",
-                    }
-                ],
+            answer = self.contribution(
+                results[0], severity="CRITICAL", confidence=1, quote="invented line"
             )
             collated = protocol.collate(prepared, results)
             self.assertEqual(collated["policy"]["confirmed_blocker_refs"], [])
@@ -921,8 +878,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 changed["bundle"]["bundle_hash"] = protocol.digest(
                     {k: v for k, v in changed["bundle"].items() if k != "bundle_hash"}
                 )
-                with self.assertRaises(protocol.Invalid):
-                    protocol.requests(changed)
+                self.assertRaises(protocol.Invalid, protocol.requests, changed)
             for field, value in (("bundle_revision", 1), ("answers", [])):
                 changed = copy.deepcopy(results)
                 changed[0][field] = value
@@ -956,50 +912,9 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
             )
             original = event_file.read_bytes()
             self.assertIsNone(protocol.posting_projection(prepared, event_file))
-            identity = prepared["identity"]
-            event = protocol.runtime(
-                prepared,
-                "start",
-                "--repo",
-                identity["repository"],
-                "--pr",
-                identity["pr_number"],
-                "--base",
-                identity["base_sha"],
-                "--head",
-                identity["head_sha"],
-                "--config-hash",
-                identity["config_hash"],
+            snapshot, event = self.posting_log(
+                prepared, [("run.invalidated", {"reason": "head_moved"})]
             )
-            identity = {**identity, "run_id": event["run_id"]}
-            arguments = [
-                identity[k]
-                for k in (
-                    "run_id",
-                    "review_key",
-                    "repository",
-                    "pr_number",
-                    "base_sha",
-                    "head_sha",
-                    "config_hash",
-                )
-            ]
-            invalidated = subprocess.check_output(
-                [
-                    "bash",
-                    "-c",
-                    '. "$1"; shift; review_runtime_build_event "$@"',
-                    "fixture",
-                    str(HERE / "review-runtime.sh"),
-                    *map(str, arguments),
-                    "2",
-                    event["occurred_at"],
-                    "run.invalidated",
-                    '{"reason":"head_moved"}',
-                ]
-            )
-            snapshot = pathlib.Path(prepared["directory"]) / "invalidated.jsonl"
-            snapshot.write_bytes(protocol.canonical(event) + b"\n" + invalidated)
             self.assertEqual(
                 protocol.posting_projection(prepared, snapshot)["reason"], "head_moved"
             )
@@ -1016,8 +931,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 changed["identity"][field] = (
                     event["run_id"] if field == "run_id" else "mismatched"
                 )
-                with self.assertRaises(protocol.Invalid):
-                    protocol.posting_projection(changed, snapshot)
+                self.assertRaises(protocol.Invalid, protocol.posting_projection, changed, snapshot)
 
 
 if __name__ == "__main__":

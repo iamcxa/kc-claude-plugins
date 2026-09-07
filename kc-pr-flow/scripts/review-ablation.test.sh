@@ -900,19 +900,23 @@ import subprocess
 import sys
 import os
 import shutil
+import contextlib
+import io
+from unittest.mock import patch
+from unittest import TestCase
 
 here, root = map(pathlib.Path, sys.argv[1:])
 spec = importlib.util.spec_from_file_location("ablation", here / "review-ablation-core.py")
 core = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(core)
 
-def refuses(call):
-    try:
+def refuses(call, diagnostic=None):
+    errors = io.StringIO()
+    with contextlib.redirect_stderr(errors), TestCase().assertRaises((SystemExit, OSError)) as failure:
         call()
-    except SystemExit as error:
-        assert error.code != 0
-    else:
-        raise AssertionError("invalid fixture was accepted")
+    assert not isinstance(failure.exception, SystemExit) or failure.exception.code != 0
+    if diagnostic:
+        assert diagnostic in errors.getvalue(), errors.getvalue()
 
 source = root / "pilot-source"
 source.mkdir()
@@ -959,12 +963,13 @@ refuses(lambda: core.pilot_corpus(bad))
 
 runs = root / "pilot-runs"
 runs.mkdir()
+material = {'goal':'Empty input must return zero.', 'code':'return total / count', 'test_evidence':'test_empty: expected 0, observed ZeroDivisionError'}
 for row in rows[:5]:
     for name in ("control", "treatment"):
         directory = runs / (str(row["slot"]) + "-" + name)
         directory.mkdir()
         manifest = {"schema": "kc-pr-flow.pilot-manifest/v1", "slot": row["slot"], "arm": name, "pr": row,
-                    "unit_kind":"arm", "unit_input_sha256":core.pilot_hash(None), "planner_manifest":None,
+                    "unit_kind":"arm", "unit_input_sha256":core.pilot_hash(material), "planner_manifest":None,
                     "arm_manifest":None, "started_at":"2026-09-05T00:00:00Z",
                     "corpus_sha256": core.pilot_hash(rows), "budget_sha256": "c" * 64, "driver_sha256": "d" * 64,
                     "requested_model": "fixture", "effort": "low", "host_sha256": "e" * 64,
@@ -983,13 +988,12 @@ for row in rows[:5]:
                            audit_hash="a"*64, capability_cost_usd=0.05, capability_tokens=4)
         core.pilot_write(directory / "manifest.json", manifest)
         core.pilot_write(directory / "receipt.json", receipt)
+        core.pilot_write(directory / "unit-input.json", material)
 def unit_record(directory, kind, slot, payload, subject=None):
     target = directory / (str(slot) + '-' + kind)
     target.mkdir(exist_ok=True)
     manifest = {**core.pilot_read(directory / '1-control/manifest.json'), 'schema':'kc-pr-flow.pilot-manifest/v1','unit_kind':kind,'slot':slot,'pr':subject,
-                'arm_manifest':None,'planner_manifest':None,'budget_sha256':'c'*64,
-                'unit_input_sha256':payload.get('input_sha256')}
-    manifest['unit_input_sha256'] = payload.get('input_sha256', core.pilot_hash(subject))
+                'unit_input_sha256':payload.get('input_sha256', core.pilot_hash(subject))}
     if kind == 'adjudication':
         for key in ('arm', 'pr', 'arm_manifest', 'planner_manifest', 'corpus_sha256', 'activation_environment', 'diff_sha256', 'started_at'):
             manifest.pop(key)
@@ -1006,6 +1010,9 @@ equivalent = copy.deepcopy(joined)
 for record in equivalent:
     record['receipt']['driver']['summary'] = 'Required questions resolved' if record['manifest']['arm'] == 'treatment' else 'Clean'
 assert len({s['summary'] for s in core.pilot_normalize(equivalent)[0]}) == 1
+equivalent[0]['receipt']['driver']['recommendation'] = 'APPROVE (profiled treatment)'
+refuses(lambda: core.pilot_normalize(equivalent), 'recommendation')
+equivalent[0]['receipt']['driver']['recommendation'] = 'APPROVE'
 equivalent[0]['receipt']['driver']['findings'] = [{}]
 refuses(lambda: core.pilot_normalize(equivalent))
 backup_runs = root / "backup-runs"
@@ -1036,9 +1043,17 @@ refuses(lambda: core.pilot_join(backup_runs, rows, {**substitution, "replacement
 refuses(lambda: core.pilot_join(backup_runs, rows, {**substitution, "control_terminal":{"reason":"timeout"}}))
 args = argparse.Namespace(corpus=str(corpus), manifest_dir=str(runs), substitution=None, blind_dir=str(root / "blind"), phase="blind", adjudication=None)
 blinded = core.cmd_pilot_compare(args)
+sealed_bytes = {p.name:p.read_bytes() for p in pathlib.Path(args.blind_dir).iterdir()}
+refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
+assert sealed_bytes == {p.name:p.read_bytes() for p in pathlib.Path(args.blind_dir).iterdir()}
 assert all("arm" not in sample and "coverage" not in sample and "wallclock_ms" not in sample for sample in blinded["samples"])
+assert all(sample['material'] == material for sample in blinded['samples'])
+for invalid in (None, {**material, 'goal':''}, {**material, 'code':'changed after launch'}):
+    altered = copy.deepcopy(joined)
+    altered[0]['material'] = invalid
+    refuses(lambda: core.pilot_normalize(altered))
 judgments = root / "judgments.json"
-core.pilot_write(judgments, {"schema": "kc-pr-flow.pilot-adjudication/v1", "input_sha256": core.pilot_hash(blinded), "findings": []})
+core.pilot_write(judgments, {"schema": "kc-pr-flow.pilot-adjudication/v1", "input_sha256": core.pilot_hash(blinded), "evidence_sufficient":True, "findings": []})
 def costed_judgments(directory, inputs, mapping, judgments):
     for slot in range(1, 6):
         pair = {'schema':inputs['schema'], 'samples':[s for s in inputs['samples'] if mapping[s['sample_id']]['slot'] == slot]}
@@ -1048,18 +1063,15 @@ def costed_judgments(directory, inputs, mapping, judgments):
 costed_judgments(runs, blinded, core.pilot_read(root / 'blind/sealed-mapping.json'), core.pilot_read(judgments))
 args.adjudication, args.phase = str(judgments), "seal"
 core.cmd_pilot_compare(args)
+refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
 args.phase = "compare"
 assert core.cmd_pilot_compare(args)["promote"] is True
+refuses(lambda: core.cmd_pilot_compare(args), 'already exists')
 for unit in ('1-admission', '1-adjudication'):
     path = runs / unit / 'receipt.json'
     saved, manifest = core.pilot_read(path), core.pilot_read(path.with_name('manifest.json'))
     path.rename(path.with_suffix('.saved'))
-    try:
-        core.cmd_pilot_compare(args)
-    except (SystemExit, OSError):
-        pass
-    else:
-        raise AssertionError('missing costed unit was accepted')
+    refuses(lambda: core.cmd_pilot_compare(args))
     path.with_suffix('.saved').rename(path)
     path.write_text(json.dumps({**saved,'cost_usd':None,'cost_status':'incomplete','run_terminal':{'reason':'attempt_failed'}}))
     refuses(lambda: core.cmd_pilot_compare(args))
@@ -1067,10 +1079,9 @@ for unit in ('1-admission', '1-adjudication'):
     path.with_name('manifest.json').write_text(json.dumps(changed))
     path.write_text(json.dumps({**saved, 'manifest_sha256':core.pilot_hash(changed)}))
     refuses(lambda: core.cmd_pilot_compare(args))
-    path.with_name('manifest.json').write_text(json.dumps(manifest))
-    path.write_text(json.dumps(saved))
+    unit_record(runs, manifest['unit_kind'], manifest['slot'], saved['driver'], manifest.get('pr'))
 
-def compare_variant(name, mutate, accepted=True):
+def compare_variant(name, mutate, accepted=True, evidence_sufficient=True):
     variant = root / name
     shutil.copytree(runs, variant)
     for path in variant.glob('*/receipt.json'):
@@ -1086,6 +1097,7 @@ def compare_variant(name, mutate, accepted=True):
                  'findings':[{'sample_id':s['sample_id'],'finding_id':f['finding_id'],'defect_id':'same-defect',
                               'accepted':accepted,'severity':f['severity']} for s in inputs['samples'] for f in s['findings']]}
     judgment_path = root / (name + '-judgments.json')
+    judgments['evidence_sufficient'] = evidence_sufficient
     core.pilot_write(judgment_path, judgments)
     costed_judgments(variant, inputs, core.pilot_read(pathlib.Path(options.blind_dir) / 'sealed-mapping.json'), judgments)
     options.adjudication, options.phase = str(judgment_path), 'seal'
@@ -1094,11 +1106,20 @@ def compare_variant(name, mutate, accepted=True):
     return core.cmd_pilot_compare(options)
 
 finding = {'path':'source.py','side':'RIGHT','anchor_sha256':'a'*64,'evidence_sha256':'b'*64,
-           'category':'correctness','claim_key':'same-defect','severity':'HIGH','confidence':9,'line':1}
-def inject(arm):
-    return lambda manifest, receipt: receipt['driver']['findings'].append(finding) if manifest['arm'] == arm and manifest['slot'] == 1 else None
+           'category':'correctness','claim_key':'same-defect','severity':'HIGH','confidence':9,'line':1,
+           'claim':'A zero divisor crashes the required empty-input case.', 'evidence_quote':'return total / count'}
+evidence_record = copy.deepcopy(joined[0])
+evidence_record['receipt']['driver']['findings'] = [finding]
+normalized = core.pilot_normalize([evidence_record])[0][0]['findings'][0]
+assert normalized['claim'] == finding['claim'] and normalized['evidence_quote'] == finding['evidence_quote']
+def inject(arm, claim=finding):
+    return lambda manifest, receipt: receipt['driver']['findings'].append(claim) if manifest['arm'] == arm and manifest['slot'] == 1 else None
 assert compare_variant('missed-high', inject('control'))['rules']['no_high_critical_misses'] is False
-assert compare_variant('extra-false-positive', inject('treatment'), False)['rules']['false_positives_not_increased'] is False
+assert compare_variant('extra-false-positive', inject('treatment', {**finding, 'claim':'The operands are reversed: this divides count by total.'}), False)['rules']['false_positives_not_increased'] is False
+refuses(lambda: compare_variant('unresolved', inject('control'), None), 'insufficient evidence')
+refuses(lambda: compare_variant('unsupported-clean', lambda m,r: None, evidence_sufficient=False), 'insufficient evidence')
+for name in ('unresolved', 'unsupported-clean'):
+    assert not any((root / (name + '-blind') / f).exists() for f in ('adjudication-seal.json', 'timing-opened.json'))
 def slow(manifest, receipt):
     receipt['wallclock_ms'] = 100 if manifest['arm'] == 'control' else 80
 assert compare_variant('slow', slow)['rules']['median_reduction'] is False
@@ -1124,7 +1145,9 @@ print("Pilot committed tree, cost, six-row admission, blind seal, five-pair comp
 
 ledger.write_text("\n".join(json.dumps({"action": "Action taken: REVIEW", "cost": 0.4, "duration_ms": 10}) for _ in range(5)))
 launch_corpus = root / "launch-corpus.tsv"
-launch_corpus.write_text(corpus.read_text().replace("a" * 40, commit).replace("b" * 40, commit))
+script.write_text('#!/bin/sh\nexit 1\n')
+git('commit', '-qm', 'nonempty frozen change', '--', str(script))
+launch_corpus.write_text(corpus.read_text().replace("a" * 40, commit).replace("b" * 40, git('rev-parse', 'HEAD')))
 launch_arm = root / "launch-arm"
 core.cmd_pilot_arm(argparse.Namespace(source_repo=str(source), commit=commit, dest=str(launch_arm), arm="control"))
 stub = root / "pilot-host"
@@ -1154,11 +1177,13 @@ print(json.dumps({'modelUsage':{'fixture':{}}, 'total_cost_usd':0.1, 'usage':{'i
 stub.chmod(0o755)
 out = root / "launch-output"
 budget_path = root / "budget.json"
+core.pilot_write(root / 'review-input.json', {k:v for k,v in material.items() if k != 'code'})
 core.pilot_write(budget_path, {"approved_by":"captain", "ledger_sha256":core.pilot_cost(ledger)["ledger_sha256"],
                              "per_run_ceiling_usd":0.4, "total_budget_usd":2, "experiment_dir":str(out.resolve())})
 launch_args = argparse.Namespace(arm_dir=str(launch_arm), arm="control", corpus=str(launch_corpus), slot=1,
                                 cost_ledger=str(ledger), budget=str(budget_path), out_dir=str(out), source_repo=str(source),
-                                host=str(stub), model="fixture", effort="low", timeout=5)
+                                host=str(stub), model="fixture", effort="low", timeout=5, unit_input=str(root / 'review-input.json'))
+refuses(lambda: core.cmd_pilot_run(argparse.Namespace(**{**vars(launch_args), 'unit_input':None})), 'requires unit_input')
 unbound_clone = root / "unbound-clone"
 subprocess.run(["git", "clone", "--quiet", "--shared", str(source), str(unbound_clone)], check=True)
 assert subprocess.run(["bash", "-c", '. "$1"; review_runtime_github_repository_identity "$2"',
@@ -1169,25 +1194,37 @@ subprocess.run(['git','init','--bare','-q',str(push_target)], check=True)
 credential_config.write_text('[credential]\n helper = synthetic-never-use\n')
 synthetic_environment = {'GIT_CONFIG_GLOBAL':str(credential_config),'SSH_AUTH_SOCK':'synthetic-agent',
                          'ANTHROPIC_API_KEY':'synthetic-model-auth','SYNTHETIC_PUSH_TARGET':str(push_target)}
-previous_environment = {k:os.environ.get(k) for k in synthetic_environment}
-try:
-    os.environ.update(synthetic_environment)
-    launched = core.cmd_pilot_run(launch_args)
+with patch.dict(os.environ, synthetic_environment):
+    clock, phases = [0], []
+    def timed(function, phase, milliseconds, predicate=lambda *a, **k: True):
+        def invoke(*args, **kwargs):
+            value = function(*args, **kwargs)
+            if predicate(*args, **kwargs):
+                clock[0] += milliseconds * 1_000_000
+                phases.append(phase)
+            return value
+        return invoke
+    reads_input = lambda path: pathlib.Path(path) == pathlib.Path(launch_args.unit_input)
+    starts_host = lambda command, *a, **k: pathlib.Path(command[0]).resolve() == stub.resolve()
+    with patch.object(core.time, 'monotonic_ns', side_effect=lambda: clock[0]), \
+         patch.object(core, 'pilot_read', side_effect=timed(core.pilot_read, 'input', 300, reads_input)), \
+         patch.object(core.subprocess, 'Popen', side_effect=timed(core.subprocess.Popen, 'host', 500, starts_host)), \
+         patch.object(core, 'pilot_receipt_guard', side_effect=timed(core.pilot_receipt_guard, 'validation', 200)):
+        launched = core.cmd_pilot_run(launch_args)
+    assert phases == ['input', 'host', 'validation'], phases
+    assert launched['wallclock_ms'] == 1000, launched['wallclock_ms']
+    assert core.pilot_read(out / '1-control/receipt.json') == launched
     contaminated = copy.copy(launch_args)
     contaminated.out_dir, contaminated.budget = str(root / 'contaminated'), str(root / 'contaminated-budget.json')
     core.pilot_write(contaminated.budget, {**core.pilot_read(budget_path), 'experiment_dir':str(pathlib.Path(contaminated.out_dir).resolve())})
     os.environ['SYNTHETIC_PROFILED_ARTIFACT'] = 'on'
     refuses(lambda: core.cmd_pilot_run(contaminated))
     assert core.pilot_read(pathlib.Path(contaminated.out_dir) / '1-control/receipt.json')['known_cost_usd'] == 0.1
-finally:
-    os.environ.pop('SYNTHETIC_PROFILED_ARTIFACT', None)
-    for key, value in previous_environment.items():
-        if value is None:
-            os.environ.pop(key, None)
-        else:
-            os.environ[key] = value
 assert not subprocess.run(['git','--git-dir',str(push_target),'show-ref'], capture_output=True).stdout
 assert launched['coverage'] == 'not_applicable' and launched['cost_usd'] == 0.1
+frozen = core.pilot_read(out / '1-control/unit-input.json')
+assert frozen == {**material, 'code':git('diff', '--unified=80', commit, 'HEAD') + '\n'}
+assert core.pilot_read(out / '1-control/manifest.json')['unit_input_sha256'] == core.pilot_hash(frozen)
 assert git("remote", "get-url", "origin") == "https://github.com/acme/widgets.git"
 stub.write_text("#!" + sys.executable + "\nimport time\ntime.sleep(10)\n")
 launch_args.slot, launch_args.timeout = 2, 1
@@ -1204,6 +1241,11 @@ unit_args.unit_kind, unit_args.unit_input, unit_args.slot = 'admission', str(uni
 planner_arm = root / 'planner-arm'
 core.cmd_pilot_arm(argparse.Namespace(source_repo=str(source), commit=commit, dest=str(planner_arm), arm='treatment'))
 unit_args.planner_arm_dir = str(planner_arm)
+for field in ('unit_input', 'planner_arm_dir'):
+    saved = getattr(unit_args, field)
+    setattr(unit_args, field, None)
+    refuses(lambda: core.cmd_pilot_run(unit_args), 'requires ' + field)
+    setattr(unit_args, field, saved)
 unit_input.write_text(unit_input.read_text().replace('a'*40, commit).replace('b'*40, commit))
 stub.write_text('#!' + sys.executable + '\n' + '''
 import json, os, pathlib
@@ -1218,6 +1260,8 @@ assert core.pilot_read(out / '3-admission/manifest.json')['unit_kind'] == 'admis
 assert admission['driver']['review_config']['modes'] == core.PILOT_MODES
 assert admission['driver']['planner_modes'] == core.PILOT_MODES
 unit_args.unit_kind, unit_args.slot = 'adjudication', 1
+unit_args.unit_input = None
+refuses(lambda: core.cmd_pilot_run(unit_args), 'requires unit_input')
 core.pilot_write(root / 'pair-input.json', {'schema':'kc-pr-flow.pilot-blind-input/v1', 'samples':blinded['samples'][:2]})
 unit_args.unit_input = str(root / 'pair-input.json')
 stub.write_text('#!' + sys.executable + '\n' + '''
@@ -1227,10 +1271,12 @@ assert '--plugin-dir' not in sys.argv and '--add-dir' not in sys.argv
 schema = json.loads(sys.argv[sys.argv.index('--json-schema') + 1])
 assert schema['properties']['input_sha256']['const'] == HASH
 assert schema['additionalProperties'] is False
+assert schema['properties']['findings']['items']['properties']['accepted']['type'] == ['boolean', 'null']
 payload = json.loads(sys.argv[sys.argv.index('--print') + 1].split('\\n', 1)[1])
-print(json.dumps({'structured_output':{'schema':'kc-pr-flow.pilot-adjudication/v1','input_sha256':HASH,'findings':[]},
+assert all(s['material'] == MATERIAL for s in payload['samples'])
+print(json.dumps({'structured_output':{'schema':'kc-pr-flow.pilot-adjudication/v1','input_sha256':HASH,'evidence_sufficient':True,'findings':[]},
                   'modelUsage':{'fixture':{}},'total_cost_usd':0.1,'usage':{'input_tokens':1,'output_tokens':1,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
-'''.replace('HASH', repr(core.pilot_hash(core.pilot_read(unit_args.unit_input)))))
+'''.replace('HASH', repr(core.pilot_hash(core.pilot_read(unit_args.unit_input)))).replace('MATERIAL', repr(material)))
 adjudicated = core.cmd_pilot_run(unit_args)
 assert adjudicated['cost_usd'] == 0.1 and adjudicated['run_terminal'] is None
 assert len(list(out.glob('*/manifest.json'))) == 4
@@ -1251,15 +1297,8 @@ refuses(lambda: core.pilot_reserve(over, over / 'next', over_manifest, core.pilo
 unit_args.slot = 3
 refuses(lambda: core.cmd_pilot_run(unit_args))
 assert len(list(out.glob('*/manifest.json'))) == 5
-old_token = os.environ.get('GH_TOKEN')
-os.environ['GH_TOKEN'] = 'fixture-must-not-be-forwarded'
-try:
+with patch.dict(os.environ, {'GH_TOKEN':'fixture-must-not-be-forwarded'}):
     refuses(lambda: core.cmd_pilot_run(launch_args))
-finally:
-    if old_token is None:
-        os.environ.pop('GH_TOKEN')
-    else:
-        os.environ['GH_TOKEN'] = old_token
 print("Pilot launcher policy, runtime cost, inherited credential and stalled-host fixtures passed")
 PY
   then pass; else fail 'Pilot recovery fixtures'; fi

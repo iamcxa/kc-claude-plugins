@@ -60,6 +60,9 @@ head without checking out or deleting any branch.
 
 ### Typed Review Runtime
 
+Arm timing covers local preparation through confirmation-ready validation; trusted
+measurement admission remains blocked (see docs/review-runtime.md).
+
 The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
 and `KC_PR_FLOW_PROFILED_REVIEW=on`. It plans required questions before collecting
 selected evidence, then returns to the existing typed confirmation and posting

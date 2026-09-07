@@ -29,6 +29,10 @@ class Invalid(ValueError):
     pass
 
 
+class ConfigurationChanged(Invalid):
+    pass
+
+
 def unique_object(pairs):
     result = {}
     for key, value in pairs:
@@ -305,11 +309,11 @@ def git(repo, *args):
     )
 
 
-def store(path, value):
+def store(path, value, raw=False):
     path = pathlib.Path(path)
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(descriptor, "wb") as output:
-        output.write(canonical(value) + b"\n")
+        output.write(value if raw else canonical(value) + b"\n")
     return str(path)
 
 
@@ -727,8 +731,9 @@ def requests(prepared):
         recomputed != frozen
         or bundle["shape"] != prepared["shape_bundle"]["shape"]
         or prepared["binding"]["plan_hash"] != frozen["plan_hash"]
+        or prepared["identity"]["config_hash"] != digest(frozen["review_config"])
     ):
-        raise Invalid("plan or shape authority drift")
+        raise ConfigurationChanged("plan or configuration authority drift")
     bindings = {b["evidence_class"]: b for b in bundle["bindings"]}
     expected = {
         e
@@ -887,7 +892,7 @@ def dispatch(prepared, command, budget_usd=None):
         attempts, final = [], None
         for ordinal in (1, 2):
             started, process = time.monotonic_ns(), None
-            envelope = None
+            envelope, output = None, b""
             outcome = "unavailable"
             with tempfile.TemporaryDirectory(dir=prepared["directory"]) as working:
                 environment = {
@@ -930,10 +935,13 @@ def dispatch(prepared, command, budget_usd=None):
                             envelope = json.loads(
                                 output, object_pairs_hook=unique_object
                             )
+                            canonical(envelope)
                         except ValueError:
-                            envelope = None
+                            envelope = {"invalid_response_sha256": raw_hash(output)}
                     if process.returncode == 0 and isinstance(envelope, dict):
                         payload = envelope.get("structured_output", envelope)
+                        if not isinstance(payload, dict):
+                            raise Invalid("provider structured output is not an object")
                         if payload.get("schema") == "kc-pr-flow.expansion-request/v1":
                             validate(payload, "ExpansionRequest")
                         else:
@@ -960,6 +968,12 @@ def dispatch(prepared, command, budget_usd=None):
                     "finished_ns": time.monotonic_ns(),
                     "provider_envelope": envelope,
                 }
+            )
+            store(
+                pathlib.Path(prepared["directory"])
+                / f"provider-{request['capability']}-{ordinal}.raw",
+                output,
+                raw=True,
             )
             store(
                 pathlib.Path(prepared["directory"])
@@ -1014,7 +1028,10 @@ def collate(prepared, results, fallbacks=()):
         return terminal(identity, "INVALIDATED", "identity_change")
     if any(r.get("schema") == "kc-pr-flow.expansion-request/v1" for r in results):
         return terminal(identity, "ABORTED_INCOMPLETE", "unsupported_expansion")
-    called = {r["capability"]: r for r in requests(prepared)}
+    try:
+        called = {r["capability"]: r for r in requests(prepared)}
+    except ConfigurationChanged:
+        return terminal(identity, "INVALIDATED", "configuration_change")
     if any(
         r.get("capability") not in prepared["plan"]["review_config"]["capabilities"]
         for r in results
@@ -1162,20 +1179,18 @@ def collate(prepared, results, fallbacks=()):
                 key=["CRITICAL", "HIGH", "MEDIUM", "LOW", "NIT"].index,
             )
             if merge_tuple not in findings:
+                source = git(
+                    prepared["repository_path"], "show",
+                    f"{candidate['evidence']['object_sha']}:{candidate['path']}",
+                ).decode().splitlines()
+                locations = [n for n, line in enumerate(source, 1)
+                             if line == contribution["quote"]]
                 findings[merge_tuple] = {
                     "runtime": {k: v for k, v in candidate.items() if k != "ordinal"},
                     "severity": severity,
                     "summaries": [],
                     "quote": contribution["quote"],
-                    "line": git(
-                        prepared["repository_path"],
-                        "show",
-                        f"{candidate['evidence']['object_sha']}:{candidate['path']}",
-                    )
-                    .decode()
-                    .splitlines()
-                    .index(contribution["quote"])
-                    + 1,
+                    "line": locations[0] if len(locations) == 1 else None,
                 }
                 findings[merge_tuple]["runtime"]["candidate_refs"] = []
             record = findings[merge_tuple]
@@ -1282,7 +1297,7 @@ def collate(prepared, results, fallbacks=()):
     }
     body = "Required coverage incomplete" if gaps else "Required questions resolved"
     body += "\n" + "\n".join(
-        f"{f['runtime']['path']}:{f['line']} {f['severity']}: "
+        f"{f['runtime']['path']}:{f['line'] or 'ambiguous location'} {f['severity']}: "
         + "; ".join(f["summaries"])
         + "\n> "
         + f["quote"]
@@ -1306,6 +1321,7 @@ def collate(prepared, results, fallbacks=()):
                 + f["quote"],
             }
             for f in findings.values()
+            if f["line"] is not None
         ],
         "event": event,
         "options": ["REQUEST_CHANGES"]
@@ -1687,6 +1703,7 @@ def main():
         ):
             result = prepared
         else:
+            identity = prepared["identity"]
             command = [
                 "claude",
                 "--print",
@@ -1752,7 +1769,14 @@ def main():
                         echo[key] = validate(identity[key], "EchoScalar")
                     except Invalid:
                         pass
-        print(canonical(terminal(echo, "REQUEST_INVALID", "schema_failure")).decode())
+        try:
+            echo = validate(identity, "ReviewIdentity")
+        except Invalid:
+            pass
+        status, reason = ("INVALIDATED", "configuration_change") if isinstance(
+            error, ConfigurationChanged
+        ) else ("REQUEST_INVALID", "schema_failure")
+        print(canonical(terminal(echo, status, reason)).decode())
         print(str(error), file=sys.stderr)
         return 2
 
