@@ -46,3 +46,8 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - Captain: "幫我合併，然後繼續". Marked ready; CI pr-test (node-tests, test-summary) + ci-gate passed, 8/8, MERGEABLE/CLEAN, base main verified; squash-merged → main 4122d2be. DEV-136 → Done in Linear.
 - DEV-137 dispatched next with BASE 4122d2be, token dev137-2026-09-07 (brief: evidence/dispatch-DEV-137-subagent.md, amended).
+
+## DEV-137 — accept station and PR (2026-09-07)
+
+- Round 1 (1901bc94): hosted/ byte-identical but 8-migration and open-api 2.57.0 assumptions fail against main → FO rulings recorded in evidence/worker-evidence-DEV-137.md. Round 2 (269b90e0): six 8→9 literals, lock restored to the branch's + fflate, scripts block; FO-verified without-it pair, lock diff fflate-only, netlify-package 69 ok. Round 3 (087b36e4): preflight script 8→9 with a refusing test case (test:hosted-gates 19/19, self-check providerCalls 0).
+- Accept: S43 refusal overridden by FO script verification. Draft PR iamcxa/qnow#1182 opened (56 files, +10262/−520). Reviews (code, security) dispatched on 269b90e0; the 087b36e4 delta is two files, FO-read.
