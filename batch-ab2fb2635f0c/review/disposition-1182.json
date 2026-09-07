@@ -40,10 +40,8 @@
       "outcome": "fixed",
       "commit": "80713b21",
       "ruling": "Captain: PoC \u2192 option A (re-grant via 0009); production scoped read = DEV-140",
-      "verified_by": "worker full npm test exit 0 on the committed tree; FO full run pending"
+      "verified_by": "worker full npm test exit 0; FO full npm test at 80713b21 from fresh npm ci exit 0 (secret 2, unit 169, postgres 71, netlify-local 5, cleanup, native-migrations, netlify-package, hosted-gates, build:web)"
     }
   ],
-  "pending": [
-    "FO full npm test at 80713b21"
-  ]
+  "pending": []
 }
