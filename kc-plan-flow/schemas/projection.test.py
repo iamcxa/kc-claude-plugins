@@ -171,6 +171,9 @@ def refuses(text):
 
 check("a colon in Re-verified is refused", refuses("Re-verified: git show origin/main:file 2026-09-08"))
 check("an issue identifier in Re-verified is refused", refuses("Re-verified: git log DRC-4411 2026-09-08"))
+check("a filename the tracker would autolink is refused",
+      refuses("Re-verified: git show origin/main for install.sh 2026-09-08"),
+      "Linear turns install.sh into a markdown link and its colons break the date parse")
 check("a clean Re-verified passes", not refuses("Re-verified: git grep publishKeyBinding at 1ea84f8e 2026-09-08"))
 
 print(f"\n{len(failures)} failed" if failures else "\nall passed")

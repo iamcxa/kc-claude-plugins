@@ -68,6 +68,10 @@ def check_re_verified(text):
             die(f"Re-verified line carries a colon, which breaks the date parse: {line}")
         if re.search(r"\b[A-Z][A-Z0-9]*-\d+\b", body):
             die(f"Re-verified line names an issue, which the tracker rewrites into a link: {line}")
+        bare = re.search(r"\b\w+\.(?:sh|com|io|net|org|app|dev|md|ts|go|py)\b", body)
+        if bare:
+            die(f"Re-verified line carries {bare.group(0)!r}, which the tracker autolinks into a URL "
+                f"whose colons then break the date parse: {line}")
 
 
 def comparable(text):
