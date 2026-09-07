@@ -31,19 +31,36 @@ The seat's two questions come straight out of that: what is this, and which
 layer is it from. The inventory answer was right — the probe did exist. The
 dating was wrong, and dating is what a review does not check.
 
+### `kc-plan-value` — decide what to build
+
+Initiative, project and issue each name a user-visible outcome. One issue is one
+value point and its acceptance is something a person does. It names no file: the
+moment a path appears, the author has stepped into the archaeologist's seat
+without the archaeologist's evidence.
+
+Milestone descriptions are three sentences — what done looks like, when it
+ships, and the boundary or the cost of cutting it.
+
+It ends by handing the archaeologist a list of questions, phrased as questions.
+A request to confirm returns a confirmation; the seat answers the shape it is
+asked.
+
+### `kc-plan-detail` — decide how to build it
+
+Cuts each value issue into sub-issues along what the archaeologist found
+missing, not along architectural layers. Slicing by layer produces a serial
+chain where no single ticket delivers the value.
+
+Verification lives here rather than in a downstream gate. Deciding how to build
+something is the same act as finding out what is already built, and a reviewer
+catching a wrong file afterwards means two people did the job badly.
+
+It writes in the format `plan-lint.py` reads, and runs it. That format is not
+negotiable and a near miss is silent: seven acceptance criteria once reported as
+`0 ACs` for want of a bullet marker.
+
 ## What is not here yet
 
-Two skills, in the order they will be built:
-
-- **`kc-plan-value`** — align initiative, project and issue to user value. Each
-  issue is one value point, and its acceptance is something a person does. It
-  names no file; the moment a path appears, the author has stepped into the
-  archaeologist's seat without the archaeologist's evidence.
-- **`kc-plan-detail`** — cut each value issue into sub-issues against what the
-  archaeologist found. Verification lives here rather than in a downstream gate:
-  deciding how to build something is the same act as finding out what is already
-  built.
-
-Four rules for `plan-lint` follow them, each earned by a defect in that same
-session: milestone/repo coherence, parent-not-earlier-than-child, state backed
-by a merged PR, and a `Supersedes:` line on every new issue.
+Four rules for `plan-lint`, each earned by a defect in the same session:
+milestone/repo coherence, parent-not-earlier-than-child, state backed by a
+merged pull request, and a `Supersedes:` line on every new issue.
