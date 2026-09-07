@@ -1,0 +1,25 @@
+{
+  "schema": "kc-ship-flow-review-findings/v1",
+  "pr": "iamcxa/qnow#1181",
+  "head": "7a969ed119d55955845fa40020c6c3af94f918c3",
+  "findings": [
+    {
+      "id": "F1",
+      "source": "code-reviewer",
+      "file": "experiments/netlify-refine-poc/qnow-next/api/app.ts",
+      "line": 798,
+      "category": "compatibility",
+      "quote": "dependencies.localTestModes?.committedMutation(context.req.raw) ===",
+      "summary": "Lost-response fault injection is now gated behind dependencies.localTestModes; test/work-control-api.integration.test.ts on main is not wired, so its 503 assertion fails under npm run test:postgres after merge.",
+      "fo_verification": "Confirmed: source branch adds `localTestModes: callerControlledLocalTestModes` (+2) to that test; candidate == main for it. FO listing found the general defect: main-existing files modified on the source branch and not carried — work-control-api (+2), work-control-postgres (+2/-2), packages/db/src/schema.test.mjs (+64/-11), postgres.integration.test.ts (+449/-1)."
+    },
+    {
+      "id": "F2",
+      "source": "fo",
+      "file": "experiments/netlify-refine-poc/qnow-next/package.json",
+      "category": "test-coverage",
+      "summary": "npm test includes test:netlify-package whose fourth sub-test needs hosted/build-artifacts.mjs; main's npm test would be red until DEV-137.",
+      "fo_verification": "Observed exit 1 in the worker's own run."
+    }
+  ]
+}
