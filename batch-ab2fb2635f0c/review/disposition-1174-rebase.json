@@ -1,0 +1,10 @@
+{
+  "schema": "kc-ship-flow-review-disposition/v1",
+  "pr": "iamcxa/qnow#1174",
+  "reviewed_head": "65c0143a46dea4c2baab50343b180c1ef22b0b39",
+  "dispositions": [
+    {"id": "R1", "source": "rebase-reconciliation review", "outcome": "no_findings", "verified": "deployCount guard and deployAttempted latch both intact with six distinct tests; EXPECTED_MIGRATIONS 10 on the run path, unread stubs confirmed; no behaviour dropped vs b5d87ed8 beyond the four DEV-35 commits; AGENTS.md claims true at head; npm test chain credential-free"},
+    {"id": "H1", "source": "fo", "summary": "test:headed-browser fails on macOS at main and candidate alike (NO_PROC_PROCESS_TABLE)", "outcome": "routed", "to": "DEV-37 cloud run must run it and quote the exit"}
+  ],
+  "pending": []
+}
