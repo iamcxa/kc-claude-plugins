@@ -85,3 +85,4 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 ## DEV-37 — cloud run started (2026-09-07)
 
 - Captain present: "跑". Conductor cloud workspace 783dccd3-e9a3-4560-a98c-560e59a035bf (qnow project, main 3ab1a323), session 28fb42f5, agent claude/sonnet, message evidence/dev37-cloud-message.md, token dev37-2026-09-07. Progress read via `conductor sql`; one run, one deploy, no retry.
+- Attempt 1 HALTED at preflight with zero provider operations (evidence/worker-evidence-DEV-37-attempt1.md). Two FO omissions in the dispatch (build:hosted, db:local:prove) and one inherited gap (no X display; DEV-35 AC-2 never measured in cloud). Diagnosis session running in the same workspace; a second run needs the Captain's approval.
