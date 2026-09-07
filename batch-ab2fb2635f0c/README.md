@@ -81,3 +81,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 ## DEV-36 — merged (2026-09-07)
 
 - Captain merged #1174 → main 3ab1a323. DEV-36 Done. Remaining in the batch: DEV-37 (cloud run, one deploy, Captain present).
+
+## DEV-37 — cloud run started (2026-09-07)
+
+- Captain present: "跑". Conductor cloud workspace 783dccd3-e9a3-4560-a98c-560e59a035bf (qnow project, main 3ab1a323), session 28fb42f5, agent claude/sonnet, message evidence/dev37-cloud-message.md, token dev37-2026-09-07. Progress read via `conductor sql`; one run, one deploy, no retry.
