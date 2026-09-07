@@ -13,3 +13,16 @@ SELF_CHECK: accept-evidence: REFUSE: AC-3 extension list (S43/DEV-134)
 ROBOREV: UNAVAILABLE(reason: no reviewer binary in workspace)
 AC-1: not this PR (hosted/ is PR 2) AC-2: all except netlify-package 4th sub-test (hosted/-dependent) AC-3: closes with DEV-137
 BLOCKER: station S43; residuals: `acceptance:hosted:full-run:self-check` does not exist on the branch (only `acceptance:hosted:self-check`, hosted/-dependent) — ticket naming slip; AC-1/AC-3 describe the post-DEV-137 state
+
+## Evidence (repair round 2, final)
+DISPATCH_TOKEN: dev136-2026-09-07-r2
+CANDIDATE_SHA: 0a513602fe8e764bfb48835d8a170b3f94fcf1cd
+BRANCH: feature/dev-136-land-the-hosted-runners-supporting-files-on-main-netlify
+BASE_SHA: 820f6fb5e155c352a75181c0662e3f866e581dc2
+COMMITS: 7a969ed1 (round 1) + 15480a46 (A: carried main-test edits, netlify-package skip) + 0a513602 (B: DEV-25 block ported to native migrations, 0008 revoke)
+TESTS (worker): type-check 0; test:unit 0 (142); test:native-migrations 0 (6, incl. 0008); test:hosted-gates 0 (7, scoped); test:secret 0; packages/db test 0 (10); single-file tenancy-isolation 0 (13/13); single-file work-control-postgres 0 on retry (27/27; first attempt Docker cold-start hook timeout, not permission-denied); single-file postgres.integration 0 (14/14)
+TESTS (FO-verified at 0a513602, fresh npm ci): test:netlify-package -> exit 0, 1 skipped with visible DEV-137 reason (the worker's block said exit 1; that value was stale)
+WITHOUT_IT: unchanged (retained 0 / removed 1 / base 1, FO-verified at 7a969ed1; test file untouched by A/B)
+SELF_CHECK: REFUSE AC-3 (S43/DEV-134, .mjs path extraction) — FO override stands
+PRE_PUSH_GATE: skipped (SKIP_PRE_PUSH=1) — whole-monorepo vitest pool mirrors CI's pr-test; CI runs once the PR leaves Draft (pr.yaml gates classify/pr-test on draft == false)
+AC-1/AC-3: post-DEV-137 state by design of the split; AC-2: all named suites pass except the hosted-dependent sub-test (skipped, DEV-137)
