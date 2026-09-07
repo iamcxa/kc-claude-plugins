@@ -7,3 +7,4 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 ## Decisions made under `defaults`
 
+- 2026-09-07T07:02:36Z — **DEV-114 accepted** (station 1d4e95e0, ACCEPT with AC-3 WARN partial variant); Draft PR #391 (merge-station.sh + test + fake-gh-merge fixture + station page + docs/ship merged line). Review: code-reviewer + silent-failure-hunter dispatched. Every later merge in this batch must go through this script once it lands.
