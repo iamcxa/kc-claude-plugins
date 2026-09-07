@@ -55,3 +55,9 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 ## Correction (2026-09-07): CI never ran qnow-next's tests
 
 - The DEV-137 code review found, and FO verified by grep, that nothing in `.github/` references qnow-next; CI's pr-test filters the pnpm packages only. My verdicts for #1181 and #1182 said "CI's pr-test is the aggregate gate" — false. #1181's green CI exercised none of qnow-next. Ticket filed (see Linear, QNow project). For #1182 the FO runs the full `npm test` locally at the final candidate as the substitute, and reports it as such.
+
+## DEV-137 — full npm test at 5b1faa18 FAILED (2026-09-07), decision for the Captain
+
+- test:postgres 3 failed / 68 passed: acceptance-postgres.integration ×2 and the branch's postgres.integration ×1, all `42501 permission denied` on `SELECT … FROM qnow_staff_assignments WHERE subject_id = $1 AND active` while running as `qnow_app` (the hosted runtime pool does `SET ROLE qnow_app`). Everything else green (secret 2, unit 169, native-migrations, netlify-package, hosted-gates).
+- Root cause: the hosted runtime reads staff assignments as qnow_app through db/work-control-store.ts; DEV-25 (main) asserts qnow_app has no privilege on that table, and my DEV-136 migration 0008 revoked the branch's grant. My F4 "store tests pass under the revoke" was measured on main's test, which runs as the owner — the evidence did not cover the hosted role. Correction recorded.
+- Options: (A) re-grant SELECT (branch's original; qnow_app can then read every tenant's subject→tenant mapping, the table has no RLS — weakens DEV-25); (B) keep DEV-25, add migration 0009 with a SECURITY DEFINER function `qnow_active_assignments(subject uuid)` granted to qnow_app and point the store at it (small, tested, preserves the invariant). FO recommends B. Captain rules.
