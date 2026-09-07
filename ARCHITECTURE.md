@@ -207,14 +207,20 @@ The state root is configurable and defaults to the platform state directory unde
 ### Profiled Lite adapter
 
 `review-capability.py` owns deterministic planning, selected evidence acquisition,
-bounded parallel calls, one transient retry, and question-level collation. Its
+bounded parallel calls, one transient retry, and validated question-level collation. Its
 closed schema and catalog live under `kc-pr-flow/schemas`; requiredness is read
-from that catalog, never copied into skill prose. Shape-only evidence revision 1
-binds the intake; revision 2 binds the runtime-minted review identity and selected
+from that catalog, never copied into skill prose. Shape and explicit goal material
+in revision 1 bind the intake; revision 2 binds the runtime-minted review identity and selected
 materials. Evidence gaps remain explicit and pre-dispatch skips mint no lane.
 
-The adapter projects accepted candidates through the runtime's `project-receipt`
-operation, then rehydrates the existing typed decision. The projection uses the
+The existing outer review agent receives a closed `ReviewerRequest` after calls
+and returns an evidence-bound `ReviewerJudgment`; it is not a new process.
+The adapter retains raw contributions and dispositions, validates bindings and
+confirmed severity, and then projects accepted candidates.
+A successful invocation can retain incomplete required coverage; runtime policy
+validation preserves its candidates and the existing blocker precedence.
+The runtime's `project-receipt` operation precedes rehydration of the existing
+typed decision. The projection uses the
 same append/replay owner as shadow observation but is fail-closed; ordinary
 shadow observation remains diagnostic and fail-open. Cross-capability defects
 use the runtime's canonical finding identity. Only confirmed High or Critical

@@ -27,6 +27,198 @@ protocol = module("capability", HERE / "review-capability.py")
 
 
 class PlannerTests(unittest.TestCase):
+    def judgment(self, prepared, results, fallbacks=()):
+        questions = []
+        code_ref = next((p["id"] for p in prepared["bundle"]["pointers"] if "pointer" in p), None)
+        for manifest in prepared["plan"]["manifests"]:
+            answer = next((r["answers"][0] for r in results if r.get("capability") == manifest["id"] and r.get("answers")), {})
+            provided = any(f.get("result", {}).get("capability") == manifest["id"] for f in fallbacks)
+            assessment = answer.get("assessment", "clean" if provided else "incomplete_required")
+            refs = ([code_ref] if code_ref else []) + [p["id"] for p in prepared["bundle"]["pointers"] if p["evidence_class"] in manifest.get("required_any_evidence", [])]
+            if not answer and not provided:
+                refs = []
+            questions.append({"question_id": manifest["questions"][0], "assessment": assessment,
+                              "reason": "The supplied source supports this assessment.", "evidence_refs": refs,
+                              "contributions": [{"ordinal": n, "disposition": "accept", "reason": "The cited source supports this claim.", "evidence_refs": refs}
+                                                for n, _ in enumerate(answer.get("contributions", []), 1)]})
+        return {"schema": "kc-pr-flow.reviewer-judgment/v1", "identity": prepared["identity"],
+                "plan_hash": prepared["plan"]["plan_hash"], "bundle_hash": prepared["bundle"]["bundle_hash"],
+                "results_hash": protocol.digest(results), "fallbacks_hash": protocol.digest(fallbacks), "questions": questions}
+
+    def collate(self, prepared, results, fallbacks=()):
+        return protocol.collate(prepared, results, fallbacks, self.judgment(prepared, results, fallbacks))
+
+    def finish(self, prepared, results, fallbacks=()):
+        return protocol.finish(prepared, results, fallbacks, self.judgment(prepared, results, fallbacks))
+
+    def test_missing_goal_cannot_claim_goal_alignment(self):
+        with self.prepared_results(goal_kind=None) as (prepared, results):
+            self.assertNotIn("goal_alignment", [r["capability"] for r in protocol.requests(prepared)])
+            result = self.collate(prepared, results)
+            decision = result["protocol_decision"]
+            self.assertEqual(["goal_alignment"], decision["gaps"])
+            self.assertEqual(decision["event"], "COMMENT")
+
+    def test_goal_material_reaches_selected_request_unchanged(self):
+        for kind in ("pr_body", "issue", "review_comment"):
+            with self.subTest(kind=kind), self.prepared_results(goal_kind=kind) as (prepared, results):
+                request = next(r for r in protocol.requests(prepared) if r["capability"] == "goal_alignment")
+                goals = [p for g in request["evidence"] for p in g["material"] if p["evidence_class"] == kind]
+                self.assertEqual(goals, prepared["shape_bundle"]["pointers"])
+                self.assertEqual(goals[0]["material"], "Set the example value to 2.")
+                self.assertEqual(self.collate(prepared, results)["protocol_decision"]["gaps"], [])
+
+    def test_goal_input_and_revision_drift_refuse(self):
+        with self.prepared_results() as (prepared, results):
+            goal = prepared["shape_bundle"]["pointers"][0]
+            original = {k: goal[k] for k in ("identity", "evidence_class", "locator", "material")}
+            for text in ("", "  ", original["locator"], "https://example.com/issue/1"):
+                self.assertEqual(protocol.freeze_goals([{**original, "material": text}], self.identity), [])
+            changed = {**original, "identity": {**self.identity, "head_sha": "a" * 40}}
+            self.assertRaises(protocol.Invalid, protocol.freeze_goals, [changed], self.identity)
+            request = next(r for r in protocol.requests(prepared) if r["capability"] == "goal_alignment")
+            answer = copy.deepcopy(next(r for r in results if r["capability"] == "goal_alignment"))
+            answer["answers"][0]["evidence_refs"].remove(goal["id"])
+            self.assertRaises(protocol.Invalid, protocol.validate_result, request, answer)
+            for mutation in ("content", "identity", "remove"):
+                changed = copy.deepcopy(prepared)
+                bundle = changed["bundle"]
+                target = next(p for p in bundle["pointers"] if p["id"] == goal["id"])
+                if mutation == "remove":
+                    bundle["pointers"].remove(target)
+                    next(b for b in bundle["bindings"] if b["evidence_class"] == "pr_body").update(refs=[], missing="unavailable")
+                elif mutation == "content":
+                    target["material"] = "A different objective."
+                else:
+                    target["identity"]["head_sha"] = "a" * 40
+                bundle["bundle_hash"] = protocol.digest({k: v for k, v in bundle.items() if k != "bundle_hash"})
+                with self.subTest(mutation=mutation):
+                    self.assertRaises(protocol.Invalid, protocol.requests, changed)
+
+    def test_missing_reviewer_judgment_cannot_approve(self):
+        with self.prepared_results() as (prepared, results):
+            decision = protocol.collate(prepared, results)["protocol_decision"]
+            self.assertEqual(decision["event"], "COMMENT")
+            self.assertEqual(decision["gaps"], prepared["plan"]["questions"])
+
+    def test_reviewer_gap_and_confirmed_high_reach_existing_confirmation(self):
+        with self.prepared_results() as (prepared, results):
+            answer = self.contribution(results[0])
+            answer["contributions"].append({**answer["contributions"][0], "claim_key": "unresolved-claim"})
+            judgment = self.judgment(prepared, results)
+            judgment["questions"][0]["assessment"] = "incomplete_required"
+            judgment["questions"][0]["contributions"][1]["disposition"] = "unresolved"
+            judgment["questions"][0]["contributions"].reverse()
+            question = judgment["questions"][1]
+            question["assessment"] = "incomplete_required"
+            question["reason"] = "The selected material does not resolve this question."
+            result = protocol.finish(prepared, results, reviewer=judgment)
+            self.assertIn("confirmation_projection", result, result)
+            self.assertFalse(result["confirmation_projection"]["approve_eligible"])
+            self.assertEqual(result["protocol_decision"]["event"], "REQUEST_CHANGES")
+            self.assertEqual(result["protocol_decision"]["gaps"], [q["question_id"] for q in judgment["questions"][:2]])
+            self.assertEqual(result["protocol_decision"]["findings"][0]["severity"], "HIGH")
+            self.assertTrue(all(o["adapter_attempts"][-1]["result"] == "succeeded" for o in result["policy"]["obligations"]))
+
+    def test_decision_cannot_drop_judgment_or_lower_confirmed_severity(self):
+        with self.prepared_results() as (prepared, results):
+            self.contribution(results[0])
+            decision = self.collate(prepared, results)["protocol_decision"]
+            changed = copy.deepcopy(decision)
+            changed["reviewer_judgment"] = None
+            self.assertRaises(protocol.Invalid, protocol.check_decision, prepared, changed)
+            changed = copy.deepcopy(decision)
+            changed["findings"][0]["severity"] = "LOW"
+            changed["confirmation_input"]["blocker_refs"] = []
+            changed["event"] = "APPROVE"
+            self.assertRaises(protocol.Invalid, protocol.check_decision, prepared, changed)
+            changed = copy.deepcopy(decision)
+            changed["findings"] = []
+            changed["terminals"][0].update(state="clean", finding_refs=[])
+            changed["confirmation_input"]["blocker_refs"] = []
+            changed["event"] = "APPROVE"
+            self.assertRaises(protocol.Invalid, protocol.check_decision, prepared, changed)
+
+    def test_reviewer_rejection_and_invalid_judgments(self):
+        with self.prepared_results() as (prepared, results):
+            self.contribution(results[0])
+            accepted = self.judgment(prepared, results)
+            rejected = copy.deepcopy(accepted)
+            rejected["questions"][0]["assessment"] = "clean"
+            rejected["questions"][0]["contributions"][0].update(disposition="reject", reason="The cited assignment already sets the required value.")
+            decision = protocol.collate(prepared, results, reviewer=rejected)["protocol_decision"]
+            self.assertEqual(decision["event"], "APPROVE")
+            self.assertEqual(decision["reviewer_input"]["questions"][0]["result"], results[0])
+            self.assertEqual(decision["reviewer_judgment"], rejected)
+            for field in ("plan_hash", "bundle_hash", "results_hash", "fallbacks_hash"):
+                changed = {**accepted, field: "a" * 64}
+                self.assertRaises(protocol.Invalid, protocol.collate, prepared, results, (), changed)
+            for mutation in ("duplicate", "omitted", "reason", "reference", "unresolved", "severity", "identity"):
+                changed = copy.deepcopy(accepted)
+                q = changed["questions"][0]
+                if mutation == "duplicate":
+                    changed["questions"].append(copy.deepcopy(q))
+                elif mutation == "omitted":
+                    q["contributions"] = []
+                elif mutation == "reason":
+                    q["contributions"][0]["reason"] = " "
+                elif mutation == "reference":
+                    q["contributions"][0]["evidence_refs"] = ["a" * 64]
+                elif mutation == "unresolved":
+                    q["contributions"][0]["disposition"] = "unresolved"
+                elif mutation == "severity":
+                    q["contributions"][0]["severity"] = "LOW"
+                else:
+                    changed["identity"]["head_sha"] = "a" * 40
+                with self.subTest(mutation=mutation):
+                    self.assertRaises(protocol.Invalid, protocol.collate, prepared, results, (), changed)
+            missing = copy.deepcopy(accepted)
+            missing["questions"].pop()
+            self.assertEqual(protocol.collate(prepared, results, reviewer=missing)["protocol_decision"]["gaps"], [accepted["questions"][-1]["question_id"]])
+
+    def test_cli_hands_off_to_reviewer_and_preserves_finalized_bytes(self):
+        with self.prepared_results() as (prepared, _):
+            directory = pathlib.Path(prepared["directory"])
+            stub = directory / "bin" / "claude"
+            stub.parent.mkdir()
+            stub.write_text("#!/usr/bin/env python3\nimport json,sys\nr=json.load(sys.stdin)\n"
+                            "v={k:r[k] for k in ('identity','plan_rev','plan_hash','bundle_revision','bundle_hash','capability')}\n"
+                            "v.update(schema='kc-pr-flow.capability-result/v1',status='succeeded',usage=dict(input_tokens=None,output_tokens=None,total_tokens=None),answers=[dict(question_id=r['question_ids'][0],assessment='clean',evidence_refs=[p['id'] for g in r['evidence'] for p in g['material']],contributions=[])])\n"
+                            "print(json.dumps(dict(structured_output=v)))\n")
+            stub.chmod(0o700)
+            intake = protocol.store(directory / "intake.json", self.identity)
+            goal = prepared["shape_bundle"]["pointers"][0]
+            goals = protocol.store(directory / "goals.json", [{k: goal[k] for k in ("identity", "evidence_class", "locator", "material")}])
+            run_dir = directory / "host-run"
+            environment = {**os.environ, "PATH": str(stub.parent) + os.pathsep + os.environ["PATH"],
+                           "KC_PR_FLOW_REVIEW_TYPED": "on", "KC_PR_FLOW_PROFILED_REVIEW": "on"}
+            run, pending = self.cli(environment=environment, identity_file=intake, repo_worktree=prepared["repository_path"],
+                                    run_dir=run_dir, model="fixture", goal_material_file=goals)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertEqual(pending["pending_finalization"], str(run_dir))
+            packet = pending["reviewer_request"]
+            protocol.validate(packet, "ReviewerRequest")
+            event_file = next((run_dir / "state").rglob("events.jsonl"))
+            self.assertEqual(len(event_file.read_text().splitlines()), 1)
+            pending_bytes = event_file.read_bytes()
+            run, _ = self.cli(finalize_dir=run_dir)
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual(event_file.read_bytes(), pending_bytes)
+            self.assertFalse((run_dir / "result.json").exists())
+            data = protocol.read_json(run_dir / "dispatched.json")
+            judgment = self.judgment(data["prepared"], data["results"])
+            review_file = protocol.store(run_dir / "reviewer.json", judgment)
+            run, final = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertTrue(final["confirmation_projection"]["approve_eligible"])
+            self.assertEqual(final["protocol_decision"]["reviewer_input"], packet)
+            self.assertEqual(final["protocol_decision"]["reviewer_judgment"], judgment)
+            paths = [event_file, run_dir / "result.json", run_dir / "audit.json"]
+            sealed = [p.read_bytes() for p in paths]
+            run, _ = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file)
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual([p.read_bytes() for p in paths], sealed)
+
     def test_actual_rehydrate_projection_mismatch_is_terminal(self):
         with self.prepared_results() as (prepared, results):
             private = pathlib.Path(prepared["directory"]) / "boundary-probe"
@@ -64,6 +256,9 @@ class PlannerTests(unittest.TestCase):
 
     def test_sampled_skill_command_stays_off_and_tokens_are_closed(self):
         skill = (HERE.parent / "skills/kc-pr-review/SKILL.md").read_text()
+        profiled = skill.split("### Default-off profiled Lite route", 1)[1].split("Accept PR number", 1)[0]
+        for contract in ("--goal-material-file", "ReviewerRequest", "ReviewerJudgment", "--reviewer-judgment-file"):
+            self.assertIn(contract, profiled)
         command = (
             skill.split(
                 "For the profiled route, call the repository-owned adapter once:", 1
@@ -139,7 +334,8 @@ class PlannerTests(unittest.TestCase):
     def cli(self, environment=None, **options):
         arguments = [
             part for key, value in options.items()
-            for part in ("--" + key.replace("_", "-"), str(value))
+            for part in (("--" + key.replace("_", "-"),) if value is True
+                         else ("--" + key.replace("_", "-"), str(value)))
         ]
         run = subprocess.run(
             [sys.executable, str(HERE / "review-capability.py"), *arguments],
@@ -334,7 +530,7 @@ class PlannerTests(unittest.TestCase):
             )
 
     @contextlib.contextmanager
-    def prepared_results(self, commands=(), head_content="value = 2\n"):
+    def prepared_results(self, commands=(), head_content="value = 2\n", goal_kind="pr_body"):
         with tempfile.TemporaryDirectory() as temporary:
             repo = pathlib.Path(temporary) / "repo"
             repo.mkdir()
@@ -355,13 +551,17 @@ class PlannerTests(unittest.TestCase):
             (repo / "example.py").write_text(head_content)
             git("commit", "-qam", "head")
             self.identity["head_sha"] = git("rev-parse", "HEAD")
+            goals = [{"identity": dict(self.identity), "evidence_class": goal_kind,
+                      "locator": "https://github.com/acme/widgets/pull/42",
+                      "material": "Set the example value to 2."}] if goal_kind else []
             prepared = protocol.prepare(
                 repo,
                 self.identity,
                 pathlib.Path(temporary) / "run",
                 test_commands=commands,
+                **({"goal_material": goals} if goal_kind else {}),
             )
-            self.assertEqual(prepared["shape_bundle"]["pointers"], [])
+            self.assertFalse(any("pointer" in p for p in prepared["shape_bundle"]["pointers"]))
             self.assertNotEqual(
                 prepared["bundle"]["identity"]["run_id"], self.identity["intake_id"]
             )
@@ -388,9 +588,7 @@ class PlannerTests(unittest.TestCase):
                         {
                             "question_id": request["question_ids"][0],
                             "assessment": "clean",
-                            "evidence_refs": [
-                                request["evidence"][0]["material"][0]["id"]
-                            ],
+                            "evidence_refs": [p["id"] for group in request["evidence"] for p in group["material"]],
                             "contributions": [],
                         }
                     ],
@@ -416,7 +614,7 @@ class PlannerTests(unittest.TestCase):
                 + "; print(json.dumps({'structured_output':next(x for x in results if x['capability']==r['capability']), 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01, 'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))"
             )
             results = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
-            self.assertEqual(len(results), len(protocol.requests(prepared)))
+            self.assertEqual(len(results), len(requests))
             for event in prepared["audit"][1:]:
                 envelope = protocol.read_json(
                     pathlib.Path(prepared["directory"])
@@ -436,7 +634,7 @@ class PlannerTests(unittest.TestCase):
                 self.assertEqual(envelope["total_cost_usd"], 0.01)
                 self.assertEqual(envelope["usage"]["input_tokens"], 10)
                 self.assertEqual(envelope["usage"]["output_tokens"], 2)
-            finished = protocol.finish(prepared, results)
+            finished = self.finish(prepared, results)
             self.assertEqual(finished["decision"]["coverage"], "complete")
             self.assertTrue(finished["decision"]["approve_eligible"])
             directory = pathlib.Path(prepared["directory"])
@@ -481,7 +679,7 @@ class PlannerTests(unittest.TestCase):
         with self.prepared_results() as (prepared, results):
             for result, severity in zip(results[:2], ("HIGH", "MEDIUM")):
                 self.contribution(result, severity=severity)
-            rendered = protocol.collate(prepared, results)["rendered"]
+            rendered = self.collate(prepared, results)["rendered"]
             self.assertEqual(len(rendered["inline_comments"]), 1)
             inline = rendered["inline_comments"][0]
             self.assertEqual(
@@ -490,7 +688,7 @@ class PlannerTests(unittest.TestCase):
             )
             self.assertIn("value = 2", inline["body"])
             self.assertIn("example.py:1", rendered["body"])
-            finished = protocol.finish(prepared, results)
+            finished = self.finish(prepared, results)
             self.assertIn("decision", finished, finished)
             decision = finished["decision"]
             self.assertEqual(decision["effective_event"], "REQUEST_CHANGES")
@@ -502,7 +700,7 @@ class PlannerTests(unittest.TestCase):
     def test_ambiguous_inline_retains_finding_without_guessing_a_line(self):
         with self.prepared_results(head_content="value = 2\nvalue = 2\n") as (prepared, results):
             self.contribution(results[0])
-            rendered = protocol.collate(prepared, results)["rendered"]
+            rendered = self.collate(prepared, results)["rendered"]
             self.assertEqual(rendered["inline_comments"], [])
             self.assertEqual(rendered["event"], "REQUEST_CHANGES")
             self.assertIn("value = 2", rendered["body"])
@@ -527,7 +725,7 @@ class PlannerTests(unittest.TestCase):
                     for e in invocations
                 )
             )
-            collated = protocol.collate(prepared, returned)
+            collated = self.collate(prepared, returned)
             self.assertTrue(
                 all(
                     len(o["adapter_attempts"]) == 2
@@ -559,7 +757,7 @@ class PlannerTests(unittest.TestCase):
     def test_configuration_mismatch_is_invalidated_at_collation(self):
         with self.prepared_results() as (prepared, results):
             prepared["binding"]["plan_hash"] = "f" * 64
-            terminal = protocol.collate(prepared, results)
+            terminal = self.collate(prepared, results)
             self.assertEqual((terminal["status"], terminal["reason"]),
                              ("INVALIDATED", "configuration_change"))
             self.assertEqual(terminal["identity"], prepared["identity"])
@@ -571,7 +769,7 @@ class PlannerTests(unittest.TestCase):
             event_file = next((directory / "state").rglob("events.jsonl"))
             before = event_file.read_bytes()
             protocol.git(repo, "checkout", "--detach", self.identity["base_sha"])
-            terminal = protocol.collate(prepared, [])
+            terminal = self.collate(prepared, [])
             protocol.git(repo, "checkout", "--detach", self.identity["head_sha"])
             protocol.validate(terminal, "RunTerminal")
             self.assertEqual(terminal["reason"], "identity_change")
@@ -593,16 +791,16 @@ class PlannerTests(unittest.TestCase):
             self.assertRaises(protocol.Invalid, protocol.requests, changed)
             results[0]["answers"][0]["question_id"] = "not_assigned"
             self.assertEqual(
-                protocol.collate(prepared, results)["rendered"]["event"], "COMMENT"
+                self.collate(prepared, results)["rendered"]["event"], "COMMENT"
             )
             results[0]["capability"] = "not_selected"
             self.assertEqual(
-                protocol.collate(prepared, results)["reason"], "schema_failure"
+                self.collate(prepared, results)["reason"], "schema_failure"
             )
 
     def test_question_decision_and_confirmation_are_derived_not_model_supplied(self):
         with self.prepared_results() as (prepared, results):
-            collated = protocol.collate(prepared, results)
+            collated = self.collate(prepared, results)
             decision = collated["protocol_decision"]
             protocol.validate(decision, "ReviewDecision")
             self.assertEqual(
@@ -656,9 +854,9 @@ class PlannerTests(unittest.TestCase):
             capability = results[0]["capability"]
             fallback = self.fallback(prepared, results[0]["capability"])
             results[0]["unexpected"] = True
-            ordinary = protocol.collate(prepared, results)
+            ordinary = self.collate(prepared, results)
             self.assertEqual(ordinary["rendered"]["event"], "COMMENT")
-            collated = protocol.collate(prepared, results, [fallback])
+            collated = self.collate(prepared, results, [fallback])
             obligation = next(
                 o
                 for o in collated["policy"]["obligations"]
@@ -677,7 +875,7 @@ class PlannerTests(unittest.TestCase):
                 (mutated if field == "bundle_hash" else mutated["result"])[field] = (
                     value
                 )
-                refused = protocol.collate(prepared, results, [mutated])
+                refused = self.collate(prepared, results, [mutated])
                 self.assertEqual(refused["rendered"]["event"], "COMMENT")
             del results[0]["unexpected"]
             results[0]["unknown"] = True
@@ -688,8 +886,13 @@ class PlannerTests(unittest.TestCase):
                 {"prepared": prepared, "results": results},
             )
             fallback_file = protocol.store(directory / "fallbacks.json", [fallback])
+            reviewer_file = protocol.store(directory / "reviewer.json", self.judgment(prepared, results, [fallback]))
+            run, refreshed = self.cli(finalize_dir=directory, defer_confirmation=True, fallbacks_file=fallback_file)
+            self.assertEqual(run.returncode, 0)
+            self.assertEqual(refreshed["reviewer_request"]["fallbacks_hash"], protocol.digest([fallback]))
             run, finished = self.cli(
                 environment=os.environ, finalize_dir=directory, fallbacks_file=fallback_file,
+                reviewer_judgment_file=reviewer_file,
             )
             self.assertEqual(run.returncode, 0)
             self.assertIn("decision", finished, finished)
@@ -725,7 +928,7 @@ class PlannerTests(unittest.TestCase):
             )
             self.assertEqual(prepared["attempts"], {})
             self.assertEqual(
-                protocol.finish(prepared, [])["reason"], "receipt_incomplete"
+                self.finish(prepared, [])["reason"], "receipt_incomplete"
             )
 
     def test_failed_and_retried_provider_reports_are_retained(self):
@@ -753,7 +956,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 returned = protocol.dispatch(
                     prepared, [sys.executable, "-c", program, str(directory)]
                 )
-                collated = protocol.collate(prepared, returned)
+                collated = self.collate(prepared, returned)
                 requests = protocol.requests(prepared)
                 events = [e for e in prepared["audit"] if e["event_type"] == "invoked"]
                 self.assertEqual(len(events), 2 * len(requests))
@@ -786,7 +989,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
             answer = self.contribution(
                 results[0], severity="CRITICAL", confidence=1, quote="invented line"
             )
-            collated = protocol.collate(prepared, results)
+            collated = self.collate(prepared, results)
             self.assertEqual(collated["policy"]["confirmed_blocker_refs"], [])
             self.assertEqual(collated["observation"]["synthesis"]["findings"], [])
             self.assertIn("Advisory", collated["rendered"]["body"])
@@ -801,7 +1004,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 answer["contributions"][0].update(
                     quote="value = 2", confidence=confidence, severity=severity
                 )
-                checked = protocol.collate(prepared, results)
+                checked = self.collate(prepared, results)
                 self.assertEqual(
                     len(checked["observation"]["synthesis"]["findings"]), findings
                 )
@@ -862,10 +1065,10 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 changed = copy.deepcopy(results)
                 changed[0][field] = value
                 self.assertEqual(
-                    protocol.collate(prepared, changed)["rendered"]["event"], "COMMENT"
+                    self.collate(prepared, changed)["rendered"]["event"], "COMMENT"
                 )
             self.assertEqual(
-                protocol.collate(prepared, results + [results[0]])["rendered"]["event"],
+                self.collate(prepared, results + [results[0]])["rendered"]["event"],
                 "COMMENT",
             )
             self.assertEqual(
@@ -881,7 +1084,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 self.identity["base_sha"],
             )
             self.assertEqual(
-                protocol.finish(prepared, results)["reason"], "identity_change"
+                self.finish(prepared, results)["reason"], "identity_change"
             )
 
     def test_posting_invalidation_and_absent_outcome_are_read_only(self):

@@ -24,6 +24,7 @@
     {
       "schema": "kc-pr-flow.capability-manifest/v1", "id": "goal_alignment", "version": 1,
       "questions": ["goal_alignment"], "required_evidence": ["diff_hunks"],
+      "required_any_evidence": ["pr_body", "issue", "review_comment"],
       "optional_evidence": ["pr_body", "issue", "review_comment"], "trust_tier": "repository-read-only",
       "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
       "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"

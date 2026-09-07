@@ -458,9 +458,15 @@ run_merge_readiness_tests() {
       --policy-file "$invalid_policy" --repo-worktree "$repo" \
       --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
       --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
-    assert_eq "producer-inconsistent $reason source fails closed" \
-      "UNKNOWN|LOW|invalid-review-evidence" \
-      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    if [ "$reason" = satisfied-incomplete ]; then
+      assert_eq "successful invocation with reviewer gap is not merge-ready" \
+        "UNKNOWN|LOW|review-incomplete" \
+        "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    else
+      assert_eq "producer-inconsistent $reason source fails closed" \
+        "UNKNOWN|LOW|invalid-review-evidence" \
+        "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    fi
   done
 
   for reason in unknown-key malformed-hash invalid-required-status caller-decision-member unknown-status; do
@@ -745,6 +751,24 @@ run_interactive_decision_tests() {
   fi
   after_hash="$(sha256_text "$(cat "$receipt")")"
   assert_eq "rehydration never appends or rewrites the receipt" "$before_hash" "$after_hash"
+
+  for mutated in security types manual-clean; do
+    bad_policy="$TEST_INPUT_ROOT/reviewer-gap-$mutated.json"
+    jq --arg capability "$mutated" '.obligations[] |=
+      if .capability==$capability then .terminal_state="incomplete_required" else . end' "$policy" >"$bad_policy"
+    output="$(bash "$RUNTIME" rehydrate-interactive --event-file "$receipt" --policy-file "$bad_policy" \
+      --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+      --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id")"
+    assert_eq "$mutated reviewer gap reaches confirmation" 0 "$?"
+    assert_eq "$mutated gap retains blocker precedence" REQUEST_CHANGES "$(jq -r .effective_event <<<"$output")"
+    assert_eq "$mutated gap cannot approve" false "$(jq -r .approve_eligible <<<"$output")"
+    assert_eq "$mutated gap remains required" true "$(jq --arg c "$mutated" '.capability_gap_refs | index($c)!=null' <<<"$output")"
+    assert_eq "$mutated gap preserves confirmed finding" "$finding_id" "$(jq -r '.confirmed_blocker_refs[0]' <<<"$output")"
+    assert_eq "$mutated gap preserves observed attempts" \
+      "$(jq -c --arg c "$mutated" '.obligations[] | select(.capability==$c) | .adapter_attempts' "$policy")" \
+      "$(jq -c --arg c "$mutated" '.capabilities[] | select(.capability==$c) | .adapter_attempts' <<<"$output")"
+  done
+  assert_eq "reviewer downgrade does not rewrite the receipt" "$before_hash" "$(sha256_text "$(cat "$receipt")")"
 
   if [ "$mode" = 'merge-positive-only' ]; then
     merge_policy="$TEST_INPUT_ROOT/interactive-merge-ready-policy.json"

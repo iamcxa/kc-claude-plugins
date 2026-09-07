@@ -42,6 +42,7 @@
         "schema": {"const": "kc-pr-flow.capability-manifest/v1"},
         "id": {"$ref": "#/$defs/Token"}, "version": {"const": 1}, "questions": {"$ref": "#/$defs/Tokens"},
         "required_evidence": {"$ref": "#/$defs/EvidenceClasses"}, "optional_evidence": {"$ref": "#/$defs/EvidenceClasses"},
+        "required_any_evidence": {"$ref": "#/$defs/EvidenceClasses"},
         "trust_tier": {"const": "repository-read-only"},
         "input_schema_ref": {"const": "review-capability-v1.schema.json#/$defs/CapabilityRequest"},
         "output_schema_ref": {"const": "review-capability-v1.schema.json#/$defs/CapabilityResult"}
@@ -110,7 +111,7 @@
     },
     "ReviewPlan": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema", "identity", "plan_rev", "profile", "requested", "recommended", "signals", "questions", "manifests", "expansion_reserve", "timeout_seconds", "retry_cap", "test_commands", "review_config", "plan_hash"],
+      "required": ["schema", "identity", "plan_rev", "profile", "requested", "recommended", "signals", "questions", "manifests", "expansion_reserve", "timeout_seconds", "retry_cap", "test_commands", "concerns", "review_config", "plan_hash"],
       "properties": {
         "schema": {"const": "kc-pr-flow.review-plan/v1"}, "identity": {"$ref": "#/$defs/IntakeIdentity"},
         "plan_rev": {"const": 1}, "profile": {"const": "lite"}, "requested": {"enum": ["auto", "lite"]},
@@ -118,6 +119,7 @@
         "questions": {"$ref": "#/$defs/Tokens"}, "manifests": {"type": "array", "items": {"$ref": "#/$defs/CapabilityManifest"}, "maxItems": 64},
         "expansion_reserve": {"const": 0}, "timeout_seconds": {"const": 120}, "retry_cap": {"const": 1},
         "test_commands": {"type": "array", "items": {"$ref": "#/$defs/TestCommand"}, "maxItems": 16},
+        "concerns": {"$ref": "#/$defs/Hashes"},
         "review_config": {"$ref": "#/$defs/ReviewConfig"}, "plan_hash": {"$ref": "#/$defs/Hash"}
       }
     },
@@ -133,6 +135,24 @@
       }
     },
     "Hashes": {"type": "array", "items": {"$ref": "#/$defs/Hash"}, "maxItems": 10000, "uniqueItems": true},
+    "GoalClass": {"enum": ["pr_body", "issue", "review_comment"]},
+    "GoalInput": {
+      "type": "object", "additionalProperties": false, "required": ["identity", "evidence_class", "locator", "material"],
+      "properties": {
+        "identity": {"$ref": "#/$defs/IntakeIdentity"}, "evidence_class": {"$ref": "#/$defs/GoalClass"},
+        "locator": {"type": "string", "minLength": 1, "maxLength": 2048}, "material": {"$ref": "#/$defs/Text"}
+      }
+    },
+    "GoalInputs": {"type": "array", "items": {"$ref": "#/$defs/GoalInput"}, "maxItems": 64, "uniqueItems": true},
+    "GoalMaterial": {
+      "type": "object", "additionalProperties": false, "required": ["identity", "evidence_class", "locator", "material", "id", "content_sha256"],
+      "properties": {
+        "identity": {"$ref": "#/$defs/IntakeIdentity"}, "evidence_class": {"$ref": "#/$defs/GoalClass"},
+        "locator": {"type": "string", "minLength": 1, "maxLength": 2048}, "material": {"type": "string", "minLength": 1, "maxLength": 16384},
+        "id": {"$ref": "#/$defs/Hash"}, "content_sha256": {"$ref": "#/$defs/Hash"}
+      }
+    },
+    "BundleMaterial": {"oneOf": [{"$ref": "#/$defs/EvidenceMaterial"}, {"$ref": "#/$defs/GoalMaterial"}]},
     "EvidenceClassBinding": {
       "type": "object", "additionalProperties": false, "required": ["evidence_class", "refs", "missing"],
       "properties": {
@@ -165,7 +185,7 @@
         "identity": {"oneOf": [{"$ref": "#/$defs/IntakeIdentity"}, {"$ref": "#/$defs/ReviewIdentity"}]},
         "parent_hash": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/Hash"}]},
         "shape": {"type": "array", "items": {"$ref": "#/$defs/PathShape"}, "maxItems": 10000},
-        "pointers": {"type": "array", "items": {"$ref": "#/$defs/EvidenceMaterial"}, "maxItems": 10000},
+        "pointers": {"type": "array", "items": {"$ref": "#/$defs/BundleMaterial"}, "maxItems": 10000},
         "test_observations": {"type": "array", "items": {"$ref": "#/$defs/TestObservation"}, "maxItems": 16},
         "bindings": {"type": "array", "items": {"$ref": "#/$defs/EvidenceClassBinding"}, "maxItems": 7}, "bundle_hash": {"$ref": "#/$defs/Hash"}
       }
@@ -175,7 +195,7 @@
       "properties": {
         "evidence_class": {"$ref": "#/$defs/EvidenceClass"}, "refs": {"$ref": "#/$defs/Hashes"},
         "missing": {"enum": [null, "unavailable", "not_found", "timed_out", "unsupported"]},
-        "material": {"type": "array", "items": {"$ref": "#/$defs/EvidenceMaterial"}, "maxItems": 10000},
+        "material": {"type": "array", "items": {"$ref": "#/$defs/BundleMaterial"}, "maxItems": 10000},
         "test_observations": {"type": "array", "items": {"$ref": "#/$defs/TestObservation"}, "maxItems": 16}
       }
     },
@@ -273,11 +293,46 @@
         "summaries": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "minItems": 1, "maxItems": 128}, "evidence_refs": {"$ref": "#/$defs/Hashes"}
       }
     },
+    "Reason": {"type": "string", "minLength": 1, "maxLength": 16384},
+    "ContributionJudgment": {
+      "type": "object", "additionalProperties": false, "required": ["ordinal", "disposition", "reason", "evidence_refs"],
+      "properties": {"ordinal": {"$ref": "#/$defs/Positive"}, "disposition": {"enum": ["accept", "reject", "unresolved"]}, "reason": {"$ref": "#/$defs/Reason"}, "evidence_refs": {"$ref": "#/$defs/Hashes"}}
+    },
+    "QuestionJudgment": {
+      "type": "object", "additionalProperties": false, "required": ["question_id", "assessment", "reason", "evidence_refs", "contributions"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/Token"}, "assessment": {"enum": ["clean", "findings", "evidence_backed_na", "incomplete_required"]},
+        "reason": {"$ref": "#/$defs/Reason"}, "evidence_refs": {"$ref": "#/$defs/Hashes"},
+        "contributions": {"type": "array", "items": {"$ref": "#/$defs/ContributionJudgment"}, "maxItems": 128}
+      }
+    },
+    "ReviewerQuestion": {
+      "type": "object", "additionalProperties": false, "required": ["question_id", "request", "result", "fallback"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/Token"}, "request": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/CapabilityRequest"}]},
+        "result": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/CapabilityResult"}]}, "fallback": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/ManualFallback"}]}
+      }
+    },
+    "ReviewerRequest": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "identity", "plan_hash", "bundle_hash", "results_hash", "fallbacks_hash", "questions"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.reviewer-request/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "results_hash": {"$ref": "#/$defs/Hash"}, "fallbacks_hash": {"$ref": "#/$defs/Hash"}, "questions": {"type": "array", "items": {"$ref": "#/$defs/ReviewerQuestion"}, "maxItems": 64}
+      }
+    },
+    "ReviewerJudgment": {
+      "type": "object", "additionalProperties": false, "required": ["schema", "identity", "plan_hash", "bundle_hash", "results_hash", "fallbacks_hash", "questions"],
+      "properties": {
+        "schema": {"const": "kc-pr-flow.reviewer-judgment/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_hash": {"$ref": "#/$defs/Hash"},
+        "results_hash": {"$ref": "#/$defs/Hash"}, "fallbacks_hash": {"$ref": "#/$defs/Hash"}, "questions": {"type": "array", "items": {"$ref": "#/$defs/QuestionJudgment"}, "maxItems": 64}
+      }
+    },
     "ReviewDecision": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema", "identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "terminals", "findings", "gaps", "event", "confirmation_input"],
+      "required": ["schema", "identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "terminals", "findings", "gaps", "event", "confirmation_input", "reviewer_input", "reviewer_judgment"],
       "properties": {
         "schema": {"const": "kc-pr-flow.review-decision/v1"}, "identity": {"$ref": "#/$defs/ReviewIdentity"},
+        "reviewer_input": {"$ref": "#/$defs/ReviewerRequest"}, "reviewer_judgment": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/ReviewerJudgment"}]},
         "plan_rev": {"const": 1}, "plan_hash": {"$ref": "#/$defs/Hash"}, "bundle_revision": {"const": 2}, "bundle_hash": {"$ref": "#/$defs/Hash"},
         "terminals": {"type": "array", "items": {"$ref": "#/$defs/QuestionTerminal"}, "maxItems": 64},
         "findings": {"type": "array", "items": {"$ref": "#/$defs/ProtocolFinding"}, "maxItems": 128}, "gaps": {"$ref": "#/$defs/Tokens"},
@@ -358,6 +413,7 @@
       {"$ref": "#/$defs/Catalog"}, {"$ref": "#/$defs/CapabilityManifest"}, {"$ref": "#/$defs/PlannerInput"},
       {"$ref": "#/$defs/ReviewPlan"}, {"$ref": "#/$defs/EvidenceBundle"}, {"$ref": "#/$defs/CapabilityRequest"},
       {"$ref": "#/$defs/CapabilityResult"}, {"$ref": "#/$defs/ExpansionRequest"}, {"$ref": "#/$defs/ReviewDecision"},
+      {"$ref": "#/$defs/ReviewerRequest"}, {"$ref": "#/$defs/ReviewerJudgment"},
       {"$ref": "#/$defs/ConfirmationProjection"}, {"$ref": "#/$defs/PostingOutcome"}, {"$ref": "#/$defs/PostingInvalidation"},
       {"$ref": "#/$defs/RunTerminal"}, {"$ref": "#/$defs/AuditEvent"}
     ]},

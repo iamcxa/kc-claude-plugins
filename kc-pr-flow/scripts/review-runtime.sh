@@ -2248,17 +2248,18 @@ review_runtime_rehydrate_interactive() (
         ((((.adapter_attempts | length) > 0 and .adapter_attempts[-1].result == "succeeded") or
           .fallback.status == "provided") as $satisfied |
         if $satisfied then
-          (.terminal_state == "clean" or .terminal_state == "findings" or .terminal_state == "evidence_backed_na") and
+          (.terminal_state == (if .required then "incomplete_required" else "incomplete_optional" end)) as $incomplete |
+          ($incomplete or .terminal_state == "clean" or .terminal_state == "findings" or .terminal_state == "evidence_backed_na") and
           (if .fallback.status == "provided" then
-            .terminal_state == .fallback.result.terminal_assessment and
-            (if .terminal_state == "findings" then (.fallback.result.candidate_ids | length > 0)
+            ($incomplete or .terminal_state == .fallback.result.terminal_assessment) and
+            (if .fallback.result.terminal_assessment == "findings" then (.fallback.result.candidate_ids | length > 0)
              else (.fallback.result.candidate_ids | length == 0) end)
            else
             (.evidence | length > 0) and
             (.adapter_attempts[-1].lane_result_ref) as $lane_ref |
             ([$projection.lanes[] | select(.result.lane_id == $lane_ref) | .result.candidates[]]) as $candidate_ids |
-            (if .terminal_state == "findings" then
-              ($candidate_ids | length > 0) and
+            (if $incomplete or .terminal_state == "findings" then
+              ($incomplete or ($candidate_ids | length > 0)) and
               all($candidate_ids[]; . as $candidate_id |
                 any($projection.findings[].candidate_ids[]; . == $candidate_id))
              else ($candidate_ids | length == 0) end)

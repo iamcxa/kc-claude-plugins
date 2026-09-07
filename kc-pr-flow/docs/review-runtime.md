@@ -340,9 +340,10 @@ For schemas, identities, storage rules, command contracts, and failure semantics
 
 ```mermaid
 flowchart LR
-  intake[Exact-head intake] --> plan[Required-question plan]
+  intake[Exact-head shape and explicit goals] --> plan[Required-question plan]
   plan --> evidence[Selected evidence and tests] --> calls[Bounded capability calls]
-  calls --> receipt[Existing receipt projection] --> decision[Existing typed decision]
+  calls --> reviewer[Existing review agent judgment]
+  reviewer --> receipt[Existing receipt projection] --> decision[Existing typed decision]
   decision --> confirm[Human confirmation] --> posting[Existing posting owner]
 ```
 
@@ -354,8 +355,21 @@ not publish these artifacts or copy them into the durable event log. Normal
 confirmation/posting retention remains owned by the existing runtime.
 
 Run `python3 scripts/review-capability.py --help` for the exact-head entry point.
-The adapter returns either legacy routing, an explicit RunTerminal, or a bound
-decision plus confirmation projection. Never treat an absent result as clean.
+Supply a `GoalInputs` array with `--goal-material-file`: each record binds the
+intake identity, source class (`pr_body`, `issue`, `review_comment`), locator and
+substantive original text already acquired by the host. The adapter does not
+fetch or authenticate those sources. It checks their identity/content binding
+and revision continuity; these are not Git-only runtime evidence pointers.
+No supplied goal, blank text or a locator alone leaves goal alignment incomplete.
+
+The adapter returns legacy routing, an explicit RunTerminal, or
+`pending_finalization` with a `ReviewerRequest`. The existing outer review agent
+returns a `ReviewerJudgment`, then invokes `--finalize-dir RUN_DIR
+--reviewer-judgment-file FILE` to obtain the bound decision and confirmation.
+The schema defines each contribution's accept/reject/unresolved disposition,
+reason and evidence references; decision validation retains confirmed severity
+and requires a judgment for completed coverage. Raw accepted/rejected/advisory
+contributions remain in the private decision input. Never treat an absent result as clean.
 No executable evidence expansion is available. A manual fallback may satisfy a
 failed attempt only with bound clean/not-applicable evidence; manual findings
 remain unconfirmed notes and required coverage stays incomplete.
@@ -363,11 +377,20 @@ Read-only posting projections bind the reviewed repository, base, head and
 configuration but retain the posting owner's independent run ID; posting events
 cannot extend the sealed review receipt. An absent terminal outcome stays absent.
 
-For interactive manual fallback, start with `--defer-confirmation`. This stops
-after bounded calls and writes `dispatched.json`; it does not return approval.
-After recording a bound `ManualFallback` array, use `--finalize-dir RUN_DIR
---fallbacks-file FILE`. Finalization never re-dispatches or re-samples route flags,
-and a sealed receipt cannot be finalized twice. Blind runs refuse this pause.
+Initial dispatch writes `dispatched.json` and pauses for the outer reviewer;
+it does not return approval. For an existing interactive human fallback, record
+a bound `ManualFallback` array and refresh the reviewer request using
+`--finalize-dir RUN_DIR --defer-confirmation --fallbacks-file FILE`. Judge this
+new packet and finalize with both `--fallbacks-file FILE` and
+`--reviewer-judgment-file FILE`. Finalization never re-dispatches or re-samples route flags,
+and a sealed receipt cannot be finalized twice. Do not use this pause in a
+supervised blind run; a request for mid-review help fails that sample.
+
+Runtime policy validation separates invocation success from coverage completion:
+a reviewer may keep a successful reply or valid fallback incomplete. Candidate
+references must still resolve to retained findings. Required gaps disallow
+approval; confirmed High/Critical findings still require REQUEST_CHANGES even
+with a gap in the same question. The event vocabulary and posting owner are unchanged.
 
 Ambiguous repeated quote anchors stay in the review body without an invented
 inline line. Audit clocks remain Python integer nanoseconds without a floating

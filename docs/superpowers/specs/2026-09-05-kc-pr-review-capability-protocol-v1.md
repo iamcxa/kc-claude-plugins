@@ -6,6 +6,8 @@
 - **Measurement revision accepted:** 2026-09-07, Captain chat `那就這樣繼續`, following the start-message to completed-review-message definition.
 - **Pilot automation withdrawal accepted:** 2026-09-07, Captain chat `同意`, approving the presented replacement scope without increasing limits.
 - **Required-field consolidation accepted:** 2026-09-07, Captain chat `批准`, approving the bounded code-and-test optimization after the local development trial.
+- **Goal and reviewer integration accepted:** 2026-09-07, Captain chat `確認`, approving the presented eleven-file local integration and no-model verification scope.
+- **Reviewer coverage seam repair accepted:** 2026-09-07, Captain chat `確認`, approving the two-file runtime implementation/test extension after the reproduced incomplete-confirmation failure.
 - **Local submission packaging accepted:** 2026-09-07, Captain chat `可以`, approving two local commits: the prior automation withdrawal with required-field consolidation, followed by goal/reviewer integration with its runtime repair. No push or merge is authorized.
 
 ## Revision authority and delivery sequence
@@ -45,6 +47,29 @@ Reconcile only affected existing documentation; add no schema, workflow, service
 storage change or default activation. This bounded local optimization does not
 restart the broader Lite implementation or grant shared-state, old-pin, paid-run,
 posting or merge authority. Existing implementation limits remain unchanged.
+
+The subsequent integration approval permits explicit source-bound goal material
+and the existing outer agent's typed judgment through the current intake,
+pending/finalize, and confirmation seams. Its eleven-file envelope is the
+capability implementation/test, schema/catalog, profiled review skill block,
+this spec, plugin CLAUDE/README/runtime guide, and the affected root
+ARCHITECTURE/PRODUCT claims. Run missing-goal, judgment, binding, coverage and
+real receipt regressions with fake answers. Preserve earlier pending changes,
+existing caps, default-off behavior and publication ownership. Do not change
+runtime/posting code, workflows, dependencies, versions, shared state or the
+historical pin; stop before commit, push, external review or paid/model/cloud
+runs. Archetype admission, transport grouping and blind evaluation remain later
+work. This is bounded local implementation, not a workflow-stage transition.
+
+The subsequent seam-repair approval adds `review-runtime.sh` and its existing
+test file to that local envelope. A successful invocation may conservatively
+retain incomplete coverage after reviewer judgment; preserve its observed result,
+candidate/finding consistency, accepted severity, confirmed blockers and the
+existing confirmation. Verify different-question and same-question partial
+coverage, complete results, failed/skipped attempts and manual fallback. Keep
+the existing limits and finish the already-approved protocol tests/docs. This
+does not add event types, change storage or posting ownership, migrate old
+receipts/locks, alter CI triggers, authorize model/cloud spend or permit a commit.
 
 The later submission acceptance permits those two local commits after verification.
 It supersedes the preceding commit stops for this packaging step, not their
@@ -152,9 +177,9 @@ non-green. No model-authored field can grant an authority in this table.
    confirmation and posting; current `review-runtime.sh` validates the final
    exact-head review identity.
 2. **DESIGNED:** The Evidence Builder creates `EvidenceBundle/v1` revision 1
-   from shape metadata only: changed paths, per-path line counts, diff shape,
+   from shape metadata and explicit goals: changed paths, per-path line counts, diff shape,
    deterministic signal inputs, discovered test-command metadata, and accepted
-   goal/concern pointers of kind `pr_body`, `issue`, or `review_comment`. It
+   goal material of class `pr_body`, `issue`, or `review_comment`. It
    contains no `git_blob` pointer, diff-hunk body, repository-rule body, or file
    body.
 3. **DESIGNED:** The Planner selects Lite, Standard, Full, or Custom and emits
@@ -203,7 +228,9 @@ non-green. No model-authored field can grant an authority in this table.
    inline-comment, event, option, confirmation-input, and GitHub-call-log hashes,
    appends through the existing runtime seam, and requires replay to report a
    complete receipt. Each invocation lane is `succeeded` if and only if its
-   result was fully accepted; otherwise it is `failed` or `unavailable`.
+   result was schema/evidence accepted; otherwise it is `failed` or `unavailable`.
+   Successful invocation is not completed coverage: reviewer uncertainty may
+   leave the required question incomplete while retaining confirmed findings.
    Obligation satisfaction is evaluated only after the final attempt: a
    successful final attempt uses fallback `not_needed`; a final attempt that
    did not return a fully accepted result may be satisfied by a verified
@@ -374,16 +401,20 @@ stricter for safe I/O but may not accept an instance the schema rejects.
 | `ReviewIdentity` | Plan-derived exact review identity | repository, PR, base, head, run id, config hash, review key |
 | `IdentityBinding` | Intake-to-runtime correlation | intake identity, review identity, plan hash, timestamp |
 | `QuestionDefinition` | Stable question catalog entry | id, version, requiredness rule, closed `waivable` flag |
-| `CapabilityManifest` | Skill-as-API public contract | id, version, questions, required/optional evidence classes, output ref, trust tier; no activation field |
+| `CapabilityManifest` | Skill-as-API public contract | id, version, questions, required/optional evidence classes, optional required-any alternatives, output ref, trust tier; no activation field |
 | `PlannerInput` | Deterministic routing input | intake identity, requested mode, PR shape, deterministic signals, concerns |
 | `ReviewPlan` | Frozen obligations and budgets | intake identity, plan rev, full review config, profile, questions, assignments, execution grouping, reserve |
 | `EvidencePointer` | Content-addressed repository fact | identity, source kind, object, path/locator, hash |
+| `GoalInput` / `GoalInputs` | Host-acquired explicit goals / input array | intake identity, source class, locator, original substantive text |
+| `GoalMaterial` | Frozen non-Git goal fact | GoalInput plus content hash and record id, preserved across bundle revisions |
 | `EvidenceClassBinding` | Manifest-class coverage | evidence class plus class-tagged pointer/test refs or one missing reason |
 | `EvidenceBundle` | Selected mechanical material | rev 1 intake identity or rev 2 review identity, revision/hash, parent hash, pointers, test observations, missing list |
 | `CapabilityRequest` | One logical capability request | identity, plan rev/hash, bundle revision/hash, capability, question ids, exact evidence material and refs grouped by manifest class |
 | `CapabilityResult` | One logical capability response | identity, plan rev/hash, bundle revision/hash, capability, question answers, usage, status |
 | `ExpansionRequest` | Bounded add-only request | cause, added questions/evidence, reserve charge |
 | `QuestionTerminal` | One canonical collation | question id, state, finding/evidence/gap refs |
+| `ReviewerRequest` | Handoff to the existing outer agent | identity, plan/bundle/results/fallback hashes, required questions with selected requests and validated answers |
+| `ReviewerJudgment` | Evidence-bound outer-agent assessment | echoed bindings, question assessments, contribution ordinals/dispositions, reasons and selected evidence references |
 | `ReviewDecision` | Validated General Reviewer result | identity, plan rev/hash, bundle revision/hash, contribution dispositions/reasons/evidence, terminals, findings, gaps, event, confirmation input |
 | `ConfirmationProjection` | Existing user gate input | identity, effective event, decision hash, confirmation required |
 | `PostingOutcome` | Read-only `post.result` projection | review key and exact head, run id, payload hash, idempotency key, outcome, remote id when verified |
@@ -573,9 +604,9 @@ from plugin grouping alone.
 
 Evidence acquisition is profile-scoped:
 
-1. Bundle revision 1 binds `IntakeIdentity/v1` and contains shape metadata only:
+1. Bundle revision 1 binds `IntakeIdentity/v1` and contains shape metadata and goals:
    changed paths, per-path line counts, diff shape, deterministic signal inputs,
-   discovered test-command metadata, and accepted goal/concern pointers of kind
+   discovered test-command metadata, and accepted goal material of class
    `pr_body`, `issue`, or `review_comment`. For this contract, repository
    content-bearing means `EvidencePointer.kind == git_blob`; revision 1 admits
    none. Repository instructions and all repository file material wait for
@@ -599,6 +630,12 @@ The Evidence Builder freezes its source and content; the reviewer must support a
 goal-alignment answer with that material and relevant code. Missing or ambiguous
 intent leaves the question incomplete under the existing report/confirmation
 shape, rather than inventing intent or adding a new user interaction gate.
+The host supplies `GoalInputs` through `--goal-material-file`; the adapter does
+not retrieve or authenticate sources. `freeze_goals` rejects identity mismatch
+and excludes empty/locator-only text. `requests` checks selected revision
+continuity and hashes. `required_any_evidence` on goal alignment requires at
+least one goal-source class in addition to diff evidence. Goal records remain
+outside the Git-only runtime pointer vocabulary.
 
 This ordering prevents the weak profile from paying for Full evidence before it
 is selected. Mechanical tests record command, cwd, exit status, started/finished
@@ -636,6 +673,14 @@ selection. Executing that contract
 requires a new accepted route and changes to current requiredness rules.
 
 ## General Reviewer rules
+
+Initial dispatch returns `ReviewerRequest` at the existing pending boundary.
+The current outer review agent supplies `ReviewerJudgment` through
+`--finalize-dir` and `--reviewer-judgment-file`; no additional reviewer process
+is launched. `checked_judgments` verifies binding, reasons, evidence and ordinal
+coverage; `check_decision` checks retained findings/severity and coverage before
+the runtime rebuilds confirmation. A new fallback requires a refreshed request
+and judgment. Re-entry after `result.json` is written is rejected before writes.
 
 The General Reviewer performs an evidence-bound model judgment, not merely
 deterministic concatenation. It compares schema-accepted capability contributions

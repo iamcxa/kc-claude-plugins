@@ -58,7 +58,12 @@ timings; see docs/review-runtime.md for the measurement boundary.
 **Profiled Lite trigger:** both typed and profiled review flags must be exact
 `on` before dispatch. The skill calls `scripts/review-capability.py`; schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and
-`schemas/review-capability-catalog-v1.json`. See `docs/review-runtime.md` for
+`schemas/review-capability-catalog-v1.json`. Intake accepts source-bound goal
+text via `--goal-material-file`; the current review agent judges the returned
+`ReviewerRequest` and finalizes with `--reviewer-judgment-file`. Missing goal
+support or unresolved judgment retains required gaps even after a successful
+capability reply; schema/collation validation preserves confirmed severity.
+See `docs/review-runtime.md` for
 invocation-artifact privacy and rollout limits. The runtime reference remains
 the event/confirmation/posting authority; capability planning is outside it.
 Tests: `python3 scripts/review-capability.test.py`, runtime `--case

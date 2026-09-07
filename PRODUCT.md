@@ -104,7 +104,8 @@ Increment 2.3 remains the owner of crash-safe lock recovery and PID-reuse handli
 
 The profiled adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on` and
 `KC_PR_FLOW_PROFILED_REVIEW=on`. A deterministic plan selects required questions
-from one catalog before collecting evidence or running tests. Required coverage
+from one catalog after intake shape and explicit goals, but before collecting
+selected repository material or running tests. Required coverage
 cannot disappear when a capability fails, lacks evidence, or requests expansion.
 Standard/Full retain the ordinary review route; Custom and executable expansion
 are unavailable. The existing typed decision, human confirmation, and posting

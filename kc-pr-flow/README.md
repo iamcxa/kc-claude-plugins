@@ -64,9 +64,12 @@ Lite acceptance uses operator-observed start/end messages, not automated runner
 timings; see docs/review-runtime.md for the measurement boundary.
 
 The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
-and `KC_PR_FLOW_PROFILED_REVIEW=on`. It plans required questions before collecting
-selected evidence, then returns to the existing typed confirmation and posting
-owners. Standard/Full remain on the ordinary route; Custom is unavailable.
+and `KC_PR_FLOW_PROFILED_REVIEW=on`. It freezes explicit goal text with intake,
+plans required questions before collecting selected repository evidence, and
+hands results to the existing review agent for typed judgment. Finalization
+validates per-claim reasons/evidence, preserves confirmed severity and required
+gaps, then returns to the existing typed confirmation and posting owners.
+Standard/Full remain on the ordinary route; Custom is unavailable.
 See [runtime usage](docs/review-runtime.md#opt-in-profiled-lite-review) and the
 closed contracts in `schemas/review-capability-v1.schema.json`; the matching
 catalog is the sole requiredness authority. The original `review-ablation.sh`
