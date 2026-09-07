@@ -62,6 +62,12 @@ your conclusions. Re-derive on every question.
    | `EXISTS_BROKEN` | the logic is there and a seam around it fails |
    | `STUB` | the shape is there and the body is not |
    | `MISSING` | not on this ref |
+   | `LOCATED` | found, and you ran nothing and found no record of a run |
+
+   `LOCATED` is where a read-only pass lands whenever the repository holds no
+   evidence of the code having run. Reach for it rather than stretching a tier
+   you cannot support: a skipped test asserts nothing, and neither does a test
+   you did not execute.
 
    Whether a branch merged, or its pull request closed, is a fact about the
    stratum. It goes in `stratum`. Code on a dead branch is not `EXISTS_BROKEN`;
@@ -87,7 +93,7 @@ code_archaeologist_report:
   findings:
     - subject: <symbol, route, or behaviour>
       stratum: <the ref this exists on, if not the ref above>
-      classification: WORKING | WORKING_UNIT_UNPROVEN | EXISTS_BROKEN | STUB | MISSING
+      classification: WORKING | WORKING_UNIT_UNPROVEN | EXISTS_BROKEN | STUB | MISSING | LOCATED
       command: <the command that produced this>
       evidence: <what it printed, compressed>
   absence_proof: <for every MISSING: both searches run>
