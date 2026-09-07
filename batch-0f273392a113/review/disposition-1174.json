@@ -1,0 +1,8 @@
+{
+  "blocking_categories": [
+    "security"
+  ],
+  "disposition": "block",
+  "findings_count": 8,
+  "schema": "kc-dev-flow-ship-flow-disposition/v1"
+}

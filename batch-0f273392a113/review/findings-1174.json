@@ -2,11 +2,76 @@
  "schema": "kc-dev-flow-pr-review-findings/v1",
  "pr": "iamcxa/qnow#1174",
  "head": "3c65da1e",
- "findings": [],
+ "findings": [
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run.mts",
+   "line": 397,
+   "category": "correctness",
+   "quote": "  } catch {",
+   "summary": "Top-level CLI catch discards the specific error id and prints a generic ACCEPTANCE_FULL_RUN_FAILED.",
+   "failure_scenario": "NETLIFY_AUTH_TOKEN unset \u2192 operator sees only the generic id."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run.mts",
+   "line": 389,
+   "category": "correctness",
+   "quote": "  } catch {",
+   "summary": "invokedDirectly() swallows realpathSync errors \u2192 the CLI body never runs and the script exits 0.",
+   "failure_scenario": "A broken symlink makes the acceptance gate 'pass' without running."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run-dependencies.mjs",
+   "line": 196,
+   "category": "correctness",
+   "quote": "  } catch {",
+   "summary": "readHostedBuildReceipt() collapses missing, corrupt and unreadable receipts into null.",
+   "failure_scenario": "A half-written receipt reads as 'build never run'."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run.mts",
+   "line": 207,
+   "category": "test-coverage",
+   "quote": "  if (ledger.providerCalls !== 0 || ledger.browserLaunches !== 0 || ledger.deploys !== 0) {",
+   "summary": "Self-check ledger is fed by its own stubs, not by the production countedNetlifyApi wrapper.",
+   "failure_scenario": "A dropped method name stops counting in real runs while self-check stays green."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run.mts",
+   "line": 342,
+   "category": "correctness",
+   "quote": "    browserEnvironment: browserEnvironmentEvidence(browserEnvironment),",
+   "summary": "Pre-flight rehearsal receipt (browserRemainder 0) is echoed into the final run receipt as if post-run.",
+   "failure_scenario": "A leaked journey browser shows remainder 0 in the published receipt."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run-dependencies.mjs",
+   "line": 311,
+   "category": "security",
+   "quote": "            evidenceDirectory: `/tmp/qnow-acceptance-evidence-${runId}`,",
+   "summary": "A secret-classified run id (written to Netlify as is_secret) is interpolated into a /tmp directory name, visible to any local user via ls /tmp.",
+   "failure_scenario": "Co-resident user on a shared runner reads the run id; not the auth secret, but a designed-secret value disclosed."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run-dependencies.mjs",
+   "line": 32,
+   "category": "correctness",
+   "quote": "export const ACCEPTANCE_DEPLOY_TIMEOUT_MS = 20 * 60_000;",
+   "summary": "Bootstrap deadline (10 min) is stamped at create() before the deploy, but the deploy may take up to 20 min; a deploy over ~10 min guarantees BOOTSTRAP_CREATE_WINDOW_EXPIRED and a failed one-shot run.",
+   "failure_scenario": "DEV-37's single permitted deploy finishes at minute 12 and the run fails safely but permanently."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-netlify-session.ts",
+   "line": 130,
+   "category": "correctness",
+   "quote": "      deployAttempted = true;",
+   "summary": "deployAttempted latched before deployOnce()'s pre-flight source check; a pre-flight throw reports deploys 1 and a phantom candidate identity lost.",
+   "failure_scenario": "Operator hunts a Netlify candidate that never existed."
+  }
+ ],
  "reviewers": {
   "code-reviewer": 0,
-  "tob-security-reviewer": "pending",
-  "silent-failure-hunter": "pending (resumed)"
+  "tob-security-reviewer": 3,
+  "silent-failure-hunter": 5
  },
  "test_command": "no credentials: pnpm test:unit, test:netlify-package, acceptance:hosted:full-run:self-check; display: test:headed-browser; hosted + mutating (authorized only): acceptance:hosted:full-run"
 }
