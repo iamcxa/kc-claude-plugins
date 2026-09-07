@@ -122,7 +122,8 @@ is the session-scoped deep link, so a click lands on the review itself.
 
 Two facts shape its credentials:
 
-- **A token is scoped to one organization** and the CLI takes no organization argument. The keychain token from `conductor auth login` serves its own organization; a repo in another organization needs `scripts/backends/conductor-token.sh <github-org>`, which reads the token from a hidden prompt, verifies it before writing, and stores it 0600 at `orgs/<org>.env`. Absent a file, the keychain token stands — so the common single-organization case needs no file at all.
+- **A token is scoped to one organization** and the CLI takes no organization argument, so which token is in use decides which repositories can be dispatched at all. Store one per scope with `scripts/backends/conductor-token.sh <github-org>` or `… <owner/repo>` — it reads the token from a hidden prompt, verifies it before writing, and stores it 0600. Lookup is repository file, then owner file, then the keychain token, because a GitHub organization can hold repositories in more than one Conductor organization. A single-organization setup needs no file at all.
+- **Project ids are cached per Conductor organization.** An id from one organization means nothing in another, and reusing a stale one produces `Project not found`, which reads as "the project is gone" when the truth is "the wrong token is in use". The error now names the organization it looked in and where to put a token for that repository.
 - **The review skill has to be present before the session starts.** Installing from
   inside a running session does *not* work — it lands in the CLI, not in that
   session's skill registry. Whatever provisions the cloud environment must carry the

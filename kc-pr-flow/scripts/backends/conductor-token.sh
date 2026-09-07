@@ -17,21 +17,24 @@ CFG_DIR="${PR_LISTEN_CFG_DIR:-$HOME/.claude/kc-plugins-config/pr-flow}"
 
 die() { printf '%s\n' "$*" >&2; exit 1; }
 
-ORG_RAW="${1:-}"
-[[ -n "$ORG_RAW" ]] || die "usage: conductor-token.sh <github-org>   (e.g. the owner in owner/repo)"
+TARGET_RAW="${1:-}"
+[[ -n "$TARGET_RAW" ]] || die "usage: conductor-token.sh <github-org|owner/repo>
+  <github-org>   covers every repository under that owner
+  <owner/repo>   covers one repository, and wins over its owner's file"
 [[ -t 0 ]] || die "refusing to read a token from a pipe — run this in a terminal"
 [[ -x "$CONDUCTOR" ]] || die "conductor CLI not found at $CONDUCTOR"
 
-ORG=$(printf '%s' "$ORG_RAW" | tr '[:upper:]' '[:lower:]')
-DEST="$CFG_DIR/orgs/$ORG.env"
+TARGET=$(printf '%s' "$TARGET_RAW" | tr '[:upper:]' '[:lower:]')
+# The lookup flattens a slug the same way, so one directory holds both scopes.
+DEST="$CFG_DIR/orgs/${TARGET//\//__}.env"
 
 if [[ -f "$DEST" ]]; then
-  printf 'A token for %s already exists. Replace it? [y/N] ' "$ORG"
+  printf 'A token for %s already exists. Replace it? [y/N] ' "$TARGET"
   read -r reply
   [[ "$reply" == [yY]* ]] || die "unchanged"
 fi
 
-printf 'Conductor API token for %s (input hidden): ' "$ORG"
+printf 'Conductor API token for %s (input hidden): ' "$TARGET"
 IFS= read -rs TOKEN
 printf '\n'
 [[ -n "$TOKEN" ]] || die "no token entered"
@@ -45,7 +48,7 @@ ORG_ID=$(awk '/^Organization ID/{print $3}' <<<"$WHOAMI")
 mkdir -p "$CFG_DIR/orgs"
 (
   umask 077
-  printf '# Conductor token for GitHub org: %s\n' "$ORG" >"$DEST"
+  printf '# Conductor token for: %s\n' "$TARGET" >"$DEST"
   printf 'CONDUCTOR_API_TOKEN=%s\n' "$TOKEN" >>"$DEST"
 )
 chmod 600 "$DEST"
@@ -54,4 +57,7 @@ printf 'Stored.\n'
 printf '  file          %s (mode 600)\n' "$DEST"
 printf '  token length  %d chars\n' "${#TOKEN}"
 printf '  organization  %s\n' "${ORG_ID:-unknown}"
-printf '\nThe listener loads this automatically for any %s/* repository.\n' "$ORG"
+case "$TARGET" in
+  */*) printf '\nThe listener loads this for %s, ahead of any file for %s.\n' "$TARGET" "${TARGET%%/*}" ;;
+  *)   printf '\nThe listener loads this for any %s/* repository without a file of its own.\n' "$TARGET" ;;
+esac

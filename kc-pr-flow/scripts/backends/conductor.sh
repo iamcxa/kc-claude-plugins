@@ -18,18 +18,38 @@ die() { printf '%s\n' "$*" >&2; exit 1; }
 # A Conductor API token is scoped to one organization and the CLI takes no
 # organization argument, so a repo outside the keychain token's org needs its own
 # token file. Absent a file, the keychain token stands.
+# A GitHub organization can hold repositories in more than one Conductor
+# organization, so a repository-level file wins over the organization one; with
+# neither, the keychain token stands.
 load_org_token() {
-  local org f
-  org=$(printf '%s' "${1%%/*}" | tr '[:upper:]' '[:lower:]')
-  f="$CFG_DIR/orgs/$org.env"
-  [[ -f "$f" ]] || return 0
-  set -a; . "$f"; set +a
+  local slug owner f
+  slug=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
+  owner="${slug%%/*}"
+  for f in "$CFG_DIR/orgs/${slug//\//__}.env" "$CFG_DIR/orgs/$owner.env"; do
+    [[ -f "$f" ]] || continue
+    set -a; . "$f"; set +a
+    return 0
+  done
 }
 
-refresh_project_cache() {
-  local out uuid remote slug tmp
+# Which Conductor organization the current token speaks for. Project ids only mean
+# anything inside one, so this is what the cache is keyed by.
+current_org() {
+  "$CONDUCTOR" auth whoami 2>/dev/null | awk '/^Organization ID/{print $3}'
+}
+
+refresh_project_cache() { # <conductor-org>
+  local org="$1" out uuid remote slug tmp
   out=$("$CONDUCTOR" project list --limit 100 2>/dev/null) || return 1
-  [[ -f "$PROJECT_CACHE" ]] || printf '{}\n' >"$PROJECT_CACHE"
+  # An earlier build keyed this file by repository alone; those entries are not
+  # attributable to an organization, so they go rather than being trusted.
+  if [[ -f "$PROJECT_CACHE" ]]; then
+    tmp="$PROJECT_CACHE.tmp.$$"
+    "$JQ" 'with_entries(select(.value | type == "object"))' "$PROJECT_CACHE" >"$tmp" 2>/dev/null \
+      && mv "$tmp" "$PROJECT_CACHE" || rm -f "$tmp"
+  else
+    printf '{}\n' >"$PROJECT_CACHE"
+  fi
   while IFS= read -r line; do
     uuid=$(grep -oE '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' <<<"$line") || true
     [[ -z "$uuid" ]] && continue
@@ -37,17 +57,20 @@ refresh_project_cache() {
     [[ -z "$remote" ]] && continue
     slug=$(sed -E 's#^https?://[^/]+/##; s#\.git$##' <<<"$remote" | tr '[:upper:]' '[:lower:]')
     tmp="$PROJECT_CACHE.tmp.$$"
-    "$JQ" --arg s "$slug" --arg id "$uuid" '.[$s] = $id' "$PROJECT_CACHE" >"$tmp" && mv "$tmp" "$PROJECT_CACHE"
+    "$JQ" --arg o "$org" --arg s "$slug" --arg id "$uuid" \
+      '.[$o] = ((.[$o] // {}) + {($s): $id})' "$PROJECT_CACHE" >"$tmp" && mv "$tmp" "$PROJECT_CACHE"
   done <<<"$out"
 }
 
-project_id_for() {
-  local slug id
-  slug=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
-  id=$("$JQ" -r --arg s "$slug" '.[$s] // empty' "$PROJECT_CACHE" 2>/dev/null)
+# A project id from one Conductor organization means nothing in another, and a
+# stale one reads as "not found" rather than "wrong key" — so the lookup is scoped.
+project_id_for() { # <repo-slug> <conductor-org>
+  local slug="$1" org="$2" id
+  slug=$(printf '%s' "$slug" | tr '[:upper:]' '[:lower:]')
+  id=$("$JQ" -r --arg o "$org" --arg s "$slug" '.[$o][$s] // empty' "$PROJECT_CACHE" 2>/dev/null)
   if [[ -z "$id" ]]; then
-    refresh_project_cache
-    id=$("$JQ" -r --arg s "$slug" '.[$s] // empty' "$PROJECT_CACHE" 2>/dev/null)
+    refresh_project_cache "$org"
+    id=$("$JQ" -r --arg o "$org" --arg s "$slug" '.[$o][$s] // empty' "$PROJECT_CACHE" 2>/dev/null)
   fi
   printf '%s' "$id"
 }
@@ -64,9 +87,11 @@ cmd_create() {
   mkdir -p "$CFG_DIR"
   load_org_token "$repo"
 
-  local pid
-  pid=$(project_id_for "$repo")
-  [[ -n "$pid" ]] || die "no Conductor project for $repo in this token's organization"
+  local pid corg
+  corg=$(current_org)
+  [[ -n "$corg" ]] || die "the Conductor token could not be verified — run: conductor auth whoami"
+  pid=$(project_id_for "$repo" "$corg")
+  [[ -n "$pid" ]] || die "no Conductor project for $repo in organization $corg — either the wrong token is in use, or add one at orgs/${repo%%/*}.env or orgs/$repo.env"
 
   # Reviewing is the expensive judgement in this loop, so the model is a choice
   # rather than the platform default. Both values are validated by the CLI, which
