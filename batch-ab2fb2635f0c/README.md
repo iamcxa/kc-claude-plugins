@@ -77,3 +77,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - 65c0143a on #1174, base now main. Worker dropped 4 DEV-35 commits (superseded by #1180), kept 11; found and fixed EXPECTED_MIGRATIONS 8→10 in #1174's own runner file. Full npm test + full-run self-check green (providerCalls 0, deploys 0). FO measuring the worker's stated residual (test:headed-browser) rather than carrying it as untested.
 - DEV-36 verdict: MERGE #1174 (base main, head 65c0143a) after ready + ci-gate. FO full npm test + full-run self-check green; reconciliation review no findings; headed-browser suite routed to the Linux cloud run. Awaiting the Captain's merge confirmation.
+
+## DEV-36 — merged (2026-09-07)
+
+- Captain merged #1174 → main 3ab1a323. DEV-36 Done. Remaining in the batch: DEV-37 (cloud run, one deploy, Captain present).
