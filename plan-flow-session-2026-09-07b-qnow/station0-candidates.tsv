@@ -1,0 +1,6 @@
+# candidate	title	probe (iamcxa/qnow main 820f6fb5, 2026-09-07)	result	reading
+DEV-136	land hosted/ on main	git ls-tree origin/main …/hosted | wc -l	0 (branch: 26); branch 48 ahead / 3 behind; 66 non-hosted files differ	reproduces; the blocker for 36/37
+DEV-36	ESM hosted runner	gh pr view 1174 --json baseRefName	OPEN, base = staging branch, head b5d87ed8 (accepted r1)	waits for DEV-136, then rebase onto main
+DEV-37	three-actor hosted acceptance	prerequisites on main?	DEV-35 yes (#1180), DEV-36 no	dispatch after 136 + 36; cloud workspace, one deploy, watched
+DEV-132	customer identity A/B/C	#1177 evidence on main	merged (c7a905a9)	decision item for this session, not a build
+DEV-114	merge station script	S36–S39, S45–S48 in three batches	six failures, all hand-driven	a kc-claude-plugins item; rider candidate before another merge-heavy batch
