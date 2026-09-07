@@ -1,0 +1,48 @@
+{
+ "project_id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+ "code_repo": "iamcxa/qnow",
+ "cycle_id": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "user_value": "Kent obtains the QNow PoC acceptance receipt: the hosted runner reaches main through two reviewable PRs, DEV-36 lands on it, and one watched cloud run produces the revision-bound, secret-safe receipt with cleanup to zero.",
+ "hypothesis": "If we land the staging-qualification work on main in two credential-free PRs and then run the acceptance once from main under a fresh authorization receipt, then the PoC closes with a receipt an independent validation can read, without a reverse merge and without an unwatched first provider run.",
+ "wedge": "Kent as FO on iamcxa/qnow only. This batch: DEV-114 first (merge station script, pre-batch blocker), then DEV-136 (support files PR), DEV-137 (hosted/ PR), DEV-36 rebased and merged, DEV-37 run once in a Conductor cloud workspace with the Captain watching. Not in it: DEV-132 (identity provider), the rest of the 48-commit branch not needed by hosted/.",
+ "outcome": "main carries hosted/ and its supporting files with credential-free evidence; #1174 is merged onto it; DEV-37 produces docs/evidence/qnow-poc-acceptance-receipt.json in one run with cleanup census 0; every merge in the batch goes through merge-station.sh.",
+ "falsifier": "Any of: a PR in the set needs a credential to pass its own checks; a merge lands outside merge-station.sh or on a non-trunk base; DEV-37 needs a second deploy or retry; the receipt names a secret, PII, URL or raw provider error; cleanup census non-zero.",
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing leaves hosted/ only on a branch nobody drives, DEV-36 unmergeable and DEV-37 unrunnable from main.",
+   "agreed": false
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is the 48-commit branch and its 84-cycle record; kc-ship-flow's stations exist on main and a merge-station script is one ticket away.",
+   "agreed": false
+  },
+  {
+   "id": "P3",
+   "statement": "Premise falsifier — remove the approach (land on main, then one watched run): the outcome cannot hold, because the runner cannot run from main and an unwatched first provider run is the risk DEV-36's own report named.",
+   "agreed": false
+  }
+ ],
+ "exit": [
+  "DEV-114 merged and used for every merge in this batch.",
+  "DEV-136, DEV-137, DEV-36 merged on main with credential-free evidence.",
+  "DEV-37's acceptance receipt exists with cleanup census 0; DEV-37 Done."
+ ],
+ "journey": {
+  "persona": "Kent (FO)",
+  "start": "hosted/ exists only on a stale branch",
+  "end": "acceptance receipt in hand from a run on main",
+  "observable": "four merges through merge-station.sh, one DEV-37 run log, one receipt, census 0"
+ },
+ "issue_cut": {
+  "order": [
+   "DEV-114",
+   "DEV-136",
+   "DEV-137",
+   "DEV-36",
+   "DEV-37"
+  ],
+  "note": "DEV-114 is a kc-claude-plugins item riding as the pre-batch blocker; the receipt's code_repo is iamcxa/qnow and lists the four qnow items."
+ }
+}

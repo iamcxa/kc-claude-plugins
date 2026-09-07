@@ -1,0 +1,573 @@
+{
+ "schema": "kc-plan-receipt/v0",
+ "project": {
+  "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+  "name": "\u67b6\u69cb\u6536\u6582\u8207 POC \u7626\u8eab",
+  "content": "## User value\n\nKent obtains a revision-bound, secret-safe QNow PoC acceptance receipt: three hosted actors prove assignment, tenant isolation, exact-once claim and readback, with cleanup to zero remainder.\n\n\u78ba\u7acb\u55ae\u4e00 API\u3001\u8cc7\u6599\u5eab\u3001\u8eab\u5206\u8207\u90e8\u7f72\u8def\u5f91\uff1b\u4fdd\u7559 Hono\u3001Zod/OpenAPI\u3001Drizzle \u8207\u53ef\u9a57\u8b49\u7684 POC \u6838\u5fc3\u6a21\u5f0f\u3002\u79fb\u9664\u672a\u63a1\u7528\u7684 UI\u3001API \u8207\u8eab\u5206\u9a57\u8b49\u5be6\u9a57\u3002",
+  "initiatives": {
+   "nodes": [
+    {
+     "id": "7d7f5b16-8a2d-4220-905a-763b3d7ec67e"
+    }
+   ]
+  },
+  "projectMilestones": {
+   "nodes": [
+    {
+     "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+     "name": "QNow PoC acceptance: three hosted actors, one recorded run"
+    }
+   ]
+  },
+  "issues": {
+   "nodes": [
+    {
+     "id": "6de7aa4a-e9c7-47c0-8a26-533c2909aaf8",
+     "identifier": "DEV-137",
+     "url": "https://linear.app/duckbase-co/issue/DEV-137/land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr-2-of-2",
+     "branchName": "feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-136"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "28ae685e-e965-4d8b-8506-fdb549841fb2",
+     "identifier": "DEV-136",
+     "url": "https://linear.app/duckbase-co/issue/DEV-136/land-the-hosted-runners-supporting-files-on-main-netlify-identity",
+     "branchName": "feature/dev-136-land-the-hosted-runners-supporting-files-on-main-netlify",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "d3ea72ee-d859-414b-8966-cee47960f9c9",
+     "identifier": "DEV-133",
+     "url": "https://linear.app/duckbase-co/issue/DEV-133/phone-identity-port-revoke-by-subject-for-the-lost-handset-case-and",
+     "branchName": "feature/dev-133-phone-identity-port-revoke-by-subject-for-the-lost-handset",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "9bf95390-dc37-424d-83fe-0a5055127e57",
+     "identifier": "DEV-132",
+     "url": "https://linear.app/duckbase-co/issue/DEV-132/decide-customer-phone-identity-on-the-netlify-target-keep-supabase",
+     "branchName": "feature/dev-132-decide-customer-phone-identity-on-the-netlify-target-keep",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "backlog"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "48e58f7b-46b6-4e4e-8c6f-dc9604df5e9e",
+     "identifier": "DEV-39",
+     "url": "https://linear.app/duckbase-co/issue/DEV-39/classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "branchName": "feature/dev-39-classify-kc-dev-flow-scripts-and-reject-unowned-adapters",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "1989cfdc-dda5-468a-a297-7b45f31afe46",
+     "identifier": "DEV-37",
+     "url": "https://linear.app/duckbase-co/issue/DEV-37/\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claimreadback-\u9a57\u6536",
+     "branchName": "feature/dev-37-\u57f7\u884c-qnow-\u4e09\u89d2\u8272-hosted-claim\uff0freadback-\u9a57\u6536",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-137"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-136"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-35"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-36"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "4e5efffe-07d8-4b98-a512-1e9e646a7e73",
+     "identifier": "DEV-36",
+     "url": "https://linear.app/duckbase-co/issue/DEV-36/\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "branchName": "feature/dev-36-\u5efa\u7acb-qnow-package-scoped-esm-hosted-journey-runner",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "started"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-137"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-136"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "57b80be9-5958-41c3-99c1-79add1ec5c37",
+     "identifier": "DEV-35",
+     "url": "https://linear.app/duckbase-co/issue/DEV-35/\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "branchName": "feature/dev-35-\u9a57\u8b49-conductor-cloud-headed-playwright-\u57f7\u884c\u74b0\u5883",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "d9ab7db7-53c1-4755-9f9f-ab752bab06a4",
+     "identifier": "DEV-25",
+     "url": "https://linear.app/duckbase-co/issue/DEV-25/\u9a57\u8b49-netlify-dbauth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "branchName": "feature/dev-25-\u9a57\u8b49-netlify-db\u3001auth-\u8207-rls-\u79df\u6236\u9694\u96e2",
+     "cycle": {
+      "id": "b788c52d-8370-475f-be4f-8fcd88dd03d6"
+     },
+     "projectMilestone": {
+      "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064"
+     },
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "0c8ddcfd-5286-4d88-afad-2888bca87e3b",
+     "identifier": "DEV-24",
+     "url": "https://linear.app/duckbase-co/issue/DEV-24/enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "branchName": "feature/dev-24-enforce-absolute-40kb-static-budget-for-kc-dev-flow-gate",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "completed"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    },
+    {
+     "id": "389c0fe8-1e12-4d7e-a8c1-be1ce617d582",
+     "identifier": "DEV-23",
+     "url": "https://linear.app/duckbase-co/issue/DEV-23/\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "branchName": "feature/dev-23-\u5efa\u7acb-poc-\u6dd8\u6c70\u8207\u9077\u79fb\u6e05\u55ae",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-37"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-22"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-21"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "64c1705c-762e-41a0-b244-0ffd371fc8f0",
+     "identifier": "DEV-22",
+     "url": "https://linear.app/duckbase-co/issue/DEV-22/\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "branchName": "feature/dev-22-\u5efa\u7acb\u6b63\u5f0f\u90e8\u7f72\u8207\u9a57\u8b49\u7ba1\u7dda",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "deb48ca1-2159-447b-a811-3a2634b3ba3b",
+     "identifier": "DEV-21",
+     "url": "https://linear.app/duckbase-co/issue/DEV-21/\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "branchName": "feature/dev-21-\u79fb\u690d\u6838\u5fc3\u71df\u904b\u5782\u76f4\u5207\u7247\u81f3\u6b63\u5f0f\u67b6\u69cb",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-19"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-20"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "82408970-59ef-4dfd-b6c4-5269fdaf0a01",
+     "identifier": "DEV-20",
+     "url": "https://linear.app/duckbase-co/issue/DEV-20/\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "branchName": "feature/dev-20-\u5efa\u7acb\u6b63\u5f0f-api-\u5408\u7d04\u8207\u79df\u6236\u8108\u7d61\u9aa8\u67b6",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "589d56fa-b3ac-4002-9a4e-f06168081dc8",
+     "identifier": "DEV-19",
+     "url": "https://linear.app/duckbase-co/issue/DEV-19/\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "branchName": "feature/dev-19-\u6574\u4f75-monorepo-\u8207\u6e05\u9664\u5be6\u9a57\u6b98\u7559",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-18"
+        }
+       },
+       {
+        "type": "blocks",
+        "issue": {
+         "identifier": "DEV-17"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "562be1c8-077d-468f-a4cf-7a389ad3625b",
+     "identifier": "DEV-18",
+     "url": "https://linear.app/duckbase-co/issue/DEV-18/\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "branchName": "feature/dev-18-\u5b9a\u6848-qnow-\u6b63\u5f0f\u67b6\u69cb-adr",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": [
+       {
+        "type": "related",
+        "issue": {
+         "identifier": "DEV-25"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "id": "5a37cf2f-a111-4d65-bdb6-8a20e389d36b",
+     "identifier": "DEV-17",
+     "url": "https://linear.app/duckbase-co/issue/DEV-17/\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "branchName": "feature/dev-17-\u76e4\u9ede-poc-\u529f\u80fd\u8207\u53ef\u6cbf\u7528\u8cc7\u7522",
+     "cycle": null,
+     "projectMilestone": null,
+     "state": {
+      "type": "unstarted"
+     },
+     "inverseRelations": {
+      "nodes": []
+     }
+    }
+   ]
+  }
+ },
+ "lint": [
+  {
+   "rule": "L1 one-line User value",
+   "pass": true,
+   "why": "'Kent obtains a revision-bound, secret-safe QNow PoC acceptan'"
+  },
+  {
+   "rule": "L2 one cycle",
+   "pass": true,
+   "why": "{'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 9"
+  },
+  {
+   "rule": "L3 milestone membership",
+   "pass": false,
+   "why": ""
+  },
+  {
+   "rule": "L4 admission DEV-137",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-136",
+   "pass": true,
+   "why": "3 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-37",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L4 admission DEV-36",
+   "pass": true,
+   "why": "2 non-goals"
+  },
+  {
+   "rule": "L5 initiative when >1 project",
+   "pass": true,
+   "why": "single project; not triggered"
+  },
+  {
+   "rule": "L6 blockedBy is a DAG",
+   "pass": true,
+   "why": "blocker->blocked [('DEV-136', 'DEV-137'), ('DEV-137', 'DEV-37'), ('DEV-136', 'DEV-37'), ('DEV-35', 'DEV-37'), ('DEV-36', 'DEV-37'), ('DEV-137', 'DEV-36'), ('DEV-136', 'DEV-36'), ('DEV-37', 'DEV-23'), ('DEV-22', 'DEV-23'), ('DEV-21', 'DEV-23'), ('DEV-19', 'DEV-22'), ('DEV-19', 'DEV-21'), ('DEV-20', 'DEV-21'), ('DEV-18', 'DEV-20'), ('DEV-18', 'DEV-19'), ('DEV-17', 'DEV-19')]; order ['DEV-132', 'DEV-133', 'DEV-136', 'DEV-17', 'DEV-18', 'DEV-24', 'DEV-25', 'DEV-35', 'DEV-39', 'DEV-137', 'DEV-19', 'DEV-20', 'DEV-36', 'DEV-22', 'DEV-21', 'DEV-37', 'DEV-23']"
+  },
+  {
+   "rule": "L6 id-order advisory",
+   "pass": true,
+   "why": "violations (DEV-37, DEV-23)"
+  },
+  {
+   "rule": "L7 split advisory (warn only)",
+   "pass": true,
+   "why": "17 issues, forked=True; consider Milestones"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-137",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-136",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-37",
+   "pass": true,
+   "why": "4 ACs"
+  },
+  {
+   "rule": "L8 e2e-able AC DEV-36",
+   "pass": true,
+   "why": "3 ACs"
+  },
+  {
+   "rule": "L9 by-product Issue check",
+   "pass": false,
+   "why": "issues with no unique surface: DEV-137: only surface origin/main...origin already claimed by DEV-136"
+  },
+  {
+   "rule": "L10 re-verified presence and age",
+   "pass": true,
+   "why": "14-day bound; violations: none"
+  }
+ ],
+ "dispatch_order": [
+  "DEV-132",
+  "DEV-133",
+  "DEV-136",
+  "DEV-17",
+  "DEV-18",
+  "DEV-24",
+  "DEV-25",
+  "DEV-35",
+  "DEV-39",
+  "DEV-137",
+  "DEV-19",
+  "DEV-20",
+  "DEV-36",
+  "DEV-22",
+  "DEV-21",
+  "DEV-37",
+  "DEV-23"
+ ],
+ "edges": [
+  [
+   "DEV-136",
+   "DEV-137"
+  ],
+  [
+   "DEV-137",
+   "DEV-37"
+  ],
+  [
+   "DEV-136",
+   "DEV-37"
+  ],
+  [
+   "DEV-35",
+   "DEV-37"
+  ],
+  [
+   "DEV-36",
+   "DEV-37"
+  ],
+  [
+   "DEV-137",
+   "DEV-36"
+  ],
+  [
+   "DEV-136",
+   "DEV-36"
+  ],
+  [
+   "DEV-37",
+   "DEV-23"
+  ],
+  [
+   "DEV-22",
+   "DEV-23"
+  ],
+  [
+   "DEV-21",
+   "DEV-23"
+  ],
+  [
+   "DEV-19",
+   "DEV-22"
+  ],
+  [
+   "DEV-19",
+   "DEV-21"
+  ],
+  [
+   "DEV-20",
+   "DEV-21"
+  ],
+  [
+   "DEV-18",
+   "DEV-20"
+  ],
+  [
+   "DEV-18",
+   "DEV-19"
+  ],
+  [
+   "DEV-17",
+   "DEV-19"
+  ]
+ ],
+ "receipt_sha256": "745e01d4e63847b1d4fc675958eadec6b2655e55e396cfba276633d2eafc54be"
+}
