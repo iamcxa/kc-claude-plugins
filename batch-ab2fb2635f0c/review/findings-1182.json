@@ -1,0 +1,11 @@
+{
+  "schema": "kc-ship-flow-review-findings/v1",
+  "pr": "iamcxa/qnow#1182",
+  "reviewed_head": "269b90e0aadc950acb0efaabbf08e49a07be82be",
+  "findings": [
+    {"id": "S1", "source": "security-reviewer", "severity": "medium", "file": "experiments/netlify-refine-poc/qnow-next/hosted/verbose-deploy-diagnostic.mjs", "line": 41, "quote": ".replace(/\\b(?:password|passwd|pwd|token|secret|api[_-]?key)\\s*[:=]\\s*[^\\s]+/giu, '[REDACTED]')", "summary": "redact() never matches JSON-quoted keys (\"password\":\"…\"); netlify-cli --json output with a short non-hex secret is printed unredacted into the diagnostic receipt."},
+    {"id": "S2", "source": "security-reviewer", "severity": "low", "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-netlify-session.ts", "line": 4, "summary": "Staging Netlify site UUID/hostname hard-coded in three new files (already on main in the preflight script)."},
+    {"id": "S3", "source": "security-reviewer", "severity": "low", "file": "experiments/netlify-refine-poc/qnow-next/hosted/acceptance-netlify-session.ts", "line": 123, "quote": "async deployOnce() {", "summary": "deploysMaximum:1 is asserted in self-check output but not enforced; a second deployOnce() overwrites candidateId and orphans the first production-context deploy from cleanup."},
+    {"id": "S0", "source": "security-reviewer", "outcome_note": "identity fallback fails closed (HOSTED_RUNTIME_CONFIGURATION_MISSING); SET ROLE qnow_app on every pooled connection; env readback never reads values; build-artifacts execFile fixed argv; no secrets found in 9.4k lines."}
+  ]
+}
