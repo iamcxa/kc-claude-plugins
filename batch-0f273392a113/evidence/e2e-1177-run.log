@@ -1,0 +1,16 @@
+== rerun with exit codes, head eeb7d4f8, 2026-09-07T01:47:30Z ==
+type-check exit=0
+npm test exit=0
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+ Test Files  15 passed (15)
+      Tests  104 passed (104)
+ Test Files  5 passed (5)
+      Tests  65 passed (65)
+ℹ pass 2
+ℹ fail 0
+ℹ pass 1
+ℹ fail 0
+probe exit=0
+probe HOLDS lines: 4
+== done 2026-09-07T01:48:08Z ==
