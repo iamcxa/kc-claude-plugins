@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Stub `gh` for merge-station.test.sh: scripted `pr view`/`pr ready`/`pr merge`
+# responses, no network. Scenario JSON path comes from $FAKE_GH_SCENARIO; every
+# invocation's argv is appended to $FAKE_GH_LOG.
+#
+# Scenario JSON shape, keyed by PR number as a string:
+#   {"<pr>": {
+#     "baseRefName": "...", "headRefOid": "<40-hex>",
+#     "precheck": {"mergeStateStatus": "..."},
+#     "states": [{"mergeable": "...", "mergeStateStatus": "...", "statusCheckRollup": [...]}, ...],
+#     "ready": "ok"|"refuse", "merge": "ok"|"refuse", "mergeCommit": "<40-hex>"
+#   }}
+# `states` advances one entry per poll call for that PR (clamped to the last
+# entry once exhausted); `precheck` is read once, never advanced.
+set -euo pipefail
+
+: "${FAKE_GH_SCENARIO:?FAKE_GH_SCENARIO must be set}"
+: "${FAKE_GH_LOG:?FAKE_GH_LOG must be set}"
+
+printf '%s\n' "$*" >> "$FAKE_GH_LOG"
+
+state_dir="${FAKE_GH_SCENARIO}.state"
+mkdir -p "$state_dir"
+
+[ "${1:-}" = "pr" ] || { echo "fake-gh: unsupported command: $*" >&2; exit 64; }
+sub="${2:-}"
+pr="${3:-}"
+
+case "$sub" in
+  view)
+    fields=""
+    shift 3
+    while [ "$#" -gt 0 ]; do
+      case "$1" in
+        --json) fields="$2"; shift 2 ;;
+        --repo) shift 2 ;;
+        *) shift ;;
+      esac
+    done
+    case "$fields" in
+      *mergeable*)
+        counter_file="$state_dir/$pr.poll"
+        count=0
+        if [ -f "$counter_file" ]; then
+          count="$(cat "$counter_file")"
+        fi
+        len="$(jq ".\"$pr\".states | length" "$FAKE_GH_SCENARIO")"
+        idx="$count"
+        [ "$idx" -lt "$len" ] || idx=$((len - 1))
+        jq -c ".\"$pr\".states[$idx]" "$FAKE_GH_SCENARIO"
+        echo $((count + 1)) > "$counter_file"
+        ;;
+      *mergeStateStatus*)
+        jq -c ".\"$pr\".precheck" "$FAKE_GH_SCENARIO"
+        ;;
+      *mergeCommit*)
+        jq -c "{mergeCommit: {oid: .\"$pr\".mergeCommit}}" "$FAKE_GH_SCENARIO"
+        ;;
+      *baseRefName*)
+        jq -c "{baseRefName: .\"$pr\".baseRefName}" "$FAKE_GH_SCENARIO"
+        ;;
+      *headRefOid*)
+        jq -c "{headRefOid: .\"$pr\".headRefOid}" "$FAKE_GH_SCENARIO"
+        ;;
+      *)
+        echo "fake-gh: unsupported --json fields: $fields" >&2
+        exit 64
+        ;;
+    esac
+    ;;
+  ready)
+    ready="$(jq -r ".\"$pr\".ready // \"ok\"" "$FAKE_GH_SCENARIO")"
+    if [ "$ready" = "ok" ]; then
+      exit 0
+    fi
+    echo "fake-gh: pr ready refused for #$pr" >&2
+    exit 1
+    ;;
+  merge)
+    merge="$(jq -r ".\"$pr\".merge // \"ok\"" "$FAKE_GH_SCENARIO")"
+    if [ "$merge" = "ok" ]; then
+      exit 0
+    fi
+    echo "fake-gh: pr merge refused for #$pr" >&2
+    exit 1
+    ;;
+  *)
+    echo "fake-gh: unsupported pr subcommand: $sub" >&2
+    exit 64
+    ;;
+esac
