@@ -96,3 +96,4 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - Captain: "合併". Ready → checks pass → first merge call refused (S36 pattern, CLEAN then "requirements met, add --auto"), second call 15 s later merged → main bf1b4ba1. DEV-143 Done.
 - Next: rehearsal in the cloud workspace without the Captain (local-fake dependencies, providerCalls 0) before attempt 5.
+- Rehearsal (session 45399263, main bf1b4ba1, zero provider ops): steps 0–5 green; full run with the package's local fake → READY_FOR_INDEPENDENT_VALIDATION, journeyPassed true, providerCalls 0, deploys 1 (fake), cleanupComplete. test:netlify-package 109/110 in the cloud VM (read-only-online-build test; passes on macOS; not in the run's dependencies) → ticket filed. Attempt 5 awaits the Captain.
