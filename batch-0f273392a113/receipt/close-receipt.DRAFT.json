@@ -170,8 +170,7 @@
    "DEV-37": {
     "rounds": 0,
     "evidence_refusals": [],
-    "code_refusals": [],
-    "note": "never dispatched (carried); writer run without it — S47"
+    "code_refusals": []
    }
   }
  },
@@ -289,5 +288,5 @@
    "verify": 13
   }
  },
- "close_sha256": "3d65b439b3fe4f498d79e638a834c41a6907f9d0034abac1b4936a7a1a804fb9"
+ "close_sha256": "60531f836012437995411a9e7c4dc4e096bc8b260d25681d040e6b03779cb8d0"
 }
