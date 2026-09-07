@@ -72,3 +72,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - Captain: "合併". Ready → ci-gate CLEAN (CI does not run qnow-next; FO full run was the gate) → squash-merged → main ac59c26a. DEV-137 → Done.
 - DEV-36 rebase of #1174 dispatched with BASE ac59c26a, token dev36-2026-09-07 (brief: evidence/dispatch-DEV-36-rebase.md).
+
+## DEV-36 — rebase accepted for review (2026-09-07)
+
+- 65c0143a on #1174, base now main. Worker dropped 4 DEV-35 commits (superseded by #1180), kept 11; found and fixed EXPECTED_MIGRATIONS 8→10 in #1174's own runner file. Full npm test + full-run self-check green (providerCalls 0, deploys 0). FO measuring the worker's stated residual (test:headed-browser) rather than carrying it as untested.
