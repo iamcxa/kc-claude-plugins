@@ -1,0 +1,24 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "ab2fb2635f0ce205c59fc4e92c9315ade0af162195c0f2fc6ca605dd36e012e3",
+ "approver": "person:captain",
+ "approved_at": "2026-09-07T06:53:33Z",
+ "decision": "go",
+ "max_workspaces": 13,
+ "concurrency": 1,
+ "repair_rounds": 2,
+ "quote": "approve",
+ "quote_source": "Captain, chat, 2026-09-07: 「approve」 in reply to the FO's line 'go · 13 workspaces · concurrency 1 · repair 2 · Pilot' (3 build workers + 1 rebase worktree + 1 cloud + 2×4 repairs)",
+ "defaults": {
+  "findings_outside_brief": [
+   "security",
+   "data-loss",
+   "compatibility"
+  ],
+  "minimal_necessity_fail": "accepted_no_pr",
+  "moved_base": "rebase_and_accept",
+  "worker_blocker": "skip_issue_continue_batch",
+  "empty_reviewer": "fallback_to_fo_diff_read",
+  "pr_creation": "batch_approve_draft"
+ }
+}

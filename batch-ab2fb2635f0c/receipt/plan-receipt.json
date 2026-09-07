@@ -1,0 +1,126 @@
+{
+ "schema": "kc-plan-receipt/v1",
+ "code_repo": "iamcxa/qnow",
+ "base_branch": "main",
+ "project": {
+  "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
+  "name": "架構收斂與 POC 瘦身",
+  "user_value": "Kent obtains the QNow PoC acceptance receipt from one watched run on main, after the hosted runner lands through two reviewable PRs.",
+  "hypothesis": "If we land the staging-qualification work on main in two credential-free PRs and then run the acceptance once from main under a fresh authorization receipt, then the PoC closes with a receipt an independent validation can read, without a reverse merge and without an unwatched first provider run.",
+  "wedge": "Kent as FO on iamcxa/qnow only. This batch: DEV-114 first (merge station script, pre-batch blocker), then DEV-136 (support files PR), DEV-137 (hosted/ PR), DEV-36 rebased and merged, DEV-37 run once in a Conductor cloud workspace with the Captain watching. Not in it: DEV-132 (identity provider), the rest of the 48-commit branch not needed by hosted/.",
+  "outcome": "main carries hosted/ and its supporting files with credential-free evidence; #1174 is merged onto it; DEV-37 produces docs/evidence/qnow-poc-acceptance-receipt.json in one run with cleanup census 0; every merge in the batch goes through merge-station.sh.",
+  "exit": [
+   "DEV-114 merged and used for every merge in this batch.",
+   "DEV-136, DEV-137, DEV-36 merged on main with credential-free evidence.",
+   "DEV-37's acceptance receipt exists with cleanup census 0; DEV-37 Done."
+  ],
+  "outcome_hash": "sha256:c4df45610dfa70a62dbcf9099bf580c072ec834fa51123043771cb61b95507d2"
+ },
+ "cycle": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "milestones": [
+  {
+   "id": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+   "name": "QNow PoC acceptance: three hosted actors, one recorded run",
+   "journey": {
+    "persona": "Kent (FO)",
+    "start": "hosted/ exists only on a stale branch",
+    "end": "acceptance receipt in hand from a run on main",
+    "observable": "four merges through merge-station.sh, one DEV-37 run log, one receipt, census 0"
+   }
+  }
+ ],
+ "issues": {
+  "DEV-136": {
+   "id": "28ae685e-e965-4d8b-8506-fdb549841fb2",
+   "url": "https://linear.app/duckbase-co/issue/DEV-136/land-the-hosted-runners-supporting-files-on-main-netlify-identity",
+   "title": "DEV-136",
+   "branch": "feature/dev-136-land-the-hosted-runners-supporting-files-on-main-netlify",
+   "close_line": "Fixes DEV-136",
+   "profile": "pilot-product-slice",
+   "milestone": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+   "body": "## The problem\n\nThe hosted acceptance runner (`experiments/netlify-refine-poc/qnow-next/hosted/`, 26 files) and the rest of the staging-qualification work (48 commits, 92 files: 38 test files, netlify/ config, identity/, local/, one schema, one db, one api file) live only on `spacedock-ensign/qnow-next-hosted-staging-qualification`; main has none of it (0 files under hosted/). DEV-36 (#1174) is based on that branch and DEV-37 cannot run from main. Captain's rule (2026-09-07): work flows main → staging → prod, never the reverse. The 84-cycle qualification record is summarised in `batch-0f273392a113/handoff-hosted-staging-qualification.md` on kc-claude-plugins' state branch.\n\n## Accepted outcome\n\n**Scope split by the Captain (2026-09-07): this ticket is PR 1 of 2 — everything under experiments/netlify-refine-poc/qnow-next that hosted/ imports or its tests need, excluding hosted/ itself; DEV-137 is PR 2 (hosted/).**\n\nThe `hosted/` runner and what it needs (package scripts, netlify/ config, identity and local helpers, schema/db/api pieces it imports, its tests) land on main through PRs whose evidence is credential-free: `test:hosted-gates`, `test:netlify-package`, `test:unit`, `acceptance:hosted:full-run:self-check` (providerCalls 0), `type-check`; no provider call, no deploy. Scaffolding the record marks as superseded (cycle 77 runner logic, temporary runners) is not carried. Falsifier: a PR in the set needs a credential to pass its own checks, or main's existing suites regress.\n\n## Surfaces\n\nThis PR's own files (supporting files): `experiments/netlify-refine-poc/qnow-next/netlify/`, `experiments/netlify-refine-poc/qnow-next/identity/`, `experiments/netlify-refine-poc/qnow-next/local/`, `experiments/netlify-refine-poc/qnow-next/test/`.\n\n## Non-goals\n\n* Running the hosted journey (DEV-37).\n* Deciding customer identity (DEV-132).\n* Rebasing #1174 (its own step after this lands).\n\n## Acceptance criteria\n\n* **AC-1** `git ls-tree -r --name-only origin/main experiments/netlify-refine-poc/qnow-next/hosted | wc -l` prints 26 or more after merge; logged.\n* **AC-2** From `experiments/netlify-refine-poc/qnow-next` at the merge head: `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run test:unit`, `npm run type-check`, `npm run acceptance:hosted:full-run:self-check` each exit 0 with logs recorded.\n* **AC-3** `git diff --stat origin/main origin/spacedock-ensign/qnow-next-hosted-staging-qualification -- experiments/netlify-refine-poc/qnow-next/hosted | wc -l` prints 0 after merge.\n\nRe-verified: `git -C ~/conductor/repos/qnow ls-tree -r --name-only origin/main experiments/netlify-refine-poc/qnow-next/hosted | grep -q .` exit 1 2026-09-07",
+   "body_sha256": "a411c70dd3773e4d456e26e1ce0c9870d7dc2c1ae92b7e15c326126b6a038dab"
+  },
+  "DEV-137": {
+   "id": "6de7aa4a-e9c7-47c0-8a26-533c2909aaf8",
+   "url": "https://linear.app/duckbase-co/issue/DEV-137/land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr-2-of-2",
+   "title": "DEV-137",
+   "branch": "feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr",
+   "close_line": "Fixes DEV-137",
+   "profile": "pilot-product-slice",
+   "milestone": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+   "body": "## The problem\n\nContinuation of DEV-136 (PR 1 of 2). With the supporting files on main, `experiments/netlify-refine-poc/qnow-next/hosted/` (26 files: acceptance operator contract, Netlify session lifecycle with rollback binding, secret-safe readback, canary scan, deploy diagnostics, package entry point) can land as its own reviewable PR. Main has 0 files under hosted/.\n\n## Accepted outcome\n\n`hosted/` lands on main as one PR (cherry-picked from `spacedock-ensign/qnow-next-hosted-staging-qualification`, superseded cycle-77 runner logic excluded), with credential-free evidence: `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run acceptance:hosted:full-run:self-check` (providerCalls 0), `npm run type-check`; no provider call, no deploy. After it merges, #1174 (DEV-36) is rebased onto main.\n\n## Surfaces\n\nThis PR's own files (hosted runner): `experiments/netlify-refine-poc/qnow-next/hosted/acceptance-execution.ts`, `experiments/netlify-refine-poc/qnow-next/hosted/acceptance-full-run.mts`, `experiments/netlify-refine-poc/qnow-next/hosted/acceptance-netlify-session.ts`.\n\n## Non-goals\n\n* Running the hosted journey (DEV-37).\n* Any change to hosted/ behaviour beyond what the branch already has (#1174's fixes come with DEV-36).\n\n## Acceptance criteria\n\n* **AC-1** `git ls-tree -r --name-only origin/main experiments/netlify-refine-poc/qnow-next/hosted | wc -l` prints 26 or more after merge; logged.\n* **AC-2** From `experiments/netlify-refine-poc/qnow-next` at the merge head, the four commands above each exit 0 with logs recorded.\n* **AC-3** `git diff --stat origin/main origin/spacedock-ensign/qnow-next-hosted-staging-qualification -- experiments/netlify-refine-poc/qnow-next/hosted | wc -l` prints 0 after merge.\n\nRe-verified: `git -C ~/conductor/repos/qnow ls-tree -r --name-only origin/main experiments/netlify-refine-poc/qnow-next/hosted | grep -q .` exit 1 2026-09-07",
+   "body_sha256": "d4374a53816c26821b5a1c4a8ba6bb154f6862b9280e988ca235e959318273cf"
+  },
+  "DEV-36": {
+   "id": "4e5efffe-07d8-4b98-a512-1e9e646a7e73",
+   "url": "https://linear.app/duckbase-co/issue/DEV-36/建立-qnow-package-scoped-esm-hosted-journey-runner",
+   "title": "DEV-36",
+   "branch": "feature/dev-36-建立-qnow-package-scoped-esm-hosted-journey-runner",
+   "close_line": "Fixes DEV-36",
+   "profile": "pilot-product-slice",
+   "milestone": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+   "body": "## 目的\n\n把 Cycle 84 的 `/tmp/*.ts` runner 失敗收斂成 repository 內正式、可測試、可重複呼叫的 ESM entrypoint，避免 tsx 將 out-of-package TypeScript 判為 CommonJS。\n\n## 範圍\n\n* 在 `qnow-next` package 內新增 `.mts` 或 `.mjs` full-runner entrypoint 與 npm script。\n* 只組裝既有 secret-safe environment、Netlify session、fixture controller 與 headed journey adapters。\n* 使用 package-scoped ESM semantics；禁止依賴 `/tmp/*.ts` top-level await。\n* 加入零 provider contract test：module 可 instantiate、Playwright CommonJS-compatible load 可用、provider clients／browser／deploy 都未執行。\n* 保留 exact revision、one-deploy、first-failure cleanup 與 safe receipt contract。\n\n## 驗收\n\n* 從任意 cwd 呼叫正式 npm command 皆可完成 self-check。\n* `providerCalls: 0`，沒有 credential／URL／PII／raw error 輸出。\n* package、type-check、Node 24 artifact、fresh-clone parity 與 relevant gates 通過。\n\n## 不包含\n\n本票不執行 Netlify deploy 或正式三角色 hosted journey。\n\n## Accepted outcome\n\nThe package-scoped ESM hosted journey runner in PR iamcxa/qnow#1174 is merged with a review disposition and an e2e result recorded; its npm script runs from main with zero provider gates, as the PR's 驗收 states.\n\n## Non-goals\n\n* Adding journeys or actors beyond the runner entrypoint.\n* Any change to secrets handling.\n\n## Acceptance criteria\n\n* **AC-1** `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state` prints MERGED and `review/disposition-1174.json` exists in the batch record.\n* **AC-2** The runner's npm script named in the PR body runs at the merge head and exits 0 with its log recorded.\n* **AC-3** `git log --oneline origin/main | grep -c '#1174'` prints 1.\n\nRe-verified: `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state | grep -q OPEN` exit 0 2026-09-07",
+   "body_sha256": "19930e084813be12651c2f3c0f8bd3d1151c433a79da4781b092cd530e3341b2"
+  },
+  "DEV-37": {
+   "id": "1989cfdc-dda5-468a-a297-7b45f31afe46",
+   "url": "https://linear.app/duckbase-co/issue/DEV-37/執行-qnow-三角色-hosted-claimreadback-驗收",
+   "title": "DEV-37",
+   "branch": "feature/dev-37-執行-qnow-三角色-hosted-claim／readback-驗收",
+   "close_line": "Fixes DEV-37",
+   "profile": "pilot-product-slice",
+   "milestone": "661c2499-533b-4e9b-bd62-9ea42f5e7064",
+   "body": "## 目的\n\n完成 QNow hosted infrastructure 已通過後仍缺少的產品驗收：以三個真實 hosted Identity actors 證明 assignment、tenant isolation、exact-once claim race、遺失回應後 readback，以及完整清理。\n\n## 前置\n\n* DEV-35：Conductor Cloud headed Playwright preflight 通過。\n* DEV-36：package-scoped ESM full runner 通過所有零 provider gates。\n* fresh authorization receipt、exact site／rollback／runtime／zero remainder 綁定。\n\n## 單次執行範圍\n\n* 最多 1 個新 candidate、1 次 deploy；禁止 retry 或第二次 deploy。\n* 六個 production/functions secrets 僅在 memory 中持有；readback 採 safe structural receipt。\n* 建立 3 個 synthetic non-PII Identity users、3 assignments、2 tenants、2 branches、1 scheduled order。\n* headed browser 建立 3 個 isolated contexts。\n* 驗證 missing/malformed identity denial、inactive assignment 403、tenant-B denial。\n* reception A/B 同步 claim，結果必須恰好一次 HTTP 200、一次 HTTP 409。\n* 轉送真實 winner POST 後只丟棄 browser response；不得重送 POST。\n* winner 必須由 Mine、Detail 與 reload 讀回；DB 恰好 1 owner、1 immutable audit。\n* safe canary scan 不得出現 secret、PII、URL 或 raw provider error。\n\n## 清理驗收\n\nfirst failure 後只允許 cleanup：\n\n1. 刪除／reset exact run-owned rows 與 audit，census 0。\n2. 刪除 exact 3 users，census 0；stale token 回 401。\n3. 刪除 exact 6 environment keys並證明 absent。\n4. pointer 綁定正確時 restore admitted bootstrap-free rollback。\n5. 刪除 exact new candidate，API NotFound、immutable routes unavailable。\n6. link、clone、evidence、QNow containers 與 owned processes remainder 0。\n\n## 完成條件\n\n產出 revision-bound、secret-safe acceptance receipt，狀態可交給獨立 validation；本票不自行宣告正式產品上線。\n\n## 不包含\n\nOTP／invitation、客戶 SMS、LINE、credential rotation、snapshot restore、Supabase、production rollout、第二個 order 或第二輪 journey。\n\n## Accepted outcome\n\nOne recorded run, in a Conductor cloud workspace whose environment carries the six production/functions secrets, executes the 單次執行範圍 above exactly once (one candidate, one deploy, no retry) and produces the revision-bound, secret-safe acceptance receipt named in 完成條件, then performs the 清理驗收 steps to zero remainder; the receipt and the run log are stored in the qnow batch record and handed to independent validation. This ticket does not declare production launch.\n\n## Non-goals\n\n* Everything listed under 不包含 above.\n* A second deploy, a retry, or a second journey — a first failure ends the run and only cleanup follows.\n\n## Acceptance criteria\n\n* **AC-1** The run log records exactly one candidate and one deploy, the claim race outcome as one HTTP 200 and one HTTP 409, and the winner read back from Mine, Detail and reload; exit 0.\n* **AC-2** The acceptance receipt file `docs/evidence/qnow-poc-acceptance-receipt.json` exists in the qnow repo (committed by the run) and a copy in the batch record and a safe canary scan of it (script named in the run) prints zero hits for secret, PII, URL or raw provider error patterns.\n* **AC-3** The cleanup census script prints 0 for rows, users, environment keys and containers, and the stale token check returns 401; each logged.\n* **AC-4** `gh pr view 1174 --repo iamcxa/qnow --json state --jq .state` and the same for 1175 print MERGED before the run starts (prerequisite gate).\n\nRe-verified: `test -f /dev/null && gh api repos/iamcxa/qnow/contents/docs/evidence --jq 'map(.name)|join(\" \")' | grep -qi 'acceptance-receipt'` exit 1 2026-09-07",
+   "body_sha256": "addc4e080d5a49756c7f5290e31075c5a8fe669f382baa3105df6a0079f14457"
+  }
+ },
+ "edges": [
+  [
+   "DEV-136",
+   "DEV-137"
+  ],
+  [
+   "DEV-137",
+   "DEV-36"
+  ],
+  [
+   "DEV-137",
+   "DEV-37"
+  ],
+  [
+   "DEV-36",
+   "DEV-37"
+  ]
+ ],
+ "dispatch_order": [
+  "DEV-136",
+  "DEV-137",
+  "DEV-36",
+  "DEV-37"
+ ],
+ "lint": {
+  "schema": "kc-plan-lint/v1",
+  "pass": true,
+  "digest": "763519be070093300273301d4d819d8b073a20da8e6447fdeffad0ee08a72a04"
+ },
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "Doing nothing leaves hosted/ only on a branch nobody drives, DEV-36 unmergeable and DEV-37 unrunnable from main.",
+   "agreed": false
+  },
+  {
+   "id": "P2",
+   "statement": "The existing partial solution is the 48-commit branch and its 84-cycle record; kc-ship-flow's stations exist on main and a merge-station script is one ticket away.",
+   "agreed": false
+  },
+  {
+   "id": "P3",
+   "statement": "Premise falsifier — remove the approach (land on main, then one watched run): the outcome cannot hold, because the runner cannot run from main and an unwatched first provider run is the risk DEV-36's own report named.",
+   "agreed": false
+  }
+ ],
+ "rationale_sha256": "ededa1083992190ce6815403ca01fc692f57a158db1a62bb8958d62450ecc1de",
+ "receipt_sha256": "ab2fb2635f0ce205c59fc4e92c9315ade0af162195c0f2fc6ca605dd36e012e3"
+}
