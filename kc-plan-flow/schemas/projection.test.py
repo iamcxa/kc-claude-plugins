@@ -83,6 +83,54 @@ check("a plan-value issue is not admission-ready", not admitted,
       "it carries no Non-goals; kc-plan-detail writes those")
 
 
+# Section-scoped replacement is the whole safety property: a plan owns the sections it
+# renders and nothing else, so reconciling must not touch what a person or plan-detail wrote.
+LIVE = """**A defect. It delivers no user-visible value on its own; it protects DRC-4474.** Reason.
+
+## Accepted outcome
+
+The old outcome nobody updated.
+
+## Scope
+
+Hand-written, and not the plan's to touch.
+
+## Non-goals
+
+- Something plan-detail wrote.
+"""
+
+check("section_body reads a section", P.section_body(LIVE, "Accepted outcome") == "The old outcome nobody updated.")
+check("section_body returns None when absent", P.section_body(LIVE, "Integration proof") is None)
+
+fixed = P.replace_section(LIVE, "Accepted outcome", "The current outcome.")
+check("replace_section swaps the body", P.section_body(fixed, "Accepted outcome") == "The current outcome.")
+check("replace_section keeps later sections", P.section_body(fixed, "Scope") == "Hand-written, and not the plan's to touch.")
+check("replace_section keeps the Non-goals bullet", "- Something plan-detail wrote." in fixed)
+check("replace_section keeps the leading declaration", fixed.startswith("**A defect."))
+check("replace_section still parses through the real reader",
+      LA.section(fixed, "Accepted outcome") == "The current outcome.")
+
+missing = LIVE.replace("## Accepted outcome\n\nThe old outcome nobody updated.\n\n", "")
+inserted = P.replace_section(missing, "Accepted outcome", "A fresh outcome.")
+check("an absent section is inserted, not refused", LA.section(inserted, "Accepted outcome") == "A fresh outcome.")
+check("insertion lands before the first existing section", inserted.index("## Accepted outcome") < inserted.index("## Scope"))
+check("insertion keeps the leading declaration", inserted.startswith("**A defect."))
+check("insertion keeps the trailing sections", LA.section(inserted, "Scope").startswith("Hand-written"))
+
+drifted = P.issue_drift(LIVE, defect, milestone)
+check("drift is found on a stale outcome", [d[0] for d in drifted] == ["Accepted outcome"])
+check("drift reports both sides", drifted[0][1] == "The old outcome nobody updated."
+      and drifted[0][2] == defect["acceptance"])
+
+aligned = P.replace_section(LIVE, "Accepted outcome", defect["acceptance"])
+check("a reconciled issue no longer drifts", P.issue_drift(aligned, defect, milestone) == [])
+
+wrong_kind = LIVE.replace("**A defect.", "**A thing.")
+check("a lost kind declaration is drift",
+      "kind declaration" in [d[0] for d in P.issue_drift(wrong_kind, defect, milestone)])
+
+
 def refuses(text):
     try:
         P.check_re_verified(text)

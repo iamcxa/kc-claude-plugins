@@ -70,6 +70,54 @@ def check_re_verified(text):
             die(f"Re-verified line names an issue, which the tracker rewrites into a link: {line}")
 
 
+def section_body(text, heading):
+    matches = list(re.finditer(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE))
+    if len(matches) != 1:
+        return None
+    start = matches[0].end()
+    following = re.search(r"^##\s+", text[start:], re.MULTILINE)
+    end = start + following.start() if following else len(text)
+    return text[start:end].strip()
+
+
+def replace_section(text, heading, body):
+    matches = list(re.finditer(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE))
+    if not matches:
+        first = re.search(r"^##\s+", text, re.MULTILINE)
+        block = f"## {heading}\n\n{body}\n\n"
+        return text[:first.start()] + block + text[first.start():] if first else \
+            (text.rstrip() + "\n\n" + block).strip()
+    if len(matches) != 1:
+        die(f"cannot reconcile {heading!r}: the description carries {len(matches)} of them")
+    start = matches[0].end()
+    following = re.search(r"^##\s+", text[start:], re.MULTILINE)
+    end = start + following.start() if following else len(text)
+    return text[:start] + "\n\n" + body + ("\n\n" if following else "\n") + text[end:]
+
+
+def owned_sections(issue, milestone):
+    owned = {"Accepted outcome": issue["acceptance"]}
+    if issue["kind"] == "value":
+        proof = milestone["integration_proof"]
+        owned["Integration proof"] = f"{proof['proof']}\n\n**Owner: {proof['owner']}.**"
+    return owned
+
+
+def issue_drift(live_description, issue, milestone):
+    drifted = []
+    for heading, planned in owned_sections(issue, milestone).items():
+        found = section_body(live_description, heading)
+        if found is None:
+            drifted.append((heading, "absent or duplicated", planned))
+        elif found.strip() != planned.strip():
+            drifted.append((heading, found, planned))
+    if issue["kind"] != "value":
+        first = live_description.strip().split("\n\n")[0]
+        if not first.startswith(f"**A {issue['kind']}."):
+            drifted.append(("kind declaration", first[:60], f"**A {issue['kind']}. ..."))
+    return drifted
+
+
 def user_value_content(current, user_value):
     if "\n" in user_value.strip():
         die("user_value must be one line")
@@ -105,7 +153,7 @@ def issue_body(issue, milestone, value_identifier):
 PROJECT_Q = """query($id: String!) { project(id: $id) {
   id name content
   projectMilestones(first: 50) { nodes { id name targetDate description } }
-  issues(first: 250) { nodes { id identifier title } } } }"""
+  issues(first: 250) { nodes { id identifier title description } } } }"""
 
 
 def main():
@@ -113,7 +161,10 @@ def main():
         print(__doc__)
         return 2
     document, project_id = pathlib.Path(sys.argv[1]), sys.argv[2]
-    apply = "--apply" in sys.argv[3:]
+    flags = sys.argv[3:]
+    apply = "--apply" in flags
+    reconcile = "--reconcile" in flags
+    apply = apply or reconcile
     validate(document)
     plan = json.loads(document.read_text())
     if plan["schema"] != "kc-plan-value/v1":
@@ -122,13 +173,15 @@ def main():
     project = gql(PROJECT_Q, {"id": project_id})["project"]
     if not project:
         die(f"no project {project_id}")
-    existing_titles = {n["title"]: n["identifier"] for n in project["issues"]["nodes"]}
+    existing = {n["title"]: n for n in project["issues"]["nodes"]}
+    existing_titles = {t: n["identifier"] for t, n in existing.items()}
     existing_milestones = {n["name"]: n for n in project["projectMilestones"]["nodes"]}
 
     writes = []
     content = user_value_content(project["content"], plan["project"]["user_value"])
     if content != (project["content"] or ""):
-        writes.append(("project content", project_id, {"content": content}))
+        kind = "project content" if not (project["content"] or "").strip() else "project content DRIFT"
+        writes.append((kind, project_id, {"content": content}))
 
     for milestone in plan["milestones"]:
         found = existing_milestones.get(milestone["name"])
@@ -139,9 +192,11 @@ def main():
         }
         if not found:
             writes.append(("milestone create", milestone["name"], fields))
-        elif any(found.get(k) != v for k, v in
-                 (("targetDate", fields["targetDate"]), ("description", fields["description"]))):
-            writes.append(("milestone update", found["id"], fields))
+        else:
+            differs = [k for k in ("targetDate", "description") if found.get(k) != fields[k]]
+            if differs:
+                was = {k: found.get(k) for k in differs}
+                writes.append(("milestone DRIFT", found["id"], {**fields, "live": was}))
 
     by_milestone = {m["name"]: m for m in plan["milestones"]}
     value_identifier = None
@@ -155,22 +210,36 @@ def main():
         if issue["kind"] != "value" and not issue.get("protects"):
             die(f"a {issue['kind']} must name the value issue it protects: {issue['title']!r}")
         body = issue_body(issue, milestone, value_identifier)
-        if issue["title"] in existing_titles:
-            writes.append(("issue exists, skipped", existing_titles[issue["title"]], issue["title"]))
+        if issue["title"] in existing:
+            node = existing[issue["title"]]
+            drifted = issue_drift(node["description"] or "", issue, milestone)
+            if drifted:
+                writes.append(("issue DRIFT", node["identifier"],
+                               {"sections": [d[0] for d in drifted], "detail": drifted}))
+            else:
+                writes.append(("issue aligned", node["identifier"], issue["title"]))
         else:
             writes.append(("issue create", issue["milestone"], {"title": issue["title"], "description": body}))
 
     for kind, target, payload in writes:
-        summary = payload if isinstance(payload, str) else json.dumps(payload)[:160]
-        print(f"{'APPLY' if apply else 'DRY  '} {kind:22} {target:44} {summary}")
+        summary = payload if isinstance(payload, str) else json.dumps(payload)[:150]
+        print(f"{'APPLY' if apply else 'DRY  '} {kind:24} {target:44} {summary}")
+        if kind == "issue DRIFT":
+            for heading, live, planned in payload["detail"]:
+                print(f"      {heading}\n        live    {live[:110]}\n        planned {planned[:110]}")
 
     created = sum(1 for k, _, _ in writes if k == "issue create")
-    print(f"\n{created} issues to create, 0 admitted to a cycle.")
+    drifting = [w for w in writes if "DRIFT" in w[0]]
+    print(f"\n{created} issues to create, {len(drifting)} drifting, 0 admitted to a cycle.")
     print("plan-lint judges only admitted issues, so these are unexamined until a cycle takes them.")
     print("They carry no Non-goals and no acceptance criteria either; kc-plan-detail writes those.")
+    if drifting and not reconcile:
+        print("\nDrift is reported, never repaired by default. The plan owns only the sections it")
+        print("renders; the rest of a description belongs to kc-plan-detail or to a person.")
+        print("Re-run with --reconcile to replace those sections and nothing else.")
 
     if not apply:
-        print("\nDry run. Re-run with --apply to perform these writes.")
+        print("\nDry run. Re-run with --apply to create, or --reconcile to also repair drift.")
         return 0
 
     team = gql("query($id: String!) { project(id: $id) { teams(first: 1) { nodes { id } } } }",
@@ -181,7 +250,10 @@ def main():
     milestone_ids = {name: node["id"] for name, node in existing_milestones.items()}
 
     for kind, target, payload in writes:
-        if kind == "project content":
+        if kind in ("project content", "project content DRIFT"):
+            if kind.endswith("DRIFT") and not reconcile:
+                print(f"left  {kind:24} {target}")
+                continue
             gql("mutation($i: String!, $c: String!) { projectUpdate(id: $i, input: {content: $c}) { success } }",
                 {"i": target, "c": payload["content"]})
         elif kind == "milestone create":
@@ -191,10 +263,28 @@ def main():
                        {"p": project_id, "n": payload["name"], "t": payload["targetDate"],
                         "d": payload["description"]})
             milestone_ids[payload["name"]] = node["projectMilestoneCreate"]["projectMilestone"]["id"]
-        elif kind == "milestone update":
+        elif kind == "milestone DRIFT":
+            if not reconcile:
+                print(f"left  {kind:24} {target}")
+                continue
             gql("mutation($i: String!, $t: TimelessDate, $d: String) {"
                 " projectMilestoneUpdate(id: $i, input: {targetDate: $t, description: $d}) { success } }",
                 {"i": target, "t": payload["targetDate"], "d": payload["description"]})
+        elif kind == "issue DRIFT":
+            if not reconcile:
+                print(f"left  {kind:24} {target}")
+                continue
+            node = gql("query($i: String!) { issue(id: $i) { id description } }", {"i": target})["issue"]
+            body = node["description"] or ""
+            for heading, _, planned in payload["detail"]:
+                if heading == "kind declaration":
+                    die(f"{target} has lost its kind declaration; repair that by hand, not by section replace")
+                planned = planned
+                body = replace_section(body, heading, planned)
+            gql("mutation($i: String!, $d: String!) { issueUpdate(id: $i, input: {description: $d}) { success } }",
+                {"i": node["id"], "d": body})
+        elif kind == "issue aligned":
+            continue
         elif kind == "issue create":
             milestone_id = milestone_ids.get(target)
             if not milestone_id:
