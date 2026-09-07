@@ -1,0 +1,77 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/qnow#1175",
+ "head": "c0c31459",
+ "reviewers": {
+  "silent-failure-hunter": 5,
+  "code-reviewer": 1,
+  "tob-security-reviewer": 2
+ },
+ "findings": [
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs",
+   "line": 436,
+   "category": "correctness",
+   "quote": "throw failed('HEADED_BROWSER_SMOKE_FAILED');",
+   "summary": "Smoke child's stderr is captured but never surfaced in the receipt; non-launch failures collapse to a bare id.",
+   "failure_scenario": "Xvfb present but cannot start; the receipt shows only smokeExitCode 1."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-smoke.mjs",
+   "line": 27,
+   "category": "correctness",
+   "quote": "} catch {",
+   "summary": "chromium.launch error text discarded before exit(LAUNCH_FAILED).",
+   "failure_scenario": "Missing shared library after an image update is undiagnosable."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-smoke.mjs",
+   "line": 75,
+   "category": "correctness",
+   "quote": "for (const context of opened.reverse()) await context.close();",
+   "summary": "finally without try: a close error replaces the original failure.",
+   "failure_scenario": "Readback mismatch masked by a context.close() throw."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs",
+   "line": 142,
+   "category": "correctness",
+   "quote": "} catch {",
+   "summary": "Bare catch around executablePath() downgrades an unexpected throw to 'no managed payload'.",
+   "failure_scenario": "A Playwright upgrade break masked as benign absence."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs",
+   "line": 527,
+   "category": "test-coverage",
+   "quote": "running.kill('SIGTERM');",
+   "summary": "Only SIGTERM is exercised end-to-end; SIGINT (Ctrl-C) handler registration is never proven.",
+   "failure_scenario": "A SIGINT-branch regression leaves Xvfb/Chrome running."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs",
+   "line": 169,
+   "category": "compatibility",
+   "quote": "  for (const entry of readdirSync('/proc')) {",
+   "summary": "processTable() reads /proc with no platform guard; on a host without /proc (macOS with a stale DISPLAY) the smoke crashes outside try/finally instead of returning the designed UNAVAILABLE code, and the browser it launched has no verified cleanup.",
+   "failure_scenario": "macOS + leftover XQuartz DISPLAY + Playwright Chromium present \u2192 uncaught ENOENT in the smoke."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs",
+   "line": 313,
+   "category": "correctness",
+   "quote": "    liveProcessGroups.add(child.pid);",
+   "summary": "child.pid recorded before the async spawn 'error' event; an undefined pid reaches process.kill(-undefined) in the interrupt handler and throws inside it.",
+   "failure_scenario": "SIGINT in the spawn-error window dies via uncaught exception instead of the structured receipt and exit 130."
+  },
+  {
+   "file": "experiments/netlify-refine-poc/qnow-next/LOCAL_STACK.md",
+   "line": 85,
+   "category": "correctness",
+   "quote": "the session already owns, and retries the next candidate \u2014 the `xvfb-run`",
+   "summary": "Doc says switch display then browser; the planner tries both browsers on the current display before switching displays (the test encodes display-outer/browser-inner).",
+   "failure_scenario": "An operator concludes xvfb-run was tried when it never was."
+  }
+ ],
+ "test_command": "Cloud image only: env -u DISPLAY npm run diagnose:headed-browser; env -u DISPLAY npm run test:headed-browser (reads /proc). Any host: node --check local/headed-browser-*.mjs; bash -n scripts/conductor-cloud-setup.sh. Never run the full conductor-cloud-setup.sh as verification (it resets a DB). Residual: zombie rows in scanProcessGroups on a non-reaping PID 1."
+}
