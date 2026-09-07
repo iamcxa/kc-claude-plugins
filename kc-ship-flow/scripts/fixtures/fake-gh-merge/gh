@@ -6,12 +6,14 @@
 # Scenario JSON shape, keyed by PR number as a string:
 #   {"<pr>": {
 #     "baseRefName": "...", "headRefOid": "<40-hex>",
-#     "precheck": {"mergeStateStatus": "..."},
+#     "precheck": {"mergeable": "...", "mergeStateStatus": "..."},
 #     "states": [{"mergeable": "...", "mergeStateStatus": "...", "statusCheckRollup": [...]}, ...],
-#     "ready": "ok"|"refuse", "merge": "ok"|"refuse", "mergeCommit": "<40-hex>"
+#     "ready": "ok"|"refuse", "merge": "ok"|"refuse",
+#     "state": "MERGED", "mergeCommit": "<40-hex>"
 #   }}
 # `states` advances one entry per poll call for that PR (clamped to the last
-# entry once exhausted); `precheck` is read once, never advanced.
+# entry once exhausted); `precheck` is read once, never advanced. `state`
+# defaults to "MERGED" when absent so existing scenarios need no change.
 set -euo pipefail
 
 : "${FAKE_GH_SCENARIO:?FAKE_GH_SCENARIO must be set}"
@@ -38,7 +40,7 @@ case "$sub" in
       esac
     done
     case "$fields" in
-      *mergeable*)
+      'mergeable,mergeStateStatus,statusCheckRollup')
         counter_file="$state_dir/$pr.poll"
         count=0
         if [ -f "$counter_file" ]; then
@@ -50,16 +52,16 @@ case "$sub" in
         jq -c ".\"$pr\".states[$idx]" "$FAKE_GH_SCENARIO"
         echo $((count + 1)) > "$counter_file"
         ;;
-      *mergeStateStatus*)
+      'mergeable,mergeStateStatus')
         jq -c ".\"$pr\".precheck" "$FAKE_GH_SCENARIO"
         ;;
-      *mergeCommit*)
-        jq -c "{mergeCommit: {oid: .\"$pr\".mergeCommit}}" "$FAKE_GH_SCENARIO"
+      'state,mergeCommit')
+        jq -c "{state: (.\"$pr\".state // \"MERGED\"), mergeCommit: {oid: .\"$pr\".mergeCommit}}" "$FAKE_GH_SCENARIO"
         ;;
-      *baseRefName*)
+      'baseRefName')
         jq -c "{baseRefName: .\"$pr\".baseRefName}" "$FAKE_GH_SCENARIO"
         ;;
-      *headRefOid*)
+      'headRefOid')
         jq -c "{headRefOid: .\"$pr\".headRefOid}" "$FAKE_GH_SCENARIO"
         ;;
       *)

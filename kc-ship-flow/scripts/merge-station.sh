@@ -5,16 +5,19 @@
 #
 # Usage: merge-station.sh --trunk <branch> [--accepted <file>]
 #                          [--override "<reason>"] [--repo owner/name]
-#                          [--wait-seconds <n>] <pr>...
+#                          [--wait-seconds <n>] [--poll-seconds <n>] <pr>...
 #
 # Exit codes: 0 every PR merged, one `MERGED: #<pr> <mergeCommit>` line per
 # PR printed in order; 2 a usage error, a PR whose baseRefName is not
 # --trunk, or (absent --override) a PR whose headRefOid is not listed in
 # --accepted; 3 a PR's mergeable/mergeStateStatus never reaches clean within
-# --wait-seconds, or any statusCheckRollup entry reads conclusion FAILURE;
-# 4 `gh pr merge` itself fails for a PR -- no later PR is touched; 5 the PR
-# after a landing reads mergeStateStatus CONFLICTING (its base moved) --
-# refuses to resolve it and stops.
+# --wait-seconds, or a statusCheckRollup entry reads a failing CheckRun
+# conclusion (FAILURE, TIMED_OUT, CANCELLED) or a failing legacy
+# StatusContext state (FAILURE, ERROR); 4 `gh pr merge` itself fails for a PR
+# -- no later PR is touched; 5 the PR after a landing reads mergeStateStatus
+# DIRTY or mergeable CONFLICTING (its base moved) -- refuses to resolve it
+# and stops; 6 the post-merge read does not confirm state MERGED with a
+# 40-hex mergeCommit oid; 7 `gh pr ready` itself fails for a PR.
 set -euo pipefail
 
 GH=${GH:-gh}
@@ -27,7 +30,7 @@ usage() {
   cat >&2 <<'EOF'
 usage: merge-station.sh --trunk <branch> [--accepted <file>]
                          [--override "<reason>"] [--repo owner/name]
-                         [--wait-seconds <n>] <pr>...
+                         [--wait-seconds <n>] [--poll-seconds <n>] <pr>...
 EOF
 }
 
@@ -36,7 +39,7 @@ accepted_file=""
 override_reason=""
 repo=""
 wait_seconds=600
-poll_seconds="${MERGE_STATION_POLL_SECONDS:-5}"
+poll_seconds="${MERGE_STATION_POLL_SECONDS:-15}"
 prs=()
 
 while [ "$#" -gt 0 ]; do
@@ -56,6 +59,9 @@ while [ "$#" -gt 0 ]; do
     --wait-seconds)
       [ "$#" -ge 2 ] || die 2 "USAGE: --wait-seconds requires a value"
       wait_seconds="$2"; shift 2 ;;
+    --poll-seconds)
+      [ "$#" -ge 2 ] || die 2 "USAGE: --poll-seconds requires a value"
+      poll_seconds="$2"; shift 2 ;;
     -*)
       usage; die 2 "USAGE: unknown flag: $1" ;;
     *)
@@ -100,7 +106,7 @@ fi
 # (3) mark every PR ready before merging any.
 for pr in "${prs[@]}"; do
   log "marking ready: pr #$pr"
-  "$GH" pr ready "$pr" "${repo_args[@]}"
+  "$GH" pr ready "$pr" "${repo_args[@]}" || die 7 "READY_FAILED: pr #$pr"
 done
 
 wait_until_clean() {
@@ -110,8 +116,11 @@ wait_until_clean() {
     resp="$(gh_view_field "$pr" 'mergeable,mergeStateStatus,statusCheckRollup')"
     mergeable="$(echo "$resp" | jq -r '.mergeable')"
     state="$(echo "$resp" | jq -r '.mergeStateStatus')"
-    failures="$(echo "$resp" | jq '[.statusCheckRollup[]? | select(.conclusion == "FAILURE")] | length')"
-    [ "$failures" -eq 0 ] || die 3 "CHECK_FAILURE: pr #$pr has a statusCheckRollup entry with conclusion FAILURE"
+    failures="$(echo "$resp" | jq '[.statusCheckRollup[]? | select(
+        ((.conclusion // "") as $c | ($c == "FAILURE" or $c == "TIMED_OUT" or $c == "CANCELLED"))
+        or ((.state // "") as $s | ($s == "FAILURE" or $s == "ERROR"))
+      )] | length')"
+    [ "$failures" -eq 0 ] || die 3 "CHECK_FAILURE: pr #$pr has a statusCheckRollup entry with a failing conclusion or state"
     if [ "$mergeable" = "MERGEABLE" ] && { [ "$state" = "CLEAN" ] || [ "$state" = "UNSTABLE" ]; }; then
       return 0
     fi
@@ -130,8 +139,10 @@ wait_until_clean() {
 first=true
 for pr in "${prs[@]}"; do
   if [ "$first" = false ]; then
-    state="$(gh_view_field "$pr" mergeStateStatus | jq -r '.mergeStateStatus')"
-    if [ "$state" = "CONFLICTING" ]; then
+    resp="$(gh_view_field "$pr" 'mergeable,mergeStateStatus')"
+    precheck_mergeable="$(echo "$resp" | jq -r '.mergeable')"
+    precheck_state="$(echo "$resp" | jq -r '.mergeStateStatus')"
+    if [ "$precheck_state" = "DIRTY" ] || [ "$precheck_mergeable" = "CONFLICTING" ]; then
       echo "MOVED_BASE: $pr — merge $trunk into its branch, then re-run"
       exit 5
     fi
@@ -144,6 +155,11 @@ for pr in "${prs[@]}"; do
   "$GH" pr merge "$pr" "${repo_args[@]}" --squash --delete-branch \
     || die 4 "MERGE_FAILED: pr #$pr"
 
-  mergeCommit="$(gh_view_field "$pr" mergeCommit | jq -r '.mergeCommit.oid // empty')"
+  merge_resp="$(gh_view_field "$pr" 'state,mergeCommit')"
+  merge_state="$(echo "$merge_resp" | jq -r '.state')"
+  mergeCommit="$(echo "$merge_resp" | jq -r '.mergeCommit.oid // empty')"
+  if [ "$merge_state" != "MERGED" ] || ! printf '%s' "$mergeCommit" | grep -qE '^[0-9a-f]{40}$'; then
+    die 6 "MERGE_UNVERIFIED: pr #$pr state=$merge_state mergeCommit=$mergeCommit"
+  fi
   echo "MERGED: #$pr $mergeCommit"
 done

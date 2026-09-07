@@ -19,7 +19,7 @@ fail() { printf 'case %s: FAIL - %s\n' "$1" "$2"; FAIL=$((FAIL + 1)); }
 run_ms() {
   local scenario="$1" log="$2"; shift 2
   : > "$log"
-  FAKE_GH_SCENARIO="$scenario" FAKE_GH_LOG="$log" PATH="$FAKE_GH_DIR:$PATH" MERGE_STATION_POLL_SECONDS=0 \
+  FAKE_GH_SCENARIO="$scenario" FAKE_GH_LOG="$log" PATH="$FAKE_GH_DIR:$PATH" \
     bash "$MERGE_STATION" "$@"
 }
 
@@ -89,19 +89,19 @@ cat > "$scenario_cg" <<'JSON'
     "baseRefName": "main",
     "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
     "ready": "ok", "merge": "ok",
-    "mergeCommit": "1111111111111111111111111111111111111c"
+    "mergeCommit": "111111111111111111111111111111111111111c"
   },
   "302": {
     "baseRefName": "main",
-    "precheck": {"mergeStateStatus": "CLEAN"},
+    "precheck": {"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN"},
     "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
     "ready": "ok", "merge": "ok",
-    "mergeCommit": "2222222222222222222222222222222222222c"
+    "mergeCommit": "222222222222222222222222222222222222222c"
   }
 }
 JSON
 log_cg="$TMP_DIR/cg.log"
-out_cg="$(run_ms "$scenario_cg" "$log_cg" --trunk main 301 302 2>&1)"
+out_cg="$(run_ms "$scenario_cg" "$log_cg" --trunk main --poll-seconds 0 301 302 2>&1)"
 rc_cg=$?
 
 last_ready="$(last_line_matching '^pr ready' "$log_cg")"
@@ -113,8 +113,8 @@ else
   fail c "marks all ready before merging any"
 fi
 
-expected_order="MERGED: #301 1111111111111111111111111111111111111c
-MERGED: #302 2222222222222222222222222222222222222c"
+expected_order="MERGED: #301 111111111111111111111111111111111111111c
+MERGED: #302 222222222222222222222222222222222222222c"
 if [ "$rc_cg" -eq 0 ] && [ "$(grep '^MERGED:' <<<"$out_cg")" = "$expected_order" ]; then
   pass g "happy path prints MERGED lines in order"
 else
@@ -136,12 +136,12 @@ cat > "$scenario_d" <<'JSON'
     "baseRefName": "main",
     "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
     "ready": "ok", "merge": "ok",
-    "mergeCommit": "4444444444444444444444444444444444444c"
+    "mergeCommit": "666666666666666666666666666666666666666c"
   }
 }
 JSON
 log_d="$TMP_DIR/d.log"
-out_d="$(run_ms "$scenario_d" "$log_d" --trunk main 401 402 2>&1)"
+out_d="$(run_ms "$scenario_d" "$log_d" --trunk main --poll-seconds 0 401 402 2>&1)"
 rc_d=$?
 if [ "$rc_d" -eq 4 ] && grep -q "MERGE_FAILED" <<<"$out_d" && grep -q "401" <<<"$out_d" && ! grep -qE '^pr merge 402' "$log_d"; then
   pass d "first merge refused exits 4 naming the PR and never merges the next"
@@ -150,8 +150,8 @@ else
   fail d "first merge refused exits 4 naming the PR and never merges the next"
 fi
 
-# --- case (e): next PR CONFLICTING after a landing -> exit 5 with
-# MOVED_BASE ---
+# --- case (e): next PR reads mergeStateStatus DIRTY / mergeable CONFLICTING
+# after a landing -> exit 5 with MOVED_BASE ---
 scenario_e="$TMP_DIR/e.json"
 cat > "$scenario_e" <<'JSON'
 {
@@ -159,27 +159,27 @@ cat > "$scenario_e" <<'JSON'
     "baseRefName": "main",
     "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
     "ready": "ok", "merge": "ok",
-    "mergeCommit": "5555555555555555555555555555555555555c"
+    "mergeCommit": "555555555555555555555555555555555555555c"
   },
   "502": {
     "baseRefName": "main",
-    "precheck": {"mergeStateStatus": "CONFLICTING"},
+    "precheck": {"mergeable": "CONFLICTING", "mergeStateStatus": "DIRTY"},
     "ready": "ok"
   }
 }
 JSON
 log_e="$TMP_DIR/e.log"
-out_e="$(run_ms "$scenario_e" "$log_e" --trunk main 501 502 2>&1)"
+out_e="$(run_ms "$scenario_e" "$log_e" --trunk main --poll-seconds 0 501 502 2>&1)"
 rc_e=$?
-if [ "$rc_e" -eq 5 ] && grep -q "MERGED: #501 5555555555555555555555555555555555555c" <<<"$out_e" \
+if [ "$rc_e" -eq 5 ] && grep -q "MERGED: #501 555555555555555555555555555555555555555c" <<<"$out_e" \
     && grep -q "MOVED_BASE: 502" <<<"$out_e" && ! grep -qE '^pr merge 502' "$log_e"; then
-  pass e "next PR CONFLICTING after a landing exits 5 with MOVED_BASE"
+  pass e "next PR reads DIRTY/CONFLICTING after a landing, exits 5 with MOVED_BASE"
 else
   printf '  out=%s\n  log=%s\n' "$out_e" "$(cat "$log_e")"
-  fail e "next PR CONFLICTING after a landing exits 5 with MOVED_BASE"
+  fail e "next PR reads DIRTY/CONFLICTING after a landing, exits 5 with MOVED_BASE"
 fi
 
-# --- case (f): a check with FAILURE -> exit 3 ---
+# --- case (f): a CheckRun-shaped conclusion FAILURE -> exit 3 ---
 scenario_f="$TMP_DIR/f.json"
 cat > "$scenario_f" <<'JSON'
 {
@@ -191,13 +191,207 @@ cat > "$scenario_f" <<'JSON'
 }
 JSON
 log_f="$TMP_DIR/f.log"
-out_f="$(run_ms "$scenario_f" "$log_f" --trunk main 601 2>&1)"
+out_f="$(run_ms "$scenario_f" "$log_f" --trunk main --poll-seconds 0 601 2>&1)"
 rc_f=$?
 if [ "$rc_f" -eq 3 ] && grep -q "CHECK_FAILURE" <<<"$out_f" && ! grep -qE '^pr merge' "$log_f"; then
-  pass f "a status check with conclusion FAILURE exits 3"
+  pass f "a CheckRun conclusion FAILURE exits 3"
 else
   printf '  out=%s\n  log=%s\n' "$out_f" "$(cat "$log_f")"
-  fail f "a status check with conclusion FAILURE exits 3"
+  fail f "a CheckRun conclusion FAILURE exits 3"
+fi
+
+# --- case (h): a legacy StatusContext-shaped failure (state, no conclusion)
+# -> exit 3 ---
+scenario_h="$TMP_DIR/h.json"
+cat > "$scenario_h" <<'JSON'
+{
+  "602": {
+    "baseRefName": "main",
+    "states": [{"mergeable": "UNSTABLE", "mergeStateStatus": "UNSTABLE", "statusCheckRollup": [{"state": "ERROR"}]}],
+    "ready": "ok"
+  }
+}
+JSON
+log_h="$TMP_DIR/h.log"
+out_h="$(run_ms "$scenario_h" "$log_h" --trunk main --poll-seconds 0 602 2>&1)"
+rc_h=$?
+if [ "$rc_h" -eq 3 ] && grep -q "CHECK_FAILURE" <<<"$out_h" && ! grep -qE '^pr merge' "$log_h"; then
+  pass h "a legacy StatusContext state ERROR (no conclusion) exits 3"
+else
+  printf '  out=%s\n  log=%s\n' "$out_h" "$(cat "$log_h")"
+  fail h "a legacy StatusContext state ERROR (no conclusion) exits 3"
+fi
+
+# --- case (i): not-clean on the first poll, clean on the second -> merges
+# after the second poll ---
+scenario_i="$TMP_DIR/i.json"
+cat > "$scenario_i" <<'JSON'
+{
+  "701": {
+    "baseRefName": "main",
+    "states": [
+      {"mergeable": "UNKNOWN", "mergeStateStatus": "UNKNOWN", "statusCheckRollup": []},
+      {"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}
+    ],
+    "ready": "ok", "merge": "ok",
+    "mergeCommit": "777777777777777777777777777777777777777c"
+  }
+}
+JSON
+log_i="$TMP_DIR/i.log"
+out_i="$(run_ms "$scenario_i" "$log_i" --trunk main --poll-seconds 0 701 2>&1)"
+rc_i=$?
+poll_calls_i="$(grep -cE '^pr view 701 --json mergeable,mergeStateStatus,statusCheckRollup' "$log_i")"
+if [ "$rc_i" -eq 0 ] && grep -q "MERGED: #701 777777777777777777777777777777777777777c" <<<"$out_i" && [ "$poll_calls_i" -ge 2 ]; then
+  pass i "merges after a second poll observes clean"
+else
+  printf '  out=%s\n  log=%s\n' "$out_i" "$(cat "$log_i")"
+  fail i "merges after a second poll observes clean"
+fi
+
+# --- case (j): never becomes clean -> WAIT_TIMEOUT exit 3 naming the PR ---
+scenario_j="$TMP_DIR/j.json"
+cat > "$scenario_j" <<'JSON'
+{
+  "801": {
+    "baseRefName": "main",
+    "states": [{"mergeable": "UNKNOWN", "mergeStateStatus": "UNKNOWN", "statusCheckRollup": []}],
+    "ready": "ok"
+  }
+}
+JSON
+log_j="$TMP_DIR/j.log"
+out_j="$(run_ms "$scenario_j" "$log_j" --trunk main --wait-seconds 2 --poll-seconds 1 801 2>&1)"
+rc_j=$?
+if [ "$rc_j" -eq 3 ] && grep -q "WAIT_TIMEOUT" <<<"$out_j" && grep -q "801" <<<"$out_j"; then
+  pass j "never-clean PR times out with WAIT_TIMEOUT naming the PR"
+else
+  printf '  out=%s\n' "$out_j"
+  fail j "never-clean PR times out with WAIT_TIMEOUT naming the PR"
+fi
+
+# --- case (k): an unknown flag exits 2 with a USAGE token ---
+scenario_k="$TMP_DIR/k.json"
+echo '{}' > "$scenario_k"
+log_k="$TMP_DIR/k.log"
+out_k="$(run_ms "$scenario_k" "$log_k" --trunk main --bogus-flag 901 2>&1)"
+rc_k=$?
+if [ "$rc_k" -eq 2 ] && grep -q "USAGE: unknown flag: --bogus-flag" <<<"$out_k"; then
+  pass k "an unknown flag exits 2 with a USAGE token"
+else
+  printf '  out=%s\n' "$out_k"
+  fail k "an unknown flag exits 2 with a USAGE token"
+fi
+
+# --- case (l): missing --trunk exits 2 with a USAGE token ---
+log_l="$TMP_DIR/l.log"
+out_l="$(run_ms "$scenario_k" "$log_l" 902 2>&1)"
+rc_l=$?
+if [ "$rc_l" -eq 2 ] && grep -q "USAGE: --trunk is required" <<<"$out_l"; then
+  pass l "missing --trunk exits 2 with a USAGE token"
+else
+  printf '  out=%s\n' "$out_l"
+  fail l "missing --trunk exits 2 with a USAGE token"
+fi
+
+# --- case (m): zero PRs exits 2 with a USAGE token ---
+log_m="$TMP_DIR/m.log"
+out_m="$(run_ms "$scenario_k" "$log_m" --trunk main 2>&1)"
+rc_m=$?
+if [ "$rc_m" -eq 2 ] && grep -q "USAGE: at least one PR is required" <<<"$out_m"; then
+  pass m "zero PRs exits 2 with a USAGE token"
+else
+  printf '  out=%s\n' "$out_m"
+  fail m "zero PRs exits 2 with a USAGE token"
+fi
+
+# --- case (n): a missing --accepted file exits 2 with a USAGE token ---
+scenario_n="$TMP_DIR/n.json"
+cat > "$scenario_n" <<'JSON'
+{"903": {"baseRefName": "main"}}
+JSON
+log_n="$TMP_DIR/n.log"
+out_n="$(run_ms "$scenario_n" "$log_n" --trunk main --accepted "$TMP_DIR/does-not-exist.txt" 903 2>&1)"
+rc_n=$?
+if [ "$rc_n" -eq 2 ] && grep -q "USAGE: --accepted file not found" <<<"$out_n"; then
+  pass n "a missing --accepted file exits 2 with a USAGE token"
+else
+  printf '  out=%s\n' "$out_n"
+  fail n "a missing --accepted file exits 2 with a USAGE token"
+fi
+
+# --- case (o): --repo owner/name is passed on every gh call ---
+scenario_o="$TMP_DIR/o.json"
+cat > "$scenario_o" <<'JSON'
+{
+  "1001": {
+    "baseRefName": "main",
+    "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
+    "ready": "ok", "merge": "ok",
+    "mergeCommit": "333333333333333333333333333333333333333c"
+  },
+  "1002": {
+    "baseRefName": "main",
+    "precheck": {"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN"},
+    "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
+    "ready": "ok", "merge": "ok",
+    "mergeCommit": "444444444444444444444444444444444444444c"
+  }
+}
+JSON
+log_o="$TMP_DIR/o.log"
+out_o="$(run_ms "$scenario_o" "$log_o" --trunk main --repo acme/widgets --poll-seconds 0 1001 1002 2>&1)"
+rc_o=$?
+total_lines_o="$(wc -l < "$log_o" | tr -d ' ')"
+repo_lines_o="$(grep -c -- '--repo acme/widgets' "$log_o")"
+if [ "$rc_o" -eq 0 ] && [ "$total_lines_o" -gt 0 ] && [ "$total_lines_o" = "$repo_lines_o" ]; then
+  pass o "--repo owner/name is present on every gh call"
+else
+  printf '  out=%s\n  log=%s\n' "$out_o" "$(cat "$log_o")"
+  fail o "--repo owner/name is present on every gh call"
+fi
+
+# --- case (p): the post-merge read does not confirm MERGED with a 40-hex
+# oid -> exit 6 MERGE_UNVERIFIED ---
+scenario_p="$TMP_DIR/p.json"
+cat > "$scenario_p" <<'JSON'
+{
+  "1101": {
+    "baseRefName": "main",
+    "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
+    "ready": "ok", "merge": "ok",
+    "state": "OPEN"
+  }
+}
+JSON
+log_p="$TMP_DIR/p.log"
+out_p="$(run_ms "$scenario_p" "$log_p" --trunk main --poll-seconds 0 1101 2>&1)"
+rc_p=$?
+if [ "$rc_p" -eq 6 ] && grep -q "MERGE_UNVERIFIED" <<<"$out_p" && grep -q "1101" <<<"$out_p"; then
+  pass p "an unmerged/invalid post-merge read exits 6 with MERGE_UNVERIFIED"
+else
+  printf '  out=%s\n' "$out_p"
+  fail p "an unmerged/invalid post-merge read exits 6 with MERGE_UNVERIFIED"
+fi
+
+# --- case (q): gh pr ready itself fails -> exit 7 READY_FAILED ---
+scenario_q="$TMP_DIR/q.json"
+cat > "$scenario_q" <<'JSON'
+{
+  "1201": {
+    "baseRefName": "main",
+    "ready": "refuse"
+  }
+}
+JSON
+log_q="$TMP_DIR/q.log"
+out_q="$(run_ms "$scenario_q" "$log_q" --trunk main --poll-seconds 0 1201 2>&1)"
+rc_q=$?
+if [ "$rc_q" -eq 7 ] && grep -q "READY_FAILED" <<<"$out_q" && grep -q "1201" <<<"$out_q" && ! grep -qE '^pr merge' "$log_q"; then
+  pass q "gh pr ready itself failing exits 7 with READY_FAILED"
+else
+  printf '  out=%s\n  log=%s\n' "$out_q" "$(cat "$log_q")"
+  fail q "gh pr ready itself failing exits 7 with READY_FAILED"
 fi
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
