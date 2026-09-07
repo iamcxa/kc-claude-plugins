@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case required-fields|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -112,6 +112,57 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+assert_event_validation() { # $1=description $2=event $3=expected diagnostic (empty for valid)
+  local output rc expected_rc=1 expected_counts='{"valid":0,"invalid":1}' expected_stderr
+  local stderr_file="$TEST_INPUT_ROOT/required-fields.stderr"
+  expected_stderr="review-runtime: line 1: $3"
+  if [ -z "$3" ]; then
+    expected_rc=0
+    expected_counts='{"valid":1,"invalid":0}'
+    expected_stderr=''
+  fi
+  output="$(printf '%s\n' "$2" | bash "$RUNTIME" validate --event-file - 2>"$stderr_file")"
+  rc=$?
+  assert_eq "$1 exit status" "$expected_rc" "$rc"
+  assert_eq "$1 result counts" "$expected_counts" "$output"
+  assert_eq "$1 diagnostic" "$expected_stderr" "$(<"$stderr_file")"
+}
+
+run_required_field_tests() {
+  local event field mutated expected
+  event="$(head -n 1 "$FIXTURE")"
+  assert_event_validation 'complete required fields' "$event" ''
+  for field in schema event_id run_id review_key repository pr_number base_sha head_sha config_hash sequence occurred_at event_type payload payload_sha256 integrity_sha256; do
+    mutated="$(jq -c --arg field "$field" 'del(.[$field])' <<<"$event")"
+    assert_event_validation "missing $field" "$mutated" missing_required_field
+    mutated="$(jq -c --arg field "$field" '.[$field]=null' <<<"$event")"
+    expected=invalid_field_type
+    [ "$field" = schema ] && expected=invalid_schema
+    assert_event_validation "present null $field" "$mutated" "$expected"
+  done
+  assert_event_validation 'empty object' '{}' missing_required_field
+  mutated="$(jq -c 'del(.integrity_sha256) | .schema="unsupported"' <<<"$event")"
+  assert_event_validation 'missing field precedes invalid schema' "$mutated" missing_required_field
+  mutated="$(jq -c '.pr_number="42"' <<<"$event")"
+  assert_event_validation 'present wrong-type field' "$mutated" invalid_field_type
+  mutated="$(jq -c '.extra=true' <<<"$event")"
+  assert_event_validation 'complete fields with unknown member' "$mutated" unsupported_event_envelope
+  assert_event_validation 'duplicate member precedes missing fields' '{"schema":"a","schema":"b"}' duplicate_json_member
+  assert_event_validation 'malformed JSON precedes missing fields' '{' invalid_json
+  for mutated in 'null' '[]' '"text"' '42' 'false'; do
+    assert_event_validation "non-object $mutated" "$mutated" invalid_json
+  done
+}
+
+if [ "$CASE_FILTER" = all ] || [ "$CASE_FILTER" = required-fields ]; then
+  run_required_field_tests
+  if [ "$CASE_FILTER" = required-fields ]; then
+    printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+    [ "$FAIL" -eq 0 ]
+    exit $?
+  fi
+fi
 
 run_profiled_receipt_tests() {
   local start observation result event_file run_id rc mutated

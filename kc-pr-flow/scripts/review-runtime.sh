@@ -928,7 +928,7 @@ review_runtime_validate_line() {
   # falls through to the per-line check exactly as before -- which is also what
   # keeps the dependency-failure status coming from the same place.
   local known_unique="${2:-}"
-  local required field schema event_type run_id review_key repository pr_number
+  local required schema event_type run_id review_key repository pr_number
   local base_sha head_sha config_hash sequence occurred_at payload payload_sha256
   local expected_payload_sha256 expected_event_id expected_review_key
   local without_integrity expected_integrity_sha256 integrity_sha256
@@ -959,12 +959,12 @@ review_runtime_validate_line() {
   fi
 
   required='schema event_id run_id review_key repository pr_number base_sha head_sha config_hash sequence occurred_at event_type payload payload_sha256 integrity_sha256'
-  for field in $required; do
-    if ! printf '%s' "$line" | jq -e --arg field "$field" 'has($field)' >/dev/null 2>&1; then
-      printf '%s' 'missing_required_field'
-      return 1
-    fi
-  done
+  if ! printf '%s' "$line" | jq -e --arg required "$required" '
+    . as $event | ($required | split(" ")) | all(.[]; . as $field | $event | has($field))
+  ' >/dev/null 2>&1; then
+    printf '%s' 'missing_required_field'
+    return 1
+  fi
 
   schema="$(printf '%s' "$line" | jq -r '.schema')"
   if [ "$schema" != 'kc-pr-flow.review-event/v1' ]; then

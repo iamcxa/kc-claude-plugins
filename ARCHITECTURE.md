@@ -223,11 +223,11 @@ invocation timing and provider reports have no approval authority and do not
 add runtime event types. Private invocation artifacts are distinct from the
 durable metadata-only runtime log.
 
-The existing ablation runner owns committed whole-plugin arms, frozen six-row
-admission, host/tool/effort/timeout pins, symmetric configuration reports, and
-sealed arm-hidden adjudication. Its Pilot comparison is separate from the
-historical permutation statistic. Outer and capability-attempt costs share one
-per-run reservation; missing provider usage cannot become an exact cost claim.
+The original ablation runner remains a separate instrument; it does not own the
+supervised Lite comparison. The operator retains frozen versions and inputs,
+observed start/end messages, complete review outputs, blind quality judgments,
+and actual provider usage under the protocol spec's evaluation rules. Missing
+usage remains unknown. Runtime traces do not authorize a speed or cost claim.
 
 ### Interactive components and data flow
 

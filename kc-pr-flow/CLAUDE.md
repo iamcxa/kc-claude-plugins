@@ -52,8 +52,8 @@ malformed structure, unsafe constructs, breakout payloads, and size caps.
 
 ### Typed Review Runtime
 
-Arm timing covers local preparation through confirmation-ready validation; trusted
-measurement admission remains blocked (see docs/review-runtime.md).
+Lite acceptance uses operator-observed start/end messages, not automated runner
+timings; see docs/review-runtime.md for the measurement boundary.
 
 **Profiled Lite trigger:** both typed and profiled review flags must be exact
 `on` before dispatch. The skill calls `scripts/review-capability.py`; schema and
@@ -62,8 +62,8 @@ catalog contracts live in `schemas/review-capability-v1.schema.json` and
 invocation-artifact privacy and rollout limits. The runtime reference remains
 the event/confirmation/posting authority; capability planning is outside it.
 Tests: `python3 scripts/review-capability.test.py`, runtime `--case
-profiled-receipt`, and ablation `--case pilot`. No paid admission or evaluation
-until a fixed budget is approved; the empty admission corpus fails closed.
+profiled-receipt`, and the original `scripts/review-ablation.test.sh` suite.
+Paid admission or evaluation requires a separately approved fixed budget.
 
 `kc-pr-review` has one post-collation observer seam before its existing confirmation gate. It is off
 by default and enabled only by `KC_PR_FLOW_REVIEW_SHADOW=on`. The Bash 3.2 + `jq` runtime uses a

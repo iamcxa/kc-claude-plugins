@@ -581,15 +581,8 @@ review_ablation_main() {
   local command="${1:-}"
   [ "$#" -gt 0 ] && shift
   case "$command" in
-    pilot-arm|pilot-compare) python3 "$(review_ablation_here)/review-ablation-core.py" "$command" "$@" ;;
     arm) review_ablation_arm "$@" ;;
-    run)
-      if [ "${1:-}" = '--pilot' ]; then
-        shift
-        python3 "$(review_ablation_here)/review-ablation-core.py" pilot-run "$@"
-      else
-        review_ablation_run "$@"
-      fi ;;
+    run) review_ablation_run "$@" ;;
     compare) review_ablation_compare "$@" ;;
     *) review_ablation_usage ;;
   esac

@@ -60,8 +60,8 @@ head without checking out or deleting any branch.
 
 ### Typed Review Runtime
 
-Arm timing covers local preparation through confirmation-ready validation; trusted
-measurement admission remains blocked (see docs/review-runtime.md).
+Lite acceptance uses operator-observed start/end messages, not automated runner
+timings; see docs/review-runtime.md for the measurement boundary.
 
 The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
 and `KC_PR_FLOW_PROFILED_REVIEW=on`. It plans required questions before collecting
@@ -69,8 +69,8 @@ selected evidence, then returns to the existing typed confirmation and posting
 owners. Standard/Full remain on the ordinary route; Custom is unavailable.
 See [runtime usage](docs/review-runtime.md#opt-in-profiled-lite-review) and the
 closed contracts in `schemas/review-capability-v1.schema.json`; the matching
-catalog is the sole requiredness authority. `review-ablation.sh pilot-arm` and
-`pilot-compare` recover the existing experiment harness, not a new review service.
+catalog is the sole requiredness authority. The original `review-ablation.sh`
+tool remains separate from the supervised Lite comparison.
 No blind promotion or measured review-speed improvement is claimed.
 
 `KC_PR_FLOW_REVIEW_SHADOW=on` enables one fail-open observer after final review collation and before

@@ -369,34 +369,22 @@ After recording a bound `ManualFallback` array, use `--finalize-dir RUN_DIR
 --fallbacks-file FILE`. Finalization never re-dispatches or re-samples route flags,
 and a sealed receipt cannot be finalized twice. Blind runs refuse this pause.
 
-The existing `review-ablation.sh run --pilot` also owns non-scored experiment
-units. `--unit-kind admission --arm control --unit-input FILE` accepts the six
-candidate identity fields (`slot`, `role`, `repository`, `pr_number`, `base_sha`,
-`head_sha`) before corpus freeze; `--planner-arm-dir` pins the independent
-treatment Planner. Both admissions must observe the complete Lite mode tuple.
-`--unit-kind adjudication --unit-input FILE` receives only one normalized
-two-sample blind envelope, never its mapping directory, and uses no tools.
-Both use the same `--cost-ledger`, `--budget`, `--out-dir`, model, effort and
-timeout reservation/finalization owner as arms. The comparison requires six
-costed admissions and five matching costed adjudications; backup attempts stay
-in the same directory and budget. Findings retain their canonical comparison
-fields; the blind summary is uniformly generated from their count, and the
-recommendation must be APPROVE, COMMENT or REQUEST_CHANGES. Repeated blind,
-seal and compare phases refuse without replacing existing sealed artifacts.
-
 Ambiguous repeated quote anchors stay in the review body without an invented
 inline line. Audit clocks remain Python integer nanoseconds without a floating
-point safe-integer bound; their differences, not their epoch, measure elapsed time.
+point safe-integer bound; they describe local work, not the acceptance interval.
 
-Every attempted unit retains a v4 receipt. `known_cost_usd` preserves reported
-subtotals; incomplete usage leaves `cost_usd: null` and is never scoreable.
-Unknown costs keep the full reservation, and reported overspend increases the
-charge used for later admission. Per-call `--max-budget-usd` is requested, not a
-claim that a provider cannot exceed it: post-call checks reject such samples
-and subsequent over-budget launches, but cannot undo incurred cost.
+Lite acceptance uses the operator-supervised start-message to completed-review
+end-message interval defined in the [protocol spec](../../docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md#blind-evaluation-and-promotion).
+The operator retains observed endpoints and complete outputs, freezes versions,
+inputs and run conditions, and applies independent blind quality scoring before
+comparing times. Required coverage and all five-pair quality/time thresholds
+remain in that spec. Missing provider usage is unknown; the operator must obtain
+a separate fixed budget before any model-based experiment.
 
-Arm wallclock_ms covers local input/checkout/material preparation, host execution,
-and confirmation-ready validation; pilot_invoke measures only the host interval.
-Budget setup, receipt writing, human waits, posting and adjudication are excluded.
-Worker-proof records remain unverified, so the integrity blocker still prevents
-speed claims. Do not backfill or mix historical host-only and full-arm timings.
+The branch-added automatic Pilot commands and comparator are withdrawn. The
+original ablation tool remains independently testable with
+`bash scripts/review-ablation.test.sh`; protocol regressions use
+`python3 scripts/review-capability.test.py`. Historical Pilot results and the
+unresolved record-integrity failure retain their original meaning; withdrawal
+does not repair that failure. Neither those results nor synthetic fixture times
+certify the supervised comparison or establish review-speed improvement.

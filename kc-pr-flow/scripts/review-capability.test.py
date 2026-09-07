@@ -13,7 +13,6 @@ import sys
 import tempfile
 import time
 import unittest
-from types import SimpleNamespace
 from unittest.mock import patch
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -25,7 +24,6 @@ def module(name, path):
 
 
 protocol = module("capability", HERE / "review-capability.py")
-core = module("ablation", HERE / "review-ablation-core.py")
 
 
 class PlannerTests(unittest.TestCase):
@@ -435,21 +433,13 @@ class PlannerTests(unittest.TestCase):
                         {"request": request, "provider_envelope": envelope}
                     ),
                 )
+                self.assertEqual(envelope["total_cost_usd"], 0.01)
+                self.assertEqual(envelope["usage"]["input_tokens"], 10)
+                self.assertEqual(envelope["usage"]["output_tokens"], 2)
             finished = protocol.finish(prepared, results)
             self.assertEqual(finished["decision"]["coverage"], "complete")
             self.assertTrue(finished["decision"]["approve_eligible"])
             directory = pathlib.Path(prepared["directory"])
-            protocol.store(directory / "prepared.json", prepared)
-            protocol.store(directory / "audit.json", prepared["audit"])
-            metrics = core.pilot_telemetry(directory, "fixture")
-            self.assertAlmostEqual(metrics["capability_cost_usd"], len(requests) * 0.01)
-            self.assertEqual(metrics["capability_tokens"], len(requests) * 12)
-            self.assertRaises(SystemExit, core.pilot_telemetry, directory, "different-model")
-            provider = next(directory.glob("provider-*.json"))
-            envelope = provider.read_bytes()
-            provider.write_text("null")
-            self.assertRaises(SystemExit, core.pilot_telemetry, directory, "fixture")
-            provider.write_bytes(envelope)
             event_file = next((directory / "state").rglob("events.jsonl"))
             identity = prepared["identity"]
             payload_hash = "f" * 64
@@ -574,34 +564,20 @@ class PlannerTests(unittest.TestCase):
                              ("INVALIDATED", "configuration_change"))
             self.assertEqual(terminal["identity"], prepared["identity"])
 
-    def test_terminal_attempt_keeps_identity_and_partial_cost_without_a_seal(self):
+    def test_terminal_attempt_keeps_identity_without_sealing_the_receipt(self):
         with self.prepared_results() as (prepared, _):
             protocol.dispatch(prepared, [sys.executable, "-c", "print('null')"])
             repo, directory = prepared["repository_path"], pathlib.Path(prepared["directory"])
+            event_file = next((directory / "state").rglob("events.jsonl"))
+            before = event_file.read_bytes()
             protocol.git(repo, "checkout", "--detach", self.identity["base_sha"])
             terminal = protocol.collate(prepared, [])
             protocol.git(repo, "checkout", "--detach", self.identity["head_sha"])
-            for name, value in (("prepared", prepared), ("audit", prepared["audit"]), ("result", terminal)):
-                protocol.store(directory / (name + ".json"), value)
-            run = directory.parent / "terminal-arm"
-            run.mkdir()
-            (run / "protocol").symlink_to(directory, target_is_directory=True)
-            args = SimpleNamespace(arm="treatment", arm_dir=HERE.parent, slot=1, effort="low", model="fixture")
-            manifest = {"pr":self.identity, "arm_manifest":{}, "activation_environment":{},
-                        "unit_kind":"arm", "arm":"treatment", "driver_sha256":"f" * 64}
-            host = {"modelUsage":{"fixture":{}}, "total_cost_usd":0.1,
-                    "usage":{"input_tokens":1,"output_tokens":1,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}
-            with patch.object(core, "pilot_invoke", return_value=(host, 10)), patch.object(core, "pilot_arm_guard", return_value={}):
-                result = core.pilot_attempt(manifest, run, lambda: core.pilot_execute(
-                    args, manifest, {"max_cost_usd":1}, {}, run, repo, True,
-                    pathlib.Path(sys.executable), HERE / "review-ablation-driver-prompt.md",
-                    review_started_ns=core.time.monotonic_ns(),
-                ))
-            self.assertEqual(result["run_terminal"], terminal)
+            protocol.validate(terminal, "RunTerminal")
             self.assertEqual(terminal["reason"], "identity_change")
-            self.assertEqual(result["known_cost_usd"], 0.1)
-            self.assertEqual(result["cost_status"], "incomplete")
-            self.assertIsNone(result["cost_usd"])
+            self.assertEqual(terminal["identity"], prepared["identity"])
+            self.assertNotIn("decision", terminal)
+            self.assertEqual(event_file.read_bytes(), before)
 
     def test_selected_material_tampering_and_unassigned_answers_refuse(self):
         with self.prepared_results() as (prepared, results):
@@ -752,7 +728,7 @@ class PlannerTests(unittest.TestCase):
                 protocol.finish(prepared, [])["reason"], "receipt_incomplete"
             )
 
-    def test_failed_and_retried_provider_usage_is_never_skipped(self):
+    def test_failed_and_retried_provider_reports_are_retained(self):
         for recover in (False, True):
             with (
                 self.subTest(recover=recover),
@@ -778,29 +754,32 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                     prepared, [sys.executable, "-c", program, str(directory)]
                 )
                 collated = protocol.collate(prepared, returned)
-                protocol.audit(prepared, "collated", collated)
-                for name, value in (
-                    ("prepared", prepared),
-                    ("audit", prepared["audit"]),
-                    ("policy", collated["policy"]),
-                ):
-                    protocol.store(directory / (name + ".json"), value)
-                metrics = core.pilot_telemetry(directory, "fixture")
-                with patch.object(core, "__file__", "/nonexistent/other-runner.py"):
+                requests = protocol.requests(prepared)
+                events = [e for e in prepared["audit"] if e["event_type"] == "invoked"]
+                self.assertEqual(len(events), 2 * len(requests))
+                self.assertEqual(len(returned), len(requests) if recover else 0)
+                self.assertEqual(len(collated["observation"]["lanes"]), len(events))
+                for request in requests:
+                    capability = request["capability"]
                     self.assertEqual(
-                        core.pilot_telemetry(directory, "fixture", arm_dir=HERE.parent),
-                        metrics,
+                        [a["result"] for a in prepared["attempts"][capability]],
+                        ["transient_failure", "succeeded" if recover else "terminal_failure"],
                     )
-                count = len(protocol.requests(prepared))
-                self.assertEqual(metrics["capability_cost_status"], "incomplete")
-                self.assertEqual(
-                    metrics["capability_unknown_attempts"],
-                    count if recover else 2 * count,
-                )
-                self.assertAlmostEqual(
-                    metrics["capability_cost_usd"], count * 0.01 if recover else 0
-                )
-                self.assertEqual(metrics["retry_count"], count)
+                    for ordinal in (1, 2):
+                        raw = (directory / f"provider-{capability}-{ordinal}.raw").read_text()
+                        envelope = protocol.read_json(directory / f"provider-{capability}-{ordinal}.json")
+                        self.assertEqual(json.loads(raw), envelope)
+                        if ordinal == 1 or not recover:
+                            self.assertEqual(raw, "null\n")
+                            self.assertIsNone(envelope)
+                        else:
+                            self.assertEqual(envelope["total_cost_usd"], 0.01)
+                            self.assertEqual(envelope["usage"]["input_tokens"], 10)
+                            self.assertEqual(envelope["usage"]["output_tokens"], 2)
+                        event = next(e for e in events if e["capability"] == capability and e["attempt"] == ordinal)
+                        self.assertEqual(event["payload_sha256"], protocol.digest(
+                            {"request": request, "provider_envelope": envelope}
+                        ))
 
     def test_unquoted_critical_is_advisory_not_a_blocker(self):
         with self.prepared_results() as (prepared, results):

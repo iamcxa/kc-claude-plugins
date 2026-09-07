@@ -3,6 +3,10 @@
 - **Date:** 2026-09-05
 - **Product:** `kc-pr-flow`
 - **Design revision accepted:** 2026-09-07, Captain chat `確認`, following the complete revised flow plan.
+- **Measurement revision accepted:** 2026-09-07, Captain chat `那就這樣繼續`, following the start-message to completed-review-message definition.
+- **Pilot automation withdrawal accepted:** 2026-09-07, Captain chat `同意`, approving the presented replacement scope without increasing limits.
+- **Required-field consolidation accepted:** 2026-09-07, Captain chat `批准`, approving the bounded code-and-test optimization after the local development trial.
+- **Local submission packaging accepted:** 2026-09-07, Captain chat `可以`, approving two local commits: the prior automation withdrawal with required-field consolidation, followed by goal/reviewer integration with its runtime repair. No push or merge is authorized.
 
 ## Revision authority and delivery sequence
 
@@ -14,13 +18,46 @@ Historical reports retain their original meaning; earlier review PASS results do
 not validate this revision. The work item's validation status and historical stage
 pin remain unchanged, and the expired pin exception is not renewed.
 
+The later measurement acceptance replaces the automated-runner prerequisite with
+the supervised comparison defined below. This changes the measurement owner and
+interval, not the quality thresholds or product scope. That acceptance alone
+does not authorize product implementation, paid runs, or workflow advancement.
+
+The subsequent withdrawal approval permits a bounded local change in the existing
+task worktree: remove this branch's automatic Pilot runner, admission, telemetry,
+join/comparator, driver and CLI additions from the five ablation/evaluation files;
+remove tests solely for that withdrawn path; and decouple mixed product tests in
+`review-capability.test.py` without deleting their product assertions. Preserve
+the original ablation tool, product validators, failure/retry evidence, and any
+CI setup still needed by retained tests. Repair affected claims in this spec,
+the plugin README, CLAUDE and runtime guide, and root architecture context.
+Historical artifacts remain recoverable from prior commits and their work records;
+withdrawal does not repair or pass the known integrity failure. This approval
+does not restart the broader Lite implementation, change shared workflow state or
+the old stage pin, authorize paid runs, or raise the limits below.
+
+The later consolidation approval permits replacing the 15 required-field queries
+inside `review_runtime_validate_line` with one query in `review-runtime.sh`, and
+adding parity/missing-field cases to `review-runtime.test.sh`. Preserve the field
+list, diagnostic/status, validation order and all other validation phases. Run
+the full runtime and capability suites and repeat the local development fixture.
+Reconcile only affected existing documentation; add no schema, workflow, service,
+storage change or default activation. This bounded local optimization does not
+restart the broader Lite implementation or grant shared-state, old-pin, paid-run,
+posting or merge authority. Existing implementation limits remain unchanged.
+
+The later submission acceptance permits those two local commits after verification.
+It supersedes the preceding commit stops for this packaging step, not their
+implementation limits or the unchanged external-review, spend, shared-state,
+historical-pin, push, posting and release boundaries.
+
 | Accepted design delta | Preserved boundary |
 |---|---|
 | Separate capability contracts from model-process grouping; measure batching and parallel execution before fixing the arrangement. | Every required question retains an accountable capability and validated answer. |
 | Give the General Reviewer evidence-bound accept/reject/unresolved judgment, with retained raw contributions and reasons. | Deterministic coverage, confirmed-blocker, confirmation, and posting authority remain in place. |
 | Supply explicit goal evidence and substantive blind-adjudication material. | Missing support remains incomplete; no undeclared retrieval or executable expansion. |
 | Admit ordinary Lite-eligible fixes, features, and refactors without the mixed-only classification restriction. | Unmodified legacy control, frozen per-arm configuration, five effective pairs, and all quality/time gates. |
-| Calibrate measurement, then test saving mechanisms, integrate Lite, and run the held-out blind evaluation. | Development samples cannot count as final blind samples or justify promotion. |
+| Observe start/end messages, test saving mechanisms, integrate Lite, and run the held-out blind evaluation. | Development samples cannot count as final blind samples or justify promotion. |
 
 The approved outcome remains at least five ordinary PR pairs, median time reduced
 by at least 33.3%, at least three pairs individually meeting that threshold, no
@@ -32,12 +69,12 @@ publication, merge, release, or implementation-limit increase is authorized here
 
 Delivery proceeds in this order; these are evidence dependencies, not new approval gates:
 
-1. **Calibrate the instrument.** Demonstrate that the measured worker cannot forge,
-   overwrite, preplant, or substitute authoritative timing/identity/outcome records.
-   Test failure, timeout, and cancellation as well as success. Same-authority file
-   hashes are insufficient; name and test the protecting boundary before crediting
-   a run. The existing integrity blocker stays open until that proof exists. Any
-   remedy requiring new isolation authority returns a bounded proposal first.
+1. **Confirm observable timing.** Use the Captain's start message and the
+   assistant's delivered complete review/end message, checked against retained
+   platform timestamps or an external stopwatch. Keep the automated runner's
+   timing and comparator out of the acceptance calculation; its integrity failure
+   is not repaired or reclassified. Repairing that unused measurement path is not
+   a prerequisite for this supervised comparison. No new isolation is authorized.
    Calibrate the independent judge on known defects, false alarms, and insufficient
    evidence, including human-checked examples, before using it for promotion.
 2. **Test the saving mechanism.** Use separate development samples to compare shared
@@ -99,7 +136,7 @@ request ends executable Lite as `ABORTED_INCOMPLETE` with reason
 | Current runtime capability policy | Deterministic Protocol Projector | Accepted terminals and results project into one `capability-policy/v1`. |
 | Authority-bearing runtime receipt | Deterministic Receipt Projector | Fail-closed existing event append/replay seam; shadow mode remains diagnostic only. |
 | Human evidence-bound capability fallback | Existing interactive human | `manual-capability-result/v1` with verified frozen-identity evidence. |
-| Blind experiment execution and provenance | Existing `review-ablation` runner | Frozen corpus, whole-tree arm manifests, identical driver, runtime receipts. |
+| Supervised experiment identity, timing and admission | External operator | Frozen PR/version bindings, retained start/end observations and complete-result checks; no worker-authored timing. |
 | Blind quality adjudication | Independent adjudicator | Sealed substantive evidence, arm-hidden envelopes, and quality-before-timing record. |
 | Review confirmation | Existing human confirmation gate | Existing `InteractiveConfirmation` boundary. |
 | GitHub posting and readback | Existing posting adapter | Existing authorization and once-only posting boundary. |
@@ -271,7 +308,7 @@ existing `KC_PR_FLOW_REVIEW_TYPED` switch. The profiled Lite path is selected
 only when both values are exactly `on`. Unset, `off`, unknown values, or
 `KC_PR_FLOW_PROFILED_REVIEW=on` while `KC_PR_FLOW_REVIEW_TYPED` is not exactly
 `on` select the unchanged legacy route for that fresh invocation. The route
-cannot change during that invocation. The ablation runner sets and records both
+cannot change during that invocation. The supervised operator sets and records both
 values explicitly and never inherits ambient values.
 
 ## Question bank and capability mapping
@@ -688,66 +725,51 @@ question remains incomplete.
 
 ## Blind evaluation and promotion
 
-The existing `review-ablation` harness remains the sole experiment runner and
-provenance owner. V1 recovers its frozen-corpus validation, pristine checkouts,
-arm manifests, byte-identical driver prompt, runtime-reported model id,
-no-posting/no-mutation guards, confirmation-ready stop, usage, cost, and
-wall-clock receipts. It does not reuse the existing alpha-0.05
-`anchor_set`/`severity_mix`/`tokens` comparator as the Pilot verdict.
+The operator runs a one-off supervised comparison and retains the original
+messages, outputs and timestamp observations outside the worker's editable
+review artifacts. The acceptance table is an operator-checked record, not a new
+service, schema, ledger or product component. A fresh reader must be able to
+recompute its durations and quality decision from those retained observations.
 
-The Pilot updates the byte-identical driver stop from the end of Step 6a to the
-moment the Step 6c confirmation request has been generated, before human input.
-Both arms therefore pay every step needed to become confirmation-ready. For
-Pilot runs, the byte-identical driver emits
-`kc-pr-flow.ablation-driver-receipt/v1`, which retains the existing v3 fields and
-adds the symmetric configuration and retry reports. The runner, not the prompt, wraps it as
-`kc-pr-flow.ablation-run/v4`. Control records `protocol_mode: legacy` and
-`coverage: not_applicable`. The byte-identical driver receipt output is extended
-symmetrically with the six-key `review_config.modes` observed by each arm's skill.
-The control driver reads those values directly from ordinary triage state and
-does not enable the diagnostic shadow switch.
-That report is corroboration only: the frozen corpus admission record is the
-configuration authority, and the runner makes a missing or mismatching report
-a promotion failure. Treatment is a closed `oneOf`: either it records the
-derived decision's coverage and approval eligibility with `run_terminal: null`,
-or it records one `RunTerminal` with decision fields absent. It derives
-capability count from frozen `capability-policy/v1`, and evidence bytes plus lane
-critical-path milliseconds from the validated non-authoritative side-car. The
-byte metric sums canonical evidence payload bytes across dispatched requests;
-the lane critical path is the latest finish minus earliest start across all
-invocations and retries. A treatment terminal
-without an agent findings receipt is still recorded as a failed-run v4 receipt;
-an unexplained missing receipt in either arm fails the experiment.
-Each v4 pair also records retries and human intervention. Treatment retry count
-is runner-derived from side-car adapter-attempt records; control retry count is
-the symmetric driver's reported retry count and is informational, never a gate
-authority. The runner writes `human_intervention_count: 0` only after verifying
-the driver stopped before human input; any resumed prompt or human input
-invalidates the run instead of being recorded as zero.
-An admitted treatment that reports non-Lite cannot fall through to legacy: its
-corroborative configuration mismatch makes the pair a promotion failure before
-the treatment `oneOf` is evaluated, so no third receipt branch is reachable.
+For each PR and version, elapsed time is simply **end minus start**:
 
-The bounded harness delta adds two operations: `pilot-arm` accepts only committed
-whole-plugin control and treatment trees and pins their commit plus canonical
-tracked-tree hash; `pilot-compare` consumes guarded joined receipts plus a sealed
-arm-hidden adjudication record and applies the five promotion rules below. Run
-manifests additionally pin reasoning effort, host executable hash, tool-policy
-hash, timeout, and the exact sampled activation environment. The runner sets
-`KC_PR_FLOW_REVIEW_TYPED=off` and `KC_PR_FLOW_PROFILED_REVIEW=off` for control,
-and sets both to `on` for treatment; it records both values per run and rejects
-any other pairing. Ambient operator values are never inherited. The prompt is
-still byte-identical; the two pinned switches are part of the intentional arm
-difference. Missing receipts, changed provenance, incomplete treatment, or
-comparator-schema drift fail the experiment rather than falling back to the
-older ablation verdict.
+- **Start:** the Captain sends the designated start message for that run.
+- **End:** the assistant delivers the complete review and confirmation request,
+  with an explicit end message. A progress update or an unsupported completion
+  claim does not qualify; the operator checks the output and required coverage.
+- **Source:** use independently observable platform timestamps that represent
+  those events, or an external stopwatch observing the same events. Select one
+  method for both versions before running and retain its resolution and evidence.
+  Do not assume a message-creation timestamp proves completed output delivery.
+  If neither source is available, report timing unavailable rather than invent it.
 
-The pinned tool policy is mechanical: the model child receives an empty
-temporary GitHub CLI config directory, no GitHub token variables, an empty MCP
-configuration, and no web-fetch/search tools. The runner rejects inherited
-credentials before launch and hashes this policy into the manifest. Both arms
-review only the frozen local checkout; the prose no-posting instruction is not
-the only guard.
+This is user-observed end-to-end waiting time, including scheduling, queueing,
+input acquisition, checkout/material preparation, mechanical tests, planning,
+model/tool execution, retries, validation and final-response delivery. Pin inputs
+and setup policy before start, but do not precompute either version's review
+materials outside the measured interval. Posting, merging and the wait for the
+Captain's final confirmation remain outside both runs; independent blind scoring
+happens afterward and has its own cost. Do not subtract perceived idle time or
+combine these observations with historical host-only or runner-arm timings.
+
+Register every attempt before start and retain PR/base/head, control/treatment
+revision, actual model/effort, configuration, start/end evidence, duration,
+complete/failed/interrupted outcome, output, retries and any human intervention.
+Failure, timeout, cancellation, missing output, missing timing, or a request for
+mid-review help stays visible and fails that sample; it is not a quick success or
+silently replaced. Passive timing observation is not help with the review.
+
+The branch-added automatic Pilot path is withdrawn; the pre-existing ablation
+tool remains a separate instrument. Historical Pilot receipts, costs, timings and
+the unresolved receipt/join integrity defect retain their original meaning, not
+acceptance authority here. Do not relabel synthetic records as observed messages
+or claim this supervised method proves worker-proof automation or sandbox security.
+
+Freeze committed whole-plugin control/treatment versions, identical task wording,
+and the existing matching no-posting/tool restrictions. Control uses both typed
+and profiled switches `off`; treatment uses both `on`. Preserve actual runtime
+identity/coverage evidence and provider usage reports, but never substitute
+worker-authored elapsed fields for the operator's two observed endpoints.
 
 The treatment is the default-off Lite path. The control is the current default
 path with its unmodified triage at a frozen exact revision, not a forced Full
@@ -784,7 +806,7 @@ Pairs use the same PR input, model family, reasoning level, host, tool
 availability, and timeout policy. Freeze run order and environment/cache policy
 before outcomes; do not give one arm an uncharged warmed preparation. Each pair
 records the actual control tier.
-The runner validates the control receipt's corroborative `review_config`
+The operator checks each version's observed `review_config`
 against its frozen corpus admission record, including `agent_tier`,
 `pr_archetype`, and all four boolean modes: `full_pass`, `probe_required`,
 `cross_model`, and `noise_filter`. Any mismatch with that arm's frozen record,
@@ -803,28 +825,26 @@ partitions, false positives, and maximum severity before timing is opened.
 Insufficient adjudication evidence cannot count as a quality pass. The judge is
 blinded, not the workers operating their own route; no double-blind claim is made.
 
-Review-to-confirmation-ready includes intake, evidence acquisition, planning,
-mechanical tests, capability calls, validation, synthesis, rendering, receipt
-projection and append, replay, rehydration, and confirmation-request production.
-It excludes human wait and actual GitHub posting in both arms. An unsupported
-expansion ends the treatment sample as a promotion failure.
-
 Promotion requires all of:
 
 1. in every pair in the promotion evaluation set, control reaches its legacy
-   confirmation request and treatment's v4 receipt has `coverage: complete`, no
-   invalid/incomplete `RunTerminal`, and reaches its typed confirmation request;
+   confirmation request and treatment's validated decision has `coverage: complete`,
+   no invalid/incomplete terminal, and reaches its typed confirmation request;
 2. within the promotion evaluation set, no accepted Critical or High control
    finding is absent from treatment;
 3. within the promotion evaluation set, aggregate treatment false positives are
    no greater than control;
-4. within the promotion evaluation set, treatment median wall time is at least
-   33.3% lower than control; and
+4. within the promotion evaluation set, median treatment end-minus-start time is
+   at least 33.3% lower than the control median; and
 5. at least three of the exactly five effective primary pairs individually
    clear 33.3%.
 
 Rule 5 is a per-pair consistency guard; it does not replace rule 4's aggregate
-median requirement, and both must pass.
+median requirement, and both must pass. Report `1 - median(treatment) /
+median(control)` and each pair's `1 - treatment / control`; require at least
+0.333 for the aggregate and at least three pairs, without rounding a miss to pass.
+The operator retains and checks the arithmetic after the blind quality verdict
+is frozen, without delegating sample admission to the defective automated join.
 
 Synthetic fixtures, structural timing, discarded invalid pairs, and fewer than
 five effective primary slots cannot promote. Five pairs support only this guarded
@@ -848,7 +868,8 @@ before held-out runs; development results do not satisfy promotion.
 It also records the fixed arm coupling: treatment is typed plus profiled while
 control is the current legacy route, so timing supports the combined-route
 effect and cannot be attributed to profiled plugins alone.
-Both arms record token totals and outer wall time. Treatment additionally
+Both arms retain actual provider token/cost reports and externally observed
+end-to-end time. Missing usage remains unknown, never zero. Treatment additionally
 records logical capability count, physical model calls and grouping, evidence
 payload bytes, and lane critical-path time
 from the side-car, so a miss cannot be explained away after timing opens.
@@ -860,8 +881,8 @@ maximum measured cost of those review-bearing daemon iterations becomes the
 hard per-run experiment ceiling. The composite action may read
 `Action taken: REVIEW #N / FIX #M`; an iteration may therefore include bundled fix work, so
 this intentionally overestimates rather than claiming an isolated review cost.
-Malformed, idle, or unclassified entries are rejected. The harness fixture
-proves those filters and refuses to launch when the ledger is insufficient.
+The operator rejects malformed, idle, or unclassified entries and does not start
+an experiment when the ledger or the separately approved budget is insufficient.
 
 
 ## Retained documents and project context
@@ -946,22 +967,17 @@ wall time before any cost claim or workflow-trigger widening.
   physical-call cost. Reviewer fixtures must reject missing dispositions/reasons,
   unresolved-to-clean conversion, and suppressed confirmed blockers; retain raw
   rejected contributions and prove an evidence-supported rejection.
-- Measurement fixtures must prove committed whole-tree arm drift rejection,
-  exact five-primary-plus-one-designated-backup corpus enforcement, dual-router
-  full-six-mode admission, failure of promotion when any effective primary control sample is
-  excluded, Lite/all-four-false and per-arm frozen-archetype
-  enforcement, rejection of a missing or admission-mismatching corroborative
-  driver receipt config, retry-source and zero-human-intervention enforcement,
-  effort/host/tools/timeout parity, exact
-  control-off/treatment-on activation switch enforcement, sealed
-  adjudication input, exact Pilot driver-receipt schema, non-Lite treatment
-  failure before `oneOf` evaluation, v4
-  receipt coverage/terminal and runner-derived treatment
-  telemetry, unexplained missing-receipt failure, both quality gates, the 33.3%
-  median and three-of-five gates, mechanical no-posting policy, and rejection of
-  absent, unparseable, or non-monotonic side-car byte/timing telemetry, plus an
-  insufficient or malformed historical cost ledger. Add successful admission of
-  ordinary non-mixed Lite PRs, development/holdout separation, a substantive
-  arm-hidden judge packet with known-defect/false-alarm calibration, and rejection
-  of forged/preplanted timing, identity substitution, and false success after
-  failure, timeout, or cancellation at the demonstrated measurement boundary.
+- Withdrawal checks preserve the original ablation commands and baseline tests,
+  reject removed Pilot entry points, and retain mixed-test product assertions for
+  dispatch/result binding, raw failures/retries, identity invalidation, and
+  confirmation. Removed automation tests do not waive the supervised acceptance
+  rules above; historical results remain historical and the integrity failure
+  remains unresolved rather than repaired.
+- Supervised acceptance checks the retained start/end observations and complete
+  outputs against the frozen PR/version bindings, preserves failed or interrupted
+  attempts, and independently recomputes the five-pair arithmetic. Missing or
+  substituted observations and incomplete reviews cannot yield a passing sample.
+  Verify ordinary non-mixed Lite admission, development/holdout separation and
+  arm-hidden substantive evidence. Calibrate the independent judge on known
+  defects, false alarms and insufficient evidence, including human-checked cases.
+  Green schemas or timings cannot replace the blind quality decision.
