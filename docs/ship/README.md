@@ -79,7 +79,8 @@ document; station: `kc-ship-flow/references/stations/uat-doc.md`), `kc-ship-flow
 
 ### `merged` — GitHub merge observed
 
-No kc-ship-flow script is dispatched here; the reconciled GitHub merge is observed through
+Script: `kc-ship-flow/scripts/merge-station.sh` (station:
+`kc-ship-flow/references/stations/merge-station.md`); the resulting merge is then observed through
 Spacedock's own `pr-merge` mod.
 
 ### `closed` — debrief and close receipt

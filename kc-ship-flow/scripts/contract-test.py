@@ -66,6 +66,8 @@ for test_name, test_command in STATION_TESTS:
     require((SCRIPTS / test_name).is_file(), f"missing station test: {test_name}")
     run(test_command, f"kc-ship-flow {test_name}")
 
+run(["bash", str(SCRIPTS / "merge-station.test.sh")], "kc-ship-flow merge-station.test.sh")
+
 for py_station in [
     "disposition.py",
     "e2e-gate.py",
