@@ -2,13 +2,13 @@
  "schema": "kc-plan-approval/v1",
  "receipt_sha256": "0f273392a11371be04d33ddc60c47b006d0104d9052cb7c23fd6d466c91b8efd",
  "approver": "person:captain",
- "approved_at": "2026-09-07T01:44:17Z",
+ "approved_at": "2026-09-07T04:23:43Z",
  "decision": "go",
- "max_workspaces": 1,
+ "max_workspaces": 3,
  "concurrency": 1,
  "repair_rounds": 2,
- "quote": "approval",
- "quote_source": "Captain, chat, 2026-09-07: 「approval」 in reply to the FO's line 'go · 1 workspace · concurrency 1 · repair 2 · Pilot' (parameters are the FO's recommendation, approved by that word)",
+ "quote": "approval · S48 重簽同意",
+ "quote_source": "Captain, chat, 2026-09-07: 「approval」 in reply to the FO's line 'go · 1 workspace · concurrency 1 · repair 2 · Pilot' (parameters are the FO's recommendation, approved by that word); re-signed 2026-09-07 「S48 重簽同意」 raising max_workspaces to 3 (three local repair workers)",
  "defaults": {
   "findings_outside_brief": [
    "security",
