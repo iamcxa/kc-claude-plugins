@@ -1,9 +1,9 @@
 # Development Brief — DEV-36 rebase of iamcxa/qnow#1174 onto main
 
 - REPO=/Users/kent/conductor/repos/qnow (read-only checkout; own worktree only)
-- BASE_SHA: __BASE__ (main after #1182)
+- BASE_SHA: ac59c26a (main after #1182)
 - PR: #1174 `feat(DEV-36): add package-scoped ESM hosted acceptance full runner`, head `conductor/dev-36-qnow-esm-runner` @ b5d87ed8, base currently `spacedock-ensign/qnow-next-hosted-staging-qualification` (10 commits, 26 files, +4175/−8 vs that base)
-- DISPATCH_TOKEN: __TOKEN__
+- DISPATCH_TOKEN: dev36-2026-09-07
 
 ## Outcome
 #1174's ten commits sit on main (rebased, not merged from the qualification branch), its base is switched to `main`, and the package's full `npm test` plus `npm run acceptance:hosted:full-run:self-check` (providerCalls 0) pass at the new head. No provider call, no deploy.

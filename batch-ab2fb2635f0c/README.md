@@ -67,3 +67,8 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - 80713b21 on PR #1182. FO full `npm test` from fresh npm ci: exit 0, every script green (postgres 71/71 including the three that failed at 5b1faa18). Stations: accept (S43 override, FO-verified pair), code review (C1 → DEV-139), security (S1/S3 fixed, S2 accepted), four repair rounds, dispositions closed.
 - Verdict: MERGE. CI does not cover qnow-next (DEV-139); the FO's local full run is the gate, stated as such in the PR body. Residuals: diagnose:* scripts without consumer (without-it unanswered), staging site id literal, DEV-140 production scoped read, DEV-138 toolchain pins.
+
+## DEV-137 — merged (2026-09-07)
+
+- Captain: "合併". Ready → ci-gate CLEAN (CI does not run qnow-next; FO full run was the gate) → squash-merged → main ac59c26a. DEV-137 → Done.
+- DEV-36 rebase of #1174 dispatched with BASE ac59c26a, token dev36-2026-09-07 (brief: evidence/dispatch-DEV-36-rebase.md).
