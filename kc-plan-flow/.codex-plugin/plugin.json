@@ -1,0 +1,35 @@
+{
+  "name": "kc-plan-flow",
+  "version": "0.1.0",
+  "description": "Planning unit of the kc fleet: value alignment, vertical slicing into sub-issues, and a persistent code-archaeologist seat that reports what a codebase holds today with the command and the ref that prove it",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "linear",
+    "milestone",
+    "vertical-slice",
+    "code-archaeology",
+    "reverse-recovery",
+    "evidence",
+    "claude-code"
+  ],
+  "interface": {
+    "displayName": "KC Plan Flow",
+    "shortDescription": "Planning: value alignment, vertical slicing, and a code-archaeologist seat",
+    "longDescription": "Planning unit of the kc fleet. Aligns initiative, project and issue to user value, cuts each value issue into sub-issues, and provides a persistent code-archaeologist seat that reports what a codebase holds today with the command and the ref that prove it.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Ask the code archaeologist what exists today"
+    ],
+    "brandColor": "#B45309"
+  }
+}

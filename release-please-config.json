@@ -83,6 +83,16 @@
         { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
         { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-ship-flow\")].version" }
       ]
+    },
+    "kc-plan-flow": {
+      "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
+      "component": "kc-plan-flow",
+      "extra-files": [
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-plan-flow\")].version" }
+      ]
     }
   }
 }

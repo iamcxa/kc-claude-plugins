@@ -158,6 +158,22 @@
         "uat",
         "close-receipt"
       ]
+    },
+    {
+      "name": "kc-plan-flow",
+      "source": "./kc-plan-flow",
+      "description": "Planning unit of the fleet: value alignment, vertical slicing into sub-issues, and a persistent code-archaeologist seat that reports what a codebase holds today with the command and the ref that prove it",
+      "version": "0.1.0",
+      "keywords": [
+        "planning",
+        "linear",
+        "milestone",
+        "vertical-slice",
+        "code-archaeology",
+        "reverse-recovery",
+        "evidence",
+        "claude-code"
+      ]
     }
   ]
 }
