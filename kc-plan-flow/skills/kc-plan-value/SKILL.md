@@ -21,6 +21,38 @@ of tickets and open pull requests that no longer says what it is delivering.
 Not for cutting one issue into tasks — that is `kc-plan-detail`, and it runs
 after this and after the archaeologist.
 
+## Ask before you shape
+
+**The `project` block is answers, so ask the questions.** Six of them, adapted from
+`office-hours`, which is where these fields came from. Ask through
+AskUserQuestion — prefer an `mcp__*__AskUserQuestion` variant when one is in your
+tool list, because some hosts disable the native tool and calling it there fails
+silently. If neither is callable, stop and say `BLOCKED — AskUserQuestion
+unavailable`; do not answer them yourself.
+
+| Ask | Fills |
+| -- | -- |
+| What is the strongest evidence someone would be genuinely upset if this disappeared tomorrow? | `user_value` |
+| What are they doing right now to get this done, even badly, and what does that cost them? | `outcome`, which is the delta from that workaround |
+| Name the actual person who needs this most. What do they do all day? | `user_value`'s persona |
+| What is the smallest version of this that is worth having this week, before the rest exists? | `wedge` |
+| Have you watched someone try this without helping them? What surprised you? | nothing — see below |
+| If the world looks different in three years, does this matter more or less? | nothing — see below |
+
+`hypothesis` and `exit` are not asked. Compose them from the answers — the status
+quo and the wedge give you "If we … then …", and the first answer gives you what
+has to be true to call it done — then show both back and get them confirmed
+before you write anything. Composing is allowed; inventing is not.
+
+**Two of the six fill no field, and that is a real gap rather than a tidy split.**
+The observation question and the three-year question have no home in
+`kc-plan-value/v1`. Put their answers in `needs_a_ruling` so they reach the
+captain instead of evaporating, and say in the handover that the schema did not
+carry them.
+
+An answer that is not a decision yet is also `needs_a_ruling`. Do not resolve it
+by picking the reading you prefer.
+
 ## No file paths
 
 **A value issue names no file, no symbol, no line.** It names what a person can
