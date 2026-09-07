@@ -13,7 +13,7 @@ Continuation of DEV-136 (PR 1 of 2). With the supporting files on main, `experim
 
 ## Accepted outcome
 
-`hosted/` lands on main as one PR (cherry-picked from `spacedock-ensign/qnow-next-hosted-staging-qualification`, superseded cycle-77 runner logic excluded), with credential-free evidence: `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run acceptance:hosted:full-run:self-check` (providerCalls 0), `npm run type-check`; no provider call, no deploy. After it merges, #1174 (DEV-36) is rebased onto main.
+`hosted/` lands on main as one PR (cherry-picked from `spacedock-ensign/qnow-next-hosted-staging-qualification`, superseded cycle-77 runner logic excluded), with credential-free evidence: `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run acceptance:hosted:self-check` (providerCalls 0), `npm run type-check`; no provider call, no deploy. After it merges, #1174 (DEV-36) is rebased onto main.
 
 ## Surfaces
 
@@ -34,7 +34,7 @@ Re-verified: `git -C ~/conductor/repos/qnow ls-tree -r --name-only origin/main e
 
 ## Verification (from experiments/netlify-refine-poc/qnow-next; `npm ci` first)
 
-`npm run type-check`, `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run acceptance:hosted:full-run:self-check` (must print providerCalls 0); all exit 0. Do not run the full run.
+`npm run type-check`, `npm run test:hosted-gates`, `npm run test:netlify-package`, `npm run acceptance:hosted:self-check` (must print providerCalls 0); all exit 0. Do not run the full run.
 
 Add no comment line that narrates the change. One commit in the repo's Conventional Commit style, stage only the files you added or changed. Push with `git push origin HEAD:refs/heads/feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr` (fast-forward on a new branch). Then the Evidence block: WITHOUT_IT_COMMAND one self-contained line exiting 0 at your candidate and non-zero at BASE_SHA (a test file or script path that does not exist at base is fine — exit 2 is non-zero), reading nothing outside the repo; WITHOUT_IT_REMOVED_VARIANT one line altering a read path you added; observe all three exits. Write the block to `.context/evidence.md` (do not stage it) and run `bash /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/accept-evidence.sh .context/evidence.md` from the worktree root; paste its last line as SELF_CHECK (the station may refuse `.ts/.mjs` paths on AC-3 — a known defect, DEV-134; report it as BLOCKER, do not work around it). Read CANDIDATE_SHA with `git rev-parse HEAD` after the push and confirm it equals `git ls-remote origin feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr`.
 
@@ -57,3 +57,12 @@ ROBOREV: UNAVAILABLE(reason: no reviewer binary in workspace)
 AC-1: <observed> AC-2: <observed> AC-3: <observed>
 BLOCKER: none | <what stopped you and at which step>
 ```
+
+## Amendments from DEV-136 (2026-09-07)
+
+- Main now carries native migrations 0000–0007 plus `0008_dev25_staff_assignments_privilege` (revokes the branch's pre-DEV-25 `GRANT SELECT ON qnow_staff_assignments TO qnow_app`). Any hosted/ test or artifact list brought from the qualification branch that enumerates migration names must include 0008; do not remove 0008 and do not re-grant.
+- Main-existing files the qualification branch modified are already carried (work-control-api, work-control-postgres, packages/db schema test); `test/postgres.integration.test.ts` was NOT carried wholesale because its branch version imports `../hosted/database-admission.js` — DEV-137 brings the branch version of that test with hosted/.
+- `test/netlify-package.test.mjs` skips its hosted-artifact sub-test while `hosted/build-artifacts.mjs` is absent; after hosted/ lands it must run and pass (report its exit explicitly).
+- `test/tenancy-isolation.integration.test.ts` on main is the ported native-migration version (13/13); do not overwrite it with the branch's deletion.
+- The AC script name is `acceptance:hosted:self-check` (not `acceptance:hosted:self-check`).
+- Do not touch the @netlify/dev, @netlify/identity, netlify-cli pins (DEV-138).
