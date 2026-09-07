@@ -125,6 +125,7 @@ required = [
     "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
     "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
     "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
+    "scripts/fixtures/plan-flow/admitted-only-rough-backlog.snapshot.json",
 ]
 for relative in required:
     require((ROOT / relative).is_file(), f"missing {relative}")
@@ -2244,6 +2245,7 @@ plan_flow_fixtures = [
     ROOT / "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
     ROOT / "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
     ROOT / "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/admitted-only-rough-backlog.snapshot.json",
 ]
 for fixture in plan_flow_fixtures:
     require(fixture.is_file(), f"missing {fixture}")
@@ -2252,8 +2254,12 @@ lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapsho
 lint_cmd = [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0])]
 lint_result = subprocess.run(lint_cmd, capture_output=True, text=True, cwd=ROOT)
 require(
-    "PASS L6" in lint_result.stdout and "PASS L8" in lint_result.stdout and "PASS L10" in lint_result.stdout,
+    "PASS L6" in lint_result.stdout and "PASS L10" in lint_result.stdout,
     f"plan-lint output missing expected rules on reverified fixture: {lint_result.stdout}",
+)
+require(
+    "L8 e2e-able AC" not in lint_result.stdout,
+    f"plan-lint L8 should not judge this fixture's Done issues: {lint_result.stdout}",
 )
 require(
     "PASS L9" in lint_result.stdout,
@@ -2284,6 +2290,99 @@ require(
 require(
     "FAIL L9" in lint_dev122_started.stdout and "dev122-fixture-shared-surface.py" in lint_dev122_started.stdout,
     f"plan-lint L9 should name the shared surface once the pair is active: {lint_dev122_started.stdout}",
+)
+
+lint_admitted_only_rough = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[4])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_admitted_only_rough.returncode == 0,
+    f"plan-lint should pass the admitted Issue and ignore the rough Backlog candidates: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "PASS L4" in lint_admitted_only_rough.stdout and "PASS L8" in lint_admitted_only_rough.stdout and "PASS L10" in lint_admitted_only_rough.stdout,
+    f"plan-lint should judge the admitted Issue under L4/L8/L10: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "WARN L6 id-order advisory" in lint_admitted_only_rough.stdout,
+    f"plan-lint L6 identifier-order agreement should warn, not fail, on a higher-id-blocks-lower-id relation: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "PASS L9" in lint_admitted_only_rough.stdout,
+    f"plan-lint L9 should judge only the admitted Issue and ignore the surface-less rough Backlog candidates: {lint_admitted_only_rough.stdout}",
+)
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_violations_path = Path(receipt_dir) / "admitted-only-rough-backlog.receipt.json"
+    lint_receipt_violations = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[4]), str(receipt_violations_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_violations.returncode == 0,
+        f"plan-lint should still pass while writing the receipt: {lint_receipt_violations.stdout}",
+    )
+    receipt_violations = json.loads(receipt_violations_path.read_text())
+    l6_advisory_entries = [e for e in receipt_violations["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_entries) == 1 and l6_advisory_entries[0]["pass"] is True,
+        f"lint receipt should record one passing L6 id-order advisory entry: {receipt_violations['lint']}",
+    )
+    require(
+        "(DEV-912, DEV-911)" in l6_advisory_entries[0]["why"],
+        f"L6 id-order advisory receipt entry should name the violation pair: {l6_advisory_entries[0]}",
+    )
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_clean_path = Path(receipt_dir) / "dev89-runA-reverified.receipt.json"
+    lint_receipt_clean = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0]), str(receipt_clean_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_clean.returncode == 0,
+        f"plan-lint should pass on the reverified fixture while writing the receipt: {lint_receipt_clean.stdout}",
+    )
+    receipt_clean = json.loads(receipt_clean_path.read_text())
+    l6_advisory_clean_entries = [e for e in receipt_clean["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_clean_entries) == 1
+        and l6_advisory_clean_entries[0]["pass"] is True
+        and l6_advisory_clean_entries[0]["why"] == "violations none",
+        f"lint receipt should record a clean L6 id-order advisory entry on a fixture with no violations: {l6_advisory_clean_entries}",
+    )
+
+
+def run_lint_without_admitted_nongoals(fixture_path: Path) -> subprocess.CompletedProcess[str]:
+    """Derive the missing-Non-goals case from the admitted-only fixture at test time."""
+    fixture = json.loads(fixture_path.read_text())
+    admitted = next(i for i in fixture["issues"]["nodes"] if i["cycle"])
+    stripped, count = re.subn(
+        r"\n## Non-goals\n\n.*?\n\n(?=## )", "\n", admitted["description"], count=1, flags=re.S
+    )
+    require(count == 1, f"fixture {fixture_path} has no single ## Non-goals section to strip")
+    admitted["description"] = stripped
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as handle:
+        json.dump(fixture, handle)
+        temp_path = Path(handle.name)
+    try:
+        return subprocess.run(
+            [sys.executable, str(plan_lint), "lint", str(temp_path)],
+            capture_output=True, text=True, cwd=ROOT,
+        )
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+lint_missing_nongoals = run_lint_without_admitted_nongoals(plan_flow_fixtures[4])
+require(
+    lint_missing_nongoals.returncode != 0,
+    f"plan-lint should fail once the admitted Issue's Non-goals are removed: {lint_missing_nongoals.stdout}",
+)
+require(
+    "FAIL L4 admission DEV-913" in lint_missing_nongoals.stdout,
+    f"plan-lint should name the admitted Issue under L4: {lint_missing_nongoals.stdout}",
 )
 
 with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
