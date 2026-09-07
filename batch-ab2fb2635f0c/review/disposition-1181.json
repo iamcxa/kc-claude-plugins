@@ -3,11 +3,45 @@
   "pr": "iamcxa/qnow#1181",
   "reviewed_head": "0a513602fe8e764bfb48835d8a170b3f94fcf1cd",
   "dispositions": [
-    {"id": "F1", "outcome": "fixed", "commit": "15480a46", "verified_by": "worker single-file work-control-postgres 27/27 and postgres.integration 14/14 at 0a513602; source-branch versions carried verbatim"},
-    {"id": "F2", "outcome": "fixed", "commit": "15480a46", "verified_by": "FO ran npm run test:netlify-package at 0a513602 after fresh npm ci: exit 0, 1 skipped with DEV-137 reason"},
-    {"id": "F3", "source": "fo", "summary": "DEV-25 non-superuser block skipped under native migrations", "outcome": "fixed", "commit": "0a513602", "verified_by": "worker single-file tenancy-isolation 13/13; delta review checks the 7 assertions are verbatim"},
-    {"id": "F4", "source": "fo", "summary": "branch 0001 grants qnow_app SELECT on qnow_staff_assignments (pre-DEV-25 snapshot)", "outcome": "fixed", "commit": "0a513602", "verified_by": "migration 0008 revokes; store tests pass under the revoke"},
-    {"id": "S0", "source": "security-reviewer", "outcome": "no_findings"}
+    {
+      "id": "F1",
+      "outcome": "fixed",
+      "commit": "15480a46",
+      "verified_by": "worker single-file work-control-postgres 27/27 and postgres.integration 14/14 at 0a513602; source-branch versions carried verbatim"
+    },
+    {
+      "id": "F2",
+      "outcome": "fixed",
+      "commit": "15480a46",
+      "verified_by": "FO ran npm run test:netlify-package at 0a513602 after fresh npm ci: exit 0, 1 skipped with DEV-137 reason"
+    },
+    {
+      "id": "F3",
+      "source": "fo",
+      "summary": "DEV-25 non-superuser block skipped under native migrations",
+      "outcome": "fixed",
+      "commit": "0a513602",
+      "verified_by": "worker single-file tenancy-isolation 13/13; delta review checks the 7 assertions are verbatim"
+    },
+    {
+      "id": "F4",
+      "source": "fo",
+      "summary": "branch 0001 grants qnow_app SELECT on qnow_staff_assignments (pre-DEV-25 snapshot)",
+      "outcome": "fixed",
+      "commit": "0a513602",
+      "verified_by": "migration 0008 revokes; store tests pass under the revoke"
+    },
+    {
+      "id": "S0",
+      "source": "security-reviewer",
+      "outcome": "no_findings"
+    },
+    {
+      "id": "D0",
+      "source": "delta-review 7a969ed1..0a513602",
+      "outcome": "no_findings",
+      "verified": "7 DEV-25 assertions byte-identical except table_count 10->11 (recomputed) and the native apply call; owner role qnow_owner NOSUPERUSER; bare-cluster teardown parity; skip self-inverts on hosted/build-artifacts.mjs; 0008 revoke reverses 0001's grant; target prefix resolution checked against @netlify/database-dev 1.0.0 source"
+    }
   ],
-  "pending": ["delta review of 7a969ed1..0a513602"]
+  "pending": []
 }
