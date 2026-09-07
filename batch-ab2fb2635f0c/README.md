@@ -8,3 +8,4 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 ## Decisions made under `defaults`
 
 - 2026-09-07T07:02:36Z — **DEV-114 accepted** (station 1d4e95e0, ACCEPT with AC-3 WARN partial variant); Draft PR #391 (merge-station.sh + test + fake-gh-merge fixture + station page + docs/ship merged line). Review: code-reviewer + silent-failure-hunter dispatched. Every later merge in this batch must go through this script once it lands.
+- 2026-09-07T07:25:38Z — **review station on #391 (DEV-114)**: code-reviewer 4 findings (2 correctness: mergeStateStatus has no CONFLICTING — the FO's own Brief wording — and legacy StatusContext failures unread; 2 test-coverage); silent-failure-hunter stalled on the harness watchdog and was resumed by message (S42 class). Repair round 1 sent without waiting for the second reviewer (its findings, if any, fit in the second approved round).

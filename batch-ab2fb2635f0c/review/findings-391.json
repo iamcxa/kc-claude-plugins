@@ -1,0 +1,43 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/kc-claude-plugins#391",
+ "head_r1": "412ea6e56961ec9e836bf8e231e50050beba2359",
+ "reviewers": {
+  "code-reviewer": 4,
+  "silent-failure-hunter": "pending"
+ },
+ "findings": [
+  {
+   "file": "kc-ship-flow/scripts/merge-station.sh",
+   "line": 134,
+   "category": "correctness",
+   "quote": "if [ \"$state\" = \"CONFLICTING\" ]; then",
+   "summary": "mergeStateStatus has no CONFLICTING value (enum: DIRTY, UNKNOWN, BLOCKED, BEHIND, UNSTABLE, HAS_HOOKS, CLEAN); CONFLICTING belongs to `mergeable`. MOVED_BASE path is dead; a conflicting next PR times out after 600 s as WAIT_TIMEOUT.",
+   "failure_scenario": "Post-landing conflict misreported after 10 minutes."
+  },
+  {
+   "file": "kc-ship-flow/scripts/merge-station.sh",
+   "line": 113,
+   "category": "correctness",
+   "quote": "failures=\"$(echo \"$resp\" | jq '[.statusCheckRollup[]? | select(.conclusion == \"FAILURE\")] | length')\"",
+   "summary": "StatusContext entries carry `state`, not `conclusion`; a legacy status FAILURE/ERROR is skipped and the PR merges.",
+   "failure_scenario": "A failed webhook-based status does not block the merge."
+  },
+  {
+   "file": "kc-ship-flow/scripts/merge-station.sh",
+   "line": 121,
+   "category": "test-coverage",
+   "quote": "die 3 \"WAIT_TIMEOUT: pr #$pr not clean after ${wait_seconds}s (mergeable=$mergeable mergeStateStatus=$state)\"",
+   "summary": "No test drives a second poll or the timeout.",
+   "failure_scenario": "Broken timeout arithmetic passes the suite."
+  },
+  {
+   "file": "kc-ship-flow/scripts/merge-station.sh",
+   "line": 60,
+   "category": "test-coverage",
+   "quote": "usage; die 2 \"USAGE: unknown flag: $1\" ;;",
+   "summary": "No test covers flag validation, missing --trunk, zero PRs, missing --accepted file, or --repo.",
+   "failure_scenario": "Argument-parsing regressions ship undetected."
+  }
+ ]
+}
