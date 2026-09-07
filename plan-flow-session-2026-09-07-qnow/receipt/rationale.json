@@ -1,0 +1,9 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "pending — Captain's approval line",
+ "lint_full": "lint.txt",
+ "station0": "station0-candidates.tsv",
+ "falsifier": "Any of: a prerequisite PR is merged without a review disposition in the batch record; DEV-37 needs a second deploy or a retry to pass; the acceptance receipt names a secret, PII, URL or raw provider error; cleanup leaves a non-zero census.",
+ "executor_dev37": "Conductor cloud worker (Captain: secrets present locally and in Conductor cloud)",
+ "pre_batch_blocker": "DEV-129 (#389) merged so lint.pass holds"
+}
