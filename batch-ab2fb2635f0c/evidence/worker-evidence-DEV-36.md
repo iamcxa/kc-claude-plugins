@@ -10,3 +10,7 @@ HIDDEN BUG FIXED: hosted/acceptance-full-run-dependencies.mjs EXPECTED_MIGRATION
 TESTS (worker): npm ci 0 (lock untouched); npm test 0 (all 9 stages); acceptance:hosted:full-run:self-check 0 — {"status":"admitted","providerCalls":0,"browserLaunches":0,"deploys":0,"netlifyOpenApiVersion":"2.57.0",...,"exactRevisionEnforced":true,"valuesExposed":false}
 RESIDUAL (worker): npm run test:headed-browser not in npm test's chain, not run — compatibility of #1174's browser adapter with main's DEV-35 planner unmeasured
 FO: running full npm test + full-run self-check + test:headed-browser at 65c0143a (log /tmp/npmtest36.log, /tmp/headed36.log); rebase-reconciliation review dispatched
+
+## FO verification at 65c0143a (fresh npm ci)
+- npm test exit 0; acceptance:hosted:full-run:self-check exit 0 (providerCalls 0, deploys 0, open-api 2.57.0); lock untouched.
+- test:headed-browser exit 1 at the candidate AND at main ac59c26a, same failure: `HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE` — the DEV-35 planner needs a Linux /proc process table; this macOS host cannot run it. Not a rebase regression; the suite is measured only in the Linux cloud workspace (DEV-37 run must include `npm run test:headed-browser` and quote its exit).

@@ -16,4 +16,5 @@ Executor: cloud worker (not a local subagent). The Captain's approval covers exa
 - `deployOnce()` now throws `ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED` on a second call within one session; the run is one deploy by construction, not by discipline. If the run needs a retry, it is a new session and the Captain says so.
 - @netlify/open-api must resolve 2.57.0 (lock restored to the qualification branch's); `acceptance:hosted:self-check` refuses otherwise. Run it before the full run and quote the line.
 - The full-run entrypoint comes from DEV-36 (#1174 rebased onto main); use the script name the merged package.json carries, and quote it.
+- Run `npm run test:headed-browser` first in the Linux workspace and quote its exit: on macOS it fails with HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE at main and at the DEV-36 head alike, so the cloud run is the only place it is measured.
 - The verbose-deploy diagnostic redacts JSON-quoted secrets as of #1182; still treat its output as sensitive and keep it in the run receipt, not in chat.
