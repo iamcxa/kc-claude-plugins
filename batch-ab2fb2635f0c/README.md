@@ -41,3 +41,8 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 - Findings: fflate 0.8.2 in CVE-2026-45820 range (test-only call site) → repair round 3 bumps to 0.8.3. @netlify/dev 5.0.1→5.0.5 available, @netlify/identity type-only but in dependencies, netlify-cli transitive highs unfixable → follow-up ticket blocked by DEV-137 (toolchain pins are contract-tested as a set). Identity code: no insecure defaults.
 - FO omission recorded: the review station did not trigger the supply-chain lane on a deps change; kc-pr-review's triage rule does. Add to DEV-134/135 class of station fixes.
 - Round 3: 4d13d179 bumps fflate to 0.8.3 (single lock entry, dev tree); worker: test:netlify-package 0 (1 skip), test:native-migrations 0. FO verified the package.json/lock pins at the pushed SHA. Final verdict unchanged: MERGE after CI pr-test at 4d13d179.
+
+## DEV-136 — merged (2026-09-07)
+
+- Captain: "幫我合併，然後繼續". Marked ready; CI pr-test (node-tests, test-summary) + ci-gate passed, 8/8, MERGEABLE/CLEAN, base main verified; squash-merged → main 4122d2be. DEV-136 → Done in Linear.
+- DEV-137 dispatched next with BASE 4122d2be, token dev137-2026-09-07 (brief: evidence/dispatch-DEV-137-subagent.md, amended).

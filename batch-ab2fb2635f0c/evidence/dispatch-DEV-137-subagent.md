@@ -2,7 +2,7 @@ You are a kc-dev-flow build-stage worker running as a LOCAL subagent for a Pilot
 
 Set up:
 - REPO=/Users/kent/conductor/repos/qnow ; git -C "$REPO" fetch origin main "+refs/heads/spacedock-ensign/qnow-next-hosted-staging-qualification:refs/remotes/origin/spacedock-ensign/qnow-next-hosted-staging-qualification"
-- WT=$(mktemp -d)/wt ; git -C "$REPO" worktree add "$WT" __BASE__ ; cd "$WT" ; git checkout -b feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr
+- WT=$(mktemp -d)/wt ; git -C "$REPO" worktree add "$WT" 4122d2be ; cd "$WT" ; git checkout -b feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr
 - Read CLAUDE.md, AGENTS.md and experiments/netlify-refine-poc/AGENTS.md first. Source of the files: `origin/spacedock-ensign/qnow-next-hosted-staging-qualification` (the qualification branch, 48 commits ahead of main). Bring files over with `git checkout origin/spacedock-ensign/qnow-next-hosted-staging-qualification -- <paths>` (or cherry-pick when a commit is clean), never by merging the branch. Do not carry files the 84-cycle record marks superseded (cycle-77 runner-only logic, temporary /tmp runners).
 
 ## Brief (DEV-137)
@@ -42,10 +42,10 @@ Final reply: exactly one fenced block, nothing after it:
 
 ```
 ## Evidence
-DISPATCH_TOKEN: __TOKEN__
+DISPATCH_TOKEN: dev137-2026-09-07
 CANDIDATE_SHA: <40-hex>
 BRANCH: feature/dev-137-land-experimentsnetlify-refine-pocqnow-nexthosted-on-main-pr
-BASE_SHA: __BASE__
+BASE_SHA: 4122d2be
 FILES: <comma-separated or a directory summary with counts>
 TESTS: <command> -> exit <code>; ...
 SURFACE: <path> -> <AC-N> | <command that proves it> | <command that removes exactly its contribution>
