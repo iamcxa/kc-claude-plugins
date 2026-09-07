@@ -34,3 +34,9 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 - Candidate 0a513602 on PR #1181. Stations: accept (FO override on S43, without-it pair verified by script), review (code F1 fixed; security none; delta review of A+B none), dispositions F1–F4 fixed and verified. FO-verified `test:netlify-package` exit 0 with 1 visible skip.
 - Verdict: MERGE after CI. qnow's pr.yaml runs `pr-test` only off Draft; the local pre-push gate was skipped, so CI's aggregate is the last gate. Captain marks ready, waits for pr-test SUCCESS, merges (squash) to main.
 - Residuals: AC-1/AC-3 close with DEV-137; the qualification branch's hosted/ tests still reference this PR's migration list (DEV-137 must add 0008 to any list it carries).
+
+## DEV-136 — supply-chain check (2026-09-07, after the Captain asked whether 20k lines is mergeable)
+
+- Size: +17465/−2501 is package-lock.json (netlify-cli 27.3.0 + @netlify/dev pull 1057 packages, 5 new install-script packages, all dev-tree); runtime code +1668/−137; tests + migrations ≈ +2700.
+- Findings: fflate 0.8.2 in CVE-2026-45820 range (test-only call site) → repair round 3 bumps to 0.8.3. @netlify/dev 5.0.1→5.0.5 available, @netlify/identity type-only but in dependencies, netlify-cli transitive highs unfixable → follow-up ticket blocked by DEV-137 (toolchain pins are contract-tested as a set). Identity code: no insecure defaults.
+- FO omission recorded: the review station did not trigger the supply-chain lane on a deps change; kc-pr-review's triage rule does. Add to DEV-134/135 class of station fixes.
