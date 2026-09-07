@@ -104,11 +104,17 @@ That is two short sentences: what it looks like when it is done in the user's
 words, then the bar stated so it can be failed. A boundary or a cut cost earns
 its place only if it still fits.
 
-**The milestone is one stack.** Everything cut against it lands on one branch, and
-that branch is what the captain accepts -- not the trunk, and not any single lane. A
-milestone whose work is spread across branches that never meet has a verification
-point with nothing to verify. This was learned by cutting one milestone into two
-lanes that could each be built and neither be accepted.
+**The milestone is one stack, and that stack is the value issue's branch.** Everything
+cut against it lands there, and that branch is what the captain accepts -- not the
+trunk, and not any single lane. A milestone whose work is spread across branches that
+never meet has a verification point with nothing to verify. This was learned by
+cutting one milestone into two lanes that could each be built and neither be accepted.
+
+Name it from the tracker's own suggestion for the value issue, never after the
+milestone. A branch carrying no issue identifier gets no automatic status linking, so
+a stack named for the milestone is invisible to the tracker that is supposed to be
+tracking it. Naming it for the value issue is what makes the tracker's per-issue model
+and this rule agree: the value issue is what the milestone delivers.
 
 **It is accepted against the description and nothing else.** Those 140 characters
 are the acceptance test, so they carry the outcome and the bar and nothing a planner
