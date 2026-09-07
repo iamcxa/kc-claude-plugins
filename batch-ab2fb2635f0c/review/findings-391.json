@@ -14,7 +14,7 @@
    "quote": "if [ \"$state\" = \"CONFLICTING\" ]; then",
    "summary": "mergeStateStatus has no CONFLICTING value (enum: DIRTY, UNKNOWN, BLOCKED, BEHIND, UNSTABLE, HAS_HOOKS, CLEAN); CONFLICTING belongs to `mergeable`. MOVED_BASE path is dead; a conflicting next PR times out after 600 s as WAIT_TIMEOUT.",
    "failure_scenario": "Post-landing conflict misreported after 10 minutes.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.sh",
@@ -23,7 +23,7 @@
    "quote": "failures=\"$(echo \"$resp\" | jq '[.statusCheckRollup[]? | select(.conclusion == \"FAILURE\")] | length')\"",
    "summary": "StatusContext entries carry `state`, not `conclusion`; a legacy status FAILURE/ERROR is skipped and the PR merges.",
    "failure_scenario": "A failed webhook-based status does not block the merge.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.sh",
@@ -32,7 +32,7 @@
    "quote": "die 3 \"WAIT_TIMEOUT: pr #$pr not clean after ${wait_seconds}s (mergeable=$mergeable mergeStateStatus=$state)\"",
    "summary": "No test drives a second poll or the timeout.",
    "failure_scenario": "Broken timeout arithmetic passes the suite.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.sh",
@@ -41,7 +41,7 @@
    "quote": "usage; die 2 \"USAGE: unknown flag: $1\" ;;",
    "summary": "No test covers flag validation, missing --trunk, zero PRs, missing --accepted file, or --repo.",
    "failure_scenario": "Argument-parsing regressions ship undetected.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.sh",
@@ -50,7 +50,7 @@
    "quote": "mergeCommit=\"$(gh_view_field \"$pr\" mergeCommit | jq -r '.mergeCommit.oid // empty')\"",
    "summary": "After merge, a null/missing mergeCommit yields `MERGED: #N ` with an empty SHA and exit 0.",
    "failure_scenario": "Downstream records an empty SHA; no signal that merge verification failed.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.sh",
@@ -59,7 +59,7 @@
    "quote": "\"$GH\" pr ready \"$pr\" \"${repo_args[@]}\"",
    "summary": "`pr ready` failure has no labeled exit code (raw gh exit 1), unlike every other refusal.",
    "failure_scenario": "Automation on the documented exit codes has no branch for it.",
-   "status": "closed in r2 (9dd7ee52)"
+   "status": "closed"
   },
   {
    "file": "kc-ship-flow/scripts/merge-station.test.sh",
@@ -68,8 +68,9 @@
    "quote": "(FO mutation) sed -i 's/\"DIRTY\"/\"NEVER\"/' kc-ship-flow/scripts/merge-station.sh",
    "summary": "A failing case prints FAIL but the suite exits 0; contract-test.py stays green on a broken station.",
    "failure_scenario": "CI green with a dead MOVED_BASE path.",
-   "status": "repair round 2 sent"
+   "status": "closed in r3 (930214ab): suite exits 1 on a failing case; case e split into e1/e2 so each signal is mutation-visible"
   }
  ],
- "head_r2": "9dd7ee524363b118be13bb955b37ca2713281547"
+ "head_r2": "9dd7ee524363b118be13bb955b37ca2713281547",
+ "head_r3": "930214ab5e4edf4fb36d5e46953a56118032d26b"
 }

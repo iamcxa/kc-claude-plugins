@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "7 findings closed across r2/r3; FO verified: suite 19 passed exit 0; FO mutation (DIRTY\u2192NEVER) \u2192 18 passed 1 failed exit 1; bash -n both files; CI green at 930214ab"
+}
