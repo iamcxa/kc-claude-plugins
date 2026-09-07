@@ -6,7 +6,7 @@ made them agree. `## User value` sat empty in a real project for a day because
 plan-lint matches it at offset zero without re.MULTILINE, and the prose that was
 supposed to fill it was written by hand three paragraphs down.
 """
-import importlib.util, pathlib, re, sys
+import importlib.util, json, pathlib, re, sys
 
 HERE = pathlib.Path(__file__).parent
 ROOT = HERE.parent.parent
@@ -130,6 +130,36 @@ wrong_kind = LIVE.replace("**A defect.", "**A thing.")
 check("a lost kind declaration is drift",
       "kind declaration" in [d[0] for d in P.issue_drift(wrong_kind, defect, milestone)])
 
+
+SUB = json.loads((HERE / "fixtures/plan-detail.valid.json").read_text())["sub_issues"][0]
+sub_body = P.detail_issue_body(SUB)
+check("a sub-issue's Accepted outcome parses back",
+      LA.section(sub_body, "Accepted outcome") == SUB["accepted_outcome"])
+check("its Non-goals are a '- ' bullet list the reader accepts",
+      LA.live_item({"url": "u", "state": {"type": "unstarted"}, "description": sub_body})["non-goals"]
+      == SUB["non_goals"])
+check("every AC keeps its bullet marker",
+      all(line.startswith("- **AC-") for line in LA.section(sub_body, "Acceptance criteria").splitlines()))
+check("the Re-verified line carries no colon after the label",
+      ":" not in next(l for l in sub_body.splitlines() if l.startswith("Re-verified:"))[len("Re-verified:"):])
+check("a fresh sub-issue does not drift from its own document", P.detail_drift(sub_body, SUB) == [])
+
+# Whatever section renders last swallows every trailing line, so a Re-verified line
+# placed after the sections lands inside Non-goals and the issue drifts from itself.
+for heading in ("Accepted outcome", "Acceptance criteria", "Non-goals"):
+    got = LA.section(sub_body, heading)
+    check(f"{heading} does not swallow the provenance lines",
+          "Re-verified:" not in got and "Supersedes:" not in got)
+
+stored = sub_body.replace("\n- ", "\n* ")
+check("a body Linear rewrote to '*' bullets does not drift", P.detail_drift(stored, SUB) == [],
+      "otherwise --reconcile writes '- ', Linear rewrites it, and it never converges")
+
+stale = P.replace_section(sub_body, "Non-goals", "- Something else entirely.")
+check("a changed Non-goals list is drift", "Non-goals" in [d[0] for d in P.detail_drift(stale, SUB)])
+no_line = "\n".join(l for l in sub_body.splitlines() if not l.startswith("Supersedes:"))
+check("a missing Supersedes line is drift",
+      ("Supersedes line", "absent", SUB["supersedes"]) in P.detail_drift(no_line, SUB))
 
 def refuses(text):
     try:

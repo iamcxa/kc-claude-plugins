@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Project a validated kc-plan-value/v1 document into Linear.
 
-Usage: project-to-linear.py <document.json> <project-id> [--apply]
+Usage: project-to-linear.py <document.json> <project-id> [--apply|--reconcile] [--cycle <id>]
 
 Dry run by default: prints every write it would make. --apply performs them.
 LINEAR_API_KEY must be set for either mode, because both read current state.
@@ -13,7 +13,7 @@ that shape is what this exists to stop: `## User value` is matched at offset
 zero of the project content with no re.MULTILINE, and a `Re-verified:` line is
 split on `:` so one colon silently destroys the date.
 """
-import json, os, re, sys, pathlib, urllib.request, urllib.error
+import json, os, re, subprocess, sys, tempfile, pathlib, urllib.request, urllib.error
 
 HERE = pathlib.Path(__file__).parent
 API = "https://api.linear.app/graphql"
@@ -70,6 +70,13 @@ def check_re_verified(text):
             die(f"Re-verified line names an issue, which the tracker rewrites into a link: {line}")
 
 
+def comparable(text):
+    # Linear rewrites a "- " bullet to "* " on write, so a document rendering "- " would
+    # drift from itself forever and --reconcile would never converge. Both readers accept
+    # either marker, so the difference is not a difference.
+    return "\n".join(re.sub(r"^[-*] ", "- ", line.rstrip()) for line in (text or "").splitlines()).strip()
+
+
 def section_body(text, heading):
     matches = list(re.finditer(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE))
     if len(matches) != 1:
@@ -109,7 +116,7 @@ def issue_drift(live_description, issue, milestone):
         found = section_body(live_description, heading)
         if found is None:
             drifted.append((heading, "absent or duplicated", planned))
-        elif found.strip() != planned.strip():
+        elif comparable(found) != comparable(planned):
             drifted.append((heading, found, planned))
     if issue["kind"] != "value":
         first = live_description.strip().split("\n\n")[0]
@@ -150,10 +157,160 @@ def issue_body(issue, milestone, value_identifier):
     return body
 
 
+def detail_issue_body(sub):
+    body = "\n\n".join([
+        f"**The gap:** {sub['gap']}",
+        f"Re-verified: {sub['re_verified']}",
+        f"Supersedes: {sub['supersedes']}",
+        "## Accepted outcome\n\n" + sub["accepted_outcome"],
+        "## Acceptance criteria\n\n" + "\n".join(sub["acceptance"]),
+        "## Non-goals\n\n" + "\n".join(f"- {item}" for item in sub["non_goals"]),
+    ])
+    check_re_verified(body)
+    return body
+
+
+def detail_owned(sub):
+    return {
+        "Accepted outcome": sub["accepted_outcome"],
+        "Acceptance criteria": "\n".join(sub["acceptance"]),
+        "Non-goals": "\n".join(f"- {item}" for item in sub["non_goals"]),
+    }
+
+
+def detail_drift(live, sub):
+    drifted = []
+    for heading, planned in detail_owned(sub).items():
+        found = section_body(live, heading)
+        if found is None:
+            drifted.append((heading, "absent or duplicated", planned))
+        elif comparable(found) != comparable(planned):
+            drifted.append((heading, found, planned))
+    for label, value in (("Re-verified", sub["re_verified"]), ("Supersedes", sub["supersedes"])):
+        line = next((l for l in live.splitlines() if l.startswith(f"{label}:")), None)
+        if line is None:
+            drifted.append((f"{label} line", "absent", value))
+        elif line[len(label) + 1:].strip() != value.strip():
+            drifted.append((f"{label} line", line[len(label) + 1:].strip(), value))
+    return drifted
+
+
 PROJECT_Q = """query($id: String!) { project(id: $id) {
   id name content
   projectMilestones(first: 50) { nodes { id name targetDate description } }
   issues(first: 250) { nodes { id identifier title description } } } }"""
+
+
+def run_lint(project_id, expected_receipt):
+    root = HERE.parent.parent
+    lint = root / "docs/plan-flow/plan-lint.py"
+    if not lint.is_file():
+        print("plan-lint is not in this checkout; the receipt is unverified")
+        return
+    with tempfile.NamedTemporaryFile(suffix=".json") as snapshot:
+        fetch = subprocess.run([sys.executable, str(lint), "fetch", project_id, snapshot.name],
+                               cwd=root, capture_output=True, text=True)
+        if fetch.returncode:
+            print(f"plan-lint fetch failed; the receipt is unverified: {fetch.stderr.strip()[:200]}")
+            return
+        run = subprocess.run([sys.executable, str(lint), "lint", snapshot.name],
+                             cwd=root, capture_output=True, text=True)
+    tail = [l for l in run.stdout.splitlines() if l.startswith("LINT ")]
+    if not tail:
+        print("plan-lint produced no verdict; the receipt is unverified")
+        return
+    verdict = tail[-1]
+    receipt = re.search(r"receipt ([0-9a-f]+)", verdict)
+    receipt = receipt.group(1) if receipt else ""
+    print(f"\n{verdict.split('| order')[0].strip()}")
+    if receipt == expected_receipt:
+        print(f"receipt matches the document: {receipt}")
+    else:
+        print(f"RECEIPT MISMATCH: the document claims {expected_receipt}, the tracker produced {receipt}")
+        print("The document was written against a different state. Re-lint and update it before it is quoted.")
+
+
+def project_detail(plan, project_id, apply, reconcile, cycle_id):
+    project = gql(PROJECT_Q, {"id": project_id})["project"]
+    if not project:
+        die(f"no project {project_id}")
+    nodes = project["issues"]["nodes"]
+    parent = next((n for n in nodes if n["title"] == plan["value_issue"]), None)
+    if not parent:
+        die(f"no issue titled {plan['value_issue']!r} in this project; kc-plan-value writes it first")
+    existing = {n["title"]: n for n in nodes}
+
+    for finding in plan["archaeology"]:
+        print(f"      archaeology {finding['classification']:22} at {finding['ref']}  {finding['question'][:70]}")
+
+    writes = []
+    for sub in plan["sub_issues"]:
+        if sub["title"] in existing:
+            node = existing[sub["title"]]
+            drifted = detail_drift(node["description"] or "", sub)
+            writes.append((("sub-issue DRIFT" if drifted else "sub-issue aligned"), node["identifier"],
+                           {"detail": drifted} if drifted else sub["title"]))
+        else:
+            writes.append(("sub-issue create", parent["identifier"],
+                           {"title": sub["title"], "description": detail_issue_body(sub)}))
+
+    for kind, target, payload in writes:
+        summary = payload if isinstance(payload, str) else json.dumps(payload)[:150]
+        print(f"{'APPLY' if apply else 'DRY  '} {kind:24} {target:44} {summary}")
+        if kind == "sub-issue DRIFT":
+            for heading, live, planned in payload["detail"]:
+                print(f"      {heading}\n        live    {live[:110]}\n        planned {planned[:110]}")
+
+    created = sum(1 for k, _, _ in writes if k == "sub-issue create")
+    drifting = sum(1 for k, _, _ in writes if k.endswith("DRIFT"))
+    admitted = "into a cycle" if cycle_id else "with no cycle"
+    print(f"\n{created} sub-issues to create {admitted}, {drifting} drifting, under {parent['identifier']}.")
+    if not cycle_id:
+        print("plan-lint judges only admitted issues, so these stay unexamined until a cycle takes them.")
+        print("Pass --cycle <id> to admit them, or record them in the document's lint.unjudged.")
+    if drifting and not reconcile:
+        print("Drift is reported, never repaired by default. Re-run with --reconcile.")
+
+    if not apply:
+        print("\nDry run. Re-run with --apply to create, or --reconcile to also repair drift.")
+        return 0
+
+    team = gql("query($id: String!) { project(id: $id) { teams(first: 1) { nodes { id } } } }",
+               {"id": project_id})["project"]["teams"]["nodes"]
+    if not team:
+        die("project has no team, so sub-issues cannot be created")
+    parent_node = gql("query($i: String!) { issue(id: $i) { id projectMilestone { id } } }",
+                      {"i": parent["identifier"]})["issue"]
+    for kind, target, payload in writes:
+        if kind == "sub-issue create":
+            fields = {"teamId": team[0]["id"], "projectId": project_id, "parentId": parent_node["id"],
+                      "title": payload["title"], "description": payload["description"]}
+            if parent_node["projectMilestone"]:
+                fields["projectMilestoneId"] = parent_node["projectMilestone"]["id"]
+            if cycle_id:
+                fields["cycleId"] = cycle_id
+            gql("mutation($f: IssueCreateInput!) { issueCreate(input: $f) { issue { identifier } } }", {"f": fields})
+        elif kind == "sub-issue DRIFT":
+            if not reconcile:
+                print(f"left  {kind:24} {target}")
+                continue
+            node = gql("query($i: String!) { issue(id: $i) { id description } }", {"i": target})["issue"]
+            body = node["description"] or ""
+            for heading, _, planned in payload["detail"]:
+                if heading.endswith(" line"):
+                    label = heading[:-5]
+                    lines = [l for l in body.splitlines() if not l.startswith(f"{label}:")]
+                    body = "\n".join(lines).rstrip() + f"\n\n{label}: {planned}"
+                else:
+                    body = replace_section(body, heading, planned)
+            gql("mutation($i: String!, $d: String!) { issueUpdate(id: $i, input: {description: $d}) { success } }",
+                {"i": node["id"], "d": body})
+        else:
+            continue
+        print(f"done  {kind:24} {target}")
+
+    run_lint(project_id, plan["lint"]["receipt"])
+    return 0
 
 
 def main():
@@ -167,8 +324,11 @@ def main():
     apply = apply or reconcile
     validate(document)
     plan = json.loads(document.read_text())
+    cycle_id = next((flags[i + 1] for i, f in enumerate(flags) if f == "--cycle" and i + 1 < len(flags)), None)
+    if plan["schema"] == "kc-plan-detail/v1":
+        return project_detail(plan, project_id, apply, reconcile, cycle_id)
     if plan["schema"] != "kc-plan-value/v1":
-        die(f"this projects kc-plan-value/v1, not {plan['schema']}")
+        die(f"this projects kc-plan-value/v1 and kc-plan-detail/v1, not {plan['schema']}")
 
     project = gql(PROJECT_Q, {"id": project_id})["project"]
     if not project:
