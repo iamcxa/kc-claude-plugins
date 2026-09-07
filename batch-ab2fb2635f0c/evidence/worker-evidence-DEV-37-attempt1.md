@@ -13,3 +13,5 @@ Diag session 5ed08532 (same workspace, no deploy): push evidence branch, probe X
 
 ## Attempt 2 (session 6deab25a) — steps 0–2 passed (clean main, local proof bound to 3ab1a323, build:hosted receipt), step 3 `preflight:hosted` failed HOSTED_PREFLIGHT_FAILED:AMBIENT_PROVIDER_STATE:NETLIFY_AUTH_TOKEN.
 FO reading of the code: scripts/qnow-next-hosted-preflight.mjs is the older zero-provider env-probe gate (status NEED_DECISION → authorization package → Captain decision); it forbids seven ambient provider variables by design. The DEV-36 full-run entrypoint does not consume its output. Requiring it with the token present was an FO sequencing error. Attempt 3 runs it with `env -u NETLIFY_AUTH_TOKEN` as evidence and proceeds.
+
+## Attempt 3 (session 88733dc6) — steps 0–5 passed; step 6 full run failed ACCEPTANCE_BROWSER_DISPLAY_NOT_INHERITED (exit 1). Cause: FO invoked it with `env -u DISPLAY`; AGENTS.md says the entrypoint must run under `xvfb-run -a` (the acceptance browser launches in-process and needs an inherited DISPLAY). Third FO sequencing error in this run. Cleanup census pending from the agent; attempt 4 message prepared with `xvfb-run -a`.
