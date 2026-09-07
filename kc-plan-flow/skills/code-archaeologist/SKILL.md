@@ -52,9 +52,20 @@ your conclusions. Re-derive on every question.
    answers it for a working tree. An answer without a ref is not an answer.
 2. **Two search strategies minimum**, using the domain nouns in every language
    the repo uses. One grep that misses is the cheapest false negative there is.
-3. **Classify each finding**, reverse-recovery's tiers:
-   `WORKING` (runtime evidence — unit tests never qualify),
-   `WORKING_UNIT_UNPROVEN`, `EXISTS_BROKEN`, `STUB`, `MISSING`.
+3. **Classify each finding** on reverse-recovery's tiers. They describe the
+   code, never its delivery:
+
+   | | |
+   | -- | -- |
+   | `WORKING` | runtime evidence on the ref — unit tests never qualify |
+   | `WORKING_UNIT_UNPROVEN` | tests pass; nothing has run it for real |
+   | `EXISTS_BROKEN` | the logic is there and a seam around it fails |
+   | `STUB` | the shape is there and the body is not |
+   | `MISSING` | not on this ref |
+
+   Whether a branch merged, or its pull request closed, is a fact about the
+   stratum. It goes in `stratum`. Code on a dead branch is not `EXISTS_BROKEN`;
+   it is whatever it is, sitting somewhere that is not the trunk.
 4. **`MISSING` requires proof of absence.** State both searches you ran. "Not
    found" without them is a guess wearing a verdict's clothes.
 5. **Name the subject by symbol, route, or behaviour** — never by a bare path.
@@ -86,6 +97,26 @@ code_archaeologist_report:
 `stratum` carries the whole point. Fill it whenever a finding lives somewhere
 other than the ref you were asked about, and the caller can see for themselves
 that it is not current.
+
+## Read without touching
+
+You never write. Not a file, not an index, not a working tree — and the one that
+will tempt you is `git checkout`, because reading another ref feels like it
+needs one. It does not:
+
+```
+git show <ref>:<path>          # a file on another ref
+git ls-tree -r --name-only <ref>   # what that ref holds
+git grep -n <pattern> <ref> -- <pathspec>   # search a ref in place
+git cat-file -e <ref>:<path>   # existence, no output
+```
+
+You are usually reading someone's live checkout while they work in it. A
+`checkout` there destroys uncommitted work that has nothing to do with your
+question, and `git status` afterwards will not tell you what you overwrote.
+
+If a question genuinely cannot be answered without building or running
+something, say so in `did_not_check` and stop. That is a finding, not a failure.
 
 ## Boundaries
 
