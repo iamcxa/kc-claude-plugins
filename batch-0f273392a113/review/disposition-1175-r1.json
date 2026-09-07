@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "all 8 r1 findings closed in c6c4fe19 (compatibility guard NO_PROC_PROCESS_TABLE with test; pid guard; stderr tail; LAUNCH_FAILED line; finally wrapped; executablePath catch narrowed; SIGINT sibling; LOCAL_STACK order). Station refused on AC-3 (S43/DEV-134); FO verified the pair by script: retained 0 / removed 1 / base 1; type-check 0; macOS run 8 pass 1 skip 12 display-dependent fail (same 12 as base). Cloud run folded into the DEV-37 workspace."
+}

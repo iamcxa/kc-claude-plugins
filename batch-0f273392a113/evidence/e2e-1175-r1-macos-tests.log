@@ -1,0 +1,242 @@
+npm warn Unknown user config "minimum-release-age". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @experiment/qnow-next-local-pilot@0.0.0 test:headed-browser
+> node --test test/headed-browser-environment.test.mjs
+
+✔ plan orders one attempt per display and browser candidate (1.092417ms)
+✔ plan keeps the virtual display as a retry behind a claimed ambient one (0.120083ms)
+✔ plan reports the exact blocker for no display server (0.5255ms)
+✔ plan reports the exact blocker for no chromium executable (0.234916ms)
+✔ a host with no /proc process table refuses with NO_PROC_PROCESS_TABLE (0.223666ms)
+✔ signalling a process group with no assigned pid is a no-op (0.382417ms)
+✔ a browser candidate needs the execute bit, not merely a file (1.365541ms)
+✔ process group stat parses a command name carrying spaces and parentheses (0.18875ms)
+✖ reaping escalates to SIGKILL against a group that refuses SIGTERM (403.130417ms)
+✖ headed browser environment proof admits the workspace (1.960959ms)
+✖ a nonempty but unusable DISPLAY retries through the virtual display (1.49325ms)
+✖ a system Chrome that cannot launch retries the Playwright-managed payload (1.51625ms)
+✖ an owned group needs a live direct child of the smoke at the reported group (0.156541ms)
+✖ a smoke naming a process it did not start owns nothing and signals nothing (403.660083ms)
+✖ a smoke whose only child shares the wrapper group is not admitted (7.355792ms)
+✖ a smoke that abandons its run still leaves every owned group empty (2.546334ms)
+✖ a run that had to be forcibly cleaned up is rejected, not admitted (1.424583ms)
+✖ a hung run is bounded, and its browser and display are still cleaned up (1.144375ms)
+✖ a cancelled run stops promptly and leaves no owned group behind (20564.280458ms)
+✖ interrupting the operator reaps the browser and display it started (10.437542ms)
+﹣ interrupting the operator with SIGINT reaps the browser and display it started (0.092958ms) # no ambient or virtual display available on this host
+ℹ tests 21
+ℹ suites 0
+ℹ pass 8
+ℹ fail 12
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 21810.177041
+
+✖ failing tests:
+
+test at test/headed-browser-environment.test.mjs:195:1
+✖ reaping escalates to SIGKILL against a group that refuses SIGTERM (403.130417ms)
+  Error: HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE
+      at unavailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:54:10)
+      at assertProcessTableAvailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:172:34)
+      at processTable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:176:3)
+      at scanProcessGroups (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:268:21)
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:203:13)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at test/headed-browser-environment.test.mjs:209:1
+✖ headed browser environment proof admits the workspace (1.960959ms)
+  Error: HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE
+      at unavailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:54:10)
+      at assertProcessTableAvailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:172:34)
+      at runHeadedBrowserEnvironmentProof (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:548:3)
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:210:25)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at test/headed-browser-environment.test.mjs:233:1
+✖ a nonempty but unusable DISPLAY retries through the virtual display (1.49325ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: ''
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:235:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:246:1
+✖ a system Chrome that cannot launch retries the Playwright-managed payload (1.51625ms)
+  Error: HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE
+      at unavailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:54:10)
+      at assertProcessTableAvailable (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:172:34)
+      at runHeadedBrowserEnvironmentProof (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/local/headed-browser-environment.mjs:548:3)
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:255:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at test/headed-browser-environment.test.mjs:274:1
+✖ an owned group needs a live direct child of the smoke at the reported group (0.156541ms)
+  Error: ENOENT: no such file or directory, open '/proc/self/stat'
+      at readFileSync (node:fs:441:20)
+      at ownProcessGroup (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:92:32)
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:275:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/proc/self/stat'
+  }
+
+test at test/headed-browser-environment.test.mjs:365:1
+✖ a smoke naming a process it did not start owns nothing and signals nothing (403.660083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE'
+  - 'HEADED_BROWSER_SMOKE_RECEIPT_NOT_ADMITTED'
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:389:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE',
+    expected: 'HEADED_BROWSER_SMOKE_RECEIPT_NOT_ADMITTED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:403:1
+✖ a smoke whose only child shares the wrapper group is not admitted (7.355792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE'
+  - 'HEADED_BROWSER_SMOKE_RECEIPT_NOT_ADMITTED'
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:417:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE',
+    expected: 'HEADED_BROWSER_SMOKE_RECEIPT_NOT_ADMITTED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:423:1
+✖ a smoke that abandons its run still leaves every owned group empty (2.546334ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE'
+  - 'HEADED_BROWSER_SMOKE_FAILED'
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:437:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE',
+    expected: 'HEADED_BROWSER_SMOKE_FAILED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:449:1
+✖ a run that had to be forcibly cleaned up is rejected, not admitted (1.424583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE'
+  - 'HEADED_BROWSER_SMOKE_FORCED_CLEANUP'
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:457:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE',
+    expected: 'HEADED_BROWSER_SMOKE_FORCED_CLEANUP',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:474:1
+✖ a hung run is bounded, and its browser and display are still cleaned up (1.144375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE'
+  - 'HEADED_BROWSER_SMOKE_TIMED_OUT'
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:483:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'HEADED_BROWSER_ENVIRONMENT_UNAVAILABLE:NO_PROC_PROCESS_TABLE',
+    expected: 'HEADED_BROWSER_SMOKE_TIMED_OUT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:493:1
+✖ a cancelled run stops promptly and leaves no owned group behind (20564.280458ms)
+  AssertionError [ERR_ASSERTION]: the cancelled run must own a browser group
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:510:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/headed-browser-environment.test.mjs:564:1
+✖ interrupting the operator reaps the browser and display it started (10.437542ms)
+  Error: ENOENT: no such file or directory, scandir '/proc'
+      at readdirSync (node:fs:1570:26)
+      at descendantRows (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:62:16)
+      at assertOperatorReapsOnSignal (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:536:20)
+      at TestContext.<anonymous> (file:///private/tmp/qnow-1175r1/experiments/netlify-refine-poc/qnow-next/test/headed-browser-environment.test.mjs:565:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: '/proc'
+  }
