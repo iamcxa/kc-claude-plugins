@@ -1,13 +1,49 @@
 {
   "schema": "kc-ship-flow-review-disposition/v1",
   "pr": "iamcxa/qnow#1182",
-  "reviewed_head": "5b1faa181d628c8648adaed305fb76b567ba4bde",
+  "reviewed_head": "80713b21189189b25a6ead07dfac412bc13db9fd",
   "dispositions": [
-    {"id": "S1", "outcome": "fixed", "commit": "5b1faa18", "verified_by": "worker: verbose-deploy-diagnostic test 13/13 with the JSON-quoted case; positive control reverting the rule fails it"},
-    {"id": "S2", "outcome": "accepted", "reason": "staging Netlify site id is an infrastructure identifier already on main (preflight script); not customer/PII. Centralising it is a later cleanup."},
-    {"id": "S3", "outcome": "fixed", "commit": "5b1faa18", "verified_by": "worker: acceptance-netlify-session test 3/3, second deployOnce rejects ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED with provider called once; self-check deploysMaximum 1"},
-    {"id": "C1", "source": "code-reviewer", "summary": "qnow-next npm test is not in CI at all", "outcome": "ticketed", "ticket": "DEV-139", "verified_by": "FO grep at 4122d2be: zero qnow-next references in .github/, root package.json, pnpm-workspace.yaml"},
-    {"id": "R0", "source": "fo", "summary": "087b36e4..5b1faa18 delta (4 files, +71) read by FO: redact rule, deploy counter, two tests"}
+    {
+      "id": "S1",
+      "outcome": "fixed",
+      "commit": "5b1faa18",
+      "verified_by": "worker: verbose-deploy-diagnostic test 13/13 with the JSON-quoted case; positive control reverting the rule fails it"
+    },
+    {
+      "id": "S2",
+      "outcome": "accepted",
+      "reason": "staging Netlify site id is an infrastructure identifier already on main (preflight script); not customer/PII. Centralising it is a later cleanup."
+    },
+    {
+      "id": "S3",
+      "outcome": "fixed",
+      "commit": "5b1faa18",
+      "verified_by": "worker: acceptance-netlify-session test 3/3, second deployOnce rejects ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED with provider called once; self-check deploysMaximum 1"
+    },
+    {
+      "id": "C1",
+      "source": "code-reviewer",
+      "summary": "qnow-next npm test is not in CI at all",
+      "outcome": "ticketed",
+      "ticket": "DEV-139",
+      "verified_by": "FO grep at 4122d2be: zero qnow-next references in .github/, root package.json, pnpm-workspace.yaml"
+    },
+    {
+      "id": "R0",
+      "source": "fo",
+      "summary": "087b36e4..5b1faa18 delta (4 files, +71) read by FO: redact rule, deploy counter, two tests"
+    },
+    {
+      "id": "P1",
+      "source": "fo full npm test at 5b1faa18",
+      "summary": "test:postgres 3/71 permission denied on qnow_staff_assignments as qnow_app",
+      "outcome": "fixed",
+      "commit": "80713b21",
+      "ruling": "Captain: PoC \u2192 option A (re-grant via 0009); production scoped read = DEV-140",
+      "verified_by": "worker full npm test exit 0 on the committed tree; FO full run pending"
+    }
   ],
-  "pending": ["FO full npm test at 5b1faa18 (substitute for the missing CI job)"]
+  "pending": [
+    "FO full npm test at 80713b21"
+  ]
 }

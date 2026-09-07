@@ -29,3 +29,8 @@ Residual → repair round 2: scripts/qnow-next-hosted-preflight.mjs:137 still `!
 - 087b36e4: scripts/qnow-next-hosted-preflight.mjs `!== 8` → `!== 9`; hosted-preflight test gains a 9th fixture entry and an eight-entry refusal case (positive-controlled). test:hosted-gates 19/19; self-check providerCalls 0.
 - 5b1faa18: S1 redact rule for JSON-quoted secrets + test (13/13); S3 deployOnce counter → ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED + test (3/3). test:unit 169; self-check providerCalls 0, deploysMaximum 1; type-check 0.
 - FO: full `npm test` at 5b1faa18 running from a fresh npm ci (log /tmp/npmtest137f.log) as the substitute for CI, which does not cover qnow-next (DEV-139).
+
+## Round 4 (80713b21) — option A
+- Migration 0009 `GRANT SELECT ON qnow_staff_assignments TO qnow_app;`; counts 9→10 across 20 files; tenancy-isolation: one hunk inside the DEV-25 non-superuser block (SELECT allowed, INSERT/UPDATE/DELETE denied), other 12 tests byte-identical (FO-verified: 1 hunk). package.json/lock untouched (FO-verified).
+- Worker full `npm test` on the clean committed tree: exit 0 (secret 2, unit 169, postgres 71, netlify-local 5, cleanup 2, native-migrations 6, netlify-package 70, hosted-gates 19, web-artifact 1); self-check providerCalls 0. Pre-commit dry run had 2 HOSTED_BUILD_REQUIRES_CLEAN_HEAD failures (dirty-tree guard), expected.
+- FO full `npm test` at 80713b21 from fresh npm ci: running (log /tmp/npmtest137g.log).
