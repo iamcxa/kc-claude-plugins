@@ -51,3 +51,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 
 - Round 1 (1901bc94): hosted/ byte-identical but 8-migration and open-api 2.57.0 assumptions fail against main → FO rulings recorded in evidence/worker-evidence-DEV-137.md. Round 2 (269b90e0): six 8→9 literals, lock restored to the branch's + fflate, scripts block; FO-verified without-it pair, lock diff fflate-only, netlify-package 69 ok. Round 3 (087b36e4): preflight script 8→9 with a refusing test case (test:hosted-gates 19/19, self-check providerCalls 0).
 - Accept: S43 refusal overridden by FO script verification. Draft PR iamcxa/qnow#1182 opened (56 files, +10262/−520). Reviews (code, security) dispatched on 269b90e0; the 087b36e4 delta is two files, FO-read.
+
+## Correction (2026-09-07): CI never ran qnow-next's tests
+
+- The DEV-137 code review found, and FO verified by grep, that nothing in `.github/` references qnow-next; CI's pr-test filters the pnpm packages only. My verdicts for #1181 and #1182 said "CI's pr-test is the aggregate gate" — false. #1181's green CI exercised none of qnow-next. Ticket filed (see Linear, QNow project). For #1182 the FO runs the full `npm test` locally at the final candidate as the substitute, and reports it as such.
