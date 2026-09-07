@@ -1,0 +1,11 @@
+== e2e station: #1175 head c0c31459 macOS host 2026-09-07T01:55:38Z ==
+npm ci exit=0
+type-check exit=0
+test:headed-browser exit=1
+ℹ tests 18
+ℹ pass 6
+ℹ fail 12
+diagnose:headed-browser exit=1
+headed-browser
+headed-browser-environment.mjs
+== done 2026-09-07T01:56:17Z ==
