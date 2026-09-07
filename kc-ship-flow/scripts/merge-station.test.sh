@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 # Behavior contract for kc-ship-flow/scripts/merge-station.sh, driven through
 # the fixture at kc-ship-flow/scripts/fixtures/fake-gh-merge/gh.
+#
+# Self-check -- prove this suite actually catches a broken station (manual,
+# not one of the cases below, and not run by this file itself):
+#   cp kc-ship-flow/scripts/merge-station.sh /tmp/merge-station.sh.orig
+#   sed -i.bak 's/"DIRTY"/"NEVER"/' kc-ship-flow/scripts/merge-station.sh
+#   bash kc-ship-flow/scripts/merge-station.test.sh; echo "exit: $?"
+#   cp /tmp/merge-station.sh.orig kc-ship-flow/scripts/merge-station.sh
+#   rm -f kc-ship-flow/scripts/merge-station.sh.bak
+# Expect at least one "FAIL" line (case e1) and a non-zero exit.
 
 set -u
 
@@ -150,33 +159,63 @@ else
   fail d "first merge refused exits 4 naming the PR and never merges the next"
 fi
 
-# --- case (e): next PR reads mergeStateStatus DIRTY / mergeable CONFLICTING
-# after a landing -> exit 5 with MOVED_BASE ---
-scenario_e="$TMP_DIR/e.json"
-cat > "$scenario_e" <<'JSON'
+# --- case (e1) / (e2): next PR reads mergeStateStatus DIRTY or mergeable
+# CONFLICTING after a landing -> exit 5 with MOVED_BASE. Each signal is
+# isolated from the other (the sibling field set to a non-triggering value)
+# so a mutation of either branch alone is caught -- this is what the
+# header's documented self-check relies on. ---
+scenario_e1="$TMP_DIR/e1.json"
+cat > "$scenario_e1" <<'JSON'
 {
-  "501": {
+  "511": {
     "baseRefName": "main",
     "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
     "ready": "ok", "merge": "ok",
-    "mergeCommit": "555555555555555555555555555555555555555c"
+    "mergeCommit": "511151115111511151115111511151115111511c"
   },
-  "502": {
+  "512": {
     "baseRefName": "main",
-    "precheck": {"mergeable": "CONFLICTING", "mergeStateStatus": "DIRTY"},
+    "precheck": {"mergeable": "MERGEABLE", "mergeStateStatus": "DIRTY"},
     "ready": "ok"
   }
 }
 JSON
-log_e="$TMP_DIR/e.log"
-out_e="$(run_ms "$scenario_e" "$log_e" --trunk main --poll-seconds 0 501 502 2>&1)"
-rc_e=$?
-if [ "$rc_e" -eq 5 ] && grep -q "MERGED: #501 555555555555555555555555555555555555555c" <<<"$out_e" \
-    && grep -q "MOVED_BASE: 502" <<<"$out_e" && ! grep -qE '^pr merge 502' "$log_e"; then
-  pass e "next PR reads DIRTY/CONFLICTING after a landing, exits 5 with MOVED_BASE"
+log_e1="$TMP_DIR/e1.log"
+out_e1="$(run_ms "$scenario_e1" "$log_e1" --trunk main --poll-seconds 1 --wait-seconds 2 511 512 2>&1)"
+rc_e1=$?
+if [ "$rc_e1" -eq 5 ] && grep -q "MERGED: #511 511151115111511151115111511151115111511c" <<<"$out_e1" \
+    && grep -q "MOVED_BASE: 512" <<<"$out_e1" && ! grep -qE '^pr merge 512' "$log_e1"; then
+  pass e "mergeStateStatus DIRTY alone (mergeable MERGEABLE) after a landing exits 5 with MOVED_BASE"
 else
-  printf '  out=%s\n  log=%s\n' "$out_e" "$(cat "$log_e")"
-  fail e "next PR reads DIRTY/CONFLICTING after a landing, exits 5 with MOVED_BASE"
+  printf '  out=%s\n  log=%s\n' "$out_e1" "$(cat "$log_e1")"
+  fail e "mergeStateStatus DIRTY alone (mergeable MERGEABLE) after a landing exits 5 with MOVED_BASE"
+fi
+
+scenario_e2="$TMP_DIR/e2.json"
+cat > "$scenario_e2" <<'JSON'
+{
+  "521": {
+    "baseRefName": "main",
+    "states": [{"mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN", "statusCheckRollup": []}],
+    "ready": "ok", "merge": "ok",
+    "mergeCommit": "521252125212521252125212521252125212521c"
+  },
+  "522": {
+    "baseRefName": "main",
+    "precheck": {"mergeable": "CONFLICTING", "mergeStateStatus": "BLOCKED"},
+    "ready": "ok"
+  }
+}
+JSON
+log_e2="$TMP_DIR/e2.log"
+out_e2="$(run_ms "$scenario_e2" "$log_e2" --trunk main --poll-seconds 1 --wait-seconds 2 521 522 2>&1)"
+rc_e2=$?
+if [ "$rc_e2" -eq 5 ] && grep -q "MERGED: #521 521252125212521252125212521252125212521c" <<<"$out_e2" \
+    && grep -q "MOVED_BASE: 522" <<<"$out_e2" && ! grep -qE '^pr merge 522' "$log_e2"; then
+  pass e "mergeable CONFLICTING alone (mergeStateStatus BLOCKED) after a landing exits 5 with MOVED_BASE"
+else
+  printf '  out=%s\n  log=%s\n' "$out_e2" "$(cat "$log_e2")"
+  fail e "mergeable CONFLICTING alone (mergeStateStatus BLOCKED) after a landing exits 5 with MOVED_BASE"
 fi
 
 # --- case (f): a CheckRun-shaped conclusion FAILURE -> exit 3 ---
@@ -394,5 +433,8 @@ else
   fail q "gh pr ready itself failing exits 7 with READY_FAILED"
 fi
 
-printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
-[ "$FAIL" -eq 0 ]
+printf '\nmerge-station.test: %s passed, %s failed\n' "$PASS" "$FAIL"
+if [ "$FAIL" -gt 0 ]; then
+  exit 1
+fi
+exit 0
