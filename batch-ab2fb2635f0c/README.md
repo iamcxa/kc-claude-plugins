@@ -91,3 +91,8 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 - Attempt 3 halted at the full run's display check (zero provider ops, receipt e235530e). Attempt 4 started on the Captain's fourth "跑": session b259ab45, token dev37-2026-09-07-r4, full run under `xvfb-run -a` per AGENTS.md.
 - Attempt 4 (receipt d342861e): everything up to the provider baseline passed; refused at rollback runtime admission because `runtimeAdmitted` demands 10 migrations of every receipt and the pinned rollback deploy (6a94d6ac, revision 348486fc, live receipt verified read-only) legitimately carries 8. The blanket 8→10 ruling in DEV-137 broke the rollback baseline. Ticket filed (blocks DEV-37); local worker dispatched for the fix PR; attempt 5 after merge with the Captain's approval.
 - DEV-143 verdict: MERGE #1183 (head fba04c0f). FO full npm test green, without-it proven, review no findings. After merge: attempt 5 of DEV-37 from the new main (Captain's approval).
+
+## DEV-143 — merged (2026-09-08)
+
+- Captain: "合併". Ready → checks pass → first merge call refused (S36 pattern, CLEAN then "requirements met, add --auto"), second call 15 s later merged → main bf1b4ba1. DEV-143 Done.
+- Next: rehearsal in the cloud workspace without the Captain (local-fake dependencies, providerCalls 0) before attempt 5.
