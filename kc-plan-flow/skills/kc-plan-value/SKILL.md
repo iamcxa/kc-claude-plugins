@@ -104,6 +104,23 @@ That is two short sentences: what it looks like when it is done in the user's
 words, then the bar stated so it can be failed. A boundary or a cut cost earns
 its place only if it still fits.
 
+**The milestone is one stack.** Everything cut against it lands on one branch, and
+that branch is what the captain accepts -- not the trunk, and not any single lane. A
+milestone whose work is spread across branches that never meet has a verification
+point with nothing to verify. This was learned by cutting one milestone into two
+lanes that could each be built and neither be accepted.
+
+**It is accepted against the description and nothing else.** Those 140 characters
+are the acceptance test, so they carry the outcome and the bar and nothing a planner
+wanted to remember. A cut rationale, a dependency note, a reason the milestone
+exists -- all of it belongs on an issue. One milestone here spent half its budget
+on "cut candidate: the browser reviewer already works", which is a true and useful
+sentence that cannot be failed.
+
+**If you cannot state the bar so a person can say it was not met, this is not a
+milestone yet.** The length bound catches a description that rambles; nothing else
+catches one that is empty.
+
 Everything else belongs on an issue or in conversation. This bound exists
 because a milestone description that has room for headings will grow them, and
 what grows there is implementation, which has its own home.
