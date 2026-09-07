@@ -6,3 +6,4 @@ Runtime: FO stations local (kc-ship-flow installed from main ac60ebe4 / 1d4e95e0
 
 ## Decisions made under `defaults`
 
+- 2026-09-07T01:45:15Z — **DEV-25 (#1177, base 038222ea head eeb7d4f8)**: accept station not applicable (pre-built PR, no worker Evidence block); review station started — code-reviewer, tob-security-reviewer, silent-failure-hunter (Sonnet) on the diff in the local qnow clone.
