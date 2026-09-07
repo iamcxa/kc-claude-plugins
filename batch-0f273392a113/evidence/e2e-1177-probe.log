@@ -1,0 +1,5 @@
+netlify/gotrue @ master, last pushed 2026-09-02T06:48:06Z
+HOLDS   netlify/gotrue api/ contains no otp.go, phone.go, or sms_provider
+HOLDS   supabase/auth internal/api/ still carries the phone OTP modules (control)
+HOLDS   netlify/gotrue route table exposes no /otp endpoint
+HOLDS   netlify/gotrue POST /token admits only the password and refresh_token grants
