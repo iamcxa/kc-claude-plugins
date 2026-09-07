@@ -61,9 +61,18 @@ and a broken product.
 a near miss is silent: an issue carrying seven acceptance criteria reported `0
 ACs` because the criteria had no bullet marker.
 
-- Acceptance criteria as a bullet list, each `- **AC-1** — …`
-- A `## Non-goals` section, as a `- ` list
-- A `Re-verified:` line carrying the command and an ISO date
+- Acceptance criteria as a bullet list, each `- **AC-1** — …`. Without the
+  bullet marker they are invisible: one issue carrying eight of them read as
+  `0 ACs`, then as `8 ACs` once the markers went in, same text otherwise.
+- Two sections, both required and both easy to half-satisfy: `## Accepted
+  outcome`, and `## Non-goals` as a `- ` list. Supplying only the second gets
+  you a complaint about the first.
+- A `Re-verified:` line carrying the command and an ISO date, **with no colon
+  and no issue identifier anywhere in it**. The parser splits the line on `:`
+  and reads the last word as the date, so `git show <ref>:<path>` breaks it —
+  and so does a branch name containing a ticket id, because the tracker
+  silently rewrites that into a link whose URL carries its own colons. Name the
+  revision by short SHA and the search by symbol.
 - A `Supersedes:` line naming an issue, or `none, searched: <query>`
 
 The `Re-verified:` line is a paste of what you already ran, not a ceremony
@@ -100,6 +109,18 @@ with the plan.
 Note what it does not judge: only issues admitted to a cycle are checked, so a
 recut that leaves its new issues un-cycled will lint clean while nothing it
 produced was examined.
+
+Two of its rules will fail on a plan shaped the way this plugin shapes one, and
+neither failure is yours to fix by contorting the plan:
+
+- **The by-product check wants every issue to claim a file nobody else claimed.**
+  A value issue names no file, by contract. So value issues fail it and always
+  will. The check belongs among sub-issues, which do name surfaces.
+- **The single-cycle check admits one cycle of work.** A plan cut into
+  milestones across three cycles cannot satisfy it while the previous cycle
+  still holds anything.
+
+Report both as limits of the linter with the receipt, and leave the plan alone.
 
 ## Return
 
