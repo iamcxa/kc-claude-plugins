@@ -66,15 +66,15 @@ The milestone is the verification point, and it carries the vertical slice when
 a single issue cannot — which is most of the time in a product spanning more
 than one repository.
 
-**Its description is three sentences. Exactly three.**
+**Its description is at most 140 characters.** Count them; do not estimate.
 
-1. What it looks like when it is done, in the user's words.
-2. When it ships — the bar, stated so it can be failed.
-3. The boundary, or the cost of cutting it.
+That is two short sentences: what it looks like when it is done in the user's
+words, then the bar stated so it can be failed. A boundary or a cut cost earns
+its place only if it still fits.
 
-Everything else belongs on an issue or in conversation. A milestone description
-that has grown headings is describing implementation, and the implementation has
-its own home.
+Everything else belongs on an issue or in conversation. This bound exists
+because a milestone description that has room for headings will grow them, and
+what grows there is implementation, which has its own home.
 
 Where an issue's acceptance is one layer of a stack, the milestone names the
 integration proof that joins them **and gives it an owner**. A milestone that
@@ -102,7 +102,7 @@ plan_value:
   milestones:
     - name: <letter · the outcome, in the user's words>
       target: <date>
-      description: <exactly three sentences>
+      description: <140 characters or fewer>
       integration_proof: <what joins the layers, and who owns it>
   issues:
     - title: <one value point>

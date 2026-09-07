@@ -38,8 +38,8 @@ value point and its acceptance is something a person does. It names no file: the
 moment a path appears, the author has stepped into the archaeologist's seat
 without the archaeologist's evidence.
 
-Milestone descriptions are three sentences — what done looks like, when it
-ships, and the boundary or the cost of cutting it.
+Milestone descriptions are capped at 140 characters — what done looks like, then
+the bar stated so it can be failed.
 
 It ends by handing the archaeologist a list of questions, phrased as questions.
 A request to confirm returns a confirmation; the seat answers the shape it is
