@@ -1,0 +1,13 @@
+{
+  "schema": "kc-ship-flow-review-disposition/v1",
+  "pr": "iamcxa/qnow#1182",
+  "reviewed_head": "5b1faa181d628c8648adaed305fb76b567ba4bde",
+  "dispositions": [
+    {"id": "S1", "outcome": "fixed", "commit": "5b1faa18", "verified_by": "worker: verbose-deploy-diagnostic test 13/13 with the JSON-quoted case; positive control reverting the rule fails it"},
+    {"id": "S2", "outcome": "accepted", "reason": "staging Netlify site id is an infrastructure identifier already on main (preflight script); not customer/PII. Centralising it is a later cleanup."},
+    {"id": "S3", "outcome": "fixed", "commit": "5b1faa18", "verified_by": "worker: acceptance-netlify-session test 3/3, second deployOnce rejects ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED with provider called once; self-check deploysMaximum 1"},
+    {"id": "C1", "source": "code-reviewer", "summary": "qnow-next npm test is not in CI at all", "outcome": "ticketed", "ticket": "DEV-139", "verified_by": "FO grep at 4122d2be: zero qnow-next references in .github/, root package.json, pnpm-workspace.yaml"},
+    {"id": "R0", "source": "fo", "summary": "087b36e4..5b1faa18 delta (4 files, +71) read by FO: redact rule, deploy counter, two tests"}
+  ],
+  "pending": ["FO full npm test at 5b1faa18 (substitute for the missing CI job)"]
+}

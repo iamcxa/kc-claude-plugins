@@ -24,3 +24,8 @@ TESTS (worker): type-check 0; test:hosted-gates 0 (18/18); test:netlify-package 
 TESTS (FO-verified at 269b90e0, fresh npm ci): without-it retained 0 / removed 1 (artifact-gate.mjs moved); test:netlify-package 0 (69 ok); lock diff vs branch = fflate block only; open-api 2.57.0; hosted/ diff vs branch = 5 files/6 lines
 AC-1 PASS (26) · AC-2 PASS · AC-3 amended PASS
 Residual → repair round 2: scripts/qnow-next-hosted-preflight.mjs:137 still `!== 8` (gates the DEV-37 deploy; its test mock is self-contained). Brief error: hosted/acceptance-full-run.mts does not exist on the branch tip.
+
+## Rounds 2–3 (087b36e4, 5b1faa18)
+- 087b36e4: scripts/qnow-next-hosted-preflight.mjs `!== 8` → `!== 9`; hosted-preflight test gains a 9th fixture entry and an eight-entry refusal case (positive-controlled). test:hosted-gates 19/19; self-check providerCalls 0.
+- 5b1faa18: S1 redact rule for JSON-quoted secrets + test (13/13); S3 deployOnce counter → ACCEPTANCE_DEPLOY_LIMIT_EXCEEDED + test (3/3). test:unit 169; self-check providerCalls 0, deploysMaximum 1; type-check 0.
+- FO: full `npm test` at 5b1faa18 running from a fresh npm ci (log /tmp/npmtest137f.log) as the substitute for CI, which does not cover qnow-next (DEV-139).
