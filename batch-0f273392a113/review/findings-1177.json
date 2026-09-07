@@ -14,7 +14,8 @@
    "category": "security",
    "quote": "'Submitting the phone number and the code exchanges them for a session, and a wrong, expired, or replayed code is refused.',",
    "summary": "otp-verify states no bound on verify attempts; reference verifyOtp has no counter; conformance tries one wrong code. A provider can be fully conformant and brute-forceable.",
-   "failure_scenario": "10^6 guesses within the 5-minute TTL against one pending code."
+   "failure_scenario": "10^6 guesses within the 5-minute TTL against one pending code.",
+   "status": "closed in r1 (2c794892)"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/identity/phone-identity-port.ts",
@@ -22,7 +23,8 @@
    "category": "security",
    "quote": "super('Phone identity request was refused');",
    "summary": "Constant message claims no oracle, but PhoneIdentityError.refusal distinguishes expired-code from invalid-code and the port never requires collapsing it at the API boundary.",
-   "failure_scenario": "Sweep phone numbers with a dummy code; expired-code reveals registered/active numbers."
+   "failure_scenario": "Sweep phone numbers with a dummy code; expired-code reveals registered/active numbers.",
+   "status": "closed in r1 (2c794892)"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/identity/phone-identity-port.ts",
@@ -30,7 +32,8 @@
    "category": "correctness",
    "quote": "revokeSession(accessToken: string): Promise<void>;",
    "summary": "Lost-handset case named by whyItGates cannot be served: revoke is keyed by the access token only; no revoke-by-subject.",
-   "failure_scenario": "Stolen device's session lives to expiry."
+   "failure_scenario": "Stolen device's session lives to expiry.",
+   "status": "listed \u2014 DEV-133"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/identity/provider-capability-matrix.ts",
@@ -38,7 +41,8 @@
    "category": "correctness",
    "quote": "'GoTrue sign-out revokes the refresh token server-side; the access JWT remains valid until exp, which is bounded by the configured access-token lifetime.',",
    "summary": "Supabase scored session-revoke 'yes' and Netlify 'partial' for the identical limit; journeyVerdict hides the shipping exposure.",
-   "failure_scenario": "Decision record undercounts a real exposure."
+   "failure_scenario": "Decision record undercounts a real exposure.",
+   "status": "listed \u2014 DEV-133"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/test/tenancy-isolation.integration.test.ts",
@@ -46,7 +50,8 @@
    "category": "test-coverage",
    "quote": "      await first.query('COMMIT');",
    "summary": "Residue test covers the COMMIT path only, not release without COMMIT/ROLLBACK.",
-   "failure_scenario": "A regression releasing a client mid-transaction goes undetected."
+   "failure_scenario": "A regression releasing a client mid-transaction goes undetected.",
+   "status": "closed in r1"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/test/phone-identity-conformance.ts",
@@ -54,7 +59,8 @@
    "category": "test-coverage",
    "quote": "      // ...and no SMS was sent to obtain it. If a send had happened the",
    "summary": "Comment claims refresh sends no SMS; the assertion never inspects the sent-codes sink.",
-   "failure_scenario": "A refresh that triggers a send passes."
+   "failure_scenario": "A refresh that triggers a send passes.",
+   "status": "closed in r1"
   },
   {
    "file": "experiments/netlify-refine-poc/qnow-next/identity/reference-phone-identity.ts",
@@ -62,8 +68,10 @@
    "category": "correctness",
    "quote": " * imports this module outside the test tree, and the conformance test asserts",
    "summary": "Header claims a conformance assertion that no non-test code imports this module; no such assertion exists.",
-   "failure_scenario": "A demo script imports the no-auth reference provider and nothing fails."
+   "failure_scenario": "A demo script imports the no-auth reference provider and nothing fails.",
+   "status": "closed in r1"
   }
  ],
- "test_command": "npm ci && npm test (Docker postgres:17-alpine for test:postgres); targeted: npx vitest run --config vitest.config.ts test/tenancy-isolation.integration.test.ts | test/phone-identity-conformance.test.ts; probe optional (network)"
+ "test_command": "npm ci && npm test (Docker postgres:17-alpine for test:postgres); targeted: npx vitest run --config vitest.config.ts test/tenancy-isolation.integration.test.ts | test/phone-identity-conformance.test.ts; probe optional (network)",
+ "head_r1": "2c79489203b3cb2476cd9817ac231a41dbb35f27"
 }

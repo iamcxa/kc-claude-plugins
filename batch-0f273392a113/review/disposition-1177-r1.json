@@ -1,0 +1,6 @@
+{
+ "schema": "kc-dev-flow-ship-flow-disposition/v1",
+ "disposition": "none-open",
+ "findings_count": 0,
+ "note": "r1 closed both security findings and the three coverage/claim findings; revoke-by-subject and matrix scoring listed under DEV-133. Accept station refused on AC-3 (extension list, S43/DEV-134); FO verified the pair itself: retained 0, removed 1, base 1; npm test exit 0 at 2c794892 (106+66+2 vitest, 2+1 node)."
+}

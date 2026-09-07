@@ -1,0 +1,12 @@
+{
+ "schema": "kc-dev-flow-pr-review-findings/v1",
+ "pr": "iamcxa/qnow#1174",
+ "head": "3c65da1e",
+ "findings": [],
+ "reviewers": {
+  "code-reviewer": 0,
+  "tob-security-reviewer": "pending",
+  "silent-failure-hunter": "pending (resumed)"
+ },
+ "test_command": "no credentials: pnpm test:unit, test:netlify-package, acceptance:hosted:full-run:self-check; display: test:headed-browser; hosted + mutating (authorized only): acceptance:hosted:full-run"
+}
