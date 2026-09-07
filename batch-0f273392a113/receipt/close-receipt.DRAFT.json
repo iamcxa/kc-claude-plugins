@@ -1,0 +1,131 @@
+{
+ "schema": "kc-ship-close-receipt/v1",
+ "plan_receipt_sha256": "0f273392a11371be04d33ddc60c47b006d0104d9052cb7c23fd6d466c91b8efd",
+ "approval_receipt_sha256": "3a39747004944fd07933f3540154b5192c45bddce950deec0d7503181390404c",
+ "batch": {
+  "entity": "batch-0f273392a113",
+  "started_at": "2026-09-07T00:40:00Z",
+  "closed_at": "2026-09-07T04:03:57Z",
+  "holder": "laptop"
+ },
+ "issues": {
+  "DEV-25": {
+   "outcome": "merged",
+   "candidate": "2c79489203b3cb2476cd9817ac231a41dbb35f27",
+   "pr": "iamcxa/qnow#1177",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 0,
+    "build": 0,
+    "verify": 6,
+    "review": 31,
+    "repair": 34
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "merged as c7a905a9 after a moved_base merge (qnow ruleset: head up to date)",
+    "hosted Neon behaviour unproven (PR's own 'Not proven')",
+    "customer identity provider undecided → DEV-132; revoke-by-subject → DEV-133",
+    "accept station S43 override (FO re-ran the pair)"
+   ]
+  },
+  "DEV-35": {
+   "outcome": "merged",
+   "candidate": "c6c4fe19b3a6aee39eb3a4692e0a2fc4a125c4cc",
+   "pr": "iamcxa/qnow#1180",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 0,
+    "build": 0,
+    "verify": 4,
+    "review": 16,
+    "repair": 16
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "first merged into the wrong base (S45), reverted; re-landed on main via #1180 as 820f6fb5 (cherry-picks)",
+    "display-dependent journey evidence pending the DEV-37 cloud run",
+    "accept station S43 override"
+   ]
+  },
+  "DEV-36": {
+   "outcome": "pr_open",
+   "candidate": "b5d87ed862a92dd1d4187f0773d4f4e9cdcccf52",
+   "pr": "iamcxa/qnow#1174",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 0,
+    "build": 0,
+    "verify": 3,
+    "review": 28,
+    "repair": 34
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "cannot land on main alone: the whole hosted/ runner (26 files) exists only on the staging-qualification branch; waits for that task's delivery to main (Captain ruling b)",
+    "bootstrap window is the 15-minute ceiling, not re-stamped after deploy",
+    "accept station S43 override"
+   ]
+  },
+  "DEV-37": {
+   "outcome": "carried",
+   "candidate": null,
+   "pr": null,
+   "rounds": 0,
+   "minutes": {
+    "dispatch": 0,
+    "build": 0,
+    "verify": 0,
+    "review": 0,
+    "repair": 0
+   },
+   "cost_usd_imputed": null,
+   "residuals": [
+    "not dispatched: prerequisites DEV-36 and the hosted runner are not on main; cloud brief prepared (evidence/dispatch-DEV-37-cloud.md)"
+   ]
+  }
+ },
+ "defects_returned": [
+  {
+   "id": "S43",
+   "class": "verify",
+   "one_line": "accept station AC-3 path extractor knows only py/md/sh/json/yaml/yml/txt; refused every TypeScript candidate",
+   "fix_ticket": "DEV-134",
+   "accepted_residual": null
+  },
+  {
+   "id": "S44",
+   "class": "seam",
+   "one_line": "FO pushed a station decision (merge before cloud evidence) to the Captain as an (a)/(b) choice",
+   "fix_ticket": null,
+   "accepted_residual": "FO conduct; the decision was taken at the station afterwards and recorded"
+  },
+  {
+   "id": "S45",
+   "class": "delivery",
+   "one_line": "merge station merged #1175 into a non-trunk base without checking baseRefName, with a resolution that broke a script",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
+  },
+  {
+   "id": "S46",
+   "class": "delivery",
+   "one_line": "three regex merge-resolution attempts shipped a syntax-broken script because the printed check was not a gate",
+   "fix_ticket": "DEV-114",
+   "accepted_residual": null
+  },
+  {
+   "id": "S42",
+   "class": "dispatch",
+   "one_line": "two background agents stalled on the harness watchdog; resumed by message, not re-dispatched",
+   "fix_ticket": null,
+   "accepted_residual": "harness behaviour; resume-first rule recorded"
+  }
+ ],
+ "totals": {
+  "workspaces_created": 3,
+  "workspaces_orphaned": 0,
+  "fix_rounds": 3,
+  "captain_gates": 3
+ }
+}
