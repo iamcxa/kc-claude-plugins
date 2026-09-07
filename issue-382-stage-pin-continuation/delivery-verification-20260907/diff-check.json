@@ -1,0 +1,14 @@
+{
+  "name": "diff-check",
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+  "exit": 0,
+  "seconds": 0.042771375039592385,
+  "timed_out": false,
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

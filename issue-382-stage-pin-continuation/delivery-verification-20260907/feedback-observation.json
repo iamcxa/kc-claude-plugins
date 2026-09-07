@@ -1,0 +1,11 @@
+{
+  "complete": true,
+  "dispositions": [],
+  "fingerprint": "sha256:08e9518a831265aca2fad2fd590fa735b34f20e6d1527b8d4b4f974fa4d791f5",
+  "head_sha": "1d5139568122a3af97cbc28333171df3bc2e27be",
+  "items": [],
+  "pr_number": 390,
+  "repository": "iamcxa/kc-claude-plugins",
+  "scheme": "github-pr-feedback/v1",
+  "stack_layer": "single"
+}

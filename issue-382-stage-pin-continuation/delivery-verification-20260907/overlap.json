@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "merge-tree",
+      "--write-tree",
+      "1d5139568122a3af97cbc28333171df3bc2e27be",
+      "abbe926929af915c2bbb8bb243eca0f6e3ac11f2"
+    ],
+    "exit": 1,
+    "label": "pr390-pr321",
+    "scope": "Read-only conflict probe; no merge, retarget or changes to PR 321"
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "merge-tree",
+      "--write-tree",
+      "1d4e95e0f38e53b525a0c7c272d0d55f0b37ddd2",
+      "abbe926929af915c2bbb8bb243eca0f6e3ac11f2"
+    ],
+    "exit": 1,
+    "label": "main-pr321",
+    "scope": "Read-only conflict probe; no merge, retarget or changes to PR 321"
+  }
+]

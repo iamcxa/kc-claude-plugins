@@ -1,0 +1,48 @@
+{
+  "author": {
+    "id": "MDQ6VXNlcjE1MjI4MDg=",
+    "is_bot": false,
+    "login": "iamcxa",
+    "name": "Kent Chen"
+  },
+  "baseRefName": "main",
+  "baseRefOid": "ac60ebe462a9177dbfcaa61f29db98444f4a384d",
+  "body": "Resume approved work after report updates or authorized corrections without weakening scope refusal or rewriting active stage pins.\n\n## What changed\n\n- Separate report growth from approved authority during pinned continuation.\n- Bind authorized corrections to rejected snapshots, scope, and retained pin history.\n- Preserve legacy status-only advances while rejecting other byte changes.\n- Document continuation and recovery boundaries.\n\n## Evidence\n\n- Acceptance: 5/5 passed; loader/contract commands: 2/2 passed in 22.00s/59.52s.\n- Independent probes: 7/7 formats advanced; 21/21 paired mutations refused.\n\nSource-only. Main-tip integration tests, provider CI, and original-task recovery remain unverified. Approved workflow exceptions applied; evidence-index citations remain unresolved.\n\n---\nCandidate: 1d5139568122a3af97cbc28333171df3bc2e27be\n[dn](https://github.com/iamcxa/kc-claude-plugins/blob/b5407abaa8a58894e2e5b88fc197e005f02ba5e0/issue-382-stage-pin-continuation.md)\nRefs #382; keep open for legacy-task recovery.\n",
+  "headRefOid": "1d5139568122a3af97cbc28333171df3bc2e27be",
+  "isDraft": true,
+  "number": 390,
+  "state": "OPEN",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-09-06T18:11:04Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34050891104/job/101534190280",
+      "name": "multi-profile route gate (live Spacedock)",
+      "startedAt": "2026-09-06T18:10:57Z",
+      "status": "COMPLETED",
+      "workflowName": "kc-dev-flow release gate"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-09-06T18:11:35Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34050891148/job/101534190442",
+      "name": "version parity (plugin.json / marketplace.json / codex / README)",
+      "startedAt": "2026-09-06T18:10:56Z",
+      "status": "COMPLETED",
+      "workflowName": "marketplace version parity"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-09-06T18:10:53Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://dashboard.gitguardian.com",
+      "name": "GitGuardian Security Checks",
+      "startedAt": "2026-09-06T18:10:52Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ],
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/390"
+}

@@ -1,0 +1,79 @@
+{
+  "main": "1d4e95e0f38e53b525a0c7c272d0d55f0b37ddd2",
+  "pr_head": "1d5139568122a3af97cbc28333171df3bc2e27be",
+  "integration_tree": "0df1c96914be6ed4222388b5d83b524176f3a488",
+  "model_calls": 0,
+  "ci_modified": false,
+  "hosted_cost_per_pr": "not measured",
+  "checks": [
+    {
+      "name": "full-contract",
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "scripts/kc-dev-flow-contract-test.py"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "exit": 0,
+      "seconds": 69.98315025004558,
+      "timed_out": false,
+      "log_sha256": "fbeadbc8f88c4970ef6982e0f640b2ec0352b251b101567267bb4fccc4811eab"
+    },
+    {
+      "name": "marketplace",
+      "command": [
+        "bash",
+        "scripts/marketplace-verify.sh"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "exit": 0,
+      "seconds": 14.505656416062266,
+      "timed_out": false,
+      "log_sha256": "6b17ab62ffb2170e27ce29a16a92fb06822e6b5ba3bb92ff7970a93c67ef6a2a"
+    },
+    {
+      "name": "frontmatter",
+      "command": [
+        "bash",
+        "scripts/skill-frontmatter-lint.sh"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "exit": 0,
+      "seconds": 0.07459324994124472,
+      "timed_out": false,
+      "log_sha256": "3fdb5741de7f190fb30055d33ebd9ed7a43eaa978318437eae83f42a366cb77b"
+    },
+    {
+      "name": "scoped-ruff",
+      "command": [
+        "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--select",
+        "E4,E7,E9,F",
+        "kc-dev-flow/scripts/profile-contract-loader.py",
+        "kc-dev-flow/scripts/profile-contract-loader.test.py"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "exit": 0,
+      "seconds": 0.1803105839062482,
+      "timed_out": false,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+      "exit": 0,
+      "seconds": 0.042771375039592385,
+      "timed_out": false,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "tracked_bytes_unchanged": true
+}

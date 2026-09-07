@@ -1,0 +1,11 @@
+{
+  "conclusion": "success",
+  "event": "pull_request",
+  "head_branch": "spacedock-ensign/issue-382-stage-pin-continuation",
+  "head_sha": "1d5139568122a3af97cbc28333171df3bc2e27be",
+  "html_url": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34050891148",
+  "id": 34050891148,
+  "path": ".github/workflows/marketplace-parity.yml",
+  "run_started_at": "2026-09-06T18:10:53Z",
+  "updated_at": "2026-09-06T18:11:36Z"
+}

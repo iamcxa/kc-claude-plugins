@@ -1,0 +1,33 @@
+443b791b1d839e4c78f9bf8e07fb6e1fe555291a
+100755 ba86abf09b920a349d6e7b2187ad994d60652659 1	docs/dev/_mods/profile-contract-loader.py
+100755 d55c07347f55734da6cfd3de1eede3a2935dfb9c 3	docs/dev/_mods/profile-contract-loader.py
+100644 b5cb8f0e9c4113ab130c54be0e3cdd5cf88eb3b9 1	kc-dev-flow/MIGRATION.md
+100644 7634850102362dc58fc81cc22e762b2ef3ff206f 2	kc-dev-flow/MIGRATION.md
+100644 4222d225b927ec1d1a4c5e9f8f79883bb86a6252 3	kc-dev-flow/MIGRATION.md
+100644 2f3575d7c0acc22cdd3ad5c4a3f92acb59fcd90f 1	kc-dev-flow/README.md
+100644 2ec58be57ed7566c2bbc478e9c540b2f529da18b 2	kc-dev-flow/README.md
+100644 54dc33750c6c19a9680c7dbfbe434b2e55082621 3	kc-dev-flow/README.md
+100644 46ad25d0bfa088b8cd73c6b8b788790e3e053a31 1	kc-dev-flow/skills/adopt-dev-flow/SKILL.md
+100644 bf939d4363ab42e839fa8080af297f16107f7c92 2	kc-dev-flow/skills/adopt-dev-flow/SKILL.md
+100644 09d555dc2fdfea2b5543b4689d94543829b7b0b1 3	kc-dev-flow/skills/adopt-dev-flow/SKILL.md
+100755 ffca10e01b6cd3994a09e1fb0432dbff4a4b7673 1	scripts/kc-dev-flow-contract-test.py
+100755 bbf116392c38e05cf1287e4bb660ec3b227ce88a 2	scripts/kc-dev-flow-contract-test.py
+100755 b5a2fba59613369f34d3a71ae9e4b695279686fe 3	scripts/kc-dev-flow-contract-test.py
+100755 ba718f7af4df46ae6d342693902b30d762a856f1 1	scripts/kc-dev-flow-minimal-stack-ablation.test.py
+100755 6ec992a661422186ef18161fbe382d1af0f1e912 2	scripts/kc-dev-flow-minimal-stack-ablation.test.py
+100755 f75818db7fbfde2b167a63838cccc6695a2fc104 3	scripts/kc-dev-flow-minimal-stack-ablation.test.py
+
+CONFLICT (modify/delete): docs/dev/_mods/profile-contract-loader.py deleted in 1d5139568122a3af97cbc28333171df3bc2e27be and modified in abbe926929af915c2bbb8bb243eca0f6e3ac11f2.  Version abbe926929af915c2bbb8bb243eca0f6e3ac11f2 of docs/dev/_mods/profile-contract-loader.py left in tree.
+Auto-merging kc-dev-flow/MIGRATION.md
+CONFLICT (content): Merge conflict in kc-dev-flow/MIGRATION.md
+Auto-merging kc-dev-flow/README.md
+CONFLICT (content): Merge conflict in kc-dev-flow/README.md
+Auto-merging kc-dev-flow/scripts/profile-contract-loader.py
+Auto-merging kc-dev-flow/scripts/profile-contract-loader.test.py
+Auto-merging kc-dev-flow/skills/adopt-dev-flow/SKILL.md
+CONFLICT (content): Merge conflict in kc-dev-flow/skills/adopt-dev-flow/SKILL.md
+Auto-merging kc-dev-flow/skills/continue-dev-flow/SKILL.md
+Auto-merging scripts/kc-dev-flow-contract-test.py
+CONFLICT (content): Merge conflict in scripts/kc-dev-flow-contract-test.py
+Auto-merging scripts/kc-dev-flow-minimal-stack-ablation.test.py
+CONFLICT (content): Merge conflict in scripts/kc-dev-flow-minimal-stack-ablation.test.py

@@ -1,0 +1,83 @@
+=== Marketplace Verification ===
+  Marketplace: kc-claude-plugins
+  Source:      /Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout
+  Temp HOME:   /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.rZBw5m88l6
+  Smoke test:  off
+
+--- L0: Version Parity ---
+PACKAGE            CONFIGURED PATH                                      RESULT    EFFECTIVE PATH
+e2e-pipeline       .claude-plugin/plugin.json                           ok        e2e-pipeline/.claude-plugin/plugin.json
+e2e-pipeline       .codex-plugin/plugin.json                            ok        e2e-pipeline/.codex-plugin/plugin.json
+e2e-pipeline       /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-plugin-forge    .claude-plugin/plugin.json                           ok        kc-plugin-forge/.claude-plugin/plugin.json
+kc-plugin-forge    .codex-plugin/plugin.json                            ok        kc-plugin-forge/.codex-plugin/plugin.json
+kc-plugin-forge    /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-nightwatch      .claude-plugin/plugin.json                           ok        kc-nightwatch/.claude-plugin/plugin.json
+kc-nightwatch      /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-hyperfocus      .claude-plugin/plugin.json                           ok        kc-hyperfocus/.claude-plugin/plugin.json
+kc-hyperfocus      /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-team-ops        .claude-plugin/plugin.json                           ok        kc-team-ops/.claude-plugin/plugin.json
+kc-team-ops        .codex-plugin/plugin.json                            ok        kc-team-ops/.codex-plugin/plugin.json
+kc-team-ops        /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-pr-flow         .claude-plugin/plugin.json                           ok        kc-pr-flow/.claude-plugin/plugin.json
+kc-pr-flow         .codex-plugin/plugin.json                            ok        kc-pr-flow/.codex-plugin/plugin.json
+kc-pr-flow         /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-dev-flow        .claude-plugin/plugin.json                           ok        kc-dev-flow/.claude-plugin/plugin.json
+kc-dev-flow        .codex-plugin/plugin.json                            ok        kc-dev-flow/.codex-plugin/plugin.json
+kc-dev-flow        plugin.json                                          ok        kc-dev-flow/plugin.json
+kc-dev-flow        /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-ship-flow       .claude-plugin/plugin.json                           ok        kc-ship-flow/.claude-plugin/plugin.json
+kc-ship-flow       .codex-plugin/plugin.json                            ok        kc-ship-flow/.codex-plugin/plugin.json
+kc-ship-flow       /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+
+Release-please config: all extra-file paths and JSONPath selectors are valid
+First-release contract: e2e-pipeline-v0.1.0, kc-plugin-forge-v0.1.0, kc-nightwatch-v0.1.0, kc-hyperfocus-v0.1.0, kc-team-ops-v0.1.0, kc-pr-flow-v0.1.0, kc-dev-flow-v0.1.0, kc-ship-flow-v0.1.0
+Plugin directory enumeration: on-disk plugin directories and marketplace.json entries match 1:1
+
+PLUGIN             release   plugin.json market    codex     hermes    RESULT
+e2e-pipeline       3.3.5     3.3.5     3.3.5     3.3.5     -         ok
+kc-plugin-forge    1.9.1     1.9.1     1.9.1     1.9.1     -         ok
+kc-nightwatch      0.5.1     0.5.1     0.5.1     -         -         ok
+kc-hyperfocus      1.6.4     1.6.4     1.6.4     -         -         ok
+kc-team-ops        1.7.0     1.7.0     1.7.0     1.7.0     -         ok
+kc-pr-flow         1.12.0    1.12.0    1.12.0    1.12.0    -         ok
+kc-dev-flow        4.3.0     4.3.0     4.3.0     4.3.0     4.3.0     ok
+kc-ship-flow       0.1.0     0.1.0     0.1.0     0.1.0     -         ok
+
+Version parity: all plugins consistent
+
+--- L1: Schema Validation ---
+Adding marketplace…✔ Successfully added marketplace: kc-claude-plugins (declared in user settings)
+  ✓ marketplace.json schema valid
+
+--- L2: Install Validation ---
+Installing plugin "e2e-pipeline@kc-claude-plugins"...✔ Successfully installed plugin: e2e-pipeline@kc-claude-plugins (scope: user)
+  ✓ e2e-pipeline installed
+Installing plugin "kc-plugin-forge@kc-claude-plugins"...✔ Successfully installed plugin: kc-plugin-forge@kc-claude-plugins (scope: user)
+  ✓ kc-plugin-forge installed
+Installing plugin "kc-nightwatch@kc-claude-plugins"...✔ Successfully installed plugin: kc-nightwatch@kc-claude-plugins (scope: user)
+  ✓ kc-nightwatch installed
+Installing plugin "kc-hyperfocus@kc-claude-plugins"...✔ Successfully installed plugin: kc-hyperfocus@kc-claude-plugins (scope: user)
+  ✓ kc-hyperfocus installed
+Installing plugin "kc-team-ops@kc-claude-plugins"...✔ Successfully installed plugin: kc-team-ops@kc-claude-plugins (scope: user)
+  ✓ kc-team-ops installed
+Installing plugin "kc-pr-flow@kc-claude-plugins"...✔ Successfully installed plugin: kc-pr-flow@kc-claude-plugins (scope: user)
+  ✓ kc-pr-flow installed
+Installing plugin "kc-dev-flow@kc-claude-plugins"...✔ Successfully installed plugin: kc-dev-flow@kc-claude-plugins (scope: user)
+  ✓ kc-dev-flow installed
+Installing plugin "kc-ship-flow@kc-claude-plugins"...✔ Successfully installed plugin: kc-ship-flow@kc-claude-plugins (scope: user)
+  ✓ kc-ship-flow installed
+
+=== Results ===
+  L0 parity: PASS
+  L1 schema: PASS
+  L2 install e2e-pipeline: PASS
+  L2 install kc-plugin-forge: PASS
+  L2 install kc-nightwatch: PASS
+  L2 install kc-hyperfocus: PASS
+  L2 install kc-team-ops: PASS
+  L2 install kc-pr-flow: PASS
+  L2 install kc-dev-flow: PASS
+  L2 install kc-ship-flow: PASS
+
+=== All checks passed ✓ ===

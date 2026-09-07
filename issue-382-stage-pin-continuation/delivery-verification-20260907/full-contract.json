@@ -1,0 +1,12 @@
+{
+  "name": "full-contract",
+  "command": [
+    "/Users/kent/conductor/workspaces/recce-cloud-infra-v1/brussels/.venv/bin/python",
+    "scripts/kc-dev-flow-contract-test.py"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+  "exit": 0,
+  "seconds": 69.98315025004558,
+  "timed_out": false,
+  "log_sha256": "fbeadbc8f88c4970ef6982e0f640b2ec0352b251b101567267bb4fccc4811eab"
+}

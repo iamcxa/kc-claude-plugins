@@ -1,0 +1,12 @@
+{
+  "name": "marketplace",
+  "command": [
+    "bash",
+    "scripts/marketplace-verify.sh"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+  "exit": 0,
+  "seconds": 14.505656416062266,
+  "timed_out": false,
+  "log_sha256": "6b17ab62ffb2170e27ce29a16a92fb06822e6b5ba3bb92ff7970a93c67ef6a2a"
+}

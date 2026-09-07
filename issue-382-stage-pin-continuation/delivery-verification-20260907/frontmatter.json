@@ -1,0 +1,12 @@
+{
+  "name": "frontmatter",
+  "command": [
+    "bash",
+    "scripts/skill-frontmatter-lint.sh"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/pr390-verification.ZcDCtB/checkout",
+  "exit": 0,
+  "seconds": 0.07459324994124472,
+  "timed_out": false,
+  "log_sha256": "3fdb5741de7f190fb30055d33ebd9ed7a43eaa978318437eae83f42a366cb77b"
+}
