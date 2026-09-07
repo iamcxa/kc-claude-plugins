@@ -2,7 +2,7 @@
  "project_id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
  "code_repo": "iamcxa/qnow",
  "cycle_id": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
- "user_value": "Kent obtains the QNow PoC acceptance receipt: the hosted runner reaches main through two reviewable PRs, DEV-36 lands on it, and one watched cloud run produces the revision-bound, secret-safe receipt with cleanup to zero.",
+ "user_value": "Kent obtains the QNow PoC acceptance receipt from one watched run on main, after the hosted runner lands through two reviewable PRs.",
  "hypothesis": "If we land the staging-qualification work on main in two credential-free PRs and then run the acceptance once from main under a fresh authorization receipt, then the PoC closes with a receipt an independent validation can read, without a reverse merge and without an unwatched first provider run.",
  "wedge": "Kent as FO on iamcxa/qnow only. This batch: DEV-114 first (merge station script, pre-batch blocker), then DEV-136 (support files PR), DEV-137 (hosted/ PR), DEV-36 rebased and merged, DEV-37 run once in a Conductor cloud workspace with the Captain watching. Not in it: DEV-132 (identity provider), the rest of the 48-commit branch not needed by hosted/.",
  "outcome": "main carries hosted/ and its supporting files with credential-free evidence; #1174 is merged onto it; DEV-37 produces docs/evidence/qnow-poc-acceptance-receipt.json in one run with cleanup census 0; every merge in the batch goes through merge-station.sh.",

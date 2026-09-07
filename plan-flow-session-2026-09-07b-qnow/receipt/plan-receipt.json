@@ -5,7 +5,7 @@
  "project": {
   "id": "995ad21c-6c40-4b6c-9354-48f28407c18d",
   "name": "架構收斂與 POC 瘦身",
-  "user_value": "Kent obtains the QNow PoC acceptance receipt: the hosted runner reaches main through two reviewable PRs, DEV-36 lands on it, and one watched cloud run produces the revision-bound, secret-safe receipt with cleanup to zero.",
+  "user_value": "Kent obtains the QNow PoC acceptance receipt from one watched run on main, after the hosted runner lands through two reviewable PRs.",
   "hypothesis": "If we land the staging-qualification work on main in two credential-free PRs and then run the acceptance once from main under a fresh authorization receipt, then the PoC closes with a receipt an independent validation can read, without a reverse merge and without an unwatched first provider run.",
   "wedge": "Kent as FO on iamcxa/qnow only. This batch: DEV-114 first (merge station script, pre-batch blocker), then DEV-136 (support files PR), DEV-137 (hosted/ PR), DEV-36 rebased and merged, DEV-37 run once in a Conductor cloud workspace with the Captain watching. Not in it: DEV-132 (identity provider), the rest of the 48-commit branch not needed by hosted/.",
   "outcome": "main carries hosted/ and its supporting files with credential-free evidence; #1174 is merged onto it; DEV-37 produces docs/evidence/qnow-poc-acceptance-receipt.json in one run with cleanup census 0; every merge in the batch goes through merge-station.sh.",
@@ -122,5 +122,5 @@
   }
  ],
  "rationale_sha256": "ededa1083992190ce6815403ca01fc692f57a158db1a62bb8958d62450ecc1de",
- "receipt_sha256": "dd5c9f95fe31a4ccec2dec4fad04f72a70f55b73086f1176aa0f9a31352156cd"
+ "receipt_sha256": "ab2fb2635f0ce205c59fc4e92c9315ade0af162195c0f2fc6ca605dd36e012e3"
 }
