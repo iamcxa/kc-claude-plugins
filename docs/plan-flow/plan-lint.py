@@ -31,7 +31,7 @@ elif mode == "lint":
     fails=[]; results=[]
     def rule(name, ok, why=""):
         results.append({"rule":name,"pass":bool(ok),"why":why}); print(("PASS " if ok else "FAIL ")+name+(": "+why if why else "")); ok or fails.append(name)
-    m = re.search(r"^## User value\n\n(.+?)\n\n", d["content"] or "", re.S); uv = m.group(1) if m else ""
+    m = re.search(r"^## User value\n\n(.+?)(?:\n\n|\Z)", d["content"] or "", re.S); uv = m.group(1) if m else ""
     rule("L1 one-line User value", bool(uv) and "\n" not in uv.strip(), repr(uv[:60]))
     def is_active(issue):
         st = issue.get("state") or {}

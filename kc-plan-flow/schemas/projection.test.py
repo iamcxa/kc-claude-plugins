@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+"""Round-trip the projector's output through the parsers that read it back.
+
+Rendering and parsing live in different repositories' worth of code and nothing
+made them agree. `## User value` sat empty in a real project for a day because
+plan-lint matches it at offset zero without re.MULTILINE, and the prose that was
+supposed to fill it was written by hand three paragraphs down.
+"""
+import importlib.util, pathlib, re, sys
+
+HERE = pathlib.Path(__file__).parent
+ROOT = HERE.parent.parent
+
+
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+P = load("proj", HERE / "project-to-linear.py")
+LA = load("la", ROOT / "kc-dev-flow/scripts/linear-admission.py")
+
+# Lifted from plan-lint rather than restated, so this test cannot drift from the rule it checks.
+L1_SOURCE = re.search(r're\.search\(r"(\^## User value.+?)", d\["content"\]',
+                      (ROOT / "docs/plan-flow/plan-lint.py").read_text())
+assert L1_SOURCE, "plan-lint no longer carries a User value rule this test can read"
+L1 = re.compile(L1_SOURCE.group(1), re.S)
+failures = []
+
+
+def check(name, condition, why=""):
+    print(("PASS " if condition else "FAIL ") + name + (f": {why}" if why else ""))
+    if not condition:
+        failures.append(name)
+
+
+VALUE = "A terminal user hands one link to anyone and reads their feedback back without leaving the reader."
+
+content = P.user_value_content("A summary line.\n\n## Who\n\nSomebody.\n", VALUE)
+match = L1.match(content)
+check("L1 matches at offset zero", bool(match))
+check("L1 captures the one line", bool(match) and match.group(1) == VALUE)
+check("the prior body survives", "## Who" in content)
+
+again = P.user_value_content(content, VALUE)
+check("projecting twice is idempotent", again == content, f"{len(content)} vs {len(again)}")
+
+replaced = P.user_value_content(content, "A different one-line value.")
+check("a second run replaces rather than stacks", replaced.count("## User value") == 1)
+
+# Linear strips trailing whitespace on write, so what comes back is not what went out.
+# A project whose content is only the user value failed L1 forever until both sides saw that.
+stored = P.user_value_content("", VALUE)
+check("a lone user value still matches L1", bool(L1.match(stored)))
+check("a lone user value has no trailing blank line", stored == stored.rstrip())
+check("re-projecting stripped content does not stack",
+      P.user_value_content(stored, VALUE).count("## User value") == 1)
+check("re-projecting stripped content is stable", P.user_value_content(stored, VALUE) == stored)
+
+milestone = {"integration_proof": {"proof": "Publish from the reader and open the link elsewhere.",
+                                  "owner": "Kent"}}
+value_issue = {"title": "A terminal user publishes a file and hands out a link that works",
+               "acceptance": "On a tap-install machine they publish and a second person comments.",
+               "milestone": "A", "kind": "value"}
+body = P.issue_body(value_issue, milestone, None)
+check("Accepted outcome parses back", LA.section(body, "Accepted outcome") == value_issue["acceptance"])
+check("the integration proof names its owner", "**Owner: Kent.**" in body)
+
+defect = {"title": "A latent walk", "acceptance": "Nothing above the created directory changes mode.",
+          "milestone": "A", "kind": "defect", "protects": value_issue["title"]}
+declared = P.issue_body(defect, milestone, "DRC-4474")
+check("a defect declares what it protects", declared.startswith("**A defect.") and "DRC-4474" in declared)
+check("a defect carries no integration proof", "## Integration proof" not in declared)
+
+try:
+    LA.live_item({"url": "u", "description": body, "state": {"type": "unstarted"}})
+    admitted = True
+except LA.AdmissionError:
+    admitted = False
+check("a plan-value issue is not admission-ready", not admitted,
+      "it carries no Non-goals; kc-plan-detail writes those")
+
+
+def refuses(text):
+    try:
+        P.check_re_verified(text)
+    except SystemExit:
+        return True
+    return False
+
+
+check("a colon in Re-verified is refused", refuses("Re-verified: git show origin/main:file 2026-09-08"))
+check("an issue identifier in Re-verified is refused", refuses("Re-verified: git log DRC-4411 2026-09-08"))
+check("a clean Re-verified passes", not refuses("Re-verified: git grep publishKeyBinding at 1ea84f8e 2026-09-08"))
+
+print(f"\n{len(failures)} failed" if failures else "\nall passed")
+sys.exit(1 if failures else 0)
