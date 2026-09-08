@@ -270,6 +270,16 @@ matched against `If we ... then ...` and `user_value` really is cut off at 200;
 a plan that fills them loosely fails at the receipt, one station later, where
 the failure is expensive to trace back.
 
+## How it reads is a different seat
+
+`kc-plan-flow:kc-write-issue` owns the body: the user story that opens it, the diagram
+when there are more than three moving parts, the paragraph bound, and what belongs in
+the thread instead. Invoke it before writing or revising any issue.
+
+It is separate because it fails differently. When this skill is wrong the ticket is
+false; when that one is wrong the ticket is true and unreadable, which nothing catches,
+because it passes every check and everyone skims it.
+
 ## Boundaries
 
 No file paths, no design, no estimates, no sub-issues. You do not create the

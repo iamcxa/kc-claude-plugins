@@ -146,6 +146,11 @@ neither failure is yours to fix by contorting the plan:
 
 Report both as limits of the linter with the receipt, and leave the plan alone.
 
+## How it reads is a different seat
+
+`kc-plan-flow:kc-write-issue` owns the body. The format rules above are what the linter
+reads; that skill is what a person reads, and a sub-issue has to survive both.
+
 ## Return
 
 `kc-plan-detail/v1`, in `schemas/`. Validate with
