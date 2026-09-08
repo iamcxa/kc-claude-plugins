@@ -27,7 +27,8 @@
       "title": "A terminal user publishes a file and gets a link",
       "acceptance": "A user runs the client against a local file and gets back a link that works for anyone holding it",
       "milestone": "A - Publishing works from the terminal",
-      "kind": "value"
+      "kind": "value",
+      "independent_because": "nothing it needs is missing on the trunk; the archaeologist classified its surface WORKING"
     },
     {
       "title": "Credential minting does not widen permissions outside the publish path",
@@ -42,5 +43,12 @@
   ],
   "needs_a_ruling": [
     "Whether the architectural parent whose children span three milestones stays open as an issue"
+  ],
+  "dependencies": [
+    {
+      "blocked": "Credential minting does not widen permissions outside the publish path",
+      "blocked_by": "A terminal user publishes a file and gets a link",
+      "because": "the second issue's acceptance run needs the artifact the first produces, established by archaeology rather than by the order these were written"
+    }
   ]
 }

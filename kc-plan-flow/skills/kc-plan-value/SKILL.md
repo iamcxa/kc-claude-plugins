@@ -155,6 +155,45 @@ integration proof that joins them **and gives it an owner**. A milestone that
 claims user value with no such owner is a milestone that will pass while the
 product does not work.
 
+## Draft, then ask, then write
+
+Tickets are written last. Not because writing is hard, but because a ticket written
+before the facts arrive is wrong at birth and every later correction is paid twice --
+once in the tracker and once in whoever already read it.
+
+1. **Draft the shape**: the value points, the milestone, and the dependency graph.
+   Nothing in the tracker yet.
+2. **Send the questions to `kc-plan-flow:code-archaeologist`**, and wait. The answers
+   change the cut, not the prose: whether a value is a build or a verification is a
+   fact about the trunk, and it moves edges.
+3. **Put the draft to the captain**, carrying what the archaeologist returned.
+4. **Then write the tickets.**
+
+One session skipped this and paid for it five times: a value issue scoped to a whole
+milestone, two more written before it emerged that a third depended on neither, one
+written against a premise the code contradicted, one describing code that was not on
+the trunk, and two written as work to build that were already built and only needed
+running.
+
+## The dependency graph comes from facts, not from the order of the story
+
+**Every edge answers one question: what must already be true before this issue's
+acceptance can be run at all?** That is a fact about the codebase. The order the
+stories were told is not evidence of anything.
+
+The same session drew the graph three times from narrative order and was wrong twice.
+The value that reads "fourth" in the story turned out to depend on nothing, because
+the server already mints what it needs -- a fact, found by asking, that no amount of
+re-reading the stories would have produced.
+
+**An issue that depends on nothing says why.** In the data, "independent" and "nobody
+thought about it" are the same absence. `independent_because` tells them apart, and it
+names the fact rather than asserting the conclusion.
+
+A validator cannot judge whether an edge is real. It can refuse an edge with no reason
+and an independence with no fact, which is the same bargain every other rule here
+makes: the truth is yours, the receipt is checkable.
+
 ## Hand over the questions
 
 Every place the plan needs a fact about existing code becomes a question in the

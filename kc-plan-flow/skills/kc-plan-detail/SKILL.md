@@ -36,6 +36,22 @@ You will get findings back that are `MISSING` on the trunk and present on a
 branch. Read them as work not yet done, not as code to relocate. A closed branch
 is a record of an attempt.
 
+## Reuse the excavation, and keep it
+
+`kc-plan-value` has already asked this seat about the cut. Start from its answers
+rather than re-asking them: what exists, on which ref, classified, is exactly the raw
+material for cutting along gaps.
+
+Two things make that reuse real rather than aspirational:
+
+- **The seat does not survive a session.** It is addressable while a session lives and
+  unreachable afterwards, whatever the contract implies. Assume you are talking to a
+  fresh one and hand it the earlier reports.
+- **So the reports have to be written down whole.** `archaeology` carries the command,
+  the evidence, the stratum and the stated limits, not a three-field verdict. A
+  classification without its command is an opinion, and a finding without its
+  `did_not_check` is a bounded search wearing an unbounded conclusion.
+
 ## Cut along the gaps, not along the layers
 
 This is the whole move, and the easiest to get wrong.

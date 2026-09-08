@@ -5,7 +5,13 @@
     {
       "question": "What draws the consent prompt and starts the publish, and where does it reach for a destination?",
       "classification": "LOCATED",
-      "ref": "1ea84f8e"
+      "ref": "1ea84f8e",
+      "command": "git grep -n publishKeyBinding origin/main",
+      "evidence": "no match on the trunk; present on roughly twenty remote refs",
+      "stratum": "absent from origin/main, carried by unmerged branches",
+      "did_not_check": [
+        "whether any of those branches is an ancestor of another"
+      ]
     }
   ],
   "sub_issues": [

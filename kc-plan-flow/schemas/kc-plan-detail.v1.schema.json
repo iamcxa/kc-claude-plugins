@@ -28,7 +28,9 @@
         "required": [
           "question",
           "classification",
-          "ref"
+          "ref",
+          "command",
+          "evidence"
         ],
         "properties": {
           "question": {
@@ -48,9 +50,38 @@
           "ref": {
             "type": "string",
             "minLength": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The command that produced the finding. Without it the classification is an opinion."
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the command returned, in enough detail to be disagreed with."
+          },
+          "stratum": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Which ref carries it and that ref's relation to the trunk. A thing on a closed branch is not a thing that exists."
+          },
+          "absence_proof": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Required in spirit for every MISSING: both searches that bound the claim."
+          },
+          "did_not_check": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The question's edges. Dropping these is how a bounded finding becomes an unbounded belief."
           }
         }
-      }
+      },
+      "description": "The archaeologist's findings kept whole rather than summarised. Three fields once survived here -- question, classification, ref -- and the commands, evidence, absence proofs and stated limits were discarded, so every planning session re-excavated what the last one had already established."
     },
     "sub_issues": {
       "type": "array",

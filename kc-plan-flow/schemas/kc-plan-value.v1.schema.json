@@ -5,20 +5,61 @@
   "description": "What to build. Its project block is shaped to lift straight into kc-plan-receipt/v1's project block; every field and bound here is that contract's, not a second opinion about it.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "project", "milestones", "issues", "questions_for_the_archaeologist", "needs_a_ruling"],
+  "required": [
+    "schema",
+    "project",
+    "milestones",
+    "issues",
+    "questions_for_the_archaeologist",
+    "needs_a_ruling",
+    "dependencies"
+  ],
   "properties": {
-    "schema": { "const": "kc-plan-value/v1" },
+    "schema": {
+      "const": "kc-plan-value/v1"
+    },
     "project": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "user_value", "hypothesis", "wedge", "outcome", "exit"],
+      "required": [
+        "name",
+        "user_value",
+        "hypothesis",
+        "wedge",
+        "outcome",
+        "exit"
+      ],
       "properties": {
-        "name": { "type": "string", "maxLength": 80, "minLength": 1 },
-        "user_value": { "type": "string", "maxLength": 200, "pattern": "^[^\n]+$" },
-        "hypothesis": { "type": "string", "pattern": "^If we .+ then .+$" },
-        "wedge": { "type": "string", "minLength": 1 },
-        "outcome": { "type": "string", "minLength": 1 },
-        "exit": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        "name": {
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 1
+        },
+        "user_value": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[^\n]+$"
+        },
+        "hypothesis": {
+          "type": "string",
+          "pattern": "^If we .+ then .+$"
+        },
+        "wedge": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     },
     "milestones": {
@@ -27,18 +68,42 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "target", "description", "integration_proof"],
+        "required": [
+          "name",
+          "target",
+          "description",
+          "integration_proof"
+        ],
         "properties": {
-          "name": { "type": "string", "minLength": 1 },
-          "target": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
-          "description": { "type": "string", "maxLength": 140, "pattern": "^[^\n]+$" },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 140,
+            "pattern": "^[^\n]+$"
+          },
           "integration_proof": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["proof", "owner"],
+            "required": [
+              "proof",
+              "owner"
+            ],
             "properties": {
-              "proof": { "type": "string", "minLength": 1 },
-              "owner": { "type": "string", "minLength": 1 }
+              "proof": {
+                "type": "string",
+                "minLength": 1
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
@@ -50,17 +115,85 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["title", "acceptance", "milestone", "kind"],
+        "required": [
+          "title",
+          "acceptance",
+          "milestone",
+          "kind"
+        ],
         "properties": {
-          "title": { "type": "string", "minLength": 1 },
-          "acceptance": { "type": "string", "minLength": 1 },
-          "milestone": { "type": "string", "minLength": 1 },
-          "kind": { "enum": ["value", "defect", "measurement"] },
-          "protects": { "type": "string", "minLength": 1 }
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acceptance": {
+            "type": "string",
+            "minLength": 1
+          },
+          "milestone": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "value",
+              "defect",
+              "measurement"
+            ]
+          },
+          "protects": {
+            "type": "string",
+            "minLength": 1
+          },
+          "independent_because": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Required when this issue is blocked by nothing: the fact that makes it independent. Silence and 'nobody considered it' are identical in the data; this tells them apart."
+          }
         }
       }
     },
-    "questions_for_the_archaeologist": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "needs_a_ruling": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+    "questions_for_the_archaeologist": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "needs_a_ruling": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Edges derived from facts, never from the order the stories were told. Each says what must already be true before the blocked issue's acceptance can be run at all.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocked",
+          "blocked_by",
+          "because"
+        ],
+        "properties": {
+          "blocked": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocked_by": {
+            "type": "string",
+            "minLength": 1
+          },
+          "because": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The fact, not the narrative. 'X ships before Y in the story' is not a reason; 'Y's acceptance run needs the binary X produces' is."
+          }
+        }
+      }
+    }
   }
 }
