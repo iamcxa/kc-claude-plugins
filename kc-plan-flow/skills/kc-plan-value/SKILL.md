@@ -155,6 +155,29 @@ integration proof that joins them **and gives it an owner**. A milestone that
 claims user value with no such owner is a milestone that will pass while the
 product does not work.
 
+## The boundary is agreed elsewhere, and declared once
+
+**What shape the code must take is not an acceptance criterion.** A criterion is one
+test; a boundary is the constraint that generates them. It is also the thing a peer
+maintainer reviews a pull request against -- not "did AC-4 pass" but "did this put
+relay knowledge back into the reader".
+
+Declare each boundary once, in the project block, with who agreed to it and where that
+agreement can be read. Then every technical issue cites it rather than restating it.
+A rule restated in five places has five chances to drift, and one project's owner
+already disagreed with itself in two places on the same day.
+
+**The agreement usually does not happen in the tracker.** The other maintainer is
+usually not in it: one project's boundary was settled across a pull request in their
+repository, and the tracker's job was only to carry the settled result. So the draft
+lives in this document, the one to three rounds happen where they are, and nothing
+reaches the tracker until it is agreed. A draft in the tracker is a draft that will be
+acted on -- one appeared as a branch and a third party opened a pull request from
+someone else's work against it within the hour.
+
+Write the rule in module and flow terms. "The reader holds no relay knowledge" survives
+any refactor; "move the probe out of that file" was wrong the day it was written.
+
 ## Draft, then ask, then write
 
 Tickets are written last. Not because writing is hard, but because a ticket written

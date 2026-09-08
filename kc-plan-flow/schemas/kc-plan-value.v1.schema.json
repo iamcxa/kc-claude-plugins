@@ -27,7 +27,8 @@
         "hypothesis",
         "wedge",
         "outcome",
-        "exit"
+        "exit",
+        "boundaries"
       ],
       "properties": {
         "name": {
@@ -58,6 +59,37 @@
           "items": {
             "type": "string",
             "minLength": 1
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The shape the code must take, declared once and cited by every technical issue. Not an acceptance criterion: a criterion is one test, a boundary is the constraint that generates them. This is what a peer maintainer reviews a pull request against, and it had no field until a project's was found living as loose prose in a tracker description while its milestone was recut three times without anyone checking the recut against it.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule",
+              "agreed_with",
+              "agreed_at"
+            ],
+            "properties": {
+              "rule": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Stated so a change can be judged against it, in module and flow terms rather than file paths. 'The reader holds no relay knowledge' survives a refactor; 'move the probe out of that file' was wrong the day it was written."
+              },
+              "agreed_with": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Who agreed, by name or role. A boundary nobody agreed to is a preference."
+              },
+              "agreed_at": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where the agreement happened and can be read: the pull request, issue or thread. Usually not this tracker, because the other maintainer is usually not in it."
+              }
+            }
           }
         }
       }

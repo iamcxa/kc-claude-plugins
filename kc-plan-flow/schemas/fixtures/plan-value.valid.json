@@ -9,6 +9,18 @@
     "exit": [
       "A tap install publishes to production and returns a working link",
       "A reviewer comments in a browser and the owner reads it back in the terminal"
+    ],
+    "boundaries": [
+      {
+        "rule": "The reader owns one local review session and holds no relay knowledge; every relay operation lives in the separate client.",
+        "agreed_with": "the host repository's maintainer",
+        "agreed_at": "subspace-v0#43"
+      },
+      {
+        "rule": "Invocation runs both ways and neither binary is the parent, so each locates the other and each refuses a counterpart too old for the contract it needs.",
+        "agreed_with": "the host repository's maintainer",
+        "agreed_at": "subspace-v0#43"
+      }
     ]
   },
   "milestones": [
