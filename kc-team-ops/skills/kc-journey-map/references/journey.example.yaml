@@ -1,106 +1,129 @@
-# Worked example: the subspace-relay Review Room journey.
+# A worked example: the journey of drawing a journey map with this plugin.
 #
-# Content transcribed from the board built on 2026-08-18 against the nine-PR stack.
-# It is STALE — the stack has since merged and shipped. It is kept as the shape a real
-# board takes, not as a current claim; the status card carries its own date.
+# It describes this plugin's own code, so every System Flow cell cites a file in this
+# repository and the example can be published. A journey of a product lives in that
+# product's repository, not here — see canvas.md.
 
-journey: review-room
-title: Review Room
+journey: draw-a-journey
+title: Draw a journey map
 
 measured:
-  ref: "main @ d61aba9, plus the open stack #68 and #75 (#73 #74 #76 #78 #80 #81 #82 #85)"
-  date: 2026-08-18
-  repos: [subspace-relay, subspace-web, subspace-v0]
+  ref: "the working tree of this plugin"
+  date: 2026-09-08
+  repos: [kc-claude-plugins]
 
 persona: >
-  Hermes, an agent owner who wants a plan confirmed by people who have no account here.
+  An engineer who has to say what a system does today, and be believed.
+
+now:
+  - id: now-prose
+    card: "Writes the flow as prose in a doc"
+    pain: "no column forces the evidence next to the claim"
+  - id: now-figma
+    card: "Draws it on a whiteboard"
+    pain: "goes stale the day it is drawn, and nothing says so"
+    workaround: "re-draws it before each review"
 
 steps:
-  - id: publish
-    card: "Hermes wants to confirm a plan, runs subspace-hermes plugin"
+  - id: write
+    card: "Writes the steps and the evidence into a file"
+    activity: "Write the journey"
+    stories:
+      - "Name the steps a person takes"
+      - "Cite the code each step runs"
+      - "Name what must stay true"
     system:
-      - "POST /api/briefing — multipart, X-Subspace-Device + Bearer + Idempotency-Key -> {briefingId, shareUrl}"
-      - "Client mints the per-share dev_/sec_ pair itself; relay never issues them"
-      - "Receipt must be written BEFORE the request — a crash after POST orphans the Briefing"
-    cites: [subspace-relay]
-    rules: [relay-moves-bytes]
+      - "docs/journey/<slug>.yaml in the consuming repository — steps, rules, slices, status"
+      - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
+    cites: [kc-claude-plugins]
+    rules: [file-is-truth, no-cell-from-memory]
 
-  - id: create
-    card: "Create a Review Room — one shareable URL, no invitation"
+  - id: render
+    card: "Renders it onto a board"
+    activity: "Put it on a board"
+    stories:
+      - "Get a story map and an evidence board"
+      - "Re-render after every change"
     system:
-      - "POST /api/room {briefingId} -> 201 {roomId, briefingId, origin}"
-      - "RoomMeta written onlyIfNew, never rewritten"
-      - "origin is captured from the create request — a Room made on a preview is pinned to it"
-    cites: [subspace-relay]
-    rules: [url-is-capability]
+      - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
+      - "One room, two pages: buildStoryMap and buildJourneyBoard from the same model"
+      - "Records come from lib/records.mjs; a hand-written note renders blank"
+    cites: [kc-claude-plugins]
+    rules: [board-is-a-cache, handmade-cards-survive]
 
-  - id: arrive
-    card: "Reviewer opens the link; relay mints a session per arrival"
+  - id: workshop
+    card: "Moves the cards around with other people"
+    activity: "Talk over it"
+    stories:
+      - "Reorder the columns"
+      - "Reword a card"
+      - "Add a card nobody had thought of"
     system:
-      - "GET /room/{roomId} -> static shell, no session; carries a fresh CSRF token when the request already has a valid cookie"
-      - "Shell sends POST {action:enter}, which carries Origin — navigation GETs do not"
-      - "Relay mints session + par_ participant id; cookie HttpOnly, SameSite=Strict, 24h"
-      - "The store keeps sha256(token) only — the raw token never appears in a response body"
-    cites: [subspace-relay]
-    rules: [one-live-tab]
+      - "The tldraw room syncs every open tab; edits are ordinary canvas edits"
+      - "Each rendered shape carries meta.journey {nodeId, kind}; a hand-added card carries none"
+    cites: [kc-claude-plugins]
+    rules: [handmade-cards-survive]
 
-  - id: name
-    card: "Reviewer types a display name, annotates, submits once"
+  - id: readback
+    card: "Takes the changes back into the file"
+    activity: "Fold it back in"
+    stories:
+      - "See what changed"
+      - "Apply the wording and the order"
     system:
-      - "POST {action:reviewer, name} -> name stored on SessionMeta by CAS; no browser storage touched"
-      - "POST {action:read} -> live room/session/briefing checks -> Briefing + artifact bytes + saved name"
-      - "The pinned subspace-web shell serializes the exact review.jsonl and result.json bytes; relay never re-encodes"
-      - "Submit writes bytes verbatim + an immutable envelope + COMMIT at resultId = base32(sha256(domain || sessionId))[:16]"
-    cites: [subspace-relay, subspace-web]
-    rules: [name-self-claimed, one-result-per-session, drafts-lost-on-reload]
-
-  - id: pull
-    card: "Hermes pulls every Result and verifies it"
-    system:
-      - "Room Results land in briefing/{b}/result/{r}/ — the owner's existing results / pull-result need no change"
-      - "envelope.submitter is the fixed literal room-review-session; envelope.participant carries the par_ id"
-      - "The owner verifies the pulled bytes with the pinned subspace-v0 feedback predicate"
-    cites: [subspace-relay, subspace-v0]
-    rules: [relay-moves-bytes]
-
-  - id: close
-    card: "Owner closes the room — disable it, or revoke one session"
-    badge: NEW
-    system:
-      - "POST /api/room/{roomId}/disable (idempotent); POST /api/room/{roomId}/session/{sessionId}/revoke"
-      - "Owner device auth — no cookie, no CSRF; that mechanism belongs to the browser reviewer"
-      - "The sweeper collects room/ under two rules: sessions by their own expiresAt, meta.json only once its Briefing is gone"
-    cites: [subspace-relay]
-    rules: [forward-only-recovery]
+      - "lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing"
+      - "--write applies card wording and column order only; it refuses a reorder when a nodeId is duplicated"
+    cites: [kc-claude-plugins]
+    rules: [lossy-inverse, ambiguity-refused]
     note: >
-      Nothing else ends a Room: with no owner action it stays open until the bound Briefing expires at DEFAULT_RETENTION_MS, 30 days.
+      Read covers the Journey board page only. On the story map a step is an activity and its stories are their own shapes, so a priority drag there is not yet seen.
+
+  - id: check
+    card: "Checks the board against the code again later"
+    activity: "Keep it true"
+    badge: NOT_BUILT
+    system:
+      - "No command re-reads the cited code and diffs it against the file"
+    cites: [kc-claude-plugins]
+    rules: [no-cell-from-memory]
+
+later:
+  - "Draw a journey that crosses two repositories"
+  - "Run the board unattended in a workflow"
+
+ownership:
+  - id: own-file
+    owner: "The engineer"
+    from: write
+    to: write
+    note: "owns the claims and the citations"
+  - id: own-tool
+    owner: "The plugin"
+    from: render
+    to: readback
+    note: "owns the drawing and the reconcile"
 
 rules:
-  - id: url-is-capability
-    text: "The Room URL IS the capability — no invitation, no login, no account"
-  - id: relay-moves-bytes
-    text: "Relay only moves bytes — it never mints a Resolution and never writes workflow state"
-  - id: name-self-claimed
-    text: "The typed name is self-claimed and unverified; duplicates are allowed — participant is the only discriminator"
-  - id: one-result-per-session
-    text: "One Result per session, enforced by addressing (same key -> 409), not by a check a future edit can forget"
-  - id: one-live-tab
-    text: "A session lives 24h, and only one live tab — the CSRF token rotates on every page load"
-  - id: drafts-lost-on-reload
-    text: "Draft annotations are lost on reload; accepted for the Pilot, and fixing it needs a subspace-web release"
-  - id: forward-only-recovery
-    text: "Account recovery is forward-only — only a still-live session in the same browser can be bound later"
-  - id: frozen-on-deploy
-    text: "Deploy freezes the one-way byte format and the resultId derivation — both migrate on population is zero"
+  - id: file-is-truth
+    text: "The file in the repository is the source of truth; the board is a rendering of it"
+  - id: board-is-a-cache
+    text: "Deleting .rooms/ loses nothing — every board can be re-rendered from its file"
+  - id: handmade-cards-survive
+    text: "A shape with no meta.journey is never touched by a re-render, and is reported as unclaimed"
+  - id: no-cell-from-memory
+    text: "Every System Flow cell cites something read this session; a recalled fact is a hypothesis"
+  - id: lossy-inverse
+    text: "Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id"
+  - id: ambiguity-refused
+    text: "tldraw copies meta verbatim on duplicate, so a duplicated nodeId refuses the whole reorder"
 
 slices:
   - id: first
-    outcome: "A reviewer with only a link can send one Result the owner can verify."
-    steps: [publish, create, arrive, name, pull, close]
+    outcome: "One journey goes file -> board -> workshop -> file without losing anything."
 
 status:
-  unproven: "The whole journey has unit and local-browser evidence only. AC-1 (Hermes pulls and verifies) and AC-4 (deployed round trip) have no evidence."
-  unmerged: "Nine PRs are green and unmerged. main carries no Room lane at all."
-  undeployed: "Zero Rooms have ever been created. Nothing is deployed and gate 1 is not accepted."
-  irreversible: "Merging and deploying — that is when the origin becomes reachable and both formats freeze."
-  as_of: 2026-08-18
+  unproven: "The check step has no command behind it; a board goes stale with nothing to say so."
+  unmerged: "This work is on a branch and has not been reviewed."
+  undeployed: "Nothing here is deployed — the board is a local development environment only, per the tldraw licence."
+  irreversible: "None. A room can be deleted and rebuilt from its file."
+  as_of: 2026-09-08
