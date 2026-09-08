@@ -9,6 +9,8 @@
 // lossy inverse: a constraint is stored as a rule id and drawn as that rule's text, so
 // canvas text cannot be mapped back to an id without guessing. Those are never applied.
 
+const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+
 import { readFileSync, writeFileSync } from 'node:fs'
 import { parse, parseDocument } from 'yaml'
 
@@ -24,7 +26,7 @@ const plain = (rich) =>
 
 const stripNumber = (text) => text.replace(/^\d+\.\s*/, '')
 
-export async function readRoom({ room, api = 'http://127.0.0.1:5858' }) {
+export async function readRoom({ room, api = API }) {
 	const doc = await fetch(`${api}/doc?room=${room}`).then((r) => r.json())
 	return (doc.snapshot?.documents ?? []).map((d) => d.state).filter((r) => r.typeName === 'shape')
 }

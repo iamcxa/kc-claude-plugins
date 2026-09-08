@@ -14,7 +14,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const [mode, a, b] = process.argv.slice(2)
-const API = 'http://127.0.0.1:5858'
+const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
 if (mode === 'export') {
 	if (!a || !b) usage()

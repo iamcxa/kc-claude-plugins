@@ -6,7 +6,9 @@ import type { RawData } from 'ws'
 import { createTLSchema } from '@tldraw/tlschema'
 import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
 
-const PORT = 5858
+// Overridable so a check can run its own server on its own port instead of silently
+// talking to whichever canvas the developer already had open.
+const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
 const DEFAULT_ROOM = 'default'
 
 // The schema the browser client will validate against. A record that fails here would

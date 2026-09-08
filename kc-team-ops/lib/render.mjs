@@ -4,6 +4,8 @@
 // Nothing here reads the room back — that is `read.mjs`. Positions are computed from
 // the model's order, never stored in the model, so a journey file stays diffable.
 
+const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
@@ -217,7 +219,7 @@ export function loadJourney(path) {
 // longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
 // and are never touched — the room is where a workshop happens, not only where a file
 // is displayed.
-export async function renderToRoom({ path, room, api = 'http://127.0.0.1:5858' }) {
+export async function renderToRoom({ path, room, api = API }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
 

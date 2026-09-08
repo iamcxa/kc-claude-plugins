@@ -1,0 +1,75 @@
+name: kc-team-ops journey canvas
+
+# Unit tests for the journey model, plus a headless boot-and-render smoke.
+#
+# The smoke is the part that answers "can somebody who installed this run it". The unit
+# tests prove the model builds records; only starting the server and pushing those records
+# through tldraw's schema validator proves they are accepted. Two defects here would have
+# been invisible to unit tests alone: index keys the schema rejects past the 61st shape on
+# a page, and a note whose fontSizeAdjustment renders it blank.
+#
+# The Node matrix is the floor and the current release. `node:sqlite` needed
+# --experimental-sqlite before 22.13.0, which is what package.json declares, so the low end
+# is there to fail loudly if that floor is ever wrong.
+#
+# Path-filtered and not a required check. Roughly two runner-minutes per PR that touches
+# the canvas: about 30s of `npm ci` and 30s of tests per Node version. No browser — the
+# client is not exercised here.
+
+on:
+  pull_request:
+    paths:
+      - "kc-team-ops/lib/**"
+      - "kc-team-ops/server/**"
+      - "kc-team-ops/scripts/canvas-smoke.sh"
+      - "kc-team-ops/package.json"
+      - "kc-team-ops/package-lock.json"
+      - "kc-team-ops/skills/kc-journey-map/references/journey.example.yaml"
+      - ".github/workflows/kc-team-ops-journey-canvas.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-team-ops/lib/**"
+      - "kc-team-ops/server/**"
+      - "kc-team-ops/scripts/canvas-smoke.sh"
+      - "kc-team-ops/package.json"
+      - "kc-team-ops/package-lock.json"
+      - ".github/workflows/kc-team-ops-journey-canvas.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  canvas:
+    name: model tests + boot smoke (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22.13.0", "24"]
+    defaults:
+      run:
+        working-directory: kc-team-ops
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: kc-team-ops/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Preflight
+        run: npm run doctor
+
+      - name: Model tests
+        run: node --test lib/*.test.mjs
+
+      - name: Boot and render
+        run: bash scripts/canvas-smoke.sh
