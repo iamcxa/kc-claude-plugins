@@ -95,7 +95,12 @@ between tools, never as the artifact that goes in git.
 node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId]   # file  -> canvas
 node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId>   # canvas -> report
 node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId> --write
+node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId> --out <other.yaml>
 ```
+
+`--write` overwrites the file it read. `--out` saves the result elsewhere and leaves the
+original alone; it writes the target even when nothing applied, because a caller who asked
+for a save-as should end up with that file.
 
 **Render is a reconcile.** Shapes the renderer owns that the model no longer produces
 are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.

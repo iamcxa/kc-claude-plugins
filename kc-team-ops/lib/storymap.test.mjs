@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import { buildStoryMap } from './storymap.mjs'
 import { buildJourneyBoard } from './render.mjs'
 import { fixtureModel as model } from './fixture.mjs'
+import { createTLSchema } from '@tldraw/tlschema'
 
 const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Boolean))
 
@@ -36,14 +37,23 @@ test('no shape carries a note fontSizeAdjustment of 0', () => {
 	}
 })
 
-test('a nine-activity map with four stories each still gets ordered unique indexes', () => {
-	// The screenshot this method was learned from has nine activities; a single-character
-	// index run holds 61 and threw at 79.
-	const steps = Array.from({ length: 9 }, (_, i) => ({ id: `s${i}`, card: `Step ${i}`, stories: ['a', 'b', 'c', 'd'] }))
+test('a map past the 61st shape still gets valid ordered unique indexes', () => {
+	// Sized to emit more than 61 shapes on one page, which is where a hand-rolled run
+	// started producing keys the schema rejects. A nine-activity map emits 47 and would
+	// have passed either way.
+	const steps = Array.from({ length: 16 }, (_, i) => ({ id: `s${i}`, card: `Step ${i}`, stories: ['a', 'b', 'c', 'd'] }))
 	const shapes = buildStoryMap({ journey: 'big', steps, slices: [{ id: 'f', outcome: 'x' }] }).filter(
 		(r) => r.typeName === 'shape'
 	)
+	assert.ok(shapes.length > 61, `fixture emits ${shapes.length} shapes, too few to reach the failure`)
 	const ix = shapes.map((r) => r.index)
 	assert.equal(new Set(ix).size, ix.length, 'two shapes share an index')
 	assert.deepEqual(ix, [...ix].sort(), 'indexes are not in ascending order')
+
+	// Unique and ordered is not the same as valid: the leading letter encodes how long the
+	// rest must be, and a run that looked fine produced keys the schema rejected at 62.
+	const schema = createTLSchema()
+	for (const shape of shapes) {
+		assert.doesNotThrow(() => schema.types.shape.validate(shape), `${shape.id} carries an index the schema rejects`)
+	}
 })

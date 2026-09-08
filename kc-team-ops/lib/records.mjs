@@ -1,3 +1,5 @@
+import { getIndices } from '@tldraw/utils'
+
 // Record factories for agent-authored story maps.
 //
 // Every default here was read off a shape the tldraw editor created in a browser,
@@ -119,21 +121,14 @@ export function fitHeight(text, width, size = 's', padding = 40) {
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
-// Ascending fractional indexes, unique per parent: a1 … a9, aA … aZ, aa … az, b1 …
+// Ascending fractional indexes, from tldraw's own generator.
 //
-// These sort lexicographically, and the alphabet is in ASCII order, so a longer run just
-// advances the leading letter: 'az' < 'b1' because 'a' < 'b'. A nine-activity map with
-// four stories each needs 79 of them, which is why one character is not enough.
-const ALPHABET = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-
+// A hand-rolled two-character run looked right and was not: the leading letter encodes
+// how many characters the rest must have, so `a1` validates and `b1` does not — it needs
+// `b11`. A run past 61 shapes produced keys the schema rejected, and a test that checked
+// only uniqueness and order passed the whole way.
 export function indexes(n) {
-	const out = []
-	for (let i = 0; i < n; i++) {
-		const prefix = String.fromCharCode('a'.charCodeAt(0) + Math.floor(i / ALPHABET.length))
-		if (prefix > 'z') throw new Error(`indexes(${n}) exceeds the two-character range`)
-		out.push(prefix + ALPHABET[i % ALPHABET.length])
-	}
-	return out
+	return getIndices(n)
 }
 
 // Pages are records too. A journey gets one room and two pages: the story map people

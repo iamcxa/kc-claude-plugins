@@ -71,7 +71,7 @@ export function diffAgainstModel(shapes, model) {
 // file, and the diff — the reason the journey lives in git at all — stops being readable.
 const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
 
-export function applyDiff(path, diff) {
+export function applyDiff(path, diff, outPath = path) {
 	const doc = parseDocument(readFileSync(path, 'utf8'))
 	const steps = doc.get('steps')
 	const applied = []
@@ -96,8 +96,10 @@ export function applyDiff(path, diff) {
 		applied.push(`reordered to ${diff.reordered.join(' -> ')}`)
 	}
 
-	if (applied.length) writeFileSync(path, doc.toString(WRITE_OPTS))
-	return { applied, skipped }
+	// Saving elsewhere is worth doing even when nothing applied: the point of a save-as is
+	// to end up with that file, and a caller who asked for one should get one.
+	if (applied.length || outPath !== path) writeFileSync(outPath, doc.toString(WRITE_OPTS))
+	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null }
 }
 
 export const loadModel = (path) => parse(readFileSync(path, 'utf8'))
