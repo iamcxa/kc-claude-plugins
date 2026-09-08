@@ -107,6 +107,21 @@ it controls, so no byte of a shared artifact can become live markup. That is a s
 decision, and the ticket read as though it were an oversight. A replacement whose ticket
 cannot state what it is giving up is a decision disguised as a task.
 
+## An issue in flight is left alone unless the edit changes what someone does
+
+Work that has already started is the one thing this contract can damage rather than
+improve. Reformatting it produces a tidier ticket, a changed body under someone's open
+pull request, and no difference to what they build.
+
+So the test is not whether it matches the current format. It is whether the person doing
+it would act differently after reading the edit. Adding a fact they need, yes. Adding
+the sections the linter wants, no.
+
+One session recut a ticket into full format two hours after its author opened two pull
+requests against it, and nothing broke, which is why no rule came out of it at the time.
+An omission leaves no wreckage to learn from -- that is what makes this rule harder to
+arrive at than the others here, and no less real.
+
 ## Estimate the technical work, and only for one question
 
 Points on sub-issues, none on the value issue above them. A value issue has no work of

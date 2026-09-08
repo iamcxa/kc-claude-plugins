@@ -116,6 +116,19 @@ no milestone, and a hypothesis nothing would ever judge -- and it validated.
   last milestone's acceptance says whether the "then" happened. That is the only rule
   here whose evidence arrives after the plan is finished.
 
+## Moving an issue can make another milestone's description a lie
+
+A milestone description is an acceptance test, so it describes work. Move that work and
+the description keeps promising it.
+
+It happened twice in one session, in the same direction: one milestone absorbed the
+first half of the two below it to make a demo date, and both of those milestones went on
+advertising what they no longer contained. Nothing reported it -- a projector sees an
+issue change parent, and cannot see the sentence elsewhere that just became false.
+
+**After moving an issue between milestones, re-read the description of the one it left.**
+If it still describes the work that moved, it is now a promise nobody is keeping.
+
 ## Milestones
 
 The milestone is the verification point, and it carries the vertical slice when
