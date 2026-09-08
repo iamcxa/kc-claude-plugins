@@ -50,9 +50,15 @@ export function buildStoryMap(model) {
 		0,
 		...nowTexts.map((t) => fitHeight(t, 220))
 	)
+	// A band is as tall as the wordiest band in the row, so a long owner note cannot
+	// spill over its neighbour.
+	const bandH = Math.max(
+		BAND_H,
+		...(model.ownership ?? []).map((b) => fitHeight(`${b.owner} — ${b.note ?? ''}`.trim(), (steps.length ? PITCH : 240)))
+	)
 	const hasOwnership = (model.ownership ?? []).length > 0
 	const Y_BAND = Y_PERSONA + headH + GAP
-	const Y_BACKBONE = Y_BAND + (hasOwnership ? BAND_H + GAP : 0) + (steps.some((s) => s.badge) ? 60 : 0)
+	const Y_BACKBONE = Y_BAND + (hasOwnership ? bandH + GAP : 0) + (steps.some((s) => s.badge) ? 60 : 0)
 	const Y_STORIES = Y_BACKBONE + 260
 
 	if (model.persona) {
@@ -157,16 +163,15 @@ export function buildStoryMap(model) {
 		const from = steps.findIndex((s) => s.id === band.from)
 		const to = steps.findIndex((s) => s.id === band.to)
 		if (from < 0 || to < 0) return
-		const x = X0 + from * PITCH - 20
 		const w = (to - from + 1) * PITCH
 		put.push({
 			...label({
 				id: `shape:sm-own-${band.id ?? i}`,
 				text: `${band.owner} — ${band.note ?? ''}`.trim(),
-				x,
+				x: X0 + from * PITCH - 20,
 				y: Y_BAND,
 				w,
-				h: BAND_H,
+				h: bandH,
 				index: ix[n++],
 				parentId,
 				color: 'violet',
@@ -176,7 +181,45 @@ export function buildStoryMap(model) {
 		})
 	})
 
+	// A slice that names its steps scopes columns, so it is drawn as a boundary around
+	// those columns. A release line across the whole width would put every column above
+	// it and claim the first slice contains all of them — which is what it did.
 	;(model.slices ?? []).forEach((slice, i) => {
+		const from = slice.steps?.length ? steps.findIndex((s) => s.id === slice.steps[0]) : -1
+		const to = slice.steps?.length ? steps.findIndex((s) => s.id === slice.steps[slice.steps.length - 1]) : -1
+		const scoped = from >= 0 && to >= from
+		const text = `${slice.label ?? `SLICE ${i + 1}`}\n${slice.outcome}`
+
+		if (scoped) {
+			put.push({
+				...releaseLine({
+					id: `shape:sm-sliceline-${slice.id}`,
+					x: X0 + from * PITCH - 20,
+					y: y,
+					w: (to - from + 1) * PITCH,
+					index: ix[n++],
+					parentId,
+				}),
+				meta: tag(slice.id, 'slice-line'),
+			})
+			put.push({
+				...label({
+					id: `shape:sm-slicelabel-${slice.id}`,
+					text,
+					x: X0 + from * PITCH - 20,
+					y: y + 40,
+					w: (to - from + 1) * PITCH - 20,
+					h: fitHeight(text, (to - from + 1) * PITCH - 20),
+					index: ix[n++],
+					parentId,
+					color: 'blue',
+					size: 's',
+				}),
+				meta: tag(slice.id, 'slice-label'),
+			})
+			return
+		}
+
 		const lineY = y + i * 320
 		put.push({
 			...releaseLine({
@@ -189,7 +232,6 @@ export function buildStoryMap(model) {
 			}),
 			meta: tag(slice.id, 'slice-line'),
 		})
-		const text = `${slice.label ?? 'FIRST SLICE'}\n${slice.outcome}`
 		put.push({
 			...label({
 				id: `shape:sm-slicelabel-${slice.id}`,
@@ -207,7 +249,8 @@ export function buildStoryMap(model) {
 		})
 	})
 
-	const laterY = y + (model.slices?.length ?? 1) * 320 - 280
+	const scopedSlices = (model.slices ?? []).every((s) => s.steps?.length)
+	const laterY = scopedSlices ? y + 260 : y + (model.slices?.length ?? 1) * 320 - 280
 	later.forEach((item, i) => {
 		const text = typeof item === 'string' ? item : item.card
 		const id = typeof item === 'string' ? `later-${i}` : (item.id ?? `later-${i}`)

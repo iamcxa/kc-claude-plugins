@@ -1,28 +1,31 @@
-# A worked example: the journey of drawing a journey map with this plugin.
+# A worked example, and this tool's own roadmap: the journey of drawing a map with it.
 #
 # It describes this plugin's own code, so every System Flow cell cites a file in this
 # repository and the example can be published. A journey of a product lives in that
 # product's repository, not here — see canvas.md.
 
 journey: draw-a-journey
-title: Draw a journey map
+title: Draw a map with this skill
 
 measured:
-  ref: "the working tree of this plugin"
+  ref: "branch iamcxa/journey-map-skill-merge, PR #394"
   date: 2026-09-08
   repos: [kc-claude-plugins]
 
 persona: >
-  An engineer who has to say what a system does today, and be believed.
+  An engineer who has to say what a system does today, and be believed — and then say which part to build next.
 
 now:
   - id: now-prose
     card: "Writes the flow as prose in a doc"
     pain: "no column forces the evidence next to the claim"
-  - id: now-figma
+  - id: now-whiteboard
     card: "Draws it on a whiteboard"
     pain: "goes stale the day it is drawn, and nothing says so"
     workaround: "re-draws it before each review"
+  - id: now-taste
+    card: "Splits the work into tickets by feel"
+    pain: "the split is defensible only by whoever made it"
 
 steps:
   - id: write
@@ -33,7 +36,7 @@ steps:
       - "Cite the code each step runs"
       - "Name what must stay true"
     system:
-      - "docs/journey/<slug>.yaml in the consuming repository — steps, rules, slices, status"
+      - "docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status"
       - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
     cites: [kc-claude-plugins]
     rules: [file-is-truth, no-cell-from-memory]
@@ -44,10 +47,11 @@ steps:
     stories:
       - "Get a story map and an evidence board"
       - "Re-render after every change"
+      - "Export an image for a report"
     system:
       - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
       - "One room, two pages: buildStoryMap and buildJourneyBoard from the same model"
-      - "Records come from lib/records.mjs; a hand-written note renders blank"
+      - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
     cites: [kc-claude-plugins]
     rules: [board-is-a-cache, handmade-cards-survive]
 
@@ -78,34 +82,61 @@ steps:
     note: >
       Read covers the Journey board page only. On the story map a step is an activity and its stories are their own shapes, so a priority drag there is not yet seen.
 
-  - id: check
-    card: "Checks the board against the code again later"
-    activity: "Keep it true"
+  - id: model
+    card: "Names the command, the events and the state behind each step"
+    activity: "Model the functions"
     badge: NOT_BUILT
+    stories:
+      - "Start from a journey, or from prose"
+      - "Name one command per step"
+      - "Name the events it emits, including the refusals"
+      - "Name the state it changes and the view it feeds"
     system:
-      - "No command re-reads the cited code and diffs it against the file"
+      - "Nothing implements this. The file has no command, event, state or read-model fields yet"
     cites: [kc-claude-plugins]
-    rules: [no-cell-from-memory]
+    rules: [model-is-written-not-derived, no-cell-from-memory]
+
+  - id: funcmap
+    card: "Reads the function map beside the journey"
+    activity: "Put it on a board"
+    badge: NOT_BUILT
+    stories:
+      - "See a third page: Command, Event, State, Read model"
+      - "Workshop it and read it back the same way"
+    system:
+      - "Nothing implements this. The columns would stay the journey's steps and only the lanes change, so the renderer and the reconcile are the ones already here"
+    cites: [kc-claude-plugins]
+    rules: [same-columns-new-lanes]
+
+  - id: handoff
+    card: "Takes the event order as the order to build in"
+    activity: "Hand it to planning"
+    badge: NOT_RULED
+    system:
+      - "Nothing implements this, and nothing has decided what planning receives or in what format"
+    cites: [kc-claude-plugins]
+    rules: [events-carry-order]
 
 later:
+  - "Check a board against the code again later, and say what drifted"
   - "Draw a journey that crosses two repositories"
   - "Run the board unattended in a workflow"
 
 ownership:
-  - id: own-file
+  - id: own-author
     owner: "The engineer"
     from: write
     to: write
-    note: "owns the claims and the citations"
+    note: "owns the claims, the citations and the model"
   - id: own-tool
-    owner: "The plugin"
+    owner: "The skill"
     from: render
     to: readback
-    note: "owns the drawing and the reconcile"
+    note: "owns the drawing, the reconcile and the read-back"
 
 rules:
   - id: file-is-truth
-    text: "The file in the repository is the source of truth; the board is a rendering of it"
+    text: "The file in the repository is the source of truth; every board is a rendering of it"
   - id: board-is-a-cache
     text: "Deleting .rooms/ loses nothing — every board can be re-rendered from its file"
   - id: handmade-cards-survive
@@ -116,14 +147,26 @@ rules:
     text: "Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id"
   - id: ambiguity-refused
     text: "tldraw copies meta verbatim on duplicate, so a duplicated nodeId refuses the whole reorder"
+  - id: model-is-written-not-derived
+    text: "A function map is written by a person reading the code, not transformed out of prose by the tool"
+  - id: same-columns-new-lanes
+    text: "The function map keeps the journey's columns and swaps the lanes; it is not a second tool"
+  - id: events-carry-order
+    text: "Events carry causal order and story order does not, which is why a build order is derived from events"
 
 slices:
-  - id: first
+  - id: draw-a-journey
+    label: "SLICE 1"
     outcome: "One journey goes file -> board -> workshop -> file without losing anything."
+    steps: [write, render, workshop, readback]
+  - id: draw-a-function-map
+    label: "SLICE 2"
+    outcome: "The same file also carries a function map, from a journey or from prose."
+    steps: [model, funcmap, handoff]
 
 status:
-  unproven: "The check step has no command behind it; a board goes stale with nothing to say so."
-  unmerged: "This work is on a branch and has not been reviewed."
-  undeployed: "Nothing here is deployed — the board is a local development environment only, per the tldraw licence."
+  unproven: "The function map has no renderer and no fields in the file; slice 2 is a plan, not a capability. Read-back covers the evidence board only."
+  unmerged: "PR #394 is a draft. Nothing here is on main."
+  undeployed: "Nothing is deployed. The board is a local development environment only, per the tldraw licence."
   irreversible: "None. A room can be deleted and rebuilt from its file."
   as_of: 2026-09-08

@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Produces a three-lane board — FigJam when a file is available, self-contained HTML + PNG otherwise — where every system claim cites the code it was read from and a mandatory status card names what is unproven, unmerged, or undeployed.
+description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map and a three-lane evidence board — where every system claim cites the code it was read from and a mandatory status card names what is unproven, unmerged, or undeployed.
 ---
 
 # Journey Map
@@ -47,7 +47,7 @@ is not a journey step.
 State plainly which ref was measured. Work living only in open PRs, worktrees, or a stack
 is not the current system, and the status card must say so.
 
-**4. Write the journey file**, per `references/cell-contract.md`. The board is not the
+**4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, now, stories, ownership, slices). The board is not the
 artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
 by convention) and holds the steps, the system lines with their citations, the rules, the
 slices and the status card. `references/journey.example.yaml` is a worked one.
@@ -55,45 +55,38 @@ slices and the status card. `references/journey.example.yaml` is a worked one.
 Positions are never written to the file. Every layout number is computed from the model's
 order, so a reordered board is a one-line diff instead of a rewritten file.
 
-**5. Render** (see below), then **look at the render**. A generated diagram is not a
-verified diagram: Mermaid silently eats text after `#`, prints literal `\n` in some node
-types and not others, and passes `parse()` while displaying the wrong label. Screenshot the
-HTML and read the image; open the FigJam and read it back. Ship what you saw, not what you
-wrote.
+**5. Render** (see below), then **look at the render**. A rendered board is not a verified
+board. A note whose `fontSizeAdjustment` is 0 validates and draws a blank sticky; a geo box
+draws its overflow outside itself; a row placed at a fixed offset lands on top of the row
+above once its text grows. Every one of those happened here. Export the image and read it.
+Ship what you saw, not what you wrote.
 
 **6. Report.** Draw mode: the board, plus the steps that came back `NOT BUILT` or
 `NOT RULED`. Check mode: the mismatch table first.
 
 ## Rendering
 
-**Canvas (preferred when the journey will be worked on with other people).** An editable
-tldraw board, rendered from the journey file and readable back. See `references/canvas.md`
-for how to run it, what round-trips and what does not. Use it when the board is a working
-surface; use HTML+PNG when it is a report.
+**The canvas.** The journey file renders onto an editable tldraw board — a story map page
+and an evidence board page. See `references/canvas.md` for how to run it, what round-trips
+and what does not. `npm run doctor` says why it will not start.
 
-**FigJam.** Requires the Figma MCP and a target file. Ask for the file URL; never create a
-new file in someone's workspace without being asked to. Use the Figma plugin's FigJam skill
-for placement. If the MCP is not connected, say so in one line and fall back — do not stall
-the deliverable on it.
-
-**HTML + PNG (always available).**
-
-1. Copy `references/board-template.html` to the artifact path.
-2. Replace only the JSON block in `<script type="application/json" id="data">`. The
-   template renders itself from that object — do not hand-write table markup.
-3. Screenshot it and read the PNG:
+**An image for a report.** Export from the canvas with tldraw's own exporter, which
+captures the whole board rather than a viewport:
 
 ```bash
-agent-browser open "file://$PWD/<path>.html" --viewport 1760x1040
-agent-browser screenshot "$PWD/<path>.png" --full
+node lib/journey-export.mjs <roomId> <out.png> [page]
 ```
 
-The output path is positional. `--path` is not a flag this CLI has, and passing one writes
-a file literally named `--path` in the working directory.
+**FigJam.** Requires the Figma MCP and a target file. Ask for the file URL; never create a
+new file in someone's workspace without being asked to. If the MCP is not connected, say so
+in one line and carry on with the canvas.
 
-Artifact path: `.context/journey-<slug>.{html,png,md}` when `.context/` exists (Conductor
-workspaces), otherwise a path the user names. Write the `.md` too — it carries the
-paste-ready sticky text plus the citations, which the PNG cannot hold.
+**When the canvas will not run**, say so in one line and deliver the journey file and the
+`.md` — both are readable, both go in git, and the file is the artifact the board renders
+from. Do not stall, and do not hand-draw a substitute board that no file backs.
+
+Artifact path: `docs/journey/<slug>.yaml` in the repository the journey describes, with the
+`.md` beside it carrying the citations.
 
 ## Hard rules
 
@@ -128,7 +121,7 @@ route can reach.
 - Every column has all three cells; every System Flow cell has a citation.
 - Column count in lane 2 and lane 3 equals column count in lane 1.
 - The status card names merge and deployment state.
-- The PNG was opened and read, not just written.
+- The exported image was opened and read, not just written.
 - Check mode: every mismatch row names a file or route, not an impression.
 - Canvas: the file was re-rendered after the last edit, and `journey-read` reports nothing
   unclaimed that has not been dispositioned.
