@@ -19,8 +19,19 @@ From the plugin directory, once per machine:
 
 ```bash
 npm install
-npm run canvas
+npm run canvas      # runs the preflight first, and refuses to start if it fails
+npm run doctor      # the preflight on its own
 ```
+
+The preflight names the thing to go fix rather than letting the failure surface as a
+Node built-in that "does not exist", a bare module-not-found, or a port bind error. It
+checks the Node floor (**22.13.0** — rooms are stored in `node:sqlite`, which needed
+`--experimental-sqlite` before that), whether the dependencies are installed, and whether
+either port is already answering.
+
+**If the canvas will not run, the skill still works.** The HTML + PNG path has no
+dependencies, no server and no ports. Say in one line that the canvas was unavailable
+and produce the HTML board — never stall the deliverable on it.
 
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)

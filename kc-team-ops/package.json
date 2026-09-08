@@ -2,8 +2,13 @@
   "name": "kc-team-ops-journey-canvas",
   "private": true,
   "version": "0.0.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "type": "module",
   "scripts": {
+    "doctor": "node lib/doctor.mjs",
+    "precanvas": "node lib/doctor.mjs",
     "canvas": "concurrently -n server,client -c red,blue \"tsx watch ./server/canvas-server.ts\" \"vite dev --host\""
   },
   "dependencies": {
