@@ -70,6 +70,8 @@ hands results to the existing review agent for typed judgment. Finalization
 validates per-claim reasons/evidence, preserves confirmed severity and required
 gaps, then returns to the existing typed confirmation and posting owners.
 Standard/Full remain on the ordinary route; Custom is unavailable.
+The adapter carries the host's existing classification through `--pr-archetype`
+instead of requiring mixed PRs; omitted input retains the prior `mixed` default.
 See [runtime usage](docs/review-runtime.md#opt-in-profiled-lite-review) and the
 closed contracts in `schemas/review-capability-v1.schema.json`; the matching
 catalog is the sole requiredness authority. The original `review-ablation.sh`

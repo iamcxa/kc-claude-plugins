@@ -283,7 +283,7 @@ def plan(request):
             "capabilities": [c["id"] for c in selected],
             "modes": {
                 "agent_tier": "lite",
-                "pr_archetype": "mixed",
+                "pr_archetype": request.get("pr_archetype", "mixed"),
                 "full_pass": False,
                 "probe_required": False,
                 "cross_model": False,
@@ -357,9 +357,10 @@ def freeze_goals(values, identity):
 
 def prepare(
     repo, identity, directory, requested="auto", test_commands=(), full_pass=False,
-    goal_material=(),
+    goal_material=(), pr_archetype="mixed",
 ):
     validate(identity, "IntakeIdentity")
+    validate(pr_archetype, "PRArchetype")
     goals = freeze_goals(goal_material, identity)
     repo, directory = pathlib.Path(repo).resolve(), pathlib.Path(directory).resolve()
     origin = subprocess.run(
@@ -411,6 +412,7 @@ def prepare(
         "protocol_major": 1,
         "requested": requested,
         "full_pass": full_pass,
+        "pr_archetype": pr_archetype,
         "shape": shape,
         "test_commands": list(test_commands),
         "concerns": [g["id"] for g in goals],
@@ -438,6 +440,8 @@ def prepare(
     config_hash = runtime(
         prepared,
         "config-hash",
+        "--pr-archetype",
+        frozen["review_config"]["modes"]["pr_archetype"],
         "--capabilities",
         ",".join(frozen["review_config"]["capabilities"]),
     )
@@ -743,6 +747,7 @@ def requests(prepared):
             "protocol_major": 1,
             "requested": frozen["requested"],
             "full_pass": False,
+            "pr_archetype": frozen["review_config"]["modes"]["pr_archetype"],
             "shape": prepared["shape_bundle"]["shape"],
             "test_commands": frozen["test_commands"],
             "concerns": [g["id"] for g in prepared["shape_bundle"]["pointers"]],
@@ -1794,6 +1799,7 @@ def main():
     parser.add_argument("--model")
     parser.add_argument("--test-commands-file")
     parser.add_argument("--full-pass", action="store_true")
+    parser.add_argument("--pr-archetype", default="mixed", help="Existing normalized host classification; defaults to mixed.")
     parser.add_argument("--defer-confirmation", action="store_true")
     parser.add_argument("--finalize-dir")
     parser.add_argument("--fallbacks-file")
@@ -1866,6 +1872,7 @@ def main():
             read_json(args.test_commands_file) if args.test_commands_file else (),
             args.full_pass,
             read_json(args.goal_material_file) if args.goal_material_file else (),
+            pr_archetype=args.pr_archetype,
         )
         if (
             prepared.get("route")

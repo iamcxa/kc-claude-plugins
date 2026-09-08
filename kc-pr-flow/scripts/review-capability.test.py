@@ -193,7 +193,7 @@ class PlannerTests(unittest.TestCase):
             environment = {**os.environ, "PATH": str(stub.parent) + os.pathsep + os.environ["PATH"],
                            "KC_PR_FLOW_REVIEW_TYPED": "on", "KC_PR_FLOW_PROFILED_REVIEW": "on"}
             run, pending = self.cli(environment=environment, identity_file=intake, repo_worktree=prepared["repository_path"],
-                                    run_dir=run_dir, model="fixture", goal_material_file=goals)
+                                    run_dir=run_dir, model="fixture", goal_material_file=goals, pr_archetype="bugfix")
             self.assertEqual(run.returncode, 0, run.stderr)
             self.assertEqual(pending["pending_finalization"], str(run_dir))
             packet = pending["reviewer_request"]
@@ -206,13 +206,15 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(event_file.read_bytes(), pending_bytes)
             self.assertFalse((run_dir / "result.json").exists())
             data = protocol.read_json(run_dir / "dispatched.json")
+            self.assertEqual(data["prepared"]["plan"]["review_config"]["modes"]["pr_archetype"], "bugfix")
             judgment = self.judgment(data["prepared"], data["results"])
             review_file = protocol.store(run_dir / "reviewer.json", judgment)
-            run, final = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file)
+            run, final = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file, pr_archetype="refactor")
             self.assertEqual(run.returncode, 0, run.stderr)
             self.assertTrue(final["confirmation_projection"]["approve_eligible"])
             self.assertEqual(final["protocol_decision"]["reviewer_input"], packet)
             self.assertEqual(final["protocol_decision"]["reviewer_judgment"], judgment)
+            self.assertEqual(final["policy"]["review_config"]["modes"]["pr_archetype"], "bugfix")
             paths = [event_file, run_dir / "result.json", run_dir / "audit.json"]
             sealed = [p.read_bytes() for p in paths]
             run, _ = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file)
@@ -259,6 +261,8 @@ class PlannerTests(unittest.TestCase):
         profiled = skill.split("### Default-off profiled Lite route", 1)[1].split("Accept PR number", 1)[0]
         for contract in ("--goal-material-file", "ReviewerRequest", "ReviewerJudgment", "--reviewer-judgment-file"):
             self.assertIn(contract, profiled)
+        self.assertIn('--pr-archetype "$REVIEW_PR_ARCHETYPE"', profiled)
+        self.assertIn("Step 4d", profiled)
         command = (
             skill.split(
                 "For the profiled route, call the repository-owned adapter once:", 1
@@ -479,6 +483,60 @@ class PlannerTests(unittest.TestCase):
             "unsupported_major",
         )
 
+    def test_plan_preserves_archetype_without_waiving_questions(self):
+        baseline = protocol.plan(self.request)
+        self.assertEqual(baseline["review_config"]["modes"]["pr_archetype"], "mixed")
+        hashes = set()
+        for archetype in ("mixed", "bugfix", "feature", "refactor", "docs", "style", "cross_stack"):
+            with self.subTest(archetype=archetype):
+                planned = protocol.plan({**self.request, "pr_archetype": archetype})
+                self.assertEqual(planned["review_config"]["modes"]["pr_archetype"], archetype)
+                self.assertEqual(planned["questions"], baseline["questions"])
+                self.assertEqual(planned["manifests"], baseline["manifests"])
+                runtime_hash = subprocess.check_output([
+                    "bash", str(HERE / "review-runtime.sh"), "config-hash", "--pr-archetype", archetype,
+                    "--capabilities", ",".join(planned["review_config"]["capabilities"])], text=True).strip()
+                self.assertEqual(runtime_hash, protocol.digest(planned["review_config"]))
+                hashes.add(planned["plan_hash"])
+        self.assertEqual(len(hashes), 7)
+
+    def test_archetype_binds_runtime_requests_and_rejects_drift(self):
+        with self.prepared_results(pr_archetype="feature") as (prepared, _):
+            config = prepared["plan"]["review_config"]
+            self.assertEqual(config["modes"]["pr_archetype"], "feature")
+            self.assertEqual(prepared["identity"]["config_hash"], protocol.digest(config))
+            self.assertTrue(protocol.requests(prepared))
+            changed = copy.deepcopy(prepared)
+            changed["plan"]["review_config"]["modes"]["pr_archetype"] = "refactor"
+            changed["plan"]["plan_hash"] = protocol.digest({k: v for k, v in changed["plan"].items() if k != "plan_hash"})
+            changed["binding"]["plan_hash"] = changed["plan"]["plan_hash"]
+            self.assertRaises(protocol.ConfigurationChanged, protocol.requests, changed)
+
+    def test_archetype_contract_remains_closed_and_respects_full_pass(self):
+        for value in ("", "fix", "cross-stack", "BUGFIX", None, 0, []):
+            with self.subTest(value=value):
+                self.assertRaises(protocol.Invalid, protocol.plan, {**self.request, "pr_archetype": value})
+        config = protocol.plan({**self.request, "pr_archetype": "refactor"})["review_config"]
+        for field in config["modes"]:
+            changed = copy.deepcopy(config)
+            del changed["modes"][field]
+            self.assertRaises(protocol.Invalid, protocol.validate, changed, "ReviewConfig")
+        for field, value in (("agent_tier", "standard"), ("full_pass", True), ("probe_required", True),
+                             ("cross_model", True), ("noise_filter", True), ("extra", False)):
+            changed = copy.deepcopy(config)
+            changed["modes"][field] = value
+            self.assertRaises(protocol.Invalid, protocol.validate, changed, "ReviewConfig")
+        self.assertEqual(protocol.plan({**self.request, "pr_archetype": "refactor", "full_pass": True})["route"], "legacy")
+        with tempfile.TemporaryDirectory() as temporary:
+            identity = protocol.store(pathlib.Path(temporary) / "intake.json", self.identity)
+            run_dir = pathlib.Path(temporary) / "run"
+            run, terminal = self.cli(identity_file=identity, repo_worktree=temporary, run_dir=run_dir,
+                                     model="fixture", pr_archetype="unknown")
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual(terminal["reason"], "schema_failure")
+            self.assertIn("schema enum mismatch", run.stderr)
+            self.assertFalse(run_dir.exists())
+
     def test_terminal_matrix_and_invalid_intake_echo_are_closed(self):
         review = {
             key: value
@@ -530,7 +588,7 @@ class PlannerTests(unittest.TestCase):
             )
 
     @contextlib.contextmanager
-    def prepared_results(self, commands=(), head_content="value = 2\n", goal_kind="pr_body"):
+    def prepared_results(self, commands=(), head_content="value = 2\n", goal_kind="pr_body", **prepare_options):
         with tempfile.TemporaryDirectory() as temporary:
             repo = pathlib.Path(temporary) / "repo"
             repo.mkdir()
@@ -560,6 +618,7 @@ class PlannerTests(unittest.TestCase):
                 pathlib.Path(temporary) / "run",
                 test_commands=commands,
                 **({"goal_material": goals} if goal_kind else {}),
+                **prepare_options,
             )
             self.assertFalse(any("pointer" in p for p in prepared["shape_bundle"]["pointers"]))
             self.assertNotEqual(

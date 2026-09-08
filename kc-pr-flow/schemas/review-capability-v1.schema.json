@@ -102,11 +102,20 @@
         "review_identity": {"$ref": "#/$defs/ReviewIdentity"}, "plan_hash": {"$ref": "#/$defs/Hash"}, "recorded_at": {"$ref": "#/$defs/Text"}
       }
     },
+    "PRArchetype": {"enum": ["bugfix", "cross_stack", "docs", "feature", "mixed", "refactor", "style"]},
     "ReviewConfig": {
       "type": "object", "additionalProperties": false, "required": ["schema", "capabilities", "modes"],
       "properties": {
         "schema": {"const": "kc-pr-flow.review-config/v1"}, "capabilities": {"$ref": "#/$defs/Tokens"},
-        "modes": {"const": {"agent_tier": "lite", "pr_archetype": "mixed", "full_pass": false, "probe_required": false, "cross_model": false, "noise_filter": false}}
+        "modes": {
+          "type": "object", "additionalProperties": false,
+          "required": ["agent_tier", "pr_archetype", "full_pass", "probe_required", "cross_model", "noise_filter"],
+          "properties": {
+            "agent_tier": {"const": "lite"}, "pr_archetype": {"$ref": "#/$defs/PRArchetype"},
+            "full_pass": {"const": false}, "probe_required": {"const": false},
+            "cross_model": {"const": false}, "noise_filter": {"const": false}
+          }
+        }
       }
     },
     "ReviewPlan": {
@@ -424,6 +433,7 @@
         "schema": {"const": "kc-pr-flow.planner-input/v1"}, "identity": {"$ref": "#/$defs/IntakeIdentity"},
         "protocol_major": {"$ref": "#/$defs/Positive"}, "requested": {"enum": ["auto", "lite", "standard", "full", "custom"]},
         "full_pass": {"type": "boolean"}, "shape": {"type": "array", "items": {"$ref": "#/$defs/PathShape"}, "maxItems": 10000},
+        "pr_archetype": {"$ref": "#/$defs/PRArchetype"},
         "test_commands": {"type": "array", "items": {"$ref": "#/$defs/TestCommand"}, "maxItems": 16},
         "concerns": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "maxItems": 64}
       }

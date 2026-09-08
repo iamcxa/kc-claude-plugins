@@ -355,6 +355,13 @@ not publish these artifacts or copy them into the durable event log. Normal
 confirmation/posting retention remains owned by the existing runtime.
 
 Run `python3 scripts/review-capability.py --help` for the exact-head entry point.
+Pass the host's existing normalized classification through `--pr-archetype`.
+`PRArchetype` in the schema uses the existing runtime vocabulary; omitted input
+retains `mixed` for compatibility. `prepare` validates the value and passes it
+to the runtime configuration-hash owner; `requests` rechecks the frozen plan
+and identity binding. Finalization uses that frozen classification, ignoring
+new intake flags. This binds the reported classification, not its correctness;
+supervised admission still requires each arm's independent classification.
 Supply a `GoalInputs` array with `--goal-material-file`: each record binds the
 intake identity, source class (`pr_body`, `issue`, `review_comment`), locator and
 substantive original text already acquired by the host. The adapter does not

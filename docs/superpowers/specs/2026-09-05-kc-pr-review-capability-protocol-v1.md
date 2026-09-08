@@ -9,6 +9,7 @@
 - **Goal and reviewer integration accepted:** 2026-09-07, Captain chat `確認`, approving the presented eleven-file local integration and no-model verification scope.
 - **Reviewer coverage seam repair accepted:** 2026-09-07, Captain chat `確認`, approving the two-file runtime implementation/test extension after the reproduced incomplete-confirmation failure.
 - **Local submission packaging accepted:** 2026-09-07, Captain chat `可以`, approving two local commits: the prior automation withdrawal with required-field consolidation, followed by goal/reviewer integration with its runtime repair. No push or merge is authorized.
+- **Ordinary PR classification connection accepted:** 2026-09-08, Captain chat `批准`, approving classification propagation, closed contracts, regression tests and necessary documents; no runtime changes, new plugin/workflow or paid validation.
 
 ## Revision authority and delivery sequence
 
@@ -75,6 +76,17 @@ The later submission acceptance permits those two local commits after verificati
 It supersedes the preceding commit stops for this packaging step, not their
 implementation limits or the unchanged external-review, spend, shared-state,
 historical-pin, push, posting and release boundaries.
+
+The classification repair connects the host's existing normalized PR archetype
+through intake, planning, runtime configuration identity and finalization. Its
+nine-file envelope is the capability script/test, capability schema, corpus
+comments, profiled skill block, this spec, and plugin CLAUDE/README/runtime guide.
+Retain `mixed` for omitted input and the runtime's existing classification values;
+do not add a classifier or let classification waive required questions or mode
+guards. Test accepted ordinary types, rejected inputs and frozen-configuration
+drift with local fixtures. Preserve all existing limits and leave runtime/posting,
+workflows, catalog, versions, shared state and historical pins unchanged. This
+approval does not authorize another commit, push, live model call or blind run.
 
 | Accepted design delta | Preserved boundary |
 |---|---|
@@ -828,6 +840,13 @@ frozen admission record is the sole authority for those expected values. The
 primary Pilot corpus contains exactly five such PRs.
 The eligible pool includes ordinary fixes, features, and refactors; it does not
 require stacked PRs or exclude candidates solely for conventional title prefixes.
+`PlannerInput.pr_archetype` and CLI `--pr-archetype` carry the host's existing
+normalized classification; omission preserves `mixed` for older callers. The
+closed `PRArchetype` definition matches the runtime vocabulary. `plan` retains
+the value without changing requiredness, `prepare` uses the existing runtime
+configuration-hash owner, and `requests` rejects drift from the frozen identity.
+Finalization does not resample classification. These checks bind a reported
+value; they do not classify a PR or replace independent corpus admission.
 Record PR shape and applicability; do not claim coverage of non-Lite populations.
 The PR corpus and exact heads are pre-registered and hash-frozen before the first
 run as five `primary` rows plus one designated `backup` row. Every attempted pair

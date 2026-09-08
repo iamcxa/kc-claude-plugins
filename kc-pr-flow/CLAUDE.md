@@ -63,6 +63,9 @@ text via `--goal-material-file`; the current review agent judges the returned
 `ReviewerRequest` and finalizes with `--reviewer-judgment-file`. Missing goal
 support or unresolved judgment retains required gaps even after a successful
 capability reply; schema/collation validation preserves confirmed severity.
+Pass the host's normalized Step 4d classification via `--pr-archetype`; omitted
+input retains `mixed`. Planning/request validation binds it into the existing
+runtime configuration hash without changing required questions or mode guards.
 See `docs/review-runtime.md` for
 invocation-artifact privacy and rollout limits. The runtime reference remains
 the event/confirmation/posting authority; capability planning is outside it.
