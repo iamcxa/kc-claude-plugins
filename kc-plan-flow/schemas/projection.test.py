@@ -66,7 +66,17 @@ value_issue = {"title": "A terminal user publishes a file and hands out a link t
                "milestone": "A", "kind": "value"}
 body = P.issue_body(value_issue, milestone, None)
 check("Accepted outcome parses back", LA.section(body, "Accepted outcome") == value_issue["acceptance"])
-check("the integration proof names its owner", "**Owner: Kent.**" in body)
+# The owner is an assignment, not a sentence. Prose cannot be queried or reassigned,
+# and it duplicates the assignee field that already carries it.
+check("the integration proof does not spell its owner into prose", "Owner:" not in body)
+check("a matching assignee does not drift",
+      P.issue_drift(body, value_issue, milestone, "Kent") == [])
+check("a wrong assignee is drift",
+      ("integration proof owner", "Someone Else", "Kent")
+      in P.issue_drift(body, value_issue, milestone, "Someone Else"))
+check("an unassigned value issue is drift",
+      ("integration proof owner", "unassigned", "Kent")
+      in P.issue_drift(body, value_issue, milestone, None))
 
 defect = {"title": "A latent walk", "acceptance": "Nothing above the created directory changes mode.",
           "milestone": "A", "kind": "defect", "protects": value_issue["title"]}

@@ -39,6 +39,15 @@ unavailable`; do not answer them yourself.
 | Have you watched someone try this without helping them? What surprised you? | nothing — see below |
 | If the world looks different in three years, does this matter more or less? | nothing — see below |
 
+**One more, and it is not from `office-hours`.** Ask who runs each milestone's
+integration proof, by name, and offer leaving it unowned as a real answer rather than
+letting silence choose it. An owner nobody was asked for is an owner nobody agreed to.
+
+The answer becomes the value issue's assignee, never a sentence in its body. Prose
+cannot be queried, cannot be reassigned, and drifts from the field that already
+carries it -- one value issue said `Owner: Kent` in its body while the assignee field
+next to it said the same thing, which is one fact in two places waiting to disagree.
+
 `hypothesis` and `exit` are not asked. Compose them from the answers — the status
 quo and the wedge give you "If we … then …", and the first answer gives you what
 has to be true to call it done — then show both back and get them confirmed

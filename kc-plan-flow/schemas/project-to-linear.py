@@ -109,13 +109,18 @@ def replace_section(text, heading, body):
 def owned_sections(issue, milestone):
     owned = {"Accepted outcome": issue["acceptance"]}
     if issue["kind"] == "value":
-        proof = milestone["integration_proof"]
-        owned["Integration proof"] = f"{proof['proof']}\n\n**Owner: {proof['owner']}.**"
+        owned["Integration proof"] = milestone["integration_proof"]["proof"]
     return owned
 
 
-def issue_drift(live_description, issue, milestone):
+def issue_drift(live_description, issue, milestone, assignee=None):
     drifted = []
+    if issue["kind"] == "value":
+        # The proof's owner is an assignment, not a sentence. Rendered as prose it cannot be
+        # queried, cannot be reassigned, and drifts from the field that actually carries it.
+        owner = milestone["integration_proof"]["owner"]
+        if (assignee or "") != owner:
+            drifted.append(("integration proof owner", assignee or "unassigned", owner))
     for heading, planned in owned_sections(issue, milestone).items():
         found = section_body(live_description, heading)
         if found is None:
@@ -151,11 +156,7 @@ def issue_body(issue, milestone, value_identifier):
         )
     parts.append("## Accepted outcome\n\n" + issue["acceptance"])
     if issue["kind"] == "value":
-        proof = milestone["integration_proof"]
-        parts.append(
-            "## Integration proof\n\n"
-            f"{proof['proof']}\n\n**Owner: {proof['owner']}.**"
-        )
+        parts.append("## Integration proof\n\n" + milestone["integration_proof"]["proof"])
     body = "\n\n".join(parts)
     check_re_verified(body)
     return body
@@ -202,7 +203,7 @@ def detail_drift(live, sub):
 PROJECT_Q = """query($id: String!) { project(id: $id) {
   id name content
   projectMilestones(first: 50) { nodes { id name targetDate description } }
-  issues(first: 250) { nodes { id identifier title description } } } }"""
+  issues(first: 250) { nodes { id identifier title description assignee { name } } } } }"""
 
 
 def run_lint(project_id, expected_receipt):
@@ -376,7 +377,8 @@ def main():
         body = issue_body(issue, milestone, value_identifier)
         if issue["title"] in existing:
             node = existing[issue["title"]]
-            drifted = issue_drift(node["description"] or "", issue, milestone)
+            drifted = issue_drift(node["description"] or "", issue, milestone,
+                                  (node.get("assignee") or {}).get("name"))
             if drifted:
                 writes.append(("issue DRIFT", node["identifier"],
                                {"sections": [d[0] for d in drifted], "detail": drifted}))
@@ -441,8 +443,8 @@ def main():
             node = gql("query($i: String!) { issue(id: $i) { id description } }", {"i": target})["issue"]
             body = node["description"] or ""
             for heading, _, planned in payload["detail"]:
-                if heading == "kind declaration":
-                    die(f"{target} has lost its kind declaration; repair that by hand, not by section replace")
+                if heading in ("kind declaration", "integration proof owner"):
+                    die(f"{target}: {heading} is not a section. Set the assignee, or fix the plan.")
                 planned = planned
                 body = replace_section(body, heading, planned)
             gql("mutation($i: String!, $d: String!) { issueUpdate(id: $i, input: {description: $d}) { success } }",

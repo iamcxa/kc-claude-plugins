@@ -14,7 +14,7 @@ if mode == "fetch":
         except urllib.error.HTTPError as e: print("GQL", e.read().decode()[:300]); sys.exit(2)
         if "errors" in r: print("GQL", json.dumps(r["errors"])[:300]); sys.exit(2)
         return r["data"]
-    d = gql("""query($p:String!){ project(id:$p){ id name content initiatives{nodes{id}} projectMilestones{nodes{id name}} issues(first:50){nodes{id identifier url description branchName cycle{id} projectMilestone{id} state{type} inverseRelations{nodes{type issue{identifier}}} }} } }""", {"p": PID})["project"]
+    d = gql("""query($p:String!){ project(id:$p){ id name content initiatives{nodes{id}} projectMilestones{nodes{id name}} issues(first:50){nodes{id identifier url description branchName cycle{id} projectMilestone{id} state{type} inverseRelations{nodes{type issue{identifier}}} comments(first:20){nodes{body}} }} } }""", {"p": PID})["project"]
     snap = {"schema":"kc-plan-receipt/v0", "project": d}
     json.dump(snap, open(SNAP_OUT, "w"), indent=1)
     print(f"Snapshot written to {SNAP_OUT}")
@@ -113,8 +113,12 @@ elif mode == "lint":
     l10_ok = True; l10_violations = []
     today = datetime.utcnow().date()
     for i in admitted_issues:
-        desc = i.get('description') or ''
-        reverified_lines = [l for l in desc.split('\n') if l.strip().startswith('Re-verified:')]
+        # A verification record is process, not acceptance, so it is allowed to live in the
+        # comment thread. What this rule needs is that one exists and is fresh, not where it sits.
+        sources = [i.get('description') or '']
+        sources += [c.get('body') or '' for c in ((i.get('comments') or {}).get('nodes') or [])]
+        reverified_lines = [l for s in sources for l in s.split('\n')
+                            if l.strip().startswith('Re-verified:')]
         if not reverified_lines:
             l10_violations.append(f"{i['identifier']}: no Re-verified line")
             l10_ok = False
