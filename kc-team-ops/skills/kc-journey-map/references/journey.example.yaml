@@ -1,0 +1,106 @@
+# Worked example: the subspace-relay Review Room journey.
+#
+# Content transcribed from the board built on 2026-08-18 against the nine-PR stack.
+# It is STALE — the stack has since merged and shipped. It is kept as the shape a real
+# board takes, not as a current claim; the status card carries its own date.
+
+journey: review-room
+title: Review Room
+
+measured:
+  ref: "main @ d61aba9, plus the open stack #68 and #75 (#73 #74 #76 #78 #80 #81 #82 #85)"
+  date: 2026-08-18
+  repos: [subspace-relay, subspace-web, subspace-v0]
+
+persona: >
+  Hermes, an agent owner who wants a plan confirmed by people who have no account here.
+
+steps:
+  - id: publish
+    card: "Hermes wants to confirm a plan, runs subspace-hermes plugin"
+    system:
+      - "POST /api/briefing — multipart, X-Subspace-Device + Bearer + Idempotency-Key -> {briefingId, shareUrl}"
+      - "Client mints the per-share dev_/sec_ pair itself; relay never issues them"
+      - "Receipt must be written BEFORE the request — a crash after POST orphans the Briefing"
+    cites: [subspace-relay]
+    rules: [relay-moves-bytes]
+
+  - id: create
+    card: "Create a Review Room — one shareable URL, no invitation"
+    system:
+      - "POST /api/room {briefingId} -> 201 {roomId, briefingId, origin}"
+      - "RoomMeta written onlyIfNew, never rewritten"
+      - "origin is captured from the create request — a Room made on a preview is pinned to it"
+    cites: [subspace-relay]
+    rules: [url-is-capability]
+
+  - id: arrive
+    card: "Reviewer opens the link; relay mints a session per arrival"
+    system:
+      - "GET /room/{roomId} -> static shell, no session; carries a fresh CSRF token when the request already has a valid cookie"
+      - "Shell sends POST {action:enter}, which carries Origin — navigation GETs do not"
+      - "Relay mints session + par_ participant id; cookie HttpOnly, SameSite=Strict, 24h"
+      - "The store keeps sha256(token) only — the raw token never appears in a response body"
+    cites: [subspace-relay]
+    rules: [one-live-tab]
+
+  - id: name
+    card: "Reviewer types a display name, annotates, submits once"
+    system:
+      - "POST {action:reviewer, name} -> name stored on SessionMeta by CAS; no browser storage touched"
+      - "POST {action:read} -> live room/session/briefing checks -> Briefing + artifact bytes + saved name"
+      - "The pinned subspace-web shell serializes the exact review.jsonl and result.json bytes; relay never re-encodes"
+      - "Submit writes bytes verbatim + an immutable envelope + COMMIT at resultId = base32(sha256(domain || sessionId))[:16]"
+    cites: [subspace-relay, subspace-web]
+    rules: [name-self-claimed, one-result-per-session, drafts-lost-on-reload]
+
+  - id: pull
+    card: "Hermes pulls every Result and verifies it"
+    system:
+      - "Room Results land in briefing/{b}/result/{r}/ — the owner's existing results / pull-result need no change"
+      - "envelope.submitter is the fixed literal room-review-session; envelope.participant carries the par_ id"
+      - "The owner verifies the pulled bytes with the pinned subspace-v0 feedback predicate"
+    cites: [subspace-relay, subspace-v0]
+    rules: [relay-moves-bytes]
+
+  - id: close
+    card: "Owner closes the room — disable it, or revoke one session"
+    badge: NEW
+    system:
+      - "POST /api/room/{roomId}/disable (idempotent); POST /api/room/{roomId}/session/{sessionId}/revoke"
+      - "Owner device auth — no cookie, no CSRF; that mechanism belongs to the browser reviewer"
+      - "The sweeper collects room/ under two rules: sessions by their own expiresAt, meta.json only once its Briefing is gone"
+    cites: [subspace-relay]
+    rules: [forward-only-recovery]
+    note: >
+      Nothing else ends a Room: with no owner action it stays open until the bound Briefing expires at DEFAULT_RETENTION_MS, 30 days.
+
+rules:
+  - id: url-is-capability
+    text: "The Room URL IS the capability — no invitation, no login, no account"
+  - id: relay-moves-bytes
+    text: "Relay only moves bytes — it never mints a Resolution and never writes workflow state"
+  - id: name-self-claimed
+    text: "The typed name is self-claimed and unverified; duplicates are allowed — participant is the only discriminator"
+  - id: one-result-per-session
+    text: "One Result per session, enforced by addressing (same key -> 409), not by a check a future edit can forget"
+  - id: one-live-tab
+    text: "A session lives 24h, and only one live tab — the CSRF token rotates on every page load"
+  - id: drafts-lost-on-reload
+    text: "Draft annotations are lost on reload; accepted for the Pilot, and fixing it needs a subspace-web release"
+  - id: forward-only-recovery
+    text: "Account recovery is forward-only — only a still-live session in the same browser can be bound later"
+  - id: frozen-on-deploy
+    text: "Deploy freezes the one-way byte format and the resultId derivation — both migrate on population is zero"
+
+slices:
+  - id: first
+    outcome: "A reviewer with only a link can send one Result the owner can verify."
+    steps: [publish, create, arrive, name, pull, close]
+
+status:
+  unproven: "The whole journey has unit and local-browser evidence only. AC-1 (Hermes pulls and verifies) and AC-4 (deployed round trip) have no evidence."
+  unmerged: "Nine PRs are green and unmerged. main carries no Room lane at all."
+  undeployed: "Zero Rooms have ever been created. Nothing is deployed and gate 1 is not accepted."
+  irreversible: "Merging and deploying — that is when the origin becomes reachable and both formats freeze."
+  as_of: 2026-08-18

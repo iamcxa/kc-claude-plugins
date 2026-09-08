@@ -47,7 +47,13 @@ is not a journey step.
 State plainly which ref was measured. Work living only in open PRs, worktrees, or a stack
 is not the current system, and the status card must say so.
 
-**4. Build the grid**, per `references/cell-contract.md`.
+**4. Write the journey file**, per `references/cell-contract.md`. The board is not the
+artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
+by convention) and holds the steps, the system lines with their citations, the rules, the
+slices and the status card. `references/journey.example.yaml` is a worked one.
+
+Positions are never written to the file. Every layout number is computed from the model's
+order, so a reordered board is a one-line diff instead of a rewritten file.
 
 **5. Render** (see below), then **look at the render**. A generated diagram is not a
 verified diagram: Mermaid silently eats text after `#`, prints literal `\n` in some node
@@ -60,12 +66,17 @@ wrote.
 
 ## Rendering
 
-**FigJam (preferred).** Requires the Figma MCP and a target file. Ask for the file URL;
-never create a new file in someone's workspace without being asked to. Use the Figma
-plugin's FigJam skill for placement. If the MCP is not connected, say so in one line and
-fall back — do not stall the deliverable on it.
+**Canvas (preferred when the journey will be worked on with other people).** An editable
+tldraw board, rendered from the journey file and readable back. See `references/canvas.md`
+for how to run it, what round-trips and what does not. Use it when the board is a working
+surface; use HTML+PNG when it is a report.
 
-**HTML + PNG (always available, and always produced).**
+**FigJam.** Requires the Figma MCP and a target file. Ask for the file URL; never create a
+new file in someone's workspace without being asked to. Use the Figma plugin's FigJam skill
+for placement. If the MCP is not connected, say so in one line and fall back — do not stall
+the deliverable on it.
+
+**HTML + PNG (always available).**
 
 1. Copy `references/board-template.html` to the artifact path.
 2. Replace only the JSON block in `<script type="application/json" id="data">`. The
@@ -97,6 +108,8 @@ paste-ready sticky text plus the citations, which the PNG cannot hold.
   or exercised end to end, the status card says exactly that.
 - **Do not rewrite the user's card text silently.** Show their words and the code fact side
   by side.
+- **A card someone added by hand is not noise.** On the canvas it comes back as `unclaimed`.
+  Ask where it belongs; never delete it to make a re-render clean.
 
 ## Check-mode output
 
@@ -117,6 +130,8 @@ route can reach.
 - The status card names merge and deployment state.
 - The PNG was opened and read, not just written.
 - Check mode: every mismatch row names a file or route, not an impression.
+- Canvas: the file was re-rendered after the last edit, and `journey-read` reports nothing
+  unclaimed that has not been dispositioned.
 
 ## Where this fails
 
