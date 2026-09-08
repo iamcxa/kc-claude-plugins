@@ -70,6 +70,25 @@ slices:
 An unfinished implementation of the thing being proposed does not belong in `now:` —
 that is the status card's job, not the user's current world.
 
+## Moving a board somewhere else
+
+tldraw's own file format handles transport; the journey file handles meaning. They
+compose because `meta.journey` rides inside the records — a board can leave here, be
+opened in any tldraw, come back, and still be read against its journey file.
+
+```bash
+node lib/journey-tldr.mjs export <roomId> <out.tldr>
+node lib/journey-tldr.mjs import <in.tldr> <roomId>
+```
+
+Verified end to end: exported 82 records with 71 carrying journey meta, imported into a
+fresh room, and `journey-read` reported no drift against the file — then caught an edit
+made inside the imported board, so the read was reading and not finding nothing.
+
+**A `.tldr` is not a journey file.** It stores coordinates and colours, not steps,
+citations or rules. Import replaces the whole target document. Use it to carry a board
+between tools, never as the artifact that goes in git.
+
 ## The two directions
 
 ```bash

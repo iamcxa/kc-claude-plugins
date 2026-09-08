@@ -1,6 +1,6 @@
 // Adapted from tldraw's `templates/simple-server-example` (MIT).
 import { useSync } from '@tldraw/sync'
-import { TLAssetStore, Tldraw } from 'tldraw'
+import { TLAssetStore, Tldraw, serializeTldrawJson } from 'tldraw'
 import 'tldraw/tldraw.css'
 
 const SERVER_URL = `http://localhost:5858`
@@ -33,6 +33,9 @@ export default function App() {
 				deepLinks
 				onMount={(editor) => {
 					;(window as any).editor = editor
+					// tldraw's own file format, so a board can leave here and be opened in any
+					// tldraw — and come back with its meta intact.
+					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
 				}}
 			/>
 		</div>
