@@ -12,6 +12,8 @@
 - **Ordinary PR classification connection accepted:** 2026-09-08, Captain chat `批准`, approving classification propagation, closed contracts, regression tests and necessary documents; no runtime changes, new plugin/workflow or paid validation.
 - **Host-native dispatch connection accepted:** 2026-09-08, Captain chat `就這樣`, approving the reduced nine-file local implementation and no-model tests described below.
 - **Host-native local submission accepted:** 2026-09-08, Captain chat `確認`, approving one local commit of the nine reviewed files; no push, Cloud/model run or merge is authorized.
+- **File handoff and test deadline revision accepted:** 2026-09-08, Captain chat `批准`, approving frozen native input files, Read-only workers, and explicit mechanical-test deadlines up to 240 seconds. Worker deadlines remain 120 seconds. This revision permits local implementation and no-model verification only, not submission, push, Cloud/model execution, merge, workflow changes, old-pin migration, or increased implementation limits.
+- **File-handoff local submission accepted:** 2026-09-09, Captain chat `確認`, approving one local commit of the ten reviewed files. Push, Cloud/model execution, merge, historical-pin migration and increased implementation limits remain unauthorized.
 
 ## Revision authority and delivery sequence
 
@@ -702,13 +704,32 @@ supports it; deterministic collation remains validation, not a substitute judge.
 
 ### Managed-host connection
 
-The local connection keeps the existing schemas and catalog unchanged.
-`--prepare-only` exports selected `CapabilityRequest` values and a shared
-`result_schema` containing the reachable `CapabilityResult` definitions. The
-managed session dispatches one `review-capability-worker` per request, with no
-tools and the inherited host model. It supplies request/schema as task data,
-not as a caller-authored system prompt or copied conversation. The independent
-CLI backend remains optional; native dispatch needs no nested CLI authentication.
+`--prepare-only` writes selected request views and a shared result-schema file
+inside the existing private invocation directory, returning their paths instead
+of inline source/schema payloads. Each JSON view has request metadata plus a
+material map keyed by evidence ID. Material strings are split into bounded text
+chunks for paged Read access; concatenating each array without a separator
+recovers the exact original material in the existing `CapabilityRequest`.
+These views are transport artifacts, not a second evidence authority. Collection
+checks their bytes against the frozen request and result-schema definitions.
+The managed session dispatches one `review-capability-worker` per request, with
+only Read and the inherited host model. The task supplies the assigned view and
+schema paths; the worker reads all needed pages. Read-only is not single-file
+isolation: the assigned-file restriction is an instruction, not an enforced path
+sandbox. Existing result/evidence validation remains the acceptance boundary.
+The independent CLI backend remains optional and unchanged; native dispatch
+needs no nested CLI authentication. The catalog and capability contracts stay
+unchanged; only `TestCommand.timeout_seconds` expands from 120 to 240 maximum.
+Mechanical commands retain their explicit selected deadline, independently of
+the unchanged 120-second worker deadline; a failed test remains failed.
+
+The approved local scope is the existing capability script/tests, schema, worker,
+review skill, this spec, architecture document, plugin README/CLAUDE document,
+and runtime usage document. Preserve default-off flags, required coverage,
+General Reviewer and posting authority, and cumulative implementation limits.
+Consolidating duplicated test setup is permitted; removing assertions or
+coverage to fit those limits is not. Local checks cannot certify native Read
+compliance, cancellation, cost, or review-speed improvement.
 
 The host owns per-attempt deadlines, cancellation and authorized total spend;
 Python does not enforce native execution controls. Missing controls or worker
@@ -1143,3 +1164,60 @@ At verification time, no commit, push, model call, Cloud dispatch or merge had b
 behavior, cancellation/budget enforcement, actual provider cost and the five
 blind PR pairs remain unverified; no speed, quality-promotion or completed-goal
 claim follows from these local results.
+
+## Local file-handoff verification (2026-09-08)
+
+At verification time, this revision was uncommitted on `c4fa9b265a1749879d86f15ee0101400c4dd1dc6`
+in the same exclusive worktree. It does not revise the preceding historical
+test record or authorize publication. The ten-file scope is:
+
+| File | Change |
+|---|---|
+| `kc-pr-flow/scripts/review-capability.py` | Frozen file export/checks and mechanical-timeout pipe cleanup |
+| `kc-pr-flow/scripts/review-capability.test.py` | Lossless transport, refusal mutations, deadline and cleanup regressions; behavior-preserving layout consolidation |
+| `kc-pr-flow/schemas/review-capability-v1.schema.json` | Mechanical deadline maximum 240; worker deadline still 120 |
+| `kc-pr-flow/agents/review-capability-worker.md` | Read-only file-input recipe and explicit isolation limits |
+| `kc-pr-flow/skills/kc-pr-review/SKILL.md` | Path-only native dispatch and separate deadline instructions |
+| `ARCHITECTURE.md` | File-transport and permission boundary |
+| `kc-pr-flow/CLAUDE.md` | Native entry point and worker inventory |
+| `kc-pr-flow/README.md` | Read-only behavior and deadline summary |
+| `kc-pr-flow/docs/review-runtime.md` | Transport format, paging, validation and limits |
+| This specification | Accepted revision, scope and actual verification |
+
+Final implementation checks used Python 3.12.12 and local fake responses only:
+
+- All **48 capability tests passed**, partitioned into four disjoint unittest
+  shards: `list(loadTestsFromTestCase(PlannerTests))[i::4]`, for `i = 0..3`.
+  Each shard ran 12 tests. Durations were 208.098, 142.186, 97.947 and 79.750
+  seconds, respectively; these are suite durations, not PR-review timings.
+- An earlier serial run overlapped further edits and was interrupted. Its
+  partial output included a failure and was not accepted as a passing result.
+  Every case was rerun after code edits stopped in the final shards above.
+- The actual timeout probe first reproduced unclosed subprocess pipe warnings.
+  After cleanup, both mechanical-command tests passed in 2.686 seconds; the
+  complete final suite also passed with the warning assertion enabled.
+- `bash kc-pr-flow/scripts/review-runtime.test.sh --case profiled-receipt`:
+  **9 passed, 0 failed**.
+- `bash kc-pr-flow/scripts/review-ablation.test.sh`: **82 passed, 0 failed**.
+- `bash scripts/skill-frontmatter-lint.sh`: **94 skill files passed**;
+  `bash scripts/skill-frontmatter-lint.test.sh`: **12 passed, 0 failed**.
+- Five compacted helper/test methods have identical Python syntax trees before
+  and after the change. The inventory grows from 45 to 48 tests; no prior test
+  case was dropped. `git diff --check` passed.
+
+The file probe restores complete requests from long Unicode/escaped material,
+validates them against the unchanged capability contract, checks private file
+modes and bounded material lines, and verifies prepare output stays below 8 KiB
+for that large fixture. Missing, changed, cross-assignment and symlinked inputs
+all fail collection. Deadline tests accept 1/120/121/240, reject 0/241/boolean/
+fractional values, observe 240 passed to the actual subprocess API, preserve a
+nonzero exit and a real timeout, and retain the worker deadline at 120.
+
+No CI, catalog, runtime/posting owner, version, historical pin or shared workspace
+was changed in this revision. At verification time, no commit, push, model call, Cloud execution or
+merge was performed. Hosted CI cost per PR was not measured; CI was unchanged.
+Live Read behavior and paging, host cancellation/budget enforcement, complete
+Cloud review, paid cost and five blind pairs remain unverified. In particular,
+Read-only is not single-file isolation and no 33.3% speedup is established.
+
+Suggested commit: `fix(kc-pr-flow): hand native Lite workers frozen files`.

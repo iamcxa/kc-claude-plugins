@@ -81,7 +81,7 @@
       "type": "object", "additionalProperties": false, "required": ["id", "argv", "cwd", "timeout_seconds"],
       "properties": {
         "id": {"$ref": "#/$defs/Token"}, "argv": {"type": "array", "items": {"$ref": "#/$defs/Text"}, "minItems": 1, "maxItems": 64},
-        "cwd": {"type": "string", "maxLength": 1024}, "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 120}
+        "cwd": {"type": "string", "maxLength": 1024}, "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 240}
       }
     },
     "ReviewIdentity": {

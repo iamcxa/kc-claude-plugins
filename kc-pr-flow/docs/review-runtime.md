@@ -341,7 +341,8 @@ For schemas, identities, storage rules, command contracts, and failure semantics
 ```mermaid
 flowchart LR
   intake[Exact-head shape and explicit goals] --> plan[Required-question plan]
-  plan --> evidence[Selected evidence and tests] --> calls[Host-native tool-free workers]
+  plan --> evidence[Selected evidence and tests] --> files[Frozen request and schema files]
+  files --> calls[Host-native Read-only workers]
   calls --> collect[Serial raw-response validation] --> reviewer[Existing review agent judgment]
   reviewer --> receipt[Existing receipt projection] --> decision[Existing typed decision]
   decision --> confirm[Human confirmation] --> posting[Existing posting owner]
@@ -370,15 +371,28 @@ and revision continuity; these are not Git-only runtime evidence pointers.
 No supplied goal, blank text or a locator alone leaves goal alignment incomplete.
 
 Use `--prepare-only` on the managed-host route, without `--model`. It returns
-`pending_dispatch`, selected `requests`, a shared `result_schema` containing only
-the existing result definition's reachable contracts, and attempt deadlines.
-The installed `review-capability-worker` receives one request/schema through
+`pending_dispatch`, `request_files` entries (`capability`, `request_file`), a shared
+`result_schema_file` path, and the unchanged 120-second worker deadline.
+The schema file contains only the result definition's reachable contracts.
+Each request view has `request` metadata and a `materials` map keyed by evidence
+ID. Joining each array without a separator restores its original `material`
+string in the existing `CapabilityRequest`; chunks are not source line breaks.
+Pretty-printed, bounded chunks support paged Read access without long source
+strings being truncated. The installed `review-capability-worker` receives
+its capability and the two paths, not parent-reproduced source/schema, through
 the host's native agent interface. No independent Claude CLI login is needed;
 omitting `--prepare-only` retains the optional authenticated CLI backend.
 Project `CLAUDE.md` is permitted shared background, pinned equally across
 comparison arms, not a substitute for assigned evidence. Native workers have
-no tools and inherit the host model. Schema-only delivery does not prove that
-the provider isolates all background context.
+only Read and inherit the host model. Read-only is not single-file isolation:
+assigned-file use is an instruction, not an enforced path sandbox. Workers
+read both files to completion or return JSON null. Collection compares exported
+bytes with frozen request/schema definitions and rejects missing, changed or
+symlinked files; this does not prove which files a live model actually read.
+
+Each authorized mechanical command keeps its explicit `timeout_seconds`, from
+1 through 240, independently of the 120-second worker deadline. Nonzero exits
+and timeouts remain evidence of unsuccessful tests, not waived or retried passes.
 
 The host, not Python, enforces native deadlines, cancels timed-out work and
 honors the already-authorized total budget. Without those controls, record

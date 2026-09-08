@@ -642,6 +642,8 @@ def prepare(
                 except ProcessLookupError:
                     pass
                 process.wait()
+                process.stdout.close()
+                process.stderr.close()
         after = datetime.datetime.now(datetime.timezone.utc).isoformat()
         observation = {
             "command": command,
@@ -1817,6 +1819,31 @@ def result_schema():
     return {**root, "$defs": definitions}
 
 
+def host_files(prepared, write=False):
+    directory = pathlib.Path(prepared["directory"])
+
+    def frozen(name, value):
+        path = directory / name
+        content = (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode()
+        if write:
+            store(path, content, raw=True)
+        elif path.is_symlink() or not path.is_file() or path.read_bytes() != content:
+            raise Invalid("native input file missing or changed")
+        return str(path)
+
+    packet = {"result_schema_file": frozen("host-result-schema.json", result_schema()), "request_files": []}
+    for request in requests(prepared):
+        metadata, materials = json.loads(canonical(request)), {}
+        for group in metadata["evidence"]:
+            for item in group["material"]:
+                material = item.pop("material")
+                materials[item["id"]] = [line[start:start + 256] for line in material.splitlines(keepends=True)
+                                         for start in range(0, len(line), 256)]
+        path = frozen(f"host-request-{request['capability']}.json", {"request": metadata, "materials": materials})
+        packet["request_files"].append({"capability": request["capability"], "request_file": path})
+    return packet
+
+
 def host_progress(prepared, results, initial=False):
     directory = pathlib.Path(prepared["directory"])
     order = {r["capability"]: n for n, r in enumerate(requests(prepared))}
@@ -1824,6 +1851,7 @@ def host_progress(prepared, results, initial=False):
     data = {"prepared": prepared, "results": results}
     remaining = host_pending(prepared)
     if initial:
+        files = host_files(prepared, write=True)
         store(directory / "host-progress.json", data)
     else:
         with tempfile.TemporaryDirectory(dir=directory) as temporary:
@@ -1835,8 +1863,7 @@ def host_progress(prepared, results, initial=False):
     packet = {"pending_dispatch": str(directory), "identity": prepared["identity"],
               "remaining": remaining, "timeout_seconds": prepared["plan"]["timeout_seconds"]}
     if initial:
-        packet["requests"] = requests(prepared)
-        packet["result_schema"] = result_schema()
+        packet.update(files)
     return packet
 
 
@@ -1854,6 +1881,7 @@ def collect_host(directory, data, capability, ordinal, outcome, response_file):
         return terminal(prepared["identity"], "INVALIDATED", "identity_change")
     if {"capability": capability, "attempt": ordinal} not in host_pending(prepared):
         raise Invalid("unassigned or repeated host attempt")
+    host_files(prepared)
     if outcome not in ("succeeded", "transient_failure", "terminal_failure", "unavailable"):
         raise Invalid("host attempt outcome required")
     if outcome == "succeeded" and not response_file:

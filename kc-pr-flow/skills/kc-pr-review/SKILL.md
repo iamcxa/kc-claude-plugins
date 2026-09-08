@@ -131,28 +131,34 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
 
 Use the requested profile instead of `auto` when explicit; pass `--full-pass`
 for that request. Pass only already-authorized mechanical commands via
-`--test-commands-file`; evidence acquisition and tests happen after the frozen
+`--test-commands-file`, with each explicit `timeout_seconds` between 1 and 240;
+this does not change the worker's 120-second deadline or turn a failed test into
+a pass. Evidence acquisition and tests happen after the frozen
 plan and before parallel capability calls. Do not run the legacy agent/test
 fan-out as well. The catalog is the sole required-question/manifest authority;
 do not invent requirements, waive coverage, or request executable expansion.
 
 A `route: legacy` response resumes ordinary triage. A RunTerminal stops this
 invocation without posting or falling back to legacy approval; cancel any
-outstanding workers. For `pending_dispatch`, retain the initial `requests` and
-shared `result_schema`. Invoke `kc-pr-flow:review-capability-worker` through the
+outstanding workers. For `pending_dispatch`, retain `request_files` and the
+shared `result_schema_file` path. Invoke `kc-pr-flow:review-capability-worker` through the
 managed session's native agent interface, one worker per selected request,
-in parallel where the host supports it. Supply only that `CapabilityRequest`
-and `result_schema` as task data, not conversation history, sibling results or
-caller-authored system instructions. The installed worker uses `tools: []` and
+in parallel where the host supports it. Each task contains the assigned
+`capability`, its `request_file` path, and the `result_schema_file` path. The
+worker reads those files directly, paging until complete and joining material
+chunks without a separator; the parent does not reproduce source or schema JSON.
+The installed worker uses `tools: Read` and
 inherits the host model; no nested `claude --print`, new session, API key or
 additional workspace is needed. Normal project `CLAUDE.md` remains permitted
 background, not a replacement for selected evidence. Keep that project context
-and model configuration equally pinned in comparison arms.
+and model configuration equally pinned in comparison arms. Read-only is not
+single-file isolation; assigned-file use is an instruction, while existing
+result validation checks evidence bindings.
 
 The host must enforce each attempt's `timeout_seconds`, cancel timed-out work,
 and honor the existing authorized total budget before dispatch or retry. Python
 collection does not enforce native execution deadlines or spend. If these host
-controls or the tool-free worker are unavailable, do not dispatch; record
+controls or the Read-only worker are unavailable, do not dispatch; record
 `unavailable` for affected assignments. Preserve each worker's exact final
 response in a private file without fixing JSON, extracting a preferred answer,
 or substituting the host's judgment. Collect **serially**, using the capability
@@ -171,7 +177,8 @@ use `terminal_failure`, `unavailable`, or `transient_failure`, retaining a raw
 response if present. Only report `transient_failure` when one authorized retry
 will actually be scheduled; otherwise record a terminal outcome. A second
 transient failure becomes terminal. Retry only the returned `remaining` entry,
-with its original request/schema; no speculative third attempt. Collection
+with its original file paths; no speculative third attempt. Collection rejects
+missing, changed or symlinked input files against the frozen request/schema and
 returns remaining IDs, not another copy of all evidence. After terminal
 collection it seals `dispatched.json`; do not edit that file or
 `host-progress.json`, collect concurrently, or recover a partial write by hand.
@@ -208,7 +215,7 @@ input without rewriting the typed
 event, blocker/gap references, or approval eligibility; present Step 6c directly.
 The existing `InteractiveCollationDecision/v1` and unchanged `review-post.sh`
 remain the confirmation and posting owners. No capability may call GitHub or
-receive tools. Removing either flag selects rollback only for a fresh invocation.
+receive tools beyond Read. Removing either flag selects rollback only for a fresh invocation.
 
 Accept PR number (`962`), PR URL (`https://github.com/owner/repo/pull/962` or `/changes` suffix), or no input (detect from current branch). Extract `owner/repo` dynamically — never hardcode.
 

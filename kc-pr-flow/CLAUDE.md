@@ -57,11 +57,14 @@ timings; see docs/review-runtime.md for the measurement boundary.
 
 **Profiled Lite trigger:** both typed and profiled review flags must be exact
 `on` before dispatch. The skill calls `scripts/review-capability.py --prepare-only`,
-dispatches `review-capability-worker` through the managed host with the emitted
-request/result schema, then collects unedited replies serially with `--collect-dir`.
-The worker is tool-free and inherits the host model; project `CLAUDE.md` remains
+dispatches `review-capability-worker` through the managed host with emitted
+request/schema file paths, then collects unedited replies serially with `--collect-dir`.
+The worker has only Read and inherits the host model; project `CLAUDE.md` remains
 permitted background. Native timeouts/cancellation and budget limits belong to
 the host, not Python collection. Missing host controls leave work unavailable.
+Read-only is not per-file isolation. Collection checks exported input bytes
+against frozen requests; the host passes paths, not reproduced source/schema.
+Mechanical tests may explicitly use up to 240 seconds; workers stay at 120 seconds.
 The independent CLI backend is optional. Schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and
 `schemas/review-capability-catalog-v1.json`. Intake accepts source-bound goal
@@ -238,7 +241,7 @@ Built-in subagents dispatched by kc-pr-review. Security agents use Trail of Bits
 
 | Agent | Dispatched by | Condition | Purpose |
 |-------|--------------|-----------|---------|
-| `review-capability-worker` | kc-pr-review (profiled Lite) | Both exact-on flags and native host controls | One tool-free, schema-bound capability; live host behavior not yet verified |
+| `review-capability-worker` | kc-pr-review (profiled Lite) | Both exact-on flags and native host controls | One Read-only, schema-bound capability using frozen files; live behavior not yet verified |
 | `tob-security-reviewer` | kc-pr-review (Step 4-ToB-a) | Always | Differential security review: risk triage, blast radius, adversarial modeling |
 | `tob-supply-chain-checker` | kc-pr-review (Step 4-ToB-b) | Dependency files changed | Supply chain risk audit + insecure defaults detection |
 | `tob-actions-auditor` | kc-pr-review (Step 4-ToB-c) | Workflow files changed | AI agent CI/CD security: 9 attack vectors |

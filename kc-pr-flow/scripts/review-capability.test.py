@@ -14,6 +14,7 @@ import sys
 import tempfile
 import time
 import unittest
+import warnings
 from unittest.mock import patch
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -290,10 +291,10 @@ class PlannerTests(unittest.TestCase):
             protocol.validate(result, "RunTerminal")
 
     @contextlib.contextmanager
-    def host_run(self, native=True):
+    def host_run(self, native=True, **fixture):
         program = None if native else (inspect.getsource(clean_reply) +
                   "\nimport json,sys\nprint(json.dumps({'structured_output':clean_reply(json.load(sys.stdin))}))\n")
-        with self.prepared_results() as (prepared, _), self.launcher(program) as (_, environment):
+        with self.prepared_results(**fixture) as (prepared, _), self.launcher(program) as (_, environment):
             directory = pathlib.Path(prepared["directory"])
             intake = protocol.store(directory / "intake.json", self.identity)
             goal = prepared["shape_bundle"]["pointers"][0]
@@ -307,7 +308,17 @@ class PlannerTests(unittest.TestCase):
                                    **({"prepare_only": True} if native else {"model": "fixture"}))
             self.assertEqual(run.returncode, 0, run.stderr)
             self.assertEqual(packet["pending_dispatch" if native else "pending_finalization"], str(run_dir))
-            replies = [clean_reply(protocol.validate(r, "CapabilityRequest")) for r in packet.get("requests", [])]
+            replies = []
+            expected = protocol.requests(protocol.read_json(run_dir / "host-progress.json")["prepared"]) if native else []
+            for entry, original in zip(packet.get("request_files", []), expected):
+                view = protocol.read_json(entry["request_file"])
+                for group in view["request"]["evidence"]:
+                    for material in group["material"]:
+                        material["material"] = "".join(view["materials"][material["id"]])
+                self.assertEqual(view["request"], original)
+                self.assertEqual(entry["capability"], original["capability"])
+                replies.append(clean_reply(protocol.validate(view["request"], "CapabilityRequest")))
+            self.assertEqual(len(replies), len(expected))
             yield run_dir, packet, replies, environment
 
     def test_host_dispatch_reaches_existing_finalization_without_a_model(self):
@@ -452,7 +463,7 @@ class PlannerTests(unittest.TestCase):
 
     def test_host_exports_existing_result_schema_without_unrelated_contracts(self):
         with self.host_run() as (directory, packet, replies, environment):
-            schema = packet["result_schema"]
+            schema = protocol.read_json(packet["result_schema_file"])
             self.assertEqual(schema["$ref"], "#/$defs/CapabilityResult")
             self.assertLess(len(schema["$defs"]), len(protocol.SCHEMA["$defs"]))
             for name, definition in schema["$defs"].items():
@@ -467,17 +478,52 @@ class PlannerTests(unittest.TestCase):
                 elif isinstance(value, list):
                     pending.extend(value)
 
-    def test_native_skill_supplies_schema_and_collects_tool_free_workers(self):
+    def test_host_files_are_lossless_bounded_and_not_inline(self):
+        content = "value = 2\n# " + '\\"雪😀' * 7000 + "\n"
+        with self.host_run(head_content=content) as (directory, packet, replies, environment):
+            self.assertNotIn("requests", packet)
+            self.assertNotIn("result_schema", packet)
+            self.assertLess(len(protocol.canonical(packet)), 8192)
+            self.assertEqual(packet["timeout_seconds"], 120)
+            for path in [packet["result_schema_file"], *(p["request_file"] for p in packet["request_files"])]:
+                path = pathlib.Path(path)
+                self.assertEqual(path.parent, directory)
+                self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+                self.assertLessEqual(max(map(len, path.read_bytes().splitlines())), 2048)
+            self.collect(directory, replies[0])
+
+    def test_host_refuses_missing_changed_cross_assignment_and_symlink_inputs(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            paths = [pathlib.Path(packet["result_schema_file"]), pathlib.Path(packet["request_files"][0]["request_file"])]
+            other = pathlib.Path(packet["request_files"][1]["request_file"])
+            for path in paths:
+                original = path.read_bytes()
+                for mutation in (None, b"{}\n", other.read_bytes(), "symlink"):
+                    with self.subTest(path=path.name, mutation=str(mutation)[:20]):
+                        path.unlink()
+                        if mutation == "symlink": path.symlink_to(other)
+                        elif mutation is not None: path.write_bytes(mutation)
+                        run, refused = self.cli(collect_dir=directory, capability=replies[0]["capability"],
+                                                 attempt=1, attempt_result="unavailable")
+                        self.assertNotEqual(run.returncode, 0)
+                        self.assertEqual(refused["status"], "REQUEST_INVALID")
+                        self.assertFalse((directory / "dispatched.json").exists())
+                        if path.exists(): path.unlink()
+                        path.write_bytes(original)
+            self.collect(directory, replies[0])
+
+    def test_native_skill_supplies_files_and_collects_read_only_workers(self):
         text = (HERE.parent / "skills/kc-pr-review/SKILL.md").read_text()
         profiled = text.split("### Default-off profiled Lite route", 1)[1].split("Accept PR number", 1)[0]
-        for required in ("--prepare-only", "result_schema", "kc-pr-flow:review-capability-worker",
+        for required in ("--prepare-only", "request_files", "result_schema_file", "kc-pr-flow:review-capability-worker",
                          "--collect-dir", "--attempt-result", "--response-file", "cancel"):
             self.assertIn(required, profiled)
         worker = (HERE.parent / "agents/review-capability-worker.md").read_text()
         frontmatter = worker.split("---", 2)[1].splitlines()
-        self.assertIn("tools: []", frontmatter)
+        self.assertIn("tools: Read", frontmatter)
         self.assertIn("model: inherit", frontmatter)
-        self.assertIn("result_schema", worker)
+        for required in ("request_file", "result_schema_file", "materials", "without a separator", "not single-file isolation"):
+            self.assertIn(required, worker)
         self.assertIn("CLAUDE.md", worker)
         self.assertIn("return JSON `null`", worker)
         self.assertIn("`incomplete_required` is not an allowed capability assessment", worker)
@@ -625,43 +671,20 @@ class PlannerTests(unittest.TestCase):
         return answer
 
     def fallback(self, prepared, capability):
-        return {
-            "schema": "kc-pr-flow.manual-fallback/v1",
-            "bundle_hash": prepared["bundle"]["bundle_hash"],
-            "human_note": "",
-            "result": {
-                "schema": "kc-pr-flow.manual-capability-result/v1",
-                "capability": capability,
-                "review_identity": prepared["identity"],
-                "terminal_assessment": "clean",
-                "candidate_ids": [],
-                "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
-                "recorded_by": "interactive-human",
-                "recorded_at": "2026-09-05T00:00:00Z",
-            },
-        }
+        return {"schema": "kc-pr-flow.manual-fallback/v1",
+                "bundle_hash": prepared["bundle"]["bundle_hash"], "human_note": "",
+                "result": {"schema": "kc-pr-flow.manual-capability-result/v1", "capability": capability,
+                           "review_identity": prepared["identity"], "terminal_assessment": "clean",
+                           "candidate_ids": [], "evidence": [prepared["bundle"]["pointers"][0]["pointer"]],
+                           "recorded_by": "interactive-human", "recorded_at": "2026-09-05T00:00:00Z"}}
 
     def setUp(self):
-        self.identity = {
-            "schema": "kc-pr-flow.intake-identity/v1",
-            "repository": "acme/widgets",
-            "pr_number": 42,
-            "base_sha": "a" * 40,
-            "head_sha": "b" * 40,
-            "intake_id": "intake-test",
-        }
-        self.request = {
-            "schema": "kc-pr-flow.planner-input/v1",
-            "identity": self.identity,
-            "protocol_major": 1,
-            "requested": "auto",
-            "full_pass": False,
-            "shape": [
-                {"path": "src/example.py", "added": 4, "deleted": 2, "binary": False}
-            ],
-            "test_commands": [],
-            "concerns": [],
-        }
+        self.identity = {"schema": "kc-pr-flow.intake-identity/v1", "repository": "acme/widgets",
+                         "pr_number": 42, "base_sha": "a" * 40, "head_sha": "b" * 40, "intake_id": "intake-test"}
+        self.request = {"schema": "kc-pr-flow.planner-input/v1", "identity": self.identity,
+                        "protocol_major": 1, "requested": "auto", "full_pass": False,
+                        "shape": [{"path": "src/example.py", "added": 4, "deleted": 2, "binary": False}],
+                        "test_commands": [], "concerns": []}
 
     def test_plan_is_deterministic_and_preserves_required_coverage(self):
         plan = protocol.plan(self.request)
@@ -975,9 +998,7 @@ class PlannerTests(unittest.TestCase):
                 routed["route"], "unavailable" if profile == "custom" else "legacy"
             )
 
-    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(
-        self,
-    ):
+    def test_manual_fallback_and_failed_capability_rehydrate_real_incomplete_receipt(self):
         started = time.monotonic()
         with self.prepared_results() as (prepared, results):
             print("Mechanical prepare seconds:", time.monotonic() - started, flush=True)
@@ -987,34 +1008,20 @@ class PlannerTests(unittest.TestCase):
             ordinary = self.collate(prepared, results)
             self.assertEqual(ordinary["rendered"]["event"], "COMMENT")
             collated = self.collate(prepared, results, [fallback])
-            obligation = next(
-                o
-                for o in collated["policy"]["obligations"]
-                if o["capability"] == capability
-            )
+            obligation = next(o for o in collated["policy"]["obligations"] if o["capability"] == capability)
             self.assertEqual(obligation["terminal_state"], "clean")
             self.assertEqual(obligation["fallback"]["status"], "provided")
-            self.assertEqual(
-                obligation["adapter_attempts"][-1]["result"], "terminal_failure"
-            )
-            for field, value in (
-                ("bundle_hash", "f" * 64),
-                ("terminal_assessment", "findings"),
-            ):
+            self.assertEqual(obligation["adapter_attempts"][-1]["result"], "terminal_failure")
+            for field, value in (("bundle_hash", "f" * 64), ("terminal_assessment", "findings")):
                 mutated = copy.deepcopy(fallback)
-                (mutated if field == "bundle_hash" else mutated["result"])[field] = (
-                    value
-                )
+                (mutated if field == "bundle_hash" else mutated["result"])[field] = value
                 refused = self.collate(prepared, results, [mutated])
                 self.assertEqual(refused["rendered"]["event"], "COMMENT")
             del results[0]["unexpected"]
             results[0]["unknown"] = True
             missing_capability = results.pop()["capability"]
             directory = pathlib.Path(prepared["directory"])
-            protocol.store(
-                directory / "dispatched.json",
-                {"prepared": prepared, "results": results},
-            )
+            protocol.store(directory / "dispatched.json", {"prepared": prepared, "results": results})
             fallback_file = protocol.store(directory / "fallbacks.json", [fallback])
             reviewer_file = protocol.store(directory / "reviewer.json", self.judgment(prepared, results, [fallback]))
             run, refreshed = self.cli(finalize_dir=directory, defer_confirmation=True, fallbacks_file=fallback_file)
@@ -1026,14 +1033,10 @@ class PlannerTests(unittest.TestCase):
             )
             self.assertEqual(run.returncode, 0)
             self.assertIn("decision", finished, finished)
-            self.assertEqual(
-                finished["decision"]["capability_gap_refs"], [missing_capability]
-            )
+            self.assertEqual(finished["decision"]["capability_gap_refs"], [missing_capability])
             self.assertEqual(finished["decision"]["effective_event"], "COMMENT")
             self.assertFalse(finished["confirmation_projection"]["approve_eligible"])
-            self.assertEqual(
-                finished["policy"]["obligations"][0]["fallback"]["status"], "provided"
-            )
+            self.assertEqual(finished["policy"]["obligations"][0]["fallback"]["status"], "provided")
             print("Mechanical runtime timing (ns):", finished["mechanical_timing_ns"], flush=True)
 
     def test_missing_required_evidence_skips_every_lane_and_refuses_receipt(self):
@@ -1137,6 +1140,30 @@ if not RECOVER:
                 self.assertEqual(protocol.canonical(protocol.capability_view(manifest["id"])["manifest"]),
                                  protocol.canonical(manifest))
 
+    def test_mechanical_deadline_is_independent_of_worker_deadline(self):
+        command = {"id": "test", "argv": [sys.executable, "-c", "raise SystemExit(7)"], "cwd": "."}
+        for seconds in (1, 120, 121, 240):
+            selected = {**command, "timeout_seconds": seconds}
+            frozen = protocol.plan({**self.request, "test_commands": [selected]})
+            self.assertEqual(frozen["test_commands"], [selected])
+            self.assertEqual(frozen["timeout_seconds"], 120)
+        for seconds in (0, 241, True, 1.5):
+            self.assertRaises(protocol.Invalid, protocol.validate, {**command, "timeout_seconds": seconds}, "TestCommand")
+        communicate, deadlines = subprocess.Popen.communicate, []
+        def observed(process, *args, **kwargs):
+            if process.args == command["argv"]: deadlines.append(kwargs.get("timeout"))
+            return communicate(process, *args, **kwargs)
+        stalled = {**command, "id": "stalled", "argv": [sys.executable, "-c", "import time; time.sleep(5)"], "timeout_seconds": 1}
+        with warnings.catch_warnings(record=True) as seen:
+            warnings.simplefilter("always", ResourceWarning)
+            with patch.object(subprocess.Popen, "communicate", observed), self.prepared_results(
+                    [{**command, "timeout_seconds": 240}, stalled]) as (prepared, _):
+                observation = prepared["bundle"]["test_observations"][0]
+                self.assertEqual((observation["status"], observation["exit_code"]), ("completed", 7))
+                self.assertEqual(deadlines, [240])
+                self.assertEqual(prepared["bundle"]["test_observations"][1]["status"], "timed_out")
+        self.assertEqual([str(w.message) for w in seen if issubclass(w.category, ResourceWarning)], [])
+
     def test_authority_mutations_refuse_before_approval(self):
         bank = protocol.catalog()
         for field, value in (
@@ -1150,11 +1177,7 @@ if not RECOVER:
             with replacement, self.assertRaises(protocol.Invalid):
                 protocol.catalog()
         with self.prepared_results() as (prepared, results):
-            for field, value in (
-                ("revision", 1),
-                ("parent_hash", "f" * 64),
-                ("bindings", []),
-            ):
+            for field, value in (("revision", 1), ("parent_hash", "f" * 64), ("bindings", [])):
                 changed = copy.deepcopy(prepared)
                 changed["bundle"][field] = value
                 rehash_bundle(changed)
@@ -1162,55 +1185,24 @@ if not RECOVER:
             for field, value in (("bundle_revision", 1), ("answers", [])):
                 changed = copy.deepcopy(results)
                 changed[0][field] = value
-                self.assertEqual(
-                    self.collate(prepared, changed)["rendered"]["event"], "COMMENT"
-                )
-            self.assertEqual(
-                self.collate(prepared, results + [results[0]])["rendered"]["event"],
-                "COMMENT",
-            )
-            self.assertEqual(
-                protocol.collate(
-                    prepared, [{"schema": "kc-pr-flow.expansion-request/v1"}]
-                )["reason"],
-                "unsupported_expansion",
-            )
-            protocol.git(
-                prepared["repository_path"],
-                "checkout",
-                "--detach",
-                self.identity["base_sha"],
-            )
-            self.assertEqual(
-                self.finish(prepared, results)["reason"], "identity_change"
-            )
+                self.assertEqual(self.collate(prepared, changed)["rendered"]["event"], "COMMENT")
+            self.assertEqual(self.collate(prepared, results + [results[0]])["rendered"]["event"], "COMMENT")
+            self.assertEqual(protocol.collate(prepared, [{"schema": "kc-pr-flow.expansion-request/v1"}])["reason"],
+                             "unsupported_expansion")
+            protocol.git(prepared["repository_path"], "checkout", "--detach", self.identity["base_sha"])
+            self.assertEqual(self.finish(prepared, results)["reason"], "identity_change")
 
     def test_posting_invalidation_and_absent_outcome_are_read_only(self):
         with self.prepared_results() as (prepared, _results):
-            event_file = next(
-                (pathlib.Path(prepared["directory"]) / "state").rglob("events.jsonl")
-            )
+            event_file = next((pathlib.Path(prepared["directory"]) / "state").rglob("events.jsonl"))
             original = event_file.read_bytes()
             self.assertIsNone(protocol.posting_projection(prepared, event_file))
-            snapshot, event = self.posting_log(
-                prepared, [("run.invalidated", {"reason": "head_moved"})]
-            )
-            self.assertEqual(
-                protocol.posting_projection(prepared, snapshot)["reason"], "head_moved"
-            )
+            snapshot, event = self.posting_log(prepared, [("run.invalidated", {"reason": "head_moved"})])
+            self.assertEqual(protocol.posting_projection(prepared, snapshot)["reason"], "head_moved")
             self.assertEqual(event_file.read_bytes(), original)
-            for field in (
-                "review_key",
-                "head_sha",
-                "config_hash",
-                "base_sha",
-                "repository",
-                "run_id",
-            ):
+            for field in ("review_key", "head_sha", "config_hash", "base_sha", "repository", "run_id"):
                 changed = copy.deepcopy(prepared)
-                changed["identity"][field] = (
-                    event["run_id"] if field == "run_id" else "mismatched"
-                )
+                changed["identity"][field] = event["run_id"] if field == "run_id" else "mismatched"
                 self.assertRaises(protocol.Invalid, protocol.posting_projection, changed, snapshot)
 
 

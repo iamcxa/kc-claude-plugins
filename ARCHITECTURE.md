@@ -208,10 +208,13 @@ The state root is configurable and defaults to the platform state directory unde
 
 `review-capability.py` owns deterministic planning, selected evidence acquisition,
 attempt/result validation and question-level collation. The managed review host
-dispatches tool-free native workers from `--prepare-only` requests and collects
+dispatches Read-only native workers using `--prepare-only` file paths and collects
 their raw responses serially with `--collect-dir`. It owns native timeouts,
 cancellation and authorized spend; the Python collector does not enforce them.
 An independently authenticated CLI backend remains optional, not a prerequisite.
+Native input files retain lossless chunked materials; collection checks them
+against the frozen requests. Read-only is not per-file isolation. Mechanical
+tests may explicitly select up to 240 seconds; workers remain at 120 seconds.
 Both transports retain at most one retry after a transient failure. The
 closed schema and catalog live under `kc-pr-flow/schemas`; requiredness is read
 from that catalog, never copied into skill prose. Shape and explicit goal material

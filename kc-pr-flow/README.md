@@ -66,10 +66,12 @@ timings; see docs/review-runtime.md for the measurement boundary.
 The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
 and `KC_PR_FLOW_PROFILED_REVIEW=on`. It freezes explicit goal text with intake,
 plans required questions before collecting selected repository evidence, and
-uses tool-free native workers in the managed review session, then hands their
+uses Read-only native workers with frozen file inputs in the managed review session, then hands their
 validated results to the existing review agent for typed judgment. A separate
 `claude --print` login is not required on this route; the CLI backend remains
-optional. The host owns timeout/cancellation and authorized spend. Project
+optional. The host owns timeout/cancellation and authorized spend.
+Mechanical-test deadlines are explicitly selected up to 240 seconds; workers
+remain at 120 seconds. Read-only does not enforce per-file isolation. Project
 `CLAUDE.md` is permitted background and must match between comparison arms.
 Local fake-response tests do not establish live host compatibility. Finalization
 validates per-claim reasons/evidence, preserves confirmed severity and required
