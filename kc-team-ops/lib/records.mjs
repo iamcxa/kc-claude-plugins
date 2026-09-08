@@ -60,7 +60,7 @@ export function frame({ id, name, x, y, w, h, index = 'a1', parentId = 'page:pag
 	}
 }
 
-const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle' }) => ({
+const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '' }) => ({
 	...base(id, x, y, index, parentId),
 	type: 'geo',
 	props: {
@@ -69,7 +69,7 @@ const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', a
 		geo: 'rectangle',
 		dash: 'draw',
 		growY: 0,
-		url: '',
+		url,
 		scale: 1,
 		flipX: false,
 		flipY: false,
@@ -103,9 +103,15 @@ export function label({
 	size = 'm',
 	align = 'middle',
 	verticalAlign = 'middle',
+	url = '',
 }) {
-	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign })
+	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
 }
+
+// tldraw draws a shape's `url` as a real anchor inside the shape, and a deep link needs
+// only a page: the camera numbers are normalised on arrival. That is enough to walk from
+// a release to the board that shows what it is missing.
+export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d=v0.0.1.1.${pageId.replace('page:', '')}`
 
 // A geo box does not grow to fit its label — text past the bottom edge is simply drawn
 // outside the box. These numbers were measured in the browser on a 300px-wide box at

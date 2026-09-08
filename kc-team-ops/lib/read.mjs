@@ -14,9 +14,11 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync, writeFileSync } from 'node:fs'
 import { parse, parseDocument } from 'yaml'
 
-const BOARD_PAGE = 'page:page'
-const STORY_PAGE = 'page:jm-storymap'
-const PAGE_NAMES = { 'page:page': 'board', 'page:jm-storymap': 'storymap', 'page:jm-funcmap': 'funcmap' }
+const STORY_PAGE = 'page:page'
+const BOARD_PREFIX = 'page:jm-board-'
+const isBoard = (parentId) => String(parentId).startsWith(BOARD_PREFIX)
+const pageName = (parentId) =>
+	parentId === STORY_PAGE ? 'storymap' : isBoard(parentId) ? `board:${String(parentId).slice(BOARD_PREFIX.length)}` : parentId === 'page:jm-funcmap' ? 'funcmap' : parentId
 const NOTE_W = 200
 
 const plain = (rich) =>
@@ -69,14 +71,32 @@ export function diffAgainstModel(shapes, model) {
 	const steps = model.steps ?? []
 	const modelOrder = steps.map((s) => s.id)
 
-	const board = shapes.filter((s) => s.parentId === BOARD_PAGE)
+	// A step in two releases appears on both of their boards. That is not a duplicate, so
+	// cards are collected per page and only compared within one.
+	const boardPages = [...new Set(shapes.filter((s) => isBoard(s.parentId)).map((s) => s.parentId))]
 	const story = shapes.filter((s) => s.parentId === STORY_PAGE)
 
-	const cards = byKind(board, 'step-card')
+	const perBoard = boardPages.map((pid) => ({ pid, cards: byKind(shapes.filter((s) => s.parentId === pid), 'step-card') }))
+	const cards = perBoard.length === 1 ? perBoard[0].cards : []
 	const activities = byKind(story, 'activity')
 	const stories = byKind(story, 'story')
 
-	const duplicated = [...new Set([...duplicatesOf(cards), ...duplicatesOf(activities), ...duplicatesOf(stories)])]
+	const duplicated = [
+		...new Set([...perBoard.flatMap((b) => duplicatesOf(b.cards)), ...duplicatesOf(activities), ...duplicatesOf(stories)]),
+	]
+
+	// A step's wording is the same fact wherever it is drawn, so two boards showing it
+	// differently is the same class of conflict as a board disagreeing with the story map.
+	const boardText = new Map()
+	const boardConflicts = new Set()
+	for (const b of perBoard) {
+		for (const shape of b.cards) {
+			const id = shape.meta.journey.nodeId
+			const now = stripNumber(plain(shape.props?.richText))
+			if (boardText.has(id) && boardText.get(id) !== now) boardConflicts.add(id)
+			else boardText.set(id, now)
+		}
+	}
 
 	const cardBy = indexByNode(cards, duplicated)
 	const actBy = indexByNode(activities, duplicated)
@@ -90,7 +110,11 @@ export function diffAgainstModel(shapes, model) {
 	const rewordConflict = []
 
 	for (const step of steps) {
-		const onBoard = cardBy.has(step.id) ? stripNumber(plain(cardBy.get(step.id).props?.richText)) : null
+		if (boardConflicts.has(step.id)) {
+			rewordConflict.push({ id: step.id, field: 'card', board: 'two boards disagree', storymap: null })
+			continue
+		}
+		const onBoard = boardText.has(step.id) ? boardText.get(step.id) : null
 		const onStory = actBy.has(step.id) ? plain(actBy.get(step.id).props?.richText) : null
 		const storyField = step.activity ? 'activity' : 'card'
 
@@ -124,7 +148,9 @@ export function diffAgainstModel(shapes, model) {
 	}
 
 	// ── column order ─────────────────────────────────────────────────────────────
-	const boardOrder = orderOf(cardBy)
+	// Column order only round-trips from a whole-journey board: a release board shows a
+	// subset, so its left-to-right order says nothing about the steps it does not draw.
+	const boardOrder = perBoard.length === 1 ? orderOf(cardBy) : []
 	const storyOrder = orderOf(actBy)
 	const boardMoved = boardOrder.length && boardOrder.join() !== modelOrder.filter((id) => cardBy.has(id)).join()
 	const storyMoved = storyOrder.length && storyOrder.join() !== modelOrder.filter((id) => actBy.has(id)).join()
@@ -194,14 +220,14 @@ export function diffAgainstModel(shapes, model) {
 		.map((s) => {
 			// A page this reader does not model still names itself, so a card added on the
 			// function map is not reported as if it were on the board.
-			const page = PAGE_NAMES[s.parentId] ?? s.parentId
-			const anchors = page === 'storymap' ? storyAnchors : page === 'board' ? boardAnchors : []
+			const page = pageName(s.parentId)
+			const anchors = page === 'storymap' ? storyAnchors : page.startsWith('board:') ? boardAnchors : []
 			const placed = anchors.length ? placeUnderColumn(s, anchors) : { column: null }
 			return { id: s.id, text: plain(s.props?.richText), page, ...placed }
 		})
 		.filter((s) => s.text)
 
-	const missing = modelOrder.filter((id) => !cardBy.has(id) && !actBy.has(id) && !duplicated.includes(id))
+	const missing = modelOrder.filter((id) => !boardText.has(id) && !actBy.has(id) && !duplicated.includes(id))
 
 	return { reordered, reorderConflict, reworded, rewordConflict, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
 }

@@ -177,8 +177,8 @@ rules:
     text: "Events carry causal order and story order does not, which is why a build order is derived from events"
 
 status:
-  unproven: "The function map has no renderer and no fields in the file; slice 2 is a plan, not a capability. Read-back covers the journey board only."
+  unproven: "The function map is drawn but never read back, so an edit made on that page is lost. Nothing has been run by anyone but its author."
   unmerged: "PR #394 is a draft. Nothing here is on main."
   undeployed: "Nothing is deployed. The board is a local development environment only, per the tldraw licence."
   irreversible: "None. A room can be deleted and rebuilt from its file."
-  as_of: 2026-09-08
+  as_of: 2026-09-09

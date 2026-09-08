@@ -43,11 +43,25 @@ questions and disagree about what the vertical axis means:
 
 | Page | Vertical axis | Answers |
 |---|---|---|
-| **Story map** | priority under an activity | what should we build, and what is the smallest useful slice |
-| **Journey board** | lane | does what we claim exist actually exist, and what does the code say |
+| **Story map** | priority within a release band | what should we build, and what is the smallest useful slice |
+| **Journey board**, one per release | lane | given we want *this* release, what does the system do today and what is missing |
 | **Function map** | lane | what does each step decide, and what becomes true when it does |
 
-The function map is Event Modeling's swimlanes over the journey's own columns: Command,
+**A journey board is scoped to one release.** It draws only the steps that release touches,
+so its `NOT BUILT` columns are that release's build list. Drawn across the whole journey the
+same badges are a pile of gaps belonging to no particular decision, which is what it did
+before. A file with no releases still gets one whole-journey board.
+
+**The pages link to each other.** A release label on the story map carries a link to that
+release's board; the board carries one back. tldraw draws a shape's `url` as a real anchor,
+and a deep link needs only a page — the camera numbers are normalised on arrival.
+
+The journey board is ours, not a published method. Its bar is the cell contract: cite the
+code or badge `NOT BUILT`, and never leave the status card off. The nearest published thing
+is a service blueprint, which is a different shape and a different question.
+
+The function map is **Event Modeling** (Adam Dymitruk's swimlane form) over the journey's own
+columns: Command,
 Event, State, Read model. The vocabulary is fmodel's tactical grammar borrowed as nouns —
 a decider takes a command and the current state and emits events; a view folds events into
 something readable — not the library, and nothing here event-sources anything.

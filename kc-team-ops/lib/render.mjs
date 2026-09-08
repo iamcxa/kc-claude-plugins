@@ -8,8 +8,8 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
-import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
-import { buildStoryMap } from './storymap.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine } from './records.mjs'
+import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 
 const PITCH = 320
@@ -34,18 +34,31 @@ const BADGE_COLOR = {
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-export function buildJourneyBoard(model) {
-	const steps = model.steps ?? []
+// One board per release, scoped to the steps that release touches.
+//
+// The board exists to answer the question the story map raises and cannot answer: given
+// that we want this release, what does the system do today, what has to stay true, and
+// what is therefore missing. Scoped that way, the NOT BUILT columns on a release's board
+// are that release's build list. Drawn across the whole journey — which is what this did
+// — the same badges are a pile of unrelated gaps belonging to no particular decision.
+export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
+
+export function buildJourneyBoard(model, { release = null, room = null } = {}) {
+	const inRelease = (step) =>
+		!release || (step.stories ?? []).some((x) => x?.release === release.id)
+	const steps = (model.steps ?? []).filter(inRelease)
+	const parentId = boardPageId(release?.id)
+	const idp = `shape:jm-${release?.id ?? 'all'}-`
 	const rulesById = new Map((model.rules ?? []).map((r) => [r.id, r.text]))
-	const ix = indexes(Math.max(8, steps.length * 4 + 12))
 	const put = []
+	const ix = indexes(Math.max(12, steps.length * 5 + 16))
 	let n = 0
 
 	// Shape ids are derived from the model, never from a coordinate: a position-derived
 	// id leaves an orphan behind the moment a row changes height.
 	const lane = (slug, text, y, h) =>
 		put.push({
-			...label({ id: `shape:jm-lane-${slug}`, text, x: LANE_X, y, w: LANE_W, h, index: ix[n++], color: 'grey' }),
+			...label({ id: `${idp}lane-${slug}`, text, x: LANE_X, y, w: LANE_W, h, index: ix[n++], parentId, color: 'grey' }),
 			meta: tag(`lane-${slug}`, 'lane-label'),
 		})
 
@@ -75,7 +88,8 @@ export function buildJourneyBoard(model) {
 		if (step.badge) {
 			put.push({
 				...label({
-					id: `shape:jm-badge-${step.id}`,
+					id: `${idp}badge-${step.id}`,
+					parentId,
 					text: step.badge.replace('_', ' '),
 					x: x + 60,
 					y: Y_BADGE,
@@ -90,7 +104,8 @@ export function buildJourneyBoard(model) {
 
 		put.push({
 			...note({
-				id: `shape:jm-card-${step.id}`,
+				id: `${idp}card-${step.id}`,
+				parentId,
 				text: `${i + 1}. ${step.card}`,
 				x: x + 50,
 				y: Y_CARD,
@@ -104,7 +119,8 @@ export function buildJourneyBoard(model) {
 		// silently and a sticky is the wrong place to carry one. The file keeps the detail.
 		put.push({
 			...label({
-				id: `shape:jm-sys-${step.id}`,
+				id: `${idp}sys-${step.id}`,
+				parentId,
 				text: systemText(step),
 				x,
 				y: Y_SYSTEM,
@@ -124,7 +140,8 @@ export function buildJourneyBoard(model) {
 		if (step.note) {
 			put.push({
 				...label({
-					id: `shape:jm-note-${step.id}`,
+					id: `${idp}note-${step.id}`,
+					parentId,
 					text: noteOf(step),
 					x,
 					y: Y_NOTE,
@@ -142,7 +159,8 @@ export function buildJourneyBoard(model) {
 
 		put.push({
 			...label({
-				id: `shape:jm-rules-${step.id}`,
+				id: `${idp}rules-${step.id}`,
+				parentId,
 				text: ruleText(step),
 				x,
 				y: Y_RULES,
@@ -172,7 +190,8 @@ export function buildJourneyBoard(model) {
 	const statusW = Math.max(600, steps.length * PITCH - 20)
 	put.push({
 		...label({
-			id: 'shape:jm-status',
+			id: `${idp}status`,
+			parentId,
 			text: statusText,
 			x: X0,
 			y: Y_RULES + H_RULES + 100,
@@ -187,16 +206,43 @@ export function buildJourneyBoard(model) {
 		meta: tag('status', 'status'),
 	})
 
+	const title = release ? `${release.name} — what is missing` : 'Journey board'
+	const relText = release ? `${release.name}\n${release.goal ?? ''}\n\n← back to the story map`.trim() : ''
+	const relH = relText ? fitHeight(relText, LANE_W) : 0
+	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
+
+	if (release) {
+		put.push({
+			...label({
+				id: `${idp}release`,
+				text: relText,
+				x: LANE_X,
+				// Sits clear of the first lane label rather than on top of it: the label's
+				// height follows the release goal, which is as long as somebody wrote it.
+				y: Y_CARD - relH - 40,
+				w: LANE_W,
+				h: relH,
+				index: ix[n++],
+				parentId,
+				color: 'blue',
+				size: 's',
+				url: room ? pageLink(room, STORY_PAGE_ID) : '',
+			}),
+			meta: tag(release.id, 'release-label'),
+		})
+	}
+
 	const slice = (model.slices ?? [])[0]
 	if (slice) {
 		const y = Y_RULES + H_RULES + 50
 		put.push({
-			...releaseLine({ id: 'shape:jm-slice-line', x: LANE_X, y, w: X0 + steps.length * PITCH, index: ix[n++] }),
+			...releaseLine({ id: `${idp}slice-line`, x: LANE_X, y, w: X0 + steps.length * PITCH, index: ix[n++], parentId }),
 			meta: tag(slice.id, 'slice-line'),
 		})
 		put.push({
 			...label({
-				id: 'shape:jm-slice-label',
+				id: `${idp}slice-label`,
+				parentId,
 				text: `SLICE\n${slice.outcome}`,
 				x: LANE_X,
 				y: y + 50,
@@ -230,14 +276,15 @@ export function releaseCoverage(model) {
 	})
 }
 
-export function buildAllPages(model) {
+export function buildAllPages(model, room = null) {
 	const modelled = (model.steps ?? []).some((s) => s.command || s.events?.length || s.state || s.readmodel)
-	return [
-		page({ id: 'page:page', name: 'Journey board', index: 'a1' }),
-		...buildJourneyBoard(model),
-		...buildStoryMap(model),
-		...(modelled ? buildFunctionMap(model) : []),
-	]
+	const releases = model.releases ?? []
+	// A board per release when the file has releases; one whole-journey board when it does
+	// not, so a map drawn before anyone has sliced it still renders.
+	const boards = releases.length
+		? releases.flatMap((release) => buildJourneyBoard(model, { release, room }))
+		: buildJourneyBoard(model, { room })
+	return [...buildStoryMap(model, room), ...boards, ...(modelled ? buildFunctionMap(model) : [])]
 }
 
 // Render is a reconcile, not an append: shapes this renderer owns that the model no
@@ -250,7 +297,7 @@ export async function renderToRoom({ path, room, api = API }) {
 
 	// One room, two pages. The board a person talks over and the board the code is cited
 	// on answer different questions and disagree about what the vertical axis means.
-	const put = buildAllPages(model)
+	const put = buildAllPages(model, roomId)
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())

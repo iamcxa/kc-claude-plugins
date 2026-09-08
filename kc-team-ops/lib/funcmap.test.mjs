@@ -40,14 +40,14 @@ test('event stickies do not overlap each other', () => {
 })
 
 test('no page claims a shape id another page already uses', () => {
-	const all = [buildJourneyBoard(fixtureModel), buildStoryMap(fixtureModel), buildFunctionMap(fixtureModel)]
-	const ids = all.flat().map((r) => r.id)
+	const ids = buildAllPages(fixtureModel).map((r) => r.id)
 	assert.equal(new Set(ids).size, ids.length, 'two pages share a shape id')
 })
 
 test('a file that models nothing gets no function map page', () => {
 	const bare = { ...fixtureModel, steps: fixtureModel.steps.map(({ command, events, state, readmodel, ...rest }) => rest) }
 	const pages = buildAllPages(bare).filter((r) => r.typeName === 'page').map((r) => r.name)
-	assert.deepEqual(pages.sort(), ['Journey board', 'Story map'], 'an empty function map claims the modelling was done')
+	assert.ok(!pages.includes('Function map'), 'an empty function map claims the modelling was done')
+	assert.ok(pages.includes('Story map'), 'the story map went missing')
 	assert.ok(buildAllPages(fixtureModel).some((r) => r.name === 'Function map'), 'a modelled file must get the page')
 })

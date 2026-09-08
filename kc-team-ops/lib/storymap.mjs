@@ -14,7 +14,7 @@
 // disagree about the vertical axis on purpose — here it is priority, there it is lane —
 // which is exactly why they are two pages and not one grid.
 
-import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine } from './records.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -28,13 +28,15 @@ const STORY_PITCH = 250
 // is placed relative to the tallest thing above rather than at a fixed offset.
 const GAP = 40
 
-export const STORY_PAGE_ID = 'page:jm-storymap'
+// tldraw's default page, so the map people should land on is the one they land on and
+// no empty 'Page 1' is left beside it.
+export const STORY_PAGE_ID = 'page:page'
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-export function buildStoryMap(model) {
+export function buildStoryMap(model, room = null) {
 	const steps = model.steps ?? []
-	const put = [page({ id: STORY_PAGE_ID, name: 'Story map', index: 'a3' })]
+	const put = [page({ id: STORY_PAGE_ID, name: 'Story map', index: 'a1' })]
 
 	const parentId = STORY_PAGE_ID
 	const maxStories = Math.max(0, ...steps.map((s) => (s.stories ?? []).length))
@@ -172,7 +174,9 @@ export function buildStoryMap(model) {
 			bandTop += 40
 		}
 
-		const text = `${band.name}\n${band.goal ?? ''}`.trim()
+		// The release label carries a link to that release's own board. The story map says
+		// what this release is for; the board it points at says what is missing to get there.
+		const text = `${band.name}\n${band.goal ?? ''}${band.id ? '\n\n→ what is missing' : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
@@ -185,6 +189,7 @@ export function buildStoryMap(model) {
 				parentId,
 				color: band.id ? 'blue' : 'red',
 				size: 's',
+				url: room && band.id ? pageLink(room, `page:jm-board-${band.id}`) : '',
 			}),
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
