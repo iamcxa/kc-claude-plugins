@@ -106,24 +106,26 @@ for a save-as should end up with that file.
 are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
 A sticky someone added during a workshop survives every re-render.
 
-**Read covers the Journey board page only.** It matches shapes whose kind is `step-card`.
-On the story map the same step is an `activity` and its stories are `story` shapes, so
-dragging a story up — a priority change, and the most common gesture there is — is not
-seen, and neither is rewording an activity. Story-map edits have to be made in the file
-until that lands.
+**Both pages are read, and they are compared.** A step is a `step-card` on the board and an
+`activity` on the story map; where the two pages disagree about the same field, neither
+wins — the conflict is reported and nothing is applied.
 
-**Read reports; `--write` applies a subset.** Two things round-trip: a card's wording and
-the order of the columns. A badge is drawn but never read back. Lane 2 and lane 3 have a lossy inverse —
+**Read reports; `--write` applies a subset.** What round-trips: the wording of a card, an
+activity and a story; the order of the columns; the priority of the stories under an
+activity. A badge is drawn but never read back. Lane 2 and lane 3 have a lossy inverse —
 a constraint is stored as a rule id and drawn as that rule's text, so canvas text cannot
 be mapped back to an id without guessing. Everything else is reported for a human to act on:
 
 | Report | Meaning |
 |---|---|
 | `reordered` | columns are in a different left-to-right order than the file |
-| `reworded` | a card's text was edited on the canvas |
+| `reorderConflict` | the two pages are in different orders — neither is applied |
+| `reworded` | a card, an activity or a story was edited; carries the page and the field |
+| `rewordConflict` | the two pages give the same step different wording — neither is applied |
+| `storiesReordered` | stories under an activity were dragged into a new priority |
 | `duplicated` | a node id appears on more than one shape |
-| `unclaimed` | a note or geo with no `meta.journey` — someone added a card by hand. An arrow or a bare text shape is not seen |
-| `missing` | the file has a step with no shape on the canvas |
+| `unclaimed` | a note or geo with no `meta.journey` — someone added a card by hand. It carries the page and the column it sits under; a card straddling two columns reports `candidates` and no column. An arrow or a bare text shape is not seen |
+| `missing` | the file has a step with no shape on either page |
 
 `--write` **refuses the reorder entirely** when anything is duplicated. tldraw copies
 `meta` verbatim on duplicate, so a copy carries its original's `nodeId` and there is no

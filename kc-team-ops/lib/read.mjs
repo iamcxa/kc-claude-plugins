@@ -1,14 +1,20 @@
 // Reads a rendered room back and reports what a person changed on the canvas.
 //
-// It deliberately does not rewrite the whole file. Lane 2 and lane 3 are projections
-// with a lossy inverse — a constraint is stored as a rule id and drawn as that rule's
-// text, so text read off the canvas cannot be mapped back to an id without guessing.
-// What round-trips safely is what a workshop actually changes: the wording of a card and
-// the order of the columns. Everything else is reported, never applied — a badge is drawn
-// from the model but is not read back off the canvas.
+// Two pages show the same steps and disagree about the vertical axis, so both are read
+// and their answers are compared. Where they disagree about the same field, neither wins:
+// a conflict is reported and nothing is applied.
+//
+// What round-trips is what a workshop actually changes — the wording of a card, the order
+// of the columns, the priority of the stories under an activity. Lane 2 and lane 3 have a
+// lossy inverse: a constraint is stored as a rule id and drawn as that rule's text, so
+// canvas text cannot be mapped back to an id without guessing. Those are never applied.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { parse, parseDocument } from 'yaml'
+
+const BOARD_PAGE = 'page:page'
+const STORY_PAGE = 'page:jm-storymap'
+const NOTE_W = 200
 
 const plain = (rich) =>
 	(rich?.content ?? [])
@@ -23,53 +29,147 @@ export async function readRoom({ room, api = 'http://127.0.0.1:5858' }) {
 	return (doc.snapshot?.documents ?? []).map((d) => d.state).filter((r) => r.typeName === 'shape')
 }
 
-export function diffAgainstModel(shapes, model) {
-	const owned = shapes.filter((s) => s.meta?.journey)
-	const cards = owned.filter((s) => s.meta.journey.kind === 'step-card')
+const byKind = (shapes, kind) => shapes.filter((s) => s.meta?.journey?.kind === kind)
 
+// A node id appearing twice means a card was duplicated. tldraw copies meta verbatim, so
+// the copy is indistinguishable from its original and neither is trusted.
+function duplicatesOf(shapes) {
 	const seen = new Map()
-	for (const s of cards) seen.set(s.meta.journey.nodeId, (seen.get(s.meta.journey.nodeId) ?? 0) + 1)
+	for (const s of shapes) seen.set(s.meta.journey.nodeId, (seen.get(s.meta.journey.nodeId) ?? 0) + 1)
+	return [...seen.entries()].filter(([, n]) => n > 1).map(([id]) => id)
+}
 
-	// A duplicated card carries its original's nodeId. There is no honest way to tell the
-	// copy from the original, so both are reported rather than one silently winning.
-	const duplicated = [...seen.entries()].filter(([, n]) => n > 1).map(([id]) => id)
+const indexByNode = (shapes, dupes) =>
+	new Map(shapes.filter((s) => !dupes.includes(s.meta.journey.nodeId)).map((s) => [s.meta.journey.nodeId, s]))
+
+const orderOf = (map) =>
+	[...map.entries()].sort((a, b) => a[1].x - b[1].x).map(([id]) => id)
+
+// Which column a shape sits under, measured as the share of its own width that overlaps
+// each anchor. A card straddling two columns is reported rather than assigned.
+function placeUnderColumn(shape, anchors) {
+	const scored = anchors
+		.map(({ nodeId, x }) => ({
+			nodeId,
+			frac: Math.max(0, Math.min(shape.x + NOTE_W, x + NOTE_W) - Math.max(shape.x, x)) / NOTE_W,
+		}))
+		.filter((s) => s.frac > 0)
+		.sort((a, b) => b.frac - a.frac)
+
+	const [best, second] = scored
+	if (!best) return { column: null }
+	if (best.frac >= 0.75 && (second?.frac ?? 0) < 0.25) return { column: best.nodeId }
+	return { column: null, candidates: scored.map((s) => ({ step: s.nodeId, overlap: Number(s.frac.toFixed(2)) })) }
+}
+
+export function diffAgainstModel(shapes, model) {
+	const steps = model.steps ?? []
+	const modelOrder = steps.map((s) => s.id)
+
+	const board = shapes.filter((s) => s.parentId === BOARD_PAGE)
+	const story = shapes.filter((s) => s.parentId === STORY_PAGE)
+
+	const cards = byKind(board, 'step-card')
+	const activities = byKind(story, 'activity')
+	const stories = byKind(story, 'story')
+
+	const duplicated = [...new Set([...duplicatesOf(cards), ...duplicatesOf(activities), ...duplicatesOf(stories)])]
+
+	const cardBy = indexByNode(cards, duplicated)
+	const actBy = indexByNode(activities, duplicated)
+	const storyBy = indexByNode(stories, duplicated)
+
+	// ── wording ──────────────────────────────────────────────────────────────────
+	// A step's sticky is `card` on the board and `activity` on the story map, and a step
+	// that declares no `activity` draws its `card` on both. Editing the story map sticky of
+	// such a step therefore edits `card`, which is why the field is decided per step.
+	const reworded = []
+	const rewordConflict = []
+
+	for (const step of steps) {
+		const onBoard = cardBy.has(step.id) ? stripNumber(plain(cardBy.get(step.id).props?.richText)) : null
+		const onStory = actBy.has(step.id) ? plain(actBy.get(step.id).props?.richText) : null
+		const storyField = step.activity ? 'activity' : 'card'
+
+		const boardChanged = onBoard && onBoard !== step.card
+		const storyChanged = onStory && onStory !== (step.activity ?? step.card)
+
+		if (boardChanged && storyChanged && storyField === 'card' && onBoard !== onStory) {
+			rewordConflict.push({ id: step.id, field: 'card', board: onBoard, storymap: onStory })
+			continue
+		}
+		if (boardChanged) reworded.push({ id: step.id, field: 'card', page: 'board', was: step.card, now: onBoard })
+		if (storyChanged)
+			reworded.push({
+				id: step.id,
+				field: storyField,
+				page: 'storymap',
+				was: step.activity ?? step.card,
+				now: onStory,
+			})
+	}
+
+	for (const step of steps) {
+		;(step.stories ?? []).forEach((s, j) => {
+			const id = typeof s === 'string' ? `${step.id}-${j}` : (s.id ?? `${step.id}-${j}`)
+			const was = typeof s === 'string' ? s : s.card
+			const shape = storyBy.get(id)
+			if (!shape) return
+			const now = plain(shape.props?.richText)
+			if (now && now !== was) reworded.push({ id, field: 'story', page: 'storymap', step: step.id, was, now })
+		})
+	}
+
+	// ── column order ─────────────────────────────────────────────────────────────
+	const boardOrder = orderOf(cardBy)
+	const storyOrder = orderOf(actBy)
+	const boardMoved = boardOrder.length && boardOrder.join() !== modelOrder.filter((id) => cardBy.has(id)).join()
+	const storyMoved = storyOrder.length && storyOrder.join() !== modelOrder.filter((id) => actBy.has(id)).join()
+
+	let reordered = null
+	let reorderConflict = null
+	if (boardMoved && storyMoved && boardOrder.join() !== storyOrder.join())
+		reorderConflict = { board: boardOrder, storymap: storyOrder }
+	else if (boardMoved) reordered = boardOrder
+	else if (storyMoved) reordered = storyOrder
+
+	// ── story priority ───────────────────────────────────────────────────────────
+	// Priority runs top to bottom under an activity, so y is the whole signal.
+	const storiesReordered = []
+	for (const step of steps) {
+		const declared = (step.stories ?? []).map((s, j) =>
+			typeof s === 'string' ? `${step.id}-${j}` : (s.id ?? `${step.id}-${j}`)
+		)
+		const present = declared.filter((id) => storyBy.has(id))
+		if (present.length < 2) continue
+		const onCanvas = [...present].sort((a, b) => storyBy.get(a).y - storyBy.get(b).y)
+		if (onCanvas.join() !== present.join()) storiesReordered.push({ step: step.id, was: present, now: onCanvas })
+	}
+
+	// ── cards nobody claimed ─────────────────────────────────────────────────────
+	const boardAnchors = [...cardBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
+	const storyAnchors = [...actBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
 
 	const unclaimed = shapes
 		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
-		.map((s) => ({ id: s.id, text: plain(s.props?.richText), x: Math.round(s.x), y: Math.round(s.y) }))
+		.map((s) => {
+			const page = s.parentId === STORY_PAGE ? 'storymap' : 'board'
+			const placed = placeUnderColumn(s, page === 'storymap' ? storyAnchors : boardAnchors)
+			return { id: s.id, text: plain(s.props?.richText), page, ...placed }
+		})
 		.filter((s) => s.text)
 
-	const byNode = new Map(cards.filter((s) => !duplicated.includes(s.meta.journey.nodeId)).map((s) => [s.meta.journey.nodeId, s]))
+	const missing = modelOrder.filter((id) => !cardBy.has(id) && !actBy.has(id) && !duplicated.includes(id))
 
-	const order = [...byNode.entries()].sort((a, b) => a[1].x - b[1].x).map(([id]) => id)
-	const modelOrder = (model.steps ?? []).map((s) => s.id)
-
-	const reworded = (model.steps ?? [])
-		.map((step) => {
-			const shape = byNode.get(step.id)
-			if (!shape) return null
-			const onCanvas = stripNumber(plain(shape.props?.richText))
-			return onCanvas && onCanvas !== step.card ? { id: step.id, was: step.card, now: onCanvas } : null
-		})
-		.filter(Boolean)
-
-	const missing = modelOrder.filter((id) => !byNode.has(id) && !duplicated.includes(id))
-
-	return {
-		reordered: order.join(',') !== modelOrder.filter((id) => byNode.has(id)).join(',') ? order : null,
-		reworded,
-		duplicated,
-		unclaimed,
-		missing,
-	}
+	return { reordered, reorderConflict, reworded, rewordConflict, storiesReordered, duplicated, unclaimed, missing }
 }
 
-// Applies only the safe subset, and preserves comments and field order in the file.
-//
-// `lineWidth: 0` and `flowCollectionPadding: false` keep the writer from reflowing lines
-// it did not change. Without them a one-card reorder rewrites every wrapped string in the
+// `lineWidth: 0` and `flowCollectionPadding: false` keep the writer from reflowing lines it
+// did not change. Without them a one-card reorder rewrites every wrapped string in the
 // file, and the diff — the reason the journey lives in git at all — stops being readable.
 const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
+
+const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
 
 export function applyDiff(path, diff, outPath = path) {
 	const doc = parseDocument(readFileSync(path, 'utf8'))
@@ -77,27 +177,52 @@ export function applyDiff(path, diff, outPath = path) {
 	const applied = []
 	const skipped = []
 
-	for (const { id, now } of diff.reworded) {
-		for (const item of steps.items) {
-			if (item.get('id') === id) {
-				item.set('card', now)
-				applied.push(`reworded ${id}`)
-			}
+	for (const { id, field, step, was, now } of diff.reworded) {
+		if (field === 'story') {
+			const node = findStep(steps, step)
+			const list = node?.get('stories')
+			const item = list?.items.find((s) => (s.get ? s.get('card') : String(s)) === was)
+			if (!item) continue
+			if (item.set) item.set('card', now)
+			else list.items[list.items.indexOf(item)] = doc.createNode(now)
+			applied.push(`reworded story ${id}`)
+			continue
 		}
+		const node = findStep(steps, id)
+		if (!node) continue
+		node.set(field, now)
+		applied.push(`reworded ${id}.${field}`)
 	}
 
-	// A duplicated card is missing from `reordered`, so applying the order would silently
-	// move the step it belongs to. Ambiguous input is refused whole, not applied in part.
-	if (diff.reordered && diff.duplicated.length) {
+	for (const { step, now } of diff.storiesReordered) {
+		const node = findStep(steps, step)
+		const list = node?.get('stories')
+		if (!list) continue
+		const key = (s, j) => {
+			const explicit = s.get ? s.get('id') : null
+			return explicit ?? `${step}-${j}`
+		}
+		const rank = new Map(now.map((id, i) => [id, i]))
+		const withKeys = list.items.map((s, j) => ({ s, k: key(s, j) }))
+		withKeys.sort((a, b) => (rank.get(a.k) ?? 1e9) - (rank.get(b.k) ?? 1e9))
+		list.items = withKeys.map((w) => w.s)
+		applied.push(`reprioritised stories under ${step}`)
+	}
+
+	if (diff.rewordConflict.length)
+		skipped.push(`${diff.rewordConflict.length} wording conflict(s) between the two pages — resolve on the canvas`)
+
+	if (diff.reorderConflict) skipped.push('reorder refused — the two pages are in different orders')
+	else if (diff.reordered && diff.duplicated.length)
 		skipped.push(`reorder refused — ${diff.duplicated.join(', ')} appear more than once on the canvas`)
-	} else if (diff.reordered) {
+	else if (diff.reordered) {
 		const index = new Map(diff.reordered.map((id, i) => [id, i]))
 		steps.items.sort((a, b) => (index.get(a.get('id')) ?? 1e9) - (index.get(b.get('id')) ?? 1e9))
 		applied.push(`reordered to ${diff.reordered.join(' -> ')}`)
 	}
 
-	// Saving elsewhere is worth doing even when nothing applied: the point of a save-as is
-	// to end up with that file, and a caller who asked for one should get one.
+	// A save-as is written even when nothing applied: a caller who asked for that file
+	// should end up with it.
 	if (applied.length || outPath !== path) writeFileSync(outPath, doc.toString(WRITE_OPTS))
 	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null }
 }
