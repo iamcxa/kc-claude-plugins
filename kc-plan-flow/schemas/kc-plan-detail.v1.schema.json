@@ -95,7 +95,8 @@
           "accepted_outcome",
           "acceptance",
           "non_goals",
-          "supersedes"
+          "supersedes",
+          "estimate"
         ],
         "properties": {
           "title": {
@@ -134,6 +135,12 @@
           "supersedes": {
             "type": "string",
             "minLength": 1
+          },
+          "estimate": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 13,
+            "description": "Fibonacci points, on the technical work only. It answers exactly one question -- whether a milestone fits before its date -- and is not a velocity, a commitment, or a measure of anyone. A value issue carries none: it has no work of its own, so estimating it double-counts its children."
           }
         }
       }

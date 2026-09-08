@@ -28,7 +28,8 @@
         "Where the returned link opens"
       ],
       "re_verified": "git grep publishKeyBinding and resolveRelayProfile at 1ea84f8e 2026-09-07",
-      "supersedes": "none, searched the project for publish key and consent prompt"
+      "supersedes": "none, searched the project for publish key and consent prompt",
+      "estimate": 3
     }
   ],
   "lint": {

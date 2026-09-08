@@ -107,6 +107,20 @@ it controls, so no byte of a shared artifact can become live markup. That is a s
 decision, and the ticket read as though it were an oversight. A replacement whose ticket
 cannot state what it is giving up is a decision disguised as a task.
 
+## Estimate the technical work, and only for one question
+
+Points on sub-issues, none on the value issue above them. A value issue has no work of
+its own -- the building happens beneath it -- so a number there counts its children
+twice.
+
+The question the estimate answers is whether the milestone fits before its date. That
+is all. It is not a velocity, not a commitment, and not a measure of whoever picks the
+work up; the moment it is any of those, it stops being an estimate and starts being a
+negotiation.
+
+If the points do not fit the date, say so before the date proves it. Cutting scope is
+the captain's decision and needs the arithmetic in front of them.
+
 ## Write what the linter reads
 
 `docs/plan-flow/plan-lint.py` judges the result. Its format is not negotiable and
