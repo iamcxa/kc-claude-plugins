@@ -45,6 +45,30 @@ questions and disagree about what the vertical axis means:
 |---|---|---|
 | **Story map** | priority under an activity | what should we build, and what is the smallest useful slice |
 | **Journey board** | lane | does what we claim exist actually exist, and what does the code say |
+| **Function map** | lane | what does each step decide, and what becomes true when it does |
+
+The function map is Event Modeling's swimlanes over the journey's own columns: Command,
+Event, State, Read model. The vocabulary is fmodel's tactical grammar borrowed as nouns —
+a decider takes a command and the current state and emits events; a view folds events into
+something readable — not the library, and nothing here event-sources anything.
+
+Events earn the lane: they carry causal order, and story order does not, so a build order
+derived from this page is derived from something real. Each event is its own sticky because
+an event is the unit a ticket and an acceptance criterion get written against.
+
+The page is drawn only when the file models something, and a step nobody has modelled shows
+`— not modelled —` rather than an empty column, so the gaps are the point:
+
+```yaml
+steps:
+  - id: …
+    command: "ApplyDiff(journeyFile, roomId, outPath?)"
+    events: ["CardReworded", "ReorderRefused"]   # name the refusals, not only the successes
+    state: "the journey file"
+    readmodel: "the diff report"
+```
+
+The function map is not read back yet — edits to it have to be made in the file.
 
 The story map follows Jeff Patton's shape and the workshop convention it borrows: blue
 for the persona and for release boundaries, green for the backbone, yellow for the

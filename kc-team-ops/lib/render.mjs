@@ -10,6 +10,7 @@ import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
 import { buildStoryMap } from './storymap.mjs'
+import { buildFunctionMap } from './funcmap.mjs'
 
 const PITCH = 320
 const COL_W = 300
@@ -215,6 +216,18 @@ export function loadJourney(path) {
 	return parse(readFileSync(path, 'utf8'))
 }
 
+// One room, several pages. The function map is drawn only when the file models something:
+// an empty third page would claim the modelling was done and came out blank.
+export function buildAllPages(model) {
+	const modelled = (model.steps ?? []).some((s) => s.command || s.events?.length || s.state || s.readmodel)
+	return [
+		page({ id: 'page:page', name: 'Journey board', index: 'a1' }),
+		...buildJourneyBoard(model),
+		...buildStoryMap(model),
+		...(modelled ? buildFunctionMap(model) : []),
+	]
+}
+
 // Render is a reconcile, not an append: shapes this renderer owns that the model no
 // longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
 // and are never touched — the room is where a workshop happens, not only where a file
@@ -225,11 +238,7 @@ export async function renderToRoom({ path, room, api = API }) {
 
 	// One room, two pages. The board a person talks over and the board the code is cited
 	// on answer different questions and disagree about what the vertical axis means.
-	const put = [
-		page({ id: 'page:page', name: 'Journey board', index: 'a1' }),
-		...buildJourneyBoard(model),
-		...buildStoryMap(model),
-	]
+	const put = buildAllPages(model)
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())

@@ -54,6 +54,13 @@ steps:
       - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
     cites: [kc-claude-plugins]
     rules: [board-is-a-cache, handmade-cards-survive]
+    command: "RenderJourney(journeyFile, roomId)"
+    events:
+      - "ShapesUpserted"
+      - "OwnedShapesRemoved"
+      - "RecordRejected"
+    state: "the room document"
+    readmodel: "the two pages a person looks at"
 
   - id: workshop
     card: "Moves the cards around with other people"
@@ -79,6 +86,15 @@ steps:
       - "--write applies card wording and column order only; it refuses a reorder when a nodeId is duplicated"
     cites: [kc-claude-plugins]
     rules: [lossy-inverse, ambiguity-refused]
+    command: "ApplyDiff(journeyFile, roomId, outPath?)"
+    events:
+      - "CardReworded"
+      - "StoriesReprioritised"
+      - "ColumnsReordered"
+      - "ReorderRefused"
+      - "ConflictRefused"
+    state: "the journey file"
+    readmodel: "the diff report"
     note: >
       Read covers the Journey board page only. On the story map a step is an activity and its stories are their own shapes, so a priority drag there is not yet seen.
 

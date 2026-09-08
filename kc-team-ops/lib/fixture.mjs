@@ -12,7 +12,16 @@ export const fixtureModel = {
 	],
 	steps: [
 		{ id: 'a', card: 'Asks for the thing', stories: ['Names it', 'Picks a target'] },
-		{ id: 'b', card: 'Gets the thing', badge: 'NOT_BUILT', stories: [{ id: 'b-see', card: 'Sees it arrive' }] },
+		{
+			id: 'b',
+			card: 'Gets the thing',
+			badge: 'NOT_BUILT',
+			stories: [{ id: 'b-see', card: 'Sees it arrive' }],
+			command: 'GetTheThing(id)',
+			events: ['ThingDelivered', 'DeliveryRefused'],
+			state: 'the thing',
+			readmodel: 'a delivery receipt',
+		},
 		{ id: 'c', card: 'Uses the thing', stories: ['Reads the result'] },
 	],
 	later: ['Does it for a team', 'Does it on a schedule'],

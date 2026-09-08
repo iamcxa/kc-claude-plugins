@@ -16,6 +16,7 @@ import { parse, parseDocument } from 'yaml'
 
 const BOARD_PAGE = 'page:page'
 const STORY_PAGE = 'page:jm-storymap'
+const PAGE_NAMES = { 'page:page': 'board', 'page:jm-storymap': 'storymap', 'page:jm-funcmap': 'funcmap' }
 const NOTE_W = 200
 
 const plain = (rich) =>
@@ -155,8 +156,11 @@ export function diffAgainstModel(shapes, model) {
 	const unclaimed = shapes
 		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
 		.map((s) => {
-			const page = s.parentId === STORY_PAGE ? 'storymap' : 'board'
-			const placed = placeUnderColumn(s, page === 'storymap' ? storyAnchors : boardAnchors)
+			// A page this reader does not model still names itself, so a card added on the
+			// function map is not reported as if it were on the board.
+			const page = PAGE_NAMES[s.parentId] ?? s.parentId
+			const anchors = page === 'storymap' ? storyAnchors : page === 'board' ? boardAnchors : []
+			const placed = anchors.length ? placeUnderColumn(s, anchors) : { column: null }
 			return { id: s.id, text: plain(s.props?.richText), page, ...placed }
 		})
 		.filter((s) => s.text)
