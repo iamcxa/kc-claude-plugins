@@ -101,6 +101,21 @@ Two rules that each cost a correction round:
   says so and names the value issue it protects. Do not dress it as an outcome
   and do not leave it homeless.
 
+## The project block is a set of claims, and each one is judged somewhere
+
+Written once and never revisited, every field in it is decoration. One measured plan
+carried three exit conditions with no milestone claiming any of them, a wedge that named
+no milestone, and a hypothesis nothing would ever judge -- and it validated.
+
+- **`exit`** — every condition is claimed by a milestone through `satisfies_exit`. An
+  exit nothing claims is a project that goes green with a condition unmet. The validator
+  refuses it now, which is how the three above were found.
+- **`wedge`** — say which milestone it became. A wedge matching no milestone was either
+  not the wedge or was quietly abandoned, and both are worth noticing.
+- **`hypothesis`** — it reads "If we ... then ...", which makes it falsifiable, so the
+  last milestone's acceptance says whether the "then" happened. That is the only rule
+  here whose evidence arrives after the plan is finished.
+
 ## Milestones
 
 The milestone is the verification point, and it carries the vertical slice when
@@ -289,6 +304,7 @@ milestones:
   - name: <letter · the outcome, in the user's words>
     target: <YYYY-MM-DD>
     description: <140 characters or fewer, one line>
+    satisfies_exit: [<which of the project's exit conditions this one makes true>]
     integration_proof:
       proof: <what joins the layers>
       owner: <who runs it>

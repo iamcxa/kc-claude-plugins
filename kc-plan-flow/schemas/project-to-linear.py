@@ -407,6 +407,9 @@ def main():
         if issue["kind"] != "value" and not issue.get("protects"):
             die(f"a {issue['kind']} must name the value issue it protects: {issue['title']!r}")
         body = issue_body(issue, milestone, value_identifier)
+        if issue.get("identifier") and issue["identifier"] not in {n["identifier"] for n in project["issues"]["nodes"]}:
+            die(f"{issue['identifier']} is named in the plan and absent from the project. An identifier "
+                "does not go stale the way a title does; fix the plan rather than creating a second issue.")
         if issue["title"] in existing:
             node = existing[issue["title"]]
             drifted = issue_drift(node["description"] or "", issue, milestone,
@@ -443,6 +446,29 @@ def main():
                        "carried by the tracker and absent from the plan; reported, never deleted"))
     for edge in unknown:
         die(f"dependency names an issue this document does not define: {edge['blocked_by']!r} -> {edge['blocked']!r}")
+
+    # The plan was walked and the tracker was not, so a section the contract deleted stayed on
+    # a live issue unreported, and two issues closed by hand had no projector path at all.
+    planned_titles = {i["title"] for i in plan["issues"]}
+    owned_headings = {"Accepted outcome"}
+    for title, node in existing.items():
+        if title in planned_titles:
+            continue
+        body = node.get("description") or ""
+        strays = [h for h in ("Integration proof",) if section_body(body, h) is not None]
+        if strays:
+            writes.append(("tracker only, stale section", node["identifier"],
+                           f"carries {strays} which this contract no longer defines"))
+    for issue in plan["issues"]:
+        node = existing.get(issue["title"])
+        if not node:
+            continue
+        body = node.get("description") or ""
+        strays = [h for h in ("Integration proof",)
+                  if h not in owned_headings and section_body(body, h) is not None]
+        if strays:
+            writes.append(("stale section", node["identifier"],
+                           f"carries {strays} which this contract no longer defines"))
 
     for kind, target, payload in writes:
         summary = payload if isinstance(payload, str) else json.dumps(payload)[:150]
@@ -512,7 +538,7 @@ def main():
             gql("mutation($a: String!, $b: String!) { issueRelationCreate("
                 "input: {issueId: $a, relatedIssueId: $b, type: blocks}) { success } }",
                 {"a": ids[a], "b": ids[b]})
-        elif kind in ("dependency unstated", "issue aligned"):
+        elif kind in ("dependency unstated", "issue aligned", "stale section", "tracker only, stale section"):
             continue
         elif kind == "issue create":
             milestone_id = milestone_ids.get(target)

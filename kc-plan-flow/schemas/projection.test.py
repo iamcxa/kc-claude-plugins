@@ -162,6 +162,12 @@ check("an edge the tracker carries and the plan omits is reported", extra == [("
 check("an edge naming an unknown issue is caught",
       P.dependency_drift({"dependencies": [{"blocked": "ghost", "blocked_by": "first", "because": "x"}]}, NODES)[2] != [])
 
+# The walk was one-directional: only the plan was iterated, so a section the contract had
+# deleted sat on five live issues unreported until an outside review looked.
+STALE = "## Accepted outcome\n\nStill current.\n\n## Integration proof\n\nDeleted from the contract.\n"
+check("a section the contract no longer defines is found", P.section_body(STALE, "Integration proof") is not None)
+check("the sections it does define still read", P.section_body(STALE, "Accepted outcome") == "Still current.")
+
 SUB = json.loads((HERE / "fixtures/plan-detail.valid.json").read_text())["sub_issues"][0]
 sub_body = P.detail_issue_body(SUB)
 check("a sub-issue's Accepted outcome parses back",

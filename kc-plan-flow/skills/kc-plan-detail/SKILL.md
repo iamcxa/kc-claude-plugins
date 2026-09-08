@@ -180,6 +180,22 @@ An acceptance criterion you cannot trace to the captain's words or to a verified
 fact is one you invented. Delete it — acceptance criteria are outward-facing
 commitments and those are not yours.
 
+## Which of these rules a machine checks, and which it does not
+
+Five of this plugin's rules are prose only: who performs an acceptance, the
+builder-alone test, exactly one handoff per value, a criterion something can measure,
+and stating why an implementation exists before replacing it. Nothing fires on any of
+them.
+
+That is not an oversight to fix by inventing five checks. It is the honest state, and it
+belongs written down, because the same session that added a mechanical gate for
+draft-first went on to add five rules with no gate and called them the same kind of
+thing. A rule enforced by memory is enforced by whoever remembers, and a fresh session
+carries nobody's corrections.
+
+When one of them fails again, that failure is the evidence for making it mechanical.
+Until then, read them.
+
 ## Close the loop
 
 ```bash

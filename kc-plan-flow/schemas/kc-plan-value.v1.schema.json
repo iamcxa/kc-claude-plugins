@@ -44,11 +44,13 @@
         },
         "hypothesis": {
           "type": "string",
-          "pattern": "^If we .+ then .+$"
+          "pattern": "^If we .+ then .+$",
+          "description": "Must read 'If we ... then ...'; the shape is the contract. It is a falsifiable claim, so the last milestone's acceptance judges it: say whether the 'then' happened. Written once and never revisited, it is decoration."
         },
         "wedge": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "The one place to push first, and why it is that one. Name the milestone it became. A wedge that matches no milestone was either not the wedge or was quietly abandoned."
         },
         "outcome": {
           "type": "string",
@@ -60,7 +62,8 @@
           "items": {
             "type": "string",
             "minLength": 1
-          }
+          },
+          "description": "What has to be true to call it done. Each entry names the milestone that satisfies it, as 'the milestone: the condition' -- an exit nothing claims is a project that goes green with a condition unmet, and one measured project had three exits and no milestone claiming any of them."
         },
         "boundaries": {
           "type": "array",
@@ -119,6 +122,14 @@
             "type": "string",
             "maxLength": 140,
             "pattern": "^[^\n]+$"
+          },
+          "satisfies_exit": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Which of the project's exit conditions this milestone makes true. The union across milestones has to cover every exit; a gap here is a project that cannot finish and does not say so."
           }
         }
       }

@@ -27,7 +27,11 @@
     {
       "name": "A - Publishing works from the terminal",
       "target": "2026-09-13",
-      "description": "A terminal user publishes a file and gets a link that works for anyone. Ships on a tap install, not from a checkout."
+      "description": "A terminal user publishes a file and gets a link that works for anyone. Ships on a tap install, not from a checkout.",
+      "satisfies_exit": [
+        "A tap install publishes to production and returns a working link",
+        "A reviewer comments in a browser and the owner reads it back in the terminal"
+      ]
     }
   ],
   "issues": [

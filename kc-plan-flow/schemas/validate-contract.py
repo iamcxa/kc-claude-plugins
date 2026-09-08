@@ -49,6 +49,13 @@ if name == "kc-archaeology-report/v1":
             problems.append(f"findings/{i}: subject looks like a path; name the symbol, route or behaviour")
 
 if name == "kc-plan-value/v1":
+    # Every claim the project block makes needs a moment it is judged. One measured plan
+    # carried three exit conditions and no milestone claiming any of them, so the project
+    # could go green with a condition unmet and nothing would have said so.
+    claimed = {e for m in doc.get("milestones", []) for e in m.get("satisfies_exit", [])}
+    for e in doc.get("project", {}).get("exit", []):
+        if e not in claimed:
+            problems.append(f"no milestone claims this exit condition: {e[:60]!r}")
     for i, m in enumerate(doc.get("milestones", [])):
         d = m.get("description", "")
         if len(d) > 140:
