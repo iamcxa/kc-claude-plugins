@@ -113,18 +113,22 @@ That is two short sentences: what it looks like when it is done in the user's
 words, then the bar stated so it can be failed. A boundary or a cut cost earns
 its place only if it still fits.
 
-**The milestone is one stack.** Each lane branches from the one before it, so the last
-lane's branch carries every lane, and that branch is what the captain accepts -- not
-the trunk, and not any single lane in isolation. A milestone whose work is spread
-across branches that never meet has a verification point with nothing to verify. This
-was learned by cutting one milestone into two lanes that could each be built and
-neither be accepted.
+**One value issue is one stack.** Its technical work stacks layer on layer, so the
+topmost branch carries the whole value point and is what gets accepted. A value issue
+whose work is spread across branches that never meet has a verification point with
+nothing to verify.
+
+**How to stack is not this skill's to state.** `kc-dev-flow/references/delivery-branch-base.md`
+owns it: branch from the topmost open layer and target that same branch, so each layer
+carries only its own diff. This skill once carried a rule of its own that said target
+the trunk instead, which is the shape that reference names as producing a review diff
+that misstates the change. Read it there rather than here.
 
 **Every branch carries its own issue's identifier, and no branch belongs to no issue.**
-That is what makes the tracker link a pull request to the work without anyone doing
-it by hand. A separate integration branch named after the milestone is the shape to
-refuse: it belongs to no issue, so it links to nothing, and the last lane's branch
-already holds everything it would have held.
+That is what makes the tracker link a pull request to the work without anyone doing it
+by hand. A separate integration branch named after the milestone is the shape to
+refuse: it belongs to no issue, so it links to nothing, and the topmost layer already
+holds everything it would have held.
 
 The tracker's suggested branch name is a safe default rather than a requirement. What
 has to be there is the identifier: a hand-written `iamcxa/drc-4429-multi-binary-release`
