@@ -145,6 +145,42 @@ def user_value_content(current, user_value):
     return (block + "\n" + rest).rstrip() if rest else block.rstrip()
 
 
+def boundaries_content(current, boundaries):
+    block = "## Boundaries\n\n" + "\n\n".join(
+        f"- **{b['rule']}**\n  Agreed with {b['agreed_with']}, {b['agreed_at']}."
+        for b in boundaries)
+    body = current or ""
+    match = re.search(r"^## Boundaries\n.*?(?=^## |\Z)", body, re.S | re.M)
+    if match:
+        return (body[:match.start()] + block + "\n\n" + body[match.end():]).rstrip()
+    return (body.rstrip() + "\n\n" + block).strip()
+
+
+def dependency_drift(plan, existing):
+    # An edge the plan states but the tracker does not carry is a plan nobody can act on.
+    # An edge the tracker carries and the plan does not is reported, never deleted: it may
+    # be a fact someone learned after the document was written.
+    by_title = {t: n for t, n in existing.items()}
+    live = set()
+    for title, node in by_title.items():
+        for rel in (node.get("inverseRelations") or {}).get("nodes", []):
+            if rel["type"] == "blocks":
+                live.add((rel["issue"]["identifier"], node["identifier"]))
+    ident = {t: n["identifier"] for t, n in by_title.items()}
+    missing, unknown = [], []
+    planned = set()
+    for edge in plan.get("dependencies", []):
+        a, b = ident.get(edge["blocked_by"]), ident.get(edge["blocked"])
+        if not (a and b):
+            unknown.append(edge)
+            continue
+        planned.add((a, b))
+        if (a, b) not in live:
+            missing.append((a, b, edge["because"]))
+    extra = sorted(live - planned)
+    return missing, extra, unknown
+
+
 def issue_body(issue, milestone, value_identifier):
     parts = []
     if issue["kind"] != "value":
@@ -204,6 +240,9 @@ PROJECT_Q = """query($id: String!) { project(id: $id) {
   id name content
   projectMilestones(first: 50) { nodes { id name targetDate description } }
   issues(first: 250) { nodes { id identifier title description assignee { name } } } } }"""
+
+RELATIONS_Q = """query($ids: [ID!]) { issues(filter: {id: {in: $ids}}) { nodes { identifier
+  inverseRelations(first: 20) { nodes { type issue { identifier } } } } } }"""
 
 
 def run_lint(project_id, expected_receipt):
@@ -344,6 +383,7 @@ def main():
 
     writes = []
     content = user_value_content(project["content"], plan["project"]["user_value"])
+    content = boundaries_content(content, plan["project"]["boundaries"])
     if content != (project["content"] or ""):
         kind = "project content" if not (project["content"] or "").strip() else "project content DRIFT"
         writes.append((kind, project_id, {"content": content}))
@@ -386,6 +426,25 @@ def main():
                 writes.append(("issue aligned", node["identifier"], issue["title"]))
         else:
             writes.append(("issue create", issue["milestone"], {"title": issue["title"], "description": body}))
+
+    # Relations are fetched only for the issues the plan names: asking for them across a
+    # whole project exceeded the provider's query complexity limit at 250 by 20.
+    named = {e[k] for e in plan.get("dependencies", []) for k in ("blocked", "blocked_by")}
+    wanted = [existing[t]["id"] for t in named if t in existing]
+    relations = {}
+    if wanted:
+        for node in gql(RELATIONS_Q, {"ids": wanted})["issues"]["nodes"]:
+            relations[node["identifier"]] = node["inverseRelations"]
+    for title, node in existing.items():
+        node["inverseRelations"] = relations.get(node["identifier"], {"nodes": []})
+    missing, extra, unknown = dependency_drift(plan, existing)
+    for a, b, because in missing:
+        writes.append(("dependency missing", f"{a} blocks {b}", because))
+    for a, b in extra:
+        writes.append(("dependency unstated", f"{a} blocks {b}",
+                       "carried by the tracker and absent from the plan; reported, never deleted"))
+    for edge in unknown:
+        die(f"dependency names an issue this document does not define: {edge['blocked_by']!r} -> {edge['blocked']!r}")
 
     for kind, target, payload in writes:
         summary = payload if isinstance(payload, str) else json.dumps(payload)[:150]
@@ -449,7 +508,13 @@ def main():
                 body = replace_section(body, heading, planned)
             gql("mutation($i: String!, $d: String!) { issueUpdate(id: $i, input: {description: $d}) { success } }",
                 {"i": node["id"], "d": body})
-        elif kind == "issue aligned":
+        elif kind == "dependency missing":
+            a, b = target.split(" blocks ")
+            ids = {n["identifier"]: n["id"] for n in project["issues"]["nodes"]}
+            gql("mutation($a: String!, $b: String!) { issueRelationCreate("
+                "input: {issueId: $a, relatedIssueId: $b, type: blocks}) { success } }",
+                {"a": ids[a], "b": ids[b]})
+        elif kind in ("dependency unstated", "issue aligned"):
             continue
         elif kind == "issue create":
             milestone_id = milestone_ids.get(target)

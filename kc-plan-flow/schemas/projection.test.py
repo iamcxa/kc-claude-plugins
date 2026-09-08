@@ -141,6 +141,29 @@ check("a lost kind declaration is drift",
       "kind declaration" in [d[0] for d in P.issue_drift(wrong_kind, defect, milestone)])
 
 
+# Two fields were added to the contract with nothing reading them, which is the same
+# shape as a rule that sat unsatisfied for a day because nothing projected into it.
+B = [{"rule": "The reader holds no relay knowledge.", "agreed_with": "the maintainer", "agreed_at": "repo#43"}]
+bc = P.boundaries_content("## User value\n\nA line.\n\n## Who\n\nSomebody.", B)
+check("boundaries render as their own section", LA.section(bc, "Boundaries").startswith("- **The reader"))
+check("rendering boundaries keeps the sections around them", LA.section(bc, "Who") == "Somebody.")
+check("re-rendering boundaries does not stack", P.boundaries_content(bc, B).count("## Boundaries") == 1)
+check("a changed boundary replaces rather than appends",
+      P.boundaries_content(bc, [{**B[0], "rule": "A different rule."}]).count("## Boundaries") == 1)
+
+NODES = {
+  "first": {"identifier": "AA-1", "inverseRelations": {"nodes": []}},
+  "second": {"identifier": "AA-2", "inverseRelations": {"nodes": [{"type": "blocks", "issue": {"identifier": "AA-1"}}]}},
+  "third": {"identifier": "AA-3", "inverseRelations": {"nodes": [{"type": "blocks", "issue": {"identifier": "AA-2"}}]}},
+}
+plan = {"dependencies": [{"blocked": "second", "blocked_by": "first", "because": "a fact"},
+                         {"blocked": "third", "blocked_by": "first", "because": "another fact"}]}
+missing, extra, unknown = P.dependency_drift(plan, NODES)
+check("an edge the plan states and the tracker lacks is missing", missing == [("AA-1", "AA-3", "another fact")])
+check("an edge the tracker carries and the plan omits is reported", extra == [("AA-2", "AA-3")])
+check("an edge naming an unknown issue is caught",
+      P.dependency_drift({"dependencies": [{"blocked": "ghost", "blocked_by": "first", "because": "x"}]}, NODES)[2] != [])
+
 SUB = json.loads((HERE / "fixtures/plan-detail.valid.json").read_text())["sub_issues"][0]
 sub_body = P.detail_issue_body(SUB)
 check("a sub-issue's Accepted outcome parses back",
