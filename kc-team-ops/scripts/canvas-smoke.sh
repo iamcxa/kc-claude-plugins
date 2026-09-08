@@ -10,10 +10,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# A port of its own: on a developer's machine 5858 is usually already taken, and
-# reusing it made this check pass while binding nothing.
-PORT=${JOURNEY_API_PORT:-$(node -e 'const s=require("net").createServer();s.listen(0,()=>{console.log(s.address().port);s.close()})')}
-export JOURNEY_API_PORT="$PORT"
+# The server picks its own port and reports it. Choosing one here first raced with the
+# probe socket's own close, and on a developer's machine 5858 is usually taken anyway.
+export JOURNEY_API_PORT="${JOURNEY_API_PORT:-0}"
 ROOM="smoke-$$"
 ROOMS_DIR="$(mktemp -d)"
 EXAMPLE="skills/kc-journey-map/references/journey.example.yaml"
@@ -32,14 +31,16 @@ JOURNEY_ROOMS_DIR="$ROOMS_DIR" npx tsx ./server/canvas-server.ts >"$LOG" 2>&1 &
 SERVER_PID=$!
 
 for _ in $(seq 1 60); do
-  grep -q "doc API on http://127.0.0.1:$PORT" "$LOG" 2>/dev/null && break
+  grep -q "doc API on http://127.0.0.1:" "$LOG" 2>/dev/null && break
   sleep 0.5
 done
-if ! grep -q "doc API on http://127.0.0.1:$PORT" "$LOG" 2>/dev/null; then
-  echo "FAIL: this server never started on $PORT"
+PORT=$(sed -n 's|.*doc API on http://127.0.0.1:\([0-9][0-9]*\).*|\1|p' "$LOG" | head -1)
+if [ -z "$PORT" ]; then
+  echo "FAIL: this server never started"
   sed -n '1,20p' "$LOG"
   exit 1
 fi
+export JOURNEY_API_PORT="$PORT"
 curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server started but does not answer"; exit 1; }
 
 node lib/journey-render.mjs "$EXAMPLE" "$ROOM"

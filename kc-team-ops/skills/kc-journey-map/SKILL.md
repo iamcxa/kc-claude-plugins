@@ -67,7 +67,7 @@ Ship what you saw, not what you wrote.
 ## Rendering
 
 **The canvas.** The journey file renders onto an editable tldraw board — a story map page
-and an journey board page. See `references/canvas.md` for how to run it, what round-trips
+and a journey board page. See `references/canvas.md` for how to run it, what round-trips
 and what does not. `npm run doctor` says why it will not start.
 
 **An image for a report.** Export from the canvas with tldraw's own exporter, which

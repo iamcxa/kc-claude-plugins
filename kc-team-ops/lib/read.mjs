@@ -136,17 +136,53 @@ export function diffAgainstModel(shapes, model) {
 	else if (boardMoved) reordered = boardOrder
 	else if (storyMoved) reordered = storyOrder
 
+	// ── release membership ───────────────────────────────────────────────────────
+	// Dragging a story across a release line is the planning gesture — it says this
+	// belongs in a later release, or has been pulled into the first one. The lines are on
+	// the canvas, so which band a story landed in is read from its y against them.
+	const lines = byKind(story, 'release-line').sort((a, b) => a.y - b.y)
+	const declaredReleases = (model.releases ?? []).map((r) => r.id)
+	const bandOf = (shape) => {
+		const crossed = lines.filter((l) => l.y < shape.y).length
+		return declaredReleases[crossed] ?? null
+	}
+
+	const storyMeta = new Map()
+	for (const step of steps) {
+		;(step.stories ?? []).forEach((s, j) => {
+			const id = typeof s === 'string' ? `${step.id}-${j}` : (s.id ?? `${step.id}-${j}`)
+			storyMeta.set(id, { step: step.id, release: typeof s === 'string' ? null : (s.release ?? null) })
+		})
+	}
+
+	const releaseMoved = []
+	if (lines.length) {
+		for (const [id, meta] of storyMeta) {
+			const shape = storyBy.get(id)
+			if (!shape) continue
+			const now = bandOf(shape)
+			if (now !== meta.release) releaseMoved.push({ id, step: meta.step, was: meta.release, now })
+		}
+	}
+
 	// ── story priority ───────────────────────────────────────────────────────────
-	// Priority runs top to bottom under an activity, so y is the whole signal.
+	// Priority runs top to bottom within a band, so only stories sharing a band compare.
 	const storiesReordered = []
 	for (const step of steps) {
-		const declared = (step.stories ?? []).map((s, j) =>
-			typeof s === 'string' ? `${step.id}-${j}` : (s.id ?? `${step.id}-${j}`)
-		)
-		const present = declared.filter((id) => storyBy.has(id))
-		if (present.length < 2) continue
-		const onCanvas = [...present].sort((a, b) => storyBy.get(a).y - storyBy.get(b).y)
-		if (onCanvas.join() !== present.join()) storiesReordered.push({ step: step.id, was: present, now: onCanvas })
+		const inStep = [...storyMeta.entries()].filter(([, m]) => m.step === step.id).map(([id]) => id)
+		const groups = new Map()
+		for (const id of inStep) {
+			if (!storyBy.has(id)) continue
+			const band = lines.length ? bandOf(storyBy.get(id)) : storyMeta.get(id).release
+            const key = band ?? 'unassigned'
+			groups.set(key, [...(groups.get(key) ?? []), id])
+		}
+		for (const [release, present] of groups) {
+			if (present.length < 2) continue
+			const onCanvas = [...present].sort((a, b) => storyBy.get(a).y - storyBy.get(b).y)
+			if (onCanvas.join() !== present.join())
+				storiesReordered.push({ step: step.id, release, was: present, now: onCanvas })
+		}
 	}
 
 	// ── cards nobody claimed ─────────────────────────────────────────────────────
@@ -167,7 +203,7 @@ export function diffAgainstModel(shapes, model) {
 
 	const missing = modelOrder.filter((id) => !cardBy.has(id) && !actBy.has(id) && !duplicated.includes(id))
 
-	return { reordered, reorderConflict, reworded, rewordConflict, storiesReordered, duplicated, unclaimed, missing }
+	return { reordered, reorderConflict, reworded, rewordConflict, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
 }
 
 // `lineWidth: 0` and `flowCollectionPadding: false` keep the writer from reflowing lines it
@@ -198,6 +234,20 @@ export function applyDiff(path, diff, outPath = path) {
 		if (!node) continue
 		node.set(field, now)
 		applied.push(`reworded ${id}.${field}`)
+	}
+
+	// A story that changed release is rewritten in place; its position inside the band is
+	// a separate report and applies on top.
+	for (const { id, step, now } of diff.releaseMoved) {
+		const node = findStep(steps, step)
+		const item = node?.get('stories')?.items.find((s) => s.get && s.get('id') === id)
+		if (!item) {
+			skipped.push(`${id} changed release but is written as a bare string — give it an id first`)
+			continue
+		}
+		if (now) item.set('release', now)
+		else item.delete('release')
+		applied.push(`${id} moved to ${now ?? 'unassigned'}`)
 	}
 
 	for (const { step, now } of diff.storiesReordered) {

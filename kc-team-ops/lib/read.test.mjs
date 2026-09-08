@@ -17,7 +17,7 @@ const story = () => buildStoryMap(fixtureModel).filter((r) => r.typeName === 'sh
 const rendered = () => [...board(), ...story()]
 
 const find = (shapes, id) => shapes.find((s) => s.id === id)
-const clean = { reordered: null, reorderConflict: null, reworded: [], rewordConflict: [], storiesReordered: [], duplicated: [], unclaimed: [], missing: [] }
+const clean = { reordered: null, reorderConflict: null, reworded: [], rewordConflict: [], releaseMoved: [], storiesReordered: [], duplicated: [], unclaimed: [], missing: [] }
 
 test('a freshly rendered board reports no drift', () => {
 	assert.deepEqual(diffAgainstModel(rendered(), fixtureModel), clean)
@@ -34,15 +34,31 @@ test('rewording an activity on the story map is seen', () => {
 	)
 })
 
-test('dragging a story up is read as a priority change', () => {
+test('dragging a story up inside its band is a priority change', () => {
 	const shapes = rendered()
 	const first = find(shapes, 'shape:sm-story-a-0')
-	const second = find(shapes, 'shape:sm-story-a-1')
-	const y = first.y
-	first.y = second.y
-	second.y = y
+	const second = find(shapes, 'shape:sm-story-a-2')
+	;[first.y, second.y] = [second.y, first.y]
 	const d = diffAgainstModel(shapes, fixtureModel)
-	assert.deepEqual(d.storiesReordered, [{ step: 'a', was: ['a-0', 'a-1'], now: ['a-1', 'a-0'] }])
+	assert.deepEqual(d.storiesReordered, [{ step: 'a', release: 'r1', was: ['a-0', 'a-2'], now: ['a-2', 'a-0'] }])
+	assert.deepEqual(d.releaseMoved, [], 'a move inside a band is not a release change')
+})
+
+test('dragging a story across a release line is read as a release change', () => {
+	// The planning gesture: this belongs in a later release, or has been pulled forward.
+	const shapes = rendered()
+	const line = shapes.filter((s) => s.meta?.journey?.kind === 'release-line').sort((a, b) => a.y - b.y)[0]
+	find(shapes, 'shape:sm-story-a-0').y = line.y + 50
+	const d = diffAgainstModel(shapes, fixtureModel)
+	assert.deepEqual(d.releaseMoved, [{ id: 'a-0', step: 'a', was: 'r1', now: 'r2' }])
+})
+
+test('a release change is written into the file', () => {
+	const path = onDisk()
+	applyDiff(path, { ...clean, releaseMoved: [{ id: 'a-0', step: 'a', was: 'r1', now: 'r2' }] })
+	const after = readFileSync(path, 'utf8')
+	const block = after.slice(after.indexOf('id: a-0'), after.indexOf('id: a-2'))
+	assert.match(block, /release: r2/, 'the story kept its old release')
 })
 
 test('the two pages disagreeing about one card is a conflict, not a winner', () => {

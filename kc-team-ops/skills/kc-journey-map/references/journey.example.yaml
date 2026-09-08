@@ -32,9 +32,9 @@ steps:
     card: "Writes the steps and the evidence into a file"
     activity: "Write the journey"
     stories:
-      - "Name the steps a person takes"
-      - "Cite the code each step runs"
-      - "Name what must stay true"
+      - {id: name-the-steps-a-person-take, card: "Name the steps a person takes", release: r1}
+      - {id: cite-the-code-each-step-runs, card: "Cite the code each step runs", release: r2}
+      - {id: name-what-must-stay-true, card: "Name what must stay true", release: r2}
     system:
       - "docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status"
       - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
@@ -45,9 +45,9 @@ steps:
     card: "Renders it onto a board"
     activity: "Put it on a board"
     stories:
-      - "Get a story map and an journey board"
-      - "Re-render after every change"
-      - "Export an image for a report"
+      - {id: get-a-story-map-and-an-journ, card: "Get a story map and a journey board", release: r1}
+      - {id: re-render-after-every-change, card: "Re-render after every change", release: r1}
+      - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1}
     system:
       - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
       - "One room, two pages: buildStoryMap and buildJourneyBoard from the same model"
@@ -66,9 +66,9 @@ steps:
     card: "Moves the cards around with other people"
     activity: "Talk over it"
     stories:
-      - "Reorder the columns"
-      - "Reword a card"
-      - "Add a card nobody had thought of"
+      - {id: reorder-the-columns, card: "Reorder the columns", release: r1}
+      - {id: reword-a-card, card: "Reword a card", release: r1}
+      - {id: add-a-card-nobody-had-though, card: "Add a card nobody had thought of", release: r1}
     system:
       - "The tldraw room syncs every open tab; edits are ordinary canvas edits"
       - "Each rendered shape carries meta.journey {nodeId, kind}; a hand-added card carries none"
@@ -79,8 +79,8 @@ steps:
     card: "Takes the changes back into the file"
     activity: "Fold it back in"
     stories:
-      - "See what changed"
-      - "Apply the wording and the order"
+      - {id: see-what-changed, card: "See what changed", release: r1}
+      - {id: apply-the-wording-and-the-or, card: "Apply the wording and the order", release: r1}
     system:
       - "lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing"
       - "--write applies card wording and column order only; it refuses a reorder when a nodeId is duplicated"
@@ -103,10 +103,10 @@ steps:
     activity: "Model the functions"
     badge: NOT_BUILT
     stories:
-      - "Start from a journey, or from prose"
-      - "Name one command per step"
-      - "Name the events it emits, including the refusals"
-      - "Name the state it changes and the view it feeds"
+      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3}
+      - {id: name-one-command-per-step, card: "Name one command per step", release: r3}
+      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3}
+      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3}
     system:
       - "Nothing implements this. The file has no command, event, state or read-model fields yet"
     cites: [kc-claude-plugins]
@@ -117,8 +117,8 @@ steps:
     activity: "Put it on a board"
     badge: NOT_BUILT
     stories:
-      - "See a third page: Command, Event, State, Read model"
-      - "Workshop it and read it back the same way"
+      - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3}
+      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: r3}
     system:
       - "Nothing implements this. The columns would stay the journey's steps and only the lanes change, so the renderer and the reconcile are the ones already here"
     cites: [kc-claude-plugins]
@@ -133,10 +133,16 @@ steps:
     cites: [kc-claude-plugins]
     rules: [events-carry-order]
 
-later:
-  - "Check a board against the code again later, and say what drifted"
-  - "Draw a journey that crosses two repositories"
-  - "Run the board unattended in a workflow"
+releases:
+  - id: r1
+    name: "RELEASE 1"
+    goal: "A person can draw a story map by talking, and plan with it."
+  - id: r2
+    name: "RELEASE 2"
+    goal: "The same map can be checked against the code that exists."
+  - id: r3
+    name: "RELEASE 3"
+    goal: "The same map yields the units to build, in the order to build them."
 
 ownership:
   - id: own-author
@@ -169,16 +175,6 @@ rules:
     text: "The function map keeps the journey's columns and swaps the lanes; it is not a second tool"
   - id: events-carry-order
     text: "Events carry causal order and story order does not, which is why a build order is derived from events"
-
-slices:
-  - id: draw-a-journey
-    label: "SLICE 1"
-    outcome: "One journey goes file -> board -> workshop -> file without losing anything."
-    steps: [write, render, workshop, readback]
-  - id: draw-a-function-map
-    label: "SLICE 2"
-    outcome: "The same file also carries a function map, from a journey or from prose."
-    steps: [model, funcmap, handoff]
 
 status:
   unproven: "The function map has no renderer and no fields in the file; slice 2 is a plan, not a capability. Read-back covers the journey board only."

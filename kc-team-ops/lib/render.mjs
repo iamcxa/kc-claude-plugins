@@ -218,6 +218,18 @@ export function loadJourney(path) {
 
 // One room, several pages. The function map is drawn only when the file models something:
 // an empty third page would claim the modelling was done and came out blank.
+// Which activities a release actually touches. A release that leaves an activity empty is
+// not automatically wrong — a later release's activities are not part of an earlier one's
+// journey — but it is the question the map exists to make askable, so it is said out loud
+// rather than left to whoever is looking at the picture.
+export function releaseCoverage(model) {
+	const steps = model.steps ?? []
+	return (model.releases ?? []).map((r) => {
+		const covered = steps.filter((s) => (s.stories ?? []).some((x) => x?.release === r.id)).map((s) => s.id)
+		return { release: r.id, covered: covered.length, of: steps.length, missing: steps.filter((s) => !covered.includes(s.id)).map((s) => s.id) }
+	})
+}
+
 export function buildAllPages(model) {
 	const modelled = (model.steps ?? []).some((s) => s.command || s.events?.length || s.state || s.readmodel)
 	return [
@@ -253,5 +265,5 @@ export async function renderToRoom({ path, room, api = API }) {
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ put, remove }),
 	})
-	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length }
+	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, coverage: releaseCoverage(model) }
 }

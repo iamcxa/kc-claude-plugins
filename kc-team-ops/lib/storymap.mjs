@@ -1,11 +1,14 @@
 // The story-map projection: the page people talk over.
 //
-// Jeff Patton's shape, and the visual convention from the workshop this borrows from:
-// blue for the persona and for release boundaries, green for the backbone of activities,
-// yellow for the stories beneath them, frames for Now and Later, small labels for
-// ownership and for evidence status. The backbone reads left to right as a narrative;
-// under each activity, order runs top to bottom by priority, with variants below the
-// main path.
+// Jeff Patton's shape: blue for the persona and for release boundaries, green for the
+// backbone of activities, yellow for the stories beneath them, small labels for ownership
+// and for evidence status. The backbone reads left to right as a narrative.
+//
+// A release is a horizontal band across every activity, named at the left margin, with a
+// full-width line above it. That is what makes the map plannable: the first band has to be
+// a thin line through the whole backbone that still works, and you can only see whether it
+// is one when the bands cut across all the columns. Bands scoped to a set of columns —
+// which is what this drew before — cannot express a walking skeleton at all.
 //
 // It is a projection of the same file the journey board renders from. The two pages
 // disagree about the vertical axis on purpose — here it is priority, there it is lane —
@@ -31,12 +34,11 @@ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 export function buildStoryMap(model) {
 	const steps = model.steps ?? []
-	const later = model.later ?? []
 	const put = [page({ id: STORY_PAGE_ID, name: 'Story map', index: 'a3' })]
 
 	const parentId = STORY_PAGE_ID
 	const maxStories = Math.max(0, ...steps.map((s) => (s.stories ?? []).length))
-	const ix = indexes(Math.max(12, steps.length * (maxStories + 3) + later.length + 16))
+	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24))
 	let n = 0
 
 	const nowTexts = (model.now ?? []).map((item) =>
@@ -136,41 +138,89 @@ export function buildStoryMap(model) {
 			})
 		}
 
-		;(step.stories ?? []).forEach((story, j) => {
-			const text = typeof story === 'string' ? story : story.card
-			const id = typeof story === 'string' ? `${step.id}-${j}` : (story.id ?? `${step.id}-${j}`)
-			put.push({
-				...note({
-					id: `shape:sm-story-${id}`,
-					text,
-					x,
-					y: Y_STORIES + j * STORY_PITCH,
-					index: ix[n++],
-					parentId,
-					color: 'yellow',
-				}),
-				meta: tag(id, 'story'),
-			})
-		})
 	})
 
-	const storyRows = Math.max(1, maxStories)
-	let y = Y_STORIES + storyRows * STORY_PITCH + 40
+	// ── release bands ────────────────────────────────────────────────────────────
+	// A release is a horizontal band across every activity, not a set of columns. That is
+	// the whole point of the method: the first band has to be a thin line through the
+	// entire backbone that still works, and you cannot see whether it is one unless the
+	// bands cut across all of them.
+	const releases = model.releases ?? []
+	const storyOf = (step, story, j) => ({
+		id: typeof story === 'string' ? `${step.id}-${j}` : (story.id ?? `${step.id}-${j}`),
+		text: typeof story === 'string' ? story : story.card,
+		release: typeof story === 'string' ? null : (story.release ?? null),
+	})
 
-	// Ownership is drawn as a band with a named edge rather than by recolouring cards,
-	// so a journey that crosses two products still reads as one journey.
+	const all = steps.flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...storyOf(step, story, j) })))
+
+	// A story nobody has placed is drawn in a band of its own rather than dropped: where it
+	// belongs is a decision someone still owes, and a silent omission hides that.
+	const bands = [
+		...releases.map((r) => ({ ...r, stories: all.filter((s) => s.release === r.id) })),
+		{ id: null, name: 'UNASSIGNED', goal: 'No release decided yet.', stories: all.filter((s) => !s.release || !releases.some((r) => r.id === s.release)) },
+	].filter((b) => b.stories.length)
+
+	let bandTop = Y_STORIES
+	bands.forEach((band, bi) => {
+		if (bi > 0) {
+			bandTop += 40
+			put.push({
+				...releaseLine({ id: `shape:sm-relline-${band.id ?? 'unassigned'}`, x: LEFT, y: bandTop, w: X0 + steps.length * PITCH, index: ix[n++], parentId }),
+				meta: tag(band.id ?? 'unassigned', 'release-line'),
+			})
+			bandTop += 40
+		}
+
+		const text = `${band.name}\n${band.goal ?? ''}`.trim()
+		put.push({
+			...label({
+				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
+				text,
+				x: LEFT,
+				y: bandTop,
+				w: LEFT_W,
+				h: fitHeight(text, LEFT_W),
+				index: ix[n++],
+				parentId,
+				color: band.id ? 'blue' : 'red',
+				size: 's',
+			}),
+			meta: tag(band.id ?? 'unassigned', 'release-label'),
+		})
+
+		// Priority runs top to bottom inside a band, per column.
+		const perColumn = new Map()
+		for (const story of band.stories) {
+			const list = perColumn.get(story.step.id) ?? []
+			list.push(story)
+			perColumn.set(story.step.id, list)
+		}
+		for (const [stepId, list] of perColumn) {
+			const i = steps.findIndex((s) => s.id === stepId)
+			list.forEach((story, j) => {
+				put.push({
+					...note({ id: `shape:sm-story-${story.id}`, text: story.text, x: X0 + i * PITCH, y: bandTop + j * STORY_PITCH, index: ix[n++], parentId, color: 'yellow' }),
+					meta: tag(story.id, 'story'),
+				})
+			})
+		}
+
+		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
+		bandTop += rows * STORY_PITCH
+	})
+
 	;(model.ownership ?? []).forEach((band, i) => {
 		const from = steps.findIndex((s) => s.id === band.from)
 		const to = steps.findIndex((s) => s.id === band.to)
 		if (from < 0 || to < 0) return
-		const w = (to - from + 1) * PITCH
 		put.push({
 			...label({
 				id: `shape:sm-own-${band.id ?? i}`,
 				text: `${band.owner} — ${band.note ?? ''}`.trim(),
 				x: X0 + from * PITCH - 20,
 				y: Y_BAND,
-				w,
+				w: (to - from + 1) * PITCH,
 				h: bandH,
 				index: ix[n++],
 				parentId,
@@ -181,92 +231,6 @@ export function buildStoryMap(model) {
 		})
 	})
 
-	// A slice that names its steps scopes columns, so it is drawn as a boundary around
-	// those columns. A release line across the whole width would put every column above
-	// it and claim the first slice contains all of them — which is what it did.
-	;(model.slices ?? []).forEach((slice, i) => {
-		const from = slice.steps?.length ? steps.findIndex((s) => s.id === slice.steps[0]) : -1
-		const to = slice.steps?.length ? steps.findIndex((s) => s.id === slice.steps[slice.steps.length - 1]) : -1
-		const scoped = from >= 0 && to >= from
-		const text = `${slice.label ?? `SLICE ${i + 1}`}\n${slice.outcome}`
-
-		if (scoped) {
-			put.push({
-				...releaseLine({
-					id: `shape:sm-sliceline-${slice.id}`,
-					x: X0 + from * PITCH - 20,
-					y: y,
-					w: (to - from + 1) * PITCH,
-					index: ix[n++],
-					parentId,
-				}),
-				meta: tag(slice.id, 'slice-line'),
-			})
-			put.push({
-				...label({
-					id: `shape:sm-slicelabel-${slice.id}`,
-					text,
-					x: X0 + from * PITCH - 20,
-					y: y + 40,
-					w: (to - from + 1) * PITCH - 20,
-					h: fitHeight(text, (to - from + 1) * PITCH - 20),
-					index: ix[n++],
-					parentId,
-					color: 'blue',
-					size: 's',
-				}),
-				meta: tag(slice.id, 'slice-label'),
-			})
-			return
-		}
-
-		const lineY = y + i * 320
-		put.push({
-			...releaseLine({
-				id: `shape:sm-sliceline-${slice.id}`,
-				x: LEFT,
-				y: lineY,
-				w: X0 + Math.max(steps.length, later.length) * PITCH,
-				index: ix[n++],
-				parentId,
-			}),
-			meta: tag(slice.id, 'slice-line'),
-		})
-		put.push({
-			...label({
-				id: `shape:sm-slicelabel-${slice.id}`,
-				text,
-				x: LEFT,
-				y: lineY + 40,
-				w: LEFT_W,
-				h: fitHeight(text, LEFT_W),
-				index: ix[n++],
-				parentId,
-				color: 'blue',
-				size: 's',
-			}),
-			meta: tag(slice.id, 'slice-label'),
-		})
-	})
-
-	const scopedSlices = (model.slices ?? []).every((s) => s.steps?.length)
-	const laterY = scopedSlices ? y + 260 : y + (model.slices?.length ?? 1) * 320 - 280
-	later.forEach((item, i) => {
-		const text = typeof item === 'string' ? item : item.card
-		const id = typeof item === 'string' ? `later-${i}` : (item.id ?? `later-${i}`)
-		put.push({
-			...note({
-				id: `shape:sm-later-${id}`,
-				text,
-				x: X0 + i * PITCH,
-				y: laterY,
-				index: ix[n++],
-				parentId,
-				color: 'orange',
-			}),
-			meta: tag(id, 'later'),
-		})
-	})
-
 	return put
 }
+
