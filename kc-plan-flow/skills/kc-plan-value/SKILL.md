@@ -230,6 +230,24 @@ A validator cannot judge whether an edge is real. It can refuse an edge with no 
 and an independence with no fact, which is the same bargain every other rule here
 makes: the truth is yours, the receipt is checkable.
 
+## Who performs the acceptance
+
+**The persona in the user story performs it, never the builder.** The story's first line
+already names them -- a terminal user, a developer on a fresh machine, someone handed a
+link. That is who runs it, and writing the criterion without naming them is how it ends
+up falling to whichever agent is nearest, which is the one that built it.
+
+Three of one milestone's five acceptances named their runner in the text and could not
+have been performed by the builder at all: they needed a second person to open a link, a
+person with nothing installed, two different reviewers. The two that did not name anyone
+were the two at risk.
+
+**If the builder alone could perform it, look again at whether it is a value point.** Not
+always wrong -- one value's persona was an unattended agent, so an agent performing it is
+the persona performing it. But user-visible value usually needs somebody who did not
+build it, and an acceptance one person can do alone at their own desk is often technical
+completeness wearing a value's clothes.
+
 ## Hand over the questions
 
 Every place the plan needs a fact about existing code becomes a question in the

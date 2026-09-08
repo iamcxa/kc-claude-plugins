@@ -71,6 +71,42 @@ integration proof `kc-plan-value` required of it. Layered sub-issues under a
 milestone with no integration owner is the shape that ships four green tickets
 and a broken product.
 
+## Exactly one sub-issue owes a handoff
+
+A value's acceptance is performed by a person, on the branch where the work landed. That
+person needs the branch runnable and the run written down: install this, run that, hand
+the link to someone, expect to see this.
+
+**That debt belongs to the topmost sub-issue in the stack, and to no other.** Which one
+that is comes from the dependency graph, not from who wrote the most. Asking every
+sub-issue for a handoff produces the same instructions in several places, and several
+copies of one fact is the shape that drifts.
+
+The handoff is not the acceptance. The sub-issue makes it performable; it does not
+perform it and does not claim it. This is the same relationship as making a pull request
+ready for review rather than approving it.
+
+## An acceptance criterion needs something that can measure it
+
+"Paints in under half a second" reads as precise and was unmeasurable: neither repository
+carried any paint instrumentation, no performance budget in CI, no dependency that could
+report one. The criterion could not be failed, which means it could not be passed either.
+
+Before writing a number, name what reads it. If nothing does, either the instrument is
+the work and belongs in its own sub-issue, or the criterion is a wish and belongs in
+conversation.
+
+## Replacing something means saying why it exists
+
+A sub-issue proposing to replace an existing implementation states, first, why that
+implementation is the way it is -- from its own source, not from memory.
+
+One proposed swapping a hand-rolled Markdown renderer for a pinned library. The
+hand-rolled one carries its rationale in its header: it escapes first and emits only tags
+it controls, so no byte of a shared artifact can become live markup. That is a security
+decision, and the ticket read as though it were an oversight. A replacement whose ticket
+cannot state what it is giving up is a decision disguised as a task.
+
 ## Write what the linter reads
 
 `docs/plan-flow/plan-lint.py` judges the result. Its format is not negotiable and
