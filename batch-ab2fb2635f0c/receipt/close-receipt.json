@@ -1,0 +1,161 @@
+{
+  "schema": "kc-ship-close-receipt/v1",
+  "plan_receipt_sha256": "ab2fb2635f0ce205c59fc4e92c9315ade0af162195c0f2fc6ca605dd36e012e3",
+  "approval_receipt_sha256": "12e850594ad154dfb6c0588c9fed5887251bba9f020e374ce7719ac1a670a7df",
+  "batch": {
+    "entity": "batch-ab2fb2635f0c",
+    "started_at": "2026-09-07T06:53:33Z",
+    "closed_at": "2026-09-08T10:30:00Z",
+    "holder": "laptop"
+  },
+  "issues": {
+    "DEV-136": {
+      "outcome": "merged",
+      "candidate": "4d13d179d97a5e932ea4269df17c73197077b2e8",
+      "pr": "iamcxa/qnow#1181",
+      "rounds": 3,
+      "minutes": {
+        "dispatch": 2,
+        "build": 50,
+        "verify": 25,
+        "review": 30,
+        "repair": 60
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "worker regenerated package-lock.json instead of carrying the branch's (@netlify/open-api drifted 2.57.0→2.57.1; restored in DEV-137)",
+        "netlify-cli 27.3.0 transitive advisories unfixable (dev tree only); @netlify/dev 5.0.5 and @netlify/identity placement → DEV-138",
+        "CI never runs qnow-next's npm test; FO local full run was the gate → DEV-139",
+        "FO's F4 evidence (store tests pass under the 0008 revoke) was measured on main's owner-role test; the hosted role failed later → 0009 in DEV-137"
+      ]
+    },
+    "DEV-137": {
+      "outcome": "merged",
+      "candidate": "80713b21189189b25a6ead07dfac412bc13db9fd",
+      "pr": "iamcxa/qnow#1182",
+      "rounds": 4,
+      "minutes": {
+        "dispatch": 2,
+        "build": 18,
+        "verify": 40,
+        "review": 25,
+        "repair": 70
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "PoC ruling: migration 0009 re-grants qnow_app SELECT on qnow_staff_assignments (DEV-25 assertion relaxed to SELECT-only); production scoped read → DEV-140",
+        "four diagnose:* scripts carried without a consumer (without-it unanswered)",
+        "staging site id literal repeated in three hosted files (pre-existing convention)",
+        "read-only-online-build test fails only in the Linux cloud workspace → DEV-144"
+      ]
+    },
+    "DEV-36": {
+      "outcome": "merged",
+      "candidate": "65c0143a46dea4c2baab50343b180c1ef22b0b39",
+      "pr": "iamcxa/qnow#1174",
+      "rounds": 0,
+      "minutes": {
+        "dispatch": 1,
+        "build": 19,
+        "verify": 15,
+        "review": 9,
+        "repair": 0
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "rebased onto main: 4 DEV-35 commits dropped as superseded by #1180; EXPECTED_MIGRATIONS 8→10 fixed in the runner",
+        "test:headed-browser is Linux-only (NO_PROC_PROCESS_TABLE on macOS at main and candidate alike); measured in the cloud on attempt 4"
+      ]
+    },
+    "DEV-37": {
+      "outcome": "captain_stopped",
+      "candidate": null,
+      "pr": null,
+      "rounds": 5,
+      "minutes": {
+        "dispatch": 10,
+        "build": 0,
+        "verify": 120,
+        "review": 0,
+        "repair": 45
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "five cloud attempts, one deploy: candidate 6a9efddb (main bf1b4ba1, 10 migrations) is published on staging; migrations 0008/0009 applied; the pre-0008 rollback can never be restored (Netlify 422) → pin re-decision in DEV-145",
+        "attempts 1–3 were FO dispatch errors (build:hosted/local proof omitted; preflight run with the ambient token; full run without xvfb-run); attempt 4 hit the rollback admission count (fixed, DEV-143); attempt 5 failed at identity.census with an unrecorded cause",
+        "Netlify Auth admin from the hosted function unproven; Captain: evaluate Clerk (DEV-146, blocks DEV-132); DEV-37 stopped",
+        "cloud workspace did not run conductor-cloud-setup.sh (no Xvfb) → DEV-142",
+        "receipts for all attempts on evidence/dev-37-acceptance-receipt (last b90d6b86)"
+      ]
+    }
+  },
+  "defects_returned": [
+    {
+      "id": "S50",
+      "class": "delivery",
+      "one_line": "(D138) toolchain pins to re-decide after hosted/ landed (@netlify/dev 5.0.5, @netlify/identity placement, netlify-cli advisories)",
+      "fix_ticket": "DEV-138"
+    },
+    {
+      "id": "S51",
+      "class": "verify",
+      "one_line": "(D139) qnow-next npm test never runs in CI; FO claimed CI as the gate for two PRs",
+      "fix_ticket": "DEV-139"
+    },
+    {
+      "id": "S52",
+      "class": "delivery",
+      "one_line": "(D140) PoC re-granted qnow_app table-wide SELECT on staff assignments; production needs a scoped read",
+      "fix_ticket": "DEV-140"
+    },
+    {
+      "id": "S53",
+      "class": "seam",
+      "one_line": "(D141) experiments/netlify-refine-poc has no recorded lifecycle (graduate vs delete); overlaps DEV-23",
+      "fix_ticket": "DEV-141"
+    },
+    {
+      "id": "S54",
+      "class": "dispatch",
+      "one_line": "(D142) Conductor cloud workspace runs the local setup, not conductor-cloud-setup.sh: no Xvfb, dirty tree",
+      "fix_ticket": "DEV-142"
+    },
+    {
+      "id": "S55",
+      "class": "verify",
+      "one_line": "(D143) rollback deploy refused by a global 10-migration count (fixed: parameterised, merged #1183)",
+      "fix_ticket": "DEV-143"
+    },
+    {
+      "id": "S56",
+      "class": "verify",
+      "one_line": "(D144) read-only-online-build test fails in the Linux cloud VM, passes on macOS at the same revision",
+      "fix_ticket": "DEV-144"
+    },
+    {
+      "id": "S57",
+      "class": "verify",
+      "one_line": "(D145) run-path admission ids not surfaced as failureReason; rollback pin stale after the DB moved to 10 migrations",
+      "fix_ticket": "DEV-145"
+    },
+    {
+      "id": "S58",
+      "class": "seam",
+      "one_line": "(D146) identity provider: Clerk POC to replace Netlify Auth + self-built OTP (blocks DEV-132)",
+      "fix_ticket": "DEV-146"
+    },
+    {
+      "id": "S49",
+      "class": "seam",
+      "one_line": "FO dispatched three cloud attempts with sequencing errors documented in the repo's own AGENTS.md; rehearsal-with-fakes was available and unused until attempt 5 — accepted residual: FO conduct; rehearsal is now the rule before a watched run",
+      "fix_ticket": null
+    }
+  ],
+  "totals": {
+    "workspaces_created": 6,
+    "workspaces_orphaned": 0,
+    "fix_rounds": 8,
+    "captain_gates": 12
+  },
+  "close_sha256": "74e380e1553c51f0b61db072d52c32ed2bfbff1081746306e94ae33472f4cc6a"
+}

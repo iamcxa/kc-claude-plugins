@@ -100,3 +100,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 - Attempt 5 started on the Captain's "跑" (2026-09-08): session a761a3ed, token dev37-2026-09-08-r5, main bf1b4ba1, sequence proven by the rehearsal. One deploy.
 - Identity probe authorized by the Captain ("探針", 2026-09-08): session 7728b385 creates three bootstrap env keys on the staging site, makes one census-users call against the published candidate while tailing the function log, then deletes the keys. No deploy, no users. Purpose: the true reason behind IDENTITY_OPERATION_FAILED (feeds DEV-145 and DEV-132).
 - Captain (2026-09-08): evaluate Clerk auth instead of Netlify Auth + self-built OTP → DEV-37 stops here (option B pending explicit confirmation); POC ticket for Clerk filed under Unplanned, blocks DEV-132; DEV-132 annotated with this batch's evidence.
+
+## Batch ab2fb2635f0c closed (2026-09-08)
+
+- CLOSE OK 74e380e1553c51f0 — DEV-136 merged (#1181), DEV-137 merged (#1182), DEV-36 merged (#1174), DEV-37 captain_stopped after five cloud attempts (one deploy; identity unproven → Clerk POC DEV-146). Defects returned S49–S58 → DEV-138…146 (S49 FO conduct, no ticket). Workspaces 6 of 13 approved; fix rounds 8. Writer outputs beside the receipt (receipt/dev-debrief.json, receipt/ship-debrief.json): the pinned close schema forbids them inside it; the previous batch validated only because jsonschema was absent (DEV-147).

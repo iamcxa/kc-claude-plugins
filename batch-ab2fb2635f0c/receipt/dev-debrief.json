@@ -1,0 +1,39 @@
+{
+  "schema": "kc-ship-dev-debrief/v1",
+  "close_receipt": "receipt/close-receipt.json",
+  "dev_debrief": {
+    "candidate_correction": "TBD (FO): one candidate correction to the build contract from this batch's Evidence.",
+    "per_issue": {
+      "DEV-136": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 3
+      },
+      "DEV-137": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 4
+      },
+      "DEV-36": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 0
+      },
+      "DEV-37": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 5
+      }
+    }
+  }
+}
