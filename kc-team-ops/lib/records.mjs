@@ -132,7 +132,7 @@ export function indexes(n) {
 }
 
 // Pages are records too. A journey gets one room and two pages: the story map people
-// talk over, and the evidence board the code is cited on. Same model, different question.
+// talk over, and the journey board the code is cited on. Same model, different question.
 export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
 }

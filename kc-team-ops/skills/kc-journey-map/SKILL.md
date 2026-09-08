@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map and a three-lane evidence board — where every system claim cites the code it was read from and a mandatory status card names what is unproven, unmerged, or undeployed.
+description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map, a three-lane journey board, and a function map of commands and events — where every system claim cites the code it was read from and a mandatory status card names what is unproven, unmerged, or undeployed.
 ---
 
 # Journey Map
@@ -67,7 +67,7 @@ Ship what you saw, not what you wrote.
 ## Rendering
 
 **The canvas.** The journey file renders onto an editable tldraw board — a story map page
-and an evidence board page. See `references/canvas.md` for how to run it, what round-trips
+and an journey board page. See `references/canvas.md` for how to run it, what round-trips
 and what does not. `npm run doctor` says why it will not start.
 
 **An image for a report.** Export from the canvas with tldraw's own exporter, which

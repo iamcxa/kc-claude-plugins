@@ -7,7 +7,7 @@
 // under each activity, order runs top to bottom by priority, with variants below the
 // main path.
 //
-// It is a projection of the same file the evidence board renders from. The two pages
+// It is a projection of the same file the journey board renders from. The two pages
 // disagree about the vertical axis on purpose — here it is priority, there it is lane —
 // which is exactly why they are two pages and not one grid.
 
