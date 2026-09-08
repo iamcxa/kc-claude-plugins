@@ -228,14 +228,20 @@ archaeology:
   - question: <as asked>
     classification: <the tier it came back as>
     ref: <the ref it was answered against>
+    command: <the command that produced it; without one the classification is an opinion>
+    evidence: <what it returned, in enough detail to be disagreed with>
+    stratum: <which ref carries it, and that ref's relation to the trunk>
+    did_not_check: [<the question's edges>]
 sub_issues:
   - title: <the gap it closes>
     gap: <what the archaeologist found missing or broken>
     accepted_outcome: <the section plan-lint requires, alongside non-goals>
     acceptance: [<"- **AC-1** — …", one string per criterion, bullet included>]
     non_goals: [<…>]
-    re_verified: <command then ISO date, no colon and no issue identifier>
+    re_verified: <command then ISO date, no colon and no issue identifier; may live in the thread instead>
     supersedes: <issue, or "none, searched: …">
+    estimate: <fibonacci points, technical work only>
+    estimate_basis: judgement | calibrated
 lint:
   receipt: <sha>
   result: PASS | FAIL

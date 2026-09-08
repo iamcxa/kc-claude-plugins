@@ -281,6 +281,10 @@ project:
   wedge: <the one place to push first, and why it is that one>
   outcome: <what a person can do afterwards that they cannot do now>
   exit: [<what has to be true to call it done>]
+  boundaries:
+    - rule: <the shape the code must take, in module and flow terms>
+      agreed_with: <who agreed; a boundary nobody agreed to is a preference>
+      agreed_at: <where it can be read, usually not this tracker>
 milestones:
   - name: <letter · the outcome, in the user's words>
     target: <YYYY-MM-DD>
@@ -294,6 +298,15 @@ issues:
     milestone: <name>
     kind: value | defect | measurement
     protects: <for defect and measurement: the title of the value issue>
+    independent_because: <when nothing blocks it: the fact that makes it independent>
+dependencies:
+  - blocked: <issue title>
+    blocked_by: <issue title>
+    because: <the fact that must be true first, never the order of the story>
+captain_ruling:
+  ruled_on: <YYYY-MM-DD>
+  on: <what was put in front of them>
+  changed: [<what the ruling changed; an empty list is an answer, an absent one is not>]
 questions_for_the_archaeologist:
   - <a question, carrying no expected answer>
 needs_a_ruling:

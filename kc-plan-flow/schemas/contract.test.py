@@ -30,3 +30,26 @@ if failures:
         print("  " + f)
     sys.exit(1)
 print(f"PASS: {len(list((HERE / 'fixtures').glob('*.json')))} fixtures")
+
+# A skill's Return template is the first thing a fresh session copies. Two of them named
+# schemas they no longer satisfied, because the fields were added here and not there, and
+# nothing compared the two: following the documented shape failed validation at step one.
+import re as _re, json as _json, pathlib as _pathlib
+_root = _pathlib.Path(__file__).parent.parent
+_template_failures = []
+for _name in ("kc-plan-value", "kc-plan-detail"):
+    _skill = (_root / "skills" / _name / "SKILL.md").read_text()
+    _m = _re.search(r"```yaml\n(schema: kc-plan-\w+/v1.*?)```", _skill, _re.S)
+    if not _m:
+        _template_failures.append(f"{_name}: no Return template to check")
+        continue
+    _keys = set(_re.findall(r"(?m)^(\w+):", _m.group(1)))
+    _required = set(_json.loads((_root / "schemas" / f"{_name}.v1.schema.json").read_text())["required"])
+    _missing = sorted(_required - _keys)
+    if _missing:
+        _template_failures.append(f"{_name}: template omits required {_missing}")
+if _template_failures:
+    for _f in _template_failures:
+        print("FAIL template: " + _f)
+    raise SystemExit(1)
+print("PASS: both Return templates carry every required field")
