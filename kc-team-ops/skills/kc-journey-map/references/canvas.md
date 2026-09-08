@@ -25,6 +25,40 @@ npm run canvas
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
 
+## Two pages, one file
+
+A journey renders into one room with two pages, because the two boards ask different
+questions and disagree about what the vertical axis means:
+
+| Page | Vertical axis | Answers |
+|---|---|---|
+| **Story map** | priority under an activity | what should we build, and what is the smallest useful slice |
+| **Journey board** | lane | does what we claim exist actually exist, and what does the code say |
+
+The story map follows Jeff Patton's shape and the workshop convention it borrows: blue
+for the persona and for release boundaries, green for the backbone, yellow for the
+stories beneath it, small labels for ownership and evidence status. Model fields it
+reads, all optional:
+
+```yaml
+persona: …
+now:                       # the status quo — how the job gets done without this product
+  - {id: …, card: …, pain: …, workaround: …}
+steps:
+  - id: …
+    card: …                # the journey card; `activity:` overrides it on the story map
+    stories: [ … ]         # ordered top to bottom by priority, variants below the main path
+    badge: NOT_BUILT       # drawn as a small label, never inside the sticky
+later: [ … ]               # activities below the release boundary
+ownership:
+  - {id: …, owner: …, from: <stepId>, to: <stepId>, note: …}
+slices:
+  - {id: …, outcome: …}    # the outcome is the label at the line's left edge
+```
+
+An unfinished implementation of the thing being proposed does not belong in `now:` —
+that is the status card's job, not the user's current world.
+
 ## The two directions
 
 ```bash
@@ -36,6 +70,12 @@ node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId> --write
 **Render is a reconcile.** Shapes the renderer owns that the model no longer produces
 are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
 A sticky someone added during a workshop survives every re-render.
+
+**Read covers the Journey board page only.** It matches shapes whose kind is `step-card`.
+On the story map the same step is an `activity` and its stories are `story` shapes, so
+dragging a story up — a priority change, and the most common gesture there is — is not
+seen, and neither is rewording an activity. Story-map edits have to be made in the file
+until that lands.
 
 **Read reports; `--write` applies a subset.** Two things round-trip: a card's wording and
 the order of the columns. A badge is drawn but never read back. Lane 2 and lane 3 have a lossy inverse —

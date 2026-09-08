@@ -119,9 +119,25 @@ export function fitHeight(text, width, size = 's', padding = 40) {
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
-// Ascending fractional indexes, unique per parent: a1, a2 ... a9, aA, aB ...
+// Ascending fractional indexes, unique per parent: a1 … a9, aA … aZ, aa … az, b1 …
+//
+// These sort lexicographically, and the alphabet is in ASCII order, so a longer run just
+// advances the leading letter: 'az' < 'b1' because 'a' < 'b'. A nine-activity map with
+// four stories each needs 79 of them, which is why one character is not enough.
+const ALPHABET = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+
 export function indexes(n) {
-	const alphabet = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-	if (n > alphabet.length) throw new Error(`indexes(${n}) exceeds the single-character range`)
-	return Array.from({ length: n }, (_, i) => `a${alphabet[i]}`)
+	const out = []
+	for (let i = 0; i < n; i++) {
+		const prefix = String.fromCharCode('a'.charCodeAt(0) + Math.floor(i / ALPHABET.length))
+		if (prefix > 'z') throw new Error(`indexes(${n}) exceeds the two-character range`)
+		out.push(prefix + ALPHABET[i % ALPHABET.length])
+	}
+	return out
+}
+
+// Pages are records too. A journey gets one room and two pages: the story map people
+// talk over, and the evidence board the code is cited on. Same model, different question.
+export function page({ id, name, index = 'a1' }) {
+	return { id, typeName: 'page', name, index, meta: {} }
 }

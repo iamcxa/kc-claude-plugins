@@ -6,7 +6,8 @@
 
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
-import { fitHeight, indexes, label, note, releaseLine } from './records.mjs'
+import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
+import { buildStoryMap } from './storymap.mjs'
 
 const PITCH = 320
 const COL_W = 300
@@ -16,7 +17,7 @@ const LANE_W = 270
 
 const Y_BADGE = 40
 const Y_CARD = 110
-const Y_SYSTEM = 350
+const H_CARD = 200
 const GAP = 60
 
 // A badge changes what the column claims, so it is drawn as its own shape rather than
@@ -50,11 +51,18 @@ export function buildJourneyBoard(model) {
 		(step.system ?? []).map((l) => `• ${l}`).join('\n') + (step.cites?.length ? `\n[${step.cites.join(', ')}]` : '')
 	const ruleText = (step) => (step.rules ?? []).map((id) => `• ${rulesById.get(id) ?? id}`).join('\n') || '—'
 
+	// Every row below the cards is placed relative to what is actually above it: a step
+	// note is optional and its height depends on its own text.
+	const noteOf = (step) => (step.note ? step.note.trim() : '')
+	const H_NOTE = Math.max(0, ...steps.map((s) => (noteOf(s) ? fitHeight(noteOf(s), COL_W) : 0)))
+	const Y_NOTE = Y_CARD + H_CARD + 20
+	const Y_SYSTEM = Y_NOTE + (H_NOTE ? H_NOTE + 20 : 0) + 20
+
 	const H_SYSTEM = Math.max(200, ...steps.map((s) => fitHeight(systemText(s), COL_W)))
 	const Y_RULES = Y_SYSTEM + H_SYSTEM + GAP
 	const H_RULES = Math.max(160, ...steps.map((s) => fitHeight(ruleText(s), COL_W)))
 
-	lane('journey', 'USER JOURNEY\nwhat a person does', Y_CARD, 200)
+	lane('journey', 'USER JOURNEY\nwhat a person does', Y_CARD, H_CARD)
 	lane('system', 'SYSTEM FLOW\nthe call, route or write', Y_SYSTEM, H_SYSTEM)
 	lane('constraints', 'CONSTRAINTS\nwhat must stay true', Y_RULES, H_RULES)
 
@@ -107,6 +115,27 @@ export function buildJourneyBoard(model) {
 			}),
 			meta: tag(step.id, 'system'),
 		})
+
+		// A note on a step is why the column matters, not what it does — it sits under the
+		// card rather than inside it, so the card stays the user's own words.
+		if (step.note) {
+			put.push({
+				...label({
+					id: `shape:jm-note-${step.id}`,
+					text: noteOf(step),
+					x,
+					y: Y_NOTE,
+					w: COL_W,
+					h: H_NOTE,
+					index: ix[n++],
+					color: 'grey',
+					size: 's',
+					align: 'start',
+					verticalAlign: 'start',
+				}),
+				meta: tag(step.id, 'note'),
+			})
+		}
 
 		put.push({
 			...label({
@@ -191,13 +220,21 @@ export function loadJourney(path) {
 export async function renderToRoom({ path, room, api = 'http://127.0.0.1:5858' }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
-	const put = buildJourneyBoard(model)
+
+	// One room, two pages. The board a person talks over and the board the code is cited
+	// on answer different questions and disagree about what the vertical axis means.
+	const put = [
+		page({ id: 'page:page', name: 'Journey board', index: 'a1' }),
+		...buildJourneyBoard(model),
+		...buildStoryMap(model),
+	]
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
+	// Only shapes are reconciled. Deleting a page would take a person's own pages with it.
 	const remove = (current.snapshot?.documents ?? [])
 		.map((d) => d.state)
-		.filter((r) => r.meta?.journey && !wanted.has(r.id))
+		.filter((r) => r.typeName === 'shape' && r.meta?.journey && !wanted.has(r.id))
 		.map((r) => r.id)
 
 	const res = await fetch(`${api}/doc?room=${roomId}`, {
