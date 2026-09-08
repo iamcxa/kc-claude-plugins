@@ -67,6 +67,14 @@ ACs` because the criteria had no bullet marker.
 - Two sections, both required and both easy to half-satisfy: `## Accepted
   outcome`, and `## Non-goals` as a `- ` list. Supplying only the second gets
   you a complaint about the first.
+- **The accepted outcome is the one sentence whose falsity means the ticket failed.**
+  Not a summary of the criteria under it. When it restates three of them, delete
+  the restatement rather than the criteria: a reader who has to check whether two
+  passages agree is doing the work the format was supposed to save them.
+- **Keep the conclusion, drop the record.** Which surfaces are involved belongs in
+  the body; the search that found them belongs in the comment thread, because it
+  ages at the speed of the codebase. One list of six surfaces named a symbol that
+  was renamed the same day the ticket was built against it.
 - A `Re-verified:` line carrying the command and an ISO date, **with no colon
   and no issue identifier anywhere in it**. The parser splits the line on `:`
   and reads the last word as the date, so `git show <ref>:<path>` breaks it —
