@@ -58,5 +58,12 @@
       "blocked_by": "A terminal user publishes a file and gets a link",
       "because": "the second issue's acceptance run needs the artifact the first produces, established by archaeology rather than by the order these were written"
     }
-  ]
+  ],
+  "captain_ruling": {
+    "ruled_on": "2026-09-08",
+    "on": "the two value points, the milestone and its single dependency",
+    "changed": [
+      "the second value was split out of the first, which had been one ticket spanning both"
+    ]
+  }
 }

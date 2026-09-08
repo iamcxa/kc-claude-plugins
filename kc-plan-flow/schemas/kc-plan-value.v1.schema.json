@@ -12,7 +12,8 @@
     "issues",
     "questions_for_the_archaeologist",
     "needs_a_ruling",
-    "dependencies"
+    "dependencies",
+    "captain_ruling"
   ],
   "properties": {
     "schema": {
@@ -207,6 +208,34 @@
             "minLength": 1,
             "description": "The fact, not the narrative. 'X ships before Y in the story' is not a reason; 'Y's acceptance run needs the binary X produces' is."
           }
+        }
+      }
+    },
+    "captain_ruling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruled_on",
+        "on"
+      ],
+      "description": "What the captain saw and ruled before any issue was created. The skill said to draft first and ask; nothing made that fire, and the session that wrote the rule then created two value issues without showing anyone a draft. The projector refuses to create issues without this.",
+      "properties": {
+        "ruled_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "on": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What was put in front of them: the value points, the milestone, the dependency graph. Name it, so a later reader can tell what was ruled on from what was added afterwards."
+        },
+        "changed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "What the ruling changed. An empty list is a real answer; an absent one means nobody asked."
         }
       }
     }

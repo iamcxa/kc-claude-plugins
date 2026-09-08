@@ -205,6 +205,12 @@ once in the tracker and once in whoever already read it.
 3. **Put the draft to the captain**, carrying what the archaeologist returned.
 4. **Then write the tickets.**
 
+The third step is recorded, not remembered. `captain_ruling` carries the date, what was
+put in front of them, and what the ruling changed; the projector refuses to create an
+issue without it. That check exists because the session that wrote this rule created two
+value issues within the hour without showing anyone a draft, and only noticed when the
+captain asked why he had not seen one.
+
 One session skipped this and paid for it five times: a value issue scoped to a whole
 milestone, two more written before it emerged that a third depended on neither, one
 written against a premise the code contradicted, one describing code that was not on

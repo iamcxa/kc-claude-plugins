@@ -417,6 +417,12 @@ def main():
             else:
                 writes.append(("issue aligned", node["identifier"], issue["title"]))
         else:
+            # Creating an issue is the irreversible half. The draft-first rule was written into
+            # the skill and then broken by its own author within the hour, so it is checked here.
+            ruling = plan.get("captain_ruling") or {}
+            if not ruling.get("ruled_on"):
+                die(f"no captain ruling recorded, so {issue['title']!r} would be created from a draft "
+                    "nobody saw. Put the draft in front of them, record what they ruled, then run this again.")
             writes.append(("issue create", issue["milestone"], {"title": issue["title"], "description": body}))
 
     # Relations are fetched only for the issues the plan names: asking for them across a
