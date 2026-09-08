@@ -103,8 +103,7 @@
         "required": [
           "name",
           "target",
-          "description",
-          "integration_proof"
+          "description"
         ],
         "properties": {
           "name": {
@@ -119,24 +118,6 @@
             "type": "string",
             "maxLength": 140,
             "pattern": "^[^\n]+$"
-          },
-          "integration_proof": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "proof",
-              "owner"
-            ],
-            "properties": {
-              "proof": {
-                "type": "string",
-                "minLength": 1
-              },
-              "owner": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
           }
         }
       }
@@ -160,7 +141,8 @@
           },
           "acceptance": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "description": "Something a person does, and for a value issue that is also the proof its parts work together: a value point delivers a person-visible outcome, which cannot be true while any of its technical work is broken. A separate integration-proof field said the same thing in different words on every issue that had one, five out of five."
           },
           "milestone": {
             "type": "string",
@@ -171,7 +153,8 @@
               "value",
               "defect",
               "measurement"
-            ]
+            ],
+            "description": "value | defect | measurement. A value issue's assignee owns running its acceptance and recording the result, and owns nothing else -- the building happens in its technical children. Assigning a value issue to whoever builds under it is someone accepting their own work."
           },
           "protects": {
             "type": "string",

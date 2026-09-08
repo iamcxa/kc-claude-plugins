@@ -150,10 +150,23 @@ Everything else belongs on an issue or in conversation. This bound exists
 because a milestone description that has room for headings will grow them, and
 what grows there is implementation, which has its own home.
 
-Where an issue's acceptance is one layer of a stack, the milestone names the
-integration proof that joins them **and gives it an owner**. A milestone that
-claims user value with no such owner is a milestone that will pass while the
-product does not work.
+**A value issue's acceptance is already the proof its parts work together.** It
+delivers something a person does, and that cannot be true while any technical work
+beneath it is broken. A separate integration-proof field was tried and said the same
+thing in different words on five issues out of five.
+
+**Its assignee is who runs that acceptance, and owns nothing else.** The building
+happens in the technical children; the value issue has no work of its own. So
+assignment means one concrete thing: this person performs the run and records the
+result.
+
+Which gives the rule a failure you can see. **A value issue assigned to whoever builds
+beneath it is someone accepting their own work.** While everything is assigned to one
+person that is invisible; the moment technical tickets go to whoever builds them, the
+two must differ.
+
+The milestone's own proof is the acceptance of the last value in its stack -- the one
+nothing else depends on. Nothing separate needs writing down.
 
 ## The boundary is agreed elsewhere, and declared once
 

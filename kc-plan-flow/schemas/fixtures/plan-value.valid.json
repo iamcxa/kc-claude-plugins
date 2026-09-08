@@ -27,11 +27,7 @@
     {
       "name": "A - Publishing works from the terminal",
       "target": "2026-09-13",
-      "description": "A terminal user publishes a file and gets a link that works for anyone. Ships on a tap install, not from a checkout.",
-      "integration_proof": {
-        "proof": "One tap install produces the same working link both from the command line and from the reader's publish key",
-        "owner": "captain"
-      }
+      "description": "A terminal user publishes a file and gets a link that works for anyone. Ships on a tap install, not from a checkout."
     }
   ],
   "issues": [

@@ -7,7 +7,7 @@ Dry run by default: prints every write it would make. --apply performs them.
 LINEAR_API_KEY must be set for either mode, because both read current state.
 
 The fields with no Linear column of their own -- user_value, acceptance, kind,
-protects, integration_proof -- are rendered into the markdown shapes that
+protects, boundaries -- are rendered into the markdown shapes that
 plan-lint and kc-dev-flow/scripts/linear-admission.py read back. Hand-writing
 that shape is what this exists to stop: `## User value` is matched at offset
 zero of the project content with no re.MULTILINE, and a `Re-verified:` line is
@@ -107,20 +107,14 @@ def replace_section(text, heading, body):
 
 
 def owned_sections(issue, milestone):
-    owned = {"Accepted outcome": issue["acceptance"]}
-    if issue["kind"] == "value":
-        owned["Integration proof"] = milestone["integration_proof"]["proof"]
-    return owned
+    return {"Accepted outcome": issue["acceptance"]}
 
 
 def issue_drift(live_description, issue, milestone, assignee=None):
     drifted = []
-    if issue["kind"] == "value":
-        # The proof's owner is an assignment, not a sentence. Rendered as prose it cannot be
-        # queried, cannot be reassigned, and drifts from the field that actually carries it.
-        owner = milestone["integration_proof"]["owner"]
-        if (assignee or "") != owner:
-            drifted.append(("integration proof owner", assignee or "unassigned", owner))
+    if issue["kind"] == "value" and not assignee:
+        # A value issue's assignee is who runs its acceptance. Unassigned, nobody does.
+        drifted.append(("acceptance owner", "unassigned", "someone who is not building underneath it"))
     for heading, planned in owned_sections(issue, milestone).items():
         found = section_body(live_description, heading)
         if found is None:
@@ -191,8 +185,6 @@ def issue_body(issue, milestone, value_identifier):
             f"{target}.** It is an issue rather than a sub-issue for that reason."
         )
     parts.append("## Accepted outcome\n\n" + issue["acceptance"])
-    if issue["kind"] == "value":
-        parts.append("## Integration proof\n\n" + milestone["integration_proof"]["proof"])
     body = "\n\n".join(parts)
     check_re_verified(body)
     return body
@@ -502,7 +494,7 @@ def main():
             node = gql("query($i: String!) { issue(id: $i) { id description } }", {"i": target})["issue"]
             body = node["description"] or ""
             for heading, _, planned in payload["detail"]:
-                if heading in ("kind declaration", "integration proof owner"):
+                if heading in ("kind declaration", "acceptance owner"):
                     die(f"{target}: {heading} is not a section. Set the assignee, or fix the plan.")
                 planned = planned
                 body = replace_section(body, heading, planned)

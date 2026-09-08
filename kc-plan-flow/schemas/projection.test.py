@@ -68,14 +68,12 @@ body = P.issue_body(value_issue, milestone, None)
 check("Accepted outcome parses back", LA.section(body, "Accepted outcome") == value_issue["acceptance"])
 # The owner is an assignment, not a sentence. Prose cannot be queried or reassigned,
 # and it duplicates the assignee field that already carries it.
-check("the integration proof does not spell its owner into prose", "Owner:" not in body)
-check("a matching assignee does not drift",
-      P.issue_drift(body, value_issue, milestone, "Kent") == [])
-check("a wrong assignee is drift",
-      ("integration proof owner", "Someone Else", "Kent")
-      in P.issue_drift(body, value_issue, milestone, "Someone Else"))
-check("an unassigned value issue is drift",
-      ("integration proof owner", "unassigned", "Kent")
+# A value issue's acceptance is already the proof its parts work together, so a separate
+# integration-proof field said the same thing twice on every issue that had one, five of five.
+check("no separate proof section is rendered", "## Integration proof" not in body)
+check("an assigned value issue does not drift", P.issue_drift(body, value_issue, milestone, "Kent") == [])
+check("an unassigned value issue is drift, because nobody runs its acceptance",
+      ("acceptance owner", "unassigned", "someone who is not building underneath it")
       in P.issue_drift(body, value_issue, milestone, None))
 
 defect = {"title": "A latent walk", "acceptance": "Nothing above the created directory changes mode.",
