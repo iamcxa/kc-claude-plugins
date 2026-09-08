@@ -48,11 +48,15 @@ node lib/journey-render.mjs "$EXAMPLE" "$ROOM"
 # the validator silently dropped would show up as a count mismatch rather than a pass.
 node - "$ROOM" "$PORT" "$EXAMPLE" <<'NODE'
 const [room, port, example] = process.argv.slice(2)
-const { loadJourney, buildJourneyBoard } = await import('./lib/render.mjs')
-const { buildStoryMap } = await import('./lib/storymap.mjs')
+// Expected shapes and pages both come from the model, so adding a page is not a change
+// this check has to be told about. Hard-coding the page list broke it the first time a
+// third page arrived.
+const { loadJourney, buildAllPages } = await import('./lib/render.mjs')
 
 const model = loadJourney(example)
-const expected = new Set([...buildJourneyBoard(model), ...buildStoryMap(model)].filter((r) => r.typeName === 'shape').map((r) => r.id))
+const built = buildAllPages(model)
+const expected = new Set(built.filter((r) => r.typeName === 'shape').map((r) => r.id))
+const expectedPages = built.filter((r) => r.typeName === 'page').map((r) => r.name).sort()
 
 const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
 const got = new Set(doc.snapshot.documents.map((d) => d.state).filter((r) => r.typeName === 'shape').map((r) => r.id))
@@ -63,11 +67,15 @@ if (missing.length) {
   process.exit(1)
 }
 const pages = doc.snapshot.documents.map((d) => d.state).filter((r) => r.typeName === 'page').map((r) => r.name).sort()
-if (pages.join() !== 'Journey board,Story map') {
-  console.error(`FAIL: expected both pages, got ${JSON.stringify(pages)}`)
+if (pages.join() !== expectedPages.join()) {
+  console.error(`FAIL: expected ${JSON.stringify(expectedPages)}, got ${JSON.stringify(pages)}`)
   process.exit(1)
 }
-console.log(`ok  ${expected.size} shapes across ${pages.length} pages`)
+if (pages.length < 2) {
+  console.error(`FAIL: the example must exercise more than one page, got ${JSON.stringify(pages)}`)
+  process.exit(1)
+}
+console.log(`ok  ${expected.size} shapes across ${pages.length} pages: ${pages.join(', ')}`)
 NODE
 
 # Reading the freshly rendered room back must report no drift, or the two halves disagree.
