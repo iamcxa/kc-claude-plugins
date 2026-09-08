@@ -3,6 +3,22 @@
 What each lane may assert, and what it may not. A board that breaks these reads as
 "this works today" when it does not — the failure this skill exists to prevent.
 
+## The three pages have three evidence standards
+
+They ask different questions, so they are held to different bars. Applying the journey
+board's bar to the story map is the mistake that stops a map being drawn at all: during a
+requirements conversation there is no code to cite, and a rule demanding citations blocks
+the very stage it was never written for.
+
+| Page | Asserts | Bar |
+|---|---|---|
+| **Story map** | what we want a person to be able to do | **No citation.** This is intent. Do not badge, do not cite, do not check it against code. |
+| **Journey board** | what the system actually does today | **A citation, or `NOT BUILT`.** Everything below applies here. |
+| **Function map** | what each step decides, and what becomes true | A command, its events including the refusals, the state, the read model. Name what is not modelled. |
+
+A story map drawn from a conversation is not unfinished work — it is the finished output of
+its own stage. It becomes a journey board only when somebody goes and reads the code.
+
 ## Columns
 
 One column per journey step. Every column carries exactly one cell in each of the three

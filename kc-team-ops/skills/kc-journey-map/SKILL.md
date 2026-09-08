@@ -19,8 +19,12 @@ is judged against.
 
 | Mode | Trigger | Output |
 |---|---|---|
+| **map** | nothing is built yet, or the question is what to build | a story map with releases, drawn from a conversation — `references/map-from-conversation.md` |
 | **draw** | no journey exists yet | the board, derived from code |
 | **check** | a journey exists — board, screenshot, or a list of cards | the mismatch table **first**, then the corrected board |
+
+Map mode comes before the other two and is held to a different bar: it asserts intent, so
+it cites nothing and badges nothing. See `references/cell-contract.md`.
 
 In check mode the mismatches are the deliverable. Do not quietly redraw someone's board
 into the "right" answer: quote their card, state the code fact, name the verdict.
