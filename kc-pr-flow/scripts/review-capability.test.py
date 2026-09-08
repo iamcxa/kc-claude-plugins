@@ -4,6 +4,7 @@
 import contextlib
 import copy
 import importlib.util
+import inspect
 import json
 import os
 import pathlib
@@ -26,7 +27,66 @@ def module(name, path):
 protocol = module("capability", HERE / "review-capability.py")
 
 
+def clean_reply(request):
+    return {
+        **{k: request[k] for k in ("identity", "plan_rev", "plan_hash", "bundle_revision", "bundle_hash", "capability")},
+        "schema": "kc-pr-flow.capability-result/v1", "status": "succeeded",
+        "usage": dict(input_tokens=None, output_tokens=None, total_tokens=None),
+        "answers": [dict(question_id=q, assessment="clean", contributions=[],
+                         evidence_refs=[p["id"] for group in request["evidence"] for p in group["material"]])
+                    for q in request["question_ids"]],
+    }
+
+
+def provider_reply(answer):
+    return {"structured_output": answer, "modelUsage": {"fixture": {}}, "total_cost_usd": 0.01,
+            "usage": dict(input_tokens=10, output_tokens=2, cache_creation_input_tokens=0, cache_read_input_tokens=0)}
+
+
+def rehash_bundle(prepared):
+    bundle = prepared["bundle"]
+    bundle["bundle_hash"] = protocol.digest({k: v for k, v in bundle.items() if k != "bundle_hash"})
+
+
 class PlannerTests(unittest.TestCase):
+    @contextlib.contextmanager
+    def launcher(self, program=None, enabled="on"):
+        with tempfile.TemporaryDirectory() as root:
+            root = pathlib.Path(root)
+            marker, stub = root / "model-called", root / "claude"
+            stub.write_text("#!/usr/bin/env python3\n" + program if program else
+                            '#!/bin/sh\ntouch "' + str(marker) + '"\nexit 99\n')
+            stub.chmod(0o700)
+            environment = {**os.environ, "PATH": str(root) + os.pathsep + os.environ["PATH"],
+                           "CLAUDE_PLUGIN_ROOT": str(HERE.parent), "KC_PR_FLOW_REVIEW_TYPED": enabled,
+                           "KC_PR_FLOW_PROFILED_REVIEW": enabled, "REVIEW_WORKTREE": str(root),
+                           "REVIEW_RUN_DIR": str(root / "run"), "REVIEW_MODEL": "fixture"}
+            yield root, environment
+            if program is None:
+                self.assertFalse(marker.exists(), "this route must not launch the CLI")
+
+    def assert_provider_report(self, prepared, event):
+        stem = pathlib.Path(prepared["directory"]) / f"provider-{event['capability']}-{event['attempt']}"
+        raw, envelope = stem.with_suffix(".raw").read_text(), protocol.read_json(stem.with_suffix(".json"))
+        self.assertEqual(json.loads(raw), envelope)
+        request = next(r for r in protocol.requests(prepared) if r["capability"] == event["capability"])
+        self.assertEqual(event["payload_sha256"], protocol.digest({"request": request, "provider_envelope": envelope}))
+        if event["result"] == "succeeded":
+            self.assertEqual(envelope["total_cost_usd"], 0.01)
+            self.assertEqual(envelope["usage"]["input_tokens"], 10)
+            self.assertEqual(envelope["usage"]["output_tokens"], 2)
+        else:
+            self.assertEqual(raw, "null\n")
+            self.assertIsNone(envelope)
+
+    def collect(self, directory, reply, outcome="succeeded", attempt=1):
+        capability = reply["capability"] if isinstance(reply, dict) else reply
+        response = {"response_file": protocol.store(directory / f"reply-{capability}-{attempt}.json", reply)} if isinstance(reply, dict) else {}
+        run, packet = self.cli(collect_dir=directory, capability=capability, attempt=attempt,
+                               attempt_result=outcome, **response)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        return packet
+
     def judgment(self, prepared, results, fallbacks=()):
         questions = []
         code_ref = next((p["id"] for p in prepared["bundle"]["pointers"] if "pointer" in p), None)
@@ -91,7 +151,7 @@ class PlannerTests(unittest.TestCase):
                     target["material"] = "A different objective."
                 else:
                     target["identity"]["head_sha"] = "a" * 40
-                bundle["bundle_hash"] = protocol.digest({k: v for k, v in bundle.items() if k != "bundle_hash"})
+                rehash_bundle(changed)
                 with self.subTest(mutation=mutation):
                     self.assertRaises(protocol.Invalid, protocol.requests, changed)
 
@@ -177,49 +237,34 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(protocol.collate(prepared, results, reviewer=missing)["protocol_decision"]["gaps"], [accepted["questions"][-1]["question_id"]])
 
     def test_cli_hands_off_to_reviewer_and_preserves_finalized_bytes(self):
-        with self.prepared_results() as (prepared, _):
-            directory = pathlib.Path(prepared["directory"])
-            stub = directory / "bin" / "claude"
-            stub.parent.mkdir()
-            stub.write_text("#!/usr/bin/env python3\nimport json,sys\nr=json.load(sys.stdin)\n"
-                            "v={k:r[k] for k in ('identity','plan_rev','plan_hash','bundle_revision','bundle_hash','capability')}\n"
-                            "v.update(schema='kc-pr-flow.capability-result/v1',status='succeeded',usage=dict(input_tokens=None,output_tokens=None,total_tokens=None),answers=[dict(question_id=r['question_ids'][0],assessment='clean',evidence_refs=[p['id'] for g in r['evidence'] for p in g['material']],contributions=[])])\n"
-                            "print(json.dumps(dict(structured_output=v)))\n")
-            stub.chmod(0o700)
-            intake = protocol.store(directory / "intake.json", self.identity)
-            goal = prepared["shape_bundle"]["pointers"][0]
-            goals = protocol.store(directory / "goals.json", [{k: goal[k] for k in ("identity", "evidence_class", "locator", "material")}])
-            run_dir = directory / "host-run"
-            environment = {**os.environ, "PATH": str(stub.parent) + os.pathsep + os.environ["PATH"],
-                           "KC_PR_FLOW_REVIEW_TYPED": "on", "KC_PR_FLOW_PROFILED_REVIEW": "on"}
-            run, pending = self.cli(environment=environment, identity_file=intake, repo_worktree=prepared["repository_path"],
-                                    run_dir=run_dir, model="fixture", goal_material_file=goals, pr_archetype="bugfix")
-            self.assertEqual(run.returncode, 0, run.stderr)
-            self.assertEqual(pending["pending_finalization"], str(run_dir))
-            packet = pending["reviewer_request"]
-            protocol.validate(packet, "ReviewerRequest")
-            event_file = next((run_dir / "state").rglob("events.jsonl"))
-            self.assertEqual(len(event_file.read_text().splitlines()), 1)
-            pending_bytes = event_file.read_bytes()
-            run, _ = self.cli(finalize_dir=run_dir)
-            self.assertEqual(run.returncode, 2)
-            self.assertEqual(event_file.read_bytes(), pending_bytes)
-            self.assertFalse((run_dir / "result.json").exists())
-            data = protocol.read_json(run_dir / "dispatched.json")
-            self.assertEqual(data["prepared"]["plan"]["review_config"]["modes"]["pr_archetype"], "bugfix")
-            judgment = self.judgment(data["prepared"], data["results"])
-            review_file = protocol.store(run_dir / "reviewer.json", judgment)
-            run, final = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file, pr_archetype="refactor")
-            self.assertEqual(run.returncode, 0, run.stderr)
-            self.assertTrue(final["confirmation_projection"]["approve_eligible"])
-            self.assertEqual(final["protocol_decision"]["reviewer_input"], packet)
-            self.assertEqual(final["protocol_decision"]["reviewer_judgment"], judgment)
-            self.assertEqual(final["policy"]["review_config"]["modes"]["pr_archetype"], "bugfix")
-            paths = [event_file, run_dir / "result.json", run_dir / "audit.json"]
-            sealed = [p.read_bytes() for p in paths]
-            run, _ = self.cli(finalize_dir=run_dir, reviewer_judgment_file=review_file)
-            self.assertEqual(run.returncode, 2)
-            self.assertEqual([p.read_bytes() for p in paths], sealed)
+        with self.host_run(native=False) as (directory, pending, _, _environment):
+            self.assert_finalization(directory, pending)
+
+    def assert_finalization(self, directory, pending):
+        self.assertEqual(pending["pending_finalization"], str(directory))
+        packet = protocol.validate(pending["reviewer_request"], "ReviewerRequest")
+        event_file = next((directory / "state").rglob("events.jsonl"))
+        self.assertEqual(len(event_file.read_text().splitlines()), 1)
+        pending_bytes = event_file.read_bytes()
+        run, _ = self.cli(finalize_dir=directory)
+        self.assertEqual(run.returncode, 2)
+        self.assertEqual(event_file.read_bytes(), pending_bytes)
+        self.assertFalse((directory / "result.json").exists())
+        data = protocol.read_json(directory / "dispatched.json")
+        self.assertEqual(data["prepared"]["plan"]["review_config"]["modes"]["pr_archetype"], "bugfix")
+        judgment = self.judgment(data["prepared"], data["results"])
+        review_file = protocol.store(directory / "reviewer.json", judgment)
+        run, final = self.cli(finalize_dir=directory, reviewer_judgment_file=review_file, pr_archetype="refactor")
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertTrue(final["confirmation_projection"]["approve_eligible"])
+        self.assertEqual(final["protocol_decision"]["reviewer_input"], packet)
+        self.assertEqual(final["protocol_decision"]["reviewer_judgment"], judgment)
+        self.assertEqual(final["policy"]["review_config"]["modes"]["pr_archetype"], "bugfix")
+        paths = [event_file, directory / "result.json", directory / "audit.json"]
+        sealed = [p.read_bytes() for p in paths]
+        run, _ = self.cli(finalize_dir=directory, reviewer_judgment_file=review_file)
+        self.assertEqual(run.returncode, 2)
+        self.assertEqual([p.read_bytes() for p in paths], sealed)
 
     def test_actual_rehydrate_projection_mismatch_is_terminal(self):
         with self.prepared_results() as (prepared, results):
@@ -244,6 +289,199 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(result["reason"], "projection_mismatch")
             protocol.validate(result, "RunTerminal")
 
+    @contextlib.contextmanager
+    def host_run(self, native=True):
+        program = None if native else (inspect.getsource(clean_reply) +
+                  "\nimport json,sys\nprint(json.dumps({'structured_output':clean_reply(json.load(sys.stdin))}))\n")
+        with self.prepared_results() as (prepared, _), self.launcher(program) as (_, environment):
+            directory = pathlib.Path(prepared["directory"])
+            intake = protocol.store(directory / "intake.json", self.identity)
+            goal = prepared["shape_bundle"]["pointers"][0]
+            goals = protocol.store(directory / "goals.json", [
+                {k: goal[k] for k in ("identity", "evidence_class", "locator", "material")}
+            ])
+            run_dir = directory / "host-run"
+            run, packet = self.cli(environment=environment, identity_file=intake,
+                                   repo_worktree=prepared["repository_path"], run_dir=run_dir,
+                                   goal_material_file=goals, pr_archetype="bugfix",
+                                   **({"prepare_only": True} if native else {"model": "fixture"}))
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertEqual(packet["pending_dispatch" if native else "pending_finalization"], str(run_dir))
+            replies = [clean_reply(protocol.validate(r, "CapabilityRequest")) for r in packet.get("requests", [])]
+            yield run_dir, packet, replies, environment
+
+    def test_host_dispatch_reaches_existing_finalization_without_a_model(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            self.assertFalse((directory / "dispatched.json").exists())
+            for reply in replies:
+                pending = self.collect(directory, reply)
+            data = protocol.read_json(directory / "dispatched.json")
+            self.assertEqual(data["results"], replies)
+            self.assertEqual(data["prepared"]["identity"], packet["identity"])
+            self.assert_finalization(directory, pending)
+
+    def test_host_collection_retains_invalid_replies_as_failed_attempts(self):
+        for mutation in ("json", "null", "duplicate", "identity", "answers", "oversized", "expansion", "nonfinite"):
+            with self.subTest(mutation=mutation), self.host_run() as (directory, packet, replies, environment):
+                reply = copy.deepcopy(replies[0])
+                if mutation == "identity":
+                    reply["identity"]["head_sha"] = "a" * 40
+                if mutation == "answers":
+                    reply["answers"] = []
+                if mutation == "expansion":
+                    reply = {"schema": "kc-pr-flow.expansion-request/v1"}
+                raw = (b"{" if mutation == "json" else b'{"schema":1,"schema":2}' if mutation == "duplicate"
+                       else b"null" if mutation == "null"
+                       else b" " * 1048577 if mutation == "oversized"
+                       else b'{"usage":NaN}' if mutation == "nonfinite" else protocol.canonical(reply))
+                response = protocol.store(directory / "response.raw", raw, raw=True)
+                capability = replies[0]["capability"]
+                run, pending = self.cli(environment=environment, collect_dir=directory, capability=capability,
+                                        attempt=1, attempt_result="succeeded", response_file=response)
+                self.assertEqual(run.returncode, 0, run.stderr)
+                self.assertEqual(pending["attempt_result"], "terminal_failure")
+                self.assertNotIn(capability, [r["capability"] for r in pending["remaining"]])
+                data = protocol.read_json(directory / "host-progress.json")
+                self.assertEqual(data["results"], [])
+                self.assertEqual(data["prepared"]["attempts"][capability][0]["result"], "terminal_failure")
+                self.assertEqual((directory / f"provider-{capability}-1.raw").read_bytes(), raw)
+                self.assertEqual(self.collate(data["prepared"], data["results"])["protocol_decision"]["event"], "COMMENT")
+
+    def test_host_collection_rejects_unassigned_repeated_and_misordered_attempts(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            response = protocol.store(directory / "reply.json", replies[0])
+            arguments = dict(collect_dir=directory, capability=replies[0]["capability"], attempt=1,
+                             attempt_result="succeeded", response_file=response)
+            original = (directory / "host-progress.json").read_bytes()
+            for delta in ({"capability": "not-assigned"}, {"attempt": 2}, {"response_file": ""},
+                          {"finalize_dir": directory}, {"prepare_only": True}):
+                with self.subTest(delta=delta):
+                    run, _ = self.cli(**{**arguments, **delta})
+                    self.assertEqual(run.returncode, 2)
+                    self.assertEqual((directory / "host-progress.json").read_bytes(), original)
+                    self.assertEqual(list(directory.glob("provider-*")), [])
+            run, _ = self.cli(finalize_dir=directory)
+            self.assertEqual(run.returncode, 2)
+            run, pending = self.cli(environment={**environment, "KC_PR_FLOW_REVIEW_TYPED": "off",
+                                                "KC_PR_FLOW_PROFILED_REVIEW": "off"}, **arguments)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            sealed = (directory / "host-progress.json").read_bytes()
+            run, _ = self.cli(**arguments)
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual((directory / "host-progress.json").read_bytes(), sealed)
+
+    def test_host_retry_exhaustion_and_unavailable_calls_remain_incomplete(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            capability = replies[0]["capability"]
+            for ordinal in (1, 2):
+                pending = self.collect(directory, capability, "transient_failure", ordinal)
+                if ordinal == 1:
+                    self.assertIn({"capability": capability, "attempt": 2}, pending["remaining"])
+                else:
+                    self.assertEqual(pending["attempt_result"], "terminal_failure")
+                    self.assertNotIn(capability, [r["capability"] for r in pending["remaining"]])
+            for reply in replies[1:]:
+                pending = self.collect(directory, reply["capability"], "unavailable")
+            self.assertEqual(pending["pending_finalization"], str(directory))
+            data = protocol.read_json(directory / "dispatched.json")
+            decision = self.collate(data["prepared"], data["results"])["protocol_decision"]
+            self.assertEqual(decision["event"], "COMMENT")
+            self.assertEqual(decision["gaps"], data["prepared"]["plan"]["questions"])
+            self.assertEqual(len(data["prepared"]["attempts"][capability]), 2)
+            sealed = {p: p.read_bytes() for p in (directory / "host-progress.json", directory / "dispatched.json")}
+            run, _ = self.cli(collect_dir=directory, capability=capability, attempt=2, attempt_result="succeeded")
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual({p: p.read_bytes() for p in sealed}, sealed)
+
+    def test_host_transient_retry_can_recover(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            self.collect(directory, replies[0]["capability"], "transient_failure")
+            self.collect(directory, replies[0], attempt=2)
+            data = protocol.read_json(directory / "host-progress.json")
+            self.assertEqual(data["results"], replies[:1])
+            self.assertEqual([a["result"] for a in data["prepared"]["attempts"][replies[0]["capability"]]],
+                             ["transient_failure", "succeeded"])
+
+    def test_host_collection_preserves_bindings_order_and_unknown_usage(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            progress = directory / "host-progress.json"
+            original = progress.read_bytes()
+            data = protocol.read_json(progress)
+            reply_file = protocol.store(directory / "reply.json", replies[0])
+            arguments = dict(collect_dir=directory, capability=replies[0]["capability"], attempt=1,
+                             attempt_result="succeeded", response_file=reply_file)
+            changed = copy.deepcopy(data)
+            changed["prepared"]["directory"] = str(directory.parent)
+            progress.write_bytes(protocol.canonical(changed))
+            run, _ = self.cli(**arguments)
+            self.assertEqual(run.returncode, 2)
+            self.assertEqual(list(directory.glob("provider-*")), [])
+            changed = copy.deepcopy(data)
+            changed["prepared"]["binding"]["plan_hash"] = "f" * 64
+            progress.write_bytes(protocol.canonical(changed))
+            run, terminal = self.cli(**arguments)
+            self.assertEqual(terminal["reason"], "configuration_change")
+            self.assertEqual(terminal["identity"], data["prepared"]["identity"])
+            progress.write_bytes(original)
+            repo = data["prepared"]["repository_path"]
+            protocol.git(repo, "checkout", "--detach", self.identity["base_sha"])
+            run, terminal = self.cli(**arguments)
+            self.assertEqual(terminal["status"], "INVALIDATED")
+            self.assertEqual(progress.read_bytes(), original)
+            protocol.git(repo, "checkout", "--detach", self.identity["head_sha"])
+            for reply in reversed(replies):
+                supplied = {**reply, "usage": dict(input_tokens=123, output_tokens=456, total_tokens=579)}
+                self.collect(directory, supplied)
+                raw = protocol.read_json(directory / f"provider-{reply['capability']}-1.json")
+                self.assertEqual(raw["usage"], supplied["usage"])
+            collected = protocol.read_json(directory / "dispatched.json")
+            self.assertEqual(collected["results"], replies)
+            self.assertTrue(all(e["started_ns"] is None and e["finished_ns"] is None
+                                for e in collected["prepared"]["audit"] if e["event_type"] == "invoked"))
+
+    def test_host_collection_keeps_expansion_requests_unsupported(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            expansion = {"schema": "kc-pr-flow.expansion-request/v1", "cause": "Need more evidence.",
+                         "question_ids": [], "evidence_classes": [], "reserve_charge": 1}
+            response = protocol.store(directory / "expansion.json", expansion)
+            run, _ = self.cli(collect_dir=directory, capability=replies[0]["capability"], attempt=1,
+                              attempt_result="succeeded", response_file=response)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            data = protocol.read_json(directory / "host-progress.json")
+            self.assertEqual(self.collate(data["prepared"], data["results"])["reason"], "unsupported_expansion")
+
+    def test_host_exports_existing_result_schema_without_unrelated_contracts(self):
+        with self.host_run() as (directory, packet, replies, environment):
+            schema = packet["result_schema"]
+            self.assertEqual(schema["$ref"], "#/$defs/CapabilityResult")
+            self.assertLess(len(schema["$defs"]), len(protocol.SCHEMA["$defs"]))
+            for name, definition in schema["$defs"].items():
+                self.assertEqual(definition, protocol.SCHEMA["$defs"][name])
+            pending = [schema]
+            while pending:
+                value = pending.pop()
+                if isinstance(value, dict):
+                    if "$ref" in value:
+                        self.assertIn(value["$ref"].split("/")[-1], schema["$defs"])
+                    pending.extend(value.values())
+                elif isinstance(value, list):
+                    pending.extend(value)
+
+    def test_native_skill_supplies_schema_and_collects_tool_free_workers(self):
+        text = (HERE.parent / "skills/kc-pr-review/SKILL.md").read_text()
+        profiled = text.split("### Default-off profiled Lite route", 1)[1].split("Accept PR number", 1)[0]
+        for required in ("--prepare-only", "result_schema", "kc-pr-flow:review-capability-worker",
+                         "--collect-dir", "--attempt-result", "--response-file", "cancel"):
+            self.assertIn(required, profiled)
+        worker = (HERE.parent / "agents/review-capability-worker.md").read_text()
+        frontmatter = worker.split("---", 2)[1].splitlines()
+        self.assertIn("tools: []", frontmatter)
+        self.assertIn("model: inherit", frontmatter)
+        self.assertIn("result_schema", worker)
+        self.assertIn("CLAUDE.md", worker)
+        self.assertIn("return JSON `null`", worker)
+        self.assertIn("`incomplete_required` is not an allowed capability assessment", worker)
+
     def test_document_tables_are_generated_from_their_authorities(self):
         document = (
             HERE.parents[1]
@@ -263,77 +501,30 @@ class PlannerTests(unittest.TestCase):
             self.assertIn(contract, profiled)
         self.assertIn('--pr-archetype "$REVIEW_PR_ARCHETYPE"', profiled)
         self.assertIn("Step 4d", profiled)
-        command = (
-            skill.split(
-                "For the profiled route, call the repository-owned adapter once:", 1
-            )[1]
-            .split("```bash\n", 1)[1]
-            .split("```", 1)[0]
-        )
-        with tempfile.TemporaryDirectory() as root:
-            root = pathlib.Path(root)
-            stub = root / "claude"
-            stub.write_text('#!/bin/sh\ntouch "' + str(root / "called") + '"\nexit 1\n')
-            stub.chmod(0o755)
+        command = skill.split("For the profiled route, call the repository-owned adapter once:", 1)[1]
+        command = command.split("```bash\n", 1)[1].split("```", 1)[0]
+        with self.launcher(enabled="off") as (root, environment):
             result = subprocess.run(
-                ["bash", "-c", command],
-                check=False,
-                cwd=root,
-                capture_output=True,
-                text=True,
-                env={
-                    **os.environ,
-                    "PATH": str(root) + os.pathsep + os.environ["PATH"],
-                    "CLAUDE_PLUGIN_ROOT": str(HERE.parent),
-                    "KC_PR_FLOW_REVIEW_TYPED": "off",
-                    "KC_PR_FLOW_PROFILED_REVIEW": "off",
-                    "REVIEW_WORKTREE": str(root),
-                    "REVIEW_RUN_DIR": str(root / "run"),
-                    "REVIEW_MODEL": "fixture",
-                },
+                ["bash", "-c", command], check=False, cwd=root,
+                capture_output=True, text=True, env=environment,
             )
             self.assertEqual(json.loads(result.stdout)["route"], "legacy")
-            self.assertFalse((root / "called").exists())
         self.assertRaises(protocol.Invalid, protocol.validate, "abc\n", "Token")
 
     def test_unsupported_material_is_missing_not_invalid_caller_schema(self):
         for content in (b"value = '\xe9'\n", b"x" * 1048577 + b"\n"):
-            with (
-                self.subTest(size=len(content)),
-                self.prepared_results() as (prepared, _),
-            ):
+            with self.subTest(size=len(content)), self.prepared_results() as (prepared, _):
                 repo = prepared["repository_path"]
                 (pathlib.Path(repo) / "example.py").write_bytes(content)
                 protocol.git(repo, "commit", "-qam", "unsupported material")
-                identity = {
-                    **self.identity,
-                    "head_sha": protocol.git(repo, "rev-parse", "HEAD")
-                    .decode()
-                    .strip(),
-                }
+                identity = {**self.identity, "head_sha": protocol.git(repo, "rev-parse", "HEAD").decode().strip()}
                 result = protocol.prepare(
-                    repo,
-                    identity,
-                    pathlib.Path(prepared["directory"]).with_name("unsupported"),
-                    "lite",
+                    repo, identity, pathlib.Path(prepared["directory"]).with_name("unsupported"), "lite",
                 )
-                binding = next(
-                    b
-                    for b in result["bundle"]["bindings"]
-                    if b["evidence_class"] == "diff_hunks"
-                )
-                self.assertEqual(
-                    binding,
-                    {
-                        "evidence_class": "diff_hunks",
-                        "refs": [],
-                        "missing": "unsupported",
-                    },
-                )
+                binding = next(b for b in result["bundle"]["bindings"] if b["evidence_class"] == "diff_hunks")
+                self.assertEqual(binding, {"evidence_class": "diff_hunks", "refs": [], "missing": "unsupported"})
                 self.assertEqual(protocol.requests(result), [])
-                self.assertEqual(
-                    protocol.finish(result, [])["reason"], "receipt_incomplete"
-                )
+                self.assertEqual(protocol.finish(result, [])["reason"], "receipt_incomplete")
 
     def cli(self, environment=None, **options):
         arguments = [
@@ -348,6 +539,7 @@ class PlannerTests(unittest.TestCase):
             capture_output=True, text=True, check=False,
         )
         self.assertNotIn("Traceback", run.stderr)
+        self.assertTrue(run.stdout, run.stderr)
         return run, json.loads(run.stdout)
 
     def test_malformed_cli_artifacts_always_return_valid_terminals(self):
@@ -538,35 +730,18 @@ class PlannerTests(unittest.TestCase):
             self.assertFalse(run_dir.exists())
 
     def test_terminal_matrix_and_invalid_intake_echo_are_closed(self):
-        review = {
-            key: value
-            for key, value in self.identity.items()
-            if key not in ("schema", "intake_id")
-        }
+        review = {key: value for key, value in self.identity.items() if key not in ("schema", "intake_id")}
         review.update(run_id="run-test", config_hash="c" * 64, review_key="d" * 64)
         pairs = {
-            "REQUEST_INVALID": [
-                "schema_failure",
-                "unsupported_major",
-                "invalid_identity",
-            ],
+            "REQUEST_INVALID": ["schema_failure", "unsupported_major", "invalid_identity"],
             "NEEDS_CLARIFICATION": ["missing_intent"],
             "ABORTED_STALE": ["stale_head"],
             "INVALIDATED": ["identity_change", "configuration_change"],
-            "ABORTED_INCOMPLETE": [
-                "required_gap",
-                "contradiction",
-                "unsupported_expansion",
-                "receipt_incomplete",
-                "projection_mismatch",
-            ],
+            "ABORTED_INCOMPLETE": ["required_gap", "contradiction", "unsupported_expansion",
+                                   "receipt_incomplete", "projection_mismatch"],
         }
         for status, reasons in pairs.items():
-            identity = (
-                review
-                if status in ("INVALIDATED", "ABORTED_INCOMPLETE")
-                else self.identity
-            )
+            identity = review if status in ("INVALIDATED", "ABORTED_INCOMPLETE") else self.identity
             for reason in reasons:
                 with self.subTest(status=status, reason=reason):
                     value = protocol.terminal(identity, status, reason)
@@ -574,18 +749,12 @@ class PlannerTests(unittest.TestCase):
                     for other_status in pairs.keys() - {status}:
                         self.assertRaises(protocol.Invalid, protocol.validate,
                                           {**value, "status": other_status}, "RunTerminal")
-        for reason in ("schema_failure", "invalid_identity"):
-            protocol.validate(
-                protocol.terminal({"pr_number": "bad"}, "REQUEST_INVALID", reason),
-                "RunTerminal",
-            )
-        with self.assertRaises(protocol.Invalid):
-            protocol.validate(
-                protocol.terminal(
-                    {"pr_number": "bad"}, "REQUEST_INVALID", "unsupported_major"
-                ),
-                "RunTerminal",
-            )
+        for reason in ("schema_failure", "invalid_identity", "unsupported_major"):
+            with self.subTest(invalid_intake=reason):
+                expected = self.assertRaises(protocol.Invalid) if reason == "unsupported_major" else contextlib.nullcontext()
+                with expected:
+                    value = protocol.terminal({"pr_number": "bad"}, "REQUEST_INVALID", reason)
+                    protocol.validate(value, "RunTerminal")
 
     @contextlib.contextmanager
     def prepared_results(self, commands=(), head_content="value = 2\n", goal_kind="pr_body", **prepare_options):
@@ -621,45 +790,10 @@ class PlannerTests(unittest.TestCase):
                 **prepare_options,
             )
             self.assertFalse(any("pointer" in p for p in prepared["shape_bundle"]["pointers"]))
-            self.assertNotEqual(
-                prepared["bundle"]["identity"]["run_id"], self.identity["intake_id"]
-            )
-            self.assertEqual(
-                prepared["bundle"]["parent_hash"],
-                prepared["shape_bundle"]["bundle_hash"],
-            )
+            self.assertNotEqual(prepared["bundle"]["identity"]["run_id"], self.identity["intake_id"])
+            self.assertEqual(prepared["bundle"]["parent_hash"], prepared["shape_bundle"]["bundle_hash"])
             requests = protocol.requests(prepared)
-            results = [
-                {
-                    **{
-                        key: request[key]
-                        for key in (
-                            "identity",
-                            "plan_rev",
-                            "plan_hash",
-                            "bundle_revision",
-                            "bundle_hash",
-                            "capability",
-                        )
-                    },
-                    "schema": "kc-pr-flow.capability-result/v1",
-                    "answers": [
-                        {
-                            "question_id": request["question_ids"][0],
-                            "assessment": "clean",
-                            "evidence_refs": [p["id"] for group in request["evidence"] for p in group["material"]],
-                            "contributions": [],
-                        }
-                    ],
-                    "status": "succeeded",
-                    "usage": {
-                        "input_tokens": None,
-                        "output_tokens": None,
-                        "total_tokens": None,
-                    },
-                }
-                for request in requests
-            ]
+            results = [clean_reply(request) for request in requests]
             yield prepared, results
 
     def test_selected_evidence_binds_the_runtime_identity_and_rehydrates(self):
@@ -668,31 +802,13 @@ class PlannerTests(unittest.TestCase):
             program = (
                 "assert __import__('sys').argv[1] == '--max-budget-usd'; "
                 "assert 0 < float(__import__('sys').argv[2]) <= 0.5; "
-                "import json,sys; r=json.load(sys.stdin); results="
-                + repr(results)
-                + "; print(json.dumps({'structured_output':next(x for x in results if x['capability']==r['capability']), 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01, 'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))"
+                "import json,sys\n" + inspect.getsource(clean_reply) + inspect.getsource(provider_reply)
+                + "print(json.dumps(provider_reply(clean_reply(json.load(sys.stdin)))))"
             )
             results = protocol.dispatch(prepared, [sys.executable, "-c", program], 6)
             self.assertEqual(len(results), len(requests))
             for event in prepared["audit"][1:]:
-                envelope = protocol.read_json(
-                    pathlib.Path(prepared["directory"])
-                    / f"provider-{event['capability']}-1.json"
-                )
-                request = next(
-                    r
-                    for r in protocol.requests(prepared)
-                    if r["capability"] == event["capability"]
-                )
-                self.assertEqual(
-                    event["payload_sha256"],
-                    protocol.digest(
-                        {"request": request, "provider_envelope": envelope}
-                    ),
-                )
-                self.assertEqual(envelope["total_cost_usd"], 0.01)
-                self.assertEqual(envelope["usage"]["input_tokens"], 10)
-                self.assertEqual(envelope["usage"]["output_tokens"], 2)
+                self.assert_provider_report(prepared, event)
             finished = self.finish(prepared, results)
             self.assertEqual(finished["decision"]["coverage"], "complete")
             self.assertTrue(finished["decision"]["approve_eligible"])
@@ -712,14 +828,7 @@ class PlannerTests(unittest.TestCase):
                 ("head.observed", {"head_sha": identity["head_sha"]}),
                 ("authorization.granted", {**posting_binding, "event": "APPROVE"}),
                 ("post.intent", posting_binding),
-                (
-                    "post.result",
-                    {
-                        "idempotency_key": idempotency,
-                        "outcome": "posted_reconciled",
-                        "remote_review_id": 42,
-                    },
-                ),
+                ("post.result", {"idempotency_key": idempotency, "outcome": "posted_reconciled", "remote_review_id": 42}),
             )
             projected_file, posting_start = self.posting_log(prepared, payloads)
             projected = protocol.posting_projection(prepared, projected_file)
@@ -728,11 +837,7 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(projected["run_id"], posting_start["run_id"])
             self.assertNotEqual(projected["run_id"], prepared["identity"]["run_id"])
             self.assertEqual(event_file.read_text().count("post.result"), 0)
-            print(
-                "Mechanical runtime timing (ns):",
-                finished["mechanical_timing_ns"],
-                flush=True,
-            )
+            print("Mechanical runtime timing (ns):", finished["mechanical_timing_ns"], flush=True)
 
     def test_cross_capability_high_finding_merges_and_forces_request_changes(self):
         with self.prepared_results() as (prepared, results):
@@ -771,26 +876,13 @@ class PlannerTests(unittest.TestCase):
             returned = protocol.dispatch(prepared, command)
             self.assertEqual(returned, [])
             for attempts in prepared["attempts"].values():
-                self.assertEqual(
-                    [a["result"] for a in attempts],
-                    ["transient_failure", "terminal_failure"],
-                )
+                self.assertEqual([a["result"] for a in attempts], ["transient_failure", "terminal_failure"])
             invocations = [e for e in prepared["audit"] if e["event_type"] == "invoked"]
             self.assertEqual(len(invocations), 2 * len(protocol.requests(prepared)))
-            self.assertTrue(
-                all(
-                    e["finished_ns"] >= e["started_ns"] > 0
-                    and e["evidence_payload_bytes"] > 0
-                    for e in invocations
-                )
-            )
+            self.assertTrue(all(e["finished_ns"] >= e["started_ns"] > 0 and e["evidence_payload_bytes"] > 0
+                                for e in invocations))
             collated = self.collate(prepared, returned)
-            self.assertTrue(
-                all(
-                    len(o["adapter_attempts"]) == 2
-                    for o in collated["policy"]["obligations"]
-                )
-            )
+            self.assertTrue(all(len(o["adapter_attempts"]) == 2 for o in collated["policy"]["obligations"]))
             self.assertEqual(len(collated["observation"]["lanes"]), len(invocations))
 
     def test_provider_shapes_and_large_monotonic_readings_keep_attempts(self):
@@ -844,9 +936,7 @@ class PlannerTests(unittest.TestCase):
             )
             changed = copy.deepcopy(prepared)
             changed["bundle"]["pointers"][0]["material"] = "invented evidence"
-            changed["bundle"]["bundle_hash"] = protocol.digest(
-                {k: v for k, v in changed["bundle"].items() if k != "bundle_hash"}
-            )
+            rehash_bundle(changed)
             self.assertRaises(protocol.Invalid, protocol.requests, changed)
             results[0]["answers"][0]["question_id"] = "not_assigned"
             self.assertEqual(
@@ -866,38 +956,19 @@ class PlannerTests(unittest.TestCase):
                 sorted(t["question_id"] for t in decision["terminals"]),
                 prepared["plan"]["questions"],
             )
-            changed = copy.deepcopy(decision)
-            changed["terminals"].pop()
-            self.assertEqual(
-                protocol.check_decision(prepared, changed)["reason"], "required_gap"
-            )
-            changed = copy.deepcopy(decision)
-            changed["terminals"][0]["state"] = "contradictory_required"
-            self.assertEqual(
-                protocol.check_decision(prepared, changed)["reason"], "contradiction"
-            )
+            for reason in ("required_gap", "contradiction"):
+                changed = copy.deepcopy(decision)
+                if reason == "required_gap":
+                    changed["terminals"].pop()
+                else:
+                    changed["terminals"][0]["state"] = "contradictory_required"
+                self.assertEqual(protocol.check_decision(prepared, changed)["reason"], reason)
 
     def test_default_off_flags_and_unsupported_profiles_do_not_dispatch(self):
-        for typed, profiled in (
-            (None, None),
-            ("on", None),
-            (None, "on"),
-            ("ON", "on"),
-            ("on", "true"),
-        ):
-            self.assertFalse(
-                protocol.enabled(
-                    {
-                        "KC_PR_FLOW_REVIEW_TYPED": typed,
-                        "KC_PR_FLOW_PROFILED_REVIEW": profiled,
-                    }
-                )
-            )
-        self.assertTrue(
-            protocol.enabled(
-                {"KC_PR_FLOW_REVIEW_TYPED": "on", "KC_PR_FLOW_PROFILED_REVIEW": "on"}
-            )
-        )
+        for typed, profiled in ((None, None), ("on", None), (None, "on"), ("ON", "on"), ("on", "true"), ("on", "on")):
+            with self.subTest(typed=typed, profiled=profiled):
+                environment = {"KC_PR_FLOW_REVIEW_TYPED": typed, "KC_PR_FLOW_PROFILED_REVIEW": profiled}
+                self.assertEqual(protocol.enabled(environment), (typed, profiled) == ("on", "on"))
         for profile in ("standard", "full", "custom"):
             routed = protocol.plan({**self.request, "requested": profile})
             self.assertEqual(
@@ -963,11 +1034,7 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(
                 finished["policy"]["obligations"][0]["fallback"]["status"], "provided"
             )
-            print(
-                "Mechanical runtime timing (ns):",
-                finished["mechanical_timing_ns"],
-                flush=True,
-            )
+            print("Mechanical runtime timing (ns):", finished["mechanical_timing_ns"], flush=True)
 
     def test_missing_required_evidence_skips_every_lane_and_refuses_receipt(self):
         with self.prepared_results() as (prepared, _results):
@@ -978,9 +1045,7 @@ class PlannerTests(unittest.TestCase):
             for binding in bundle["bindings"]:
                 if binding["evidence_class"] == "diff_hunks":
                     binding.update(refs=[], missing="unavailable")
-            bundle["bundle_hash"] = protocol.digest(
-                {k: v for k, v in bundle.items() if k != "bundle_hash"}
-            )
+            rehash_bundle(prepared)
             self.assertEqual(protocol.requests(prepared), [])
             self.assertEqual(
                 protocol.dispatch(prepared, ["/this/command/must/not/run"]), []
@@ -1008,10 +1073,8 @@ if not marker.exists():
 if not RECOVER:
     print('null')
     sys.exit(1)
-answer = next(x for x in RESULTS if x['capability'] == r['capability'])
-print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'total_cost_usd':0.01,
-                  'usage':{'input_tokens':10,'output_tokens':2,'cache_creation_input_tokens':0,'cache_read_input_tokens':0}}))
-""".replace("RECOVER", repr(recover)).replace("RESULTS", repr(results))
+""".replace("RECOVER", repr(recover)) + inspect.getsource(clean_reply) + inspect.getsource(provider_reply)
+                program += "print(json.dumps(provider_reply(clean_reply(r))))"
                 returned = protocol.dispatch(
                     prepared, [sys.executable, "-c", program, str(directory)]
                 )
@@ -1027,21 +1090,8 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                         [a["result"] for a in prepared["attempts"][capability]],
                         ["transient_failure", "succeeded" if recover else "terminal_failure"],
                     )
-                    for ordinal in (1, 2):
-                        raw = (directory / f"provider-{capability}-{ordinal}.raw").read_text()
-                        envelope = protocol.read_json(directory / f"provider-{capability}-{ordinal}.json")
-                        self.assertEqual(json.loads(raw), envelope)
-                        if ordinal == 1 or not recover:
-                            self.assertEqual(raw, "null\n")
-                            self.assertIsNone(envelope)
-                        else:
-                            self.assertEqual(envelope["total_cost_usd"], 0.01)
-                            self.assertEqual(envelope["usage"]["input_tokens"], 10)
-                            self.assertEqual(envelope["usage"]["output_tokens"], 2)
-                        event = next(e for e in events if e["capability"] == capability and e["attempt"] == ordinal)
-                        self.assertEqual(event["payload_sha256"], protocol.digest(
-                            {"request": request, "provider_envelope": envelope}
-                        ))
+                for event in events:
+                    self.assert_provider_report(prepared, event)
 
     def test_unquoted_critical_is_advisory_not_a_blocker(self):
         with self.prepared_results() as (prepared, results):
@@ -1070,12 +1120,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
                 self.assertEqual("Advisory" in checked["rendered"]["body"], advisory)
 
     def test_selected_mechanical_commands_run_once_and_record_unavailable(self):
-        command = {
-            "id": "missing",
-            "argv": ["/this/command/is/missing"],
-            "cwd": ".",
-            "timeout_seconds": 1,
-        }
+        command = {"id": "missing", "argv": ["/this/command/is/missing"], "cwd": ".", "timeout_seconds": 1}
         with self.prepared_results([command]) as (prepared, _results):
             observations = prepared["bundle"]["test_observations"]
             self.assertEqual(len(observations), 1)
@@ -1089,12 +1134,8 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
             self.assertEqual(rejected["reason"], "invalid_identity")
             self.assertFalse(rejected_dir.exists())
             for manifest in prepared["plan"]["manifests"]:
-                self.assertEqual(
-                    protocol.canonical(
-                        protocol.capability_view(manifest["id"])["manifest"]
-                    ),
-                    protocol.canonical(manifest),
-                )
+                self.assertEqual(protocol.canonical(protocol.capability_view(manifest["id"])["manifest"]),
+                                 protocol.canonical(manifest))
 
     def test_authority_mutations_refuse_before_approval(self):
         bank = protocol.catalog()
@@ -1116,9 +1157,7 @@ print(json.dumps({'structured_output':answer, 'modelUsage':{'fixture':{}}, 'tota
             ):
                 changed = copy.deepcopy(prepared)
                 changed["bundle"][field] = value
-                changed["bundle"]["bundle_hash"] = protocol.digest(
-                    {k: v for k, v in changed["bundle"].items() if k != "bundle_hash"}
-                )
+                rehash_bundle(changed)
                 self.assertRaises(protocol.Invalid, protocol.requests, changed)
             for field, value in (("bundle_revision", 1), ("answers", [])):
                 changed = copy.deepcopy(results)

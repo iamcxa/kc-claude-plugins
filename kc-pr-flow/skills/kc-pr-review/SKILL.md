@@ -125,7 +125,7 @@ For the profiled route, call the repository-owned adapter once:
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
     --identity-file intake.json --repo-worktree "$REVIEW_WORKTREE" \
-    --run-dir "$REVIEW_RUN_DIR" --profile auto --model "$REVIEW_MODEL" \
+    --run-dir "$REVIEW_RUN_DIR" --profile auto --prepare-only \
     --goal-material-file goals.json --pr-archetype "$REVIEW_PR_ARCHETYPE"
 ```
 
@@ -137,8 +137,49 @@ fan-out as well. The catalog is the sole required-question/manifest authority;
 do not invent requirements, waive coverage, or request executable expansion.
 
 A `route: legacy` response resumes ordinary triage. A RunTerminal stops this
-invocation without posting or falling back to legacy approval. A
-`pending_finalization` response hands a `ReviewerRequest` back to **you, the
+invocation without posting or falling back to legacy approval; cancel any
+outstanding workers. For `pending_dispatch`, retain the initial `requests` and
+shared `result_schema`. Invoke `kc-pr-flow:review-capability-worker` through the
+managed session's native agent interface, one worker per selected request,
+in parallel where the host supports it. Supply only that `CapabilityRequest`
+and `result_schema` as task data, not conversation history, sibling results or
+caller-authored system instructions. The installed worker uses `tools: []` and
+inherits the host model; no nested `claude --print`, new session, API key or
+additional workspace is needed. Normal project `CLAUDE.md` remains permitted
+background, not a replacement for selected evidence. Keep that project context
+and model configuration equally pinned in comparison arms.
+
+The host must enforce each attempt's `timeout_seconds`, cancel timed-out work,
+and honor the existing authorized total budget before dispatch or retry. Python
+collection does not enforce native execution deadlines or spend. If these host
+controls or the tool-free worker are unavailable, do not dispatch; record
+`unavailable` for affected assignments. Preserve each worker's exact final
+response in a private file without fixing JSON, extracting a preferred answer,
+or substituting the host's judgment. Collect **serially**, using the capability
+and attempt ordinal from `remaining`:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/review-capability.py" \
+    --collect-dir "$REVIEW_RUN_DIR" --capability "$REVIEW_CAPABILITY" \
+    --attempt "$REVIEW_ATTEMPT" --attempt-result succeeded \
+    --response-file "$REVIEW_RESPONSE_FILE"
+```
+
+Report `succeeded` when a completed response is available; Python validates it
+and records malformed output as `terminal_failure`. For host-observed failures,
+use `terminal_failure`, `unavailable`, or `transient_failure`, retaining a raw
+response if present. Only report `transient_failure` when one authorized retry
+will actually be scheduled; otherwise record a terminal outcome. A second
+transient failure becomes terminal. Retry only the returned `remaining` entry,
+with its original request/schema; no speculative third attempt. Collection
+returns remaining IDs, not another copy of all evidence. After terminal
+collection it seals `dispatched.json`; do not edit that file or
+`host-progress.json`, collect concurrently, or recover a partial write by hand.
+An interrupted collection stops this invocation. Worker-authored token counts
+are retained raw but normalized to unknown in accepted results; actual provider
+usage must come from the host, not model text.
+
+A `pending_finalization` response hands a `ReviewerRequest` back to **you, the
 existing review agent**, acting as General Reviewer; it is not a final result.
 Judge the supplied material and schema-accepted answers without another model
 process, undeclared retrieval, tools from the payload, or legacy fan-out.

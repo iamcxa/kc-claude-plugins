@@ -10,6 +10,8 @@
 - **Reviewer coverage seam repair accepted:** 2026-09-07, Captain chat `確認`, approving the two-file runtime implementation/test extension after the reproduced incomplete-confirmation failure.
 - **Local submission packaging accepted:** 2026-09-07, Captain chat `可以`, approving two local commits: the prior automation withdrawal with required-field consolidation, followed by goal/reviewer integration with its runtime repair. No push or merge is authorized.
 - **Ordinary PR classification connection accepted:** 2026-09-08, Captain chat `批准`, approving classification propagation, closed contracts, regression tests and necessary documents; no runtime changes, new plugin/workflow or paid validation.
+- **Host-native dispatch connection accepted:** 2026-09-08, Captain chat `就這樣`, approving the reduced nine-file local implementation and no-model tests described below.
+- **Host-native local submission accepted:** 2026-09-08, Captain chat `確認`, approving one local commit of the nine reviewed files; no push, Cloud/model run or merge is authorized.
 
 ## Revision authority and delivery sequence
 
@@ -87,6 +89,25 @@ guards. Test accepted ordinary types, rejected inputs and frozen-configuration
 drift with local fixtures. Preserve all existing limits and leave runtime/posting,
 workflows, catalog, versions, shared state and historical pins unchanged. This
 approval does not authorize another commit, push, live model call or blind run.
+
+The host-native connection permits a prepare/collect path in the existing
+capability script, its tests, the existing profiled skill block, and one shared
+tool-free capability worker. Reuse the current request, result and attempt
+contracts; do not change schemas or catalog. The other five files are this spec,
+root ARCHITECTURE, and plugin CLAUDE, README and runtime guide. Project CLAUDE.md
+rules are permitted shared background, pinned equally for compared arms; they
+do not replace the selected evidence required to support review conclusions.
+The managed host owns native dispatch, timeout/cancellation and budget handling;
+Python validates and records returned attempts before the existing reviewer and
+confirmation path. Retain the independent CLI path as an optional backend, not
+a managed-session authentication prerequisite. Test with local fake responses;
+live native-agent behavior, cancellation and cost remain unverified. Preserve
+default-off behavior, required questions, retry limits and existing publication
+owners. No model/cloud calls, new isolation, dependencies, workflow/state/pin
+changes, commit, push or merge are authorized by this local approval.
+Captain chat `同意` subsequently authorizes consolidation of duplicate test
+setup and assertions to stay within the existing line limits, without removing
+verification cases or increasing those limits.
 
 | Accepted design delta | Preserved boundary |
 |---|---|
@@ -572,8 +593,11 @@ the derived decision, not by a `RunTerminal` success value.
 
 The catalog stores each capability's public manifest. A generated capability
 view exposes that manifest plus operating instructions; it is not a second
-authority and is checked byte-for-byte against the catalog fields. Private
-provider prompts and unrelated tools remain outside the caller context.
+authority and is checked byte-for-byte against the catalog fields. Invocation
+exposes the typed request/result contract, not unrelated tools or private
+provider instructions. This is not a claim of provider-level context isolation:
+the managed worker may load normal project `CLAUDE.md` background, equally
+pinned across compared arms. That context cannot replace selected evidence.
 
 ```yaml
 capability:
@@ -676,6 +700,36 @@ to the measured route; that role need not add a separate agent process.
 No grouping is claimed faster until development evidence
 supports it; deterministic collation remains validation, not a substitute judge.
 
+### Managed-host connection
+
+The local connection keeps the existing schemas and catalog unchanged.
+`--prepare-only` exports selected `CapabilityRequest` values and a shared
+`result_schema` containing the reachable `CapabilityResult` definitions. The
+managed session dispatches one `review-capability-worker` per request, with no
+tools and the inherited host model. It supplies request/schema as task data,
+not as a caller-authored system prompt or copied conversation. The independent
+CLI backend remains optional; native dispatch needs no nested CLI authentication.
+
+The host owns per-attempt deadlines, cancellation and authorized total spend;
+Python does not enforce native execution controls. Missing controls or worker
+availability leave assignments unavailable. The host preserves exact response
+bytes and serializes `--collect-dir` calls. Collection checks frozen bindings,
+assigned ordinals, one transient retry, schema, evidence and question coverage.
+Malformed responses fail; JSON null is an unsuccessful response when a worker
+cannot support an answer, never a new capability-result variant. A second
+transient failure is terminal. Valid results are ordered by frozen assignment.
+
+`host-progress.json` is private, replaceable in-flight state; completing the
+assignments creates `dispatched.json` for the existing reviewer/finalizer.
+This adds no runtime event types or crash-recovery/storage-integrity guarantee.
+Concurrent collection or hand-repair of a partial write is unsupported; an
+interrupted invocation stops. Worker-authored usage is retained raw but becomes
+unknown in accepted results. Native invocation clocks are unknown, not the
+collection command's duration. Host telemetry and operator-observed endpoints
+remain the sources for actual usage and full-review time, respectively.
+Local fake-response tests verify the connection, not native model behavior,
+cancellation, cost, prompt isolation or review-speed improvement.
+
 For the documented future expansion contract, the window opens only after all
 plan-revision-1 capability results bound to evidence-bundle revision 2 are
 accepted or terminal. Requests are collected
@@ -686,7 +740,7 @@ requires a new accepted route and changes to current requiredness rules.
 
 ## General Reviewer rules
 
-Initial dispatch returns `ReviewerRequest` at the existing pending boundary.
+Completed dispatch returns `ReviewerRequest` at the existing pending boundary.
 The current outer review agent supplies `ReviewerJudgment` through
 `--finalize-dir` and `--reviewer-judgment-file`; no additional reviewer process
 is launched. `checked_judgments` verifies binding, reasons, evidence and ordinal
@@ -1037,6 +1091,11 @@ wall time before any cost claim or workflow-trigger widening.
   confirmation. Removed automation tests do not waive the supervised acceptance
   rules above; historical results remain historical and the integrity failure
   remains unresolved rather than repaired.
+- Native-connection fixtures preserve CLI finalization and sealed bytes; test
+  raw malformed/misbound responses, assignment/order rejection, transient retry
+  recovery/exhaustion, unavailable work, frozen identity/configuration drift,
+  unsupported expansion, unknown usage/clocks and result-schema closure.
+  Static worker/skill checks do not stand in for managed-host execution.
 - Supervised acceptance checks the retained start/end observations and complete
   outputs against the frozen PR/version bindings, preserves failed or interrupted
   attempts, and independently recomputes the five-pair arithmetic. Missing or
@@ -1045,3 +1104,42 @@ wall time before any cost claim or workflow-trigger widening.
   arm-hidden substantive evidence. Calibrate the independent judge on known
   defects, false alarms and insufficient evidence, including human-checked cases.
   Green schemas or timings cannot replace the blind quality decision.
+
+## Local native-connection verification (2026-09-08)
+
+These results cover the uncommitted changes on `6b2a714ab1762afa0529e7dae2f8b94e71c75ba6`
+in the original `kc-pr-review-capability-pilot` worktree, not a published commit
+or a live Cloud run. The nine-file submission scope is:
+
+| File | Change |
+|---|---|
+| `kc-pr-flow/scripts/review-capability.py` | Native prepare/collect, existing-result schema export, bound failures and unknown usage |
+| `kc-pr-flow/scripts/review-capability.test.py` | Shared fixtures/assertions and native success/failure regressions |
+| `kc-pr-flow/skills/kc-pr-review/SKILL.md` | Native worker dispatch and serial collection in the existing Lite block |
+| `kc-pr-flow/agents/review-capability-worker.md` | One tool-free worker with fixed request/result instructions |
+| `ARCHITECTURE.md` | Host versus deterministic-collector ownership |
+| `kc-pr-flow/CLAUDE.md` | Entry point, agent inventory and host-control requirements |
+| `kc-pr-flow/README.md` | Optional CLI and unverified live-compatibility boundary |
+| `kc-pr-flow/docs/review-runtime.md` | Invocation, collection and evidence limits |
+| This specification | Accepted local scope and verification record |
+
+Executed with Python 3.12.12 in a temporary venv, using local fake model responses:
+
+- `python kc-pr-flow/scripts/review-capability.test.py`: 45 tests passed in
+  488.885 seconds. This is suite duration, not review-speed evidence.
+- Targeted rerun of invalid native replies, worker/skill wiring and generated
+  document tables after the final null-response case: 3 tests passed in 15.046
+  seconds. The null reply is retained as failed work, not clean coverage.
+- `bash kc-pr-flow/scripts/review-runtime.test.sh --case profiled-receipt`:
+  9 passed, 0 failed.
+- `bash kc-pr-flow/scripts/review-ablation.test.sh`: 82 passed, 0 failed.
+- The pre-consolidation inventory's 44 tests remain; one transient-retry recovery
+  test was added. Shared setup, response fixtures and finalization assertions
+  replaced duplication; ordinary assertion layout was also tightened.
+
+No schema, catalog, runtime, workflow, version, posting or historical-pin file
+changed in this local scope. CI was not modified and per-PR cost was not measured.
+At verification time, no commit, push, model call, Cloud dispatch or merge had been performed. Native agent
+behavior, cancellation/budget enforcement, actual provider cost and the five
+blind PR pairs remain unverified; no speed, quality-promotion or completed-goal
+claim follows from these local results.

@@ -202,12 +202,17 @@ The state root is configurable and defaults to the platform state directory unde
 | Human confirmation and remote posting | Existing interactive review flow; the runtime cannot bypass or execute either |
 | Required coverage | Capability terminal states plus explicit evidence-bound fallback |
 | Remote mutation | GitHub review identity, reconciled to a deterministic local intent |
-| Provider-specific invocation | Adapter only; it cannot mutate core lifecycle state directly |
+| Provider-specific invocation | Managed host or optional CLI adapter; neither directly mutates core lifecycle state |
 
 ### Profiled Lite adapter
 
 `review-capability.py` owns deterministic planning, selected evidence acquisition,
-bounded parallel calls, one transient retry, and validated question-level collation. Its
+attempt/result validation and question-level collation. The managed review host
+dispatches tool-free native workers from `--prepare-only` requests and collects
+their raw responses serially with `--collect-dir`. It owns native timeouts,
+cancellation and authorized spend; the Python collector does not enforce them.
+An independently authenticated CLI backend remains optional, not a prerequisite.
+Both transports retain at most one retry after a transient failure. The
 closed schema and catalog live under `kc-pr-flow/schemas`; requiredness is read
 from that catalog, never copied into skill prose. Shape and explicit goal material
 in revision 1 bind the intake; revision 2 binds the runtime-minted review identity and selected
@@ -228,6 +233,10 @@ findings populate blocker references; they force REQUEST_CHANGES. Side-car
 invocation timing and provider reports have no approval authority and do not
 add runtime event types. Private invocation artifacts are distinct from the
 durable metadata-only runtime log.
+The native collector's private `host-progress.json` is replaceable in-flight
+state, not a new runtime event store or a crash-recovery/tamper-proof mechanism.
+The same permitted project `CLAUDE.md` background must be pinned across compared
+arms. Native worker behavior and host controls still require live validation.
 
 The original ablation runner remains a separate instrument; it does not own the
 supervised Lite comparison. The operator retains frozen versions and inputs,

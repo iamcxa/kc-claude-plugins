@@ -66,7 +66,12 @@ timings; see docs/review-runtime.md for the measurement boundary.
 The default-off profiled Lite adapter requires both `KC_PR_FLOW_REVIEW_TYPED=on`
 and `KC_PR_FLOW_PROFILED_REVIEW=on`. It freezes explicit goal text with intake,
 plans required questions before collecting selected repository evidence, and
-hands results to the existing review agent for typed judgment. Finalization
+uses tool-free native workers in the managed review session, then hands their
+validated results to the existing review agent for typed judgment. A separate
+`claude --print` login is not required on this route; the CLI backend remains
+optional. The host owns timeout/cancellation and authorized spend. Project
+`CLAUDE.md` is permitted background and must match between comparison arms.
+Local fake-response tests do not establish live host compatibility. Finalization
 validates per-claim reasons/evidence, preserves confirmed severity and required
 gaps, then returns to the existing typed confirmation and posting owners.
 Standard/Full remain on the ordinary route; Custom is unavailable.

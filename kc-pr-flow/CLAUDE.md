@@ -56,7 +56,13 @@ Lite acceptance uses operator-observed start/end messages, not automated runner
 timings; see docs/review-runtime.md for the measurement boundary.
 
 **Profiled Lite trigger:** both typed and profiled review flags must be exact
-`on` before dispatch. The skill calls `scripts/review-capability.py`; schema and
+`on` before dispatch. The skill calls `scripts/review-capability.py --prepare-only`,
+dispatches `review-capability-worker` through the managed host with the emitted
+request/result schema, then collects unedited replies serially with `--collect-dir`.
+The worker is tool-free and inherits the host model; project `CLAUDE.md` remains
+permitted background. Native timeouts/cancellation and budget limits belong to
+the host, not Python collection. Missing host controls leave work unavailable.
+The independent CLI backend is optional. Schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and
 `schemas/review-capability-catalog-v1.json`. Intake accepts source-bound goal
 text via `--goal-material-file`; the current review agent judges the returned
@@ -228,10 +234,11 @@ records that proof with the arm/prompt/model pins in its runner manifest.
 
 ## Internal Agents
 
-Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.
+Built-in subagents dispatched by kc-pr-review. Security agents use Trail of Bits methodologies.
 
 | Agent | Dispatched by | Condition | Purpose |
 |-------|--------------|-----------|---------|
+| `review-capability-worker` | kc-pr-review (profiled Lite) | Both exact-on flags and native host controls | One tool-free, schema-bound capability; live host behavior not yet verified |
 | `tob-security-reviewer` | kc-pr-review (Step 4-ToB-a) | Always | Differential security review: risk triage, blast radius, adversarial modeling |
 | `tob-supply-chain-checker` | kc-pr-review (Step 4-ToB-b) | Dependency files changed | Supply chain risk audit + insecure defaults detection |
 | `tob-actions-auditor` | kc-pr-review (Step 4-ToB-c) | Workflow files changed | AI agent CI/CD security: 9 attack vectors |

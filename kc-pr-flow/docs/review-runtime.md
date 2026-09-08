@@ -341,8 +341,8 @@ For schemas, identities, storage rules, command contracts, and failure semantics
 ```mermaid
 flowchart LR
   intake[Exact-head shape and explicit goals] --> plan[Required-question plan]
-  plan --> evidence[Selected evidence and tests] --> calls[Bounded capability calls]
-  calls --> reviewer[Existing review agent judgment]
+  plan --> evidence[Selected evidence and tests] --> calls[Host-native tool-free workers]
+  calls --> collect[Serial raw-response validation] --> reviewer[Existing review agent judgment]
   reviewer --> receipt[Existing receipt projection] --> decision[Existing typed decision]
   decision --> confirm[Human confirmation] --> posting[Existing posting owner]
 ```
@@ -369,7 +369,36 @@ fetch or authenticate those sources. It checks their identity/content binding
 and revision continuity; these are not Git-only runtime evidence pointers.
 No supplied goal, blank text or a locator alone leaves goal alignment incomplete.
 
-The adapter returns legacy routing, an explicit RunTerminal, or
+Use `--prepare-only` on the managed-host route, without `--model`. It returns
+`pending_dispatch`, selected `requests`, a shared `result_schema` containing only
+the existing result definition's reachable contracts, and attempt deadlines.
+The installed `review-capability-worker` receives one request/schema through
+the host's native agent interface. No independent Claude CLI login is needed;
+omitting `--prepare-only` retains the optional authenticated CLI backend.
+Project `CLAUDE.md` is permitted shared background, pinned equally across
+comparison arms, not a substitute for assigned evidence. Native workers have
+no tools and inherit the host model. Schema-only delivery does not prove that
+the provider isolates all background context.
+
+The host, not Python, enforces native deadlines, cancels timed-out work and
+honors the already-authorized total budget. Without those controls, record
+unavailable work instead of launching it. Preserve unedited worker response
+bytes and collect one attempt at a time with `--collect-dir RUN_DIR --capability
+CAPABILITY --attempt ORDINAL --attempt-result succeeded --response-file FILE`.
+Malformed or unsupported replies become failed attempts, not clean answers.
+The host may report `terminal_failure` or `unavailable` without a response;
+use `transient_failure` only when one authorized retry will actually run.
+The second transient failure is terminal. Never collect concurrently or start
+an unassigned/third attempt. The skill contains the dispatch/collection sequence.
+
+Private `host-progress.json` is replaceable in-flight state. Once all assignments
+are terminal, collection creates `dispatched.json` and hands off to judgment.
+These files add no runtime event types, recovery, storage-integrity guarantee
+or release authority. Partial-write recovery and live host cancellation/budget
+enforcement are not verified by local fake-response tests. Stop an interrupted
+invocation rather than editing its progress or silently launching another run.
+
+Preparation/collection can also return legacy routing, an explicit RunTerminal, or
 `pending_finalization` with a `ReviewerRequest`. The existing outer review agent
 returns a `ReviewerJudgment`, then invokes `--finalize-dir RUN_DIR
 --reviewer-judgment-file FILE` to obtain the bound decision and confirmation.
@@ -384,7 +413,7 @@ Read-only posting projections bind the reviewed repository, base, head and
 configuration but retain the posting owner's independent run ID; posting events
 cannot extend the sealed review receipt. An absent terminal outcome stays absent.
 
-Initial dispatch writes `dispatched.json` and pauses for the outer reviewer;
+Completed dispatch writes `dispatched.json` and pauses for the outer reviewer;
 it does not return approval. For an existing interactive human fallback, record
 a bound `ManualFallback` array and refresh the reviewer request using
 `--finalize-dir RUN_DIR --defer-confirmation --fallbacks-file FILE`. Judge this
@@ -400,8 +429,11 @@ approval; confirmed High/Critical findings still require REQUEST_CHANGES even
 with a gap in the same question. The event vocabulary and posting owner are unchanged.
 
 Ambiguous repeated quote anchors stay in the review body without an invented
-inline line. Audit clocks remain Python integer nanoseconds without a floating
-point safe-integer bound; they describe local work, not the acceptance interval.
+inline line. Known audit clocks remain Python integer nanoseconds without a
+floating point safe-integer bound; they describe local work, not the acceptance
+interval. Native invocation clocks stay null because collection did not observe
+execution. Worker-authored usage stays in raw reports but is normalized to null
+in accepted results; only the host's actual provider telemetry can supply usage.
 
 Lite acceptance uses the operator-supervised start-message to completed-review
 end-message interval defined in the [protocol spec](../../docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md#blind-evaluation-and-promotion).
