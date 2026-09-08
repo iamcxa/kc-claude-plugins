@@ -121,6 +121,20 @@ negotiation.
 If the points do not fit the date, say so before the date proves it. Cutting scope is
 the captain's decision and needs the arithmetic in front of them.
 
+**Say where the number came from.** `judgement` is a reading of the ticket: it orders
+work and cannot promise a date. `calibrated` means a reference class was measured and
+the scale moved to fit it. A judged number presented as arithmetic is the false
+precision this whole contract exists to refuse -- one plan reported 34 points against a
+three-day milestone with nothing behind any of them, and it read like a measurement.
+
+Calibrating needs finished work, so a first plan is always judged. What it costs to
+become calibrated is small and specific: for three tickets that finished, record the
+change size that landed and the time from starting to reviewable, then move the scale.
+The tracker already holds both, and a repository's own merged history gives the
+reference class -- in one of them the median change was 61 lines across 3 files and the
+top quarter began at 367 lines across 7, which places a ticket far better than any
+adjective.
+
 ## Write what the linter reads
 
 `docs/plan-flow/plan-lint.py` judges the result. Its format is not negotiable and

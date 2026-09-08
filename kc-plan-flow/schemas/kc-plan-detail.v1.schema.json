@@ -96,7 +96,8 @@
           "acceptance",
           "non_goals",
           "supersedes",
-          "estimate"
+          "estimate",
+          "estimate_basis"
         ],
         "properties": {
           "title": {
@@ -141,6 +142,13 @@
             "minimum": 1,
             "maximum": 13,
             "description": "Fibonacci points, on the technical work only. It answers exactly one question -- whether a milestone fits before its date -- and is not a velocity, a commitment, or a measure of anyone. A value issue carries none: it has no work of its own, so estimating it double-counts its children."
+          },
+          "estimate_basis": {
+            "enum": [
+              "judgement",
+              "calibrated"
+            ],
+            "description": "Where the number came from. 'judgement' is a reading of the ticket and orders work; it cannot promise a date. 'calibrated' means a reference class was measured -- finished tickets of this kind, their real change size and the time from starting to reviewable -- and the scale adjusted against it. The first plan to carry estimates reported 34 points against a three-day milestone with no calibration behind any of them, which reads as arithmetic and was a guess."
           }
         }
       }
