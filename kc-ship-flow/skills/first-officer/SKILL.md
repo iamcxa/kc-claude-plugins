@@ -26,7 +26,9 @@ the stage that follows.
 Advance one commissioned `docs/ship` batch entity through its six stages in order, calling each
 stage's installed script from `docs/ship/README.md`'s per-stage lines:
 
-1. `dispatched` — `kc-ship-flow/scripts/fenced-dispatch.sh`
+1. `dispatched` — `kc-ship-flow/scripts/fenced-dispatch.sh` dispatches a dev entity's stage (`spacedock
+   dispatch build` builds the message and carries the stage's own model, if any); the Evidence block
+   for that entity arrives later, from its `validation` stage, not from this dispatching layer.
 2. `accepted` — `kc-ship-flow/scripts/accept-evidence.sh`
 3. `reviewed` — `kc-ship-flow/scripts/open-pr.sh`, then `kc-ship-flow/scripts/disposition.py`. When the
    diff touches a dependency manifest or lockfile, dispatch the supply-chain lane

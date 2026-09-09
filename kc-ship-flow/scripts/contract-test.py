@@ -69,6 +69,7 @@ for test_name, test_command in STATION_TESTS:
 
 run(["bash", str(SCRIPTS / "merge-station.test.sh")], "kc-ship-flow merge-station.test.sh")
 run(["bash", str(SCRIPTS / "ci-covers.test.sh")], "kc-ship-flow ci-covers.test.sh")
+run(["bash", str(SCRIPTS / "fenced-dispatch.test.sh")], "kc-ship-flow fenced-dispatch.test.sh")
 
 # --- ci-covers.sh: DEV-149's two named fixtures, registered directly (not
 # only through ci-covers.test.sh) -- a workflow naming the check but never
@@ -737,6 +738,64 @@ require(
     forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
     "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
     f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
+)
+
+# --- DEV-156: fenced-dispatch.sh dispatches a dev entity's stage through
+# `spacedock dispatch build` rather than a hand-written message. Two fixtures
+# registered directly -- a stage that declares a model and one that does not
+# -- plus a fixture whose named stage is undeclared, to prove the station
+# refuses (exit 4) rather than falling back to an inline message.
+fenced_dispatch_script = SCRIPTS / "fenced-dispatch.sh"
+dispatch_fixtures = FIXTURES / "dispatch"
+for fixture_name in ["task-with-model.md", "task-with-model", "task-without-model.md", "task-without-model", "task-build-fails.md", "task-build-fails"]:
+    require((dispatch_fixtures / fixture_name).exists(), f"missing fixture: dispatch/{fixture_name}")
+
+with_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-with-model.md"),
+        "--stage", "implementation", "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    with_model_result.returncode == 0 and "--model sonnet" in with_model_result.stdout,
+    "fenced-dispatch.sh --dry-run did not carry --model from the task-with-model fixture's stage: "
+    f"exit={with_model_result.returncode} stdout={with_model_result.stdout!r} stderr={with_model_result.stderr!r}",
+)
+
+without_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-without-model.md"),
+        "--stage", "implementation", "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout and "--effort" not in without_model_result.stdout,
+    "fenced-dispatch.sh --dry-run carried --model/--effort for the task-without-model fixture, "
+    f"whose stage declares neither: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
+)
+
+build_fails_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-build-fails.md"),
+        "--stage", "nonexistent-stage", "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    build_fails_result.returncode == 4 and "dispatch build failed" in build_fails_result.stdout,
+    "fenced-dispatch.sh did not refuse (exit 4, 'dispatch build failed') when spacedock dispatch "
+    f"build exits non-zero: exit={build_fails_result.returncode} stdout={build_fails_result.stdout!r}",
 )
 
 print("kc-ship-flow contract: PASS")
