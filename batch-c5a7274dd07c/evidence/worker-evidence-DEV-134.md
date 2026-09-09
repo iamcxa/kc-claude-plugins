@@ -11,3 +11,6 @@ WITHOUT_IT_REMOVED_VARIANT: git show de64053c:kc-ship-flow/scripts/accept-eviden
 WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2
 SELF_CHECK: accept-evidence: ACCEPT exit 0
 BLOCKER: none. Residual: kc-ship-flow/README.md named in the Brief does not exist (FO Brief error; references/stations/accept-evidence.md is the doc).
+
+## Round 2 (c1bd1c03)
+is_tracked_path takes CANDIDATE_SHA and tests `git cat-file -e "$CANDIDATE_SHA:$path"`; new contract case: throwaway repo, checkout at base, candidate-only.ts exists only at CANDIDATE_SHA → ACCEPT. Worker proof and FO's independent mutation both flip the case. AC-1 0 / AC-2 1 / contract-test 0.
