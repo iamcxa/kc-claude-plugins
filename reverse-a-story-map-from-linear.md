@@ -5,7 +5,7 @@ status: implementation
 source: captain
 product: kc-team-ops
 planning-window:
-planning-outcome:
+planning-outcome: "POC answered: a tracker reverses into a usable story-map draft, but the backbone, the one-journey sentence, the persona's pain and the ownership names are not in a tracker and must come from people. The captain judged the reversed backbone recognisable and close to the Linear plan. Compared against an independently drawn board of the same system, the two proved orthogonal by protagonist — the reversed map is the publisher's loop, the independent one is the reviewer's — which is the alignment signal the POC set out to test. Route-back: absorb four card types into one board and demote the journey board to a generated per-release contract."
 sprint: journey-map-poc
 sprint-readiness: ready
 started: 2026-09-09T03:45:05Z
