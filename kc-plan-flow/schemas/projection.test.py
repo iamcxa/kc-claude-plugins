@@ -71,10 +71,19 @@ check("Accepted outcome parses back", LA.section(body, "Accepted outcome") == va
 # A value issue's acceptance is already the proof its parts work together, so a separate
 # integration-proof field said the same thing twice on every issue that had one, five of five.
 check("no separate proof section is rendered", "## Integration proof" not in body)
-check("an assigned value issue does not drift", P.issue_drift(body, value_issue, milestone, "Kent") == [])
+# The assignment is a field on both sides now, so the check compares them rather than
+# asking only whether one exists. It caught "Kent" against "Kent Chen (KC)" the hour it landed.
+owned = {**value_issue, "assignee": "Kent Chen (KC)"}
+check("a matching assignee does not drift", P.issue_drift(body, owned, milestone, "Kent Chen (KC)") == [])
 check("an unassigned value issue is drift, because nobody runs its acceptance",
-      ("acceptance owner", "unassigned", "someone who is not building underneath it")
-      in P.issue_drift(body, value_issue, milestone, None))
+      ("acceptance owner", "unassigned", "Kent Chen (KC)")
+      in P.issue_drift(body, owned, milestone, None))
+check("an assignee the plan did not name is drift",
+      ("acceptance owner", "Somebody Else", "Kent Chen (KC)")
+      in P.issue_drift(body, owned, milestone, "Somebody Else"))
+check("the user story opens the body when the plan carries one",
+      P.issue_body({**owned, "user_story": "As a tester, I want a story, so that it opens the body."},
+                   milestone, None).startswith("As a tester,"))
 
 defect = {"title": "A latent walk", "acceptance": "Nothing above the created directory changes mode.",
           "milestone": "A", "kind": "defect", "protects": value_issue["title"]}

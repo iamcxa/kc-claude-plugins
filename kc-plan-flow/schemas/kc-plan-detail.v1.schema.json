@@ -149,6 +149,14 @@
               "calibrated"
             ],
             "description": "Where the number came from. 'judgement' is a reading of the ticket and orders work; it cannot promise a date. 'calibrated' means a reference class was measured -- finished tickets of this kind, their real change size and the time from starting to reviewable -- and the scale adjusted against it. The first plan to carry estimates reported 34 points against a three-day milestone with no calibration behind any of them, which reads as arithmetic and was a guess."
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Titles of sub-issues under the same value that must land first. This is what makes 'the topmost sub-issue' answerable -- the rule about who owes a handoff needed an order no step produced."
           }
         }
       }
@@ -157,7 +165,6 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "receipt",
         "result",
         "unjudged",
         "known_limits"
@@ -165,13 +172,16 @@
       "properties": {
         "receipt": {
           "type": "string",
-          "pattern": "^[0-9a-f]{16,64}$"
+          "pattern": "^[0-9a-f]{16,64}$",
+          "description": "The receipt the linter produced, once there is something to lint. Absent on a first projection and filled on the run after: the issues have to exist before they can be judged, and requiring it up front made the documented loop impossible to complete on its first pass."
         },
         "result": {
           "enum": [
             "PASS",
-            "FAIL"
-          ]
+            "FAIL",
+            "not-yet-linted"
+          ],
+          "description": "`not-yet-linted` is the honest state of a document whose issues have not been created. It is not a pass and it is not a failure; treating it as either is how an unlinted plan gets quoted as a linted one."
         },
         "unjudged": {
           "type": "array",

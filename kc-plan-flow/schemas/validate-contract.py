@@ -58,6 +58,11 @@ if name == "kc-plan-value/v1":
             problems.append(f"no milestone claims this exit condition: {e[:60]!r}")
     # "In the data, independence and inattention are the same absence" -- the skill says so and
     # nothing checked it, so a plan could stay silent about why nothing blocks an issue.
+    # A value issue has no work of its own, so an unassigned one has nobody to run its
+    # acceptance. The field existed and was optional, which closed half the hole.
+    for i, issue in enumerate(doc.get("issues", [])):
+        if issue.get("kind") == "value" and not issue.get("assignee"):
+            problems.append(f"issues/{i}: a value issue with no assignee has nobody to run its acceptance")
     blocked = {e.get("blocked") for e in doc.get("dependencies", [])}
     for i, issue in enumerate(doc.get("issues", [])):
         if issue.get("title") not in blocked and not issue.get("independent_because"):

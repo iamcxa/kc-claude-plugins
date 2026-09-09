@@ -112,9 +112,10 @@ def owned_sections(issue, milestone):
 
 def issue_drift(live_description, issue, milestone, assignee=None):
     drifted = []
-    if issue["kind"] == "value" and not assignee:
-        # A value issue's assignee is who runs its acceptance. Unassigned, nobody does.
-        drifted.append(("acceptance owner", "unassigned", "someone who is not building underneath it"))
+    planned_assignee = issue.get("assignee")
+    if issue["kind"] == "value" and (assignee or "") != (planned_assignee or ""):
+        drifted.append(("acceptance owner", assignee or "unassigned",
+                        planned_assignee or "someone who is not building underneath it"))
     for heading, planned in owned_sections(issue, milestone).items():
         found = section_body(live_description, heading)
         if found is None:
@@ -177,12 +178,14 @@ def dependency_drift(plan, existing):
 
 def issue_body(issue, milestone, value_identifier):
     parts = []
+    if issue.get("user_story"):
+        parts.append(issue["user_story"])
     if issue["kind"] != "value":
         noun = "defect" if issue["kind"] == "defect" else "measurement"
         target = value_identifier or issue.get("protects", "")
         parts.append(
             f"**A {noun}. It delivers no user-visible value on its own; it protects "
-            f"{target}.** It is an issue rather than a sub-issue for that reason."
+            f"{target}.**"
         )
     parts.append("## Accepted outcome\n\n" + issue["acceptance"])
     body = "\n\n".join(parts)
@@ -227,6 +230,8 @@ def detail_drift(live, sub):
             drifted.append((f"{label} line", line[len(label) + 1:].strip(), value))
     return drifted
 
+
+USERS_Q = """query { users(first: 100) { nodes { id name } } }"""
 
 PROJECT_Q = """query($id: String!) { project(id: $id) {
   id name content
@@ -319,6 +324,7 @@ def project_detail(plan, project_id, apply, reconcile, cycle_id):
                       {"i": parent["identifier"]})["issue"]
     for kind, target, payload in writes:
         if kind == "sub-issue create":
+            people = {u["name"]: u["id"] for u in gql(USERS_Q)["users"]["nodes"]}
             fields = {"teamId": team[0]["id"], "projectId": project_id, "parentId": parent_node["id"],
                       "title": payload["title"], "description": payload["description"]}
             if parent_node["projectMilestone"]:
@@ -426,7 +432,9 @@ def main():
             if not ruling.get("ruled_on"):
                 die(f"no captain ruling recorded, so {issue['title']!r} would be created from a draft "
                     "nobody saw. Put the draft in front of them, record what they ruled, then run this again.")
-            writes.append(("issue create", issue["milestone"], {"title": issue["title"], "description": body}))
+            writes.append(("issue create", issue["milestone"],
+                           {"title": issue["title"], "description": body,
+                            "assignee": issue.get("assignee")}))
 
     # Relations are fetched only for the issues the plan names: asking for them across a
     # whole project exceeded the provider's query complexity limit at 250 by 20.
@@ -541,14 +549,20 @@ def main():
         elif kind in ("dependency unstated", "issue aligned", "stale section", "tracker only, stale section"):
             continue
         elif kind == "issue create":
+            people = {u["name"]: u["id"] for u in gql(USERS_Q)["users"]["nodes"]}
             milestone_id = milestone_ids.get(target)
             if not milestone_id:
                 die(f"milestone {target!r} has no id, so {payload['title']!r} cannot be placed")
-            gql("mutation($t: String!, $p: String!, $m: String!, $ti: String!, $d: String!) {"
-                " issueCreate(input: {teamId: $t, projectId: $p, projectMilestoneId: $m,"
-                " title: $ti, description: $d}) { issue { identifier } } }",
-                {"t": team_id, "p": project_id, "m": milestone_id,
-                 "ti": payload["title"], "d": payload["description"]})
+            fields = {"teamId": team_id, "projectId": project_id, "projectMilestoneId": milestone_id,
+                      "title": payload["title"], "description": payload["description"]}
+            if payload.get("assignee"):
+                who = people.get(payload["assignee"])
+                if not who:
+                    die(f"the tracker has no member named {payload['assignee']!r}; an assignee that "
+                        "cannot be resolved would create an issue nobody runs the acceptance for")
+                fields["assigneeId"] = who
+            gql("mutation($f: IssueCreateInput!) { issueCreate(input: $f) { issue { identifier } } }",
+                {"f": fields})
         print(f"done  {kind:22} {target}")
     return 0
 

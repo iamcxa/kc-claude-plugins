@@ -177,6 +177,15 @@ ACs` because the criteria had no bullet marker.
   silently rewrites that into a link whose URL carries its own colons. Name the
   revision by short SHA and the search by symbol.
 - A `Supersedes:` line naming an issue, or `none, searched: <query>`
+- **At least one criterion has to name something that runs.** The rule matches the words
+  `exit`, `script`, `log`, `run` or `prints` across an issue's criteria, and an issue where
+  none of them appears reads as having no runnable acceptance however many criteria it
+  carries. This plugin's own fixture failed it with two criteria until someone read the
+  linter rather than the list. Do not pad a criterion with the word "run" to pass -- restate
+  it as the thing somebody executes, which is what it should have said.
+- **The `Re-verified:` line needs at least three words after the colon**, because the parser
+  splits on whitespace and reads the last token as the date. A one-word command plus a date
+  is two tokens and is refused as a format error, not as a missing line.
 
 The `Re-verified:` line is a paste of what you already ran, not a ceremony
 performed afterwards. If you cannot paste one, you did not check.
@@ -217,6 +226,13 @@ Until then, read them.
 python3 docs/plan-flow/plan-lint.py fetch <project-id> <snapshot.json>
 python3 docs/plan-flow/plan-lint.py lint <snapshot.json> [receipt.json]
 ```
+
+**On a first projection there is no receipt yet, and that is not a failure.** The issues have
+to exist before anything can judge them, so the document goes out with
+`result: not-yet-linted` and no `receipt`, the projector creates the issues, and the run
+after that fills both. Requiring a receipt up front made this loop impossible to finish on
+its first pass, which is the shape of every ordering bug in this contract: a step asking
+for the output of a step that comes later.
 
 Run it from the repository root; it resolves
 `kc-dev-flow/scripts/linear-admission.py` relative to the working directory.
@@ -271,6 +287,7 @@ sub_issues:
     non_goals: [<…>]
     re_verified: <command then ISO date, no colon and no issue identifier; may live in the thread instead>
     supersedes: <issue, or "none, searched: …">
+    depends_on: [<titles of sub-issues under this value that must land first>]
     estimate: <fibonacci points, technical work only>
     estimate_basis: judgement | calibrated
 lint:

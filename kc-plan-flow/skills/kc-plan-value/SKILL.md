@@ -401,9 +401,16 @@ milestones:
     target: <YYYY-MM-DD>
     description: <140 characters or fewer, one line>
     satisfies_exit: [<which of the project's exit conditions this one makes true>]
+archaeology:
+  - question: <as asked>
+    classification: <the tier it came back as>
+    ref: <the ref it was answered against>
+    changed_the_cut: <what this answer moved, or that it moved nothing>
 issues:
   - title: <one value point>
+    user_story: <"As <who>, I want <what>, so that <why>." -- the issue's first line>
     acceptance: <something a person does>
+    assignee: <who runs the acceptance, spelled as the tracker spells them>
     milestone: <name>
     kind: value | defect | measurement
     protects: <for defect and measurement: the title of the value issue>

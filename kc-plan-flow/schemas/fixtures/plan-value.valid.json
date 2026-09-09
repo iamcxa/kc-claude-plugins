@@ -40,14 +40,17 @@
       "acceptance": "A user runs the client against a local file and gets back a link that works for anyone holding it",
       "milestone": "A - Publishing works from the terminal",
       "kind": "value",
-      "independent_because": "nothing it needs is missing on the trunk; the archaeologist classified its surface WORKING"
+      "independent_because": "nothing it needs is missing on the trunk; the archaeologist classified its surface WORKING",
+      "assignee": "Kent Chen (KC)",
+      "user_story": "As a terminal user, I want to share what I am reading, so that someone else can comment on it."
     },
     {
       "title": "Credential minting does not widen permissions outside the publish path",
       "acceptance": "Publishing a file whose path holds no state-root ancestor leaves unrelated parent directories untouched",
       "milestone": "A - Publishing works from the terminal",
       "kind": "defect",
-      "protects": "A terminal user publishes a file and gets a link"
+      "protects": "A terminal user publishes a file and gets a link",
+      "assignee": "Kent Chen (KC)"
     }
   ],
   "questions_for_the_archaeologist": [
@@ -69,5 +72,13 @@
     "changed": [
       "the second value was split out of the first, which had been one ticket spanning both"
     ]
-  }
+  },
+  "archaeology": [
+    {
+      "question": "What on the trunk can send bytes off the machine?",
+      "classification": "MISSING",
+      "ref": "origin/main@9434db51",
+      "changed_the_cut": "the first value stopped being a port and became a build"
+    }
+  ]
 }

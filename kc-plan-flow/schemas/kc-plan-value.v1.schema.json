@@ -176,6 +176,17 @@
             "type": "string",
             "minLength": 1,
             "description": "Required when this issue is blocked by nothing: the fact that makes it independent. Silence and 'nobody considered it' are identical in the data; this tells them apart."
+          },
+          "assignee": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Who runs this issue's acceptance, exactly as the tracker spells their name. Required on a value issue: it has no work of its own, so the assignment means one concrete thing. It was prose in a body once, beside the field saying the same name, and the two disagreed within the hour."
+          },
+          "user_story": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "^As .+, I want .+, so that .+$",
+            "description": "'As <who>, I want <what>, so that <why>.' The first line of the issue, before any heading. A reader who stops there knows what it is for."
           }
         }
       }
@@ -247,6 +258,44 @@
             "minLength": 1
           },
           "description": "What the ruling changed. An empty list is a real answer; an absent one means nobody asked."
+        }
+      }
+    },
+    "archaeology": {
+      "type": "array",
+      "description": "What the archaeologist answered before the cut was ruled on. It lived nowhere: the value document had no field for a report, so the captain ruled on evidence the ruled-on artifact could not hold, and the next seat re-excavated it.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question",
+          "classification",
+          "ref"
+        ],
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "classification": {
+            "enum": [
+              "WORKING",
+              "WORKING_UNIT_UNPROVEN",
+              "EXISTS_BROKEN",
+              "STUB",
+              "MISSING",
+              "LOCATED"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "changed_the_cut": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What this answer moved. An answer that changed nothing is worth recording; an answer nobody can trace to a decision is worth asking why it was asked."
+          }
         }
       }
     }

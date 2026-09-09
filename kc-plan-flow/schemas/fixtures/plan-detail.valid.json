@@ -20,7 +20,7 @@
       "gap": "The key resolves the destination itself, in two places that cannot share one resolution",
       "accepted_outcome": "A reader presses one key, sees what publishing will do, confirms, and gets a working link",
       "acceptance": [
-        "- **AC-1** - The key publishes through the client and the status row shows the returned link",
+        "- **AC-1** - A test run against the real pair shows the key publishing through the client, with the returned link on the status row",
         "- **AC-2** - The reader composes its prompt without resolving a destination of its own"
       ],
       "non_goals": [
@@ -30,18 +30,17 @@
       "re_verified": "git grep publishKeyBinding and resolveRelayProfile at 1ea84f8e 2026-09-07",
       "supersedes": "none, searched the project for publish key and consent prompt",
       "estimate": 3,
-      "estimate_basis": "judgement"
+      "estimate_basis": "judgement",
+      "depends_on": []
     }
   ],
   "lint": {
-    "receipt": "7638e9d53de20c44",
-    "result": "FAIL",
+    "result": "not-yet-linted",
     "unjudged": [
-      "issues outside the admitted cycle"
+      "every issue in this document; none exists yet"
     ],
     "known_limits": [
-      "L9-value-issue-has-no-file-surface",
-      "L2-single-cycle"
+      "L9-value-issue-has-no-file-surface"
     ]
   }
 }
