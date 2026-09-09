@@ -1,0 +1,26 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#400",
+ "reviewed_head": "fc046e98bbd95359a6536594f0d5084e43e22b0d",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "fc046e98",
+   "verified_by": "FO: display-name-only workflow refused with (a) at head; unscoping the region (cat instead of jobs_region, 2 sites) fails ci-covers.test"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "fc046e98",
+   "verified_by": "FO: on: pull_request trigger refused with (a); real job id covered"
+  },
+  {
+   "id": "F3",
+   "outcome": "fixed",
+   "commit": "fc046e98",
+   "verified_by": "exit-code comment block removed; 17 comment lines remain (usage/limit block)"
+  }
+ ],
+ "pending": []
+}

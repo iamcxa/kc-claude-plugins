@@ -1,6 +1,6 @@
 ## Evidence
-DISPATCH_TOKEN: dev149-2026-09-09
-CANDIDATE_SHA: 62dbffea58cff3db1ee089a6b2e977ab0dd5635d
+DISPATCH_TOKEN: dev149-2026-09-09-r2
+CANDIDATE_SHA: fc046e98bbd95359a6536594f0d5084e43e22b0d
 BRANCH: feature/dev-149-kc-ship-flow-merge-verdict-verify-the-named-ci-check
 BASE_SHA: 68447554384ae047a41bcd5b8e5a483b52698408
 FILES: kc-ship-flow/scripts/ci-covers.sh, ci-covers.test.sh, contract-test.py, fixtures/monorepo-uncovered/**, fixtures/monorepo-covered/**, skills/first-officer/SKILL.md, references/stations/merge-station.md, references/stations/ci-covers.md
@@ -13,3 +13,5 @@ BLOCKER: none
 
 ## FO verification at 62dbffea58cff3db1ee089a6b2e977ab0dd5635d
 AC-1 exit 1 with the (b) reason; AC-2 exit 0; ci-covers.test 8/8; contract-test 0. Pair re-run by script: retained 0; with the variant (initial state flipped to matched) the uncovered fixture passes, so the test exits 1 — the pair proves the check exists. 19 comment lines in ci-covers.sh (usage/limit block the Brief asked for; reviewer to judge). 10 files +377.
+
+## Round 2 (fc046e98): (a) and (b) scoped to the jobs region; cases i (display-name-only) and j (on: pull_request) refuse; exit-code comment block removed. FO: reproduced F1/F2 as refusals at head and a real job as covered; unscoping the region fails ci-covers.test.
