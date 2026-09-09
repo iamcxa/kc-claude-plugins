@@ -18,3 +18,4 @@ Order: DEV-156 → DEV-151 → DEV-152 (#399, pre-built, enters at accepted) →
 - 2026-09-09 — **DEV-153 verdict: MERGE #403 (head 2d54370c).** Review no findings; FO ACs green. Captain merges by hand.
 - 2026-09-09 — DEV-154 accepted at c4bd54cb (pair restated to a grep so the removed leg is non-zero); PR #404 opened, body per template. Review dispatched. DEV-155 dispatched (last build of the batch).
 - 2026-09-09 — #404 review: five findings (missed intent.md, guard scope, two stale claims, fallback depth). Repair round 1 dispatched.
+- 2026-09-09 — DEV-155 accepted at fdc4d6ff (pair restated: base station as the removed variant); PR #405 opened, body per template. Review running.
