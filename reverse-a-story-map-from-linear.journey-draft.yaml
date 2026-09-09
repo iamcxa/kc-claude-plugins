@@ -1,0 +1,170 @@
+# DRAFT — not yet rendered. See the stage report in
+# reverse-a-story-map-from-linear.md for why: the CODE worktree assigned to this
+# dispatch (montpellier-v1/.worktrees/spacedock-ensign-reverse-a-story-map-from-linear,
+# cut from bb6f737b) carries no kc-team-ops/skills/kc-journey-map at all, so
+# lib/journey-render.mjs does not exist there to run. This file is authored
+# against the schema documented in kc-team-ops/skills/kc-journey-map/references/
+# canvas.md and journey.example.yaml (read from origin/iamcxa/journey-map-skill-merge,
+# read-only, no writes made there). Intended path once unblocked:
+# docs/journey/share-artifacts-from-linear.yaml, room slug: linear-share-artifacts-tui.
+#
+# Source: Linear project "Share artifacts publicly from the TUI"
+# https://linear.app/recce/project/share-artifacts-publicly-from-the-tui-804c3e2d83d5
+# Read 2026-09-09 via linear-mcp (workspace: Recce). 48 issues, 5 milestones. No writes made to Linear.
+#
+# MARKING CONVENTION (this file has no dedicated schema field for it, so it is
+# carried in two places every reader will see): every steps[].note below states
+# tracker-or-invented explicitly in its first clause. There is no partial case —
+# see the header note on `steps` for why.
+
+journey: share-artifacts-from-linear
+title: Share artifacts publicly from the TUI — reversed from Linear
+
+persona: >
+  A terminal user publishes the artifact they are reading, hands out one link, and
+  reads the feedback back in the same TUI. — read from the tracker: this is the
+  project's own summary field, verbatim.
+
+# All six activities below are INVENTED. Linear has no activity/backbone concept —
+# only issues, parent/child links, and milestones (used as releases below). The
+# backbone is synthesized from the flow diagrams embedded in DRC-4474, DRC-4489,
+# DRC-4502, DRC-4490 and DRC-4491's own descriptions (mermaid flowcharts each issue
+# author drew to explain their own ticket), not read from any tracker field.
+steps:
+  - id: get-the-tools
+    card: "Get the tools"
+    activity: "Get the tools"
+    note: >
+      INVENTED. No Linear field names this step; inferred as the necessary
+      precondition to DRC-4489's own opening line ("install the tools and
+      publish from the command line").
+    stories:
+      - {id: drc-4489-install-and-publish, card: "Install the tools and publish from the command line", release: a1}
+      - {id: drc-4429-ship-more-than-one-program, card: "The release pipeline ships more than one program", release: a1}
+
+  - id: publish-and-hand-out-link
+    card: "Publish and hand out a link"
+    activity: "Publish and hand out a link"
+    note: >
+      INVENTED. Synthesized from DRC-4474's and DRC-4489's own mermaid diagrams,
+      both of which draw "publish" and "hand out the link" as one motion.
+    stories:
+      - {id: drc-4474-publish-one-keypress, card: "Publish with one keypress and hand out the link", release: a2}
+      - {id: drc-4415-publish-key-calls-client, card: "The publish key calls the client", release: a2}
+      - {id: drc-4411-relay-client-publishes, card: "The relay client publishes, and says what it supports", release: a1}
+      - {id: drc-4416-relay-tells-expiry, card: "Relay tells the client the expiry and the window it will use"}
+      - {id: drc-4417-measure-publish-cas-loss, card: "Measure what the publish CAS actually loses, before repairing it"}
+      - {id: drc-4488-script-publish-expiry, card: "A script publishes to relay and is told when the link expires"}
+      - {id: drc-4496-refuses-unsafe-print, card: "The relay client refuses what it cannot safely print or resolve"}
+      - {id: drc-4498-publish-via-proxy, card: "The relay client publishes from a network that requires a proxy"}
+      - {id: drc-4497-credential-travels-clear, card: "The publish credential travels in clear to a remote http relay"}
+      - {id: drc-4495-credential-survives-crash, card: "The relay client's credential survives a crash, a strict umask, and a race"}
+      - {id: drc-4316-credential-minting-chmod, card: "Credential minting walks up chmodding parents (closed — folded into DRC-4411)"}
+      - {id: drc-4312-status-line-hints-shared, card: "The publish status line hints that it is shared (done)", release: a1}
+      - {id: drc-4296-upgrade-relay-and-smoke, card: "Upgrade the production Relay and add a deployment smoke test (done)", release: a1}
+
+  - id: open-and-read
+    card: "Open the link and read"
+    activity: "Open the link and read"
+    note: >
+      INVENTED. Synthesized from DRC-4490's and DRC-4502's own mermaid diagrams
+      (browser and terminal variants of the same "open the link, read it" motion).
+    stories:
+      - {id: drc-4490-open-link-installed-nothing, card: "Open the link and read, having installed nothing", release: a1}
+      - {id: drc-4335-open-lands-in-review, card: "Opening a share link lands the reviewer in the review, not an empty page", release: a1}
+      - {id: drc-4494-outside-reviewer-no-asking, card: "A reviewer from outside the project uses the surface without asking how", release: b}
+      - {id: drc-4418-diagram-runtime-download, card: "A reviewer downloads a diagram runtime they did not ask for", release: b}
+      - {id: drc-4419-room-looks-like-reader, card: "The Room looks like the same product as the reader", release: b}
+      - {id: drc-4336-renderer-states-support, card: "State what the web renderer supports, refuse the rest by name (closed — already on trunk)", release: b}
+      - {id: drc-4341-renders-as-author-wrote, card: "A shared document renders the way its author wrote it"}
+      - {id: drc-4284-persist-reviewer-identity, card: "Persist lightweight reviewer identity in the web client (done)", release: c}
+      - {id: drc-4285-load-returning-comments, card: "Load returning reviewer comments in the web review flow (done)", release: c}
+      - {id: drc-4313-tui-says-reviewer-view, card: "A reviewer's TUI says it is a reviewer view (closed — duplicate of DRC-4412)", release: c}
+      - {id: drc-4502-review-own-terminal, card: "A reviewer reviews in their own terminal, with no browser at any step", release: d}
+      - {id: drc-4412-terminal-reviewer-go, card: "The terminal reviewer, in Go", release: d}
+      - {id: drc-4297-rr-refuses-stale-sr, card: "rr refuses an sr too old for the handoff it needs"}
+
+  - id: leave-feedback
+    card: "Leave feedback"
+    activity: "Leave feedback"
+    note: >
+      INVENTED. Only two Linear issues describe this motion on its own (most
+      "leave feedback" work is bundled inside DRC-4490, placed above); split out
+      here because Patton's backbone treats reading and responding as different
+      verbs even when one ticket covers both.
+    stories:
+      - {id: drc-4420-comment-form-survives-clear, card: "Prove the comment form survives a cleared selection", release: b}
+      - {id: drc-4287-feedback-survives-visits, card: "Prove reviewer feedback survives across visits, end to end", release: b}
+      - {id: drc-4430-returning-reviewer-adds, card: "A returning reviewer can add to what they already said (closed — already on trunk)", release: b}
+
+  - id: read-feedback-back
+    card: "Read the feedback back"
+    activity: "Read the feedback back"
+    note: >
+      INVENTED. Synthesized from DRC-4491's own mermaid diagram ("every result"
+      flowing back to the owner) and DRC-4506's title.
+    stories:
+      - {id: drc-4491-owner-reads-every-comment, card: "The owner reads back every comment the share collected", release: a1}
+      - {id: drc-4413-rr-list-and-feedback, card: "rr list and rr feedback, so the owner reads what came back", release: a1}
+      - {id: drc-4506-reader-shows-collected-feedback, card: "The reader shows the feedback a share collected", release: a2}
+      - {id: drc-4286-retrieve-feedback-on-return, card: "Retrieve all artifact feedback when the owner returns (closed — duplicate of DRC-4413)", release: c}
+      - {id: drc-4288-e2e-owner-feedback-retrieval, card: "Add end-to-end coverage for owner feedback retrieval (closed — duplicate)", release: c}
+
+  - id: revoke-the-share
+    card: "Revoke the share"
+    activity: "Revoke the share"
+    note: >
+      INVENTED. Read from DRC-4501's accepted outcome sentence, which names the
+      verb ("the owner takes a share back") directly; the activity name is a
+      light paraphrase of it, not a literal field copy.
+    stories:
+      - {id: drc-4501-owner-revokes-from-terminal, card: "The owner takes a share back from the terminal", release: c}
+      - {id: drc-4339-owner-ends-share-tui, card: "The owner ends a share from the TUI", release: c}
+      - {id: drc-4449-summary-answers-share-url, card: "The briefing summary answers its owner with the share URL", release: c}
+      - {id: drc-4500-protocol-doc-promises-unserved-route, card: "A merged protocol document promises a route the trunk does not serve", release: c}
+
+releases:
+  - id: a1
+    name: "A1 · The whole loop, from the command line"
+    goal: "Someone completes the whole loop from the command line: shares a file, reads back what came in. Ships when one person does it end to end."
+  - id: a2
+    name: "A2 · The person's loop, from the reader"
+    goal: "A person shares with one keypress and reads the comments back, both in the reader. Ships when one person does both without leaving it."
+  - id: d
+    name: "D · A reviewer works from their own terminal"
+    goal: "A reviewer opens a share URL in their own terminal and their feedback reaches the owner. Ships when no step needs a browser."
+  - id: b
+    name: "B · The review surface is fit to show people"
+    goal: "A reviewer from outside the project uses the review surface without asking how. Ships when nobody has to be walked through it."
+  - id: c
+    name: "C · The owner takes a share back"
+    goal: "The owner ends a share from the terminal, and the reviewer inside it stops immediately. Ships when one revoke is run by hand and watched."
+
+# UNATTACHABLE — every issue below is real and open/closed in the project, and none
+# fit one step in the left-to-right backbone above without forcing it. Listed here,
+# not silently dropped, per this stage's AC-3.
+unattachable:
+  - id: DRC-4289
+    title: "Verify GitHub-to-Linear issue synchronization for subspace-relay"
+    reason: "repo/process tooling; describes no step a person takes in the journey"
+  - id: DRC-4290
+    title: "Consolidate existing Relay work into the Phase 1 scope"
+    reason: "project housekeeping across every step, not one step (done)"
+  - id: DRC-4314
+    title: "Decide whether /rr keeps its publish path, or becomes an agent-only skill"
+    reason: "a decision record, not a step a person takes (done)"
+  - id: DRC-4338
+    title: "rr becomes its own binary, and sr stops talking to relay"
+    reason: "a theme/epic spanning three milestones (canceled as a theme); its children are attached individually above"
+  - id: DRC-4349
+    title: "Decide whether Room session Result indexes need a versioned integrity format"
+    reason: "a backlog data-integrity decision, not user-facing at any one step"
+  - id: DRC-4283
+    title: "Define and review artifact identity and sharing model"
+    reason: "a protocol/doc reconciliation ticket underlying both publish and revoke; forcing it into one step would misrepresent it"
+  - id: DRC-4299
+    title: "Run exact-tip live end-to-end review journeys"
+    reason: "verification spanning every step (publish, review, read-back), not itself one"
+  - id: DRC-4298
+    title: "Harden deferred TUI publish reliability"
+    reason: "cancelled and absorbed into other tickets 2026-09-07; its own body says nothing here was built, so no step-owning code exists to attach to"
