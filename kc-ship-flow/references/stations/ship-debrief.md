@@ -1,6 +1,6 @@
 # ship-debrief station
 
-**Enforcing script:** `kc-ship-flow/scripts/ship-debrief.py <batch-dir>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/ship-debrief.py <batch-dir>`
 
 **Input:** the batch's durable records only — `receipt/close-receipt.json` (or `.DRAFT.json`) for
 `defects_returned` and per-issue minutes, and `README.md`'s "## Decisions made under `defaults`"

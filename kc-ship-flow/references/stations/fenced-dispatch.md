@@ -1,6 +1,6 @@
 # fenced-dispatch station
 
-**Enforcing script:** `kc-ship-flow/scripts/fenced-dispatch.sh`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/fenced-dispatch.sh`
 
 **Input:** `<state-dir> <holder-id> <writer> <claim> <project-id> <base-branch> <message-file>`. The
 message file is the dispatch task body; a body longer than the first chat message travels this way —

@@ -1,6 +1,6 @@
 # notify station
 
-**Enforcing script:** `kc-ship-flow/scripts/notify.sh <channel> <batch-id> <doc-path> --dry-run
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/notify.sh <channel> <batch-id> <doc-path> --dry-run
 --state-dir <dir>`
 
 **Input:** a channel, batch id, UAT document path, and state dir.

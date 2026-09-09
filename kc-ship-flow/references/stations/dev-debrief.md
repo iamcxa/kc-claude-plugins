@@ -1,6 +1,6 @@
 # dev-debrief station
 
-**Enforcing script:** `kc-ship-flow/scripts/dev-debrief.py <batch-dir>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/dev-debrief.py <batch-dir>`
 
 **Input:** the batch's durable records only — `receipt/close-receipt.json` (or `.DRAFT.json`),
 `evidence/worker-evidence-<ISSUE>*.md`, `README.md`'s "## Decisions made under `defaults`" bullets,

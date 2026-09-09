@@ -1,6 +1,6 @@
 # e2e-gate station
 
-**Enforcing script:** `kc-ship-flow/scripts/e2e-gate.py <plan-receipt.json> <close-receipt.json>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/e2e-gate.py <plan-receipt.json> <close-receipt.json>`
 
 **Input:** the batch's plan receipt (`dispatch_order`, `milestones`) and close receipt
 (per-issue `candidate`).
