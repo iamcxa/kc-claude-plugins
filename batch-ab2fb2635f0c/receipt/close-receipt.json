@@ -93,62 +93,63 @@
     {
       "id": "S50",
       "class": "delivery",
-      "one_line": "(D138) toolchain pins to re-decide after hosted/ landed (@netlify/dev 5.0.5, @netlify/identity placement, netlify-cli advisories)",
+      "one_line": "toolchain pins to re-decide after hosted/ landed (@netlify/dev 5.0.5, @netlify/identity placement, netlify-cli advisories)",
       "fix_ticket": "DEV-138"
     },
     {
       "id": "S51",
       "class": "verify",
-      "one_line": "(D139) qnow-next npm test never runs in CI; FO claimed CI as the gate for two PRs",
+      "one_line": "qnow-next npm test never runs in CI; FO claimed CI as the gate for two PRs",
       "fix_ticket": "DEV-139"
     },
     {
       "id": "S52",
       "class": "delivery",
-      "one_line": "(D140) PoC re-granted qnow_app table-wide SELECT on staff assignments; production needs a scoped read",
+      "one_line": "PoC re-granted qnow_app table-wide SELECT on staff assignments; production needs a scoped read",
       "fix_ticket": "DEV-140"
     },
     {
       "id": "S53",
       "class": "seam",
-      "one_line": "(D141) experiments/netlify-refine-poc has no recorded lifecycle (graduate vs delete); overlaps DEV-23",
+      "one_line": "experiments/netlify-refine-poc has no recorded lifecycle (graduate vs delete); overlaps DEV-23",
       "fix_ticket": "DEV-141"
     },
     {
       "id": "S54",
       "class": "dispatch",
-      "one_line": "(D142) Conductor cloud workspace runs the local setup, not conductor-cloud-setup.sh: no Xvfb, dirty tree",
+      "one_line": "Conductor cloud workspace runs the local setup, not conductor-cloud-setup.sh: no Xvfb, dirty tree",
       "fix_ticket": "DEV-142"
     },
     {
       "id": "S55",
       "class": "verify",
-      "one_line": "(D143) rollback deploy refused by a global 10-migration count (fixed: parameterised, merged #1183)",
+      "one_line": "rollback deploy refused by a global 10-migration count (fixed: parameterised, merged #1183)",
       "fix_ticket": "DEV-143"
     },
     {
       "id": "S56",
       "class": "verify",
-      "one_line": "(D144) read-only-online-build test fails in the Linux cloud VM, passes on macOS at the same revision",
+      "one_line": "read-only-online-build test fails in the Linux cloud VM, passes on macOS at the same revision",
       "fix_ticket": "DEV-144"
     },
     {
       "id": "S57",
       "class": "verify",
-      "one_line": "(D145) run-path admission ids not surfaced as failureReason; rollback pin stale after the DB moved to 10 migrations",
+      "one_line": "run-path admission ids not surfaced as failureReason; rollback pin stale after the DB moved to 10 migrations",
       "fix_ticket": "DEV-145"
     },
     {
       "id": "S58",
       "class": "seam",
-      "one_line": "(D146) identity provider: Clerk POC to replace Netlify Auth + self-built OTP (blocks DEV-132)",
+      "one_line": "identity provider: Clerk POC to replace Netlify Auth + self-built OTP (blocks DEV-132)",
       "fix_ticket": "DEV-146"
     },
     {
       "id": "S49",
       "class": "seam",
-      "one_line": "FO dispatched three cloud attempts with sequencing errors documented in the repo's own AGENTS.md; rehearsal-with-fakes was available and unused until attempt 5 — accepted residual: FO conduct; rehearsal is now the rule before a watched run",
-      "fix_ticket": null
+      "one_line": "FO dispatched three cloud attempts with sequencing errors documented in the repo's own AGENTS.md; rehearsal-with-fakes was available and unused until attempt 5",
+      "fix_ticket": null,
+      "accepted_residual": "FO conduct; rehearsal with the package's fakes is now the rule before a watched provider run"
     }
   ],
   "totals": {
@@ -157,5 +158,114 @@
     "fix_rounds": 8,
     "captain_gates": 12
   },
-  "close_sha256": "74e380e1553c51f0b61db072d52c32ed2bfbff1081746306e94ae33472f4cc6a"
+  "dev_debrief": {
+    "candidate_correction": "TBD (FO): one candidate correction to the build contract from this batch's Evidence.",
+    "per_issue": {
+      "DEV-136": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 3
+      },
+      "DEV-137": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 4
+      },
+      "DEV-36": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 0
+      },
+      "DEV-37": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [],
+        "rounds": 5
+      }
+    }
+  },
+  "ship_debrief": {
+    "candidate_correction": "TBD (FO): one candidate correction to ship-flow from this batch.",
+    "defaults_decisions": [
+      {
+        "decision": "2026-09-07T07:02:36Z — **DEV-114 accepted** (station 1d4e95e0, ACCEPT with AC-3 WARN partial variant); Draft PR #391 (merge-station.sh + test + fake-gh-merge fixture + station page + docs/ship merged line). Review: code-reviewer + silent-failure-hunter dispatched. Every later merge in this batch must go through this script once it lands.",
+        "overturned": false
+      },
+      {
+        "decision": "2026-09-07T07:25:38Z — **review station on #391 (DEV-114)**: code-reviewer 4 findings (2 correctness: mergeStateStatus has no CONFLICTING — the FO's own Brief wording — and legacy StatusContext failures unread; 2 test-coverage); silent-failure-hunter stalled on the harness watchdog and was resumed by message (S42 class). Repair round 1 sent without waiting for the second reviewer (its findings, if any, fit in the second approved round).",
+        "overturned": false
+      },
+      {
+        "decision": "2026-09-07T07:34:39Z — **DEV-114 round 2 accepted** (9dd7ee52; 18 cases, DIRTY/CONFLICTING, StatusContext state, polling/timeout/flag cases, MERGE_UNVERIFIED exit 6, READY_FAILED exit 7). FO mutation found the suite exits 0 with FAIL lines → repair round 2 (last approved): the suite must fail on a failing case. Six r1 findings closed.",
+        "overturned": false
+      },
+      {
+        "decision": "2026-09-07T07:42:33Z — **DEV-114 round 3 accepted** (930214ab): suite fails on a failing case; case e split so each conflict signal is mutation-visible (FO re-ran the mutation: 18/1, exit 1). All 7 findings closed. **#391 ready for the Captain's merge**; from then on the batch's merges run through merge-station.sh.",
+        "overturned": false
+      },
+      {
+        "decision": "2026-09-07T07:50:17Z — **#391 merged by the Captain**; kc-ship-flow re-synced to the local install (merge-station.sh present). DEV-114 Done. DEV-136 dispatched to a local Sonnet subagent at qnow main 820f6fb5, token dev136-2026-09-07. Merge authority: the Captain merges each PR by hand (no station authorization given).",
+        "overturned": false
+      }
+    ],
+    "defects_disposition": [
+      {
+        "disposition": "DEV-138",
+        "id": "S50"
+      },
+      {
+        "disposition": "DEV-139",
+        "id": "S51"
+      },
+      {
+        "disposition": "DEV-140",
+        "id": "S52"
+      },
+      {
+        "disposition": "DEV-141",
+        "id": "S53"
+      },
+      {
+        "disposition": "DEV-142",
+        "id": "S54"
+      },
+      {
+        "disposition": "DEV-143",
+        "id": "S55"
+      },
+      {
+        "disposition": "DEV-144",
+        "id": "S56"
+      },
+      {
+        "disposition": "DEV-145",
+        "id": "S57"
+      },
+      {
+        "disposition": "DEV-146",
+        "id": "S58"
+      },
+      {
+        "disposition": "FO conduct; rehearsal is now the rule before a watched run",
+        "id": "S49"
+      }
+    ],
+    "minutes_per_station": {
+      "build": 87,
+      "dispatch": 15,
+      "repair": 175,
+      "review": 64,
+      "verify": 200
+    }
+  },
+  "close_sha256": "6079dc6a41266a0964c5a703ecf1fbb1bf08cd930a2932eb682cc51fd6a612d5"
 }

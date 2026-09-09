@@ -104,3 +104,7 @@ Runtime: local Sonnet workers in worktrees; FO stations local via ~/.claude/plug
 ## Batch ab2fb2635f0c closed (2026-09-08)
 
 - CLOSE OK 74e380e1553c51f0 — DEV-136 merged (#1181), DEV-137 merged (#1182), DEV-36 merged (#1174), DEV-37 captain_stopped after five cloud attempts (one deploy; identity unproven → Clerk POC DEV-146). Defects returned S49–S58 → DEV-138…146 (S49 FO conduct, no ticket). Workspaces 6 of 13 approved; fix rounds 8. Writer outputs beside the receipt (receipt/dev-debrief.json, receipt/ship-debrief.json): the pinned close schema forbids them inside it; the previous batch validated only because jsonschema was absent (DEV-147).
+
+## Re-closed against main's schema (2026-09-09)
+
+- CLOSE OK 6079dc6a41266a09. The 2026-09-08 close validated against a stale close-receipt schema present only in the FO's worktree (S59, batch c5a7274dd07c); main's schema (kc-ship-flow/schemas/) requires dev_debrief and ship_debrief inside the receipt and admits accepted_residual. Writer blocks embedded, S49 carries its accepted residual, disposition ids mapped D→S. receipt/dev-debrief.json and receipt/ship-debrief.json stay as the writers' raw outputs.
