@@ -1,7 +1,7 @@
 ---
 id: 20w9we1wvtdy500nf9rc3a65
 title: Reverse a story map out of a Linear project, and see whether it survives contact
-status: backlog
+status: ideation
 source: captain
 product: kc-team-ops
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved the seed at the backlog gate: the POC question, the falsifier against an independently drawn map, and the stop point at a story map plus an unattachable-issue list. Constraint recorded as AC-1 and Non-goals: draw into a separate room and file, leave the existing planning board untouched.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
