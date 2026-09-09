@@ -1,0 +1,14 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#398",
+ "reviewed_head": "1b1cefe155cd503a3b67b3e91b15a539ee88a02b",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "1b1cefe1",
+   "verified_by": "FO: no-changed-files fixture exits 2 with a named path; mutating the guard to `if False` fails the new contract case; restored passes"
+  }
+ ],
+ "pending": []
+}
