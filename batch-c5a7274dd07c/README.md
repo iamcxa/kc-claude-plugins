@@ -27,3 +27,7 @@ Stations per docs/ship/README.md; every FO decision and every worker Evidence bl
 - 2026-09-09 — #400 review: F1/F2 (check and package matches not scoped to the jobs mapping — the guard itself could report a false 'covered') confirmed by the reviewer's runs; F3 comment block. Repair round 1 dispatched (scope to jobs region, two refusal cases, delete the block).
 - 2026-09-09 — **DEV-149 verdict: MERGE #400 (head fc046e98).** F1/F2 reproduced by the FO as refusals at head and proven by the FO's own mutation (region unscoped → ci-covers.test fails; first mutation attempt matched nothing, discarded); F3 removed. Installed station ACCEPT. Captain merges by hand.
 - 2026-09-09 — Captain merged #398 and #400 → main 781f9624. DEV-148, DEV-149 Done. All five issues merged; closing with the repaired close station from an origin/main worktree.
+
+## Batch c5a7274dd07c closed (2026-09-09)
+
+- CLOSE OK e930a4bfc18e12ff — DEV-134 (#395), DEV-147+DEV-135 (#397), DEV-148 (#398), DEV-149 (#400) merged. Closed from an origin/main worktree with the repaired station: writers' blocks embedded, jsonschema present, no hand edit — the batch's own falsifier held. Defects returned S59–S66 (DEV-150–155 + two FO-conduct residuals). Workspaces 4 of 12; fix rounds 8; captain gates 9. Queued for the next ship-flow batch: DEV-151–155 and PR #399 (DEV-152, adopter-authored); Kent's design ruling on the dispatch station (relay#191: dispatch dev entities via `spacedock dispatch build`, model from the stage) recorded by the relay session.

@@ -1,0 +1,258 @@
+{
+  "schema": "kc-ship-close-receipt/v1",
+  "plan_receipt_sha256": "c5a7274dd07c4ee18d0e246e32193fa7aeb74dbe711be38afa5b0c997ca809f9",
+  "approval_receipt_sha256": "25df447c70c701a92e81ec4716ecdacb357a343e6a3863dd9795aa469c075453",
+  "batch": {
+    "entity": "batch-c5a7274dd07c",
+    "started_at": "2026-09-09T03:55:26Z",
+    "closed_at": "2026-09-09T09:40:00Z",
+    "holder": "laptop"
+  },
+  "issues": {
+    "DEV-134": {
+      "outcome": "merged",
+      "candidate": "c1bd1c0396bfaefe18bde41244b9f6a47e17ec3f",
+      "pr": "iamcxa/kc-claude-plugins#395",
+      "rounds": 1,
+      "minutes": {
+        "dispatch": 2,
+        "build": 17,
+        "verify": 8,
+        "review": 5,
+        "repair": 6
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "first PR accepted by the installed station without an FO override",
+        "Brief named a non-existent kc-ship-flow/README.md (FO error)"
+      ]
+    },
+    "DEV-147": {
+      "outcome": "merged",
+      "candidate": "7d76023f2674dcb995ff361da47333dd52922173",
+      "pr": "iamcxa/kc-claude-plugins#397",
+      "rounds": 4,
+      "minutes": {
+        "dispatch": 2,
+        "build": 36,
+        "verify": 30,
+        "review": 20,
+        "repair": 25
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "premise half wrong (S59): main's ship-owned schema requires dev_debrief/ship_debrief embedded; beside-file design withdrawn",
+        "batch ab2fb2635f0c re-closed against main's schema",
+        "two pre-existing fixtures still carry real PR numbers/SHAs (DEV-130)",
+        "comment lines 3.6% of added lines, reviewer judged the remainder fact-bearing"
+      ]
+    },
+    "DEV-135": {
+      "outcome": "merged",
+      "candidate": "7d76023f2674dcb995ff361da47333dd52922173",
+      "pr": "iamcxa/kc-claude-plugins#397",
+      "rounds": 0,
+      "minutes": {
+        "dispatch": 0,
+        "build": 0,
+        "verify": 0,
+        "review": 0,
+        "repair": 0
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "delivered inside #397 with DEV-147 (one worker, one PR)"
+      ]
+    },
+    "DEV-148": {
+      "outcome": "merged",
+      "candidate": "1b1cefe155cd503a3b67b3e91b15a539ee88a02b",
+      "pr": "iamcxa/kc-claude-plugins#398",
+      "rounds": 2,
+      "minutes": {
+        "dispatch": 1,
+        "build": 7,
+        "verify": 10,
+        "review": 3,
+        "repair": 15
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "supply file checked for existence only (disclosed in the station doc)",
+        "PR opened by open-pr.sh, body rewritten by the FO per the pr-merge template (DEV-151)"
+      ]
+    },
+    "DEV-149": {
+      "outcome": "merged",
+      "candidate": "fc046e98bbd95359a6536594f0d5084e43e22b0d",
+      "pr": "iamcxa/kc-claude-plugins#400",
+      "rounds": 1,
+      "minutes": {
+        "dispatch": 1,
+        "build": 12,
+        "verify": 10,
+        "review": 5,
+        "repair": 5
+      },
+      "cost_usd_imputed": null,
+      "residuals": [
+        "text matching, no YAML parser (stated limit); a working-directory in another job of the same workflow still satisfies (b)",
+        "17 comment lines in ci-covers.sh (usage/limit block)"
+      ]
+    }
+  },
+  "defects_returned": [
+    {
+      "id": "S59",
+      "class": "verify",
+      "one_line": "FO validated receipts from a feature-branch worktree carrying a stale close schema; false premise for DEV-147 and a re-close",
+      "fix_ticket": null,
+      "accepted_residual": "FO conduct; rule: run validators from an origin/main worktree (memory updated)"
+    },
+    {
+      "id": "S60",
+      "class": "delivery",
+      "one_line": "Briefs told workers to open PRs; bodies ignored the pr-merge template; open-pr.sh writes five audit lines, not the template",
+      "fix_ticket": "DEV-151"
+    },
+    {
+      "id": "S61",
+      "class": "verify",
+      "one_line": "accept station refuses a removed variant one import hop from the read path",
+      "fix_ticket": "DEV-150"
+    },
+    {
+      "id": "S62",
+      "class": "dispatch",
+      "one_line": "intent.sh/holder.sh hardcode branch and remote spacedock-state/dev; a separate ship root pushes onto dev's branch (adopter report; PR #399 pending)",
+      "fix_ticket": "DEV-152"
+    },
+    {
+      "id": "S63",
+      "class": "verify",
+      "one_line": "e2e-gate.py resolves ROOT from __file__ and seeks docs/ship-flow/flows (adopter report)",
+      "fix_ticket": "DEV-153"
+    },
+    {
+      "id": "S64",
+      "class": "read-path",
+      "one_line": "first-officer skill names scripts by repository-relative path; unresolvable in an adopter (adopter report)",
+      "fix_ticket": "DEV-154"
+    },
+    {
+      "id": "S65",
+      "class": "verify",
+      "one_line": "a without-it pair living in a test file the candidate adds cannot run at BASE_SHA (127) and is forced inline (adopter report; also DEV-148/149 fixtures)",
+      "fix_ticket": "DEV-155"
+    },
+    {
+      "id": "S66",
+      "class": "verify",
+      "one_line": "three FO mutation attempts matched nothing and were discarded before a real one ran (DEV-134 r2, DEV-148, DEV-149)",
+      "fix_ticket": null,
+      "accepted_residual": "FO conduct; a mutation must print what it changed before its result counts"
+    }
+  ],
+  "totals": {
+    "workspaces_created": 4,
+    "workspaces_orphaned": 0,
+    "fix_rounds": 8,
+    "captain_gates": 9
+  },
+  "dev_debrief": {
+    "candidate_correction": "TBD (FO): one candidate correction to the build contract from this batch's Evidence.",
+    "per_issue": {
+      "DEV-134": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2"
+        ],
+        "rounds": 1
+      },
+      "DEV-135": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 0
+      },
+      "DEV-147": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 4
+      },
+      "DEV-148": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 2
+      },
+      "DEV-149": {
+        "code_refusals": [
+          "source: not recorded"
+        ],
+        "evidence_refusals": [
+          "retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1"
+        ],
+        "rounds": 1
+      }
+    }
+  },
+  "ship_debrief": {
+    "candidate_correction": "TBD (FO): one candidate correction to ship-flow from this batch.",
+    "defaults_decisions": [],
+    "defects_disposition": [
+      {
+        "disposition": "FO conduct; rule: run validators from an origin/main worktree (memory updated)",
+        "id": "S59"
+      },
+      {
+        "disposition": "DEV-151",
+        "id": "S60"
+      },
+      {
+        "disposition": "DEV-150",
+        "id": "S61"
+      },
+      {
+        "disposition": "DEV-152",
+        "id": "S62"
+      },
+      {
+        "disposition": "DEV-153",
+        "id": "S63"
+      },
+      {
+        "disposition": "DEV-154",
+        "id": "S64"
+      },
+      {
+        "disposition": "DEV-155",
+        "id": "S65"
+      },
+      {
+        "disposition": "FO conduct; a mutation must print what it changed before its result counts",
+        "id": "S66"
+      }
+    ],
+    "minutes_per_station": {
+      "build": 72,
+      "dispatch": 6,
+      "repair": 51,
+      "review": 33,
+      "verify": 58
+    }
+  },
+  "close_sha256": "e930a4bfc18e12fff1fc648f959a3cbce82ade7f24f8f6ce542f7c831efe71c4"
+}
