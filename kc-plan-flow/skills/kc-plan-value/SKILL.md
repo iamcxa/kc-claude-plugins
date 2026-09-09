@@ -116,6 +116,30 @@ no milestone, and a hypothesis nothing would ever judge -- and it validated.
   last milestone's acceptance says whether the "then" happened. That is the only rule
   here whose evidence arrives after the plan is finished.
 
+## The shipping sentence is the entry gate
+
+A milestone's description is written first, and it has to be a sentence someone can watch
+and call true or false. After that, every issue asking to join faces one question:
+**remove you, and does the sentence still hold?**
+
+If it holds, the issue is not this milestone's -- however urgent, however small, however
+convenient. **Urgency is a property of the issue, not of the sentence.**
+
+The cost is that obviously-worth-doing work gets deferred, and that is the point. A
+milestone is valuable because it ends, and one that admits every good idea does not.
+
+**When every issue in a milestone carries the top priority, the gate did not fire.** That
+is not a team with five emergencies; it is a milestone assembled by judging each issue on
+its own merits instead of against the sentence. It is the cheapest detector here and needs
+no new process: read the priorities, and if they are all the same, the gate was never a
+gate.
+
+One project reached five value points at top priority in a single milestone while the two
+below it had one each. Two of the five did not survive the question, and one of those two
+had a criterion that another issue's acceptance depended on -- so removing it was not
+moving a card, it was also amending what the depending issue promised to print. Ask the
+question of the sentence, then follow what the answer touches.
+
 ## Moving an issue can make another milestone's description a lie
 
 A milestone description is an acceptance test, so it describes work. Move that work and
