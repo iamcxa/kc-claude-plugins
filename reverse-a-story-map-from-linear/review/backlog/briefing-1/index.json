@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:20w9we1wvtdy500nf9rc3a65:backlog:attempt-1:revision-1",
+  "question": "Is a story map reversed from a Linear project a usable starting point for a value-alignment conversation, or must the backbone come from people?",
+  "artifacts": [
+    {
+      "id": "artifact:20w9we1wvtdy500nf9rc3a65:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/744615fc84d6797a3a8d4d0e4fb94729cc68abb6/reverse-a-story-map-from-linear.md",
+      "rev": "sha256:10d562fd8eeee788f596fa805ea98e67a217b8e30740482dcbbd52c87d9094b6",
+      "mediaType": "text/markdown",
+      "summary": "POC seed. Draw one story map from the captain's named Linear project, marking every backbone activity as read-from-tracker or invented, and list every issue that attaches to no activity. Stop there; no journey board, no function map. Draws into its own room and its own file, leaving the existing planning board and worked example untouched. The captain will supply an independently drawn map of the same project; the value criterion is whether the invented backbone is recognisable beside it."
+    }
+  ]
+}

@@ -15,6 +15,17 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:20w9we1wvtdy500nf9rc3a65:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:20w9we1wvtdy500nf9rc3a65-backlog-1
+              briefing:
+                id: briefing:20w9we1wvtdy500nf9rc3a65:backlog:attempt-1:revision-1
+                digest: sha256:fd087955f59c08344668c6da75bd585963b41d5332092b60b4c9bf59a9406a39
+                room-ref: ./reverse-a-story-map-from-linear/review/backlog/briefing-1
 ---
 
 ## The problem
