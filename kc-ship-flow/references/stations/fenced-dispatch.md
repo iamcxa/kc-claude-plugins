@@ -3,19 +3,29 @@
 **Enforcing script:** `kc-ship-flow/scripts/fenced-dispatch.sh`
 
 **Dispatched unit:** a dev entity's stage, not a hand-written batch message. The station calls
-`spacedock dispatch build --entity-path <dev-task> --stage <stage> --workflow-dir <dir> --host
-claude` and treats the JSON envelope it writes to stdout as the built artifact: the artifact's
-`dispatch_file_path` file is the message handed to `conductor workspace create --message-file`
-(its sha256 is what the intent records), and the artifact's own `model`/`effort` keys — read from
-the workflow's stage definition, never invented by this station — are forwarded to `conductor
-workspace create` only when present. The Evidence block for that dev entity arrives later, after
-its `validation` stage, written by the layer that verified it rather than this dispatching layer.
+`spacedock dispatch build --entity-path <dev-task> --stage <stage> --workflow-dir <dir>
+--checklist-file <file> --host claude` and treats the JSON envelope it writes to stdout as the
+built artifact: the artifact's `dispatch_file_path` file is the message handed to `conductor
+workspace create --message-file` (its sha256 is what the intent records), and the artifact's own
+`model` key — read from the workflow's stage definition, never invented by this station — is
+forwarded to `conductor workspace create` only when present. `--checklist-file` points at a file
+this station writes itself, holding exactly one procedural line (`DONE: complete stage <stage> per
+the workflow's own stage contract.`) — flag/file mode refuses without it (`spacedock dispatch build
+--help`: "flag/file input requires --entity-path, --stage, and --checklist-file"), and that one
+line is the only text the station contributes to the message body (see the enforcement cited next
+to it in fenced-dispatch.sh). A future revision could instead drive `dispatch build`'s stdin JSON
+mode with the stage's own real checklist once one exists; today no such per-stage checklist source
+exists, so this placeholder line is what flag mode requires. The Evidence block for that dev entity
+arrives later, after its `validation` stage, written by the layer that verified it rather than this
+dispatching layer.
 
 **Input:** `<state-dir> <holder-id> <writer> <claim> <project-id> <base-branch> --entity-path
-<dev-task> --stage <stage> [--workflow-dir <dir>] [--dry-run]`. When `--workflow-dir` is omitted it
-defaults to a sibling directory named after the entity file's own basename
-(`<entity-dir>/<entity-stem>/`). `--dry-run` prints the would-be `conductor workspace create` argv
-and the message sha256 instead of committing an intent or calling `conductor`.
+<dev-task> --stage <stage> --workflow-dir <dir> [--dry-run]`. `--workflow-dir` is required and never
+guessed — refuses (`workflow-dir required`, exit 2) when absent, since a real adopter entity's
+workflow README does not live at any fixed path relative to the entity file (e.g. an entity filed
+under `docs/dev/.spacedock-state/` has its README at the workflow root, `docs/dev/`, not beside the
+entity). `--dry-run` prints the would-be `conductor workspace create` argv and the message sha256
+instead of committing an intent or calling `conductor`.
 
 **Output:** the adopted `workspace-id` on stdout once `intent.sh adopt` succeeds.
 

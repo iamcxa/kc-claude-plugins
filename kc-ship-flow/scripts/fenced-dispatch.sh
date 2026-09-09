@@ -2,12 +2,13 @@
 # Production entry for one workspace create under the intent-commit order. No bypass flags.
 #   intent commit -> holder check -> create once -> read-back by id (name, project, token) -> holder check -> fenced adopt
 # Usage: fenced-dispatch.sh <state-dir> <holder-id> <writer> <claim> <project-id> <base-branch>
-#          --entity-path <dev-task> --stage <stage> [--workflow-dir <dir>] [--dry-run]
+#          --entity-path <dev-task> --stage <stage> --workflow-dir <dir> [--dry-run]
 #          [--pause-before-adopt] [--delay-create N]
 # This station does not author the message: it obtains it by running `spacedock dispatch build`
-# against the dev entity's stage and hashes the artifact `spacedock` already wrote to disk. When
-# `--workflow-dir` is omitted it defaults to a sibling directory named after the entity's own
-# basename (`<entity-dir>/<entity-stem>/`) so each fixture entity carries its own stage definition.
+# against the dev entity's stage and hashes the artifact `spacedock` already wrote to disk.
+# `--workflow-dir` is required and never guessed -- a real adopter entity (e.g. one filed under
+# docs/dev/.spacedock-state/) has its workflow README living at the workflow root, not next to the
+# entity file, so no path relationship between the two is safe to assume.
 # The two test-only flags exist so the falsifier can stop the process at the worst moment; they
 # never weaken a guarantee.
 set -euo pipefail
@@ -30,16 +31,18 @@ ts(){ date -u +%FT%TZ; }; say(){ echo "$(ts) $holder#$num: $*" | tee -a "$log"; 
 [[ "$project" =~ ^[0-9a-f-]{36}$ ]] || die "project-id must be a uuid" 2
 [ -n "$entity" ] || die "--entity-path is required" 2
 [ -n "$stage" ] || die "--stage is required" 2
+[ -n "$workflow_dir" ] || die "workflow-dir required" 2
 [ -f "$entity" ] || die "entity file missing: $entity" 2
-if [ -z "$workflow_dir" ]; then
-  entity_dir=$(cd "$(dirname "$entity")" && pwd); entity_stem=$(basename "$entity" .md)
-  workflow_dir="$entity_dir/$entity_stem"
-fi
 [ -d "$workflow_dir" ] || die "workflow-dir missing: $workflow_dir" 2
 
-# The checklist is procedural (follow the stage's own instructions), never the message: the
-# message body -- the dev entity's actual work -- comes entirely from `dispatch build`'s reading
-# of the entity file and the stage's README section, never from this station.
+# The checklist below is the only text this station contributes to the message; the rest of the
+# message body comes entirely from `dispatch build`'s own reading of the entity file and the
+# stage's README section. That line does appear verbatim in the built message (its "### Completion
+# checklist" section) and is included in the sha256 the intent records -- it is not excluded from
+# the message, only bounded to this one procedural line. Enforced by
+# kc-ship-flow/scripts/fenced-dispatch.test.sh case (d), which rebuilds the artifact directly
+# through `spacedock dispatch build` with the identical checklist content and requires a
+# byte-for-byte sha256 match against this station's own message.
 checklist="$run/checklist"
 printf 'DONE: complete stage %s per the workflow'\''s own stage contract.\n' "$stage" >"$checklist"
 build_out="$run/build.json"
@@ -50,7 +53,6 @@ fi
 dispatch_file=$(python3 -c "import json,sys; print(json.load(open('$build_out'))['dispatch_file_path'])") || die "dispatch build failed" 4
 [ -f "$dispatch_file" ] || die "dispatch build failed" 4
 MODEL=$(python3 -c "import json; print(json.load(open('$build_out')).get('model') or '')")
-EFFORT=$(python3 -c "import json; print(json.load(open('$build_out')).get('effort') or '')")
 
 TOKEN=$(python3 -c "import secrets; print(secrets.token_hex(16))"); NAME="$claim-$TOKEN"
 # Copy the message into this run's private temp dir first and hash that copy: the hash bound into the
@@ -60,7 +62,6 @@ cp "$dispatch_file" "$run/message"; MSG_SHA=$(sha256sum "$run/message" | cut -d'
 
 model_args=()
 [ -n "$MODEL" ] && model_args+=(--model "$MODEL")
-[ -n "$EFFORT" ] && model_args+=(--effort "$EFFORT")
 
 if [ "$DRYRUN" = 1 ]; then
   printf 'conductor workspace create --project-id %s --branch %s --name %s --agent claude' "$project" "$base" "$NAME"
@@ -70,7 +71,7 @@ if [ "$DRYRUN" = 1 ]; then
   exit 0
 fi
 
-say "start claim=$claim message_sha256=$MSG_SHA model=${MODEL:-none} effort=${EFFORT:-none}"
+say "start claim=$claim message_sha256=$MSG_SHA model=${MODEL:-none}"
 "$here/intent.sh" commit "$state" "$holder" "$num" "$claim" "$TOKEN" "$project" "$base" "$MSG_SHA" >>"$log" 2>&1 || die "intent not committed (exists or fenced); reconcile instead of create" 4
 say "intent committed token=$TOKEN"
 [ "$DELAY" -gt 0 ] && { say "delaying create ${DELAY}s"; sleep "$DELAY"; }

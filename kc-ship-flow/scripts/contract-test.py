@@ -756,7 +756,8 @@ with_model_result = subprocess.run(
         "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
         "00000000-0000-0000-0000-000000000000", "main",
         "--entity-path", str(dispatch_fixtures / "task-with-model.md"),
-        "--stage", "implementation", "--dry-run",
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-with-model"), "--dry-run",
     ],
     cwd=ROOT, capture_output=True, text=True,
 )
@@ -772,14 +773,15 @@ without_model_result = subprocess.run(
         "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
         "00000000-0000-0000-0000-000000000000", "main",
         "--entity-path", str(dispatch_fixtures / "task-without-model.md"),
-        "--stage", "implementation", "--dry-run",
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-without-model"), "--dry-run",
     ],
     cwd=ROOT, capture_output=True, text=True,
 )
 require(
-    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout and "--effort" not in without_model_result.stdout,
-    "fenced-dispatch.sh --dry-run carried --model/--effort for the task-without-model fixture, "
-    f"whose stage declares neither: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
+    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout,
+    "fenced-dispatch.sh --dry-run carried --model for the task-without-model fixture, "
+    f"whose stage declares none: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
 )
 
 build_fails_result = subprocess.run(
@@ -788,7 +790,8 @@ build_fails_result = subprocess.run(
         "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
         "00000000-0000-0000-0000-000000000000", "main",
         "--entity-path", str(dispatch_fixtures / "task-build-fails.md"),
-        "--stage", "nonexistent-stage", "--dry-run",
+        "--stage", "nonexistent-stage",
+        "--workflow-dir", str(dispatch_fixtures / "task-build-fails"), "--dry-run",
     ],
     cwd=ROOT, capture_output=True, text=True,
 )
