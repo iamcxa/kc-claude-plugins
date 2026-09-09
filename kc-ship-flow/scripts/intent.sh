@@ -8,8 +8,20 @@
 # claim schema: ^[a-z0-9][a-z0-9.-]{2,63}$ (e.g. dev-84.g1). token: 32 hex (128-bit). project: uuid. message-sha256: 64 hex (sha256 of the exact message file handed to `conductor workspace create`). All sync failures are fatal.
 # commit and adopt hold a portable mkdir-based lock at ship-lock.d under `git -C <state-dir> rev-parse --git-dir` across their whole sync -> write -> commit -> push sequence: two invocations on the same checkout serialize instead of racing `git add`/commit/push on the shared working tree. Resolving the git dir through `rev-parse` (rather than assuming `<state-dir>/.git` is a directory) keeps the lock working when the state checkout is a `git worktree` whose `.git` is a file pointing elsewhere. `mkdir` is the atomic acquire (POSIX-portable, no `flock`/`lockf`/GNU-only flags, so it works on the First Officer's macOS host too); the lock dir lives under the git dir (git metadata, not the working tree) so it never itself makes the checkout dirty. The release trap is armed at script start, before any acquire is attempted, and only ever removes a lock this process itself created (never `rm -rf` one found already held). Staleness is judged by the lock directory's own mtime (age > 120s by default, no liveness probe: a remote holder's pid is meaningless on this host, and mtime survives a holder that was killed before it ever wrote its own marker), and a stale lock is reclaimed by an atomic rename to a `.stale.<epoch>.<pid>` side path — never by deleting it out from under whoever might still hold it — followed by a fresh `mkdir` retry. Once held, an `owner=<host>:<pid>:<epoch>` marker is written inside for audit and for the release trap's own-lock check.
 set -euo pipefail
-cmd=${1:-}; state=${2:-}; branch=spacedock-state/dev; dir="$state/_intents"; here=$(cd "$(dirname "$0")" && pwd)
+cmd=${1:-}; state=${2:-}; dir="$state/_intents"; here=$(cd "$(dirname "$0")" && pwd)
 die() { echo "intent: $1" >&2; exit "${2:-1}"; }
+# The state branch is whatever this checkout tracks, never a fixed name. Split-root repositories
+# run several state roots at once -- dev, plan, ship -- and a fixed name here does not fail: it
+# fetches one workflow's branch into another's checkout and pushes that checkout's commits onto it.
+# `upstream:strip=3` drops `refs/remotes/<remote>/` and keeps a branch name that contains slashes.
+state_remote_branch() {
+  local ref remote branch
+  ref=$(git -C "$state" symbolic-ref -q HEAD) || die "state checkout is not on a branch; refusing" 6
+  remote=$(git -C "$state" for-each-ref --format='%(upstream:remotename)' "$ref")
+  branch=$(git -C "$state" for-each-ref --format='%(upstream:strip=3)' "$ref")
+  [ -n "$remote" ] && [ -n "$branch" ] || die "state checkout tracks no upstream; refusing to guess which branch is the authority" 6
+  printf '%s %s\n' "$remote" "$branch"
+}
 ts() { date -u +%FT%TZ; }
 # Lock state is script-global (not `local`): the EXIT trap reads it at trap-firing time, which can be
 # long after `lock()` returns, and a function-local would already be out of scope by then.
@@ -63,8 +75,8 @@ except OSError: print(0)
   for s in $LOCK_MINE_STALE; do rm -rf "$s"; done
   LOCK_MINE_STALE=""
 }
-sync_in() { [ -z "$(git -C "$state" status --porcelain)" ] || die "state checkout dirty" 6; git -C "$state" fetch -q origin "$branch" || die "fetch failed" 6; git -C "$state" merge -q --ff-only FETCH_HEAD || die "state branch diverged" 6; }
-commit_push() { git -C "$state" add _intents; git -C "$state" -c user.name=intent -c user.email=intent@local commit -q -m "$1"; git -C "$state" push -q origin HEAD:"$branch" || die "push rejected; another writer moved the branch" 6; }
+sync_in() { [ -z "$(git -C "$state" status --porcelain)" ] || die "state checkout dirty" 6; read remote branch < <(state_remote_branch); git -C "$state" fetch -q "$remote" "$branch" || die "fetch failed" 6; git -C "$state" merge -q --ff-only FETCH_HEAD || die "state branch diverged" 6; }
+commit_push() { git -C "$state" add _intents; git -C "$state" -c user.name=intent -c user.email=intent@local commit -q -m "$1"; read remote branch < <(state_remote_branch); git -C "$state" push -q "$remote" HEAD:"$branch" || die "push rejected; another writer moved the branch" 6; }
 check_claim() { [[ "$1" =~ ^[a-z0-9][a-z0-9.-]{2,63}$ ]] || die "claim must match ^[a-z0-9][a-z0-9.-]{2,63}$" 2; }
 check_token() { [[ "$1" =~ ^[0-9a-f]{32}$ ]] || die "token must be 32 hex" 2; }
 check_uuid() { [[ "$1" =~ ^[0-9a-f-]{36}$ ]] || die "$2 must be a uuid" 2; }
