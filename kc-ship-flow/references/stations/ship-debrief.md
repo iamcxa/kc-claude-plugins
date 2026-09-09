@@ -10,9 +10,9 @@ bullets.
 defect (an undispositioned defect is flagged rather than dropped), minutes summed per station, and
 each `defaults` decision marked `overturned` only when a later bullet's text carries that decision's
 own leading timestamp together with "retract", "overturn", or "correction"; `candidate_correction` is
-always a placeholder for the First Officer to edit, never filled in from the record. The same object,
-wrapped with `schema`/`close_receipt` keys, is also written to `--out <path>` (default
-`receipt/ship-debrief.json` beside the close receipt).
+always a placeholder for the First Officer to edit, never filled in from the record. The First
+Officer embeds this object as the close receipt's own `ship_debrief` field (the schema requires it
+there).
 
 **Refusal:** exit 2 on bad argv, a missing close receipt, a missing `README.md`, a missing per-issue
 minutes field, or a close receipt that parses as JSON but is malformed or missing a field this script
