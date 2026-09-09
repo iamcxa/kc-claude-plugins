@@ -15,6 +15,34 @@ means two people did the job badly. There is no downstream fact-checking seat an
 there should not be one: contested *judgment* goes to
 `kc-dev-flow:science-officer`, and that is a different thing.
 
+## A batch is cut on the delivery boundary, not the milestone boundary
+
+A milestone is a value boundary: it answers what a person gets. A batch is an acceptance
+boundary: it answers what is accepted in one sitting. **They are not required to be
+one-to-one, and assuming they are produces a batch that cannot be accepted.**
+
+Two milestones belong in one batch when they cannot ship apart. The test is mechanical
+and the answers are already written down: does the dependency record put one behind the
+other, and do they share one review, one merge train and one release? Two yeses and they
+are one delivery.
+
+Two milestones in one project were cut correctly as value — one loop from a command line,
+one from a reader — and the second was blocked by the first in the project's own
+dependency record, because the reader's key calls the client the first one installs. One
+captain's UAT, one maintainer's review, one release. Batching them separately would have
+declared an acceptance that could never be run on its own.
+
+**Batching does not create the coupling. It makes an existing coupling visible.** If two
+milestones already cannot ship apart, two batches do not decouple them; they only hide
+that neither can close alone until somebody finds out at the gate.
+
+The reverse case is worth naming, because it is the one people reach for first: a
+milestone whose members ship on different schedules is still one milestone. A member that
+merges on its own — a different repository, a different reviewer — stays in the batch if
+it is in the acceptance. It is in the batch because it is in the walk, not because it is
+in the train.
+
+
 ## An evidence requirement names the observation, never the artifact
 
 **The test is one question: can this sentence be satisfied without adding anything to the
