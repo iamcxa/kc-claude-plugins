@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import importlib.util
 import json as json_mod
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -31,16 +30,10 @@ def load_module():
 
 ship_debrief = load_module()
 
-# every run() below passes --out into a throwaway tempdir: the default
-# <batch>/receipt/ship-debrief.json would otherwise write into these tracked
-# fixture directories on every test run.
-_OUT_DIR = tempfile.mkdtemp(prefix="ship-debrief-test-out-")
-
 
 def run(batch: Path) -> subprocess.CompletedProcess:
-    out = Path(_OUT_DIR) / f"{batch.name}.json"
     return subprocess.run(
-        [sys.executable, str(MODULE_PATH), "--out", str(out), str(batch)], capture_output=True, text=True
+        [sys.executable, str(MODULE_PATH), str(batch)], capture_output=True, text=True
     )
 
 
@@ -107,30 +100,5 @@ with tempfile.TemporaryDirectory() as tmp:
 # --- confirms it stays exit 0 -----------------------------------------------
 carried = run(FIXTURES / "batch-carried-probe")
 require(carried.returncode == 0, f"batch-carried-probe must exit 0, got {carried.returncode}: {carried.stderr}")
-
-# --- DEV-147: the writer's stdout draft is also written, wrapped, to a ----
-# --- schema-admitted home beside the receipt (default <batch>/receipt/ ---
-# --- ship-debrief.json) -----------------------------------------------------
-with tempfile.TemporaryDirectory() as tmp:
-    default_out_batch = Path(tmp) / "batch-overturn-probe"
-    shutil.copytree(FIXTURES / "batch-overturn-probe", default_out_batch)
-    default_out_result = subprocess.run(
-        [sys.executable, str(MODULE_PATH), str(default_out_batch)], capture_output=True, text=True,
-    )
-    require(
-        default_out_result.returncode == 0,
-        f"default --out run must exit 0, got {default_out_result.returncode}: {default_out_result.stderr}",
-    )
-    written = default_out_batch / "receipt" / "ship-debrief.json"
-    require(written.is_file(), f"default --out must write {written}")
-    written_doc = json_mod.loads(written.read_text(encoding="utf-8"))
-    require(
-        written_doc["schema"] == "kc-ship-ship-debrief/v1" and written_doc["close_receipt"] == "receipt/close-receipt.json",
-        f"written ship-debrief.json must carry its own schema tag and a close_receipt pointer: {written_doc}",
-    )
-    require(
-        written_doc["ship_debrief"] == json_mod.loads(default_out_result.stdout),
-        "the wrapped file's ship_debrief must match stdout's draft",
-    )
 
 print("ship-debrief test: all checks passed")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Draft the ship-flow dev debrief from a batch's durable records, addressed to dev-flow.
-usage: dev-debrief.py [--out <path>] <batch-dir>
+usage: dev-debrief.py <batch-dir>
 
 Reads, all required once an issue names them:
   <batch-dir>/receipt/close-receipt.json (or .DRAFT.json)   per-issue rounds, outcome
@@ -19,12 +19,6 @@ Evidence block. Any other outcome without an evidence file still exits 2.
 It is a draft for the First Officer to edit, not a finished debrief --
 `candidate_correction` is always a placeholder the writer cannot fill in
 from the record.
-
-Also writes the same object, wrapped as `{"schema": "kc-ship-dev-debrief/v1",
-"close_receipt": "receipt/close-receipt.json", "dev_debrief": <the object
-above>}`, to `--out <path>` (default `<batch-dir>/receipt/dev-debrief.json`)
--- a schema-admitted home beside the receipt, so the draft never has to be
-hand-copied there.
 
 Exit 0 on success. Exit 2 on: bad argv; a missing close receipt; a missing
 rounds field; a missing worker-evidence file (for a dispatched issue); an
@@ -222,46 +216,17 @@ def build(batch_dir):
     }
 
 
-def parse_args(argv):
-    """Return (batch_dir, out_path) or None on bad argv. `out_path` is None
-    when --out was not given (caller applies the default)."""
-    args = list(argv[1:])
-    out_path = None
-    if "--out" in args:
-        idx = args.index("--out")
-        if idx + 1 >= len(args):
-            return None
-        out_path = args[idx + 1]
-        del args[idx : idx + 2]
-    if len(args) != 1:
-        return None
-    return args[0], out_path
-
-
 def main(argv):
-    parsed = parse_args(argv)
-    if parsed is None:
+    if len(argv) != 2:
         print(__doc__)
         return 2
-    batch_dir, out_path = parsed
+    batch_dir = argv[1]
     try:
         debrief = build(batch_dir)
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         print(f"dev-debrief: malformed or incomplete batch record in {batch_dir}: {exc!r}", file=sys.stderr)
         return 2
     print(json.dumps(debrief, indent=1, ensure_ascii=False, sort_keys=True))
-    out = out_path or os.path.join(batch_dir, "receipt", "dev-debrief.json")
-    wrapped = {
-        "schema": "kc-ship-dev-debrief/v1",
-        "close_receipt": "receipt/close-receipt.json",
-        "dev_debrief": debrief,
-    }
-    out_dir = os.path.dirname(out)
-    if out_dir:
-        os.makedirs(out_dir, exist_ok=True)
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(wrapped, f, indent=1, ensure_ascii=False, sort_keys=True)
-        f.write("\n")
     return 0
 
 

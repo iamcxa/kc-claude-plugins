@@ -31,16 +31,10 @@ def load_module():
 
 dev_debrief = load_module()
 
-# every run() below passes --out into a throwaway tempdir: the default
-# <batch>/receipt/dev-debrief.json would otherwise write into these tracked
-# fixture directories on every test run.
-_OUT_DIR = tempfile.mkdtemp(prefix="dev-debrief-test-out-")
-
 
 def run(batch: Path) -> subprocess.CompletedProcess:
-    out = Path(_OUT_DIR) / f"{batch.name}.json"
     return subprocess.run(
-        [sys.executable, str(MODULE_PATH), "--out", str(out), str(batch)], capture_output=True, text=True
+        [sys.executable, str(MODULE_PATH), str(batch)], capture_output=True, text=True
     )
 
 
@@ -144,31 +138,6 @@ with tempfile.TemporaryDirectory() as tmp:
         merged_outcome.returncode == 2 and issue_id in merged_outcome.stderr,
         f"a `merged` outcome with no evidence file must still exit 2 naming {issue_id}: "
         f"exit={merged_outcome.returncode} stderr={merged_outcome.stderr!r}",
-    )
-
-# --- DEV-147: the writer's stdout draft is also written, wrapped, to a ----
-# --- schema-admitted home beside the receipt (default <batch>/receipt/ ---
-# --- dev-debrief.json) -----------------------------------------------------
-with tempfile.TemporaryDirectory() as tmp:
-    default_out_batch = Path(tmp) / "batch-carried-probe"
-    shutil.copytree(FIXTURES / "batch-carried-probe", default_out_batch)
-    default_out_result = subprocess.run(
-        [sys.executable, str(MODULE_PATH), str(default_out_batch)], capture_output=True, text=True,
-    )
-    require(
-        default_out_result.returncode == 0,
-        f"default --out run must exit 0, got {default_out_result.returncode}: {default_out_result.stderr}",
-    )
-    written = default_out_batch / "receipt" / "dev-debrief.json"
-    require(written.is_file(), f"default --out must write {written}")
-    written_doc = json_mod.loads(written.read_text(encoding="utf-8"))
-    require(
-        written_doc["schema"] == "kc-ship-dev-debrief/v1" and written_doc["close_receipt"] == "receipt/close-receipt.json",
-        f"written dev-debrief.json must carry its own schema tag and a close_receipt pointer: {written_doc}",
-    )
-    require(
-        written_doc["dev_debrief"] == json_mod.loads(default_out_result.stdout),
-        "the wrapped file's dev_debrief must match stdout's draft",
     )
 
 print("dev-debrief test: all checks passed")
