@@ -6,3 +6,5 @@ Order: DEV-156 → DEV-151 → DEV-152 (#399, pre-built, enters at accepted) →
 ## Decision log
 
 - 2026-09-09T14:05:31Z — batch opened.
+- 2026-09-09 — DEV-156 accepted by the installed station at 04b896da; PR #401 opened by open-pr.sh, body per pr-merge template. Review dispatched. Premise gap recorded: dispatch build flag mode needs --checklist-file; the station writes a one-line procedural checklist.
+- 2026-09-09 — DEV-152: the Captain merged #399 directly (main 39cb179b) before its accept/review stations ran here; recorded as merged with stations skipped (Captain's prerogative). DEV-152 Done.
