@@ -107,7 +107,8 @@
         "required": [
           "name",
           "target",
-          "description"
+          "description",
+          "journey"
         ],
         "properties": {
           "name": {
@@ -130,6 +131,43 @@
               "minLength": 1
             },
             "description": "Which of the project's exit conditions this milestone makes true. The union across milestones has to cover every exit; a gap here is a project that cannot finish and does not say so."
+          },
+          "journey": {
+            "type": "array",
+            "minItems": 2,
+            "description": "The walk this milestone delivers, in order. The 140-character description summarises it; this defines it. Written before the tickets, because it is what the captain rules on. Four milestone sentences in one project each carried an ambiguity a second reader resolved differently, and every one of them would have been visible here: a step nobody delivers, or a step the bar excludes.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "actor",
+                "surface",
+                "does",
+                "delivered_by"
+              ],
+              "properties": {
+                "actor": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Who, in the words a person would use. Not a role in the system."
+                },
+                "surface": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Where they are: the reader, a browser, their own terminal. The step that reads two ways is almost always the one whose surface is unstated."
+                },
+                "does": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "What they do and what they get back."
+                },
+                "delivered_by": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The value issue that makes this step possible. A step with none is a promise nobody is keeping."
+                }
+              }
+            }
           }
         }
       }

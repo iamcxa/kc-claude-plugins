@@ -67,6 +67,20 @@ if name == "kc-plan-value/v1":
     for i, issue in enumerate(doc.get("issues", [])):
         if issue.get("title") not in blocked and not issue.get("independent_because"):
             problems.append(f"issues/{i}: nothing blocks it and it does not say why")
+    # The journey is checked both ways: a step nobody delivers is a promise nobody keeps,
+    # and a value issue on no step is in this milestone for a reason nobody wrote down.
+    titles = {i.get("title") for i in doc.get("issues", []) if i.get("kind") == "value"}
+    for i, m in enumerate(doc.get("milestones", [])):
+        walked = set()
+        for j, step in enumerate(m.get("journey", [])):
+            by = step.get("delivered_by")
+            walked.add(by)
+            if by not in titles:
+                problems.append(f"milestones/{i}/journey/{j}: no value issue named {by[:40]!r} delivers this step")
+        mine = {i2.get("title") for i2 in doc.get("issues", [])
+                if i2.get("kind") == "value" and i2.get("milestone") == m.get("name")}
+        for absent in sorted(mine - walked):
+            problems.append(f"milestones/{i}: {absent[:40]!r} is a member and appears on no step of the journey")
     for i, m in enumerate(doc.get("milestones", [])):
         d = m.get("description", "")
         if len(d) > 140:

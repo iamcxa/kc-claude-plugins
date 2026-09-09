@@ -118,6 +118,29 @@ no milestone, and a hypothesis nothing would ever judge -- and it validated.
   last milestone's acceptance says whether the "then" happened. That is the only rule
   here whose evidence arrives after the plan is finished.
 
+## Write the walk, not only the sentence
+
+The 140-character description summarises the milestone. **The journey defines it**, and it
+is written first, because it is what the captain rules on.
+
+Each step names the actor in the words a person would use, the surface they are on, what
+they do and get back, and the value issue that makes the step possible. Then it is checked
+both ways: a step no issue delivers is a promise nobody is keeping, and a value issue on
+no step is a member for a reason nobody wrote down.
+
+**This exists because a sentence cannot carry the whole answer.** Four things decide a
+milestone -- who it is for, what they get, who runs the acceptance, and the concrete walk
+-- and the sentence holds two of them inside a budget where the bar is the half that
+loses. Who runs it is the assignee. The walk had no home at all, so every reader derived
+it from the sentence and derived it differently.
+
+Four ambiguities in one project would each have been visible here rather than found by a
+second reader days later: a step whose surface was unstated read two ways; a claimed
+outcome had no step delivering it; a bar excluded the actor of a step beside it; and a bar
+described an onboarding the walk never mentioned.
+
+**The step that reads two ways is almost always the one whose surface is unstated.**
+
 ## The sentence tests the cut before it tests the members
 
 Write the sentence first, and if it will not come out unambiguous, **the milestone is cut
@@ -402,6 +425,11 @@ milestones:
     target: <YYYY-MM-DD>
     description: <140 characters or fewer, one line>
     satisfies_exit: [<which of the project's exit conditions this one makes true>]
+    journey:
+      - actor: <who, in the words a person would use>
+        surface: <where they are: the reader, a browser, their own terminal>
+        does: <what they do, and what they get back>
+        delivered_by: <the value issue that makes this step possible>
 archaeology:
   - question: <as asked>
     classification: <the tier it came back as>

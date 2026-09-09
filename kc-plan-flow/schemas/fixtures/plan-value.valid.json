@@ -31,6 +31,20 @@
       "satisfies_exit": [
         "A tap install publishes to production and returns a working link",
         "A reviewer comments in a browser and the owner reads it back in the terminal"
+      ],
+      "journey": [
+        {
+          "actor": "a terminal user",
+          "surface": "the reader",
+          "does": "presses one key and is handed a link",
+          "delivered_by": "A terminal user publishes a file and gets a link"
+        },
+        {
+          "actor": "a colleague",
+          "surface": "a browser",
+          "does": "opens the link and leaves a comment",
+          "delivered_by": "A terminal user publishes a file and gets a link"
+        }
       ]
     }
   ],
