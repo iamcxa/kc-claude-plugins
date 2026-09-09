@@ -1,0 +1,7 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#397","findings":[
+{"id":"F1","head":"b3235989","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/dev-debrief.py","line":206,"quote":"\"note\": \"not dispatched\",","summary":"per_issue note field forbidden by ship's close schema; embedding the writer's own output refused"},
+{"id":"F2","head":"b3235989","source":"code-reviewer","category":"test-coverage","file":"kc-ship-flow/scripts/contract-test.py","line":541,"summary":"no test threads a writer-produced not-dispatched entry through validate-receipt"},
+{"id":"F3","head":"52b51f27","source":"code-reviewer","category":"style","file":"kc-ship-flow/scripts/dev-debrief.test.py","line":115,"summary":"two banners restate the adjacent require() messages and cite the ticket"},
+{"id":"F4","head":"52b51f27","source":"code-reviewer","category":"style","file":"kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.dev-debrief-wrapper-embedded.json","line":82,"summary":"fixture carries real PR numbers (#364, #365) and three real commit SHAs; sibling fixture is synthetic"},
+{"id":"S59","source":"fo","summary":"Brief premise wrong: main's ship-owned schema requires dev_debrief/ship_debrief embedded; beside-file design withdrawn (stale schema in FO worktree)"}
+]}

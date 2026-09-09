@@ -1,0 +1,7 @@
+{"schema":"kc-ship-flow-review-disposition/v1","pr":"iamcxa/kc-claude-plugins#397","dispositions":[
+{"id":"F1","outcome":"fixed","commit":"52b51f27","verified_by":"FO: removing note from the schema fails the new contract case; restored passes"},
+{"id":"F2","outcome":"fixed","commit":"52b51f27","verified_by":"contract case threads dev-debrief.py's real output through validate-receipt (CLOSE OK)"},
+{"id":"F3","outcome":"repair_round_4","verified_by":"pending"},
+{"id":"F4","outcome":"repair_round_4","verified_by":"pending"},
+{"id":"S59","outcome":"withdrawn_design","verified_by":"beside-file mechanism removed in r3; batch ab2fb263 re-closed against main's schema (CLOSE OK 6079dc6a)"}
+],"pending":["F3","F4"]}
