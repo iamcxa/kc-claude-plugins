@@ -1,0 +1,7 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 407,
+  "findings": [
+    {"category": "nonexistent-category", "summary": "unknown class must fail closed"}
+  ]
+}

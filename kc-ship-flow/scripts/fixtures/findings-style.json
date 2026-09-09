@@ -1,0 +1,7 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 401,
+  "findings": [
+    {"category": "style", "summary": "inconsistent quoting", "location": "scripts/example.py:40"}
+  ]
+}

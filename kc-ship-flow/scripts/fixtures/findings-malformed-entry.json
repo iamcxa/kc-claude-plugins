@@ -1,0 +1,8 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 406,
+  "findings": [
+    {"category": "style", "summary": "ok"},
+    "not-a-finding-object"
+  ]
+}

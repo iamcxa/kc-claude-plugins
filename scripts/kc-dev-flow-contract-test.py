@@ -121,9 +121,11 @@ required = [
     "scripts/roborev-implementation-exit-contract.test.py",
     "scripts/pr-merge-portable-delivery.test.py",
     "docs/plan-flow/plan-lint.py",
-    "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
     "scripts/fixtures/plan-flow/dev89-runA-correct-relations.snapshot.json",
     "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
+    "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
+    "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
+    "scripts/fixtures/plan-flow/admitted-only-rough-backlog.snapshot.json",
 ]
 for relative in required:
     require((ROOT / relative).is_file(), f"missing {relative}")
@@ -2023,7 +2025,7 @@ for phrase in [
     "`session_transcripts_view`, not `conductor session message --after`",
     "that CLI truncates its JSON response at 64 KB, which cuts off a long Evidence block, and "
     "its `--after` cursor rejects a sent message's id, which breaks polling from the FO's own last message.",
-    "`scripts/ship-flow/worker-transcript.sh <session-id>` prints the session's last fenced "
+    "`kc-ship-flow/scripts/worker-transcript.sh <session-id>` prints the session's last fenced "
     "`## Evidence` block, or exits 1 with `no evidence block` when the transcript has none.",
 ]:
     require(phrase in normalized_ship_readme, f"Ship-flow runtime omits the conductor-sql transcript-read rule: {phrase}")
@@ -2077,6 +2079,9 @@ require(
 
 surface_map_check = ROOT / "kc-dev-flow/scripts/surface-map-check.py"
 run([sys.executable, "-m", "py_compile", str(surface_map_check)], "surface-map-check compile")
+
+if not require_ablation_only:
+    run([sys.executable, "docs/plan-flow/schema/close-receipt.test.py"], "plan-flow close-receipt validation")
 
 surface_map_fixtures = ROOT / "kc-dev-flow/scripts/fixtures/surface-map"
 surface_map_work_item = surface_map_fixtures / "dev-66-work-item-fixture.md"
@@ -2228,62 +2233,6 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         f"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}",
     )
 
-with tempfile.TemporaryDirectory(prefix="kc-dev-flow-intent-lock-") as intent_lock_root_name:
-    # DEV-93: a split-root state checkout (`git worktree add`) has `.git` as a FILE, not a
-    # directory; a lock path hardcoded as `<state>/.git/...` can never `mkdir` there. This
-    # case fails on the pre-fix script (SystemExit-worthy `lock timeout`, exit 6) and only
-    # passes once the lock path is resolved through `git rev-parse --git-dir`.
-    intent_lock_root = Path(intent_lock_root_name)
-    intent_lock_origin = intent_lock_root / "origin.git"
-    intent_lock_seed = intent_lock_root / "seed"
-    intent_lock_bare = intent_lock_root / "bare-clone"
-    intent_lock_state_wt = intent_lock_root / "state-wt"
-    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
-    subprocess.run(["git", "init", "-q", "--bare", str(intent_lock_origin)], check=True, capture_output=True)
-    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_seed)], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "checkout", "-q", "-b", "spacedock-state/dev"], check=True, capture_output=True)
-    (intent_lock_seed / "_holder.json").write_text(json.dumps({"writer": 1, "holder": "laptop", "at": "x"}), encoding="utf-8")
-    subprocess.run(["git", "-C", str(intent_lock_seed), "add", "_holder.json"], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "commit", "-q", "-m", "seed holder"], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), "push", "-q", "origin", "spacedock-state/dev"], check=True, capture_output=True)
-    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_bare)], check=True, capture_output=True)
-    subprocess.run(
-        ["git", "-C", str(intent_lock_bare), "worktree", "add", "-q", str(intent_lock_state_wt), "spacedock-state/dev"],
-        check=True, capture_output=True,
-    )
-    require((intent_lock_state_wt / ".git").is_file(), "DEV-93 fixture: worktree .git is not a file")
-
-    def run_intent_commit(script: Path, claim: str) -> subprocess.CompletedProcess:
-        env = dict(os.environ, SHIP_LOCK_STALE_S="3")
-        return subprocess.run(
-            [
-                str(script), "commit", str(intent_lock_state_wt), "laptop", "1", claim,
-                "0123456789abcdef0123456789abcdef",
-                "11111111-1111-1111-1111-111111111111",
-                "d98f40b5e2080cb884facf1734fc66052eff998",
-                hashlib.sha256(claim.encode()).hexdigest(),
-            ],
-            capture_output=True, text=True, env=env, timeout=60,
-        )
-
-    fixed_result = run_intent_commit(ROOT / "scripts/ship-flow/intent.sh", "dev-93-contract-case")
-    require(
-        fixed_result.returncode == 0,
-        "intent.sh commit did not succeed on a worktree-style state checkout (`.git` is a file): "
-        f"exit={fixed_result.returncode} stdout={fixed_result.stdout!r} stderr={fixed_result.stderr!r}",
-    )
-    intent_lock_git_dir_raw = subprocess.run(
-        ["git", "-C", str(intent_lock_state_wt), "rev-parse", "--git-dir"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    intent_lock_git_dir = Path(intent_lock_git_dir_raw)
-    if not intent_lock_git_dir.is_absolute():
-        intent_lock_git_dir = intent_lock_state_wt / intent_lock_git_dir
-    require(
-        not list(intent_lock_git_dir.glob("ship-lock.d*")),
-        "intent.sh left lock residue under the worktree's git dir",
-    )
-
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 
@@ -2291,15 +2240,12 @@ plan_lint = ROOT / "docs/plan-flow/plan-lint.py"
 require(plan_lint.is_file(), f"missing {plan_lint}")
 require(plan_lint.stat().st_mode & 0o111, f"not executable: docs/plan-flow/plan-lint.py")
 
-plan_flow_schemas = [
-    ROOT / "docs/plan-flow/schema/kc-ship-close-receipt.v1.schema.json",
-]
-for schema in plan_flow_schemas:
-    require(schema.is_file(), f"missing {schema}")
-
 plan_flow_fixtures = [
     ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json",
     ROOT / "scripts/fixtures/plan-flow/dev67-inverted-relations.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev122-done-pair-unadmitted.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/dev122-started-pair.snapshot.json",
+    ROOT / "scripts/fixtures/plan-flow/admitted-only-rough-backlog.snapshot.json",
 ]
 for fixture in plan_flow_fixtures:
     require(fixture.is_file(), f"missing {fixture}")
@@ -2308,12 +2254,135 @@ lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapsho
 lint_cmd = [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0])]
 lint_result = subprocess.run(lint_cmd, capture_output=True, text=True, cwd=ROOT)
 require(
-    "PASS L6" in lint_result.stdout and "PASS L8" in lint_result.stdout and "PASS L10" in lint_result.stdout,
+    "PASS L6" in lint_result.stdout and "PASS L10" in lint_result.stdout,
     f"plan-lint output missing expected rules on reverified fixture: {lint_result.stdout}",
 )
 require(
-    "FAIL L9" in lint_result.stdout and "DEV-91" in lint_result.stdout,
-    f"plan-lint L9 should fail on DEV-91 by-product: {lint_result.stdout}",
+    "L8 e2e-able AC" not in lint_result.stdout,
+    f"plan-lint L8 should not judge this fixture's Done issues: {lint_result.stdout}",
+)
+require(
+    "PASS L9" in lint_result.stdout,
+    f"plan-lint L9 should ignore this fixture's Done issues sharing a surface: {lint_result.stdout}",
+)
+
+lint_dev122_unadmitted = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[2])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_dev122_unadmitted.returncode == 0,
+    f"plan-lint should pass the Done-pair/unadmitted-candidate fixture: {lint_dev122_unadmitted.stdout}",
+)
+require(
+    "PASS L9" in lint_dev122_unadmitted.stdout and "unadmitted: 1" in lint_dev122_unadmitted.stdout,
+    f"plan-lint should ignore the Done pair in L9 and report the un-cycled candidate as unadmitted in L2: {lint_dev122_unadmitted.stdout}",
+)
+
+lint_dev122_started = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[3])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_dev122_started.returncode != 0,
+    f"plan-lint should fail once the shared-surface pair is active: {lint_dev122_started.stdout}",
+)
+require(
+    "FAIL L9" in lint_dev122_started.stdout and "dev122-fixture-shared-surface.py" in lint_dev122_started.stdout,
+    f"plan-lint L9 should name the shared surface once the pair is active: {lint_dev122_started.stdout}",
+)
+
+lint_admitted_only_rough = subprocess.run(
+    [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[4])],
+    capture_output=True, text=True, cwd=ROOT,
+)
+require(
+    lint_admitted_only_rough.returncode == 0,
+    f"plan-lint should pass the admitted Issue and ignore the rough Backlog candidates: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "PASS L4" in lint_admitted_only_rough.stdout and "PASS L8" in lint_admitted_only_rough.stdout and "PASS L10" in lint_admitted_only_rough.stdout,
+    f"plan-lint should judge the admitted Issue under L4/L8/L10: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "WARN L6 id-order advisory" in lint_admitted_only_rough.stdout,
+    f"plan-lint L6 identifier-order agreement should warn, not fail, on a higher-id-blocks-lower-id relation: {lint_admitted_only_rough.stdout}",
+)
+require(
+    "PASS L9" in lint_admitted_only_rough.stdout,
+    f"plan-lint L9 should judge only the admitted Issue and ignore the surface-less rough Backlog candidates: {lint_admitted_only_rough.stdout}",
+)
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_violations_path = Path(receipt_dir) / "admitted-only-rough-backlog.receipt.json"
+    lint_receipt_violations = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[4]), str(receipt_violations_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_violations.returncode == 0,
+        f"plan-lint should still pass while writing the receipt: {lint_receipt_violations.stdout}",
+    )
+    receipt_violations = json.loads(receipt_violations_path.read_text())
+    l6_advisory_entries = [e for e in receipt_violations["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_entries) == 1 and l6_advisory_entries[0]["pass"] is True,
+        f"lint receipt should record one passing L6 id-order advisory entry: {receipt_violations['lint']}",
+    )
+    require(
+        "(DEV-912, DEV-911)" in l6_advisory_entries[0]["why"],
+        f"L6 id-order advisory receipt entry should name the violation pair: {l6_advisory_entries[0]}",
+    )
+
+with tempfile.TemporaryDirectory(prefix="plan-flow-receipt-") as receipt_dir:
+    receipt_clean_path = Path(receipt_dir) / "dev89-runA-reverified.receipt.json"
+    lint_receipt_clean = subprocess.run(
+        [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0]), str(receipt_clean_path)],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    require(
+        lint_receipt_clean.returncode == 0,
+        f"plan-lint should pass on the reverified fixture while writing the receipt: {lint_receipt_clean.stdout}",
+    )
+    receipt_clean = json.loads(receipt_clean_path.read_text())
+    l6_advisory_clean_entries = [e for e in receipt_clean["lint"] if e["rule"] == "L6 id-order advisory"]
+    require(
+        len(l6_advisory_clean_entries) == 1
+        and l6_advisory_clean_entries[0]["pass"] is True
+        and l6_advisory_clean_entries[0]["why"] == "violations none",
+        f"lint receipt should record a clean L6 id-order advisory entry on a fixture with no violations: {l6_advisory_clean_entries}",
+    )
+
+
+def run_lint_without_admitted_nongoals(fixture_path: Path) -> subprocess.CompletedProcess[str]:
+    """Derive the missing-Non-goals case from the admitted-only fixture at test time."""
+    fixture = json.loads(fixture_path.read_text())
+    admitted = next(i for i in fixture["issues"]["nodes"] if i["cycle"])
+    stripped, count = re.subn(
+        r"\n## Non-goals\n\n.*?\n\n(?=## )", "\n", admitted["description"], count=1, flags=re.S
+    )
+    require(count == 1, f"fixture {fixture_path} has no single ## Non-goals section to strip")
+    admitted["description"] = stripped
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as handle:
+        json.dump(fixture, handle)
+        temp_path = Path(handle.name)
+    try:
+        return subprocess.run(
+            [sys.executable, str(plan_lint), "lint", str(temp_path)],
+            capture_output=True, text=True, cwd=ROOT,
+        )
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+lint_missing_nongoals = run_lint_without_admitted_nongoals(plan_flow_fixtures[4])
+require(
+    lint_missing_nongoals.returncode != 0,
+    f"plan-lint should fail once the admitted Issue's Non-goals are removed: {lint_missing_nongoals.stdout}",
+)
+require(
+    "FAIL L4 admission DEV-913" in lint_missing_nongoals.stdout,
+    f"plan-lint should name the admitted Issue under L4: {lint_missing_nongoals.stdout}",
 )
 
 with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:

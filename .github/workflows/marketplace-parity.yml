@@ -59,5 +59,8 @@ jobs:
       - name: Validate portable dev-flow product contract
         run: ./scripts/kc-dev-flow-contract-test.py
 
+      - name: Validate kc-ship-flow contract
+        run: python3 kc-ship-flow/scripts/contract-test.py
+
       - name: Validate split-root state prerequisite
         run: ./scripts/dev-flow-state-prereq.test.sh

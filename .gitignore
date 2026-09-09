@@ -27,3 +27,4 @@ __pycache__/
 docs/ship-flow/.spacedock-state/
 .worktrees/
 docs/dev/.spacedock-state/
+.context/

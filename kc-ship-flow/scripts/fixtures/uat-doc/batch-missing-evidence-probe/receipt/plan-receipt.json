@@ -1,0 +1,8 @@
+{
+ "project": {"name": "Missing evidence probe batch"},
+ "receipt_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+ "dispatch_order": ["DEV-1"],
+ "issues": {
+  "DEV-1": {"title": "Evidence file was never written"}
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "project": {"name": "Unaccounted probe batch"},
+ "receipt_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+ "dispatch_order": ["DEV-1", "DEV-2"],
+ "issues": {
+  "DEV-1": {"title": "Handled issue", "branch": "feature/dev-1"},
+  "DEV-2": {"title": "Lost issue", "branch": "feature/dev-2"}
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "project": {"name": "Branch selection probe batch"},
+ "receipt_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+ "dispatch_order": ["DEV-1", "DEV-2"],
+ "issues": {
+  "DEV-1": {"title": "Candidate landed, worker branch wins", "branch": "feature/dev-1-planned"},
+  "DEV-2": {"title": "No candidate yet, planned branch wins", "branch": "feature/dev-2-planned"}
+ }
+}

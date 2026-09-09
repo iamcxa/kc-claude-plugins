@@ -1,0 +1,7 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 405,
+  "findings": [
+    {"category": "Security", "summary": "case-varied category must still block", "location": "scripts/example.py:1"}
+  ]
+}

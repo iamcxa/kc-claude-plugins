@@ -1,0 +1,9 @@
+{
+ "issues": {
+  "DEV-1": {
+   "outcome": "accepted_no_pr",
+   "candidate": "4444444444444444444444444444444444444444",
+   "residuals": []
+  }
+ }
+}

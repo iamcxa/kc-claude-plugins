@@ -1,0 +1,34 @@
+{
+ "schema": "kc-ship-close-receipt/v1",
+ "plan_receipt_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+ "approval_receipt_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+ "batch": {
+  "entity": "probe",
+  "started_at": "2026-09-06T00:00:00Z",
+  "closed_at": "DRAFT",
+  "holder": "laptop"
+ },
+ "issues": {
+  "DEV-303": {
+   "outcome": "pr_open",
+   "rounds": 1,
+   "minutes": {
+    "dispatch": 1
+   }
+  }
+ },
+ "defects_returned": [
+  {
+   "id": "S1",
+   "class": "verify",
+   "one_line": "probe defect",
+   "fix_ticket": "DEV-304"
+  }
+ ],
+ "totals": {
+  "workspaces_created": 1,
+  "workspaces_orphaned": 0,
+  "fix_rounds": 0,
+  "captain_gates": 0
+ }
+}

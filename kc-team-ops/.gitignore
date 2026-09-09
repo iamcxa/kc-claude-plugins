@@ -1,0 +1,9 @@
+# Dev build artifacts
+dist/
+
+# Canvas dependencies — installed on first launch, never committed
+node_modules/
+
+# Rendered canvas rooms. A rendering cache, not a source of truth: the journey file
+# in the consuming repository is. Deleting these loses nothing that cannot be re-rendered.
+.rooms/

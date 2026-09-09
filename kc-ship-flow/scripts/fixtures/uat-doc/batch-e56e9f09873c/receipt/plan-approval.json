@@ -1,0 +1,24 @@
+{
+ "schema": "kc-plan-approval/v1",
+ "receipt_sha256": "e56e9f09873c5297b799762d5b57f150552ff36c35de11fc17dc2c77e1497d95",
+ "approver": "person:captain",
+ "approved_at": "2026-09-06T02:03:47Z",
+ "decision": "go",
+ "max_workspaces": 4,
+ "concurrency": 2,
+ "repair_rounds": 2,
+ "quote": "go · 4 workspaces · concurrency 2 · repair 2 · Pilot",
+ "quote_source": "Captain, Ask UI, 2026-09-06: 'go · 4 workspaces · concurrency 2 · repair 2 · Pilot', re-bound after the Captain read the four Briefs and chose the 104/105/107 changes (Ask UI, same day)",
+ "defaults": {
+  "findings_outside_brief": [
+   "security",
+   "data-loss",
+   "compatibility"
+  ],
+  "minimal_necessity_fail": "accepted_no_pr",
+  "moved_base": "rebase_and_accept",
+  "worker_blocker": "skip_issue_continue_batch",
+  "empty_reviewer": "fallback_to_fo_diff_read",
+  "pr_creation": "batch_approve_draft"
+ }
+}
