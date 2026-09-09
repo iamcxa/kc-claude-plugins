@@ -21,3 +21,4 @@ Order: DEV-156 → DEV-151 → DEV-152 (#399, pre-built, enters at accepted) →
 - 2026-09-09 — DEV-155 accepted at fdc4d6ff (pair restated: base station as the removed variant); PR #405 opened, body per template. Review running.
 - 2026-09-09 — **DEV-154 verdict: MERGE #404 (head a2a87725).** F1–F5 fixed; FO mutation of a station-doc line fails the new guard. Captain merges by hand.
 - 2026-09-09 — #405 review: F1 (rename passes as add) and F2 (any path token satisfies the rule) confirmed; repair round 1 dispatched (true-add set with rename detection; executed path only; three contract cases).
+- 2026-09-10 — **DEV-155 verdict: MERGE #405 (head 7d0ac8cc).** F1/F2 fixed and proven by FO mutations (note: removing  alone is a no-op because git's diff.renames defaults on;  is the real mutation). Captain merges by hand. All five builds of this batch are at the merge station: #401, #403, #404, #405 mergeable; #402 awaits the Captain's ruling.

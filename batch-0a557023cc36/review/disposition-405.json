@@ -1,0 +1,20 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#405",
+ "reviewed_head": "7d0ac8cc813b82b7cf06e23a2347db788c89079d",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "7d0ac8cc",
+   "verified_by": "FO: --no-renames mutation fails the rename contract case"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "7d0ac8cc",
+   "verified_by": "FO: last-token mutation fails the unrelated-127 case"
+  }
+ ],
+ "pending": []
+}
