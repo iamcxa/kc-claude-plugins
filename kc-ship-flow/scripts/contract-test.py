@@ -444,4 +444,30 @@ require(
     f"stdout={mutated_result.stdout!r}",
 )
 
+accept_evidence_script = SCRIPTS / "accept-evidence.sh"
+
+ts_read_path_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "ts-read-path.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    ts_read_path_result.returncode == 0
+    and "accept-evidence: ACCEPT" in ts_read_path_result.stdout,
+    "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND reading tracked .ts/.mts paths: "
+    f"exit={ts_read_path_result.returncode} stdout={ts_read_path_result.stdout!r} "
+    f"stderr={ts_read_path_result.stderr!r}",
+)
+
+mutant_untracked_path_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "mutant-untracked-path.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    mutant_untracked_path_result.returncode == 1
+    and "accept-evidence-does-not-exist.xyz" in mutant_untracked_path_result.stdout,
+    "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND reading only an untracked path, "
+    f"naming it: exit={mutant_untracked_path_result.returncode} "
+    f"stdout={mutant_untracked_path_result.stdout!r}",
+)
+
 print("kc-ship-flow contract: PASS")

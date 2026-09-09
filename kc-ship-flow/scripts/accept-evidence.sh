@@ -167,16 +167,20 @@ if [ -n "$BRANCH" ]; then
   fi
 fi
 
-# Extract paths that WITHOUT_IT_COMMAND reads
-# Look for file paths in the command that look like they exist in the repo
+is_tracked_path() {
+  local path="$1"
+  local repo_root="$2"
+  git -C "$repo_root" ls-files --error-unmatch -- "$path" >/dev/null 2>&1
+}
+
+extract_path_like_tokens() {
+  local cmd="$1"
+  echo "$cmd" | grep -oE '[a-zA-Z0-9_./-]+' | grep -E '/|\.[a-zA-Z0-9]+$' || true
+}
+
 extract_command_paths() {
   local cmd="$1"
   local repo_root="$2"
-
-  # Extract paths from common patterns:
-  # - grep/test/find <path>
-  # - git show <sha>:<path>
-  # - Explicit file paths
 
   local paths=()
 
@@ -185,16 +189,11 @@ extract_command_paths() {
     [ -n "$path" ] && paths+=("$path")
   done < <(echo "$cmd" | grep -oE 'git show [^:]+:([^ ]+)' | sed 's/git show [^:]*://g' || true)
 
-  # Extract grep/test/find file arguments
-  # Look for patterns like: grep "pattern" file.txt
-  while read -r path; do
-    [ -n "$path" ] && [ "$path" != "-q" ] && paths+=("$path")
-  done < <(echo "$cmd" | grep -oE '(grep|test|find) [^&|;]*' | sed 's/^grep[^"]* \|^test[^"]*[)]//' | tr ' ' '\n' | grep -E '\.(py|md|sh|json|yaml|yml|txt)$' || true)
-
-  # Extract any token with common file extensions
-  while read -r path; do
-    [ -n "$path" ] && paths+=("$path")
-  done < <(echo "$cmd" | grep -oE '[a-zA-Z0-9_./-]+\.(py|md|sh|json|yaml|yml|txt)' || true)
+  while read -r token; do
+    if [ -n "$token" ] && is_tracked_path "$token" "$repo_root"; then
+      paths+=("$token")
+    fi
+  done < <(extract_path_like_tokens "$cmd")
 
   # Print unique paths
   printf '%s\n' "${paths[@]}" | sort -u
@@ -286,6 +285,10 @@ variant_paths=$(extract_variant_paths "$WITHOUT_IT_REMOVED_VARIANT")
 changed_paths=$(get_changed_paths "$BASE_SHA" "$CANDIDATE_SHA" "$repo_root")
 
 if [ -z "$command_paths" ]; then
+  untracked_candidates=$(extract_path_like_tokens "$WITHOUT_IT_COMMAND" | sort -u)
+  if [ -n "$untracked_candidates" ]; then
+    refuse "AC-3: WITHOUT_IT_COMMAND reads an untracked path: $(echo "$untracked_candidates" | tr '\n' ' ' | sed 's/ *$//')"
+  fi
   refuse "AC-3: cannot extract paths from WITHOUT_IT_COMMAND - command may be unparseable"
 fi
 
