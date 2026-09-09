@@ -7,6 +7,7 @@ import importlib.util
 import json as json_mod
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -86,8 +87,6 @@ require(
 
 # --- finding #9: malformed JSON exits 2 with a one-line reason, never a --
 # --- raw traceback -----------------------------------------------------------
-import tempfile  # noqa: E402
-
 with tempfile.TemporaryDirectory() as tmp:
     receipt_dir = Path(tmp) / "receipt"
     receipt_dir.mkdir()
@@ -95,5 +94,11 @@ with tempfile.TemporaryDirectory() as tmp:
     malformed = run(Path(tmp))
     require(malformed.returncode == 2, f"malformed close receipt must exit 2, got {malformed.returncode}")
     require("Traceback" not in malformed.stderr, f"malformed JSON leaked a traceback: {malformed.stderr!r}")
+
+# --- DEV-135: ship-debrief.py never reads worker-evidence files, so a -----
+# --- carried issue with no evidence file already succeeds; this only -----
+# --- confirms it stays exit 0 -----------------------------------------------
+carried = run(FIXTURES / "batch-carried-probe")
+require(carried.returncode == 0, f"batch-carried-probe must exit 0, got {carried.returncode}: {carried.stderr}")
 
 print("ship-debrief test: all checks passed")

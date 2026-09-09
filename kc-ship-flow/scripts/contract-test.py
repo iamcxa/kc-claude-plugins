@@ -522,4 +522,163 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-
         f"stderr={candidate_tree_result.stderr!r}",
     )
 
+# --- DEV-147/DEV-135: dev-debrief.py's real not-dispatched output (the
+# --- `note` field) embeds into a close receipt that validate-receipt.py
+# --- accepts -- the close-receipt schema admits `note` on a per_issue
+# --- entry, it is not a shape only the writer's own stdout can produce ----
+dev_debrief_script = SCRIPTS / "dev-debrief.py"
+carried_batch = FIXTURES / "batch-carried-issue"
+carried_result = subprocess.run(
+    [sys.executable, str(dev_debrief_script), str(carried_batch)], capture_output=True, text=True,
+)
+require(
+    carried_result.returncode == 0,
+    f"dev-debrief.py on {carried_batch} must exit 0: exit={carried_result.returncode} stderr={carried_result.stderr!r}",
+)
+carried_dev_debrief = json.loads(carried_result.stdout)
+(carried_issue_id,) = carried_dev_debrief["per_issue"]
+require(
+    carried_dev_debrief["per_issue"][carried_issue_id].get("note") == "not dispatched",
+    f"batch-carried-issue's writer output must carry a not-dispatched note: {carried_dev_debrief}",
+)
+
+
+def canon(obj: object) -> bytes:
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def sha(text: str) -> str:
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+carried_body = "## The problem\n\nFixture body.\n\n## Accepted outcome\n\nFixture only.\n"
+carried_plan_receipt = {
+    "schema": "kc-plan-receipt/v1",
+    "code_repo": "example-org/example-repo",
+    "base_branch": "main",
+    "project": {
+        "id": "00000000-0000-0000-0000-0000000000a1",
+        "name": "Synthetic carried-note contract fixture",
+        "user_value": "A writer-produced not-dispatched entry embeds into a close receipt that validates.",
+        "hypothesis": "If we let the schema admit `note` then a real dev-debrief.py output validates unchanged.",
+        "wedge": "Fixture only; exercises validate-receipt.py's close-receipt path end to end.",
+        "outcome": "One issue closes carried, with a not-dispatched dev_debrief entry.",
+        "exit": ["Fixture validates."],
+        "outcome_hash": f"sha256:{sha('carried-note-fixture-outcome')}",
+    },
+    "cycle": "00000000-0000-0000-0000-0000000000a2",
+    "milestones": [],
+    "issues": {
+        carried_issue_id: {
+            "id": "00000000-0000-0000-0000-0000000000a3",
+            "url": f"https://example.test/issue/{carried_issue_id}",
+            "title": carried_issue_id,
+            "branch": f"feature/{carried_issue_id.lower()}-synthetic-fixture",
+            "close_line": f"Fixes {carried_issue_id}",
+            "profile": "pilot-product-slice",
+            "milestone": None,
+            "body": carried_body,
+            "body_sha256": sha(carried_body),
+        },
+    },
+    "edges": [],
+    "dispatch_order": [carried_issue_id],
+    "lint": {"schema": "kc-plan-lint/v1", "pass": True, "digest": sha("carried-note-fixture-lint")},
+    "premises": [
+        {"id": "P1", "statement": "Fixture premise: a real not-dispatched dev-debrief entry validates.", "agreed": True},
+    ],
+    "rationale_sha256": sha("carried-note-fixture-rationale"),
+}
+carried_plan_receipt["receipt_sha256"] = sha(canon(carried_plan_receipt).decode())
+
+carried_plan_approval = {
+    "schema": "kc-plan-approval/v1",
+    "receipt_sha256": carried_plan_receipt["receipt_sha256"],
+    "approver": "person:captain",
+    "approved_at": "2026-09-09T00:00:00Z",
+    "decision": "go",
+    "max_workspaces": 1,
+    "concurrency": 1,
+    "repair_rounds": 0,
+    "quote": "go, synthetic fixture approval",
+    "quote_source": "fixture, not a real approval",
+    "defaults": {
+        "findings_outside_brief": ["security", "data-loss", "compatibility"],
+        "minimal_necessity_fail": "accepted_no_pr",
+        "moved_base": "rebase_and_accept",
+        "worker_blocker": "skip_issue_continue_batch",
+        "empty_reviewer": "fallback_to_fo_diff_read",
+        "pr_creation": "batch_approve_draft",
+    },
+}
+
+carried_close_receipt = {
+    "schema": "kc-ship-close-receipt/v1",
+    "plan_receipt_sha256": carried_plan_receipt["receipt_sha256"],
+    "approval_receipt_sha256": sha(canon(carried_plan_approval).decode()),
+    "batch": {
+        "entity": "batch-carried-note-contract",
+        "started_at": "2026-09-09T00:00:00Z",
+        "closed_at": "2026-09-09T00:05:00Z",
+        "holder": "laptop",
+    },
+    "issues": {
+        carried_issue_id: {
+            "outcome": "carried",
+            "candidate": None,
+            "pr": None,
+            "rounds": 0,
+            "minutes": {"dispatch": 0},
+        },
+    },
+    "defects_returned": [],
+    "totals": {"workspaces_created": 0, "workspaces_orphaned": 0, "fix_rounds": 0, "captain_gates": 0},
+    "dev_debrief": carried_dev_debrief,
+    "ship_debrief": {
+        "defaults_decisions": [],
+        "defects_disposition": [],
+        "minutes_per_station": {"dispatch": 0},
+        "candidate_correction": "TBD (FO): one candidate correction to ship-flow from this batch.",
+    },
+}
+carried_close_receipt["close_sha256"] = sha(canon(carried_close_receipt).decode())
+
+validate_receipt_script = ROOT / "docs" / "plan-flow" / "schema" / "validate-receipt.py"
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-carried-note-") as carried_dir_name:
+    carried_dir = Path(carried_dir_name)
+    (carried_dir / "plan-receipt.json").write_text(json.dumps(carried_plan_receipt), encoding="utf-8")
+    (carried_dir / "plan-approval.json").write_text(json.dumps(carried_plan_approval), encoding="utf-8")
+    (carried_dir / "close-receipt.json").write_text(json.dumps(carried_close_receipt), encoding="utf-8")
+    carried_note_result = subprocess.run(
+        [
+            sys.executable, str(validate_receipt_script),
+            str(carried_dir / "plan-receipt.json"),
+            str(carried_dir / "plan-approval.json"),
+            str(carried_dir / "close-receipt.json"),
+        ],
+        capture_output=True, text=True,
+    )
+    require(
+        carried_note_result.returncode == 0 and "CLOSE OK" in carried_note_result.stdout,
+        "validate-receipt.py did not accept a close receipt embedding dev-debrief.py's real "
+        f"not-dispatched output: exit={carried_note_result.returncode} "
+        f"stdout={carried_note_result.stdout!r} stderr={carried_note_result.stderr!r}",
+    )
+close_receipt_fixtures = FIXTURES / "close-receipt"
+forbidden_embed_result = subprocess.run(
+    [
+        sys.executable, str(validate_receipt_script),
+        str(close_receipt_fixtures / "plan-receipt.json"),
+        str(close_receipt_fixtures / "plan-approval.json"),
+        str(close_receipt_fixtures / "close-receipt.dev-debrief-wrapper-embedded.json"),
+    ],
+    capture_output=True, text=True,
+)
+require(
+    forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
+    "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
+    f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
+)
+
 print("kc-ship-flow contract: PASS")
