@@ -1,0 +1,38 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#402",
+ "reviewed_head": "87f0de588547bed35c8db292ae5dc16ea7eaca34",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "87f0de58",
+   "verified_by": "worker revert-proof per fix; FO mutation of the --fixes loop fails the multi-branch case; FO regenerated #402's body with the final script"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "87f0de58",
+   "verified_by": "worker revert-proof per fix; FO mutation of the --fixes loop fails the multi-branch case; FO regenerated #402's body with the final script"
+  },
+  {
+   "id": "F3",
+   "outcome": "fixed",
+   "commit": "87f0de58",
+   "verified_by": "worker revert-proof per fix; FO mutation of the --fixes loop fails the multi-branch case; FO regenerated #402's body with the final script"
+  },
+  {
+   "id": "F4",
+   "outcome": "fixed",
+   "commit": "87f0de58",
+   "verified_by": "worker revert-proof per fix; FO mutation of the --fixes loop fails the multi-branch case; FO regenerated #402's body with the final script"
+  },
+  {
+   "id": "F5",
+   "outcome": "fixed",
+   "commit": "87f0de58",
+   "verified_by": "worker revert-proof per fix; FO mutation of the --fixes loop fails the multi-branch case; FO regenerated #402's body with the final script"
+  }
+ ],
+ "pending": []
+}

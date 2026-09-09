@@ -1,19 +1,27 @@
 {
  "schema": "kc-ship-flow-review-disposition/v1",
  "pr": "iamcxa/kc-claude-plugins#405",
- "reviewed_head": "7d0ac8cc813b82b7cf06e23a2347db788c89079d",
+ "reviewed_head": "66a1ffbf1b7a76c769af3ab0d2e9a17cb9d08973",
  "dispositions": [
   {
    "id": "F1",
    "outcome": "fixed",
    "commit": "7d0ac8cc",
-   "verified_by": "FO: --no-renames mutation fails the rename contract case"
+   "verified_by": "FO --no-renames mutation"
   },
   {
    "id": "F2",
    "outcome": "fixed",
    "commit": "7d0ac8cc",
-   "verified_by": "FO: last-token mutation fails the unrelated-127 case"
+   "verified_by": "FO last-token mutation"
+  },
+  {
+   "id": "C1",
+   "source": "ci",
+   "summary": "new-test-file case unrunnable under fetch-depth 1 (fixture pinned a real SHA)",
+   "outcome": "fixed",
+   "commit": "66a1ffbf",
+   "verified_by": "FO shallow clone: contract-test 0; round-2 station fails; CI version parity SUCCESS"
   }
  ],
  "pending": []
