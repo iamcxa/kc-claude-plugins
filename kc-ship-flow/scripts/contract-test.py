@@ -528,6 +528,34 @@ require(
     f"stdout={mutant_untracked_path_result.stdout!r}",
 )
 
+# DEV-155: a WITHOUT_IT_COMMAND that is itself a new test file the candidate
+# adds exits 126/127 at BASE_SHA -- that leg is satisfied by the path being
+# tracked at CANDIDATE_SHA and absent at BASE_SHA, not by an exit code.
+new_test_file_pair_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "new-test-file-pair.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    new_test_file_pair_result.returncode == 0
+    and "accept-evidence: ACCEPT" in new_test_file_pair_result.stdout
+    and "absent (added by candidate)" in new_test_file_pair_result.stdout,
+    "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND that is a new test file the "
+    f"candidate adds, recording the BASE_SHA absence: exit={new_test_file_pair_result.returncode} "
+    f"stdout={new_test_file_pair_result.stdout!r}",
+)
+
+mutant_absent_both_sides_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "mutant-absent-both-sides.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    mutant_absent_both_sides_result.returncode == 1
+    and "dev-155-absent-both-sides.sh" in mutant_absent_both_sides_result.stdout,
+    "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND naming a path absent at both "
+    f"BASE_SHA and CANDIDATE_SHA: exit={mutant_absent_both_sides_result.returncode} "
+    f"stdout={mutant_absent_both_sides_result.stdout!r}",
+)
+
 with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-tree-") as candidate_tree_dir_name:
     candidate_tree_dir = Path(candidate_tree_dir_name)
     candidate_tree_repo = candidate_tree_dir / "repo"

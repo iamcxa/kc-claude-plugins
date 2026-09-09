@@ -358,16 +358,31 @@ set -e
 
 echo "$(timestamp) WITHOUT_IT_COMMAND at BASE_SHA exited $base_exit_code"
 
-# Check for command not found errors (exit 126 or 127)
+# Check for command not found errors (exit 126 or 127): refuse unless a path
+# WITHOUT_IT_COMMAND names is tracked at CANDIDATE_SHA and absent at BASE_SHA
+# (the candidate added it, e.g. a new test file) -- that leg is satisfied by
+# the absence itself, not by an exit code.
 if [ "$base_exit_code" -eq 126 ] || [ "$base_exit_code" -eq 127 ]; then
-  refuse "AC-1: WITHOUT_IT_COMMAND did not run at BASE_SHA (exit $base_exit_code - command not found)"
-fi
+  added_by_candidate=""
+  while read -r token; do
+    [ -z "$token" ] && continue
+    if is_tracked_path "$token" "$repo_root" "$CANDIDATE_SHA" \
+       && ! git -C "$repo_root" cat-file -e "${BASE_SHA}:${token}" >/dev/null 2>&1; then
+      added_by_candidate="$token"
+      break
+    fi
+  done < <(extract_path_like_tokens "$WITHOUT_IT_COMMAND")
 
-if [ "$base_exit_code" -eq 0 ]; then
+  if [ -n "$added_by_candidate" ]; then
+    echo "$(timestamp) AC-1: at BASE_SHA: absent (added by candidate): $added_by_candidate"
+  else
+    refuse "AC-1: WITHOUT_IT_COMMAND did not run at BASE_SHA (exit $base_exit_code - command not found): $WITHOUT_IT_COMMAND"
+  fi
+elif [ "$base_exit_code" -eq 0 ]; then
   refuse "AC-1: WITHOUT_IT_COMMAND already exits 0 at BASE_SHA $BASE_SHA - pair cannot fail"
+else
+  echo "$(timestamp) AC-1 PASS: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA (exit code $base_exit_code)"
 fi
-
-echo "$(timestamp) AC-1 PASS: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA (exit code $base_exit_code)"
 
 # If all checks pass, accept
 echo "$(timestamp) accept-evidence: ACCEPT"
