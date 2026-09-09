@@ -275,6 +275,15 @@ require(
     f"stderr={disposition_deps_with_supply.stderr!r}",
 )
 
+disposition_deps_no_changed_files = run_disposition(ship_flow_fixtures / "deps-diff-no-changed-files")
+require(
+    disposition_deps_no_changed_files.returncode == 2
+    and "changed-files.txt required" in (disposition_deps_no_changed_files.stdout + disposition_deps_no_changed_files.stderr),
+    "disposition.py did not refuse a bundle missing changed-files.txt: "
+    f"exit={disposition_deps_no_changed_files.returncode} stdout={disposition_deps_no_changed_files.stdout!r} "
+    f"stderr={disposition_deps_no_changed_files.stderr!r}",
+)
+
 open_pr_fork_branch = subprocess.run(
     ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md")],
     cwd=ROOT, capture_output=True, text=True,

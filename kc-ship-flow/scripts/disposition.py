@@ -30,10 +30,11 @@ rather than let an unreviewed category class through as merely `listed`.
 
 When the sole argument is a directory, it is a self-describing review-input
 bundle: `<dir>/findings.json` (same schema as the single-file form),
-`<dir>/changed-files.txt` (one changed path per line; this script does not
-otherwise learn the diff, so the bundle carries it explicitly), and, only
-required when a changed path is a dependency manifest or lockfile
-(package.json, package-lock.json, pnpm-lock.yaml, yarn.lock,
+`<dir>/changed-files.txt` (required; one changed path per line -- this script
+does not otherwise learn the diff, so a bundle missing it refuses (exit 2,
+`changed-files.txt required`) rather than reading as an empty, gate-bypassing
+diff), and, only required when a changed path is a dependency manifest or
+lockfile (package.json, package-lock.json, pnpm-lock.yaml, yarn.lock,
 requirements*.txt, pyproject.toml, poetry.lock, go.mod, go.sum, Cargo.toml,
 Cargo.lock), `<dir>/review/findings-<pr>-supply.json` (the
 `tob-supply-chain-checker` lane's output, `<pr>` taken from `findings.json`'s
@@ -41,12 +42,13 @@ Cargo.lock), `<dir>/review/findings-<pr>-supply.json` (the
 refuses (exit 2, `supply-chain findings required`) before any disposition is
 computed; a diff without such a path, or a present supply-chain file, is
 unaffected and proceeds to the normal disposition below. The single-file
-form never checks this -- it carries no changed-file list to gate on.
+form never checks either -- it carries no changed-file list to gate on.
 
 Exit codes: 0 disposition computed and printed as JSON on stdout (block,
 listed, or reviewer-absent); 2 usage error, a findings list with a
 non-dict entry or an entry whose `category` is not a string, or (bundle form
-only) a dependency-manifest diff missing its supply-chain findings file.
+only) a missing `changed-files.txt` or a dependency-manifest diff missing its
+supply-chain findings file.
 """
 from __future__ import annotations
 
@@ -68,6 +70,7 @@ DEPENDENCY_FILENAMES = frozenset({
 })
 REQUIREMENTS_RE = re.compile(r"^requirements.*\.txt$")
 SUPPLY_CHAIN_REFUSAL = "supply-chain findings required"
+CHANGED_FILES_REFUSAL = "changed-files.txt required"
 
 
 class MalformedFindings(ValueError):
@@ -153,7 +156,10 @@ def main_bundle(target: Path) -> int:
         return 2
 
     changed_files_path = target / "changed-files.txt"
-    changed_files = read_changed_files(changed_files_path) if changed_files_path.is_file() else []
+    if not changed_files_path.is_file():
+        print(f"{CHANGED_FILES_REFUSAL}: {changed_files_path}", file=sys.stderr)
+        return 2
+    changed_files = read_changed_files(changed_files_path)
     if any(is_dependency_path(changed) for changed in changed_files):
         pr = document.get("pr") if document else None
         supply_findings_path = target / "review" / f"findings-{pr}-supply.json"

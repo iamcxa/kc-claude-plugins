@@ -1,0 +1,7 @@
+{
+  "schema": "kc-dev-flow-pr-review-findings/v1",
+  "pr": 7,
+  "findings": [
+    {"category": "style", "summary": "fixture: bundle with no changed-files.txt", "location": "scripts/example.py:1"}
+  ]
+}
