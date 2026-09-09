@@ -15,6 +15,17 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:rzqf2brz01krek0pdmz8cbnt:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:rzqf2brz01krek0pdmz8cbnt-backlog-1
+              briefing:
+                id: briefing:rzqf2brz01krek0pdmz8cbnt:backlog:attempt-1:revision-1
+                digest: sha256:f4f5cc0cc7d58414dffc892090b3406d7778c6ba1d439fef67fb367a3a5d6ae1
+                room-ref: ./collapse-to-one-board/review/backlog/briefing-1
 ---
 
 ## The problem

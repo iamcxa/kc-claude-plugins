@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rzqf2brz01krek0pdmz8cbnt:backlog:attempt-1:revision-1",
+  "question": "Does one board plus a generated per-release contract carry everything three boards carried, judged on this skill's own journey?",
+  "artifacts": [
+    {
+      "id": "artifact:rzqf2brz01krek0pdmz8cbnt:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ae8de7fe2f1f83cf60f446c577b6bceb8df6f0a5/collapse-to-one-board.md",
+      "rev": "sha256:b23f685d794f274808725662b48cae26ab3bb1962099ac0e89b3d85a399c0767",
+      "mediaType": "text/markdown",
+      "summary": "POC seed. Absorb four card types the independently drawn board had and ours lacked: a story-level status and gap, an open-question card, a one-journey sentence, and a release label carrying its own coverage count. Demote the journey board from a canvas to a per-release contract generated from the journey file, checked by three lints that must each be shown firing on a real defect. Migrate this repository's own journey to the new format; a format that cannot describe the tool that made it describes nothing. No cross-repository evidence and no browser work in this task."
+    }
+  ]
+}
