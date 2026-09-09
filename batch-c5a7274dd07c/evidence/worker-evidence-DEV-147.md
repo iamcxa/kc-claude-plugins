@@ -1,6 +1,6 @@
 ## Evidence
-DISPATCH_TOKEN: dev147-2026-09-09-r3
-CANDIDATE_SHA: 52b51f27f1877795d024881d64064451c0fabd8b
+DISPATCH_TOKEN: dev147-2026-09-09-r4
+CANDIDATE_SHA: 7d76023f2674dcb995ff361da47333dd52922173
 BRANCH: feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers
 BASE_SHA: 668510376e157d1ff9f8fc7781c417c0f6b0d719
 PR: iamcxa/kc-claude-plugins#397

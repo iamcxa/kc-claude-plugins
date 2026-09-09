@@ -1,7 +1,37 @@
-{"schema":"kc-ship-flow-review-disposition/v1","pr":"iamcxa/kc-claude-plugins#397","dispositions":[
-{"id":"F1","outcome":"fixed","commit":"52b51f27","verified_by":"FO: removing note from the schema fails the new contract case; restored passes"},
-{"id":"F2","outcome":"fixed","commit":"52b51f27","verified_by":"contract case threads dev-debrief.py's real output through validate-receipt (CLOSE OK)"},
-{"id":"F3","outcome":"repair_round_4","verified_by":"pending"},
-{"id":"F4","outcome":"repair_round_4","verified_by":"pending"},
-{"id":"S59","outcome":"withdrawn_design","verified_by":"beside-file mechanism removed in r3; batch ab2fb263 re-closed against main's schema (CLOSE OK 6079dc6a)"}
-],"pending":["F3","F4"]}
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#397",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "52b51f27",
+   "verified_by": "FO: removing note from the schema fails the new contract case; restored passes"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "52b51f27",
+   "verified_by": "contract case threads dev-debrief.py's real output through validate-receipt (CLOSE OK)"
+  },
+  {
+   "id": "F3",
+   "outcome": "fixed",
+   "verified_by": "FO: banners gone from the diff; no iamcxa/linear ids in fixtures; candidate SHAs in close-receipt fixtures do not resolve; suites green",
+   "commit": "7d76023f"
+  },
+  {
+   "id": "F4",
+   "outcome": "fixed",
+   "verified_by": "FO: banners gone from the diff; no iamcxa/linear ids in fixtures; candidate SHAs in close-receipt fixtures do not resolve; suites green",
+   "commit": "7d76023f"
+  },
+  {
+   "id": "S59",
+   "outcome": "withdrawn_design",
+   "verified_by": "beside-file mechanism removed in r3; batch ab2fb263 re-closed against main's schema (CLOSE OK 6079dc6a)"
+  }
+ ],
+ "pending": [],
+ "reviewed_head": "7d76023f2674dcb995ff361da47333dd52922173"
+}
