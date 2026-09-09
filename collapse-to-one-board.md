@@ -26,6 +26,17 @@ gates:
                 id: briefing:rzqf2brz01krek0pdmz8cbnt:backlog:attempt-1:revision-1
                 digest: sha256:f4f5cc0cc7d58414dffc892090b3406d7778c6ba1d439fef67fb367a3a5d6ae1
                 room-ref: ./collapse-to-one-board/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:rzqf2brz01krek0pdmz8cbnt:backlog:1
+                briefing: briefing:rzqf2brz01krek0pdmz8cbnt:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-09T07:39:23.210261Z"
+                decision: approve
+                reason: 'Captain: 開票，我想盡快看到新版結果 — approving the absorb-and-collapse seed and asking for the new format quickly. Scope constraints recorded from his prior rulings: cross-repository evidence is a separate task, the function map leaves the flow but not the tree, and the skill''s own journey must survive the migration.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
