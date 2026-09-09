@@ -570,31 +570,120 @@ require(
 
 # DEV-155: a WITHOUT_IT_COMMAND that is itself a new test file the candidate
 # adds exits 126/127 at BASE_SHA -- that leg is satisfied by the path being
-# tracked at CANDIDATE_SHA and absent at BASE_SHA, not by an exit code.
-new_test_file_pair_result = subprocess.run(
-    ["bash", str(accept_evidence_script), str(FIXTURES / "new-test-file-pair.md")],
-    cwd=ROOT, text=True, capture_output=True,
-)
-require(
-    new_test_file_pair_result.returncode == 0
-    and "accept-evidence: ACCEPT" in new_test_file_pair_result.stdout
-    and "absent (added by candidate)" in new_test_file_pair_result.stdout,
-    "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND that is a new test file the "
-    f"candidate adds, recording the BASE_SHA absence: exit={new_test_file_pair_result.returncode} "
-    f"stdout={new_test_file_pair_result.stdout!r}",
-)
+# tracked at CANDIDATE_SHA and absent at BASE_SHA, not by an exit code. Built
+# in a throwaway repo (the DEV-134 candidate-tree pattern below) rather than
+# pinned to a real commit in this repo's own history, so the case does not
+# depend on this checkout's depth (a shallow CI checkout drops old commits).
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-new-test-file-") as new_test_file_dir_name:
+    new_test_file_dir = Path(new_test_file_dir_name)
+    new_test_file_repo = new_test_file_dir / "repo"
+    subprocess.run(["git", "init", "-q", str(new_test_file_repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(new_test_file_repo), *git_user, "commit", "-q", "--allow-empty", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    new_test_file_base_sha = subprocess.check_output(
+        ["git", "-C", str(new_test_file_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
 
-mutant_absent_both_sides_result = subprocess.run(
-    ["bash", str(accept_evidence_script), str(FIXTURES / "mutant-absent-both-sides.md")],
-    cwd=ROOT, text=True, capture_output=True,
-)
-require(
-    mutant_absent_both_sides_result.returncode == 1
-    and "dev-155-absent-both-sides.sh" in mutant_absent_both_sides_result.stdout,
-    "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND naming a path absent at both "
-    f"BASE_SHA and CANDIDATE_SHA: exit={mutant_absent_both_sides_result.returncode} "
-    f"stdout={mutant_absent_both_sides_result.stdout!r}",
-)
+    (new_test_file_repo / "dev-155-new-test.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(new_test_file_repo), "add", "dev-155-new-test.sh"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(new_test_file_repo), *git_user, "commit", "-q", "-m", "test(fixture): add dev-155-new-test.sh"],
+        check=True, capture_output=True,
+    )
+    new_test_file_candidate_sha = subprocess.check_output(
+        ["git", "-C", str(new_test_file_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(new_test_file_repo), "checkout", "-q", "--detach", new_test_file_candidate_sha],
+        check=True, capture_output=True,
+    )
+
+    new_test_file_evidence = new_test_file_dir / "evidence.md"
+    new_test_file_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {new_test_file_candidate_sha}\n"
+        f"BASE_SHA: {new_test_file_base_sha}\n"
+        "WITHOUT_IT_COMMAND: bash dev-155-new-test.sh\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f dev-155-new-test.sh\n",
+        encoding="utf-8",
+    )
+    new_test_file_pair_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(new_test_file_evidence), "--repo", str(new_test_file_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        new_test_file_pair_result.returncode == 0
+        and "accept-evidence: ACCEPT" in new_test_file_pair_result.stdout
+        and "absent (added by candidate)" in new_test_file_pair_result.stdout,
+        "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND that is a new test file the "
+        f"candidate adds, recording the BASE_SHA absence: exit={new_test_file_pair_result.returncode} "
+        f"stdout={new_test_file_pair_result.stdout!r}",
+    )
+
+    # AC-2, same throwaway repo: a script absent at BOTH BASE_SHA and
+    # CANDIDATE_SHA is still refused (untracked at CANDIDATE_SHA, so AC-3
+    # cannot extract a command path at all).
+    absent_both_sides_evidence = new_test_file_dir / "evidence-absent-both-sides.md"
+    absent_both_sides_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {new_test_file_candidate_sha}\n"
+        f"BASE_SHA: {new_test_file_base_sha}\n"
+        "WITHOUT_IT_COMMAND: bash dev-155-absent-both-sides.sh\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f dev-155-absent-both-sides.sh\n",
+        encoding="utf-8",
+    )
+    mutant_absent_both_sides_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(absent_both_sides_evidence), "--repo", str(new_test_file_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        mutant_absent_both_sides_result.returncode == 1
+        and "dev-155-absent-both-sides.sh" in mutant_absent_both_sides_result.stdout,
+        "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND naming a path absent at both "
+        f"BASE_SHA and CANDIDATE_SHA: exit={mutant_absent_both_sides_result.returncode} "
+        f"stdout={mutant_absent_both_sides_result.stdout!r}",
+    )
+
+# DEV-155 repair: a BASE_SHA (or CANDIDATE_SHA) that is not reachable in the
+# repository at all -- a fabricated hex, or a real SHA a shallow checkout
+# never fetched -- must die() by name instead of falling through diffs and
+# worktree checkouts that resolve an unreachable SHA to an empty result.
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-unreachable-base-") as unreachable_base_dir_name:
+    unreachable_base_dir = Path(unreachable_base_dir_name)
+    unreachable_base_repo = unreachable_base_dir / "repo"
+    subprocess.run(["git", "init", "-q", str(unreachable_base_repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(unreachable_base_repo), *git_user, "commit", "-q", "--allow-empty", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    unreachable_base_candidate_sha = subprocess.check_output(
+        ["git", "-C", str(unreachable_base_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+    fabricated_base_sha = "abc123abc123abc123abc123abc123abc123abc1"
+
+    unreachable_base_evidence = unreachable_base_dir / "evidence.md"
+    unreachable_base_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {unreachable_base_candidate_sha}\n"
+        f"BASE_SHA: {fabricated_base_sha}\n"
+        "WITHOUT_IT_COMMAND: echo present\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f absent.txt\n",
+        encoding="utf-8",
+    )
+    unreachable_base_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(unreachable_base_evidence), "--repo", str(unreachable_base_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        unreachable_base_result.returncode == 2
+        and f"BASE_SHA not reachable: {fabricated_base_sha}" in unreachable_base_result.stderr,
+        "accept-evidence.sh did not fail closed (exit 2, naming the SHA) on a BASE_SHA that is "
+        f"not reachable in the repository: exit={unreachable_base_result.returncode} "
+        f"stdout={unreachable_base_result.stdout!r} stderr={unreachable_base_result.stderr!r}",
+    )
 
 with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-tree-") as candidate_tree_dir_name:
     candidate_tree_dir = Path(candidate_tree_dir_name)

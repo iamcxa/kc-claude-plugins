@@ -149,10 +149,20 @@ echo "$(timestamp) checking Evidence block: CANDIDATE=$CANDIDATE_SHA BASE=$BASE_
 
 # AC-4: Verify CANDIDATE_SHA is a valid commit
 echo "$(timestamp) checking AC-4: CANDIDATE_SHA is valid"
-if ! git -C "$repo_root" rev-parse --verify "${CANDIDATE_SHA}^{commit}" >/dev/null 2>&1; then
-  refuse "CANDIDATE_SHA unreachable: $CANDIDATE_SHA"
+if ! git -C "$repo_root" cat-file -e "${CANDIDATE_SHA}^{commit}" 2>/dev/null; then
+  refuse "CANDIDATE_SHA not reachable: $CANDIDATE_SHA"
 fi
 echo "$(timestamp) AC-4 PASS: CANDIDATE_SHA is valid and reachable"
+
+# AC-1 reachability leg, checked here (before AC-3's diff and AC-1's own
+# worktree checkout, both of which resolve an unreachable SHA to an empty
+# result rather than an error) so a shallow checkout or fabricated hex dies
+# by name instead of surfacing as an empty changed/added-paths diff below.
+echo "$(timestamp) checking AC-1: BASE_SHA is reachable"
+if ! git -C "$repo_root" cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+  die "BASE_SHA not reachable: $BASE_SHA"
+fi
+echo "$(timestamp) AC-1 PASS: BASE_SHA is reachable"
 
 # If BRANCH is specified, additionally verify it matches remote head (if branch exists)
 if [ -n "$BRANCH" ]; then
@@ -364,12 +374,8 @@ else
 fi
 
 # AC-1: Run WITHOUT_IT_COMMAND at BASE_SHA and verify it exits non-zero
+# (reachability of BASE_SHA was already checked above, before AC-3's diff)
 echo "$(timestamp) checking AC-1: WITHOUT_IT_COMMAND exits non-zero at BASE_SHA $BASE_SHA"
-
-# Verify BASE_SHA exists
-if ! git -C "$repo_root" rev-parse --verify "${BASE_SHA}^{commit}" >/dev/null 2>&1; then
-  refuse "BASE_SHA unreachable: $BASE_SHA"
-fi
 
 # Create temporary worktree
 worktree_dir=$(mktemp -d)
