@@ -1,0 +1,7 @@
+candidate	verified_by	date	result
+DEV-134 accept station refuses .ts/.mjs	git show origin/main:kc-ship-flow/scripts/accept-evidence.sh | grep -n 'py|md|sh|json|yaml|yml|txt'	2026-09-09	lines 192,197 still carry the fixed extension list; every PR in batch ab2fb263 was refused on AC-3 and FO-overridden
+DEV-147 validator skips schema without jsonschema; writers' output forbidden by schema	git show origin/main:docs/plan-flow/schema/validate-receipt.py | grep -n jsonschema	2026-09-09	lines 19-24: import guarded, `if jsonschema:`; batch 0f273392 close embedded dev_debrief/ship_debrief/accepted_residual and passed only without jsonschema; ab2fb263 refused until moved beside
+DEV-135 writers refuse a carried issue without an evidence file	batch 0f273392 README S47; kc-ship-flow/scripts/dev-debrief.py line 96	2026-09-09	`missing worker-evidence file for {issue}`; FO ran writers on a copy without DEV-37 in 0f273392
+DEV-148 review station has no supply-chain lane	git show origin/main:kc-ship-flow/skills/first-officer/SKILL.md | grep -i supply	2026-09-09	no match; the lane ran in ab2fb263 only after the Captain's question and found fflate CVE-2026-45820
+DEV-149 merge verdict names CI as gate without checking coverage	git grep -c qnow-next 4122d2be -- .github (qnow)	2026-09-09	0; #1181/#1182 bodies claimed CI as the aggregate gate
+not admitted: DEV-126, DEV-127, DEV-128, DEV-130, DEV-120/121/131, DEV-123/124/125	—	2026-09-09	no evidence from ab2fb263 pressing them; DEV-128 handled at release time

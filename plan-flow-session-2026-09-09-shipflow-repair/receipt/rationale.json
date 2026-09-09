@@ -1,0 +1,8 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "pending — Captain's approval line",
+ "lint_full": "lint.txt",
+ "station0": "station0-candidates.tsv",
+ "falsifier": "Any of: a repaired station still refuses a fixture it should accept; the close receipt of this batch itself needs a manual workaround; contract-test (required marketplace-parity job) does not exercise the new refusal; a PR in the set edits a plan-flow schema without a ship re-pin in the same PR.",
+ "order_note": "DEV-147 and DEV-135 touch the same writers; one worker, two commits, one PR. DEV-149 last: it is a new script, no dependency on the others."
+}

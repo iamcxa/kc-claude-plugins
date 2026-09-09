@@ -1,0 +1,22 @@
+{
+  "project_id": "6072d592-8704-448b-bb8d-66471b0557f9",
+  "code_repo": "iamcxa/kc-claude-plugins",
+  "milestone_id": "381855af-826f-482c-a7a6-6b3a61de4b81",
+  "user_value": "Kent runs the next plan session on a ship-flow whose accept, review, merge-verdict and close stations no longer need FO overrides for the four defects batch ab2fb263 recorded.",
+  "hypothesis": "If we fix the four station defects the qnow batch recorded, each as one PR through ship-flow's own stations, then the next batch closes without an FO override at accept, without a supply-chain check run by hand, without a CI claim the workflow does not back, and with a close receipt that validates the same on every host.",
+  "wedge": "kc-claude-plugins only, Kent as Captain, FO dispatches four local Sonnet workers in order 134 → 147+135 → 148 → 149; not in it: DEV-126/127/128/130 and the docs layout tickets.",
+  "outcome": "accept-evidence.sh accepts any git-tracked path; validate-receipt.py fails closed without jsonschema and the writers' outputs have a schema-admitted home; dev/ship-debrief accept a carried issue; the review station dispatches the supply-chain lane on dependency diffs and disposition refuses without it; a ci-covers check backs any CI-as-gate claim; contract-test covers each.",
+  "falsifier": "Any of: a repaired station still refuses a fixture it should accept; the close receipt of this batch itself needs a manual workaround; contract-test (required marketplace-parity job) does not exercise the new refusal; a PR in the set edits a plan-flow schema without a ship re-pin in the same PR.",
+  "premises": [
+    "The four defects are still on origin/main as verified by command on 2026-09-09 (station 0).",
+    "No other agent holds these tickets (Captain, 2026-09-09; FO branch/PR scan).",
+    "ship-flow can ship its own repair: its stations ran four batches already."
+  ],
+  "exit": [
+    "DEV-134, DEV-147, DEV-135, DEV-148, DEV-149 merged on main with contract-test green.",
+    "This batch's own close receipt validates with jsonschema present, no manual edit.",
+    "Next plan session starts on the released kc-ship-flow (DEV-128 handled at release)."
+  ],
+  "journey": {"persona": "Kent as Captain of the next batch", "start": "a candidate with a .ts without-it command", "end": "CLOSE OK on a receipt no hand touched", "observable": "zero FO override lines in the batch README"},
+  "issue_cut": {"order": ["DEV-134", "DEV-147", "DEV-135", "DEV-148", "DEV-149"], "note": "DEV-147 and DEV-135 touch the same writers; one worker, two commits, one PR. DEV-149 last: it is a new script, no dependency on the others."}
+}
