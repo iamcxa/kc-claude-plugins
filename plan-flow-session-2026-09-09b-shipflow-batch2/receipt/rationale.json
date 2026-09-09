@@ -1,0 +1,8 @@
+{
+ "captain_answers_file": "station2-captain-answers.md",
+ "decision": "pending — Captain's approval line",
+ "lint_full": "lint.txt",
+ "station0": "station0-candidates.tsv",
+ "falsifier": "Any of: a station still needs the FO to rewrite its output by hand in this batch's own PRs; #399's state-branch test does not fail when the hardcode is restored; a dispatched fixture task's model does not reach the create call; the adopter's ship root still pushes onto dev's branch.",
+ "order_note": "DEV-152 is pre-built (#399) and enters at accepted; DEV-155 last because DEV-156 changes what the accept station receives."
+}

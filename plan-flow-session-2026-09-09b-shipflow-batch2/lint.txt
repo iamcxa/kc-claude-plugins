@@ -1,0 +1,20 @@
+PASS L1 one-line User value: 'Kent dispatches a batch, leaves, and returns to one Slack me'
+PASS L2 one cycle: {'b788c52d-8370-475f-be4f-8fcd88dd03d6'}; unadmitted: 11
+PASS L3 milestone membership
+PASS L4 admission DEV-156: 3 non-goals
+PASS L4 admission DEV-155: 2 non-goals
+PASS L4 admission DEV-154: 2 non-goals
+PASS L4 admission DEV-153: 2 non-goals
+PASS L4 admission DEV-151: 2 non-goals
+PASS L5 initiative when >1 project: single project; not triggered
+PASS L6 blockedBy is a DAG: blocker->blocked [('DEV-121', 'DEV-131'), ('DEV-119', 'DEV-120'), ('DEV-117', 'DEV-120'), ('DEV-116', 'DEV-119'), ('DEV-118', 'DEV-119'), ('DEV-115', 'DEV-117'), ('DEV-115', 'DEV-116'), ('DEV-106', 'DEV-107'), ('DEV-105', 'DEV-106'), ('DEV-104', 'DEV-106')]; order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-123', 'DEV-124', 'DEV-125', 'DEV-126', 'DEV-127', 'DEV-128', 'DEV-129', 'DEV-130', 'DEV-134', 'DEV-135', 'DEV-147', 'DEV-148', 'DEV-149', 'DEV-150', 'DEV-151', 'DEV-152', 'DEV-153', 'DEV-154', 'DEV-155', 'DEV-156', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-131', 'DEV-107', 'DEV-119', 'DEV-120']
+PASS L6 id-order advisory: violations none
+PASS L7 split advisory (warn only): 33 issues, forked=True; consider Milestones
+PASS L8 e2e-able AC DEV-156: 3 ACs
+PASS L8 e2e-able AC DEV-155: 3 ACs
+PASS L8 e2e-able AC DEV-154: 3 ACs
+PASS L8 e2e-able AC DEV-153: 3 ACs
+PASS L8 e2e-able AC DEV-151: 3 ACs
+PASS L9 by-product Issue check: issues with no unique surface: none
+PASS L10 re-verified presence and age: 14-day bound; violations: none
+LINT PASS | receipt 516d113c14049441 | order ['DEV-104', 'DEV-105', 'DEV-115', 'DEV-118', 'DEV-121', 'DEV-122', 'DEV-123', 'DEV-124', 'DEV-125', 'DEV-126', 'DEV-127', 'DEV-128', 'DEV-129', 'DEV-130', 'DEV-134', 'DEV-135', 'DEV-147', 'DEV-148', 'DEV-149', 'DEV-150', 'DEV-151', 'DEV-152', 'DEV-153', 'DEV-154', 'DEV-155', 'DEV-156', 'DEV-106', 'DEV-116', 'DEV-117', 'DEV-131', 'DEV-107', 'DEV-119', 'DEV-120']

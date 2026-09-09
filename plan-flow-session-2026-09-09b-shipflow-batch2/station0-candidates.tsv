@@ -1,0 +1,8 @@
+candidate	verified_by	date	result
+DEV-156 dispatch station hand-writes the message and hardcodes --model haiku-4-5	grep -n 'model haiku-4-5' fenced-dispatch.sh (main 781f9624)	2026-09-09	line 22; spacedock dispatch build --print-schema has no model field (relay#191); Captain ruled: dispatch dev entities
+DEV-151 open-pr.sh body is five audit lines, not the pr-merge template	sed -n BODY_EOF heredoc, open-pr.sh	2026-09-09	confirmed; #397/#398/#400 bodies rewritten by hand
+DEV-152 intent.sh/holder.sh hardcode branch and remote	grep branch=spacedock-state/dev (main)	2026-09-09	lines 11 and 9; PR #399 (adopter) fixes it with state-branch.test.sh
+DEV-153 e2e-gate.py ROOT from __file__, flows under docs/ship-flow/flows	grep -n parents/flows e2e-gate.py	2026-09-09	lines 43-44; commissioned README says docs/ship/flows
+DEV-154 FO skill names scripts by repo-relative path	grep -c kc-ship-flow/scripts/ SKILL.md	2026-09-09	8 occurrences; unresolvable in an adopter
+DEV-155 a pair in a new test file cannot run at BASE_SHA	accept-evidence.sh AC-1 leg; #399 and DEV-148/149 evidence	2026-09-09	127 refused; inline duplication forced
+not admitted: DEV-150 (one-hop read path), DEV-126/127/128/130, docs layout tickets	—	2026-09-09	DEV-150 parked in Unplanned; DEV-128 at release time

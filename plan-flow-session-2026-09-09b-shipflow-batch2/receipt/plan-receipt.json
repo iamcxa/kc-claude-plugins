@@ -1,0 +1,154 @@
+{
+ "schema": "kc-plan-receipt/v1",
+ "code_repo": "iamcxa/kc-claude-plugins",
+ "base_branch": "main",
+ "project": {
+  "id": "6072d592-8704-448b-bb8d-66471b0557f9",
+  "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
+  "user_value": "Kent runs one ship batch that dispatches dev entities to Conductor cloud through spacedock, from any adopter repository, without a hand-written message or a hardcoded model.",
+  "hypothesis": "If we make the dispatch station build its message from a dev entity's stage and fix the five portability defects the adopter found, then a repository with its own ship state root dispatches two lanes to Conductor cloud through the stations, and the next batch here needs no FO rewrite of a PR body or an inline without-it pair.",
+  "wedge": "kc-claude-plugins only; Kent as Captain; #399 (DEV-152, adopter-authored) enters at accepted; DEV-156 first because it changes what the other stations receive; then DEV-151, DEV-153, DEV-154, DEV-155. Not in it: DEV-150, nesting a first-officer session in the cloud workspace (#191's recorded ideal), the docs/plan-flow move (DEV-121, the kc-plan-flow session).",
+  "outcome": "fenced-dispatch.sh obtains its message from spacedock dispatch build and passes the stage's model; open-pr.sh writes the pr-merge body; intent.sh/holder.sh derive branch and remote from the state checkout; e2e-gate.py takes root and flows dir as arguments; the FO skill resolves scripts from the plugin root; the accept station records an absent-at-base path the candidate adds; contract-test covers each.",
+  "exit": [
+   "DEV-156, DEV-151, DEV-152 (#399), DEV-153, DEV-154, DEV-155 merged on main with contract-test green.",
+   "This batch's own PRs opened by open-pr.sh with template bodies, and its accept blocks need no inline pair duplication for new test files.",
+   "kc-ship-flow released (DEV-128 handled) so adopters install the fixed stations."
+  ],
+  "outcome_hash": "sha256:8ebc34c5be7982ec2e84835af6b30338a197e931db94c08cd49c548dcb035004"
+ },
+ "cycle": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "milestones": [
+  {
+   "id": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "name": "Ship-flow batch 2: dispatch dev entities, and the adopter portability defects",
+   "journey": {
+    "persona": "Kent as Captain; the relay session as adopter",
+    "start": "a batch member in a second repository cannot be dispatched",
+    "end": "two lanes dispatched from one batch through spacedock",
+    "observable": "intent files on spacedock-state/ship, each with the stage's model"
+   }
+  }
+ ],
+ "issues": {
+  "DEV-156": {
+   "id": "de1366ea-ae92-41e6-99c7-757eecd8267b",
+   "url": "https://linear.app/duckbase-co/issue/DEV-156/kc-ship-flow-dispatch-station-dispatch-dev-entities-via-spacedock",
+   "title": "DEV-156",
+   "branch": "feature/dev-156-kc-ship-flow-dispatch-station-dispatch-dev-entities-via",
+   "close_line": "Fixes DEV-156",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\n`kc-ship-flow/scripts/fenced-dispatch.sh` builds one hand-written message and calls `conductor workspace create --agent claude --model haiku-4-5 --effort low` (verified at main 781f9624 on 2026-09-09: line 22). The model is fixed for every batch member, and the message quality is whatever the first officer wrote that day. `spacedock dispatch build --entity-path <task> --stage <stage>` already produces an ensign dispatch artifact from a dev entity, with the model read from the workflow's stage definition (`dispatch build --print-schema` has no model field; the engine reads it per stage). Ship reinvented in bash what dev flow already owns.\n\nCaptain's ruling (recorded on spacedock-dev/subspace-relay#191, confirmed in chat 2026-09-09 「前者，先做完這一批」): the dispatch station dispatches dev entities, several in a row — one `spacedock dispatch build` call per task, one claim per task, the intent fence unchanged. The Evidence block is written after the dev task's `validation` stage (`fresh: true`, `feedback-to: implementation`) by the layer that verified, not the layer that built; `accept-evidence.sh` re-running WITHOUT_IT_COMMAND at BASE_SHA stays as a third check.\n\n## Accepted outcome\n\n`fenced-dispatch.sh` takes `<state-dir> <holder-id> <writer> <claim> <project-id> <base-branch> --entity-path <dev-task> --stage <stage> [--workflow-dir <dir>]`, obtains the message by running `spacedock dispatch build --entity-path … --stage … --host claude` (the artifact's text is the message file whose sha256 the intent records), passes no `--model`/`--effort` to `conductor workspace create` unless the built artifact carries one, and refuses with a named reason when `dispatch build` exits non-zero. The station doc states that the dispatched unit is a dev entity and that the Evidence block arrives from the task's validation stage. Falsifier: a fixture dev task whose stage declares a model produces a create call carrying that model; the same task with no model produces a create call with none.\n\n## Non-goals\n\n* Nesting a first-officer session in the cloud workspace (recorded on #191 as the ideal, not this ticket).\n* Changing the intent/holder fence or the claim schema.\n* Changing [accept-evidence.sh](<http://accept-evidence.sh>)'s checks.\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/fenced-dispatch.sh <fixture-state> h1 1 dev-1.g1 <uuid> main --entity-path kc-ship-flow/scripts/fixtures/dispatch/task-with-model.md --stage implementation --dry-run` prints the `conductor workspace create` argv containing `--model` from the stage and the message sha256 that matches the built artifact.\n* **AC-2** the same with `--entity-path …/task-without-model.md` prints an argv without `--model` and `--effort`.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered, and a fixture whose `dispatch build` fails makes the script exit 4 printing `dispatch build failed`.\n\nRe-verified: `grep -c 'model haiku-4-5' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/fenced-dispatch.sh` exit 0 2026-09-09",
+   "body_sha256": "a2c605d9237572b9f5df5e22d8b64acbe426f046a678002d5206a6f96279bff7"
+  },
+  "DEV-155": {
+   "id": "58d4b12f-56cd-4866-810c-1621735cedf9",
+   "url": "https://linear.app/duckbase-co/issue/DEV-155/accept-station-a-without-it-pair-that-lives-in-a-test-file-the",
+   "title": "DEV-155",
+   "branch": "feature/dev-155-accept-station-a-without-it-pair-that-lives-in-a-test-file",
+   "close_line": "Fixes DEV-155",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\nObserved 2026-09-09 on iamcxa/kc-claude-plugins#399 (DEV-152) by the subspace-relay session, and consistent with [accept-evidence.sh](<http://accept-evidence.sh>)'s AC-1 at main: the station runs WITHOUT_IT_COMMAND in a worktree at BASE_SHA and requires a non-zero exit there; when the pair lives in a test file the candidate adds, `bash` on the missing file exits 127, which the station refuses as \"command did not run\" (the S43-era rule that a command must have run, not merely failed). The worker's only way through is to duplicate the new test's assertion inline in WITHOUT_IT_COMMAND — so the pair and the test can drift and nothing checks that they still agree. The same shape hit DEV-148 and DEV-149 (fixture directories absent at BASE_SHA).\n\n## Accepted outcome\n\nThe station distinguishes \"the command's own file is absent at BASE_SHA\" from \"the command ran and failed\": when WITHOUT_IT_COMMAND names a path that is added by the candidate (present at CANDIDATE_SHA, absent at BASE_SHA — the station already computes the changed-path set), the BASE_SHA leg is satisfied by that fact and recorded as `at BASE_SHA: absent (added by candidate)` instead of demanding an exit code; the removed-variant leg still must run at CANDIDATE_SHA and fail. An absent path that the candidate did not add is still refused. Contract cases: a pair whose command is a new test file → ACCEPT with the recorded reason; a pair naming a path absent on both sides → REFUSE.\n\n## Non-goals\n\n* Relaxing the removed-variant leg.\n* Accepting a pair with no observable failure at all.\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/accept-evidence.sh kc-ship-flow/scripts/fixtures/new-test-file-pair.md` prints ACCEPT and `at BASE_SHA: absent (added by candidate)`.\n* **AC-2** `bash kc-ship-flow/scripts/accept-evidence.sh kc-ship-flow/scripts/fixtures/mutant-absent-both-sides.md` prints REFUSE naming the path.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `grep -c 'at BASE_SHA' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/accept-evidence.sh` exit 0 2026-09-09",
+   "body_sha256": "4a2eb4bf0e06d870433323b9e8eb3449e521cfdb091939b83784b27ff90498f0"
+  },
+  "DEV-154": {
+   "id": "a56d735a-bab0-49c6-ae95-9b55c049e4b2",
+   "url": "https://linear.app/duckbase-co/issue/DEV-154/kc-ship-flow-first-officer-skill-scripts-are-named-by-repository",
+   "title": "DEV-154",
+   "branch": "feature/dev-154-kc-ship-flow-first-officer-skill-scripts-are-named-by",
+   "close_line": "Fixes DEV-154",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\nReported by the subspace-relay adopter on 2026-09-09, verified: `kc-ship-flow/skills/first-officer/SKILL.md` names every station script as `kc-ship-flow/scripts/<name>` (lines 17, 29–35 at main). In an adopter repository the plugin is installed under the Claude/Codex plugin root, not at that relative path, so the FO cannot run the chain as written.\n\n## Accepted outcome\n\nThe skill resolves the scripts directory once (the plugin's own install path via `${CLAUDE_PLUGIN_ROOT}` or the skill file's location) and names each script relative to it; docs/ship/README.md's per-stage lines are pinned to the same resolution; [local-profile-check.py](<http://local-profile-check.py>) verifies the resolved paths exist. Falsifier: the chain runs from a temp adopter checkout with the plugin installed only under ~/.claude/plugins/local/.\n\n## Non-goals\n\n* Moving scripts out of the plugin.\n* Changing what each station does.\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/local-profile-check.py kc-ship-flow/scripts/fixtures/adopter/docs/ship/README.md` run from a directory that is not kc-claude-plugins exits 0 and prints each resolved script path.\n* **AC-2** `grep -c 'kc-ship-flow/scripts/' kc-ship-flow/skills/first-officer/SKILL.md` prints 0 (paths come from the resolved root).\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with the adopter fixture registered.\n\nRe-verified: `grep -c 'kc-ship-flow/scripts/' /Users/kent/.claude/plugins/local/kc-ship-flow/skills/first-officer/SKILL.md` exit 0 2026-09-09",
+   "body_sha256": "6bd90d44254e1f05d8804f350dcc2e719255f074544fd40195f9ecd98026dccf"
+  },
+  "DEV-153": {
+   "id": "60318a1f-66ef-4ed8-ad87-a861f19aa563",
+   "url": "https://linear.app/duckbase-co/issue/DEV-153/kc-ship-flow-e2e-gatepy-root-resolves-from-the-plugin-file-and-flows",
+   "title": "DEV-153",
+   "branch": "feature/dev-153-kc-ship-flow-e2e-gatepy-root-resolves-from-the-plugin-file",
+   "close_line": "Fixes DEV-153",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\nReported by the subspace-relay adopter on 2026-09-09, verified on kc-claude-plugins main: `kc-ship-flow/scripts/e2e-gate.py` line 43 `ROOT = Path(__file__).resolve().parents[2]` lands outside any checkout when the plugin is installed under ~/.claude/plugins/local/; it degrades to `e2e: not applicable` only because the flow-file check runs before `resolve_commit`. Line 44 `FLOWS_DIR = ROOT / \"docs/ship-flow/flows\"` names the retired workflow (DEV-120) while the commissioned docs/ship/README.md Local Profile row says `docs/ship/flows/`.\n\n## Accepted outcome\n\n[e2e-gate.py](<http://e2e-gate.py>) takes the repository root and the flows directory from its arguments (the FO skill passes the code checkout root and the README's Local Profile row), never from `__file__`; a missing flows directory is a named refusal, not \"not applicable\"; the station doc and SKILL.md show the invocation.\n\n## Non-goals\n\n* Changing the flow-file format or [e2e-cli.sh](<http://e2e-cli.sh>).\n* Retiring docs/ship-flow (DEV-120).\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/e2e-gate.py --root kc-ship-flow/scripts/fixtures/e2e-gate/repo --flows docs/ship/flows <milestone>` exits 0 and prints the resolved flow path under docs/ship/flows.\n* **AC-2** the same with `--flows docs/missing` exits 2 and prints `flows directory not found`.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `grep -c 'docs/ship-flow/flows' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/e2e-gate.py` exit 0 2026-09-09",
+   "body_sha256": "ee37921649c007a22b6204098e76a69a0cbc28ff5c3abdfdba65238652367d58"
+  },
+  "DEV-152": {
+   "id": "df59c9c2-177a-40b7-adfd-452afb510d29",
+   "url": "https://linear.app/duckbase-co/issue/DEV-152/kc-ship-flow-dispatch-station-intentsh-and-holdersh-hardcode",
+   "title": "DEV-152",
+   "branch": "feature/dev-152-kc-ship-flow-dispatch-station-intentsh-and-holdersh-hardcode",
+   "close_line": "Fixes DEV-152",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\nReported by the subspace-relay adopter session on 2026-09-09 and verified by the FO on kc-claude-plugins main the same day: `kc-ship-flow/scripts/intent.sh` line 11 and `kc-ship-flow/scripts/holder.sh` line 9 set `branch=spacedock-state/dev` and use it for `fetch`, `merge --ff-only FETCH_HEAD` and `push origin HEAD:$branch`; `fenced-dispatch.sh` calls both. A repository whose `docs/ship` state root sits on `spacedock-state/ship` (subspace-relay has three roots: dev, plan, ship) would push ship's intents and holder record onto dev's branch. The value is an assumption from when this repository's ship state lived under docs/dev on that branch, not a constraint.\n\n## Accepted outcome\n\nBoth scripts derive the branch from the state checkout itself — `git -C \"$state\" rev-parse --abbrev-ref --symbolic-full-name @{upstream}` (falling back to `rev-parse --abbrev-ref HEAD` with `origin/` prefix) — and refuse with a named reason when the checkout has no upstream; [fenced-dispatch.sh](<http://fenced-dispatch.sh>) passes nothing new. Falsifier: a temp state checkout on branch `spacedock-state/ship` with an origin, `intent.sh commit` pushes to `spacedock-state/ship` and `git -C origin rev-parse spacedock-state/dev` is unchanged.\n\n## Non-goals\n\n* Parametrising the branch on the command line (a second source of truth beside the checkout).\n* Changing the claim/intent schema.\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/intent.sh commit <ship-root-fixture> h1 1 dev-1.g1 <token> <uuid> main <sha>` in a fixture whose state checkout tracks `origin/spacedock-state/ship` exits 0 and `git -C <origin> log -1 --format=%s spacedock-state/ship` prints the intent commit while `spacedock-state/dev` is untouched.\n* **AC-2** the same with a checkout that has no upstream exits 6 and prints `state checkout has no upstream`.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `git show origin/main:kc-ship-flow/scripts/intent.sh | grep -q 'branch=spacedock-state/dev'` exit 0 2026-09-09",
+   "body_sha256": "09b2175f10f327b48c6a57e16809a930667260926a1a787c6538ee523c93a49d"
+  },
+  "DEV-151": {
+   "id": "22b9f591-3aeb-4726-9d94-5f4325d7ac74",
+   "url": "https://linear.app/duckbase-co/issue/DEV-151/kc-ship-flow-open-prsh-write-the-pr-body-per-the-pr-merge-mod-template",
+   "title": "DEV-151",
+   "branch": "feature/dev-151-kc-ship-flow-open-prsh-write-the-pr-body-per-the-pr-merge",
+   "close_line": "Fixes DEV-151",
+   "profile": "pilot-product-slice",
+   "milestone": "4e6be035-a357-483d-a51c-73716d1d50e6",
+   "body": "## The problem\n\nCaptain, 2026-09-09: 「應該要按照 pr-mod 寫 pr body」. `kc-ship-flow/scripts/open-pr.sh` writes a body of five lines (Candidate, Base, Without-it, Removed variant, Accept station) — verified by reading its BODY_EOF heredoc on 2026-09-09 — while the repository's pr-merge mod (`docs/dev/_mods/pr-merge.md` § PR body template) requires: a one-sentence motivation lead (≤25 words), `## What changed` (3–5 action-verb bullets ≤15 words), `## Evidence` (N/N passed per suite), a `---` separator, the audit link `[{entity-id}](/{owner}/{repo}/blob/{sha}/{path})`, and `Closes {issue}`; 60–120 words. In batch c5a7274dd07c the workers opened PRs themselves with free-form bodies (#395, #397); the FO rewrote #397 by hand.\n\n## Accepted outcome\n\n`open-pr.sh <evidence-file> <batch-dir>` builds the pr-merge body from the Evidence block, the plan receipt's issue entry (motivation lead condensed from `## The problem`, `Fixes <issue>` from `close_line`) and the batch README (audit link to the batch entity on the state branch), with `## Evidence` from the block's TESTS line in N/N form; the body is 60–120 words; contract-test asserts the section order and the Closes line. Falsifier: #397's rewritten body, regenerated by the script from its evidence file, differs only in wording of the lead.\n\n## Non-goals\n\n* Changing the pr-merge mod's template.\n* Generating the PR title (already the candidate commit's subject).\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/open-pr.sh kc-ship-flow/scripts/fixtures/open-pr/evidence.md kc-ship-flow/scripts/fixtures/open-pr/batch --dry-run` prints a body whose first line has no `#` and ≤25 words and whose sections appear in the order What changed, Evidence, `---`, audit link, Fixes.\n* **AC-2** the same with a block lacking TESTS prints a body without `## Evidence` and exits 0.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `grep -c 'What changed' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/open-pr.sh` exit 1 2026-09-09",
+   "body_sha256": "c9c298bb27f2afebbb3583111fb0407cf00c2fd0e22ebf044f68e727cb0b1e42"
+  }
+ },
+ "edges": [
+  [
+   "DEV-156",
+   "DEV-151"
+  ],
+  [
+   "DEV-151",
+   "DEV-152"
+  ],
+  [
+   "DEV-152",
+   "DEV-153"
+  ],
+  [
+   "DEV-153",
+   "DEV-154"
+  ],
+  [
+   "DEV-154",
+   "DEV-155"
+  ]
+ ],
+ "dispatch_order": [
+  "DEV-156",
+  "DEV-151",
+  "DEV-152",
+  "DEV-153",
+  "DEV-154",
+  "DEV-155"
+ ],
+ "lint": {
+  "schema": "kc-plan-lint/v1",
+  "pass": true,
+  "digest": "516d113c14049441c966dcadd722d61023a934b6c7ea639adb29d66137bdbb9f"
+ },
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "The six defects are on origin/main 781f9624 as verified by command (station 0).",
+   "agreed": false
+  },
+  {
+   "id": "P2",
+   "statement": "spacedock dispatch build --entity-path/--stage exists and emits a dispatch artifact (relay#191; to be re-verified by DEV-156's worker with --help).",
+   "agreed": false
+  },
+  {
+   "id": "P3",
+   "statement": "The relay session's #399 is confined to kc-ship-flow/ and carries a falsified test.",
+   "agreed": false
+  }
+ ],
+ "rationale_sha256": "755a09a031389e7973ba2a61b618d07dc3661ccb80ea380766aad82ead9f9405",
+ "receipt_sha256": "0a557023cc36cc410b94e3bf99a9dde46084490f047fd918005eac3e42e9a0c5"
+}
