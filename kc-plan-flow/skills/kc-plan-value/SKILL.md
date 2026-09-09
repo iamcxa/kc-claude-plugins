@@ -140,6 +140,25 @@ had a criterion that another issue's acceptance depended on -- so removing it wa
 moving a card, it was also amending what the depending issue promised to print. Ask the
 question of the sentence, then follow what the answer touches.
 
+## Where the gate's rejects go
+
+An issue the gate turns away is not deleted and not left milestone-less. It goes to the
+tracker's triage queue **with the reason written on it** -- that it did not survive the
+shipping sentence, and that this is not a judgement on the work. Milestone-less reads as
+an oversight; a state reads as a decision.
+
+**Not being able to place an issue is a different thing, and does not belong here.** If
+you cannot tell which milestone an issue serves, you do not yet understand the issue or
+the milestones, and filing it hides that instead of resolving it. The gate rejects what
+it has understood.
+
+**Triage needs an emptying, or it is a graveyard.** One team's queue held nine issues
+when this rule was written, the oldest sitting forty days, four of them repeats of one
+title, and six with no project at all -- so nothing there distinguished "decided against"
+from "never looked at". The next planning round puts every triaged issue of that project
+in front of the new shipping sentence: it passes and joins, or its reason is written
+again. An issue whose reason is written twice is asking for a decision, not a queue.
+
 ## Moving an issue can make another milestone's description a lie
 
 A milestone description is an acceptance test, so it describes work. Move that work and
