@@ -129,3 +129,34 @@ The Linear-read half of this task is complete and durable (48/48 issues accounte
 ### Summary
 
 Install and render both work; PNG export does not, for a structural reason and not a fixable mistake in this session: the tldraw client's sync URL is a hard-coded `localhost:5858` with no override, so a browser can only ever see the shared canvas, never a privately-ported one. Two ways out, no implementation done by this session: (a) the FO lifts "do not reuse 5858" and this session writes `linear-reverse` there instead — rooms are isolated by id, `draw-a-journey` is unaffected, export would work today with zero code changes; (b) a small code change makes `SERVER_URL` and the export target configurable. Data survives either way: `linear-reverse` is fully rendered (137 shapes, 10 releaseless stories correctly banded, no blank stickies) on the isolated private server and re-renders identically once run against whichever server the FO picks.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Render `linear-reverse` into the shared canvas (5858/3737) once the FO lifted "do not reuse 5858"; capture the renderer's own coverage lines; confirm `draw-a-journey` untouched.
+  `node lib/journey-render.mjs <draft> linear-reverse` against the shared, already-running server: `200, 137 shapes`. Coverage verbatim: `a1: covers 4/6 activities  not touched: leave-feedback, revoke-the-share` / `a2: covers 2/6  not touched: get-the-tools, open-and-read, leave-feedback, revoke-the-share` / `d: covers 1/6  not touched: get-the-tools, publish-and-hand-out-link, leave-feedback, read-feedback-back, revoke-the-share` / `b: covers 2/6  not touched: get-the-tools, publish-and-hand-out-link, read-feedback-back, revoke-the-share` / `c: covers 3/6  not touched: get-the-tools, publish-and-hand-out-link, leave-feedback`. `draw-a-journey` checked via `/health` before and after my render: `sessions: 1, clock: 18` both times, unchanged. The FO independently verified afterward that `linear-reverse` exists with six pages and `draw-a-journey` is untouched, and accepted this half of the work.
+- FAILED: Export the Story map page and one release board as PNG via `lib/journey-export.mjs`, open them, and judge whether the six invented activities read as a journey or a feature list.
+  Multiple attempts (default daemon, then an isolated `AGENT_BROWSER_NAMESPACE`, with progressively longer timeouts) hit intermittent `agent-browser` failures — `open` timeouts and `Resource temporarily unavailable (os error 35) (after 5 retries)` on `eval` — under a verified severe host load (`uptime`: load averages 53/178/152 on a 3-user box, 26 concurrent Chrome-for-Testing processes). The FO subsequently identified the root cause directly: both of us were driving the same shared `agent-browser` instance at once and the CDP channel died from that contention — their scheduling error, not a defect in my approach. Per the FO's instruction I stood down, killed my own isolated-namespace daemon, and did not touch the browser again. The FO is completing the export themselves. No PNG was produced or opened by this session; the visual "journey vs. feature-list" judgment was not attempted and is not claimed.
+
+### Three findings carried forward so they are not lost when this task closes
+
+1. **`npm install` rewrites `package-lock.json` on a clean checkout.** Exact diff (`git diff` on `kc-team-ops/package-lock.json`):
+   ```
+   @@ -27,6 +27,9 @@
+            "tsx": "^4.19.2",
+            "typescript": "^5.8.3",
+            "vite": "^8.0.16"
+   +      },
+   +      "engines": {
+   +        "node": ">=22.13.0"
+          }
+        }
+   ```
+   npm is normalizing the root package entry to carry the `engines` field already declared in `package.json` but never recorded in the committed lock. Left uncommitted in the CODE worktree; not reverted, not committed by this session.
+
+2. **`server/client/App.tsx`'s `SERVER_URL` is a hard-coded literal (`http://localhost:5858`) with no env, query-param, or build-time override anywhere in that 43-line file.** A browser can write to a privately-ported doc-API server (`JOURNEY_API_PORT`) but can never see the result, because every browser client syncs only to 5858. A configurable version would need to reach six places, all fixed to the same two ports today: `SERVER_URL` itself (the `useSync` uri in `App.tsx`), `pageLink` in `lib/records.mjs` (bakes `localhost:3737` into every release-label link), the `open` URL in `lib/journey-export.mjs`, the startup log line in `server/canvas-server.ts`, the `[5858, 3737]` probe list in `lib/doctor.mjs`, and `server.port` in `vite.config.mts`. No code changed.
+
+3. **`lib/doctor.mjs` probes only the fixed ports 5858/3737**, so it fails closed with `FAIL port 5858/3737 in use` whenever *any* other canvas is already running — which, per this task, is now the normal case rather than the exception the doctor's message implies. It does not read `JOURNEY_API_PORT`, so the FO's own port-isolation instruction can only be carried out by hand-invoking `tsx server/canvas-server.ts`, never through `npm run canvas` (whose `precanvas` hook runs this same doctor and aborts on the same FAIL).
+
+### Summary
+
+The render is done, verified, and accepted by the FO: `linear-reverse` exists as its own room on the shared canvas with the six-activity backbone and 137 shapes, `draw-a-journey` and `journey.example.yaml` are byte-identical to before this task. The PNG export did not complete in this session — root cause was two agents driving one shared browser at once, not a defect in the render or in this session's approach — and the FO is finishing that step directly. This session made no further browser, render, or server calls after being told to stand down.
