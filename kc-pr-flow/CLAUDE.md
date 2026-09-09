@@ -65,6 +65,10 @@ the host, not Python collection. Missing host controls leave work unavailable.
 Read-only is not per-file isolation. Collection checks exported input bytes
 against frozen requests; the host passes paths, not reproduced source/schema.
 Mechanical tests may explicitly use up to 240 seconds; workers stay at 120 seconds.
+Failed checks include bounded, common-credential-masked diagnostic excerpts in
+their existing observation/bundle binding. Native collection accepts pure JSON
+or one complete JSON fence without surrounding prose, retains original bytes,
+and applies the unchanged closed content/evidence validation after unwrapping.
 The independent CLI backend is optional. Schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and
 `schemas/review-capability-catalog-v1.json`. Intake accepts source-bound goal

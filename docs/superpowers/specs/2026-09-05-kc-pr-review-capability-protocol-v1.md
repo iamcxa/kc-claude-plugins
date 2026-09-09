@@ -14,6 +14,7 @@
 - **Host-native local submission accepted:** 2026-09-08, Captain chat `確認`, approving one local commit of the nine reviewed files; no push, Cloud/model run or merge is authorized.
 - **File handoff and test deadline revision accepted:** 2026-09-08, Captain chat `批准`, approving frozen native input files, Read-only workers, and explicit mechanical-test deadlines up to 240 seconds. Worker deadlines remain 120 seconds. This revision permits local implementation and no-model verification only, not submission, push, Cloud/model execution, merge, workflow changes, old-pin migration, or increased implementation limits.
 - **File-handoff local submission accepted:** 2026-09-09, Captain chat `確認`, approving one local commit of the ten reviewed files. Push, Cloud/model execution, merge, historical-pin migration and increased implementation limits remain unauthorized.
+- **Native response and failure-diagnostic repair accepted:** 2026-09-09, Captain chat `確認，請修復接點`, approving the two local repairs and no-model verification described below. This grants no further commit, push, Cloud/model spend, merge, shared-state or historical-pin change.
 
 ## Revision authority and delivery sequence
 
@@ -704,6 +705,26 @@ supports it; deterministic collation remains validation, not a substitute judge.
 
 ### Managed-host connection
 
+The September 9 repair stays in the existing prepare/collect seams. Native
+collection may mechanically unwrap one complete JSON Markdown fence, with no
+surrounding prose, before the unchanged closed result/evidence validation. It
+retains the original response bytes; it neither repairs JSON members nor asks
+another model to rewrite an answer. Multiple objects/fences, extra prose,
+duplicate keys and invalid evidence remain unsuccessful attempts. The optional
+CLI provider decoder is unchanged. Workers still request pure JSON.
+
+Failed, timed-out and unavailable mechanical commands add optional, hash-bound
+diagnostics to their existing observation: stdout/stderr excerpts of at most
+4096 characters each and an explicit truncation flag. Common credential-bearing
+lines and private-key blocks are masked before excerpts enter the private bundle;
+this is bounded redaction, not a guarantee against arbitrary secret formats.
+Successful commands retain digest-only observations. Old observations remain
+readable without migration. Native file views also chunk these diagnostic strings;
+the worker joins each array without a separator, preserving the typed observation.
+The scope is the existing script/test/schema, worker's read recipe, and
+affected documentation only, within unchanged implementation limits. Local
+fixture and saved-response replay do not prove live worker output reliability.
+
 `--prepare-only` writes selected request views and a shared result-schema file
 inside the existing private invocation directory, returning their paths instead
 of inline source/schema payloads. Each JSON view has request metadata plus a
@@ -718,8 +739,9 @@ schema paths; the worker reads all needed pages. Read-only is not single-file
 isolation: the assigned-file restriction is an instruction, not an enforced path
 sandbox. Existing result/evidence validation remains the acceptance boundary.
 The independent CLI backend remains optional and unchanged; native dispatch
-needs no nested CLI authentication. The catalog and capability contracts stay
-unchanged; only `TestCommand.timeout_seconds` expands from 120 to 240 maximum.
+needs no nested CLI authentication. The catalog and `CapabilityResult` contract
+stay unchanged. Mechanical `TestCommand.timeout_seconds` permits up to 240
+seconds, and `TestObservation` may carry the bounded diagnostics described above.
 Mechanical commands retain their explicit selected deadline, independently of
 the unchanged 120-second worker deadline; a failed test remains failed.
 

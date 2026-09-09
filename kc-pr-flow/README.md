@@ -71,7 +71,10 @@ validated results to the existing review agent for typed judgment. A separate
 `claude --print` login is not required on this route; the CLI backend remains
 optional. The host owns timeout/cancellation and authorized spend.
 Mechanical-test deadlines are explicitly selected up to 240 seconds; workers
-remain at 120 seconds. Read-only does not enforce per-file isolation. Project
+remain at 120 seconds. Failed checks retain bounded, common-credential-masked
+diagnostic excerpts. Native collection can unwrap a single JSON fence without
+changing its contents or bypassing result validation; extra prose is rejected
+and original replies are retained. Read-only does not enforce per-file isolation. Project
 `CLAUDE.md` is permitted background and must match between comparison arms.
 Local fake-response tests do not establish live host compatibility. Finalization
 validates per-claim reasons/evidence, preserves confirmed severity and required

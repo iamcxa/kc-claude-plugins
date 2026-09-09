@@ -60,6 +60,26 @@ def digest(value):
     return hashlib.sha256(canonical(value)).hexdigest()
 
 
+def failure_diagnostics(stdout, stderr):
+    """Bound excerpts and mask common credential forms, not arbitrary secrets."""
+    excerpts, truncated = {}, False
+    sensitive = re.compile(
+        r"authorization|bearer\s|[\w-]*(?:token|secret|password|api[_-]?key)[\w-]*[\"']?\s*[:=]"
+        r"|\b(?:sk-[\w-]+|gh[pousr]_[\w]+|github_pat_[\w]+|AKIA[A-Z0-9]{16}|eyJ[\w-]+\.)"
+        r"|https?://[^\s/@]+:[^\s/@]+@", re.I,
+    )
+    for name, data in (("stdout", stdout), ("stderr", stderr)):
+        text = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]|[\x00-\x08\x0b-\x1f\x7f]", "", data.decode("utf-8", "replace"))
+        text = re.sub(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?(?:-----END [A-Z ]*PRIVATE KEY-----|\Z)",
+                      "[REDACTED PRIVATE KEY]", text)
+        text = "".join("[REDACTED CREDENTIAL LINE]\n" if sensitive.search(line) else line
+                       for line in text.splitlines(keepends=True))
+        if len(text) > 4096:
+            text, truncated = text[:2048] + "\n[...truncated...]\n" + text[-2000:], True
+        excerpts[name] = text
+    return {**excerpts, "truncated": truncated}
+
+
 SCHEMA = read_json(HERE.parent / "schemas/review-capability-v1.schema.json")
 
 
@@ -655,6 +675,8 @@ def prepare(
             "stdout_sha256": raw_hash(stdout),
             "stderr_sha256": raw_hash(stderr),
         }
+        if status != "completed" or exit_code != 0:
+            observation["diagnostics"] = failure_diagnostics(stdout, stderr)
         observations.append({**observation, "id": digest(observation)})
     if git(repo, "rev-parse", "HEAD").decode().strip() != identity["head_sha"]:
         return terminal(review_identity, "INVALIDATED", "identity_change")
@@ -1822,6 +1844,10 @@ def result_schema():
 def host_files(prepared, write=False):
     directory = pathlib.Path(prepared["directory"])
 
+    def chunks(text):
+        return [line[start:start + 256] for line in text.splitlines(keepends=True)
+                for start in range(0, len(line), 256)]
+
     def frozen(name, value):
         path = directory / name
         content = (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode()
@@ -1837,8 +1863,11 @@ def host_files(prepared, write=False):
         for group in metadata["evidence"]:
             for item in group["material"]:
                 material = item.pop("material")
-                materials[item["id"]] = [line[start:start + 256] for line in material.splitlines(keepends=True)
-                                         for start in range(0, len(line), 256)]
+                materials[item["id"]] = chunks(material)
+            for observation in group["test_observations"]:
+                if "diagnostics" in observation:
+                    diagnostic = observation["diagnostics"]
+                    diagnostic.update({k: chunks(diagnostic[k]) for k in ("stdout", "stderr")})
         path = frozen(f"host-request-{request['capability']}.json", {"request": metadata, "materials": materials})
         packet["request_files"].append({"capability": request["capability"], "request_file": path})
     return packet
@@ -1865,6 +1894,11 @@ def host_progress(prepared, results, initial=False):
     if initial:
         packet.update(files)
     return packet
+
+
+def native_response(output):
+    wrapped = re.fullmatch(rb"```json[ \t]*\r?\n([\s\S]*?)\r?\n```", output.strip())
+    return json.loads(wrapped[1] if wrapped else output, object_pairs_hook=unique_object)
 
 
 def collect_host(directory, data, capability, ordinal, outcome, response_file):
@@ -1894,7 +1928,7 @@ def collect_host(directory, data, capability, ordinal, outcome, response_file):
     try:
         if len(output) > 1048576:
             raise Invalid("provider response exceeds limit")
-        envelope = json.loads(output, object_pairs_hook=unique_object) if output else None
+        envelope = native_response(output) if output else None
         canonical(envelope)
     except ValueError:
         envelope = {"invalid_response_sha256": raw_hash(output)}

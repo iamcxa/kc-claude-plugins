@@ -393,13 +393,32 @@ symlinked files; this does not prove which files a live model actually read.
 Each authorized mechanical command keeps its explicit `timeout_seconds`, from
 1 through 240, independently of the 120-second worker deadline. Nonzero exits
 and timeouts remain evidence of unsuccessful tests, not waived or retried passes.
+Failed, timed-out and unavailable observations include optional `diagnostics`:
+stdout/stderr excerpts (at most 4096 characters each) and a `truncated` flag.
+`failure_diagnostics` masks common credential-bearing lines and private-key
+blocks before retaining the excerpt; it is not an arbitrary-secret detector.
+Long excerpts retain their beginning and end with a visible truncation marker.
+Native file views chunk diagnostic stdout/stderr into arrays like source
+material; joining each array without a separator restores the typed string.
+These excerpts share the observation/bundle hash binding and private artifact
+retention; original stream hashes remain, but original test output is not saved.
+Successes keep digest-only observations, and older observations without the
+optional member need no migration. A failing test is evidence to investigate,
+not proof of a particular code defect when the excerpt is inconclusive.
 
 The host, not Python, enforces native deadlines, cancels timed-out work and
 honors the already-authorized total budget. Without those controls, record
 unavailable work instead of launching it. Preserve unedited worker response
 bytes and collect one attempt at a time with `--collect-dir RUN_DIR --capability
 CAPABILITY --attempt ORDINAL --attempt-result succeeded --response-file FILE`.
-Malformed or unsupported replies become failed attempts, not clean answers.
+The native collector accepts pure JSON or one complete `json` Markdown fence
+with no surrounding prose. `native_response` unwraps only that presentation
+before the unchanged duplicate-key, schema, identity, question and evidence
+checks; the `.raw` artifact retains the supplied bytes. It does not rewrite
+JSON or extract an object from arbitrary prose. Extra text, multiple objects,
+wrong-language fences and invalid content remain failed attempts. Workers still
+request JSON-only output; this compatibility decoder does not guarantee model
+compliance. The optional CLI provider decoder is unchanged.
 The host may report `terminal_failure` or `unavailable` without a response;
 use `transient_failure` only when one authorized retry will actually run.
 The second transient failure is terminal. Never collect concurrently or start

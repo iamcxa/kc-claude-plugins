@@ -12,6 +12,8 @@ and limit until complete. The request view contains `request` metadata and a
 material chunks without a separator to recover the original `material` string
 of the closed `CapabilityRequest`. Chunk boundaries are not source line breaks;
 JSON escapes represent source characters, not literal backslashes.
+Test-observation diagnostics in this file view also chunk `stdout` and `stderr`;
+join each array without a separator. Excerpts can be redacted or truncated.
 The schema file contains the result definition and its referenced definitions.
 For a supported assessment, return one JSON object matching that schema,
 without prose or fences.

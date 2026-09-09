@@ -183,7 +183,12 @@
         "id": {"$ref": "#/$defs/Hash"}, "command": {"$ref": "#/$defs/TestCommand"}, "head_sha": {"$ref": "#/$defs/Commit"},
         "status": {"enum": ["completed", "timed_out", "unavailable"]}, "exit_code": {"anyOf": [{"type": "integer"}, {"type": "null"}]},
         "started_at": {"$ref": "#/$defs/Text"}, "finished_at": {"$ref": "#/$defs/Text"},
-        "stdout_sha256": {"$ref": "#/$defs/Hash"}, "stderr_sha256": {"$ref": "#/$defs/Hash"}
+        "stdout_sha256": {"$ref": "#/$defs/Hash"}, "stderr_sha256": {"$ref": "#/$defs/Hash"},
+        "diagnostics": {
+          "type": "object", "additionalProperties": false, "required": ["stdout", "stderr", "truncated"],
+          "properties": {"stdout": {"type": "string", "maxLength": 4096},
+                         "stderr": {"type": "string", "maxLength": 4096}, "truncated": {"type": "boolean"}}
+        }
       }
     },
     "EvidenceBundle": {
