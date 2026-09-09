@@ -116,6 +116,40 @@ no milestone, and a hypothesis nothing would ever judge -- and it validated.
   last milestone's acceptance says whether the "then" happened. That is the only rule
   here whose evidence arrives after the plan is finished.
 
+## The sentence tests the cut before it tests the members
+
+Write the sentence first, and if it will not come out unambiguous, **the milestone is cut
+on the wrong axis.** Change the axis; do not patch the sentence.
+
+One milestone was cut three ways in a day. By layer -- a client, a surface, a packaging
+piece -- and an independent review named it the anti-pattern outright. By outcome, the
+whole loop, and its sentence read two different ways to two readers: one took "a user
+shares" literally, the other read it under a ruling about which surface a user touches,
+and both were defensible against the same fourteen words. By audience -- one loop for an
+agent at a command line, then the same loop for a person at a keypress -- and the
+ambiguity was simply gone.
+
+**Not one issue moved in that third cut.** The boundary slid onto a seam the dependency
+graph already had. That is the tell of a cut that fits: the work stays where it is and
+only the line moves. A cut that requires relocating tickets to make sense is being argued
+into place.
+
+**Cutting by audience is not cutting by component.** An audience has a whole journey and
+can accept it; a component has a slice of one, and accepting by component is the layer
+anti-pattern wearing a friendlier word.
+
+## Give the sentence to someone who was not in the cutting
+
+The ambiguity above was found because two agents read the same sentence and returned
+opposite answers. The one who had spent the day inside the milestone could not see it;
+the one reading it cold saw it immediately.
+
+So the check is one question to somebody outside: **read this sentence and tell me what
+has to be true for it to ship.** If their answer differs from yours, you have not found a
+disagreement about the work -- you have found that the sentence does not say what you
+think it says. That is cheaper than any review and it is the only detector here that does
+not need the tracker.
+
 ## The shipping sentence is the entry gate
 
 A milestone's description is written first, and it has to be a sentence someone can watch
