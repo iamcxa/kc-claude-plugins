@@ -939,7 +939,7 @@ def validate_result(request, result):
         raise Invalid("result binding mismatch")
     if [a["question_id"] for a in result["answers"]] != request["question_ids"]:
         raise Invalid("assigned answer coverage")
-    allowed = {p["id"] for group in request["evidence"] for p in group["material"]}
+    allowed = {p["id"] for g in request["evidence"] for p in [*g["material"], *g["test_observations"]]}
     code = {p["id"] for group in request["evidence"] for p in group["material"] if "pointer" in p}
     alternatives = request["capability_view"]["manifest"].get("required_any_evidence", [])
     goals = {p["id"] for group in request["evidence"] if group["evidence_class"] in alternatives for p in group["material"]}

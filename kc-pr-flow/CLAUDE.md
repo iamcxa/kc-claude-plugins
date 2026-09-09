@@ -68,7 +68,10 @@ Mechanical tests may explicitly use up to 240 seconds; workers stay at 120 secon
 Failed checks include bounded, common-credential-masked diagnostic excerpts in
 their existing observation/bundle binding. Native collection accepts pure JSON
 or one complete JSON fence without surrounding prose, retains original bytes,
-and applies the unchanged closed content/evidence validation after unwrapping.
+and applies closed content/evidence validation after unwrapping. Answers may
+additionally cite selected test observations; `validate_result` still requires
+code evidence and rejects test logs as contribution locations. Workers explicitly
+check required result members, including `status`; collection does not fill omissions.
 The independent CLI backend is optional. Schema and
 catalog contracts live in `schemas/review-capability-v1.schema.json` and
 `schemas/review-capability-catalog-v1.json`. Intake accepts source-bound goal

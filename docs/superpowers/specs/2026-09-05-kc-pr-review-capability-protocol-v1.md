@@ -15,8 +15,24 @@
 - **File handoff and test deadline revision accepted:** 2026-09-08, Captain chat `批准`, approving frozen native input files, Read-only workers, and explicit mechanical-test deadlines up to 240 seconds. Worker deadlines remain 120 seconds. This revision permits local implementation and no-model verification only, not submission, push, Cloud/model execution, merge, workflow changes, old-pin migration, or increased implementation limits.
 - **File-handoff local submission accepted:** 2026-09-09, Captain chat `確認`, approving one local commit of the ten reviewed files. Push, Cloud/model execution, merge, historical-pin migration and increased implementation limits remain unauthorized.
 - **Native response and failure-diagnostic repair accepted:** 2026-09-09, Captain chat `確認，請修復接點`, approving the two local repairs and no-model verification described below. This grants no further commit, push, Cloud/model spend, merge, shared-state or historical-pin change.
+- **Native result contract and test handoff repair accepted:** 2026-09-09, Captain chat `確認`, approving the smallest local repair after the four-of-six development result: required result-field guidance, supplied test-observation support in answers, and exact toolchain/history handoff. No new paid run, commit, push, merge, architecture expansion, shared-state or historical-pin change.
 
 ## Revision authority and delivery sequence
+
+The latest local repair makes supplied `test_observations` IDs usable in answer
+`evidence_refs`, alongside code evidence. A contribution still requires a supplied
+code pointer and exact source quote; a failed test alone is not a proven PR defect.
+Unknown or unassigned references, missing code/goal support, missing required result
+members and unresolved coverage remain rejected. The worker must explicitly retain
+`status: succeeded` in a supported result, without collector-side field repair.
+The existing worker, validator, tests and affected documents are the product scope;
+the operator handoff records the absolute installed Go path and sufficient target
+history. Local replay and fixtures precede any separately authorized live run.
+This changes neither the JSON Schema nor catalog, default flags, retry limits,
+runtime/posting ownership, execution stage or cumulative implementation limits.
+Consolidating repeated test mutation setup may make room for the regression cases;
+all existing cases and assertions remain required. Earlier Cloud evidence remains
+unaltered, including incomplete coverage, failed tests and unresolved base comparison.
 
 This document guides the implementer and reviewer of the default-off Lite route.
 The September 7 confirmation accepts the design deltas below, not an execution

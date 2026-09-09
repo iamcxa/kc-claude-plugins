@@ -217,8 +217,9 @@ against the frozen requests. Read-only is not per-file isolation. Mechanical
 tests may explicitly select up to 240 seconds; workers remain at 120 seconds.
 Failed-test excerpts are bounded and common-credential-masked inside the existing
 hash-bound observation. Native response decoding can unwrap a single JSON fence
-without extra prose; raw bytes are retained and result/evidence validation is
-unchanged. Neither change adds a lifecycle owner or publication authority.
+without extra prose; raw bytes are retained. Result validation permits selected
+test observations as answer support, while requiring code evidence and
+code-located contributions. No lifecycle owner or publication authority is added.
 Both transports retain at most one retry after a transient failure. The
 closed schema and catalog live under `kc-pr-flow/schemas`; requiredness is read
 from that catalog, never copied into skill prose. Shape and explicit goal material

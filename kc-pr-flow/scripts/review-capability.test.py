@@ -34,7 +34,7 @@ def clean_reply(request):
         "schema": "kc-pr-flow.capability-result/v1", "status": "succeeded",
         "usage": dict(input_tokens=None, output_tokens=None, total_tokens=None),
         "answers": [dict(question_id=q, assessment="clean", contributions=[],
-                         evidence_refs=[p["id"] for group in request["evidence"] for p in group["material"]])
+                         evidence_refs=[p["id"] for g in request["evidence"] for p in [*g["material"], *g["test_observations"]]])
                     for q in request["question_ids"]],
     }
 
@@ -214,24 +214,23 @@ class PlannerTests(unittest.TestCase):
             for field in ("plan_hash", "bundle_hash", "results_hash", "fallbacks_hash"):
                 changed = {**accepted, field: "a" * 64}
                 self.assertRaises(protocol.Invalid, protocol.collate, prepared, results, (), changed)
-            for mutation in ("duplicate", "omitted", "reason", "reference", "unresolved", "severity", "identity"):
+            q = accepted["questions"][0]
+            contribution = ("questions", 0, "contributions", 0)
+            for path, value in (
+                (("questions",), accepted["questions"] + [q]),
+                (("questions", 0, "contributions"), []),
+                ((*contribution, "reason"), " "),
+                ((*contribution, "evidence_refs"), ["a" * 64]),
+                ((*contribution, "disposition"), "unresolved"),
+                ((*contribution, "severity"), "LOW"),
+                (("identity", "head_sha"), "a" * 40),
+            ):
                 changed = copy.deepcopy(accepted)
-                q = changed["questions"][0]
-                if mutation == "duplicate":
-                    changed["questions"].append(copy.deepcopy(q))
-                elif mutation == "omitted":
-                    q["contributions"] = []
-                elif mutation == "reason":
-                    q["contributions"][0]["reason"] = " "
-                elif mutation == "reference":
-                    q["contributions"][0]["evidence_refs"] = ["a" * 64]
-                elif mutation == "unresolved":
-                    q["contributions"][0]["disposition"] = "unresolved"
-                elif mutation == "severity":
-                    q["contributions"][0]["severity"] = "LOW"
-                else:
-                    changed["identity"]["head_sha"] = "a" * 40
-                with self.subTest(mutation=mutation):
+                target = changed
+                for key in path[:-1]:
+                    target = target[key]
+                target[path[-1]] = value
+                with self.subTest(path=path):
                     self.assertRaises(protocol.Invalid, protocol.collate, prepared, results, (), changed)
             missing = copy.deepcopy(accepted)
             missing["questions"].pop()
@@ -337,7 +336,7 @@ class PlannerTests(unittest.TestCase):
             self.assert_finalization(directory, pending)
 
     def test_host_collection_retains_invalid_replies_as_failed_attempts(self):
-        mutations = ("json", "null", "duplicate", "identity", "answers", "oversized", "expansion", "nonfinite")
+        mutations = ("json", "null", "duplicate", "identity", "answers", "status", "oversized", "expansion", "nonfinite")
         for mutation, wrapped in [(m, w) for m in mutations for w in (False, True)] + [(m, True) for m in ("prose", "multiple", "language")]:
             with self.subTest(mutation=mutation, wrapped=wrapped), self.host_run() as (directory, packet, replies, environment):
                 reply = copy.deepcopy(replies[0])
@@ -350,7 +349,7 @@ class PlannerTests(unittest.TestCase):
                 raw = (b"{" if mutation == "json" else b'{"schema":1,"schema":2}' if mutation == "duplicate"
                        else b"null" if mutation == "null"
                        else b" " * 1048577 if mutation == "oversized"
-                       else b'{"usage":NaN}' if mutation == "nonfinite" else protocol.canonical(reply))
+                       else b'{"usage":NaN}' if mutation == "nonfinite" else protocol.canonical({k: v for k, v in reply.items() if mutation != "status" or k != "status"}))
                 if wrapped:
                     raw = b"```json\n" + raw + b"\n```"
                 if mutation == "prose":
@@ -537,9 +536,9 @@ class PlannerTests(unittest.TestCase):
             self.assertIn(required, profiled)
         worker = (HERE.parent / "agents/review-capability-worker.md").read_text()
         frontmatter = worker.split("---", 2)[1].splitlines()
-        self.assertIn("tools: Read", frontmatter)
-        self.assertIn("model: inherit", frontmatter)
-        for required in ("request_file", "result_schema_file", "materials", "without a separator", "not single-file isolation"):
+        self.assertTrue({"tools: Read", "model: inherit"} <= set(frontmatter))
+        for required in ("request_file", "result_schema_file", "materials", "without a separator", "not single-file isolation",
+                         '"status": "succeeded"', "test_observations", "code pointer"):
             self.assertIn(required, worker)
         self.assertIn("CLAUDE.md", worker)
         self.assertIn("return JSON `null`", worker)
@@ -814,6 +813,7 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(prepared["bundle"]["parent_hash"], prepared["shape_bundle"]["bundle_hash"])
             requests = protocol.requests(prepared)
             results = [clean_reply(request) for request in requests]
+            self.assertTrue(all(protocol.validate_result(r, a) == a for r, a in zip(requests, results)))
             yield prepared, results
 
     def test_selected_evidence_binds_the_runtime_identity_and_rehydrates(self):

@@ -406,6 +406,27 @@ Successes keep digest-only observations, and older observations without the
 optional member need no migration. A failing test is evidence to investigate,
 not proof of a particular code defect when the excerpt is inconclusive.
 
+`validate_result` accepts IDs from the selected request's `material` and
+`test_observations` in an answer's `evidence_refs`. Code evidence remains
+required, as does goal evidence where declared. A contribution's `evidence_ref`
+must still point to supplied code material and be listed by its answer; test
+observations can support the explanation but cannot supply an inline location.
+Unknown references or observation-only answers remain invalid. Result
+`status: succeeded` means the capability produced its supported answer, not that
+tests passed. The worker explicitly checks this required member; the collector
+rejects omissions without repairing the response. These instructions need live
+revalidation before claiming reliable model compliance.
+
+For operator-managed checkouts, hand off the absolute verified toolchain binary
+and process-local PATH prefix, not "the installed path". Verify that exact binary
+before prepare; inability to resolve it is not proof that the tool is uninstalled.
+Fetch sufficient target history before mechanical tests; a shallow base/head-only
+checkout can break tests referencing older commits. Pin the selected base/head
+without rebasing onto current main, and record unavailable history as an
+environment limitation. Do not repair a sealed run or claim an environmental
+failure without the necessary independent evidence. These are handoff checks,
+not a new setup workflow, installation permission or paid-run authorization.
+
 The host, not Python, enforces native deadlines, cancels timed-out work and
 honors the already-authorized total budget. Without those controls, record
 unavailable work instead of launching it. Preserve unedited worker response
