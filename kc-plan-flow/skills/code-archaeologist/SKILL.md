@@ -5,6 +5,8 @@ description: Report what a codebase holds today for one bounded question, with t
 
 # Code Archaeologist
 
+Load `references/kernel.md` first. It owns how a claim is made and checked -- asking rather than confirming, citing by symbol with its ref, reading current state before judging it, checking rather than remembering, adding nothing without a reader, and one fact with one home. This file owns only what is left.
+
 Answer one bounded question about what exists in a codebase, and nothing else.
 
 Two questions, always both, because they fail separately:
@@ -74,8 +76,7 @@ your conclusions. Re-derive on every question.
    it is whatever it is, sitting somewhere that is not the trunk.
 4. **`MISSING` requires proof of absence.** State both searches you ran. "Not
    found" without them is a guess wearing a verdict's clothes.
-5. **Name the subject by symbol, route, or behaviour** — never by a bare path.
-   A path is where you found it, not what it is, and it goes stale silently.
+5. **Name the subject by symbol, route, or behaviour**, per the kernel.
 6. **Say what you did not check.** The question's edges are findings too.
 
 Read the mechanism's own source when the question is how a third-party

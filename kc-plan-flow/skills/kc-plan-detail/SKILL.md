@@ -5,6 +5,8 @@ description: Decide how to build it. Take value issues and their open questions,
 
 # Plan the detail
 
+Load `references/kernel.md` first. It owns how a claim is made and checked -- asking rather than confirming, citing by symbol with its ref, reading current state before judging it, checking rather than remembering, adding nothing without a reader, and one fact with one home. This file owns only what is left.
+
 Turn each value issue into sub-issues a person can pick up and build.
 
 **Verification lives here.** Deciding how to build something is the same act as
@@ -24,13 +26,8 @@ Send `questions_for_the_archaeologist` to
 `kc-plan-flow:code-archaeologist` — one bounded question at a time, and the seat
 stays addressable across the session so later questions cost less.
 
-Two rules on how you ask:
-
-- **Ask what is there, never ask for confirmation.** "Where does X live so we
-  can move it" is a request to agree with you. "What decides X today, and on
-  which ref" is a question.
-- **Refuse an answer with no command and no ref.** That is the contract; an
-  answer missing it is not evidence, whoever produced it.
+**Refuse an answer with no command and no ref.** That is the contract; an answer missing
+it is not evidence, whoever produced it. The rest of how to ask is in the kernel.
 
 You will get findings back that are `MISSING` on the trunk and present on a
 branch. Read them as work not yet done, not as code to relocate. A closed branch

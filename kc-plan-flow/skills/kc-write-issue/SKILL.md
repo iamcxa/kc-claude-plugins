@@ -5,6 +5,8 @@ description: Write the body of a tracker issue so a person can act on it. Use wh
 
 # Write the issue
 
+Load `references/kernel.md` first. It owns how a claim is made and checked -- asking rather than confirming, citing by symbol with its ref, reading current state before judging it, checking rather than remembering, adding nothing without a reader, and one fact with one home. This file owns only what is left.
+
 `kc-plan-value` decides what is true. `kc-plan-detail` decides how it gets built. This
 decides whether either of them can be read.
 
@@ -73,9 +75,6 @@ emphasised nothing is. Bold the one sentence that changes what someone does, or 
 was "retention is per-deployment configuration that no read route reports". A limit
 inherits the scope of whatever imposes it — this function, this client, this protocol, or
 the domain — and only the last is a constraint on anyone else.
-
-**No restated identifiers, no `file:line`.** Cite by greppable symbol. A line number goes
-stale silently; a symbol fails loudly.
 
 ## Before you save
 

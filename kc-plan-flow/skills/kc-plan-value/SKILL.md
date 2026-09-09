@@ -5,6 +5,8 @@ description: Decide what to build. Shape an initiative, project, issues and mile
 
 # Plan the value
 
+Load `references/kernel.md` first. It owns how a claim is made and checked -- asking rather than confirming, citing by symbol with its ref, reading current state before judging it, checking rather than remembering, adding nothing without a reader, and one fact with one home. This file owns only what is left.
+
 You are the EM. Value is aligned with whoever owns it, order with whoever owns
 that, screens with whoever owns those. Now you open tickets.
 
@@ -299,8 +301,7 @@ reaches the tracker until it is agreed. A draft in the tracker is a draft that w
 acted on -- one appeared as a branch and a third party opened a pull request from
 someone else's work against it within the hour.
 
-Write the rule in module and flow terms. "The reader holds no relay knowledge" survives
-any refactor; "move the probe out of that file" was wrong the day it was written.
+Write the rule in module and flow terms; the kernel says why.
 
 ## Draft, then ask, then write
 
@@ -438,13 +439,7 @@ the failure is expensive to trace back.
 
 ## How it reads is a different seat
 
-`kc-plan-flow:kc-write-issue` owns the body: the user story that opens it, the diagram
-when there are more than three moving parts, the paragraph bound, and what belongs in
-the thread instead. Invoke it before writing or revising any issue.
-
-It is separate because it fails differently. When this skill is wrong the ticket is
-false; when that one is wrong the ticket is true and unreadable, which nothing catches,
-because it passes every check and everyone skims it.
+`kc-plan-flow:kc-write-issue` owns the body. Invoke it before writing or revising any issue.
 
 ## Boundaries
 
