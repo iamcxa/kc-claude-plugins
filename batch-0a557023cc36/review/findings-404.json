@@ -1,0 +1,7 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#404","reviewed_head":"c4bd54cb","findings":[
+{"id":"F1","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/references/stations/intent.md","line":3,"summary":"15th station doc still names the repository-relative script path"},
+{"id":"F2","source":"code-reviewer","category":"test-coverage","file":"kc-ship-flow/scripts/contract-test.py","line":485,"summary":"banned-prefix guard scoped to SKILL.md only; README and station docs unguarded"},
+{"id":"F3","source":"code-reviewer","category":"style","file":"docs/ship/README.md","line":35,"summary":"'nothing checks what else the skill reads' now false (script refs scanned whole-file)"},
+{"id":"F4","source":"code-reviewer","category":"style","file":"kc-ship-flow/skills/first-officer/SKILL.md","line":10,"summary":"same stale claim in the skill"},
+{"id":"F5","source":"code-reviewer","category":"compatibility","file":"kc-ship-flow/skills/first-officer/SKILL.md","line":15,"summary":"fallback says scripts/ is 'beside this SKILL.md'; it is two levels up (kc-plugin-release phrasing exists)"}
+]}
