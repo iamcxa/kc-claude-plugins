@@ -7,3 +7,4 @@ Stations per docs/ship/README.md; every FO decision and every worker Evidence bl
 ## Decision log
 
 - 2026-09-09T03:55:26Z — batch opened.
+- 2026-09-09T04:13Z — **DEV-134 accepted by the installed station itself** (first acceptance in four batches without an FO override; the block's without-it paths are .md). FO verified at 686f86fb: AC-1 exit 0, AC-2 refuses naming the untracked path, contract-test exit 0, without-it removed exit 1 (worker reported 2 — both non-zero, different refusal branch), 0 comment lines added. PR #395 Draft. Review station: code-reviewer dispatched. Brief error: kc-ship-flow/README.md does not exist (worker read references/stations/accept-evidence.md).
