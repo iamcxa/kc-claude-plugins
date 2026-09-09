@@ -3,27 +3,33 @@
 What each lane may assert, and what it may not. A board that breaks these reads as
 "this works today" when it does not — the failure this skill exists to prevent.
 
-## The three pages have three evidence standards
+## The three surfaces have three evidence standards
 
-They ask different questions, so they are held to different bars. Applying the journey
-board's bar to the story map is the mistake that stops a map being drawn at all: during a
+They ask different questions, so they are held to different bars. Applying the release
+contract's bar to the story map is the mistake that stops a map being drawn at all: during a
 requirements conversation there is no code to cite, and a rule demanding citations blocks
 the very stage it was never written for.
 
-| Page | Asserts | Bar |
+| Surface | Asserts | Bar |
 |---|---|---|
-| **Story map** | what we want a person to be able to do | **No citation.** This is intent. Do not badge, do not cite, do not check it against code. |
-| **Journey board** | what the system actually does today | **A citation, or `NOT BUILT`.** Everything below applies here. |
-| **Function map** | what each step decides, and what becomes true | A command, its events including the refusals, the state, the read model. Name what is not modelled. |
+| **Story map** (canvas) | what we want a person to be able to do, and which of those stories exist today | Backbone and story wording: **no citation** — this is intent. Every story's `status`, though, is checked: `exists` requires `evidence`, and a lint re-greps the repository for it every run. |
+| **Release contract** (generated document) | what the system actually does today, per release | **Generated only, never authored.** Carries each story's status, evidence symbol and applicable rule ids — this is where "a citation, or it does not count" lives now. |
+| **Function map** (canvas) | what each step decides, and what becomes true | A command, its events including the refusals, the state, the read model. Name what is not modelled. |
 
 A story map drawn from a conversation is not unfinished work — it is the finished output of
-its own stage. It becomes a journey board only when somebody goes and reads the code.
+its own stage. Its stories get a `status` and, where they exist, an `evidence` symbol only
+once somebody goes and reads the code — see "Stories" below.
+
+The journey board — a per-release canvas page citing each step's system flow and
+constraints — is retired. Its unique content was a citation and a constraint list, neither
+of which is spatial; the release contract carries the same facts as a document a lint can
+check, which a grid never could.
 
 ## Columns
 
-One column per journey step. Every column carries exactly one cell in each of the three
-lanes. A column with an empty System Flow cell is not allowed: either cite the code, or
-badge the step `NOT BUILT`.
+One column per journey step. A step carries `system:` (free-text citations of the code
+that runs) and `rules:` (which constraints apply) for a person reading the file — but the
+checkable claim now lives one level down, on the step's stories. See "Stories" below.
 
 ## Lane 1 — User Journey
 
@@ -31,33 +37,51 @@ badge the step `NOT BUILT`.
 
 - ≤ 12 words. A sticky note, not a sentence from a spec.
 - Name the actor when a step changes hands (owner → reviewer → owner).
-- No API names, no key paths, no HTTP verbs. Those belong in lane 2.
-- Steps a user cannot perform today still appear here — badged, never omitted.
+- No API names, no key paths, no HTTP verbs. Those belong in the stories beneath it.
 
-**Badges** (rendered next to the step number):
+**Check-mode badges** (rendered in the mismatch table, not on the story map):
 
 | Badge | Meaning |
 |---|---|
 | `NEW` | the step was missing from the journey being checked |
-| `NOT BUILT` | no code implements this step; nobody can perform it today |
-| `NOT RULED` | the step depends on a decision nobody has made |
 | `CHANGED` | the step exists but works differently than the checked journey says |
 
-## Lane 2 — System Flow
+`NOT BUILT` and `NOT RULED` used to be step badges too. They moved to story grain —
+`status: gap` and `question:` — because a step is too coarse a unit to say is or is not
+built; see "Stories".
 
-**Asserts:** the call, route, or write that this exact step performs.
+## Stories
 
-- **Every cell carries a citation** — `path/file.ts:120`, a route path, or a storage key
-  read this session. A cell with no citation is a cell written from memory; delete it and
-  go read the code.
+**Asserts:** whether a specific, nameable piece of the step is proven to exist.
+
+- `status: exists | gap` is required on every story. `exists` means a citation-grade
+  symbol backs it; `gap` means nothing does yet — draw it, never omit it.
+- `evidence:` is a bare symbol — a function, const, or command name that greps in this
+  repository — required whenever `status: exists`. Not a `file:line`: a line number goes
+  stale silently and the lint would have nothing stable to search for.
+- `question:` is optional and orthogonal to status: an unresolved decision, on a story
+  that may itself exist or be a gap. Drawn violet.
+- A bare string story (`- "some idea"`) cannot carry any of the three fields — it fires
+  the `no-status` lint. Give it an id and object form as soon as it needs one.
+
+These three are what the three lints check — see `lib/lint.mjs` and the per-release
+contract generated from them (`lib/release-contract.mjs`).
+
+## Lane 2 — System Flow (per step, narrative)
+
+**Asserts:** the call, route, or write the step performs, in prose for a reader of the
+file. Not machine-checked — the checked claim is the story's `evidence`, not this text.
+
+- Cite what you name here — a citation you cannot back is a line written from memory;
+  delete it and go read the code.
 - Name the durable effect, not just the request: what is written, under which key, with
   which write mode (`onlyIfNew`, CAS, verbatim).
-- Two to four short lines. If a cell needs a paragraph, the column is really two steps.
-- Never describe a route that does not exist. A planned route is `NOT BUILT` in lane 1.
 
 ## Lane 3 — Constraints
 
 **Asserts:** what must stay true at this step — invariants, rulings, deliberate costs.
+Written as `rules:` on the step (ids into the file's `rules:` list) and carried onto every
+story in that step's release contract row.
 
 - A constraint is something a future change could *violate*. If it cannot be violated, it
   is a description, not a constraint.
@@ -65,8 +89,8 @@ badge the step `NOT BUILT`.
   accepted for the Pilot").
 - **Open defects are not constraints.** A bug is a thing to fix, not a rule to keep. Bugs
   belong on the status card or in the tracker.
-- **Unruled options are not constraints.** If nobody has decided, say so in lane 1 with
-  `NOT RULED` rather than drawing the preferred answer as though it were settled.
+- **Unruled options are not constraints.** If nobody has decided, say so with a story
+  `question:` rather than drawing the preferred answer as though it were settled.
 
 ## The status card
 

@@ -9,11 +9,14 @@ title: Draw a map with this skill
 
 measured:
   ref: "branch iamcxa/journey-map-skill-merge, PR #394"
-  date: 2026-09-08
+  date: 2026-09-09
   repos: [kc-claude-plugins]
 
 persona: >
   An engineer who has to say what a system does today, and be believed — and then say which part to build next.
+
+one_journey: >
+  An engineer writes one journey file, and every board, contract and lint they see is generated from it — never re-typed, never silently stale.
 
 now:
   - id: now-prose
@@ -32,9 +35,9 @@ steps:
     card: "Writes the steps and the evidence into a file"
     activity: "Write the journey"
     stories:
-      - {id: name-the-steps-a-person-take, card: "Name the steps a person takes", release: r1}
-      - {id: cite-the-code-each-step-runs, card: "Cite the code each step runs", release: r2}
-      - {id: name-what-must-stay-true, card: "Name what must stay true", release: r2}
+      - {id: name-the-steps-a-person-take, card: "Name the steps a person takes", release: r1, status: exists, evidence: loadModel}
+      - {id: cite-the-code-each-step-runs, card: "Cite the code each step runs", release: r2, status: exists, evidence: systemText}
+      - {id: name-what-must-stay-true, card: "Name what must stay true", release: r2, status: exists, evidence: ruleText}
     system:
       - "docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status"
       - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
@@ -42,15 +45,15 @@ steps:
     rules: [file-is-truth, no-cell-from-memory]
 
   - id: render
-    card: "Renders it onto a board"
+    card: "Renders it onto the one canvas board"
     activity: "Put it on a board"
     stories:
-      - {id: get-a-story-map-and-an-journ, card: "Get a story map and a journey board", release: r1}
-      - {id: re-render-after-every-change, card: "Re-render after every change", release: r1}
-      - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1}
+      - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}
+      - {id: re-render-after-every-change, card: "Re-render after every change", release: r1, status: exists, evidence: renderToRoom}
+      - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1, status: exists, evidence: toImage}
     system:
       - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
-      - "One room, two pages: buildStoryMap and buildJourneyBoard from the same model"
+      - "One room, one primary page: buildStoryMap from the model (buildFunctionMap joins it when a step is modelled)"
       - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
     cites: [kc-claude-plugins]
     rules: [board-is-a-cache, handmade-cards-survive]
@@ -60,15 +63,34 @@ steps:
       - "OwnedShapesRemoved"
       - "RecordRejected"
     state: "the room document"
-    readmodel: "the two pages a person looks at"
+    readmodel: "the story map a person looks at"
+
+  - id: contract
+    card: "Generates a per-release contract instead of a second board"
+    activity: "Check it against the code"
+    stories:
+      - {id: generate-a-contract-per-release, card: "Generate a per-release contract, never authored by hand", release: r2, status: exists, evidence: buildReleaseContract}
+      - {id: run-three-lints-that-can-fail, card: "Run three lints, each shown firing on a real defect", release: r2, status: exists, evidence: lintJourney}
+    system:
+      - "lib/release-contract.mjs -> one document per release: each story's status, evidence symbol and rule ids"
+      - "lib/lint.mjs -> no-status, exists-without-evidence, evidence-not-found; the last re-greps the repository every run"
+    cites: [kc-claude-plugins]
+    rules: [contract-is-generated, grep-is-the-check]
+    command: "LintJourney(journeyFile, repoRoot)"
+    events:
+      - "ContractGenerated"
+      - "LintPassed"
+      - "LintViolationFound"
+    state: "nothing — the file is the only state; the contract and the lint result are both derived"
+    readmodel: "the release contract document, and the lint's violation list"
 
   - id: workshop
     card: "Moves the cards around with other people"
     activity: "Talk over it"
     stories:
-      - {id: reorder-the-columns, card: "Reorder the columns", release: r1}
-      - {id: reword-a-card, card: "Reword a card", release: r1}
-      - {id: add-a-card-nobody-had-though, card: "Add a card nobody had thought of", release: r1}
+      - {id: reorder-the-columns, card: "Reorder the columns", release: r1, status: exists, evidence: readRoom}
+      - {id: reword-a-card, card: "Reword a card", release: r1, status: exists, evidence: readRoom}
+      - {id: add-a-card-nobody-had-though, card: "Add a card nobody had thought of", release: r1, status: exists, evidence: readRoom}
     system:
       - "The tldraw room syncs every open tab; edits are ordinary canvas edits"
       - "Each rendered shape carries meta.journey {nodeId, kind}; a hand-added card carries none"
@@ -79,8 +101,8 @@ steps:
     card: "Takes the changes back into the file"
     activity: "Fold it back in"
     stories:
-      - {id: see-what-changed, card: "See what changed", release: r1}
-      - {id: apply-the-wording-and-the-or, card: "Apply the wording and the order", release: r1}
+      - {id: see-what-changed, card: "See what changed", release: r1, status: exists, evidence: diffAgainstModel}
+      - {id: apply-the-wording-and-the-or, card: "Apply the wording and the order", release: r1, status: exists, evidence: applyDiff}
     system:
       - "lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing"
       - "--write applies card wording and column order only; it refuses a reorder when a nodeId is duplicated"
@@ -96,38 +118,37 @@ steps:
     state: "the journey file"
     readmodel: "the diff report"
     note: >
-      Read covers the Journey board page only. On the story map a step is an activity and its stories are their own shapes, so a priority drag there is not yet seen.
+      Read covers the story map only, and only the fields it always read: wording, order, release membership, story priority. A story's status, evidence and question are written by hand and not yet round-tripped from the canvas.
 
   - id: model
     card: "Names the command, the events and the state behind each step"
     activity: "Model the functions"
-    badge: NOT_BUILT
     stories:
-      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3}
-      - {id: name-one-command-per-step, card: "Name one command per step", release: r3}
-      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3}
-      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3}
+      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3, status: gap}
+      - {id: name-one-command-per-step, card: "Name one command per step", release: r3, status: gap}
+      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3, status: gap}
+      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3, status: gap}
     system:
-      - "Nothing implements this. The file has no command, event, state or read-model fields yet"
+      - "write, render, contract and readback carry command/events/state/readmodel already; workshop and model do not yet"
     cites: [kc-claude-plugins]
     rules: [model-is-written-not-derived, no-cell-from-memory]
 
   - id: funcmap
     card: "Reads the function map beside the journey"
     activity: "Put it on a board"
-    badge: NOT_BUILT
     stories:
-      - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3}
-      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: r3}
+      - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3, status: exists, evidence: buildFunctionMap}
+      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: r3, status: gap, question: "readRoom never looks at page:jm-funcmap — is a fourth read path worth it, or does the function map stay generated-only?"}
     system:
-      - "Nothing implements this. The columns would stay the journey's steps and only the lanes change, so the renderer and the reconcile are the ones already here"
+      - "lib/funcmap.mjs draws the page whenever a step carries command/events/state/readmodel; nothing reads it back yet"
     cites: [kc-claude-plugins]
     rules: [same-columns-new-lanes]
 
   - id: handoff
     card: "Takes the event order as the order to build in"
     activity: "Hand it to planning"
-    badge: NOT_RULED
+    stories:
+      - {id: hand-the-order-to-planning, card: "Hand the event order to planning", release: r3, status: gap, question: "What does planning receive, and in what format?"}
     system:
       - "Nothing implements this, and nothing has decided what planning receives or in what format"
     cites: [kc-claude-plugins]
@@ -154,17 +175,21 @@ ownership:
     owner: "The skill"
     from: render
     to: readback
-    note: "owns the drawing, the reconcile and the read-back"
+    note: "owns the drawing, the contract, the lint and the read-back"
 
 rules:
   - id: file-is-truth
-    text: "The file in the repository is the source of truth; every board is a rendering of it"
+    text: "The file in the repository is the source of truth; every board or document is generated from it"
   - id: board-is-a-cache
-    text: "Deleting .rooms/ loses nothing — every board can be re-rendered from its file"
+    text: "Deleting .rooms/ loses nothing — the board can be re-rendered from its file"
   - id: handmade-cards-survive
     text: "A shape with no meta.journey is never touched by a re-render, and is reported as unclaimed"
   - id: no-cell-from-memory
     text: "Every System Flow cell cites something read this session; a recalled fact is a hypothesis"
+  - id: contract-is-generated
+    text: "The per-release contract is generated from the journey file on every run; there is no hand-edit path"
+  - id: grep-is-the-check
+    text: "A lint that can be made to fire on a real defect is a check; one that cannot is decoration"
   - id: lossy-inverse
     text: "Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id"
   - id: ambiguity-refused
@@ -177,8 +202,8 @@ rules:
     text: "Events carry causal order and story order does not, which is why a build order is derived from events"
 
 status:
-  unproven: "The function map is drawn but never read back, so an edit made on that page is lost. Nothing has been run by anyone but its author."
+  unproven: "A story's status, evidence and question are written by hand and not yet read back from an edit made on the canvas. Nothing here has been run by anyone but its author."
   unmerged: "PR #394 is a draft. Nothing here is on main."
   undeployed: "Nothing is deployed. The board is a local development environment only, per the tldraw licence."
-  irreversible: "None. A room can be deleted and rebuilt from its file."
+  irreversible: "None. A room can be deleted and rebuilt from its file; the contract is regenerated, not edited."
   as_of: 2026-09-09

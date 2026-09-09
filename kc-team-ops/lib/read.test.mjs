@@ -160,45 +160,17 @@ test('a story written in object form is reworded too', () => {
 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
 })
 
-// ── one board per release ───────────────────────────────────────────────────────
+// ── collapse to one board ────────────────────────────────────────────────────────
+// The per-release canvas board (buildJourneyBoard, wired in through buildAllPages) is
+// retired in favour of the generated release contract (release-contract.mjs). The five
+// tests this section used to hold asserted that a board page existed per release; they
+// guarded a feature this stage removes on purpose, so they are gone, not adapted.
+// buildJourneyBoard itself is untouched and still under test in storymap.test.mjs.
 
-import { buildAllPages, boardPageId } from './render.mjs'
+import { buildAllPages } from './render.mjs'
 
-test('a release gets its own board, scoped to the steps it touches', () => {
-	const pages = buildAllPages(fixtureModel).filter((r) => r.typeName === 'page')
-	assert.ok(pages.some((p) => p.id === boardPageId('r1')), 'release 1 has no board')
-	const onR1 = buildAllPages(fixtureModel).filter((r) => r.parentId === boardPageId('r1') && r.meta?.journey?.kind === 'step-card')
-	// Fixture: r1 has stories under a, b and c; r2 only under a.
-	assert.deepEqual(onR1.map((r) => r.meta.journey.nodeId).sort(), ['a', 'b', 'c'])
-	const onR2 = buildAllPages(fixtureModel).filter((r) => r.parentId === boardPageId('r2') && r.meta?.journey?.kind === 'step-card')
-	assert.deepEqual(onR2.map((r) => r.meta.journey.nodeId), ['a'], 'release 2 drew steps it does not touch')
-})
-
-test('a step on two release boards is not read as a duplicate', () => {
-	const shapes = buildAllPages(fixtureModel).filter((r) => r.typeName === 'shape')
-	const d = diffAgainstModel(shapes, fixtureModel)
-	assert.deepEqual(d.duplicated, [], 'a step drawn on two boards was read as a duplicated card')
-})
-
-test('two boards showing one step differently is a conflict', () => {
-	const shapes = buildAllPages(fixtureModel).filter((r) => r.typeName === 'shape')
-	const onR1 = shapes.find((r) => r.parentId === boardPageId('r1') && r.meta?.journey?.nodeId === 'a' && r.meta.journey.kind === 'step-card')
-	onR1.props.richText = rt('1. Only release one says this')
-	const d = diffAgainstModel(shapes, fixtureModel)
-	assert.equal(d.reworded.filter((r) => r.id === 'a' && r.field === 'card').length, 0, 'one board silently won')
-	assert.ok(d.rewordConflict.some((c) => c.id === 'a'), 'the disagreement was not reported')
-})
-
-test('a release label links to that release board, and the board links back', () => {
-	const put = buildAllPages(fixtureModel, 'demo')
-	const label = put.find((r) => r.id === 'shape:sm-rellabel-r1')
-	assert.match(label.props.url, /jm-board-r1$/, 'the story map does not reach the board')
-	const back = put.find((r) => r.parentId === boardPageId('r1') && r.meta?.journey?.kind === 'release-label')
-	assert.match(back.props.url, /d=v0\.0\.1\.1\.page$/, 'the board does not reach the story map')
-})
-
-test('a file with no releases still gets one whole-journey board', () => {
-	const bare = { ...fixtureModel, releases: [], steps: fixtureModel.steps.map((s) => ({ ...s, stories: [] })) }
-	const pages = buildAllPages(bare).filter((r) => r.typeName === 'page').map((r) => r.id)
-	assert.ok(pages.includes(boardPageId(null)), 'a map drawn before anyone sliced it lost its board')
+test('buildAllPages draws the story map and, when modelled, the function map — no board page', () => {
+	const pages = buildAllPages(fixtureModel).filter((r) => r.typeName === 'page').map((r) => r.id)
+	assert.deepEqual(pages, ['page:page', 'page:jm-funcmap'])
+	assert.ok(!pages.some((id) => id.startsWith('page:jm-board-')), 'a retired per-release board page came back')
 })
