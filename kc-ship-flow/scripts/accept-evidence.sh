@@ -170,7 +170,8 @@ fi
 is_tracked_path() {
   local path="$1"
   local repo_root="$2"
-  git -C "$repo_root" ls-files --error-unmatch -- "$path" >/dev/null 2>&1
+  local candidate_sha="$3"
+  git -C "$repo_root" cat-file -e "${candidate_sha}:${path}" >/dev/null 2>&1
 }
 
 extract_path_like_tokens() {
@@ -181,6 +182,7 @@ extract_path_like_tokens() {
 extract_command_paths() {
   local cmd="$1"
   local repo_root="$2"
+  local candidate_sha="$3"
 
   local paths=()
 
@@ -190,7 +192,7 @@ extract_command_paths() {
   done < <(echo "$cmd" | grep -oE 'git show [^:]+:([^ ]+)' | sed 's/git show [^:]*://g' || true)
 
   while read -r token; do
-    if [ -n "$token" ] && is_tracked_path "$token" "$repo_root"; then
+    if [ -n "$token" ] && is_tracked_path "$token" "$repo_root" "$candidate_sha"; then
       paths+=("$token")
     fi
   done < <(extract_path_like_tokens "$cmd")
@@ -280,7 +282,7 @@ if check_masked_exit "$WITHOUT_IT_REMOVED_VARIANT"; then
 fi
 
 echo "$(timestamp) checking AC-3: static path consistency"
-command_paths=$(extract_command_paths "$WITHOUT_IT_COMMAND" "$repo_root")
+command_paths=$(extract_command_paths "$WITHOUT_IT_COMMAND" "$repo_root" "$CANDIDATE_SHA")
 variant_paths=$(extract_variant_paths "$WITHOUT_IT_REMOVED_VARIANT")
 changed_paths=$(get_changed_paths "$BASE_SHA" "$CANDIDATE_SHA" "$repo_root")
 

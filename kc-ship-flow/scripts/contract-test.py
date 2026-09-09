@@ -314,7 +314,7 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
             f"BASE_SHA: {open_pr_sha}\n"
             "SELF_CHECK: fixture accept-evidence: ACCEPT\n"
             "WITHOUT_IT_COMMAND: true\n"
-            "WITHOUT_IT_REMOVED_VARIANT: true\n",
+            "WITHOUT_IT_REMOVED_VARIANT: rm -f candidate-only.ts\n",
             encoding="utf-8",
         )
         return evidence
@@ -469,5 +469,57 @@ require(
     f"naming it: exit={mutant_untracked_path_result.returncode} "
     f"stdout={mutant_untracked_path_result.stdout!r}",
 )
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-tree-") as candidate_tree_dir_name:
+    candidate_tree_dir = Path(candidate_tree_dir_name)
+    candidate_tree_repo = candidate_tree_dir / "repo"
+    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
+    subprocess.run(["git", "init", "-q", str(candidate_tree_repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), *git_user, "commit", "-q", "--allow-empty", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    checkout_sha = subprocess.check_output(
+        ["git", "-C", str(candidate_tree_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    only_in_candidate = candidate_tree_repo / "candidate-only.ts"
+    only_in_candidate.write_text("export const marker = \"only-in-candidate\";\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(candidate_tree_repo), "add", "candidate-only.ts"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), *git_user, "commit", "-q", "-m", "feat(fixture): add candidate-only path"],
+        check=True, capture_output=True,
+    )
+    candidate_sha = subprocess.check_output(
+        ["git", "-C", str(candidate_tree_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), "checkout", "-q", "--detach", checkout_sha],
+        check=True, capture_output=True,
+    )
+
+    candidate_tree_evidence = candidate_tree_dir / "evidence.md"
+    candidate_tree_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {candidate_sha}\n"
+        f"BASE_SHA: {checkout_sha}\n"
+        "WITHOUT_IT_COMMAND: grep -q only-in-candidate candidate-only.ts\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f candidate-only.ts\n",
+        encoding="utf-8",
+    )
+
+    candidate_tree_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(candidate_tree_evidence), "--repo", str(candidate_tree_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        candidate_tree_result.returncode == 0
+        and "accept-evidence: ACCEPT" in candidate_tree_result.stdout,
+        "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND reading a path that exists only "
+        "at CANDIDATE_SHA on a --repo checkout sitting at an earlier commit: "
+        f"exit={candidate_tree_result.returncode} stdout={candidate_tree_result.stdout!r} "
+        f"stderr={candidate_tree_result.stderr!r}",
+    )
 
 print("kc-ship-flow contract: PASS")
