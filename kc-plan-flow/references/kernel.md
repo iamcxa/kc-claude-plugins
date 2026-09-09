@@ -56,6 +56,32 @@ check.
 **The cheapest source of "where is it now" is the person doing it, then their pull
 request body, then reasoning. Reasoning is last and it is where this went wrong.**
 
+## A sentence has two jobs, and the second one loses
+
+A shipping sentence names an outcome and names a bar. The ambiguity keeps landing on the
+bar, three times in one project: the outcome got the care and the bar got whatever words
+were left inside the budget.
+
+Both halves face the same standard -- two readers, same answer -- and the bar is read
+separately, because it fails in ways the outcome does not.
+
+**Two failures worth checking for by name:**
+
+**A verb no member delivers.** Read each verb in the sentence and name the issue that
+makes it true. One milestone claimed sharing and reading back while both its members
+published; the reading-back work was in the milestone below it, and the only route to it
+contradicted the same sentence's "in the reader".
+
+**A bar that excludes a required member.** Read the bar against every member's subject.
+One milestone required a reviewer typing in a browser and set its bar at "unattended",
+so the bar denied the member the outcome could not do without.
+
+The second one has a tell: the bar came from a word in the milestone's own name rather
+than from the work. That one was named "the agent's loop" because the first draft called
+its persona an agent, and "unattended" followed from the name, not from anything anybody
+needed. **When a bar restates the title, check whether it is describing the work or the
+label.**
+
 ## Check, do not remember
 
 A rule enforced by being read is enforced by whoever reads it, and a fresh session
