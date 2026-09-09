@@ -26,6 +26,17 @@ gates:
                 id: briefing:20w9we1wvtdy500nf9rc3a65:backlog:attempt-1:revision-1
                 digest: sha256:fd087955f59c08344668c6da75bd585963b41d5332092b60b4c9bf59a9406a39
                 room-ref: ./reverse-a-story-map-from-linear/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:20w9we1wvtdy500nf9rc3a65:backlog:1
+                briefing: briefing:20w9we1wvtdy500nf9rc3a65:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-09T03:43:59.766489Z"
+                decision: approve
+                reason: 'Captain approved the seed at the backlog gate: the POC question, the falsifier against an independently drawn map, and the stop point at a story map plus an unattachable-issue list. Constraint recorded as AC-1 and Non-goals: draw into a separate room and file, leave the existing planning board untouched.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
