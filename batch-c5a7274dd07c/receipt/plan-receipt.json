@@ -1,0 +1,138 @@
+{
+ "schema": "kc-plan-receipt/v1",
+ "code_repo": "iamcxa/kc-claude-plugins",
+ "base_branch": "main",
+ "project": {
+  "id": "6072d592-8704-448b-bb8d-66471b0557f9",
+  "name": "Ship-flow hands the Captain one UAT message instead of a chat to read",
+  "user_value": "Kent runs the next plan session on a ship-flow whose accept, review, merge-verdict and close stations no longer need FO overrides for the four defects batch ab2fb263 recorded.",
+  "hypothesis": "If we fix the four station defects the qnow batch recorded, each as one PR through ship-flow's own stations, then the next batch closes without an FO override at accept, without a supply-chain check run by hand, without a CI claim the workflow does not back, and with a close receipt that validates the same on every host.",
+  "wedge": "kc-claude-plugins only, Kent as Captain, FO dispatches four local Sonnet workers in order 134 → 147+135 → 148 → 149; not in it: DEV-126/127/128/130 and the docs layout tickets.",
+  "outcome": "accept-evidence.sh accepts any git-tracked path; validate-receipt.py fails closed without jsonschema and the writers' outputs have a schema-admitted home; dev/ship-debrief accept a carried issue; the review station dispatches the supply-chain lane on dependency diffs and disposition refuses without it; a ci-covers check backs any CI-as-gate claim; contract-test covers each.",
+  "exit": [
+   "DEV-134, DEV-147, DEV-135, DEV-148, DEV-149 merged on main with contract-test green.",
+   "This batch's own close receipt validates with jsonschema present, no manual edit.",
+   "Next plan session starts on the released kc-ship-flow (DEV-128 handled at release)."
+  ],
+  "outcome_hash": "sha256:5528b7269d139f00bdf403b2017ad59c320fc29e252c5e03114005c19aa6a841"
+ },
+ "cycle": "b788c52d-8370-475f-be4f-8fcd88dd03d6",
+ "milestones": [
+  {
+   "id": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "name": "Repair after batch ab2fb263: stations that the qnow batch showed wrong",
+   "journey": {
+    "persona": "Kent as Captain of the next batch",
+    "start": "a candidate with a .ts without-it command",
+    "end": "CLOSE OK on a receipt no hand touched",
+    "observable": "zero FO override lines in the batch README"
+   }
+  }
+ ],
+ "issues": {
+  "DEV-149": {
+   "id": "d1bf51d7-464e-43b9-9f50-f7c68dbb0e27",
+   "url": "https://linear.app/duckbase-co/issue/DEV-149/kc-ship-flow-merge-verdict-verify-the-named-ci-check-actually-runs-the",
+   "title": "DEV-149",
+   "branch": "feature/dev-149-kc-ship-flow-merge-verdict-verify-the-named-ci-check",
+   "close_line": "Fixes DEV-149",
+   "profile": "pilot-product-slice",
+   "milestone": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "body": "## The problem\n\nIn batch ab2fb2635f0c the FO wrote \"CI's pr-test is the aggregate gate\" in the bodies of iamcxa/qnow#1181 and #1182. qnow-next is an npm island inside a pnpm monorepo; `git grep -c qnow-next 4122d2be -- .github` printed 0, so a green ci-gate had run none of its tests, and #1181 merged on that claim (DEV-139 wires the suite). Nothing in `kc-ship-flow/scripts/merge-station.sh` or the merge verdict checks that a named CI check runs the package it is credited for.\n\n## Accepted outcome\n\nA new script `kc-ship-flow/scripts/ci-covers.sh <repo-root> <package-path> <check-name>` exits 0 only when a workflow file under `.github/workflows/` names the check and contains a step that runs inside or filters to `<package-path>`; otherwise it exits 1 naming what is missing. The merge verdict template in the first-officer skill records its output, and when it fails the verdict must name the FO's local run as the gate. Falsifier: a monorepo fixture where the package is absent from every workflow → exit 1; the same fixture with a `working-directory: <package-path>` step → exit 0.\n\n## Non-goals\n\n* Wiring any package into CI (that is the adopter's ticket, e.g. DEV-139).\n* Judging whether the CI job's assertions are good; only whether it runs the package at all.\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/ci-covers.sh kc-ship-flow/scripts/fixtures/monorepo-uncovered experiments/island pr-test` exits 1 and prints `experiments/island not run by pr-test`.\n* **AC-2** `bash kc-ship-flow/scripts/ci-covers.sh kc-ship-flow/scripts/fixtures/monorepo-covered experiments/island pr-test` exits 0.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `git -C /Users/kent/conductor/repos/qnow grep -c qnow-next 4122d2be -- .github` exit 1 2026-09-09",
+   "body_sha256": "afcfded6bbb71172187a44236cfdcdac326391dc3fb167ae2e59550141cef25c"
+  },
+  "DEV-148": {
+   "id": "d50f963d-abe8-414d-b970-a265f407d57e",
+   "url": "https://linear.app/duckbase-co/issue/DEV-148/kc-ship-flow-review-station-a-diff-that-touches-a-dependency-manifest",
+   "title": "DEV-148",
+   "branch": "feature/dev-148-kc-ship-flow-review-station-a-diff-that-touches-a-dependency",
+   "close_line": "Fixes DEV-148",
+   "profile": "pilot-product-slice",
+   "milestone": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "body": "## The problem\n\nIn batch ab2fb2635f0c (2026-09-07) iamcxa/qnow#1181 added six pinned dependencies and grew `package-lock.json` from 4474 to 19438 lines; the reviewed stage ran code, security and delta reviews and no supply-chain lane. Only after the Captain asked whether 20k lines was mergeable did the FO run `kc-pr-flow:tob-supply-chain-checker`, which found fflate 0.8.2 inside CVE-2026-45820's range (a third repair round) and @netlify/dev 5.0.5 available. `kc-ship-flow/skills/first-officer/SKILL.md` has no rule for dependency diffs; `kc-ship-flow/scripts/disposition.py` accepts a disposition without a supply-chain findings file.\n\n## Accepted outcome\n\nThe reviewed stage states that a diff touching a dependency manifest or lockfile (`package.json`, `package-lock.json`, `pnpm-lock.yaml`, `requirements*.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`) dispatches the supply-chain lane before disposition; `disposition.py` refuses a disposition for such a diff when `review/findings-<PR>-supply.json` is absent, naming the file; a diff without such paths is unaffected. Falsifier: #1181's file list (as a synthetic fixture) is refused without the findings file and accepted with it.\n\n## Non-goals\n\n* Fixing any advisory the lane reports; the lane's job is to run and be dispositioned, not to bump pins.\n* Adding the lane to kc-pr-flow, which already has it.\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/disposition.py kc-ship-flow/scripts/fixtures/deps-diff-no-supply` exits 2 and prints `supply-chain findings required`.\n* **AC-2** `python3 kc-ship-flow/scripts/disposition.py kc-ship-flow/scripts/fixtures/deps-diff-with-supply` exits 0.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered, and `grep -c supply-chain kc-ship-flow/skills/first-officer/SKILL.md` prints at least 1.\n\nRe-verified: `grep -qi supply /Users/kent/.claude/plugins/local/kc-ship-flow/skills/first-officer/SKILL.md` exit 1 2026-09-09",
+   "body_sha256": "e98677e2b823cce72ac72412721cd056a4f8b19e31626695eb924b2e73cf8a5a"
+  },
+  "DEV-147": {
+   "id": "8d9a8983-f71d-461d-baa3-293d1b4102b0",
+   "url": "https://linear.app/duckbase-co/issue/DEV-147/ship-flow-close-receipt-schema-forbids-the-debrief-writers-output",
+   "title": "DEV-147",
+   "branch": "feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers",
+   "close_line": "Fixes DEV-147",
+   "profile": "pilot-product-slice",
+   "milestone": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "body": "## The problem\n\n`docs/plan-flow/schema/validate-receipt.py` guards `import jsonschema` and skips schema validation when the import fails, so batch 0f273392a113's close receipt (which embedded `dev_debrief`, `ship_debrief` and an `accepted_residual` field the pinned `kc-ship-close-receipt.v1.schema.json` forbids) printed CLOSE OK on 2026-09-07 and the same shape was refused on 2026-09-08 once jsonschema was installed. The writers `kc-ship-flow/scripts/dev-debrief.py` and `kc-ship-flow/scripts/ship-debrief.py` emit blocks the schema has no home for, and (DEV-135) refuse a carried issue that has no `evidence/worker-evidence-<ISSUE>*.md`.\n\n## Accepted outcome\n\n`validate-receipt.py` exits non-zero with a named reason when jsonschema cannot be imported; the writers' outputs are written to `receipt/dev-debrief.json` and `receipt/ship-debrief.json` beside the close receipt and the first-officer skill names that home; the writers accept an issue whose close outcome is `carried` or `captain_stopped` with no evidence file, emitting an empty refusal list instead of exit 2. Falsifier: batch ab2fb2635f0c's receipt validates unchanged, and batch 0f273392a113's embedded shape is refused with jsonschema present.\n\n## Non-goals\n\n* Changing what the close receipt asserts (issues, defects, totals) or the plan/approval schemas' required fields.\n* Rewriting the previous batches' receipts; they stay as recorded.\n\n## Acceptance criteria\n\n* **AC-1** `python3 -S docs/plan-flow/schema/validate-receipt.py <plan> <approval> <close>` (jsonschema absent) exits 2 and prints `jsonschema required`.\n* **AC-2** `python3 kc-ship-flow/scripts/dev-debrief.py kc-ship-flow/scripts/fixtures/batch-carried-issue` exits 0 and prints an entry for the carried issue with `evidence_refusals: []`.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with a close fixture that has `receipt/dev-debrief.json` beside the receipt and a receipt embedding `dev_debrief` refused.\n\nRe-verified: `grep -c 'if jsonschema' docs/plan-flow/schema/validate-receipt.py` exit 0 2026-09-09",
+   "body_sha256": "4b3a8aa89f4e4b07285c9dfec9f11dbf1f0115aa5149bc2da59f4529641d6954"
+  },
+  "DEV-135": {
+   "id": "a81bbba2-a145-4a73-9f80-249cb74f32a8",
+   "url": "https://linear.app/duckbase-co/issue/DEV-135/debrief-writers-accept-a-carried-never-dispatched-issue-without-a",
+   "title": "DEV-135",
+   "branch": "feature/dev-135-debrief-writers-accept-a-carried-never-dispatched-issue",
+   "close_line": "Fixes DEV-135",
+   "profile": "pilot-product-slice",
+   "milestone": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "body": "## The problem\n\n`kc-ship-flow/scripts/dev-debrief.py` exits 2 with `missing worker-evidence file for DEV-37` when the close receipt carries an issue with outcome `carried` that was never dispatched (batch 0f273392, 2026-09-07). A batch that stops before dispatching an admitted item is a normal outcome (`defaults.worker_blocker = skip_issue_continue_batch`, or a Captain ruling), so the writer must not require an Evidence block for it.\n\n## Accepted outcome\n\nBoth debrief writers accept issues whose outcome is `carried`, `captain_stopped` or `drift` with no evidence file: `per_issue` gets `rounds: 0`, empty refusal lists and `note: not dispatched`; the writers still refuse a `merged` / `pr_open` / `accepted_no_pr` issue without an evidence file. A fixture batch with one carried issue writes both debriefs and the close receipt validates.\n\n## Non-goals\n\n* Changing the close-receipt schema.\n* Inventing evidence for undispatched items.\n\n## Acceptance criteria\n\n* **AC-1** `python3 kc-ship-flow/scripts/dev-debrief.py kc-ship-flow/scripts/fixtures/debrief-writer/batch-carried-probe` exits 0 and its JSON has `per_issue.DEV-9xx.note == \"not dispatched\"`.\n* **AC-2** The same fixture with the carried issue's outcome changed to `merged` makes the writer exit 2 naming the missing file.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both cases registered.\n\nRe-verified: `python3 ~/.claude/plugins/local/kc-ship-flow/scripts/dev-debrief.py /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/batch-0f273392a113` exit 2 2026-09-07",
+   "body_sha256": "bf8e7c3655006c001dd6d9e9cba28ca53889681dec1cbd38cbc43b2e4eacd5c0"
+  },
+  "DEV-134": {
+   "id": "0642d1d3-822e-469e-99eb-219b85cda653",
+   "url": "https://linear.app/duckbase-co/issue/DEV-134/accept-station-ac-3-path-extraction-must-accept-any-tracked-file-not-a",
+   "title": "DEV-134",
+   "branch": "feature/dev-134-accept-station-ac-3-path-extraction-must-accept-any-tracked",
+   "close_line": "Fixes DEV-134",
+   "profile": "pilot-product-slice",
+   "milestone": "381855af-826f-482c-a7a6-6b3a61de4b81",
+   "body": "## The problem\n\n`kc-ship-flow/scripts/accept-evidence.sh` AC-3 extracts the read paths a WITHOUT_IT_COMMAND touches with a fixed extension list (py, md, sh, json, yaml, yml, txt). On 2026-09-07 it refused the #1177 repair candidate (iamcxa/qnow, all `.ts`/`.mts` files) with `cannot extract paths from WITHOUT_IT_COMMAND - command may be unparseable` although the pair was correct (retained 0 / removed 1 / base 1, verified by the FO). The station was built on a Python/shell repository and encodes that repository's extensions as the world.\n\n## Accepted outcome\n\nAC-3 recognizes any path that is a tracked file in the candidate tree (`git ls-files` membership), independent of extension, plus the existing rule for directories; a fixture with a `.ts` and a `.mts` read path is accepted and a fixture whose only path is untracked is still refused. Falsifier: the #1177 r1 block (kept as a synthetic fixture with the same shape) accepts.\n\n## Non-goals\n\n* Changing the out-of-tree or `|| echo` refusals.\n* Parsing languages beyond path tokens.\n\n## Acceptance criteria\n\n* **AC-1** `bash kc-ship-flow/scripts/accept-evidence.sh kc-ship-flow/scripts/fixtures/ts-read-path.md` prints ACCEPT (fixture synthetic, `.ts` and `.mts` paths).\n* **AC-2** `bash kc-ship-flow/scripts/accept-evidence.sh kc-ship-flow/scripts/fixtures/mutant-untracked-path.md` prints REFUSE naming the path.\n* **AC-3** `python3 kc-ship-flow/scripts/contract-test.py` exits 0 with both fixtures registered.\n\nRe-verified: `grep -q 'ts' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/accept-evidence.sh && grep -oE 'py\\|md\\|sh[^)]*' /Users/kent/.claude/plugins/local/kc-ship-flow/scripts/accept-evidence.sh | grep -q '\\bts\\b'` exit 1 2026-09-07",
+   "body_sha256": "1cc10665b7263dd592132e03196ff66e666be4a5dc527ece7e03a55b96d53c0d"
+  }
+ },
+ "edges": [
+  [
+   "DEV-134",
+   "DEV-147"
+  ],
+  [
+   "DEV-147",
+   "DEV-135"
+  ],
+  [
+   "DEV-135",
+   "DEV-148"
+  ],
+  [
+   "DEV-148",
+   "DEV-149"
+  ]
+ ],
+ "dispatch_order": [
+  "DEV-134",
+  "DEV-147",
+  "DEV-135",
+  "DEV-148",
+  "DEV-149"
+ ],
+ "lint": {
+  "schema": "kc-plan-lint/v1",
+  "pass": true,
+  "digest": "7a2f73bf68e01748a6f04fb38bb265f6152eb0cfaea1b7aa9deffd4972c35887"
+ },
+ "premises": [
+  {
+   "id": "P1",
+   "statement": "The four defects are still on origin/main as verified by command on 2026-09-09 (station 0).",
+   "agreed": false
+  },
+  {
+   "id": "P2",
+   "statement": "No other agent holds these tickets (Captain, 2026-09-09; FO branch/PR scan).",
+   "agreed": false
+  },
+  {
+   "id": "P3",
+   "statement": "ship-flow can ship its own repair: its stations ran four batches already.",
+   "agreed": false
+  }
+ ],
+ "rationale_sha256": "37b809de981914f4878fcc2fede9e631c73e6e3396b9aa03a03dd63db9b566e0",
+ "receipt_sha256": "c5a7274dd07c4ee18d0e246e32193fa7aeb74dbe711be38afa5b0c997ca809f9"
+}
