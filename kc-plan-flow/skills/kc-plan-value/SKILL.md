@@ -140,6 +140,12 @@ had a criterion that another issue's acceptance depended on -- so removing it wa
 moving a card, it was also amending what the depending issue promised to print. Ask the
 question of the sentence, then follow what the answer touches.
 
+**Technical work follows its value point and never joins alone.** With its parent outside
+the milestone, nothing inside the milestone tests whether that work was worth doing. So the
+second detector is an orphan: a technical issue whose value point sits in another milestone,
+or in none. Applying the gate to one milestone left two of them within the hour, and both
+were found by someone else looking.
+
 ## Where the gate's rejects go
 
 An issue the gate turns away is not deleted and not left milestone-less. It goes to the
