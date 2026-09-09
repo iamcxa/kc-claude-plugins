@@ -31,7 +31,8 @@ stage's installed script from `docs/ship/README.md`'s per-stage lines:
    for that entity arrives later, from its `validation` stage, not from this dispatching layer.
 2. `accepted` — `kc-ship-flow/scripts/accept-evidence.sh`
 3. `reviewed` — `kc-ship-flow/scripts/open-pr.sh <evidence-file> <batch-dir> (--entity-path
-   <dev-task-file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>]`, then
+   <dev-task-file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>] [--fixes
+   <issue-id> ...]`, then
    `kc-ship-flow/scripts/disposition.py`. `--lead`/`--evidence-file` are only needed when the
    automatic extraction refuses (`lead required` / no recognized suite token). When the diff touches
    a dependency manifest or lockfile, dispatch the supply-chain lane

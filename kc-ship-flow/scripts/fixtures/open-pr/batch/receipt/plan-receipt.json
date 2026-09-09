@@ -15,6 +15,31 @@
       "branch": "feature/fixture-branch-clause",
       "close_line": "Fixes DEV-9003",
       "body": "## The problem\n\nThis synthetic fixture sentence exists only to prove the clause boundary rule closes right at word number eighteen, not at twenty five and never trails off as a fragment though it keeps running on for quite a while longer here.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+    },
+    "DEV-9004": {
+      "branch": "feature/fixture-branch-emptylead",
+      "close_line": "Fixes DEV-9004",
+      "body": ""
+    },
+    "DEV-9005": {
+      "branch": "feature/fixture-branch-noboundary",
+      "close_line": "Fixes DEV-9005",
+      "body": "## The problem\n\nThis synthetic fixture sentence deliberately avoids any comma semicolon dash or colon while running well past twenty five words all the way beyond forty words just to prove the clause boundary rule finds no boundary anywhere in this sentence at all.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+    },
+    "DEV-9006": {
+      "branch": "feature/fixture-branch-multi",
+      "close_line": "Fixes DEV-9006",
+      "body": "## The problem\n\nA synthetic fixture problem for the one-PR-two-issues --fixes case, exercising the primary BRANCH-matched issue.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+    },
+    "DEV-9007": {
+      "branch": "feature/fixture-branch-multi-extra",
+      "close_line": "Fixes DEV-9007",
+      "body": "## The problem\n\nA second synthetic fixture issue, named only via --fixes DEV-9007, never matched by its own BRANCH field.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+    },
+    "DEV-9008": {
+      "branch": "feature/fixture-branch-backtick",
+      "close_line": "Fixes DEV-9008",
+      "body": "## The problem\n\nCaptain, 2026-09-09: `should follow the pr-merge template`. The real lead sentence follows here as the actual motivation.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
     }
   }
 }

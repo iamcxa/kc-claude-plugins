@@ -4,7 +4,7 @@
 # template, "Extraction rules").
 # Usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run]
 #                    (--entity-path <dev-entity-file> | --what-changed-file <file>)
-#                    [--lead <file>] [--evidence-file <file>]
+#                    [--lead <file>] [--evidence-file <file>] [--fixes <issue-id> ...]
 #
 # <batch-dir> is a batch record directory: <batch-dir>/README.md (entity id
 # is the directory's own basename, `batch-` prefix stripped) and
@@ -35,14 +35,25 @@
 # The lead is never a fragment: a first sentence over 25 words is closed at
 # the longest clause boundary (`,` `;` `—` `:`) within the first 25 words,
 # period-terminated; with no such boundary, `--lead <file>` (one sentence)
-# supplies it, else the run refuses (exit 2, `lead required`).
+# supplies it, else the run refuses (exit 2, `lead required`). An empty or
+# whitespace-only source paragraph is treated the same as no boundary --
+# never emitted as an empty lead.
 #
 # `## Evidence` bullets are admitted only for a token naming a recognized
-# suite or test runner (`contract-test.py`, `*.test.sh`, `*.test.py`,
-# `*.test.mjs`, `npm test`, `npm run test:*`, `pytest`, `vitest`,
-# `node --test`) followed by `N/N passed` or `exit 0`; when no such token is
-# found the section is omitted unless `--evidence-file <file>` supplies
-# bullets verbatim (one per line).
+# suite or test runner (`contract-test.py` or its bare form `contract-test`,
+# `*.test.sh`, `*.test.py`, `*.test.mjs`, `npm test`, `npm run test:*`,
+# `pytest`, `vitest`, `node --test`) followed by `N/N passed` or `exit 0`;
+# when no such token is found the section is omitted unless
+# `--evidence-file <file>` supplies bullets verbatim (one per line). When the
+# `TESTS` field has runner-shaped tokens (`N/N` or `exit 0`) that name no
+# recognized suite, and no `--evidence-file` rescues them, a notice prints on
+# stderr (`evidence: no suite token matched; pass --evidence-file`); the
+# section is still omitted and the run still exits 0.
+#
+# `--fixes <issue-id>` (repeatable) names an additional plan-receipt issue --
+# looked up by id, not by BRANCH -- fixed by this same PR (a one-PR-multiple-
+# issue delivery). Its `close_line` is appended after the BRANCH-matched
+# issue's own; an id absent from the receipt refuses (exit 2).
 #
 # --dry-run prints the body to stdout and exits 0 without resolving
 # CANDIDATE_SHA, binding BRANCH to origin, or calling gh. Every other exit
@@ -56,8 +67,10 @@
 # Evidence block missing a required field; a BRANCH containing `:` (fork
 # syntax); a batch-dir README.md untracked by its own checkout; a batch
 # receipt missing or with zero or more than one issue whose `branch` equals
-# BRANCH; a first sentence over 25 words with no clause boundary and no
-# `--lead` override (`lead required`); an unreachable CANDIDATE_SHA; a
+# BRANCH; a `--fixes` id absent from the receipt; a first sentence over 25
+# words with no clause boundary and no `--lead` override (`lead required`),
+# including an empty or whitespace-only source paragraph; an unreachable
+# CANDIDATE_SHA; a
 # BRANCH that resolves to zero or more than one ref on origin; a BRANCH
 # whose remote head does not equal CANDIDATE_SHA; a `gh pr create` failure;
 # or a PR number that cannot be parsed from `gh pr create`'s stdout.
@@ -68,7 +81,7 @@ log() { echo "$(timestamp) open-pr: $*" >&2; }
 die() { log "$*"; exit 2; }
 
 usage() {
-  echo "usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run] (--entity-path <file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>]" >&2
+  echo "usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run] (--entity-path <file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>] [--fixes <issue-id> ...]" >&2
   exit 2
 }
 
@@ -77,6 +90,7 @@ entity_path=""
 what_changed_path=""
 lead_path=""
 evidence_path=""
+fixes_ids=()
 args=()
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -102,6 +116,11 @@ while [ "$#" -gt 0 ]; do
     --evidence-file)
       [ "$#" -ge 2 ] || usage
       evidence_path="$2"
+      shift 2
+      ;;
+    --fixes)
+      [ "$#" -ge 2 ] || usage
+      fixes_ids+=("$2")
       shift 2
       ;;
     *)
@@ -182,7 +201,7 @@ body_tmp="$(mktemp)"
 body_err_tmp="$(mktemp)"
 trap 'rm -f "$body_tmp" "$body_err_tmp"' EXIT
 set +e
-python3 - "$plan_receipt" "$BRANCH" "$batch_owner_repo" "$batch_ref" "$batch_readme_relpath" "$batch_entity_id" "$TESTS" "$entity_path" "$what_changed_path" "$lead_path" "$evidence_path" \
+python3 - "$plan_receipt" "$BRANCH" "$batch_owner_repo" "$batch_ref" "$batch_readme_relpath" "$batch_entity_id" "$TESTS" "$entity_path" "$what_changed_path" "$lead_path" "$evidence_path" "${fixes_ids[@]}" \
   >"$body_tmp" 2>"$body_err_tmp" <<'PY'
 import re
 import json
@@ -190,6 +209,7 @@ import sys
 
 (receipt_path, branch, owner_repo, ref, readme_path, entity_id,
  tests_field, entity_path, what_changed_path, lead_path, evidence_path) = sys.argv[1:12]
+fixes_ids = sys.argv[12:]
 
 with open(receipt_path, encoding="utf-8") as f:
     receipt = json.load(f)
@@ -203,6 +223,17 @@ if len(matches) != 1:
     sys.exit(1)
 issue = matches[0]
 
+# --fixes names an additional issue by id, not by BRANCH -- a one-PR delivery
+# that closes more than one issue (this PR's own branch binds only its
+# primary issue's `branch` field). Every id must be present in the receipt.
+fixes_issues = []
+for fixes_id in fixes_ids:
+    fixes_issue = receipt.get("issues", {}).get(fixes_id)
+    if fixes_issue is None:
+        print(f"--fixes id {fixes_id!r} not found in {receipt_path}", file=sys.stderr)
+        sys.exit(1)
+    fixes_issues.append(fixes_issue)
+
 CLAUSE_BOUNDARIES = ",;—:"
 TRAILING_WRAPPERS = "'\"」”)]"
 
@@ -212,7 +243,7 @@ def is_quote_only(sentence: str) -> bool:
     # then require what remains to be fully wrapped in one matched quote
     # pair (plus only trailing punctuation).
     s = re.sub(r"^[^:\n]{1,60}:\s*", "", sentence.strip())
-    for open_q, close_q in (("「", "」"), ("“", "”"), ('"', '"'), ("'", "'")):
+    for open_q, close_q in (("「", "」"), ("“", "”"), ('"', '"'), ("'", "'"), ("`", "`")):
         if s.startswith(open_q):
             rest = s[len(open_q):]
             close_idx = rest.rfind(close_q)
@@ -243,17 +274,22 @@ def close_at_clause_boundary(sentence: str):
 
 
 def lead_from_problem(body_text: str, lead_override: str):
+    # An empty or whitespace-only source paragraph is missing, exactly like a
+    # long sentence with no clause boundary -- consult --lead, else refuse
+    # (never emit an empty first line the caller's `is None` guard misses).
     m = re.search(r"##\s*The problem\s*\n+(.*?)(?:\n\s*\n|\n##|\Z)", body_text, re.S)
     para = (m.group(1) if m else body_text).strip()
     para = re.sub(r"\s+", " ", para)
     if not para:
-        return ""
+        return lead_override or None
     sentences = re.split(r"(?<=[.!?])\s+", para)
     start = 0
     while start < len(sentences) and is_quote_only(sentences[start]):
         start += 1
     # Exactly the first (non-quote) sentence -- never several joined.
     sentence = sentences[start] if start < len(sentences) else para
+    if not sentence.strip():
+        return lead_override or None
     if len(sentence.split()) <= 25:
         return sentence
     cut = close_at_clause_boundary(sentence)
@@ -290,7 +326,7 @@ def what_changed_from_entity(body_text: str) -> list[str]:
 # runner -- a bare data/fixture path (e.g. a synthetic evidence.md) is never
 # a suite, however path-like or however close to an "N/N"/"exit 0" token.
 SUITE_PATTERNS = [
-    re.compile(r"\S*\bcontract-test\.py\b"),
+    re.compile(r"\S*\bcontract-test(?:\.py)?\b"),
     re.compile(r"\S*\.test\.sh\b"),
     re.compile(r"\S*\.test\.py\b"),
     re.compile(r"\S*\.test\.mjs\b"),
@@ -335,11 +371,28 @@ def suite_bullets_from_text(text: str) -> list[str]:
     return bullets
 
 
+def has_unmatched_runner_token(text: str) -> bool:
+    # True when a line carries a runner-shaped marker (`N/N` or `exit 0`) but
+    # names no recognized suite -- the silent-omission case that must instead
+    # notice on stderr rather than pass as an ordinary "no TESTS" run.
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        ratio_m = re.search(r"\d+/\d+", line)
+        exit0_m = None if ratio_m else re.search(r"\bexit 0\b", line)
+        marker = ratio_m or exit0_m
+        if marker and not find_suite(line[: marker.start()]):
+            return True
+    return False
+
+
 lead_override = ""
 if lead_path:
     with open(lead_path, encoding="utf-8") as f:
         lead_override = f.read().strip()
 
+tests_notice_needed = False
 if entity_path:
     with open(entity_path, encoding="utf-8") as f:
         entity_text = f.read()
@@ -350,7 +403,9 @@ elif what_changed_path:
     with open(what_changed_path, encoding="utf-8") as f:
         what_changed = [line.strip() for line in f if line.strip()]
     lead = lead_from_problem(issue.get("body", ""), lead_override)
-    evidence = suite_bullets_from_text(tests_field.replace(";", "\n"))
+    tests_text = tests_field.replace(";", "\n")
+    evidence = suite_bullets_from_text(tests_text)
+    tests_notice_needed = not evidence and has_unmatched_runner_token(tests_text)
 else:
     print("what-changed required: pass --entity-path <dev-entity-file> or --what-changed-file <file>", file=sys.stderr)
     sys.exit(1)
@@ -363,6 +418,13 @@ if not evidence and evidence_path:
     with open(evidence_path, encoding="utf-8") as f:
         evidence = [line.strip() for line in f if line.strip()]
 
+# TESTS carried a runner-shaped token (N/N or exit 0) that named no
+# recognized suite, and nothing rescued it -- notice on stderr rather than
+# silently drop it like an ordinary TESTS-less run; the section is still
+# omitted and the run still exits 0.
+if not evidence and tests_notice_needed:
+    print("evidence: no suite token matched; pass --evidence-file", file=sys.stderr)
+
 lines = [lead, "", "## What changed"]
 lines += [f"- {b}" for b in what_changed]
 
@@ -374,12 +436,19 @@ lines += ["", "---", f"[{entity_id}](/{owner_repo}/blob/{ref}/{readme_path})"]
 close_line = issue.get("close_line", "")
 if close_line:
     lines.append(close_line)
+for fixes_issue in fixes_issues:
+    fixes_close_line = fixes_issue.get("close_line", "")
+    if fixes_close_line:
+        lines.append(fixes_close_line)
 
 print("\n".join(lines))
 PY
 body_status=$?
 set -e
 [ "$body_status" -eq 0 ] || die "$(cat "$body_err_tmp")"
+# A non-refusal notice (e.g. the no-suite-token-matched case) still lands on
+# body_err_tmp -- forward it on success too, not only on the die path above.
+if [ -s "$body_err_tmp" ]; then cat "$body_err_tmp" >&2; fi
 body="$(cat "$body_tmp")"
 
 if [ "$dry_run" -eq 1 ]; then
