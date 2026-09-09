@@ -194,7 +194,11 @@ def run_e2e_gate(
         close_path = override_path
     try:
         return subprocess.run(
-            [sys.executable, str(e2e_gate), str(e2e_gate_fixtures / plan_fixture), str(close_path)],
+            [
+                sys.executable, str(e2e_gate),
+                "--root", str(ROOT), "--flows", "docs/ship-flow/flows",
+                str(e2e_gate_fixtures / plan_fixture), str(close_path),
+            ],
             cwd=ROOT, text=True, capture_output=True, env=env, timeout=30,
         )
     finally:
@@ -254,6 +258,41 @@ require(
     and "docs/ship-flow/flows/从派工到一条-slack-消息.yaml" in e2e_gate_chinese.stdout,
     f"e2e-gate Chinese milestone name should derive its Unicode flow path: "
     f"exit {e2e_gate_chinese.returncode}, stdout {e2e_gate_chinese.stdout!r}",
+)
+
+# --- DEV-153 AC-1/AC-2: milestone-name mode takes --root and --flows from arguments, never
+# from __file__, and refuses a missing flows directory by name rather than "not applicable" ---
+e2e_gate_ac1 = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/ship/flows",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac1.returncode == 0
+    and "docs/ship/flows/synthetic-gate-journey.yaml" in e2e_gate_ac1.stdout
+    and "not applicable" not in e2e_gate_ac1.stdout,
+    f"e2e-gate AC-1 (milestone-name mode, --root/--flows from arguments) failed: "
+    f"exit {e2e_gate_ac1.returncode}, stdout {e2e_gate_ac1.stdout!r}, stderr {e2e_gate_ac1.stderr!r}",
+)
+
+e2e_gate_ac2_missing_flows = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/missing",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac2_missing_flows.returncode == 2
+    and "flows directory not found" in e2e_gate_ac2_missing_flows.stderr,
+    f"e2e-gate AC-2 (missing flows directory should be a named refusal) failed: "
+    f"exit {e2e_gate_ac2_missing_flows.returncode}, stderr {e2e_gate_ac2_missing_flows.stderr!r}",
 )
 
 # --- review station: open-pr.sh BRANCH binding + disposition.py category handling ---

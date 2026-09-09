@@ -35,7 +35,9 @@ stage's installed script from `docs/ship/README.md`'s per-stage lines:
    (`kc-pr-flow:tob-supply-chain-checker` or the profile's equivalent) and write its findings before
    calling `disposition.py` — passed a bundle directory, it refuses (exit 2,
    `supply-chain findings required`) when that path is absent.
-4. `uat` (gate) — `kc-ship-flow/scripts/e2e-gate.py`, `kc-ship-flow/scripts/uat-doc.py`,
+4. `uat` (gate) — `kc-ship-flow/scripts/e2e-gate.py --root <code checkout> --flows docs/ship/flows
+   <plan-receipt.json> <close-receipt.json>` (`--root` and `--flows` are always required; `--flows`
+   is the Local Profile table's "E2E flows" row value), `kc-ship-flow/scripts/uat-doc.py`,
    `kc-ship-flow/scripts/notify.sh`
 5. `merged` — no kc-ship-flow script; observe the GitHub merge through Spacedock's `pr-merge` mod
 6. `closed` — `kc-ship-flow/scripts/dev-debrief.py`, then `kc-ship-flow/scripts/ship-debrief.py`;
