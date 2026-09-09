@@ -6,7 +6,7 @@
   "holder": "laptop",
   "started_at": "2026-09-03T14:05:00Z"
  },
- "close_sha256": "a95825e3b681590ca248d0392de5df6622076e0403b546bf80ec54f40b16597b",
+ "close_sha256": "24fb4e8d342e20482dd69d5cf39f9e6c554dab9f2d5403829cbeea31c4050242",
  "defects_returned": [
   {
    "class": "holder",
@@ -70,7 +70,7 @@
  },
  "issues": {
   "DEV-90": {
-   "candidate": "00d2dbf5d2a2778da500a6580849dc89c2e782ba",
+   "candidate": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
    "cost_usd_imputed": null,
    "minutes": {
     "build": 4,
@@ -79,12 +79,12 @@
     "verify": 6
    },
    "outcome": "pr_open",
-   "pr": "iamcxa/kc-claude-plugins#364",
+   "pr": "example-org/example-repo#1",
    "residuals": [],
    "rounds": 1
   },
   "DEV-91": {
-   "candidate": "00c4c05be6ea19a810e40606e6d0f3baad3f9af1",
+   "candidate": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
    "cost_usd_imputed": null,
    "minutes": {
     "build": 4,
@@ -100,7 +100,7 @@
    "rounds": 1
   },
   "DEV-92": {
-   "candidate": "9c05eaf86e74b608d5bef929e5772c931d6791b4",
+   "candidate": "cccccccccccccccccccccccccccccccccccccccc",
    "cost_usd_imputed": null,
    "minutes": {
     "build": 3,
@@ -109,7 +109,7 @@
     "verify": 5
    },
    "outcome": "pr_open",
-   "pr": "iamcxa/kc-claude-plugins#365",
+   "pr": "example-org/example-repo#2",
    "residuals": [
     "review by FO read; Codex endpoint 404 (S25)"
    ],

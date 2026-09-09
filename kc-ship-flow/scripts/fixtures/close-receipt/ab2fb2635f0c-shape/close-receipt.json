@@ -6,7 +6,7 @@
   "holder": "laptop",
   "started_at": "2026-09-07T06:53:33Z"
  },
- "close_sha256": "6f2c266068d64b7c6c33e830067e340a1e8d4cd66aff78f48a3a2b67b5a9ccfe",
+ "close_sha256": "27fa19c1d76613542bdcccfbe38c63bb68aa8d5ac8eb2cc07671c777994da244",
  "defects_returned": [
   {
    "class": "delivery",
@@ -50,7 +50,7 @@
  },
  "issues": {
   "DEV-970": {
-   "candidate": "4d13d179d97a5e932ea4269df17c73197077b2e8",
+   "candidate": "111111111111111111111111111111111111aaaa",
    "cost_usd_imputed": null,
    "minutes": {
     "build": 50,
@@ -67,7 +67,7 @@
    "rounds": 3
   },
   "DEV-971": {
-   "candidate": "80713b21189189b25a6ead07dfac412bc13db9fd",
+   "candidate": "222222222222222222222222222222222222bbbb",
    "cost_usd_imputed": null,
    "minutes": {
     "build": 18,

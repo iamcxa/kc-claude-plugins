@@ -112,8 +112,6 @@ with tempfile.TemporaryDirectory() as tmp:
     require(malformed.returncode == 2, f"malformed close receipt must exit 2, got {malformed.returncode}")
     require("Traceback" not in malformed.stderr, f"malformed JSON leaked a traceback: {malformed.stderr!r}")
 
-# --- DEV-135 AC-1: a carried issue with no worker-evidence file exits 0 ---
-# --- with an empty refusal list and a not-dispatched note -----------------
 carried = run(FIXTURES / "batch-carried-probe")
 require(carried.returncode == 0, f"batch-carried-probe must exit 0, got {carried.returncode}: {carried.stderr}")
 carried_doc = json_mod.loads(carried.stdout)
@@ -123,8 +121,6 @@ require(
     f"carried issue must be an empty-refusal, not-dispatched entry: {carried_entry}",
 )
 
-# --- DEV-135 AC-2: the same fixture with the carried issue's outcome ------
-# --- changed to `merged` still exits 2 naming the missing evidence file ---
 with tempfile.TemporaryDirectory() as tmp:
     mutated_batch = Path(tmp) / "batch-carried-probe"
     shutil.copytree(FIXTURES / "batch-carried-probe", mutated_batch)
