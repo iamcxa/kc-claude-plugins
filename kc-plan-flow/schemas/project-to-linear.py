@@ -78,7 +78,19 @@ def comparable(text):
     # Linear rewrites a "- " bullet to "* " on write, so a document rendering "- " would
     # drift from itself forever and --reconcile would never converge. Both readers accept
     # either marker, so the difference is not a difference.
-    return "\n".join(re.sub(r"^[-*] ", "- ", line.rstrip()) for line in (text or "").splitlines()).strip()
+    lines = [re.sub(r"^[-*] ", "- ", line.rstrip()) for line in (text or "").splitlines()]
+    kept = []
+    for i, line in enumerate(lines):
+        if not line:
+            before = next((l for l in reversed(kept) if l), "")
+            after = next((l for l in lines[i + 1:] if l), "")
+            # A list is one node in the tracker's store, so a blank line the renderer puts
+            # between two items does not come back. The project body drifted from itself on
+            # every run until this was normalised too.
+            if after.startswith("- ") and (before.startswith("- ") or before.startswith("  ")):
+                continue
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def section_body(text, heading):
@@ -382,7 +394,7 @@ def main():
     writes = []
     content = user_value_content(project["content"], plan["project"]["user_value"])
     content = boundaries_content(content, plan["project"]["boundaries"])
-    if content != (project["content"] or ""):
+    if comparable(content) != comparable(project["content"] or ""):
         kind = "project content" if not (project["content"] or "").strip() else "project content DRIFT"
         writes.append((kind, project_id, {"content": content}))
 

@@ -215,6 +215,22 @@ def refuses(text):
     return False
 
 
+TIGHT = "## Boundaries\n\n- **One.**\n  Agreed upstream.\n- **Two.**\n  Agreed upstream."
+LOOSE = "## Boundaries\n\n- **One.**\n  Agreed upstream.\n\n- **Two.**\n  Agreed upstream."
+check("a list the tracker tightened does not drift", P.comparable(LOOSE) == P.comparable(TIGHT),
+      "the project body reported drift on every run and --reconcile never converged")
+check("a blank line between paragraphs is still a difference",
+      P.comparable("## A\n\nOne.\n\nTwo.") != P.comparable("## A\n\nOne.\nTwo."))
+check("a blank line before a list is still a difference",
+      P.comparable("Lead in.\n\n- One.") != P.comparable("Lead in.\n- One."))
+B = [{"rule": "One.", "agreed_with": "the maintainer", "agreed_at": "repo#1"},
+     {"rule": "Two.", "agreed_with": "the maintainer", "agreed_at": "repo#1"}]
+_rendered = P.boundaries_content("", B)
+_stored = P.comparable(_rendered)
+check("boundaries survive the tracker's own round trip",
+      P.comparable(P.boundaries_content(_stored, B)) == _stored,
+      "a second --reconcile must find nothing to repair")
+
 check("a colon in Re-verified is refused", refuses("Re-verified: git show origin/main:file 2026-09-08"))
 check("an issue identifier in Re-verified is refused", refuses("Re-verified: git log DRC-4411 2026-09-08"))
 check("a filename the tracker would autolink is refused",
