@@ -179,6 +179,38 @@ extract_path_like_tokens() {
   echo "$cmd" | grep -oE '[a-zA-Z0-9_./-]+' | grep -E '/|\.[a-zA-Z0-9]+$' || true
 }
 
+# The single path WITHOUT_IT_COMMAND actually executes: the first token after
+# a leading interpreter (env's assignments/flags, then bash/sh/python3/python/
+# node), or the first token when there is no such interpreter. An argument
+# elsewhere in the command does not qualify -- only this one path.
+extract_executed_path() {
+  local cmd="$1"
+  local -a words
+  read -r -a words <<< "$cmd"
+  local i=0
+  local n=${#words[@]}
+
+  if [ "$i" -lt "$n" ] && [ "${words[$i]}" = "env" ]; then
+    i=$((i + 1))
+    while [ "$i" -lt "$n" ]; do
+      case "${words[$i]}" in
+        *=*|-*) i=$((i + 1)) ;;
+        *) break ;;
+      esac
+    done
+  fi
+
+  if [ "$i" -lt "$n" ]; then
+    case "${words[$i]}" in
+      bash|sh|python3|python|node) i=$((i + 1)) ;;
+    esac
+  fi
+
+  if [ "$i" -lt "$n" ]; then
+    echo "${words[$i]}"
+  fi
+}
+
 extract_command_paths() {
   local cmd="$1"
   local repo_root="$2"
@@ -358,23 +390,17 @@ set -e
 
 echo "$(timestamp) WITHOUT_IT_COMMAND at BASE_SHA exited $base_exit_code"
 
-# Check for command not found errors (exit 126 or 127): refuse unless a path
-# WITHOUT_IT_COMMAND names is tracked at CANDIDATE_SHA and absent at BASE_SHA
-# (the candidate added it, e.g. a new test file) -- that leg is satisfied by
-# the absence itself, not by an exit code.
+# Check for command not found errors (exit 126 or 127): refuse unless the
+# executed path (not merely a named argument) was truly added between
+# BASE_SHA and CANDIDATE_SHA -- a rename does not qualify, only `diff
+# --diff-filter=A` with rename detection on does -- so that leg is satisfied
+# by the addition itself, not by an exit code.
 if [ "$base_exit_code" -eq 126 ] || [ "$base_exit_code" -eq 127 ]; then
-  added_by_candidate=""
-  while read -r token; do
-    [ -z "$token" ] && continue
-    if is_tracked_path "$token" "$repo_root" "$CANDIDATE_SHA" \
-       && ! git -C "$repo_root" cat-file -e "${BASE_SHA}:${token}" >/dev/null 2>&1; then
-      added_by_candidate="$token"
-      break
-    fi
-  done < <(extract_path_like_tokens "$WITHOUT_IT_COMMAND")
+  executed_path=$(extract_executed_path "$WITHOUT_IT_COMMAND")
+  added_paths=$(git -C "$repo_root" diff --name-only --diff-filter=A -M "$BASE_SHA" "$CANDIDATE_SHA" 2>/dev/null || true)
 
-  if [ -n "$added_by_candidate" ]; then
-    echo "$(timestamp) AC-1: at BASE_SHA: absent (added by candidate): $added_by_candidate"
+  if [ -n "$executed_path" ] && printf '%s\n' "$added_paths" | grep -qxF "$executed_path"; then
+    echo "$(timestamp) AC-1: at BASE_SHA: absent (added by candidate): $executed_path"
   else
     refuse "AC-1: WITHOUT_IT_COMMAND did not run at BASE_SHA (exit $base_exit_code - command not found): $WITHOUT_IT_COMMAND"
   fi

@@ -608,6 +608,116 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-
         f"stderr={candidate_tree_result.stderr!r}",
     )
 
+# DEV-155 F1: a renamed script is not a truly added path -- the station must
+# still refuse, naming the command, even though the new name is absent at
+# BASE_SHA and tracked at CANDIDATE_SHA.
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-renamed-") as renamed_dir_name:
+    renamed_dir = Path(renamed_dir_name)
+    renamed_repo = renamed_dir / "repo"
+    subprocess.run(["git", "init", "-q", str(renamed_repo)], check=True, capture_output=True)
+    (renamed_repo / "old-name.sh").write_text("#!/usr/bin/env bash\necho base\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(renamed_repo), "add", "old-name.sh"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(renamed_repo), *git_user, "commit", "-q", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    renamed_base_sha = subprocess.check_output(
+        ["git", "-C", str(renamed_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(renamed_repo), "mv", "old-name.sh", "new-name.sh"], check=True, capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(renamed_repo), *git_user, "commit", "-q", "-m", "refactor(fixture): rename"],
+        check=True, capture_output=True,
+    )
+    renamed_candidate_sha = subprocess.check_output(
+        ["git", "-C", str(renamed_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(renamed_repo), "checkout", "-q", "--detach", renamed_base_sha],
+        check=True, capture_output=True,
+    )
+
+    renamed_evidence = renamed_dir / "evidence.md"
+    renamed_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {renamed_candidate_sha}\n"
+        f"BASE_SHA: {renamed_base_sha}\n"
+        "WITHOUT_IT_COMMAND: bash new-name.sh\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f new-name.sh\n",
+        encoding="utf-8",
+    )
+
+    renamed_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(renamed_evidence), "--repo", str(renamed_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        renamed_result.returncode == 1 and "new-name.sh" in renamed_result.stdout,
+        "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND executing a renamed (not added) "
+        f"script, naming it: exit={renamed_result.returncode} stdout={renamed_result.stdout!r} "
+        f"stderr={renamed_result.stderr!r}",
+    )
+
+# DEV-155 F2: only the executed path (not a named argument) may satisfy the
+# added-by-candidate leg -- a genuinely added argument must not excuse an
+# unrelated 127 from the script that is actually executed.
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-unrelated-127-") as unrelated_dir_name:
+    unrelated_dir = Path(unrelated_dir_name)
+    unrelated_repo = unrelated_dir / "repo"
+    subprocess.run(["git", "init", "-q", str(unrelated_repo)], check=True, capture_output=True)
+    (unrelated_repo / "existing-check.sh").write_text(
+        "#!/usr/bin/env bash\ndefinitely-not-a-real-command-xyz\n", encoding="utf-8",
+    )
+    subprocess.run(["git", "-C", str(unrelated_repo), "add", "existing-check.sh"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(unrelated_repo), *git_user, "commit", "-q", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    unrelated_base_sha = subprocess.check_output(
+        ["git", "-C", str(unrelated_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    (unrelated_repo / "new-fixture.md").write_text("fixture\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(unrelated_repo), "add", "new-fixture.md"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(unrelated_repo), *git_user, "commit", "-q", "-m", "feat(fixture): add new-fixture.md"],
+        check=True, capture_output=True,
+    )
+    unrelated_candidate_sha = subprocess.check_output(
+        ["git", "-C", str(unrelated_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(unrelated_repo), "checkout", "-q", "--detach", unrelated_base_sha],
+        check=True, capture_output=True,
+    )
+
+    unrelated_evidence = unrelated_dir / "evidence.md"
+    unrelated_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {unrelated_candidate_sha}\n"
+        f"BASE_SHA: {unrelated_base_sha}\n"
+        "WITHOUT_IT_COMMAND: bash existing-check.sh new-fixture.md\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f new-fixture.md\n",
+        encoding="utf-8",
+    )
+
+    unrelated_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(unrelated_evidence), "--repo", str(unrelated_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        unrelated_result.returncode == 1 and "existing-check.sh" in unrelated_result.stdout,
+        "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND whose executed script exits 127 "
+        "for an unrelated reason, naming it, even though an argument was genuinely added: "
+        f"exit={unrelated_result.returncode} stdout={unrelated_result.stdout!r} "
+        f"stderr={unrelated_result.stderr!r}",
+    )
+
 # --- DEV-147/DEV-135: dev-debrief.py's real not-dispatched output (the
 # --- `note` field) embeds into a close receipt that validate-receipt.py
 # --- accepts -- the close-receipt schema admits `note` on a per_issue
