@@ -258,6 +258,23 @@ require(
     f"exit={disposition_malformed.returncode} stdout={disposition_malformed.stdout!r} stderr={disposition_malformed.stderr!r}",
 )
 
+disposition_deps_no_supply = run_disposition(ship_flow_fixtures / "deps-diff-no-supply")
+require(
+    disposition_deps_no_supply.returncode == 2
+    and "supply-chain findings required" in (disposition_deps_no_supply.stdout + disposition_deps_no_supply.stderr),
+    "disposition.py did not refuse a dependency-manifest diff missing its supply-chain findings file: "
+    f"exit={disposition_deps_no_supply.returncode} stdout={disposition_deps_no_supply.stdout!r} "
+    f"stderr={disposition_deps_no_supply.stderr!r}",
+)
+
+disposition_deps_with_supply = run_disposition(ship_flow_fixtures / "deps-diff-with-supply")
+require(
+    disposition_deps_with_supply.returncode == 0 and '"disposition": "listed"' in disposition_deps_with_supply.stdout,
+    "disposition.py refused a dependency-manifest diff whose supply-chain findings file is present: "
+    f"exit={disposition_deps_with_supply.returncode} stdout={disposition_deps_with_supply.stdout!r} "
+    f"stderr={disposition_deps_with_supply.stderr!r}",
+)
+
 open_pr_fork_branch = subprocess.run(
     ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md")],
     cwd=ROOT, capture_output=True, text=True,
