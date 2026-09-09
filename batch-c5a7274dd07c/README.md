@@ -21,3 +21,4 @@ Stations per docs/ship/README.md; every FO decision and every worker Evidence bl
 - 2026-09-09 — DEV-148 accepted by the installed station at deb94d0b (r2: synthetic fixture ids). PR #398 opened by open-pr.sh (station), body rewritten per pr-merge template by the FO (DEV-151 will fold this into the script). Review running.
 - 2026-09-09 — #398 review: F1 (missing changed-files.txt read as empty → gate bypass) confirmed; repair round 3 dispatched. Everything else clean (basename match covers nested manifests, legacy path unchanged, existence-only supply check disclosed, 0 narrating comments).
 - 2026-09-09 — **DEV-148 verdict: MERGE #398 (head 1b1cefe1).** F1 fixed and proven by the FO's own mutation; installed station ACCEPT at the new head. Captain merges by hand.
+- 2026-09-09 — DEV-149 accepted by the installed station at 62dbffea; PR #400 opened by open-pr.sh, body per pr-merge template. Review dispatched.
