@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-09-09T07:39:54Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-collapse-to-one-board
 issue:
 pr:
 mod-block:
