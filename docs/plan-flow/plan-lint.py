@@ -75,6 +75,24 @@ elif mode == "lint":
     for i in admitted_issues:
         acs=[l for l in i["description"].splitlines() if AC.match(l)]
         rule(f"L8 e2e-able AC {i['identifier']}", bool(acs) and any(re.search(r"exit|script|log|run|prints", a) for a in acs), f"{len(acs)} ACs")
+    # L11: an evidence, proof or handoff section names the observation, never a thing to build.
+    # The test is whether the sentence can be satisfied without adding to the diff. One brief said
+    # AC-1 was proven "by a real consumer parsing real client output"; the consumer did not exist,
+    # 153 lines were shipped to create it, and three fresh-context validations, five review panels
+    # and sixteen mutations all passed, because every one of them checks the artifact against the
+    # criteria and none checks what the criteria assume gets built.
+    BUILT = re.compile(r"\b(package|helper|harness|fixture|shared type|module|library|consumer|wrapper|adapter|scaffold)\b", re.I)
+    EVID = re.compile(r"^#+\s*.*(evidence|proof|verification|handoff|hand-off)", re.I)
+    for i in admitted_issues:
+        named, section = [], False
+        for line in (i["description"] or "").splitlines():
+            if line.startswith("#"):
+                section = bool(EVID.match(line)); continue
+            if section:
+                named += [m.group(0) for m in BUILT.finditer(line)]
+        rule(f"L11 evidence names a run {i['identifier']}", not named,
+             f"names {sorted(set(named))}" if named else "no built noun")
+
     # L9: for every Issue after the first, at least one claimed surface must be unique to it
     l9_ok = True; l9_violations = []
     def extract_surfaces(desc):

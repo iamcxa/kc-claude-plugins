@@ -15,6 +15,39 @@ means two people did the job badly. There is no downstream fact-checking seat an
 there should not be one: contested *judgment* goes to
 `kc-dev-flow:science-officer`, and that is a different thing.
 
+## An evidence requirement names the observation, never the artifact
+
+**The test is one question: can this sentence be satisfied without adding anything to the
+diff?** If not, it is scope wearing evidence's clothes, and it belongs in the acceptance
+criteria where the admission gate can see it.
+
+"A real consumer parsing real client output" and "parsing the bytes the built binary
+printed" describe the same evidence. The first names a thing; the second names a run. A
+brief carried the first, the consumer did not exist, and 153 lines shipped to create it —
+in a package whose own ticket then landed in a different milestone.
+
+**The damage was not the lines.** The approved plan ended up saying in one place that the
+reader must not depend on that package and in another that it would import it: two claims
+about the future, contradicting each other in one document. Three fresh-context
+validations, five review panels and sixteen mutations all passed it, because every one of
+them checks the artifact against the criteria and none checks what the criteria assume
+somebody will build.
+
+`plan-lint`'s L11 is this rule made mechanical. It reads every evidence, proof,
+verification and handoff section and fails on a noun of construction — package, helper,
+harness, fixture, shared type, module, library, consumer, wrapper, adapter, scaffold.
+Prose asking you to notice this had already been read by everyone who missed it.
+
+Two variants the linter cannot see, so read for them:
+
+**A proof sentence naming a future ticket as the consumer** has declared a cross-milestone
+dependency inside a sentence about proof. Pull it out and declare it, or drop it.
+
+**A proof sentence whose subject is a thing rather than a run** is where a second reader
+resolves it differently. That is the standard the value seat already applies to shipping
+sentences; this is the same standard one altitude down.
+
+
 ## Trigger
 
 `kc-plan-value` has produced value issues, milestones and a question list, and
