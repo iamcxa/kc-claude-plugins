@@ -1,14 +1,14 @@
 ---
 id: 20w9we1wvtdy500nf9rc3a65
 title: Reverse a story map out of a Linear project, and see whether it survives contact
-status: ideation
+status: implementation
 source: captain
 product: kc-team-ops
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
-started:
+sprint: journey-map-poc
+sprint-readiness: ready
+started: 2026-09-09T03:45:05Z
 completed:
 verdict:
 worktree:
