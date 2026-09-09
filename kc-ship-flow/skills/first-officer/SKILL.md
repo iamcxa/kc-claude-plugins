@@ -33,14 +33,18 @@ the stage that follows.
 Advance one commissioned `docs/ship` batch entity through its six stages in order, calling each
 stage's installed script from `docs/ship/README.md`'s per-stage lines:
 
-1. `dispatched` — `$SHIP_SCRIPTS/fenced-dispatch.sh`
+1. `dispatched` — `$SHIP_SCRIPTS/fenced-dispatch.sh` dispatches a dev entity's stage (`spacedock
+   dispatch build` builds the message and carries the stage's own model, if any); the Evidence block
+   for that entity arrives later, from its `validation` stage, not from this dispatching layer.
 2. `accepted` — `$SHIP_SCRIPTS/accept-evidence.sh`
 3. `reviewed` — `$SHIP_SCRIPTS/open-pr.sh`, then `$SHIP_SCRIPTS/disposition.py`. When the
    diff touches a dependency manifest or lockfile, dispatch the supply-chain lane
    (`kc-pr-flow:tob-supply-chain-checker` or the profile's equivalent) and write its findings before
    calling `disposition.py` — passed a bundle directory, it refuses (exit 2,
    `supply-chain findings required`) when that path is absent.
-4. `uat` (gate) — `$SHIP_SCRIPTS/e2e-gate.py`, `$SHIP_SCRIPTS/uat-doc.py`,
+4. `uat` (gate) — `$SHIP_SCRIPTS/e2e-gate.py --root <code checkout> --flows docs/ship/flows
+   <plan-receipt.json> <close-receipt.json>` (`--root` and `--flows` are always required; `--flows`
+   is the Local Profile table's "E2E flows" row value), `$SHIP_SCRIPTS/uat-doc.py`,
    `$SHIP_SCRIPTS/notify.sh`
 5. `merged` — no kc-ship-flow script; observe the GitHub merge through Spacedock's `pr-merge` mod
 6. `closed` — `$SHIP_SCRIPTS/dev-debrief.py`, then `$SHIP_SCRIPTS/ship-debrief.py`;
