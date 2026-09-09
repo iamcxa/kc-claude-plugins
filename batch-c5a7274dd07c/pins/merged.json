@@ -1,0 +1,19 @@
+{
+  "batch": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state/batch-c5a7274dd07c",
+  "contract_digest": "ddd89d176e5f23fac9c9c7d19219c200f96f5934972f2f58ab3636ba30ac36e3",
+  "plugin_version": "0.1.0",
+  "previous_station": "uat",
+  "resources": [
+    {
+      "path": ".claude-plugin/plugin.json",
+      "sha256": "a3a9c65405a7fec7c79ad46de2814b397804ae4de42d48ca7fb5b57394a4bc45"
+    },
+    {
+      "path": "references/kernel.md",
+      "sha256": "62defc45a2343c5b182d29782c40a600493a46d5cfab1244133cc6f47c67547e"
+    }
+  ],
+  "schema": "kc-ship-flow-batch-pin/v1",
+  "station": "merged",
+  "written_at": "2026-09-09T04:44:41Z"
+}

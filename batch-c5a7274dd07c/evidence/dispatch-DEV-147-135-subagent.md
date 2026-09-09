@@ -1,6 +1,6 @@
 # Development Brief — DEV-147 + DEV-135 (close station: validator fails closed without jsonschema; writers' output has a home; writers accept a carried issue)
 
-- Worktree source: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1 (read-only for you): `WT=$(mktemp -d)/wt; git -C "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1" worktree add "$WT" origin/main; cd "$WT"; git checkout -b feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers`. Base: origin/main after #395 merges (verify `git log --oneline -1` mentions #395; if not, stop and report).
+- Worktree source: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1 (read-only for you): `WT=$(mktemp -d)/wt; git -C "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1" worktree add "$WT" origin/main; cd "$WT"; git checkout -b feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers`. Base: origin/main 66851037 (contains #395).
 - DISPATCH_TOKEN: dev147-2026-09-09
 - Files in scope: docs/plan-flow/schema/validate-receipt.py; kc-ship-flow/scripts/dev-debrief.py, ship-debrief.py, their .test.py files; kc-ship-flow/scripts/contract-test.py (case registration); kc-ship-flow/scripts/fixtures/**; kc-ship-flow/skills/first-officer/SKILL.md (the closed-stage line only); kc-ship-flow/references/stations/*.md if a close-station doc exists. Do NOT edit any *.schema.json.
 
