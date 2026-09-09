@@ -1,0 +1,138 @@
+{
+ "approval_receipt_sha256": "eea87a8fd0cd6580393d1dc3f8238a336c7c3aa2b9683cc17352ef546b0f394d",
+ "batch": {
+  "closed_at": "2026-09-08T10:30:00Z",
+  "entity": "batch-ab2fb2635f0c-shape",
+  "holder": "laptop",
+  "started_at": "2026-09-07T06:53:33Z"
+ },
+ "close_sha256": "6f2c266068d64b7c6c33e830067e340a1e8d4cd66aff78f48a3a2b67b5a9ccfe",
+ "defects_returned": [
+  {
+   "class": "delivery",
+   "fix_ticket": "DEV-980",
+   "id": "S60",
+   "one_line": "synthetic defect with a fix ticket"
+  },
+  {
+   "accepted_residual": "accepted: fixed independently in an unrelated PR after this batch closed",
+   "class": "verify",
+   "fix_ticket": null,
+   "id": "S61",
+   "one_line": "synthetic defect accepted without a fix ticket"
+  }
+ ],
+ "dev_debrief": {
+  "candidate_correction": "TBD (FO): one candidate correction to the build contract from this batch's Evidence.",
+  "per_issue": {
+   "DEV-970": {
+    "code_refusals": [
+     "source: not recorded"
+    ],
+    "evidence_refusals": [],
+    "rounds": 3
+   },
+   "DEV-971": {
+    "code_refusals": [
+     "source: not recorded"
+    ],
+    "evidence_refusals": [],
+    "rounds": 4
+   },
+   "DEV-972": {
+    "code_refusals": [
+     "source: not recorded"
+    ],
+    "evidence_refusals": [],
+    "rounds": 5
+   }
+  }
+ },
+ "issues": {
+  "DEV-970": {
+   "candidate": "4d13d179d97a5e932ea4269df17c73197077b2e8",
+   "cost_usd_imputed": null,
+   "minutes": {
+    "build": 50,
+    "dispatch": 2,
+    "repair": 60,
+    "review": 30,
+    "verify": 25
+   },
+   "outcome": "merged",
+   "pr": "example-org/example-repo#1",
+   "residuals": [
+    "synthetic residual for DEV-970"
+   ],
+   "rounds": 3
+  },
+  "DEV-971": {
+   "candidate": "80713b21189189b25a6ead07dfac412bc13db9fd",
+   "cost_usd_imputed": null,
+   "minutes": {
+    "build": 18,
+    "dispatch": 2,
+    "repair": 70,
+    "review": 25,
+    "verify": 40
+   },
+   "outcome": "merged",
+   "pr": "example-org/example-repo#2",
+   "residuals": [
+    "synthetic residual for DEV-971"
+   ],
+   "rounds": 4
+  },
+  "DEV-972": {
+   "candidate": null,
+   "cost_usd_imputed": null,
+   "minutes": {
+    "build": 0,
+    "dispatch": 10,
+    "repair": 45,
+    "review": 0,
+    "verify": 120
+   },
+   "outcome": "captain_stopped",
+   "pr": null,
+   "residuals": [
+    "five cloud attempts, one deploy; Captain stopped before the run could complete"
+   ],
+   "rounds": 5
+  }
+ },
+ "plan_receipt_sha256": "53cdba988e362165e9fd74f4c3423aa7b180a3eea85c3f0cdf2cb5895d378378",
+ "schema": "kc-ship-close-receipt/v1",
+ "ship_debrief": {
+  "candidate_correction": "TBD (FO): one candidate correction to ship-flow from this batch.",
+  "defaults_decisions": [
+   {
+    "decision": "2026-09-07T07:02:36Z -- synthetic decision A.",
+    "overturned": false
+   }
+  ],
+  "defects_disposition": [
+   {
+    "disposition": "DEV-980",
+    "id": "S60"
+   },
+   {
+    "disposition": "accepted: fixed independently in an unrelated PR after this batch closed",
+    "id": "S61"
+   }
+  ],
+  "minutes_per_station": {
+   "build": 68,
+   "dispatch": 14,
+   "repair": 175,
+   "review": 55,
+   "verify": 185
+  }
+ },
+ "totals": {
+  "captain_gates": 12,
+  "fix_rounds": 8,
+  "workspaces_created": 3,
+  "workspaces_orphaned": 0
+ }
+}
