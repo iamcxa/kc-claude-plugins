@@ -1,0 +1,7 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#401","reviewed_head":"04b896da","findings":[
+{"id":"F1","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/contract-test.py","line":72,"summary":"contract-test now needs the spacedock binary; the required marketplace-parity job has no install step → every PR red"},
+{"id":"F2","source":"code-reviewer","category":"style","file":"kc-ship-flow/scripts/fenced-dispatch.sh","line":40,"summary":"'never the message' is false: the station's checklist line lands in the hashed message body"},
+{"id":"F3","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/references/stations/fenced-dispatch.md","line":6,"summary":"documented invocation omits --checklist-file (required by the CLI); placeholder unexplained"},
+{"id":"F4","source":"code-reviewer","category":"test-coverage","file":"kc-ship-flow/scripts/fenced-dispatch.sh","line":63,"summary":"--effort forwarding is dead code on spacedock 0.27.2 (never emits effort)"},
+{"id":"F5","source":"code-reviewer","category":"compatibility","file":"kc-ship-flow/scripts/fenced-dispatch.sh","line":36,"summary":"default --workflow-dir only resolves the fixture layout, not docs/dev adopters"}
+]}
