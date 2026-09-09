@@ -1,0 +1,20 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#403",
+ "reviewed_head": "2d54370c3d3832880a1195fd9d26d86c5994fa19",
+ "dispositions": [
+  {
+   "id": "R1",
+   "source": "code-reviewer",
+   "outcome": "no_findings",
+   "verified": "ROOT from --root everywhere except the sibling e2e-cli.sh; docs/ship-flow flow edits are the new-argument reference only; exit codes distinct; AC-1 fails if the literal is restored; 2 banner comments per file convention"
+  },
+  {
+   "id": "V1",
+   "source": "fo",
+   "outcome": "verified",
+   "verified": "AC-1 exit 0 resolved path; AC-2 exit 2 named; contract-test 0; 0 comment lines in e2e-gate.py"
+  }
+ ],
+ "pending": []
+}
