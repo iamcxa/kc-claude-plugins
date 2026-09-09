@@ -69,6 +69,7 @@ for test_name, test_command in STATION_TESTS:
 
 run(["bash", str(SCRIPTS / "merge-station.test.sh")], "kc-ship-flow merge-station.test.sh")
 run(["bash", str(SCRIPTS / "ci-covers.test.sh")], "kc-ship-flow ci-covers.test.sh")
+run(["bash", str(SCRIPTS / "fenced-dispatch.test.sh")], "kc-ship-flow fenced-dispatch.test.sh")
 
 # --- ci-covers.sh: DEV-149's two named fixtures, registered directly (not
 # only through ci-covers.test.sh) -- a workflow naming the check but never
@@ -193,7 +194,11 @@ def run_e2e_gate(
         close_path = override_path
     try:
         return subprocess.run(
-            [sys.executable, str(e2e_gate), str(e2e_gate_fixtures / plan_fixture), str(close_path)],
+            [
+                sys.executable, str(e2e_gate),
+                "--root", str(ROOT), "--flows", "docs/ship-flow/flows",
+                str(e2e_gate_fixtures / plan_fixture), str(close_path),
+            ],
             cwd=ROOT, text=True, capture_output=True, env=env, timeout=30,
         )
     finally:
@@ -253,6 +258,41 @@ require(
     and "docs/ship-flow/flows/从派工到一条-slack-消息.yaml" in e2e_gate_chinese.stdout,
     f"e2e-gate Chinese milestone name should derive its Unicode flow path: "
     f"exit {e2e_gate_chinese.returncode}, stdout {e2e_gate_chinese.stdout!r}",
+)
+
+# --- DEV-153 AC-1/AC-2: milestone-name mode takes --root and --flows from arguments, never
+# from __file__, and refuses a missing flows directory by name rather than "not applicable" ---
+e2e_gate_ac1 = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/ship/flows",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac1.returncode == 0
+    and "docs/ship/flows/synthetic-gate-journey.yaml" in e2e_gate_ac1.stdout
+    and "not applicable" not in e2e_gate_ac1.stdout,
+    f"e2e-gate AC-1 (milestone-name mode, --root/--flows from arguments) failed: "
+    f"exit {e2e_gate_ac1.returncode}, stdout {e2e_gate_ac1.stdout!r}, stderr {e2e_gate_ac1.stderr!r}",
+)
+
+e2e_gate_ac2_missing_flows = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/missing",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac2_missing_flows.returncode == 2
+    and "flows directory not found" in e2e_gate_ac2_missing_flows.stderr,
+    f"e2e-gate AC-2 (missing flows directory should be a named refusal) failed: "
+    f"exit {e2e_gate_ac2_missing_flows.returncode}, stderr {e2e_gate_ac2_missing_flows.stderr!r}",
 )
 
 # --- review station: open-pr.sh BRANCH binding + disposition.py category handling ---
@@ -875,6 +915,67 @@ require(
     forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
     "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
     f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
+)
+
+# --- DEV-156: fenced-dispatch.sh dispatches a dev entity's stage through
+# `spacedock dispatch build` rather than a hand-written message. Two fixtures
+# registered directly -- a stage that declares a model and one that does not
+# -- plus a fixture whose named stage is undeclared, to prove the station
+# refuses (exit 4) rather than falling back to an inline message.
+fenced_dispatch_script = SCRIPTS / "fenced-dispatch.sh"
+dispatch_fixtures = FIXTURES / "dispatch"
+for fixture_name in ["task-with-model.md", "task-with-model", "task-without-model.md", "task-without-model", "task-build-fails.md", "task-build-fails"]:
+    require((dispatch_fixtures / fixture_name).exists(), f"missing fixture: dispatch/{fixture_name}")
+
+with_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-with-model.md"),
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-with-model"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    with_model_result.returncode == 0 and "--model sonnet" in with_model_result.stdout,
+    "fenced-dispatch.sh --dry-run did not carry --model from the task-with-model fixture's stage: "
+    f"exit={with_model_result.returncode} stdout={with_model_result.stdout!r} stderr={with_model_result.stderr!r}",
+)
+
+without_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-without-model.md"),
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-without-model"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout,
+    "fenced-dispatch.sh --dry-run carried --model for the task-without-model fixture, "
+    f"whose stage declares none: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
+)
+
+build_fails_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-build-fails.md"),
+        "--stage", "nonexistent-stage",
+        "--workflow-dir", str(dispatch_fixtures / "task-build-fails"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    build_fails_result.returncode == 4 and "dispatch build failed" in build_fails_result.stdout,
+    "fenced-dispatch.sh did not refuse (exit 4, 'dispatch build failed') when spacedock dispatch "
+    f"build exits non-zero: exit={build_fails_result.returncode} stdout={build_fails_result.stdout!r}",
 )
 
 print("kc-ship-flow contract: PASS")

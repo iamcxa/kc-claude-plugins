@@ -1,0 +1,12 @@
+name: synthetic-gate-journey
+description: |
+  Synthetic fixture for e2e-gate.py's milestone-name resolution mode
+  (DEV-153 AC-1/AC-2). Not consumed by e2e-cli.sh.
+steps:
+  - id: placeholder
+    action: "Execute external"
+    description: "placeholder step, never executed by these AC checks"
+    execute:
+      cli:
+        - run: "true"
+          expect: "exit code 0"
