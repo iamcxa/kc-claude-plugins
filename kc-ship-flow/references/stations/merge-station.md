@@ -29,3 +29,7 @@ Base and accepted-head are checked for every PR before any `ready`/`merge` call;
 ready before any is merged. This is the S36/S37/S38/S45/S46 hardening: a single hand-driven `gh pr
 ready`/`gh pr merge` pair races the ready transition, can swallow a refusal, can drift past the
 accepted candidate, can merge into a non-trunk base, and a printed check is not a gate.
+
+A clean `statusCheckRollup` entry for a monorepo PR is also not proof that entry's check ran the
+changed package — see `references/stations/ci-covers.md` (DEV-149): run `ci-covers.sh` before the
+merge verdict names that check the gate for a package it may never have entered.

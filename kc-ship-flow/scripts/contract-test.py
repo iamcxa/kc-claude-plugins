@@ -50,6 +50,7 @@ STATIONS = [
     "notify.sh",
     "dev-debrief.py",
     "ship-debrief.py",
+    "ci-covers.sh",
 ]
 for station in STATIONS:
     require((SCRIPTS / station).is_file(), f"missing station script: {station}")
@@ -67,6 +68,37 @@ for test_name, test_command in STATION_TESTS:
     run(test_command, f"kc-ship-flow {test_name}")
 
 run(["bash", str(SCRIPTS / "merge-station.test.sh")], "kc-ship-flow merge-station.test.sh")
+run(["bash", str(SCRIPTS / "ci-covers.test.sh")], "kc-ship-flow ci-covers.test.sh")
+
+# --- ci-covers.sh: DEV-149's two named fixtures, registered directly (not
+# only through ci-covers.test.sh) -- a workflow naming the check but never
+# entering the package must be refused, and one that enters it must pass.
+ci_covers_script = SCRIPTS / "ci-covers.sh"
+ci_covers_uncovered = FIXTURES / "monorepo-uncovered"
+ci_covers_covered = FIXTURES / "monorepo-covered"
+require(ci_covers_uncovered.is_dir(), f"missing fixture: {ci_covers_uncovered}")
+require(ci_covers_covered.is_dir(), f"missing fixture: {ci_covers_covered}")
+
+ci_covers_uncovered_result = subprocess.run(
+    ["bash", str(ci_covers_script), str(ci_covers_uncovered), "experiments/island", "pr-test"],
+    capture_output=True, text=True,
+)
+require(
+    ci_covers_uncovered_result.returncode == 1
+    and "experiments/island not run by pr-test" in ci_covers_uncovered_result.stderr,
+    "ci-covers.sh did not refuse the monorepo-uncovered fixture (check named, package never "
+    f"entered): exit={ci_covers_uncovered_result.returncode} stderr={ci_covers_uncovered_result.stderr!r}",
+)
+
+ci_covers_covered_result = subprocess.run(
+    ["bash", str(ci_covers_script), str(ci_covers_covered), "experiments/island", "pr-test"],
+    capture_output=True, text=True,
+)
+require(
+    ci_covers_covered_result.returncode == 0,
+    "ci-covers.sh did not accept the monorepo-covered fixture (check named, package entered via "
+    f"working-directory:): exit={ci_covers_covered_result.returncode} stderr={ci_covers_covered_result.stderr!r}",
+)
 
 for py_station in [
     "disposition.py",

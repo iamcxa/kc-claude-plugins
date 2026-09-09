@@ -40,3 +40,16 @@ Write and check each stage's pin with `kc-ship-flow/scripts/pin.py write --stati
 `check --station <name>` before advancing past it. Validate the closed stage's close receipt with
 `docs/plan-flow/schema/validate-receipt.py <plan-receipt.json> <approval.json> <close-receipt.json>`
 before terminalizing the entity.
+
+## Merge verdict
+
+Before a stage-5 merge verdict names a CI check as the gate for a monorepo package, run:
+
+```bash
+kc-ship-flow/scripts/ci-covers.sh <repo-root> <package-path> <check-name>
+```
+
+Exit 0 records the check's output as the gate. On exit 1 the check named it but never entered the
+package (or never named it at all) — the verdict cannot cite that CI check as the gate; it names the
+FO's own local run of the package's tests as the gate instead, and says so. See
+`references/stations/ci-covers.md`.
