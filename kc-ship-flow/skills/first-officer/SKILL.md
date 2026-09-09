@@ -29,8 +29,10 @@ stage's installed script from `docs/ship/README.md`'s per-stage lines:
 1. `dispatched` — `kc-ship-flow/scripts/fenced-dispatch.sh`
 2. `accepted` — `kc-ship-flow/scripts/accept-evidence.sh`
 3. `reviewed` — `kc-ship-flow/scripts/open-pr.sh <evidence-file> <batch-dir> (--entity-path
-   <dev-task-file> | --what-changed-file <file>)`, then `kc-ship-flow/scripts/disposition.py`. When
-   the diff touches a dependency manifest or lockfile, dispatch the supply-chain lane
+   <dev-task-file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>]`, then
+   `kc-ship-flow/scripts/disposition.py`. `--lead`/`--evidence-file` are only needed when the
+   automatic extraction refuses (`lead required` / no recognized suite token). When the diff touches
+   a dependency manifest or lockfile, dispatch the supply-chain lane
    (`kc-pr-flow:tob-supply-chain-checker` or the profile's equivalent) and write its findings before
    calling `disposition.py` — passed a bundle directory, it refuses (exit 2, `supply-chain findings
    required`) when that path is absent.

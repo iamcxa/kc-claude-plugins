@@ -400,7 +400,8 @@ require(
 )
 
 # Fallback mode's Evidence comes from TESTS's own suite-labeled tokens, never
-# an AC count: two suites in TESTS must produce two distinct suite bullets.
+# an AC count: only the recognized suite (contract-test.py) gets a bullet --
+# open-pr.sh itself, the script under test, is not a suite/runner.
 open_pr_dry_run_tests_evidence = subprocess.run(
     [
         "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence.md"), str(open_pr_batch_dir),
@@ -411,12 +412,59 @@ open_pr_dry_run_tests_evidence = subprocess.run(
 require(
     open_pr_dry_run_tests_evidence.returncode == 0
     and "- kc-ship-flow/scripts/contract-test.py: exit 0" in open_pr_dry_run_tests_evidence.stdout.splitlines()
-    and "- kc-ship-flow/scripts/open-pr.sh: exit 0" in open_pr_dry_run_tests_evidence.stdout.splitlines()
-    and "passed" not in open_pr_dry_run_tests_evidence.stdout.split("## Evidence", 1)[1].split("---", 1)[0].replace("exit 0", ""),
-    "open-pr.sh --dry-run --what-changed-file did not derive one Evidence bullet per suite-labeled "
-    "TESTS token (never an AC count): "
+    and "open-pr.sh: exit 0" not in open_pr_dry_run_tests_evidence.stdout,
+    "open-pr.sh --dry-run --what-changed-file did not admit only the recognized suite token from "
+    "TESTS (never an AC count, never the script under test itself): "
     f"exit={open_pr_dry_run_tests_evidence.returncode} stdout={open_pr_dry_run_tests_evidence.stdout!r} "
     f"stderr={open_pr_dry_run_tests_evidence.stderr!r}",
+)
+
+# Round-3 falsifier: a fixture/data path (evidence.md) beside a recognized
+# suite (contract-test.py) in TESTS must still yield exactly one bullet.
+open_pr_suite_filter = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-suite-filter.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+if "## Evidence" in open_pr_suite_filter.stdout:
+    open_pr_suite_filter_evidence_block = open_pr_suite_filter.stdout.split("## Evidence", 1)[1].split("---", 1)[0]
+    open_pr_suite_filter_evidence_bullets = [
+        line for line in open_pr_suite_filter_evidence_block.splitlines() if line.startswith("- ")
+    ]
+else:
+    open_pr_suite_filter_evidence_bullets = []
+require(
+    open_pr_suite_filter.returncode == 0
+    and open_pr_suite_filter_evidence_bullets == ["- contract-test.py: exit 0"],
+    "open-pr.sh --dry-run did not admit exactly one Evidence bullet ('contract-test.py: exit 0') "
+    "when TESTS also mentions a bare fixture path (evidence.md), which is never a suite: "
+    f"exit={open_pr_suite_filter.returncode} stdout={open_pr_suite_filter.stdout!r} "
+    f"stderr={open_pr_suite_filter.stderr!r}",
+)
+
+# Round-3 falsifier: a first sentence of 40 words with its only clause
+# boundary at word 18 closes there, period-terminated -- never a fragment
+# trailing at word 25.
+open_pr_clause_boundary = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-clause.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+open_pr_clause_boundary_lead = open_pr_clause_boundary.stdout.splitlines()[0] if open_pr_clause_boundary.stdout else ""
+require(
+    open_pr_clause_boundary.returncode == 0
+    and open_pr_clause_boundary_lead == (
+        "This synthetic fixture sentence exists only to prove the clause boundary rule "
+        "closes right at word number eighteen."
+    ),
+    "open-pr.sh --dry-run did not close a 40-word first sentence at its word-18 clause boundary "
+    "(period-terminated, not a mid-sentence fragment): "
+    f"exit={open_pr_clause_boundary.returncode} stdout={open_pr_clause_boundary.stdout!r} "
+    f"stderr={open_pr_clause_boundary.stderr!r}",
 )
 
 open_pr_neither_flag = subprocess.run(

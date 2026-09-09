@@ -4,12 +4,17 @@
     "DEV-9001": {
       "branch": "feature/fixture-branch",
       "close_line": "Fixes DEV-9001",
-      "body": "## The problem\n\nA synthetic fixture problem paragraph, written long enough to exceed twenty five words so the open-pr.sh body builder's truncation to twenty five words is actually exercised by this fixture's assertion.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+      "body": "## The problem\n\nA synthetic fixture problem for open-pr.sh's contract test, exercising BRANCH matching and the batch audit link without a long lead.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
     },
     "DEV-9002": {
       "branch": "feature/does-not-exist-on-origin",
       "close_line": "Fixes DEV-9002",
       "body": "## The problem\n\nA second synthetic fixture problem paragraph, for the BRANCH that never resolves to a ref on origin.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
+    },
+    "DEV-9003": {
+      "branch": "feature/fixture-branch-clause",
+      "close_line": "Fixes DEV-9003",
+      "body": "## The problem\n\nThis synthetic fixture sentence exists only to prove the clause boundary rule closes right at word number eighteen, not at twenty five and never trails off as a fragment though it keeps running on for quite a while longer here.\n\n## Accepted outcome\n\nSynthetic outcome text, not read by open-pr.sh.\n"
     }
   }
 }

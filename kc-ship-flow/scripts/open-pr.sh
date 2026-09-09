@@ -4,6 +4,7 @@
 # template, "Extraction rules").
 # Usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run]
 #                    (--entity-path <dev-entity-file> | --what-changed-file <file>)
+#                    [--lead <file>] [--evidence-file <file>]
 #
 # <batch-dir> is a batch record directory: <batch-dir>/README.md (entity id
 # is the directory's own basename, `batch-` prefix stripped) and
@@ -15,22 +16,33 @@
 #
 # --entity-path <file> reads a dev entity (the same shape
 # `kc-ship-flow/scripts/fenced-dispatch.sh` dispatches): the lead is the
-# entity's own `## The problem` paragraph, condensed to <=25 words and
-# skipping any leading sentence that is only a quoted attribution (e.g.
-# `Captain, <date>: 「...」.`) so a quote does not become the PR's motivation
-# lead; `## What changed` is one bullet per `- [x] ...` item in the last
+# entity's own `## The problem` first sentence (skipping a leading sentence
+# that is only a quoted attribution, e.g. `Captain, <date>: 「...」.`);
+# `## What changed` is one bullet per `- [x] ...` item in the last
 # `## Stage Report: implementation` section (`[x]` dropped, duplicates
-# collapsed); `## Evidence` is one bullet per suite-labeled `N/N` or `exit 0`
-# token found in the last `## Stage Report: validation` section.
+# collapsed); `## Evidence` is one bullet per suite- or runner-labeled
+# `N/N` or `exit 0` token found in the last `## Stage Report: validation`
+# section -- a bare data/fixture path is never a suite.
 #
 # Without --entity-path, --what-changed-file <file> supplies the `## What
 # changed` bullets verbatim (one per non-empty line, FO-authored); the lead
 # comes from the matched batch-receipt issue's `body`'s `## The problem`
-# (same quote-skipping rule); `## Evidence` is derived by scanning the
-# Evidence block's own TESTS field for the same suite-labeled `N/N`/`exit 0`
-# tokens -- never a count of ACs.
+# (same rule); `## Evidence` is derived by the same suite/runner scan
+# applied to the Evidence block's own TESTS field -- never a count of ACs.
 #
 # Neither flag given refuses (exit 2, `what-changed required`).
+#
+# The lead is never a fragment: a first sentence over 25 words is closed at
+# the longest clause boundary (`,` `;` `—` `:`) within the first 25 words,
+# period-terminated; with no such boundary, `--lead <file>` (one sentence)
+# supplies it, else the run refuses (exit 2, `lead required`).
+#
+# `## Evidence` bullets are admitted only for a token naming a recognized
+# suite or test runner (`contract-test.py`, `*.test.sh`, `*.test.py`,
+# `*.test.mjs`, `npm test`, `npm run test:*`, `pytest`, `vitest`,
+# `node --test`) followed by `N/N passed` or `exit 0`; when no such token is
+# found the section is omitted unless `--evidence-file <file>` supplies
+# bullets verbatim (one per line).
 #
 # --dry-run prints the body to stdout and exits 0 without resolving
 # CANDIDATE_SHA, binding BRANCH to origin, or calling gh. Every other exit
@@ -38,16 +50,17 @@
 #
 # Exit codes: 0 PR opened (number on stdout), or --dry-run body printed; 2
 # every other exit path -- a usage error; an evidence, batch-dir,
-# --entity-path, or --what-changed-file argument that does not exist;
-# neither --entity-path nor --what-changed-file given; an evidence file with
-# no `## Evidence` heading or more than one; an Evidence block missing a
-# required field; a BRANCH containing `:` (fork syntax); a batch-dir
-# README.md untracked by its own checkout; a batch receipt missing or with
-# zero or more than one issue whose `branch` equals BRANCH; an unreachable
-# CANDIDATE_SHA; a BRANCH that resolves to zero or more than one ref on
-# origin; a BRANCH whose remote head does not equal CANDIDATE_SHA; a
-# `gh pr create` failure; or a PR number that cannot be parsed from
-# `gh pr create`'s stdout.
+# --entity-path, --what-changed-file, --lead, or --evidence-file argument
+# that does not exist; neither --entity-path nor --what-changed-file given;
+# an evidence file with no `## Evidence` heading or more than one; an
+# Evidence block missing a required field; a BRANCH containing `:` (fork
+# syntax); a batch-dir README.md untracked by its own checkout; a batch
+# receipt missing or with zero or more than one issue whose `branch` equals
+# BRANCH; a first sentence over 25 words with no clause boundary and no
+# `--lead` override (`lead required`); an unreachable CANDIDATE_SHA; a
+# BRANCH that resolves to zero or more than one ref on origin; a BRANCH
+# whose remote head does not equal CANDIDATE_SHA; a `gh pr create` failure;
+# or a PR number that cannot be parsed from `gh pr create`'s stdout.
 set -euo pipefail
 
 timestamp() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
@@ -55,13 +68,15 @@ log() { echo "$(timestamp) open-pr: $*" >&2; }
 die() { log "$*"; exit 2; }
 
 usage() {
-  echo "usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run] (--entity-path <file> | --what-changed-file <file>)" >&2
+  echo "usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run] (--entity-path <file> | --what-changed-file <file>) [--lead <file>] [--evidence-file <file>]" >&2
   exit 2
 }
 
 dry_run=0
 entity_path=""
 what_changed_path=""
+lead_path=""
+evidence_path=""
 args=()
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -77,6 +92,16 @@ while [ "$#" -gt 0 ]; do
     --what-changed-file)
       [ "$#" -ge 2 ] || usage
       what_changed_path="$2"
+      shift 2
+      ;;
+    --lead)
+      [ "$#" -ge 2 ] || usage
+      lead_path="$2"
+      shift 2
+      ;;
+    --evidence-file)
+      [ "$#" -ge 2 ] || usage
+      evidence_path="$2"
       shift 2
       ;;
     *)
@@ -135,6 +160,8 @@ if [ -z "$entity_path" ] && [ -z "$what_changed_path" ]; then
 fi
 [ -z "$entity_path" ] || [ -f "$entity_path" ] || die "entity file not found: $entity_path"
 [ -z "$what_changed_path" ] || [ -f "$what_changed_path" ] || die "what-changed file not found: $what_changed_path"
+[ -z "$lead_path" ] || [ -f "$lead_path" ] || die "lead file not found: $lead_path"
+[ -z "$evidence_path" ] || [ -f "$evidence_path" ] || die "evidence file not found: $evidence_path"
 
 # --- resolve the batch entity from batch-dir's own git checkout ---
 batch_readme_relpath="$(git -C "$batch_dir" ls-files --full-name -- README.md)"
@@ -155,14 +182,14 @@ body_tmp="$(mktemp)"
 body_err_tmp="$(mktemp)"
 trap 'rm -f "$body_tmp" "$body_err_tmp"' EXIT
 set +e
-python3 - "$plan_receipt" "$BRANCH" "$batch_owner_repo" "$batch_ref" "$batch_readme_relpath" "$batch_entity_id" "$TESTS" "$entity_path" "$what_changed_path" \
+python3 - "$plan_receipt" "$BRANCH" "$batch_owner_repo" "$batch_ref" "$batch_readme_relpath" "$batch_entity_id" "$TESTS" "$entity_path" "$what_changed_path" "$lead_path" "$evidence_path" \
   >"$body_tmp" 2>"$body_err_tmp" <<'PY'
 import re
 import json
 import sys
 
 (receipt_path, branch, owner_repo, ref, readme_path, entity_id,
- tests_field, entity_path, what_changed_path) = sys.argv[1:10]
+ tests_field, entity_path, what_changed_path, lead_path, evidence_path) = sys.argv[1:12]
 
 with open(receipt_path, encoding="utf-8") as f:
     receipt = json.load(f)
@@ -176,9 +203,8 @@ if len(matches) != 1:
     sys.exit(1)
 issue = matches[0]
 
-
-def cap_words(text: str, n: int) -> str:
-    return " ".join(text.split()[:n])
+CLAUSE_BOUNDARIES = ",;—:"
+TRAILING_WRAPPERS = "'\"」”)]"
 
 
 def is_quote_only(sentence: str) -> bool:
@@ -195,7 +221,28 @@ def is_quote_only(sentence: str) -> bool:
     return False
 
 
-def lead_from_problem(body_text: str) -> str:
+def close_at_clause_boundary(sentence: str):
+    # The longest prefix of `sentence` that ends at a clause boundary (`,`
+    # `;` an em dash `:`) within the first 25 words, closed with a period.
+    # None when no such boundary exists -- never a mid-sentence fragment.
+    words = sentence.split()
+    limit = min(25, len(words))
+    best_idx = None
+    for i in range(limit):
+        stripped = words[i].rstrip(TRAILING_WRAPPERS)
+        if stripped and stripped[-1] in CLAUSE_BOUNDARIES:
+            best_idx = i
+    if best_idx is None:
+        return None
+    prefix_words = words[: best_idx + 1]
+    last = prefix_words[-1]
+    m = re.match(r"^(.*?)[" + CLAUSE_BOUNDARIES + r"]+[" + TRAILING_WRAPPERS + r"]*$", last)
+    core = m.group(1) if m else last.rstrip(CLAUSE_BOUNDARIES)
+    prefix_words[-1] = core
+    return " ".join(prefix_words).rstrip() + "."
+
+
+def lead_from_problem(body_text: str, lead_override: str):
     m = re.search(r"##\s*The problem\s*\n+(.*?)(?:\n\s*\n|\n##|\Z)", body_text, re.S)
     para = (m.group(1) if m else body_text).strip()
     para = re.sub(r"\s+", " ", para)
@@ -205,8 +252,14 @@ def lead_from_problem(body_text: str) -> str:
     start = 0
     while start < len(sentences) and is_quote_only(sentences[start]):
         start += 1
-    remainder = " ".join(sentences[start:]) if start < len(sentences) else para
-    return cap_words(remainder, 25)
+    # Exactly the first (non-quote) sentence -- never several joined.
+    sentence = sentences[start] if start < len(sentences) else para
+    if len(sentence.split()) <= 25:
+        return sentence
+    cut = close_at_clause_boundary(sentence)
+    if cut is not None:
+        return cut
+    return lead_override or None
 
 
 def last_section(body_text: str, heading_prefix: str) -> str:
@@ -233,10 +286,34 @@ def what_changed_from_entity(body_text: str) -> list[str]:
     return bullets[:5]
 
 
+# A bullet is admitted only for a token naming a recognized suite or test
+# runner -- a bare data/fixture path (e.g. a synthetic evidence.md) is never
+# a suite, however path-like or however close to an "N/N"/"exit 0" token.
+SUITE_PATTERNS = [
+    re.compile(r"\S*\bcontract-test\.py\b"),
+    re.compile(r"\S*\.test\.sh\b"),
+    re.compile(r"\S*\.test\.py\b"),
+    re.compile(r"\S*\.test\.mjs\b"),
+    re.compile(r"\bnpm test\b"),
+    re.compile(r"\bnpm run test:\S*"),
+    re.compile(r"\bpytest\b"),
+    re.compile(r"\bvitest\b"),
+    re.compile(r"\bnode --test\b"),
+]
+
+
+def find_suite(prefix: str):
+    best = None
+    best_end = -1
+    for pattern in SUITE_PATTERNS:
+        for m in pattern.finditer(prefix):
+            if m.end() > best_end:
+                best_end = m.end()
+                best = m.group(0)
+    return best
+
+
 def suite_bullets_from_text(text: str) -> list[str]:
-    # One bullet per line carrying a suite-labeled `N/N` or `exit 0` token --
-    # the suite is the nearest preceding path-like token (contains `.` or
-    # `/`), falling back to the nearest preceding token of any kind.
     bullets: list[str] = []
     seen: set[str] = set()
     for raw_line in text.splitlines():
@@ -248,9 +325,7 @@ def suite_bullets_from_text(text: str) -> list[str]:
         marker = ratio_m or exit0_m
         if not marker:
             continue
-        prefix_tokens = re.findall(r"[\w./-]+", line[: marker.start()])
-        suite = next((t for t in reversed(prefix_tokens) if "." in t or "/" in t), None)
-        suite = suite or (prefix_tokens[-1] if prefix_tokens else None)
+        suite = find_suite(line[: marker.start()])
         if not suite:
             continue
         bullet = f"{suite}: {marker.group(0)} passed" if ratio_m else f"{suite}: exit 0"
@@ -260,20 +335,33 @@ def suite_bullets_from_text(text: str) -> list[str]:
     return bullets
 
 
+lead_override = ""
+if lead_path:
+    with open(lead_path, encoding="utf-8") as f:
+        lead_override = f.read().strip()
+
 if entity_path:
     with open(entity_path, encoding="utf-8") as f:
         entity_text = f.read()
-    lead = lead_from_problem(entity_text)
+    lead = lead_from_problem(entity_text, lead_override)
     what_changed = what_changed_from_entity(entity_text)
     evidence = suite_bullets_from_text(last_section(entity_text, "Stage Report: validation"))
 elif what_changed_path:
     with open(what_changed_path, encoding="utf-8") as f:
         what_changed = [line.strip() for line in f if line.strip()]
-    lead = lead_from_problem(issue.get("body", ""))
+    lead = lead_from_problem(issue.get("body", ""), lead_override)
     evidence = suite_bullets_from_text(tests_field.replace(";", "\n"))
 else:
     print("what-changed required: pass --entity-path <dev-entity-file> or --what-changed-file <file>", file=sys.stderr)
     sys.exit(1)
+
+if lead is None:
+    print("lead required: first sentence exceeds 25 words with no clause boundary; pass --lead <file>", file=sys.stderr)
+    sys.exit(1)
+
+if not evidence and evidence_path:
+    with open(evidence_path, encoding="utf-8") as f:
+        evidence = [line.strip() for line in f if line.strip()]
 
 lines = [lead, "", "## What changed"]
 lines += [f"- {b}" for b in what_changed]
