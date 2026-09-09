@@ -1,24 +1,38 @@
 #!/usr/bin/env bash
-# Open a Draft PR from a worker's accepted Evidence block.
-# Usage: open-pr.sh <evidence-file>
+# Open a Draft PR from a worker's accepted Evidence block, body per the
+# pr-merge mod's PR body template (docs/dev/_mods/pr-merge.md § PR body
+# template).
+# Usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run]
 #
-# Title is the CANDIDATE_SHA commit's subject; body carries BASE_SHA,
-# CANDIDATE_SHA, the WITHOUT_IT_COMMAND/WITHOUT_IT_REMOVED_VARIANT pair, and
-# the block's own SELF_CHECK line (the accept station's verdict, carried
-# rather than re-derived: this script trusts the block was already accepted
-# by kc-ship-flow/scripts/accept-evidence.sh before it runs). BRANCH is bound to
-# CANDIDATE_SHA against origin before `gh pr create` runs, so a fork branch
-# (`user:branch`) or a branch whose remote head differs from the reviewed
-# commit is refused rather than opened under a misleading title. Progress is
-# logged to stderr with timestamps; stdout carries exactly the opened PR
-# number.
+# <batch-dir> is a batch record directory: <batch-dir>/README.md (entity id
+# is the directory's own basename, `batch-` prefix stripped) and
+# <batch-dir>/receipt/plan-receipt.json (its `issues` map -- each entry's
+# `branch`, `close_line`, and `body`'s `## The problem` paragraph). The
+# audit link's owner/repo, ref, and path all come from the batch-dir's own
+# git checkout (origin remote, current branch, `git ls-files`), never from
+# CANDIDATE_SHA or cwd's repository -- the same rule pr-merge.md's
+# split-root correction applies to a spacedock entity, applied here to this
+# lighter batch-dir shape.
 #
-# Exit codes: 0 PR opened, number printed on stdout; 2 every other exit path
-# -- a usage error; an evidence file that is missing, has no `## Evidence`
-# heading, or has more than one; an Evidence block missing a required field;
-# an unreachable CANDIDATE_SHA; a BRANCH containing `:` (fork syntax); a
-# BRANCH that resolves to zero or more than one ref on origin; a BRANCH whose
-# remote head does not equal CANDIDATE_SHA; a `gh pr create` failure; or a PR
+# Body order: a <=25-word motivation lead condensed from the matched
+# issue's `## The problem`; `## What changed` (one bullet per top-level
+# FILES entry, capped at 5); `## Evidence` (N/N passed, counted from
+# TESTS's `-> exit` markers), omitted when TESTS is absent or has no such
+# marker; `---`; the audit link; the issue's `close_line` verbatim.
+#
+# --dry-run prints the body to stdout and exits 0 without resolving
+# CANDIDATE_SHA, binding BRANCH to origin, or calling gh. Every other exit
+# path is unchanged from non-dry-run.
+#
+# Exit codes: 0 PR opened (number on stdout), or --dry-run body printed; 2
+# every other exit path -- a usage error; an evidence or batch-dir argument
+# that does not exist; an evidence file with no `## Evidence` heading or
+# more than one; an Evidence block missing a required field; a BRANCH
+# containing `:` (fork syntax); a batch-dir README.md untracked by its own
+# checkout; a batch receipt missing or with zero or more than one issue
+# whose `branch` equals BRANCH; an unreachable CANDIDATE_SHA; a BRANCH that
+# resolves to zero or more than one ref on origin; a BRANCH whose remote
+# head does not equal CANDIDATE_SHA; a `gh pr create` failure; or a PR
 # number that cannot be parsed from `gh pr create`'s stdout.
 set -euo pipefail
 
@@ -26,13 +40,23 @@ timestamp() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
 log() { echo "$(timestamp) open-pr: $*" >&2; }
 die() { log "$*"; exit 2; }
 
-if [ "$#" -ne 1 ]; then
-  echo "usage: open-pr.sh <evidence-file>" >&2
+dry_run=0
+args=()
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) dry_run=1 ;;
+    *) args+=("$arg") ;;
+  esac
+done
+if [ "${#args[@]}" -ne 2 ]; then
+  echo "usage: open-pr.sh <evidence-file> <batch-dir> [--dry-run]" >&2
   exit 2
 fi
+evidence_file="${args[0]}"
+batch_dir="${args[1]}"
 
-evidence_file="$1"
 [ -f "$evidence_file" ] || die "evidence file not found: $evidence_file"
+[ -d "$batch_dir" ] || die "batch dir not found: $batch_dir"
 
 repo_root="$(git rev-parse --show-toplevel)"
 
@@ -54,6 +78,8 @@ evidence_text="$(parse_evidence)"
 CANDIDATE_SHA="$(get_field CANDIDATE_SHA)"
 BASE_SHA="$(get_field BASE_SHA)"
 BRANCH="$(get_field BRANCH)"
+FILES="$(get_field FILES)"
+TESTS="$(get_field TESTS)"
 WITHOUT_IT_COMMAND="$(get_field WITHOUT_IT_COMMAND)"
 WITHOUT_IT_REMOVED_VARIANT="$(get_field WITHOUT_IT_REMOVED_VARIANT)"
 SELF_CHECK="$(get_field SELF_CHECK)"
@@ -70,6 +96,110 @@ done
 case "$BRANCH" in
   *:*) die "BRANCH contains ':' (fork syntax refused): $BRANCH" ;;
 esac
+
+# --- resolve the batch entity from batch-dir's own git checkout ---
+batch_readme_relpath="$(git -C "$batch_dir" ls-files --full-name -- README.md)"
+[ -n "$batch_readme_relpath" ] || die "batch-dir README.md is untracked by its own checkout: $batch_dir"
+batch_origin_url="$(git -C "$batch_dir" remote get-url origin)"
+batch_owner_repo="$(printf '%s\n' "$batch_origin_url" | sed -E 's#\.git$##; s#^git@[^:]+:##; s#^https?://[^/]+/##')"
+batch_ref="$(git -C "$batch_dir" rev-parse --abbrev-ref HEAD)"
+batch_entity_id="$(basename "$batch_dir")"
+case "$batch_entity_id" in batch-*) batch_entity_id="${batch_entity_id#batch-}" ;; esac
+
+plan_receipt="$batch_dir/receipt/plan-receipt.json"
+[ -f "$plan_receipt" ] || die "batch receipt not found: $plan_receipt"
+
+# --- match BRANCH to exactly one issue in the batch receipt, then build the
+# pr-merge-shaped body from that issue, FILES, TESTS, and the batch entity ---
+body_tmp="$(mktemp)"
+body_err_tmp="$(mktemp)"
+trap 'rm -f "$body_tmp" "$body_err_tmp"' EXIT
+set +e
+python3 - "$plan_receipt" "$BRANCH" "$FILES" "$TESTS" "$batch_owner_repo" "$batch_ref" "$batch_readme_relpath" "$batch_entity_id" \
+  >"$body_tmp" 2>"$body_err_tmp" <<'PY'
+import json
+import re
+import sys
+
+receipt_path, branch, files_field, tests_field, owner_repo, ref, readme_path, entity_id = sys.argv[1:9]
+
+with open(receipt_path, encoding="utf-8") as f:
+    receipt = json.load(f)
+
+matches = [v for v in receipt.get("issues", {}).values() if v.get("branch") == branch]
+if len(matches) != 1:
+    print(
+        f"{len(matches)} issues in {receipt_path} match BRANCH {branch}, expected exactly 1",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+issue = matches[0]
+
+
+def cap_words(text: str, n: int) -> str:
+    return " ".join(text.split()[:n])
+
+
+def lead_from_problem(body_text: str) -> str:
+    m = re.search(r"##\s*The problem\s*\n+(.*?)(?:\n\s*\n|\n##|\Z)", body_text, re.S)
+    para = (m.group(1) if m else body_text).strip()
+    para = re.sub(r"\s+", " ", para)
+    sentence_match = re.search(r"^(.*?[.!?])(\s|$)", para)
+    sentence = sentence_match.group(1) if sentence_match else para
+    return cap_words(sentence, 25)
+
+
+def split_top_level(field: str) -> list[str]:
+    # Split on top-level commas only -- a `{a,b,c}` brace group in FILES
+    # (this repo's convention for a shared-directory file group) stays one
+    # token, one bullet, not three.
+    tokens: list[str] = []
+    depth = 0
+    current: list[str] = []
+    for ch in field:
+        if ch == "{":
+            depth += 1
+            current.append(ch)
+        elif ch == "}":
+            depth -= 1
+            current.append(ch)
+        elif ch == "," and depth == 0:
+            tokens.append("".join(current).strip())
+            current = []
+        else:
+            current.append(ch)
+    if current:
+        tokens.append("".join(current).strip())
+    return [t for t in tokens if t]
+
+
+lines = [lead_from_problem(issue.get("body", "")), "", "## What changed"]
+for token in split_top_level(files_field)[:5]:
+    lines.append("- " + cap_words(f"Update `{token}`", 15))
+
+if tests_field:
+    exits = re.findall(r"->\s*exit\s*(\d+)", tests_field)
+    if exits:
+        total = len(exits)
+        passed = sum(1 for e in exits if e == "0")
+        lines += ["", "## Evidence", f"- {passed}/{total} passed"]
+
+lines += ["", "---", f"[{entity_id}](/{owner_repo}/blob/{ref}/{readme_path})"]
+close_line = issue.get("close_line", "")
+if close_line:
+    lines.append(close_line)
+
+print("\n".join(lines))
+PY
+body_status=$?
+set -e
+[ "$body_status" -eq 0 ] || die "$(cat "$body_err_tmp")"
+body="$(cat "$body_tmp")"
+
+if [ "$dry_run" -eq 1 ]; then
+  printf '%s\n' "$body"
+  exit 0
+fi
 
 git -C "$repo_root" rev-parse --verify "${CANDIDATE_SHA}^{commit}" >/dev/null 2>&1 \
   || die "CANDIDATE_SHA unreachable: $CANDIDATE_SHA"
@@ -89,16 +219,8 @@ title="$(git -C "$repo_root" log -1 --format=%s "$CANDIDATE_SHA")"
 
 body_file="$(mktemp)"
 stderr_file="$(mktemp)"
-trap 'rm -f "$body_file" "$stderr_file"' EXIT
-cat > "$body_file" <<BODY_EOF
-Candidate: \`$CANDIDATE_SHA\`
-Base: \`$BASE_SHA\`
-
-Without-it: \`$WITHOUT_IT_COMMAND\`
-Removed variant: \`$WITHOUT_IT_REMOVED_VARIANT\`
-
-Accept station: $SELF_CHECK
-BODY_EOF
+trap 'rm -f "$body_tmp" "$body_err_tmp" "$body_file" "$stderr_file"' EXIT
+printf '%s\n' "$body" >"$body_file"
 
 log "opening Draft PR: branch=$BRANCH base=main title=$title"
 set +e

@@ -1,13 +1,15 @@
 # Evidence block grammar
 
 **Enforcing scripts:** `kc-ship-flow/scripts/accept-evidence.sh <evidence-file>` and
-`kc-ship-flow/scripts/open-pr.sh <evidence-file>` — the two scripts that actually parse a worker's
-Evidence block. Between them they read `CANDIDATE_SHA`, `BASE_SHA`, `BRANCH`, `FILES`,
-`WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, `WITHOUT_IT_OBSERVED`, and `SELF_CHECK`.
+`kc-ship-flow/scripts/open-pr.sh <evidence-file> <batch-dir>` — the two scripts that actually parse a
+worker's Evidence block. Between them they read `CANDIDATE_SHA`, `BASE_SHA`, `BRANCH`, `FILES`,
+`TESTS`, `WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, `WITHOUT_IT_OBSERVED`, and `SELF_CHECK`.
 `accept-evidence.sh` requires `CANDIDATE_SHA`, `BASE_SHA`, `WITHOUT_IT_COMMAND`, and
 `WITHOUT_IT_REMOVED_VARIANT` to be non-empty (refusing an "incomplete Evidence block" otherwise) and
 reads `BRANCH` and `FILES` without requiring them; `open-pr.sh` separately requires `CANDIDATE_SHA`,
-`BASE_SHA`, `BRANCH`, `WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, and `SELF_CHECK`.
+`BASE_SHA`, `BRANCH`, `WITHOUT_IT_COMMAND`, `WITHOUT_IT_REMOVED_VARIANT`, and `SELF_CHECK`, and reads
+`FILES` and `TESTS` (both optional) to build its PR body's `## What changed` and `## Evidence`
+sections — see `references/stations/open-pr.md`.
 
 `WITHOUT_IT_COMMAND` is one self-contained shell line with three properties, each checked by a
 different script:

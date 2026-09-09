@@ -316,8 +316,10 @@ require(
     f"stderr={disposition_deps_no_changed_files.stderr!r}",
 )
 
+open_pr_batch_dir = ship_flow_fixtures / "open-pr" / "batch"
+
 open_pr_fork_branch = subprocess.run(
-    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md")],
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md"), str(open_pr_batch_dir)],
     cwd=ROOT, capture_output=True, text=True,
 )
 require(
@@ -327,13 +329,49 @@ require(
 )
 
 open_pr_double_block = subprocess.run(
-    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-double-block.md")],
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-double-block.md"), str(open_pr_batch_dir)],
     cwd=ROOT, capture_output=True, text=True,
 )
 require(
     open_pr_double_block.returncode == 2 and "'## Evidence' headings" in open_pr_double_block.stderr,
     "open-pr.sh did not refuse an evidence file with more than one '## Evidence' heading: "
     f"exit={open_pr_double_block.returncode} stderr={open_pr_double_block.stderr!r}",
+)
+
+open_pr_dry_run_body = subprocess.run(
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence.md"), str(open_pr_batch_dir), "--dry-run"],
+    cwd=ROOT, capture_output=True, text=True,
+)
+open_pr_dry_run_lines = open_pr_dry_run_body.stdout.splitlines()
+open_pr_dry_run_section_order = [
+    line for line in open_pr_dry_run_lines
+    if line in ("## What changed", "## Evidence", "---") or line.startswith("[") or line.startswith("Fixes ")
+]
+require(
+    open_pr_dry_run_body.returncode == 0
+    and open_pr_dry_run_lines
+    and "#" not in open_pr_dry_run_lines[0]
+    and len(open_pr_dry_run_lines[0].split()) <= 25
+    and len(open_pr_dry_run_section_order) == 5
+    and open_pr_dry_run_section_order[0] == "## What changed"
+    and open_pr_dry_run_section_order[1] == "## Evidence"
+    and open_pr_dry_run_section_order[2] == "---"
+    and open_pr_dry_run_section_order[3].startswith("[")
+    and open_pr_dry_run_section_order[4].startswith("Fixes "),
+    "open-pr.sh --dry-run did not print a pr-merge-shaped body (lead <=25 words with no '#', "
+    "sections What changed / Evidence / --- / audit link / Fixes in order): "
+    f"exit={open_pr_dry_run_body.returncode} stdout={open_pr_dry_run_body.stdout!r} stderr={open_pr_dry_run_body.stderr!r}",
+)
+
+open_pr_dry_run_no_tests = subprocess.run(
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-no-tests.md"), str(open_pr_batch_dir), "--dry-run"],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_dry_run_no_tests.returncode == 0 and "## Evidence" not in open_pr_dry_run_no_tests.stdout,
+    "open-pr.sh --dry-run on a block lacking TESTS should print a body without '## Evidence' and exit 0: "
+    f"exit={open_pr_dry_run_no_tests.returncode} stdout={open_pr_dry_run_no_tests.stdout!r} "
+    f"stderr={open_pr_dry_run_no_tests.stderr!r}",
 )
 
 with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_name:
@@ -399,7 +437,7 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
         open_pr_env = dict(os.environ)
         open_pr_env["PATH"] = f"{fake_gh_dir}:{open_pr_env.get('PATH', '')}"
         return subprocess.run(
-            ["bash", str(open_pr_script), str(evidence)],
+            ["bash", str(open_pr_script), str(evidence), str(open_pr_batch_dir)],
             cwd=open_pr_repo, capture_output=True, text=True, env=open_pr_env,
         )
 
