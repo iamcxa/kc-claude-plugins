@@ -32,7 +32,9 @@ stage's installed script from `docs/ship/README.md`'s per-stage lines:
 4. `uat` (gate) — `kc-ship-flow/scripts/e2e-gate.py`, `kc-ship-flow/scripts/uat-doc.py`,
    `kc-ship-flow/scripts/notify.sh`
 5. `merged` — no kc-ship-flow script; observe the GitHub merge through Spacedock's `pr-merge` mod
-6. `closed` — `kc-ship-flow/scripts/dev-debrief.py`, then `kc-ship-flow/scripts/ship-debrief.py`
+6. `closed` — `kc-ship-flow/scripts/dev-debrief.py`, then `kc-ship-flow/scripts/ship-debrief.py`; each
+   also writes its draft, wrapped, to `receipt/dev-debrief.json` / `receipt/ship-debrief.json`
+   beside the close receipt (`--out` overrides the default path)
 
 Write and check each stage's pin with `kc-ship-flow/scripts/pin.py write --station <name>` /
 `check --station <name>` before advancing past it. Validate the closed stage's close receipt with

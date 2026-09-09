@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -521,5 +522,52 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-
         f"exit={candidate_tree_result.returncode} stdout={candidate_tree_result.stdout!r} "
         f"stderr={candidate_tree_result.stderr!r}",
     )
+
+# --- DEV-147 AC-3: the debrief writers' output lands beside the receipt ---
+# --- (a schema-admitted home), and a close receipt embedding dev_debrief's
+# --- own wrapper keys is refused by validate-receipt.py -------------------
+dev_debrief_script = SCRIPTS / "dev-debrief.py"
+ship_debrief_script = SCRIPTS / "ship-debrief.py"
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-debrief-writer-out-") as writer_out_dir_name:
+    writer_out_batch = Path(writer_out_dir_name) / "batch-carried-probe"
+    shutil.copytree(FIXTURES / "debrief-writer" / "batch-carried-probe", writer_out_batch)
+
+    dev_debrief_result = subprocess.run(
+        [sys.executable, str(dev_debrief_script), str(writer_out_batch)], capture_output=True, text=True,
+    )
+    require(
+        dev_debrief_result.returncode == 0
+        and (writer_out_batch / "receipt" / "dev-debrief.json").is_file(),
+        "dev-debrief.py did not write receipt/dev-debrief.json beside the receipt: "
+        f"exit={dev_debrief_result.returncode} stderr={dev_debrief_result.stderr!r}",
+    )
+
+    ship_debrief_result = subprocess.run(
+        [sys.executable, str(ship_debrief_script), str(writer_out_batch)], capture_output=True, text=True,
+    )
+    require(
+        ship_debrief_result.returncode == 0
+        and (writer_out_batch / "receipt" / "ship-debrief.json").is_file(),
+        "ship-debrief.py did not write receipt/ship-debrief.json beside the receipt: "
+        f"exit={ship_debrief_result.returncode} stderr={ship_debrief_result.stderr!r}",
+    )
+
+validate_receipt_script = ROOT / "docs" / "plan-flow" / "schema" / "validate-receipt.py"
+close_receipt_fixtures = FIXTURES / "close-receipt"
+forbidden_embed_result = subprocess.run(
+    [
+        sys.executable, str(validate_receipt_script),
+        str(close_receipt_fixtures / "plan-receipt.json"),
+        str(close_receipt_fixtures / "plan-approval.json"),
+        str(close_receipt_fixtures / "close-receipt.dev-debrief-wrapper-embedded.json"),
+    ],
+    capture_output=True, text=True,
+)
+require(
+    forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
+    "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
+    f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
+)
 
 print("kc-ship-flow contract: PASS")

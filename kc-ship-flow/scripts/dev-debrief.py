@@ -1,26 +1,37 @@
 #!/usr/bin/env python3
 """Draft the ship-flow dev debrief from a batch's durable records, addressed to dev-flow.
-usage: dev-debrief.py <batch-dir>
+usage: dev-debrief.py [--out <path>] <batch-dir>
 
 Reads, all required once an issue names them:
-  <batch-dir>/receipt/close-receipt.json (or .DRAFT.json)   per-issue rounds
+  <batch-dir>/receipt/close-receipt.json (or .DRAFT.json)   per-issue rounds, outcome
   <batch-dir>/evidence/worker-evidence-<ISSUE>*.md            each issue's own Evidence block (WITHOUT_IT_OBSERVED)
   <batch-dir>/README.md                                       "## Decisions made under `defaults`" bullets naming a REFUSE
   <batch-dir>/review/disposition-<PR>*.json                   a blocking review disposition, if the issue has a PR
 
 Prints a kc-ship-close-receipt/v1 `dev_debrief` object (JSON) to stdout: per
 Issue, its rounds, its without-it refusal shape, and its code refusals
-sourced from the record (never a copy of `issues[*].residuals`). It is a
-draft for the First Officer to edit, not a finished debrief --
+sourced from the record (never a copy of `issues[*].residuals`). An issue
+whose outcome is `carried`, `captain_stopped`, or `drift` and has no
+worker-evidence file gets `evidence_refusals: []`, `code_refusals: []`, and
+`note: "not dispatched"` instead of the exit-2 refusal below -- a batch that
+stops before dispatching an admitted item is a normal outcome, not a missing
+Evidence block. Any other outcome without an evidence file still exits 2.
+It is a draft for the First Officer to edit, not a finished debrief --
 `candidate_correction` is always a placeholder the writer cannot fill in
 from the record.
 
+Also writes the same object, wrapped as `{"schema": "kc-ship-dev-debrief/v1",
+"close_receipt": "receipt/close-receipt.json", "dev_debrief": <the object
+above>}`, to `--out <path>` (default `<batch-dir>/receipt/dev-debrief.json`)
+-- a schema-admitted home beside the receipt, so the draft never has to be
+hand-copied there.
+
 Exit 0 on success. Exit 2 on: bad argv; a missing close receipt; a missing
-rounds field; a missing worker-evidence file; an evidence-file selection
-nothing here can resolve (see select_evidence_file); or a close receipt
-that parses as JSON but is malformed or missing a field this script reads
-(json.JSONDecodeError, KeyError, TypeError) -- never silently defaulted to
-0 or {}.
+rounds field; a missing worker-evidence file (for a dispatched issue); an
+evidence-file selection nothing here can resolve (see select_evidence_file);
+or a close receipt that parses as JSON but is malformed or missing a field
+this script reads (json.JSONDecodeError, KeyError, TypeError) -- never
+silently defaulted to 0 or {}.
 """
 import glob
 import importlib.util
@@ -90,9 +101,17 @@ def parse_evidence_block(text):
     return fields
 
 
-def load_worker_evidence(batch_dir, issue):
+NOT_DISPATCHED_OUTCOMES = {"carried", "captain_stopped", "drift"}
+
+
+def load_worker_evidence(batch_dir, issue, allow_missing=False):
+    """Return the parsed Evidence block for `issue`, or None when no
+    worker-evidence file exists and `allow_missing` is set (an outcome in
+    NOT_DISPATCHED_OUTCOMES). Any other missing case exits 2."""
     matches = uat_doc.find_worker_evidence_files(batch_dir, issue)
     if not matches:
+        if allow_missing:
+            return None
         print(f"dev-debrief: missing worker-evidence file for {issue} (worker-evidence-{issue}*.md)", file=sys.stderr)
         sys.exit(2)
     try:
@@ -177,7 +196,16 @@ def build(batch_dir):
         if "rounds" not in entry:
             print(f"dev-debrief: {issue_id} missing rounds in {close_path}", file=sys.stderr)
             sys.exit(2)
-        worker = load_worker_evidence(batch_dir, issue_id)
+        outcome = entry.get("outcome")
+        worker = load_worker_evidence(batch_dir, issue_id, allow_missing=outcome in NOT_DISPATCHED_OUTCOMES)
+        if worker is None:
+            per_issue[issue_id] = {
+                "rounds": entry["rounds"],
+                "evidence_refusals": [],
+                "code_refusals": [],
+                "note": "not dispatched",
+            }
+            continue
         evidence_refusals = []
         observed = worker.get("WITHOUT_IT_OBSERVED")
         if observed:
@@ -194,17 +222,46 @@ def build(batch_dir):
     }
 
 
+def parse_args(argv):
+    """Return (batch_dir, out_path) or None on bad argv. `out_path` is None
+    when --out was not given (caller applies the default)."""
+    args = list(argv[1:])
+    out_path = None
+    if "--out" in args:
+        idx = args.index("--out")
+        if idx + 1 >= len(args):
+            return None
+        out_path = args[idx + 1]
+        del args[idx : idx + 2]
+    if len(args) != 1:
+        return None
+    return args[0], out_path
+
+
 def main(argv):
-    if len(argv) != 2:
+    parsed = parse_args(argv)
+    if parsed is None:
         print(__doc__)
         return 2
-    batch_dir = argv[1]
+    batch_dir, out_path = parsed
     try:
         debrief = build(batch_dir)
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         print(f"dev-debrief: malformed or incomplete batch record in {batch_dir}: {exc!r}", file=sys.stderr)
         return 2
     print(json.dumps(debrief, indent=1, ensure_ascii=False, sort_keys=True))
+    out = out_path or os.path.join(batch_dir, "receipt", "dev-debrief.json")
+    wrapped = {
+        "schema": "kc-ship-dev-debrief/v1",
+        "close_receipt": "receipt/close-receipt.json",
+        "dev_debrief": debrief,
+    }
+    out_dir = os.path.dirname(out)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(wrapped, f, indent=1, ensure_ascii=False, sort_keys=True)
+        f.write("\n")
     return 0
 
 
