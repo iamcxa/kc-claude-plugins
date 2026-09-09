@@ -1,6 +1,6 @@
 ## Evidence
-DISPATCH_TOKEN: dev156-2026-09-09
-CANDIDATE_SHA: 04b896dab9701ea40dd9a4ff26f71806f9c41402
+DISPATCH_TOKEN: dev156-2026-09-09-r2
+CANDIDATE_SHA: 87d13967ea576f680f82065367a6425f366a96df
 BRANCH: feature/dev-156-kc-ship-flow-dispatch-station-dispatch-dev-entities-via
 BASE_SHA: 39cb179be8af4bd71063d51ce7a58e646368e45d
 FILES: kc-ship-flow/scripts/fenced-dispatch.sh, fenced-dispatch.test.sh, contract-test.py, fixtures/dispatch/{task-with-model,task-without-model,task-build-fails}(.md + README.md), references/stations/fenced-dispatch.md, skills/first-officer/SKILL.md
@@ -10,3 +10,5 @@ WITHOUT_IT_REMOVED_VARIANT: git show 39cb179be8af4bd71063d51ce7a58e646368e45d:kc
 WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2
 SELF_CHECK: accept-evidence: ACCEPT
 BLOCKER: none. Premise gap: spacedock dispatch build flag mode requires --checklist-file; the station writes a one-line procedural checklist (documented).
+
+## Round 2 (87d13967): CI install step (pinned, sha-verified, identical to release-gate), fail-closed 'spacedock required', bounded checklist claim, doc names --checklist-file, --effort removed, --workflow-dir required. FO verified each; contract-test 0; CI version parity passed.

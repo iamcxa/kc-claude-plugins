@@ -1,0 +1,38 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#401",
+ "reviewed_head": "87d13967ea576f680f82065367a6425f366a96df",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "87d13967",
+   "verified_by": "FO: install step in marketplace-parity.yml carries the same pinned version and sha256 as kc-dev-flow-release-gate.yml; fenced-dispatch.test.sh prints 'spacedock required' and exits 1 under PATH=/usr/bin:/bin; CI 'version parity' passed on #401 with the step"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "87d13967",
+   "verified_by": "comment rewritten as a bounded claim (FO read)"
+  },
+  {
+   "id": "F3",
+   "outcome": "fixed",
+   "commit": "87d13967",
+   "verified_by": "station doc names --checklist-file and the placeholder"
+  },
+  {
+   "id": "F4",
+   "outcome": "fixed",
+   "commit": "87d13967",
+   "verified_by": "0 'effort' mentions in fenced-dispatch.sh"
+  },
+  {
+   "id": "F5",
+   "outcome": "fixed",
+   "commit": "87d13967",
+   "verified_by": "missing --workflow-dir refuses 'workflow-dir required' exit 2; dry run with it prints --model sonnet"
+  }
+ ],
+ "pending": []
+}
