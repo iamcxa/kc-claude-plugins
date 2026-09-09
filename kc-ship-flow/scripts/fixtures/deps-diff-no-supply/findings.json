@@ -1,6 +1,6 @@
 {
   "schema": "kc-dev-flow-pr-review-findings/v1",
-  "pr": 1181,
+  "pr": 7,
   "findings": [
     {"category": "style", "summary": "fixture: normal findings, no supply-chain lane run", "location": "scripts/example.py:1"}
   ]

@@ -1,6 +1,6 @@
 {
   "schema": "kc-dev-flow-pr-review-findings/v1",
-  "pr": 1181,
+  "pr": 7,
   "findings": [
     {"category": "security", "summary": "fixture: supply-chain lane output present", "location": "package-lock.json"}
   ]
