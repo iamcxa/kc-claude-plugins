@@ -1,0 +1,5 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#400","reviewed_head":"62dbffea","findings":[
+{"id":"F1","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/ci-covers.sh","line":54,"summary":"any `name:` line (incl. the workflow display name) satisfies (a); reviewer reproduced a false 'covered'"},
+{"id":"F2","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/ci-covers.sh","line":55,"summary":"any 2-space key (e.g. `on: pull_request:`) satisfies (a) as a job id"},
+{"id":"F3","source":"code-reviewer","category":"style","file":"kc-ship-flow/scripts/ci-covers.sh","line":12,"summary":"8-line exit-code comment restates die() and the station doc"}
+]}
