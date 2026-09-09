@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-09-09T03:45:05Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-reverse-a-story-map-from-linear
 issue:
 pr:
 mod-block:
