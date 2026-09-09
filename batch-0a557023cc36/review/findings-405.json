@@ -1,0 +1,4 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#405","reviewed_head":"fdc4d6ff","findings":[
+{"id":"F1","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/accept-evidence.sh","line":369,"summary":"'added by candidate' decided by presence/absence, so a renamed file passes as new; use diff --diff-filter=A -M"},
+{"id":"F2","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/accept-evidence.sh","line":374,"summary":"any path-like token can satisfy the rule; only the executed path may"}
+]}
