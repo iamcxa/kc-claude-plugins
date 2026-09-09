@@ -48,6 +48,13 @@ for _name in ("kc-plan-value", "kc-plan-detail"):
     _missing = sorted(_required - _keys)
     if _missing:
         _template_failures.append(f"{_name}: template omits required {_missing}")
+    # Asking only whether required fields are present let the template keep offering a field
+    # the schema had started refusing, so following it to the letter failed at the next step.
+    _schema = _json.loads((_root / "schemas" / f"{_name}.v1.schema.json").read_text())
+    if _schema.get("additionalProperties") is False:
+        _extra = sorted(_keys - set(_schema.get("properties", {})))
+        if _extra:
+            _template_failures.append(f"{_name}: template offers {_extra}, which the schema refuses")
 if _template_failures:
     for _f in _template_failures:
         print("FAIL template: " + _f)

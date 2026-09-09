@@ -56,6 +56,12 @@ if name == "kc-plan-value/v1":
     for e in doc.get("project", {}).get("exit", []):
         if e not in claimed:
             problems.append(f"no milestone claims this exit condition: {e[:60]!r}")
+    # "In the data, independence and inattention are the same absence" -- the skill says so and
+    # nothing checked it, so a plan could stay silent about why nothing blocks an issue.
+    blocked = {e.get("blocked") for e in doc.get("dependencies", [])}
+    for i, issue in enumerate(doc.get("issues", [])):
+        if issue.get("title") not in blocked and not issue.get("independent_because"):
+            problems.append(f"issues/{i}: nothing blocks it and it does not say why")
     for i, m in enumerate(doc.get("milestones", [])):
         d = m.get("description", "")
         if len(d) > 140:

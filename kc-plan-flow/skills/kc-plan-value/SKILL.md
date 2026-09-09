@@ -401,9 +401,6 @@ milestones:
     target: <YYYY-MM-DD>
     description: <140 characters or fewer, one line>
     satisfies_exit: [<which of the project's exit conditions this one makes true>]
-    integration_proof:
-      proof: <what joins the layers>
-      owner: <who runs it>
 issues:
   - title: <one value point>
     acceptance: <something a person does>
