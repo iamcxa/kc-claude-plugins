@@ -1,0 +1,38 @@
+{
+ "schema": "kc-ship-flow-review-disposition/v1",
+ "pr": "iamcxa/kc-claude-plugins#404",
+ "reviewed_head": "a2a87725530bf62250b475fdae010506124df35d",
+ "dispositions": [
+  {
+   "id": "F1",
+   "outcome": "fixed",
+   "commit": "a2a87725",
+   "verified_by": "FO: 0 repo-relative prefixes left across README/SKILL/15 station docs; mutation of one doc line fails contract-test; fallback wording and claims read"
+  },
+  {
+   "id": "F2",
+   "outcome": "fixed",
+   "commit": "a2a87725",
+   "verified_by": "FO: 0 repo-relative prefixes left across README/SKILL/15 station docs; mutation of one doc line fails contract-test; fallback wording and claims read"
+  },
+  {
+   "id": "F3",
+   "outcome": "fixed",
+   "commit": "a2a87725",
+   "verified_by": "FO: 0 repo-relative prefixes left across README/SKILL/15 station docs; mutation of one doc line fails contract-test; fallback wording and claims read"
+  },
+  {
+   "id": "F4",
+   "outcome": "fixed",
+   "commit": "a2a87725",
+   "verified_by": "FO: 0 repo-relative prefixes left across README/SKILL/15 station docs; mutation of one doc line fails contract-test; fallback wording and claims read"
+  },
+  {
+   "id": "F5",
+   "outcome": "fixed",
+   "commit": "a2a87725",
+   "verified_by": "FO: 0 repo-relative prefixes left across README/SKILL/15 station docs; mutation of one doc line fails contract-test; fallback wording and claims read"
+  }
+ ],
+ "pending": []
+}
