@@ -14,3 +14,6 @@ BLOCKER: none
 
 ## FO verification at b3235989 (fresh worktree; the first run had no worktree and was discarded)
 AC-1 `python3 -S validate-receipt.py <ab2fb2635f0c-shape trio>` exit 2 "jsonschema required"; same trio with jsonschema: CLOSE OK 6f2c2660; AC-2 dev-debrief on batch-carried-issue exit 0 (evidence_refusals present); embedded dev_debrief receipt refused exit 1 (by the validator's own per_issue check, which runs before jsonschema — the schema refusal is second in line); close-receipt.test 0; validator reverted to base → close-receipt.test exit 1; dev-debrief.test 0; ship-debrief.test 0. Comment lines added in python: 5 (one block explaining check ordering; 0.6% of +806).
+
+## FO verification at 52b51f27 (fresh worktree)
+Installed station ACCEPT. contract-test 0; close-receipt.test 0; dev-debrief.test 0; ship-debrief.test 0. FO mutation: removing `note` from ship's schema makes the new contract case fail ("validate-receipt.py did not accept a close receipt embedding dev-debrief.py's real not-dispatched output"), restored passes. Comment lines added in python: 5 (0.6%). Delta review b3235989..52b51f27 dispatched.
