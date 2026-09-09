@@ -1,7 +1,7 @@
 ---
 id: rzqf2brz01krek0pdmz8cbnt
 title: Collapse to one board, and generate the per-release contract that replaces the other
-status: backlog
+status: ideation
 source: captain
 product: kc-team-ops
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain: 開票，我想盡快看到新版結果 — approving the absorb-and-collapse seed and asking for the new format quickly. Scope constraints recorded from his prior rulings: cross-repository evidence is a separate task, the function map leaves the flow but not the tree, and the skill''s own journey must survive the migration.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
