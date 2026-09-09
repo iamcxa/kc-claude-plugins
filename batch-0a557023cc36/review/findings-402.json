@@ -1,0 +1,7 @@
+{"schema":"kc-ship-flow-review-findings/v1","pr":"iamcxa/kc-claude-plugins#402","reviewed_head":"6cd2c881","findings":[
+{"id":"F1","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/open-pr.sh","line":250,"summary":"empty source paragraph yields lead '' which passes the `is None` guard and --lead cannot rescue it"},
+{"id":"F2","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/open-pr.sh","line":197,"summary":"issue lookup requires exactly one issue whose branch == BRANCH; a one-PR-two-issues delivery (#397's shape) emits one Fixes line or dies"},
+{"id":"F3","source":"code-reviewer","category":"compatibility","file":"kc-ship-flow/scripts/open-pr.sh","line":293,"summary":"suite allowlist requires `contract-test.py`; this batch's own TESTS convention writes `contract-test` → Evidence silently omitted"},
+{"id":"F4","source":"code-reviewer","category":"test-coverage","file":"kc-ship-flow/scripts/open-pr.sh","line":38,"summary":"--lead, --evidence-file and the `lead required` refusal have no contract case"},
+{"id":"F5","source":"code-reviewer","category":"correctness","file":"kc-ship-flow/scripts/open-pr.sh","line":215,"summary":"quote-only detection misses backtick-quoted remarks"}
+]}
