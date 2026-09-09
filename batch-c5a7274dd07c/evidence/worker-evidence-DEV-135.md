@@ -1,15 +1,15 @@
 ## Evidence
-DISPATCH_TOKEN: dev147-2026-09-09-r2
-CANDIDATE_SHA: b3235989f3037b7c1b45036de040a4b892b03686
+DISPATCH_TOKEN: dev147-2026-09-09-r3
+CANDIDATE_SHA: 52b51f27f1877795d024881d64064451c0fabd8b
 BRANCH: feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers
 BASE_SHA: 668510376e157d1ff9f8fc7781c417c0f6b0d719
 PR: iamcxa/kc-claude-plugins#397
-FILES: docs/plan-flow/schema/validate-receipt.py, docs/plan-flow/schema/close-receipt.test.py, kc-ship-flow/scripts/{dev-debrief,ship-debrief}.py + .test.py, contract-test.py, references/stations/{dev,ship}-debrief.md, skills/first-officer/SKILL.md, fixtures (batch-carried-issue, debrief-writer/batch-carried-probe, close-receipt/*)
+FILES: docs/plan-flow/schema/{validate-receipt.py,close-receipt.test.py}, kc-ship-flow/schemas/kc-ship-close-receipt.v1.schema.json (optional per_issue.note), kc-ship-flow/scripts/{dev-debrief,ship-debrief}.py + tests, contract-test.py, references/stations/{dev,ship}-debrief.md, skills/first-officer/SKILL.md, fixtures (batch-carried-issue, debrief-writer/batch-carried-probe, close-receipt/*)
 TESTS: DEV-147 AC-1 exit 2 "jsonschema required"; AC-2 exit 0 evidence_refusals []; AC-3 contract-test exit 0; DEV-135 AC-1 exit 0 note "not dispatched"; AC-2 mutated outcome exit 2; falsifiers: ab2fb2635f0c-shape CLOSE OK, embedded dev_debrief refused; kc-dev-flow-contract-test exit 0; CI version parity SUCCESS on #397
 WITHOUT_IT_COMMAND: python3 -S docs/plan-flow/schema/validate-receipt.py kc-ship-flow/scripts/fixtures/close-receipt/ab2fb2635f0c-shape/plan-receipt.json kc-ship-flow/scripts/fixtures/close-receipt/ab2fb2635f0c-shape/plan-approval.json kc-ship-flow/scripts/fixtures/close-receipt/ab2fb2635f0c-shape/close-receipt.json; test $? -eq 2
 WITHOUT_IT_REMOVED_VARIANT: git show 668510376e157d1ff9f8fc7781c417c0f6b0d719:docs/plan-flow/schema/validate-receipt.py > docs/plan-flow/schema/validate-receipt.py
 WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 1; at BASE_SHA -> exit 1
-SELF_CHECK: worker notes — DEV-135's Linear ACs supersede the Brief paraphrase (fixture path, outcome set {carried, captain_stopped, drift}, note field); close-receipt.test.py edited outside the Brief's file list because CI runs it; writer stdout carries a note field the receipt schema forbids (inert: writers no longer embed)
+SELF_CHECK: r3 — beside-file design withdrawn; note admitted by ship's schema with a contract case threading the writer's output through validate-receipt; worker notes — DEV-135's Linear ACs supersede the Brief paraphrase (fixture path, outcome set {carried, captain_stopped, drift}, note field); close-receipt.test.py edited outside the Brief's file list because CI runs it; writer stdout carries a note field the receipt schema forbids (inert: writers no longer embed)
 BLOCKER: none
 
 ## FO verification at b3235989 (fresh worktree; the first run had no worktree and was discarded)
