@@ -478,14 +478,21 @@ require(
 )
 
 # DEV-154: station scripts were named by a plugin-relative path that only resolves
-# inside a checkout named kc-claude-plugins. SKILL.md must not reintroduce it; the
-# adopter fixture must resolve from a plugin copy installed somewhere else entirely.
+# inside a checkout named kc-claude-plugins. None of SKILL.md, docs/ship/README.md, or
+# any references/stations/*.md may reintroduce it -- local-profile-check.py resolves
+# by trailing filename, so a prefix reversion in a doc it doesn't parse would pass
+# silently. The adopter fixture must also resolve from a plugin copy installed
+# somewhere else entirely.
 first_officer_skill = PLUGIN / "skills" / "first-officer" / "SKILL.md"
-require(
-    "kc-ship-flow/scripts/" not in first_officer_skill.read_text(encoding="utf-8"),
-    f"{first_officer_skill} still names a station script by the repo-relative "
-    "'kc-ship-flow/scripts/' path (AC-2 regression)",
-)
+ship_readme_root_path = ROOT / "docs" / "ship" / "README.md"
+station_docs = sorted((PLUGIN / "references" / "stations").glob("*.md"))
+require(len(station_docs) > 0, "no references/stations/*.md docs found")
+for doc_path in [first_officer_skill, ship_readme_root_path, *station_docs]:
+    require(
+        "kc-ship-flow/scripts/" not in doc_path.read_text(encoding="utf-8"),
+        f"{doc_path} still names a station script by the repo-relative "
+        "'kc-ship-flow/scripts/' path (AC-2 regression)",
+    )
 
 adopter_readme = FIXTURES / "adopter" / "docs" / "ship" / "README.md"
 require(adopter_readme.is_file(), f"missing fixture: {adopter_readme}")

@@ -32,7 +32,7 @@ closed`.
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
 
-This table is the first-officer skill's declared input before dispatching a batch, not the full README as a policy bundle. `${CLAUDE_PLUGIN_ROOT}/scripts/local-profile-check.py` verifies the table's required rows; nothing checks what else the skill reads.
+This table is the first-officer skill's declared input before dispatching a batch, not the full README as a policy bundle. `${CLAUDE_PLUGIN_ROOT}/scripts/local-profile-check.py` verifies the table's required rows and every script reference in this README; the rest of the README is not checked.
 
 | Role | Bound local authority |
 |---|---|

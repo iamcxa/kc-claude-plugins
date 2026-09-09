@@ -7,13 +7,14 @@ description: Use when running the commissioned docs/ship batch workflow end to e
 
 `docs/ship/README.md`'s `## Local Profile` table is this skill's declared input before resolving
 or dispatching a batch, not the full README as a policy bundle. `local-profile-check.py` below
-verifies the table's required rows; nothing checks what else this skill reads.
+verifies the table's required rows and every script reference in the README; the rest of the
+README is not checked.
 
 Resolve the scripts directory once, then name every station script below relative to it as
 `$SHIP_SCRIPTS/<name>`: `SHIP_SCRIPTS="${CLAUDE_PLUGIN_ROOT:?}/scripts"`. A runtime that does not
 set `CLAUDE_PLUGIN_ROOT` (Claude Code sets it for a running skill; some other hosts do not) has no
-env var to read here — resolve `SHIP_SCRIPTS` instead to the `scripts/` directory beside this
-SKILL.md file's own installed location.
+env var to read here — resolve `SHIP_SCRIPTS` instead to the directory two levels above this
+SKILL.md, then `/scripts`.
 
 ## Refuse before dispatch
 
