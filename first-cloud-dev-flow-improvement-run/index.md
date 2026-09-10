@@ -1,6 +1,6 @@
 ---
 title: "POC: validate the first cloud run of the dev-flow improvement loop"
-status: backlog
+status: ideation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -26,7 +26,7 @@ gates:
                 reason: 'Kent confirmed proceeding to POC implementation and a single cloud run in the current turn: 確認. The preceding presented scope is the frozen event-query workload, one baseline, 20 active minutes, no automatic retry, truthful usage, and no recurring activation or product delivery.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 # First cloud run of the dev-flow improvement loop
