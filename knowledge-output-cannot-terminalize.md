@@ -1,7 +1,7 @@
 ---
 id: geef7a3dy7w12g7tq89h21te
 title: "Work whose output is knowledge cannot terminalize: pr-merge requires a merged PR that such work never has"
-status: backlog
+status: ideation
 source:
 product: repo-platform
 sprint: S8
@@ -34,7 +34,7 @@ gates:
                 reason: Kent approved the explicitly presented upstream native knowledge-delivery repair under this existing defect owner with 批准; this is durable admission of that same bounded scope and Pilot profile, not a new scope decision.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Historical problem and investigation
