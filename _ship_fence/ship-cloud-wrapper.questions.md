@@ -19,3 +19,8 @@ Finding for dispatch.sh: the boot message must carry the conn (gate record id + 
 Q4: (after the Captain typed "push it: open the Draft PR, prepare the validation gate, stop." into the session) — pushed, PR #411 opened, pr: recorded.
 Q5: gate prepare refuses on a second missing object 4b20a918 (the sibling's backlog record commit, also rewritten by the FO's replay).
 A5: pushed refs/heads/spacedock-state/dev-recovery-4b20a918; fetch, inspect, retry. Defect owner: ship FO (state replay).
+
+## 2026-09-11 feedback round 1 (batch FO → both workers)
+Gates: validation revise recorded on both entities (actor agent:first-officer, conn = Captain 「批」 2026-09-10).
+#410: merge main (#406 landed), delete fenced-dispatch/intent/holder/worker-transcript, wire new tests into contract-test, body per mod + Residuals/without-it.
+#411: merge main, align close.py/uat-doc.py to dispatch.sh's fence shape, ship v2 schema file, body per mod + Residuals.
