@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: verify at the integrated head, one UAT document, worker-written debriefs, and a slim close receipt"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
 started: 2026-09-10T08:56:36Z
-completed:
-verdict:
+completed: 2026-09-10T19:53:04Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-verify-uat-close
 issue:
 pr: pr-merge:411
@@ -71,7 +71,7 @@ gates:
                 reason: 'Captain merged #411 in chat: 「411 合併」 2026-09-11'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 review-round:
     id: round:7efj5b0dh4dh7616yma4nykm:validation:1
     stage: validation
@@ -80,6 +80,7 @@ review-round:
         id: briefing:7efj5b0dh4dh7616yma4nykm:validation:round-1
         digest: sha256:b71303b3e44508745c5fd3531a74a7f4613cfd7b6c34a3f03f49878a68cc7df3
         room-ref: ./review/validation/round-1
+archived: 2026-09-10T19:53:04Z
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch
