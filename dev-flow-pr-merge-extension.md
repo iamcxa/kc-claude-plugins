@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow owns the pr-merge extension: Residuals and without-it sections, synced to every adopter"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat: 「可以」 2026-09-11'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a
