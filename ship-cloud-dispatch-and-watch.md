@@ -91,3 +91,39 @@ work_profile:
   scope_boundary: No removal of old stations; no close receipt change; no Linear; no local dispatch.
   semantics_unchanged: false
 ```
+
+## Stage Report: implementation
+
+- DONE: dispatch.sh --dry-run prints one create argv per ready task with a matching message sha256, exits 2 conductor unavailable on auth whoami failure (AC-1)
+  `kc-ship-flow/scripts/dispatch.sh`; `dispatch.test.sh` cases a-c, f; verified live against the real sprint (3 real tasks, all print correctly) at 8b27fae1.
+- DONE: watch.sh --once prints one of gate-prepared\|quota\|question\|stopped per task against a fixture state dir, usage-limit banner yields quota (AC-2)
+  `kc-ship-flow/scripts/watch.sh`; `watch.test.sh` cases a, b, f.
+- DONE: both scripts refuse exit 5 "conductor cli changed" with a help diff on a conductor-cli.txt pin mismatch, before any other call (AC-5)
+  `kc-ship-flow/pins/conductor-cli.txt`; `dispatch.test.sh` case d, `watch.test.sh` case d — the fake conductor exits 64 if anything past --version/--help is called.
+- DONE: neither script calls intent.sh, holder.sh, or any accept/review/merge/notify/debrief script — task 2 can remove all of them
+  grep confirms zero references from `dispatch.sh`/`watch.sh` to those scripts; the claim fence is dispatch.sh's own JSON file under `_ship_fence/`, not intent.sh's.
+- DONE: docs/ship/README.md re-commissioned to dispatched -> watching -> verified -> uat -> closed; local-profile-check.py passes it and names Integrated head when removed (AC-4)
+  `python3 kc-ship-flow/scripts/local-profile-check.py docs/ship/README.md` → `LOCAL_PROFILE_OK: 9 required rows present`; row-removed run → `LOCAL_PROFILE_MISSING_ROW: Integrated head`, exit 1.
+- DONE: shell values (slug, message sha256, workspace/session ids) reach Python only via sys.argv, never interpolated into `-c` source
+  Falsifier: `spacedock new "it's-a-slug"` mints a real entity with a literal quote in its slug (spacedock accepts one). At ba9daeb7, `dispatch.sh ... --dry-run` against a fixture containing that entity exits 1 with `SyntaxError: unterminated string literal`; `watch.sh ... --once` likewise exits 1. At 8b27fae1 both exit 0 and print a line for the slug (`dispatch.test.sh`/`watch.test.sh` case f pin this in permanently).
+- DONE: quota check reads only the transcript tail, not the whole transcript
+  Falsifier: a transcript with the usage-limit banner in an earlier assistant turn and plain prose in the last one read `quota` before the fix, `stopped` after (`watch.test.sh` case e).
+- SKIPPED: RoboRev implementation-exit observation (`implementation_exit_observation_declared` / `roborev-implementation-exit.md`)
+  This build is retained, not disposable (dispatch.sh/watch.sh are the real artifact AC-3 will run next, not a throwaway demo) — fresh proof, so the build contract keeps the RoboRev observation and independent decision in validation, not implementation. Not invoked here by design, not omitted by oversight.
+- SKIPPED: AC-3 (the real dispatch of the other two sprint tasks)
+  Not in this stage's checklist (items 1-3 only); requires this dispatch.sh to exist first.
+
+### Residuals (not fixed, flagged for the next stage/task)
+
+- Task 1 itself keeps `sprint-readiness: ready` throughout its own lifecycle; a later `dispatch.sh ship-cloud-wrapper` real run will re-select it unless it is fenced or done first.
+- A `conductor workspace create` failure after the claim-fence pre-commit leaves a committed null-workspace record with no reconcile path; a re-run reports `already-recorded` and does not retry.
+- `docs/ship/.spacedock-state` does not exist in any local checkout; the remote `spacedock-state/ship-flow` branch holds unrelated superpowers-spec archive content, not batch entities. Which branch ship's real state lives on is a First Officer decision before the AC-3 real run, not resolved here.
+- `dispatch.sh` resolves `docs/dev` relative to its own script path, so the literal AC-1 command (no `--workflow-dir`) must be run from the main workspace checkout, not a task's feature worktree — confirmed by testing both ways.
+- `spacedock status --workflow-dir docs/ship --validate` could not be exercised (no local state checkout, previous point) — the re-commissioned README is unverified against any existing batch entity in the old six-stage schema.
+- `dispatch.test.sh`/`watch.test.sh` are standalone, not wired into `kc-ship-flow/scripts/contract-test.py` (which still enumerates the old station chain this design removes) — left for task 2. Ran `contract-test.py` in full: one pre-existing, unrelated failure (`fenced-dispatch.test.sh`, reproduces identically on HEAD before this change).
+- watch.sh's question heuristic is "last non-blank line of the last assistant turn ends in `?`" only; no other question shape is recognized.
+- The `Integrated head` README row defaults to `trunk` as a placeholder, not a Captain ruling.
+
+### Summary
+
+dispatch.sh and watch.sh implement the cloud-wrapper design's `dispatched`/`watching` stages: one Conductor workspace + fixed FO-boot message per ready task with a claim fence, and a poll that reads the state branch for a prepared gate before falling back to the session transcript. `docs/ship/README.md` is re-commissioned to the five-stage route with an `Integrated head` Local Profile row. A background review caught a real defect (shell values interpolated into `python3 -c` source, breaking on a slug containing a quote) and a second pass on my own found the quota check reading whole-transcript instead of tail-only; both are fixed with falsifiers proving the before/after behavior change, not just a pass count.
