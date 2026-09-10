@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-verify-uat-close
 issue:
-pr:
+pr: 411
 mod-block:
 id: 7efj5b0dh4dh7616yma4nykm
 gates:
