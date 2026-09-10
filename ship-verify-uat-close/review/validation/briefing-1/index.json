@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1",
+  "question": "Approve validation: AC-1/2/3 reproduced live, Draft PR #411 open, AC-4 correctly deferred pending the sibling dispatch/watch task's fence-file shape — ready to merge once ready, or hold for AC-4/residuals first?",
+  "artifacts": [
+    {
+      "id": "artifact:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/372ba9b228b2beb9de7aad9eb5a1a78eec11b97b/ship-verify-uat-close/review/validation/validation-review.md",
+      "rev": "sha256:824ac58c2000d2e871572e3033bbe891129a467c4ddaf1572c616a759e290168",
+      "mediaType": "text/markdown",
+      "summary": "uat-doc.py and close.py rewritten and proven against fixtures (AC-1/2/3); PR #411 (Draft) opened against main; AC-4 (real sprint run) blocked on sibling task's fence-file schema, named as residual."
+    }
+  ]
+}

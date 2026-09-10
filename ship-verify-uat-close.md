@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:7efj5b0dh4dh7616yma4nykm:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:7efj5b0dh4dh7616yma4nykm-validation-1
+              briefing:
+                id: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1
+                digest: sha256:4047200f33c792d975771a7a4dd83b490edddcdefd2a33aa6706568f56349581
+                room-ref: ./ship-verify-uat-close/review/validation/briefing-1
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch
