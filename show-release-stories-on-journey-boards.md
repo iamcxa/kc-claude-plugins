@@ -54,6 +54,17 @@ gates:
                 id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1
                 digest: sha256:14f60796cb791988e5b95555b6d6034c4b8e97f49a68940f8b42c44afd60d07b
                 room-ref: ./show-release-stories-on-journey-boards/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wwn8jfrh1f6k6zyj5tfcjb23:ideation:2
+                briefing: briefing:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T09:55:13.06185Z"
+                decision: approve
+                reason: 'Kent approved the presented second ideation briefing (14f60796): implement the release-story board and three-state consistency, repair stale activity wording, preserve the bounded Pilot scope, and defer full sprint-to-release migration and live host-selection proof.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
