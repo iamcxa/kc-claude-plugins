@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map, plus a function map of commands and events when the file models one — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and a mandatory status card names what is unproven, unmerged, or undeployed.
+description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — the user journey (story map) by default, plus a per-release journey board or a function map of commands and events, each drawn only on request — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and a mandatory status card names what is unproven, unmerged, or undeployed.
 ---
 
 # Journey Map
@@ -72,11 +72,22 @@ what it found, not just that it ran. Check mode: the mismatch table first.
 
 ## Rendering
 
-**The canvas.** The journey file renders onto an editable tldraw board — a story map page,
-plus a function map page when the file models a step's command/events/state/read-model. See
-`references/canvas.md` for how to run it, what round-trips and what does not. `npm run
-doctor` says why it will not start. The per-release detail that used to be a second canvas
-page is a generated document instead — `node lib/journey-contract.mjs`, not a board.
+**Ask what to draw, before rendering.** (`AskUserQuestion`, multi-select): `User journey`
+(story map — default, preselected) / `Journey board` (one page per release) / `Function map`
+(commands and events). If the tool is unavailable, or nobody answers, render the user
+journey alone — that default is load-bearing, not a fallback of convenience.
+
+**The canvas.** The journey file renders onto an editable tldraw board, one page per
+projection chosen:
+
+```bash
+node lib/journey-render.mjs <journey.yaml> [roomId] --pages story-map,journey-board,function-map
+```
+
+Omitting `--pages` renders the default (`story-map` alone). See `references/canvas.md` for
+how to run it, what round-trips and what does not. `npm run doctor` says why it will not
+start. The release contract — the per-release detail the journey board also draws — is a
+generated document, not a board: `node lib/journey-contract.mjs`.
 
 **An image for a report.** Export from the canvas with tldraw's own exporter, which
 captures the whole board rather than a viewport:

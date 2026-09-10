@@ -21,9 +21,9 @@ its own stage. Its stories get a `status` and, where they exist, an `evidence` s
 once somebody goes and reads the code — see "Stories" below.
 
 The journey board — a per-release canvas page citing each step's system flow and
-constraints — is retired. Its unique content was a citation and a constraint list, neither
-of which is spatial; the release contract carries the same facts as a document a lint can
-check, which a grid never could.
+constraints — is opt-in, drawn only on request. It carries the same facts as the release
+contract, held to the same bar; the release contract is the generated form a lint can check,
+which a grid never could.
 
 ## Columns
 

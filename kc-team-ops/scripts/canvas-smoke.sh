@@ -43,19 +43,22 @@ fi
 export JOURNEY_API_PORT="$PORT"
 curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server started but does not answer"; exit 1; }
 
-node lib/journey-render.mjs "$EXAMPLE" "$ROOM"
+# Every projection selected, so the smoke exercises the schema validator against all of
+# them, not only the default one board.
+PAGES="story-map,journey-board,function-map"
+node lib/journey-render.mjs "$EXAMPLE" "$ROOM" --pages "$PAGES"
 
 # The renderer reports what it sent; this reads back what the server kept, so a record
 # the validator silently dropped would show up as a count mismatch rather than a pass.
-node - "$ROOM" "$PORT" "$EXAMPLE" <<'NODE'
-const [room, port, example] = process.argv.slice(2)
+node - "$ROOM" "$PORT" "$EXAMPLE" "$PAGES" <<'NODE'
+const [room, port, example, selection] = process.argv.slice(2)
 // Expected shapes and pages both come from the model, so adding a page is not a change
 // this check has to be told about. Hard-coding the page list broke it the first time a
 // third page arrived.
 const { loadJourney, buildAllPages } = await import('./lib/render.mjs')
 
 const model = loadJourney(example)
-const built = buildAllPages(model)
+const built = buildAllPages(model, null, selection.split(','))
 const expected = new Set(built.filter((r) => r.typeName === 'shape').map((r) => r.id))
 const expectedPages = built.filter((r) => r.typeName === 'page').map((r) => r.name).sort()
 

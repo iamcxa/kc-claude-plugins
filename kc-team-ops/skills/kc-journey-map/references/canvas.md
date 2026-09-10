@@ -36,18 +36,22 @@ and produce the HTML board — never stall the deliverable on it.
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
 
-## One board, plus a generated contract
+## Three projections, drawn by request
 
-A journey renders onto one canvas page — the story map — plus a second canvas page for the
-function map when the file models something. What used to be a second canvas, the journey
-board (one page per release, citing each step's system flow and constraints), is retired:
-its unique content was a citation and a constraint list, and neither is spatial.
+A render draws whichever projections were asked for — never more. Ask (`AskUserQuestion`,
+multi-select) before rendering: `story-map` (user journey, preselected), `journey-board`,
+`function-map`. No answer, or the tool unavailable, means the default: `story-map` alone.
+
+```bash
+node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map,journey-board,function-map]
+```
 
 | Surface | Kind | Answers |
 |---|---|---|
-| **Story map** | canvas, one page | what should we build, what is the smallest useful slice, and which of those stories exist today |
-| **Release contract**, one per release | generated document, not canvas | given we want *this* release, what does the system do today and what is missing — `lib/journey-contract.mjs` |
-| **Function map** | canvas, one page, drawn only when modelled | what does each step decide, and what becomes true when it does |
+| **Story map** (`story-map`, default) | canvas, one page | what should we build, what is the smallest useful slice, and which of those stories exist today |
+| **Journey board** (`journey-board`, opt-in) | canvas, one page per release (or one whole-journey page with none) | given we want *this* release, what does the system do today and what is missing |
+| **Release contract**, one per release | generated document, not canvas | the same question as the journey board, as a document a lint can check instead of a picture a person has to notice is wrong — `lib/journey-contract.mjs` |
+| **Function map** (`function-map`, opt-in) | canvas, one page | what does each step decide, and what becomes true when it does |
 
 **The release contract is generated, never authored.** It reads every story in a release and
 prints its status, its evidence symbol, and the rule ids that apply — the same facts the
@@ -82,8 +86,9 @@ Events earn the lane: they carry causal order, and story order does not, so a bu
 derived from this page is derived from something real. Each event is its own sticky because
 an event is the unit a ticket and an acceptance criterion get written against.
 
-The page is drawn only when the file models something, and a step nobody has modelled shows
-`— not modelled —` rather than an empty column, so the gaps are the point:
+The page draws whenever `function-map` is selected, whether or not anything is modelled: a
+step nobody has modelled shows `— not modelled —` rather than an empty column, so the gaps
+are the point:
 
 ```yaml
 steps:
@@ -168,10 +173,9 @@ A sticky someone added during a workshop survives every re-render.
 
 **The reader still understands a journey-board page if one exists.** A step is a
 `step-card` there and an `activity` on the story map; where the two disagree about the same
-field, neither wins — the conflict is reported and nothing is applied. The default pipeline
-no longer renders that page, so in practice this is comparing the story map against itself —
-harmless, and it is the same code path a hand-built board from `buildJourneyBoard` would use
-if something still calls it directly.
+field, neither wins — the conflict is reported and nothing is applied. The journey board
+renders only when selected, so this comparison only has two sides to disagree on a render
+that asked for both pages.
 
 **Read reports; `--write` applies a subset.** What round-trips: the wording of a card, an
 activity and a story; the order of the columns; the priority of the stories under an

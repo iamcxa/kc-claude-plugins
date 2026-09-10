@@ -33,9 +33,9 @@ run it again to see what it catches.
 | RELEASE 1/2/3 — what is missing | one journey board per release, scoped to the steps that release touches |
 | Function map | Command, Event, State and Read model over the same columns |
 
-Regenerate it after changing the example:
+Regenerate it after changing the example — all five pages need every projection selected:
 
 ```bash
-node lib/journey-render.mjs skills/kc-journey-map/references/journey.example.yaml draw-a-journey
+node lib/journey-render.mjs skills/kc-journey-map/references/journey.example.yaml draw-a-journey --pages story-map,journey-board,function-map
 node lib/journey-tldr.mjs export draw-a-journey skills/kc-journey-map/references/example/draw-a-journey.tldr
 ```
