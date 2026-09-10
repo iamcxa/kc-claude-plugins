@@ -1,0 +1,17 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-overlay",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/validation-evidence/rollback-overlay.json",
+    "./internal/status",
+    "-run",
+    "^TestValidationKnowledgeRollbackPreservesPreLockPeerEdit$",
+    "-count=1",
+    "-v"
+  ],
+  "rc": 1,
+  "seconds": 3.9438211917877197,
+  "stdout": "=== RUN   TestValidationKnowledgeRollbackPreservesPreLockPeerEdit\n    merge_guard_test.go:1374: peer_edit_present_before_failed_commit=true\n    merge_guard_test.go:1375: rc=1 live=true peer_edit_retained=false stdout= stderr=Error: merge guard: failed to commit archive move for task: exit status 1\n    merge_guard_test.go:1376: commit-failure rollback lost the peer edit captured by the locked consumer\n--- FAIL: TestValidationKnowledgeRollbackPreservesPreLockPeerEdit (2.54s)\nFAIL\nFAIL\tgithub.com/spacedock-dev/spacedock/internal/status\t3.007s\nFAIL\n",
+  "stderr": ""
+}

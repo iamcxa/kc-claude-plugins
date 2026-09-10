@@ -488,3 +488,32 @@ This amendment updates current scope only; all historical amendments/reports and
 ### Summary
 
 The approved integrated repair and local consumer correction are concrete, within both limits, and supported by positive native finalization, refusal, archive-once, publication recovery, conflict and complete copied-original proof. Required suites were executed and the sole failing release-state assertion also fails on the untouched base; this is not represented as an all-green suite. Exact product diffs remain uncommitted for independent review and Captain confirmation. Original live task approval, evidence and resources remain unchanged; no original closure or new cloud proof is claimed.
+
+
+## Stage Report: validation
+
+- FAILED: Independently verify the exact upstream and local candidate against AC-1 through AC-5, approved eight-file/850 and local one-file/40 scope, and native authority/data safety.
+  Exact hashes and scope pass, but AC-4 loses a peer edit on failed archive commit; [independent review and smallest fix](knowledge-output-cannot-terminalize/validation-evidence/review.md).
+- FAILED: Exercise meaningful native knowledge finalization/refusal/archive-once/committed-publication recovery cases; verify complete candidate test evidence and original-copy proof without altering live records.
+  Fresh existing focused cases: 74 pass/0 fail/0 skip. Independent pre-lock-edit regression fails; retained before/after bytes prove data loss. Full/race raw logs and copied-original proof audited, all 18 live original hashes preserved.
+- DONE: Review changed-surface necessity and consumer documentation, report exact hashes and all residuals, and preserve a durable validation verdict without product commits or external delivery.
+  All 8 upstream/1 local surfaces reviewed and mapped; no scope excess or unmapped addition. Report/evidence only; no product mutation, provider/model/cloud call, installation or original closure.
+
+### Acceptance evidence
+
+- AC-1: PASS. TestKnowledgeMergeNativeArchive freshly reports finalized/PASSED/consumed with no active entity; missing native archive integration would fail it.
+- AC-2: PASS for exercised native controls. Exact approval/successor/evidence/product/PR/whole-entity refusal cases preserve bytes; deleting the predicate allows forbidden consumption and fails those assertions.
+- AC-3: PASS. Fresh merge regression preserves genuine sentinels and refuses open/malformed/missing product proof; explicit knowledge does not reinterpret rejection.
+- AC-4: FAIL. `internal/status/merge.go:503-510` permits rollback of a stale snapshot read at line 756 and restored at line 805. [Independent raw failure](knowledge-output-cannot-terminalize/validation-evidence/rollback-prelock.json) shows peer edit in archived bytes before failed commit, absent after rollback. This is not the excluded hard crash.
+- AC-5: VERIFIED PRODUCER PROOF. [Readback](knowledge-output-cannot-terminalize/validation-evidence/copied-original-audit.json) matches retained copy archive hash/HEAD and consumed synthetic approval; baseline blocked, native test-only rebinding and publication resume are explicit. All 18 real original files unchanged; live rebinding/cleanup/final check remain separately owned.
+
+### Exact candidate and residuals
+
+- Upstream patch SHA-256 `cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5` against `af70297ddae6ec64444849e8e3fcf57484bc16e1`: 8 files/743 gross; local patch `2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c` against `c9c5752fda853737d4a937ad7f59564c5651ca53`: 1 file/24 gross. [Final unchanged root/branch/hash readback](knowledge-output-cannot-terminalize/validation-evidence/final-readback.json).
+- Full/race producer logs each have 3,104 pass/11 skip and one cask leaf failure plus parent; same release-state failure reproduced on untouched base. Race binds final patch; full preceded restoration of an unrelated pre-existing whitespace delta. No all-green claim or delegated acceptance of red residuals.
+- Object-based source map and optional RoboRev remain UNAVAILABLE without an authorized product commit. No candidate objects fabricated. Exact-file commit approval, PR/delivery/provider checks, installation and original live closure remain outstanding.
+- project_context: impact `none`; bound PRODUCT.md, ARCHITECTURE.md and CLAUDE.md retain their plugin/profile/loading/ownership claims. Fresh validation compared their stated surfaces with the full diff and native outcomes; review.md records scope and necessity.
+
+### Summary
+
+REJECTED: the accepted recovery/data-safety journey has one independently reproduced data-loss defect despite passing ordinary native cases. Bind the rollback preimage to the same checked under-lock entity snapshot or refuse unsafe rollback, within existing approved surfaces; retain this regression for one final recheck. Product candidates remain byte-identical and uncommitted; this verdict does not accept the separate existing red release-state constraint.

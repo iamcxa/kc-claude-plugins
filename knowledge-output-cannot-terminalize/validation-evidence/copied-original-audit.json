@@ -1,0 +1,143 @@
+{
+  "archive_exists": true,
+  "archive_sha256": "36244d099e3ffb452b89c8d75a49e22a0cadd0761c47ded7a6a2a1e5a524429e",
+  "matches_producer_archive_sha256": true,
+  "producer_binary_retained": false,
+  "archive_readback": "\ntitle: \"POC: validate the first cloud run of the dev-flow improvement loop\"\nstatus: done\nproduct: kc-dev-flow\nsprint: S8\nsprint-readiness: ready\nid: 7ktmx2rsetq67yhbg4ezxm0q\ngates:\n    version: 1\n    records:\n        - id: gate:7ktmx2rsetq67yhbg4ezxm0q:backlog\n          stage: backlog\n          attempts:\n            - id: gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-backlog-1\n              briefing:\n                id: briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1\n                digest: sha256:559957ef58b48799d881ad00fa8a45f92997a4a3bff65c78b73d79efbc69b073\n                room-ref: ./review/backlog/briefing-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:backlog:1\n                briefing: briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1\n                by: person:captain\n                at: \"2026-09-10T08:56:31.360166Z\"\n                decision: approve\n                reason: 'Kent confirmed proceeding to POC implementation and a single cloud run in the current turn: \u78ba\u8a8d. The preceding presented scope is the frozen event-query workload, one baseline, 20 active minutes, no automatic retry, truthful usage, and no recurring activation or product delivery.'\n              application:\n                target-stage: ideation\n                state: consumed\n        - id: gate:7ktmx2rsetq67yhbg4ezxm0q:validation\n          stage: validation\n          attempts:\n            - id: gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-validation-1\n              briefing:\n                id: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1\n                digest: sha256:bd0f3adff2920f1d8dc91f6471d7907d48ee35de2de48317ce63e87d7232d0b7\n                room-ref: ./review/validation/briefing-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:validation:1\n                briefing: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1\n                by: person:captain\n                at: \"2026-09-10T15:32:06.314176Z\"\n                decision: approve\n                reason: 'Captain approved archival: \u53ef\u4ee5\u5c01\u5b58. Accept the experiment outcome change and preserve its evidence; no unattended Routine claim.'\n              application:\n                target-stage: done\n                state: superseded\n            - id: gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-validation-2\n              briefing:\n                id: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-2:revision-1\n                digest: sha256:9ee0dcd66f56020d664becb7f5479f83a8b0d4c2177db1a484bd562e2c72b6fe\n                room-ref: '@review/validation/briefing-2'\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:validation:2\n                briefing: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-2:revision-1\n                by: person:captain\n                at: \"2026-09-10T17:22:49.071087Z\"\n                decision: approve\n                reason: SYNTHETIC TEST ONLY new machine binding; not Kent approval\n              application:\n                target-stage: done\n                state: consumed\nstarted: 2026-09-10T09:28:22Z\nworktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run\npr:\nverdict: PASSED\ncompleted: 2026-09-10T17:23:15Z\nmod-block:\narchived: 2026-09-10T17:23:16Z\n",
+  "copy_state_status": "",
+  "copy_state_head": "de9a1f34e492ea5c812020c1e85accf01e45c11a",
+  "raw_result_labels": [
+    {
+      "label": "build",
+      "rc": 0
+    },
+    {
+      "label": "copy-product",
+      "rc": 0
+    },
+    {
+      "label": "remove-product-origin",
+      "rc": 0
+    },
+    {
+      "label": "copy-state",
+      "rc": 0
+    },
+    {
+      "label": "remove-state-origin",
+      "rc": 0
+    },
+    {
+      "label": "test-git-name",
+      "rc": 0
+    },
+    {
+      "label": "test-git-email",
+      "rc": 0
+    },
+    {
+      "label": "test-git-name",
+      "rc": 0
+    },
+    {
+      "label": "test-git-email",
+      "rc": 0
+    },
+    {
+      "label": "original-baseline",
+      "rc": 0
+    },
+    {
+      "label": "original-explicit-refusal",
+      "rc": 1
+    },
+    {
+      "label": "test-only-supersede",
+      "rc": 0
+    },
+    {
+      "label": "test-only-return-validation",
+      "rc": 1
+    },
+    {
+      "label": "rebuild",
+      "rc": 0
+    },
+    {
+      "label": "test-only-commit-rework",
+      "rc": 0
+    },
+    {
+      "label": "test-only-return-validation-committed",
+      "rc": 0
+    },
+    {
+      "label": "fixture-head",
+      "rc": 0
+    },
+    {
+      "label": "fixture-trunk",
+      "rc": 0
+    },
+    {
+      "label": "fixture-owned-worktree",
+      "rc": 0
+    },
+    {
+      "label": "commit-test-declaration",
+      "rc": 0
+    },
+    {
+      "label": "prepare-test-only-binding",
+      "rc": 0
+    },
+    {
+      "label": "record-test-only-approval",
+      "rc": 0
+    },
+    {
+      "label": "consume-test-only-approval",
+      "rc": 0
+    },
+    {
+      "label": "commit-test-binding",
+      "rc": 0
+    },
+    {
+      "label": "fixture-bare-origin",
+      "rc": 0
+    },
+    {
+      "label": "fixture-add-origin",
+      "rc": 0
+    },
+    {
+      "label": "fixture-first-push",
+      "rc": 0
+    },
+    {
+      "label": "native-finalize-publication-interrupted",
+      "rc": 1
+    },
+    {
+      "label": "archived-local-head",
+      "rc": 0
+    },
+    {
+      "label": "native-publish-resume",
+      "rc": 0
+    },
+    {
+      "label": "native-repeat-noop",
+      "rc": 0
+    },
+    {
+      "label": "resumed-head",
+      "rc": 0
+    },
+    {
+      "label": "archive-native-read",
+      "rc": 0
+    }
+  ]
+}

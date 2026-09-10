@@ -1,0 +1,116 @@
+{
+  "integrated-full": {
+    "summary": {
+      "command": [
+        "go",
+        "test",
+        "./...",
+        "-json"
+      ],
+      "rc": 1,
+      "seconds": 215.37965583289042,
+      "tests": {
+        "pass": 3104,
+        "fail": 2,
+        "skip": 11
+      }
+    },
+    "recount": {
+      "pass": 3104,
+      "skip": 11,
+      "fail": 2
+    },
+    "failures": [
+      {
+        "Time": "2026-09-11T01:21:58.018933+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks/edge-satisfies-pin",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-11T01:21:58.018938+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks",
+        "Elapsed": 1.77
+      },
+      {
+        "Time": "2026-09-11T01:21:59.219983+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Elapsed": 8.552
+      }
+    ],
+    "data_race": false,
+    "stdout_sha256": "25a6c712a95c85bbc84d9e106cb07dad4d30e4b9624dd3ed9772fa8d4ae63860"
+  },
+  "integrated-race": {
+    "summary": {
+      "command": [
+        "go",
+        "test",
+        "./...",
+        "-race",
+        "-json"
+      ],
+      "rc": 1,
+      "seconds": 233.5100434590131,
+      "tests": {
+        "pass": 3104,
+        "fail": 2,
+        "skip": 11
+      },
+      "candidate_sha256": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5"
+    },
+    "recount": {
+      "pass": 3104,
+      "skip": 11,
+      "fail": 2
+    },
+    "failures": [
+      {
+        "Time": "2026-09-11T01:26:33.157558+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks/edge-satisfies-pin",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-11T01:26:33.157684+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks",
+        "Elapsed": 1.77
+      },
+      {
+        "Time": "2026-09-11T01:26:36.287481+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Elapsed": 11.568999999999999
+      }
+    ],
+    "data_race": false,
+    "stdout_sha256": "abb44d4c90764c14d5dd5b98a9492dbc8ed2e25a724efae61ba7ec75f0ae7cb1"
+  },
+  "original": {
+    "evidence-attempt-2/cloud-events.json": true,
+    "evidence-attempt-2/cloud-final.md": true,
+    "evidence-attempt-2/cloud-usage.json": true,
+    "evidence-attempt-2/launch-envelope.json": true,
+    "evidence-attempt-2/launch-prompt.md": true,
+    "evidence-attempt-2/launch.json": true,
+    "evidence-attempt-2/local-token-counter.json": true,
+    "evidence-attempt-2/parent-token-counter.json": true,
+    "evidence-attempt-2/sha256.json": true,
+    "implementation-resumed-stage-pin.json": true,
+    "implementation-stage-pin.json": true,
+    "index.md": true,
+    "migration-20260910/authorization.json": true,
+    "migration-20260910/implementation-stage-pin.json": true,
+    "migration-20260910/index.md": true,
+    "migration-20260910/original-pinned-work-item.md": true,
+    "review/backlog/briefing-1/index.json": true,
+    "review/validation/briefing-1/index.json": true
+  }
+}

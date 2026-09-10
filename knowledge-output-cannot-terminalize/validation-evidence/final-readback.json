@@ -1,0 +1,45 @@
+{
+  "upstream": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "head": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "status": " M internal/cli/help.go\n M internal/gates/delivery.go\n M internal/gates/delivery_test.go\n M internal/gates/io.go\n M internal/status/merge.go\n M internal/status/merge_guard_test.go\n M internal/status/mutate.go\n M mods/pr-merge.md\n",
+    "patch_sha256": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5",
+    "numstat": "3\t0\tinternal/cli/help.go\n238\t8\tinternal/gates/delivery.go\n196\t0\tinternal/gates/delivery_test.go\n7\t3\tinternal/gates/io.go\n45\t7\tinternal/status/merge.go\n193\t0\tinternal/status/merge_guard_test.go\n18\t9\tinternal/status/mutate.go\n16\t0\tmods/pr-merge.md\n",
+    "diff_check": 0,
+    "changed_gofmt": {
+      "rc": 0,
+      "stdout": ""
+    }
+  },
+  "local": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "head": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "status": " M docs/dev/_mods/pr-merge.md\n",
+    "patch_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+    "numstat": "11\t13\tdocs/dev/_mods/pr-merge.md\n",
+    "diff_check": 0
+  },
+  "live_original_preserved": {
+    "evidence-attempt-2/cloud-events.json": true,
+    "evidence-attempt-2/cloud-final.md": true,
+    "evidence-attempt-2/cloud-usage.json": true,
+    "evidence-attempt-2/launch-envelope.json": true,
+    "evidence-attempt-2/launch-prompt.md": true,
+    "evidence-attempt-2/launch.json": true,
+    "evidence-attempt-2/local-token-counter.json": true,
+    "evidence-attempt-2/parent-token-counter.json": true,
+    "evidence-attempt-2/sha256.json": true,
+    "implementation-resumed-stage-pin.json": true,
+    "implementation-stage-pin.json": true,
+    "index.md": true,
+    "migration-20260910/authorization.json": true,
+    "migration-20260910/implementation-stage-pin.json": true,
+    "migration-20260910/index.md": true,
+    "migration-20260910/original-pinned-work-item.md": true,
+    "review/backlog/briefing-1/index.json": true,
+    "review/validation/briefing-1/index.json": true
+  },
+  "stage_pin_sha256": "46b4309475d96c27b1a0df3050fbb8b1f0d3b347ad05709cf3d21ba250da250b"
+}
