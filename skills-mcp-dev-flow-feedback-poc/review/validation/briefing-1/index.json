@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:4n79qfrpfetj8vrpmdphpkwd:validation:attempt-1:revision-1",
+  "question": "Accept the change conclusion and close this bounded POC without admitting another experiment?",
+  "artifacts": [
+    {
+      "id": "artifact:4n79qfrpfetj8vrpmdphpkwd:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b79921082e055a6c58d0e8b70aa43369bd68001d/skills-mcp-dev-flow-feedback-poc/index.md",
+      "rev": "sha256:4f0405e61a2eabc032bcb304aca323993a52237fc45d5d52a18d230842866d6a",
+      "mediaType": "text/markdown",
+      "summary": "One baseline made the correct maintenance decision; clean instruction isolation remains unproven. Decision-ready in 539 seconds; stop with change, preserve evidence, and accept no new experiment."
+    }
+  ]
+}

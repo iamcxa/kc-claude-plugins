@@ -12,6 +12,17 @@ issue:
 pr:
 mod-block:
 id: 4n79qfrpfetj8vrpmdphpkwd
+gates:
+    version: 1
+    records:
+        - id: gate:4n79qfrpfetj8vrpmdphpkwd:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:4n79qfrpfetj8vrpmdphpkwd-validation-1
+              briefing:
+                id: briefing:4n79qfrpfetj8vrpmdphpkwd:validation:attempt-1:revision-1
+                digest: sha256:850b2e92c436a9d47cb03b5582834b4dc3903d28de4c7ec9a8d0d839175ad4ab
+                room-ref: ./review/validation/briefing-1
 ---
 
 # Evidence-led dev-flow improvement POC
