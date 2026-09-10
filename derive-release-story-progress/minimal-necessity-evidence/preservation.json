@@ -1,0 +1,32 @@
+{
+  "layer-1": {
+    "worktree_diff_exit": 0,
+    "output": ""
+  },
+  "layer-2": {
+    "worktree_diff_exit": 0,
+    "output": ""
+  },
+  "layer-3": {
+    "worktree_diff_exit": 0,
+    "output": ""
+  },
+  "layer-4": {
+    "worktree_diff_exit": 0,
+    "output": ""
+  },
+  "layer-5": {
+    "worktree_diff_exit": 0,
+    "output": ""
+  },
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut",
+    "branch": "codex/journey-stack-recut",
+    "status": ""
+  },
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state",
+    "branch": "spacedock-state/dev",
+    "status": " M derive-release-story-progress/index.md\n M derive-release-story-progress/stack-recut-evidence/local-commit-review.md\n?? derive-release-story-progress/minimal-necessity-evidence/\n"
+  }
+}

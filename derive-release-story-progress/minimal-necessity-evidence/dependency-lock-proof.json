@@ -1,0 +1,18 @@
+{
+  "removed_packages": [
+    "node_modules/@fastify/cors",
+    "node_modules/@vitejs/plugin-react",
+    "node_modules/fastify-plugin",
+    "node_modules/mnemonist",
+    "node_modules/obliterator",
+    "node_modules/typescript"
+  ],
+  "added_packages": [],
+  "changed_resolved_versions": [],
+  "removed_root_declarations": [
+    "@fastify/cors",
+    "typescript",
+    "@vitejs/plugin-react"
+  ],
+  "note": "shared dependencies reused read-only, not a fresh install"
+}

@@ -1,0 +1,74 @@
+{
+  "normalization": "fractional index bytes vary randomly; schema validate and compare rank per parent instead",
+  "cases": [
+    {
+      "name": "fixture",
+      "selection": [
+        "story-map"
+      ],
+      "records": 33,
+      "equal": true
+    },
+    {
+      "name": "fixture",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 57,
+      "equal": true
+    },
+    {
+      "name": "fixture",
+      "selection": [
+        "function-map"
+      ],
+      "records": 18,
+      "equal": true
+    },
+    {
+      "name": "fixture",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 108,
+      "equal": true
+    },
+    {
+      "name": "worked-example",
+      "selection": [
+        "story-map"
+      ],
+      "records": 77,
+      "equal": true
+    },
+    {
+      "name": "worked-example",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 141,
+      "equal": true
+    },
+    {
+      "name": "worked-example",
+      "selection": [
+        "function-map"
+      ],
+      "records": 45,
+      "equal": true
+    },
+    {
+      "name": "worked-example",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 263,
+      "equal": true
+    }
+  ],
+  "instrument_negative": "removing story borders is detected"
+}

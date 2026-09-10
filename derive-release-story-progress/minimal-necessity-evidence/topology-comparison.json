@@ -1,0 +1,242 @@
+{
+  "five": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 1,
+        "files": 24,
+        "additions": 6023,
+        "deletions": 0,
+        "changed": 6023,
+        "generated": 5309,
+        "non_generated": 714
+      },
+      {
+        "from_layer": 1,
+        "to_layer": 2,
+        "files": 24,
+        "additions": 1079,
+        "deletions": 334,
+        "changed": 1413,
+        "generated": 0,
+        "non_generated": 1413
+      },
+      {
+        "from_layer": 2,
+        "to_layer": 3,
+        "files": 34,
+        "additions": 1966,
+        "deletions": 139,
+        "changed": 2105,
+        "generated": 1,
+        "non_generated": 2104
+      },
+      {
+        "from_layer": 3,
+        "to_layer": 4,
+        "files": 21,
+        "additions": 620,
+        "deletions": 375,
+        "changed": 995,
+        "generated": 2,
+        "non_generated": 993
+      },
+      {
+        "from_layer": 4,
+        "to_layer": 5,
+        "files": 10,
+        "additions": 433,
+        "deletions": 27,
+        "changed": 460,
+        "generated": 0,
+        "non_generated": 460
+      }
+    ],
+    "summed_review_lines": 10996
+  },
+  "four_details_borders": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 1,
+        "files": 24,
+        "additions": 6023,
+        "deletions": 0,
+        "changed": 6023,
+        "generated": 5309,
+        "non_generated": 714
+      },
+      {
+        "from_layer": 1,
+        "to_layer": 2,
+        "files": 24,
+        "additions": 1079,
+        "deletions": 334,
+        "changed": 1413,
+        "generated": 0,
+        "non_generated": 1413
+      },
+      {
+        "from_layer": 2,
+        "to_layer": 4,
+        "files": 36,
+        "additions": 2231,
+        "deletions": 159,
+        "changed": 2390,
+        "generated": 1,
+        "non_generated": 2389
+      },
+      {
+        "from_layer": 4,
+        "to_layer": 5,
+        "files": 10,
+        "additions": 433,
+        "deletions": 27,
+        "changed": 460,
+        "generated": 0,
+        "non_generated": 460
+      }
+    ],
+    "summed_review_lines": 10286
+  },
+  "three_planning_inspection_progress": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 2,
+        "files": 42,
+        "additions": 7079,
+        "deletions": 311,
+        "changed": 7390,
+        "generated": 5309,
+        "non_generated": 2081
+      },
+      {
+        "from_layer": 2,
+        "to_layer": 4,
+        "files": 36,
+        "additions": 2231,
+        "deletions": 159,
+        "changed": 2390,
+        "generated": 1,
+        "non_generated": 2389
+      },
+      {
+        "from_layer": 4,
+        "to_layer": 5,
+        "files": 10,
+        "additions": 433,
+        "deletions": 27,
+        "changed": 460,
+        "generated": 0,
+        "non_generated": 460
+      }
+    ],
+    "summed_review_lines": 10240
+  },
+  "three_native_fullmodel_progress": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 1,
+        "files": 24,
+        "additions": 6023,
+        "deletions": 0,
+        "changed": 6023,
+        "generated": 5309,
+        "non_generated": 714
+      },
+      {
+        "from_layer": 1,
+        "to_layer": 4,
+        "files": 43,
+        "additions": 3181,
+        "deletions": 364,
+        "changed": 3545,
+        "generated": 1,
+        "non_generated": 3544
+      },
+      {
+        "from_layer": 4,
+        "to_layer": 5,
+        "files": 10,
+        "additions": 433,
+        "deletions": 27,
+        "changed": 460,
+        "generated": 0,
+        "non_generated": 460
+      }
+    ],
+    "summed_review_lines": 10028
+  },
+  "two_core_progress": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 4,
+        "files": 56,
+        "additions": 9151,
+        "deletions": 311,
+        "changed": 9462,
+        "generated": 5310,
+        "non_generated": 4152
+      },
+      {
+        "from_layer": 4,
+        "to_layer": 5,
+        "files": 10,
+        "additions": 433,
+        "deletions": 27,
+        "changed": 460,
+        "generated": 0,
+        "non_generated": 460
+      }
+    ],
+    "summed_review_lines": 9922
+  },
+  "four_borders_progress": {
+    "units": [
+      {
+        "from_layer": 0,
+        "to_layer": 1,
+        "files": 24,
+        "additions": 6023,
+        "deletions": 0,
+        "changed": 6023,
+        "generated": 5309,
+        "non_generated": 714
+      },
+      {
+        "from_layer": 1,
+        "to_layer": 2,
+        "files": 24,
+        "additions": 1079,
+        "deletions": 334,
+        "changed": 1413,
+        "generated": 0,
+        "non_generated": 1413
+      },
+      {
+        "from_layer": 2,
+        "to_layer": 3,
+        "files": 34,
+        "additions": 1966,
+        "deletions": 139,
+        "changed": 2105,
+        "generated": 1,
+        "non_generated": 2104
+      },
+      {
+        "from_layer": 3,
+        "to_layer": 5,
+        "files": 25,
+        "additions": 1040,
+        "deletions": 389,
+        "changed": 1429,
+        "generated": 2,
+        "non_generated": 1427
+      }
+    ],
+    "summed_review_lines": 10970
+  }
+}

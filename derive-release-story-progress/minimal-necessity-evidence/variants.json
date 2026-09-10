@@ -1,0 +1,85 @@
+{
+  "no-frame": [
+    {
+      "path": "lib/records.mjs",
+      "original_sha256": "f2a5db2d2fa8183f74e51c497ee5977a56368f8812b74f8eb8751402878d5124",
+      "variant_sha256": "0f9299786ba2d697e38ae27bf09c99a82f873a95209e7e158062653dbb553a0a"
+    }
+  ],
+  "no-disk": [
+    {
+      "path": "server/rooms.ts",
+      "original_sha256": "80e53acaad8dc64bf33538c0b44604c9cdd0c7baa778905adfbdbf2d272c42c0",
+      "variant_sha256": "1067d0192a179205e69a30e7feea84f4123a2c8b63f04c132cd361c31294c3ab"
+    }
+  ],
+  "smaller-deps": [
+    {
+      "path": "package-lock.json",
+      "original_sha256": "703a5efab3e74e4a2e905e530d82a8b09209180948cd06ca20f51c08a70a101b",
+      "variant_sha256": "9080d1eacbbf30c18b623be3e9574a3837a7f9c8d4c88e34b1946938fca10c4c"
+    },
+    {
+      "path": "package.json",
+      "original_sha256": "dbaba5d00c77d2100e87dd485d86f32e275c3e17823778e06f1e94f302c854c6",
+      "variant_sha256": "8bee276f4066266951915d90b013aa2252610326c4141cfbe6650c6a5b810e58"
+    },
+    {
+      "path": "server/canvas-server.ts",
+      "original_sha256": "1925845db525b2db6d99c520ac49685f5df167041aabb75dbd14a845e5316f82",
+      "variant_sha256": "6df5f45be57cb29ac1c04647111edc80de8d609994bb5645fbea7a5a80164e44"
+    },
+    {
+      "path": "server/client/App.tsx",
+      "original_sha256": "ef42a7b1e09d7569bede4bc3b49ada2fa324bf84997d8254c5f5ac4dd68c7671",
+      "variant_sha256": "e5414ebba74a5b9fe2158bac5a68be618a38051b20210489ffdf67410b6ffc3e"
+    },
+    {
+      "path": "vite.config.mts",
+      "original_sha256": "c9d98501f43e112c9e1c99aaa5455aab92dd1a8404f7830170d2ba1d7646b9dd",
+      "variant_sha256": "c98366a31aaa540d0d4e1152d2b0d28fe8da4d3ae76afa88d3c21a4bad896326"
+    }
+  ],
+  "no-reconcile": [
+    {
+      "path": "lib/render.mjs",
+      "original_sha256": "14589d020a4f44cdbd9cf6cd99598837924745045d92ee4812d62254315b5b35",
+      "variant_sha256": "b38a5b7eac60c562fc95a736539a1bfa118af35412558f87d1dde3dee70e9870"
+    }
+  ],
+  "no-borders": [
+    {
+      "path": "lib/records.mjs",
+      "original_sha256": "f2a5db2d2fa8183f74e51c497ee5977a56368f8812b74f8eb8751402878d5124",
+      "variant_sha256": "7acd9b408496ada74cf5ab2017ae067086b8f5fd1603095fed123c9b02b65578"
+    }
+  ],
+  "no-evidence-filter": [
+    {
+      "path": "lib/lint.mjs",
+      "original_sha256": "0f4878b12e16b7ddeebad5509fafae71b1ed6ea88fc170f41f3fc12f3abf1c2c",
+      "variant_sha256": "36db282eaed560944f731c92b81c5066e7cbbed9bab5ca963f5852c20f4a861a"
+    }
+  ],
+  "no-release-bands": [
+    {
+      "path": "lib/storymap.mjs",
+      "original_sha256": "2dd7d85867fd65d7770c7f57fe1d81de65f00532f9e9e0ba9135a4ea0b7f5652",
+      "variant_sha256": "45140d78cfd77e5845c1560b1489571ecdf82ab177ce5d776ec048b846414041"
+    }
+  ],
+  "no-schema-check": [
+    {
+      "path": "server/canvas-server.ts",
+      "original_sha256": "1925845db525b2db6d99c520ac49685f5df167041aabb75dbd14a845e5316f82",
+      "variant_sha256": "ca6c0b75d56c9929678bb8405cb699179ac8c6cd50b970853dc4b848029e667d"
+    }
+  ],
+  "lean-schema": [
+    {
+      "path": "server/canvas-server.ts",
+      "original_sha256": "1925845db525b2db6d99c520ac49685f5df167041aabb75dbd14a845e5316f82",
+      "variant_sha256": "d10f40e5094240f1e654ae384bdd8bbf3a007fc70a0edfe378e27ab83d13e748"
+    }
+  ]
+}

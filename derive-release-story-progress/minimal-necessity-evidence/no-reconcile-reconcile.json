@@ -1,0 +1,16 @@
+{
+  "variant": "no-reconcile",
+  "mode": "reconcile",
+  "kind": "mutation",
+  "checks": [
+    {
+      "claim": "deleted source story disappears on redraw",
+      "passed": false
+    },
+    {
+      "claim": "hand-authored note survives redraw",
+      "passed": true
+    }
+  ],
+  "owned_server_stopped": true
+}

@@ -1,6 +1,6 @@
 # Corrected five-layer local commit proposal
 
-Status: corrected candidates frozen; focused independent re-review passed.
+Status: HELD — kernel minimal-necessity audit completed with FAIL / needs reduction. Prior focused behavior/safety re-review passed; it does not establish minimality. See [necessity verdict and concrete reduction proposal](../minimal-necessity-evidence/README.md).
 This replaces the rejected proposal preserved in `initial-rejected/local-commit-review.md`.
 No product commit is authorized by this packet. Kent
 must approve these exact local commits; push, PR creation/linking, readiness,
@@ -189,4 +189,4 @@ Exact changed files:
 
 ## Evidence
 
-The task state `stack-recut-evidence/correction/README.md` links same-instrument red/green second-ID proofs, distinct-wording controls, source hashes, stale-wording refusal and affected readback/smoke checks. `manifest.json`, `equivalence.json`, and `patch-proof.json` bind the corrected trees. Focused independent validation passed on both corrected intermediate trees; see [independent proof](../stack-recut-independent-validation/rereview/README.md) and [Stage Report: validation (cycle 4)](../index.md#stage-report-validation-cycle-4). This packet is ready for Kent's exact local-commit review.
+The task state `stack-recut-evidence/correction/README.md` links same-instrument red/green second-ID proofs, distinct-wording controls, source hashes, stale-wording refusal and affected readback/smoke checks. `manifest.json`, `equivalence.json`, and `patch-proof.json` bind the corrected trees. Focused independent validation passed on both corrected intermediate trees; see [independent proof](../stack-recut-independent-validation/rereview/README.md) and [Stage Report: validation (cycle 4)](../index.md#stage-report-validation-cycle-4). The prior local-commit gate was withdrawn; this packet remains held pending disposition and producer integration of the [kernel necessity findings](../minimal-necessity-evidence/README.md). Its exact five-layer lists are historical review inputs, not a refreshed authorization packet.

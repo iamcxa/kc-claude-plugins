@@ -490,3 +490,20 @@ The single intermediate-layer safety finding has producer closure evidence from 
 ### Summary
 
 PASS for the corrected five-layer local delivery proposal: the sole reported intermediate writeback safety failure is fixed and independently exercised on both affected trees. The exact candidate packet can proceed to Kent's local-commit review; no commit, PR, merge or delivery acceptance is granted by this validation.
+
+## Stage Report: validation (cycle 5)
+
+- FAILED: Apply the pinned dev-flow kernel Minimal necessity and verification discipline to the exact final candidate, mapping every retained changed surface to an accepted goal, named falsifier, safety boundary or required lifecycle obligation.
+  Exact final tree `cefe085d5d9b12b5679421b5607c808d6989a1b7`; [60/60-path mapping](minimal-necessity-evidence/surface-map.md) finds unused frame helper, removable CORS/compiler dependencies and stale documentation. Goal sufficiency does not imply minimal necessity.
+- DONE: Run task-owned without-it observations with explicit removed mechanisms, actual failure/control results and falsifier kinds; separately evaluate PR layers and material smaller equivalent dependency/design alternatives.
+  [Observed removals/controls](minimal-necessity-evidence/README.md): no-disk loses hand note after restart, no-reconciliation retains deleted story, no-bands loses unassigned story, no-borders loses colors, prose-only evidence falsely passes; each intended failure has preserved original control.
+- DONE: Report concrete keep/merge/remove findings, comment/document retention and deletion candidates with evidence and limits in durable state; preserve all frozen product candidates and do not claim minimality from green tests or smaller LOC alone.
+  [Document/comment dispositions](minimal-necessity-evidence/documents-comments.md) retain unique contracts with two-search second-home accounting; no whole-document deletion. All frozen candidates/history preserved; local-commit packet remains held.
+
+### Summary
+
+Minimal necessity is **FAIL / needs reduction**. Remove unused frame, CORS registration/dependency and unused compiler; the coherent smaller browser/CLI path also works without React Fast Refresh plugin, but preserve the plugin in the recommended repair to avoid that developer tooling loss. The six removed lock nodes describe the tested three-dependency alternative, not the recommended two-dependency reduction. Keep existing schema-error boundary: lean prototype proves invalid-batch 400 and atomic rejection, not correct unexpected-server-error classification.
+
+Recommend three review units (complete editable planning, optional evidence/detail with status borders, explicit local-task progress), using current cumulative trees 2/4/5 as grouping inputs; four remains defensible if separate infrastructure ownership is required. This is a defined reviewability/temporary-adaptation tradeoff, not mathematical minimality; no revised product candidate exists yet.
+
+AC-1..AC-5 retain prior behavior evidence and six producer mutations bound by exact final blob SHA-256 values; this audit separately covers predecessor canvas/story/evidence mechanisms. Same-wording ID/text corruption evidence and distinct-wording control remain frozen in initial/rereview records. No product commits, PR/provider actions, task acceptance or source deletion occurred; CI cost per PR is unmeasured. First Officer owns bounded reduction/topology disposition and producer routing.

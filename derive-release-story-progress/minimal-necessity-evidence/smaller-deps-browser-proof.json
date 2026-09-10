@@ -1,0 +1,53 @@
+{
+  "api": "http://127.0.0.1:61141",
+  "client": "http://127.0.0.1:61144",
+  "notes_from_server": [
+    {
+      "x": 200,
+      "y": 180,
+      "rotation": 0,
+      "isLocked": false,
+      "opacity": 1,
+      "meta": {},
+      "id": "shape:dependency-note",
+      "type": "note",
+      "parentId": "page:page",
+      "index": "a1Uju",
+      "props": {
+        "color": "black",
+        "richText": {
+          "type": "doc",
+          "attrs": {
+            "dir": "auto"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "dir": "auto"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Smaller dependency canvas still edits"
+                }
+              ]
+            }
+          ]
+        },
+        "size": "m",
+        "font": "draw",
+        "align": "middle",
+        "verticalAlign": "middle",
+        "labelColor": "black",
+        "growY": 0,
+        "fontSizeAdjustment": 1,
+        "url": "",
+        "scale": 1,
+        "textLastEditedBy": "JjxDD-IeywOwAUsndNv4w"
+      },
+      "typeName": "shape"
+    }
+  ],
+  "cross_origin": true
+}

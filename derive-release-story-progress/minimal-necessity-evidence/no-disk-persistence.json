@@ -1,0 +1,12 @@
+{
+  "variant": "no-disk",
+  "mode": "persistence",
+  "kind": "mutation",
+  "checks": [
+    {
+      "claim": "native hand-authored note survives server restart",
+      "passed": false
+    }
+  ],
+  "owned_server_stopped": true
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "removed": "no-release-bands",
+    "variant": "no-release-bands",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=a story is drawn in its own release band|a release line spans every activity|a story with no release",
+      "lib/storymap.test.mjs"
+    ],
+    "exit": 1,
+    "output": "\u2716 a story is drawn in its own release band, not its declaring order (3.085291ms)\n\u2716 a release line spans every activity, not a range of them (0.513208ms)\n\u2716 a story with no release is drawn in an UNASSIGNED band, never dropped (0.823167ms)\n\u2139 tests 3\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 3\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 251.819875\n\n\u2716 failing tests:\n\ntest at lib/storymap.test.mjs:33:1\n\u2716 a story is drawn in its own release band, not its declaring order (3.085291ms)\n  TypeError: Cannot read properties of undefined (reading 'y')\n      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/necessity-audit/no-release-bands/lib/storymap.test.mjs:38:53)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1325:25)\n      at Test.start (node:internal/test_runner/test:1191:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)\n\ntest at lib/storymap.test.mjs:42:1\n\u2716 a release line spans every activity, not a range of them (0.513208ms)\n  TypeError: Cannot read properties of undefined (reading 'x')\n      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/necessity-audit/no-release-bands/lib/storymap.test.mjs:48:17)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1325:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)\n      at Test.postRun (node:internal/test_runner/test:1465:19)\n      at Test.run (node:internal/test_runner/test:1390:12)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)\n\ntest at lib/storymap.test.mjs:52:1\n\u2716 a story with no release is drawn in an UNASSIGNED band, never dropped (0.823167ms)\n  AssertionError [ERR_ASSERTION]: an unplaced story vanished instead of being flagged\n      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/necessity-audit/no-release-bands/lib/storymap.test.mjs:57:9)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1325:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)\n      at Test.postRun (node:internal/test_runner/test:1465:19)\n      at Test.run (node:internal/test_runner/test:1390:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n"
+  },
+  {
+    "removed": "no-release-bands",
+    "variant": "control",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=a story is drawn in its own release band|a release line spans every activity|a story with no release",
+      "lib/storymap.test.mjs"
+    ],
+    "exit": 0,
+    "output": "\u2714 a story is drawn in its own release band, not its declaring order (3.792667ms)\n\u2714 a release line spans every activity, not a range of them (0.519208ms)\n\u2714 a story with no release is drawn in an UNASSIGNED band, never dropped (0.502917ms)\n\u2139 tests 3\n\u2139 suites 0\n\u2139 pass 3\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 252.55075\n"
+  },
+  {
+    "removed": "no-borders",
+    "variant": "no-borders",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=both projections border all three states",
+      "lib/render.test.mjs"
+    ],
+    "exit": 1,
+    "output": "\u2716 both projections border all three states, share legends, and count exists alone (3.1085ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 186.606792\n\n\u2716 failing tests:\n\ntest at lib/render.test.mjs:62:1\n\u2716 both projections border all three states, share legends, and count exists alone (3.1085ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n  + []\n  - [\n  -   'red',\n  -   'violet',\n  -   'green'\n  - ]\n  \n      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/necessity-audit/no-borders/lib/render.test.mjs:65:9)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1325:25)\n      at Test.start (node:internal/test_runner/test:1191:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ 'red', 'violet', 'green' ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n"
+  },
+  {
+    "removed": "no-borders",
+    "variant": "control",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=both projections border all three states",
+      "lib/render.test.mjs"
+    ],
+    "exit": 0,
+    "output": "\u2714 both projections border all three states, share legends, and count exists alone (5.417542ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 187.1585\n"
+  },
+  {
+    "removed": "no-evidence-filter",
+    "variant": "no-evidence-filter",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=evidence that greps only in prose",
+      "lib/lint.test.mjs"
+    ],
+    "exit": 1,
+    "output": "\u2716 evidence that greps only in prose is reported missing, even though the string exists (1196.870166ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 1255.846833\n\n\u2716 failing tests:\n\ntest at lib/lint.test.mjs:91:1\n\u2716 evidence that greps only in prose is reported missing, even though the string exists (1196.870166ms)\n  AssertionError [ERR_ASSERTION]: s-1 must fail because the only match is a doc, not because the string is missing\n  + actual - expected\n  \n  + []\n  - [\n  -   's-1'\n  - ]\n  \n      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/necessity-audit/no-evidence-filter/lib/lint.test.mjs:109:9)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1325:25)\n      at Test.start (node:internal/test_runner/test:1191:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [],\n    expected: [ 's-1' ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n"
+  },
+  {
+    "removed": "no-evidence-filter",
+    "variant": "control",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=evidence that greps only in prose",
+      "lib/lint.test.mjs"
+    ],
+    "exit": 0,
+    "output": "\u2714 evidence that greps only in prose is reported missing, even though the string exists (1167.007042ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 1225.471792\n"
+  }
+]
