@@ -54,6 +54,17 @@ gates:
                 id: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-2:revision-1
                 digest: sha256:e5d8eb8d1c8a331b1eb2ce0b1b4cf8c137c39f8a1237f9b18626f257cfee8c36
                 room-ref: ./ship-remove-duplicated-stations/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pzg36pjjn7tvtdtknpv9w82h:validation:2
+                briefing: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-09-10T16:06:27.57520849Z"
+                decision: revise
+                reason: 'Batch FO verification at e5c2df15: built from main without #406; stations superseded by dispatch.sh still present; body not per pr-merge template'
+                conn:
+                    quote: '批 (2026-09-10, answering the First Officer: "#410/#411 各一輪 feedback ... 合了我就對兩個雲端 workspace 各送一則 feedback")'
+                    source: Captain chat reply 2026-09-10 to the three-gate table
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
