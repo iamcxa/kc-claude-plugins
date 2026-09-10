@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:zbkw7v9dsgxgf048qvrmxmwy:backlog:attempt-1:revision-1",
+  "question": "Admit ship-cloud-dispatch-and-watch into implementation under the POC profile as briefed?",
+  "artifacts": [
+    {
+      "id": "artifact:zbkw7v9dsgxgf048qvrmxmwy:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/aa0ba11d14eb68451d1a6d2738b3b558630216a5/ship-cloud-dispatch-and-watch/review/backlog/backlog-review.md",
+      "rev": "sha256:7970d64dac1fd2736390b647072a15fb6356196d50ca0451498360ba4db4cb6b",
+      "mediaType": "text/markdown",
+      "summary": "POC brief for dispatch.sh, watch.sh, conductor CLI pin, README re-commission; AC-1..AC-5"
+    }
+  ]
+}

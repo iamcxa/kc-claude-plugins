@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: zbkw7v9dsgxgf048qvrmxmwy
+gates:
+    version: 1
+    records:
+        - id: gate:zbkw7v9dsgxgf048qvrmxmwy:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:zbkw7v9dsgxgf048qvrmxmwy-backlog-1
+              briefing:
+                id: briefing:zbkw7v9dsgxgf048qvrmxmwy:backlog:attempt-1:revision-1
+                digest: sha256:83c3464183c7028de813d07f783af997e216d08e25d6ac1b3d60da57607492cb
+                room-ref: ./ship-cloud-dispatch-and-watch/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:zbkw7v9dsgxgf048qvrmxmwy:backlog:1
+                briefing: briefing:zbkw7v9dsgxgf048qvrmxmwy:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T04:19:51.471578Z"
+                decision: approve
+                reason: 'Captain approved in chat: 「批」 2026-09-10'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 kc-ship-flow re-implemented per-task acceptance, PR opening, review disposition and merging that
