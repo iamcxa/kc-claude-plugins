@@ -1,0 +1,2 @@
+Commit exactly the Captain-approved 12-file border delta after matching the validated manifest, without changing source or repeating completed validation.
+Record the local commit SHA and clean candidate tree; preserve pending delivery and all existing rooms/services.
