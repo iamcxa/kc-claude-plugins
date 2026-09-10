@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: wwn8jfrh1f6k6zyj5tfcjb23
+gates:
+    version: 1
+    records:
+        - id: gate:wwn8jfrh1f6k6zyj5tfcjb23:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:wwn8jfrh1f6k6zyj5tfcjb23-backlog-1
+              briefing:
+                id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1
+                digest: sha256:1f42307ebe5318d7f9f9508d14936bdc5d9c93a37ae01179502ac4c528348d15
+                room-ref: ./show-release-stories-on-journey-boards/review/backlog/briefing-1
 ---
 
 ## The problem

@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1",
+  "question": "Approve the Pilot scope for release story boards and gap/unverified/exists, with host-selection verification deferred, to enter ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/88627fc42682fedef63a63b2c3b7538599d46d62/show-release-stories-on-journey-boards.md",
+      "rev": "sha256:463a6453653aeb09969c58a6d43cc9ef4cccdb221d0a1e0752a0c839a3d7c057",
+      "mediaType": "text/markdown",
+      "summary": "The committed seed records Kent-selected Pilot, six acceptance criteria, shared activity flow and constraints, three story statuses, and deferred host-selection execution proof. Ideation must preserve the existing candidate, resolve the minimum delta and verification plan, and satisfy the local execution-group prerequisite before working-stage dispatch."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
