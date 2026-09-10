@@ -79,6 +79,7 @@ work_profile:
     Local journey-board behavior and three story statuses only. Excludes
     plan-flow integration, provider changes, per-story system mapping,
     host-selection execution proof, production rollout and consumer migration.
+  semantics_unchanged: false
   promote_when:
     - A consumer must migrate owned records or change configuration to upgrade.
     - Production exposure, unattended operation or long-term support is accepted.
@@ -179,3 +180,21 @@ that selection. Also check the documented default when the host tool is
 unavailable. Code-symbol lookup alone does not prove this host interaction.
 Do not claim the complete release journey is accepted before this story's
 required evidence is resolved.
+
+### Feedback Cycles
+
+#### Captain continuation — release terminology and local admission
+
+Kent authorized the proposed local docs/dev/ROADMAP.md registration and use
+before merge: "我授權，但希望之後全部改成 release 稱呼". The release
+delivers the existing accepted journey value without a fixed time cycle. The
+legacy `sprint: S1` and heading are compatibility identifiers for the current
+installed loader. A complete sprint-to-release terminology, field, command and
+record migration is deferred until the journey-map slice is satisfactory; this
+does not add that migration to the present implementation scope.
+
+The FO corrected an omitted profile declaration to `semantics_unchanged: false`
+from the already accepted story projection and status behavior changes. This
+repairs receipt capture; it does not change the selected Pilot, scope, non-goals,
+or claim any worker evidence. No worker was spawned before the loader refused
+the incomplete receipt.
