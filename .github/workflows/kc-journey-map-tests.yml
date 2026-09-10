@@ -1,4 +1,4 @@
-name: kc-team-ops journey canvas
+name: kc-journey-map tests
 
 # Unit tests for the journey model, plus a headless boot-and-render smoke.
 #
@@ -19,22 +19,22 @@ name: kc-team-ops journey canvas
 on:
   pull_request:
     paths:
-      - "kc-team-ops/lib/**"
-      - "kc-team-ops/server/**"
-      - "kc-team-ops/scripts/canvas-smoke.sh"
-      - "kc-team-ops/package.json"
-      - "kc-team-ops/package-lock.json"
-      - "kc-team-ops/skills/kc-journey-map/references/journey.example.yaml"
-      - ".github/workflows/kc-team-ops-journey-canvas.yml"
+      - "kc-journey-map/lib/**"
+      - "kc-journey-map/server/**"
+      - "kc-journey-map/scripts/canvas-smoke.sh"
+      - "kc-journey-map/package.json"
+      - "kc-journey-map/package-lock.json"
+      - "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml"
+      - ".github/workflows/kc-journey-map-tests.yml"
   push:
     branches: [main]
     paths:
-      - "kc-team-ops/lib/**"
-      - "kc-team-ops/server/**"
-      - "kc-team-ops/scripts/canvas-smoke.sh"
-      - "kc-team-ops/package.json"
-      - "kc-team-ops/package-lock.json"
-      - ".github/workflows/kc-team-ops-journey-canvas.yml"
+      - "kc-journey-map/lib/**"
+      - "kc-journey-map/server/**"
+      - "kc-journey-map/scripts/canvas-smoke.sh"
+      - "kc-journey-map/package.json"
+      - "kc-journey-map/package-lock.json"
+      - ".github/workflows/kc-journey-map-tests.yml"
 
 permissions:
   contents: read
@@ -50,7 +50,7 @@ jobs:
         node: ["22.13.0", "24"]
     defaults:
       run:
-        working-directory: kc-team-ops
+        working-directory: kc-journey-map
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-          cache-dependency-path: kc-team-ops/package-lock.json
+          cache-dependency-path: kc-journey-map/package-lock.json
 
       - name: Install
         run: npm ci
