@@ -1,6 +1,6 @@
 ---
 title: "Repair POC close measurement ordering"
-status: implementation
+status: validation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
