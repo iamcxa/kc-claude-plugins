@@ -73,6 +73,17 @@ gates:
                 id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-1:revision-1
                 digest: sha256:0c45fa6ffd78144a36c064e6d22e77c9a83c6f5df14d66de5e931a1928839dda
                 room-ref: ./show-release-stories-on-journey-boards/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wwn8jfrh1f6k6zyj5tfcjb23:validation:1
+                briefing: briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T13:26:35.591109Z"
+                decision: approve
+                reason: 'Kent approved validation briefing 0c45fa6f and the exact 19-file local commit: feat(kc-journey-map): show release stories with honest evidence states. Authority is limited to that local commit; push, PR creation, merge, release and delivery acceptance remain unapproved. Preserve the validation state and do not consume terminal authorization into delivery.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
