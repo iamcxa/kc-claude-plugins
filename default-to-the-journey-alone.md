@@ -26,6 +26,17 @@ gates:
                 id: briefing:g87dzxbq3j3rdwzneqr4g5nt:backlog:attempt-1:revision-1
                 digest: sha256:ed32b487f4e99d5ea7f2d585335879fade38136431bd574a3fab353dbcb829c9
                 room-ref: ./default-to-the-journey-alone/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:g87dzxbq3j3rdwzneqr4g5nt:backlog:1
+                briefing: briefing:g87dzxbq3j3rdwzneqr4g5nt:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T03:27:59.208817Z"
+                decision: approve
+                reason: 'Captain: 同意 — approving the two-part split he proposed, of which this is part one: keep the skeleton able to draw all three originally-defined boards, ask through a multi-select, and default to the user journey alone. Integration is explicitly part two and excluded here.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
