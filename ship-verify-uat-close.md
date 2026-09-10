@@ -89,3 +89,32 @@ work_profile:
   scope_boundary: No debrief written by ship; no external receipt reader; no Linear.
   semantics_unchanged: false
 ```
+
+## Stage Report: implementation
+
+- DONE: uat-doc.py rewritten to read only docs/dev entities + batch record and write one UAT document (tasks, PR links, gate status, e2e result), calling e2e-gate.py with --root from the Integrated head Local Profile row
+  `kc-ship-flow/scripts/uat-doc.py` (commit 3053f925): reads `<state-dir>/*.md` frontmatter directly (no plan-receipt.json/plan-approval.json/close-receipt.json) plus `<state-dir>/_ship_fence/<sprint>.json`; `run_e2e_gate()` calls `e2e-gate.py --root <resolved> --flows <resolved>` with the root/flows resolved from `docs/ship/README.md`'s `Integrated head`/`E2E flows` Local Profile rows.
+- DONE: close.py written to message each merged task's worker to run spacedock debrief, record debrief-failed on repeated push rejection, and write kc-ship-close-receipt/v2 only when every task has a merged PR + pushed debrief or captain_stopped
+  `kc-ship-flow/scripts/close.py` (new, commit 3053f925): a task is "merged" iff its `pr:` frontmatter is exactly `pr-merge:<N>`; `print_debrief_messages()` prints one `conductor message create --session <id>` argv per merged task still pending a debrief; `build_receipt()`/`run_close()` write `kc-ship-close-receipt/v2` only once every non-`captain_stopped` task is merged with a `pushed` or `failed` (repeated-push-rejection) debrief, reading that status from the fence file's `tasks.<slug>.debrief`.
+- DONE: AC-1, AC-2, AC-3 pass against fixtures per the entity's Acceptance criteria
+  `kc-ship-flow/scripts/uat-doc.test.py` (AC-1: `fixtures/uat-doc-v2/ready` exits 0 with both tasks and the recorded Q&A; `fixtures/uat-doc-v2/missing-gate` exits 1 printing exactly `DEV-203`, whose validation gate is already resolved, not prepared). `kc-ship-flow/scripts/close.test.py` (AC-2: `fixtures/close-v2/dry-run` `--dry-run` prints exactly one `conductor message create --session sess-301 ...` line and nothing for the unmerged `DEV-302`; the same fixture without `--dry-run` exits 3 printing `not all tasks merged`; AC-3: `--validate` on `fixtures/close-v2/receipts/valid.json` exits 0, on a copy with `DEV-301`'s `debrief` field deleted exits 1 naming `DEV-301`). Both test files run standalone (`python3 kc-ship-flow/scripts/uat-doc.test.py`, `python3 kc-ship-flow/scripts/close.test.py`) and are wired into `kc-ship-flow/scripts/contract-test.py`'s `STATIONS`/`STATION_TESTS`/`py_compile` lists.
+
+### Residuals (not fixed, flagged for the next stage/task)
+
+- `docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md` (this entity's own header cites it) does not exist on `main` or this worktree's branch; it was found only on `origin/docs/ship-flow-cloud-wrapper-spec` (fetched during this stage) and used as the authoritative design source for `uat-doc.py`/`close.py`'s "uat"/"closed" sections. Whoever merges this sprint's design doc into `main` should confirm nothing in it contradicts the schemas invented here.
+- The `_ship_fence/<sprint>.json` batch-record schema (`tasks.<slug>.{workspace_id,session_id,merged_sha,debrief}`, `questions[]`, `captain_stopped[]`) is this task's own invention (the sibling dispatch/watch task's real fence-file shape was not mergeable/readable from this worktree at time of writing -- its own report only says "the claim fence is dispatch.sh's own JSON file under `_ship_fence/`", no field list). If dispatch.sh/watch.sh land a different shape, `uat_doc.load_batch_record()`/`close.py`'s readers need reconciling before the AC-4/real-sprint run.
+- "record debrief-failed on repeated push rejection" is read, not written, by `close.py`: this script expects the fence file to already carry `debrief.status: "failed"` after a worker's second rejected push (the design assigns that write to the worker/watch side, not to `close.py`). No script in this sprint writes that field yet; AC-4's real run needs it before `close.py` can close a debrief-failed task.
+- Per the design's "What leaves kc-ship-flow" table and this entity's own `implementation` obligation ("delete v1 fixtures"), `fixtures/uat-doc/` (the old plan-flow-batch-dir fixtures) and `dev-debrief.py`/`ship-debrief.py` are removal candidates -- left untouched here because removing stations is explicitly the sprint's second task ("Slimming uat-doc.py, the close receipt, or writing close.py (third task)" is this entity's own non-goal boundary in the sibling task). `uat-doc.py` keeps `find_worker_evidence_files()`/`load_defaults_decisions()` as explicitly-labeled legacy compatibility so `dev-debrief.py`/`ship-debrief.py`'s existing tests keep passing until that removal lands.
+- AC-4 (the real sprint's own batch closed by `close.py`, worker-written debriefs pushed to the state branch) is out of this stage's checklist (which names only AC-1 to AC-3) and was not attempted -- it depends on the sibling dispatch/watch task's real cloud run landing first.
+- `kc-ship-flow/scripts/contract-test.py`'s pre-existing `fenced-dispatch.test.sh` failure (3 of 4 cases) reproduces identically on this branch's unmodified HEAD (verified via `git stash`) -- unrelated to this stage's changes, not fixed here.
+
+### Summary
+
+`uat-doc.py` and `close.py` are rewritten/written per the cloud-wrapper design's "uat" and "closed"
+stages: both read a sprint's `docs/dev` entity frontmatter and a new `_ship_fence/<sprint>.json`
+batch record directly, with no plan-flow receipt in the loop. `close.py` messages each merged
+task's worker to debrief and writes `kc-ship-close-receipt/v2` only once every task is closeable.
+AC-1 through AC-3 pass against purpose-built fixtures (`fixtures/uat-doc-v2/`,
+`fixtures/close-v2/`); the design doc itself and the sibling dispatch/watch task's fence-file
+schema were not available in this worktree, so the batch-record shape and the debrief-failed
+write path are this stage's own invention, flagged above for reconciliation before AC-4's real run.
