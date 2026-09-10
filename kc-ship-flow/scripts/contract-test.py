@@ -313,8 +313,8 @@ prose_placement_check = SCRIPTS / "prose-placement-check.py"
 placement_tsv = PLUGIN / "references" / "placement.tsv"
 original_placement = placement_tsv.read_text(encoding="utf-8")
 mutated_placement = original_placement.replace(
-    "97b2ae0b2cc8\tkc-ship-flow/references/stations/notify.md",
-    "97b2ae0b2cc8\tkc-ship-flow/references/stations/uat-doc.md",
+    "d708e82924c7\tkc-ship-flow/references/stations/uat-doc.md",
+    "d708e82924c7\tkc-ship-flow/references/stations/e2e-gate.md",
 )
 require(mutated_placement != original_placement, "prose-placement-check mutation fixture: target row not found in placement.tsv")
 try:
