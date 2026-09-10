@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1",
+  "question": "Approve this bounded discoverable-architecture repair design to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f401ba748cd1b2d7816cc255e88562998a6da3cb/issue-396-architecture-entrypoint/index.md",
+      "rev": "sha256:9ebab636d0b7bda260c67ce2b650e9081d4451e48dbf230ae3fd990f14d697f2",
+      "mediaType": "text/markdown",
+      "summary": "Thirteen existing files establish one architecture explanation home through existing adoption, selected-stage and context-maintenance seams. Disposable experiments keep a brief outline; retained work provides a discoverable code-traceable explanation and reuses an accurate existing home. Five falsifiable scenarios are designed. Baseline loader and contract checks pass at 39,991 of 40,000 bytes; the proposed consolidation estimate is not candidate proof. Implementation and provider-spend approval remain pending."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

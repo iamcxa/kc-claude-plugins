@@ -30,6 +30,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:m0e43swm7wrs71xy98ea43gp:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:m0e43swm7wrs71xy98ea43gp-ideation-1
+              briefing:
+                id: briefing:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1
+                digest: sha256:e1c30c753d41c2b4d9723cf6c14879d4fc7ac999958b16c4d27ceb0b8380d959
+                room-ref: ./review/ideation/briefing-1
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
