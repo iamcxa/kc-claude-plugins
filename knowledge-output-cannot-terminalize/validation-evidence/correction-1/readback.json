@@ -1,0 +1,331 @@
+{
+  "upstream": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "head": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "base": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "patch_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+    "source_sha256": {
+      "internal/cli/help.go": "ce434e5e82eea304041c37e3036a10146b64e7d3357543e7c01dca13930db630",
+      "internal/gates/delivery.go": "7499f15de73fa3d01e58effc4092a40700266e6e10be804b2c6a3418d1708ca1",
+      "internal/gates/delivery_test.go": "fddce109a945f460eb1fae38cc912e19ed81f2fc44c230400305e772d5e70588",
+      "internal/gates/io.go": "5ff85045e51b3444877a1b9b09cc3d50364216e5cbe0638fb4f3dde7faa98cb4",
+      "internal/status/merge.go": "bad4504c577730d4b3f6f12e9e5dd6196009d680bdbeb2e1934b1beb234b5c28",
+      "internal/status/merge_guard_test.go": "b11021edd9c9084bce3a1490f6edf6a1fa3e76910bb27474c251e80d67a010d5",
+      "internal/status/mutate.go": "c736dea0073fd16554f0c697f531906b487a30845c4023531216b4585823d655",
+      "mods/pr-merge.md": "da0499e9ce1eaeac420d48392f84054817ef0045a1dc605ffce125fb7fcbf6ca"
+    },
+    "numstat": "3\t0\tinternal/cli/help.go\n238\t8\tinternal/gates/delivery.go\n196\t0\tinternal/gates/delivery_test.go\n7\t3\tinternal/gates/io.go\n50\t10\tinternal/status/merge.go\n243\t0\tinternal/status/merge_guard_test.go\n18\t9\tinternal/status/mutate.go\n16\t0\tmods/pr-merge.md\n",
+    "gross": 801,
+    "status": " M internal/cli/help.go\n M internal/gates/delivery.go\n M internal/gates/delivery_test.go\n M internal/gates/io.go\n M internal/status/merge.go\n M internal/status/merge_guard_test.go\n M internal/status/mutate.go\n M mods/pr-merge.md\n",
+    "diff_check_rc": 0,
+    "changed_format": {
+      "rc": 0,
+      "stdout": ""
+    }
+  },
+  "local": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "head": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "patch_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+    "source_sha256": {
+      "docs/dev/_mods/pr-merge.md": "943a1c1e65b1a09f6541d1f53ffd4f1e19d16e25921e5bce9219f4b54b305d6e"
+    },
+    "numstat": "11\t13\tdocs/dev/_mods/pr-merge.md\n",
+    "gross": 24,
+    "status": " M docs/dev/_mods/pr-merge.md\n",
+    "diff_check_rc": 0
+  },
+  "correction-full": {
+    "producer_summary": {
+      "command": [
+        "go",
+        "test",
+        "./...",
+        "-json"
+      ],
+      "rc": 1,
+      "seconds": 209.9320942920167,
+      "candidate_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+      "tests": {
+        "pass": 3107,
+        "fail": 2,
+        "skip": 11
+      },
+      "failures": [
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": "TestContractCasks/edge-satisfies-pin"
+        },
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": "TestContractCasks"
+        },
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": null
+        }
+      ]
+    },
+    "recount": {
+      "pass": 3107,
+      "skip": 11,
+      "fail": 2
+    },
+    "stdout_sha256": "186f3bc72c16213a841a0458371cb028edc5f4d8aea0f5713f13c72035d77797",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "failed_events": [
+      {
+        "Time": "2026-09-11T01:52:18.462757+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks/edge-satisfies-pin",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-11T01:52:18.462764+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks",
+        "Elapsed": 1.62
+      },
+      {
+        "Time": "2026-09-11T01:52:19.509906+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Elapsed": 7.089
+      }
+    ],
+    "data_race_diagnostic": false
+  },
+  "correction-race": {
+    "producer_summary": {
+      "command": [
+        "go",
+        "test",
+        "./...",
+        "-race",
+        "-json"
+      ],
+      "rc": 1,
+      "seconds": 230.69683225010522,
+      "candidate_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+      "tests": {
+        "pass": 3107,
+        "fail": 2,
+        "skip": 11
+      },
+      "failures": [
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": "TestContractCasks/edge-satisfies-pin"
+        },
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": "TestContractCasks"
+        },
+        {
+          "package": "github.com/spacedock-dev/spacedock/skills/integration",
+          "test": null
+        }
+      ]
+    },
+    "recount": {
+      "pass": 3107,
+      "skip": 11,
+      "fail": 2
+    },
+    "stdout_sha256": "e162493bc2d55d5030ea26c3fbeb6ef1b8365b376cfe0b48a1d7719e890570f1",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "failed_events": [
+      {
+        "Time": "2026-09-11T01:55:51.360258+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks/edge-satisfies-pin",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-11T01:55:51.360265+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Test": "TestContractCasks",
+        "Elapsed": 1.45
+      },
+      {
+        "Time": "2026-09-11T01:55:52.439875+08:00",
+        "Action": "fail",
+        "Package": "github.com/spacedock-dev/spacedock/skills/integration",
+        "Elapsed": 7.3469999999999995
+      }
+    ],
+    "data_race_diagnostic": false
+  },
+  "original_files": {
+    "evidence-attempt-2/cloud-events.json": {
+      "sha256": "1e6fd27ec2fdf89813564a512c7ee2ec8adab7b6bc7590fd2b6a70260ee39710",
+      "matches": true
+    },
+    "evidence-attempt-2/cloud-final.md": {
+      "sha256": "788d241914d18d74ecfac879a7803825e17376112485662a10582e5c8f38839e",
+      "matches": true
+    },
+    "evidence-attempt-2/cloud-usage.json": {
+      "sha256": "7f23a41c4be2c8e31a93709bff8c57e32603dec865dd2f3df2e0eb7aff991e83",
+      "matches": true
+    },
+    "evidence-attempt-2/launch-envelope.json": {
+      "sha256": "ebfb34858041350603c0e6d7c47319416b7fe85ebc66dbdd7aef06456b62f7fb",
+      "matches": true
+    },
+    "evidence-attempt-2/launch-prompt.md": {
+      "sha256": "e31baf033a354c3de62132b0b7239b6393f07edcb129cd3fa3dbd803022c74b6",
+      "matches": true
+    },
+    "evidence-attempt-2/launch.json": {
+      "sha256": "75f40a4bd1c025bc7d50e50f84573bad5e4651b2e52cbac9d8d42f5467f3515e",
+      "matches": true
+    },
+    "evidence-attempt-2/local-token-counter.json": {
+      "sha256": "4621b345f6d168b982378d06144065623f5da992acac2b4136ba2f605f5e9e15",
+      "matches": true
+    },
+    "evidence-attempt-2/parent-token-counter.json": {
+      "sha256": "0e99e1cfc07ac3734b08fd79d603d4e1b2bc23a780694502dd1fe48fde77c6b2",
+      "matches": true
+    },
+    "evidence-attempt-2/sha256.json": {
+      "sha256": "0351daef531c80808d9b8c4735ae3f67a0303c7030adb28354bf7aa92f3ccba7",
+      "matches": true
+    },
+    "implementation-resumed-stage-pin.json": {
+      "sha256": "68b3ff61d04038159a71d3a3b1f902f2bcf8d25b2e5396dbd1aaac8dcc61418a",
+      "matches": true
+    },
+    "implementation-stage-pin.json": {
+      "sha256": "9efcf36ef17fd7786ee040557f966ead75afa1305f09145103103d93d324c69e",
+      "matches": true
+    },
+    "index.md": {
+      "sha256": "2431bae3b5c6127ee06a38835ab8825a950d325e5db8b1f10f44cba64b47eff8",
+      "matches": true
+    },
+    "migration-20260910/authorization.json": {
+      "sha256": "15ed684279f19975cea1fc6562722b2d709c11d1606d9f1ee5fff9b54b12c3af",
+      "matches": true
+    },
+    "migration-20260910/implementation-stage-pin.json": {
+      "sha256": "9efcf36ef17fd7786ee040557f966ead75afa1305f09145103103d93d324c69e",
+      "matches": true
+    },
+    "migration-20260910/index.md": {
+      "sha256": "2c44289325b5b5809d7a08142577aafa953bd44424752d4384df3b74b3010693",
+      "matches": true
+    },
+    "migration-20260910/original-pinned-work-item.md": {
+      "sha256": "128c91d85506e6ad088cecbf6c16cd3419fb5fd067de17f9962d3e2f92e6cf8d",
+      "matches": true
+    },
+    "review/backlog/briefing-1/index.json": {
+      "sha256": "23de7a0a17d9f53d6ff8d417451d6c875bdc61ce7ecf078b6f16f802dae80565",
+      "matches": true
+    },
+    "review/validation/briefing-1/index.json": {
+      "sha256": "df83edab0a8f44440fc8612b0bab93d6ffd5a96473734e52e97cdaafd6d60367",
+      "matches": true
+    }
+  },
+  "historical_failure_preserved": {
+    "reproduce-rollback.py": {
+      "sha256": "ee348bc263626135482b03d57566506ecff7a3e097f6aec0f5307317526dcac7",
+      "matches": true
+    },
+    "rollback-prelock-test.patch": {
+      "sha256": "0274e9c81ce886d95e975864ed84c81ff1280a33392007d75b2ab9c7f2156441",
+      "matches": true
+    },
+    "rollback-prelock.json": {
+      "sha256": "b1cbcabb155b21bed1613c9d09baa2c94271951fa2fc5b80b148f43d9bdb596c",
+      "matches": true
+    },
+    "rollback-before-commit.md": {
+      "sha256": "fab8d954a3bfbd5205f60f4de02f99c255247006051199bed19f3a0b1cc91140",
+      "matches": true
+    },
+    "rollback-after-failure.md": {
+      "sha256": "e6a69437952f62c281316b1b037b1a6408e3ed22465b2d7b44bc71f84f40b7dd",
+      "matches": true
+    }
+  },
+  "stage_pin": {
+    "attempt": "validation/2",
+    "contract_digest": "cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558",
+    "local_profile_interface": "kc-dev-flow-local-profile/v1",
+    "local_profile_sha256": "69cc9895fba8ebc8837a4ecb76da145b71314373f1d66483ef796f74570b953b",
+    "logical_stage": "verify-deliver",
+    "next_workflow_stage": "done",
+    "plugin_version": "4.3.0",
+    "previous_pin": {
+      "attempt": "implementation-correction-1",
+      "contract_digest": "cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558",
+      "feedback_context": {
+        "attempt": "implementation-correction-1",
+        "authorization": {
+          "by": "agent:first-officer",
+          "decision": "revise",
+          "reference": "Kent explicitly approved eight-file/850-gross repair scope in this conversation (\u6279\u51c6), recorded by Captain scope amendment in state commit a26bb6709e29a12c5ec76c10cec4da5d589863d4. FO now authorizes this bounded AC-4 correction under that existing scope. Reviewer report 661ece460195dfa33665875c9abec9cf199a3e8f; original accepted authority unchanged."
+        },
+        "from_stage": "validation",
+        "rejected_pin_sha256": "0fb0dca61f040b3c134f857c46c809a7e1f496c92c1c4060ed1cd8696c6e9e69",
+        "rejected_revision": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5",
+        "rejected_work_item_sha256": "e10cf03685be5e0c84a525f77aa3a5cfeeffb0424257d132e50d219c8dd6ee41",
+        "rejection": "REJECTED AC-4: internal/status/merge.go:497-505 permits rollback using a stale preimage read at line 750 and restored at line 803. A peer body edit after captureArchiveState reads content but before locked FinalizeTerminalApproval is preserved through finalize/archive, then silently lost on archive commit failure. validation-evidence/rollback-prelock.json and reproduce-rollback.py prove rc=1, live=true, peer_edit_retained=false. Reviewed upstream base af70297ddae6ec64444849e8e3fcf57484bc16e1 plus uncommitted patch SHA-256 cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5; local patch 2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c unchanged. rejected_revision below identifies the actual uncommitted patch by its SHA-256, NOT a Git commit; no product commit was authorized or fabricated.",
+        "repair_scope": [
+          "Bind knowledge rollback preimage to the same checked locked entity snapshot, or refuse stale-preimage finalization before any consumption; preserve peer edits on archive commit failure.",
+          "Retain the independent pre-lock-edit regression in existing approved tests and rerun relevant native recovery/refusal/product cases and required changed-candidate checks.",
+          "Stay within existing eight named upstream files/850 gross and unchanged local one-file/40; no product commits, installs, external delivery, providers, live original or permission changes."
+        ],
+        "schema": "kc-dev-flow-feedback/v1",
+        "to_stage": "implementation"
+      },
+      "local_profile_interface": "kc-dev-flow-local-profile/v1",
+      "local_profile_sha256": "69cc9895fba8ebc8837a4ecb76da145b71314373f1d66483ef796f74570b953b",
+      "logical_stage": "build",
+      "next_workflow_stage": "validation",
+      "plugin_version": "4.3.0",
+      "previous_pin": {
+        "attempt": "validation/1",
+        "contract_digest": "cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558",
+        "local_profile_interface": "kc-dev-flow-local-profile/v1",
+        "local_profile_sha256": "69cc9895fba8ebc8837a4ecb76da145b71314373f1d66483ef796f74570b953b",
+        "logical_stage": "verify-deliver",
+        "next_workflow_stage": "done",
+        "plugin_version": "4.3.0",
+        "profile": "pilot-product-slice",
+        "schema": "kc-dev-flow-stage-pin/v1",
+        "work_item": "knowledge-output-cannot-terminalize",
+        "work_item_authority_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+        "work_item_boundary_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+        "work_item_sha256": "03732db875033b01353e656e4289398ba5ca0de26c33ec4adbe2bcff9702e1e9",
+        "workflow_stage": "validation"
+      },
+      "profile": "pilot-product-slice",
+      "schema": "kc-dev-flow-stage-pin/v1",
+      "work_item": "knowledge-output-cannot-terminalize",
+      "work_item_authority_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+      "work_item_boundary_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+      "work_item_sha256": "e10cf03685be5e0c84a525f77aa3a5cfeeffb0424257d132e50d219c8dd6ee41",
+      "workflow_stage": "implementation"
+    },
+    "profile": "pilot-product-slice",
+    "schema": "kc-dev-flow-stage-pin/v1",
+    "work_item": "knowledge-output-cannot-terminalize",
+    "work_item_authority_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+    "work_item_boundary_sha256": "0b4010ad1da05ceffa5782ba0aac67153b8cb436ff9091de64bef5fa2d4d7e19",
+    "work_item_sha256": "1cdc8b1b8063347ca9df312e2dc7b76ae0c1703ae88b5fe6efde667c97414e77",
+    "workflow_stage": "validation"
+  },
+  "stage_pin_sha256": "d96007b45f2319f6b8f3fdd01d2c7fe29ebc0b27b4f5715d30fe225f4baad452"
+}

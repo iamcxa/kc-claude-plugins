@@ -1,0 +1,19 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-overlay",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-review-capture-04c9w7bu/overlay.json",
+    "./internal/status",
+    "-run",
+    "^TestKnowledgeRollbackPreservesPeerEdit$",
+    "-count=1",
+    "-v"
+  ],
+  "candidate_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+  "test_only_change": "captures native test state and independently asserts exact same approval ID/digest after retry; no product source changes",
+  "rc": 0,
+  "seconds": 8.476685047149658,
+  "stdout": "=== RUN   TestKnowledgeRollbackPreservesPeerEdit\n=== RUN   TestKnowledgeRollbackPreservesPeerEdit/before-consume\n    merge_guard_test.go:1411: timing=before-consume failed_commit_rc=1 current_bytes_retained=true attempt=gate-attempt:task-validation-1 digest=sha256:e89eb222e1bd5e3945ee2e9c74237f55050b9f1e30856e69ab8f90eae4d8d626 final_state=consumed verdict=PASSED retry=finalized\n=== RUN   TestKnowledgeRollbackPreservesPeerEdit/after-consume\n    merge_guard_test.go:1411: timing=after-consume failed_commit_rc=1 current_bytes_retained=true attempt=gate-attempt:task-validation-1 digest=sha256:b68ac14979facc0ab7e067415bbf3e640e7763cc9a282296212540bb206f6a75 final_state=consumed verdict=PASSED retry=finalized\n--- PASS: TestKnowledgeRollbackPreservesPeerEdit (6.79s)\n    --- PASS: TestKnowledgeRollbackPreservesPeerEdit/before-consume (3.34s)\n    --- PASS: TestKnowledgeRollbackPreservesPeerEdit/after-consume (3.45s)\nPASS\nok  \tgithub.com/spacedock-dev/spacedock/internal/status\t7.228s\n",
+  "stderr": ""
+}

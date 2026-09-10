@@ -1,0 +1,22 @@
+{
+  "before-consume": {
+    "hashes": {
+      "before-failed-commit": "47fe5ca92aafb822fd7bc2d1664487a35906f671233932e5ae1fcf8eae4c21ed",
+      "live-after-failure": "47fe5ca92aafb822fd7bc2d1664487a35906f671233932e5ae1fcf8eae4c21ed",
+      "after-retry": "5ab6141b4dbae5ad72e471f85f2a505032385a2cd0099a79d462e963fdbb52a9"
+    },
+    "byte_identical_after_failed_commit": true,
+    "peer_marker_retained_after_retry": true,
+    "consumed_count": 1
+  },
+  "after-consume": {
+    "hashes": {
+      "before-failed-commit": "87e7fbb3b419447feb4d3b91fda7ab91b756cf18ac3e74ae1d0a7a1aabbc2988",
+      "live-after-failure": "87e7fbb3b419447feb4d3b91fda7ab91b756cf18ac3e74ae1d0a7a1aabbc2988",
+      "after-retry": "54440231fe5859f3a1911441a9e86310af45b64a3085e33b58d9dd16e8ca0ad9"
+    },
+    "byte_identical_after_failed_commit": true,
+    "peer_marker_retained_after_retry": true,
+    "consumed_count": 1
+  }
+}

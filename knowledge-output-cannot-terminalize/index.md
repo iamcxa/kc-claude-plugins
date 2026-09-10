@@ -554,3 +554,33 @@ REJECTED: the accepted recovery/data-safety journey has one independently reprod
 ### Summary
 
 The demonstrated data loss and adjacent consume-to-archive interval are repaired by retaining current knowledge entity bytes during location rollback, then reusing validated consumed-state retry. Both regression cases fail without the correction and pass with it; the independent reproducer now retains the peer edit through a real commit failure. The corrected candidate stays within scope and uncommitted. Required full/race runs retain the separately controlled pre-existing cask failure, so independent validation and acceptance remain with the First Officer/Captain.
+
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independently verify the exact upstream and local candidate against AC-1 through AC-5, approved eight-file/850 and local one-file/40 scope, and native authority/data safety.
+  PASSED for in-scope functionality: corrected exact patch fits 8 files/801 gross; local unchanged at 1/24. [Final bounded review](validation-evidence/correction-1/review.md) closes the reproduced AC-4 finding without accepting the separate red release-state residual.
+- DONE: Exercise meaningful native knowledge finalization/refusal/archive-once/committed-publication recovery cases; verify complete candidate test evidence and original-copy proof without altering live records.
+  [Unchanged reproducer](validation-evidence/correction-1/unchanged-replay/result.json) now retains the peer edit through actual failed commit. Fresh focused run: 77 pass/0 fail/0 skip; independently captured both timing intervals retain bytes and retry the same consumed approval ID/digest.
+- DONE: Review changed-surface necessity and consumer documentation, report exact hashes and all residuals, and preserve a durable validation verdict without product commits or external delivery.
+  Only merge.go and its existing test changed from rejected candidate; keeping current knowledge bytes removes stale restore while legacy product rollback stays unchanged. Historical failure evidence preserved; report/evidence only, no product or external delivery mutation.
+
+### Acceptance evidence
+
+- AC-1: PASS. Fresh finalized/PASSED/consumed/no-active-entity checks; removing native archive integration would fail them.
+- AC-2: PASS. Fresh exact approval/successor/evidence/product/PR/whole-entity refusal cases preserve bytes; deleting those predicates allows forbidden writes and fails assertions.
+- AC-3: PASS. Fresh product merged/open/malformed/missing-proof and legacy rollback checks retain prior behavior; explicit knowledge never substitutes rejected verdict.
+- AC-4: PASS. [Captured native cases](validation-evidence/correction-1/window-capture.json) and [exact retained bytes](validation-evidence/correction-1/byte-proof.json) prove both peer-write intervals, actual commit failure, no stale overwrite, and finalized retry with original attempt/digest consumed once. Existing archive-once/publication/conflict/tamper cases pass. Producer removal-of-correction control fails both intervals; excluded hard crash remains excluded.
+- AC-5: ACCEPTED RETAINED TEST-ONLY PROOF. Previously reviewed complete copied-original proof remains identified with predecessor cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5, not relabeled as a fresh run. Unchanged journey surfaces plus current rollback/retry proof support the correction; all 18 live original hashes remain unchanged. Original rebinding/cleanup/final check stay separately owned.
+
+### Exact candidate and residuals
+
+- Upstream patch SHA-256 `6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e` against `af70297ddae6ec64444849e8e3fcf57484bc16e1`: 8 files/801 gross; local patch `2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c` against `c9c5752fda853737d4a937ad7f59564c5651ca53`: 1 file/24 gross. [Root/branch/source hashes, pin and final readback](validation-evidence/correction-1/readback.json).
+- Corrected full/race producer logs each recount 3,107 pass/11 skip and the same cask leaf failure plus parent, no data-race diagnostic; both explicitly bind corrected patch. These required suites are red. Earlier untouched-base control remains applicable; no acceptance of that release-state residual or redundant whole-suite rerun.
+- Original rejected report/reproducer/raw failure bytes are unchanged. Installed loader accepted validation/2 with unchanged authority; migration residue was committed by the First Officer and prerequisite passed before evidence writes.
+- Source-map checker/optional RoboRev remain unavailable without a real authorized candidate commit. Exact-file commit confirmation, PR/provider/delivery checks, installation and live original closure remain outstanding. No fabricated objects, provider/model/cloud calls or product edits.
+- project_context: impact `none`; existing PRODUCT.md, ARCHITECTURE.md and CLAUDE.md boundaries remain unchanged. Two-file correction review and fresh native outcomes validate this classification; consumer docs need no new correction.
+
+### Summary
+
+PASSED for the accepted functional scope: the same reviewer reproduced the former failure as passing and verified both peer-write intervals plus safe consumed-approval retry. Product changes remain within scope, byte-bound and uncommitted; this verdict neither accepts the separately controlled red release-state assertion nor authorizes commit, delivery or original live closure.

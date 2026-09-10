@@ -1,0 +1,61 @@
+func TestKnowledgeRollbackPreservesPeerEdit(t *testing.T) {
+	for _, timing := range []string{"before-consume", "after-consume"} {
+		t.Run(timing, func(t *testing.T) {
+			root, entity := knowledgeMergeFixture(t)
+			state := filepath.Dir(entity)
+            initialDoc, _, initialErr := gates.Read(entity)
+            if initialErr != nil {t.Fatal(initialErr)}
+            initialAttempt := initialDoc.Records[0].Attempts[0]
+			realGit, err := exec.LookPath("git")
+			if err != nil {
+				t.Fatal(err)
+			}
+			bin := t.TempDir()
+			marker := filepath.Join(bin, "injected")
+			condition := `case "$*" in *'ls-files -- :(literal)task') inject=yes;; esac`
+			if timing == "after-consume" {
+				condition = fmt.Sprintf("if grep -q '^status: done' %q 2>/dev/null; then inject=yes; fi", entity)
+			}
+			script := fmt.Sprintf("#!/bin/sh\n%s\nif [ \"$inject\" = yes ] && [ ! -f %q ]; then\n printf '\\npeer edit across finalization\\n' >> %q\n touch %q\nfi\nexec %q \"$@\"\n", condition, marker, entity, marker, realGit)
+			if err := os.WriteFile(filepath.Join(bin, "git"), []byte(script), 0755); err != nil {
+				t.Fatal(err)
+			}
+			t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+			captured := filepath.Join(bin, "before-failed-commit")
+			hook := filepath.Join(state, ".git", "hooks", "pre-commit")
+			if err := os.WriteFile(hook, []byte(fmt.Sprintf("#!/bin/sh\ncp _archive/task.md %q\nexit 1\n", captured)), 0755); err != nil {
+				t.Fatal(err)
+			}
+			var out, errOut bytes.Buffer
+			args := []string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed", "--json"}
+			code := MergeGuard(args, root, &out, &errOut)
+			data, err := os.ReadFile(entity)
+			archived, captureErr := os.ReadFile(captured)
+			if code == 0 || err != nil || captureErr != nil || !bytes.Equal(data, archived) || !bytes.Contains(data, []byte("peer edit across finalization")) || !bytes.Contains(data, []byte("state: consumed")) {
+				t.Fatalf("failed commit must retain current consumed bytes: rc=%d read=%v capture=%v stdout=%s stderr=%s", code, err, captureErr, &out, &errOut)
+			}
+			if err := os.Remove(hook); err != nil {
+				t.Fatal(err)
+			}
+			out.Reset()
+			errOut.Reset()
+			if code := MergeGuard(args, root, &out, &errOut); code != 0 || !strings.Contains(out.String(), "finalized") {
+				t.Fatalf("consumed retry failed: rc=%d stdout=%s stderr=%s", code, &out, &errOut)
+			}
+			finalPath := filepath.Join(state, "_archive", "task.md")
+            final := readBytes(t, finalPath)
+            finalDoc, _, finalErr := gates.Read(finalPath)
+            if finalErr != nil {t.Fatal(finalErr)}
+            finalAttempt := finalDoc.Records[0].Attempts[0]
+            if finalAttempt.ID != initialAttempt.ID || finalAttempt.Briefing.Digest != initialAttempt.Briefing.Digest || finalAttempt.Application.State != "consumed" || frontmatterField(t, finalPath, "verdict") != "PASSED" {t.Fatal("retry changed original approval identity or verdict")}
+            evidenceDir := os.Getenv("VALIDATION_WINDOW_CAPTURE")
+            for name, contents := range map[string][]byte{"before-failed-commit": archived, "live-after-failure": data, "after-retry": []byte(final)} {
+                if err := os.WriteFile(filepath.Join(evidenceDir, timing+"-"+name+".md"), contents, 0600); err != nil {t.Fatal(err)}
+            }
+            t.Logf("timing=%s failed_commit_rc=%d current_bytes_retained=%t attempt=%s digest=%s final_state=%s verdict=PASSED retry=finalized",timing,code,bytes.Equal(data,archived),finalAttempt.ID,finalAttempt.Briefing.Digest,finalAttempt.Application.State)
+			if fileExists(entity) || !strings.Contains(final, "peer edit across finalization") || strings.Count(final, "state: consumed") != 1 {
+				t.Fatal("retry must preserve edit and same single consumed approval")
+			}
+		})
+	}
+}
