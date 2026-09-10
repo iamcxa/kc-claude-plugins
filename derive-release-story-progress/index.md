@@ -359,3 +359,18 @@ The optional skill now derives development progress through the real local task 
 ### Summary
 
 Independent local validation passes the frozen candidate; the fresh material challenge covered timestamped versus refreshed task state and native edit/reload/source safety, with producer red/green evidence inspected rather than duplicated. This proves the bounded fixture journey, not wholly omitted task scope, atomic observation, hosted delivery or actual-user acceptance; product commit and subsequent delivery remain Captain-owned, and preview cleanup follows review.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Commit exactly the Captain-approved ten-file journey-progress candidate after matching the validated manifest; change no source and do not repeat passing validation.
+  Local commit receipt: `947501df45dea7d139ff030eed4549701170fcab`, subject `feat(kc-journey-map): derive release progress from local tasks`, parent `bc51b2464659594d3c06806442c77ec15319962b`, tree `8b20fa206a9203c84ea0ddcdc3c058b262a2c0ae`, branch `codex/journey-progress`.
+  Manifest SHA-256 `f0261937f5c5a92455add6e86215c1a7d2444dec1b6fcd6e3e70bbe537128e99` and every bound file hash matched before staging and again in committed blobs. The commit changed exactly the ten approved paths (+433/-27); `git diff --check` and staged whitespace checks passed. No source or version edit and no repeated test suite.
+  Exact file set: `kc-journey-map/lib/journey-progress.mjs`; `kc-journey-map/lib/progress.mjs`; `kc-journey-map/lib/progress.test.mjs`; `kc-journey-map/lib/records.mjs`; `kc-journey-map/lib/render.mjs`; `kc-journey-map/lib/storymap.mjs`; `kc-journey-map/skills/kc-journey-map/SKILL.md`; `kc-journey-map/skills/kc-journey-map/references/canvas.md`; `kc-journey-map/skills/kc-journey-map/references/cell-contract.md`; `kc-journey-map/skills/kc-journey-progress/SKILL.md`.
+- DONE: Record the local commit, verified tree and empty product index in the existing entity; preserve approved validation and pending delivery authority, previews, and unrelated work.
+  Post-commit index and tracked working tree are empty; the sole untracked path is the pre-existing `kc-journey-map/node_modules` setup symlink. No `.context` artifact or symlink entered the product commit; no preview/service/room operation occurred in this continuation.
+  AC-1, AC-2, AC-3, AC-4, and AC-5 retain the preceding independent validation verdict and its exact-byte evidence; the commit/tree checks bind that same validated content to the new Git object rather than claiming a new validation run.
+  Authority: Kent's recorded approval of briefing `b88365b91c640c1549daede74139a46ba7ab6651b53f7c56829d9306cda4dea1` grants this local commit only. Pinned kc-dev-flow 4.1.1 accepted `local-commit-stage-pin.json`, attempt `spacedock-ensign-91n5fvm5qt-local-commit`. Task frontmatter, gate records, prior pins and reports remain intact; terminal application stays pending.
+
+### Summary
+
+The approved ten-file candidate is now a verified local commit without changing its validated bytes. Product push, PR creation, merge, release, delivery acceptance, terminal consumption and preview cleanup remain outside this continuation; existing previews stay available for the next Captain decision.
