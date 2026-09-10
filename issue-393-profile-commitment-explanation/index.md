@@ -100,11 +100,11 @@ The decision timestamp is capture time. In this Kathmandu session the Captain ap
 
 ## Stage Report: ideation
 
-- DONE: Define one bounded accepted journey and its real program/file seams, non-goals, state boundaries and applicable context-policy receipts.
+- DONE: Define one bounded accepted journey and its real program/file seams, non-goals, state boundaries and applicable context-policy receipts. Shape evidence: AC-1 specifies commitment, assumption, observable result and included work (Journey step 2); AC-2 specifies the lower alternative and the evidence or operational duty it cannot cover (step 3); AC-3 distinguishes existing valued state/consumers from disposable experiment output and rejects repository-age routing (steps 1 and 3). These are designed behaviors, not observed acceptance.
   The journey and policy dispositions below repair the named selection seam using existing programs, receipt fields, and authorities; no new standing process is proposed.
-- DONE: Trace AC-1 through AC-5 to concrete falsifiable implementation and verification steps, with no new standing process or unsupported behavior claim.
+- DONE: Trace AC-1 through AC-5 to concrete falsifiable implementation and verification steps, with no new standing process or unsupported behavior claim. Shape evidence: AC-4 maps accepted scope into existing receipt fields and keeps misunderstanding, no answer and interruption unresolved (Journey steps 4-5). The Falsifiable acceptance and proof proposal section maps AC-1, AC-2, AC-3, AC-4 and AC-5 to six concrete cases, including unchanged-receipt readback and both lower-commitment and valid Production responses; implementation and behavioral proof remain pending.
   The six cases and fixed baseline/candidate exercise below are design obligations; no implementation acceptance or operator-behavior pass is claimed.
-- DONE: Measure the proposed file surface and instruction-budget pressure, set stop numbers, and durably report one sufficient implementation route after the FO grants the state-write slot.
+- DONE: Measure the proposed file surface and instruction-budget pressure, set stop numbers, and durably report one sufficient implementation route after the FO grants the state-write slot. Shape evidence: AC-5 uses the three measured proposed files in Where it touches and stop numbers, retains existing contract checks and the 40,000-byte limit (observed source maximum 39,991), and proposes the bounded baseline/candidate exercise in Falsifiable acceptance and proof proposal. This proves measured shape feasibility, not implementation acceptance; no new standing process or consumer migration is proposed.
   Source base c2c62bf9dff5c3af1e27eb643a15eadf9023485f was clean main; source gate measurement returned maximum 39,991 / 40,000 bytes. This report is recorded after the FO's serialized write grant.
 
 ### Summary
