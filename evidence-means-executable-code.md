@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-09-10T04:24:57Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-evidence-means-executable-code
 issue:
 pr:
 mod-block:
