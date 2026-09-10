@@ -1,0 +1,8 @@
+{
+  "sprint": "ship-cloud-wrapper",
+  "tasks": {
+    "DEV-301": {"workspace_id": "ws-301", "session_id": "sess-301", "merged_sha": "abc1230000000000000000000000000000000000"},
+    "DEV-302": {"workspace_id": "ws-302", "session_id": "sess-302"}
+  },
+  "questions": []
+}

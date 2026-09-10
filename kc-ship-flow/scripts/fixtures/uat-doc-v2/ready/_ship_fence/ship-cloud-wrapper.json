@@ -1,0 +1,14 @@
+{
+  "sprint": "ship-cloud-wrapper",
+  "tasks": {
+    "DEV-201": {"workspace_id": "ws-201", "session_id": "sess-201"},
+    "DEV-202": {"workspace_id": "ws-202", "session_id": "sess-202"}
+  },
+  "questions": [
+    {
+      "task": "DEV-202",
+      "question": "Does this task's Local Profile row cover the delivery branch base?",
+      "answer": "Yes, see the Local Profile's delivery-branch-base policy row."
+    }
+  ]
+}

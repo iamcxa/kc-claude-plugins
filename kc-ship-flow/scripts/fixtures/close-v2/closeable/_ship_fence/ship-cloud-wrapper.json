@@ -1,0 +1,15 @@
+{
+  "sprint": "ship-cloud-wrapper",
+  "tasks": {
+    "DEV-301": {
+      "workspace_id": "ws-301",
+      "session_id": "sess-301",
+      "merged_sha": "abc1230000000000000000000000000000000000",
+      "debrief": {"status": "pushed", "path": "_debriefs/2026-09-10-01-claude-fable-5-1.md"}
+    }
+  },
+  "questions": [
+    {"task": "DEV-301", "question": "Which base branch?", "answer": "trunk, per the Local Profile."}
+  ],
+  "residuals": ["fixture residual for AC-3 receipt shape"]
+}
