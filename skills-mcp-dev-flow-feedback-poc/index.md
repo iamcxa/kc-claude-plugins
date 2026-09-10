@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-skills-mcp-dev-flow-feedback-poc
 issue:
-pr: local-merge:poc-change-outcome-only-repair-delivered-separately
+pr: local-merge:91a9f58207a19c0cfc547cae2b464b99e97f5349
 mod-block:
 id: 4n79qfrpfetj8vrpmdphpkwd
 gates:
@@ -34,6 +34,7 @@ gates:
               application:
                 target-stage: done
                 state: pending
+delivery-reason: Knowledge-only POC delivered as the accepted change outcome and Captain resolution in published state commit 91a9f58207a19c0cfc547cae2b464b99e97f5349. No product merge is claimed; repair commit 1eae2f5a5467b4600783eaedc671cf5cd57d1969 remains a separate delivery. The local no-PR procedure uses this real evidence commit because Spacedock 0.27.2 requires a hexadecimal local-merge suffix.
 ---
 
 # Evidence-led dev-flow improvement POC
