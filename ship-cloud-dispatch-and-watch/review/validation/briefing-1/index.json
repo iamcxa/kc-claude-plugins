@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:zbkw7v9dsgxgf048qvrmxmwy:validation:attempt-1:revision-1",
+  "question": "Approve validation of ship-cloud-dispatch-and-watch and merge #406?",
+  "artifacts": [
+    {
+      "id": "artifact:zbkw7v9dsgxgf048qvrmxmwy:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/35a066d2cb3c6aa3496085afe31390b28980e193/ship-cloud-dispatch-and-watch/review/validation/validation-review.md",
+      "rev": "sha256:0eab2922f050f1a0bc967e48371ea3e46289211844f0cb671e208c7b95f37517",
+      "mediaType": "text/markdown",
+      "summary": "AC-1..AC-5 evidenced; six run findings carried to the next round"
+    }
+  ]
+}

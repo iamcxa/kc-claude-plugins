@@ -37,6 +37,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:zbkw7v9dsgxgf048qvrmxmwy:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:zbkw7v9dsgxgf048qvrmxmwy-validation-1
+              briefing:
+                id: briefing:zbkw7v9dsgxgf048qvrmxmwy:validation:attempt-1:revision-1
+                digest: sha256:b1e3d87bc8ff3e6b6f7538903834086b32a3275029e8eaf8b53097fc75c1b899
+                room-ref: ./ship-cloud-dispatch-and-watch/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:zbkw7v9dsgxgf048qvrmxmwy:validation:1
+                briefing: briefing:zbkw7v9dsgxgf048qvrmxmwy:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T14:12:46.910776Z"
+                decision: approve
+                reason: 'Captain approved in chat: 「批」 2026-09-10 (validation gate + merge #406)'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 kc-ship-flow re-implemented per-task acceptance, PR opening, review disposition and merging that
