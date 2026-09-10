@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-skills-mcp-dev-flow-feedback-poc
 issue:
-pr:
+pr: local-merge:poc-change-outcome-only-repair-delivered-separately
 mod-block:
 id: 4n79qfrpfetj8vrpmdphpkwd
 gates:
