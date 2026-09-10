@@ -262,8 +262,6 @@ export function loadJourney(path) {
 	return parse(readFileSync(path, 'utf8'))
 }
 
-// One room, several pages. The function map is drawn only when the file models something:
-// an empty third page would claim the modelling was done and came out blank.
 // Which activities a release actually touches. A release that leaves an activity empty is
 // not automatically wrong — a later release's activities are not part of an earlier one's
 // journey — but it is the question the map exists to make askable, so it is said out loud
@@ -276,27 +274,41 @@ export function releaseCoverage(model) {
 	})
 }
 
-// The journey board (buildJourneyBoard, below) no longer renders here: its content —
-// a citation and a constraint list per step — was never spatial, and now generates as
-// a per-release contract document instead (release-contract.mjs). buildJourneyBoard
-// stays in the tree and under test; it has simply left this critical path, the same
-// position funcmap.mjs is in until a step is modelled.
-export function buildAllPages(model, room = null) {
-	const modelled = (model.steps ?? []).some((s) => s.command || s.events?.length || s.state || s.readmodel)
-	return [...buildStoryMap(model, room), ...(modelled ? buildFunctionMap(model) : [])]
+// A board per release when the file has releases; one whole-journey board when it does
+// not, so a map drawn before anyone has sliced it still renders.
+const journeyBoardPages = (model, room) => {
+	const releases = model.releases ?? []
+	return releases.length
+		? releases.flatMap((release) => buildJourneyBoard(model, { release, room }))
+		: buildJourneyBoard(model, { room })
+}
+
+// Which projections a render draws is a choice made per call, never a property of the
+// file — the same journey renders one way for a stand-up and another for a release review.
+export const PROJECTIONS = {
+	'story-map': (model, room) => buildStoryMap(model, room),
+	'journey-board': journeyBoardPages,
+	'function-map': (model) => buildFunctionMap(model),
+}
+export const PROJECTION_KEYS = Object.keys(PROJECTIONS)
+export const DEFAULT_PROJECTIONS = ['story-map']
+
+export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTIONS) {
+	const chosen = selection?.length ? selection : DEFAULT_PROJECTIONS
+	const unknown = chosen.filter((key) => !PROJECTIONS[key])
+	if (unknown.length) throw new Error(`unknown projection(s): ${unknown.join(', ')}`)
+	return PROJECTION_KEYS.filter((key) => chosen.includes(key)).flatMap((key) => PROJECTIONS[key](model, room))
 }
 
 // Render is a reconcile, not an append: shapes this renderer owns that the model no
 // longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
 // and are never touched — the room is where a workshop happens, not only where a file
 // is displayed.
-export async function renderToRoom({ path, room, api = API }) {
+export async function renderToRoom({ path, room, selection, api = API }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
 
-	// One room, two pages. The board a person talks over and the board the code is cited
-	// on answer different questions and disagree about what the vertical axis means.
-	const put = buildAllPages(model, roomId)
+	const put = buildAllPages(model, roomId, selection)
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())

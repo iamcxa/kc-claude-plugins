@@ -160,17 +160,23 @@ test('a story written in object form is reworded too', () => {
 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
 })
 
-// ── collapse to one board ────────────────────────────────────────────────────────
-// The per-release canvas board (buildJourneyBoard, wired in through buildAllPages) is
-// retired in favour of the generated release contract (release-contract.mjs). The five
-// tests this section used to hold asserted that a board page existed per release; they
-// guarded a feature this stage removes on purpose, so they are gone, not adapted.
-// buildJourneyBoard itself is untouched and still under test in storymap.test.mjs.
-
+// ── which projections render is a choice, not a file property ───────────────────
 import { buildAllPages } from './render.mjs'
 
-test('buildAllPages draws the story map and, when modelled, the function map — no board page', () => {
+test('with no selection, buildAllPages draws the story map alone', () => {
 	const pages = buildAllPages(fixtureModel).filter((r) => r.typeName === 'page').map((r) => r.id)
-	assert.deepEqual(pages, ['page:page', 'page:jm-funcmap'])
-	assert.ok(!pages.some((id) => id.startsWith('page:jm-board-')), 'a retired per-release board page came back')
+	assert.deepEqual(pages, ['page:page'])
+})
+
+test('an empty selection falls back to the default rather than rendering nothing', () => {
+	// An explicit [] must not reach renderToRoom's reconcile as "draw nothing" — that
+	// would read back as every existing journey shape in the room being stale and removed.
+	const pages = buildAllPages(fixtureModel, null, []).filter((r) => r.typeName === 'page').map((r) => r.id)
+	assert.deepEqual(pages, ['page:page'])
+})
+
+test('selecting the journey board draws one page per release, alongside the story map', () => {
+	const pages = buildAllPages(fixtureModel, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'page').map((r) => r.id)
+	const expectedBoards = fixtureModel.releases.map((r) => `page:jm-board-${r.id}`)
+	assert.deepEqual(pages, ['page:page', ...expectedBoards])
 })

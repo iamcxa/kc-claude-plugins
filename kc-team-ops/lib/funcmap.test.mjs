@@ -39,15 +39,18 @@ test('event stickies do not overlap each other', () => {
 	assert.ok(events[1].y - events[0].y >= 200, `pitch ${events[1].y - events[0].y} is smaller than a sticky`)
 })
 
-test('no page claims a shape id another page already uses', () => {
-	const ids = buildAllPages(fixtureModel).map((r) => r.id)
+test('no page claims a shape id another page already uses, with every projection selected', () => {
+	const ids = buildAllPages(fixtureModel, null, ['story-map', 'journey-board', 'function-map']).map((r) => r.id)
 	assert.equal(new Set(ids).size, ids.length, 'two pages share a shape id')
 })
 
-test('a file that models nothing gets no function map page', () => {
+test('the function map is opt-in: selection decides, never the file content', () => {
 	const bare = { ...fixtureModel, steps: fixtureModel.steps.map(({ command, events, state, readmodel, ...rest }) => rest) }
-	const pages = buildAllPages(bare).filter((r) => r.typeName === 'page').map((r) => r.name)
-	assert.ok(!pages.includes('Function map'), 'an empty function map claims the modelling was done')
-	assert.ok(pages.includes('Story map'), 'the story map went missing')
-	assert.ok(buildAllPages(fixtureModel).some((r) => r.name === 'Function map'), 'a modelled file must get the page')
+
+	const byDefault = buildAllPages(fixtureModel).filter((r) => r.typeName === 'page').map((r) => r.name)
+	assert.ok(!byDefault.includes('Function map'), 'the function map arrived uninvited, though the file models something')
+
+	const selected = buildAllPages(bare, null, ['story-map', 'function-map'])
+	assert.ok(selected.some((r) => r.name === 'Function map'), 'selecting the function map on an unmodelled file did not draw it')
+	assert.match(text(selected.find((r) => r.id === 'shape:fm-cmd-a')), /not modelled/, 'a selected but unmodelled step must still say so')
 })
