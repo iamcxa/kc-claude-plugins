@@ -27,8 +27,9 @@ kc-ship-flow is a thin wrapper over kc-dev-flow: it bundles the `docs/dev` tasks
 `sprint` value, sends each to its own Conductor cloud first officer, watches the set to a prepared
 `validation` gate, verifies at the integrated head, and hands the Captain one UAT. Anything a task
 already does per-task belongs to dev flow or Spacedock, not here; see
-`docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md` for the full design and the
-ruling it implements. The batch moves through `dispatched -> watching -> verified -> uat -> closed`.
+`docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md` (branch
+`docs/ship-flow-cloud-wrapper-spec`, not yet on `main`) for the full design and the ruling it
+implements. The batch moves through `dispatched -> watching -> verified -> uat -> closed`.
 
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
@@ -45,7 +46,7 @@ This table is the first-officer skill's declared input before dispatching a batc
 | E2E flows | `docs/ship/flows/` |
 | Pin | `kc-ship-flow/pins/conductor-cli.txt` (the Conductor CLI this plugin was written against) |
 | Installed contract interface | `kc-ship-flow-batch-pin/v1` |
-| Integrated head | `trunk` — the adopter's row deciding whether `verified` runs before or after the Captain's merge (`preview`, `trunk`, or `staging`) |
+| Integrated head | `trunk` (placeholder, not yet a Captain ruling — one of `preview`, `trunk`, or `staging`; decides whether `verified` runs before or after the Captain's merge) |
 <!-- kc-ship-flow-static-local-profile:end -->
 
 ## Stages
@@ -57,7 +58,7 @@ per `docs/dev` task whose `sprint` matches and whose `sprint-readiness` is `read
 fixed first-officer boot message (not a per-stage ensign dispatch). Records a claim fence
 (`<state-dir>/_ship_fence/<sprint>.json`) before each create so a re-run skips an
 already-dispatched slug. Refuses (exit 2, `conductor unavailable`) when `conductor auth whoami`
-fails or the workspace project id cannot be resolved from the repo remote.
+fails; refuses (exit 6) when the workspace project id cannot be resolved from the repo remote.
 
 ### `watching` — poll to a prepared gate or an exit condition
 
@@ -65,7 +66,8 @@ Script: `kc-ship-flow/scripts/watch.sh <sprint> [--once]`. Reads the docs/dev st
 prepared `validation` gate first; only when a task's session is idle does it fall back to reading
 the transcript tail (`conductor sql`, never `session message --after` — see
 `docs/ship/runbooks/conductor-cloud.md`) for a usage-limit banner (`quota`) or a trailing question
-(`question`). Every question a worker asked and the answer sent is recorded on the batch.
+(`question`). Recording each question and its answer on the batch record is a residual: this
+stage only reports the `question` exit today, it does not yet write that record.
 
 ### `verified` — e2e at the integrated head
 

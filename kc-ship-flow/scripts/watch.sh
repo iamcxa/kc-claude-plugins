@@ -100,27 +100,31 @@ except ValueError:
 rows = d.get('rows') or []
 transcript = rows[0].get('transcript', '') if rows else ''
 
+# The tail only: a banner earlier in a long transcript (already resolved -- the worker kept
+# going after a resumed session) must not read as quota forever, and only the tail bears on
+# what the worker is doing right now.
+blocks = re.split(r'(?m)^## Assistant\$', transcript)
+last_block = blocks[-1] if blocks else ''
+
 # Verified real-transcript wording (2026-09-10, via conductor sql): 'You've hit your
 # session limit · resets 9pm (Asia/Taipei)'. The 'usage limit' alternative is an
 # unverified guess at another phrasing of the same product banner.
-if re.search(r'hit your session limit|usage limit reached', transcript, re.IGNORECASE):
+if re.search(r'hit your session limit|usage limit reached', last_block, re.IGNORECASE):
     print('quota')
     raise SystemExit
 
-blocks = re.split(r'(?m)^## Assistant\$', transcript)
-last_block = blocks[-1] if blocks else ''
 lines = [line for line in last_block.splitlines() if line.strip()]
 last_line = lines[-1].strip() if lines else ''
 print('question' if last_line.endswith('?') else 'stopped')
 "
 }
 
-slugs=$(python3 -c "
-import json
-d = json.load(open('$fence_file'))
+slugs=$(python3 -c '
+import json, sys
+d = json.load(open(sys.argv[1]))
 for k in sorted(d):
     print(k)
-")
+' "$fence_file")
 
 poll_once() {
   while IFS= read -r slug; do
@@ -131,11 +135,12 @@ poll_once() {
       echo "$slug gate-prepared"
       continue
     fi
-    session=$(python3 -c "
-import json
-d = json.load(open('$fence_file'))
-print((d.get('$slug') or {}).get('session') or '')
-")
+    session=$(python3 -c '
+import json, sys
+path, slug = sys.argv[1], sys.argv[2]
+d = json.load(open(path))
+print((d.get(slug) or {}).get("session") or "")
+' "$fence_file" "$slug")
     if [ -z "$session" ]; then
       echo "$slug stopped"
       continue

@@ -27,7 +27,9 @@ DRYRUN=0
 workflow_dir="$repo_root/docs/dev"
 state_dir="$repo_root/docs/ship/.spacedock-state"
 project_id=""
-model="${SHIP_DISPATCH_MODEL:-sonnet}"
+# Both defaults are listed by `conductor model` (agent claude) as of the pinned CLI version;
+# "sonnet" alone is not a valid model id there.
+model="${SHIP_DISPATCH_MODEL:-sonnet-5-1m}"
 effort="${SHIP_DISPATCH_EFFORT:-medium}"
 
 while [ $# -gt 0 ]; do
@@ -103,11 +105,14 @@ fi
 while IFS= read -r slug; do
   [ -n "$slug" ] || continue
 
-  already=$(python3 -c "
-import json
-d = json.load(open('$existing_copy'))
-print('yes' if '$slug' in d else 'no')
-")
+  # Values reach Python only as argv, never interpolated into the source: a slug can
+  # contain a quote (it comes off an adopter's state branch, not this repo).
+  already=$(python3 -c '
+import json, sys
+path, slug = sys.argv[1], sys.argv[2]
+d = json.load(open(path))
+print("yes" if slug in d else "no")
+' "$existing_copy" "$slug")
   if [ "$already" = yes ]; then
     echo "$slug already-recorded"
     continue
@@ -144,13 +149,13 @@ BOOTMSG
   mkdir -p "$state_dir/_ship_fence"
   fence_scratch="$run/$slug.fence.json"
   cp "$existing_copy" "$fence_scratch"
-  python3 -c "
-import json
-p = '$fence_scratch'
-d = json.load(open(p))
-d['$slug'] = {'workspace': None, 'session': None, 'message_sha256': '$msg_sha'}
-json.dump(d, open(p, 'w'), indent=1, sort_keys=True)
-"
+  python3 -c '
+import json, sys
+path, slug, msg_sha = sys.argv[1], sys.argv[2], sys.argv[3]
+d = json.load(open(path))
+d[slug] = {"workspace": None, "session": None, "message_sha256": msg_sha}
+json.dump(d, open(path, "w"), indent=1, sort_keys=True)
+' "$fence_scratch" "$slug" "$msg_sha"
   cp "$fence_scratch" "$fence_file"
   cp "$fence_scratch" "$existing_copy"
   git -C "$state_dir" add "_ship_fence/$sprint.json"
@@ -164,14 +169,14 @@ json.dump(d, open(p, 'w'), indent=1, sort_keys=True)
     || die "conductor workspace create returned no workspace id for $slug" 7
   sid=$(printf '%s' "$out" | python3 -c "import json,sys; print(json.load(sys.stdin).get('sessionId') or '')")
 
-  python3 -c "
-import json
-p = '$fence_file'
-d = json.load(open(p))
-d['$slug']['workspace'] = '$wid'
-d['$slug']['session'] = ('$sid' or None)
-json.dump(d, open(p, 'w'), indent=1, sort_keys=True)
-"
+  python3 -c '
+import json, sys
+path, slug, wid, sid = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+d = json.load(open(path))
+d[slug]["workspace"] = wid
+d[slug]["session"] = sid or None
+json.dump(d, open(path, "w"), indent=1, sort_keys=True)
+' "$fence_file" "$slug" "$wid" "$sid"
   # Keep the loop's in-memory view of "already recorded" in sync with what was just
   # committed: the next slug's "already" check and its own fence_scratch base both read
   # existing_copy, and without this it would still see this slug's workspace as null.

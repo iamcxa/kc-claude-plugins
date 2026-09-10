@@ -26,7 +26,9 @@ cat > "$TRANSCRIPTS" <<EOF
 {
   "sess-quota": "## User\n\ncontinue\n\n## Assistant\n\nYou've hit your session limit · resets 9pm (Asia/Taipei)",
   "sess-question": "## User\n\ngo\n\n## Assistant\n\nTwo files touch this rename. Should I update both, or just the one named in the task?",
-  "sess-stopped": "## User\n\ngo\n\n## Assistant\n\nDone. Pushed the branch and opened the draft PR."
+  "sess-stopped": "## User\n\ngo\n\n## Assistant\n\nDone. Pushed the branch and opened the draft PR.",
+  "sess-resumed-after-quota": "## Assistant\n\nYou've hit your session limit · resets 9pm (Asia/Taipei)\n\n## User\n\ncontinue\n\n## Assistant\n\nResumed and finished the refactor; running the tests now.",
+  "sess-quote-slug": "## Assistant\n\nDone. Nothing else to report."
 }
 EOF
 
@@ -93,6 +95,26 @@ if [ "$rc_d" -eq 5 ] && grep -q "conductor cli changed" <<<"$out_d"; then
 else
   printf '  out=%s\n' "$out_d"
   fail d "pin mismatch refuses (exit 5, conductor cli changed)"
+fi
+
+# --- case (e): a usage-limit banner earlier in the transcript, resolved by the worker
+# resuming and continuing (the tail is plain prose), reads as stopped -- the quota check
+# must look only at the tail, not the whole transcript ---
+if grep -qx "task-resumed-after-quota stopped" <<<"$out_a"; then
+  pass e "a resolved earlier banner reads as stopped, not quota, once the tail has moved on"
+else
+  printf '  out=%s\n' "$out_a"
+  fail e "a resolved earlier banner reads as stopped, not quota, once the tail has moved on"
+fi
+
+# --- case (f): a slug containing a single quote (real spacedock entities can carry one --
+# verified via `spacedock new "it's-a-slug"`) is handled as data throughout the fence-key
+# and session lookups, not interpolated into a python -c source string ---
+if grep -qx "it's-a-slug stopped" <<<"$out_a"; then
+  pass f "a slug containing a single quote is handled as data"
+else
+  printf '  out=%s\n' "$out_a"
+  fail f "a slug containing a single quote is handled as data"
 fi
 
 rm -f "$TRANSCRIPTS" "$LOG"

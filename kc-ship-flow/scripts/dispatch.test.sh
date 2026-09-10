@@ -49,9 +49,10 @@ rc_a=$?
 count_argv=$(grep -c "^conductor workspace create " <<<"$out_a")
 ok=1
 [ "$rc_a" -eq 0 ] || ok=0
-[ "$count_argv" -eq 2 ] || ok=0
+[ "$count_argv" -eq 3 ] || ok=0
 grep -q "task-ready-one" <<<"$out_a" || ok=0
 grep -q "task-ready-two" <<<"$out_a" || ok=0
+grep -q "it's-a-slug" <<<"$out_a" || ok=0
 grep -q "task-not-ready" <<<"$out_a" && ok=0
 grep -q -- "--project-id $FIXTURE_PROJECT_ID" <<<"$out_a" || ok=0
 if grep -q "workspace create" "$LOG" 2>/dev/null; then ok=0; fi
@@ -74,7 +75,7 @@ import json
 json.dump({'task-ready-one': {'workspace': None, 'session': None, 'message_sha256': 'x'}}, open('$STATE_DIR/_ship_fence/ship-cloud-wrapper-fixture.json', 'w'))
 "
 out_b="$(run_dispatch)"
-if grep -qx "task-ready-one already-recorded" <<<"$out_b" && [ "$(grep -c "^conductor workspace create " <<<"$out_b")" -eq 1 ] && grep -q "task-ready-two" <<<"$out_b"; then
+if grep -qx "task-ready-one already-recorded" <<<"$out_b" && [ "$(grep -c "^conductor workspace create " <<<"$out_b")" -eq 2 ] && grep -q "task-ready-two" <<<"$out_b"; then
   pass b "an already-recorded slug is skipped, not re-printed"
 else
   printf '  out=%s\n' "$out_b"
@@ -147,6 +148,19 @@ if [ "$rc_e" -eq 0 ] && [ "$recorded_ws" = "ws-fixture-1" ] && [ "$committed" -g
 else
   printf '  out=%s recorded_ws=%s committed=%s\n' "$out_e" "$recorded_ws" "$committed"
   fail e "real mode commits the fence file locally and records the returned workspace id"
+fi
+
+# --- case (f): a slug containing a single quote (real spacedock entities can carry one --
+# verified via `spacedock new "it's-a-slug"`) is handled as data, not interpolated into a
+# python -c source string. This fixture crashes the pre-fix script with a Python
+# SyntaxError (see the commit introducing this case for the before/after run) ---
+out_f="$(run_dispatch)"
+rc_f=$?
+if [ "$rc_f" -eq 0 ] && grep -q "message-file .*it's-a-slug.boot.md" <<<"$out_f"; then
+  pass f "a slug containing a single quote is handled as data"
+else
+  printf '  out=%s\n' "$out_f"
+  fail f "a slug containing a single quote is handled as data"
 fi
 
 rm -rf "$STATE_DIR"
