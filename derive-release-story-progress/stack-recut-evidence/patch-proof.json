@@ -1,0 +1,27 @@
+[
+  {
+    "layer": 1,
+    "replayed_tree": "feec1a91f7479f9f1ff15b8a0bf8650d86271421",
+    "snapshot_matches_index": true
+  },
+  {
+    "layer": 2,
+    "replayed_tree": "9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b",
+    "snapshot_matches_index": true
+  },
+  {
+    "layer": 3,
+    "replayed_tree": "55b4416f5b37649fc0fec4d7eeddcef3561bad9c",
+    "snapshot_matches_index": true
+  },
+  {
+    "layer": 4,
+    "replayed_tree": "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff",
+    "snapshot_matches_index": true
+  },
+  {
+    "layer": 5,
+    "replayed_tree": "cefe085d5d9b12b5679421b5607c808d6989a1b7",
+    "snapshot_matches_index": true
+  }
+]

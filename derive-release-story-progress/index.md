@@ -374,3 +374,30 @@ Independent local validation passes the frozen candidate; the fresh material cha
 ### Summary
 
 The approved ten-file candidate is now a verified local commit without changing its validated bytes. Product push, PR creation, merge, release, delivery acceptance, terminal consumption and preview cleanup remain outside this continuation; existing previews stay available for the next Captain decision.
+
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Prepare five isolated cumulative layer candidates following the Captain-approved three-way split plus existing borders and progress; preserve original branches and exact final semantics.
+  Kent's "確認這樣拆" authorizes this bounded delivery recut; `stack-recut-evidence/README.md` explains the grouping, preservation, and separate remaining local-commit/PR gates without rewriting earlier approvals.
+  Layer 1 preserves the legacy team-ops drawing surface until layer 2 replaces it; early runtime, docs, examples, render/read/tests and CI contain only their available capabilities.
+- DONE: Run meaningful per-layer validation, prove final cumulative tree equivalence to the merge of current main with the approved product, and report exact files, sizes, trees, and limits.
+  `stack-recut-evidence/manifest.json` binds layer sizes 24/+6023/-0, 24/+1075/-334, 34/+1966/-139, 21/+625/-376, 10/+433/-27; generated shares and every path are recorded there.
+  `equivalence.json` and `patch-proof.json` prove zero differences for the three expected merge trees and replay all five patches; layer 5 is `cefe085d5d9b12b5679421b5607c808d6989a1b7` on pinned main `c9c5752f`.
+  Native canvas: clean dependency install, isolated marketplace install with resolved skill path, malformed-record refusal, live editor/UI change, restart/reopen, native export/import and PNG export passed; losing persistence or the skill path falsifies these checks.
+  Story planning: 17 tests plus live wording/order/release/save-as and duplicate-identity refusal passed; accepting a straddled card, trusting a duplicate or changing source bytes falsifies these checks.
+  Full layers 3/4/5: 44/67/72 tests and isolated five-page boot/render/readback passed; dropped records or fresh-room drift falsifies the smoke. Version parity passed for all layers; dependency manifests and locks are byte-identical.
+  AC-1: layer 5's empty-PATH drawing and real refresh-CLI-to-canvas checks passed; a mandatory task-reader dependency in drawing would fail them.
+  AC-2: real task fixtures retain full identity and produce 2/3 done tasks versus 1/2 done stories; dropping identity scope or counting tasks as stories fails the assertions.
+  AC-3: actual missing/partial/duplicate/malformed/short-ID mappings and truncated pages refuse completion; archived tasks read and reopening removes completion.
+  AC-4: all-done real fixtures yield pending delivery acceptance with the existing three borders; equating done with acceptance or losing provenance fails the checks.
+  AC-5: actual refresh/readback preserves source and task bytes, and native-compatible wording edits change only expected intent; persisting derived status fails the assertions.
+- DONE: Retain a concise implementation report and concrete local commit review packet; no product commits, pushes, PR creation, or destructive rewriting.
+  `stack-recut-evidence/README.md` is the review packet; raw patches/logs/browser files remain in task `.context/journey-stack-recut`. Five patch replays and snapshot/index comparisons passed; parent code worktree remains clean.
+  GitHub Actions cost per PR is unmeasured. The optional RoboRev observation is UNAVAILABLE(reason: unsupported), requests/confirmations 0/0: no committed recut product tip exists, so no ambient old HEAD was reviewed.
+  Limits: inherited layer-3 EOF whitespace remains to preserve exact source; temporary proxy blocked toolbar CDN assets, so browser proof covers native records/editing/portability, not complete icon appearance. Fresh independent intermediate-layer review remains required.
+  Project-context receipt: impact=none; authority=PRODUCT.md/ARCHITECTURE.md/CLAUDE.md; existing accepted product/provider/delivery boundaries unchanged. This recut changes delivery grouping only; no new project-context claim was authored.
+
+### Summary
+
+Five exact cumulative candidates and replayable patches are ready for independent validation and a concrete local-commit decision. The original 10-file/460-line progress feature and all three approved product endpoints are preserved; no product delivery or task terminalization occurred.

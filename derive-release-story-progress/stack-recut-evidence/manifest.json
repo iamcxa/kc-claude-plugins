@@ -1,0 +1,768 @@
+{
+  "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+  "layers": [
+    {
+      "layer": 1,
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-1",
+      "base_tree": "b4df0a7ffb4812ec059b70ab39729ec18af61ddc",
+      "tree": "feec1a91f7479f9f1ff15b8a0bf8650d86271421",
+      "files": 24,
+      "additions": 6023,
+      "deletions": 0,
+      "changed_lines": 6023,
+      "generated_lines": 5309,
+      "generated_share": 0.8814544247052963,
+      "paths": [
+        {
+          "path": ".claude-plugin/marketplace.json",
+          "additions": 11,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": ".github/workflows/kc-journey-map-tests.yml",
+          "additions": 58,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": ".release-please-manifest.json",
+          "additions": 1,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.claude-plugin/plugin.json",
+          "additions": 15,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.codex-plugin/plugin.json",
+          "additions": 32,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.gitignore",
+          "additions": 9,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/doctor.mjs",
+          "additions": 68,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-export.mjs",
+          "additions": 60,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-tldr.mjs",
+          "additions": 70,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/package-lock.json",
+          "additions": 5309,
+          "deletions": 0,
+          "generated": true
+        },
+        {
+          "path": "kc-journey-map/package.json",
+          "additions": 35,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/scripts/canvas-smoke.sh",
+          "additions": 51,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/canvas-server.ts",
+          "additions": 114,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/App.tsx",
+          "additions": 43,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/index.css",
+          "additions": 6,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/index.html",
+          "additions": 13,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/main.tsx",
+          "additions": 10,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/vite-env.d.ts",
+          "additions": 1,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/rooms.ts",
+          "additions": 47,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+          "additions": 10,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+          "additions": 25,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/tsconfig.json",
+          "additions": 16,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/vite.config.mts",
+          "additions": 9,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "release-please-config.json",
+          "additions": 10,
+          "deletions": 0,
+          "generated": false
+        }
+      ],
+      "patch_sha256": "22e5f77c9ca5288d55b7dac0f8c09325f23cca9cf8045cb949c996ffc2a57441",
+      "whitespace_check_exit": 0,
+      "whitespace_check_output": ""
+    },
+    {
+      "layer": 2,
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-2",
+      "base_tree": "feec1a91f7479f9f1ff15b8a0bf8650d86271421",
+      "tree": "9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b",
+      "files": 24,
+      "additions": 1075,
+      "deletions": 334,
+      "changed_lines": 1409,
+      "generated_lines": 0,
+      "generated_share": 0.0,
+      "paths": [
+        {
+          "path": ".claude-plugin/marketplace.json",
+          "additions": 5,
+          "deletions": 6,
+          "generated": false
+        },
+        {
+          "path": ".github/workflows/kc-journey-map-tests.yml",
+          "additions": 4,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.claude-plugin/plugin.json",
+          "additions": 1,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.codex-plugin/plugin.json",
+          "additions": 4,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/fixture.mjs",
+          "additions": 36,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-read.mjs",
+          "additions": 29,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-render.mjs",
+          "additions": 14,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/model.mjs",
+          "additions": 5,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.mjs",
+          "additions": 230,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.test.mjs",
+          "additions": 123,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/records.mjs",
+          "additions": 138,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/render.mjs",
+          "additions": 47,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.mjs",
+          "additions": 232,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.test.mjs",
+          "additions": 95,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/scripts/canvas-smoke.sh",
+          "additions": 42,
+          "deletions": 12,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+          "additions": 18,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+          "additions": 24,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml",
+          "additions": 22,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/.claude-plugin/plugin.json",
+          "additions": 2,
+          "deletions": 5,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/.codex-plugin/plugin.json",
+          "additions": 4,
+          "deletions": 7,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/README.md",
+          "additions": 0,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/skills/kc-journey-map/SKILL.md",
+          "additions": 0,
+          "deletions": 125,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/skills/kc-journey-map/references/board-template.html",
+          "additions": 0,
+          "deletions": 96,
+          "generated": false
+        },
+        {
+          "path": "kc-team-ops/skills/kc-journey-map/references/cell-contract.md",
+          "additions": 0,
+          "deletions": 73,
+          "generated": false
+        }
+      ],
+      "patch_sha256": "8d97617c34dd3cf6ee6bba77e16d1f1c6e16702fc3f2d85e9eb60d1f3998c2f3",
+      "whitespace_check_exit": 0,
+      "whitespace_check_output": ""
+    },
+    {
+      "layer": 3,
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-3",
+      "base_tree": "9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b",
+      "tree": "55b4416f5b37649fc0fec4d7eeddcef3561bad9c",
+      "files": 34,
+      "additions": 1966,
+      "deletions": 139,
+      "changed_lines": 2105,
+      "generated_lines": 1,
+      "generated_share": 0.00047505938242280285,
+      "paths": [
+        {
+          "path": ".claude-plugin/marketplace.json",
+          "additions": 4,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": ".github/workflows/kc-journey-map-tests.yml",
+          "additions": 15,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.claude-plugin/plugin.json",
+          "additions": 6,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/.codex-plugin/plugin.json",
+          "additions": 10,
+          "deletions": 5,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/doctor.mjs",
+          "additions": 1,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/fixture.mjs",
+          "additions": 18,
+          "deletions": 6,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/funcmap.mjs",
+          "additions": 97,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/funcmap.test.mjs",
+          "additions": 56,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-contract.mjs",
+          "additions": 24,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-example.test.mjs",
+          "additions": 46,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-lint.mjs",
+          "additions": 28,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-render.mjs",
+          "additions": 19,
+          "deletions": 9,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-tldr.mjs",
+          "additions": 5,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/lint.mjs",
+          "additions": 71,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/lint.test.mjs",
+          "additions": 140,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/model.mjs",
+          "additions": 21,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.mjs",
+          "additions": 94,
+          "deletions": 12,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.test.mjs",
+          "additions": 61,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/records.mjs",
+          "additions": 7,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/release-contract.mjs",
+          "additions": 43,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/release-contract.test.mjs",
+          "additions": 40,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/render.mjs",
+          "additions": 284,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.mjs",
+          "additions": 50,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.test.mjs",
+          "additions": 10,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/scripts/canvas-smoke.sh",
+          "additions": 17,
+          "deletions": 9,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/App.tsx",
+          "additions": 1,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/rooms.ts",
+          "additions": 2,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+          "additions": 144,
+          "deletions": 14,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+          "additions": 210,
+          "deletions": 18,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+          "additions": 113,
+          "deletions": 24,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/example/README.md",
+          "additions": 41,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/example/draw-a-journey.tldr",
+          "additions": 1,
+          "deletions": 0,
+          "generated": true
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml",
+          "additions": 215,
+          "deletions": 18,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/map-from-conversation.md",
+          "additions": 72,
+          "deletions": 0,
+          "generated": false
+        }
+      ],
+      "patch_sha256": "75a2898b366c6df0d6ce1ea40e03ba2e4a0ac4556e802348a4222c1c662276a4",
+      "whitespace_check_exit": 2,
+      "whitespace_check_output": "kc-journey-map/lib/storymap.mjs:280: new blank line at EOF.\n"
+    },
+    {
+      "layer": 4,
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-4",
+      "base_tree": "55b4416f5b37649fc0fec4d7eeddcef3561bad9c",
+      "tree": "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff",
+      "files": 21,
+      "additions": 625,
+      "deletions": 376,
+      "changed_lines": 1001,
+      "generated_lines": 2,
+      "generated_share": 0.001998001998001998,
+      "paths": [
+        {
+          "path": "docs/dev/ROADMAP.md",
+          "additions": 15,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/journey-example.test.mjs",
+          "additions": 18,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/lint.mjs",
+          "additions": 4,
+          "deletions": 3,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/lint.test.mjs",
+          "additions": 7,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/model.mjs",
+          "additions": 3,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.mjs",
+          "additions": 60,
+          "deletions": 66,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/read.test.mjs",
+          "additions": 145,
+          "deletions": 2,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/records.mjs",
+          "additions": 41,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/release-contract.mjs",
+          "additions": 2,
+          "deletions": 7,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/release-contract.test.mjs",
+          "additions": 7,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/render.mjs",
+          "additions": 83,
+          "deletions": 208,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/render.test.mjs",
+          "additions": 93,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.mjs",
+          "additions": 6,
+          "deletions": 28,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.test.mjs",
+          "additions": 17,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/server/client/App.tsx",
+          "additions": 23,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+          "additions": 3,
+          "deletions": 3,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+          "additions": 64,
+          "deletions": 32,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+          "additions": 12,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/example/README.md",
+          "additions": 10,
+          "deletions": 4,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/example/draw-a-journey.tldr",
+          "additions": 1,
+          "deletions": 1,
+          "generated": true
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml",
+          "additions": 11,
+          "deletions": 12,
+          "generated": false
+        }
+      ],
+      "patch_sha256": "76f8fc11e51d06b346e68ede78df61d6d906e0378312483526b2e23bc1eb70fb",
+      "whitespace_check_exit": 0,
+      "whitespace_check_output": ""
+    },
+    {
+      "layer": 5,
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-5",
+      "base_tree": "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff",
+      "tree": "cefe085d5d9b12b5679421b5607c808d6989a1b7",
+      "files": 10,
+      "additions": 433,
+      "deletions": 27,
+      "changed_lines": 460,
+      "generated_lines": 0,
+      "generated_share": 0.0,
+      "paths": [
+        {
+          "path": "kc-journey-map/lib/journey-progress.mjs",
+          "additions": 28,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/progress.mjs",
+          "additions": 97,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/progress.test.mjs",
+          "additions": 174,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/records.mjs",
+          "additions": 23,
+          "deletions": 5,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/render.mjs",
+          "additions": 17,
+          "deletions": 13,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/lib/storymap.mjs",
+          "additions": 6,
+          "deletions": 8,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+          "additions": 4,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+          "additions": 16,
+          "deletions": 1,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+          "additions": 10,
+          "deletions": 0,
+          "generated": false
+        },
+        {
+          "path": "kc-journey-map/skills/kc-journey-progress/SKILL.md",
+          "additions": 58,
+          "deletions": 0,
+          "generated": false
+        }
+      ],
+      "patch_sha256": "fbbd75200e81847937597b35f8c1936d7f304d0a5a85caf8986205d1f90069ca",
+      "whitespace_check_exit": 0,
+      "whitespace_check_output": ""
+    }
+  ]
+}
