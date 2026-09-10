@@ -89,4 +89,37 @@ require(
     f"exit={missing.returncode} stderr={missing.stderr!r}",
 )
 
+# --- close.py's own readers against a fence file dispatch.sh/watch.sh actually produce ---
+# Same reconciliation as uat-doc.test.py: `debrief_status`/`build_receipt` must read the
+# top-level `<slug> -> {workspace, session, message_sha256}` shape dispatch.sh actually commits
+# (pinned in the sibling dispatch/watch task's own fixture,
+# fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json -- verified against dispatch.sh's real
+# writes in dispatch.test.sh cases (b)/(e)), with close.py's own `merged_sha`/`debrief` additions
+# layered on top of one slug's object, not nested under a "tasks" key.
+import importlib.util as _importlib_util  # noqa: E402
+
+close_spec = _importlib_util.spec_from_file_location("close_module", SCRIPT)
+close_module = _importlib_util.module_from_spec(close_spec)
+close_spec.loader.exec_module(close_module)
+
+dispatch_fence = json.loads(
+    (HERE / "fixtures" / "watch" / "state" / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8")
+)
+dispatch_fence["task-gate-prepared"]["merged_sha"] = "deadbeef"
+dispatch_fence["task-gate-prepared"]["debrief"] = {"status": "pushed", "path": "_debriefs/x.md"}
+require(
+    close_module.debrief_status(dispatch_fence, "task-gate-prepared") == {"status": "pushed", "path": "_debriefs/x.md"},
+    "debrief_status misread a debrief nested in dispatch.sh's real top-level slug shape",
+)
+receipt = close_module.build_receipt(
+    "ship-cloud-wrapper",
+    {"task-gate-prepared": {"pr": "pr-merge:9"}},
+    dispatch_fence,
+)
+require(
+    receipt["tasks"]["task-gate-prepared"]["workspace_id"] == "ws-1"
+    and receipt["tasks"]["task-gate-prepared"]["session_id"] == "sess-gate-prepared",
+    f"build_receipt did not read workspace/session from dispatch.sh's real field names: {receipt!r}",
+)
+
 print("close test: all checks passed")

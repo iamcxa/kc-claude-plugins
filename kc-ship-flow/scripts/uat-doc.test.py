@@ -98,4 +98,25 @@ require(
     "render_pr did not report an absent PR as 'not recorded'",
 )
 
+# --- load_batch_record against a fence file dispatch.sh/watch.sh actually produce ---
+# `kc-ship-flow/scripts/fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json` is the sibling
+# dispatch/watch task's own fixture, pinned to dispatch.sh's real committed shape (verified in
+# `dispatch.test.sh` cases (b)/(e): a top-level `<slug> -> {workspace, session, message_sha256}`
+# map, no `sprint`/`tasks` wrapper). Loading it here -- not a hand-authored stand-in -- is the
+# reconciliation this stage's revise round asked for: `load_batch_record` must read the shape the
+# sibling station actually writes, not this task's own earlier invention.
+DISPATCH_FENCE_DIR = HERE / "fixtures" / "watch" / "state"
+dispatch_record = uat_doc.load_batch_record(str(DISPATCH_FENCE_DIR), "ship-cloud-wrapper")
+require(
+    dispatch_record.get("task-gate-prepared") == {
+        "workspace": "ws-1", "session": "sess-gate-prepared", "message_sha256": "aa",
+    },
+    f"load_batch_record misread dispatch.sh's real fence shape: {dispatch_record!r}",
+)
+require(
+    "tasks" not in dispatch_record,
+    "load_batch_record's result carries a 'tasks' key -- that indirection does not exist in "
+    "dispatch.sh's actual fence file",
+)
+
 print("uat-doc test: all checks passed")

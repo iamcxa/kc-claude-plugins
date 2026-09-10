@@ -8,12 +8,15 @@ usage: close.py <sprint> --state-dir <dir> [--dry-run]
 Design: `docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md`, section "closed".
 Reads the same `<state-dir>/*.md` task entities and `<state-dir>/_ship_fence/<sprint>.json`
 batch record as `uat-doc.py` (dynamically imported here rather than re-implemented, so the two
-scripts never drift on what a task's `pr:` field or the fence file mean).
+scripts never drift on what a task's `pr:` field or the fence file mean). The fence file is the
+top-level map `dispatch.sh` actually writes -- `<slug> -> {workspace, session, message_sha256}`,
+no `sprint`/`tasks` wrapper -- with `merged_sha` and `debrief` added by this script as further
+keys of each slug's own object, and `questions`/`residuals` as batch-level siblings.
 
 A task is *merged* iff its entity's `pr:` frontmatter is exactly `pr-merge:<N>` -- the marker the
 design says the ship FO records once the Captain's merge is observed; any other `pr:` shape
 (a plain `owner/repo#N`, `#N`, or none) is not yet merged. Debrief status per task comes from the
-fence file's `tasks.<slug>.debrief.status`: `"pushed"` (worker committed `_debriefs/...` and
+fence file's `<slug>.debrief.status`: `"pushed"` (worker committed `_debriefs/...` and
 pushed -- the receipt records its path), `"failed"` (a second rejected push -- the design's rule
 that the ship FO does not write the debrief on a worker's behalf and closes anyway, recording the
 failure), or absent/pending (worker hasn't debriefed yet -- blocks closing unless the Captain
@@ -46,7 +49,13 @@ import shlex
 import sys
 from pathlib import Path
 
+try:
+    import jsonschema
+except ImportError:
+    jsonschema = None
+
 HERE = Path(__file__).resolve().parent
+SCHEMA_PATH = HERE.parent / "schemas" / "kc-ship-close-receipt.v2.schema.json"
 MERGED_RE = re.compile(r"^pr-merge:(\d+)$")
 
 
@@ -70,7 +79,7 @@ def merged_pr_number(task):
 
 
 def debrief_status(record, slug):
-    return (record.get("tasks", {}).get(slug, {}) or {}).get("debrief", {}) or {}
+    return (record.get(slug, {}) or {}).get("debrief", {}) or {}
 
 
 def build_debrief_field(record, slug, captain_stopped):
@@ -87,7 +96,7 @@ def build_debrief_field(record, slug, captain_stopped):
 
 def debrief_message(task, record, slug):
     pr_number = merged_pr_number(task)
-    merged_sha = (record.get("tasks", {}).get(slug, {}) or {}).get("merged_sha", "")
+    merged_sha = (record.get(slug, {}) or {}).get("merged_sha", "")
     return (
         f"Your PR #{pr_number} merged at {merged_sha}. Run `spacedock debrief` for your "
         "session, commit it path-scoped under `_debriefs/` on the state branch, and push."
@@ -102,7 +111,7 @@ def print_debrief_messages(tasks, record):
         status = debrief_status(record, slug).get("status")
         if status in ("pushed", "failed"):
             continue
-        session_id = (record.get("tasks", {}).get(slug, {}) or {}).get("session_id", "")
+        session_id = (record.get(slug, {}) or {}).get("session", "")
         message = debrief_message(task, record, slug)
         argv = ["conductor", "message", "create", "--session", str(session_id), "--message", message]
         print(shlex.join(argv))
@@ -113,11 +122,11 @@ def build_receipt(sprint, tasks, record):
     per_task = {}
     for slug in sorted(tasks):
         task = tasks[slug]
-        fence = record.get("tasks", {}).get(slug, {}) or {}
+        fence = record.get(slug, {}) or {}
         per_task[slug] = {
             "slug": slug,
-            "workspace_id": fence.get("workspace_id"),
-            "session_id": fence.get("session_id"),
+            "workspace_id": fence.get("workspace"),
+            "session_id": fence.get("session"),
             "pr": task.get("pr"),
             "merged_sha": fence.get("merged_sha"),
             "debrief": build_debrief_field(record, slug, captain_stopped),
@@ -178,6 +187,10 @@ def run_close(sprint, state_dir, dry_run):
 
 
 def validate_receipt(path):
+    """Plain-Python name-the-field checks run first (a missing debrief names its slug rather than
+    reporting a generic JSON Schema path), then `kc-ship-close-receipt.v2.schema.json` -- the
+    schema is the second gate, never a replacement for the first: it catches shape drift
+    (an extra property, a wrong type) the hand-rolled checks above do not look for."""
     try:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
@@ -197,6 +210,18 @@ def validate_receipt(path):
     missing = sorted(slug for slug, task in tasks.items() if not task.get("debrief"))
     if missing:
         print(f"close: missing debrief field for: {', '.join(missing)}", file=sys.stderr)
+        return 1
+
+    if jsonschema is None:
+        print("close: jsonschema required", file=sys.stderr)
+        return 2
+    try:
+        with SCHEMA_PATH.open(encoding="utf-8") as f:
+            schema = json.load(f)
+        jsonschema.validate(data, schema)
+    except jsonschema.exceptions.ValidationError as exc:
+        loc = "/".join(str(p) for p in exc.absolute_path) or "(root)"
+        print(f"close: {path} violates {SCHEMA_PATH.name} at {loc}: {exc.message}", file=sys.stderr)
         return 1
     return 0
 

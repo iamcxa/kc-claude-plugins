@@ -154,9 +154,15 @@ def load_task_entities(state_dir, sprint):
 
 
 def load_batch_record(state_dir, sprint):
+    """The claim-fence file `dispatch.sh` writes: a top-level map `<slug> ->
+    {workspace, session, message_sha256}` (no `sprint`/`tasks` wrapper -- that indirection was
+    this task's own invention before this fix and does not match what `dispatch.sh` actually
+    writes). `close.py`'s own `<slug>.debrief -> {status, path}` field, plus batch-level
+    `questions`/`residuals` siblings this task's own flow adds, live as additional top-level keys
+    in the same file. Absent file -> empty record, same as an unstarted batch."""
     path = Path(state_dir) / "_ship_fence" / f"{sprint}.json"
     if not path.is_file():
-        return {"sprint": sprint, "tasks": {}, "questions": []}
+        return {}
     with path.open(encoding="utf-8") as f:
         return json.load(f)
 
