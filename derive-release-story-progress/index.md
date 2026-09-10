@@ -534,3 +534,14 @@ The Captain-approved three-unit reduction is implemented and producer-verified, 
 ### Summary
 
 Behavior, exact candidate integrations, approved code/dependency reductions and three-unit reviewability pass at Pilot depth; documentation completion is held by one false retained schema rationale, not a runtime defect. First Officer should route only the stated comment correction while preserving all diagnostics, then bind the refreshed candidate; no broad rerun or new design loop is justified. Producer fresh install/browser/runtime evidence was reviewed, not independently repeated; CI cost per PR remains unmeasured and delivery acceptance pending.
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Apply only the exact reviewer-prescribed schema rationale comment to the three new cumulative candidates, preserving every executable byte and all other blobs.
+  Replaced the three-line false rationale with the exact one-line PATCH/HTTP 400 diagnostic comment. [Immutable closure](schema-comment-correction-evidence/README.md) and [exact byte/tree proof](schema-comment-correction-evidence/comment-only-proof.json) show only this comment differs in each new candidate; all other blobs/modes and executable bytes are identical.
+- DONE: Bind the exact comment-only old/new trees and refresh the concrete uncommitted local-commit packet without rerunning unchanged behavior or overwriting prior evidence.
+  [Final trees and counts](schema-comment-correction-evidence/trees.json), exact file lists/patches and [held local-commit packet](schema-comment-correction-evidence/local-commit-review.md) use `feat(kc-journey-map):` subjects. Unit 1 loses only two comment lines; units 2/3 adjacent patches are unchanged. [Independent cycle 6 evidence](three-unit-independent-validation/README.md) and [prior AC-1..AC-5 producer evidence](three-unit-reduction-evidence/README.md) are retained through the exact comment-only binding; prior reviewer verdict is not overwritten. No fresh runtime/test/install/reviewer run or product commit occurred. Pilot, absent Planning Receipt, source/services preservation and delivery limits remain unchanged.
+
+### Summary
+
+The sole prescribed comment correction is complete and bound to three corrected cumulative trees. The packet is held for the Captain decision through First Officer orchestration; this closure adds no independent runtime verdict or delivery authority.

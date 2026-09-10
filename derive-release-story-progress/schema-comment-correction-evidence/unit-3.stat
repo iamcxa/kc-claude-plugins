@@ -1,0 +1,11 @@
+ kc-journey-map/lib/journey-progress.mjs            |  28 ++++
+ kc-journey-map/lib/progress.mjs                    |  97 ++++++++++++
+ kc-journey-map/lib/progress.test.mjs               | 174 +++++++++++++++++++++
+ kc-journey-map/lib/records.mjs                     |  28 +++-
+ kc-journey-map/lib/render.mjs                      |  30 ++--
+ kc-journey-map/lib/storymap.mjs                    |  14 +-
+ kc-journey-map/skills/kc-journey-map/SKILL.md      |   4 +
+ .../skills/kc-journey-map/references/canvas.md     |  11 +-
+ .../kc-journey-map/references/cell-contract.md     |  10 ++
+ kc-journey-map/skills/kc-journey-progress/SKILL.md |  58 +++++++
+ 10 files changed, 427 insertions(+), 27 deletions(-)

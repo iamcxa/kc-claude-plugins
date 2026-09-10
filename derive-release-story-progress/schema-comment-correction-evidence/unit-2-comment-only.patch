@@ -1,0 +1,15 @@
+diff --git a/kc-journey-map/server/canvas-server.ts b/kc-journey-map/server/canvas-server.ts
+index 535e7d63f33ee83dcfbafa2a6c76b9c8af341cc6..2fc8245c59d4222f3505ccfc4ff3ecb7df4e7656 100644
+--- a/kc-journey-map/server/canvas-server.ts
++++ b/kc-journey-map/server/canvas-server.ts
+@@ -10,9 +10,7 @@ import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
+ const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
+ const DEFAULT_ROOM = 'default'
+ 
+-// The schema the browser client will validate against. A record that fails here would
+-// be accepted by the store and then crash every connected tab on receipt, so PATCH
+-// rejects it at the door instead.
++// Validate PATCH records before writing so malformed client input receives detailed HTTP 400 diagnostics.
+ const schema = createTLSchema()
+ 
+ function validateRecord(record: any): string | null {

@@ -1,0 +1,43 @@
+{
+  "observation": "Exact byte substitution plus complete tree-entry comparison; no runtime revalidation",
+  "before": "// The schema the browser client will validate against. A record that fails here would\n// be accepted by the store and then crash every connected tab on receipt, so PATCH\n// rejects it at the door instead.",
+  "after": "// Validate PATCH records before writing so malformed client input receives detailed HTTP 400 diagnostics.",
+  "units": [
+    {
+      "unit": 1,
+      "old_tree": "063df758d06b2b2170a3378cdff01c4195fbc2b0",
+      "new_tree": "b5bbc4d8ef0f800072fd9635389c481590ff05fb",
+      "only_changed_path": "kc-journey-map/server/canvas-server.ts",
+      "old_file_sha256": "6df5f45be57cb29ac1c04647111edc80de8d609994bb5645fbea7a5a80164e44",
+      "new_file_sha256": "8aa63a718247707c8813df1496a01e8ccc9e21f6a59fb42c6bad6dc358049950",
+      "new_blob": "2fc8245c59d4222f3505ccfc4ff3ecb7df4e7656",
+      "all_other_blobs_and_modes_identical": true,
+      "exact_comment_replacement_and_inverse_pass": true,
+      "executable_bytes_identical": true
+    },
+    {
+      "unit": 2,
+      "old_tree": "a117b410f9b7dde03ee081f5545b4d9755d77e7b",
+      "new_tree": "058298ebd763f16e395c77ebeea1474a193cddc0",
+      "only_changed_path": "kc-journey-map/server/canvas-server.ts",
+      "old_file_sha256": "6df5f45be57cb29ac1c04647111edc80de8d609994bb5645fbea7a5a80164e44",
+      "new_file_sha256": "8aa63a718247707c8813df1496a01e8ccc9e21f6a59fb42c6bad6dc358049950",
+      "new_blob": "2fc8245c59d4222f3505ccfc4ff3ecb7df4e7656",
+      "all_other_blobs_and_modes_identical": true,
+      "exact_comment_replacement_and_inverse_pass": true,
+      "executable_bytes_identical": true
+    },
+    {
+      "unit": 3,
+      "old_tree": "b52f204f4c6a2b6ec09f2657adcca272e97dc1a0",
+      "new_tree": "8a581c3c1bdbc2d11783f35cc040cfafd72c9f3f",
+      "only_changed_path": "kc-journey-map/server/canvas-server.ts",
+      "old_file_sha256": "6df5f45be57cb29ac1c04647111edc80de8d609994bb5645fbea7a5a80164e44",
+      "new_file_sha256": "8aa63a718247707c8813df1496a01e8ccc9e21f6a59fb42c6bad6dc358049950",
+      "new_blob": "2fc8245c59d4222f3505ccfc4ff3ecb7df4e7656",
+      "all_other_blobs_and_modes_identical": true,
+      "exact_comment_replacement_and_inverse_pass": true,
+      "executable_bytes_identical": true
+    }
+  ]
+}
