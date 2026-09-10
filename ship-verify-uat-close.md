@@ -1,16 +1,16 @@
 ---
 title: "ship-flow POC: verify at the integrated head, one UAT document, worker-written debriefs, and a slim close receipt"
-status: ideation
+status: implementation
 source:
 product: kc-ship-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
-started:
+started: 2026-09-10T08:56:36Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-verify-uat-close
 issue:
 pr:
 mod-block:
