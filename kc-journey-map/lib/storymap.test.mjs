@@ -17,7 +17,7 @@ test('the story map draws every element the method calls for', () => {
 		'one-journey',
 		'activity',
 		'story',
-		'story-status',
+		'story-border', 'status-legend',
 		'story-question',
 		'ownership',
 		'release-line',
@@ -90,9 +90,11 @@ test('a map past the 61st shape still gets valid ordered unique indexes', () => 
 		(r) => r.typeName === 'shape'
 	)
 	assert.ok(shapes.length > 61, `fixture emits ${shapes.length} shapes, too few to reach the failure`)
-	const ix = shapes.map((r) => r.index)
-	assert.equal(new Set(ix).size, ix.length, 'two shapes share an index')
-	assert.deepEqual(ix, [...ix].sort(), 'indexes are not in ascending order')
+	for (const parentId of new Set(shapes.map((s) => s.parentId))) {
+		const ix = shapes.filter((s) => s.parentId === parentId).map((r) => r.index)
+		assert.equal(new Set(ix).size, ix.length, 'siblings share an index')
+		assert.deepEqual(ix, [...ix].sort(), 'sibling indexes are not in ascending order')
+	}
 
 	// Unique and ordered is not the same as valid: the leading letter encodes how long the
 	// rest must be, and a run that looked fine produced keys the schema rejected at 62.
@@ -102,12 +104,13 @@ test('a map past the 61st shape still gets valid ordered unique indexes', () => 
 	}
 })
 
-test('story map labels all three states and counts exists alone', () => {
+test('story map borders all three states and counts exists alone', () => {
 	const three = { releases: [{ id: 'r', name: 'Release' }], steps: [{ id: 'a', card: 'Act', stories: ['gap', 'unverified', 'exists'].map((status) => ({ id: status, card: status, release: 'r', status })) }] }
 	const text = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
 	const records = buildStoryMap(three)
-	assert.deepEqual(kindOf(records, 'story-status').map(text), ['GAP', 'UNVERIFIED', 'EXISTS'])
+	assert.deepEqual(kindOf(records, 'story-border').map((s) => s.props.color), ['red', 'violet', 'green'])
+	assert.equal(kindOf(records, 'story-status').length, 0)
 	assert.match(text(kindOf(records, 'release-label')[0]), /1\/3 exist/)
 	delete three.steps[0].stories[0].status
-	assert.equal(text(kindOf(buildStoryMap(three), 'story-status')[0]), 'UNASSESSED')
+	assert.equal(kindOf(buildStoryMap(three), 'story-border').length, 2)
 })

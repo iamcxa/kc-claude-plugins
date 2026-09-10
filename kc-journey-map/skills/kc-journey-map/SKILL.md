@@ -55,7 +55,7 @@ is not the current system, and the status card must say so.
 **4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). Give every story a `status` (`gap`, `unverified` or `exists`) and, when it exists, an `evidence` symbol — the meanings are defined in `references/cell-contract.md`; these are what the lints in `lib/lint.mjs` check. The board is not the
 artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
 by convention) and holds the steps, the stories with their status and evidence, the system
-lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one.
+lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one. Story map and release-board story cards use yellow fill and green/red/violet status borders, with one shared legend per page; `references/canvas.md` describes native editing and export behavior.
 
 Positions are never written to the file. Every layout number is computed from the model's
 order, so a reordered board is a one-line diff instead of a rewritten file.

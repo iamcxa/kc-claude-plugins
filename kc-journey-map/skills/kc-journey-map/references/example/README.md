@@ -30,8 +30,12 @@ run it again to see what it catches.
 | Page | Shows |
 |---|---|
 | Story map | the backbone, its stories, and three release bands |
-| RELEASE 1/2/3 — stories, flow & constraints | selected yellow stories with three-state labels beneath green activity groups; shared flow and constraints once per activity |
+| RELEASE 1/2/3 — stories, flow & constraints | selected yellow stories with status borders beneath green activity groups; shared flow and constraints once per activity |
 | Function map | Command, Event, State and Read model over the same columns |
+
+Both story projections use green/red/violet story borders and one legend per page.
+The saved borders render as standard shapes in other tldraw hosts; dynamic height
+and scale synchronization runs in this canvas (see `../canvas.md`).
 
 Host selection is `unverified`; its actual host exercise remains deferred.
 

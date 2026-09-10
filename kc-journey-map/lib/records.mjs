@@ -1,4 +1,4 @@
-import { getIndices } from '@tldraw/utils'
+import { getIndexAbove, getIndices } from '@tldraw/utils'
 
 // Record factories for agent-authored story maps.
 //
@@ -141,4 +141,44 @@ export function indexes(n) {
 // talk over, and the journey board the code is cited on. Same model, different question.
 export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
+}
+
+export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
+
+// Standard child shapes keep portable exports readable without changing a story's
+// page parent or direct coordinates, which read.mjs uses for release membership.
+export function storyBorder(story) {
+	const status = story.meta?.journey?.status
+	if (story.type !== 'note' || story.meta?.journey?.kind !== 'story' || !Object.hasOwn(STORY_STATUS_COLORS, status)) return null
+	const scale = story.props.scale
+	const border = label({ id: `${story.id}-status-border`, parentId: story.id, x: 0, y: 0,
+		w: 200 * scale, h: (200 + story.props.growY) * scale, text: '', color: STORY_STATUS_COLORS[status], size: 'xl' })
+	border.props.dash = 'solid'
+	border.props.scale = scale
+	border.isLocked = true
+	border.meta = { journey: { kind: 'story-border', nodeId: story.meta.journey.nodeId } }
+	return border
+}
+
+export function withStoryStatus(records) {
+	const parentId = records.find((r) => r.typeName === 'page').id
+	const shapes = records.filter((r) => r.typeName === 'shape')
+	const y = Math.min(0, ...shapes.map((s) => s.y)) - 190
+	let index = shapes.map((s) => s.index).sort().at(-1) ?? 'a1'
+	const legend = []
+	for (const [i, [status, color]] of Object.entries(STORY_STATUS_COLORS).entries()) {
+		const text = `${status.toUpperCase()}\n${{ exists: 'evidence supported', gap: 'known missing', unverified: 'pending verification' }[status]}`
+		const id = `shape:${parentId.slice(5)}-status-legend-${status}`
+		const sample = label({ id, parentId, x: 300 + i * 380, y, w: 360, h: 90, text, color, size: 's', index: index = getIndexAbove(index) })
+		sample.meta = { journey: { kind: 'status-legend', nodeId: status } }
+		const border = label({ id: `${id}-border`, parentId: id, x: 0, y: 0, w: 360, h: 90, text: '', color, size: 'xl' })
+		border.props.dash = 'solid'
+		border.isLocked = true
+		border.meta = { journey: { kind: 'legend-border', nodeId: status } }
+		legend.push(sample, border)
+	}
+	const caption = label({ id: `shape:${parentId.slice(5)}-status-legend-caption`, parentId,
+		x: 300, y: y + 100, w: 1120, h: 64, text: 'Story status is not delivery acceptance.', color: 'grey', size: 's', index: getIndexAbove(index) })
+	caption.meta = { journey: { kind: 'status-legend-caption', nodeId: 'status-legend' } }
+	return [...records, ...shapes.map(storyBorder).filter(Boolean), ...legend, caption]
 }

@@ -54,8 +54,8 @@ test('worked host selection stays unverified across projections and contract', (
 	assert.equal(host.status, 'unverified')
 	const release = model.releases.find((r) => r.id === host.release)
 	const text = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
-	for (const [records, kind] of [[buildStoryMap(model), 'story-status'], [buildJourneyBoard(model, { release }), 'story-proof']]) {
-		assert.match(text(records.find((s) => s.meta?.journey?.nodeId === host.id && s.meta.journey.kind === kind)), /^UNVERIFIED/)
+	for (const [records, kind] of [[buildStoryMap(model), 'story-border'], [buildJourneyBoard(model, { release }), 'story-border']]) {
+		assert.equal(records.find((s) => s.meta?.journey?.nodeId === host.id && s.meta.journey.kind === kind).props.color, 'violet')
 		const stories = model.steps.flatMap((s) => s.stories ?? []).filter((s) => s.release === release.id)
 		const count = stories.filter((s) => s.status === 'exists').length
 		assert.match(text(records.find((s) => s.meta?.journey?.nodeId === release.id && s.meta.journey.kind === 'release-label')), new RegExp(`${count}/${stories.length} (stories )?exist`))

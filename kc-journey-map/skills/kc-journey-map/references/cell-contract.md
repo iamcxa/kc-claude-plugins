@@ -58,6 +58,8 @@ built; see "Stories".
   missing implementation; `unverified` means the required behavior has not yet been
   verified; `exists` means implementation evidence supports its relevant execution
   boundary. Missing evidence alone does not prove absence.
+- Story cards use green / red / violet borders for `exists` / `gap` / `unverified`,
+  with one shared legend per page. See `canvas.md` for editing and export behavior.
 - Only `exists` counts toward the implemented-story total in `buildStoryMap` and
   `buildJourneyBoard`. It does not mean delivery acceptance or release completion.
   A symbol lookup checks citation consistency, not the complete execution boundary.
@@ -65,7 +67,8 @@ built; see "Stories".
   repository — required whenever `status: exists`. Not a `file:line`: a line number goes
   stale silently and the lint would have nothing stable to search for.
 - `question:` is optional and orthogonal to status: an unresolved decision, on a story
-  in any of the three states. Drawn violet.
+  in any of the three states. Story-map question boxes are violet; release-board
+  evidence/question boxes are neutral, so their frame is not a second status signal.
 - A bare string story (`- "some idea"`) cannot carry any of the three fields — it fires
   the `no-status` lint. Give it an id and object form as soon as it needs one.
 

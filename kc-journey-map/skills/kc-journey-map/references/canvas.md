@@ -55,10 +55,20 @@ node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map
 
 **Journey boards use stories as the review unit.** Each release page shows its selected
 stories as yellow cards under green activity headings (`activity`, falling back to
-`card`). A separate box below each story shows its status, evidence symbol and open
-question. `EXISTS` describes recorded implementation evidence, not delivery acceptance.
+`card`). Each story has a solid 10 px status border: green for `exists`, red for `gap`,
+violet for `unverified`, with one legend per page. Neutral boxes below retain evidence
+and questions. `EXISTS` describes implementation evidence, not delivery acceptance.
 With no releases, the whole-journey board also shows unassigned stories and marks
 activities that have no stories yet.
+
+`records.mjs:storyBorder` keeps each story as a native yellow note with a locked,
+empty geo child. `App.tsx:syncStoryBorders` updates that child after note creation
+and changes, including measured text height and scale, and repairs loaded borders.
+Moving the note moves its border without changing the page parent or coordinates
+read by `read.mjs`. Plain notes without a story status keep their native behavior.
+PNG, SVG and `.tldr` exports include standard shapes; other tldraw hosts retain
+the saved border geometry, while subsequent height/scale edits need this canvas
+for synchronization. `node --test lib/render.test.mjs` checks generated geometry.
 
 System flow and constraints span each activity group once. The file currently stores
 `system`, `cites`, `rules` and `note` on the activity, so the board labels them as shared
@@ -132,7 +142,7 @@ steps:
       - id: …
         card: …
         release: …
-        status: exists      # gap | unverified | exists — required; labeled per story
+        status: exists      # gap | unverified | exists — required; border color per story
         evidence: …          # a bare symbol that greps in the repo; required when status is exists
         question: …          # optional — an unresolved decision, drawn violet
 later: [ … ]               # activities below the release boundary

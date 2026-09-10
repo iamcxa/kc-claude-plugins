@@ -8,7 +8,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine } from './records.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, storyStatusLabel } from './model.mjs'
@@ -53,7 +53,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 	const lane = (slug, text, y, h) => box(`lane-${slug}`, `lane-${slug}`, 'lane-label', text, LANE_X, y, LANE_W, h, 'grey')
 	const activityText = (step) => step.activity ?? step.card
 	const proofText = (story) => [
-		storyStatusLabel(story.status),
+		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
 		story.question && `? ${story.question}`,
 	].filter(Boolean).join('\n')
@@ -77,7 +77,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 
 	lane('activity', 'ACTIVITIES\nshared groups', 0, activityH)
 	lane('journey', 'RELEASE STORIES\nwhat a person can do', storyY, 200)
-	lane('evidence', 'STORY STATUS\nevidence and open questions\nEXISTS is not delivery acceptance', proofY, proofH)
+	lane('evidence', 'STORY EVIDENCE\nevidence and open questions', proofY, proofH)
 	lane('system', 'SYSTEM FLOW\nshared by the activity; story mapping not recorded', systemY, systemH)
 	lane('constraints', 'CONSTRAINTS\nshared by the activity; story mapping not recorded', rulesY, rulesH)
 
@@ -91,10 +91,10 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 			put.push({
 				...note({ id: `${idp}story-${story.id}`, parentId, text: story.card,
 					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
-				meta: tag(story.id, 'story'),
+				meta: { journey: { nodeId: story.id, kind: 'story', ...(story.status ? { status: story.status } : {}) } },
 			})
 			box(`proof-${story.id}`, story.id, 'story-proof', proofText(story), sx, proofY, STORY_W, proofH,
-				story.status === 'gap' ? 'red' : story.status === 'exists' ? 'grey' : 'violet')
+				'grey')
 		})
 		box(`sys-${step.id}`, step.id, 'system', systemText(step), x, systemY, w, systemH)
 		box(`rules-${step.id}`, step.id, 'constraints', ruleText(step), x, rulesY, w, rulesH, 'blue')
@@ -130,7 +130,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 		const text = `SLICE\n${slice.outcome}`
 		box('slice-label', slice.id, 'slice-label', text, LANE_X, y + 50, LANE_W, fitHeight(text, LANE_W))
 	}
-	return put
+	return withStoryStatus(put)
 }
 
 export function loadJourney(path) {

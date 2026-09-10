@@ -2,7 +2,7 @@
 //
 // Jeff Patton's shape: blue for the persona and for release boundaries, green for the
 // backbone of activities, yellow for the stories beneath them, small labels for ownership
-// and for evidence status. The backbone reads left to right as a narrative.
+// and story status borders. The backbone reads left to right as a narrative.
 //
 // A release is a horizontal band across every activity, named at the left margin, with a
 // full-width line above it. That is what makes the map plannable: the first band has to be
@@ -13,8 +13,8 @@
 // The default story map shows status at story grain. Optional release boards and
 // generated contracts provide detail from the same model.
 
-import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
-import { normalizeStory, storyStatusLabel } from './model.mjs'
+import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus } from './records.mjs'
+import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -203,23 +203,7 @@ export function buildStoryMap(model, room = null) {
 				const y = bandTop + j * STORY_PITCH
 				put.push({
 					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
-					meta: tag(story.id, 'story'),
-				})
-
-				put.push({
-					...label({
-						id: `shape:sm-story-status-${story.id}`,
-						text: storyStatusLabel(story.status),
-						x,
-						y: y - 46,
-						w: 200,
-						h: 40,
-						index: ix[n++],
-						parentId,
-						color: story.status === 'gap' ? 'red' : story.status === 'exists' ? 'grey' : 'violet',
-						size: 's',
-					}),
-					meta: tag(story.id, 'story-status'),
+					meta: { journey: { nodeId: story.id, kind: 'story', ...(story.status ? { status: story.status } : {}) } },
 				})
 
 				if (story.question) {
@@ -269,6 +253,6 @@ export function buildStoryMap(model, room = null) {
 		})
 	})
 
-	return put
+	return withStoryStatus(put)
 }
 
