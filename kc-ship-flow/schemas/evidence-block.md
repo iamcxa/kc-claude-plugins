@@ -18,7 +18,10 @@ different script:
 - It exits 0 retained and non-zero once `WITHOUT_IT_REMOVED_VARIANT` is applied — this is
   `kc-ship-flow/scripts/without-it.sh <sha> <command> <removed-variant>`'s own contract (see
   `references/stations/without-it.md`); `accept-evidence.sh`'s own AC-1 check separately re-runs
-  `WITHOUT_IT_COMMAND` at `BASE_SHA` in a fresh worktree and refuses if that exit is 0 or 126/127.
+  `WITHOUT_IT_COMMAND` at `BASE_SHA` in a fresh worktree and refuses if that exit is 0, or 126/127
+  with its executed path not truly added between `BASE_SHA` and `CANDIDATE_SHA` — the exact
+  executed-path and added-vs-renamed rule is `references/stations/accept-evidence.md`'s, not
+  restated here.
 - The First Officer runs it verbatim, unchanged — a procedural rule with no script today (see
   `references/kernel.md`'s residuals).
 
