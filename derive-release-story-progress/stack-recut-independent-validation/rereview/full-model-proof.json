@@ -1,0 +1,22 @@
+[
+  {
+    "layer": 2,
+    "case": "same-wording",
+    "entire_model_diff": "only a-2.card changes"
+  },
+  {
+    "layer": 2,
+    "case": "distinct-wording",
+    "entire_model_diff": "only a-2.card changes"
+  },
+  {
+    "layer": 3,
+    "case": "same-wording",
+    "entire_model_diff": "only a-2.card changes"
+  },
+  {
+    "layer": 3,
+    "case": "distinct-wording",
+    "entire_model_diff": "only a-2.card changes"
+  }
+]

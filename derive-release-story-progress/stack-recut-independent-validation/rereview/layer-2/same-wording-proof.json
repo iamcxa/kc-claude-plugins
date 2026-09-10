@@ -1,0 +1,100 @@
+{
+  "tree": "9702db9d0b908b03d44e92dcc87ec20a16a61731",
+  "kind": "refusal",
+  "seam": "real server PATCH -> journey-read CLI --out -> YAML identity",
+  "cases": [
+    {
+      "name": "same-wording",
+      "render_status": 200,
+      "patch_status": 200,
+      "cli_exit": 0,
+      "cli_stdout": "{\n  \"reordered\": null,\n  \"reworded\": [\n    {\n      \"id\": \"a-2\",\n      \"field\": \"story\",\n      \"page\": \"storymap\",\n      \"step\": \"a\",\n      \"was\": \"Names it\",\n      \"now\": \"Edited second story\"\n    }\n  ],\n  \"releaseMoved\": [],\n  \"storiesReordered\": [],\n  \"duplicated\": [],\n  \"unclaimed\": [],\n  \"missing\": []\n}\napplied:\n  reworded story a-2\nwrote: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/independent-recut-rereview/layer-2/same-wording-out.yaml\n",
+      "cli_stderr": "",
+      "expected": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2"
+        }
+      ],
+      "actual": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2"
+        }
+      ],
+      "identity_preserved": true,
+      "source_hash_before": "61eae0dc19d124bf50da1bb95eb9075b1831ec4e7ef5061fe2309837e7c7b22b",
+      "source_hash_after": "61eae0dc19d124bf50da1bb95eb9075b1831ec4e7ef5061fe2309837e7c7b22b",
+      "source_preserved": true
+    },
+    {
+      "name": "distinct-wording",
+      "render_status": 200,
+      "patch_status": 200,
+      "cli_exit": 0,
+      "cli_stdout": "{\n  \"reordered\": null,\n  \"reworded\": [\n    {\n      \"id\": \"a-2\",\n      \"field\": \"story\",\n      \"page\": \"storymap\",\n      \"step\": \"a\",\n      \"was\": \"Confirms it\",\n      \"now\": \"Edited second story\"\n    }\n  ],\n  \"releaseMoved\": [],\n  \"storiesReordered\": [],\n  \"duplicated\": [],\n  \"unclaimed\": [],\n  \"missing\": []\n}\napplied:\n  reworded story a-2\nwrote: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/independent-recut-rereview/layer-2/distinct-wording-out.yaml\n",
+      "cli_stderr": "",
+      "expected": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2"
+        }
+      ],
+      "actual": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2"
+        }
+      ],
+      "identity_preserved": true,
+      "source_hash_before": "7e913f69685e700bc62b93fb96835301b3f0c087ed9c7ad04ac3b424040c17b4",
+      "source_hash_after": "7e913f69685e700bc62b93fb96835301b3f0c087ed9c7ad04ac3b424040c17b4",
+      "source_preserved": true
+    }
+  ],
+  "owned_server_stopped": true
+}

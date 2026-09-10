@@ -459,3 +459,25 @@ FAIL for independently safe intermediate delivery: same-wording stories can be w
 ### Summary
 
 The single intermediate-layer safety finding has producer closure evidence from the same falsifiable runtime scenario and its passing control. Corrected exact candidates and the updated local-commit proposal are ready for the one focused independent re-review; final product endpoints and earlier approvals remain unchanged.
+
+## Stage Report: validation (cycle 4)
+
+- DONE: Verify that each intermediate layer is independently usable, accurately documented, and free of missing or hidden later-layer dependencies; attack a concrete isolation or safety claim not settled by the producer checks.
+  PASS: the original real API PATCH -> `journey-read --out` falsifier now updates only second ID `a-2` for same-wording stories in corrected layers 2/3; distinct-wording controls also pass, all four CLI exits are zero, source hashes stay unchanged, and full output-model comparison shows only the intended wording change. Evidence: `stack-recut-independent-validation/rereview/layer-{2,3}/same-wording-proof.json` and `full-model-proof.json`.
+  The original negative/control evidence remains under `stack-recut-independent-validation/initial`; replacing ID selection with old-text search recreates that observed failure. Earlier verified layer-1 legacy/available-command preservation and layer-2 module isolation remain unchanged by this sole +5/-1 existing block.
+- DONE: Audit the exact five candidate tree/file manifests, relevant producer check evidence and final equality proof without redundantly rerunning owned green deterministic checks.
+  Reviewed updated `stack-recut-evidence/{manifest,equivalence,patch-proof}.json`, `local-commit-review.md`, frozen correction README/closure proof and promoted patch. `rereview/binding.json` matches both corrected read-file hashes and frozen README SHA-256 `eb8601c22d0d6d84e099af605a6ec60613f9ee31289440f7a22344fd9081a8b0`; both snapshots have no unstaged tracked changes.
+  Exact trees: layer 1 `feec1a91f7479f9f1ff15b8a0bf8650d86271421`; layer 2 `9702db9d0b908b03d44e92dcc87ec20a16a61731`; layer 3 `1738d173046d750819cd40e8ee838dd3eace114e`; layer 4 `6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff`; layer 5 `cefe085d5d9b12b5679421b5607c808d6989a1b7`.
+  The promoted stable-ID selector/stale-wording refusal is the only layer-2/3 correction; layer-3 original-tree equality is qualified by that exact patch. Final layers 4/5 retain exact original merge equality. No unaffected full suite, install, layout run or equality replay was repeated.
+  AC-1: unchanged final standalone drawing/optional refresh proof remains bound; a mandatory reader would fail the retained empty-PATH observation.
+  AC-2: unchanged full journey/release/story identity and differing task/story ratio proof remains bound; early writer now also respects the requested story ID.
+  AC-3: retained missing/partial/ambiguous/unreadable/archive/reopen/pagination checks remain valid; producer stale-wording guard evidence covers the promoted refusal branch.
+  AC-4: unchanged final three-color/provenance and pending-delivery-acceptance proof remains bound; development completion still does not assert acceptance.
+  AC-5: independent corrected intermediate readback preserves source bytes and all model fields except the requested wording; final derived-progress and task/source preservation evidence remains bound to unchanged layer 5.
+- DONE: Append an independent validation report with scoped findings or PASS, original AC coverage and delivery-only limits; preserve candidate bytes, original branches, rooms, and old approvals.
+  `stack-recut-independent-validation/rereview/README.md` records PASS and reproduction. Both owned ephemeral API servers stopped; no product source/commit/provider/room/status/gate changes, and original FAIL plus FO-recorded validation/1 correction round remain intact.
+  No unresolved finding remains in this focused scope. CI cost is unmeasured; shared-install and blocked external-icon appearance limits remain, and inherited layer-3 EOF whitespace is unchanged. Exact local-commit approval and all later delivery authorities remain outstanding.
+
+### Summary
+
+PASS for the corrected five-layer local delivery proposal: the sole reported intermediate writeback safety failure is fixed and independently exercised on both affected trees. The exact candidate packet can proceed to Kent's local-commit review; no commit, PR, merge or delivery acceptance is granted by this validation.
