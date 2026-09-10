@@ -19,6 +19,17 @@ gates:
                 id: briefing:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1
                 digest: sha256:68a25b098d6ffe011b12240fa4392e022eda7c5dbe98d22b3c51707a37c2872f
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:td0yhsww2jnwnrzh5c6wc6er:backlog:1
+                briefing: briefing:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T09:12:02.999076Z"
+                decision: approve
+                reason: Captain Kent approved these issue repairs with "確認，就這樣交付" and selected Pilot for both with "Pilot可以". This initial admission records that existing scope/profile decision after publishing its administrative brief; it grants shape only and does not claim approval of a later implementation or future evidence.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
