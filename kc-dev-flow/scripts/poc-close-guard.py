@@ -142,24 +142,39 @@ def parse_outcome(text: str, receipt: dict[str, object]) -> str:
         raise CloseError("decision_ready_elapsed_seconds does not match the timestamps")
     if (elapsed > int(receipt["poc_decision_ready_minutes"]) * 60 or interventions) and direction != "change":
         raise CloseError("budget exhaustion or Captain intervention requires direction change")
-    close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
-    unsigned(close, "captain_wait_seconds")
-    unsigned(close, "terminal_cleanup_seconds")
-    if one_field(close, "cleanup_status") not in {"complete", "failed", "not-applicable"}:
-        raise CloseError("cleanup_status is invalid")
     return direction
 
 
+def validate_measurements(text: str, *, final: bool) -> None:
+    close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
+    status = one_field(close, "cleanup_status")
+    if status not in {"pending", "complete", "failed", "not-applicable"}:
+        raise CloseError("cleanup_status is invalid")
+    pending = []
+    for field in ("captain_wait_seconds", "terminal_cleanup_seconds"):
+        if one_field(close, field) == "pending":
+            pending.append(f"{field}=pending")
+        else:
+            unsigned(close, field)
+    if final and (pending or status not in {"complete", "not-applicable"}):
+        raise CloseError(f"POC close incomplete: cleanup_status={status}" + ("; " + ", ".join(pending) if pending else ""))
+
+
 def validate(path: Path, phase: str) -> tuple[str, str, str, str]:
-    if phase not in {"prepare", "review", "consume"}:
+    if phase not in {"prepare", "review", "consume", "check-final"}:
         raise CloseError(f"unsupported close phase: {phase}")
     text, item_id, receipt = read_work_item(path)
     proof_path = str(receipt["poc_proof_path"])
     stage = str(receipt["workflow_stage"])
     allowed = {"validation", "implementation"} if phase in {"prepare", "review"} and proof_path == "direct" else {"validation"}
+    if phase == "check-final":
+        allowed = {"done"}
     if stage not in allowed:
         raise CloseError(f"POC {proof_path} close path requires work item status {' or '.join(sorted(allowed))}")
-    return item_id, parse_outcome(text, receipt), proof_path, stage
+    direction = parse_outcome(text, receipt)
+    if "poc_artifact" in receipt or phase == "check-final":
+        validate_measurements(text, final=phase == "check-final")
+    return item_id, direction, proof_path, stage
 
 
 def invoke_spacedock(
@@ -269,11 +284,16 @@ def parse_args() -> argparse.Namespace:
     prepare.add_argument("--summary", required=True)
     commands.add_parser("review", help="Read the profile-selected proof report and POC evidence as JSON")
     commands.add_parser("consume")
+    commands.add_parser("check-final", help="Read-only check of terminal status and completed close measurements")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    if args.command == "check-final":
+        item_id, direction, _proof, _stage = validate(args.work_item, "check-final")
+        print(json.dumps({"id": item_id, "direction": direction, "close_complete": True}))
+        return 0
     if args.spacedock_bin is None:
         raise CloseError("spacedock executable is required")
     spacedock = args.spacedock_bin.expanduser().resolve()
