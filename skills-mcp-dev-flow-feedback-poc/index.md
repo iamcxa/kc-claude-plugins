@@ -686,3 +686,22 @@ Initial pre-Captain-gate observation: captain_wait_seconds is zero because no ga
 ### Summary
 
 The existing runner produced one correct maintenance recommendation under its observed configuration, but did not establish a clean instruction boundary. The direct outcome is change: preserve this bounded observation and stop; no general improvement claim, delivery proposal, gate action, or terminal completion is made.
+
+## Dispatch checklist correction
+
+The First Officer corrected its original completion checklist: its first item required an actually isolated run, although the Captain-approved Exploration Brief requires stopping with `change` when comparison validity cannot be established. The original FAILED report correctly records failure of that stronger dispatch obligation and remains unchanged. This correction follows the First Officer's record-only implementation advance assignment; it changes the stage-completion boundary to include attempting the existing runner and determining isolation, not the frozen experimental criteria or the observed result.
+
+The experiment remains closed at one baseline execution. Instruction isolation is UNPROVEN; initialization listed installed plugins but did not prove their instruction bodies were loaded. Valid comparative proof remains unavailable, and the existing `change` outcome, decision-ready timestamp, close measurement, frozen rubric, prompts, and model results remain unchanged. No new execution or renewed proof occurred during this bookkeeping correction.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Freeze one real failure and normal control, validate the observation criteria, attempt the unchanged baseline with an existing runner, and determine whether its instruction isolation is established.
+  Freeze commit b91ffdaf567da14dcf541d8cd079384eea2fe708 and retained calibration anchors distinguish no-work, duplicate construction, and existing-seam repair; the single existing-runner attempt wrote ACTION.json, while initialization evidence leaves instruction isolation UNPROVEN. This completes the attempt-and-determine obligation; it does not pass isolation or comparative proof.
+- DONE: Use at most four comparison executions and stop on no baseline failure, missing validity, or the 15-minute limit.
+  Existing execution metadata records one baseline, zero normal/candidate runs, and the validity-based stop at decision-ready 04:19:00Z, 539 seconds after admission. The correct action is one observation under the observed configuration, not general no-headroom or improvement evidence.
+- DONE: Record attributable evidence, one direct POC outcome, separate close measurement, and cleanup in this exact task state.
+  Evidence commit 578fae54cd4b1fb13d36c8084016b0965642f282 retains exact safe prompts/results, model/runtime metadata, actual tool effects, one unchanged change outcome, separate initial close measurement, and verified scratch cleanup; this append retains the original FAILED report and all prior bytes.
+
+### Summary
+
+The approved bounded experiment is complete as an attempted comparison with isolation UNPROVEN and direction `change`. The First Officer's checklist correction accounts for the already approved validity stop; it changes neither the experimental scoring rule nor the failed proof, and adds no model execution, product change, gate action, or terminal completion.
