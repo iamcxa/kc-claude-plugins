@@ -1,7 +1,7 @@
 ---
 id: g87dzxbq3j3rdwzneqr4g5nt
 title: Ask which boards to draw, and default to the user journey alone
-status: implementation
+status: validation
 source: captain
 product: kc-team-ops
 planning-window:
