@@ -1,0 +1,3 @@
+Implement the approved optional progress skill and real local task reader/calculator with complete mapping, full identity, archived/reopened-task handling, and honest development progress for AC-1, AC-2, and AC-3.
+Integrate the derived snapshot into both story projections without coupling drawing to Spacedock or leaking progress through readback; prove the real CLI/canvas seam and three-color pending-acceptance behavior for AC-4 and AC-5.
+Record the exact uncommitted candidate, proportional green/red evidence, measured scope and minimal necessity in a durable report; preserve the approved base, task states, source journeys, user rooms and services.
