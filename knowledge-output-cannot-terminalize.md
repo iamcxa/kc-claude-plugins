@@ -8,7 +8,7 @@ sprint: S8
 started: 2026-09-10T16:27:54Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-knowledge-output-cannot-terminalize
 issue:
 pr:
 mod-block:
