@@ -47,6 +47,17 @@ gates:
                 id: briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1
                 digest: sha256:59133c34c0735bc13868d806761ba1c6eab7267aa071df4bcee53dd34af2a55e
                 room-ref: ./review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:td0yhsww2jnwnrzh5c6wc6er:ideation:2
+                briefing: briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T09:37:49.025289Z"
+                decision: approve
+                reason: Captain Kent replied "批准" to the presented two-item ideation review, including this task snapshot 59133c34. Accept the three-file design and enter implementation; new model spend remains separately reserved.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
