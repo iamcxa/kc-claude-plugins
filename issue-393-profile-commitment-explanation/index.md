@@ -58,6 +58,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+worktree: .worktrees/spacedock-ensign-issue-393-profile-commitment-explanation
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
