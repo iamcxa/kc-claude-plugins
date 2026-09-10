@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): make retained architecture explanations discoverable"
-status: backlog
+status: ideation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -29,7 +29,7 @@ gates:
                 reason: Captain Kent approved these issue repairs with "確認，就這樣交付" and selected Pilot for both with "Pilot可以". This initial admission records that existing scope/profile decision after publishing its administrative brief; it grants shape only and does not claim approval of a later implementation or future evidence.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
