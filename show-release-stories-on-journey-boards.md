@@ -26,6 +26,17 @@ gates:
                 id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1
                 digest: sha256:1f42307ebe5318d7f9f9508d14936bdc5d9c93a37ae01179502ac4c528348d15
                 room-ref: ./show-release-stories-on-journey-boards/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wwn8jfrh1f6k6zyj5tfcjb23:backlog:1
+                briefing: briefing:wwn8jfrh1f6k6zyj5tfcjb23:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T09:24:50.160423Z"
+                decision: approve
+                reason: 'Kent approved the presented Pilot admission: release story boards, gap/unverified/exists, deferred host-selection verification, and preparation of the required local execution group.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
