@@ -7,6 +7,7 @@ sprint-readiness: ready
 issue: iamcxa/kc-claude-plugins#396
 provenance: https://github.com/iamcxa/kc-claude-plugins/issues/396
 id: m0e43swm7wrs71xy98ea43gp
+started: 2026-09-10T09:09:43Z
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
