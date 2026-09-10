@@ -1,0 +1,11 @@
+✔ lintEvidenceNotFound fires when the cited symbol no longer greps, and passes when it does (810.430084ms)
+✔ evidence that greps only in prose is reported missing, even though the string exists (1021.457042ms)
+✔ lint rejects unsupported status and accepts gap, unverified and exists (689.62775ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2582.878917

@@ -298,3 +298,24 @@ Retained-document trigger=true for the new optional skill and bounded existing r
 ### Summary
 
 A complete task mapping needs one explicit scope assertion in an existing task, not a count of whatever metadata happens to be present. The local CLI can carry that scalar contract, and the existing drawing/readback seam can display a derived snapshot while preserving journey intent. One bounded implementation route is ready for ideation review; task-derived usability or delivery acceptance is not claimed.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved optional progress skill and real local task reader/calculator with complete mapping, full identity, archived/reopened-task handling, and honest development progress for AC-1, AC-2, and AC-3.
+  AC-1: `implementation-evidence/final-scoped-tests.txt` exercises empty-PATH drawing, invalid-argument refusal and real CLI-to-canvas drawing; `without-snapshot.txt` fails when the renderer stops consuming the snapshot.
+  AC-2: the real fixture yields 2/3 done tasks but 1/2 complete stories with archived task readback and full stored IDs; dropping journey/release identity or using task totals fails the named mutations in `implementation-evidence/mutations.json`.
+  AC-3: actual missing/partial/conflicting/duplicate/short-ID/malformed record cases stay unverified, actual truncated pagination refuses, and reopening removes completion; empty scope and all-done-without-declaration cannot complete (`final-scoped-tests.txt`).
+- DONE: Integrate the derived snapshot into both story projections without coupling drawing to Spacedock or leaking progress through readback; prove the real CLI/canvas seam and three-color pending-acceptance behavior for AC-4 and AC-5.
+  AC-4: `mixed-storymap.png` shows red/green/violet with task provenance; `all-done-board.png` and `all-done-cli.json` show 2/2 stories development-complete, pending delivery acceptance. Removing shared derived-border selection fails `without-derived-border.txt`; authored executable-symbol lint remains green (`authored-lint-tests.txt`).
+  AC-5: `native-edit-proof.json` and `native-save-as.txt` bind real native wording edit to the sole expected YAML text change; no progress fields persist. CLI fixture source/task bytes remain unchanged, and injecting progress into wording fails `wording-leak.txt`.
+- DONE: Record the exact uncommitted candidate, proportional green/red evidence, measured scope and minimal necessity in a durable report; preserve the approved base, task states, source journeys, user rooms and services.
+  `implementation-evidence/candidate-manifest.json` SHA-256 f0261937f5c5a92455add6e86215c1a7d2444dec1b6fcd6e3e70bbe537128e99 binds 10 product files / 460 changed lines / 125 reader+CLI lines against bc51b2464659594d3c06806442c77ec15319962b (limits 10 / 700 / 260). Product staging is empty; no product commit was made.
+  Six producer mutations failed; restored candidate passed five progress checks, three focused existing readback checks, three authored lint checks and diff whitespace validation. `implementation-evidence/README.md` maps each retained file and comment decision to its necessity and lists the exact commands.
+  Project-context receipt: impact=none; authority=PRODUCT.md/ARCHITECTURE.md/CLAUDE.md; surface=plugin and workflow/provider/delivery boundaries; stale_claim/approved_change/landed_change=none; implementation evidence=exact diff plus exercised read-only/standalone route; independent validation still owns fresh validation_evidence. Existing catalog omission not widened.
+  Optional implementation observation: UNAVAILABLE(reason: unsupported); pinned exact-input protocol cannot bind this uncommitted candidate to a Git tip object. RoboRev v0.62.0 capability help read, request/confirmation counts 0/0; no provider job, no convenience commit. Details and configuration hash are in `implementation-evidence/README.md`.
+  Preserved original listeners 3737/3741/5858 and their existing room list; isolated preview only on 3743/5863. Existing App.tsx, read.mjs, manifests/lockfiles and valuable journey files remain unchanged. Dependency symlink and preview cleanup condition are explicitly recorded.
+
+### Summary
+
+The optional skill now derives development progress through the real local task CLI and renders it through the existing canvas/readback seams. Preview links, partial/all-done PNGs, exact manifest, necessity observations and limits are retained in `implementation-evidence/README.md`; fixtures do not represent real-project delivery. The 10-file candidate is frozen uncommitted for independent validation, with no product delivery or acceptance action authorized.

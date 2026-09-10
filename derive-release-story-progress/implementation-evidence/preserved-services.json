@@ -1,0 +1,14 @@
+{
+  "unchangedListeners": "COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    37382 kent   20u  IPv4 0xc3ebe81f8046ae7d      0t0  TCP 127.0.0.1:5858 (LISTEN)\nnode    80105 kent   29u  IPv4 0x178b02afab795de4      0t0  TCP 127.0.0.1:3741 (LISTEN)\nnode    96295 kent   14u  IPv4 0x9b866e3bb2d52e66      0t0  TCP 127.0.0.1:3737 (LISTEN)\n",
+  "ownedBackendPort": 5863,
+  "ownedBackendPID": 30667,
+  "ownedFrontendPort": 3743,
+  "ownedFrontendPID": 30751,
+  "ownedRooms": [
+    "progress-mixed",
+    "progress-all-done"
+  ],
+  "endpointOverride": "test-only .context/progress-probe/vite.config.mjs; source App.tsx untouched",
+  "unchangedExistingRoomCount": 26,
+  "unchangedExistingRoomListSha256": "9f44e24a388887e8e83c5674d6c6fe7dc83ec218136c1505686481bb981fc3a1"
+}

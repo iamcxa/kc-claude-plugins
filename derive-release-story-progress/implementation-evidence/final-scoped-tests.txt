@@ -1,0 +1,13 @@
+✔ real archived reader distinguishes task/story ratios, full identities, and reopening (284.084833ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (1269.15375ms)
+✔ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (432.477375ms)
+✔ derived projections use three borders without entering story wording or source readback (94.497709ms)
+✔ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (1128.057917ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3315.610542

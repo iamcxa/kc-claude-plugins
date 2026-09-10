@@ -1,0 +1,26 @@
+[
+  {
+    "path": "all-done.yaml",
+    "sha256": "ad29cb40933ffdbf8bfde40cd9dbb0ced46a3d56e464f87f08f7bc1754b1a5c7"
+  },
+  {
+    "path": "workflow/a.md",
+    "sha256": "012f476ddb9f70bf9368a633365c76a21cf16970af7980b0c034fa19ef040e82"
+  },
+  {
+    "path": "workflow/b.md",
+    "sha256": "5a76a338d26b3847c51b2101760bf363072fd43d52ab954b1290ea813a581493"
+  },
+  {
+    "path": "workflow/_archive/c.md",
+    "sha256": "5535082dccd11b5c12dad26a15e9ee40c105eaed0d6695a91cd92e5e036ceabe"
+  },
+  {
+    "path": "workflow/d.md",
+    "sha256": "5ee4fbc8f28071cb3f98d9365791d4618bab509ad482b3fffceef706f63d213c"
+  },
+  {
+    "path": "workflow/e.md",
+    "sha256": "5b0e95ac02aaa87bc3efccddaae85a8c94928d877a176acfbe143f298e1453a9"
+  }
+]

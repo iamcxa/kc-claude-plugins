@@ -1,0 +1,32 @@
+✖ derived projections use three borders without entering story wording or source readback (350.795417ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 436.911291
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:120:1
+✖ derived projections use three borders without entering story wording or source readback (350.795417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-YOO6Rh/copy.yaml'
+  - null
+  
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/kc-journey-map/lib/progress.test.mjs:135:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-YOO6Rh/copy.yaml',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

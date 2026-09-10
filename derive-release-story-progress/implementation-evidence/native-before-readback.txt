@@ -1,0 +1,12 @@
+{
+  "reordered": null,
+  "reorderConflict": null,
+  "reworded": [],
+  "rewordConflict": [],
+  "releaseMoved": [],
+  "storiesReordered": [],
+  "duplicated": [],
+  "unclaimed": [],
+  "missing": []
+}
+nothing safe to apply

@@ -1,0 +1,50 @@
+[
+  {
+    "mutation": "without-snapshot",
+    "path": "kc-journey-map/lib/render.mjs",
+    "removed": "buildAllPages(model, roomId, selection, progress)",
+    "replacement": "buildAllPages(model, roomId, selection)",
+    "exit": 1,
+    "check": "actual refresh CLI"
+  },
+  {
+    "mutation": "without-journey-identity",
+    "path": "kc-journey-map/lib/progress.mjs",
+    "removed": "JSON.stringify(parts)",
+    "replacement": "JSON.stringify(parts.slice(1))",
+    "exit": 1,
+    "check": "real archived reader"
+  },
+  {
+    "mutation": "without-release-identity",
+    "path": "kc-journey-map/lib/progress.mjs",
+    "removed": "JSON.stringify(parts)",
+    "replacement": "JSON.stringify(parts.filter((_, i) => i !== 1))",
+    "exit": 1,
+    "check": "real archived reader"
+  },
+  {
+    "mutation": "task-ratio-substitution",
+    "path": "kc-journey-map/lib/progress.mjs",
+    "removed": "const doneStories = members.filter((s) => s.status === 'exists').length",
+    "replacement": "const doneStories = members.reduce((n, s) => n + s.doneTasks, 0)",
+    "exit": 1,
+    "check": "real archived reader"
+  },
+  {
+    "mutation": "without-derived-border",
+    "path": "kc-journey-map/lib/records.mjs",
+    "removed": "story.meta?.journey?.progress?.status ?? story.meta?.journey?.status",
+    "replacement": "story.meta?.journey?.status",
+    "exit": 1,
+    "check": "derived projections"
+  },
+  {
+    "mutation": "wording-leak",
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "removed": "text: story.card,",
+    "replacement": "text: story.card + \" [progress]\",",
+    "exit": 1,
+    "check": "derived projections"
+  }
+]

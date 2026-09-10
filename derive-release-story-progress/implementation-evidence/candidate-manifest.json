@@ -1,0 +1,72 @@
+{
+  "base": "bc51b2464659594d3c06806442c77ec15319962b",
+  "base_tree": "9ad63dd76e621088f0d0739a2a073017f2248f43",
+  "branch": "codex/journey-progress",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress",
+  "candidate": "uncommitted",
+  "changed_product_files": 10,
+  "changed_product_lines": 460,
+  "reader_cli_lines": 125,
+  "files": [
+    {
+      "path": "kc-journey-map/lib/journey-progress.mjs",
+      "added": 28,
+      "deleted": 0,
+      "sha256": "0ee50a912cfc61b47c1435a68be0f659feff249a079ba7b7def3830268cd7506"
+    },
+    {
+      "path": "kc-journey-map/lib/progress.mjs",
+      "added": 97,
+      "deleted": 0,
+      "sha256": "13f86de5453e7ee0da000f64a8c2bf2fc873c01b8314d7521203a81b1affb3ef"
+    },
+    {
+      "path": "kc-journey-map/lib/progress.test.mjs",
+      "added": 174,
+      "deleted": 0,
+      "sha256": "c479821a7894b5069edce49c9b59ea79ebc733b14af9f2717f33d19869890d28"
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "added": 23,
+      "deleted": 5,
+      "sha256": "f2a5db2d2fa8183f74e51c497ee5977a56368f8812b74f8eb8751402878d5124"
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "added": 17,
+      "deleted": 13,
+      "sha256": "14589d020a4f44cdbd9cf6cd99598837924745045d92ee4812d62254315b5b35"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "added": 6,
+      "deleted": 8,
+      "sha256": "2dd7d85867fd65d7770c7f57fe1d81de65f00532f9e9e0ba9135a4ea0b7f5652"
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+      "added": 4,
+      "deleted": 0,
+      "sha256": "864864ad0f33182aaf504bad48390901bf9c18e1f8c225502650ea18c7caae52"
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+      "added": 16,
+      "deleted": 1,
+      "sha256": "e204e5a5987c1cb1f2988558cb7a2046f111b4f6d26de263c1b95d838552da0d"
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+      "added": 10,
+      "deleted": 0,
+      "sha256": "3b722fb9074a0cf7fd9dfcc3fc8e6ae060f87a8fcb6be2d42d405d35fbf16449"
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-progress/SKILL.md",
+      "added": 58,
+      "deleted": 0,
+      "sha256": "68c04c3018a730ab3522496b2c19e9c59ac07c7a19396807bc94642d0ccf8dfa"
+    }
+  ]
+}

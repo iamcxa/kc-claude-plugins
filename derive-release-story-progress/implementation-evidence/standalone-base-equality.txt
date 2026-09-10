@@ -1,0 +1,1 @@
+PASS: drawing-only record properties and sibling order equal predecessor for disposable three-story/two-release model. Random tldraw index suffixes normalized to sibling rank; no other normalization.

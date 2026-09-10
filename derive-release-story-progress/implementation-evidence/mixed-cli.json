@@ -1,0 +1,89 @@
+{
+  "progress": {
+    "schema": "journey-progress/v1",
+    "journey": "demo",
+    "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-probe/workflow",
+    "observedAt": "2026-09-10T16:43:50.834Z",
+    "diagnostic": null,
+    "stories": [
+      {
+        "journey": "demo",
+        "release": "R1",
+        "story": "alpha",
+        "status": "gap",
+        "requiredTasks": 2,
+        "doneTasks": 1,
+        "taskIds": [
+          "000000000000000000000001",
+          "000000000000000000000002"
+        ]
+      },
+      {
+        "journey": "demo",
+        "release": "R1",
+        "story": "beta",
+        "status": "exists",
+        "requiredTasks": 1,
+        "doneTasks": 1,
+        "taskIds": [
+          "000000000000000000000003"
+        ]
+      },
+      {
+        "journey": "demo",
+        "release": "R2",
+        "story": "gamma",
+        "status": "unverified",
+        "requiredTasks": 0,
+        "doneTasks": 0,
+        "taskIds": [],
+        "diagnostic": "One confirmed complete mapping is required"
+      }
+    ],
+    "releases": [
+      {
+        "release": "R1",
+        "totalStories": 2,
+        "doneStories": 1,
+        "requiredTasks": 3,
+        "doneTasks": 2,
+        "status": "gap",
+        "acceptance": "delivery acceptance not established"
+      },
+      {
+        "release": "R2",
+        "totalStories": 1,
+        "doneStories": 0,
+        "requiredTasks": 0,
+        "doneTasks": 0,
+        "status": "unverified",
+        "acceptance": "delivery acceptance not established"
+      }
+    ]
+  },
+  "drawn": {
+    "status": 200,
+    "body": "{\"roomId\":\"progress-mixed\",\"put\":70,\"removed\":0,\"clock\":1}",
+    "shapes": 70,
+    "removed": 0,
+    "coverage": [
+      {
+        "release": "R1",
+        "covered": 2,
+        "of": 3,
+        "missing": [
+          "clarify"
+        ]
+      },
+      {
+        "release": "R2",
+        "covered": 1,
+        "of": 3,
+        "missing": [
+          "review",
+          "inspect"
+        ]
+      }
+    ]
+  }
+}

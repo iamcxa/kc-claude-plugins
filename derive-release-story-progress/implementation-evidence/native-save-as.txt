@@ -1,0 +1,23 @@
+{
+  "reordered": null,
+  "reorderConflict": null,
+  "reworded": [
+    {
+      "id": "alpha",
+      "field": "story",
+      "page": "board:R1",
+      "step": "review",
+      "was": "Review required work",
+      "now": "Review the required tasks"
+    }
+  ],
+  "rewordConflict": [],
+  "releaseMoved": [],
+  "storiesReordered": [],
+  "duplicated": [],
+  "unclaimed": [],
+  "missing": []
+}
+applied:
+  reworded story alpha
+wrote: ../.context/progress-probe/native-output.yaml

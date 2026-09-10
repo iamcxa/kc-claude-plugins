@@ -1,0 +1,10 @@
+{
+  "sourceBeforeSha256": "89762e4e8bc69c9f545712ecb72f860ac0668457da146f03958d446fa423bdd3",
+  "sourceAfterSha256": "5e65e9c140bec497e8d112aa80d25ef845abb1f509be32a952c6f17b3e828d93",
+  "exactByteChange": "card: Review required work -> card: Review the required tasks",
+  "authoredStatus": "exists",
+  "derivedStatus": "gap",
+  "nativeSyncedBorder": "red",
+  "derivedFieldsPersisted": false,
+  "readback": "native-save-as.txt"
+}

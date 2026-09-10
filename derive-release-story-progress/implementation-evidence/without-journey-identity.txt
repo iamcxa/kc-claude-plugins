@@ -1,0 +1,43 @@
+✖ real archived reader distinguishes task/story ratios, full identities, and reopening (395.223417ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 485.021625
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:51:1
+✖ real archived reader distinguishes task/story ratios, full identities, and reopening (395.223417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+  +     0,
+  +     0,
+  +     'unverified'
+  -     1,
+  -     2,
+  -     'gap'
+      ],
+      [
+        1,
+        1,
+        'exists'
+  
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/kc-journey-map/lib/progress.test.mjs:54:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 0, 0, 'unverified' ], [ 1, 1, 'exists' ] ],
+    expected: [ [ 1, 2, 'gap' ], [ 1, 1, 'exists' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

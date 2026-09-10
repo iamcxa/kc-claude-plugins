@@ -1,0 +1,11 @@
+✔ fresh release boards and story map share story ids without duplicates or drift (4.57125ms)
+✔ editing a release story round-trips its identity and leaves the original file alone with save-as (11.72475ms)
+✔ stories with the same wording are written by id, not by first text match (7.254291ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.469583

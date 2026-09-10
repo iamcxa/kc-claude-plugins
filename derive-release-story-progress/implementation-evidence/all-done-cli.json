@@ -1,0 +1,59 @@
+{
+  "progress": {
+    "schema": "journey-progress/v1",
+    "journey": "demo",
+    "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-probe/workflow",
+    "observedAt": "2026-09-10T16:45:34.015Z",
+    "diagnostic": null,
+    "stories": [
+      {
+        "journey": "demo",
+        "release": "R1",
+        "story": "alpha",
+        "status": "exists",
+        "requiredTasks": 2,
+        "doneTasks": 2,
+        "taskIds": [
+          "000000000000000000000001",
+          "000000000000000000000002"
+        ]
+      },
+      {
+        "journey": "demo",
+        "release": "R1",
+        "story": "beta",
+        "status": "exists",
+        "requiredTasks": 1,
+        "doneTasks": 1,
+        "taskIds": [
+          "000000000000000000000003"
+        ]
+      }
+    ],
+    "releases": [
+      {
+        "release": "R1",
+        "totalStories": 2,
+        "doneStories": 2,
+        "requiredTasks": 3,
+        "doneTasks": 3,
+        "status": "exists",
+        "acceptance": "pending delivery acceptance"
+      }
+    ]
+  },
+  "drawn": {
+    "status": 200,
+    "body": "{\"roomId\":\"progress-all-done\",\"put\":44,\"removed\":0,\"clock\":1}",
+    "shapes": 44,
+    "removed": 0,
+    "coverage": [
+      {
+        "release": "R1",
+        "covered": 2,
+        "of": 2,
+        "missing": []
+      }
+    ]
+  }
+}

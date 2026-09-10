@@ -1,0 +1,14 @@
+{
+  "link": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/kc-journey-map/node_modules",
+  "target": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-board-stories/kc-journey-map/node_modules",
+  "versions": {
+    "tldraw": "5.4.0",
+    "@tldraw/sync-core": "5.4.0",
+    "vite": "8.2.2",
+    "yaml": "2.9.0",
+    "tsx": "4.23.13"
+  },
+  "cleanInstallClaim": false,
+  "node": "v24.18.0",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3"
+}
