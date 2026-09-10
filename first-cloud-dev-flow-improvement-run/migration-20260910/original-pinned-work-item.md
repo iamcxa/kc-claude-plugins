@@ -27,8 +27,6 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
-started: 2026-09-10T09:28:22Z
-worktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run
 ---
 
 # First cloud run of the dev-flow improvement loop
@@ -253,52 +251,3 @@ Each job inherits the agreed execution limits, any chosen monetary budget, and s
 4. Proactive discovery: inspect approved local evidence and source for actionable gaps, feeding the same deduplicated issue queue as real-run observations. Use production/adopter debriefs, source-rule versus executable-consumer mismatches, tests/PR feedback, and repeated waste as distinct provenance sources. Reproduce evidence first; label an untested hypothesis separately from a confirmed failure. Search for existing issues and successful controls before proposing a change. One local case does not justify adding an upstream rule automatically. There is no issue quota; no finding is a valid result. Do not fetch arbitrary external data or install skills. Current output is suitability and issue proposals, not posting authority.
 
 The manual cloud result must identify which mandatory gaps remain before periodic execution is considered.
-
-
-## POC outcome
-
-```yaml
-poc_outcome:
-  direction: change
-  admitted_at: "2026-09-10T09:01:36Z"
-  decision_ready_at: "2026-09-10T09:06:55Z"
-  decision_ready_elapsed_seconds: 319
-  captain_interventions_before_decision_ready: 0
-  evidence: "Installed 4.1.1 exact-pin read refused after dispatch added started and worktree fields; state commits 3ad9be8cde7a028136a70f68306d140c6207941a and 1543ba2300b0ae9f979d9b45bf6a1a37f6b339a7 retain the complete comparison."
-  strongest_limit: "No cloud workspace or session was created; no frozen workload case or cloud instruction boundary was exercised."
-  reversal_fact: "A separately authorized execution must preserve valid admission binding across dispatch metadata and demonstrate the actual installed cloud runtime before workload proof."
-  cleanup_status_at_decision: pending
-```
-
-## POC close measurement
-
-Terminal measurement is pending the real Captain decision and the existing owner's close/debrief; this is not a close claim. Cloud cleanup is not applicable because no cloud resources were created. The assigned local worktree remains clean and retained for its owner. Installed 4.1.1 requires integer `captain_wait_seconds` and `terminal_cleanup_seconds` plus `cleanup_status` in complete/failed/not-applicable; it cannot encode a pending terminal cleanup. No future durations or completion values are fabricated here; the First Officer must record the real measurement when available.
-
-## Stage Report: implementation
-
-- DONE: Establish the fresh cloud workspace and immutable instruction/runtime boundary, or report the first invalid mandatory precondition with evidence.
-  Stopped before cloud creation on the installed 4.1.1 exact-pin refusal, exit 2; no environment repair, pin replacement, or model launch followed.
-- SKIPPED: Run at most one event-query-v1 journey and capture all three frozen outcomes plus real workflow state and manual gate boundaries.
-  Mandatory local coordination precondition failed first. Mixed, empty, and malformed cases are all NOT RUN; workload acceptance is unproven, and the real Captain close gate remains pending.
-- DONE: Retain attributable usage and time coverage, findings and successful defaults; record an evidence-backed POC outcome and decision-ready close measurement.
-  This entity, unchanged pin, two state revisions, and worker transcript retain the refusal; outcome is change. Decision-ready wall measurement is above; terminal measurement remains explicitly pending.
-
-### Evidence and boundaries
-
-- Run identity: `first-cloud-dev-flow-improvement-run/implementation/1`; local worker `spacedock_ensign_7ktmx2rset_implementation`, parent `/root`; cloud workspace/session/link: none created.
-- Exact failing command: `rtk proxy python3 /Users/kent/.codex/plugins/cache/kent-local/kc-dev-flow/4.1.1/scripts/profile-contract-loader.py --work-item /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/index.md --local-profile /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/README.md --stage-pin /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/implementation-stage-pin.json --stage-attempt implementation/1 --format json`.
-- Observed rejection: `profile contract: ACTIVE_STAGE_PIN_MISMATCH: restore the pinned plugin version and bytes`, exit 2. Earlier invocation omitted `--local-profile` and exited 2; it was a local invocation error, not a cloud retry.
-- Read-only unpinned diagnostic exited 0: plugin version `4.1.1`, contract digest `e6f51ce2b017a3252be4a9541252309fd9ccb480f30d7979b9b6a980aa4b7f80`, direct disposable POC, implementation-exit observation false. This diagnosis did not authorize execution without the pin.
-- Pin task digest `128c91d85506e6ad088cecbf6c16cd3419fb5fd067de17f9962d3e2f92e6cf8d` matches committed task at `3ad9be8cde7a028136a70f68306d140c6207941a`; dispatched task digest `ee00cd6b152aa02450d70d15fe25f3121bbb9897f62ad8ec99884bc8ec62ce25` matches `1543ba2300b0ae9f979d9b45bf6a1a37f6b339a7`. Their only diff adds `started` and `worktree` frontmatter. Plugin version/digest and attempt match; the whole-task hash comparison is the observed cause.
-- Observably returned installed resources: kernel SHA-256 `2b24e257b39a9a3c9d3906f7bbf096713dbb0d4d7ce26af63efd9697b0644922`; POC base `73498da27fb4c5a33bd44d348d7f434cfa924d710bbceda36afb6ec1b02d1c49`; POC build `b7f1b57a0e706ac42f7b837deabc5ed249ad439b866b6a310d647e944f49dd65`. Cloud instruction reads, package version, source commit, permissions, and telemetry are unknown.
-- Environment result: local coordination invalid for dispatch; installed runtime exercised is 4.1.1. Source checkout at `6b408ac102978d4bbf3614a7109934191520aa9b` declares 4.3.0 but was not executed as the runtime. `CONDUCTOR_IS_LOCAL=1`; this is not a cloud workload failure or evidence about cloud production installation.
-- Workflow result: incomplete; load refused before implement/prove. No validation worker, RoboRev, product edit/commit/push, recurring job, issue/PR/review posting, merge, or release. Earlier backlog-to-ideation routing correction is a separate coordination observation, with no causal claim about this failure.
-- Usage coverage: cloud launches 0, cloud workload execution 0, accepted journeys 0; cloud token records are unavailable because no session exists. Local worker and parent tokens/cache/auxiliary usage and monetary cost are unknown; no total-cost, per-success, or efficiency claim. Approved but unused cloud model was Codex gpt-5.6-sol, high effort, existing account; no enforceable monetary cap was verified.
-- Timing: conservative rounded worker execution start `2026-09-10T09:02:00Z`; decision-ready at the timestamp above, 295 seconds worker wall coverage. Parent reported approximately 2–3 active supervision minutes through report preparation, uninstrumented. Conservatively charging the full worker wall plus that parent estimate gives approximately 415–475 actor-seconds through decision-ready/report preparation; this is an estimate with incomplete coverage, not a measured total. Preparation before dispatch is separate. No cloud overlap or human gate wait occurred before decision-ready; report/close handling after it is separate.
-- Successful defaults: exact binding refused before cloud spend; read-only diagnosis left the pin and code untouched; direct POC contract emitted false for provider review, avoiding an unauthorized reviewer call.
-- Deduplication: live read of [issue 382](https://github.com/iamcxa/kc-claude-plugins/issues/382), open, already describes 4.1.1 whole-document hash refusal after normal reports. Proposed follow-up is to add the first-dispatch `started`/`worktree` case to that existing issue, subject to later posting authority; no new issue is proposed or posted. This run alone establishes no new universal rule.
-- Exit inspection: code branch `spacedock-ensign/first-cloud-dev-flow-improvement-run` remains clean at the original source commit; matching open PR query returned none. Worker shutdown, real Captain decision, terminal cleanup, and existing-owner debrief remain with the First Officer.
-
-### Summary
-
-The bounded experiment produced a local coordination falsifier before any cloud launch: dispatch metadata invalidated the task hash pinned immediately before dispatch. Retain a change outcome and route the real close decision to Kent; fixing the known mechanism or launching another baseline requires separately admitted work.

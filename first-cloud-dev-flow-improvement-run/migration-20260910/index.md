@@ -27,7 +27,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
-started: 2026-09-10T09:28:22Z
+started: 2026-09-10T09:01:36Z
 worktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run
 ---
 
