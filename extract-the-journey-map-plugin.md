@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-09-10T04:38:38Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-extract-the-journey-map-plugin
 issue:
 pr:
 mod-block:
