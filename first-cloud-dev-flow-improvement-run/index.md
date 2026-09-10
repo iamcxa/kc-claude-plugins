@@ -48,6 +48,7 @@ gates:
                 state: pending
 started: 2026-09-10T09:28:22Z
 worktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run
+pr: local-merge:accepted-cloud-experiment-change-outcome-no-product-diff
 ---
 
 # First cloud run of the dev-flow improvement loop
