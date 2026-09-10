@@ -45,6 +45,10 @@ gates:
                 id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-1:revision-1
                 digest: sha256:d8622096fe6798dc93dde21729f9501d82edbcee4c78e07dccdde77feffae3dc
                 room-ref: ./show-release-stories-on-journey-boards/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-10T09:50:50.348896Z"
+                reason: The committed ideation analysis covers all six criteria, but the stage report uses an AC-1 through AC-6 range that the required scanner does not expand. Add explicit per-criterion citations to the existing report before presentation; no scope or product change.
 ---
 
 ## The problem
