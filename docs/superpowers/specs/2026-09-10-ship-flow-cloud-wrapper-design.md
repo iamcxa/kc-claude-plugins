@@ -203,7 +203,15 @@ schema (slimmed), `local-profile-check.py` (checks the new rows).
   receipt is read. plan-flow's responsibility ends when `linear-admission.py` creates the task.
 - Output: `kc-ship-close-receipt/v2` (slimmed as above). v1 fixtures are deleted with their
   stations.
-- Host: Conductor CLI ≥ 0.85.0 is the contract; the Conductor MCP is optional.
+- Host: the Conductor CLI is the contract; the Conductor MCP is optional. **The plugin pins the
+  CLI it was written against** in `kc-ship-flow/pins/conductor-cli.txt`: the `conductor --version`
+  line followed by the full `conductor --help` text. Every station that calls `conductor` first
+  compares the installed version to the pin. Equal → proceed as the skill says. Different → print
+  `diff` of the pinned help against the live `conductor --help`, exit 5
+  `conductor cli changed: read the diff, then re-pin`, and do nothing else; the FO reads the diff,
+  adjusts the skill if a used flag moved, and re-pins in the same PR. (Captain, 2026-09-10; three
+  of the six traps recorded on 2026-09-03 had already disappeared by 0.85.0 without anything
+  telling the skill.)
 
 ## Open items for the Captain
 
