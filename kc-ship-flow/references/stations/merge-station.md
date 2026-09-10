@@ -1,6 +1,6 @@
 # merge-station station
 
-**Enforcing script:** `kc-ship-flow/scripts/merge-station.sh --trunk <branch> [--accepted <file>]
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/merge-station.sh --trunk <branch> [--accepted <file>]
 [--override "<reason>"] [--repo owner/name] [--wait-seconds <n>] [--poll-seconds <n>] <pr>...`
 
 **Input:** the trunk branch name, an ordered list of PR numbers, and optionally a file of accepted

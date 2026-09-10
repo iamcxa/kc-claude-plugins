@@ -1,7 +1,7 @@
 # disposition station
 
-**Enforcing script:** `kc-ship-flow/scripts/disposition.py <findings.json>` or
-`kc-ship-flow/scripts/disposition.py <bundle-dir>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/disposition.py <findings.json>` or
+`${CLAUDE_PLUGIN_ROOT}/scripts/disposition.py <bundle-dir>`
 
 **Input:** the findings file the FO's own session wrote to disk after running the `kc-pr-review`
 skill on a PR (schema `kc-dev-flow-pr-review-findings/v1`). When the diff touches a dependency

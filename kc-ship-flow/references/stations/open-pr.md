@@ -1,6 +1,6 @@
 # open-pr station
 
-**Enforcing script:** `kc-ship-flow/scripts/open-pr.sh <evidence-file>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/open-pr.sh <evidence-file>`
 
 **Input:** a worker's accepted Evidence block file.
 
@@ -8,7 +8,7 @@
 `BASE_SHA`, `CANDIDATE_SHA`, the without-it pair, and the block's own `SELF_CHECK` line — and prints
 the opened PR number.
 
-**Refusal:** see `kc-ship-flow/scripts/contract-test.py` for the BRANCH-binding refusals (fork syntax,
+**Refusal:** see `${CLAUDE_PLUGIN_ROOT}/scripts/contract-test.py` for the BRANCH-binding refusals (fork syntax,
 a BRANCH absent from origin) this script enforces before calling `gh`.
 
 This is the first of the two scripts either side of the `kc-pr-review` session run — see

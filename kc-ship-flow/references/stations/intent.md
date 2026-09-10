@@ -1,6 +1,6 @@
 # intent station
 
-**Enforcing script:** `kc-ship-flow/scripts/intent.sh commit|adopt|reconcile|show ...`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/intent.sh commit|adopt|reconcile|show ...`
 
 **Input:** `commit` takes the claim, dispatch token, project, base branch, and message sha256;
 `adopt` takes the workspace id; `reconcile` takes only the holder/writer identity.

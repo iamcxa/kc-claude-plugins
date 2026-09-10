@@ -1,6 +1,6 @@
 # ci-covers station
 
-**Enforcing script:** `kc-ship-flow/scripts/ci-covers.sh <repo-root> <package-path> <check-name>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/ci-covers.sh <repo-root> <package-path> <check-name>`
 
 **Input:** a repo root, the path of the monorepo package the merge verdict is about to trust CI for,
 and the name of the CI check that verdict cites as the gate.

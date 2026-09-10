@@ -1,6 +1,6 @@
 # accept-evidence station
 
-**Enforcing script:** `kc-ship-flow/scripts/accept-evidence.sh <evidence-file> [--repo <repo-path>]`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/accept-evidence.sh <evidence-file> [--repo <repo-path>]`
 
 **Input:** a worker's `## Evidence` block file: `CANDIDATE_SHA`, `BASE_SHA`, `BRANCH`,
 `WITHOUT_IT_COMMAND`, and `WITHOUT_IT_REMOVED_VARIANT` are required fields.

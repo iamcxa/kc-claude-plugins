@@ -1,6 +1,6 @@
 # without-it station
 
-**Enforcing script:** `kc-ship-flow/scripts/without-it.sh <sha> <command> <removed-variant>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/without-it.sh <sha> <command> <removed-variant>`
 
 **Input:** a candidate `<sha>`, one self-contained `<command>` shell line, and one self-contained
 `<removed-variant>` shell line that reverts the candidate change.

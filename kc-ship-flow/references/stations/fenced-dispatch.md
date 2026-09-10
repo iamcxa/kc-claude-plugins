@@ -1,6 +1,6 @@
 # fenced-dispatch station
 
-**Enforcing script:** `kc-ship-flow/scripts/fenced-dispatch.sh`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/fenced-dispatch.sh`
 
 **Dispatched unit:** a dev entity's stage, not a hand-written batch message. The station calls
 `spacedock dispatch build --entity-path <dev-task> --stage <stage> --workflow-dir <dir>

@@ -22,12 +22,11 @@ stages:
       terminal: true
 ---
 
-# kc-ship-flow batch workflow
+# kc-ship-flow batch workflow (adopter fixture)
 
-This workflow replaces the hand-built batch records under `docs/dev/.spacedock-state/batch-*/`
-(the station chain that ran in the First Officer's head for batch `e56e9f09`) with one commissioned
-Spacedock entity per batch, moving through `dispatched -> accepted -> reviewed -> uat -> merged ->
-closed`.
+DEV-154 fixture: a synthetic adopter README, structurally identical to `docs/ship/README.md`,
+for proving `local-profile-check.py` resolves every named station script from wherever the
+plugin is installed -- not only a checkout named `kc-claude-plugins`.
 
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
@@ -38,7 +37,7 @@ This table is the first-officer skill's declared input before dispatching a batc
 |---|---|
 | Holder | State-holder identity written to `.spacedock-state`'s `_holder.json` by `spacedock state commit` |
 | Runtime | Local subagent or Conductor cloud |
-| Planning provider | Linear `duckbase-co` via `kc-plan-receipt/v1` |
+| Planning provider | Linear `example-org` via `kc-plan-receipt/v1` |
 | UAT delivery | Subspace `/r` |
 | Approval defaults | `receipt/plan-approval.json` in the batch dir |
 | E2E flows | `docs/ship/flows/` |

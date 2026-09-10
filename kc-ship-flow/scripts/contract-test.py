@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -515,6 +516,64 @@ require(
     f"duplicated, naming the marker error: exit={duplicated_marker_result.returncode} "
     f"stderr={duplicated_marker_result.stderr!r}",
 )
+
+# DEV-154: station scripts were named by a plugin-relative path that only resolves
+# inside a checkout named kc-claude-plugins. None of SKILL.md, docs/ship/README.md, or
+# any references/stations/*.md may reintroduce it -- local-profile-check.py resolves
+# by trailing filename, so a prefix reversion in a doc it doesn't parse would pass
+# silently. The adopter fixture must also resolve from a plugin copy installed
+# somewhere else entirely.
+first_officer_skill = PLUGIN / "skills" / "first-officer" / "SKILL.md"
+ship_readme_root_path = ROOT / "docs" / "ship" / "README.md"
+station_docs = sorted((PLUGIN / "references" / "stations").glob("*.md"))
+require(len(station_docs) > 0, "no references/stations/*.md docs found")
+for doc_path in [first_officer_skill, ship_readme_root_path, *station_docs]:
+    require(
+        "kc-ship-flow/scripts/" not in doc_path.read_text(encoding="utf-8"),
+        f"{doc_path} still names a station script by the repo-relative "
+        "'kc-ship-flow/scripts/' path (AC-2 regression)",
+    )
+
+adopter_readme = FIXTURES / "adopter" / "docs" / "ship" / "README.md"
+require(adopter_readme.is_file(), f"missing fixture: {adopter_readme}")
+
+adopter_in_tree_result = subprocess.run(
+    [sys.executable, str(local_profile_check), str(adopter_readme)],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    adopter_in_tree_result.returncode == 0
+    and "LOCAL_PROFILE_SCRIPT_OK" in adopter_in_tree_result.stdout
+    and "fenced-dispatch.sh" in adopter_in_tree_result.stdout,
+    "local-profile-check.py did not resolve the adopter fixture's station scripts: "
+    f"exit={adopter_in_tree_result.returncode} stdout={adopter_in_tree_result.stdout!r} "
+    f"stderr={adopter_in_tree_result.stderr!r}",
+)
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-adopter-install-") as adopter_install_root_name:
+    # Falsifier: plugin copy under an unrelated tree, CLAUDE_PLUGIN_ROOT unset, cwd
+    # elsewhere -- only the script's own file location can resolve its siblings here.
+    adopter_install_dir = Path(adopter_install_root_name) / "plugins" / "local" / "kc-ship-flow"
+    shutil.copytree(PLUGIN, adopter_install_dir)
+    adopter_install_check = adopter_install_dir / "scripts" / "local-profile-check.py"
+    adopter_install_readme = adopter_install_dir / "scripts" / "fixtures" / "adopter" / "docs" / "ship" / "README.md"
+    require(adopter_install_readme.is_file(), "adopter install copy is missing its own fixture")
+    with tempfile.TemporaryDirectory(prefix="kc-ship-flow-adopter-cwd-") as adopter_cwd_name:
+        adopter_env = dict(os.environ)
+        adopter_env.pop("CLAUDE_PLUGIN_ROOT", None)
+        adopter_install_result = subprocess.run(
+            [sys.executable, str(adopter_install_check), str(adopter_install_readme)],
+            cwd=adopter_cwd_name, text=True, capture_output=True, env=adopter_env,
+        )
+    require(
+        adopter_install_result.returncode == 0
+        and "LOCAL_PROFILE_SCRIPT_OK" in adopter_install_result.stdout
+        and str(adopter_install_dir) in adopter_install_result.stdout,
+        "local-profile-check.py did not resolve station scripts from a plugin copy "
+        "installed outside kc-claude-plugins, run from an unrelated cwd without "
+        f"CLAUDE_PLUGIN_ROOT set: exit={adopter_install_result.returncode} "
+        f"stdout={adopter_install_result.stdout!r} stderr={adopter_install_result.stderr!r}",
+    )
 
 # DEV-117 repair round 1: a placement.tsv row is not "placed" just because its
 # destination file exists -- it must also carry that segment's hash marker.

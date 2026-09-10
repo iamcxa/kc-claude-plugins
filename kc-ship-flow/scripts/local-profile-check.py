@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Check that a kc-ship-flow batch workflow README's Local Profile table carries every
-required row before the first-officer skill dispatches a batch.
+required row before the first-officer skill dispatches a batch, and that every station
+script the README names resolves to a real file next to this script -- regardless of
+where the plugin is installed or what directory this check is run from.
 
 usage: local-profile-check.py <readme.md>
-exit 0: every required row present.
-exit 1: at least one required row is missing; stderr names each missing row.
+exit 0: every required row present and every named script resolves; each resolved script
+path is printed to stdout alongside LOCAL_PROFILE_OK.
+exit 1: at least one required row is missing, or at least one named script does not
+resolve; stderr names each.
 exit 2: usage error, unreadable file, or a Local Profile block that is missing, duplicated, or
 out of order (a start/end marker must each occur exactly once, start before end).
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -26,6 +31,23 @@ REQUIRED_ROWS = [
     "Pin",
     "Installed contract interface",
 ]
+
+# Matches the trailing filename of any "scripts/<name>" reference regardless of the
+# prefix (repo-relative, an unexpanded `${CLAUDE_PLUGIN_ROOT}`, or bare `scripts/`).
+SCRIPT_REF_PATTERN = re.compile(r"scripts/([A-Za-z0-9._-]+\.(?:sh|py))")
+
+
+def resolve_scripts_root() -> Path:
+    # This file's own parent is always the scripts root -- independent of cwd,
+    # CLAUDE_PLUGIN_ROOT, or the checkout's directory name.
+    return Path(__file__).resolve().parent
+
+
+def extract_script_refs(text: str) -> list[str]:
+    seen: dict[str, None] = {}
+    for match in SCRIPT_REF_PATTERN.finditer(text):
+        seen.setdefault(match.group(1), None)
+    return list(seen)
 
 
 def extract_row_labels(block: str) -> list[str]:
@@ -85,7 +107,20 @@ def main(argv: list[str]) -> int:
         print(f"LOCAL_PROFILE_MISSING_ROW: {', '.join(missing)}", file=sys.stderr)
         return 1
 
+    scripts_root = resolve_scripts_root()
+    script_refs = extract_script_refs(text)
+    unresolved = [name for name in script_refs if not (scripts_root / name).is_file()]
+    if unresolved:
+        print(
+            f"LOCAL_PROFILE_SCRIPT_MISSING: {', '.join(unresolved)} not found under "
+            f"{scripts_root}",
+            file=sys.stderr,
+        )
+        return 1
+
     print(f"LOCAL_PROFILE_OK: {len(REQUIRED_ROWS)} required rows present")
+    for name in script_refs:
+        print(f"LOCAL_PROFILE_SCRIPT_OK: {scripts_root / name}")
     return 0
 
 

@@ -1,6 +1,6 @@
 # e2e-gate station
 
-**Enforcing script:** `kc-ship-flow/scripts/e2e-gate.py --root <repo-root> --flows <flows-dir> <plan-receipt.json> <close-receipt.json>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/e2e-gate.py --root <repo-root> --flows <flows-dir> <plan-receipt.json> <close-receipt.json>`
 
 `--root` and `--flows` are always required, taken from arguments and never derived from the
 script's own install location (the plugin can be installed anywhere under a plugin directory,

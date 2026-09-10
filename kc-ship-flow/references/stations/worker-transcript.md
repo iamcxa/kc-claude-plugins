@@ -1,6 +1,6 @@
 # worker-transcript station
 
-**Enforcing script:** `kc-ship-flow/scripts/worker-transcript.sh <session-id>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/worker-transcript.sh <session-id>`
 
 **Input:** a Conductor cloud session id.
 

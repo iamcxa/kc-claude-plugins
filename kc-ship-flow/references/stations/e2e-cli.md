@@ -1,6 +1,6 @@
 # e2e-cli station
 
-**Enforcing script:** `kc-ship-flow/scripts/e2e-cli.sh <sha> <flow.yaml>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/e2e-cli.sh <sha> <flow.yaml>`
 
 **Input:** a resolved `<sha>` and an e2e-pipeline flow YAML consumed read-only.
 

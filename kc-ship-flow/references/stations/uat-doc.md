@@ -1,6 +1,6 @@
 # uat-doc station
 
-**Enforcing script:** `kc-ship-flow/scripts/uat-doc.py <batch-dir>`
+**Enforcing script:** `${CLAUDE_PLUGIN_ROOT}/scripts/uat-doc.py <batch-dir>`
 
 **Input:** the batch's durable records only — `receipt/plan-receipt.json`,
 `receipt/plan-approval.json`, `receipt/close-receipt(.DRAFT).json`,
