@@ -1,0 +1,53 @@
+{
+  "units": [
+    {
+      "unit": 1,
+      "tree": "063df758d06b2b2170a3378cdff01c4195fbc2b0",
+      "exact_paths_numstat_patch_replay": true,
+      "removed_package_nodes": [
+        "node_modules/@fastify/cors",
+        "node_modules/fastify-plugin",
+        "node_modules/mnemonist",
+        "node_modules/obliterator",
+        "node_modules/typescript"
+      ],
+      "no_added_or_changed_retained_nodes": true,
+      "react_fast_refresh_config_unchanged": true,
+      "working_tree_diff_empty": true,
+      "read_sha256": "fa1227fb5747aae67926f2730af0f17c4c48f1369d8a0a5e7c4a61811030e158"
+    },
+    {
+      "unit": 2,
+      "tree": "a117b410f9b7dde03ee081f5545b4d9755d77e7b",
+      "exact_paths_numstat_patch_replay": true,
+      "removed_package_nodes": [
+        "node_modules/@fastify/cors",
+        "node_modules/fastify-plugin",
+        "node_modules/mnemonist",
+        "node_modules/obliterator",
+        "node_modules/typescript"
+      ],
+      "no_added_or_changed_retained_nodes": true,
+      "react_fast_refresh_config_unchanged": true,
+      "working_tree_diff_empty": true,
+      "read_sha256": "21c1c45167d2066d584e454e1c64196c9ac3f9694bed0195f77538405989515f"
+    },
+    {
+      "unit": 3,
+      "tree": "b52f204f4c6a2b6ec09f2657adcca272e97dc1a0",
+      "exact_paths_numstat_patch_replay": true,
+      "removed_package_nodes": [
+        "node_modules/@fastify/cors",
+        "node_modules/fastify-plugin",
+        "node_modules/mnemonist",
+        "node_modules/obliterator",
+        "node_modules/typescript"
+      ],
+      "no_added_or_changed_retained_nodes": true,
+      "react_fast_refresh_config_unchanged": true,
+      "working_tree_diff_empty": true,
+      "read_sha256": "21c1c45167d2066d584e454e1c64196c9ac3f9694bed0195f77538405989515f"
+    }
+  ],
+  "producer_evidence_hashes": true
+}

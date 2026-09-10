@@ -1,0 +1,26 @@
+{
+  "normalization": "fractional index bytes vary randomly; schema validate and compare rank per parent instead",
+  "cases": [
+    {
+      "name": "fixture",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 108,
+      "equal": true
+    },
+    {
+      "name": "worked-example",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 263,
+      "equal": true
+    }
+  ],
+  "instrument_negative": "removing story borders is detected"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "schema-rationale",
+  "severity": "medium documentation correctness; no observed behavior failure",
+  "status": "open",
+  "units": [
+    1,
+    2,
+    3
+  ],
+  "path": "kc-journey-map/server/canvas-server.ts",
+  "lines": [
+    13,
+    14,
+    15
+  ],
+  "exact_comment": "// The schema the browser client will validate against. A record that fails here would\n// be accepted by the store and then crash every connected tab on receipt, so PATCH\n// rejects it at the door instead.",
+  "source_sha256": "6df5f45be57cb29ac1c04647111edc80de8d609994bb5645fbea7a5a80164e44",
+  "negative_evidence": "../minimal-necessity-evidence/no-schema-check-schema.json",
+  "negative_sha256": "d4359f6fdd758c4d248099e44216a7f517b01b5eab0a1fe727ffe09fb5dd1a4d",
+  "negative_result": {
+    "variant": "no-schema-check",
+    "mode": "schema",
+    "kind": "mutation",
+    "checks": [
+      {
+        "claim": "reject malformed native shape before persistence",
+        "passed": false,
+        "http_status": 500,
+        "response": "{\"statusCode\":500,\"error\":\"Internal Server Error\",\"message\":\"At shape(type = note).props.color: Expected \\\"black\\\" or \\\"grey\\\" or \\\"light-violet\\\" or \\\"violet\\\" or \\\"blue\\\" or \\\"light-blue\\\" or \\\"yellow\\\" or \\\"orange\\\" or \\\"green\\\" or \\\"light-green\\\" or \\\"light-red\\\" or \\\"red\\\" or \\\"white\\\", got INVALID\"}"
+      }
+    ],
+    "owned_server_stopped": true
+  },
+  "smallest_correction": "Replace only this rationale in the earliest owning unit and inherit upward: Validate PATCH records before writing so malformed client input receives detailed HTTP 400 diagnostics.",
+  "behavior_boundary": "Keep createTLSchema, validateRecord, array guards and existing unexpected server error behavior unchanged."
+}

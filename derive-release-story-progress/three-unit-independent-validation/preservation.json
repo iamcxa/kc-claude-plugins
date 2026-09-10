@@ -1,0 +1,16 @@
+{
+  "checked": {
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-1": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-2": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-3": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-4": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-5": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-1": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-2": "tracked diff empty",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3": "tracked diff empty"
+  },
+  "owned_services_started": false,
+  "product_branch": "codex/journey-stack-recut",
+  "provider_actions": "none"
+}

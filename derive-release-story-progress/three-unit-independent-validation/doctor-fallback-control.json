@@ -1,0 +1,24 @@
+[
+  {
+    "candidate": "original",
+    "command": [
+      "node",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit-independent-validation/doctor-original/lib/doctor.mjs"
+    ],
+    "exit": 1,
+    "correct_fallback_check": false,
+    "stdout": "ok    node           v24.18.0\nFAIL  dependencies   node_modules is missing or incomplete\n      -> npm install --prefix /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit-independent-validation/doctor-original\nFAIL  port 5858      in use (doc API)\n      -> stop the other canvas, or free the port \u2014 several sessions cannot share one\nFAIL  port 3737      in use (canvas)\n      -> stop the other canvas, or free the port \u2014 several sessions cannot share one\n\n3 check(s) failed. The rest of the skill still works \u2014 HTML + PNG needs none of this.\n",
+    "stderr": ""
+  },
+  {
+    "candidate": "corrected",
+    "command": [
+      "node",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit-independent-validation/doctor-corrected/lib/doctor.mjs"
+    ],
+    "exit": 1,
+    "correct_fallback_check": true,
+    "stdout": "ok    node           v24.18.0\nFAIL  dependencies   node_modules is missing or incomplete\n      -> npm install --prefix /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit-independent-validation/doctor-corrected\nFAIL  port 5858      in use (doc API)\n      -> stop the other canvas, or free the port \u2014 several sessions cannot share one\nFAIL  port 3737      in use (canvas)\n      -> stop the other canvas, or free the port \u2014 several sessions cannot share one\n\n3 check(s) failed. Resolve these prerequisites, or provide the journey YAML and Markdown without a canvas.\n",
+    "stderr": ""
+  }
+]

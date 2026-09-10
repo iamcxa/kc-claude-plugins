@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=dirname(fileURLToPath(import.meta.url));
+const plugin=`${root}/../three-unit/unit-3/kc-journey-map`;
+const {createTLSchema}=await import(`${plugin}/node_modules/@tldraw/tlschema/dist-esm/index.mjs`);
+const schema=createTLSchema();
+const path='skills/kc-journey-map/references/example/draw-a-journey.tldr';
+const bytes=readFileSync(`${plugin}/${path}`);
+assert.deepEqual(bytes,readFileSync(`${root}/../three-unit/unit-2/kc-journey-map/${path}`));
+const native=JSON.parse(bytes),records=native.records;
+for(const r of records)schema.types[r.typeName].validate(r);
+const tagged=records.filter(r=>r.meta?.journey?.nodeId==='ask-which-boards-to-draw');
+function checkHost(rs){const borders=rs.filter(r=>r.meta?.journey?.kind==='story-border'&&r.meta.journey.nodeId==='ask-which-boards-to-draw');assert.deepEqual(borders.map(r=>r.props.color),['violet','violet']);}
+const broken=structuredClone(records);broken.find(r=>r.meta?.journey?.kind==='story-border'&&r.meta.journey.nodeId==='ask-which-boards-to-draw').props.color='green';assert.throws(()=>checkHost(broken));checkHost(records);
+const alltext=JSON.stringify(records);
+assert.ok(alltext.includes('Event order is authored modeling input; the projection does not infer causality or build order'));
+assert.equal(records.filter(r=>r.typeName==='page').length,5);
+assert.equal(records.filter(r=>r.meta?.journey).length,258);
+const result={schema_valid_records:records.length,pages:5,tagged:258,host_unverified_borders:2,host_color_mutation_detected:true,authored_rule_present:true,unit_2_3_equal:true,sha256:createHash('sha256').update(bytes).digest('hex')};
+writeFileSync(`${root}/native-example-proof.json`,JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify(result));

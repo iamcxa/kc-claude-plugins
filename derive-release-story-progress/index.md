@@ -521,3 +521,16 @@ AC-1..AC-5 retain prior behavior evidence and six producer mutations bound by ex
 ### Summary
 
 The Captain-approved three-unit reduction is implemented and producer-verified, with exact candidate/file manifests and retained historical/negative/control proof. The packet remains held for focused independent validation and later exact local-commit approval; no delivery authority is implied.
+
+## Stage Report: validation (cycle 6)
+
+- FAILED: Independently verify the exact approved two-dependency, unused-code and bounded document reductions close prior minimal-necessity findings while preserving required behavior and safety.
+  Behavior and approved reductions pass; one retained schema comment falsely says malformed records would be accepted by storage. Prior no-prevalidation probe returns native rejection/500; preserved boundary supplies atomic detailed 400. [Exact finding and smallest comment-only correction](three-unit-independent-validation/finding.json).
+- DONE: Verify the three cumulative delivery units and exact-file/tree packet, using focused falsifiable checks and accurately bound reused evidence rather than repeated broad verification.
+  Trees `063df758d06b2b2170a3378cdff01c4195fbc2b0`, `a117b410f9b7dde03ee081f5545b4d9755d77e7b`, `b52f204f4c6a2b6ec09f2657adcca272e97dc1a0` match independent file/numstat/hash/patch replay. Actual two dependencies/five nodes removed; Fast Refresh/schema diagnostics retained. Projection comparison detects missing borders; doctor check rejects old false fallback; native example check rejects a green host border before accepting violet.
+- DONE: Durably report verdict, AC coverage, changed-surface necessity, evidence limits and preservation; leave product commits and delivery authority pending.
+  [Independent report](three-unit-independent-validation/README.md) binds AC-1..AC-5 and reused core/progress negative controls, independently disposes document blocks and supports three workflow units. Mutable commit subjects use `kc-journey-map`; packet remains held for the single documentation correction. No source/self-repair, product commit, service/room mutation or provider action.
+
+### Summary
+
+Behavior, exact candidate integrations, approved code/dependency reductions and three-unit reviewability pass at Pilot depth; documentation completion is held by one false retained schema rationale, not a runtime defect. First Officer should route only the stated comment correction while preserving all diagnostics, then bind the refreshed candidate; no broad rerun or new design loop is justified. Producer fresh install/browser/runtime evidence was reviewed, not independently repeated; CI cost per PR remains unmeasured and delivery acceptance pending.
