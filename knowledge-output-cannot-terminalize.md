@@ -250,11 +250,11 @@ work_profile:
     architecture: [Preserve native gates and archive authority, Keep genuine PR and local-merge semantics]
     implementation: [Bind explicit knowledge delivery to an approved evidence-bearing terminal briefing, Reuse existing locked finalize and archive operations]
     testing: [Prove positive native terminalization and refusal controls, Verify archive-once recovery and a copied original task snapshot]
-  scope_boundary: Upstream internal/status/merge.go, internal/status/merge_guard_test.go, mods/pr-merge.md at most three files and 250 added plus deleted lines; separate local docs/dev/_mods/pr-merge.md follow-up at most one file and 40 added plus deleted lines.
+  scope_boundary: Upstream internal/status/merge.go, internal/status/merge_guard_test.go, mods/pr-merge.md, internal/gates/delivery.go, internal/gates/delivery_test.go, internal/gates/io.go, internal/cli/help.go at most seven files and 650 added plus deleted lines; separate local docs/dev/_mods/pr-merge.md follow-up at most one file and 40 added plus deleted lines.
   semantics_unchanged: false
   promote_when: [Consumer migration, Replacement state authority, Production support or release ownership]
   decision:
-    authority: Kent explicitly approved the Pilot scope and upstream repair in the current conversation, as relayed by the First Officer
+    authority: Kent approved the original Pilot scope and explicitly approved the seven-file 650-gross-line reshape with 批准 on 2026-09-11, as relayed by the First Officer
     at: 2026-09-11
 ```
 
@@ -317,7 +317,7 @@ Provide an explicit native knowledge-delivery route in `merge guard` (the approv
 
 ## Non-goals
 
-No forced status/archive, invented merge credential, unrelated PR, rejected-verdict reinterpretation, alternate archive bypass, weakened product PR requirement, replacement workflow engine, new approval schema or additional runtime consumer without reshape, broad local mod refit, duplicate defect task, manual improvement-cycle implementation, recurring scheduler, paid/cloud execution, automatic external posting, automatic merge/release, consumer migration, production support commitment, or live original-task/approval/resource mutation by this implementation worker. Product commit, push, PR, merge, installation and original cleanup retain their existing explicit authority boundaries.
+No forced status/archive, invented merge credential, unrelated PR, rejected-verdict reinterpretation, alternate archive bypass, weakened product PR requirement, replacement workflow engine, new gates frontmatter approval schema or separate approval protocol/consumer, broad local mod refit, duplicate defect task, manual improvement-cycle implementation, recurring scheduler, paid/cloud execution, automatic external posting, automatic merge/release, consumer migration, production support commitment, or live original-task/approval/resource mutation by this implementation worker. The expressly approved exception is extension of the existing native locked terminal consumer and frozen Briefing artifact semantics within the seven named upstream files; it creates no second consumer or authority. Product commit, push, PR, merge, installation and original cleanup retain their existing explicit authority boundaries.
 
 ## Acceptance criteria
 
@@ -329,24 +329,41 @@ No forced status/archive, invented merge credential, unrelated PR, rejected-verd
 
 ## Route-back conditions
 
-Stop and return the observed scope delta if correct authority binding requires an additional approval schema/runtime consumer, more than the three named upstream files, over 250 total added-plus-deleted upstream lines, more than the one named local mod file, or over 40 added-plus-deleted local lines. Do not weaken the predicate to fit the count. Consumer migration, replacement state authority, new paid execution, expanded permissions or production/release support require the Captain's corresponding new choice. Product behavior uncertainty or a real conflict stops at the existing owner boundary.
+Stop and return the observed scope delta if correct authority binding requires a new gates frontmatter approval schema, separate approval protocol/consumer, any upstream file beyond the seven named files, over 650 total added-plus-deleted upstream lines, more than the one named local mod file, or over 40 added-plus-deleted local lines. Unresolved product-scope proof returns to design rather than accepting a flag, arbitrary hash, or unverified zero-product claim. Do not weaken the predicate to fit the count. Consumer migration, replacement state authority, new paid execution, expanded permissions or production/release support require the Captain's corresponding new choice. Product behavior uncertainty or a real conflict stops at the existing owner boundary.
 
 ## Approved implementation shape
 
 OBSERVED: the retained native probe supplies the refusal: an approved accepted-knowledge case returns exit 0 with blocked signal, unchanged active bytes and pending approval. Its synthetic rejected case finalizes but changes meaning. The dispatch's bounded upstream check found the same classifier on main `af70297ddae6ec64444849e8e3fcf57484bc16e1`; that is evidence at shape time, not permission to assume today's base.
 
-DESIGNED: the upstream `merge guard` process selects the explicit knowledge route, verifies its bound terminal approval and no-product scope, and hands off to the existing gates-owned locked writer plus archive/publication. On missing/tampered authority or product delivery it refuses without spending approval; after an interrupted publication, native state recovery resumes the existing archive. Local mod prose describes this real native route only after it exists. Fresh verification owns positive, negative-control and copied-original-snapshot proof; none is claimed passing yet.
+DESIGNED: `merge guard --delivery knowledge` selects the explicit route and binds the exact prechecked attempt ID and Briefing digest to the existing `FinalizeTerminalApproval` consumer. Under its existing lock, the consumer compares those identities, resolves the frozen approved artifact through existing Git-source validation, requires a knowledge-only evidence declaration with explicit product scope/base/head and no product difference, and refuses a live PR/sentinel/product commitment. A no-product claim is checked against its bound scope, not accepted as a boolean or arbitrary hash; absence of product scope is an explicit typed claim reviewed by the human, not inferred from prose.
 
-| Exact file | Previously measured lines | Estimated after | Purpose |
-| --- | ---: | ---: | --- |
-| Upstream `internal/status/merge.go` | 1049 | 1080–1110 | explicit authority-checked knowledge route |
-| Upstream `internal/status/merge_guard_test.go` | 1161 | 1250–1300 | native positive/refusal/recovery and copied-snapshot proof |
-| Upstream `mods/pr-merge.md` | 163 | 175–190 | supported route contract |
-| Separate local `docs/dev/_mods/pr-merge.md` | 520 | 515–535 | narrow correction after runtime support |
+Reuse Briefing v1 artifacts for this declaration, without a new gates frontmatter schema or separate approval receipt. The knowledge write compares the whole checked entity snapshot so PR/body changes cannot survive that check. Ordinary product delivery retains existing behavior; native archive, publication, conflict handling and resume remain the owners. Local mod prose changes only after executable proof. All positive/refusal/recovery acceptance evidence remains pending.
 
-Counts are inherited from the accepted shape's installed 0.27.2 read, unverified against the forthcoming isolated upstream checkout. Before editing, pin the live delivery base and remeasure those exact files; record any drift rather than refitting silently. Measure stop counts from `git diff --numstat <pinned-base>` with additions plus deletions, including tests/docs. Upstream initially permits at most 3 files/250 gross lines; the separate local follow-up permits 1 file/40 gross lines. No other product file is preauthorized by this shape. Evidence stays in task state and must not be used to hide implementation files from the count.
+| Exact file | Estimated gross additions plus deletions | Purpose |
+| --- | ---: | --- |
+| Upstream `internal/status/merge.go` | 45–70 | explicit route and exact authority passed to native finalize |
+| Upstream `internal/status/merge_guard_test.go` | 140–180 | native positive/refusal/archive/recovery and original-copy cases |
+| Upstream `mods/pr-merge.md` | 20–30 | supported knowledge route and evidence contract |
+| Upstream `internal/gates/delivery.go` | 100–140 | frozen evidence and exact approval checked under existing lock |
+| Upstream `internal/gates/delivery_test.go` | 130–180 | approval substitution, product/PR drift, evidence tamper and single consumption |
+| Upstream `internal/gates/io.go` | 15–25 | whole checked entity comparison for knowledge write |
+| Upstream `internal/cli/help.go` | 5–10 | supported explicit flag help |
+| Separate local `docs/dev/_mods/pr-merge.md` | at most 40 | narrow correction only after executable support |
+
+The approved upstream stop is 7 named files / 650 gross added-plus-deleted lines against `af70297ddae6ec64444849e8e3fcf57484bc16e1`; 455–635 is an estimate, not proof of fit. The separate local stop remains 1 named file / 40 gross lines against `c9c5752fda853737d4a937ad7f59564c5651ca53`. Measure `git diff --numstat <pinned-base>`, including tests/docs, without hiding implementation in evidence. Recheck roots, branches, statuses and bases before edits; further file/schema/consumer or product-scope changes return to design.
 
 One upstream repair followed by its narrow existing-consumer prose correction is sufficient. Preserve evidence before any disposable fixture cleanup; no live resource cleanup is part of this worker scope. No new model/provider/cloud execution is authorized here. The broader manual cycle's proposed token/runtime budget is not a budget for this dependency; the First Officer's bounded implementation dispatch supplies its execution cap.
+
+## Captain scope amendment — 2026-09-11
+
+Kent explicitly approved the concrete seven-file / 650-gross-line reshape with `批准` in the current conversation, relayed by the First Officer. This accepts the exact existing-consumer/frozen-artifact/whole-entity extension in [the implementation scope stop](knowledge-output-cannot-terminalize/implementation-evidence/scope-stop.md); its historical “not authorized” wording records the prior stop, now superseded only by this amendment. The same accepted goal, Pilot profile, AC-1 through AC-5, and other non-goals remain in force. Product commits still require exact-file confirmation; no product edits occur until the First Officer creates and dispatches the new stage pin.
+
+This is a human-authorized new scope boundary, not validation feedback or a workaround for a loader/pin refusal. Prior implementation/1 and the earlier ideation pin are immutable historical inputs; the First Officer will create a separate implementation/2 pin and retain both existing files unchanged:
+
+- `knowledge-output-cannot-terminalize/ideation-stage-pin.json`: SHA-256 `c8f1c7c3b6770984ca66c1a2c8fdd07e32a0ac637a622749b0a573609b1df062`.
+- `knowledge-output-cannot-terminalize/implementation-stage-pin.json`: SHA-256 `d8e261572377d9a930675e90ee42a1a4ada821a9f00511a44506ec3b13678c64`.
+
+The original cloud experiment's semantic archival approval persists, but its frozen Briefing does not contain the new typed declaration. Native rebinding remains with its owner, preserving old approval history; this amendment neither mutates that live task nor promises that no further human authorization is needed. Historical three-file stage reports and implementation evidence remain unchanged.
 
 ## Stage Report: ideation
 
