@@ -45,6 +45,17 @@ gates:
                 id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:ideation:attempt-1:revision-1
                 digest: sha256:29015547bdc32627615c8b8935dfa223eef7d62baba299f7d03613a1498d939d
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:91n5fvm5qtpf6gxd4bwhxxkg:ideation:1
+                briefing: briefing:91n5fvm5qtpf6gxd4bwhxxkg:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:29:10.956787Z"
+                decision: approve
+                reason: Kent approved ideation briefing 29015547 and entering implementation, including the task-owned complete required-task mapping, separate local progress skill, source-preserving rendering, three-color development semantics, pending delivery acceptance, and the 10-file/700-line/260-reader-line stop thresholds. Kent separately approved the predecessor 12-file border local commit as the dependency base. This grants implementation and validation, not a product commit for the new progress feature or push/PR/merge/release.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
