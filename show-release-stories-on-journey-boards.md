@@ -1,6 +1,6 @@
 ---
 title: Show release stories on journey boards with shared activity context
-status: ideation
+status: implementation
 source:
 product: kc-journey-map
 planning-window:
@@ -64,7 +64,7 @@ gates:
                 reason: 'Kent approved the presented second ideation briefing (14f60796): implement the release-story board and three-state consistency, repair stale activity wording, preserve the bounded Pilot scope, and defer full sprint-to-release migration and live host-selection proof.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
