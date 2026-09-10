@@ -1,0 +1,20 @@
+{
+  "schema": "kc-dev-flow-feedback/v1",
+  "from_stage": "validation",
+  "to_stage": "implementation",
+  "attempt": "implementation-correction-1",
+  "rejected_pin_sha256": "0fb0dca61f040b3c134f857c46c809a7e1f496c92c1c4060ed1cd8696c6e9e69",
+  "rejected_work_item_sha256": "e10cf03685be5e0c84a525f77aa3a5cfeeffb0424257d132e50d219c8dd6ee41",
+  "rejected_revision": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5",
+  "rejection": "REJECTED AC-4: internal/status/merge.go:497-505 permits rollback using a stale preimage read at line 750 and restored at line 803. A peer body edit after captureArchiveState reads content but before locked FinalizeTerminalApproval is preserved through finalize/archive, then silently lost on archive commit failure. validation-evidence/rollback-prelock.json and reproduce-rollback.py prove rc=1, live=true, peer_edit_retained=false. Reviewed upstream base af70297ddae6ec64444849e8e3fcf57484bc16e1 plus uncommitted patch SHA-256 cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5; local patch 2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c unchanged. rejected_revision below identifies the actual uncommitted patch by its SHA-256, NOT a Git commit; no product commit was authorized or fabricated.",
+  "repair_scope": [
+    "Bind knowledge rollback preimage to the same checked locked entity snapshot, or refuse stale-preimage finalization before any consumption; preserve peer edits on archive commit failure.",
+    "Retain the independent pre-lock-edit regression in existing approved tests and rerun relevant native recovery/refusal/product cases and required changed-candidate checks.",
+    "Stay within existing eight named upstream files/850 gross and unchanged local one-file/40; no product commits, installs, external delivery, providers, live original or permission changes."
+  ],
+  "authorization": {
+    "decision": "revise",
+    "by": "agent:first-officer",
+    "reference": "Kent explicitly approved eight-file/850-gross repair scope in this conversation (\u6279\u51c6), recorded by Captain scope amendment in state commit a26bb6709e29a12c5ec76c10cec4da5d589863d4. FO now authorizes this bounded AC-4 correction under that existing scope. Reviewer report 661ece460195dfa33665875c9abec9cf199a3e8f; original accepted authority unchanged."
+  }
+}
