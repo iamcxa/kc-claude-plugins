@@ -64,6 +64,17 @@ gates:
                 id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1
                 digest: sha256:b88365b91c640c1549daede74139a46ba7ab6651b53f7c56829d9306cda4dea1
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:91n5fvm5qtpf6gxd4bwhxxkg:validation:1
+                briefing: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T17:08:39.651976Z"
+                decision: approve
+                reason: 'Kent approved validation briefing b88365b9 and the exact ten-file local commit in .context/journey-progress-commit-review.md, subject feat(kc-journey-map): derive release progress from local tasks. Authority is local validation and this local commit only. Keep validation status and terminal application unconsumed; product push, PR creation, merge, release and delivery acceptance remain separate.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
