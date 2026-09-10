@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1",
+  "question": "Accept the first bounded cloud experiment with outcome change, retain evidence, and archive owned experiment resources before final measurements and debrief?",
+  "artifacts": [
+    {
+      "id": "artifact:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8d0f90c21424459f68d3393d68eef91f397c7a1f/first-cloud-dev-flow-improvement-run/index.md",
+      "rev": "sha256:c4f1071acfe13bcc4527efe685f91ac34fbb4af8550ddfddf3512e2d130d304c",
+      "mediaType": "text/markdown",
+      "summary": "One authorized event-query cloud baseline completed; cloud owner reports 3/3 cases, but raw per-case captures were not independently exported. Installed runtime provenance passed. Cloud telemetry records 666940 total tokens including cached input; complete actor cost and efficiency are unknown. Preserve change outcome. PR412 fixed the observed close-order blocker and the installed guard now accepts truthful pending measurements. Captain approval authorizes accepting this limited outcome, retaining evidence, then archiving owned resources and recording actual final measurements; it does not activate recurring routines."
+    }
+  ]
+}

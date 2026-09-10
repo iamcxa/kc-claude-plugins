@@ -27,6 +27,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:7ktmx2rsetq67yhbg4ezxm0q:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-validation-1
+              briefing:
+                id: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1
+                digest: sha256:bd0f3adff2920f1d8dc91f6471d7907d48ee35de2de48317ce63e87d7232d0b7
+                room-ref: ./review/validation/briefing-1
 started: 2026-09-10T09:28:22Z
 worktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run
 ---
