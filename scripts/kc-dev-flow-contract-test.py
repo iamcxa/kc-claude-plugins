@@ -466,6 +466,7 @@ expected_manifest_resources = {
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",
     "references/pr-delivery.md",
+    "references/pr-merge-extension.md",
     "references/roborev-implementation-exit.md",
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
@@ -485,6 +486,36 @@ require(
     and len(str(installed_package["contract_digest"])) == 64,
     "installed manifest does not bind the exact canonical runtime surface",
 )
+# adopt-dev-flow's sync of `references/pr-merge-extension.md` into this
+# repository's `_mods/pr-merge.md` is prose (SKILL.md step 7), not a script;
+# this byte-for-byte comparison is the only drift detector for that copy.
+pr_merge_mod = read("docs/dev/_mods/pr-merge.md")
+pr_merge_extension_marker = "<!-- kc-dev-flow runtime extension:start -->\n"
+require(
+    pr_merge_mod.count(pr_merge_extension_marker) == 1,
+    "docs/dev/_mods/pr-merge.md runtime extension marker is not unique",
+)
+pr_merge_mod_extension = pr_merge_extension_marker + pr_merge_mod.split(pr_merge_extension_marker, 1)[1]
+pr_merge_extension_resource = read("kc-dev-flow/references/pr-merge-extension.md")
+if pr_merge_mod_extension != pr_merge_extension_resource:
+    first_diff = next(
+        (
+            index
+            for index, (mod_char, resource_char) in enumerate(
+                zip(pr_merge_mod_extension, pr_merge_extension_resource)
+            )
+            if mod_char != resource_char
+        ),
+        min(len(pr_merge_mod_extension), len(pr_merge_extension_resource)),
+    )
+    context_start = max(0, first_diff - 20)
+    require(
+        False,
+        "docs/dev/_mods/pr-merge.md extension block drifted from "
+        "kc-dev-flow/references/pr-merge-extension.md at byte "
+        f"{first_diff}: mod={pr_merge_mod_extension[context_start:first_diff + 20]!r} "
+        f"resource={pr_merge_extension_resource[context_start:first_diff + 20]!r}",
+    )
 # `release` was a Production-only runtime state until it stranded a Pilot item
 # outside its declared route. Nothing else reads adoption prose, so the retired
 # state is guarded here rather than trusted to a reviewer.

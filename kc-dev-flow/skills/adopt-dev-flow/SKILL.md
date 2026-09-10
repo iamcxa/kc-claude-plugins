@@ -158,6 +158,14 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    rebases onto it will re-target a stacked branch and open an artifact carrying
    the parent's work. Record that as a refit requirement against the local
    provider copy; do not bind a stacked default over a ceremony that discards it.
+   When that local provider copy is Spacedock `pr-merge`, write
+   `../../references/pr-merge-extension.md` verbatim between its
+   `<!-- kc-dev-flow runtime extension:start -->` and
+   `<!-- kc-dev-flow runtime extension:end -->` markers in the repository's
+   `_mods/pr-merge.md` — append that marker pair after the released mod body if
+   absent — and never edit the released body above it. This is prose sync, not
+   a script: the repository's own contract test is the only drift detector, so
+   compare the marked block byte-for-byte against the resource after writing it.
    A missing delivery authority is a refit requirement. Do not classify its
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release

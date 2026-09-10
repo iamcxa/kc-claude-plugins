@@ -20,6 +20,7 @@
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",
     "references/pr-delivery.md",
+    "references/pr-merge-extension.md",
     "references/roborev-implementation-exit.md",
     "references/profiles/poc-exploration/base.md",
     "references/profiles/poc-exploration/build.md",
