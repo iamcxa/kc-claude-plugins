@@ -8,7 +8,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus } from './records.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, storyStatusLabel } from './model.mjs'
@@ -26,7 +26,7 @@ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 // their group once; it is shared context, not evidence that each story is implemented.
 export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
 
-export function buildJourneyBoard(model, { release = null, room = null } = {}) {
+export function buildJourneyBoard(model, { release = null, room = null, progress = null } = {}) {
 	let right = X0
 	const groups = (model.steps ?? []).map((step) => {
 		const stories = (step.stories ?? []).map((story, j) => normalizeStory(step, story, j))
@@ -53,6 +53,10 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 	const lane = (slug, text, y, h) => box(`lane-${slug}`, `lane-${slug}`, 'lane-label', text, LANE_X, y, LANE_W, h, 'grey')
 	const activityText = (step) => step.activity ?? step.card
 	const proofText = (story) => [
+		progress && (() => {
+			const p = storyProgress(progress, model, story)
+			return `Local tasks: ${p.doneTasks ?? 0}/${p.requiredTasks ?? 0} done\n${p.taskIds?.join(', ') || p.diagnostic}`
+		})(),
 		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
 		story.question && `? ${story.question}`,
@@ -91,7 +95,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 			put.push({
 				...note({ id: `${idp}story-${story.id}`, parentId, text: story.card,
 					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
-				meta: { journey: { nodeId: story.id, kind: 'story', ...(story.status ? { status: story.status } : {}) } },
+				meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 			})
 			box(`proof-${story.id}`, story.id, 'story-proof', proofText(story), sx, proofY, STORY_W, proofH,
 				'grey')
@@ -115,7 +119,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
 	if (release) {
 		const stories = groups.flatMap((g) => g.stories)
-		const text = `${release.name}\n${release.goal ?? ''}\n\n${stories.filter((s) => s.status === 'exists').length}/${stories.length} stories exist\n← back to the story map`
+		const text = `${release.name}\n${release.goal ?? ''}\n\n${progress ? releaseProgressText(progress, model, release.id) : `${stories.filter((s) => s.status === 'exists').length}/${stories.length} stories exist`}\n← back to the story map`
 		const h = fitHeight(text, statusW)
 		box('release', release.id, 'release-label', text, X0, -h - GAP, statusW, h, 'blue',
 			{ url: room ? pageLink(room, STORY_PAGE_ID) : '' })
@@ -130,7 +134,7 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 		const text = `SLICE\n${slice.outcome}`
 		box('slice-label', slice.id, 'slice-label', text, LANE_X, y + 50, LANE_W, fitHeight(text, LANE_W))
 	}
-	return withStoryStatus(put)
+	return withStoryStatus(put, progress)
 }
 
 export function loadJourney(path) {
@@ -151,39 +155,39 @@ export function releaseCoverage(model) {
 
 // A board per release when the file has releases; one whole-journey board when it does
 // not, so a map drawn before anyone has sliced it still renders.
-const journeyBoardPages = (model, room) => {
+const journeyBoardPages = (model, room, progress) => {
 	const releases = model.releases ?? []
 	return releases.length
-		? releases.flatMap((release) => buildJourneyBoard(model, { release, room }))
-		: buildJourneyBoard(model, { room })
+		? releases.flatMap((release) => buildJourneyBoard(model, { release, room, progress }))
+		: buildJourneyBoard(model, { room, progress })
 }
 
 // Which projections a render draws is a choice made per call, never a property of the
 // file — the same journey renders one way for a stand-up and another for a release review.
 export const PROJECTIONS = {
-	'story-map': (model, room) => buildStoryMap(model, room),
+	'story-map': (model, room, progress) => buildStoryMap(model, room, progress),
 	'journey-board': journeyBoardPages,
 	'function-map': (model) => buildFunctionMap(model),
 }
 export const PROJECTION_KEYS = Object.keys(PROJECTIONS)
 export const DEFAULT_PROJECTIONS = ['story-map']
 
-export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTIONS) {
+export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTIONS, progress = null) {
 	const chosen = selection?.length ? selection : DEFAULT_PROJECTIONS
 	const unknown = chosen.filter((key) => !PROJECTIONS[key])
 	if (unknown.length) throw new Error(`unknown projection(s): ${unknown.join(', ')}`)
-	return PROJECTION_KEYS.filter((key) => chosen.includes(key)).flatMap((key) => PROJECTIONS[key](model, room))
+	return PROJECTION_KEYS.filter((key) => chosen.includes(key)).flatMap((key) => PROJECTIONS[key](model, room, progress))
 }
 
 // Render is a reconcile, not an append: shapes this renderer owns that the model no
 // longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
 // and are never touched — the room is where a workshop happens, not only where a file
 // is displayed.
-export async function renderToRoom({ path, room, selection, api = API }) {
+export async function renderToRoom({ path, room, selection, progress = null, api = API }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
 
-	const put = buildAllPages(model, roomId, selection)
+	const put = buildAllPages(model, roomId, selection, progress)
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())

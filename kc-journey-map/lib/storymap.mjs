@@ -13,7 +13,7 @@
 // The default story map shows status at story grain. Optional release boards and
 // generated contracts provide detail from the same model.
 
-import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus } from './records.mjs'
+import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
 import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
@@ -34,7 +34,7 @@ export const STORY_PAGE_ID = 'page:page'
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-export function buildStoryMap(model, room = null) {
+export function buildStoryMap(model, room = null, progress = null) {
 	const steps = model.steps ?? []
 	const put = [page({ id: STORY_PAGE_ID, name: 'Story map', index: 'a1' })]
 
@@ -169,10 +169,8 @@ export function buildStoryMap(model, room = null) {
 			bandTop += 40
 		}
 
-		// The release label carries how many of its stories exist, computed from the model
-		// on every render — never typed by hand, so it cannot drift from the stories below it.
 		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
-		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${existsCount}/${band.stories.length} exist` : ''}`.trim()
+		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${progress ? releaseProgressText(progress, model, band.id) : `${existsCount}/${band.stories.length} exist`}` : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
@@ -203,7 +201,7 @@ export function buildStoryMap(model, room = null) {
 				const y = bandTop + j * STORY_PITCH
 				put.push({
 					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
-					meta: { journey: { nodeId: story.id, kind: 'story', ...(story.status ? { status: story.status } : {}) } },
+					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 				})
 
 				if (story.question) {
@@ -229,7 +227,7 @@ export function buildStoryMap(model, room = null) {
 		}
 
 		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
-		bandTop += rows * STORY_PITCH
+		bandTop += progress ? Math.max(rows * STORY_PITCH, fitHeight(text, LEFT_W)) : rows * STORY_PITCH
 	})
 
 	;(model.ownership ?? []).forEach((band, i) => {
@@ -253,6 +251,6 @@ export function buildStoryMap(model, room = null) {
 		})
 	})
 
-	return withStoryStatus(put)
+	return withStoryStatus(put, progress)
 }
 

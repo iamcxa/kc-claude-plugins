@@ -148,7 +148,7 @@ export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'v
 // Standard child shapes keep portable exports readable without changing a story's
 // page parent or direct coordinates, which read.mjs uses for release membership.
 export function storyBorder(story) {
-	const status = story.meta?.journey?.status
+	const status = story.meta?.journey?.progress?.status ?? story.meta?.journey?.status
 	if (story.type !== 'note' || story.meta?.journey?.kind !== 'story' || !Object.hasOwn(STORY_STATUS_COLORS, status)) return null
 	const scale = story.props.scale
 	const border = label({ id: `${story.id}-status-border`, parentId: story.id, x: 0, y: 0,
@@ -160,14 +160,32 @@ export function storyBorder(story) {
 	return border
 }
 
-export function withStoryStatus(records) {
+export function storyProgress(progress, model, story) {
+	if (!progress) return undefined
+	return (progress.journey === model.journey && progress.stories?.find((s) =>
+		s.journey === model.journey && s.release === story.release && s.story === story.id)) ||
+		{ status: 'unverified', diagnostic: 'No matching task observation' }
+}
+
+export function releaseProgressText(progress, model, releaseId) {
+	const release = progress.journey === model.journey && progress.releases?.find((r) => r.release === releaseId)
+	return release ? `${release.doneStories}/${release.totalStories} stories development-complete\n${release.acceptance}` : 'Development progress unverified'
+}
+
+export function withStoryStatus(records, progress = null) {
 	const parentId = records.find((r) => r.typeName === 'page').id
 	const shapes = records.filter((r) => r.typeName === 'shape')
-	const y = Math.min(0, ...shapes.map((s) => s.y)) - 190
+	const captionText = progress
+		? `DEVELOPMENT PROGRESS — local Spacedock tasks\nObserved: ${progress.observedAt}\nSource: ${progress.source}\nTask completion is not delivery acceptance or proof of usability.${progress.diagnostic ? `\n${progress.diagnostic}` : ''}`
+		: 'Story status is not delivery acceptance.'
+	const captionH = progress ? fitHeight(captionText, 1120) : 64
+	const y = Math.min(0, ...shapes.map((s) => s.y)) - (progress ? 130 + captionH : 190)
 	let index = shapes.map((s) => s.index).sort().at(-1) ?? 'a1'
 	const legend = []
 	for (const [i, [status, color]] of Object.entries(STORY_STATUS_COLORS).entries()) {
-		const text = `${status.toUpperCase()}\n${{ exists: 'evidence supported', gap: 'known missing', unverified: 'pending verification' }[status]}`
+		const text = progress
+			? { exists: 'DEVELOPMENT COMPLETE\npending delivery acceptance', gap: 'DEVELOPMENT INCOMPLETE\nrequired task work remains', unverified: 'DEVELOPMENT UNVERIFIED\nmapping or observation uncertain' }[status]
+			: `${status.toUpperCase()}\n${{ exists: 'evidence supported', gap: 'known missing', unverified: 'pending verification' }[status]}`
 		const id = `shape:${parentId.slice(5)}-status-legend-${status}`
 		const sample = label({ id, parentId, x: 300 + i * 380, y, w: 360, h: 90, text, color, size: 's', index: index = getIndexAbove(index) })
 		sample.meta = { journey: { kind: 'status-legend', nodeId: status } }
@@ -178,7 +196,7 @@ export function withStoryStatus(records) {
 		legend.push(sample, border)
 	}
 	const caption = label({ id: `shape:${parentId.slice(5)}-status-legend-caption`, parentId,
-		x: 300, y: y + 100, w: 1120, h: 64, text: 'Story status is not delivery acceptance.', color: 'grey', size: 's', index: getIndexAbove(index) })
+		x: 300, y: y + 100, w: 1120, h: captionH, text: captionText, color: 'grey', size: 's', index: getIndexAbove(index) })
 	caption.meta = { journey: { kind: 'status-legend-caption', nodeId: 'status-legend' } }
 	return [...records, ...shapes.map(storyBorder).filter(Boolean), ...legend, caption]
 }

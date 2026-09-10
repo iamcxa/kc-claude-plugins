@@ -154,11 +154,26 @@ slices:
 
 Both projections label story states; an unsupported or missing value shows UNASSESSED
 and fails lint. See `cell-contract.md` for the status meanings and evidence boundary.
-A release's label carries how many of its stories have `status: exists` — computed from `status` on every
+Drawing without task progress, a release's label carries how many of its stories have `status: exists` — computed from `status` on every
 render, never typed by hand.
 
 An unfinished implementation of the thing being proposed does not belong in `now:` —
 that is the status card's job, not the user's current world.
+
+## Draw a task observation
+
+The optional `../../kc-journey-progress/SKILL.md` supplies an ephemeral snapshot to
+`renderToRoom({ progress })` or `buildAllPages(model, room, selection, progress)`.
+Both story projections use it for release counts and the shared `storyBorder`;
+the editor's native border synchronization therefore keeps the derived color.
+A contextual legend names local task provenance and observation time, while board
+proof boxes retain authored evidence. The source-authored function map, release
+contracts and symbol lint keep their existing inputs.
+
+Derived metadata and separate labels stay outside the safe subset in `read.mjs`.
+Native wording, ordering and release edits still round-trip; progress does not
+enter editable story wording or journey status. Exercise both routes with
+`node --test lib/progress.test.mjs` from the plugin root.
 
 ## Moving a board somewhere else
 
