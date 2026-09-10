@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1",
+  "question": "Approve the independently validated five-layer recut and the exact five local product commits in the review packet?",
+  "artifacts": [
+    {
+      "id": "artifact:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/9976f6ebff7e9123118fc07dd6011853865a865a/derive-release-story-progress/stack-recut-evidence/local-commit-review.md",
+      "rev": "sha256:d6bb554563327fa4a871a75721e6dcf4d765662a3391ce57127e2d406e87af31",
+      "mediaType": "text/markdown",
+      "summary": "Five independently usable cumulative candidates are verified. The existing stable-ID safety fix was promoted into layers 2/3 and independently rechecked; final layers 4/5 equal the approved endpoints. Approval is local validation and the five exact local commits only; push, PR creation/linking, readiness, merge, release and closing #394 remain separate."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1:item-2",
+      "uri": "git-root://state/9976f6ebff7e9123118fc07dd6011853865a865a/derive-release-story-progress/stack-recut-independent-validation/rereview/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:efd75db98e3c5c779b1530389a913040dc7a3e08eae74d509837af2536a6f5e1"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1:item-3",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

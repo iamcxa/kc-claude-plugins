@@ -74,7 +74,12 @@ gates:
                 reason: 'Kent approved validation briefing b88365b9 and the exact ten-file local commit in .context/journey-progress-commit-review.md, subject feat(kc-journey-map): derive release progress from local tasks. Authority is local validation and this local commit only. Keep validation status and terminal application unconsumed; product push, PR creation, merge, release and delivery acceptance remain separate.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
+            - id: gate-attempt:91n5fvm5qtpf6gxd4bwhxxkg-validation-2
+              briefing:
+                id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1
+                digest: sha256:53e89c1b9cbe750196e01913dabb9e4d81004f9fb7cf80c7e3e7b70394049dd1
+                room-ref: ./review/validation/briefing-2
 review-round:
     id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:1
     stage: validation
