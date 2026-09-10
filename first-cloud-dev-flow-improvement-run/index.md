@@ -16,6 +16,17 @@ gates:
                 id: briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1
                 digest: sha256:559957ef58b48799d881ad00fa8a45f92997a4a3bff65c78b73d79efbc69b073
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:backlog:1
+                briefing: briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T08:56:31.360166Z"
+                decision: approve
+                reason: 'Kent confirmed proceeding to POC implementation and a single cloud run in the current turn: 確認. The preceding presented scope is the frozen event-query workload, one baseline, 20 active minutes, no automatic retry, truthful usage, and no recurring activation or product delivery.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 # First cloud run of the dev-flow improvement loop
