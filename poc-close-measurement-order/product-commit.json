@@ -1,0 +1,21 @@
+{
+  "commit": "9efb958aeaca3ba946c9f85f4ab8f7940bbc2d30",
+  "message": "fix(kc-dev-flow): separate pending and final POC close measurements",
+  "parent": "c2c62bf9dff5c3af1e27eb643a15eadf9023485f",
+  "branch": "spacedock-ensign/poc-close-measurement-order",
+  "paths": [
+    "kc-dev-flow/references/profiles/poc-exploration/build.md",
+    "kc-dev-flow/references/profiles/poc-exploration/prove.md",
+    "kc-dev-flow/scripts/poc-close-guard.py",
+    "kc-dev-flow/scripts/poc-close-guard.test.py",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+  ],
+  "approved_patch_sha256": "8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18",
+  "committed_binary_diff_sha256": "8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18",
+  "worktree_clean": true,
+  "index_clean": true,
+  "authorization": "Kent: 確認提交; commit only",
+  "product_push": false,
+  "tests": "Previously passed suites not rerun; native git commit succeeded with hooks honored",
+  "remaining": "Independent orchestration/delivery decision; no push or gate advance authorized"
+}
