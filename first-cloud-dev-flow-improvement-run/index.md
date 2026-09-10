@@ -1,6 +1,6 @@
 ---
 title: "POC: validate the first cloud run of the dev-flow improvement loop"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
