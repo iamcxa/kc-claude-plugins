@@ -6,7 +6,7 @@
   "artifacts": [
     {
       "id": "artifact:knowledge-candidate",
-      "uri": "../implementation-evidence/integrated-upstream.patch",
+      "uri": "../../../implementation-evidence/integrated-upstream.patch",
       "mediaType": "text/x-diff",
       "rev": "sha256:cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5"
     }
