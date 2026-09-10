@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-1:revision-1",
+  "question": "Does this PR complete the accepted station removal with every AC verified or honestly accounted for, ready for Captain review?",
+  "artifacts": [
+    {
+      "id": "artifact:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/105d1a2fcbdd2ea011ae94430f1b1e8124694666/ship-remove-duplicated-stations/review/validation/validation-review.md",
+      "rev": "sha256:3471ae64c9d23370080c3a969ff0c1559cc3d716449f1fa5f1d37c1c7805fda4",
+      "mediaType": "text/markdown",
+      "summary": "Draft PR #410 opened; AC-1 grep/AC-2/AC-3 independently reproduced in a fresh clone, AC-4 fixture list in the PR body; AC-1's exit-0 half is a pre-existing environment gap, not a regression."
+    }
+  ]
+}

@@ -37,6 +37,18 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:pzg36pjjn7tvtdtknpv9w82h:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:pzg36pjjn7tvtdtknpv9w82h-validation-1
+              briefing:
+                id: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-1:revision-1
+                digest: sha256:3ee052f9279cceb0631701be90aa6889ff9dcc42c1155bb33db04be27531a82a
+                room-ref: ./ship-remove-duplicated-stations/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-10T09:40:43.215327302Z"
+                reason: 'Re-preparing after fixing PR #410: failing version-parity required check, DEV-157 references removed, and PR body brought in line with the pr-merge mod template'
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
