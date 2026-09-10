@@ -23,6 +23,17 @@ gates:
                 id: briefing:4n79qfrpfetj8vrpmdphpkwd:validation:attempt-1:revision-1
                 digest: sha256:850b2e92c436a9d47cb03b5582834b4dc3903d28de4c7ec9a8d0d839175ad4ab
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:4n79qfrpfetj8vrpmdphpkwd:validation:1
+                briefing: briefing:4n79qfrpfetj8vrpmdphpkwd:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T08:28:50.262542Z"
+                decision: approve
+                reason: 'Captain confirmed the presented change conclusion and delivery sequence: close this POC, deliver known repairs separately, then admit a new experiment after adopting the repaired version. User reply: 確認，就這樣交付'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 # Evidence-led dev-flow improvement POC
