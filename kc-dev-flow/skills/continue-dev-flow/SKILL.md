@@ -133,9 +133,9 @@ byte. Invoke it with the exact item and marked README; do not search hosts or
 store its path. It emits shared core, selected base, and selected stage only.
 Profile selection is per item, never a
 project-global mode; simultaneous items may load different routes.
-For canonical admitted work, the latest Stage Report cites stable `AC-N`
-identifiers and the repository's Spacedock `--ac-scan` check must report no
-unknown or uncovered criterion before the next gate.
+For canonical admitted work with Acceptance criteria, the latest Stage Report
+cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
+uncovered criterion before the next gate. POCs use `review` below.
 
 A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
 the loader's output already parses that block into `declared_receipts` — the
@@ -195,9 +195,9 @@ the recovery falsifier, exact diff against `scope_boundary`, rollback, and risk
 list. False or uncertain evidence returns `RECOVERY_FULL_ROUTE_REQUIRED`; only
 the Captain or an explicit `recovery_rollback` may re-record the full route.
 
-A loader refusal means the item's current stage is outside its selected route,
-its receipt is stale, or the adoption is incomplete. Resolve that exact
-condition; do not substitute another item's profile or general workflow prose.
+A loader refusal means an off-route stage, stale receipt, or incomplete adoption.
+Resolve that condition; do not substitute another item's profile or general
+workflow prose.
 
 For a superset state graph, route as follows:
 
@@ -212,52 +212,55 @@ contract. Skipped stages create no review or evidence obligation.
 
 ## Advance
 
-At POC validation, use this installed package's sibling `poc-close-guard.py`. Record one
-`poc_outcome` and one separate `poc_close_measurement`. For direct proof, build
-records the outcome and the guard moves the item from implementation to
-validation solely for the terminal gate; do not dispatch a validation worker.
-For fresh proof, validation records the outcome. Prepare the gate through the guard, and record approval without
-`--consume`. After approval, consume the gate through the guard and terminalize
-the POC. Then return the POC outcome to planning. KC Dev Flow does not create
-downstream delivery work or preselect its profile; planning decides whether a
-new Development Brief exists, and that item enters KC Dev Flow independently.
-Raw Spacedock remains bypassable; this is a fail-closed KC Dev Flow path, not an
-engine tamper-resistance claim.
+Resolve `../../scripts/poc-close-guard.py` from this skill. Record
+`poc_outcome` and `poc_close_measurement`; future wait/cleanup durations
+and cleanup status stay `pending`, never fabricated zero.
 
-- Perform the selected stage mission and required output. Move to the loader's
-  `next_workflow_stage` when its stated stop condition is met.
-- Invoke `kc-dev-flow:chief-engineer` only for an unclear next step, a material
-  blocker, route drift, or a selected transition that needs delivery sequencing.
-- Invoke `kc-dev-flow:science-officer` only for a contested, high-risk,
-  hard-to-reverse, or low-confidence technical claim, or on Captain request.
-  Do not load the legacy `science-officer-em` adapter unless a consumer requests
-  its legacy report envelope.
-- Repair material findings with one owner and one final re-verification. Do not
-  create an open-ended implementation-review loop.
-- Use required deterministic gates at their declared boundaries. FO applies
-  them; provider labels and agent advice do not replace them.
-- Ask the Captain only for scope/profile change, irreversibility, new spend or
-  permission, accepted red residuals, and merge or release authority.
+```bash
+python3 <guard> --workflow-dir <workflow-dir> --work-item <task-path> review
+```
 
-After the exact selected route and repository delivery authority are satisfied,
-terminalize through the existing state owner. Keep reports to decision, evidence
-that changes the decision, and next action.
+`review` selects Spacedock's latest implementation report for direct proof,
+validation for fresh proof. Declared criteria and checklist items need evidence;
+absent criteria are allowed. Direct build records the outcome; `prepare` commits
+implementation to validation before binding. Stop on durability failure; do not dispatch a validation worker. Fresh proof records its outcome in validation.
+
+Prepare through the guard, record human approval without `--consume`, then
+consume through the guard. Native merge guard terminalizes and archives; consume
+alone leaves approval pending. Preserve frozen Briefing bytes and frontmatter.
+The First Officer performs separately authorized cleanup, records actual wait
+and cleanup in the archived body, commits that path through the existing state
+owner, then runs native `state commit` to publish. Resume from the archive without reusing approval. Run guard
+`check-final` on that path: it requires `done`, numeric durations and cleanup
+`complete`/`not-applicable`; pending/failed cleanup remains incomplete.
+Then return the POC outcome to planning. KC Dev Flow does not create downstream delivery work
+or preselect its profile; planning decides whether a new Development Brief exists.
+
+- Complete the selected mission/output; advance to `next_workflow_stage` at its
+  stop condition.
+- Use `kc-dev-flow:chief-engineer` for unclear sequencing, blockers or route drift;
+  `kc-dev-flow:science-officer` for contested, high-risk, hard-to-reverse or
+  low-confidence claims, or Captain request. Load `science-officer-em` only for
+  consumers requesting its legacy envelope.
+- Assign findings one owner and one final recheck, without open-ended review.
+- FO applies deterministic gates at declared boundaries; advice is not a gate.
+- Ask the Captain for scope/profile changes, irreversibility, spend/permissions,
+  accepted red residuals, or merge/release authority.
+
+After the selected route and delivery authority are satisfied, terminalize
+through the existing state owner. Report decision, material evidence and next action.
 
 ## Optional observations
 
-At implementation exit, inspect the loader's
-`implementation_exit_observation_declared` field. Direct POCs emit false; retained
-or safety-bound POCs and the higher profiles keep their existing value. When the loader output is true,
-read the selected build contract's `review_convergence` observation and provider
-contract it names — `../../references/roborev-implementation-exit.md` — as the
-method. Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, and
-`panel: none`; the actual host and implementation family is provenance only.
-Pass the selected profile's minimum severity and caps explicitly. A full route
-or named recovery risk emits true; recovery `[none]` emits false. A false or
-absent declaration performs no RoboRev probe or invocation. An unavailable
-fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
+At implementation exit, when the `implementation_exit_observation_declared`
+loader output is true, load the selected `review_convergence` observation and installed
+`../../references/roborev-implementation-exit.md` conditional reference.
+Direct POCs and recovery `[none]` emit false; full routes and named recovery risks
+emit true. A false/absent declaration performs no RoboRev probe or invocation. Use Codex
+`gpt-5.6-terra`, reasoning `medium`, `panel: none`, and explicit profile severity
+and caps; host/implementation family is provenance. Unavailable reviewer yields
+non-gating `UNAVAILABLE`.
 
-The provider contract is declared by the installed manifest and loaded like any
-other conditional reference. README policy, local mods, provider adapters, and
-Spacedock state stay repository-owned. Load improvement harvesting only on an explicit request; it
-never interrupts the selected product route.
+README policy, local mods, provider adapters and Spacedock state stay
+repository-owned. Load improvement harvesting only on explicit request;
+it cannot interrupt the selected route.

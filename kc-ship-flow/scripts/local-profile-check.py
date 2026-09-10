@@ -25,6 +25,7 @@ REQUIRED_ROWS = [
     "E2E flows",
     "Pin",
     "Installed contract interface",
+    "Integrated head",
 ]
 
 
