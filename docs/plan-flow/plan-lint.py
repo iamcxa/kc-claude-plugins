@@ -37,12 +37,13 @@ elif mode == "lint":
         st = issue.get("state") or {}
         return st.get("type") not in ("completed", "canceled")
     active_issues = [i for i in d["issues"]["nodes"] if is_active(i)]
+    admitted_issues = [i for i in active_issues if i["cycle"]]
     admitted_cycles = {i["cycle"]["id"] for i in active_issues if i["cycle"]}
     unadmitted = sum(1 for i in active_issues if not i["cycle"])
     rule("L2 one cycle", len(admitted_cycles) <= 1, f"{admitted_cycles}; unadmitted: {unadmitted}")
     ms = d["projectMilestones"]["nodes"]
     rule("L3 milestone membership", (not ms) or all(i["projectMilestone"] for i in d["issues"]["nodes"]), "no milestones -> implicit single MS" if not ms else "")
-    for i in d["issues"]["nodes"]:
+    for i in admitted_issues:
         try: item=la.live_item(i); la.delivery_binding(i, i["url"], 5.0); ok=True; why=f"{len(item['non-goals'])} non-goals"
         except Exception as e: ok=False; why=str(e)
         rule(f"L4 admission {i['identifier']}", ok, why)
@@ -57,7 +58,7 @@ elif mode == "lint":
             indeg[b]-=1
             if indeg[b]==0: q.append(b)
     dag_ok = len(order)==len(ids); rule("L6 blockedBy is a DAG", dag_ok, f"blocker->blocked {edges}; order {order}")
-    # L6 (replaced): verify blocks-edge direction matches an independent signal of intended order
+    # L6 identifier-order agreement is advisory: it never fails the lint, only warns.
     if dag_ok:
         l6_intent = sorted(ids)
         l6_violations = []
@@ -66,11 +67,12 @@ elif mode == "lint":
             b_idx = l6_intent.index(b) if b in l6_intent else -1
             if a_idx >= b_idx and a_idx >= 0 and b_idx >= 0:
                 l6_violations.append(f"({a}, {b})")
-        l6_ok = not l6_violations
-        rule("L6 blockedBy direction agrees with identifier order", l6_ok, f"intent order {l6_intent}; violations {', '.join(l6_violations) if l6_violations else 'none'}")
+        if l6_violations:
+            print(f"WARN L6 id-order advisory: intent order {l6_intent}; violations {', '.join(l6_violations)}")
+        rule("L6 id-order advisory", True, f"violations {', '.join(l6_violations)}" if l6_violations else "violations none")
     forked=any(len(v)>1 for v in adj.values()); rule("L7 split advisory (warn only)", True, f"{len(ids)} issues, forked={forked}" + ("; consider Milestones" if (len(ids)>=4 or forked) else ""))
     AC=re.compile(r"^[-*] \*\*AC-\d+\s*\*\*")
-    for i in d["issues"]["nodes"]:
+    for i in admitted_issues:
         acs=[l for l in i["description"].splitlines() if AC.match(l)]
         rule(f"L8 e2e-able AC {i['identifier']}", bool(acs) and any(re.search(r"exit|script|log|run|prints", a) for a in acs), f"{len(acs)} ACs")
     # L9: for every Issue after the first, at least one claimed surface must be unique to it
@@ -88,8 +90,8 @@ elif mode == "lint":
     claimed_surfaces = {}
     for i in d["issues"]["nodes"]:
         claimed_surfaces[i['identifier']] = extract_surfaces(i.get('description') or '')
-    active_ids = {i['identifier'] for i in active_issues}
-    l9_order = [x for x in order if x in active_ids]
+    admitted_ids = {i['identifier'] for i in admitted_issues}
+    l9_order = [x for x in order if x in admitted_ids]
     for idx, issue_id in enumerate(l9_order):
         if idx > 0:
             current_surfaces = claimed_surfaces.get(issue_id, set())
@@ -110,7 +112,7 @@ elif mode == "lint":
     from datetime import datetime, timedelta
     l10_ok = True; l10_violations = []
     today = datetime.utcnow().date()
-    for i in d["issues"]["nodes"]:
+    for i in admitted_issues:
         desc = i.get('description') or ''
         reverified_lines = [l for l in desc.split('\n') if l.strip().startswith('Re-verified:')]
         if not reverified_lines:

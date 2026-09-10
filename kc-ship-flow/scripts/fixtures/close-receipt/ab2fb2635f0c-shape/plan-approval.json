@@ -1,0 +1,24 @@
+{
+ "approved_at": "2026-09-07T06:50:00Z",
+ "approver": "person:captain",
+ "concurrency": 2,
+ "decision": "go",
+ "defaults": {
+  "empty_reviewer": "fallback_to_fo_diff_read",
+  "findings_outside_brief": [
+   "security",
+   "data-loss",
+   "compatibility"
+  ],
+  "minimal_necessity_fail": "accepted_no_pr",
+  "moved_base": "rebase_and_accept",
+  "pr_creation": "batch_approve_draft",
+  "worker_blocker": "skip_issue_continue_batch"
+ },
+ "max_workspaces": 3,
+ "quote": "go, synthetic fixture approval",
+ "quote_source": "fixture, not a real approval",
+ "receipt_sha256": "53cdba988e362165e9fd74f4c3423aa7b180a3eea85c3f0cdf2cb5895d378378",
+ "repair_rounds": 2,
+ "schema": "kc-plan-approval/v1"
+}

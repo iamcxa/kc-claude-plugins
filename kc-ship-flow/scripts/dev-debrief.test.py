@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import importlib.util
 import json as json_mod
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -102,8 +104,6 @@ except dev_debrief.AmbiguousEvidence:
 
 # --- finding #9: malformed JSON exits 2 with a one-line reason, never a --
 # --- raw traceback -----------------------------------------------------------
-import tempfile  # noqa: E402
-
 with tempfile.TemporaryDirectory() as tmp:
     receipt_dir = Path(tmp) / "receipt"
     receipt_dir.mkdir()
@@ -111,5 +111,29 @@ with tempfile.TemporaryDirectory() as tmp:
     malformed = run(Path(tmp))
     require(malformed.returncode == 2, f"malformed close receipt must exit 2, got {malformed.returncode}")
     require("Traceback" not in malformed.stderr, f"malformed JSON leaked a traceback: {malformed.stderr!r}")
+
+carried = run(FIXTURES / "batch-carried-probe")
+require(carried.returncode == 0, f"batch-carried-probe must exit 0, got {carried.returncode}: {carried.stderr}")
+carried_doc = json_mod.loads(carried.stdout)
+carried_entry = next(v for k, v in carried_doc["per_issue"].items() if k.startswith("DEV-9"))
+require(
+    carried_entry == {"rounds": 0, "evidence_refusals": [], "code_refusals": [], "note": "not dispatched"},
+    f"carried issue must be an empty-refusal, not-dispatched entry: {carried_entry}",
+)
+
+with tempfile.TemporaryDirectory() as tmp:
+    mutated_batch = Path(tmp) / "batch-carried-probe"
+    shutil.copytree(FIXTURES / "batch-carried-probe", mutated_batch)
+    close_path = mutated_batch / "receipt" / "close-receipt.DRAFT.json"
+    close_doc = json_mod.loads(close_path.read_text(encoding="utf-8"))
+    (issue_id,) = close_doc["issues"]
+    close_doc["issues"][issue_id]["outcome"] = "merged"
+    close_path.write_text(json_mod.dumps(close_doc), encoding="utf-8")
+    merged_outcome = run(mutated_batch)
+    require(
+        merged_outcome.returncode == 2 and issue_id in merged_outcome.stderr,
+        f"a `merged` outcome with no evidence file must still exit 2 naming {issue_id}: "
+        f"exit={merged_outcome.returncode} stderr={merged_outcome.stderr!r}",
+    )
 
 print("dev-debrief test: all checks passed")

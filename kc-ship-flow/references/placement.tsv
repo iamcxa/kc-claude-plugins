@@ -1,0 +1,28 @@
+105937aee006	docs/ship/runbooks/conductor-cloud.md	host scope disclaimer (Conductor cloud only)
+557d72a24417	docs/ship/runbooks/conductor-cloud.md	host scope disclaimer (Conductor cloud only)
+737c3628e0df	residual	no script enforces dispatch-layer ordering today; DEV-117 Non-goals: file a ticket per principle rather than fabricate a check
+57898e58e8ab	docs/ship/runbooks/conductor-cloud.md	Conductor WAF blocks curl|tar bootstrap lines; image preinstalls kc-dev-flow/spacedock
+482684f393ea	kc-ship-flow/references/stations/fenced-dispatch.md	committed carrier file, hashed and bound by fenced-dispatch.sh's message-file argument
+c2e920c86922	residual	without-it.sh strips only credential env vars (see references/stations/without-it.md); no script checks temp-HOME/no-network isolation, so DEV-117 Non-goals applies: file a ticket rather than fabricate a check
+169c2a145c7a	kc-ship-flow/references/stations/e2e-cli.md	enforced by e2e-cli.sh
+c8805a1fa6a1	kc-ship-flow/references/stations/e2e-cli.md	enforced by e2e-cli.sh
+c30183386509	docs/ship/runbooks/conductor-cloud.md	pty limitation of Conductor cloud build workers
+f348a6450677	kc-ship-flow/schemas/evidence-block.md	Evidence block field grammar
+d999717871ef	kc-ship-flow/schemas/evidence-block.md	WITHOUT_IT_COMMAND field contract
+173b015e4a8a	kc-ship-flow/references/stations/without-it.md	enforced by without-it.sh
+f7d9f3314010	kc-ship-flow/references/stations/disposition.md	enforced by disposition.py's BLOCKING_CATEGORIES
+c0974575084d	kc-ship-flow/references/stations/fenced-dispatch.md	enforced by fenced-dispatch.sh
+aa07537259c4	kc-ship-flow/references/stations/fenced-dispatch.md	enforced by fenced-dispatch.sh's intent/holder/create/adopt sequence
+6df22fa5c1de	kc-ship-flow/references/stations/intent.md	enforced by intent.sh reconcile
+a86300c3e55a	kc-ship-flow/references/stations/intent.md	enforced by intent.sh's lock and project-mismatch refusal
+fd20ac2b4540	docs/ship/runbooks/conductor-cloud.md	conductor CLI's own truncation/--after limitation
+f8f92d5da8fb	kc-ship-flow/references/stations/worker-transcript.md	enforced by worker-transcript.sh
+87bb44ce5e4c	kc-ship-flow/references/stations/worker-transcript.md	enforced by worker-transcript.sh
+5aa826f86c91	kc-ship-flow/references/stations/e2e-gate.md	enforced by e2e-gate.py's slugify
+d7132b42e5fa	kc-ship-flow/references/stations/e2e-gate.md	enforced by e2e-gate.py
+2f1d305eccd5	kc-ship-flow/references/kernel.md	review-station shape principle
+2c6efbaf14c7	kc-ship-flow/references/stations/open-pr.md	enforced by open-pr.sh
+94f809381215	kc-ship-flow/references/stations/disposition.md	enforced by disposition.py
+d708e82924c7	kc-ship-flow/references/stations/uat-doc.md	enforced by uat-doc.py
+73541e486535	kc-ship-flow/references/stations/notify.md	enforced by notify.sh
+97b2ae0b2cc8	kc-ship-flow/references/stations/notify.md	enforced by notify.sh

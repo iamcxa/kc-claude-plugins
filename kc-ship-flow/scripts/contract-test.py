@@ -50,6 +50,7 @@ STATIONS = [
     "notify.sh",
     "dev-debrief.py",
     "ship-debrief.py",
+    "ci-covers.sh",
 ]
 for station in STATIONS:
     require((SCRIPTS / station).is_file(), f"missing station script: {station}")
@@ -60,10 +61,45 @@ STATION_TESTS = [
     ("notify.test.sh", ["bash", str(SCRIPTS / "notify.test.sh")]),
     ("dev-debrief.test.py", [sys.executable, str(SCRIPTS / "dev-debrief.test.py")]),
     ("ship-debrief.test.py", [sys.executable, str(SCRIPTS / "ship-debrief.test.py")]),
+    ("pin.test.py", [sys.executable, str(SCRIPTS / "pin.test.py")]),
 ]
 for test_name, test_command in STATION_TESTS:
     require((SCRIPTS / test_name).is_file(), f"missing station test: {test_name}")
     run(test_command, f"kc-ship-flow {test_name}")
+
+run(["bash", str(SCRIPTS / "merge-station.test.sh")], "kc-ship-flow merge-station.test.sh")
+run(["bash", str(SCRIPTS / "ci-covers.test.sh")], "kc-ship-flow ci-covers.test.sh")
+run(["bash", str(SCRIPTS / "fenced-dispatch.test.sh")], "kc-ship-flow fenced-dispatch.test.sh")
+
+# --- ci-covers.sh: DEV-149's two named fixtures, registered directly (not
+# only through ci-covers.test.sh) -- a workflow naming the check but never
+# entering the package must be refused, and one that enters it must pass.
+ci_covers_script = SCRIPTS / "ci-covers.sh"
+ci_covers_uncovered = FIXTURES / "monorepo-uncovered"
+ci_covers_covered = FIXTURES / "monorepo-covered"
+require(ci_covers_uncovered.is_dir(), f"missing fixture: {ci_covers_uncovered}")
+require(ci_covers_covered.is_dir(), f"missing fixture: {ci_covers_covered}")
+
+ci_covers_uncovered_result = subprocess.run(
+    ["bash", str(ci_covers_script), str(ci_covers_uncovered), "experiments/island", "pr-test"],
+    capture_output=True, text=True,
+)
+require(
+    ci_covers_uncovered_result.returncode == 1
+    and "experiments/island not run by pr-test" in ci_covers_uncovered_result.stderr,
+    "ci-covers.sh did not refuse the monorepo-uncovered fixture (check named, package never "
+    f"entered): exit={ci_covers_uncovered_result.returncode} stderr={ci_covers_uncovered_result.stderr!r}",
+)
+
+ci_covers_covered_result = subprocess.run(
+    ["bash", str(ci_covers_script), str(ci_covers_covered), "experiments/island", "pr-test"],
+    capture_output=True, text=True,
+)
+require(
+    ci_covers_covered_result.returncode == 0,
+    "ci-covers.sh did not accept the monorepo-covered fixture (check named, package entered via "
+    f"working-directory:): exit={ci_covers_covered_result.returncode} stderr={ci_covers_covered_result.stderr!r}",
+)
 
 for py_station in [
     "disposition.py",
@@ -158,7 +194,11 @@ def run_e2e_gate(
         close_path = override_path
     try:
         return subprocess.run(
-            [sys.executable, str(e2e_gate), str(e2e_gate_fixtures / plan_fixture), str(close_path)],
+            [
+                sys.executable, str(e2e_gate),
+                "--root", str(ROOT), "--flows", "docs/ship-flow/flows",
+                str(e2e_gate_fixtures / plan_fixture), str(close_path),
+            ],
             cwd=ROOT, text=True, capture_output=True, env=env, timeout=30,
         )
     finally:
@@ -220,6 +260,41 @@ require(
     f"exit {e2e_gate_chinese.returncode}, stdout {e2e_gate_chinese.stdout!r}",
 )
 
+# --- DEV-153 AC-1/AC-2: milestone-name mode takes --root and --flows from arguments, never
+# from __file__, and refuses a missing flows directory by name rather than "not applicable" ---
+e2e_gate_ac1 = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/ship/flows",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac1.returncode == 0
+    and "docs/ship/flows/synthetic-gate-journey.yaml" in e2e_gate_ac1.stdout
+    and "not applicable" not in e2e_gate_ac1.stdout,
+    f"e2e-gate AC-1 (milestone-name mode, --root/--flows from arguments) failed: "
+    f"exit {e2e_gate_ac1.returncode}, stdout {e2e_gate_ac1.stdout!r}, stderr {e2e_gate_ac1.stderr!r}",
+)
+
+e2e_gate_ac2_missing_flows = subprocess.run(
+    [
+        sys.executable, str(e2e_gate),
+        "--root", "kc-ship-flow/scripts/fixtures/e2e-gate/repo",
+        "--flows", "docs/missing",
+        "Synthetic gate journey",
+    ],
+    cwd=ROOT, text=True, capture_output=True, timeout=30,
+)
+require(
+    e2e_gate_ac2_missing_flows.returncode == 2
+    and "flows directory not found" in e2e_gate_ac2_missing_flows.stderr,
+    f"e2e-gate AC-2 (missing flows directory should be a named refusal) failed: "
+    f"exit {e2e_gate_ac2_missing_flows.returncode}, stderr {e2e_gate_ac2_missing_flows.stderr!r}",
+)
+
 # --- review station: open-pr.sh BRANCH binding + disposition.py category handling ---
 ship_flow_fixtures = FIXTURES
 open_pr_script = SCRIPTS / "open-pr.sh"
@@ -253,6 +328,32 @@ require(
     disposition_malformed.returncode == 2,
     "disposition.py did not refuse a findings list with a non-dict entry: "
     f"exit={disposition_malformed.returncode} stdout={disposition_malformed.stdout!r} stderr={disposition_malformed.stderr!r}",
+)
+
+disposition_deps_no_supply = run_disposition(ship_flow_fixtures / "deps-diff-no-supply")
+require(
+    disposition_deps_no_supply.returncode == 2
+    and "supply-chain findings required" in (disposition_deps_no_supply.stdout + disposition_deps_no_supply.stderr),
+    "disposition.py did not refuse a dependency-manifest diff missing its supply-chain findings file: "
+    f"exit={disposition_deps_no_supply.returncode} stdout={disposition_deps_no_supply.stdout!r} "
+    f"stderr={disposition_deps_no_supply.stderr!r}",
+)
+
+disposition_deps_with_supply = run_disposition(ship_flow_fixtures / "deps-diff-with-supply")
+require(
+    disposition_deps_with_supply.returncode == 0 and '"disposition": "listed"' in disposition_deps_with_supply.stdout,
+    "disposition.py refused a dependency-manifest diff whose supply-chain findings file is present: "
+    f"exit={disposition_deps_with_supply.returncode} stdout={disposition_deps_with_supply.stdout!r} "
+    f"stderr={disposition_deps_with_supply.stderr!r}",
+)
+
+disposition_deps_no_changed_files = run_disposition(ship_flow_fixtures / "deps-diff-no-changed-files")
+require(
+    disposition_deps_no_changed_files.returncode == 2
+    and "changed-files.txt required" in (disposition_deps_no_changed_files.stdout + disposition_deps_no_changed_files.stderr),
+    "disposition.py did not refuse a bundle missing changed-files.txt: "
+    f"exit={disposition_deps_no_changed_files.returncode} stdout={disposition_deps_no_changed_files.stdout!r} "
+    f"stderr={disposition_deps_no_changed_files.stderr!r}",
 )
 
 open_pr_fork_branch = subprocess.run(
@@ -311,7 +412,7 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
             f"BASE_SHA: {open_pr_sha}\n"
             "SELF_CHECK: fixture accept-evidence: ACCEPT\n"
             "WITHOUT_IT_COMMAND: true\n"
-            "WITHOUT_IT_REMOVED_VARIANT: true\n",
+            "WITHOUT_IT_REMOVED_VARIANT: rm -f candidate-only.ts\n",
             encoding="utf-8",
         )
         return evidence
@@ -358,5 +459,385 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
         "open-pr.sh did not refuse a BRANCH absent from origin before calling gh: "
         f"exit={open_pr_unbound.returncode} stderr={open_pr_unbound.stderr!r}",
     )
+
+run([sys.executable, str(SCRIPTS / "prose-placement-check.py")], "kc-ship-flow prose-placement-check.py")
+
+run(
+    [sys.executable, str(SCRIPTS / "local-profile-check.py"), str(ROOT / "docs" / "ship" / "README.md")],
+    "kc-ship-flow local-profile-check.py",
+)
+
+# DEV-119 repair round 1: local-profile-check.py must refuse a Local Profile table
+# missing a required row, and refuse (rather than silently pick) a duplicated
+# marker pair, naming which failure it hit. Both run against a temporary copy of
+# the real README, never the tracked file itself.
+local_profile_check = SCRIPTS / "local-profile-check.py"
+ship_readme_path = ROOT / "docs" / "ship" / "README.md"
+ship_readme_text = ship_readme_path.read_text(encoding="utf-8")
+
+
+def run_local_profile_check(contents: str) -> subprocess.CompletedProcess[str]:
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".md", delete=False, encoding="utf-8"
+    ) as handle:
+        handle.write(contents)
+        temp_readme = Path(handle.name)
+    try:
+        return subprocess.run(
+            [sys.executable, str(local_profile_check), str(temp_readme)],
+            cwd=ROOT, text=True, capture_output=True,
+        )
+    finally:
+        temp_readme.unlink(missing_ok=True)
+
+
+missing_runtime_text = "\n".join(
+    line for line in ship_readme_text.splitlines() if "| Runtime |" not in line
+) + "\n"
+require(
+    missing_runtime_text != ship_readme_text,
+    "local-profile-check mutation fixture: no '| Runtime |' row found in docs/ship/README.md",
+)
+missing_runtime_result = run_local_profile_check(missing_runtime_text)
+require(
+    missing_runtime_result.returncode != 0
+    and "LOCAL_PROFILE_MISSING_ROW: Runtime" in missing_runtime_result.stderr,
+    "local-profile-check.py did not refuse a Local Profile table missing the Runtime row, "
+    f"naming it: exit={missing_runtime_result.returncode} stderr={missing_runtime_result.stderr!r}",
+)
+
+duplicated_marker_text = ship_readme_text + "\n" + ship_readme_text
+duplicated_marker_result = run_local_profile_check(duplicated_marker_text)
+require(
+    duplicated_marker_result.returncode != 0
+    and "LOCAL_PROFILE_MARKER_COUNT" in duplicated_marker_result.stderr,
+    "local-profile-check.py did not refuse a Local Profile block whose start/end markers are "
+    f"duplicated, naming the marker error: exit={duplicated_marker_result.returncode} "
+    f"stderr={duplicated_marker_result.stderr!r}",
+)
+
+# DEV-117 repair round 1: a placement.tsv row is not "placed" just because its
+# destination file exists -- it must also carry that segment's hash marker.
+# Repoint one real row to a different real destination that lacks its hash
+# and confirm the check refuses (before the fix this mutation stayed exit 0).
+prose_placement_check = SCRIPTS / "prose-placement-check.py"
+placement_tsv = PLUGIN / "references" / "placement.tsv"
+original_placement = placement_tsv.read_text(encoding="utf-8")
+mutated_placement = original_placement.replace(
+    "97b2ae0b2cc8\tkc-ship-flow/references/stations/notify.md",
+    "97b2ae0b2cc8\tkc-ship-flow/references/stations/uat-doc.md",
+)
+require(mutated_placement != original_placement, "prose-placement-check mutation fixture: target row not found in placement.tsv")
+try:
+    placement_tsv.write_text(mutated_placement, encoding="utf-8")
+    mutated_result = subprocess.run(
+        [sys.executable, str(prose_placement_check)], cwd=ROOT, text=True, capture_output=True,
+    )
+finally:
+    placement_tsv.write_text(original_placement, encoding="utf-8")
+require(
+    mutated_result.returncode != 0,
+    "prose-placement-check.py did not refuse a row repointed to an unrelated existing "
+    f"destination lacking the segment's hash marker: exit={mutated_result.returncode} "
+    f"stdout={mutated_result.stdout!r}",
+)
+
+accept_evidence_script = SCRIPTS / "accept-evidence.sh"
+
+ts_read_path_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "ts-read-path.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    ts_read_path_result.returncode == 0
+    and "accept-evidence: ACCEPT" in ts_read_path_result.stdout,
+    "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND reading tracked .ts/.mts paths: "
+    f"exit={ts_read_path_result.returncode} stdout={ts_read_path_result.stdout!r} "
+    f"stderr={ts_read_path_result.stderr!r}",
+)
+
+mutant_untracked_path_result = subprocess.run(
+    ["bash", str(accept_evidence_script), str(FIXTURES / "mutant-untracked-path.md")],
+    cwd=ROOT, text=True, capture_output=True,
+)
+require(
+    mutant_untracked_path_result.returncode == 1
+    and "accept-evidence-does-not-exist.xyz" in mutant_untracked_path_result.stdout,
+    "accept-evidence.sh did not refuse a WITHOUT_IT_COMMAND reading only an untracked path, "
+    f"naming it: exit={mutant_untracked_path_result.returncode} "
+    f"stdout={mutant_untracked_path_result.stdout!r}",
+)
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-accept-evidence-candidate-tree-") as candidate_tree_dir_name:
+    candidate_tree_dir = Path(candidate_tree_dir_name)
+    candidate_tree_repo = candidate_tree_dir / "repo"
+    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
+    subprocess.run(["git", "init", "-q", str(candidate_tree_repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), *git_user, "commit", "-q", "--allow-empty", "-m", "feat(fixture): base"],
+        check=True, capture_output=True,
+    )
+    checkout_sha = subprocess.check_output(
+        ["git", "-C", str(candidate_tree_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    only_in_candidate = candidate_tree_repo / "candidate-only.ts"
+    only_in_candidate.write_text("export const marker = \"only-in-candidate\";\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(candidate_tree_repo), "add", "candidate-only.ts"], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), *git_user, "commit", "-q", "-m", "feat(fixture): add candidate-only path"],
+        check=True, capture_output=True,
+    )
+    candidate_sha = subprocess.check_output(
+        ["git", "-C", str(candidate_tree_repo), "rev-parse", "HEAD"], text=True,
+    ).strip()
+
+    subprocess.run(
+        ["git", "-C", str(candidate_tree_repo), "checkout", "-q", "--detach", checkout_sha],
+        check=True, capture_output=True,
+    )
+
+    candidate_tree_evidence = candidate_tree_dir / "evidence.md"
+    candidate_tree_evidence.write_text(
+        "## Evidence\n"
+        f"CANDIDATE_SHA: {candidate_sha}\n"
+        f"BASE_SHA: {checkout_sha}\n"
+        "WITHOUT_IT_COMMAND: grep -q only-in-candidate candidate-only.ts\n"
+        "WITHOUT_IT_REMOVED_VARIANT: rm -f candidate-only.ts\n",
+        encoding="utf-8",
+    )
+
+    candidate_tree_result = subprocess.run(
+        ["bash", str(accept_evidence_script), str(candidate_tree_evidence), "--repo", str(candidate_tree_repo)],
+        cwd=ROOT, text=True, capture_output=True,
+    )
+    require(
+        candidate_tree_result.returncode == 0
+        and "accept-evidence: ACCEPT" in candidate_tree_result.stdout,
+        "accept-evidence.sh did not accept a WITHOUT_IT_COMMAND reading a path that exists only "
+        "at CANDIDATE_SHA on a --repo checkout sitting at an earlier commit: "
+        f"exit={candidate_tree_result.returncode} stdout={candidate_tree_result.stdout!r} "
+        f"stderr={candidate_tree_result.stderr!r}",
+    )
+
+# --- DEV-147/DEV-135: dev-debrief.py's real not-dispatched output (the
+# --- `note` field) embeds into a close receipt that validate-receipt.py
+# --- accepts -- the close-receipt schema admits `note` on a per_issue
+# --- entry, it is not a shape only the writer's own stdout can produce ----
+dev_debrief_script = SCRIPTS / "dev-debrief.py"
+carried_batch = FIXTURES / "batch-carried-issue"
+carried_result = subprocess.run(
+    [sys.executable, str(dev_debrief_script), str(carried_batch)], capture_output=True, text=True,
+)
+require(
+    carried_result.returncode == 0,
+    f"dev-debrief.py on {carried_batch} must exit 0: exit={carried_result.returncode} stderr={carried_result.stderr!r}",
+)
+carried_dev_debrief = json.loads(carried_result.stdout)
+(carried_issue_id,) = carried_dev_debrief["per_issue"]
+require(
+    carried_dev_debrief["per_issue"][carried_issue_id].get("note") == "not dispatched",
+    f"batch-carried-issue's writer output must carry a not-dispatched note: {carried_dev_debrief}",
+)
+
+
+def canon(obj: object) -> bytes:
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def sha(text: str) -> str:
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+carried_body = "## The problem\n\nFixture body.\n\n## Accepted outcome\n\nFixture only.\n"
+carried_plan_receipt = {
+    "schema": "kc-plan-receipt/v1",
+    "code_repo": "example-org/example-repo",
+    "base_branch": "main",
+    "project": {
+        "id": "00000000-0000-0000-0000-0000000000a1",
+        "name": "Synthetic carried-note contract fixture",
+        "user_value": "A writer-produced not-dispatched entry embeds into a close receipt that validates.",
+        "hypothesis": "If we let the schema admit `note` then a real dev-debrief.py output validates unchanged.",
+        "wedge": "Fixture only; exercises validate-receipt.py's close-receipt path end to end.",
+        "outcome": "One issue closes carried, with a not-dispatched dev_debrief entry.",
+        "exit": ["Fixture validates."],
+        "outcome_hash": f"sha256:{sha('carried-note-fixture-outcome')}",
+    },
+    "cycle": "00000000-0000-0000-0000-0000000000a2",
+    "milestones": [],
+    "issues": {
+        carried_issue_id: {
+            "id": "00000000-0000-0000-0000-0000000000a3",
+            "url": f"https://example.test/issue/{carried_issue_id}",
+            "title": carried_issue_id,
+            "branch": f"feature/{carried_issue_id.lower()}-synthetic-fixture",
+            "close_line": f"Fixes {carried_issue_id}",
+            "profile": "pilot-product-slice",
+            "milestone": None,
+            "body": carried_body,
+            "body_sha256": sha(carried_body),
+        },
+    },
+    "edges": [],
+    "dispatch_order": [carried_issue_id],
+    "lint": {"schema": "kc-plan-lint/v1", "pass": True, "digest": sha("carried-note-fixture-lint")},
+    "premises": [
+        {"id": "P1", "statement": "Fixture premise: a real not-dispatched dev-debrief entry validates.", "agreed": True},
+    ],
+    "rationale_sha256": sha("carried-note-fixture-rationale"),
+}
+carried_plan_receipt["receipt_sha256"] = sha(canon(carried_plan_receipt).decode())
+
+carried_plan_approval = {
+    "schema": "kc-plan-approval/v1",
+    "receipt_sha256": carried_plan_receipt["receipt_sha256"],
+    "approver": "person:captain",
+    "approved_at": "2026-09-09T00:00:00Z",
+    "decision": "go",
+    "max_workspaces": 1,
+    "concurrency": 1,
+    "repair_rounds": 0,
+    "quote": "go, synthetic fixture approval",
+    "quote_source": "fixture, not a real approval",
+    "defaults": {
+        "findings_outside_brief": ["security", "data-loss", "compatibility"],
+        "minimal_necessity_fail": "accepted_no_pr",
+        "moved_base": "rebase_and_accept",
+        "worker_blocker": "skip_issue_continue_batch",
+        "empty_reviewer": "fallback_to_fo_diff_read",
+        "pr_creation": "batch_approve_draft",
+    },
+}
+
+carried_close_receipt = {
+    "schema": "kc-ship-close-receipt/v1",
+    "plan_receipt_sha256": carried_plan_receipt["receipt_sha256"],
+    "approval_receipt_sha256": sha(canon(carried_plan_approval).decode()),
+    "batch": {
+        "entity": "batch-carried-note-contract",
+        "started_at": "2026-09-09T00:00:00Z",
+        "closed_at": "2026-09-09T00:05:00Z",
+        "holder": "laptop",
+    },
+    "issues": {
+        carried_issue_id: {
+            "outcome": "carried",
+            "candidate": None,
+            "pr": None,
+            "rounds": 0,
+            "minutes": {"dispatch": 0},
+        },
+    },
+    "defects_returned": [],
+    "totals": {"workspaces_created": 0, "workspaces_orphaned": 0, "fix_rounds": 0, "captain_gates": 0},
+    "dev_debrief": carried_dev_debrief,
+    "ship_debrief": {
+        "defaults_decisions": [],
+        "defects_disposition": [],
+        "minutes_per_station": {"dispatch": 0},
+        "candidate_correction": "TBD (FO): one candidate correction to ship-flow from this batch.",
+    },
+}
+carried_close_receipt["close_sha256"] = sha(canon(carried_close_receipt).decode())
+
+validate_receipt_script = ROOT / "docs" / "plan-flow" / "schema" / "validate-receipt.py"
+
+with tempfile.TemporaryDirectory(prefix="kc-ship-flow-carried-note-") as carried_dir_name:
+    carried_dir = Path(carried_dir_name)
+    (carried_dir / "plan-receipt.json").write_text(json.dumps(carried_plan_receipt), encoding="utf-8")
+    (carried_dir / "plan-approval.json").write_text(json.dumps(carried_plan_approval), encoding="utf-8")
+    (carried_dir / "close-receipt.json").write_text(json.dumps(carried_close_receipt), encoding="utf-8")
+    carried_note_result = subprocess.run(
+        [
+            sys.executable, str(validate_receipt_script),
+            str(carried_dir / "plan-receipt.json"),
+            str(carried_dir / "plan-approval.json"),
+            str(carried_dir / "close-receipt.json"),
+        ],
+        capture_output=True, text=True,
+    )
+    require(
+        carried_note_result.returncode == 0 and "CLOSE OK" in carried_note_result.stdout,
+        "validate-receipt.py did not accept a close receipt embedding dev-debrief.py's real "
+        f"not-dispatched output: exit={carried_note_result.returncode} "
+        f"stdout={carried_note_result.stdout!r} stderr={carried_note_result.stderr!r}",
+    )
+close_receipt_fixtures = FIXTURES / "close-receipt"
+forbidden_embed_result = subprocess.run(
+    [
+        sys.executable, str(validate_receipt_script),
+        str(close_receipt_fixtures / "plan-receipt.json"),
+        str(close_receipt_fixtures / "plan-approval.json"),
+        str(close_receipt_fixtures / "close-receipt.dev-debrief-wrapper-embedded.json"),
+    ],
+    capture_output=True, text=True,
+)
+require(
+    forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
+    "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
+    f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
+)
+
+# --- DEV-156: fenced-dispatch.sh dispatches a dev entity's stage through
+# `spacedock dispatch build` rather than a hand-written message. Two fixtures
+# registered directly -- a stage that declares a model and one that does not
+# -- plus a fixture whose named stage is undeclared, to prove the station
+# refuses (exit 4) rather than falling back to an inline message.
+fenced_dispatch_script = SCRIPTS / "fenced-dispatch.sh"
+dispatch_fixtures = FIXTURES / "dispatch"
+for fixture_name in ["task-with-model.md", "task-with-model", "task-without-model.md", "task-without-model", "task-build-fails.md", "task-build-fails"]:
+    require((dispatch_fixtures / fixture_name).exists(), f"missing fixture: dispatch/{fixture_name}")
+
+with_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-with-model.md"),
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-with-model"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    with_model_result.returncode == 0 and "--model sonnet" in with_model_result.stdout,
+    "fenced-dispatch.sh --dry-run did not carry --model from the task-with-model fixture's stage: "
+    f"exit={with_model_result.returncode} stdout={with_model_result.stdout!r} stderr={with_model_result.stderr!r}",
+)
+
+without_model_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-without-model.md"),
+        "--stage", "implementation",
+        "--workflow-dir", str(dispatch_fixtures / "task-without-model"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout,
+    "fenced-dispatch.sh --dry-run carried --model for the task-without-model fixture, "
+    f"whose stage declares none: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
+)
+
+build_fails_result = subprocess.run(
+    [
+        "bash", str(fenced_dispatch_script),
+        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
+        "00000000-0000-0000-0000-000000000000", "main",
+        "--entity-path", str(dispatch_fixtures / "task-build-fails.md"),
+        "--stage", "nonexistent-stage",
+        "--workflow-dir", str(dispatch_fixtures / "task-build-fails"), "--dry-run",
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    build_fails_result.returncode == 4 and "dispatch build failed" in build_fails_result.stdout,
+    "fenced-dispatch.sh did not refuse (exit 4, 'dispatch build failed') when spacedock dispatch "
+    f"build exits non-zero: exit={build_fails_result.returncode} stdout={build_fails_result.stdout!r}",
+)
 
 print("kc-ship-flow contract: PASS")

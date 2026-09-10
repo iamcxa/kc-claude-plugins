@@ -2,11 +2,12 @@
 """Behavior contract for validate-receipt.py's close-receipt argument
 (docs/plan-flow/schema/validate-receipt.py <receipt> <approval> <close>).
 
-Every negative fixture here runs under both the plain interpreter and
+`jsonschema` is a hard requirement: every case below runs with it available
+(the interpreter running this test), and one case runs the script under
 `python3 -S` (which drops site-packages, so `jsonschema` is unimportable
-while the stdlib this script needs stays available) and asserts the same
-INVALID: line -- proving the structural Python checks, not jsonschema, are
-what names the refusal.
+while the stdlib this script needs stays available) to prove the import
+failure exits 2 naming it, rather than silently falling back to a weaker
+check.
 """
 from __future__ import annotations
 
@@ -38,28 +39,25 @@ def run(close_fixture: str, *, no_jsonschema: bool = False) -> subprocess.Comple
 
 
 def require_refusal(close_fixture: str, needle: str) -> None:
-    """Run a negative fixture with and without jsonschema and require both
-    runs to exit 1 with the same INVALID: line naming `needle`."""
+    """Run a negative fixture (jsonschema available) and require exit 1 with
+    an INVALID: line naming `needle`."""
     plain = run(close_fixture)
     require(plain.returncode == 1, f"{close_fixture}: expected exit 1, got {plain.returncode}: {plain.stdout}{plain.stderr}")
     require(needle in plain.stdout, f"{close_fixture}: refusal must name {needle!r}: {plain.stdout!r}")
 
-    structural = run(close_fixture, no_jsonschema=True)
-    require(
-        "jsonschema not installed" in structural.stdout,
-        f"{close_fixture}: -S run did not actually drop jsonschema: {structural.stdout!r}",
-    )
-    require(
-        structural.returncode == 1 and needle in structural.stdout,
-        f"{close_fixture}: -S run must refuse identically naming {needle!r}: {structural.stdout!r}",
-    )
-    plain_invalid = next(l for l in plain.stdout.splitlines() if l.startswith("INVALID:"))
-    structural_invalid = next(l for l in structural.stdout.splitlines() if l.startswith("INVALID:"))
-    require(
-        plain_invalid == structural_invalid,
-        f"{close_fixture}: INVALID line differs with/without jsonschema: {plain_invalid!r} vs {structural_invalid!r}",
-    )
 
+# --- DEV-147 AC-1: jsonschema absent exits 2 naming it, never a silent -----
+# --- structural-only fallback -----------------------------------------------
+no_jsonschema_result = run("close-receipt.dispositioned.json", no_jsonschema=True)
+require(
+    no_jsonschema_result.returncode == 2,
+    f"jsonschema-absent run must exit 2, got {no_jsonschema_result.returncode}: "
+    f"{no_jsonschema_result.stdout}{no_jsonschema_result.stderr}",
+)
+require(
+    "jsonschema required" in no_jsonschema_result.stdout,
+    f"jsonschema-absent run must print 'jsonschema required': {no_jsonschema_result.stdout!r}",
+)
 
 # --- finding #8: the "refuses undispositioned" step is isolated -- the ----
 # --- DRAFT fixture differs from the accepted one in exactly the three ----
@@ -87,17 +85,46 @@ require_refusal("close-receipt.malformed-defect-id.json", "malformed id")
 require_refusal("close-receipt.per-issue-mismatch.json", "dev_debrief.per_issue")
 require_refusal("close-receipt.disposition-mismatch.json", "ship_debrief.defects_disposition")
 
+# --- DEV-147: a close receipt embedding the debrief writers' own wrapper -
+# --- (`schema` + `close_receipt` keys) inside `dev_debrief` is a shape ----
+# --- `additionalProperties: false` forbids -- reproduces batch ----------
+# --- ab2fb2635f0c's actual defect (a hand-written dev-debrief.json's -----
+# --- content pasted into the close receipt's own dev_debrief field) ------
+require_refusal("close-receipt.dev-debrief-wrapper-embedded.json", "dev_debrief")
+
+# --- falsifier: a real close-receipt shape (batch ab2fb2635f0c, ids -------
+# --- replaced) with a `captain_stopped` issue and a mixed defect ---------
+# --- disposition set validates unchanged ----------------------------------
+ab2fb2635f0c_dir = FIXTURES / "ab2fb2635f0c-shape"
+ab2fb2635f0c_result = subprocess.run(
+    [
+        sys.executable, str(MODULE_PATH),
+        str(ab2fb2635f0c_dir / "plan-receipt.json"),
+        str(ab2fb2635f0c_dir / "plan-approval.json"),
+        str(ab2fb2635f0c_dir / "close-receipt.json"),
+    ],
+    capture_output=True, text=True,
+)
+require(
+    ab2fb2635f0c_result.returncode == 0 and "CLOSE OK" in ab2fb2635f0c_result.stdout,
+    f"ab2fb2635f0c-shape fixture must validate unchanged: "
+    f"exit={ab2fb2635f0c_result.returncode} stdout={ab2fb2635f0c_result.stdout!r} stderr={ab2fb2635f0c_result.stderr!r}",
+)
+
 # --- validate-receipt.py refuses when the plugin's close-receipt schema is
-# --- not installed (HERE.parents[2]/kc-ship-flow/schemas/ absent), before
-# --- ever reaching jsonschema.validate -----------------------------------
+# --- not installed (HERE.parents[2]/kc-ship-flow/schemas/ absent). jsonschema
+# --- is required up front, so this case runs with it available; the
+# --- schema-not-installed check is a plain-Python guard ahead of the
+# --- jsonschema.validate() call, not a substitute for jsonschema itself.
 with tempfile.TemporaryDirectory(prefix="close-receipt-absent-schema-") as absent_root_name:
     absent_root = Path(absent_root_name)
     absent_module_dir = absent_root / "docs" / "plan-flow" / "schema"
     absent_module_dir.mkdir(parents=True)
     absent_module = absent_module_dir / "validate-receipt.py"
     shutil.copy(MODULE_PATH, absent_module)
-    # validate-receipt.py loads kc-plan-approval.v1.schema.json unconditionally
-    # (only the jsonschema.validate() call on it is gated), so the copy needs it too.
+    # validate-receipt.py loads both plan schemas unconditionally now that
+    # jsonschema is a hard requirement, so the copy needs both.
+    shutil.copy(HERE / "kc-plan-receipt.v1.schema.json", absent_module_dir / "kc-plan-receipt.v1.schema.json")
     shutil.copy(HERE / "kc-plan-approval.v1.schema.json", absent_module_dir / "kc-plan-approval.v1.schema.json")
     absent_fixtures = absent_root / "fixtures"
     absent_fixtures.mkdir()
@@ -108,7 +135,7 @@ with tempfile.TemporaryDirectory(prefix="close-receipt-absent-schema-") as absen
     )
     absent = subprocess.run(
         [
-            sys.executable, "-S", str(absent_module),
+            sys.executable, str(absent_module),
             absent_plan_receipt, absent_plan_approval, absent_close_receipt,
         ],
         capture_output=True, text=True,

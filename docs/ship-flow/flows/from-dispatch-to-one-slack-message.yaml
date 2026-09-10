@@ -18,7 +18,7 @@ steps:
     description: "the e2e gate records 'e2e: not applicable' for a milestone with no flow file"
     execute:
       cli:
-        - run: "python3 kc-ship-flow/scripts/e2e-gate.py kc-ship-flow/scripts/fixtures/e2e-gate/plan-receipt.ac3.json kc-ship-flow/scripts/fixtures/e2e-gate/close-receipt.ac3.json"
+        - run: "python3 kc-ship-flow/scripts/e2e-gate.py --root . --flows docs/ship-flow/flows kc-ship-flow/scripts/fixtures/e2e-gate/plan-receipt.ac3.json kc-ship-flow/scripts/fixtures/e2e-gate/close-receipt.ac3.json"
           expect: "exit code 0"
 
   - id: uat-doc-builds-batch-document

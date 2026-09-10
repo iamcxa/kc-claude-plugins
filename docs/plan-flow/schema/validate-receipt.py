@@ -5,26 +5,30 @@ distinct sentences; on a close receipt: every defect has a non-blank
 fix_ticket or accepted_residual, dev_debrief and ship_debrief carry their
 minimum non-blank fields, dev_debrief.per_issue matches the plan receipt's
 issue set, and ship_debrief.defects_disposition ids match defects_returned
-ids. Every close-receipt check above runs in plain Python whether or not
-the `jsonschema` package is installed (`python3 -S` drops it from
-sys.path without touching the stdlib this script otherwise needs).
+ids. The plain-Python checks above run in addition to jsonschema, never in
+place of it -- `jsonschema` is a hard requirement, checked before any input
+file is opened, so a receipt one environment accepts cannot silently differ
+from what another refuses.
 usage: validate-receipt.py <receipt.json> [approval.json] [close.json]
-exit 0 ok, 1 invalid (see the INVALID: line for what and why), 2 usage or a
+exit 0 ok, 1 invalid (see the INVALID: line for what and why), 2 usage, an
+unimportable `jsonschema` (prints `jsonschema required`), or a
 missing/unparseable input file (uncaught OSError/JSONDecodeError)."""
 import json, sys, hashlib, re, collections, pathlib
 HERE = pathlib.Path(__file__).resolve().parent
 def canon(o): return json.dumps(o, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
 def fail(msg): print("INVALID:", msg); sys.exit(1)
+if len(sys.argv) < 2: print(__doc__); sys.exit(2)
 try:
     import jsonschema
 except ImportError:
-    jsonschema = None
-if len(sys.argv) < 2: print(__doc__); sys.exit(2)
+    print("jsonschema required"); sys.exit(2)
+def validate_schema(instance, schema_path):
+    try:
+        jsonschema.validate(instance, json.load(open(schema_path)))
+    except jsonschema.exceptions.ValidationError as exc:
+        fail(f"schema violation at {'/'.join(str(p) for p in exc.absolute_path) or '(root)'}: {exc.message}")
 r = json.load(open(sys.argv[1]))
-if jsonschema:
-    jsonschema.validate(r, json.load(open(HERE / "kc-plan-receipt.v1.schema.json")))
-else:
-    print("note: jsonschema not installed; structural checks only")
+validate_schema(r, HERE / "kc-plan-receipt.v1.schema.json")
 core = dict(r); core.pop("receipt_sha256", None)
 if hashlib.sha256(canon(core)).hexdigest() != r["receipt_sha256"]: fail("receipt_sha256 does not match canonical content")
 for k, i in r["issues"].items():
@@ -55,28 +59,18 @@ for k, i in r["issues"].items():
 if ms and any(i["milestone"] is None for i in r["issues"].values()): fail("milestones exist but an issue has none")
 if len(sys.argv) > 2:
     a = json.load(open(sys.argv[2]))
-    approval_schema = json.load(open(HERE / "kc-plan-approval.v1.schema.json"))
-    if jsonschema:
-        jsonschema.validate(a, approval_schema)
-    else:
-        # structural checks when jsonschema unavailable
-        if "defaults" not in a: fail("defaults block is required")
-        defaults = a["defaults"]
-        required_fields = {"findings_outside_brief", "minimal_necessity_fail", "moved_base", "worker_blocker", "empty_reviewer", "pr_creation"}
-        for field in required_fields:
-            if field not in defaults: fail(f"defaults block missing required field: {field}")
-        for key in defaults:
-            if key not in required_fields: fail(f"defaults block has unexpected field: {key}")
+    validate_schema(a, HERE / "kc-plan-approval.v1.schema.json")
     if a["receipt_sha256"] != r["receipt_sha256"]: fail("approval does not bind this receipt")
     if a["decision"] != "go": fail(f"approval decision is {a['decision']}; no dispatch authority")
     if a["max_workspaces"] < len(ids): print(f"note: max_workspaces {a['max_workspaces']} < {len(ids)} issues; ship-flow will batch")
 print("OK", r["receipt_sha256"][:16], len(ids), "issues", len(r["edges"]), "edges")
 
 # ---- close receipt (optional third argument: close.json) ----
-# Every check below runs whether or not `jsonschema` is installed, and all of
-# them run before jsonschema.validate() -- so a name-the-field refusal fires
-# first even when jsonschema is present (a ValidationError traceback does not
-# name a defect id the way `fail()` does).
+# The checks below run in addition to jsonschema.validate() (see
+# validate_schema above), not in place of it, and all of them run before that
+# call -- so a name-the-field refusal fires first even though jsonschema is
+# always present (a ValidationError message does not name a defect id the way
+# `fail()` does).
 DEFECT_ID_RE = re.compile(r"^S[0-9]+$")
 FIX_TICKET_RE = re.compile(r"^[A-Z][A-Z0-9]*-[0-9]+$")
 
@@ -133,7 +127,7 @@ if len(sys.argv) > 3:
 
     close_schema_path = HERE.parents[2] / "kc-ship-flow" / "schemas" / "kc-ship-close-receipt.v1.schema.json"
     if not close_schema_path.is_file(): fail(f"close-receipt schema not installed: {close_schema_path}")
-    if jsonschema: jsonschema.validate(c, json.load(open(close_schema_path)))
+    validate_schema(c, close_schema_path)
     cc = dict(c); cc.pop("close_sha256", None)
     if hashlib.sha256(canon(cc)).hexdigest() != c["close_sha256"]: fail("close_sha256 does not match canonical content")
     if c["plan_receipt_sha256"] != r["receipt_sha256"]: fail("close receipt does not bind this plan receipt")

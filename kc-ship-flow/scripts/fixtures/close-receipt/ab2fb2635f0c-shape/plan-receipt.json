@@ -1,0 +1,83 @@
+{
+ "base_branch": "main",
+ "code_repo": "example-org/example-repo",
+ "cycle": "00000000-0000-0000-0000-000000000002",
+ "dispatch_order": [
+  "DEV-970",
+  "DEV-971",
+  "DEV-972"
+ ],
+ "edges": [
+  [
+   "DEV-970",
+   "DEV-971"
+  ],
+  [
+   "DEV-971",
+   "DEV-972"
+  ]
+ ],
+ "issues": {
+  "DEV-970": {
+   "body": "## The problem\n\nSynthetic fixture body for DEV-970 (merged issue).\n\n## Accepted outcome\n\nMerges cleanly.\n",
+   "body_sha256": "7b4405ebcdd37211a9fc05ce803a8082fcc92ced8d55bca030eef2cff3f7952c",
+   "branch": "feature/dev-970-synthetic-fixture",
+   "close_line": "Fixes DEV-970",
+   "id": "00000000-0000-0000-0000-000000000970",
+   "milestone": null,
+   "profile": "pilot-product-slice",
+   "title": "DEV-970",
+   "url": "https://example.test/issue/DEV-970"
+  },
+  "DEV-971": {
+   "body": "## The problem\n\nSynthetic fixture body for DEV-971 (merged issue).\n\n## Accepted outcome\n\nMerges cleanly.\n",
+   "body_sha256": "c6911a0f0317e6cb977b35cb4ff23e0175daa93823d2ed3626c4055bdcf4679c",
+   "branch": "feature/dev-971-synthetic-fixture",
+   "close_line": "Fixes DEV-971",
+   "id": "00000000-0000-0000-0000-000000000971",
+   "milestone": null,
+   "profile": "pilot-product-slice",
+   "title": "DEV-971",
+   "url": "https://example.test/issue/DEV-971"
+  },
+  "DEV-972": {
+   "body": "## The problem\n\nSynthetic fixture body for DEV-972, a run stopped by the Captain before a deploy could be admitted.\n\n## Accepted outcome\n\nA cloud run produces a revision-bound receipt; stopped before completion counts as `captain_stopped`, not a failure.\n",
+   "body_sha256": "3ba13a946a0018f46e4e899541c28f87b213a63e6e1c18924281d465500cb96a",
+   "branch": "feature/dev-972-synthetic-fixture",
+   "close_line": "Fixes DEV-972",
+   "id": "00000000-0000-0000-0000-000000000972",
+   "milestone": null,
+   "profile": "pilot-product-slice",
+   "title": "DEV-972",
+   "url": "https://example.test/issue/DEV-972"
+  }
+ },
+ "lint": {
+  "digest": "abf182cdd148133b02e52fad68914b4ba3f0762038048c7192e69eefcfed1d48",
+  "pass": true,
+  "schema": "kc-plan-lint/v1"
+ },
+ "milestones": [],
+ "premises": [
+  {
+   "agreed": true,
+   "id": "P1",
+   "statement": "Fixture premise: the ab2fb2635f0c-shape trio must validate unchanged."
+  }
+ ],
+ "project": {
+  "exit": [
+   "Fixture validates."
+  ],
+  "hypothesis": "If we keep the close receipt's real shape then the stricter validator still accepts it.",
+  "id": "00000000-0000-0000-0000-000000000001",
+  "name": "Synthetic ab2fb2635f0c-shape fixture",
+  "outcome": "Three issues close: two merged, one captain_stopped.",
+  "outcome_hash": "sha256:4384e8fe1b4a19efed43dd4dc3def218876d791cf91a0025712da35039ac5985",
+  "user_value": "A close receipt shaped like a real historical batch validates after the jsonschema-required fix.",
+  "wedge": "Fixture only; not a real batch; exercises validate-receipt.py's close-receipt path."
+ },
+ "rationale_sha256": "6ecd2be4b88c4d1067e478d2e5e62830154785fed59f4417ac0b28ad4ae43851",
+ "receipt_sha256": "53cdba988e362165e9fd74f4c3423aa7b180a3eea85c3f0cdf2cb5895d378378",
+ "schema": "kc-plan-receipt/v1"
+}
