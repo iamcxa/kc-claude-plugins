@@ -89,6 +89,17 @@ gates:
                 id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1
                 digest: sha256:cb7635b1ae9c13de6a403aea4290cbb3b1f186a5cf8c834c6482e4ad9a4366c0
                 room-ref: ./show-release-stories-on-journey-boards/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:wwn8jfrh1f6k6zyj5tfcjb23:validation:2
+                briefing: briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T16:27:19.960991Z"
+                decision: approve
+                reason: 'Kent approved the exact 12-file validated border local commit in response to the combined design/base-commit question. Commit subject: feat(kc-journey-map): show story status with synchronized borders. This approves local validation and this local commit only; push, PR, merge, release and delivery acceptance remain unapproved. Keep the task at validation and do not consume terminal authority.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
