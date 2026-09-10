@@ -101,3 +101,16 @@ Return `poc_outcome` to planning.
 
 The release-1 exists count before and after. It is 12/12 today and at least one of those is
 documentation.
+
+## Stage Report: implementation
+
+- DONE: Restrict evidence matching to something executable, so a symbol found only in prose no longer counts as implemented.
+  `kc-team-ops/lib/lint.mjs` `filesCiting` now filters `git grep` hits through `isExecutableFile` (a curated code-extension set plus `.github/workflows/*.yml`); commit f97e4ff8.
+- DONE: Re-examine the tool's own journey and restate as gap any story whose evidence no longer qualifies, never deleting a story to make the lint pass.
+  Of the 12 release-1 stories only `ask-which-boards-to-draw` (evidence `AskUserQuestion`) failed the new lint — that symbol names a host tool invoked per `SKILL.md` prose, with no code in this repo issuing the call. Restated `status: gap` with a `question` naming why, evidence field dropped (gap stories carry no evidence); the other 11 keep `evidence: <real .mjs symbol>` unchanged, in `kc-team-ops/skills/kc-journey-map/references/journey.example.yaml`.
+- DONE: Report the release-1 exists count before and after; a number that did not move means the fix or the demonstration is wrong.
+  Verified by stashing the fix and re-running against the original files: BEFORE — `node lib/journey-lint.mjs …` reports "all lints pass", release-1 exists = 12/12 (the lie). AFTER — same command on the fixed files still reports "all lints pass", release-1 exists = 11/12. The count moved by exactly the one story whose evidence was prose.
+
+### Summary
+
+`lintEvidenceNotFound`'s `git grep` had no pathspec, so a symbol quoted in a `SKILL.md` or reference doc satisfied the same check as a symbol backed by running code. Added an extension/path allowlist (`.mjs/.cjs/.js/.jsx/.mts/.cts/.ts/.tsx/.py/.rb/.sh/.bash/.zsh`, plus `.github/workflows/*.yml`) so prose and data files (`.md`, `.tldr`, the journey's own `.yaml`) never qualify as evidence on their own — CI workflows and shell scripts still do, per the task's explicit non-goal against over-restricting. Did not raise the tier to "passing test" and did not touch any other release or story. Two new tests in `lib/lint.test.mjs` cover the prose-only case and the shell/CI-executable case; reverting the filter (a one-line mutation) makes exactly the prose-only test fail and no other, confirmed by running it. Full suite: 44/44 pass (`node --test lib/*.test.mjs`, after `npm install` to restore `node_modules`, which is gitignored and not part of the diff).
