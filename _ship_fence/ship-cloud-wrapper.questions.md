@@ -24,3 +24,4 @@ A5: pushed refs/heads/spacedock-state/dev-recovery-4b20a918; fetch, inspect, ret
 Gates: validation revise recorded on both entities (actor agent:first-officer, conn = Captain 「批」 2026-09-10).
 #410: merge main (#406 landed), delete fenced-dispatch/intent/holder/worker-transcript, wire new tests into contract-test, body per mod + Residuals/without-it.
 #411: merge main, align close.py/uat-doc.py to dispatch.sh's fence shape, ship v2 schema file, body per mod + Residuals.
+Finding 7 (2026-09-11): a cloud FO's own gate records pin commits that exist only in its clone (rewritten by its pull --rebase); the batch FO cannot record decisions on that entity from another checkout. Multi-writer split-root + rebase sync breaks content-addressed gate history in both directions. Workaround: the entity's own FO records the decision with the Captain's conn; boot message must say "merge, never rebase" for state sync.
