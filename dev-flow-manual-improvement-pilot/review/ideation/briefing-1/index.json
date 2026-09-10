@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1",
+  "question": "Approve the bounded design and extend the existing knowledge-output defect scope to a native Spacedock knowledge-delivery route before Pilot replay?",
+  "artifacts": [
+    {
+      "id": "artifact:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4451e48b1897bcd785b308a9187e675bf565df3d/dev-flow-manual-improvement-pilot/index.md",
+      "rev": "sha256:009787a5455b4767888c0318fa2cc9cc19cf2786c79951474d12140469774f88",
+      "mediaType": "text/markdown",
+      "summary": "Shape has 3 completed checklist outcomes. Native fixture observes exit 0 but blocked/pending for accepted knowledge; rejected would change meaning. Recommend explicit approval/evidence-bound native knowledge delivery under existing defect owner, preserving product PR refusal. Manual capture/accounting design follows only after closure; no live launch or product commit approved here."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/4451e48b1897bcd785b308a9187e675bf565df3d/dev-flow-manual-improvement-pilot/shape-evidence/shape.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:a065e845527a89679d33e044ff40b4aa2a48474bfb8523d4527f788d74f00165"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
