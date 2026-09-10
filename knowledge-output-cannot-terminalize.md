@@ -1,7 +1,7 @@
 ---
 id: geef7a3dy7w12g7tq89h21te
 title: "Work whose output is knowledge cannot terminalize: pr-merge requires a merged PR that such work never has"
-status: implementation
+status: validation
 source:
 product: repo-platform
 sprint: S8
