@@ -76,6 +76,7 @@ gates:
                 state: pending
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
+mod-block: merge:pr-merge
 ---
 
 # Repair phase-aware POC close measurements
