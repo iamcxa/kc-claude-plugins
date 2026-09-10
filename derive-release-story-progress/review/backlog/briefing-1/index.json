@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1",
+  "question": "Admit the approved standalone Pilot task to shape its local task-progress and independent drawing integration?",
+  "artifacts": [
+    {
+      "id": "artifact:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/25cd5b28dcc6b484b9c6dc9396bb8223ea52b339/derive-release-story-progress/index.md",
+      "rev": "sha256:527401f3a42a416c25ee1580fcf6ab6132ebc486572bf2631b3d49e794d33f37",
+      "mediaType": "text/markdown",
+      "summary": "Kent approved the two-skill split and selected Pilot. Shape the smallest local task-to-story mapping, three-color development progress, pending delivery acceptance, and source-preserving render input. No plan-flow consolidation, provider change, global sprint migration, product commit, or delivery authorization."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

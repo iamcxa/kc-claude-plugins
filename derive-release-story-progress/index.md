@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: 91n5fvm5qtpf6gxd4bwhxxkg
+gates:
+    version: 1
+    records:
+        - id: gate:91n5fvm5qtpf6gxd4bwhxxkg:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:91n5fvm5qtpf6gxd4bwhxxkg-backlog-1
+              briefing:
+                id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1
+                digest: sha256:0a602c42d8b37ea7b1b47e1afb24c4de0ead2a31e0dfa988f4bb23b04d441834
+                room-ref: ./review/backlog/briefing-1
 ---
 
 ## The problem
