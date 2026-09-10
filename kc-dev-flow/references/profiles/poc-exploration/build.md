@@ -50,6 +50,9 @@ production hardening.
 
 ## Required output
 
+- before the first implementation edit, name the architecture home; disposable
+  work uses a brief outline of components, data flow, external boundaries, and
+  tentative assumptions; retained work follows `project-context-maintenance.md`;
 - one runnable integrated artifact;
 - focused checks for owned logic and the riskiest assumption;
 - the effective decision-ready limit and selected `direct` or `fresh` proof path;

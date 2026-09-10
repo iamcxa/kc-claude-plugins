@@ -73,7 +73,10 @@ not another agent, review, or gate.
 - **Exploration Brief** — required for POC; uses the existing v3 decision,
   falsifier, budget, and stop-condition fields. New admissions also record an
   artifact class, safety boundary, and positive decision-ready minute limit;
-  15 is the default and a different limit requires its reason.
+  15 is the default and a different limit requires its reason. A disposable POC
+  adds a tentative architecture outline: components, data flow, external boundaries
+  and assumptions. Retained work identifies a linked home before implementation;
+  see [Architecture home](references/project-context-maintenance.md#architecture-home).
 - **Planning Receipt** — optional and complete or absent; the exact `source`,
   `planning-window`, and `planning-outcome` tuple activates the adopter's
   read-only provider reconcile. A partial tuple stops.
@@ -201,7 +204,7 @@ installing the package activates none of it; a reference link is not activation.
 | `reverse-recovery-audit.md` | A POC `build` or Pilot/Production `shape` proposes an addition, replacement, removal, or missing claim in existing code. |
 | `journey-slicing.md` | A Pilot or Production journey cannot be one integrated slice. |
 | `retained-document-policy.md` | An accepted or observed retained-document change reaches the selected shape/build/verification stage. Adds no receipt. |
-| `project-context-maintenance.md` | Accepted behavior, architecture, or a public contract may change a claim in bound project context. |
+| `project-context-maintenance.md` | An initial retained explanation is needed, or accepted behavior, architecture, or a public contract may change a bound context claim. |
 | `delivery-branch-base.md` | The work item is delivered through a review artifact, so its base branch must be chosen. Forge-neutral, and it loads even when a provider mod owns the ceremony. |
 | `pr-delivery.md` | No adopter-owned mod, such as Spacedock `pr-merge`, already owns the forge-PR ceremony. |
 | `roborev-implementation-exit.md` | The `build` observation names a provider and the repository meets its precondition — a Spacedock-registered state holder, which RoboRev needs for single-flight. Any other repository records the observation as out of scope once. |

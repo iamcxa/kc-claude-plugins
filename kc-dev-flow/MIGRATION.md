@@ -6,6 +6,14 @@ planning-item link, move it to a repository-owned provenance field and remove
 the canonical `source` field before either v4 admission validation or
 continuation. Preserve the value; do not reinterpret it as provider identity.
 
+## Retained architecture explanations
+
+No consumer migration or archived-task retrofit is required. New work identifies
+its proportional explanation through the existing context authority; an accurate
+linked section needs no duplicate file or edit. See [Architecture home](references/project-context-maintenance.md#architecture-home).
+Same-stage pins retain their recorded contracts. The loader's compatible next-stage
+pin adopts the correction; this guidance changes no receipt schema or state format.
+
 ## Migrating a vendored 4.x adopter to installed contracts
 
 This migration makes the installed `kc-dev-flow` package the canonical runtime

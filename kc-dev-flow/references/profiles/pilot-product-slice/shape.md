@@ -39,6 +39,8 @@ smallest maintainable slice.
 
 ## Required output
 
+- the linked architecture home before implementation, following
+  `project-context-maintenance.md` when its existing trigger applies;
 - one accepted journey and explicit non-goals;
 - persistence, recovery, and data-safety boundaries;
 - task-specific acceptance checks able to falsify the slice;

@@ -137,34 +137,30 @@ For canonical admitted work with Acceptance criteria, the latest Stage Report
 cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
 uncovered criterion before the next gate. POCs use `review` below.
 
-A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
-the loader's output already parses that block into `declared_receipts` — the
-receipt names this stage declares, each behind a trigger you evaluate. Read
-`declared_receipts` for those names instead of re-parsing the block for
-`receipt`. For each entry, still resolve `path` relative to the selected
-stage contract and read it only when its named `trigger` is true; otherwise
-leave it unread. Resolve the
-trigger first from accepted scope, then recheck it against the exact changed
-files before implementation exit or validation. `retained_document_change` is
-true only when the accepted output or exact diff adds, removes, or changes a
-retained document. `project_context_claim_may_change` is true only when accepted
-behavior, architecture, or a public contract may change a claim in the bound
-project context, or the exact diff changes that bound context. A Markdown work
-record alone satisfies neither trigger. `delivery_artifact_review` is true when
-this item is delivered through a reviewable delivery artifact — pull request,
-merge request, or forge equivalent — no matter who owns the ceremony; it is false
-only for a route that delivers without one. `pr_delivery_selected` is narrower:
-true only when no local delivery provider owns the PR ceremony, so the portable
-one applies. A repository whose provider mod owns the ceremony has the first
-trigger true and the second false. Read
-`implementation_exit_observation_declared` from the loader output; true loads
-the declared build observation and false performs no provider work. RoboRev's
-repository precondition is a
-Spacedock-registered state holder, so a repository without one leaves the trigger
-false and never loads the contract. A newly true trigger loads its reference
-before the stage verdict. Record a named receipt in the existing work item;
-`receipt: null` creates no receipt. A link is not activation. A reference cannot
-add stages, broaden scope, or become a standing policy bundle.
+Use loader `declared_receipts`; do not re-parse receipt names. Resolve each
+`kc-dev-flow-conditional-references/v1` entry's `path` relative to the selected
+stage. Read when its trigger is true; otherwise leave unread. Evaluate accepted
+scope, recheck the exact diff before implementation exit or validation, and load
+newly true references before the verdict.
+
+- `retained_document_change`: accepted output or diff adds, removes, or changes
+  a retained document.
+- `project_context_claim_may_change`: retained implementation needs its initial
+  explanation, accepted behavior, architecture, or a public contract may change a
+  bound claim, or the diff changes that context. The existing policy
+  owns coverage and upkeep through the bound authority.
+  A Markdown work record alone satisfies neither trigger.
+- `delivery_artifact_review`: PR, merge request or equivalent delivery, regardless
+  of ceremony owner; false for delivery without one.
+- `pr_delivery_selected`: no local provider owns PR ceremony. With a local
+  provider the first delivery trigger is true and this one false.
+- Use loader `implementation_exit_observation_declared`: true loads the build
+  observation; false performs no provider work. RoboRev requires a
+  Spacedock-registered state holder; without it keep the trigger false and
+  contract unread.
+
+Record named receipts in the existing item; `receipt: null` creates no receipt.
+A link is not activation. Do not let references add stages, scope, or standing policy.
 
 Before dispatch, the First Officer writes and commits the state-owned stage-pin
 sidecar, re-reads it, and dispatches only that envelope:

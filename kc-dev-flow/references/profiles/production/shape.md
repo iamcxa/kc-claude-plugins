@@ -39,6 +39,8 @@ policy, rollout, and release boundary.
 
 ## Required output
 
+- the linked architecture home before implementation, following
+  `project-context-maintenance.md` when its existing trigger applies;
 - accepted journey, constraints, non-goals, exact owners, and the observable
   semantics this work may change;
 - applicable lifecycle and specialist-risk obligations;

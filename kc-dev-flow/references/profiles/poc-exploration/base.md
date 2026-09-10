@@ -23,9 +23,9 @@ observable stop point in the v3 receipt before build.
 - At `prove`, evaluate the question and abandonment condition the shared core's
   `backlog` exit bar already recorded. Do not rewrite either.
 - Record cleanup and what the experiment does not prove.
-- Do not require architecture documentation, a PR, Chief Engineer consultation,
-  Science Officer review, or production operations unless the repository or an
-  observed boundary independently requires it.
+- A disposable POC needs no permanent architecture document; retained work uses
+  triggered `project-context-maintenance.md`. Require a PR, Chief Engineer, Science
+  Officer, or production operations only for repository policy or an observed boundary.
 
 ## Route-back boundary
 

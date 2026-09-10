@@ -22,8 +22,9 @@ documentation logic. This mod owns the small stage obligation between those laye
 ## Rule
 
 **Every approved task classifies its effect on the bound project context. When the
-task changes a described product behavior, architecture boundary, public contract,
-scope decision, or durable constraint, the approved context change lands in the same
+task introduces a retained explanation or changes a described product behavior,
+architecture boundary, public contract, scope decision, or durable constraint,
+the approved context change lands in the same
 delivery slice and fresh validation checks the changed claim against the delivered
 behavior.**
 
@@ -31,11 +32,36 @@ Use one of two classifications:
 
 - `none` — the task changes no claim made by the bound project context. Name the
   relevant described surface or explain why none is involved.
-- `update` — name the bound authority, the routed claim locator that becomes stale,
-  and the replacement claim already authorized by the task.
+- `update` — name the bound authority, the missing or stale routed claim, and
+  the initial or replacement explanation already authorized by the task.
 
 The classification is not permission to change product direction. Scope and
 irreversible decisions remain with their existing authority.
+
+## Architecture home
+
+Identify the architecture home before implementation, in the current shape output
+or in build before the first edit when the route has no shape stage. A disposable
+POC uses a small Exploration Brief outline of components, data flow, external
+boundaries and tentative assumptions; it needs no permanent documentation set.
+Do not require completed architecture before the experiment answers its question.
+
+For retained implementation, link the explanation from the bound context or README.
+Reuse its existing authoritative section; default to `ARCHITECTURE.md` for a new
+repository retaining implementation. Keep one context authority, routed to that home.
+Explain retained components and responsibilities, inputs/outputs, persistence and
+source-of-truth boundaries, important package roles, and relevant code or commands.
+Pilot and Production extend this with applicable authorization, deployment, failure,
+recovery, and compatibility boundaries; omit irrelevant sections.
+
+Align retained claims with implemented behavior before the existing
+implementation/validation boundary. Keep hypotheses, proposed design, review history,
+deployment snapshots and mutable progress in the work item or planning authority.
+Apply `retained-document-policy.md` to touched explanations, including its render-and-check
+rule if a diagram is used. An accurate linked section satisfies the requirement
+with no duplicate file; unchanged claims need no extra edit or review loop. Do not
+reopen completed work. Validation runs the claims' cited code/commands and follows the
+entry link under the existing `planned_check`; this adds no stage, gate or reviewer.
 
 ## Inputs
 

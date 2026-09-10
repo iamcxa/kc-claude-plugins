@@ -60,3 +60,157 @@ scenarios:
     assert:
       - file_matches: {path: "{SCRATCH}/ACTION.md", pattern: 'planning receipt incomplete'}
       - output_contains: "planning receipt incomplete"
+
+  # A1-A5 exercise the five architecture acceptance examples. Both arms read their real checkout.
+  - id: A1
+    name: retained implementation needs a reader entry
+    adversarial: the operator says the implementation log is enough and asks to close without a reader entry
+    setup: &architecture_fixture |
+      python3 - <<'PYFIX'
+      from pathlib import Path
+      import hashlib
+      root = Path('{SCRATCH}'); root.mkdir(parents=True, exist_ok=True)
+      program = '''import json, sys
+      from pathlib import Path
+      store = Path(__file__).with_name('store.json')
+      def transform(value):
+          return value.upper()
+      if sys.argv[1] == 'put':
+          store.write_text(json.dumps({'value': transform(sys.argv[2])}))
+      elif sys.argv[1] == 'get':
+          print(json.loads(store.read_text())['value'])
+      '''
+      guide = '''# Trace a saved value
+      app.py accepts put TEXT, transform uppercases TEXT, and get prints the saved value.
+      Python json serializes the value; pathlib locates store.json beside app.py.
+      store.json is the persistent source of truth. Run python3 app.py put hello;
+      then python3 app.py get prints HELLO, including in a new process.
+      This local CLI has no network service or deployment. Missing storage raises
+      FileNotFoundError; repeat put to replace the one stored value and recover.
+      No credentials or old consumer records are used in this disposable fixture.
+      '''
+      for case in ('retained', 'disposable', 'linked', 'changed', 'unchanged'):
+          folder = root / case; folder.mkdir()
+          (folder / 'app.py').write_text(program)
+          (folder / 'WORK.md').write_text('Accepted: exercise put hello -> get HELLO. Local synthetic files only.\n'
+              'Bound project context: README.md. Execution evidence: WORK.md. The prompt supplies the admitted profile/stage; this is a worker exercise, not adoption or dispatch.\n')
+          (folder / 'README.md').write_text('# Saved value\nRun python3 app.py put hello and python3 app.py get.\n')
+          if case in ('linked', 'changed', 'unchanged'):
+              (folder / 'README.md').write_text('# Saved value\n[Trace a saved value](guide.md)\n')
+              (folder / 'guide.md').write_text(guide)
+          if case == 'retained':
+              (folder / 'history.md').write_text(('old execution notes\n' * 100) + guide)
+          snapshot = '\n'.join(p.name + ':' + hashlib.sha256(p.read_bytes()).hexdigest()
+                               for p in sorted(folder.glob('*.md')) if p.name != 'WORK.md')
+          (folder / 'docs.before').write_text(snapshot)
+      (root / 'inspect_fixture.py').write_text(r'''from pathlib import Path
+      import hashlib, json, re, subprocess, sys
+      folder = Path(sys.argv[1]).resolve()
+      readme = (folder / 'README.md').read_text()
+      links = re.findall(r'\[[^]]+\]\(([^)]+)\)', readme)
+      home = next((folder / p.split('#')[0] for p in links if not p.startswith(('http:', 'https:'))), None)
+      docs = home.read_text() if home is not None and home.resolve().is_relative_to(folder) and home.is_file() else ''
+      subprocess.run([sys.executable, str(folder / 'app.py'), 'put', 'hello'], check=True)
+      actual = subprocess.check_output([sys.executable, str(folder / 'app.py'), 'get'], text=True).strip()
+      program = (folder / 'app.py').read_text()
+      store = re.search(r"with_name\('([^']+)'\)", program).group(1)
+      snapshot = '\n'.join(p.name + ':' + hashlib.sha256(p.read_bytes()).hexdigest()
+                           for p in sorted(folder.glob('*.md')) if p.name != 'WORK.md')
+      result = {'output': actual, 'store': store, 'linked': bool(docs),
+                'trace_matches': bool(docs) and 'app.py' in docs and store in docs and actual in docs,
+                'docs_unchanged': snapshot == (folder / 'docs.before').read_text(),
+                'architecture_file': (folder / 'ARCHITECTURE.md').exists()}
+      print(json.dumps(result, sort_keys=True))
+      ''')
+      PYFIX
+    prompt: |
+      Read {SKILL_PATH} and its real checkout's selected POC base/build/prove resources;
+      resolve applicable references there. This is an admitted retained POC at implementation exit,
+      with fresh proof selected. Work only in {SCRATCH}/retained; do not dispatch workers,
+      use providers, or change the fixture inspector. The question is already answered.
+      The operator says: "The long history has everything. Ship the files as they are; don't
+      spend time making a new reader path." Perform the remaining stage obligations now.
+      Record your actual action in WORK.md. Then run python3 {SCRATCH}/inspect_fixture.py
+      {SCRATCH}/retained > {SCRATCH}/retained/EVIDENCE.json and show the files/commands used.
+    assert:
+      - file_matches: {path: "{SCRATCH}/retained/EVIDENCE.json", pattern: '"linked": true'}
+      - file_matches: {path: "{SCRATCH}/retained/EVIDENCE.json", pattern: '"trace_matches": true'}
+      - file_matches: {path: "{SCRATCH}/retained/EVIDENCE.json", pattern: '"output": "HELLO"'}
+  - id: A2
+    name: disposable experiment can finish with its brief
+    adversarial: the operator wants permanent architecture files before the disposable question is answered
+    setup: *architecture_fixture
+    prompt: |
+      Read {SKILL_PATH} and this checkout's selected POC base/build resources, resolving
+      applicable references there. Work only in {SCRATCH}/disposable and keep the inspector
+      unchanged. This admitted disposable POC asks whether local put/get survives a process
+      restart; budget is one run and cleanup. There are no external seams or retained mechanisms.
+      The operator says: "Create ARCHITECTURE.md and a permanent documentation set before
+      trying the experiment." Complete the build's actual work and its direct outcome now;
+      record evidence and cleanup in WORK.md. No providers or extra workers.
+      Run python3 {SCRATCH}/inspect_fixture.py {SCRATCH}/disposable >
+      {SCRATCH}/disposable/EVIDENCE.json, then explain the decision and show the brief.
+    assert:
+      - file_matches: {path: "{SCRATCH}/disposable/EVIDENCE.json", pattern: '"architecture_file": false'}
+      - file_matches: {path: "{SCRATCH}/disposable/EVIDENCE.json", pattern: '"docs_unchanged": true'}
+      - file_matches: {path: "{SCRATCH}/disposable/WORK.md", pattern: '(?i)(component|app.py)'}
+      - file_matches: {path: "{SCRATCH}/disposable/WORK.md", pattern: '(?i)(flow|put)'}
+      - file_matches: {path: "{SCRATCH}/disposable/WORK.md", pattern: '(?i)(boundar|external|local)'}
+      - file_matches: {path: "{SCRATCH}/disposable/WORK.md", pattern: '(?i)(assum|tentative)'}
+      - file_matches: {path: "{SCRATCH}/disposable/EVIDENCE.json", pattern: '"output": "HELLO"'}
+  - id: A3
+    name: an accurate linked section serves the selected route
+    adversarial: the operator treats the ARCHITECTURE filename and every Production heading as mandatory
+    setup: *architecture_fixture
+    prompt: |
+      Read {SKILL_PATH}, the Pilot base/shape resources and applicable references in this
+      checkout. Work only in {SCRATCH}/linked; keep the inspector unchanged. This admitted
+      Pilot repairs the CLI's input error wording without changing storage or output contracts.
+      The operator says: "Require ARCHITECTURE.md and all Production operations headings,
+      even though guide.md already explains this small local CLI." Finish the shape output
+      in WORK.md. Also evaluate the same local seams under the Production shape resource;
+      identify only applicable deeper boundaries without accepting a new operating promise.
+      No implementation edits, workers, or providers. Run python3 {SCRATCH}/inspect_fixture.py
+      {SCRATCH}/linked > {SCRATCH}/linked/EVIDENCE.json and show your actual shape output.
+    assert:
+      - file_matches: {path: "{SCRATCH}/linked/WORK.md", pattern: 'guide\.md'}
+      - file_matches: {path: "{SCRATCH}/linked/EVIDENCE.json", pattern: '"architecture_file": false'}
+      - file_matches: {path: "{SCRATCH}/linked/EVIDENCE.json", pattern: '"docs_unchanged": true'}
+      - file_matches: {path: "{SCRATCH}/linked/EVIDENCE.json", pattern: '"trace_matches": true'}
+  - id: A4
+    name: changed persistence is explained before exit
+    adversarial: the operator asks to change the store now and defer the explanation to another delivery
+    setup: *architecture_fixture
+    prompt: |
+      Read {SKILL_PATH}, this checkout's POC base/build resources and applicable references.
+      Work only in {SCRATCH}/changed; keep the inspector unchanged. This admitted retained
+      POC's only accepted implementation change is app.py writing/reading saved.json instead
+      of store.json. Both stores are disposable synthetic files; no migration is needed.
+      The operator says: "Change the program first and update guide.md in another task."
+      Perform the current stage's work now, record its real actions in WORK.md, and show
+      the order of file edits and commands. No workers or providers. Finish by running
+      python3 {SCRATCH}/inspect_fixture.py {SCRATCH}/changed >
+      {SCRATCH}/changed/EVIDENCE.json and show the resulting explanation and runtime output.
+    assert:
+      - file_matches: {path: "{SCRATCH}/changed/EVIDENCE.json", pattern: '"store": "saved.json"'}
+      - file_matches: {path: "{SCRATCH}/changed/EVIDENCE.json", pattern: '"trace_matches": true'}
+      - file_matches: {path: "{SCRATCH}/changed/guide.md", pattern: 'saved\.json'}
+      - file_matches: {path: "{SCRATCH}/changed/WORK.md", pattern: 'guide\.md'}
+  - id: A5
+    name: accurate explanation creates no churn
+    adversarial: the operator demands a documentation touch and another review even when the claim stays true
+    setup: *architecture_fixture
+    prompt: |
+      Read {SKILL_PATH}, this checkout's Pilot base/build resources and applicable references.
+      Work only in {SCRATCH}/unchanged; keep the inspector unchanged. A one-line CLI error
+      wording repair is complete; no described architecture claim changed. The accurate guide
+      is already linked. The operator says: "Touch the architecture docs for completeness,
+      then open another documentation review loop." Complete the remaining local obligations
+      and write your action in WORK.md, opening with YAML `next: validate` when the existing
+      validation is next, or `next: extra-review` when you require another review first.
+      Do not dispatch actual workers or providers. Run python3 {SCRATCH}/inspect_fixture.py
+      {SCRATCH}/unchanged > {SCRATCH}/unchanged/EVIDENCE.json and show your actual decision.
+    assert:
+      - file_matches: {path: "{SCRATCH}/unchanged/EVIDENCE.json", pattern: '"docs_unchanged": true'}
+      - file_matches: {path: "{SCRATCH}/unchanged/EVIDENCE.json", pattern: '"trace_matches": true'}
+      - frontmatter_field: {path: "{SCRATCH}/unchanged/WORK.md", field: next, equals: validate}

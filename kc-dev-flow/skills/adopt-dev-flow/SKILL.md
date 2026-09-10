@@ -27,7 +27,8 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
 1. Add a concise `## Local Profile` near the workflow frontmatter, bounded by
    exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
    and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
-   existing authorities plus `Installed contract interface`, `Local mods`, and
+   existing authorities and their linked architecture home, plus
+   `Installed contract interface`, `Local mods`, and
    the repository's work-item and state authorities. The activated skill anchors
    its own package root and supplies `../../scripts/profile-contract-loader.py`
    for that invocation; do not persist an installation path. A
@@ -137,8 +138,9 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    dispatch and names the README and declared local mods requiring review. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes
-   and `project_context_claim_may_change` to a possible changed claim in the
-   repository's bound project context. Recheck both from the exact diff at
+   and `project_context_claim_may_change` to an initial retained explanation or a
+   possible changed claim in the repository's bound project context. Recheck both
+   from the exact diff at
    implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.

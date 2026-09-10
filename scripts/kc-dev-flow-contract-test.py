@@ -1009,6 +1009,35 @@ for reference, trigger in [
         and "do not load the file when that trigger is false" in policy,
         f"conditional reference has stale adoption instructions: {reference}",
     )
+# These assertions cover instruction wiring; operator behavior needs the five scenarios.
+architecture_contracts = {
+    "kc-dev-flow/references/project-context-maintenance.md": [
+        "## Architecture home", "link the explanation from the bound context or README",
+        "components and responsibilities", "persistence and source-of-truth boundaries",
+        "important package roles", "authorization, deployment, failure, recovery, and compatibility",
+        "before implementation", "before the existing implementation/validation boundary",
+        "An accurate linked section satisfies the requirement", "no extra edit or review loop",
+    ],
+    "kc-dev-flow/references/profiles/poc-exploration/base.md": ["A disposable POC needs no permanent architecture document"],
+    "kc-dev-flow/references/profiles/poc-exploration/build.md": [
+        "components, data flow, external boundaries, and tentative assumptions", "before the first implementation edit",
+    ],
+    "kc-dev-flow/references/profiles/pilot-product-slice/shape.md": ["architecture home before implementation"],
+    "kc-dev-flow/references/profiles/production/shape.md": ["architecture home before implementation"],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "retained implementation needs its initial explanation",
+        "accepted behavior, architecture, or a public contract",
+    ],
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md": ["initial retained explanation", "linked architecture home"],
+    "docs/dev/README.md": ["initial retained explanation"],
+    "kc-dev-flow/README.md": ["tentative architecture outline", "initial retained explanation"],
+    "kc-dev-flow/MIGRATION.md": ["No consumer migration or archived-task retrofit"],
+}
+for relative, clauses in architecture_contracts.items():
+    text = re.sub(r"\s+", " ", read(relative))
+    for clause in clauses:
+        require(clause in text, f"architecture entrypoint omits {relative}: {clause}")
+
 with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
     work_items = Path(temporary)
     for contracts_root in [PLUGIN / "references"]:
