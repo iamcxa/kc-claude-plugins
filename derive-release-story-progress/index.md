@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: ideation
+status: implementation
 product: kc-journey-map
 source:
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: Kent approved ideation briefing 29015547 and entering implementation, including the task-owned complete required-task mapping, separate local progress skill, source-preserving rendering, three-color development semantics, pending delivery acceptance, and the 10-file/700-line/260-reader-line stop thresholds. Kent separately approved the predecessor 12-file border local commit as the dependency base. This grants implementation and validation, not a product commit for the new progress feature or push/PR/merge/release.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
