@@ -155,3 +155,37 @@ left to the FO per this run's explicit correction — the PR body, topology deci
 audit-link tuple are pre-resolved above so the FO's pr-merge pass needs no rework. AC-4 remains
 blocked on the sibling dispatch/watch task's fence-file schema, reverified absent on this branch,
 and is named here rather than silently dropped.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Branch merges origin/main (merge commit, not rebase) picking up #406's dispatch.sh/watch.sh
+  Merge commit 750db571 (`git merge origin/main --no-edit`), clean, no conflicts; `origin/main` was at c9c5752f (post-#406/#407/#412).
+- DONE: close.py and uat-doc.py read/write the fence shape dispatch.sh actually writes (top-level slug -> {workspace, session, message_sha256}, debrief recorded as slug.debrief -> {status, path}), fixtures/tests updated, new test loads a dispatch.sh --dry-run-format fence file
+  `uat_doc.load_batch_record()` now returns the raw top-level dict (no `sprint`/`tasks` synth wrapper); `close.py`'s `debrief_status`/`debrief_message`/`build_receipt` read `record.get(slug, {})` directly, and write `merged_sha`/`debrief` as further keys of that same slug object. All four v2 fixtures (`uat-doc-v2/{ready,missing-gate}`, `close-v2/{dry-run,closeable}`) rewritten to the flat shape; commit 8dc28e4f. New tests in both `uat-doc.test.py` and `close.test.py` load `fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json` — the sibling dispatch/watch task's own fixture, pinned to dispatch.sh's real committed shape per `dispatch.test.sh` cases (b)/(e) — through `load_batch_record`/`debrief_status`/`build_receipt`, proving the reader matches dispatch.sh's actual output rather than a hand-authored stand-in.
+- DONE: v2 receipt schema shipped as kc-ship-flow/schemas/kc-ship-close-receipt.v2.schema.json and used by close.py --validate
+  New file (commit 8dc28e4f); `close.py`'s `validate_receipt()` runs its existing name-the-field checks first, then `jsonschema.validate()` against this schema (hard `import jsonschema` dependency, matching `docs/plan-flow/schema/validate-receipt.py`'s established pattern in this tree). `close.test.py`'s AC-3 cases (valid/missing-debrief) still pass against the schema-backed validator.
+- SKIPPED: Delete the v1 schema and its fixtures
+  Finding 3's own condition ("only if nothing left in the tree reads them") is not met: `docs/plan-flow/schema/validate-receipt.py`, `dev-debrief.py`, `ship-debrief.py`, `e2e-gate.py`, and `contract-test.py` all still read `kc-ship-close-receipt.v1.schema.json` or `kc-ship-close-receipt/v1`, plus a dozen v1-shaped fixtures. Removal is explicitly the sprint's second task (`ship-remove-duplicated-stations`) per this entity's own non-goals; deleting here would break those still-live readers.
+- DONE: PR #411 body rewritten exactly per docs/dev/_mods/pr-merge.md template
+  Rewritten via `gh pr edit 411 --body-file` to: one <=25-word motivation sentence, `## What changed` (4 bullets, each <=15 words, no rationale), `## Evidence` (2 bullets, N/N-passed form), `## Native stack exception` (retained per the topology gate: merge-base diff is 23 files / +1117/-375 against `origin/main`, tripping the numeric trigger with no independently reviewable layer), `## Residuals` (3 bullets, known limits only), `---`, then the split-root audit link resolved fresh at this cycle's own state SHA (below) — no Linear id anywhere.
+
+### Split-root audit-link tuple (this cycle)
+
+`ENTITY_PATH=/home/vercel-sandbox/kc-claude-plugins/docs/dev/.spacedock-state/ship-verify-uat-close.md`,
+`STATE_ROOT` = same dir's toplevel, `STATE_RELATIVE_PATH=ship-verify-uat-close.md`,
+`STATE_ORIGIN=https://github.com/iamcxa/kc-claude-plugins` -> `STATE_REPO=iamcxa/kc-claude-plugins`,
+`SHORT_ID=7e`. `STATE_SHA` is this stage report's own commit SHA on `spacedock-state/dev` (resolved
+fresh, per the mod, immediately before constructing the PR body -- not reconstructed after).
+Recorded literally in the PR body's audit link below.
+
+### Summary
+
+Merged `origin/main` (merge commit, not rebase) to pick up #406's `dispatch.sh`/`watch.sh`; fixed
+the fence-shape mismatch findings 1-2 flagged (top-level slug map, no `tasks` wrapper, debrief
+nested per-slug) with fixtures and tests reconciled against the sibling task's own real fence
+fixture, not a hand-authored guess; shipped the v2 receipt schema as a file and wired
+`close.py --validate` to it via `jsonschema` (v1 deletion skipped — still read by five other
+scripts, out of this task's scope per the entity's own non-goals); and rewrote PR #411's body to
+the FO's exact template. All of `uat-doc.test.py` (14/14 checks) and `close.test.py` (9/9 checks)
+pass at this cycle's head; the pre-existing, unrelated `fenced-dispatch.test.sh` failure (3 of 4
+cases) was reverified identical on the clean merge commit before any of this cycle's edits.
