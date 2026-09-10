@@ -302,13 +302,13 @@ def build_doc(sprint, state_dir, root=None, flows=None):
 
 # --- legacy compatibility -----------------------------------------------
 #
-# dev-debrief.py and ship-debrief.py dynamically import this module (`_load_uat_doc()`) to reuse
-# its plan-flow-batch-dir readers (`find_worker_evidence_files`, `load_defaults_decisions`).
-# Both scripts are themselves removal candidates under the cloud-wrapper design ("What leaves
-# kc-ship-flow": "spacedock debrief, run by each worker" replaces them) -- that removal is this
-# sprint's second task, not this one. Keeping these two functions here, unchanged from the v1
-# uat-doc.py they were written against, is scoped compatibility until that removal lands; nothing
-# in the rewritten `build_doc`/`main` above calls them.
+# The per-task debrief writers this cloud-wrapper design's "What leaves kc-ship-flow" table
+# superseded with "spacedock debrief, run by each worker" dynamically imported this module
+# (`_load_uat_doc()`) to reuse its plan-flow-batch-dir readers (`find_worker_evidence_files`,
+# `load_defaults_decisions`). Those writers are already removed by this sprint's station-removal
+# task; nothing in the rewritten `build_doc`/`main` above calls these two functions either. Kept,
+# unchanged from the v1 uat-doc.py they were written against, as scoped compatibility rather than
+# deleted outright -- slimming uat-doc.py is out of this task's scope.
 
 EVIDENCE_FIELD_RE = re.compile(r"^([A-Z][A-Z0-9_]*):\s?(.*)$")
 
