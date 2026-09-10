@@ -133,9 +133,9 @@ byte. Invoke it with the exact item and marked README; do not search hosts or
 store its path. It emits shared core, selected base, and selected stage only.
 Profile selection is per item, never a
 project-global mode; simultaneous items may load different routes.
-For canonical admitted work, the latest Stage Report cites stable `AC-N`
-identifiers and the repository's Spacedock `--ac-scan` check must report no
-unknown or uncovered criterion before the next gate.
+For canonical admitted work with Acceptance criteria, the latest Stage Report
+cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
+uncovered criterion before the next gate. POCs use `review` below.
 
 A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
 the loader's output already parses that block into `declared_receipts` — the
@@ -209,17 +209,23 @@ contract. Skipped stages create no review or evidence obligation.
 
 ## Advance
 
-At POC validation, use this installed package's sibling `poc-close-guard.py`. Record one
-`poc_outcome` and one separate `poc_close_measurement`. For direct proof, build
-records the outcome and the guard moves the item from implementation to
-validation solely for the terminal gate; do not dispatch a validation worker.
-For fresh proof, validation records the outcome. Prepare the gate through the guard, and record approval without
-`--consume`. After approval, consume the gate through the guard and terminalize
-the POC. Then return the POC outcome to planning. KC Dev Flow does not create
-downstream delivery work or preselect its profile; planning decides whether a
-new Development Brief exists, and that item enters KC Dev Flow independently.
-Raw Spacedock remains bypassable; this is a fail-closed KC Dev Flow path, not an
-engine tamper-resistance claim.
+Resolve `../../scripts/poc-close-guard.py` from this skill for POC close. Record
+one `poc_outcome` and one separate `poc_close_measurement`:
+
+```bash
+python3 <guard> --workflow-dir <workflow-dir> --work-item <task-path> review
+```
+
+`review` reads Spacedock's latest exact-stage report: implementation for direct
+proof, validation for fresh proof. Declared criteria and checklist items require
+evidence; absent criteria are allowed.
+
+Direct build records the outcome; `prepare` moves and commits implementation
+to validation before binding. Stop on durability failure; do not dispatch a validation worker.
+Fresh proof records its outcome in validation. Prepare through the guard, record approval without
+`--consume`, then consume through the guard and terminalize;
+return the POC outcome to planning. KC Dev Flow does not create downstream delivery work
+or preselect its profile; planning decides whether a new Development Brief exists.
 
 - Perform the selected stage mission and required output. Move to the loader's
   `next_workflow_stage` when its stated stop condition is met.
