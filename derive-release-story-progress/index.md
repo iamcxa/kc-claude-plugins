@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: backlog
+status: ideation
 product: kc-journey-map
 source:
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Kent approved the concrete two-skill task scope with 那就按這樣繼續 and answered 可以 to adopting Pilot and the shape/build/verify route for this task. Admit this standalone brief to ideation only; the prior border commit and later implementation/delivery gates retain their authority.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
