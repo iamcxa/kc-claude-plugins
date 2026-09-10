@@ -38,6 +38,10 @@ gates:
                 id: briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-1:revision-1
                 digest: sha256:611a93f369240be4d07e9acec25eb12220a6b39a5ed16627aacf16c2e47b522f
                 room-ref: ./review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-10T09:23:51.845042Z"
+                reason: Structured acceptance scan cannot locate AC-2, AC-3, or AC-4 in the report projection. The evidence exists below the Summary section but must be repaired by its report owner before a review can be presented; accepted scope is unchanged.
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
