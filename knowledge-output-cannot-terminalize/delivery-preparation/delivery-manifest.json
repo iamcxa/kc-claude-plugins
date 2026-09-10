@@ -1,0 +1,161 @@
+{
+  "status": "prepared for Captain review only; no push or PR creation authorized",
+  "workflow_dir": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev",
+  "standalone": true,
+  "provider_binding": null,
+  "cross_repository_native_stack": false,
+  "audit": {
+    "entity_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/index.md",
+    "state_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state",
+    "state_sha": "dcbc6659eb0bebc62b45c8cf74178a1265486e2a",
+    "state_relative_path": "knowledge-output-cannot-terminalize/index.md",
+    "state_origin": "https://github.com/iamcxa/kc-claude-plugins.git",
+    "state_repo": "iamcxa/kc-claude-plugins",
+    "short_id": "ge",
+    "tuple_resolution": "native status --resolve/--short-id, git tracked object and gh repo view explicit origin; all exit 0"
+  },
+  "units": [
+    {
+      "name": "upstream",
+      "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+      "repo": "spacedock-dev/spacedock",
+      "base": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+      "candidate": "552df847e6a845a6cc5ee59327f2d38161192541",
+      "title": "fix(gates): finalize knowledge delivery without losing peer edits",
+      "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+      "base_branch": "main",
+      "origin": "https://github.com/spacedock-dev/spacedock.git",
+      "body_file": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/delivery-preparation/upstream-pr-body-xik0rw6r.md",
+      "body_mode": "0o600",
+      "body_sha256": "c34f7fd358aee0ccb367a4e33d38ddf74338fe36212001ad78b2c40a00128292",
+      "body_word_count": 100,
+      "commit_count": 1,
+      "files": [
+        "internal/cli/help.go",
+        "internal/gates/delivery.go",
+        "internal/gates/delivery_test.go",
+        "internal/gates/io.go",
+        "internal/status/merge.go",
+        "internal/status/merge_guard_test.go",
+        "internal/status/mutate.go",
+        "mods/pr-merge.md"
+      ],
+      "preflight": {
+        "command": [
+          "git",
+          "-C",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+          "merge-tree",
+          "--write-tree",
+          "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+          "552df847e6a845a6cc5ee59327f2d38161192541"
+        ],
+        "rc": 0,
+        "stdout": "0f242f8eecd5558e15df2af456416b408cd73ae9\n",
+        "stderr": ""
+      },
+      "push_command": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+        "push",
+        "origin",
+        "552df847e6a845a6cc5ee59327f2d38161192541:refs/heads/spacedock-ensign/knowledge-output-cannot-terminalize"
+      ],
+      "create_command": [
+        "gh",
+        "pr",
+        "create",
+        "--draft",
+        "--repo",
+        "spacedock-dev/spacedock",
+        "--base",
+        "main",
+        "--head",
+        "spacedock-ensign/knowledge-output-cannot-terminalize",
+        "--title",
+        "fix(gates): finalize knowledge delivery without losing peer edits",
+        "--body-file",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/delivery-preparation/upstream-pr-body-xik0rw6r.md",
+        "--assignee",
+        "@me"
+      ],
+      "commands_executed": {
+        "preflight": true,
+        "push": false,
+        "create": false
+      }
+    },
+    {
+      "name": "local",
+      "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+      "repo": "iamcxa/kc-claude-plugins",
+      "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+      "candidate": "fa69e442bf7899db8c72c515ecc88ea7712e8787",
+      "title": "fix(dev-flow): use native knowledge delivery finalization",
+      "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+      "base_branch": "main",
+      "origin": "https://github.com/iamcxa/kc-claude-plugins.git",
+      "body_file": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/delivery-preparation/local-pr-body-3umyhobr.md",
+      "body_mode": "0o600",
+      "body_sha256": "bf8a260a1620d1f52084068f4d933ed5cafde81f3db6f927d3de13b7e6a1ae7d",
+      "body_word_count": 93,
+      "commit_count": 1,
+      "files": [
+        "docs/dev/_mods/pr-merge.md"
+      ],
+      "preflight": {
+        "command": [
+          "git",
+          "-C",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+          "merge-tree",
+          "--write-tree",
+          "c9c5752fda853737d4a937ad7f59564c5651ca53",
+          "fa69e442bf7899db8c72c515ecc88ea7712e8787"
+        ],
+        "rc": 0,
+        "stdout": "9b3a1329c7c2a575de5cb0b7ffaa1e39563bf60b\n",
+        "stderr": ""
+      },
+      "push_command": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+        "push",
+        "origin",
+        "fa69e442bf7899db8c72c515ecc88ea7712e8787:refs/heads/spacedock-ensign/knowledge-output-cannot-terminalize"
+      ],
+      "create_command": [
+        "gh",
+        "pr",
+        "create",
+        "--draft",
+        "--repo",
+        "iamcxa/kc-claude-plugins",
+        "--base",
+        "main",
+        "--head",
+        "spacedock-ensign/knowledge-output-cannot-terminalize",
+        "--title",
+        "fix(dev-flow): use native knowledge delivery finalization",
+        "--body-file",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/delivery-preparation/local-pr-body-3umyhobr.md",
+        "--assignee",
+        "@me"
+      ],
+      "commands_executed": {
+        "preflight": true,
+        "push": false,
+        "create": false
+      }
+    }
+  ],
+  "remaining": [
+    "Captain approval of exact Draft bodies and push/create units",
+    "Automated surface-map remains exit 1; manual necessity evidence retained",
+    "Upstream landing and available target runtime before local consumer merge/use",
+    "No Ready, merge, installation, terminalization or original-task cleanup authorization",
+    "Future improvement Pilot remains manual-trigger only; original archival prerequisite and explicit runtime/usage budget before any cloud/model execution; no recurring activation"
+  ]
+}
