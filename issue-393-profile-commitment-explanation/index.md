@@ -30,6 +30,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:td0yhsww2jnwnrzh5c6wc6er:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:td0yhsww2jnwnrzh5c6wc6er-ideation-1
+              briefing:
+                id: briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-1:revision-1
+                digest: sha256:611a93f369240be4d07e9acec25eb12220a6b39a5ed16627aacf16c2e47b522f
+                room-ref: ./review/ideation/briefing-1
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
