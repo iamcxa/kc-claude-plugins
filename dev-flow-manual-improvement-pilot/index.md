@@ -35,6 +35,17 @@ gates:
                 id: briefing:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1
                 digest: sha256:ef2a004507cdb9033f64aca96dd1e608cd93ff4212c29a3333963722d547dede
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3w83fmy975y617nrfhcy1mqq:ideation:1
+                briefing: briefing:3w83fmy975y617nrfhcy1mqq:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:23:46.069557Z"
+                decision: approve
+                reason: Kent explicitly approved the presented ef2a0045 Pilot design and upstream knowledge-only closure scope with 批准. Implement the existing defect owner first, preserving native approval/evidence and product delivery refusal. Original POC close approval remains valid; no product commit, cloud launch, external post, merge or release authorization is inferred.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-10T16:11:49Z
 ---
 
