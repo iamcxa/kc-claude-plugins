@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-1:revision-1",
+  "question": "Approve the independently validated 19-file local candidate and authorize the local commit feat(kc-journey-map): show release stories with honest evidence states? This approval does not authorize push, PR creation, merge, release, or delivery acceptance.",
+  "artifacts": [
+    {
+      "id": "artifact:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/708d1b319b3602abef388ce57a39ed7e296c69ff/show-release-stories-on-journey-boards.md",
+      "rev": "sha256:bae8afd989b314fb1803f6818fae4aee84883e12f3f9b230758060364d3d1f78",
+      "mediaType": "text/markdown",
+      "summary": "Local validation passed on content manifest 4d60e58052bc34843c42f6a9fde0b3d4c390931462cedd2af270b19d6d72554b. Sixty scoped tests, example lint, isolated five-page smoke, all three release-page inspections, and browser edit/reload/separate-YAML persistence passed. Conflict, duplicate and stale-edit checks protect identity and newer source edits. All 19 candidate hashes and 14 existing room snapshots are unchanged. Product files remain uncommitted; host-selection execution and full sprint-to-release migration remain deferred, and subsequent delivery requires separate authority."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
