@@ -5,8 +5,8 @@ source:
 product: kc-journey-map
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: S1
+sprint-readiness: ready
 started:
 completed:
 verdict:
