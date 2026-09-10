@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:g0nx8a1ht539e12e9jm54fbw:backlog:attempt-1:revision-1",
+  "question": "Does the journey map stand alone as a publishable plugin before any plan-flow integration is attempted?",
+  "artifacts": [
+    {
+      "id": "artifact:g0nx8a1ht539e12e9jm54fbw:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/817a0481d093872e55eed880f6bd606fd143ed66/extract-the-journey-map-plugin.md",
+      "rev": "sha256:7583da9856b2da6f5875712e467fc2b51ac41084d67b230f53452f39d001642f",
+      "mediaType": "text/markdown",
+      "summary": "Move 36 files — lib, server, skills/kc-journey-map and the canvas package.json — out of kc-team-ops into a plugin named kc-journey-map. The separation is already clean: nothing else in kc-team-ops references them. No behaviour changes; a move that also fixes something is a move nobody can review. Both repository gates must pass, including the marketplace install test from a clean HOME, which is what proves publishable rather than merely moved. kc-team-ops stops advertising the journey map, and the canvas CI workflow's path filters follow the code or die silently."
+    }
+  ]
+}

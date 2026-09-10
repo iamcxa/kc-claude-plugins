@@ -15,6 +15,17 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:g0nx8a1ht539e12e9jm54fbw:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:g0nx8a1ht539e12e9jm54fbw-backlog-1
+              briefing:
+                id: briefing:g0nx8a1ht539e12e9jm54fbw:backlog:attempt-1:revision-1
+                digest: sha256:b47e20f4f1ad241b14c1e741691b9ca7f7b5316f787e7182b0a0c2b03fe18c1d
+                room-ref: ./extract-the-journey-map-plugin/review/backlog/briefing-1
 ---
 
 ## The problem
