@@ -16,6 +16,17 @@ gates:
                 id: briefing:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1
                 digest: sha256:f4e4d284e5d60d57ff73cc00fdeaadeeb300eacee90a058825a018485ff7f528
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3w83fmy975y617nrfhcy1mqq:backlog:1
+                briefing: briefing:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:10:48.218365Z"
+                decision: approve
+                reason: Kent approved the proposed bounded manual Pilot with 同意 and resumed it with 繼續，額度回來了. Admit shaping of the recorded scope; no recurring activation, new cloud execution, product commit, merge or release authority is inferred.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 # One manually triggered dev-flow improvement cycle
