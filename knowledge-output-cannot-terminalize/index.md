@@ -570,7 +570,7 @@ The demonstrated data loss and adjacent consume-to-archive interval are repaired
 
 ## Stage Report: validation (cycle 2)
 
-- DONE: Independently verify the exact upstream and local candidate against AC-1 through AC-5, approved eight-file/850 and local one-file/40 scope, and native authority/data safety.
+- DONE: Independently verify the exact upstream and local candidate against AC-1, AC-2, AC-3, AC-4, AC-5, approved eight-file/850 and local one-file/40 scope, and native authority/data safety.
   PASSED for in-scope functionality: corrected exact patch fits 8 files/801 gross; local unchanged at 1/24. [Final bounded review](validation-evidence/correction-1/review.md) closes the reproduced AC-4 finding without accepting the separate red release-state residual.
 - DONE: Exercise meaningful native knowledge finalization/refusal/archive-once/committed-publication recovery cases; verify complete candidate test evidence and original-copy proof without altering live records.
   [Unchanged reproducer](validation-evidence/correction-1/unchanged-replay/result.json) now retains the peer edit through actual failed commit. Fresh focused run: 77 pass/0 fail/0 skip; independently captured both timing intervals retain bytes and retry the same consumed approval ID/digest.
