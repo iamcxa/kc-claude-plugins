@@ -16,6 +16,17 @@ gates:
                 id: briefing:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1
                 digest: sha256:7854bae80bb4b2b34cc41b5831dc80f8190b3a16db29a67ad8637b947ff91f79
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:aznp6gpr6zanmr8argy0jcdj:backlog:1
+                briefing: briefing:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T13:40:31.144358Z"
+                decision: approve
+                reason: Kent approved the bounded phase-aware close repair and selected the proposed Pilot profile with 同意 in the current conversation; no product commit, release, new cloud run, or terminal POC approval is implied.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 # Repair phase-aware POC close measurements
