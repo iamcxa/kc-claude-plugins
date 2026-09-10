@@ -1,0 +1,38 @@
+{
+  "upstream": {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kent-local/kc-dev-flow/4.3.0/scripts/surface-map-check.py",
+      "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+      "552df847e6a845a6cc5ee59327f2d38161192541",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/integrated-surface-map.md",
+      "--work-item",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/index.md",
+      "--brief",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/index.md",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery"
+    ],
+    "rc": 1,
+    "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/cli/help.go\nmissing SURFACE line: internal/gates/delivery.go\nmissing SURFACE line: internal/gates/delivery_test.go\nmissing SURFACE line: internal/gates/io.go\nmissing SURFACE line: internal/status/merge.go\nmissing SURFACE line: internal/status/merge_guard_test.go\nmissing SURFACE line: internal/status/mutate.go\nmissing SURFACE line: mods/pr-merge.md\n",
+    "stderr": ""
+  },
+  "local": {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kent-local/kc-dev-flow/4.3.0/scripts/surface-map-check.py",
+      "c9c5752fda853737d4a937ad7f59564c5651ca53",
+      "fa69e442bf7899db8c72c515ecc88ea7712e8787",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/integrated-surface-map.md",
+      "--work-item",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/index.md",
+      "--brief",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/index.md",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize"
+    ],
+    "rc": 1,
+    "stdout": "surface-map-check: FAIL\nmissing SURFACE line: docs/dev/_mods/pr-merge.md\n",
+    "stderr": ""
+  }
+}

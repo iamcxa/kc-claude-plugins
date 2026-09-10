@@ -1,0 +1,46 @@
+{
+  "authorization": "Captain exact-file approval: exactly two local product commits; retained baseline cask failure accepted; no external delivery",
+  "repos": {
+    "upstream": {
+      "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+      "base": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+      "approved_diff_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+      "paths": [
+        "internal/cli/help.go",
+        "internal/gates/delivery.go",
+        "internal/gates/delivery_test.go",
+        "internal/gates/io.go",
+        "internal/status/merge.go",
+        "internal/status/merge_guard_test.go",
+        "internal/status/mutate.go",
+        "mods/pr-merge.md"
+      ],
+      "message": "fix(gates): finalize knowledge delivery without losing peer edits",
+      "commit_rc": 0,
+      "stdout": "[spacedock-ensign/knowledge-output-cannot-terminalize 552df84] fix(gates): finalize knowledge delivery without losing peer edits\n 8 files changed, 771 insertions(+), 30 deletions(-)\n",
+      "stderr": "",
+      "commit": "552df847e6a845a6cc5ee59327f2d38161192541",
+      "parent": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+      "committed_diff_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+      "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+      "status": ""
+    },
+    "local": {
+      "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+      "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+      "approved_diff_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+      "paths": [
+        "docs/dev/_mods/pr-merge.md"
+      ],
+      "message": "fix(dev-flow): use native knowledge delivery finalization",
+      "commit_rc": 0,
+      "stdout": "[spacedock-ensign/knowledge-output-cannot-terminalize fa69e442] fix(dev-flow): use native knowledge delivery finalization\n 1 file changed, 11 insertions(+), 13 deletions(-)\n",
+      "stderr": "",
+      "commit": "fa69e442bf7899db8c72c515ecc88ea7712e8787",
+      "parent": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+      "committed_diff_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+      "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+      "status": ""
+    }
+  }
+}
