@@ -65,6 +65,8 @@ tier. Do not invoke RoboRev or dispatch a validation worker. Fresh proof
 keeps the outcome and independent decision in validation. If time is exhausted,
 record `change` with the strongest evidence, limit, reversal fact, and cleanup
 status; do not kill an active tool call or continue silently.
+Keep future wait/cleanup measurements explicitly `pending`; follow
+`continue-dev-flow` Advance for the guard, native approval and final reporting.
 
 If run, `kc-dev-flow/scripts/surface-map-check.py` applies only to the surfaces
 this stage's `poc_outcome` marks retained; a disposable POC surface is out of
