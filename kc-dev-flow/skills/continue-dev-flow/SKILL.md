@@ -195,9 +195,9 @@ the recovery falsifier, exact diff against `scope_boundary`, rollback, and risk
 list. False or uncertain evidence returns `RECOVERY_FULL_ROUTE_REQUIRED`; only
 the Captain or an explicit `recovery_rollback` may re-record the full route.
 
-A loader refusal means the item's current stage is outside its selected route,
-its receipt is stale, or the adoption is incomplete. Resolve that exact
-condition; do not substitute another item's profile or general workflow prose.
+A loader refusal means an off-route stage, stale receipt, or incomplete adoption.
+Resolve that condition; do not substitute another item's profile or general
+workflow prose.
 
 For a superset state graph, route as follows:
 
@@ -263,7 +263,7 @@ or named recovery risk emits true; recovery `[none]` emits false. A false or
 absent declaration performs no RoboRev probe or invocation. An unavailable
 fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
 
-The provider contract is declared by the installed manifest and loaded like any
-other conditional reference. README policy, local mods, provider adapters, and
+The installed manifest declares the provider contract; load it as a conditional
+reference. README policy, local mods, provider adapters, and
 Spacedock state stay repository-owned. Load improvement harvesting only on an explicit request; it
 never interrupts the selected product route.
