@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""Behavior contract for kc-ship-flow/scripts/uat-doc.py."""
+"""Behavior contract for kc-ship-flow/scripts/uat-doc.py (cloud-wrapper redesign, v2 -- reads
+`docs/dev` entities + the batch record directly, not a plan-flow batch dir).
 
+Pins the entity's own AC-1:
+`python3 kc-ship-flow/scripts/uat-doc.py ship-cloud-wrapper --state-dir <fixture>` exits 0
+writing the document with every task of the fixture sprint, and exits 1 printing the slug when a
+task lacks a prepared `validation` gate.
+"""
 from __future__ import annotations
 
-import importlib.util
-import json as json_mod
-import re
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-MODULE_PATH = HERE / "uat-doc.py"
-FIXTURES = HERE / "fixtures" / "uat-doc"
+SCRIPT = HERE / "uat-doc.py"
+FIXTURES = HERE / "fixtures" / "uat-doc-v2"
 
 
 def require(condition: bool, message: str) -> None:
@@ -21,141 +23,100 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit(f"uat-doc test: {message}")
 
 
-def load_module():
-    spec = importlib.util.spec_from_file_location("uat_doc", MODULE_PATH)
-    require(spec is not None and spec.loader is not None, "cannot load uat-doc.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-uat_doc = load_module()
-
-
-def heading_lines(text: str) -> list[str]:
-    def normalize(line: str) -> str:
-        line = line.rstrip()
-        return line.split(" — ", 1)[0] if " — " in line else line
-
-    return [normalize(l) for l in text.splitlines() if l.startswith("#")]
-
-
-def pr_numbers(text: str) -> set[str]:
-    return set(re.findall(r"/pull/(\d+)", text))
-
-
-# --- finding #11: uat.md.reference gets a reader ---------------------------
-reference_batch = FIXTURES / "batch-1016352e0223"
-reference_text = (reference_batch / "evidence" / "uat.md.reference").read_text(encoding="utf-8")
-generated_text = uat_doc.build_doc(str(reference_batch))
-require(
-    set(heading_lines(reference_text)) <= set(heading_lines(generated_text)),
-    f"generated doc dropped a reference heading: {set(heading_lines(reference_text)) - set(heading_lines(generated_text))}",
-)
-require(
-    pr_numbers(reference_text) == pr_numbers(generated_text),
-    f"PR set differs from reference: reference={pr_numbers(reference_text)} generated={pr_numbers(generated_text)}",
-)
-
-# --- findings #1, #6: BRANCH injection + newline-title injection ----------
-injection_text = uat_doc.build_doc(str(FIXTURES / "batch-injection-probe"))
-require("](" not in injection_text, "a markdown link survived sanitization")
-require(
-    sum(1 for line in injection_text.splitlines() if line == "## For the Captain") == 1,
-    "an embedded newline in a title forged a second '## For the Captain' heading",
-)
-require(
-    "<unsafe value refused>" in injection_text,
-    "a BRANCH value outside the git-ref-safe allowlist was rendered instead of refused",
-)
-
-# --- finding #2: an issue with no Evidence file and no close entry --------
-unaccounted_text = uat_doc.build_doc(str(FIXTURES / "batch-unaccounted-probe"))
-require("## Unaccounted" in unaccounted_text, "missing Unaccounted section")
-require("- DEV-2: no Evidence file and no close-receipt entry." in unaccounted_text, "DEV-2 not listed as unaccounted")
-require(
-    "none stuck." not in unaccounted_text,
-    "'Not handed off' printed 'none stuck.' while Unaccounted is non-empty",
-)
-
-# --- finding #4: missing Evidence file never renders literal None ---------
-missing_evidence_text = uat_doc.build_doc(str(FIXTURES / "batch-missing-evidence-probe"))
-require(
-    "base: not recorded · branch: not recorded" in missing_evidence_text,
-    "a missing Evidence file did not render 'base: not recorded · branch: not recorded'",
-)
-require("None" not in missing_evidence_text, "a missing field rendered literal 'None'")
-require(uat_doc.base_label(None, {}) == "(not recorded)", "base_label(None, ...) must be '(not recorded)', not '(main)'")
-require(uat_doc.base_label("deadbeef", {}) == "(main)", "base_label of a real, unmapped base_sha must stay '(main)'")
-
-# --- finding #5: branch selection is no longer dead code ------------------
-branch_logic_text = uat_doc.build_doc(str(FIXTURES / "batch-branch-logic-probe"))
-require(
-    "branch `feature/dev-1-actual-pushed`" in branch_logic_text,
-    "a close-receipt candidate present must select the worker's own BRANCH",
-)
-require(
-    "branch `feature/dev-2-planned`" in branch_logic_text,
-    "no close-receipt candidate must fall back to the plan receipt's planned branch, not the worker's",
-)
-
-# --- finding #3: worker-sourced lines are labeled honestly -----------------
-require(
-    "Without-it (worker self-report):" in generated_text,
-    "without-it line is not labeled as a worker self-report",
-)
-require(
-    "contract test (worker self-report)" in generated_text,
-    "contract test status is not labeled as a worker self-report",
-)
-require("FO ran verbatim" not in generated_text, "a line still claims the FO ran something verbatim")
-self_check_text = uat_doc.build_doc(str(FIXTURES / "batch-e56e9f09873c"))
-require(
-    "FO accept station: 2026-09-06T02:20:47Z accept-evidence: ACCEPT" in self_check_text,
-    "FO accept station line is not sourced from the block's SELF_CHECK field",
-)
-
-# --- finding #7: decisions parser recognizes '- ' and '* ' and joins wraps -
-decisions = uat_doc.load_defaults_decisions(str(FIXTURES / "decisions-mixed-bullets"))
-require(decisions is not None and len(decisions) == 3, f"expected 3 decisions, got {decisions}")
-require(decisions[0] == "2026-09-06T00:00Z — dash-bullet decision, single line.", f"dash bullet not parsed: {decisions}")
-require(decisions[1] == "2026-09-06T00:01Z — star-bullet decision, single line.", f"star bullet not parsed: {decisions}")
-require(
-    decisions[2]
-    == "2026-09-06T00:02Z — dash-bullet decision that wraps onto a second physical line that must join the first.",
-    f"wrapped continuation line not joined: {decisions}",
-)
-
-# --- finding #8: malformed receipt data exits 2, not a traceback ----------
-with tempfile.TemporaryDirectory() as tmp:
-    tmp_path = Path(tmp)
-    (tmp_path / "receipt").mkdir()
-    (tmp_path / "receipt" / "plan-receipt.json").write_text("{not valid json", encoding="utf-8")
-    result = subprocess.run(
-        [sys.executable, str(MODULE_PATH), str(tmp_path)],
-        capture_output=True,
-        text=True,
+def run(state_dir: Path, sprint: str = "ship-cloud-wrapper"):
+    return subprocess.run(
+        [sys.executable, str(SCRIPT), sprint, "--state-dir", str(state_dir)],
+        capture_output=True, text=True,
     )
-    require(result.returncode == 2, f"malformed JSON must exit 2, got {result.returncode}")
-    require("Traceback" not in result.stderr, "malformed JSON leaked a traceback instead of a one-line reason")
 
-with tempfile.TemporaryDirectory() as tmp:
-    tmp_path = Path(tmp)
-    (tmp_path / "receipt").mkdir()
-    (tmp_path / "receipt" / "plan-receipt.json").write_text(
-        json_mod.dumps({"project": {"name": "no dispatch_order here"}}), encoding="utf-8"
-    )
-    result = subprocess.run(
-        [sys.executable, str(MODULE_PATH), str(tmp_path)],
-        capture_output=True,
-        text=True,
-    )
-    require(result.returncode == 2, f"a receipt missing a required key must exit 2, got {result.returncode}")
-    require("Traceback" not in result.stderr, "a missing key leaked a traceback instead of a one-line reason")
 
-# --- finding #10: the evidence glob is anchored ----------------------------
-glob_batch = str(FIXTURES / "batch-glob-anchor-probe")
-require(not uat_doc.has_worker_evidence(glob_batch, "DEV-9"), "DEV-9 must not match DEV-90's evidence file")
-require(uat_doc.has_worker_evidence(glob_batch, "DEV-90"), "DEV-90's own evidence file must be found")
+# --- AC-1, happy path: every task has a prepared validation gate -----------
+ready = run(FIXTURES / "ready")
+require(ready.returncode == 0, f"ready fixture did not exit 0: {ready.returncode} stderr={ready.stderr!r}")
+require("# UAT: ship-cloud-wrapper" in ready.stdout, "document missing its title heading")
+require("## DEV-201" in ready.stdout and "## DEV-202" in ready.stdout, "document missing a task heading")
+require(
+    "https://github.com/acme/repo/pull/42" in ready.stdout,
+    f"document did not render DEV-202's owner/repo#N PR as a link: {ready.stdout!r}",
+)
+require(
+    "Does this task's Local Profile row cover the delivery branch base?" in ready.stdout
+    and "Yes, see the Local Profile's delivery-branch-base policy row." in ready.stdout,
+    "document dropped the batch record's recorded question/answer pair",
+)
+require("[trunk]" in ready.stdout, "document did not read the Integrated head Local Profile row")
+
+# --- AC-1, negative path: a task's validation gate is resolved, not prepared -----
+missing_gate = run(FIXTURES / "missing-gate")
+require(
+    missing_gate.returncode == 1,
+    f"missing-gate fixture did not exit 1: {missing_gate.returncode} stdout={missing_gate.stdout!r}",
+)
+require(
+    missing_gate.stdout.strip() == "DEV-203",
+    f"missing-gate fixture did not print exactly the unprepared slug: {missing_gate.stdout!r}",
+)
+
+# --- usage: no task found for the sprint under an empty state-dir exits 2 --
+import tempfile  # noqa: E402
+
+with tempfile.TemporaryDirectory() as empty_dir:
+    empty = run(Path(empty_dir), sprint="nothing-here")
+    require(
+        empty.returncode == 2,
+        f"empty state-dir with no matching entity did not exit 2: {empty.returncode}",
+    )
+
+# --- module-level unit checks on the frontmatter parser (fast, no subprocess) ---
+import importlib.util  # noqa: E402
+
+spec = importlib.util.spec_from_file_location("uat_doc", SCRIPT)
+uat_doc = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(uat_doc)
+
+resolved_text = (FIXTURES / "missing-gate" / "DEV-203.md").read_text(encoding="utf-8")
+fm = uat_doc.read_frontmatter_text(resolved_text)
+require(
+    uat_doc.validation_gate_status(fm) == "resolved",
+    "DEV-203's validation gate did not parse as 'resolved' -- the frontmatter fixture text or the "
+    "attempt-block parser drifted",
+)
+
+prepared_text = (FIXTURES / "ready" / "DEV-201.md").read_text(encoding="utf-8")
+fm2 = uat_doc.read_frontmatter_text(prepared_text)
+require(
+    uat_doc.validation_gate_status(fm2) == "prepared",
+    "DEV-201's validation gate did not parse as 'prepared'",
+)
+
+require(
+    uat_doc.render_pr("pr-merge:99", None) == "PR #99 (merged via pr-merge)",
+    "render_pr did not fall back to a plain label for pr-merge:N with no repo hint",
+)
+require(
+    uat_doc.render_pr(None, None) == "not recorded",
+    "render_pr did not report an absent PR as 'not recorded'",
+)
+
+# --- load_batch_record against a fence file dispatch.sh/watch.sh actually produce ---
+# `kc-ship-flow/scripts/fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json` is the sibling
+# dispatch/watch task's own fixture, pinned to dispatch.sh's real committed shape (verified in
+# `dispatch.test.sh` cases (b)/(e): a top-level `<slug> -> {workspace, session, message_sha256}`
+# map, no `sprint`/`tasks` wrapper). Loading it here -- not a hand-authored stand-in -- is the
+# reconciliation this stage's revise round asked for: `load_batch_record` must read the shape the
+# sibling station actually writes, not this task's own earlier invention.
+DISPATCH_FENCE_DIR = HERE / "fixtures" / "watch" / "state"
+dispatch_record = uat_doc.load_batch_record(str(DISPATCH_FENCE_DIR), "ship-cloud-wrapper")
+require(
+    dispatch_record.get("task-gate-prepared") == {
+        "workspace": "ws-1", "session": "sess-gate-prepared", "message_sha256": "aa",
+    },
+    f"load_batch_record misread dispatch.sh's real fence shape: {dispatch_record!r}",
+)
+require(
+    "tasks" not in dispatch_record,
+    "load_batch_record's result carries a 'tasks' key -- that indirection does not exist in "
+    "dispatch.sh's actual fence file",
+)
 
 print("uat-doc test: all checks passed")

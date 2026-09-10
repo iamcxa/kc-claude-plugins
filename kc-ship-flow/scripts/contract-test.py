@@ -47,6 +47,7 @@ STATIONS = [
     "e2e-gate.py",
     "parse-execute-external.py",
     "uat-doc.py",
+    "close.py",
     "notify.sh",
     "dev-debrief.py",
     "ship-debrief.py",
@@ -58,6 +59,7 @@ for station in STATIONS:
 
 STATION_TESTS = [
     ("uat-doc.test.py", [sys.executable, str(SCRIPTS / "uat-doc.test.py")]),
+    ("close.test.py", [sys.executable, str(SCRIPTS / "close.test.py")]),
     ("notify.test.sh", ["bash", str(SCRIPTS / "notify.test.sh")]),
     ("dev-debrief.test.py", [sys.executable, str(SCRIPTS / "dev-debrief.test.py")]),
     ("ship-debrief.test.py", [sys.executable, str(SCRIPTS / "ship-debrief.test.py")]),
@@ -106,6 +108,7 @@ for py_station in [
     "e2e-gate.py",
     "parse-execute-external.py",
     "uat-doc.py",
+    "close.py",
     "dev-debrief.py",
     "ship-debrief.py",
 ]:
