@@ -149,3 +149,16 @@ dispatch.sh and watch.sh implement the cloud-wrapper design's `dispatched`/`watc
 ### Summary
 
 Items 1, 2, and 4 of the completion checklist reproduce cleanly in a fresh 8b27fae1 checkout: all four fixture-based ACs pass with the recorded exit codes, the quote-slug regression is bisected precisely (fails pre-fix, passes post-fix), both scripts' guards are proven to actually gate behavior (one must-catch and one must-not-catch mutation per script), and the generated FO boot message matches the design spec's three instructions with no re-implemented per-task logic. AC-3 is explicitly out of scope for this stage per item 3 and is marked SKIPPED with no Conductor workspace created and no state-branch push.
+
+### AC-3 — the real run, recorded by the First Officer (2026-09-10)
+
+- DONE: `dispatch.sh ship-cloud-wrapper` (candidate 8b27fae1, run from /tmp/zb-verify with `--workflow-dir` and `--state-dir`) created two Conductor workspaces — `ship-remove-duplicated-stations` → 20c25f00 / session b2811dee, `ship-verify-uat-close` → 9081b7d7 / session abc9855f — with claim fences committed to `spacedock-state/ship` before each create; both cloud first officers reached a prepared `validation` gate with a Draft PR (#410 at e5c2df15, #411 at 3053f925), observed by `watch.sh --once` as `gate-prepared`.
+  Questions asked by the workers and every answer sent are on `spacedock-state/ship` at `_ship_fence/ship-cloud-wrapper.questions.md` (5 rounds; one required the Captain to type "push it" into the session).
+
+Findings from the run, for the next round (validation → implementation feedback):
+1. `watch.sh` reports `stopped` while the workspace is still `initializing` (session already `idle`); it must read workspace state before session status.
+2. `watch.sh` reports `stopped` when the session flickers to `idle` while the FO's own subagent runs; `idle` is a candidate signal only, the transcript tail decides.
+3. `watch.sh`'s question heuristic missed two of three real questions (they did not end in `?`); it fired once.
+4. The boot message carries no sender identity or dispatch token, so a worker treated the FO's later answer as an injection until the senderId was pointed out.
+5. The boot message carries no Captain conn for the push; one worker refused `git push` under the pr-merge mod's "captain-approved push" rule until the Captain typed the line into the session. The Captain's verbatim batch approval must ride in the boot message as `conn-quote`/`conn-source`.
+6. State-branch sync from a shared checkout with a peer's dirty file fails; the FO's replay rewrote two commits that gate records pinned (recovered under `spacedock-state/dev-recovery-*` refs). dispatch.sh/watch.sh need their own state worktree or a no-replay path.
