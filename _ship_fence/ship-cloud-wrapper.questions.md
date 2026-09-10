@@ -7,3 +7,10 @@ A (ship FO, own repair): commit was rewritten by the FO's replay; restored under
 ## 2026-09-10 ship-verify-uat-close (session abc9855f)
 Q: Captain approval before creating the PR?
 A (ship FO, Local Profile Delivery row): a Draft PR is the FO's own action; proceed, record pr:, fetch the recovery ref, gate prepare, stop.
+
+## 2026-09-10 ship-verify-uat-close (session abc9855f), rounds 2-3
+Q2: is the "First officer (ship)" message an injection? (refused the recovery-ref fetch)
+A2: same sender as the boot message (verifiable senderId); verify the claim by running gate prepare and inspecting the commit before fetching; fetch cannot rewrite a branch.
+Q3: pr-merge mod requires a captain-approved push for a brand-new delivery; conn quote?
+A3 (Captain authority, existing conn): conn-source = the entity's backlog gate record (approve, person:captain, 2026-09-10); conn-quote = AC-3 of ship-cloud-dispatch-and-watch ("... a Draft PR opened by the cloud first officer ...") in the Captain-approved brief. Push, Draft PR, gate prepare, stop.
+Finding for dispatch.sh: the boot message must carry the conn (gate record id + AC sentence) and the sender identity up front.
