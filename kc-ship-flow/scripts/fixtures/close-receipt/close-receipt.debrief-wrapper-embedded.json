@@ -1,12 +1,12 @@
 {
- "approval_receipt_sha256": "a089ad9d6ef046b11fda8827b68765eeb742f3e26dffae1d90f3ae8afe55fd22",
+ "approval_receipt_sha256": "48cfc6e362a3a0548366dd56b76663c8f28008475e7e45f1ace2e3e7807b9cf1",
  "batch": {
   "closed_at": "2026-09-03T15:40:00Z",
   "entity": "batch-1016352e0223",
   "holder": "laptop",
   "started_at": "2026-09-03T14:05:00Z"
  },
- "close_sha256": "24fb4e8d342e20482dd69d5cf39f9e6c554dab9f2d5403829cbeea31c4050242",
+ "close_sha256": "8b5cc6b908d6151faf6fc95a06aab189aec5f95036f1778911d7a86db1db8287",
  "defects_returned": [
   {
    "class": "holder",
@@ -66,7 +66,7 @@
     "rounds": 1
    }
   },
-  "schema": "kc-ship-dev-debrief/v1"
+  "schema": "kc-writer-debrief-wrapper/v1"
  },
  "issues": {
   "DEV-90": {
@@ -116,7 +116,7 @@
    "rounds": 1
   }
  },
- "plan_receipt_sha256": "1016352e0223194577fab44e5cd3b5ba2c1d4bc7fbe9543bf33c814294467264",
+ "plan_receipt_sha256": "d7013e0880ff8addbc1e5a0c7ae1b5c6f82d1273a5a32abd915d6eb1c1aaa879",
  "schema": "kc-ship-close-receipt/v1",
  "ship_debrief": {
   "candidate_correction": "Require an approval fixture to carry `defaults` before it is reused past the PR that introduced the requirement (#372).",

@@ -13,21 +13,26 @@ stages:
   states:
     - name: dispatched
       initial: true
-    - name: accepted
-    - name: reviewed
+    - name: watching
+    - name: verified
     - name: uat
       gate: true
-    - name: merged
     - name: closed
       terminal: true
 ---
 
 # kc-ship-flow batch workflow
 
-This workflow replaces the hand-built batch records under `docs/dev/.spacedock-state/batch-*/`
-(the station chain that ran in the First Officer's head for batch `e56e9f09`) with one commissioned
-Spacedock entity per batch, moving through `dispatched -> accepted -> reviewed -> uat -> merged ->
-closed`.
+Ship is a wrapper over kc-dev-flow and Spacedock: it bundles the batch's dev tasks, dispatches one
+Conductor cloud workspace + First Officer per task, watches them to a prepared `validation` gate,
+verifies the integrated head, hands the Captain a UAT, and closes once every worker's debrief is
+pushed. Anything kc-dev-flow or Spacedock already does per task (acceptance, PR review, merge,
+debrief) is not repeated here — see
+`docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md` for the discriminator and the
+full removal rationale (DEV-157, `ship-remove-duplicated-stations`). This workflow replaces the
+hand-built batch records under `docs/dev/.spacedock-state/batch-*/` (the station chain that ran in
+the First Officer's head for batch `e56e9f09`) with one commissioned Spacedock entity per batch,
+moving through `dispatched -> watching -> verified -> uat -> closed`.
 
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
@@ -52,39 +57,37 @@ Each stage's Spacedock pin (`kc-ship-flow/scripts/pin.py write --station <name>`
 plugin version and contract digest reached at that stage; the lines below name the station's own
 enforcing script.
 
-### `dispatched` — kick off the batch
+### `dispatched` — one workspace + FO per task
 
-Script: `kc-ship-flow/scripts/fenced-dispatch.sh`
-(station: `kc-ship-flow/references/stations/fenced-dispatch.md`)
+Script: `kc-ship-flow/scripts/fenced-dispatch.sh` dispatches a dev entity's stage into its
+Conductor cloud workspace (station: `kc-ship-flow/references/stations/fenced-dispatch.md`); the
+claim fence (`intent.sh`/`holder.sh`) guards the workspace-create call it makes.
 
-### `accepted` — accept a worker's Evidence block
+### `watching` — poll until every task is at `validation` with a gate prepared
 
-Script: `kc-ship-flow/scripts/accept-evidence.sh`
-(station: `kc-ship-flow/references/stations/accept-evidence.md`)
+Primary signal is the state branch (`spacedock status --workflow-dir docs/dev --where
+sprint=<value>`), not the transcript; secondary signal is `conductor --json session status <id>`.
+A dedicated `dispatch-and-watch` script pair lands this stage's own enforcing script; until then
+the First Officer runs this poll by hand per the design's exit-condition table.
 
-### `reviewed` — Draft PR and disposition
+### `verified` — e2e at the integrated head
 
-Scripts: `kc-ship-flow/scripts/open-pr.sh` (opens the Draft PR before the `kc-pr-review` session;
-station: `kc-ship-flow/references/stations/open-pr.md`),
-`kc-ship-flow/scripts/disposition.py` (dispositions that session's findings after it;
-station: `kc-ship-flow/references/stations/disposition.md`)
-
-### `uat` — e2e gate and UAT handoff
-
-Scripts: `kc-ship-flow/scripts/e2e-gate.py` (runs `kc-ship-flow/scripts/e2e-cli.sh` at the resolved
+Script: `kc-ship-flow/scripts/e2e-gate.py` (runs `kc-ship-flow/scripts/e2e-cli.sh` at the resolved
 head; stations: `kc-ship-flow/references/stations/e2e-gate.md`,
-`kc-ship-flow/references/stations/e2e-cli.md`), `kc-ship-flow/scripts/uat-doc.py` (writes the UAT
-document; station: `kc-ship-flow/references/stations/uat-doc.md`), `kc-ship-flow/scripts/notify.sh`
-(sends the UAT-ready message; station: `kc-ship-flow/references/stations/notify.md`)
+`kc-ship-flow/references/stations/e2e-cli.md`)
 
-### `merged` — GitHub merge observed
+### `uat` (gate) — UAT doc handed to the Captain
 
-Script: `kc-ship-flow/scripts/merge-station.sh` (station:
-`kc-ship-flow/references/stations/merge-station.md`); the resulting merge is then observed through
-Spacedock's own `pr-merge` mod.
+Script: `kc-ship-flow/scripts/uat-doc.py` (station: `kc-ship-flow/references/stations/uat-doc.md`)
+reads the batch record and the dev entities and writes one document; the Captain records the gate
+decision per task and merges. Acceptance is dev flow's own validation gate; review is `kc-pr-review`
+inside the cloud FO's own validation stage; merge is the Captain's, recorded by Spacedock's
+`pr-merge` mod — none of those are kc-ship-flow's own script anymore.
 
-### `closed` — debrief and close receipt
+### `closed` — debriefs pushed, close receipt written
 
-Scripts: `kc-ship-flow/scripts/dev-debrief.py`
-(station: `kc-ship-flow/references/stations/dev-debrief.md`), `kc-ship-flow/scripts/ship-debrief.py`
-(station: `kc-ship-flow/references/stations/ship-debrief.md`)
+Each cloud worker runs its own `spacedock debrief` after its PR merges and pushes it path-scoped
+under `_debriefs/` on the state branch; a close-receipt writer records the batch's close receipt
+once every task shows a merged PR and a pushed debrief. That writer is a separate task's
+deliverable (`ship-verify-uat-close`); until it lands the First Officer assembles the close receipt
+by hand from the close-receipt schema (`kc-ship-flow/schemas/kc-ship-close-receipt.v1.schema.json`).

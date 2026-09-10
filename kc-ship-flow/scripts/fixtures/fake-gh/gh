@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# Stub `gh` for open-pr.sh's without-it falsifier: never touches GitHub.
-echo "https://github.com/example/example/pull/777"

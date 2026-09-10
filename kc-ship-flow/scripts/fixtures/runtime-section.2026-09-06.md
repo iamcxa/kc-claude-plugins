@@ -33,10 +33,11 @@ The worker's Evidence block defines `CANDIDATE_SHA`, `BRANCH`, `BASE_SHA`,
 one self-contained shell line: it references no file outside the candidate
 tree, it exits 0 on the candidate and non-zero once `WITHOUT_IT_REMOVED_VARIANT`
 is applied, and the First Officer runs it verbatim, unchanged, in a worktree
-with no secrets. `kc-ship-flow/scripts/without-it.sh <sha> <command>
-<removed-variant>` runs `<command>` retained, applies `<removed-variant>`, runs
-`<command>` again, and exits 0 only when the retained run passes and the
-removed run fails.
+with no secrets. That per-task check ran `<command>` retained, applied
+`<removed-variant>`, ran `<command>` again, and exited 0 only when the
+retained run passed and the removed run failed; the enforcing script is
+removed under DEV-157 (`ship-remove-duplicated-stations`), since dev flow's
+own validation gate (`fresh: true`) is the acceptance now.
 
 Security, data-loss, and compatibility findings outside the Brief block the candidate while general improvements are scoped out. (DEV-67)
 
@@ -93,16 +94,20 @@ milestone named exits non-zero and the batch is not UAT-ready.
 `kc-pr-flow/scripts/review-ablation.sh` runs it headless for its ablation
 harness, but this station does not -- it runs `kc-pr-review` only inside a
 Claude session, so the review station is two scripts either side of that
-session run. `kc-ship-flow/scripts/open-pr.sh <evidence-file>` opens the Draft PR from a
-worker's accepted Evidence block: title is the `CANDIDATE_SHA` commit's
-subject, body carries `BASE_SHA`, `CANDIDATE_SHA`, the without-it pair, and
-the block's own `SELF_CHECK` line, and it prints the opened PR number.
-`kc-ship-flow/scripts/disposition.py <findings.json>` then reads the findings
-the FO's own session wrote to disk after running `kc-pr-review` on that PR
-and dispositions them by `kc-plan-approval/v1`'s `defaults.findings_outside_brief`
-rule stated above: an empty or missing findings file is `reviewer-absent`
-with the `fallback_to_fo_diff_read` marker, never read as "no findings",
-because the two are indistinguishable from a findings file alone.
+session run. The review station's Draft-PR opener took a worker's accepted
+Evidence block and opened a PR titled with the `CANDIDATE_SHA` commit's
+subject, body carrying `BASE_SHA`, `CANDIDATE_SHA`, the without-it pair, and
+the block's own `SELF_CHECK` line, printing the opened PR number; that
+per-task opener is removed under DEV-157, since Spacedock's `pr-merge` mod
+opens the Draft PR now. The review station's disposition step then read the
+findings the FO's own session wrote to disk after running `kc-pr-review` on
+that PR and dispositioned them by `kc-plan-approval/v1`'s
+`defaults.findings_outside_brief` rule stated above: an empty or missing
+findings file was `reviewer-absent` with the `fallback_to_fo_diff_read`
+marker, never read as "no findings", because the two are indistinguishable
+from a findings file alone; that per-task disposition step is removed under
+DEV-157, since `kc-pr-review` now runs inside the cloud FO's own `docs/dev`
+validation stage.
 
 `kc-ship-flow/scripts/uat-doc.py <batch-dir>` builds the batch's UAT document from
 its durable records only -- `receipt/plan-receipt.json`,
@@ -110,8 +115,9 @@ its durable records only -- `receipt/plan-receipt.json`,
 `evidence/worker-evidence-<ISSUE>*.md`, and, when present, the `README.md`
 `## Decisions made under \`defaults\`` bullets -- so the document lists what
 the batch already recorded rather than deciding anything new.
-`kc-ship-flow/scripts/notify.sh <channel> <batch-id> <doc-path> --dry-run
---state-dir <dir>` sends one UAT-ready message per batch id: a deterministic
-message id keyed on the batch id makes a second call for the same batch id
-and state dir a no-op instead of a duplicate send. It has no real-send path;
-the First Officer sends the real message.
+The batch's UAT-ready notifier sent one UAT-ready message per batch id: a
+deterministic message id keyed on the batch id made a second call for the
+same batch id and state dir a no-op instead of a duplicate send, and it had
+no real-send path of its own. That per-task notifier is removed under
+DEV-157, since the UAT doc path is returned in chat and nothing has bitten
+without a channel post; the First Officer sends the real message.

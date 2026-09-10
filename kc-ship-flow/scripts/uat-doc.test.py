@@ -111,7 +111,7 @@ require(
 require("FO ran verbatim" not in generated_text, "a line still claims the FO ran something verbatim")
 self_check_text = uat_doc.build_doc(str(FIXTURES / "batch-e56e9f09873c"))
 require(
-    "FO accept station: 2026-09-06T02:20:47Z accept-evidence: ACCEPT" in self_check_text,
+    "FO accept station: 2026-09-06T02:20:47Z acceptance-check: ACCEPT" in self_check_text,
     "FO accept station line is not sourced from the block's SELF_CHECK field",
 )
 

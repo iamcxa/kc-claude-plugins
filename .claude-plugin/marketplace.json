@@ -147,7 +147,7 @@
     {
       "name": "kc-ship-flow",
       "source": "./kc-ship-flow",
-      "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
+      "description": "Batch delivery wrapper over kc-dev-flow and Spacedock: dispatch dev tasks to Conductor cloud, watch to a prepared validation gate, e2e gate, UAT handoff, close receipt",
       "version": "0.1.0",
       "keywords": [
         "delivery",
