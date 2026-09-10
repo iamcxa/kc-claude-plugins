@@ -25,3 +25,6 @@ Gates: validation revise recorded on both entities (actor agent:first-officer, c
 #410: merge main (#406 landed), delete fenced-dispatch/intent/holder/worker-transcript, wire new tests into contract-test, body per mod + Residuals/without-it.
 #411: merge main, align close.py/uat-doc.py to dispatch.sh's fence shape, ship v2 schema file, body per mod + Residuals.
 Finding 7 (2026-09-11): a cloud FO's own gate records pin commits that exist only in its clone (rewritten by its pull --rebase); the batch FO cannot record decisions on that entity from another checkout. Multi-writer split-root + rebase sync breaks content-addressed gate history in both directions. Workaround: the entity's own FO records the decision with the Captain's conn; boot message must say "merge, never rebase" for state sync.
+
+## 2026-09-11 feedback round 2 (#410 only)
+Batch FO verdict at af020cf4: revise. kc-ship-flow first-officer skill collides with the Spacedock skill name and carries stale stage lines (per-station pins, plan-receipt args, plan-flow validator, deleted spec path). Rename to run-batch; merge main after #411 lands.
