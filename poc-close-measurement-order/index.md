@@ -233,9 +233,9 @@ State-only report/evidence commit through registered native state commit is auth
 ## Stage Report: validation
 
 - DONE: Independently attack the exact patch against AC-1 through AC-5: manual approval/freshness, final truthful measurements, read-only completeness, compatibility, interruption recovery and original blocked snapshot.
-  PASSED for the uncommitted patch below. Independent native refusal cases and publication-interruption recovery pass; producer snapshot/regression evidence supplies AC-4/AC-5 without claiming independent cloud verification.
+  AC-1: pending direct review/prepare passed; AC-2: open manual gate and denied unapproved consume preserved task bytes; AC-3: tampered Briefing refused, native one-use terminalization and interrupted publication recovery passed with unchanged historical approval/final-check bytes (validation-evidence.json). PASSED for the exact uncommitted patch below.
 - DONE: Verify producer-owned native proof and required regression results; run only missing or newly justified adversarial cases, and inspect instruction claims and minimal necessity against the exact five-file diff.
-  Inspected required four-suite exit-0 evidence, native fixture assertions and original-failure reproducer; added only the missing actual publication failure/retry and full-fixture byte-preservation checks in validation-probe.py.
+  AC-4: inspected four required exit-0 regression suites and completed/negative-outcome compatibility in implementation-checks.json; AC-5: inspected preserved blocked-snapshot baseline refusal and candidate native lifecycle in implementation-native-evidence.json, with original source hash unchanged and cloud cases owner-reported. Added only the missing AC-3 publication failure/retry and full-fixture byte-preservation checks in validation-probe.py.
 - DONE: Record PASSED or REJECTED with precise findings, patch hashes, AC evidence and delivery limitations; leave product files unchanged and uncommitted.
   PASSED; no material findings. Product branch remains spacedock-ensign/poc-close-measurement-order at c2c62bf9dff5c3af1e27eb643a15eadf9023485f with empty index and the same five modified files.
 - SKIPPED: Repeat already-green suites, optional provider review, product delivery and original experiment close.
