@@ -85,13 +85,13 @@ work_profile:
 
 ## Stage Report: ideation
 
-1. DONE: Determine the legitimate knowledge-only terminalization dependency from live upstream evidence and a bounded local falsifier; preserve existing approval.
+- DONE: 1. Determine the legitimate knowledge-only terminalization dependency from live upstream evidence and a bounded local falsifier; preserve existing approval.
    AC-5: dispatch-pinned upstream check plus `shape-evidence/native-probe.py` / `native-probe.json` prove blocked accepted knowledge; rejected syntax succeeds only by changing meaning. Positive path DESIGNED, original approval untouched.
-2. DONE: Shape one manual improvement journey with raw case evidence, per-actor usage, duplicate handling and independent same-case/negative-control verification.
+- DONE: 2. Shape one manual improvement journey with raw case evidence, per-actor usage, duplicate handling and independent same-case/negative-control verification.
    AC-1, AC-2, AC-3, AC-4: `shape-evidence/shape.md` journey steps 2–7 and acceptance table bind each consumer, artifact, failure and recovery path; implementation acceptance remains pending.
-3. DONE: Provide the smallest file-level implementation plan, limits, execution budget and exact Captain decision needed; cite AC-1 through AC-5 without claiming designed behavior already passes.
+- DONE: 3. Provide the smallest file-level implementation plan, limits, execution budget and exact Captain decision needed; cite AC-1 through AC-5 without claiming designed behavior already passes.
    `shape-evidence/shape.md` contains file counts, delivery bases, diff stop numbers, bounded local-only execution proposal and upstream scope delta; no launch/product mutation performed.
-4. SKIPPED: Implement the selected repair, run live replay, publish review, or terminalize either real task.
+- SKIPPED: 4. Implement the selected repair, run live replay, publish review, or terminalize either real task.
    Shape-only authorization; AC-1–AC-4 positive execution and AC-5 legitimate closure/cleanup/final-check are not yet accepted.
 
 ### Summary
