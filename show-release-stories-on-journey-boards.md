@@ -1,6 +1,6 @@
 ---
 title: Show release stories on journey boards with shared activity context
-status: validation
+status: implementation
 source:
 product: kc-journey-map
 planning-window:
@@ -83,7 +83,7 @@ gates:
                 reason: 'Kent approved validation briefing 0c45fa6f and the exact 19-file local commit: feat(kc-journey-map): show release stories with honest evidence states. Authority is limited to that local commit; push, PR creation, merge, release and delivery acceptance remain unapproved. Preserve the validation state and do not consume terminal authorization into delivery.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## The problem
@@ -229,6 +229,31 @@ Do not claim the complete release journey is accepted before this story's
 required evidence is resolved.
 
 ### Feedback Cycles
+
+#### Captain-approved refinement — story status borders
+
+Kent accepted the editable visual trial: "可以，這樣很好，就這樣定下來".
+Implement yellow story cards with black text and a uniform 10 px solid status
+border on both the Story map and every release Journey board: green for
+`exists`, red for `gap`, violet for `unverified`. Keep one shared legend per
+page, remove repeated per-story status words, and retain evidence, questions,
+implementation counts, activity styling, and the three accepted meanings.
+The supported card border must follow movement, text-driven height, and scale;
+the disposable preview's static-height limitation is not accepted in the
+implementation. Preserve stable identities and existing readback semantics.
+
+This is a presentation refinement within AC-1, AC-2, AC-4 and AC-6, not a new
+profile, planning-provider change, or expansion of the accepted non-goals.
+The former validation approval supported local commit
+`697525fe1e647dcea67663bc19b5519b70dfa5b3` only. `merge guard --rework`
+superseded its unspent terminal application and returned this task to
+implementation for this authorized refinement. Preserve that commit and its
+historical reports; the new candidate requires fresh validation. Product
+commit, push, PR, merge, release, and delivery acceptance remain separate.
+Preview evidence is in the tacoma workspace's
+`.context/journey-border-preview/thick-story-border-preview-wwn8jfrh1f-result.json`;
+it demonstrates appearance and bounded edit/movement readback, not the final
+dynamic border implementation.
 
 #### Captain continuation — release terminology and local admission
 
