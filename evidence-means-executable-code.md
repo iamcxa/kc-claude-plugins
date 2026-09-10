@@ -15,6 +15,17 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:d3xb3q0qwmjpkty23njq6t66:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:d3xb3q0qwmjpkty23njq6t66-backlog-1
+              briefing:
+                id: briefing:d3xb3q0qwmjpkty23njq6t66:backlog:attempt-1:revision-1
+                digest: sha256:0115adc27e4220103f15f6645bacce4921e2fef6a93b9371a1dc9d887ae9896a
+                room-ref: ./evidence-means-executable-code/review/backlog/briefing-1
 ---
 
 ## The problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:d3xb3q0qwmjpkty23njq6t66:backlog:attempt-1:revision-1",
+  "question": "Can the exists count be made honest without losing stories whose evidence is legitimately not a code symbol?",
+  "artifacts": [
+    {
+      "id": "artifact:d3xb3q0qwmjpkty23njq6t66:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6ea5fec51adb301ad6487d053f0d38f7c9978db2/evidence-means-executable-code.md",
+      "rev": "sha256:a24a65e3f928f980862540744960e7ee5af2f18f2bd789779c97d55a236a4ebc",
+      "mediaType": "text/markdown",
+      "summary": "The dogfood proved the count is inflated: the evidence lint greps the whole repository with no pathspec, so a symbol found only in markdown passes. The tool's own journey cites AskUserQuestion, which exists solely in documentation including an unrelated skill's, and the board reports 12/12 exist on that basis. Restrict evidence to something executable, restate any story that no longer qualifies as a gap rather than deleting it, and report the count before and after."
+    }
+  ]
+}
