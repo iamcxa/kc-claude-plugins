@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): explain the next commitment during profile selection"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -57,7 +57,7 @@ gates:
                 reason: Captain Kent replied "批准" to the presented two-item ideation review, including this task snapshot 59133c34. Accept the three-file design and enter implementation; new model spend remains separately reserved.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
