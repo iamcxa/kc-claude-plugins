@@ -1,0 +1,37 @@
+{
+  "actor": "parent coordinator",
+  "thread_id": "01a08a64-fc57-7e82-8424-76541a8fe60a",
+  "baseline": {
+    "timestamp": "2026-09-10T09:28:03.515Z",
+    "usage": {
+      "input_tokens": 18453111,
+      "cached_input_tokens": 18074752,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 48918,
+      "reasoning_output_tokens": 13909,
+      "total_tokens": 18502029
+    }
+  },
+  "latest": {
+    "timestamp": "2026-09-10T09:37:24.684Z",
+    "usage": {
+      "input_tokens": 21163882,
+      "cached_input_tokens": 20774144,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 53210,
+      "reasoning_output_tokens": 15750,
+      "total_tokens": 21217092
+    }
+  },
+  "delta": {
+    "input_tokens": 2710771,
+    "cached_input_tokens": 2699392,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4292,
+    "reasoning_output_tokens": 1841,
+    "total_tokens": 2715063
+  },
+  "uncached_input_tokens": 11379,
+  "coverage": "Local runtime-reported counters between snapshots; excludes prior failed attempt and later reporting after latest snapshot. Start anchor precedes resumed started by about 19 seconds. Worker/cloud separate. Cached input is included in input; reasoning output is included in output. Not provider billing.",
+  "cost": "unknown"
+}

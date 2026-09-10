@@ -1,0 +1,34 @@
+{
+  "thread": "01a08a8d-5190-71d0-8bf8-5d44b8a92d8c",
+  "before": {
+    "timestamp": "2026-09-10T09:07:52.159Z",
+    "usage": {
+      "input_tokens": 1292482,
+      "cached_input_tokens": 1241472,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 8266,
+      "reasoning_output_tokens": 549,
+      "total_tokens": 1300748
+    }
+  },
+  "latest": {
+    "timestamp": "2026-09-10T09:38:58.662Z",
+    "usage": {
+      "input_tokens": 5118156,
+      "cached_input_tokens": 4994816,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 19421,
+      "reasoning_output_tokens": 2775,
+      "total_tokens": 5137577
+    }
+  },
+  "delta": {
+    "input_tokens": 3825674,
+    "cached_input_tokens": 3753344,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 11155,
+    "reasoning_output_tokens": 2226,
+    "total_tokens": 3836829
+  },
+  "coverage": "Resumed worker token counts through latest timestamp; excludes later reporting. Cache input is included in input; reasoning output is included in output."
+}

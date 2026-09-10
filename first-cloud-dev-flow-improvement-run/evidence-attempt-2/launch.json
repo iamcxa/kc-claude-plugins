@@ -1,0 +1,10 @@
+{
+  "workspaceId": "56db4940-399c-4f86-9933-c8b0ce697a03",
+  "sessionId": "1ee5baad-4c68-4db7-abb5-8393bfba64f0",
+  "deepLink": "conductor://workspace?id=56db4940-399c-4f86-9933-c8b0ce697a03",
+  "initialMessage": {
+    "messageId": "45eaa8bf-4cfe-405a-b990-7a275f48739a",
+    "state": "queued",
+    "deepLink": "conductor://workspace?id=56db4940-399c-4f86-9933-c8b0ce697a03&session=1ee5baad-4c68-4db7-abb5-8393bfba64f0"
+  }
+}

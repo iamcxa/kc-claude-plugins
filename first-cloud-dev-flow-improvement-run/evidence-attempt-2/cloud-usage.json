@@ -1,0 +1,238 @@
+{
+  "method": "Sum incremental SDK report usage, never add cumulative totals or final event usage again",
+  "totals": {
+    "totalTokens": 666940,
+    "inputTokens": 657136,
+    "cachedInputTokens": 603776,
+    "cacheWriteInputTokens": 0,
+    "outputTokens": 9804,
+    "reasoningOutputTokens": 3083
+  },
+  "last_cumulative_total_tokens": 666940,
+  "reports": [
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 30369,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 30369,
+        "inputTokens": 30127,
+        "cachedInputTokens": 10880,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 242,
+        "reasoningOutputTokens": 95
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 63456,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 33087,
+        "inputTokens": 32464,
+        "cachedInputTokens": 29952,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 623,
+        "reasoningOutputTokens": 187
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 98770,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 35314,
+        "inputTokens": 35205,
+        "cachedInputTokens": 32256,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 109,
+        "reasoningOutputTokens": 10
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 138169,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 39399,
+        "inputTokens": 38747,
+        "cachedInputTokens": 35072,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 652,
+        "reasoningOutputTokens": 123
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 180005,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 41836,
+        "inputTokens": 41048,
+        "cachedInputTokens": 38528,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 788,
+        "reasoningOutputTokens": 322
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 224772,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 44767,
+        "inputTokens": 44640,
+        "cachedInputTokens": 40832,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 127,
+        "reasoningOutputTokens": 63
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 271449,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 46677,
+        "inputTokens": 46498,
+        "cachedInputTokens": 44416,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 179,
+        "reasoningOutputTokens": 95
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 318740,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 47291,
+        "inputTokens": 46866,
+        "cachedInputTokens": 46336,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 425,
+        "reasoningOutputTokens": 330
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 370048,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 51308,
+        "inputTokens": 50275,
+        "cachedInputTokens": 46720,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 1033,
+        "reasoningOutputTokens": 360
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 423018,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 52970,
+        "inputTokens": 51994,
+        "cachedInputTokens": 50048,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 976,
+        "reasoningOutputTokens": 210
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 482142,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 59124,
+        "inputTokens": 57894,
+        "cachedInputTokens": 51840,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 1230,
+        "reasoningOutputTokens": 287
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 542051,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 59909,
+        "inputTokens": 59148,
+        "cachedInputTokens": 57728,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 761,
+        "reasoningOutputTokens": 196
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 602949,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 60898,
+        "inputTokens": 60315,
+        "cachedInputTokens": 59008,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 583,
+        "reasoningOutputTokens": 289
+      }
+    },
+    {
+      "threadId": "01a08aa8-9cb7-7130-9285-5be5e854f3d6",
+      "turnId": "01a08aa8-9d80-7b62-80bf-6612de59f9e0",
+      "cumulativeTotalTokens": 666940,
+      "model": "gpt-5.6-sol",
+      "modelProvider": "openai_sse",
+      "serviceTier": "default",
+      "usage": {
+        "totalTokens": 63991,
+        "inputTokens": 61915,
+        "cachedInputTokens": 60160,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 2076,
+        "reasoningOutputTokens": 516
+      }
+    }
+  ]
+}

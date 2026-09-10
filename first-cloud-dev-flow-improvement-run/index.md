@@ -257,22 +257,24 @@ The manual cloud result must identify which mandatory gaps remain before periodi
 
 ## POC outcome
 
+Attempt one remains in [the stopped snapshot](migration-20260910/index.md); the explicitly authorized resumed attempt is `implementation/2`. This result is ready for the real Captain decision, not evidence that close/debrief occurred.
+
 ```yaml
 poc_outcome:
   direction: change
-  admitted_at: "2026-09-10T09:01:36Z"
-  decision_ready_at: "2026-09-10T09:06:55Z"
-  decision_ready_elapsed_seconds: 319
+  admitted_at: "2026-09-10T09:28:22Z"
+  decision_ready_at: "2026-09-10T09:40:36Z"
+  decision_ready_elapsed_seconds: 734
   captain_interventions_before_decision_ready: 0
-  evidence: "Installed 4.1.1 exact-pin read refused after dispatch added started and worktree fields; state commits 3ad9be8cde7a028136a70f68306d140c6207941a and 1543ba2300b0ae9f979d9b45bf6a1a37f6b339a7 retain the complete comparison."
-  strongest_limit: "No cloud workspace or session was created; no frozen workload case or cloud instruction boundary was exercised."
-  reversal_fact: "A separately authorized execution must preserve valid admission binding across dispatch metadata and demonstrate the actual installed cloud runtime before workload proof."
+  evidence: "One completed cloud turn loaded the matching installed exact-main contract and reported all three frozen cases passing with exact byte captures; evidence-attempt-2/cloud-final.md and cloud-events.json."
+  strongest_limit: "Workflow awaits real Captain close and debrief; CLI exported batch tool output omits intermediate case output, so byte results are cloud-owner reported with originals retained in its workspace."
+  reversal_fact: "A contrary original stdout/stderr capture, mismatched installed bytes, or inability to complete the existing real close path changes the bounded result."
   cleanup_status_at_decision: pending
 ```
 
 ## POC close measurement
 
-Terminal measurement is pending the real Captain decision and the existing owner's close/debrief; this is not a close claim. Cloud cleanup is not applicable because no cloud resources were created. The assigned local worktree remains clean and retained for its owner. Installed 4.1.1 requires integer `captain_wait_seconds` and `terminal_cleanup_seconds` plus `cleanup_status` in complete/failed/not-applicable; it cannot encode a pending terminal cleanup. No future durations or completion values are fabricated here; the First Officer must record the real measurement when available.
+As of 2026-09-10T09:40:36Z, no terminal cleanup has been attempted (0 incurred seconds) and the real Captain close decision has not been requested by the parent yet (0 incurred wait seconds). These are observations to date, not final durations. Cloud workspace `56db4940-399c-4f86-9933-c8b0ce697a03` and its finished session remain retained with original evidence; cleanup is pending, not not-applicable. The installed schema accepts only complete/failed/not-applicable for terminal cleanup, so no truthful provisional complete record exists. Parent must supply actual final measurements after the human decision and cleanup; no approval is fabricated.
 
 ## Stage Report: implementation
 
@@ -302,3 +304,33 @@ Terminal measurement is pending the real Captain decision and the existing owner
 ### Summary
 
 The bounded experiment produced a local coordination falsifier before any cloud launch: dispatch metadata invalidated the task hash pinned immediately before dispatch. Retain a change outcome and route the real close decision to Kent; fixing the known mechanism or launching another baseline requires separately admitted work.
+
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Verify the explicit legacy migration and installed exact-main pin; establish the fresh cloud environment and actually loaded production instructions before workload execution.
+  Local installed loader accepted unchanged `implementation-resumed-stage-pin.json`, attempt implementation/2; cloud loaded the installed matching digest and complete kernel/POC bodies before implementation. Migration authorization, original pin, and stopped snapshot remain preserved.
+- DONE: Run the single approved event-query-v1 cloud baseline and prove all three cases, or retain the first evidenced mandatory precondition failure without fallback or automatic retry.
+  One cloud turn completed; owner reports mixed exit 0/exact two lines, empty exit 0/zero bytes, malformed exit 1/zero stdout and line-2 invalid-JSON stderr. Exact reported captures and script/case hashes: [cloud final evidence](evidence-attempt-2/cloud-final.md).
+- DONE: Write the outcome, attributable usage/time, concrete findings and successful defaults; preserve attempt one and leave the real Captain close decision to the parent.
+  Outcome recommends change because direct external capture inspection is incomplete; route the real close decision; final workflow remains incomplete at the human gate. [Attempt-two evidence](evidence-attempt-2/sha256.json) binds the safe retained artifacts; prior result remains in migration snapshot and historical report.
+
+### Evidence, measurements and limits
+
+- Cloud link: `conductor://workspace?id=56db4940-399c-4f86-9933-c8b0ce697a03&session=1ee5baad-4c68-4db7-abb5-8393bfba64f0`. Initial message `45eaa8bf-4cfe-405a-b990-7a275f48739a`; one create, one initial model turn, no second launch.
+- Actual cloud: Linux x86_64, Python 3.9.25, CONDUCTOR_IS_LOCAL=0, source HEAD `c2c62bf9dff5c3af1e27eb643a15eadf9023485f`; source and installed runtime checked separately. Local code worktree remains at original `6b408ac102978d4bbf3614a7109934191520aa9b`; no product edit or commit.
+- Installed cloud runtime: `/home/vercel-sandbox/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow/4.3.0`, exact-main content rather than version-label-only provenance; manifest SHA-256 `b95f114b4aec527406f786d4b76565a5a6852b511ad7514655afd9c83933c5d0`, loader `ae08b9265b25be0a48e6b0da97c15f1c7080484a6646db1d11a66b5bd77983ed`, contract digest `8cd3a8c40ab258ebb2541b9b0346e56686f9d90d9e400ef4e575526fc0e3df5e`. Spacedock 0.27.2 gate tooling available.
+- Observable instruction loading: installed continue skill read plus successful installed loader emitted full kernel/POC base/build bodies; hashes and exact command in cloud final/events. Direct disposable POC and review observation false; no reviewer/auxiliary model launched.
+- Prompt SHA-256 `e31baf033a354c3de62132b0b7239b6393f07edcb129cd3fa3dbd803022c74b6`; retained 65,555 exact bytes include frozen request/cases and exact task/pin inputs. Original cloud script SHA-256 `644dc4667ff05369b5b0cd7f1efd2ce328a07fbeb663df80936ae13b772dd09f` and fixture hashes are retained in final evidence.
+- Workload: cloud-owner-reported 3/3 acceptance; workflow: incomplete pending Captain close, cleanup and debrief; environment: matching installed-runtime load passed; telemetry: scoped runtime counters available, financial cost unknown. No clean-isolation, comparative efficiency or complete-journey acceptance claim.
+- Cloud usage: input 657136 including cached input 603776 (uncached 53360); output 9804 including reasoning 3083; cache write 0; total 666940. Sum of 14 incremental SDK records equals last cumulative count; neither cumulative totals nor final per-call usage were added twice. Final cloud prose said unknown before the terminal SDK event exposed usage; retained event supersedes that telemetry statement.
+- Local worker usage through 2026-09-10T09:38:58.662Z: input 3825674 including cached 3753344; output 11155 including reasoning 2226; total 3836829. Exact own-thread anchors retained; excludes subsequent reporting. Parent separately reports input 2710771 including cached 2699392, output 4292 including reasoning 1841, total 2715063 through 09:37:24.684Z; its pre-start anchor includes about 19 seconds of boundary spill. Do not treat these partial scopes as complete cost.
+- Timing: cloud active-command interval 09:32:15–09:36:52Z = 277 seconds; model turn began 09:31:41Z and final turn event arrived later, so 277 seconds excludes startup/final composition. Local resumed wall starts approximately 09:29:00Z, including 105 seconds explicitly idle sleeping plus API waits; parent active supervision estimate about 3 minutes. Active actor timing is uninstrumented. At final report, conservatively charging local wall minus 105 seconds explicit idle, the cloud session wall, and the parent estimate yields approximately 19–20 aggregate actor minutes; this is not instrumented active execution and includes API/report overhead; preparation/prior attempt separate, later close/debrief excluded. No hard dollar cap or dollar estimate verified.
+- Friction: one cloud input-materialization command consumed JSON stdin with its inline Python script, causing EPIPE and missing-task loader exit 2; corrected within the same turn before workload. This is an invocation error, not an unavailable runtime or a new baseline. No external issue proposed from one shell mistake.
+- Evidence transport limit: session-message CLI truncates at 65536 bytes for huge echoed prompt events; retained exact original prompt avoids losing launch input. Available safe events are deduplicated by event ID, with explicit truncation list. Exported batched tool event preserves command and exit but only final git-status output; exact case bytes are owner-reported in final and remain as original cloud files. The inspected CLI help exposes no read-only workspace file/export operation; direct cloud captures were not downloaded. No independent retest was authorized or claimed.
+- Successful defaults: updated pin survives dispatch metadata; installed-runtime checks precede workload; direct profile avoids provider review; malformed fixture demonstrates no partial-output leak; cloud stops at human gate without shared-state mutation. Prior hash-refusal finding remains associated with existing issue 382; no issue/PR/review post, product push, schedule, merge or release occurred.
+- Cleanup/authority: safe prompt, launch JSON, available event transcript, final byte report, counters and hashes now retained outside disposable worktree in this task. Cloud resource and local worktree retained; no archive/deletion before the parent handles the unresolved Captain gate.
+
+### Summary
+
+The renewed single cloud baseline reached the actual installed exact-main runtime and reported all three frozen cases passing. The useful next decision is the real Captain close; original cloud byte captures remain available, while exported evidence and scoped counters support only the bounded claims above.
