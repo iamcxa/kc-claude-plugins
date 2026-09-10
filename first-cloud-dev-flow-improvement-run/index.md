@@ -35,6 +35,17 @@ gates:
                 id: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1
                 digest: sha256:bd0f3adff2920f1d8dc91f6471d7907d48ee35de2de48317ce63e87d7232d0b7
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:validation:1
+                briefing: briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T15:32:06.314176Z"
+                decision: approve
+                reason: 'Captain approved archival: 可以封存. Accept the experiment outcome change and preserve its evidence; no unattended Routine claim.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-10T09:28:22Z
 worktree: .worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run
 ---
