@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Stub `conductor` for dispatch.test.sh. No network. --version/--help delegate to the real
+# binary (already pinned from it); auth whoami and project list are scripted so dispatch.sh
+# never needs a real account. Every invocation's argv is appended to $FAKE_CONDUCTOR_LOG
+# when set -- used to prove --dry-run makes no `workspace create` call.
+set -euo pipefail
+
+[ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
+
+REAL_CONDUCTOR="${FAKE_CONDUCTOR_REAL:?FAKE_CONDUCTOR_REAL must be set to the real conductor binary}"
+PROJECT_ID="${FAKE_CONDUCTOR_PROJECT_ID:?FAKE_CONDUCTOR_PROJECT_ID must be set}"
+REMOTE="${FAKE_CONDUCTOR_REMOTE:?FAKE_CONDUCTOR_REMOTE must be set}"
+
+case "${1:-}" in
+  --version) exec "$REAL_CONDUCTOR" --version ;;
+  --help) exec "$REAL_CONDUCTOR" --help ;;
+esac
+
+if [ "${1:-}" = "auth" ] && [ "${2:-}" = "whoami" ]; then
+  if [ "${FAKE_CONDUCTOR_AUTH_FAIL:-0}" = 1 ]; then
+    echo "not authenticated" >&2
+    exit 3
+  fi
+  echo "authenticated (fake)"
+  exit 0
+fi
+
+if [ "${1:-}" = "project" ] && [ "${2:-}" = "list" ]; then
+  python3 -c "
+import json
+print(json.dumps({'data': [{'id': '$PROJECT_ID', 'name': 'fixture', 'gitRemote': '$REMOTE'}], 'offset': 0, 'hasMore': False}))
+"
+  exit 0
+fi
+
+if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "create" ]; then
+  if [ "${FAKE_CONDUCTOR_ALLOW_CREATE:-0}" != 1 ]; then
+    echo "fake-conductor: workspace create called (should not happen in --dry-run test)" >&2
+    exit 64
+  fi
+  python3 -c "
+import json
+print(json.dumps({'workspaceId': 'ws-fixture-1', 'sessionId': 'sess-fixture-1'}))
+"
+  exit 0
+fi
+
+echo "fake-conductor: unhandled $*" >&2
+exit 64
