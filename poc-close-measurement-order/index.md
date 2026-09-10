@@ -63,6 +63,17 @@ gates:
                 id: briefing:aznp6gpr6zanmr8argy0jcdj:validation:attempt-2:revision-1
                 digest: sha256:11f5fcb3c9443e8e15ad8a4b544183dd13d75bdaaccdc754e79bab8f61a316f0
                 room-ref: ./review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:aznp6gpr6zanmr8argy0jcdj:validation:2
+                briefing: briefing:aznp6gpr6zanmr8argy0jcdj:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T14:39:34.362675Z"
+                decision: approve
+                reason: Kent reviewed the validation and claim boundary, confirmed the exact five-file commit, then explicitly approved proceeding to PR delivery with 批准. Authorizes the validated candidate and Draft PR push/create; merge, release and original experiment close remain separate.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
 ---
