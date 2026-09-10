@@ -1,8 +1,8 @@
 # Corrected five-layer local commit proposal
 
-Status: corrected candidates frozen; focused independent re-review pending.
+Status: corrected candidates frozen; focused independent re-review passed.
 This replaces the rejected proposal preserved in `initial-rejected/local-commit-review.md`.
-No product commit is authorized by this packet. After independent validation, Kent
+No product commit is authorized by this packet. Kent
 must approve these exact local commits; push, PR creation/linking, readiness,
 merge/release and closing original Draft #394 remain separate actions.
 
@@ -189,4 +189,4 @@ Exact changed files:
 
 ## Evidence
 
-The task state `stack-recut-evidence/correction/README.md` links same-instrument red/green second-ID proofs, distinct-wording controls, source hashes, stale-wording refusal and affected readback/smoke checks. `manifest.json`, `equivalence.json`, and `patch-proof.json` bind the corrected trees. Independent focused validation must pass before this packet is presented for local-commit approval.
+The task state `stack-recut-evidence/correction/README.md` links same-instrument red/green second-ID proofs, distinct-wording controls, source hashes, stale-wording refusal and affected readback/smoke checks. `manifest.json`, `equivalence.json`, and `patch-proof.json` bind the corrected trees. Focused independent validation passed on both corrected intermediate trees; see [independent proof](../stack-recut-independent-validation/rereview/README.md) and [Stage Report: validation (cycle 4)](../index.md#stage-report-validation-cycle-4). This packet is ready for Kent's exact local-commit review.
