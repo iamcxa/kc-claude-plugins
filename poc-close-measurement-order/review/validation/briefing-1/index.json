@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:aznp6gpr6zanmr8argy0jcdj:validation:attempt-1:revision-1",
+  "question": "Approve the independently validated bounded POC close-order repair and commit its exact five-file patch, retaining separate delivery and real experiment close authority?",
+  "artifacts": [
+    {
+      "id": "artifact:aznp6gpr6zanmr8argy0jcdj:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b759b32c4fbe6951b8fb37d89fd43a9165cf930a/poc-close-measurement-order/index.md",
+      "rev": "sha256:8fe3cd746cb88368a2d8d17e0c1cd9b42927b84cf6e04a1a7884840ee8135378",
+      "mediaType": "text/markdown",
+      "summary": "Independent validation PASSED; 3 assigned items DONE, 0 FAILED; AC-1 through AC-5 evidenced. Four required suites pass, native pending/manual gate/immutable approval/archive/final measurement paths verified, actual publication interruption recovers without another approval. Exact uncommitted five-file patch SHA-256 8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18; 198 added/48 deleted. Product commit awaits Kent exact-file confirmation; no product delivery or live experiment close is claimed."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:aznp6gpr6zanmr8argy0jcdj:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

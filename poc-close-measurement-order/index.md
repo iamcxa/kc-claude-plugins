@@ -46,6 +46,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:aznp6gpr6zanmr8argy0jcdj:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:aznp6gpr6zanmr8argy0jcdj-validation-1
+              briefing:
+                id: briefing:aznp6gpr6zanmr8argy0jcdj:validation:attempt-1:revision-1
+                digest: sha256:bb7f8c6acb9534ab51ef6a052499b640d46559372b3ffd09214d446f7388d36c
+                room-ref: ./review/validation/briefing-1
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
 ---
