@@ -5,6 +5,17 @@ product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
 id: 7ktmx2rsetq67yhbg4ezxm0q
+gates:
+    version: 1
+    records:
+        - id: gate:7ktmx2rsetq67yhbg4ezxm0q:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-backlog-1
+              briefing:
+                id: briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1
+                digest: sha256:559957ef58b48799d881ad00fa8a45f92997a4a3bff65c78b73d79efbc69b073
+                room-ref: ./review/backlog/briefing-1
 ---
 
 # First cloud run of the dev-flow improvement loop

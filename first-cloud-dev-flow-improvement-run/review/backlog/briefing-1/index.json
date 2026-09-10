@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1",
+  "question": "Start the accepted single cloud POC with the frozen event-query cases and 20-minute/no-retry boundary?",
+  "artifacts": [
+    {
+      "id": "artifact:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6aa5459d9d5ce4ef1a458ad34b05884292ef2de5/first-cloud-dev-flow-improvement-run/index.md",
+      "rev": "sha256:982f63f57bfc94f36478ce11d42cc598a93feeb49a637a4a95b22996d48722cc",
+      "mediaType": "text/markdown",
+      "summary": "Kent approved task creation and now confirmed proceeding to implementation. Prove one actual cloud flow, retain functional/workflow/usage evidence, and stop without automatic retry or recurring activation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:7ktmx2rsetq67yhbg4ezxm0q:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
