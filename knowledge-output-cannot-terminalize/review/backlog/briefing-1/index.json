@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1",
+  "question": "Admit the existing knowledge-close defect under the Captain-approved upstream Pilot repair scope?",
+  "artifacts": [
+    {
+      "id": "artifact:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a91c234313fa979b354f9e0babe2f9249c8c4e09/knowledge-output-cannot-terminalize.md",
+      "rev": "sha256:b14311f1ce60f641d7d16a462d9dc03b7318ee3bd3d797743b7e701ddb15922f",
+      "mediaType": "text/markdown",
+      "summary": "Preserve historical evidence; current standalone brief implements the already approved native knowledge-delivery repair, three upstream files/250 gross lines and one consumer mod/40 lines; no live task mutation or product commit."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

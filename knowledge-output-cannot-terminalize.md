@@ -13,6 +13,17 @@ issue:
 pr:
 mod-block:
 sprint-readiness: ready
+gates:
+    version: 1
+    records:
+        - id: gate:geef7a3dy7w12g7tq89h21te:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:geef7a3dy7w12g7tq89h21te-backlog-1
+              briefing:
+                id: briefing:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1
+                digest: sha256:320aa73c1906dbd2c2a98b1bf2f9c16b3409b284e2da8c621e9ad32ec7ebd802
+                room-ref: ./knowledge-output-cannot-terminalize/review/backlog/briefing-1
 ---
 
 ## Historical problem and investigation
