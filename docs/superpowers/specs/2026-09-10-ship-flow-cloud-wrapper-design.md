@@ -206,10 +206,19 @@ schema (slimmed), `local-profile-check.py` (checks the new rows).
 
 ## POC path
 
-One real sprint, `journey-map-poc` (3 tasks on the state branch today), run with only
-`dispatch.sh` and `watch.sh` scripted; verify, UAT and close done by hand and recorded in the
-batch dir. Success = three Draft PRs at prepared gates, delivered by cloud FOs, with zero ship
-scripts that dev flow already had. Then the removal PR, then the remaining scripts.
+Three `docs/dev` tasks under `sprint: ship-cloud-wrapper`, POC profile, standalone
+Captain-approved briefs with no Linear read or write (Captain, 2026-09-10: 「這一段不要去管
+linear」):
+
+1. `ship-cloud-dispatch-and-watch` — `dispatch.sh`, `watch.sh`, README re-commission. Built
+   locally through dev flow because nothing can dispatch it yet.
+2. `ship-remove-duplicated-stations` — the removal PR.
+3. `ship-verify-uat-close` — `uat-doc.py` rewrite, `close.py`, close receipt v2.
+
+Tasks 2 and 3 are the first real batch the new ship dispatches: ship's second batch is ship
+itself. Success = both reach prepared gates with Draft PRs opened by cloud first officers, and
+the sprint closes with worker-written debriefs. (`journey-map-poc` was considered and rejected
+as the first batch: its three tasks are already mid-flight in another session.)
 
 ## Consequences already visible
 
