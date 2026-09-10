@@ -16,7 +16,7 @@ The First Officer reads a worker's transcript through `conductor sql` against
 `session_transcripts_view`, not `conductor session message --after`: that CLI truncates its JSON
 response at 64 KB, which cuts off a long Evidence block, and its `--after` cursor rejects a sent
 message's id, which breaks polling from the FO's own last message — see
-`references/stations/worker-transcript.md` for the script this host limitation motivated.
+`kc-ship-flow/scripts/watch.sh` for the script this host limitation motivated.
 
 Placed segments (`references/placement.tsv`): `105937aee006`, `557d72a24417`, `57898e58e8ab`,
 `c30183386509`, `fd20ac2b4540`.

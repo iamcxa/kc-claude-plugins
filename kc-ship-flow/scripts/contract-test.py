@@ -35,10 +35,8 @@ def run(command: list[str], label: str) -> None:
 
 
 STATIONS = [
-    "intent.sh",
-    "holder.sh",
-    "fenced-dispatch.sh",
-    "worker-transcript.sh",
+    "dispatch.sh",
+    "watch.sh",
     "e2e-cli.sh",
     "e2e-gate.py",
     "parse-execute-external.py",
@@ -56,7 +54,8 @@ for test_name, test_command in STATION_TESTS:
     require((SCRIPTS / test_name).is_file(), f"missing station test: {test_name}")
     run(test_command, f"kc-ship-flow {test_name}")
 
-run(["bash", str(SCRIPTS / "fenced-dispatch.test.sh")], "kc-ship-flow fenced-dispatch.test.sh")
+run(["bash", str(SCRIPTS / "dispatch.test.sh")], "kc-ship-flow dispatch.test.sh")
+run(["bash", str(SCRIPTS / "watch.test.sh")], "kc-ship-flow watch.test.sh")
 
 for py_station in [
     "e2e-gate.py",
@@ -67,62 +66,6 @@ for py_station in [
 
 CLOSE_RECEIPT_SCHEMA = PLUGIN / "schemas" / "kc-ship-close-receipt.v1.schema.json"
 require(CLOSE_RECEIPT_SCHEMA.is_file(), f"missing {CLOSE_RECEIPT_SCHEMA}")
-
-with tempfile.TemporaryDirectory(prefix="kc-ship-flow-intent-lock-") as intent_lock_root_name:
-    # DEV-93: a split-root state checkout (`git worktree add`) has `.git` as a FILE, not a
-    # directory; a lock path hardcoded as `<state>/.git/...` can never `mkdir` there. This
-    # case fails on the pre-fix script (SystemExit-worthy `lock timeout`, exit 6) and only
-    # passes once the lock path is resolved through `git rev-parse --git-dir`.
-    intent_lock_root = Path(intent_lock_root_name)
-    intent_lock_origin = intent_lock_root / "origin.git"
-    intent_lock_seed = intent_lock_root / "seed"
-    intent_lock_bare = intent_lock_root / "bare-clone"
-    intent_lock_state_wt = intent_lock_root / "state-wt"
-    git_user = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.test"]
-    subprocess.run(["git", "init", "-q", "--bare", str(intent_lock_origin)], check=True, capture_output=True)
-    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_seed)], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "checkout", "-q", "-b", "spacedock-state/dev"], check=True, capture_output=True)
-    (intent_lock_seed / "_holder.json").write_text(json.dumps({"writer": 1, "holder": "laptop", "at": "x"}), encoding="utf-8")
-    subprocess.run(["git", "-C", str(intent_lock_seed), "add", "_holder.json"], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), *git_user, "commit", "-q", "-m", "seed holder"], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(intent_lock_seed), "push", "-q", "origin", "spacedock-state/dev"], check=True, capture_output=True)
-    subprocess.run(["git", "clone", "-q", str(intent_lock_origin), str(intent_lock_bare)], check=True, capture_output=True)
-    subprocess.run(
-        ["git", "-C", str(intent_lock_bare), "worktree", "add", "-q", str(intent_lock_state_wt), "spacedock-state/dev"],
-        check=True, capture_output=True,
-    )
-    require((intent_lock_state_wt / ".git").is_file(), "DEV-93 fixture: worktree .git is not a file")
-
-    def run_intent_commit(script: Path, claim: str) -> subprocess.CompletedProcess:
-        env = dict(os.environ, SHIP_LOCK_STALE_S="3")
-        return subprocess.run(
-            [
-                str(script), "commit", str(intent_lock_state_wt), "laptop", "1", claim,
-                "0123456789abcdef0123456789abcdef",
-                "11111111-1111-1111-1111-111111111111",
-                "d98f40b5e2080cb884facf1734fc66052eff998",
-                hashlib.sha256(claim.encode()).hexdigest(),
-            ],
-            capture_output=True, text=True, env=env, timeout=60,
-        )
-
-    fixed_result = run_intent_commit(SCRIPTS / "intent.sh", "dev-93-contract-case")
-    require(
-        fixed_result.returncode == 0,
-        "intent.sh commit did not succeed on a worktree-style state checkout (`.git` is a file): "
-        f"exit={fixed_result.returncode} stdout={fixed_result.stdout!r} stderr={fixed_result.stderr!r}",
-    )
-    intent_lock_git_dir_raw = subprocess.run(
-        ["git", "-C", str(intent_lock_state_wt), "rev-parse", "--git-dir"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    intent_lock_git_dir = Path(intent_lock_git_dir_raw)
-    if not intent_lock_git_dir.is_absolute():
-        intent_lock_git_dir = intent_lock_state_wt / intent_lock_git_dir
-    require(
-        not list(intent_lock_git_dir.glob("ship-lock.d*")),
-        "intent.sh left lock residue under the worktree's git dir",
-    )
 
 e2e_gate = SCRIPTS / "e2e-gate.py"
 e2e_gate_fixtures = FIXTURES / "e2e-gate"
@@ -489,67 +432,6 @@ require(
     forbidden_embed_result.returncode == 1 and "dev_debrief" in forbidden_embed_result.stdout,
     "validate-receipt.py did not refuse a close receipt whose dev_debrief embeds the writer's own "
     f"wrapper keys: exit={forbidden_embed_result.returncode} stdout={forbidden_embed_result.stdout!r}",
-)
-
-# --- DEV-156: fenced-dispatch.sh dispatches a dev entity's stage through
-# `spacedock dispatch build` rather than a hand-written message. Two fixtures
-# registered directly -- a stage that declares a model and one that does not
-# -- plus a fixture whose named stage is undeclared, to prove the station
-# refuses (exit 4) rather than falling back to an inline message.
-fenced_dispatch_script = SCRIPTS / "fenced-dispatch.sh"
-dispatch_fixtures = FIXTURES / "dispatch"
-for fixture_name in ["task-with-model.md", "task-with-model", "task-without-model.md", "task-without-model", "task-build-fails.md", "task-build-fails"]:
-    require((dispatch_fixtures / fixture_name).exists(), f"missing fixture: dispatch/{fixture_name}")
-
-with_model_result = subprocess.run(
-    [
-        "bash", str(fenced_dispatch_script),
-        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
-        "00000000-0000-0000-0000-000000000000", "main",
-        "--entity-path", str(dispatch_fixtures / "task-with-model.md"),
-        "--stage", "implementation",
-        "--workflow-dir", str(dispatch_fixtures / "task-with-model"), "--dry-run",
-    ],
-    cwd=ROOT, capture_output=True, text=True,
-)
-require(
-    with_model_result.returncode == 0 and "--model sonnet" in with_model_result.stdout,
-    "fenced-dispatch.sh --dry-run did not carry --model from the task-with-model fixture's stage: "
-    f"exit={with_model_result.returncode} stdout={with_model_result.stdout!r} stderr={with_model_result.stderr!r}",
-)
-
-without_model_result = subprocess.run(
-    [
-        "bash", str(fenced_dispatch_script),
-        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
-        "00000000-0000-0000-0000-000000000000", "main",
-        "--entity-path", str(dispatch_fixtures / "task-without-model.md"),
-        "--stage", "implementation",
-        "--workflow-dir", str(dispatch_fixtures / "task-without-model"), "--dry-run",
-    ],
-    cwd=ROOT, capture_output=True, text=True,
-)
-require(
-    without_model_result.returncode == 0 and "--model" not in without_model_result.stdout,
-    "fenced-dispatch.sh --dry-run carried --model for the task-without-model fixture, "
-    f"whose stage declares none: exit={without_model_result.returncode} stdout={without_model_result.stdout!r}",
-)
-
-build_fails_result = subprocess.run(
-    [
-        "bash", str(fenced_dispatch_script),
-        "/tmp/kc-ship-flow-contract-fixture-state", "h1", "1", "dev-1.g1",
-        "00000000-0000-0000-0000-000000000000", "main",
-        "--entity-path", str(dispatch_fixtures / "task-build-fails.md"),
-        "--stage", "nonexistent-stage",
-        "--workflow-dir", str(dispatch_fixtures / "task-build-fails"), "--dry-run",
-    ],
-    cwd=ROOT, capture_output=True, text=True,
-)
-require(
-    build_fails_result.returncode == 4 and "dispatch build failed" in build_fails_result.stdout,
-    "fenced-dispatch.sh did not refuse (exit 4, 'dispatch build failed') when spacedock dispatch "
-    f"build exits non-zero: exit={build_fails_result.returncode} stdout={build_fails_result.stdout!r}",
 )
 
 print("kc-ship-flow contract: PASS")

@@ -28,13 +28,15 @@ the stage that follows.
 
 Advance one commissioned `docs/ship` batch entity through its five stages in order:
 
-1. `dispatched` — `kc-ship-flow/scripts/fenced-dispatch.sh` dispatches a dev entity's stage
-   (`spacedock dispatch build` builds the message and carries the stage's own model, if any) into
-   its Conductor cloud workspace, guarded by the claim fence (`intent.sh`/`holder.sh`).
-2. `watching` — poll each task's dev entity to a prepared `validation` gate (primary signal: the
-   state branch; secondary: `conductor --json session status <id>`). Route a stuck worker's
-   question per the Local Profile table before it dispatches next; a dedicated watch script is a
-   separate task's deliverable.
+1. `dispatched` — `kc-ship-flow/scripts/dispatch.sh <sprint> [--dry-run]` creates one Conductor
+   workspace per `docs/dev` task whose `sprint` matches and whose `sprint-readiness` is `ready`,
+   each carrying a fixed first-officer boot message, guarded by a claim fence
+   (`<state-dir>/_ship_fence/<sprint>.json`) so a re-run skips an already-dispatched slug.
+2. `watching` — `kc-ship-flow/scripts/watch.sh <sprint> [--once]` polls the state branch for a
+   prepared `validation` gate first, falling back to the transcript tail (`conductor sql`, never
+   `session message --after`) only when a task's session is idle, reporting a usage-limit banner
+   (`quota`) or a trailing question (`question`). Route a stuck worker's question per the Local
+   Profile table before it dispatches next.
 3. `verified` — `kc-ship-flow/scripts/e2e-gate.py --root <code checkout> --flows docs/ship/flows
    <plan-receipt.json> <close-receipt.json>` (`--root` and `--flows` are always required; `--flows`
    is the Local Profile table's "E2E flows" row value) at the integrated head.
