@@ -1,0 +1,6 @@
+{
+  "path": "internal/release/runtime_live_evidence_workflow_test.go",
+  "verified_current_bytes_equal_gofmt_HEAD": true,
+  "restored_only_preexisting_formatting_to_HEAD": true,
+  "product_file_was_clean_before_required_format": true
+}

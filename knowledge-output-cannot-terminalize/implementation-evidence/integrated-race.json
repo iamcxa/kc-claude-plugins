@@ -1,0 +1,17 @@
+{
+  "command": [
+    "go",
+    "test",
+    "./...",
+    "-race",
+    "-json"
+  ],
+  "rc": 1,
+  "seconds": 233.5100434590131,
+  "tests": {
+    "pass": 3104,
+    "fail": 2,
+    "skip": 11
+  },
+  "candidate_sha256": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5"
+}

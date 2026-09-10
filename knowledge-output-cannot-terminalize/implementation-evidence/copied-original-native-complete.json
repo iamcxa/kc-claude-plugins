@@ -1,0 +1,509 @@
+{
+  "synthetic_decisions_only": true,
+  "live_authority_mutations": 0,
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+  "results": [
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-o",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "./cmd/spacedock"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "copy-product",
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product'...\ndone.\n"
+    },
+    {
+      "label": "remove-product-origin",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "copy-state",
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state'...\ndone.\n"
+    },
+    {
+      "label": "remove-state-origin",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "test-git-name",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "config",
+        "user.name",
+        "Synthetic fixture"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "test-git-email",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "config",
+        "user.email",
+        "test@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "test-git-name",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "config",
+        "user.name",
+        "Synthetic fixture"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "test-git-email",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "config",
+        "user.email",
+        "test@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "original-baseline",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"first-cloud-dev-flow-improvement-run\",\"signal\":\"blocked\",\"action\":\"await-pr\",\"pr\":\"local-merge:accepted-cloud-experiment-change-outcome-no-product-diff\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "original-explicit-refusal",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--delivery",
+        "knowledge",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: merge guard: terminal delivery write refused for first-cloud-dev-flow-improvement-run: knowledge delivery refuses PR or merge claims\n"
+    },
+    {
+      "label": "test-only-supersede",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--rework",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"first-cloud-dev-flow-improvement-run\",\"signal\":\"reworked\",\"feedback-to\":\"implementation\",\"application\":\"superseded\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "test-only-return-validation",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "status",
+        "--set",
+        "first-cloud-dev-flow-improvement-run",
+        "status=validation",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: entity first-cloud-dev-flow-improvement-run cannot change status away from entered stage \"implementation\": dirty completion artifact: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/index.md differs from local HEAD in Git root /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state; commit that path (this guard does not require a remote push).\n"
+    },
+    {
+      "label": "rebuild",
+      "argv": [
+        "go",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+        "build",
+        "-o",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "./cmd/spacedock"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "test-only-commit-rework",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "state",
+        "commit",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed first-cloud-dev-flow-improvement-run locally; no origin remote \u2014 state is local-only until an origin is configured.\n",
+      "stderr": ""
+    },
+    {
+      "label": "test-only-return-validation-committed",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "status",
+        "--set",
+        "first-cloud-dev-flow-improvement-run",
+        "status=validation",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "status: implementation -> validation\n",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-head",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "c9c5752fda853737d4a937ad7f59564c5651ca53\n",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-trunk",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "branch",
+        "-f",
+        "main",
+        "c9c5752fda853737d4a937ad7f59564c5651ca53"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-owned-worktree",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product",
+        "worktree",
+        "add",
+        "--detach",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/.worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run",
+        "c9c5752fda853737d4a937ad7f59564c5651ca53"
+      ],
+      "rc": 0,
+      "stdout": "HEAD is now at c9c5752f fix(kc-dev-flow): separate pending and final POC close measurements (#412)\n",
+      "stderr": "Preparing worktree (detached HEAD c9c5752f)\n"
+    },
+    {
+      "label": "commit-test-declaration",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "state",
+        "commit",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed first-cloud-dev-flow-improvement-run locally; no origin remote \u2014 state is local-only until an origin is configured.\n",
+      "stderr": ""
+    },
+    {
+      "label": "prepare-test-only-binding",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "gate",
+        "prepare",
+        "first-cloud-dev-flow-improvement-run",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/knowledge-delivery.md",
+        "--question",
+        "SYNTHETIC TEST ONLY: copied original knowledge declaration",
+        "--summary",
+        "TEST ONLY binding; not Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "room=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/review/validation/briefing-2\nbriefing=briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-2:revision-1\ndigest=sha256:9ee0dcd66f56020d664becb7f5479f83a8b0d4c2177db1a484bd562e2c72b6fe\nstate=open\n",
+      "stderr": ""
+    },
+    {
+      "label": "record-test-only-approval",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "gate",
+        "record",
+        "first-cloud-dev-flow-improvement-run",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC TEST ONLY new machine binding; not Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:7ktmx2rsetq67yhbg4ezxm0q:validation attempt=gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-validation-2 state=closed briefing=briefing:7ktmx2rsetq67yhbg4ezxm0q:validation:attempt-2:revision-1 resolution=resolution:spacedock:7ktmx2rsetq67yhbg4ezxm0q:validation:2 decision=approve\nsync=local-only phase=record\n",
+      "stderr": ""
+    },
+    {
+      "label": "consume-test-only-approval",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "gate",
+        "consume",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:7ktmx2rsetq67yhbg4ezxm0q:validation attempt=gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-validation-2 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "label": "commit-test-binding",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "state",
+        "commit",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Nothing to commit for first-cloud-dev-flow-improvement-run \u2014 state checkout already up to date.\n",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-bare-origin",
+      "argv": [
+        "git",
+        "init",
+        "--bare",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git"
+      ],
+      "rc": 0,
+      "stdout": "Initialized empty Git repository in /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git/\n",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-add-origin",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "remote",
+        "add",
+        "origin",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "fixture-first-push",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "push",
+        "-u",
+        "origin",
+        "spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "branch 'spacedock-state/dev' set up to track 'origin/spacedock-state/dev'.\n",
+      "stderr": "To /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git\n * [new branch]        spacedock-state/dev -> spacedock-state/dev\n"
+    },
+    {
+      "label": "native-finalize-publication-interrupted",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--delivery",
+        "knowledge",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"first-cloud-dev-flow-improvement-run\",\"signal\":\"finalized\",\"status\":\"done\",\"verdict\":\"passed\",\"result\":\"unpublished\"}\n",
+      "stderr": "merge guard: archive commit for first-cloud-dev-flow-improvement-run is durable locally, but split-root publication failed:\nTo /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git\n ! [remote rejected]   HEAD -> spacedock-state/dev (pre-receive hook declined)\nerror: failed to push some refs to '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/state-origin.git'\n\nSettle unrelated state-checkout dirt if Git refused rebase, then resume with `spacedock state commit first-cloud-dev-flow-improvement-run --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev`; archived resume publishes the existing commit without creating another archive commit.\n"
+    },
+    {
+      "label": "archived-local-head",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "de9a1f34e492ea5c812020c1e85accf01e45c11a\n",
+      "stderr": ""
+    },
+    {
+      "label": "native-publish-resume",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "state",
+        "commit",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Published existing archived state for first-cloud-dev-flow-improvement-run to spacedock-state/dev.\n",
+      "stderr": ""
+    },
+    {
+      "label": "native-repeat-noop",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "state",
+        "commit",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Nothing to commit for first-cloud-dev-flow-improvement-run \u2014 state checkout already up to date.\n",
+      "stderr": ""
+    },
+    {
+      "label": "resumed-head",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "de9a1f34e492ea5c812020c1e85accf01e45c11a\n",
+      "stderr": ""
+    },
+    {
+      "label": "archive-native-read",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "status",
+        "--read",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/_archive/first-cloud-dev-flow-improvement-run/index.md",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"read\",\"path\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/_archive/first-cloud-dev-flow-improvement-run/index.md\",\"total_lines\":\"391\",\"frontmatter\":{\"archived\":\"2026-09-10T17:23:16Z\",\"completed\":\"2026-09-10T17:23:15Z\",\"gates\":\"\",\"id\":\"7ktmx2rsetq67yhbg4ezxm0q\",\"mod-block\":\"\",\"pr\":\"\",\"product\":\"kc-dev-flow\",\"sprint\":\"S8\",\"sprint-readiness\":\"ready\",\"started\":\"2026-09-10T09:28:22Z\",\"status\":\"done\",\"title\":\"POC: validate the first cloud run of the dev-flow improvement loop\",\"verdict\":\"PASSED\",\"worktree\":\".worktrees/spacedock-ensign-first-cloud-dev-flow-improvement-run\"},\"headings\":[{\"text\":\"First cloud run of the dev-flow improvement loop\",\"level\":\"1\",\"offset\":\"74\",\"lines\":\"75\"},{\"text\":\"Captain admission\",\"level\":\"2\",\"offset\":\"78\",\"lines\":\"6\"},{\"text\":\"Exploration Brief\",\"level\":\"2\",\"offset\":\"84\",\"lines\":\"7\"},{\"text\":\"Accepted outcome\",\"level\":\"2\",\"offset\":\"91\",\"lines\":\"6\"},{\"text\":\"Non-goals\",\"level\":\"2\",\"offset\":\"97\",\"lines\":\"4\"},{\"text\":\"Long-term direction\",\"level\":\"2\",\"offset\":\"101\",\"lines\":\"4\"},{\"text\":\"Execution entry observations\",\"level\":\"2\",\"offset\":\"105\",\"lines\":\"8\"},{\"text\":\"Work profile receipt\",\"level\":\"2\",\"offset\":\"113\",\"lines\":\"30\"},{\"text\":\"Frozen execution specification snapshot\",\"level\":\"2\",\"offset\":\"143\",\"lines\":\"6\"},{\"text\":\"First cloud run: review draft\",\"level\":\"1\",\"offset\":\"149\",\"lines\":\"243\"},{\"text\":\"Outcome and evidence boundary\",\"level\":\"2\",\"offset\":\"153\",\"lines\":\"13\"},{\"text\":\"Observed facts and unresolved preflight\",\"level\":\"2\",\"offset\":\"166\",\"lines\":\"16\"},{\"text\":\"Frozen workload and cases\",\"level\":\"2\",\"offset\":\"182\",\"lines\":\"49\"},{\"text\":\"Frozen first-run request\",\"level\":\"2\",\"offset\":\"231\",\"lines\":\"6\"},{\"text\":\"Manual first-run sequence and accepted bounds\",\"level\":\"2\",\"offset\":\"237\",\"lines\":\"16\"},{\"text\":\"Evidence retained by existing owners\",\"level\":\"2\",\"offset\":\"253\",\"lines\":\"15\"},{\"text\":\"Coverage progression and token measurement\",\"level\":\"2\",\"offset\":\"268\",\"lines\":\"16\"},{\"text\":\"Four later periodic jobs: proposed responsibilities\",\"level\":\"2\",\"offset\":\"284\",\"lines\":\"14\"},{\"text\":\"POC outcome\",\"level\":\"2\",\"offset\":\"298\",\"lines\":\"17\"},{\"text\":\"POC close measurement\",\"level\":\"2\",\"offset\":\"315\",\"lines\":\"13\"},{\"text\":\"Stage Report: implementation\",\"level\":\"2\",\"offset\":\"328\",\"lines\":\"30\"},{\"text\":\"Evidence and boundaries\",\"level\":\"3\",\"offset\":\"337\",\"lines\":\"16\"},{\"text\":\"Summary\",\"level\":\"3\",\"offset\":\"353\",\"lines\":\"5\"},{\"text\":\"Stage Report: implementation (cycle 2)\",\"level\":\"2\",\"offset\":\"358\",\"lines\":\"34\"},{\"text\":\"Evidence, measurements and limits\",\"level\":\"3\",\"offset\":\"367\",\"lines\":\"22\"},{\"text\":\"Summary\",\"level\":\"3\",\"offset\":\"389\",\"lines\":\"3\"}]}\n",
+      "stderr": ""
+    }
+  ],
+  "binary_sha256": "68f128690c2730327f301fd4aad606a6eb6ce7c766a5def0edbe9c814fef6e51",
+  "original_copy_sha256": "2431bae3b5c6127ee06a38835ab8825a950d325e5db8b1f10f44cba64b47eff8",
+  "proof": {
+    "archive": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-complete-t4d39x8n/product/docs/dev/.spacedock-state/_archive/first-cloud-dev-flow-improvement-run/index.md",
+    "archive_sha256": "36244d099e3ffb452b89c8d75a49e22a0cadd0761c47ded7a6a2a1e5a524429e",
+    "head_unchanged_on_native_resume": true,
+    "archive_bytes_unchanged_on_native_resume": true,
+    "original_historical_approval_preserved_as_superseded_in_copy": true,
+    "synthetic_new_approval_consumed_once": true,
+    "archive_count": 1,
+    "live_original_mutations": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "gofmt",
+    "-w",
+    "./cmd",
+    "./internal"
+  ],
+  "rc": 0,
+  "seconds": 0.08387491619214416,
+  "tests": {
+    "pass": 0,
+    "fail": 0,
+    "skip": 0
+  }
+}

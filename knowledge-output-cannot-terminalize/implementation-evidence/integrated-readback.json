@@ -1,0 +1,71 @@
+{
+  "upstream": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+    "base": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "head": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "status": "M internal/cli/help.go\n M internal/gates/delivery.go\n M internal/gates/delivery_test.go\n M internal/gates/io.go\n M internal/status/merge.go\n M internal/status/merge_guard_test.go\n M internal/status/mutate.go\n M mods/pr-merge.md",
+    "diff_sha256": "cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5",
+    "numstat": [
+      [
+        "3",
+        "0",
+        "internal/cli/help.go"
+      ],
+      [
+        "238",
+        "8",
+        "internal/gates/delivery.go"
+      ],
+      [
+        "196",
+        "0",
+        "internal/gates/delivery_test.go"
+      ],
+      [
+        "7",
+        "3",
+        "internal/gates/io.go"
+      ],
+      [
+        "45",
+        "7",
+        "internal/status/merge.go"
+      ],
+      [
+        "193",
+        "0",
+        "internal/status/merge_guard_test.go"
+      ],
+      [
+        "18",
+        "9",
+        "internal/status/mutate.go"
+      ],
+      [
+        "16",
+        "0",
+        "mods/pr-merge.md"
+      ]
+    ],
+    "gross": 743,
+    "diff_check_rc": 0
+  },
+  "coord": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+    "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "head": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "status": "M docs/dev/_mods/pr-merge.md",
+    "diff_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+    "numstat": [
+      [
+        "11",
+        "13",
+        "docs/dev/_mods/pr-merge.md"
+      ]
+    ],
+    "gross": 24,
+    "diff_check_rc": 0
+  }
+}

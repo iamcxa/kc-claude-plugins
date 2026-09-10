@@ -1,0 +1,7 @@
+{
+  "command": [
+    "python3",
+    "scripts/kc-dev-flow-contract-test.py"
+  ],
+  "rc": 0
+}
