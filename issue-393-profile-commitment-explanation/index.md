@@ -7,6 +7,7 @@ sprint-readiness: ready
 issue: iamcxa/kc-claude-plugins#393
 provenance: https://github.com/iamcxa/kc-claude-plugins/issues/393
 id: td0yhsww2jnwnrzh5c6wc6er
+started: 2026-09-10T09:09:39Z
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
