@@ -255,6 +255,18 @@ Preview evidence is in the tacoma workspace's
 it demonstrates appearance and bounded edit/movement readback, not the final
 dynamic border implementation.
 
+Kent then authorized the two additional existing files: "確認額外修改兩個檔案".
+This is the Captain's reshape choice for the file-count stop: permit 21 total
+changed files against the pinned base, stopping on 22 instead of 20. The two
+additional paths are `kc-journey-map/lib/records.mjs` (shared border/legend and
+geometry) and `kc-journey-map/server/client/App.tsx` (editor synchronization).
+The selected Pilot profile and the 1,400 changed-line / 650 non-test lib-line
+stop numbers remain unchanged. No new permanent files or dependencies are
+needed. Report net code change after removing the superseded status rendering,
+separately from cumulative changed-file counts. The candidate was still clean
+at `697525fe` with 19 changed files / 883 changed lines / 474 non-test lib lines
+when this additional-file plan was accepted.
+
 #### Captain continuation — release terminology and local admission
 
 Kent authorized the proposed local docs/dev/ROADMAP.md registration and use
