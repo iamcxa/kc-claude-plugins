@@ -1,6 +1,6 @@
 ---
 title: "POC: test evidence-led dev-flow improvement on one real failure"
-status: implementation
+status: validation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
