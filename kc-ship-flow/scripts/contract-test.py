@@ -42,6 +42,7 @@ STATIONS = [
     "e2e-gate.py",
     "parse-execute-external.py",
     "uat-doc.py",
+    "close.py",
 ]
 for station in STATIONS:
     require((SCRIPTS / station).is_file(), f"missing station script: {station}")
@@ -49,6 +50,7 @@ for station in STATIONS:
 
 STATION_TESTS = [
     ("uat-doc.test.py", [sys.executable, str(SCRIPTS / "uat-doc.test.py")]),
+    ("close.test.py", [sys.executable, str(SCRIPTS / "close.test.py")]),
     ("pin.test.py", [sys.executable, str(SCRIPTS / "pin.test.py")]),
 ]
 for test_name, test_command in STATION_TESTS:
@@ -72,6 +74,7 @@ for py_station in [
     "e2e-gate.py",
     "parse-execute-external.py",
     "uat-doc.py",
+    "close.py",
 ]:
     run([sys.executable, "-m", "py_compile", str(SCRIPTS / py_station)], f"{py_station} compile")
 
