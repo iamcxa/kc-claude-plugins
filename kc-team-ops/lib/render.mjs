@@ -276,15 +276,14 @@ export function releaseCoverage(model) {
 	})
 }
 
+// The journey board (buildJourneyBoard, below) no longer renders here: its content —
+// a citation and a constraint list per step — was never spatial, and now generates as
+// a per-release contract document instead (release-contract.mjs). buildJourneyBoard
+// stays in the tree and under test; it has simply left this critical path, the same
+// position funcmap.mjs is in until a step is modelled.
 export function buildAllPages(model, room = null) {
 	const modelled = (model.steps ?? []).some((s) => s.command || s.events?.length || s.state || s.readmodel)
-	const releases = model.releases ?? []
-	// A board per release when the file has releases; one whole-journey board when it does
-	// not, so a map drawn before anyone has sliced it still renders.
-	const boards = releases.length
-		? releases.flatMap((release) => buildJourneyBoard(model, { release, room }))
-		: buildJourneyBoard(model, { room })
-	return [...buildStoryMap(model, room), ...boards, ...(modelled ? buildFunctionMap(model) : [])]
+	return [...buildStoryMap(model, room), ...(modelled ? buildFunctionMap(model) : [])]
 }
 
 // Render is a reconcile, not an append: shapes this renderer owns that the model no

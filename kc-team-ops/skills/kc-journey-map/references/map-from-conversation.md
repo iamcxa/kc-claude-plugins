@@ -9,8 +9,8 @@ You are facilitating, not deciding. The map is theirs; the discipline is yours.
 
 - **Do not ask for citations, and do not check anything against code.** This stage asserts
   intent. `references/cell-contract.md` explains why the three pages have different bars.
-- **Do not badge.** `NOT BUILT` belongs on the journey board, where there is a codebase to
-  be absent from.
+- **Do not set `status` on a story.** `gap` belongs to draw mode, where there is a codebase
+  a story can be absent from.
 - **Do not decide the first release.** Draw what they say the first release is, including
   when you think it is too big. If you think it is too big, say so once, in one sentence,
   and then draw theirs.

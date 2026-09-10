@@ -11,7 +11,18 @@ const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Bool
 
 test('the story map draws every element the method calls for', () => {
 	const k = kinds(buildStoryMap(model))
-	for (const kind of ['persona', 'now', 'activity', 'story', 'badge', 'ownership', 'release-line', 'release-label']) {
+	for (const kind of [
+		'persona',
+		'now',
+		'one-journey',
+		'activity',
+		'story',
+		'story-status',
+		'story-question',
+		'ownership',
+		'release-line',
+		'release-label',
+	]) {
 		assert.ok(k.has(kind), `story map is missing ${kind}`)
 	}
 })

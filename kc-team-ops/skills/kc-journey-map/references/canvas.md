@@ -36,29 +36,41 @@ and produce the HTML board — never stall the deliverable on it.
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
 
-## Two pages, one file
+## One board, plus a generated contract
 
-A journey renders into one room with two pages, because the two boards ask different
-questions and disagree about what the vertical axis means:
+A journey renders onto one canvas page — the story map — plus a second canvas page for the
+function map when the file models something. What used to be a second canvas, the journey
+board (one page per release, citing each step's system flow and constraints), is retired:
+its unique content was a citation and a constraint list, and neither is spatial.
 
-| Page | Vertical axis | Answers |
+| Surface | Kind | Answers |
 |---|---|---|
-| **Story map** | priority within a release band | what should we build, and what is the smallest useful slice |
-| **Journey board**, one per release | lane | given we want *this* release, what does the system do today and what is missing |
-| **Function map** | lane | what does each step decide, and what becomes true when it does |
+| **Story map** | canvas, one page | what should we build, what is the smallest useful slice, and which of those stories exist today |
+| **Release contract**, one per release | generated document, not canvas | given we want *this* release, what does the system do today and what is missing — `lib/journey-contract.mjs` |
+| **Function map** | canvas, one page, drawn only when modelled | what does each step decide, and what becomes true when it does |
 
-**A journey board is scoped to one release.** It draws only the steps that release touches,
-so its `NOT BUILT` columns are that release's build list. Drawn across the whole journey the
-same badges are a pile of gaps belonging to no particular decision, which is what it did
-before. A file with no releases still gets one whole-journey board.
+**The release contract is generated, never authored.** It reads every story in a release and
+prints its status, its evidence symbol, and the rule ids that apply — the same facts the
+journey board used to draw, as a document a lint can check instead of a picture a person has
+to notice is wrong. See `lib/release-contract.mjs`.
 
-**The pages link to each other.** A release label on the story map carries a link to that
-release's board; the board carries one back. tldraw draws a shape's `url` as a real anchor,
-and a deep link needs only a page — the camera numbers are normalised on arrival.
+**Three lints run against the file itself**, not the board:
 
-The journey board is ours, not a published method. Its bar is the cell contract: cite the
-code or badge `NOT BUILT`, and never leave the status card off. The nearest published thing
-is a service blueprint, which is a different shape and a different question.
+| Lint | Fires on |
+|---|---|
+| `no-status` | a story with no `status` field at all — including a bare-string story, which cannot carry one |
+| `exists-without-evidence` | a story marked `exists` with no `evidence` symbol |
+| `evidence-not-found` | an `evidence` symbol that no longer greps anywhere in the repository outside the journey file itself |
+
+```bash
+node lib/journey-lint.mjs docs/journey/<slug>.yaml [repoRoot]
+node lib/journey-contract.mjs docs/journey/<slug>.yaml <releaseId> [--out <path>]
+```
+
+`evidence-not-found` is the one a grid could never do: a table does not notice that the
+symbol it cites was renamed out from under it. Because the grep is `git grep`, it only sees
+tracked content — a symbol added in the same uncommitted change as the story that cites it
+needs `git add` before the lint sees it too.
 
 The function map is **Event Modeling** (Adam Dymitruk's swimlane form) over the journey's own
 columns: Command,
@@ -85,25 +97,35 @@ steps:
 The function map is not read back yet — edits to it have to be made in the file.
 
 The story map follows Jeff Patton's shape and the workshop convention it borrows: blue
-for the persona and for release boundaries, green for the backbone, yellow for the
-stories beneath it, small labels for ownership and evidence status. Model fields it
-reads, all optional:
+for the persona, the release boundaries and the one-sentence banner above the backbone,
+green for the backbone, yellow for the stories beneath it, small labels for ownership,
+story status and open questions. Model fields it reads, all optional except a story's
+`status`:
 
 ```yaml
 persona: …
+one_journey: …            # one sentence: what is true when the whole loop works. Drawn above the backbone.
 now:                       # the status quo — how the job gets done without this product
   - {id: …, card: …, pain: …, workaround: …}
 steps:
   - id: …
     card: …                # the journey card; `activity:` overrides it on the story map
-    stories: [ … ]         # ordered top to bottom by priority, variants below the main path
-    badge: NOT_BUILT       # drawn as a small label, never inside the sticky
+    stories:                # ordered top to bottom by priority, variants below the main path
+      - id: …
+        card: …
+        release: …
+        status: exists      # or gap — required; a gap is drawn on the story, never the step
+        evidence: …          # a bare symbol that greps in the repo; required when status is exists
+        question: …          # optional — an unresolved decision, drawn violet
 later: [ … ]               # activities below the release boundary
 ownership:
   - {id: …, owner: …, from: <stepId>, to: <stepId>, note: …}
 slices:
   - {id: …, outcome: …}    # the outcome is the label at the line's left edge
 ```
+
+A release's label carries how many of its stories exist — computed from `status` on every
+render, never typed by hand.
 
 An unfinished implementation of the thing being proposed does not belong in `now:` —
 that is the status card's job, not the user's current world.
@@ -144,14 +166,18 @@ for a save-as should end up with that file.
 are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
 A sticky someone added during a workshop survives every re-render.
 
-**Both pages are read, and they are compared.** A step is a `step-card` on the board and an
-`activity` on the story map; where the two pages disagree about the same field, neither
-wins — the conflict is reported and nothing is applied.
+**The reader still understands a journey-board page if one exists.** A step is a
+`step-card` there and an `activity` on the story map; where the two disagree about the same
+field, neither wins — the conflict is reported and nothing is applied. The default pipeline
+no longer renders that page, so in practice this is comparing the story map against itself —
+harmless, and it is the same code path a hand-built board from `buildJourneyBoard` would use
+if something still calls it directly.
 
 **Read reports; `--write` applies a subset.** What round-trips: the wording of a card, an
 activity and a story; the order of the columns; the priority of the stories under an
-activity. A badge is drawn but never read back. Lane 2 and lane 3 have a lossy inverse —
-a constraint is stored as a rule id and drawn as that rule's text, so canvas text cannot
+activity. A story's `status`, `evidence` and `question` are not read back yet — they are
+written by hand, the same as a rule id. Lane 2 and lane 3 have a lossy inverse — a
+constraint is stored as a rule id and drawn as that rule's text, so canvas text cannot
 be mapped back to an id without guessing. Everything else is reported for a human to act on:
 
 | Report | Meaning |

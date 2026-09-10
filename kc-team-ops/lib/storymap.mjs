@@ -10,11 +10,13 @@
 // is one when the bands cut across all the columns. Bands scoped to a set of columns —
 // which is what this drew before — cannot express a walking skeleton at all.
 //
-// It is a projection of the same file the journey board renders from. The two pages
-// disagree about the vertical axis on purpose — here it is priority, there it is lane —
-// which is exactly why they are two pages and not one grid.
+// This is the one canvas board a journey renders onto; the per-release detail that used
+// to be a second canvas page (the journey board) is a generated document instead — see
+// release-contract.mjs. A story's status (`exists`/`gap`) and open `question` are drawn
+// here, at story grain, not on the step: a step is too coarse a unit to be in or out.
 
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine } from './records.mjs'
+import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
+import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -62,7 +64,8 @@ export function buildStoryMap(model, room = null) {
 	)
 	const hasOwnership = (model.ownership ?? []).length > 0
 	const Y_BAND = Y_PERSONA + headH + GAP
-	const Y_BACKBONE = Y_BAND + (hasOwnership ? bandH + GAP : 0) + (steps.some((s) => s.badge) ? 60 : 0)
+	const oneJourneyH = model.one_journey ? 70 : 0
+	const Y_BACKBONE = Y_BAND + (hasOwnership ? bandH + GAP : 0) + oneJourneyH
 	const Y_STORIES = Y_BACKBONE + 260
 
 	if (model.persona) {
@@ -104,6 +107,27 @@ export function buildStoryMap(model, room = null) {
 		})
 	})
 
+	// One sentence naming what is true when the whole loop works, read above the
+	// backbone it sits over rather than folded into the persona note it is not part of.
+	if (model.one_journey) {
+		put.push({
+			...label({
+				id: 'shape:sm-one-journey',
+				text: `ONE JOURNEY\n${model.one_journey}`,
+				x: X0,
+				y: Y_BACKBONE - oneJourneyH,
+				w: Math.max(600, steps.length * PITCH - 20),
+				h: oneJourneyH - 10,
+				index: ix[n++],
+				parentId,
+				color: 'blue',
+				size: 's',
+				align: 'start',
+			}),
+			meta: tag('one-journey', 'one-journey'),
+		})
+	}
+
 	steps.forEach((step, i) => {
 		const x = X0 + i * PITCH
 
@@ -119,27 +143,6 @@ export function buildStoryMap(model, room = null) {
 			}),
 			meta: tag(step.id, 'activity'),
 		})
-
-		// Evidence status rides as a small label, never inside the sticky: a card is the
-		// user's words and a badge is ours, and mixing them is how a board starts lying.
-		if (step.badge) {
-			put.push({
-				...label({
-					id: `shape:sm-badge-${step.id}`,
-					text: step.badge.replace('_', ' '),
-					x,
-					y: Y_BACKBONE - 56,
-					w: 200,
-					h: 48,
-					index: ix[n++],
-					parentId,
-					color: step.badge === 'NOT_BUILT' ? 'red' : 'orange',
-					size: 's',
-				}),
-				meta: tag(step.id, 'badge'),
-			})
-		}
-
 	})
 
 	// ── release bands ────────────────────────────────────────────────────────────
@@ -148,13 +151,7 @@ export function buildStoryMap(model, room = null) {
 	// entire backbone that still works, and you cannot see whether it is one unless the
 	// bands cut across all of them.
 	const releases = model.releases ?? []
-	const storyOf = (step, story, j) => ({
-		id: typeof story === 'string' ? `${step.id}-${j}` : (story.id ?? `${step.id}-${j}`),
-		text: typeof story === 'string' ? story : story.card,
-		release: typeof story === 'string' ? null : (story.release ?? null),
-	})
-
-	const all = steps.flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...storyOf(step, story, j) })))
+	const all = steps.flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))
 
 	// A story nobody has placed is drawn in a band of its own rather than dropped: where it
 	// belongs is a decision someone still owes, and a silent omission hides that.
@@ -174,9 +171,10 @@ export function buildStoryMap(model, room = null) {
 			bandTop += 40
 		}
 
-		// The release label carries a link to that release's own board. The story map says
-		// what this release is for; the board it points at says what is missing to get there.
-		const text = `${band.name}\n${band.goal ?? ''}${band.id ? '\n\n→ what is missing' : ''}`.trim()
+		// The release label carries how many of its stories exist, computed from the model
+		// on every render — never typed by hand, so it cannot drift from the stories below it.
+		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
+		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${existsCount}/${band.stories.length} exist` : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
@@ -189,7 +187,6 @@ export function buildStoryMap(model, room = null) {
 				parentId,
 				color: band.id ? 'blue' : 'red',
 				size: 's',
-				url: room && band.id ? pageLink(room, `page:jm-board-${band.id}`) : '',
 			}),
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
@@ -204,10 +201,52 @@ export function buildStoryMap(model, room = null) {
 		for (const [stepId, list] of perColumn) {
 			const i = steps.findIndex((s) => s.id === stepId)
 			list.forEach((story, j) => {
+				const x = X0 + i * PITCH
+				const y = bandTop + j * STORY_PITCH
 				put.push({
-					...note({ id: `shape:sm-story-${story.id}`, text: story.text, x: X0 + i * PITCH, y: bandTop + j * STORY_PITCH, index: ix[n++], parentId, color: 'yellow' }),
+					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
 					meta: tag(story.id, 'story'),
 				})
+
+				// The gap and the open question are drawn on the story itself, not the step it
+				// sits under: a step is too coarse a grain to be a build unit, and a story is not.
+				if (story.status === 'gap') {
+					put.push({
+						...label({
+							id: `shape:sm-story-status-${story.id}`,
+							text: 'GAP',
+							x,
+							y: y - 46,
+							w: 200,
+							h: 40,
+							index: ix[n++],
+							parentId,
+							color: 'red',
+							size: 's',
+						}),
+						meta: tag(story.id, 'story-status'),
+					})
+				}
+
+				if (story.question) {
+					const w = 200
+					put.push({
+						...label({
+							id: `shape:sm-story-question-${story.id}`,
+							text: `? ${story.question}`,
+							x: x + 210,
+							y,
+							w,
+							h: fitHeight(story.question, w),
+							index: ix[n++],
+							parentId,
+							color: 'violet',
+							size: 's',
+							align: 'start',
+						}),
+						meta: tag(story.id, 'story-question'),
+					})
+				}
 			})
 		}
 

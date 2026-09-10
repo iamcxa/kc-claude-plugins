@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map, a three-lane journey board, and a function map of commands and events — where every system claim cites the code it was read from and a mandatory status card names what is unproven, unmerged, or undeployed.
+description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — a story map, plus a function map of commands and events when the file models one — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and a mandatory status card names what is unproven, unmerged, or undeployed.
 ---
 
 # Journey Map
@@ -40,21 +40,22 @@ Documentation describes intent; the spine must describe reachability.
 For each step, locate the handler, the route registration, and the durable write. Record
 `file:line` as you go. Three questions decide the column:
 
-- Can a person reach this step today? If not, the column is badged `NOT BUILT`.
+- Can a person reach this step today? Split it into stories where the answer differs story
+  by story, and give each the `status` the answer implies — `exists` or `gap`.
 - What does the system durably do here — which key, which write mode?
 - What would break if a future change ignored this step's rule?
 
-A step whose handler exists but has no route is `NOT BUILT`. Code that only tests can call
-is not a journey step.
+A story whose handler exists but has no route is `status: gap`, not `exists`. Code that only
+tests can call is not a journey story.
 
 **3. Check the trunk, not just the branch.**
 State plainly which ref was measured. Work living only in open PRs, worktrees, or a stack
 is not the current system, and the status card must say so.
 
-**4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, now, stories, ownership, slices). The board is not the
+**4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). Give every story a `status` (`exists` or `gap`) and, when it exists, an `evidence` symbol — these are what the three lints in `lib/lint.mjs` check. The board is not the
 artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
-by convention) and holds the steps, the system lines with their citations, the rules, the
-slices and the status card. `references/journey.example.yaml` is a worked one.
+by convention) and holds the steps, the stories with their status and evidence, the system
+lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one.
 
 Positions are never written to the file. Every layout number is computed from the model's
 order, so a reordered board is a one-line diff instead of a rewritten file.
@@ -65,14 +66,17 @@ draws its overflow outside itself; a row placed at a fixed offset lands on top o
 above once its text grows. Every one of those happened here. Export the image and read it.
 Ship what you saw, not what you wrote.
 
-**6. Report.** Draw mode: the board, plus the steps that came back `NOT BUILT` or
-`NOT RULED`. Check mode: the mismatch table first.
+**6. Report.** Draw mode: the board, the release contract per release
+(`node lib/journey-contract.mjs`), and `node lib/journey-lint.mjs` run against the file — cite
+what it found, not just that it ran. Check mode: the mismatch table first.
 
 ## Rendering
 
-**The canvas.** The journey file renders onto an editable tldraw board — a story map page
-and a journey board page. See `references/canvas.md` for how to run it, what round-trips
-and what does not. `npm run doctor` says why it will not start.
+**The canvas.** The journey file renders onto an editable tldraw board — a story map page,
+plus a function map page when the file models a step's command/events/state/read-model. See
+`references/canvas.md` for how to run it, what round-trips and what does not. `npm run
+doctor` says why it will not start. The per-release detail that used to be a second canvas
+page is a generated document instead — `node lib/journey-contract.mjs`, not a board.
 
 **An image for a report.** Export from the canvas with tldraw's own exporter, which
 captures the whole board rather than a viewport:
@@ -94,12 +98,16 @@ Artifact path: `docs/journey/<slug>.yaml` in the repository the journey describe
 
 ## Hard rules
 
-- **No cell from memory.** Every System Flow cell cites a file, line, route, or key read
-  this session. Recalled facts from a previous session are a hypothesis; re-read them.
+- **No cell from memory.** Every System Flow cell and every story `evidence` symbol cites a
+  file, symbol, route, or key read this session. Recalled facts from a previous session are
+  a hypothesis; re-read them.
 - **The status card is mandatory** and must name what is unproven, unmerged, or undeployed.
   A board without it reads as a claim that the journey works today.
-- **A missing step is drawn, not dropped.** `NOT BUILT` and `NOT RULED` are outputs; silence
-  is not.
+- **A gap is drawn on the story, not dropped, and not put on the step.** `status: gap` and an
+  unresolved `question:` are outputs at story grain; a step is too coarse a unit to be
+  in-or-out. Silence is not an output.
+- **`exists` without `evidence` does not pass.** The `exists-without-evidence` lint exists
+  because a status typed with no proof behind it is worse than no status at all.
 - **Defects are not constraints, and unruled options are not constraints.**
 - **Never present local or unit evidence as journey evidence.** If nothing has been deployed
   or exercised end to end, the status card says exactly that.
@@ -122,8 +130,8 @@ route can reach.
 
 ## Verify before presenting
 
-- Every column has all three cells; every System Flow cell has a citation.
-- Column count in lane 2 and lane 3 equals column count in lane 1.
+- Every story carries a `status`; every `exists` story carries `evidence`.
+- `node lib/journey-lint.mjs <file>` exits 0 — run it, do not eyeball the file for gaps.
 - The status card names merge and deployment state.
 - The exported image was opened and read, not just written.
 - Check mode: every mismatch row names a file or route, not an impression.
