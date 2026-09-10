@@ -1,0 +1,40 @@
+[
+  {
+    "name": "focused",
+    "argv": [
+      "go",
+      "test",
+      "./internal/status",
+      "./internal/gates",
+      "-run",
+      "TestMergeGuard|TestFinalizeTerminalApproval|TestTerminalDelivery",
+      "-count=1",
+      "-json"
+    ],
+    "rc": 0,
+    "elapsed_seconds": 11.64540887484327,
+    "test_counts": {
+      "pass": 48,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  {
+    "name": "full",
+    "rc": 130,
+    "status": "interrupted_on_first_officer_scope_stop_no_candidate"
+  },
+  {
+    "name": "race",
+    "status": "not_run_no_candidate"
+  },
+  {
+    "name": "gofmt",
+    "status": "not_run_no_product_edits"
+  },
+  {
+    "name": "build",
+    "rc": 0,
+    "status": "local_base_binary_only"
+  }
+]

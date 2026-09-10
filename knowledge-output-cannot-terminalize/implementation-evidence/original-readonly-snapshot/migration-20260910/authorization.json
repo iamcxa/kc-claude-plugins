@@ -1,0 +1,22 @@
+{
+  "record_type": "Captain-authorized migration of stranded legacy stage",
+  "recorded_at": "2026-09-10T09:27:13.669006+00:00",
+  "authority": "Kent, current Conductor conversation",
+  "authorization_messages": [
+    "\u540c\u610f (repair obstacles and rerun)",
+    "\u90a3\u5c31\u5148\u66f4\u65b0\u672c\u5730\u5230\u9060\u7aef main \u7248\u672c\uff0c\u56e0\u70ba\u9084\u6c92\u767c\u5e03\u65b0\u7248",
+    "\u7e7c\u7e8c (after local update and stated next step: legacy-pin migration and rerun)"
+  ],
+  "scope": "Continue the same event-query-v1 POC on the newly installed exact-main runtime. Preserve failed attempt evidence and the original pin; one renewed manual attempt, one cloud baseline maximum, 20 aggregate active actor minutes, same model and cases, no automatic retries. Existing final Captain gate remains unapproved.",
+  "old_pin": "implementation-stage-pin.json",
+  "old_pin_sha256": "9efcf36ef17fd7786ee040557f966ead75afa1305f09145103103d93d324c69e",
+  "original_pinned_snapshot": "migration-20260910/original-pinned-work-item.md",
+  "stopped_snapshot": "migration-20260910/index.md",
+  "new_pin": "implementation-resumed-stage-pin.json",
+  "new_attempt": "implementation/2",
+  "new_plugin_source_commit": "c2c62bf9dff5c3af1e27eb643a15eadf9023485f",
+  "new_plugin_version_label": "4.3.0",
+  "migration_rule": "MIGRATION.md requires separately recorded Captain-authorized migration preserving original snapshot and pin; no blanket loader override. This explicit migration does not mutate or delete the old pin.",
+  "scope_unchanged": true,
+  "cloud_launches_before_migration": 0
+}

@@ -374,3 +374,31 @@ The existing defect owner now carries the approved standalone Development Brief,
 ### Summary
 
 The approved native knowledge-delivery shape is ready for the implementation handoff; no research, probes or product edits were repeated. Remaining dependencies are live base/file-count confirmation, implementation and fresh AC-1 through AC-5 proof within three upstream files/250 gross lines plus the separate one-file/40-line local correction; original-task terminalization and cleanup remain separately owned.
+
+
+## Stage Report: implementation
+
+- FAILED: Implement the approved explicit native knowledge-delivery route with real bound terminal approval/evidence and refusal controls; preserve existing product delivery behavior.
+  Scope stop before product edits: [decisive native seam and proposed exact reshape](knowledge-output-cannot-terminalize/implementation-evidence/scope-stop.md); existing writer cannot bind a prechecked knowledge predicate without extending the approved file boundary.
+- FAILED: Prove archive-once and interrupted-publication recovery plus copied original experiment snapshot, retaining raw outputs and source hashes without mutating real approval or resources.
+  Original-copy baseline reproduced blocked/pending; no corrected candidate exists, so positive/archive/recovery proof is absent. All 18 real source files match retained hashes; cloud/resource operations zero.
+- SKIPPED: Apply the narrow local mod correction only after executable support, run required focused/full/race checks, and return exact uncommitted diffs for Captain confirmation.
+  No executable support; local mod stays unchanged. Existing focused tests 48 pass/0 fail; full suite interrupted at First Officer scope stop; race/gofmt and local contract deferred with no candidate.
+
+### Acceptance evidence
+
+- AC-1: NOT SATISFIED. [Copied original raw outputs](knowledge-output-cannot-terminalize/implementation-evidence/copied-original-baseline.json): baseline rc=0/signal=blocked; proposed explicit flag rc=1/unknown argument; no finalized candidate.
+- AC-2: NOT SATISFIED. Missing exact-attempt/digest consumer constraint and full-entity comparison are source-proven at gates/delivery.go:26-48 and gates/io.go:313-369; proposed falsifiers are documented, not claimed executed.
+- AC-3: BASELINE ONLY. [Focused tests](knowledge-output-cannot-terminalize/implementation-evidence/checks.json) exercise merged/open/malformed sentinels, native gate refusal and one locked approval replacement; changing these behaviors would fail their existing outcome/state assertions. 48 passed, zero failed; unchanged product code is not knowledge support.
+- AC-4: NOT SATISFIED. No knowledge candidate exists; archive-once, publication interruption, conflict and native resume are deferred, not inferred from baseline checks.
+- AC-5: PARTIAL. [Source hashes](knowledge-output-cannot-terminalize/implementation-evidence/original-source-hashes.json), byte-identical readonly snapshot and [post-probe readback](knowledge-output-cannot-terminalize/implementation-evidence/scope-stop-readback.json) prove original task/briefings/pins/evidence unchanged. Existing semantic archival approval persists; a new typed declaration is not machine-bound and requires explicit native rebinding by its owner.
+
+### Exact candidate and boundary
+
+- Upstream base: af70297ddae6ec64444849e8e3fcf57484bc16e1; COORD base: c9c5752fda853737d4a937ad7f59564c5651ca53. Both isolated product trees clean; both empty diff SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855; 0 changed files/0 gross lines.
+- Proposed reshape only: add gates/delivery.go, gates/delivery_test.go, gates/io.go and cli/help.go to the original three upstream files; estimate 455-635 gross lines, proposed stop 7 files/650 gross lines. Local consumer retains 1 file/40 gross lines. No new gate schema/protocol, installation, product commit, external delivery, paid execution or subagents.
+- RoboRev observation: UNAVAILABLE (no committed candidate); zero requests, zero confirmations. Surface map and independent candidate review are inapplicable until a candidate exists. Required full/race/format exit checks remain outstanding.
+
+### Summary
+
+Implementation is incomplete and stopped at the explicit additional-consumer/file scope boundary, accepted by the First Officer. The existing frozen Briefing remains immutable evidence but does not supply a typed knowledge-delivery predicate; the smallest proposed repair extends the existing locked consumer and its tests, with exact authority and whole-entity drift checks, then reuses native archive/publication. The original task and approvals were preserved; no product changes were made.

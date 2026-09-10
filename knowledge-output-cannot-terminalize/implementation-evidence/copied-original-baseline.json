@@ -1,0 +1,79 @@
+{
+  "disposable_copy": true,
+  "no_remote": true,
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm",
+  "binary_sha256": "31502374bad61489ef77675bc7e95bb019f2cac1bcd6768858e797fd79ed17fa",
+  "results": [
+    {
+      "label": "clone-readonly-source",
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-hardlinks",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev/.spacedock-state"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev/.spacedock-state'...\ndone.\n"
+    },
+    {
+      "label": "remove-copy-remote",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev/.spacedock-state",
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "copied-original-baseline",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev",
+        "--verdict",
+        "passed",
+        "--json"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"first-cloud-dev-flow-improvement-run\",\"signal\":\"blocked\",\"action\":\"await-pr\",\"pr\":\"local-merge:accepted-cloud-experiment-change-outcome-no-product-diff\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "copied-original-explicit-route-absent",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev",
+        "--delivery",
+        "knowledge",
+        "--verdict",
+        "passed",
+        "--json"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: unknown argument: --delivery\n"
+    },
+    {
+      "label": "readback",
+      "active_exists": true,
+      "archive_exists": false,
+      "unchanged": true,
+      "task_sha256": "2431bae3b5c6127ee06a38835ab8825a950d325e5db8b1f10f44cba64b47eff8"
+    }
+  ]
+}
