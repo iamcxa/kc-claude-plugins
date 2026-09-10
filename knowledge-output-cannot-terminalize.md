@@ -2,9 +2,9 @@
 id: geef7a3dy7w12g7tq89h21te
 title: "Work whose output is knowledge cannot terminalize: pr-merge requires a merged PR that such work never has"
 status: backlog
-source: "Blocked while closing digest-effect-unmeasured, 2026-08-20. That task's accepted output was a measurement verdict, not a diff. It has no PR and no worktree, and the mechanism refused its terminal transition: 'workflow has merge hook(s) [pr-merge] that have not run (pr field is empty and mod-block is empty)'."
+source:
 product: repo-platform
-sprint:
+sprint: S8
 started:
 completed:
 verdict:
@@ -12,6 +12,7 @@ worktree:
 issue:
 pr:
 mod-block:
+sprint-readiness: ready
 ---
 
 ## Historical problem and investigation
