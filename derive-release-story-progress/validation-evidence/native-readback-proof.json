@@ -1,0 +1,9 @@
+{
+  "originalSourceSha256": "89762e4e8bc69c9f545712ecb72f860ac0668457da146f03958d446fa423bdd3",
+  "readbackSha256": "977bed83013e73b8144e368cdd36fbcca691931fac7f8db26cf6d63e2b2f6d48",
+  "exactOnlyChange": "card: Review required work -> card: Review every required task before acceptance",
+  "authored": "exists",
+  "derived": "gap",
+  "border": "red",
+  "inputMethod": "programmatic editor selection/enter-edit; native textbox keyboard Meta+A and typing; Escape; real page reload; no programmatic richText update"
+}

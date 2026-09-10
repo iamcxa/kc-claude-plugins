@@ -1,0 +1,4099 @@
+{
+  "roomId": "progress-validation-native",
+  "snapshot": {
+    "tombstoneHistoryStartsAtClock": 0,
+    "documentClock": 2,
+    "documents": [
+      {
+        "state": {
+          "gridSize": 10,
+          "name": "",
+          "meta": {},
+          "id": "document:document",
+          "typeName": "document"
+        },
+        "lastChangedClock": 0
+      },
+      {
+        "state": {
+          "id": "page:page",
+          "typeName": "page",
+          "name": "Story map",
+          "index": "a1",
+          "meta": {}
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:sm-persona",
+          "typeName": "shape",
+          "x": 20,
+          "y": 40,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "persona",
+              "kind": "persona"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 250,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "PERSONA"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Release owner"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-beta-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:sm-story-beta",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "beta"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-gamma-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:sm-story-gamma",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "gamma"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-exists-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:page-status-legend-exists",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-gap-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:page-status-legend-gap",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-unverified-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:page-status-legend-unverified",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "page:jm-board-R1",
+          "typeName": "page",
+          "name": "First release \u2014 stories, flow & constraints",
+          "index": "a5",
+          "meta": {}
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-lane-activity",
+          "typeName": "shape",
+          "x": 20,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-activity",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "ACTIVITIES"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared groups"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-story-beta-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-R1-story-beta",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "beta"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-exists-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R1-status-legend-exists",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-gap-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R1-status-legend-gap",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-unverified-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R1-status-legend-unverified",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "page:jm-board-R2",
+          "typeName": "page",
+          "name": "Next release \u2014 stories, flow & constraints",
+          "index": "a6",
+          "meta": {}
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-lane-activity",
+          "typeName": "shape",
+          "x": 20,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-activity",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "ACTIVITIES"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared groups"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-story-gamma-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-R2-story-gamma",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "gamma"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-exists-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R2-status-legend-exists",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-gap-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R2-status-legend-gap",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-unverified-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-board-R2-status-legend-unverified",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "legend-border",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 1
+      },
+      {
+        "state": {
+          "id": "shape:sm-one-journey",
+          "typeName": "shape",
+          "x": 300,
+          "y": 168,
+          "rotation": 0,
+          "index": "a2kSQ",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "one-journey",
+              "kind": "one-journey"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 700,
+            "h": 60,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "ONE JOURNEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect task progress, then decide what still needs acceptance."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-act-review",
+          "typeName": "shape",
+          "x": 300,
+          "y": 238,
+          "rotation": 0,
+          "index": "a3ehj",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "review",
+              "kind": "activity"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "green",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-act-inspect",
+          "typeName": "shape",
+          "x": 540,
+          "y": 238,
+          "rotation": 0,
+          "index": "a4dR6",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "inspect",
+              "kind": "activity"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "green",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect results"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-act-clarify",
+          "typeName": "shape",
+          "x": 780,
+          "y": 238,
+          "rotation": 0,
+          "index": "a51WQ",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "clarify",
+              "kind": "activity"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "green",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Clarify scope"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-rellabel-R1",
+          "typeName": "shape",
+          "x": 20,
+          "y": 498,
+          "rotation": 0,
+          "index": "a67SU",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "R1",
+              "kind": "release-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 250,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "First release"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review and inspect the required work."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph"
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1/2 stories development-complete"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "delivery acceptance not established"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-alpha",
+          "typeName": "shape",
+          "x": 300,
+          "y": 498,
+          "rotation": 0,
+          "index": "a7LRr",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "alpha",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R1",
+                "story": "alpha",
+                "status": "gap",
+                "requiredTasks": 2,
+                "doneTasks": 1,
+                "taskIds": [
+                  "000000000000000000000001",
+                  "000000000000000000000002"
+                ]
+              },
+              "status": "exists"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review required work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-beta",
+          "typeName": "shape",
+          "x": 540,
+          "y": 498,
+          "rotation": 0,
+          "index": "a8LOE",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "beta",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R1",
+                "story": "beta",
+                "status": "exists",
+                "requiredTasks": 1,
+                "doneTasks": 1,
+                "taskIds": [
+                  "000000000000000000000003"
+                ]
+              },
+              "status": "gap"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect completed work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-relline-R2",
+          "typeName": "shape",
+          "x": 20,
+          "y": 788,
+          "rotation": 0,
+          "index": "a9XnA",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "R2",
+              "kind": "release-line"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 1020,
+            "h": 5,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "solid",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-rellabel-R2",
+          "typeName": "shape",
+          "x": 20,
+          "y": 828,
+          "rotation": 0,
+          "index": "aAvUL",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "R2",
+              "kind": "release-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 250,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Next release"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Clarify unmapped work."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph"
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "0/1 stories development-complete"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "delivery acceptance not established"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-gamma",
+          "typeName": "shape",
+          "x": 780,
+          "y": 828,
+          "rotation": 0,
+          "index": "aBbUD",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "gamma",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R2",
+                "story": "gamma",
+                "status": "unverified",
+                "requiredTasks": 0,
+                "doneTasks": 0,
+                "taskIds": [],
+                "diagnostic": "One confirmed complete mapping is required"
+              },
+              "status": "exists"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect unknown work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:sm-story-alpha-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:sm-story-alpha",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "alpha"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-exists",
+          "typeName": "shape",
+          "x": 300,
+          "y": -290,
+          "rotation": 0,
+          "index": "aCGb6",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT COMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "pending delivery acceptance"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-gap",
+          "typeName": "shape",
+          "x": 680,
+          "y": -290,
+          "rotation": 0,
+          "index": "aDIZU",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT INCOMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "required task work remains"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-unverified",
+          "typeName": "shape",
+          "x": 1060,
+          "y": -290,
+          "rotation": 0,
+          "index": "aEHvQ",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT UNVERIFIED"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "mapping or observation uncertain"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:page-status-legend-caption",
+          "typeName": "shape",
+          "x": 300,
+          "y": -190,
+          "rotation": 0,
+          "index": "aFNY2",
+          "parentId": "page:page",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend-caption",
+              "nodeId": "status-legend"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 1120,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT PROGRESS \u2014 local Spacedock tasks"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Observed: 2026-09-10T16:57:56.398Z"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Source: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-validation/workflow"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Task completion is not delivery acceptance or proof of usability."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-lane-journey",
+          "typeName": "shape",
+          "x": 20,
+          "y": 128,
+          "rotation": 0,
+          "index": "a2E4M",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-journey",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "RELEASE STORIES"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "what a person can do"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-lane-evidence",
+          "typeName": "shape",
+          "x": 20,
+          "y": 348,
+          "rotation": 0,
+          "index": "a3KPM",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-evidence",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "STORY EVIDENCE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "evidence and open questions"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-lane-system",
+          "typeName": "shape",
+          "x": 20,
+          "y": 620,
+          "rotation": 0,
+          "index": "a4zyy",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-system",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 180,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SYSTEM FLOW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared by the activity; story mapping not recorded"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-lane-constraints",
+          "typeName": "shape",
+          "x": 20,
+          "y": 840,
+          "rotation": 0,
+          "index": "a5SU1",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-constraints",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "CONSTRAINTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared by the activity; story mapping not recorded"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-card-review",
+          "typeName": "shape",
+          "x": 320,
+          "y": 0,
+          "rotation": 0,
+          "index": "a617j",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "review",
+              "kind": "activity"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-story-alpha",
+          "typeName": "shape",
+          "x": 370,
+          "y": 128,
+          "rotation": 0,
+          "index": "a7av6",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "alpha",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R1",
+                "story": "alpha",
+                "status": "gap",
+                "requiredTasks": 2,
+                "doneTasks": 1,
+                "taskIds": [
+                  "000000000000000000000001",
+                  "000000000000000000000002"
+                ]
+              },
+              "status": "exists"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review required work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-proof-alpha",
+          "typeName": "shape",
+          "x": 360,
+          "y": 348,
+          "rotation": 0,
+          "index": "a8afM",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "alpha",
+              "kind": "story-proof"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 220,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Local tasks: 1/2 done"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "000000000000000000000001, 000000000000000000000002"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Evidence: Authored evidence remains separate"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-sys-review",
+          "typeName": "shape",
+          "x": 320,
+          "y": 620,
+          "rotation": 0,
+          "index": "a9jdr",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "review",
+              "kind": "system"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 180,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "black",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONTEXT"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No system flow recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-rules-review",
+          "typeName": "shape",
+          "x": 320,
+          "y": 840,
+          "rotation": 0,
+          "index": "aAchj",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "review",
+              "kind": "constraints"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONSTRAINTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No constraints recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-card-inspect",
+          "typeName": "shape",
+          "x": 680,
+          "y": 0,
+          "rotation": 0,
+          "index": "aBt9U",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "inspect",
+              "kind": "activity"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect results"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-story-beta",
+          "typeName": "shape",
+          "x": 730,
+          "y": 128,
+          "rotation": 0,
+          "index": "aCq9z",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "beta",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R1",
+                "story": "beta",
+                "status": "exists",
+                "requiredTasks": 1,
+                "doneTasks": 1,
+                "taskIds": [
+                  "000000000000000000000003"
+                ]
+              },
+              "status": "gap"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect completed work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-proof-beta",
+          "typeName": "shape",
+          "x": 720,
+          "y": 348,
+          "rotation": 0,
+          "index": "aDzzaV",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "beta",
+              "kind": "story-proof"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 220,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Local tasks: 1/1 done"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "000000000000000000000003"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No story evidence recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-sys-inspect",
+          "typeName": "shape",
+          "x": 680,
+          "y": 620,
+          "rotation": 0,
+          "index": "aEP7j",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "inspect",
+              "kind": "system"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 180,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "black",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONTEXT"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No system flow recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-rules-inspect",
+          "typeName": "shape",
+          "x": 680,
+          "y": 840,
+          "rotation": 0,
+          "index": "aF7mv",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "inspect",
+              "kind": "constraints"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONSTRAINTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No constraints recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-status",
+          "typeName": "shape",
+          "x": 320,
+          "y": 1100,
+          "rotation": 0,
+          "index": "aGUFy",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "status",
+              "kind": "status"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 660,
+            "h": 112,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "STATUS \u2014 as of unknown date"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Unproven: Disposable fixture only; no real project delivery acceptance."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-release",
+          "typeName": "shape",
+          "x": 320,
+          "y": -224,
+          "rotation": 0,
+          "index": "aHU83",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "R1",
+              "kind": "release-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 660,
+            "h": 184,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "http://localhost:3737/?room=progress-validation-native&d=v0.0.1.1.page",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "First release"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Review and inspect the required work."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph"
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1/2 stories development-complete"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "delivery acceptance not established"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "\u2190 back to the story map"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R1-story-alpha-status-border",
+          "typeName": "shape",
+          "x": 0,
+          "y": 0,
+          "rotation": 0,
+          "index": "a1",
+          "parentId": "shape:jm-R1-story-alpha",
+          "isLocked": true,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "story-border",
+              "nodeId": "alpha"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 200,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "solid",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "xl",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph"
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-exists",
+          "typeName": "shape",
+          "x": 300,
+          "y": -514,
+          "rotation": 0,
+          "index": "aIn12",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT COMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "pending delivery acceptance"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-gap",
+          "typeName": "shape",
+          "x": 680,
+          "y": -514,
+          "rotation": 0,
+          "index": "aJHPI",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT INCOMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "required task work remains"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-unverified",
+          "typeName": "shape",
+          "x": 1060,
+          "y": -514,
+          "rotation": 0,
+          "index": "aKNPM",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT UNVERIFIED"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "mapping or observation uncertain"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R1-status-legend-caption",
+          "typeName": "shape",
+          "x": 300,
+          "y": -414,
+          "rotation": 0,
+          "index": "aLa7b",
+          "parentId": "page:jm-board-R1",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend-caption",
+              "nodeId": "status-legend"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 1120,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT PROGRESS \u2014 local Spacedock tasks"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Observed: 2026-09-10T16:57:56.398Z"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Source: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-validation/workflow"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Task completion is not delivery acceptance or proof of usability."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-lane-journey",
+          "typeName": "shape",
+          "x": 20,
+          "y": 128,
+          "rotation": 0,
+          "index": "a2SSr",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-journey",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 200,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "RELEASE STORIES"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "what a person can do"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-lane-evidence",
+          "typeName": "shape",
+          "x": 20,
+          "y": 348,
+          "rotation": 0,
+          "index": "a3yvf",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-evidence",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "STORY EVIDENCE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "evidence and open questions"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-lane-system",
+          "typeName": "shape",
+          "x": 20,
+          "y": 620,
+          "rotation": 0,
+          "index": "a4l7z",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-system",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 180,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SYSTEM FLOW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared by the activity; story mapping not recorded"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-lane-constraints",
+          "typeName": "shape",
+          "x": 20,
+          "y": 840,
+          "rotation": 0,
+          "index": "a5Orz",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "lane-constraints",
+              "kind": "lane-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 270,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "CONSTRAINTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "shared by the activity; story mapping not recorded"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-card-clarify",
+          "typeName": "shape",
+          "x": 320,
+          "y": 0,
+          "rotation": 0,
+          "index": "a6Xfn",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "clarify",
+              "kind": "activity"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 88,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Clarify scope"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-story-gamma",
+          "typeName": "shape",
+          "x": 370,
+          "y": 128,
+          "rotation": 0,
+          "index": "a7U6y",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "gamma",
+              "kind": "story",
+              "progress": {
+                "journey": "demo",
+                "release": "R2",
+                "story": "gamma",
+                "status": "unverified",
+                "requiredTasks": 0,
+                "doneTasks": 0,
+                "taskIds": [],
+                "diagnostic": "One confirmed complete mapping is required"
+              },
+              "status": "exists"
+            }
+          },
+          "type": "note",
+          "props": {
+            "color": "yellow",
+            "size": "m",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "labelColor": "black",
+            "growY": 0,
+            "fontSizeAdjustment": 1,
+            "url": "",
+            "scale": 1,
+            "textLastEditedBy": null,
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Inspect unknown work"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-proof-gamma",
+          "typeName": "shape",
+          "x": 360,
+          "y": 348,
+          "rotation": 0,
+          "index": "a8yBE",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "gamma",
+              "kind": "story-proof"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 220,
+            "h": 232,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Local tasks: 0/0 done"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "One confirmed complete mapping is required"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Evidence: Authored evidence remains separate"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-sys-clarify",
+          "typeName": "shape",
+          "x": 320,
+          "y": 620,
+          "rotation": 0,
+          "index": "a91uQ",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "clarify",
+              "kind": "system"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 180,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "black",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONTEXT"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No system flow recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-rules-clarify",
+          "typeName": "shape",
+          "x": 320,
+          "y": 840,
+          "rotation": 0,
+          "index": "aAMIb",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "clarify",
+              "kind": "constraints"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 300,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "SHARED ACTIVITY CONSTRAINTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "No constraints recorded."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-status",
+          "typeName": "shape",
+          "x": 320,
+          "y": 1100,
+          "rotation": 0,
+          "index": "aB8tn",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "status",
+              "kind": "status"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 600,
+            "h": 112,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "STATUS \u2014 as of unknown date"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Unproven: Disposable fixture only; no real project delivery acceptance."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-R2-release",
+          "typeName": "shape",
+          "x": 320,
+          "y": -224,
+          "rotation": 0,
+          "index": "aCaWI",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "nodeId": "R2",
+              "kind": "release-label"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 600,
+            "h": 184,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "http://localhost:3737/?room=progress-validation-native&d=v0.0.1.1.page",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "blue",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "start",
+            "verticalAlign": "start",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Next release"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Clarify unmapped work."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph"
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "0/1 stories development-complete"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "delivery acceptance not established"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "\u2190 back to the story map"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-exists",
+          "typeName": "shape",
+          "x": 300,
+          "y": -514,
+          "rotation": 0,
+          "index": "aDNDz",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "exists"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "green",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT COMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "pending delivery acceptance"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-gap",
+          "typeName": "shape",
+          "x": 680,
+          "y": -514,
+          "rotation": 0,
+          "index": "aExKv",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "gap"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "red",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT INCOMPLETE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "required task work remains"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-unverified",
+          "typeName": "shape",
+          "x": 1060,
+          "y": -514,
+          "rotation": 0,
+          "index": "aFkhQ",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend",
+              "nodeId": "unverified"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 360,
+            "h": 90,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "violet",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT UNVERIFIED"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "mapping or observation uncertain"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      },
+      {
+        "state": {
+          "id": "shape:jm-board-R2-status-legend-caption",
+          "typeName": "shape",
+          "x": 300,
+          "y": -414,
+          "rotation": 0,
+          "index": "aGKsQ",
+          "parentId": "page:jm-board-R2",
+          "isLocked": false,
+          "opacity": 1,
+          "meta": {
+            "journey": {
+              "kind": "status-legend-caption",
+              "nodeId": "status-legend"
+            }
+          },
+          "type": "geo",
+          "props": {
+            "w": 1120,
+            "h": 160,
+            "geo": "rectangle",
+            "dash": "draw",
+            "growY": 0,
+            "url": "",
+            "scale": 1,
+            "flipX": false,
+            "flipY": false,
+            "color": "grey",
+            "labelColor": "black",
+            "fill": "none",
+            "size": "s",
+            "font": "draw",
+            "align": "middle",
+            "verticalAlign": "middle",
+            "richText": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "DEVELOPMENT PROGRESS \u2014 local Spacedock tasks"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Observed: 2026-09-10T16:57:56.398Z"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Source: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-validation/workflow"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Task completion is not delivery acceptance or proof of usability."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "lastChangedClock": 2
+      }
+    ],
+    "tombstones": {},
+    "schema": {
+      "schemaVersion": 2,
+      "sequences": {
+        "com.tldraw.store": 5,
+        "com.tldraw.asset": 1,
+        "com.tldraw.camera": 1,
+        "com.tldraw.document": 2,
+        "com.tldraw.instance": 26,
+        "com.tldraw.instance_page_state": 5,
+        "com.tldraw.page": 1,
+        "com.tldraw.instance_presence": 6,
+        "com.tldraw.pointer": 1,
+        "com.tldraw.shape": 4,
+        "com.tldraw.user": 1,
+        "com.tldraw.asset.image": 6,
+        "com.tldraw.asset.video": 5,
+        "com.tldraw.asset.bookmark": 2,
+        "com.tldraw.shape.arrow": 8,
+        "com.tldraw.shape.bookmark": 2,
+        "com.tldraw.shape.draw": 5,
+        "com.tldraw.shape.embed": 4,
+        "com.tldraw.shape.frame": 1,
+        "com.tldraw.shape.geo": 12,
+        "com.tldraw.shape.group": 0,
+        "com.tldraw.shape.highlight": 4,
+        "com.tldraw.shape.image": 5,
+        "com.tldraw.shape.line": 5,
+        "com.tldraw.shape.note": 13,
+        "com.tldraw.shape.text": 4,
+        "com.tldraw.shape.video": 4,
+        "com.tldraw.binding.arrow": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "candidateManifestSha256": "f0261937f5c5a92455add6e86215c1a7d2444dec1b6fcd6e3e70bbe537128e99",
+  "head": "bc51b2464659594d3c06806442c77ec15319962b",
+  "branch": "codex/journey-progress",
+  "allTenHashesMatch": {
+    "kc-journey-map/lib/journey-progress.mjs": true,
+    "kc-journey-map/lib/progress.mjs": true,
+    "kc-journey-map/lib/progress.test.mjs": true,
+    "kc-journey-map/lib/records.mjs": true,
+    "kc-journey-map/lib/render.mjs": true,
+    "kc-journey-map/lib/storymap.mjs": true,
+    "kc-journey-map/skills/kc-journey-map/SKILL.md": true,
+    "kc-journey-map/skills/kc-journey-map/references/canvas.md": true,
+    "kc-journey-map/skills/kc-journey-map/references/cell-contract.md": true,
+    "kc-journey-map/skills/kc-journey-progress/SKILL.md": true
+  },
+  "indexEmpty": true,
+  "scope": [
+    {
+      "path": "kc-journey-map/lib/journey-progress.mjs",
+      "added": 28,
+      "deleted": 0
+    },
+    {
+      "path": "kc-journey-map/lib/progress.mjs",
+      "added": 97,
+      "deleted": 0
+    },
+    {
+      "path": "kc-journey-map/lib/progress.test.mjs",
+      "added": 174,
+      "deleted": 0
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "added": 23,
+      "deleted": 5
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "added": 17,
+      "deleted": 13
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "added": 6,
+      "deleted": 8
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+      "added": 4,
+      "deleted": 0
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+      "added": 16,
+      "deleted": 1
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+      "added": 10,
+      "deleted": 0
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-progress/SKILL.md",
+      "added": 58,
+      "deleted": 0
+    }
+  ],
+  "totalChangedLines": 460,
+  "readerCliLines": 125,
+  "preservedArtifactsWithChangedBytes": [
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-probe/rooms/progress-all-done.db",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress/.context/progress-probe/rooms/progress-mixed.db"
+  ],
+  "mixedRecordsAfterProducerClock4": [
+    [
+      "user:5Rq2BcKGoGor_FEqHzP_k",
+      5
+    ]
+  ],
+  "originalSourceAndTasksUnchanged": true,
+  "stateBranch": "spacedock-state/dev"
+}

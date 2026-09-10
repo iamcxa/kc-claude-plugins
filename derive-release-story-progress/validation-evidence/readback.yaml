@@ -1,0 +1,36 @@
+journey: demo
+persona: Release owner
+one_journey: Inspect task progress, then decide what still needs acceptance.
+releases:
+  - id: R1
+    name: First release
+    goal: Review and inspect the required work.
+  - id: R2
+    name: Next release
+    goal: Clarify unmapped work.
+steps:
+  - id: review
+    card: Review work
+    stories:
+      - id: alpha
+        card: Review every required task before acceptance
+        release: R1
+        status: exists
+        evidence: Authored evidence remains separate
+  - id: inspect
+    card: Inspect results
+    stories:
+      - id: beta
+        card: Inspect completed work
+        release: R1
+        status: gap
+  - id: clarify
+    card: Clarify scope
+    stories:
+      - id: gamma
+        card: Inspect unknown work
+        release: R2
+        status: exists
+        evidence: Authored evidence remains separate
+status:
+  unproven: Disposable fixture only; no real project delivery acceptance.
