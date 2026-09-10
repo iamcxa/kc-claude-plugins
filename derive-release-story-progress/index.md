@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: implementation
+status: validation
 product: kc-journey-map
 source:
 planning-window:
