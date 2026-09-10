@@ -1,7 +1,7 @@
 ---
 id: geef7a3dy7w12g7tq89h21te
 title: "Work whose output is knowledge cannot terminalize: pr-merge requires a merged PR that such work never has"
-status: ideation
+status: implementation
 source:
 product: repo-platform
 sprint: S8
@@ -53,7 +53,7 @@ gates:
                 reason: Apply Kent current 批准 of the explicit native knowledge-delivery implementation design, transferred unchanged from approved Pilot ef2a0045 to this existing defect owner. Two shape handoff checks passed; implement the exact approved limits, product commits still require confirmation.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Historical problem and investigation
