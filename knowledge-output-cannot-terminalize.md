@@ -343,3 +343,15 @@ One upstream repair followed by its narrow existing-consumer prose correction is
 ### Summary
 
 The existing defect owner now carries the approved standalone Development Brief, v3 Pilot receipt and bounded shape using the already retained evidence. Historical claims are preserved and clearly separated from current authority. Product implementation, positive native proof and original experiment closure remain pending.
+
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Confirm the committed current Development Brief and already-approved shape match the native knowledge-delivery repair, preserving original task authority.
+  The current brief, Approved implementation shape and prior ideation report agree: AC-1 explicit approved knowledge finalization; AC-2 refusal controls; AC-3 genuine product-delivery semantics; AC-4 archive-once recovery; AC-5 copied-original proof. These are design mappings, not passing implementation evidence.
+- DONE: Validate installed profile loading against ideation/1 and report only unresolved implementation dependencies; do not repeat existing research or probes.
+  Installed 4.3.0 loader exited 0 against the committed ideation/1 pin: pilot-product-slice, shape, next implementation; contract digest cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558. The receipt, pin and approved authority bytes were preserved.
+
+### Summary
+
+The approved native knowledge-delivery shape is ready for the implementation handoff; no research, probes or product edits were repeated. Remaining dependencies are live base/file-count confirmation, implementation and fresh AC-1 through AC-5 proof within three upstream files/250 gross lines plus the separate one-file/40-line local correction; original-task terminalization and cleanup remain separately owned.
