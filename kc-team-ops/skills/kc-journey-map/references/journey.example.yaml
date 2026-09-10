@@ -9,7 +9,7 @@ title: Draw a map with this skill
 
 measured:
   ref: "branch iamcxa/journey-map-skill-merge, PR #394"
-  date: 2026-09-09
+  date: 2026-09-10
   repos: [kc-claude-plugins]
 
 persona: >
@@ -48,22 +48,30 @@ steps:
     card: "Renders it onto the one canvas board"
     activity: "Put it on a board"
     stories:
+      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: exists, evidence: AskUserQuestion}
+      - {id: default-to-the-journey-alone, card: "Get the user journey alone when nobody answers", release: r1, status: exists, evidence: DEFAULT_PROJECTIONS}
+      - {id: draw-the-journey-board-if-ask, card: "Draw the per-release journey board, but only if asked for it", release: r1, status: exists, evidence: buildJourneyBoard}
       - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}
       - {id: re-render-after-every-change, card: "Re-render after every change", release: r1, status: exists, evidence: renderToRoom}
       - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1, status: exists, evidence: toImage}
     system:
       - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
-      - "One room, one primary page: buildStoryMap from the model (buildFunctionMap joins it when a step is modelled)"
+      - "Which pages draw is a per-call choice, never a file property: buildAllPages(model, room, selection) defaults to story-map alone — even when the file models command/events, and even when selection is an explicit empty array"
+      - "journey-board is opt-in, not retired: buildJourneyBoard reproduces its pre-retirement per-release/whole-journey pages verbatim when selected"
       - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
     cites: [kc-claude-plugins]
-    rules: [board-is-a-cache, handmade-cards-survive]
-    command: "RenderJourney(journeyFile, roomId)"
+    rules: [board-is-a-cache, handmade-cards-survive, selection-is-per-call]
+    command: "RenderJourney(journeyFile, roomId, selection)"
     events:
       - "ShapesUpserted"
       - "OwnedShapesRemoved"
       - "RecordRejected"
     state: "the room document"
     readmodel: "the story map a person looks at"
+    note: >
+      journey-board drew for every release until b997dfdd retired it in favour of the
+      generated release contract; it is back here, but opt-in only — nothing selects it
+      unless the person (or the default) names it.
 
   - id: contract
     card: "Generates a per-release contract instead of a second board"
@@ -140,7 +148,7 @@ steps:
       - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3, status: exists, evidence: buildFunctionMap}
       - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: r3, status: gap, question: "readRoom never looks at page:jm-funcmap — is a fourth read path worth it, or does the function map stay generated-only?"}
     system:
-      - "lib/funcmap.mjs draws the page whenever a step carries command/events/state/readmodel; nothing reads it back yet"
+      - "lib/funcmap.mjs draws the page whenever function-map is selected — one row per step whether or not it is modelled (an unmodelled step draws '— not modelled —', not a blank); nothing reads it back yet"
     cites: [kc-claude-plugins]
     rules: [same-columns-new-lanes]
 
@@ -200,10 +208,12 @@ rules:
     text: "The function map keeps the journey's columns and swaps the lanes; it is not a second tool"
   - id: events-carry-order
     text: "Events carry causal order and story order does not, which is why a build order is derived from events"
+  - id: selection-is-per-call
+    text: "Which projections a render draws is chosen per call, never stored in the journey file — the same file renders one way for a stand-up and another for a release review"
 
 status:
   unproven: "A story's status, evidence and question are written by hand and not yet read back from an edit made on the canvas. Nothing here has been run by anyone but its author."
   unmerged: "PR #394 is a draft. Nothing here is on main."
   undeployed: "Nothing is deployed. The board is a local development environment only, per the tldraw licence."
   irreversible: "None. A room can be deleted and rebuilt from its file; the contract is regenerated, not edited."
-  as_of: 2026-09-09
+  as_of: 2026-09-10
