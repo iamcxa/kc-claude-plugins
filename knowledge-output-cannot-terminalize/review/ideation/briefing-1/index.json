@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:geef7a3dy7w12g7tq89h21te:ideation:attempt-1:revision-1",
+  "question": "Apply the Captain-approved upstream knowledge-delivery implementation design?",
+  "artifacts": [
+    {
+      "id": "artifact:geef7a3dy7w12g7tq89h21te:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/29c325f97477e6208c5a5720f5f9af8c6c5306d7/knowledge-output-cannot-terminalize.md",
+      "rev": "sha256:b4750a6d62aa846a4c22111434b9defa7252b271eccd013ce0c5246950fffc2c",
+      "mediaType": "text/markdown",
+      "summary": "Already-approved design transferred unchanged to existing defect owner; installed pinned shape validated. Implement bounded native explicit knowledge route, preserve product refusal, independent native evidence, and narrowly update consumer mod. Product commit remains separately confirmed."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:geef7a3dy7w12g7tq89h21te:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:geef7a3dy7w12g7tq89h21te:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:geef7a3dy7w12g7tq89h21te-ideation-1
+              briefing:
+                id: briefing:geef7a3dy7w12g7tq89h21te:ideation:attempt-1:revision-1
+                digest: sha256:56c26cade66a3ed12743b638879e0c7e3906a148cca2c3835e4187b68907ec28
+                room-ref: ./knowledge-output-cannot-terminalize/review/ideation/briefing-1
 ---
 
 ## Historical problem and investigation
