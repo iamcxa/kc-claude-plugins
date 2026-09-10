@@ -26,6 +26,17 @@ gates:
                 id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1
                 digest: sha256:0a602c42d8b37ea7b1b47e1afb24c4de0ead2a31e0dfa988f4bb23b04d441834
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:91n5fvm5qtpf6gxd4bwhxxkg:backlog:1
+                briefing: briefing:91n5fvm5qtpf6gxd4bwhxxkg:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:07:48.101427Z"
+                decision: approve
+                reason: Kent approved the concrete two-skill task scope with 那就按這樣繼續 and answered 可以 to adopting Pilot and the shape/build/verify route for this task. Admit this standalone brief to ideation only; the prior border commit and later implementation/delivery gates retain their authority.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
