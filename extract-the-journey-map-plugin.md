@@ -1,7 +1,7 @@
 ---
 id: g0nx8a1ht539e12e9jm54fbw
 title: Extract the journey map into its own publishable plugin
-status: backlog
+status: ideation
 source: captain
 product: kc-journey-map
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain: 開切票,然後切成新的 plugin — and named it kc-journey-map after being told the -flow suffix is reserved for staged workflows. He also ruled the plan line is out of scope for now: focus on finishing journey-map well, integrate with plan later.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
