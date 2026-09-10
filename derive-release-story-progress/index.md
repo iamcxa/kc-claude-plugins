@@ -85,13 +85,13 @@ gates:
                 at: "2026-09-10T18:49:46.913016Z"
                 reason: Kent explicitly requested the dev-flow kernel minimal-stack and without-it checks before local commit approval. The prior review proves behavior and recut safety, not complete minimal necessity; hold this proposal pending that bounded audit.
 review-round:
-    id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:2
+    id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:3
     stage: validation
-    cycle: 2
+    cycle: 3
     briefing:
-        id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:round-2
-        digest: sha256:d9fbef87fc1319ad03d9995cfa302097bae90853cd4c20ef07e94763f9d7e477
-        room-ref: ./review/validation/round-2
+        id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:round-3
+        digest: sha256:5c4768c7a9d3173fd2e6b1d06a9fa65cdb823af734c354c68e4f55b28c8dfddb
+        room-ref: ./review/validation/round-3
 ---
 
 ## The problem
