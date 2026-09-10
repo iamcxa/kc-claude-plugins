@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1",
+  "question": "Approve this bounded profile-selection repair design to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/6fc10e5d789c356e82c73660b835458d50e5b484/issue-393-profile-commitment-explanation/index.md",
+      "rev": "sha256:395495568e0e4d7beca4de48a38f62654c2f7e9a284e65c944dd6a12d97f4325",
+      "mediaType": "text/markdown",
+      "summary": "Three existing files repair task-specific commitment explanation and scope transfer. Six falsifiable cases distinguish disposable integration, limited real use, and accepted operational duties. Measured static maximum remains 39,991 of 40,000 bytes. Implementation and behavior acceptance are pending; the proposed later model exercise needs a separately approved provider and spend bound."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

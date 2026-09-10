@@ -42,6 +42,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T09:23:51.845042Z"
                 reason: Structured acceptance scan cannot locate AC-2, AC-3, or AC-4 in the report projection. The evidence exists below the Summary section but must be repaired by its report owner before a review can be presented; accepted scope is unchanged.
+            - id: gate-attempt:td0yhsww2jnwnrzh5c6wc6er-ideation-2
+              briefing:
+                id: briefing:td0yhsww2jnwnrzh5c6wc6er:ideation:attempt-2:revision-1
+                digest: sha256:59133c34c0735bc13868d806761ba1c6eab7267aa071df4bcee53dd34af2a55e
+                room-ref: ./review/ideation/briefing-2
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
