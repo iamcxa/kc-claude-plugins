@@ -6,7 +6,7 @@
  },
  "ship-verify-uat-close": {
   "message_sha256": "36bfef64834acea9fe87d386358b360dfdf25fad4d0d582d41a5d1d48f222a02",
-  "session": null,
-  "workspace": null
+  "session": "abc9855f-5b8a-42bb-8384-8f3e4d8a3fdd",
+  "workspace": "9081b7d7-e95a-4578-a166-01e2be6ad432"
  }
 }
