@@ -504,7 +504,7 @@ The approved integrated repair and local consumer correction are concrete, withi
 - AC-1: PASS. TestKnowledgeMergeNativeArchive freshly reports finalized/PASSED/consumed with no active entity; missing native archive integration would fail it.
 - AC-2: PASS for exercised native controls. Exact approval/successor/evidence/product/PR/whole-entity refusal cases preserve bytes; deleting the predicate allows forbidden consumption and fails those assertions.
 - AC-3: PASS. Fresh merge regression preserves genuine sentinels and refuses open/malformed/missing product proof; explicit knowledge does not reinterpret rejection.
-- AC-4: FAIL. `internal/status/merge.go:503-510` permits rollback of a stale snapshot read at line 756 and restored at line 805. [Independent raw failure](knowledge-output-cannot-terminalize/validation-evidence/rollback-prelock.json) shows peer edit in archived bytes before failed commit, absent after rollback. This is not the excluded hard crash.
+- AC-4: FAIL. `internal/status/merge.go:497-505` permits rollback of a stale snapshot read at line 750 and restored at line 803. [Independent raw failure](knowledge-output-cannot-terminalize/validation-evidence/rollback-prelock.json) shows peer edit in archived bytes before failed commit, absent after rollback. This is not the excluded hard crash.
 - AC-5: VERIFIED PRODUCER PROOF. [Readback](knowledge-output-cannot-terminalize/validation-evidence/copied-original-audit.json) matches retained copy archive hash/HEAD and consumed synthetic approval; baseline blocked, native test-only rebinding and publication resume are explicit. All 18 real original files unchanged; live rebinding/cleanup/final check remain separately owned.
 
 ### Exact candidate and residuals
