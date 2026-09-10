@@ -47,6 +47,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-09-10T13:41:14Z
+worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
 ---
 
 # Repair phase-aware POC close measurements
