@@ -1,6 +1,6 @@
 ---
 title: "Repair POC close measurement ordering"
-status: backlog
+status: ideation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -26,7 +26,7 @@ gates:
                 reason: Kent approved the bounded phase-aware close repair and selected the proposed Pilot profile with 同意 in the current conversation; no product commit, release, new cloud run, or terminal POC approval is implied.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 # Repair phase-aware POC close measurements
