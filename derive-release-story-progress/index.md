@@ -75,6 +75,14 @@ gates:
               application:
                 target-stage: done
                 state: pending
+review-round:
+    id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:round-1
+        digest: sha256:1c9cfbb4e4c92df1067bdb4e6fc27180ee98f42c0f420527515a2222be74f946
+        room-ref: ./review/validation/round-1
 ---
 
 ## The problem
