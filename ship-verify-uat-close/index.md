@@ -25,7 +25,7 @@ gates:
               briefing:
                 id: briefing:7efj5b0dh4dh7616yma4nykm:backlog:attempt-1:revision-1
                 digest: sha256:5e72e261ae2278e8489b44c8db3040afa3f475a72ae1729da40db721405e4d3f
-                room-ref: ./ship-verify-uat-close/review/backlog/briefing-1
+                room-ref: ./review/backlog/briefing-1
               resolution:
                 type: Resolution
                 id: resolution:spacedock:7efj5b0dh4dh7616yma4nykm:backlog:1
@@ -44,7 +44,7 @@ gates:
               briefing:
                 id: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1
                 digest: sha256:4047200f33c792d975771a7a4dd83b490edddcdefd2a33aa6706568f56349581
-                room-ref: ./ship-verify-uat-close/review/validation/briefing-1
+                room-ref: ./review/validation/briefing-1
               resolution:
                 type: Resolution
                 id: resolution:spacedock:7efj5b0dh4dh7616yma4nykm:validation:1
