@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: dispatch one cloud first officer per dev task and watch the set to its validation gates"
-status: backlog
+status: ideation
 source:
 product: kc-ship-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat: 「批」 2026-09-10'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 kc-ship-flow re-implemented per-task acceptance, PR opening, review disposition and merging that
