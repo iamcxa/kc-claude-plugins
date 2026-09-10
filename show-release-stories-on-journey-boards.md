@@ -309,6 +309,13 @@ Release means one delivered user-journey value with no fixed timebox. Kent autho
 - DONE: Preserve the candidate and user rooms; record release terminology intent, the authorized local scheduling exception, and deferred host-selection proof without expanding into plan-flow or the repository-wide field migration.
   No product or room mutation was performed; state-only report append preserves frontmatter and the stage pin. Deferred terminology and host work remain in this entity.
 
+- AC-1: Observed `render.mjs:29` base/candidate probe: zero versus one selected story record; `render.test.mjs` exercises yellow stories and once-per-activity context. Final browser layout remains validation work.
+- AC-2: Observed `lint.mjs:39`, `storymap.mjs:213`, `render.mjs:57` probes expose unsupported-status acceptance, absent badges and UNASSESSED; final three-state/count repair checks are designed above.
+- AC-3: Observed runtime-loaded `journey.example.yaml:51` still marks host selection gap; change to unverified and projection/count checks are designed, while actual host execution remains deferred.
+- AC-4: Observed `read.test.mjs` identity/conflict/legacy cases pass; the `applyDiff` temp-file probe overwrites newer activity wording. The existing guard extension and stale-edit refusal check remain implementation/validation work.
+- AC-5: Observed `read.test.mjs` release-detail movement refusal and story-map cross-band membership cases pass; final candidate must preserve these projection-specific semantics.
+- AC-6: Inherited smoke/browser save-as evidence is in Existing local observations; no new-status browser proof is claimed. Fresh three-page inspection and browser-to-server-to-separate-YAML checks remain designed above.
+
 ### Summary
 
 Recover the existing release-story candidate, finish the three-status model/projections/documentation/example, and extend its stale-wording guard to activity/card fields. The approved scope fits one Pilot slice with explicit refusal, mutation and browser checks; implementation authorization and final-candidate validation remain with the next workflow boundary.
