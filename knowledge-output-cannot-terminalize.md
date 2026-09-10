@@ -24,6 +24,17 @@ gates:
                 id: briefing:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1
                 digest: sha256:320aa73c1906dbd2c2a98b1bf2f9c16b3409b284e2da8c621e9ad32ec7ebd802
                 room-ref: ./knowledge-output-cannot-terminalize/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:geef7a3dy7w12g7tq89h21te:backlog:1
+                briefing: briefing:geef7a3dy7w12g7tq89h21te:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:27:17.921751Z"
+                decision: approve
+                reason: Kent approved the explicitly presented upstream native knowledge-delivery repair under this existing defect owner with 批准; this is durable admission of that same bounded scope and Pilot profile, not a new scope decision.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Historical problem and investigation
