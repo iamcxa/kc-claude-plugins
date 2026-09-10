@@ -276,6 +276,15 @@ poc_outcome:
 
 As of 2026-09-10T09:40:36Z, no terminal cleanup has been attempted (0 incurred seconds) and the real Captain close decision has not been requested by the parent yet (0 incurred wait seconds). These are observations to date, not final durations. Cloud workspace `56db4940-399c-4f86-9933-c8b0ce697a03` and its finished session remain retained with original evidence; cleanup is pending, not not-applicable. The installed schema accepts only complete/failed/not-applicable for terminal cleanup, so no truthful provisional complete record exists. Parent must supply actual final measurements after the human decision and cleanup; no approval is fabricated.
 
+The dated paragraph above describes the runtime before PR #412. The following pending values preserve truthful close observations after that repair; final durations remain unmeasured.
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: pending
+  terminal_cleanup_seconds: pending
+  cleanup_status: pending
+```
+
 ## Stage Report: implementation
 
 - DONE: Establish the fresh cloud workspace and immutable instruction/runtime boundary, or report the first invalid mandatory precondition with evidence.
@@ -330,6 +339,8 @@ The bounded experiment produced a local coordination falsifier before any cloud 
 - Evidence transport limit: session-message CLI truncates at 65536 bytes for huge echoed prompt events; retained exact original prompt avoids losing launch input. Available safe events are deduplicated by event ID, with explicit truncation list. Exported batched tool event preserves command and exit but only final git-status output; exact case bytes are owner-reported in final and remain as original cloud files. The inspected CLI help exposes no read-only workspace file/export operation; direct cloud captures were not downloaded. No independent retest was authorized or claimed.
 - Successful defaults: updated pin survives dispatch metadata; installed-runtime checks precede workload; direct profile avoids provider review; malformed fixture demonstrates no partial-output leak; cloud stops at human gate without shared-state mutation. Prior hash-refusal finding remains associated with existing issue 382; no issue/PR/review post, product push, schedule, merge or release occurred.
 - Cleanup/authority: safe prompt, launch JSON, available event transcript, final byte report, counters and hashes now retained outside disposable worktree in this task. Cloud resource and local worktree retained; no archive/deletion before the parent handles the unresolved Captain gate.
+
+Post-repair close preparation: PR #412 merged; the installed kc-dev-flow 4.3.0 package source is c9c5752fda853737d4a937ad7f59564c5651ca53. Pending wait and cleanup durations are truthful future observations. The outcome remains change; original cloud case proof stays owner-reported, and no new workload was executed. This reporting-only continuation preserves the historical pins and admitted scope; it is not a new stage dispatch, repin, approval or final-duration claim.
 
 ### Summary
 
