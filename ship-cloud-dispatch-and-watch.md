@@ -6,13 +6,13 @@ product: kc-ship-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper
-sprint-readiness: ready
+sprint-readiness: defer
 started: 2026-09-10T04:22:51Z
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-cloud-dispatch-and-watch
 issue:
-pr:
+pr: 406
 mod-block:
 id: zbkw7v9dsgxgf048qvrmxmwy
 gates:
