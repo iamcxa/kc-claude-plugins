@@ -1,0 +1,8 @@
+{
+  "task-gate-prepared": {"workspace": "ws-1", "session": "sess-gate-prepared", "message_sha256": "aa"},
+  "task-quota": {"workspace": "ws-2", "session": "sess-quota", "message_sha256": "bb"},
+  "task-question": {"workspace": "ws-3", "session": "sess-question", "message_sha256": "cc"},
+  "task-stopped": {"workspace": "ws-4", "session": "sess-stopped", "message_sha256": "dd"},
+  "task-resumed-after-quota": {"workspace": "ws-5", "session": "sess-resumed-after-quota", "message_sha256": "ee"},
+  "it's-a-slug": {"workspace": "ws-6", "session": "sess-quote-slug", "message_sha256": "ff"}
+}
