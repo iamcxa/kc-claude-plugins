@@ -1,6 +1,6 @@
 ---
 title: "Repair POC close measurement ordering"
-status: validation
+status: done
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -73,11 +73,14 @@ gates:
                 reason: Kent reviewed the validation and claim boundary, confirmed the exact five-file commit, then explicitly approved proceeding to PR delivery with 批准. Authorizes the validated candidate and Draft PR push/create; merge, release and original experiment close remain separate.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
-mod-block: merge:pr-merge
+mod-block:
 pr: pr-merge:412
+verdict: PASSED
+completed: 2026-09-10T15:23:06Z
+archived: 2026-09-10T15:23:06Z
 ---
 
 # Repair phase-aware POC close measurements
