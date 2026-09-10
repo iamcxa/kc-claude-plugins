@@ -27,6 +27,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-10T13:41:14Z
 ---
 
 # Repair phase-aware POC close measurements
