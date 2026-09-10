@@ -11,7 +11,7 @@ sprint-readiness: ready
 started: 2026-09-10T03:28:44Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-default-to-the-journey-alone
 issue:
 pr:
 mod-block:
