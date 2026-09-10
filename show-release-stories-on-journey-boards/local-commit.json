@@ -1,0 +1,13 @@
+{
+  "commit": "697525fe1e647dcea67663bc19b5519b70dfa5b3",
+  "subject": "feat(kc-journey-map): show release stories with honest evidence states",
+  "base": "1166747c22f0d6c62db098e5f8cad61bf81174bd",
+  "manifest_sha256": "4d60e58052bc34843c42f6a9fde0b3d4c390931462cedd2af270b19d6d72554b",
+  "file_count": 19,
+  "working_tree": "clean",
+  "scope": "authorized local commit only; product branch not pushed",
+  "authorization": "Kent approved the validation briefing and exact 19-file local commit in chat.",
+  "delivery": "Pending separate authority; no product push, new PR, merge, release or delivery acceptance.",
+  "validation_report_commit": "708d1b31",
+  "content_readback": "Every committed file SHA-256 matches the independently validated manifest; candidate checkout clean."
+}
