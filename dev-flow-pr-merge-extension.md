@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: rca7s3d89e103ajfdpbj2awe
+gates:
+    version: 1
+    records:
+        - id: gate:rca7s3d89e103ajfdpbj2awe:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:rca7s3d89e103ajfdpbj2awe-backlog-1
+              briefing:
+                id: briefing:rca7s3d89e103ajfdpbj2awe:backlog:attempt-1:revision-1
+                digest: sha256:9a9fe770e8ec617be54624960d7a672e40baaa857de5de6f53a948ed30dc4007
+                room-ref: ./dev-flow-pr-merge-extension/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:rca7s3d89e103ajfdpbj2awe:backlog:1
+                briefing: briefing:rca7s3d89e103ajfdpbj2awe:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T16:03:59.159189Z"
+                decision: approve
+                reason: 'Captain approved in chat: 「可以」 2026-09-11'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a

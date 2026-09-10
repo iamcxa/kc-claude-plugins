@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rca7s3d89e103ajfdpbj2awe:backlog:attempt-1:revision-1",
+  "question": "Admit dev-flow-pr-merge-extension into implementation under the POC profile?",
+  "artifacts": [
+    {
+      "id": "artifact:rca7s3d89e103ajfdpbj2awe:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f48326448e38845576e71444b91edb17b15c2aa2/dev-flow-pr-merge-extension/review/backlog/backlog-review.md",
+      "rev": "sha256:2f35f9c9a38cf8a07f434a16ff65d6bcaff2c7066100f215ad086c9990e090eb",
+      "mediaType": "text/markdown",
+      "summary": "kc-dev-flow-owned pr-merge extension resource; Residuals + without-it sections; adopters synced and checked"
+    }
+  ]
+}
