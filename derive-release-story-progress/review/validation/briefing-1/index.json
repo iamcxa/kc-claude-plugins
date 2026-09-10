@@ -1,0 +1,38 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1",
+  "question": "Approve the independently validated ten-file journey-progress candidate and its exact local commit, with delivery still pending?",
+  "artifacts": [
+    {
+      "id": "artifact:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1325074844a3c0ce8155f37a9f1ad8152f4aee6d/derive-release-story-progress/index.md",
+      "rev": "sha256:4a94fc3c3466e06ac7a5fb7248c842884cb32f61a75eefc130d179e66a46e217",
+      "mediaType": "text/markdown",
+      "summary": "Independent local validation PASS on the frozen ten-file candidate: explicit complete task mapping, full identities, archive/reopen behavior, 2/3 tasks versus 1/2 stories, standalone drawing, three-color progress, all-done pending delivery acceptance, and native edit/readback source preservation. Manifest f0261937 binds the uncommitted candidate on bc51b246; measured 460 changed lines and 125 reader/CLI lines. Approve local validation and feat(kc-journey-map): derive release progress from local tasks only; push/PR/merge/release/actual-user acceptance remain separate."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/1325074844a3c0ce8155f37a9f1ad8152f4aee6d/derive-release-story-progress/implementation-evidence/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:786c2a5358aff29e37f13969386873a5a811cb5a039625c5166bcde45702cabc"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/1325074844a3c0ce8155f37a9f1ad8152f4aee6d/derive-release-story-progress/validation-evidence/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:3fb83764a2fa700618d94a7867e36b99782593f00b89565dc24b8ccd8c9c0ad2"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-1:revision-1:item-4",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
