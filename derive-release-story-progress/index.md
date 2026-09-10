@@ -401,3 +401,26 @@ The approved ten-file candidate is now a verified local commit without changing 
 ### Summary
 
 Five exact cumulative candidates and replayable patches are ready for independent validation and a concrete local-commit decision. The original 10-file/460-line progress feature and all three approved product endpoints are preserved; no product delivery or task terminalization occurred.
+
+## Stage Report: validation (cycle 3)
+
+- FAILED: Verify that each intermediate layer is independently usable, accurately documented, and free of missing or hidden later-layer dependencies; attack a concrete isolation or safety claim not settled by the producer checks.
+  Layer 2 real API edit plus `journey-read --out` silently writes the first same-wording story instead of the edited second ID, exit 0; distinct-wording control passes and both source hashes stay unchanged. `stack-recut-independent-validation/initial/same-wording-proof.json` is the decisive refusal falsifier (expected safe identity handling, observed no refusal/wrong target).
+  Cause: layer-2 `lib/read.mjs:176` selects by old text; layer 3 retains it, layer 4 already selects by ID. Layer 1 legacy registration/skill/template and available installed commands are intact; layer 2 source imports show no hidden later board/function/evidence/selection/progress implementation.
+- DONE: Audit the exact five candidate tree/file manifests, relevant producer check evidence and final equality proof without redundantly rerunning owned green deterministic checks.
+  Reviewed `stack-recut-evidence/{manifest,validation-summary,equivalence,patch-proof}.json`, producer browser readback log and layer-5 test/smoke output; snapshot working files match their own indexes (`snapshot-audit.json`). No full suite or deterministic equality replay was repeated.
+  Exact trees: layer 1 `feec1a91f7479f9f1ff15b8a0bf8650d86271421`; layer 2 `9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b`; layer 3 `55b4416f5b37649fc0fec4d7eeddcef3561bad9c`; layer 4 `6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff`; layer 5 `cefe085d5d9b12b5679421b5607c808d6989a1b7`.
+  AC-1: retained empty-PATH and actual refresh/draw evidence plus source-isolated early drawing route; adding a mandatory task reader breaks standalone drawing.
+  AC-2: retained full-identity and task-versus-story ratio checks; scope dropping or task-count substitution fails their assertions.
+  AC-3: retained missing/ambiguous/partial/unreadable mapping, archive/reopen and pagination checks; empty/all-done without complete mapping cannot count complete.
+  AC-4: retained all-done pending-acceptance and three-border/provenance checks; treating development completion as acceptance fails them.
+  AC-5: retained final source/task-byte and derived readback checks remain bound to layer 5; this independent predecessor failure disproves safe story-intent readback for layer 2 and the same source defect persists in layer 3.
+- DONE: Append an independent validation report with scoped findings or PASS, original AC coverage and delivery-only limits; preserve candidate bytes, original branches, rooms, and old approvals.
+  `stack-recut-independent-validation/initial/README.md` retains diagnosis, repro/control, limits and ownership; no product edits/commits, task status/gates, provider writes, existing-room writes or listener termination. The sole owned API process stopped.
+  No new exact-candidate PR exists; old #394 is preserved history, not clean feedback for the recut. CI cost is unmeasured; dependency reuse and blocked external-icon appearance remain limits. Layer-3 inherited EOF whitespace is nonblocking formatting and unchanged.
+  Neutral round publication is not recorded: no entity Briefing/log exists and exposed installed review tooling supplies presentation, not a noninteractive two-file room producer; the First Officer received the capability gap.
+  First Officer assigned one producer correction: promote only existing ID-selection safety hunk into layers 2/3, remove it from layer 4 delta, qualify layer-3 equality and retain exact layer-4/5 endpoints; independent focused re-review remains pending.
+
+### Summary
+
+FAIL for independently safe intermediate delivery: same-wording stories can be written to the wrong stable ID in layers 2/3. Final progress semantics and original AC evidence are not regressed by this finding; producer correction and one focused independent re-review are required before exact local-commit approval.

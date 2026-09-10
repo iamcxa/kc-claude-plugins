@@ -1,0 +1,119 @@
+{
+  "1": {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-1",
+    "unstaged_tracked_changes": [],
+    "tracked_libs": [
+      "kc-journey-map/lib/doctor.mjs",
+      "kc-journey-map/lib/journey-export.mjs",
+      "kc-journey-map/lib/journey-tldr.mjs"
+    ]
+  },
+  "2": {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-2",
+    "unstaged_tracked_changes": [],
+    "tracked_libs": [
+      "kc-journey-map/lib/doctor.mjs",
+      "kc-journey-map/lib/fixture.mjs",
+      "kc-journey-map/lib/journey-export.mjs",
+      "kc-journey-map/lib/journey-read.mjs",
+      "kc-journey-map/lib/journey-render.mjs",
+      "kc-journey-map/lib/journey-tldr.mjs",
+      "kc-journey-map/lib/model.mjs",
+      "kc-journey-map/lib/read.mjs",
+      "kc-journey-map/lib/read.test.mjs",
+      "kc-journey-map/lib/records.mjs",
+      "kc-journey-map/lib/render.mjs",
+      "kc-journey-map/lib/storymap.mjs",
+      "kc-journey-map/lib/storymap.test.mjs"
+    ]
+  },
+  "3": {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-3",
+    "unstaged_tracked_changes": [],
+    "tracked_libs": [
+      "kc-journey-map/lib/doctor.mjs",
+      "kc-journey-map/lib/fixture.mjs",
+      "kc-journey-map/lib/funcmap.mjs",
+      "kc-journey-map/lib/funcmap.test.mjs",
+      "kc-journey-map/lib/journey-contract.mjs",
+      "kc-journey-map/lib/journey-example.test.mjs",
+      "kc-journey-map/lib/journey-export.mjs",
+      "kc-journey-map/lib/journey-lint.mjs",
+      "kc-journey-map/lib/journey-read.mjs",
+      "kc-journey-map/lib/journey-render.mjs",
+      "kc-journey-map/lib/journey-tldr.mjs",
+      "kc-journey-map/lib/lint.mjs",
+      "kc-journey-map/lib/lint.test.mjs",
+      "kc-journey-map/lib/model.mjs",
+      "kc-journey-map/lib/read.mjs",
+      "kc-journey-map/lib/read.test.mjs",
+      "kc-journey-map/lib/records.mjs",
+      "kc-journey-map/lib/release-contract.mjs",
+      "kc-journey-map/lib/release-contract.test.mjs",
+      "kc-journey-map/lib/render.mjs",
+      "kc-journey-map/lib/storymap.mjs",
+      "kc-journey-map/lib/storymap.test.mjs"
+    ]
+  },
+  "4": {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-4",
+    "unstaged_tracked_changes": [],
+    "tracked_libs": [
+      "kc-journey-map/lib/doctor.mjs",
+      "kc-journey-map/lib/fixture.mjs",
+      "kc-journey-map/lib/funcmap.mjs",
+      "kc-journey-map/lib/funcmap.test.mjs",
+      "kc-journey-map/lib/journey-contract.mjs",
+      "kc-journey-map/lib/journey-example.test.mjs",
+      "kc-journey-map/lib/journey-export.mjs",
+      "kc-journey-map/lib/journey-lint.mjs",
+      "kc-journey-map/lib/journey-read.mjs",
+      "kc-journey-map/lib/journey-render.mjs",
+      "kc-journey-map/lib/journey-tldr.mjs",
+      "kc-journey-map/lib/lint.mjs",
+      "kc-journey-map/lib/lint.test.mjs",
+      "kc-journey-map/lib/model.mjs",
+      "kc-journey-map/lib/read.mjs",
+      "kc-journey-map/lib/read.test.mjs",
+      "kc-journey-map/lib/records.mjs",
+      "kc-journey-map/lib/release-contract.mjs",
+      "kc-journey-map/lib/release-contract.test.mjs",
+      "kc-journey-map/lib/render.mjs",
+      "kc-journey-map/lib/render.test.mjs",
+      "kc-journey-map/lib/storymap.mjs",
+      "kc-journey-map/lib/storymap.test.mjs"
+    ]
+  },
+  "5": {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/layer-5",
+    "unstaged_tracked_changes": [],
+    "tracked_libs": [
+      "kc-journey-map/lib/doctor.mjs",
+      "kc-journey-map/lib/fixture.mjs",
+      "kc-journey-map/lib/funcmap.mjs",
+      "kc-journey-map/lib/funcmap.test.mjs",
+      "kc-journey-map/lib/journey-contract.mjs",
+      "kc-journey-map/lib/journey-example.test.mjs",
+      "kc-journey-map/lib/journey-export.mjs",
+      "kc-journey-map/lib/journey-lint.mjs",
+      "kc-journey-map/lib/journey-progress.mjs",
+      "kc-journey-map/lib/journey-read.mjs",
+      "kc-journey-map/lib/journey-render.mjs",
+      "kc-journey-map/lib/journey-tldr.mjs",
+      "kc-journey-map/lib/lint.mjs",
+      "kc-journey-map/lib/lint.test.mjs",
+      "kc-journey-map/lib/model.mjs",
+      "kc-journey-map/lib/progress.mjs",
+      "kc-journey-map/lib/progress.test.mjs",
+      "kc-journey-map/lib/read.mjs",
+      "kc-journey-map/lib/read.test.mjs",
+      "kc-journey-map/lib/records.mjs",
+      "kc-journey-map/lib/release-contract.mjs",
+      "kc-journey-map/lib/release-contract.test.mjs",
+      "kc-journey-map/lib/render.mjs",
+      "kc-journey-map/lib/render.test.mjs",
+      "kc-journey-map/lib/storymap.mjs",
+      "kc-journey-map/lib/storymap.test.mjs"
+    ]
+  }
+}
