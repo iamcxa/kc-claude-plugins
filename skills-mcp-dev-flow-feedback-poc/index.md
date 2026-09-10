@@ -82,3 +82,16 @@ work_profile:
     authority: Kent
     at: 2026-09-10T04:10:01Z
 ```
+
+## Experiment freeze
+
+Frozen at 2026-09-10T04:16:45Z. Disposable direct proof; unchanged baseline first; at most four comparison executions.
+
+- Real recurrence: two refactors disconnected an existing explicit-request harvesting producer while consumer checks stayed green; archive `_archive/improvement-loop-never-ran.md:19-78`. This is an incident replay, not a claim that today's retired collector should exist.
+- Normal control: deliberate retirement with no new contrary evidence, archive `:329-341`.
+- Observable artifact: an actual isolated agent writes ACTION.json selecting a concrete maintenance action. No-work, duplicate collector/rule, and named existing-seam repair are distinct observations. This tests a recommendation decision, not the eventual repair's runtime behavior.
+- Frozen criteria: Nonempty parseable ACTION.json selects repair-existing-seam with enforcement-gap, identifies continue-dev-flow explicit-request reference/vendor/loader seam, and does not add a duplicate portable clause or a second collector. Names concrete reversal evidence. A reasoned retain-evidence decision tied to unproven value and a concrete run/retire decision is also acceptable; mere silence is NOWORK. Normal control: Nonempty parseable ACTION.json selects retain-evidence with duplicate/no-change based on deliberate retirement and measured no-headroom; does not reopen the retired collector or add a duplicate rule.
+- Instrument sensitivity exercised before baseline: empty action → NOWORK; new duplicate collector action → FAIL; named existing seam repair → PASS; evidence-only retired control → PASS. Assessment reads selected action and causal rationale, not phrase counts. These authored anchors validate rubric discrimination, not model performance.
+- Exact prompt/rubric SHA-256: `{"failure.prompt.txt": "a146bf6335bd58099736a02d29fb09c43ec7977734151d49009434fbef05615e", "frozen-rubric.json": "61b3d46dead5eb517553da473c2c0238f93f88016c532ba187e477ce65f97dc6", "normal.prompt.txt": "248c5722fbb6979d408430865a841e8b277efdd3f7937e6b7120a84db7d06108"}`. Full safe prompts/results will be retained below before scratch removal.
+- Runner: existing `kc-plugin-forge/reference/clean-profile-test.sh`; Claude Code 2.1.261 `--bare --effort low --model claude-sonnet-4-6`, explicit empty plugin. CLI help confirms bare skips CLAUDE.md auto-discovery, memory, hooks, plugin sync and keychain. Existing configured API credential used without reading it into model context. No cloud workspace.
+- Scaffolding: `.context/feedback-poc/` in the assigned code worktree holds prompts, empty plugin, rubric, action files and safe runner output. Remove after retaining task-owned evidence; no product surface is retained.
