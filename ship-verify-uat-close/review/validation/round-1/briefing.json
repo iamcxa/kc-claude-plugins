@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7efj5b0dh4dh7616yma4nykm:validation:round-1",
+  "question": "Correction round 1 on the validation-gate revise: merge #406, fix fence-shape mismatch, ship v2 schema file, rewrite PR #411 body per pr-merge.md template.",
+  "artifacts": [
+    {
+      "id": "artifact:7efj5b0dh4dh7616yma4nykm:validation:round-1:item-1",
+      "uri": "git-root://state/1c4a49814deb97384830d0848e55933e72778473/ship-verify-uat-close/index.md",
+      "rev": "sha256:d7d1d659b03e20446438485e8c02056c1a26c302ad346d865d5a0e445232a456",
+      "mediaType": "text/markdown",
+      "summary": "Stage Report: implementation (cycle 2)"
+    }
+  ]
+}

@@ -56,6 +56,14 @@ gates:
                 conn:
                     quote: '批 (2026-09-10, answering the First Officer: "#410/#411 各一輪 feedback ... 合了我就對兩個雲端 workspace 各送一則 feedback")'
                     source: Captain chat reply 2026-09-10 to the three-gate table
+review-round:
+    id: round:7efj5b0dh4dh7616yma4nykm:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:7efj5b0dh4dh7616yma4nykm:validation:round-1
+        digest: sha256:b71303b3e44508745c5fd3531a74a7f4613cfd7b6c34a3f03f49878a68cc7df3
+        room-ref: ./review/validation/round-1
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch
