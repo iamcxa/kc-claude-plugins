@@ -1,14 +1,14 @@
 ---
 id: g0nx8a1ht539e12e9jm54fbw
 title: Extract the journey map into its own publishable plugin
-status: ideation
+status: implementation
 source: captain
 product: kc-journey-map
 planning-window:
 planning-outcome:
 sprint: journey-map-poc
 sprint-readiness: ready
-started:
+started: 2026-09-10T04:38:38Z
 completed:
 verdict:
 worktree:
