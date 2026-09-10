@@ -66,6 +66,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T18:23:15.5314Z"
                 reason: Pre-presentation AC scan marks AC-2 and AC-3 unevidenced because checklist uses a range. Reviewer must explicitly cite each criterion in its owned latest checklist without changing functional verdict or product candidate.
+            - id: gate-attempt:geef7a3dy7w12g7tq89h21te-validation-2
+              briefing:
+                id: briefing:geef7a3dy7w12g7tq89h21te:validation:attempt-2:revision-1
+                digest: sha256:43650f3c2917f37368ab46dc91db90ccc84f2f8d3055258142d946f179219c14
+                room-ref: ./review/validation/briefing-2
 review-round:
     id: round:geef7a3dy7w12g7tq89h21te:validation:1
     stage: validation
