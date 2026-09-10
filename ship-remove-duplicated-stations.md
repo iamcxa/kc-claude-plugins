@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
