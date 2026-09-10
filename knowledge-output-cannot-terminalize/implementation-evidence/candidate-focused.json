@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "go",
+    "test",
+    "./internal/status",
+    "./internal/gates",
+    "-run",
+    "TestMergeGuard|TestFinalizeTerminalApproval|TestTerminalDelivery|TestKnowledgeApproval|TestKnowledgeWhole",
+    "-count=1",
+    "-json"
+  ],
+  "rc": 0,
+  "test_counts": {
+    "pass": 65,
+    "fail": 0,
+    "skip": 0
+  },
+  "elapsed": 16.78652345808223
+}

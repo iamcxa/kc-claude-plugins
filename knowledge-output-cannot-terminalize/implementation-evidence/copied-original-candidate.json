@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+    "merge",
+    "guard",
+    "first-cloud-dev-flow-improvement-run",
+    "--workflow-dir",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-original-snapshot-h3bvy0zm/docs/dev",
+    "--delivery",
+    "knowledge",
+    "--verdict",
+    "passed",
+    "--json"
+  ],
+  "rc": 1,
+  "stdout": "",
+  "stderr": "Error: merge guard: terminal delivery write refused for first-cloud-dev-flow-improvement-run: attempt gate-attempt:7ktmx2rsetq67yhbg4ezxm0q-backlog-1 selected source: git-root commit is not an exact full local commit object\n",
+  "binary_sha256": "189332590df21b848188d07b0881e5077c3d08534220951a197bfeca86904457",
+  "copy_unchanged": true,
+  "approval": "original unchanged; no synthetic rebind yet",
+  "archive_exists": false
+}

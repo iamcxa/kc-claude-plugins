@@ -419,3 +419,32 @@ The approved native knowledge-delivery shape is ready for the implementation han
 ### Summary
 
 Implementation is incomplete and stopped at the explicit additional-consumer/file scope boundary, accepted by the First Officer. The existing frozen Briefing remains immutable evidence but does not supply a typed knowledge-delivery predicate; the smallest proposed repair extends the existing locked consumer and its tests, with exact authority and whole-entity drift checks, then reuses native archive/publication. The original task and approvals were preserved; no product changes were made.
+
+
+## Stage Report: implementation (cycle 2)
+
+- FAILED: Implement the approved explicit native knowledge-delivery route with real bound terminal approval/evidence and refusal controls; preserve existing product delivery behavior.
+  Concrete seven-file candidate implements the locked approval/evidence consumer and refusal controls, but the native journey still fails at the unmodified archive owner; [candidate summary](knowledge-output-cannot-terminalize/implementation-evidence/candidate-summary.md).
+- FAILED: Prove archive-once and interrupted-publication recovery plus copied original experiment snapshot, retaining raw outputs and source hashes without mutating real approval or resources.
+  Consumer one-use/resume passes; archive-once/publication recovery and positive original rebinding remain unproven. All 18 real original files match retained hashes; cloud/resource operations zero.
+- SKIPPED: Apply the narrow local mod correction only after executable support, run required focused/full/race checks, and return exact uncommitted diffs for Captain confirmation.
+  Local mod stays unchanged because native archive support is incomplete. Exact uncommitted upstream patch retained; required full/race/full-tree format and local contract checks deferred at the First Officer's explicit partial-integration boundary.
+
+### Acceptance evidence
+
+- AC-1: PARTIAL. [Base failure](knowledge-output-cannot-terminalize/implementation-evidence/knowledge-before.stdout) was unknown --delivery; consumer now writes PASSED/consumed once. [Native integration](knowledge-output-cannot-terminalize/implementation-evidence/knowledge-archive.stdout) reports done/PASSED/consumed, archive=false, then empty-PR refusal; no finalized success is claimed.
+- AC-2: CONSUMER PROOF. Tests exercise missing approval/declaration, wrong attempt/digest, true successor substitution, Briefing tamper, invalid evidence hash, duplicate declaration, open PR/invented reason, product claim/diff/dirty checkout/head drift, whole-entity PR/body drift, and tampered consumed verdict/decision. Removing their checks allows forbidden consumption or overwrites and fails the corresponding byte/state assertion.
+- AC-3: BASELINE REGRESSION. [Focused run](knowledge-output-cannot-terminalize/implementation-evidence/candidate-focused.json) has 65 passing events/0 failures including existing merged/open/malformed sentinel and terminal delivery tests; [CLI run](knowledge-output-cannot-terminalize/implementation-evidence/candidate-cli.json) has 20/0. Final exact-worktree binding addition then passed valid/changed-worktree subcases; broader runs precede this small addition, not a claimed final full sweep.
+- AC-4: PARTIAL. TestKnowledgeApprovalRefusalsAndResume validates consumed original approval/digest/frozen proof/terminal PASSED/completed on retry without rewriting or spending twice. Native archive integration remains 1 failure; publication-failure/conflict/resume proof awaits the archive owner change. Pre-existing rename-before-commit hard-crash recovery is outside this bounded repair.
+- AC-5: PARTIAL. [Complete main/state Git-object copy](knowledge-output-cannot-terminalize/implementation-evidence/copied-original-candidate-bound-roots.json) refuses the original reason sentinel unchanged; the earlier candidate-copy result lacked a main Git object and is fixture limitation only. Neither proves a typed positive route. [Original preservation](knowledge-output-cannot-terminalize/implementation-evidence/original-preserved-cycle-2.json) verifies all 18 source files; existing semantic approval persists, typed native rebinding stays with its owner.
+
+### Exact candidate and remaining decision
+
+- Upstream base af70297ddae6ec64444849e8e3fcf57484bc16e1; 7 files/547 gross lines; [uncommitted patch](knowledge-output-cannot-terminalize/implementation-evidence/upstream-candidate.patch) SHA-256 9877481465237f39ee4450235d2a68a1e59710049626168c58e873952a8cad96. No product commit/push/PR/install.
+- COORD base c9c5752fda853737d4a937ad7f59564c5651ca53; clean/zero diff, SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. All three task pins unchanged; [readback](knowledge-output-cannot-terminalize/implementation-evidence/candidate-readback.json) records hashes, numstat and exact final targeted check.
+- Smallest remaining file: internal/status/mutate.go runArchive, reusing gates proof of the same consumed knowledge approval and binding the actual archived bytes. No generic consumed flag, force, fake sentinel, policy change or alternate archive. Estimated integrated total 685–790 gross including required native recovery tests; recommend one 8-file/850-gross decision, not a promise to fit 650. Local 1-file/40 bound unchanged.
+- Focused formatting and diff --check pass. Manual mapping names all five non-test surfaces; installed surface-map checker requires a committed candidate object and was not given a fabricated revision. RoboRev UNAVAILABLE, zero requests; full exit and independent candidate validation remain outstanding.
+
+### Summary
+
+The authorized seven-file work is now concrete and reviewable, with passing constrained-consumer/refusal evidence and an intentionally retained failing native archive test. The archive owner's separate empty-PR check is the remaining eighth-file integration boundary, so implementation is incomplete; product diffs remain uncommitted for exact-file confirmation. Original approvals, task evidence, pins and resources remain untouched.

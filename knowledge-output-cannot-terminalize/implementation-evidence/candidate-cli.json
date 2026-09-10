@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "go",
+    "test",
+    "./internal/cli",
+    "-run",
+    "TestTerminal|TestMerge",
+    "-count=1",
+    "-json"
+  ],
+  "rc": 0,
+  "test_counts": {
+    "pass": 20,
+    "fail": 0,
+    "skip": 0
+  },
+  "elapsed": 14.91885908297263
+}

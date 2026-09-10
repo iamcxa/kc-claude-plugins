@@ -1,0 +1,71 @@
+{
+  "upstream": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+    "base_sha": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "diff_sha256": "9877481465237f39ee4450235d2a68a1e59710049626168c58e873952a8cad96",
+    "files": 7,
+    "gross_lines": 547,
+    "numstat": [
+      [
+        "3",
+        "0",
+        "internal/cli/help.go"
+      ],
+      [
+        "208",
+        "8",
+        "internal/gates/delivery.go"
+      ],
+      [
+        "196",
+        "0",
+        "internal/gates/delivery_test.go"
+      ],
+      [
+        "7",
+        "3",
+        "internal/gates/io.go"
+      ],
+      [
+        "33",
+        "7",
+        "internal/status/merge.go"
+      ],
+      [
+        "66",
+        "0",
+        "internal/status/merge_guard_test.go"
+      ],
+      [
+        "16",
+        "0",
+        "mods/pr-merge.md"
+      ]
+    ],
+    "status": " M internal/cli/help.go\n M internal/gates/delivery.go\n M internal/gates/delivery_test.go\n M internal/gates/io.go\n M internal/status/merge.go\n M internal/status/merge_guard_test.go\n M mods/pr-merge.md\n"
+  },
+  "coordinator": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+    "base_sha": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "files": 0,
+    "gross_lines": 0,
+    "numstat": [],
+    "status": ""
+  },
+  "pins": {
+    "implementation-stage-pin.json": "d8e261572377d9a930675e90ee42a1a4ada821a9f00511a44506ec3b13678c64",
+    "ideation-stage-pin.json": "c8f1c7c3b6770984ca66c1a2c8fdd07e32a0ac637a622749b0a573609b1df062",
+    "implementation-2-stage-pin.json": "a58bc6cb8eab2c8fb26fe03d21266d21e870597148b90bf1f53509669835e175"
+  },
+  "completion": "partial; native archive integration fails; no product commits",
+  "provider_requests": 0,
+  "final_targeted_check": {
+    "command": "go test ./internal/gates -run TestKnowledgeApprovalRefusalsAndResume/(changed-worktree|valid)$ -count=1",
+    "exit": 0,
+    "passed_subcases": 2,
+    "note": "Final explicit worktree-path binding addition; broad 65+20 checks precede this addition."
+  }
+}

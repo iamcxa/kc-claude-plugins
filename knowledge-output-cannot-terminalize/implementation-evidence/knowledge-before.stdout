@@ -1,0 +1,5 @@
+--- FAIL: TestKnowledgeMergeNativeArchive (0.69s)
+    merge_guard_test.go:1203: knowledge finalize rc=1 out= err=Error: unknown argument: --delivery
+FAIL
+FAIL	github.com/spacedock-dev/spacedock/internal/status	1.157s
+FAIL

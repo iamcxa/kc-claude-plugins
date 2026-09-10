@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "go",
+    "test",
+    "./internal/gates",
+    "-run",
+    "TestKnowledge",
+    "-count=1",
+    "-json"
+  ],
+  "rc": 0,
+  "test_counts": {
+    "pass": 16,
+    "fail": 0,
+    "skip": 0
+  },
+  "elapsed": 14.63105725008063
+}

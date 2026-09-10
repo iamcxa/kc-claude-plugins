@@ -1,0 +1,96 @@
+{
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product",
+  "synthetic_rebinding": false,
+  "product_and_state_origins_removed": true,
+  "binary_sha256": "189332590df21b848188d07b0881e5077c3d08534220951a197bfeca86904457",
+  "copy_unchanged": true,
+  "archive_exists": false,
+  "results": [
+    {
+      "label": "copy-product-objects",
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product'...\ndone.\n"
+    },
+    {
+      "label": "remove-product-origin",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product",
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "copy-state-objects",
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product/docs/dev/.spacedock-state"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product/docs/dev/.spacedock-state'...\ndone.\n"
+    },
+    {
+      "label": "remove-state-origin",
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product/docs/dev/.spacedock-state",
+        "remote",
+        "remove",
+        "origin"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-o",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "./cmd/spacedock"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "candidate-original-authority",
+      "argv": [
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/knowledge-output-cannot-terminalize/implementation-evidence/.context/spacedock",
+        "merge",
+        "guard",
+        "first-cloud-dev-flow-improvement-run",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-bound-original-gvo755t0/product/docs/dev",
+        "--delivery",
+        "knowledge",
+        "--verdict",
+        "passed",
+        "--json"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: merge guard: terminal delivery write refused for first-cloud-dev-flow-improvement-run: knowledge delivery refuses PR or merge claims\n"
+    }
+  ]
+}

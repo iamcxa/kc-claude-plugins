@@ -1,0 +1,10 @@
+{"Time":"2026-09-11T00:58:48.730103+08:00","Action":"start","Package":"github.com/spacedock-dev/spacedock/internal/status"}
+{"Time":"2026-09-11T00:58:48.95663+08:00","Action":"run","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive"}
+{"Time":"2026-09-11T00:58:48.956699+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive","Output":"=== RUN   TestKnowledgeMergeNativeArchive\n"}
+{"Time":"2026-09-11T00:58:50.005234+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive","Output":"    merge_guard_test.go:1211: active status=done verdict=PASSED application=consumed archive=false\n"}
+{"Time":"2026-09-11T00:58:50.005304+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive","Output":"    merge_guard_test.go:1214: knowledge finalize rc=1 out= err=Error: entity task cannot be archived — workflow has merge hook(s) [pr-merge] that have not run (pr field is empty and mod-block is empty). Invoke the hook first, or use --force to bypass.\n"}
+{"Time":"2026-09-11T00:58:50.014704+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive","Output":"--- FAIL: TestKnowledgeMergeNativeArchive (1.06s)\n"}
+{"Time":"2026-09-11T00:58:50.014748+08:00","Action":"fail","Package":"github.com/spacedock-dev/spacedock/internal/status","Test":"TestKnowledgeMergeNativeArchive","Elapsed":1.06}
+{"Time":"2026-09-11T00:58:50.014773+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Output":"FAIL\n"}
+{"Time":"2026-09-11T00:58:50.015624+08:00","Action":"output","Package":"github.com/spacedock-dev/spacedock/internal/status","Output":"FAIL\tgithub.com/spacedock-dev/spacedock/internal/status\t1.285s\n"}
+{"Time":"2026-09-11T00:58:50.015639+08:00","Action":"fail","Package":"github.com/spacedock-dev/spacedock/internal/status","Elapsed":1.286}
