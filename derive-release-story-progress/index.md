@@ -5,8 +5,8 @@ product: kc-journey-map
 source:
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: S1
+sprint-readiness: ready
 started:
 completed:
 verdict:
@@ -29,20 +29,46 @@ not workflow maintenance or a replacement planning provider.
 
 ## Work profile receipt
 
-Pending Captain selection for this new item. Recommend Pilot / Product slice:
-limited local use, retained plugin functionality, read-only task access, and no
-required migration for existing drawing-only consumers. The earlier Pilot receipt
-belongs to show-release-stories-on-journey-boards and is not copied as a decision
-for this new scope.
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    Kent selected Pilot for this retained local plugin feature. Task access is
+    read-only; drawing-only consumers keep working without a migration. There
+    is no unattended operation or production commitment.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Keep task reading outside the independently usable drawing core.
+      - Keep journey intent authoritative and derived progress out of readback writes.
+    implementation:
+      - Add one optional progress skill with explicit local refresh and optional drawing.
+      - Resolve complete required mappings by journey, release, and story identity.
+      - Separate development completion from delivery acceptance using the three existing colors.
+    testing:
+      - Exercise the actual local task reader and projection seam.
+      - Falsify missing mappings, identity collisions, reopened tasks, and vacuous completion.
+      - Prove source preservation and all-done pending-delivery-acceptance behavior.
+  scope_boundary: >-
+    Local read-only task progress and optional drawing integration within
+    kc-journey-map. Excludes plan-flow consolidation, provider changes, global
+    sprint migration, background operation, consumer migration, and delivery authority.
+  semantics_unchanged: false
+  promote_when:
+    - Existing drawing-only consumers must migrate records or configuration.
+    - Production exposure, unattended operation, or long-term support is accepted.
+  decision:
+    authority: Kent
+    at: 2026-09-10T16:06:47.619756Z
+```
 
-Proposed route: shape -> build -> verify-deliver.
-Architecture: keep task reading outside the drawing core and preserve existing
-standalone use. Implementation: one optional progress skill and a bounded local
-reader/calculator, with explicit refresh that can also invoke drawing. Testing:
-exercise actual task-reading and projection seams, unknown/incomplete mappings,
-reopened tasks, source preservation, and an all-done pending-acceptance case.
-No production exposure, daemon, provider writes, or compatibility migration is
-accepted. These boundaries recommend Pilot; they do not select it.
+Kent answered "可以" to the explicit Pilot selection question for this new task.
+The standalone Development Brief supplies planning authority; no Planning Receipt
+or planning-provider invocation is needed. Use the existing local kc-journey-map
+S1 execution group for this continuation of release-story inspection; this legacy
+scheduler field is not a journey release mapping or a time-cycle commitment.
 
 ## Accepted outcome
 
@@ -129,7 +155,7 @@ implementation boundary after checking live ownership and delivery state.
 ## Captain direction
 
 Kent approved the preceding two-skill division with "那就按這樣繼續".
-This authorizes preparing and continuing this integration task. It does not
-supply the new item's profile selection or approve the earlier border commit.
+This authorizes preparing and continuing this integration task. Kent subsequently selected Pilot for this item. It does not approve the earlier
+border commit.
 The Planning Receipt is absent: use this standalone Captain-approved brief and
 invoke no planning-provider reader or comparator.
