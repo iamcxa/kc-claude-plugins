@@ -80,6 +80,10 @@ gates:
                 id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-2:revision-1
                 digest: sha256:53e89c1b9cbe750196e01913dabb9e4d81004f9fb7cf80c7e3e7b70394049dd1
                 room-ref: ./review/validation/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-10T18:49:46.913016Z"
+                reason: Kent explicitly requested the dev-flow kernel minimal-stack and without-it checks before local commit approval. The prior review proves behavior and recut safety, not complete minimal necessity; hold this proposal pending that bounded audit.
 review-round:
     id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:1
     stage: validation
