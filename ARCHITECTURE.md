@@ -36,7 +36,8 @@ hash-binds the exact committed work item, so profile is item-local rather than a
 project-global switch; concurrent items may follow different routes safely. One
 state-owned stage pin binds the active attempt to its starting plugin version,
 contract digest, work-item hash, and Local Profile interface. Same-stage drift
-fails closed; a compatible installed upgrade takes effect only at the next
+in accepted authority or pinned contracts fails closed; ordinary report updates
+do not change that authority; a compatible installed upgrade takes effect only at the next
 stage boundary, while an incompatible interface stops before pin write or
 dispatch for an explicit README/local-mod refit.
 

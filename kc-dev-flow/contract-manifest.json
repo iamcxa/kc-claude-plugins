@@ -13,6 +13,7 @@
     ]
   },
   "resources": [
+    "MIGRATION.md",
     "references/kernel.md",
     "references/reverse-recovery-audit.md",
     "references/journey-slicing.md",
