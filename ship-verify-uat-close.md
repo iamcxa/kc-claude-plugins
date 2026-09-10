@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: verify at the integrated head, one UAT document, worker-written debriefs, and a slim close receipt"
-status: validation
+status: implementation
 source:
 product: kc-ship-flow
 planning-window:
