@@ -1,0 +1,3 @@
+Resolve the smallest local task-to-story progress contract and its unknown/completion/acceptance semantics, with a falsifiable real-reader observation for AC-1, AC-2, and AC-3.
+Shape the source-preserving renderer integration for AC-4 and AC-5, including standalone use, readback, exact touched-file estimates, dependency base, and proportional stop thresholds.
+Commit one durable ideation report with explicit AC-1 through AC-5 evidence citations and observed/designed boundaries; preserve product candidates and all existing task and room state.
