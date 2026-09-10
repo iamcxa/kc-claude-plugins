@@ -27,6 +27,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-10T16:11:49Z
 ---
 
 # One manually triggered dev-flow improvement cycle
