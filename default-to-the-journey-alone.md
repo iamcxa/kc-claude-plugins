@@ -1,14 +1,14 @@
 ---
 id: g87dzxbq3j3rdwzneqr4g5nt
 title: Ask which boards to draw, and default to the user journey alone
-status: ideation
+status: implementation
 source: captain
 product: kc-team-ops
 planning-window:
 planning-outcome:
 sprint: journey-map-poc
 sprint-readiness: ready
-started:
+started: 2026-09-10T03:28:44Z
 completed:
 verdict:
 worktree:
