@@ -1,7 +1,7 @@
 schema: forge-skill-scenarios/v1
 skill: continue-dev-flow
 skill_path: kc-dev-flow/skills/continue-dev-flow/SKILL.md
-model: sonnet-4-6
+model: sonnet-5-1m
 effort: low
 green_preamble: "Before doing anything else, read {SKILL_PATH} in this checkout completely and follow it. Also read its mandatory shared core, kc-dev-flow/references/kernel.md, completely. Then:"
 scenarios:
