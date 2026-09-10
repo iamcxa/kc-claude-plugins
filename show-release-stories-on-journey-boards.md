@@ -84,6 +84,11 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:wwn8jfrh1f6k6zyj5tfcjb23-validation-2
+              briefing:
+                id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1
+                digest: sha256:cb7635b1ae9c13de6a403aea4290cbb3b1f186a5cf8c834c6482e4ad9a4366c0
+                room-ref: ./show-release-stories-on-journey-boards/review/validation/briefing-2
 ---
 
 ## The problem

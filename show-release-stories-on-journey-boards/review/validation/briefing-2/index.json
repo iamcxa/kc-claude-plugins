@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1",
+  "question": "Approve the validated story-border refinement and its exact 12-file local commit, with delivery still pending?",
+  "artifacts": [
+    {
+      "id": "artifact:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/6d67fb50ad99a353c4687714b842f59bf0253c93/show-release-stories-on-journey-boards.md",
+      "rev": "sha256:f951abbd96d50ec59f803cf067da67487330bf95d2246b6a77981d0a234fc030",
+      "mediaType": "text/markdown",
+      "summary": "Both projections use shared status borders that follow native note height and scale. Independent validation passed editing, pointer movement, reload, export/import and safe readback; runtime net change is plus 46 lines. This approval covers local validation and the reviewed local commit only; product push, PR creation, merge, release and delivery acceptance remain separate."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:wwn8jfrh1f6k6zyj5tfcjb23:validation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
