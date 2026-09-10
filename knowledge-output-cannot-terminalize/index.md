@@ -62,6 +62,10 @@ gates:
                 id: briefing:geef7a3dy7w12g7tq89h21te:validation:attempt-1:revision-1
                 digest: sha256:3a009f91835e67c240379e2bc4ded250420c44e6b94a1e296608e60bec6f0109
                 room-ref: ./review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-10T18:23:15.5314Z"
+                reason: Pre-presentation AC scan marks AC-2 and AC-3 unevidenced because checklist uses a range. Reviewer must explicitly cite each criterion in its owned latest checklist without changing functional verdict or product candidate.
 review-round:
     id: round:geef7a3dy7w12g7tq89h21te:validation:1
     stage: validation
