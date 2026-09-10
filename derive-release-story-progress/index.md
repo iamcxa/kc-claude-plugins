@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-10T16:09:10Z
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress
 issue:
 pr:
 mod-block:
