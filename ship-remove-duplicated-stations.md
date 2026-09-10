@@ -70,6 +70,17 @@ gates:
                 id: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-3:revision-1
                 digest: sha256:1942262912b2fae4cc1e30d79d0a8e96f768bfaa570b9f294acdc40132bafc89
                 room-ref: ./ship-remove-duplicated-stations/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pzg36pjjn7tvtdtknpv9w82h:validation:3
+                briefing: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-3:revision-1
+                by: agent:first-officer
+                at: "2026-09-10T18:56:28.594437902Z"
+                decision: revise
+                reason: 'Batch FO verification at af020cf4: kc-ship-flow/skills/first-officer/SKILL.md collides with the Spacedock skill name and carries stale stage instructions'
+                conn:
+                    quote: '批 (2026-09-10, answering the First Officer: "#410/#411 各一輪 feedback ... 合了我就對兩個雲端 workspace 各送一則 feedback")'
+                    source: Captain chat reply 2026-09-10 to the three-gate table
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
