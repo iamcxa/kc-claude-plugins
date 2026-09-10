@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: verify at the integrated head, one UAT document, worker-written debriefs, and a slim close receipt"
-status: backlog
+status: ideation
 source:
 product: kc-ship-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat: approve 2026-09-10'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch
