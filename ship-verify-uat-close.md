@@ -45,6 +45,17 @@ gates:
                 id: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1
                 digest: sha256:4047200f33c792d975771a7a4dd83b490edddcdefd2a33aa6706568f56349581
                 room-ref: ./ship-verify-uat-close/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7efj5b0dh4dh7616yma4nykm:validation:1
+                briefing: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-10T16:04:56.707615Z"
+                decision: revise
+                reason: 'Batch FO verification at the PR head: built from main without #406; integration defects (see feedback message)'
+                conn:
+                    quote: '批 (2026-09-10, answering the First Officer: "#410/#411 各一輪 feedback ... 合了我就對兩個雲端 workspace 各送一則 feedback")'
+                    source: Captain chat reply 2026-09-10 to the three-gate table
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch
