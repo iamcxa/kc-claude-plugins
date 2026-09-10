@@ -1,0 +1,383 @@
+{
+  "synthetic_only": true,
+  "fresh": false,
+  "split_root": false,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "init",
+        "-qb",
+        "main"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "config",
+        "user.name",
+        "Synthetic lifecycle"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "config",
+        "user.email",
+        "synthetic@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "add",
+        ".gitignore",
+        "docs/dev/README.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "commit",
+        "-qm",
+        "synthetic workflow"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "new",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "created: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md id=2thh5x53f4mwenfjawx5r2mc\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--resolve",
+        "probe",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"resolve\",\"workflow\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev\",\"scope\":\"active\",\"slug\":\"probe\",\"id\":\"2t\",\"stored_id\":\"2thh5x53f4mwenfjawx5r2mc\",\"path\":\"/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed probe in the inline workflow repository; nothing pushed.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "review"
+      ],
+      "rc": 0,
+      "stdout": "{\n  \"work_item\": \"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md\",\n  \"id\": \"2thh5x53f4mwenfjawx5r2mc\",\n  \"proof_path\": \"direct\",\n  \"proof_stage\": \"implementation\",\n  \"direction\": \"change\",\n  \"checklist\": [\n    {\n      \"status\": \"DONE\",\n      \"text\": \"Verify the explicit legacy migration and installed exact-main pin; establish the fresh cloud environment and actually loaded production instructions before workload execution.\",\n      \"start\": \"296\",\n      \"end\": \"297\"\n    },\n    {\n      \"status\": \"DONE\",\n      \"text\": \"Run the single approved event-query-v1 cloud baseline and prove all three cases, or retain the first evidenced mandatory precondition failure without fallback or automatic retry.\",\n      \"start\": \"298\",\n      \"end\": \"299\"\n    },\n    {\n      \"status\": \"DONE\",\n      \"text\": \"Write the outcome, attributable usage/time, concrete findings and successful defaults; preserve attempt one and leave the real Captain close decision to the parent.\",\n      \"start\": \"300\",\n      \"end\": \"301\"\n    }\n  ],\n  \"acceptance_criteria\": {\n    \"declared\": false,\n    \"acs\": []\n  },\n  \"poc_outcome\": \"poc_outcome:\\n  direction: change\\n  admitted_at: \\\"2026-09-10T09:28:22Z\\\"\\n  decision_ready_at: \\\"2026-09-10T09:40:36Z\\\"\\n  decision_ready_elapsed_seconds: 734\\n  captain_interventions_before_decision_ready: 0\\n  evidence: \\\"One completed cloud turn loaded the matching installed exact-main contract and reported all three frozen cases passing with exact byte captures; evidence-attempt-2/cloud-final.md and cloud-events.json.\\\"\\n  strongest_limit: \\\"Workflow awaits real Captain close and debrief; CLI exported batch tool output omits intermediate case output, so byte results are cloud-owner reported with originals retained in its workspace.\\\"\\n  reversal_fact: \\\"A contrary original stdout/stderr capture, mismatched installed bytes, or inability to complete the existing real close path changes the bounded result.\\\"\\n  cleanup_status_at_decision: pending\\n\",\n  \"poc_close_measurement\": \"poc_close_measurement:\\n  captain_wait_seconds: pending\\n  terminal_cleanup_seconds: pending\\n  cleanup_status: pending\\n\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "prepare",
+        "--question",
+        "Synthetic fixture only?",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "--summary",
+        "Synthetic pending observations"
+      ],
+      "rc": 0,
+      "stdout": "room=/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe/review/validation/briefing-1\nbriefing=briefing:2thh5x53f4mwenfjawx5r2mc:validation:attempt-1:revision-1\ndigest=sha256:6e44ed89038b746bdcda3657c968231e53396e0f4b9c180b37e660324fd25cfa\nstate=open\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "consume"
+      ],
+      "rc": 1,
+      "stdout": "gate=gate:2thh5x53f4mwenfjawx5r2mc:validation attempt=gate-attempt:2thh5x53f4mwenfjawx5r2mc-validation-1 application=/ condition=ineligible eligible=false consumed=false target-stage=\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC direct close path requires work item status done\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "record",
+        "probe",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC TEST ONLY; not Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:2thh5x53f4mwenfjawx5r2mc:validation attempt=gate-attempt:2thh5x53f4mwenfjawx5r2mc-validation-1 state=closed briefing=briefing:2thh5x53f4mwenfjawx5r2mc:validation:attempt-1:revision-1 resolution=resolution:spacedock:2thh5x53f4mwenfjawx5r2mc:validation:1 decision=approve\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "consume"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: bound canonical Briefing bytes do not match the frozen digest\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed probe in the inline workflow repository; nothing pushed.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/probe.md",
+        "consume"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:2thh5x53f4mwenfjawx5r2mc:validation attempt=gate-attempt:2thh5x53f4mwenfjawx5r2mc-validation-1 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "merge",
+        "guard",
+        "probe",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"probe\",\"signal\":\"finalized\",\"status\":\"done\",\"verdict\":\"passed\",\"result\":\"inline\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/_archive/probe.md",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=pending; terminal_cleanup_seconds=pending\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/_archive/probe.md",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=failed\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "spacedock state commit: archived entity \"probe\" is dirty; archived scope is publish-only and will not stage or commit it:\nM docs/dev/_archive/probe.md\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "add",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo",
+        "commit",
+        "-qm",
+        "synthetic final observations",
+        "--",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Archived state for probe is already committed; an inline workflow publishes nothing.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev/_archive/probe.md",
+        "check-final"
+      ],
+      "rc": 0,
+      "stdout": "{\"id\": \"2thh5x53f4mwenfjawx5r2mc\", \"direction\": \"change\", \"close_complete\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/real/repo/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: Error: unknown reference: probe\n"
+    }
+  ],
+  "original_sha256": "7d918157b36f8ee0b3fa087ffb1671c969cc8bafcaabea5fe38e4828e616900d",
+  "original_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/first-cloud-dev-flow-improvement-run/index.md",
+  "original_failure": "captain_wait_seconds must be a non-negative integer",
+  "preserved_snapshot": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/original-snapshot.md",
+  "fixture": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-real-snapshot-h5u4_9hb/pending-snapshot.md",
+  "normalization": "test-only native ID/gate/worktree bindings removed; full body retained plus pending measurement YAML",
+  "cloud_runs": 0,
+  "cloud_case_coverage": "owner-reported only, not independently rerun"
+}

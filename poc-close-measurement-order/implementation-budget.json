@@ -1,0 +1,21 @@
+{
+  "route_bytes": {
+    "poc-exploration": 29840,
+    "pilot-product-slice": 43874,
+    "production": 43710
+  },
+  "static_components": {
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": 15894,
+    "docs/dev/README.md#frontmatter+Local Profile": 7631
+  },
+  "static_input_bytes": {
+    "poc-exploration/implementation": 39979,
+    "poc-exploration/validation": 38641,
+    "pilot-product-slice/ideation": 39869,
+    "pilot-product-slice/implementation": 38751,
+    "pilot-product-slice/validation": 38281,
+    "production/ideation": 39529,
+    "production/implementation": 38394,
+    "production/validation": 38717
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order",
+  "commands": [
+    {
+      "command": "rtk proxy python3 kc-dev-flow/scripts/poc-close-guard.test.py",
+      "rc": 0,
+      "result": "PASS: parser controls; selected reports/ACs; direct/fresh native lifecycle and local bare-remote publication"
+    },
+    {
+      "command": "rtk proxy python3 kc-dev-flow/scripts/profile-contract-loader.test.py",
+      "rc": 0,
+      "result": "PASS: loader/authority/report/feedback and route mechanisms"
+    },
+    {
+      "command": "rtk proxy python3 kc-dev-flow/scripts/profile-spacedock-route.test.py",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "rtk proxy python3 scripts/kc-dev-flow-contract-test.py",
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "rtk proxy python3 <task>/implementation-probe.py <worktree> <task> <original-task> /Users/kent/.local/bin/spacedock",
+      "rc": 0,
+      "result": "PASS: original snapshot red control and candidate lifecycle"
+    },
+    {
+      "command": "rtk proxy python3 <task>/implementation-surface-check.py <worktree> <task>",
+      "rc": 0,
+      "result": "PASS: missing mapping red control; four non-test files mapped"
+    },
+    {
+      "command": "scripts/kc-dev-flow-multi-profile-gate.py::assert_proportional_load(load_loader(), references)",
+      "rc": 0,
+      "result": "PASS: max 39979/40000 bytes"
+    },
+    {
+      "command": "rtk git -C <worktree> diff --check",
+      "rc": 0,
+      "result": "PASS"
+    }
+  ],
+  "observation": {
+    "capability": "review_convergence",
+    "mode": "observe",
+    "profile": "pilot-product-slice",
+    "provider": "roborev",
+    "version": "0.62.0",
+    "outcome": "UNAVAILABLE",
+    "reason": "unavailable",
+    "detail": "No authorized committed candidate exists; exact base/tip and candidate configuration Git object cannot be bound. CLI version and review/list/show help probed only; no provider job query, daemon setup, or model request.",
+    "candidate_revision": null,
+    "patch_sha256": "8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18",
+    "identity_hash": null,
+    "config_hash": null,
+    "working_config_sha256": "ae3555f0b3fcf5b626c39c614e3b2058bd2e31fb5840ce864edfaeded34f07f1",
+    "job_identity": null,
+    "member_states": [],
+    "request_count": 0,
+    "confirmation_count": 0,
+    "cost_coverage": "unknown; no provider request; local agent usage not measured"
+  },
+  "budget": {
+    "route_bytes": {
+      "poc-exploration": 29840,
+      "pilot-product-slice": 43874,
+      "production": 43710
+    },
+    "static_components": {
+      "kc-dev-flow/skills/continue-dev-flow/SKILL.md": 15894,
+      "docs/dev/README.md#frontmatter+Local Profile": 7631
+    },
+    "static_input_bytes": {
+      "poc-exploration/implementation": 39979,
+      "poc-exploration/validation": 38641,
+      "pilot-product-slice/ideation": 39869,
+      "pilot-product-slice/implementation": 38751,
+      "pilot-product-slice/validation": 38281,
+      "production/ideation": 39529,
+      "production/implementation": 38394,
+      "production/validation": 38717
+    }
+  },
+  "limitations": [
+    "No product commit, provider review, product push, PR, CI change or cloud workload run.",
+    "Cloud owner-reported case results are not independently verified.",
+    "Instruction necessity probe is structural; native tests exercise the commands described."
+  ]
+}

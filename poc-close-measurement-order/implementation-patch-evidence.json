@@ -1,0 +1,14 @@
+{
+  "base": "c2c62bf9dff5c3af1e27eb643a15eadf9023485f",
+  "patch_sha256": "8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18",
+  "file_sha256": {
+    "kc-dev-flow/references/profiles/poc-exploration/build.md": "736ea46354d5813d98cd9c5a35e7c3ae716df95f2e1efd48de615589edffe15e",
+    "kc-dev-flow/references/profiles/poc-exploration/prove.md": "c2a996268d2e35f8386de1244ec073fdbaadc3908d488dab93a9b0fbda01cbab",
+    "kc-dev-flow/scripts/poc-close-guard.py": "56606dfcd8b1d475df71a8e264e4b155a225f4c2dc45d8b4263b76d6c84b5a8b",
+    "kc-dev-flow/scripts/poc-close-guard.test.py": "a8d4e5fdaf7240d059098a0d19440baff001d5962625effb859b90505bfa74f2",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": "5db194ead89a44abc234ed261f5af8bb367eece385698ca91a17330629a94f83"
+  },
+  "numstat": "2\t0\tkc-dev-flow/references/profiles/poc-exploration/build.md\n3\t0\tkc-dev-flow/references/profiles/poc-exploration/prove.md\n26\t6\tkc-dev-flow/scripts/poc-close-guard.py\n128\t0\tkc-dev-flow/scripts/poc-close-guard.test.py\n39\t42\tkc-dev-flow/skills/continue-dev-flow/SKILL.md\n",
+  "surface_adapter": "stock main and validators; git_changed_files input replaced by exact uncommitted git diff entries",
+  "surface_control": "missing mappings refused; four mappings passed"
+}

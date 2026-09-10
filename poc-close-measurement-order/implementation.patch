@@ -1,0 +1,345 @@
+diff --git a/kc-dev-flow/references/profiles/poc-exploration/build.md b/kc-dev-flow/references/profiles/poc-exploration/build.md
+index dfae753c..e959c16a 100644
+--- a/kc-dev-flow/references/profiles/poc-exploration/build.md
++++ b/kc-dev-flow/references/profiles/poc-exploration/build.md
+@@ -65,6 +65,8 @@ tier. Do not invoke RoboRev or dispatch a validation worker. Fresh proof
+ keeps the outcome and independent decision in validation. If time is exhausted,
+ record `change` with the strongest evidence, limit, reversal fact, and cleanup
+ status; do not kill an active tool call or continue silently.
++Keep future wait/cleanup measurements explicitly `pending`; follow
++`continue-dev-flow` Advance for the guard, native approval and final reporting.
+ 
+ If run, `kc-dev-flow/scripts/surface-map-check.py` applies only to the surfaces
+ this stage's `poc_outcome` marks retained; a disposable POC surface is out of
+diff --git a/kc-dev-flow/references/profiles/poc-exploration/prove.md b/kc-dev-flow/references/profiles/poc-exploration/prove.md
+index 4c292cc8..9ce211c5 100644
+--- a/kc-dev-flow/references/profiles/poc-exploration/prove.md
++++ b/kc-dev-flow/references/profiles/poc-exploration/prove.md
+@@ -42,6 +42,9 @@ question.
+ Record one `poc_outcome`: direction `proceed`, `stop`, or `change`, exact
+ evidence, strongest limit, reversal fact, and cleanup. Return it to planning
+ after terminalization; it grants no downstream creation or profile authority.
++Future close measurements stay `pending` through approval. Outcome acceptance
++is not completed cleanup: follow `continue-dev-flow` Advance, then run the
++guard's read-only `check-final` against the archived task.
+ 
+ - observed journey result and artifact revision;
+ - result of the critical-risk check;
+diff --git a/kc-dev-flow/scripts/poc-close-guard.py b/kc-dev-flow/scripts/poc-close-guard.py
+index 5a9519c9..972a7341 100755
+--- a/kc-dev-flow/scripts/poc-close-guard.py
++++ b/kc-dev-flow/scripts/poc-close-guard.py
+@@ -142,24 +142,39 @@ def parse_outcome(text: str, receipt: dict[str, object]) -> str:
+         raise CloseError("decision_ready_elapsed_seconds does not match the timestamps")
+     if (elapsed > int(receipt["poc_decision_ready_minutes"]) * 60 or interventions) and direction != "change":
+         raise CloseError("budget exhaustion or Captain intervention requires direction change")
++    return direction
++
++
++def validate_measurements(text: str, *, final: bool) -> None:
+     close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
+-    unsigned(close, "captain_wait_seconds")
+-    unsigned(close, "terminal_cleanup_seconds")
+-    if one_field(close, "cleanup_status") not in {"complete", "failed", "not-applicable"}:
++    status = one_field(close, "cleanup_status")
++    if status not in {"pending", "complete", "failed", "not-applicable"}:
+         raise CloseError("cleanup_status is invalid")
+-    return direction
++    pending = []
++    for field in ("captain_wait_seconds", "terminal_cleanup_seconds"):
++        if one_field(close, field) == "pending":
++            pending.append(f"{field}=pending")
++        else:
++            unsigned(close, field)
++    if final and (pending or status not in {"complete", "not-applicable"}):
++        raise CloseError(f"POC close incomplete: cleanup_status={status}" + ("; " + ", ".join(pending) if pending else ""))
+ 
+ 
+ def validate(path: Path, phase: str) -> tuple[str, str, str, str]:
+-    if phase not in {"prepare", "review", "consume"}:
++    if phase not in {"prepare", "review", "consume", "check-final"}:
+         raise CloseError(f"unsupported close phase: {phase}")
+     text, item_id, receipt = read_work_item(path)
+     proof_path = str(receipt["poc_proof_path"])
+     stage = str(receipt["workflow_stage"])
+     allowed = {"validation", "implementation"} if phase in {"prepare", "review"} and proof_path == "direct" else {"validation"}
++    if phase == "check-final":
++        allowed = {"done"}
+     if stage not in allowed:
+         raise CloseError(f"POC {proof_path} close path requires work item status {' or '.join(sorted(allowed))}")
+-    return item_id, parse_outcome(text, receipt), proof_path, stage
++    direction = parse_outcome(text, receipt)
++    if "poc_artifact" in receipt or phase == "check-final":
++        validate_measurements(text, final=phase == "check-final")
++    return item_id, direction, proof_path, stage
+ 
+ 
+ def invoke_spacedock(
+@@ -269,11 +284,16 @@ def parse_args() -> argparse.Namespace:
+     prepare.add_argument("--summary", required=True)
+     commands.add_parser("review", help="Read the profile-selected proof report and POC evidence as JSON")
+     commands.add_parser("consume")
++    commands.add_parser("check-final", help="Read-only check of terminal status and completed close measurements")
+     return parser.parse_args()
+ 
+ 
+ def main() -> int:
+     args = parse_args()
++    if args.command == "check-final":
++        item_id, direction, _proof, _stage = validate(args.work_item, "check-final")
++        print(json.dumps({"id": item_id, "direction": direction, "close_complete": True}))
++        return 0
+     if args.spacedock_bin is None:
+         raise CloseError("spacedock executable is required")
+     spacedock = args.spacedock_bin.expanduser().resolve()
+diff --git a/kc-dev-flow/scripts/poc-close-guard.test.py b/kc-dev-flow/scripts/poc-close-guard.test.py
+index e1ecef96..b5dcea3c 100755
+--- a/kc-dev-flow/scripts/poc-close-guard.test.py
++++ b/kc-dev-flow/scripts/poc-close-guard.test.py
+@@ -333,9 +333,134 @@ Stopped with change under the approved validity stop.
+     print("POC close guard native regressions: PASS (durable prepare; latest direct/fresh proof; absent/malformed/uncovered ACs)")
+ 
+ 
++def pending_item_text() -> str:
++    return direct_item_text("change").replace("captain_wait_seconds: 0", "captain_wait_seconds: pending").replace("terminal_cleanup_seconds: 2", "terminal_cleanup_seconds: pending").replace("cleanup_status: complete", "cleanup_status: pending")
++
++
++def lifecycle_regressions(root: Path, spacedock: Path, *, fresh: bool = False, split: bool = False, body: str | None = None) -> dict:
++    repo = root / "repo"
++    workflow = repo / "docs/dev"
++    workflow.mkdir(parents=True, exist_ok=True)
++    history = []
++
++    def run(*args, input_text=None, ok=True):
++        result = subprocess.run(list(map(str, args)), cwd=repo, input=input_text, text=True, capture_output=True)
++        history.append({"argv": list(map(str, args)), "rc": result.returncode, "stdout": result.stdout, "stderr": result.stderr})
++        if ok:
++            require(result.returncode == 0, f"lifecycle failed: {args}: {result.stderr}")
++        return result
++
++    def git(*args, holder=repo):
++        return run("git", "-C", holder, *args)
++
++    def native(*args, **kwargs):
++        return run(spacedock, *args, "--workflow-dir", workflow, **kwargs)
++
++    def close(phase, *args, target=None, ok=True):
++        return run(sys.executable, GUARD_PATH, "--spacedock-bin", spacedock, "--workflow-dir", workflow, "--work-item", target or item, phase, *args, ok=ok)
++
++    template = (root.parent / "native/README.md").read_text()
++    (workflow / "README.md").write_text(template.replace("trunk: main", "state: .spacedock-state\ntrunk: main") if split else template)
++    (repo / ".gitignore").write_text("docs/dev/.spacedock-state/\n")
++    git("init", "-qb", "main")
++    git("config", "user.name", "Synthetic lifecycle")
++    git("config", "user.email", "synthetic@example.invalid")
++    git("add", ".gitignore", "docs/dev/README.md")
++    git("commit", "-qm", "synthetic workflow")
++    holder = repo
++    if split:
++        remote = root / "remote.git"
++        run("git", "init", "--bare", remote)
++        git("remote", "add", "origin", remote)
++        git("push", "-u", "origin", "main")
++        holder = workflow / ".spacedock-state"
++        git("worktree", "add", "--detach", holder, "HEAD")
++        git("switch", "--orphan", "spacedock-state/dev", holder=holder)
++        (holder / ".keep").touch()
++        git("add", ".keep", holder=holder)
++        git("commit", "-qm", "synthetic state", holder=holder)
++        git("push", "-u", "origin", "spacedock-state/dev", holder=holder)
++    report = "\n## Stage Report: implementation\n\n- DONE: Observe the synthetic falsifier.\n  Disposable local observation only.\n"
++    text = body if body is not None else pending_item_text() + report
++    if fresh:
++        text = text.replace("status: implementation", "status: validation").replace("poc_artifact: no-code", "poc_artifact: retained")
++        text += report.replace("Stage Report: implementation", "Stage Report: validation")
++    import re
++    text = re.sub(r"^id:.*\n", "", text, count=1, flags=re.MULTILINE)
++    native("new", "probe", input_text=text)
++    item = Path(json.loads(native("status", "--resolve", "probe", "--json").stdout)["path"])
++    native("state", "commit", "probe")
++    reviewed = json.loads(close("review").stdout)
++    require(reviewed["proof_stage"] == ("validation" if fresh else "implementation"), "wrong pending proof stage")
++    prepared = close("prepare", "--question", "Synthetic fixture only?", "--artifact", item, "--summary", "Synthetic pending observations").stdout
++    require("state=open" in prepared, "prepare did not leave an open human gate")
++    before = item.read_bytes()
++    require(close("consume", ok=False).returncode != 0 and item.read_bytes() == before, "unapproved consume advanced task")
++    require(close("check-final", ok=False).returncode != 0, "nonterminal close reported complete")
++    native("gate", "record", "probe", "--decision", "approve", "--actor", "person:captain", "--reason", "SYNTHETIC TEST ONLY; not Kent approval")
++    briefing = next((holder if split else workflow).rglob("index.json"))
++    frozen = briefing.read_bytes()
++    briefing.write_bytes(frozen.replace(b"Synthetic fixture only?", b"Tampered fixture question"))
++    tampered = close("consume", ok=False)
++    require(tampered.returncode != 0 and "frozen digest" in tampered.stderr, "tampered briefing accepted")
++    briefing.write_bytes(frozen)
++    item.write_text(item.read_text().replace("captain_wait_seconds: pending", "captain_wait_seconds: 12"))
++    native("state", "commit", "probe")
++    consumed = close("consume").stdout
++    require("route=approved-awaiting-merge" in consumed and "consumed=false" in consumed, "guard took terminal authority")
++    require(briefing.read_bytes() == frozen, "measurement changed frozen approval")
++    native("merge", "guard", "probe", "--verdict", "passed", "--json")
++    archived = next(path for path in holder.rglob("probe.md") if path != item)
++    interrupted = archived.read_bytes()
++    require(close("check-final", target=archived, ok=False).returncode != 0 and archived.read_bytes() == interrupted, "interrupted cleanup passed or mutated state")
++    failed = archived.read_text().replace("terminal_cleanup_seconds: pending", "terminal_cleanup_seconds: 3").replace("cleanup_status: pending", "cleanup_status: failed")
++    archived.write_text(failed)
++    require(close("check-final", target=archived, ok=False).returncode != 0, "failed cleanup passed")
++    archived.write_text(failed.replace("cleanup_status: failed", "cleanup_status: complete"))
++    final_bytes = archived.read_bytes()
++    require(native("state", "commit", "probe", ok=False).returncode != 0, "dirty archive silently published")
++    git("add", archived, holder=holder)
++    git("commit", "-qm", "synthetic final observations", "--", archived, holder=holder)
++    native("state", "commit", "probe")
++    require(json.loads(close("check-final", target=archived).stdout)["close_complete"], "completed cleanup refused")
++    require(archived.read_bytes() == final_bytes, "final check mutated archive")
++    require(native("gate", "consume", "probe", ok=False).returncode != 0, "terminal approval reused")
++    if split:
++        published = git("show", f"origin/spacedock-state/dev:{archived.relative_to(holder)}", holder=holder).stdout
++        require(published == archived.read_text(), "final observations missing from local remote")
++        require(git("rev-parse", "HEAD", holder=holder).stdout == git("rev-parse", "origin/spacedock-state/dev", holder=holder).stdout, "state publication incomplete")
++    return {"synthetic_only": True, "fresh": fresh, "split_root": split, "commands": history}
++
++
++def measurement_regressions(guard, root: Path) -> None:
++    pending = direct_item_text().replace("captain_wait_seconds: 0", "captain_wait_seconds: pending").replace("terminal_cleanup_seconds: 2", "terminal_cleanup_seconds: pending").replace("cleanup_status: complete", "cleanup_status: pending")
++    for phase in ("review", "prepare", "consume"):
++        item = write_item(root, pending.replace("status: implementation", "status: validation"))
++        require(guard.validate(item, phase)[1] == "proceed", f"pending refused in {phase}")
++    for field, value in (("captain_wait_seconds", "pending"), ("terminal_cleanup_seconds", "pending"), ("cleanup_status", "pending")):
++        line = f"  {field}: {value}\n"
++        for replacement in ("", line + line):
++            require_refusal(guard, root, pending.replace(line, replacement), "review", f"exactly one {field}")
++        for invalid in ("-1", "1.5", "unknown"):
++            require_refusal(guard, root, pending.replace(line, f"  {field}: {invalid}\n"), "review", field)
++    require_refusal(guard, root, pending, "check-final", "status done")
++    terminal = pending.replace("status: implementation", "status: done")
++    require_refusal(guard, root, terminal, "check-final", "cleanup_status=pending")
++    complete = terminal.replace("captain_wait_seconds: pending", "captain_wait_seconds: 12").replace("terminal_cleanup_seconds: pending", "terminal_cleanup_seconds: 3").replace("cleanup_status: pending", "cleanup_status: complete")
++    for status in ("complete", "not-applicable"):
++        item = write_item(root, complete.replace("cleanup_status: complete", f"cleanup_status: {status}"))
++        before = item.read_bytes()
++        require(guard.validate(item, "check-final")[3] == "done", "completed terminal record refused")
++        require(item.read_bytes() == before, "check-final mutated the record")
++    require_refusal(guard, root, complete.replace("cleanup_status: complete", "cleanup_status: failed"), "check-final", "cleanup_status=failed")
++    require_refusal(guard, root, complete.replace("captain_wait_seconds: 12", "captain_wait_seconds: pending"), "check-final", "captain_wait_seconds=pending")
++    require_refusal(guard, root, complete.replace("terminal_cleanup_seconds: 3", "terminal_cleanup_seconds: -1"), "check-final", "non-negative integer")
++
++
+ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
+     root = Path(temporary)
+     guard = load_guard()
++    measurement_regressions(guard, root)
+     direct = write_item(root, direct_item_text(), "direct")
+     require(guard.validate(direct, "prepare")[2:] == ("direct", "implementation"), "direct POC was not accepted from implementation")
+     require_refusal(guard, root, direct_item_text(elapsed=899), "prepare", "does not match")
+@@ -452,6 +577,9 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
+     located = os.environ.get("SPACEDOCK_BIN") or shutil.which("spacedock")
+     if located:
+         native_regressions(root, Path(located).resolve())
++        for fresh, split in ((False, False), (True, True)):
++            lifecycle_regressions(root / f"lifecycle-{fresh}", Path(located).resolve(), fresh=fresh, split=split)
++        print("POC close lifecycle: PASS (pending direct/fresh; manual approval; frozen briefing; archive; retry; local remote)")
+     else:
+         print("POC close guard native regressions: SKIP (spacedock unavailable)")
+ 
+diff --git a/kc-dev-flow/skills/continue-dev-flow/SKILL.md b/kc-dev-flow/skills/continue-dev-flow/SKILL.md
+index 946ba77b..3b1c5638 100644
+--- a/kc-dev-flow/skills/continue-dev-flow/SKILL.md
++++ b/kc-dev-flow/skills/continue-dev-flow/SKILL.md
+@@ -212,58 +212,55 @@ contract. Skipped stages create no review or evidence obligation.
+ 
+ ## Advance
+ 
+-Resolve `../../scripts/poc-close-guard.py` from this skill for POC close. Record
+-one `poc_outcome` and one separate `poc_close_measurement`:
++Resolve `../../scripts/poc-close-guard.py` from this skill. Record
++`poc_outcome` and `poc_close_measurement`; future wait/cleanup durations
++and cleanup status stay `pending`, never fabricated zero.
+ 
+ ```bash
+ python3 <guard> --workflow-dir <workflow-dir> --work-item <task-path> review
+ ```
+ 
+-`review` reads Spacedock's latest exact-stage report: implementation for direct
+-proof, validation for fresh proof. Declared criteria and checklist items require
+-evidence; absent criteria are allowed.
++`review` selects Spacedock's latest implementation report for direct proof,
++validation for fresh proof. Declared criteria and checklist items need evidence;
++absent criteria are allowed. Direct build records the outcome; `prepare` commits
++implementation to validation before binding. Stop on durability failure; do not dispatch a validation worker. Fresh proof records its outcome in validation.
+ 
+-Direct build records the outcome; `prepare` moves and commits implementation
+-to validation before binding. Stop on durability failure; do not dispatch a validation worker.
+-Fresh proof records its outcome in validation. Prepare through the guard, record approval without
+-`--consume`, then consume through the guard and terminalize;
+-return the POC outcome to planning. KC Dev Flow does not create downstream delivery work
++Prepare through the guard, record human approval without `--consume`, then
++consume through the guard. Native merge guard terminalizes and archives; consume
++alone leaves approval pending. Preserve frozen Briefing bytes and frontmatter.
++The First Officer performs separately authorized cleanup, records actual wait
++and cleanup in the archived body, commits that path through the existing state
++owner, then runs native `state commit` to publish. Resume from the archive without reusing approval. Run guard
++`check-final` on that path: it requires `done`, numeric durations and cleanup
++`complete`/`not-applicable`; pending/failed cleanup remains incomplete.
++Then return the POC outcome to planning. KC Dev Flow does not create downstream delivery work
+ or preselect its profile; planning decides whether a new Development Brief exists.
+ 
+-- Perform the selected stage mission and required output. Move to the loader's
+-  `next_workflow_stage` when its stated stop condition is met.
+-- Invoke `kc-dev-flow:chief-engineer` only for an unclear next step, a material
+-  blocker, route drift, or a selected transition that needs delivery sequencing.
+-- Invoke `kc-dev-flow:science-officer` only for a contested, high-risk,
+-  hard-to-reverse, or low-confidence technical claim, or on Captain request.
+-  Do not load the legacy `science-officer-em` adapter unless a consumer requests
+-  its legacy report envelope.
+-- Repair material findings with one owner and one final re-verification. Do not
+-  create an open-ended implementation-review loop.
+-- Use required deterministic gates at their declared boundaries. FO applies
+-  them; provider labels and agent advice do not replace them.
+-- Ask the Captain only for scope/profile change, irreversibility, new spend or
+-  permission, accepted red residuals, and merge or release authority.
++- Complete the selected mission/output; advance to `next_workflow_stage` at its
++  stop condition.
++- Use `kc-dev-flow:chief-engineer` for unclear sequencing, blockers or route drift;
++  `kc-dev-flow:science-officer` for contested, high-risk, hard-to-reverse or
++  low-confidence claims, or Captain request. Load `science-officer-em` only for
++  consumers requesting its legacy envelope.
++- Assign findings one owner and one final recheck, without open-ended review.
++- FO applies deterministic gates at declared boundaries; advice is not a gate.
++- Ask the Captain for scope/profile changes, irreversibility, spend/permissions,
++  accepted red residuals, or merge/release authority.
+ 
+-After the exact selected route and repository delivery authority are satisfied,
+-terminalize through the existing state owner. Keep reports to decision, evidence
+-that changes the decision, and next action.
++After the selected route and delivery authority are satisfied, terminalize
++through the existing state owner. Report decision, material evidence and next action.
+ 
+ ## Optional observations
+ 
+-At implementation exit, inspect the loader's
+-`implementation_exit_observation_declared` field. Direct POCs emit false; retained
+-or safety-bound POCs and the higher profiles keep their existing value. When the loader output is true,
+-read the selected build contract's `review_convergence` observation and provider
+-contract it names — `../../references/roborev-implementation-exit.md` — as the
+-method. Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, and
+-`panel: none`; the actual host and implementation family is provenance only.
+-Pass the selected profile's minimum severity and caps explicitly. A full route
+-or named recovery risk emits true; recovery `[none]` emits false. A false or
+-absent declaration performs no RoboRev probe or invocation. An unavailable
+-fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
++At implementation exit, when the `implementation_exit_observation_declared`
++loader output is true, load the selected `review_convergence` observation and installed
++`../../references/roborev-implementation-exit.md` conditional reference.
++Direct POCs and recovery `[none]` emit false; full routes and named recovery risks
++emit true. A false/absent declaration performs no RoboRev probe or invocation. Use Codex
++`gpt-5.6-terra`, reasoning `medium`, `panel: none`, and explicit profile severity
++and caps; host/implementation family is provenance. Unavailable reviewer yields
++non-gating `UNAVAILABLE`.
+ 
+-The installed manifest declares the provider contract; load it as a conditional
+-reference. README policy, local mods, provider adapters, and
+-Spacedock state stay repository-owned. Load improvement harvesting only on an explicit request; it
+-never interrupts the selected product route.
++README policy, local mods, provider adapters and Spacedock state stay
++repository-owned. Load improvement harvesting only on explicit request;
++it cannot interrupt the selected route.
