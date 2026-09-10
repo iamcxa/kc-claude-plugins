@@ -61,6 +61,17 @@ gates:
                 id: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-2:revision-1
                 digest: sha256:e28fcb6fff59b9600ff83fe77a9d14476e94aa85030a0b62be5653048df03f80
                 room-ref: ./review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7efj5b0dh4dh7616yma4nykm:validation:2
+                briefing: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T19:52:16.054482Z"
+                decision: approve
+                reason: 'Captain merged #411 in chat: 「411 合併」 2026-09-11'
+              application:
+                target-stage: done
+                state: pending
 review-round:
     id: round:7efj5b0dh4dh7616yma4nykm:validation:1
     stage: validation
