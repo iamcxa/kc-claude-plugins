@@ -118,3 +118,21 @@ AC-1 through AC-3 pass against purpose-built fixtures (`fixtures/uat-doc-v2/`,
 `fixtures/close-v2/`); the design doc itself and the sibling dispatch/watch task's fence-file
 schema were not available in this worktree, so the batch-record shape and the debrief-failed
 write path are this stage's own invention, flagged above for reconciliation before AC-4's real run.
+
+## Stage Report: validation
+
+- DONE: Local POC verification: AC-1 and AC-2 and AC-3 reproduce against fixtures at this exact head (not just cited from the implementation report)
+  At worktree HEAD 3053f925: `uat-doc.py ship-cloud-wrapper --state-dir fixtures/uat-doc-v2/ready` exits 0 with both tasks + Q&A rendered; `--state-dir fixtures/uat-doc-v2/missing-gate` exits 1 printing `DEV-203`. `close.py ship-cloud-wrapper --dry-run --state-dir fixtures/close-v2/dry-run` prints exactly one `conductor message create --session sess-301 ...` line, none for unmerged `DEV-302`; the same fixture without `--dry-run` exits 3 printing `not all tasks merged`. `close.py --validate fixtures/close-v2/receipts/valid.json` exits 0; the same file with `DEV-301`'s `debrief` field removed exits 1 naming `DEV-301`. `uat-doc.test.py` and `close.test.py` both print "all checks passed", exit 0.
+- SKIPPED: Draft PR opened for this entity's diff via the pr-merge mod per the Local Profile's delivery authority
+  Per the FO's explicit correction this run, PR push/creation is the FO's action, not this ensign's — I did not push the branch or run `gh pr create`. Preflight is done and reusable: `git merge-tree --write-tree origin/main HEAD` (origin/main at c2c62bf9) is clean; diff is 23 files / +1016/-379 against origin/main, tripping the numeric topology trigger (files > 20) with no dependent/independent layers, so the delivery unit is one Draft PR carrying a `## Native stack exception` heading (the 14 fixture files only make sense paired 1:1 with the two rewritten scripts/tests). Split-root audit-link tuple resolved: entity path `ship-verify-uat-close.md`, state SHA `4bbf5638b747e5dcdb8da8dd5d1bd356ee9b3eb0`, state repo `iamcxa/kc-claude-plugins` -> `[7e](/iamcxa/kc-claude-plugins/blob/4bbf5638b747e5dcdb8da8dd5d1bd356ee9b3eb0/ship-verify-uat-close.md)`.
+- SKIPPED: AC-4 real run attempted or its exact blocking dependency (sibling dispatch/watch task's fence-file shape) named as a residual, not silently dropped
+  Not attempted; still blocked on the same dependency the implementation stage report named. Reverified this stage: `kc-ship-flow/scripts/fenced-dispatch.sh` (the only dispatch station present on this branch; no `watch.sh` exists yet) has zero references to `_ship_fence`, `debrief`, `workspace_id`, `session_id`, or `merged_sha` — the batch-record schema `close.py`/`uat-doc.py` read is still this task's own invention, not yet produced by any dispatch/watch station. AC-4 needs that station to land and its fence-file shape reconciled with `uat_doc.load_batch_record()`/`close.py`'s readers before a real run can be attempted.
+
+### Summary
+
+AC-1 through AC-3 reproduced live at worktree HEAD 3053f925 (not re-cited from the implementation
+report); both fixture-driven test files still report all-clear. Draft PR creation was deliberately
+left to the FO per this run's explicit correction — the PR body, topology decision, and split-root
+audit-link tuple are pre-resolved above so the FO's pr-merge pass needs no rework. AC-4 remains
+blocked on the sibling dispatch/watch task's fence-file schema, reverified absent on this branch,
+and is named here rather than silently dropped.
