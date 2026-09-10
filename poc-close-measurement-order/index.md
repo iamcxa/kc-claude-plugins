@@ -5,6 +5,17 @@ product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
 id: aznp6gpr6zanmr8argy0jcdj
+gates:
+    version: 1
+    records:
+        - id: gate:aznp6gpr6zanmr8argy0jcdj:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:aznp6gpr6zanmr8argy0jcdj-backlog-1
+              briefing:
+                id: briefing:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1
+                digest: sha256:7854bae80bb4b2b34cc41b5831dc80f8190b3a16db29a67ad8637b947ff91f79
+                room-ref: ./review/backlog/briefing-1
 ---
 
 # Repair phase-aware POC close measurements

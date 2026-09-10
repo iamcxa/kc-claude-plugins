@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1",
+  "question": "Admit the approved Pilot repair of POC close measurement ordering?",
+  "artifacts": [
+    {
+      "id": "artifact:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/51f04784db3c44ef4d19846b920321dbc5004235/poc-close-measurement-order/index.md",
+      "rev": "sha256:ff8de9c2e190bad344f04a82cb62a29372416e31c3c471b634123ab3ebac5d5b",
+      "mediaType": "text/markdown",
+      "summary": "Kent approved the bounded retained repair and selected Pilot. Shape phase ordering against native approval freshness; preserve compatibility and stop before product commit or live POC approval."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:aznp6gpr6zanmr8argy0jcdj:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
