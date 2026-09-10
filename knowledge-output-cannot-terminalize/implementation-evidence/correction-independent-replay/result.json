@@ -1,0 +1,16 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-overlay",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-validation-overlay-tukbokvk/overlay.json",
+    "./internal/status",
+    "-run",
+    "^TestValidationKnowledgeRollbackPreservesPreLockPeerEdit$",
+    "-count=1",
+    "-v"
+  ],
+  "rc": 0,
+  "stdout": "=== RUN   TestValidationKnowledgeRollbackPreservesPreLockPeerEdit\n    merge_guard_test.go:1406: peer_edit_present_before_failed_commit=false\n    merge_guard_test.go:1407: rc=1 live=true peer_edit_retained=true stdout= stderr=Error: merge guard: terminal delivery write refused for task: knowledge delivery rollback preimage changed before locked finalization\n--- PASS: TestValidationKnowledgeRollbackPreservesPreLockPeerEdit (1.54s)\nPASS\nok  \tgithub.com/spacedock-dev/spacedock/internal/status\t1.952s\n",
+  "stderr": ""
+}

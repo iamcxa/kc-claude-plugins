@@ -1,0 +1,10 @@
+{
+  "command": [
+    "gofmt",
+    "-w",
+    "./cmd",
+    "./internal"
+  ],
+  "rc": 0,
+  "restored_verified_preexisting_formatting_only": "internal/release/runtime_live_evidence_workflow_test.go"
+}

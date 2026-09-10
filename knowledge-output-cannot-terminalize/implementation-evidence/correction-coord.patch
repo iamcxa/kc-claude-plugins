@@ -1,0 +1,39 @@
+diff --git a/docs/dev/_mods/pr-merge.md b/docs/dev/_mods/pr-merge.md
+index 7aae70b8..6b8b2224 100644
+--- a/docs/dev/_mods/pr-merge.md
++++ b/docs/dev/_mods/pr-merge.md
+@@ -28,23 +28,21 @@ Check PR-pending entities using the same logic as the startup hook: a row carryi
+ 
+ ## Delivery without a PR
+ 
+-Not every entity delivers through a pull request. Work whose accepted outcome is knowledge — a
+-measurement that returns a verdict, an audit, a keep-or-retire decision — produces no diff and
+-therefore no PR, and the terminal guard still requires durable delivery proof.
+-
+-Record that proof as a `local-merge:` sentinel naming why there is no PR, then terminalize
+-through the ceremony:
++Knowledge-only outcomes use native `--delivery knowledge`, with a terminal human approval bound
++to the committed knowledge declaration and retained evidence described in Spacedock's upstream
++`pr-merge` mod under **Explicit knowledge delivery**. The native consumer checks the exact
++approval, frozen evidence, clean product checkout and empty diff against the declared trunk.
+ 
+ ```
+-spacedock status --workflow-dir {dir} --set {slug} pr=local-merge:{reason}
+-spacedock merge guard {slug} --workflow-dir {dir} --verdict passed
++spacedock merge guard {slug} --workflow-dir {dir} --delivery knowledge --verdict passed
+ ```
+ 
+-The sentinel is a claim about delivery, not a formality — write the reason the outcome needed no
+-artifact, so a later reader can tell "answered, nothing to ship" from "never finished".
+-
+-Do not reach for `--force` here. A refusal from the guard usually means a ceremony step was
+-skipped, and forcing past it trains the habit of overriding a guard that is normally right.
++Keep `pr` empty. `local-merge:{sha}` means a genuine local merge, never a reason for skipping one.
++An old approval without the typed declaration requires explicit native rebinding by its owner;
++do not edit its frozen Briefing or infer that existing prose already supplies the binding.
++Require `signal: finalized` and inspect publication durability before cleanup. If publication
++fails after a committed archive, resume through native `spacedock state commit {slug}`.
++A missing flag or refused proof stops here; do not use `--force`, a fake sentinel or rejected verdict.
+ 
+ ## Hook: merge
+ 

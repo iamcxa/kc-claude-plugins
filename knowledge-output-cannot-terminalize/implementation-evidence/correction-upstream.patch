@@ -1,0 +1,1066 @@
+diff --git a/internal/cli/help.go b/internal/cli/help.go
+index 0c545df..59b8f28 100644
+--- a/internal/cli/help.go
++++ b/internal/cli/help.go
+@@ -234,6 +234,7 @@ func setMergeHelp(cmd *cobra.Command, w io.Writer) {
+ Usage:
+   spacedock merge guard <slug> --verdict passed|rejected [--workflow-dir DIR]
+   spacedock merge guard <slug> --rework [--workflow-dir DIR]
++  spacedock merge guard <slug> --delivery knowledge --verdict passed [--workflow-dir DIR]
+ 
+ Drive the terminal merge ceremony for an entity as one ordered envelope: arm the
+ mod-block before the hook, detect hook completion by the state delta, then
+@@ -267,6 +268,8 @@ Exit 3 means Git rebase conflict: the rebase was aborted; stop and surface its p
+ Flags:
+   --verdict passed|rejected   The merge decision (required unless --rework; a
+                               verdict-less finalize is refused)
++  --delivery knowledge        Verify frozen knowledge evidence and exact terminal approval;
++                              requires separate state/product roots and no product diff.
+   --rework                    Delivery requires rework: supersede the pending terminal
+                               approval and route back through the declared feedback-to
+   --workflow-dir DIR          Target this workflow explicitly (skips auto-discovery).
+diff --git a/internal/gates/delivery.go b/internal/gates/delivery.go
+index 272f11f..7b9b3bd 100644
+--- a/internal/gates/delivery.go
++++ b/internal/gates/delivery.go
+@@ -5,10 +5,16 @@
+ package gates
+ 
+ import (
++	"bytes"
++	"encoding/json"
+ 	"fmt"
++	"os"
++	"os/exec"
+ 	"path/filepath"
++	"regexp"
+ 	"strings"
+ 
++	"github.com/spacedock-dev/spacedock/internal/gitsource"
+ 	"gopkg.in/yaml.v3"
+ )
+ 
+@@ -23,26 +29,47 @@ import (
+ // record (ErrNoGateRecord — the only case a caller may fall back to a legacy
+ // gate-free path), the authority is unreadable or digest-stale, or the current
+ // application is not a binding pending advance onto the terminal stage.
+-func FinalizeTerminalApproval(path, workflowDir, verdict, completedStamp string) (string, error) {
+-	unlock, doc, oldNode, status, eligibility, err := lockPendingTerminalApproval(path, workflowDir)
++// A supplied knowledge binding also permits a validated consumed delivery to
++// resume without another write; the whole checked entity binds its first write.
++func FinalizeTerminalApproval(path, workflowDir, verdict, completedStamp string, knowledge ...KnowledgeApproval) (string, error) {
++	unlock, doc, oldNode, status, eligibility, err := lockPendingTerminalApproval(path, workflowDir, len(knowledge) > 0)
+ 	if err != nil {
+ 		return "", err
+ 	}
+ 	defer unlock()
+ 	record, err := recordForStage(doc, status)
++	if len(knowledge) > 0 && record == nil && len(doc.Records) > 0 {
++		record = &doc.Records[len(doc.Records)-1]
++		err = nil
++	}
+ 	if err != nil {
+ 		return "", err
+ 	}
+ 	attempt := &record.Attempts[len(record.Attempts)-1]
++	expectation := entityExpectation{Gates: oldNode, Status: &status}
++	if len(knowledge) > 0 {
++		if len(knowledge) != 1 || verdict != "PASSED" || knowledge[0].Attempt != attempt.ID || knowledge[0].BriefingDigest != attempt.Briefing.Digest {
++			return "", fmt.Errorf("knowledge delivery approval identity or verdict changed")
++		}
++		snapshot, err := checkedKnowledgeSnapshot(path, workflowDir, status, oldNode, attempt)
++		if err != nil {
++			return "", err
++		}
++		expectation = entityExpectation{Bytes: snapshot}
++		if attempt.Application.State == "consumed" {
++			return status, nil
++		}
++	}
+ 	attempt.Application.State = "consumed"
+ 	if err := validateApplicationMutation(oldNode, doc, attempt.ID, "pending", "consumed"); err != nil {
+ 		return "", err
+ 	}
+ 	target := eligibility.TargetStage
+-	if err := writeEntityDocument(path, oldNode, &status, doc, &target,
+-		entityField{key: "verdict", value: verdict},
+-		entityField{key: "completed", value: completedStamp},
+-	); err != nil {
++	fields := []entityField{{key: "verdict", value: verdict}, {key: "completed", value: completedStamp}}
++	if len(knowledge) > 0 {
++		fields = append(fields, entityField{key: "mod-block", value: ""})
++	}
++	if err := writeEntityDocumentExpected(path, expectation, doc, &target, fields...); err != nil {
+ 		return "", err
+ 	}
+ 	return target, nil
+@@ -156,8 +183,10 @@ func ApprovedAwaitingMergeRoute(path, workflowDir string) bool {
+ // (ErrNoGateRecord), unreadable/digest-stale retained authority, or an
+ // application that is consumed/superseded/never-pending or not aimed at the
+ // terminal stage — returns an error with the lock released and no byte
+-// written. On success the caller owns the returned unlock.
+-func lockPendingTerminalApproval(path, workflowDir string) (unlock func(), doc *Document, oldNode *yaml.Node, status string, eligibility Eligibility, err error) {
++// written. Knowledge resume additionally admits a consumed approval targeting
++// the current terminal stage; the caller must validate its delivery proof.
++// On success the caller owns the returned unlock.
++func lockPendingTerminalApproval(path, workflowDir string, knowledgeResume ...bool) (unlock func(), doc *Document, oldNode *yaml.Node, status string, eligibility Eligibility, err error) {
+ 	unlock, err = lockEntity(path)
+ 	if err != nil {
+ 		return nil, nil, nil, "", Eligibility{}, err
+@@ -178,6 +207,15 @@ func lockPendingTerminalApproval(path, workflowDir string) (unlock func(), doc *
+ 		return fail(err)
+ 	}
+ 	record, err := recordForStage(doc, status)
++	if len(knowledgeResume) > 0 && knowledgeResume[0] && record == nil && len(doc.Records) > 0 {
++		prior := &doc.Records[len(doc.Records)-1]
++		if len(prior.Attempts) > 0 {
++			attempt := prior.Attempts[len(prior.Attempts)-1]
++			if attempt.Resolution != nil && attempt.Resolution.Decision == "approve" && attempt.Application != nil && attempt.Application.State == "consumed" && attempt.Application.TargetStage == status && advanceTargetTerminal(workflowDir, prior.Stage, status) {
++				return unlock, doc, oldNode, status, Eligibility{TargetStage: status}, nil
++			}
++		}
++	}
+ 	if err != nil {
+ 		return fail(err)
+ 	}
+@@ -199,3 +237,195 @@ func lockPendingTerminalApproval(path, workflowDir string) (unlock func(), doc *
+ 	}
+ 	return unlock, doc, oldNode, status, eligibility, nil
+ }
++
++// KnowledgeApproval binds caller selection to the approval consumed under lock.
++type KnowledgeApproval struct {
++	Attempt        string
++	BriefingDigest string
++}
++
++type knowledgeDeclaration struct {
++	Type    string `json:"type"`
++	Version string `json:"version"`
++	Outcome string `json:"outcome"`
++	Product struct {
++		Root     string `json:"root"`
++		Worktree string `json:"worktree,omitempty"`
++		Base     string `json:"base"`
++		Head     string `json:"head"`
++	} `json:"product"`
++	Evidence []struct {
++		URI string `json:"uri"`
++		Rev string `json:"rev"`
++	} `json:"evidence"`
++}
++
++func validateKnowledgeDelivery(entity, workflow string, snapshot []byte, binding Briefing) error {
++	root, _, _, err := frontmatterNode(snapshot)
++	if err != nil {
++		return err
++	}
++	field := func(key string) string {
++		if n := mappingValue(root, key); n != nil {
++			return strings.TrimSpace(n.Value)
++		}
++		return ""
++	}
++	if field("pr") != "" {
++		return fmt.Errorf("knowledge delivery refuses PR or merge claims")
++	}
++	manifest, err := boundBriefingManifest(entity, binding)
++	if err != nil {
++		return err
++	}
++	if len(manifest.Artifacts) != 1 {
++		return fmt.Errorf("knowledge delivery requires one approved declaration artifact")
++	}
++	roots := gitsource.Roots{Main: workflow, State: filepath.Dir(entity)}
++	artifact := manifest.Artifacts[0]
++	data, err := gitsource.Resolve(roots, artifact.URI, artifact.Rev)
++	if err != nil {
++		return err
++	}
++	const fence = "```spacedock-knowledge-delivery\n"
++	parts := strings.Split(string(data), fence)
++	if len(parts) != 2 {
++		return fmt.Errorf("approved artifact must contain one knowledge delivery declaration")
++	}
++	end := strings.Index(parts[1], "\n```")
++	if end < 0 {
++		return fmt.Errorf("unclosed knowledge delivery declaration")
++	}
++	if err := rejectDuplicateMembers([]byte(parts[1][:end])); err != nil {
++		return err
++	}
++	var declaration knowledgeDeclaration
++	decoder := json.NewDecoder(strings.NewReader(parts[1][:end]))
++	decoder.DisallowUnknownFields()
++	if err := decoder.Decode(&declaration); err != nil {
++		return err
++	}
++	if declaration.Type != "KnowledgeDelivery" || declaration.Version != "1" || strings.TrimSpace(declaration.Outcome) == "" || len(declaration.Evidence) == 0 {
++		return fmt.Errorf("incomplete knowledge delivery declaration")
++	}
++	for _, evidence := range declaration.Evidence {
++		if _, err := gitsource.Resolve(roots, evidence.URI, evidence.Rev); err != nil {
++			return fmt.Errorf("knowledge evidence: %w", err)
++		}
++	}
++	gitRead := func(dir string, args ...string) (string, error) {
++		out, err := exec.Command("git", append([]string{"-C", dir}, args...)...).Output()
++		return strings.TrimSpace(string(out)), err
++	}
++	main, err := gitRead(workflow, "rev-parse", "--show-toplevel")
++	if err != nil {
++		return err
++	}
++	product := main
++	scope := "main"
++	if worktree := field("worktree"); worktree != "" {
++		if filepath.IsAbs(worktree) || filepath.Clean(worktree) == ".." || strings.HasPrefix(filepath.Clean(worktree), ".."+string(filepath.Separator)) {
++			return fmt.Errorf("knowledge product worktree must be repository-relative")
++		}
++		product = filepath.Join(main, worktree)
++		scope = "worktree"
++	}
++	if declaration.Product.Root != scope || declaration.Product.Worktree != field("worktree") {
++		return fmt.Errorf("knowledge product scope does not match the entity")
++	}
++	state, err := gitRead(filepath.Dir(entity), "rev-parse", "--show-toplevel")
++	productRoot, rootErr := gitRead(product, "rev-parse", "--show-toplevel")
++	if err != nil || rootErr != nil || productRoot == state {
++		return fmt.Errorf("knowledge delivery requires separate product and state Git roots")
++	}
++	fullCommit := regexp.MustCompile(`^[0-9a-f]{40}$`)
++	for _, commit := range []string{declaration.Product.Base, declaration.Product.Head} {
++		if !fullCommit.MatchString(commit) {
++			return fmt.Errorf("knowledge product requires full commit IDs")
++		}
++		resolved, err := gitRead(product, "rev-parse", "--verify", commit+"^{commit}")
++		if err != nil || resolved != commit {
++			return fmt.Errorf("knowledge product requires exact local commit objects")
++		}
++	}
++	readme, err := os.ReadFile(filepath.Join(workflow, "README.md"))
++	if err != nil {
++		return err
++	}
++	config, _, _, err := frontmatterNode(readme)
++	if err != nil {
++		return err
++	}
++	trunk := "main"
++	if value := mappingValue(config, "trunk"); value != nil && strings.TrimSpace(value.Value) != "" {
++		trunk = strings.TrimSpace(value.Value)
++	}
++	base, err := gitRead(product, "rev-parse", "--verify", "refs/heads/"+trunk+"^{commit}")
++	if err != nil || base != declaration.Product.Base {
++		return fmt.Errorf("knowledge product base does not match workflow trunk")
++	}
++	head, err := gitRead(product, "rev-parse", "HEAD")
++	if err != nil || head != declaration.Product.Head {
++		return fmt.Errorf("knowledge product HEAD changed")
++	}
++	if _, err := gitRead(product, "diff", "--exit-code", declaration.Product.Base, declaration.Product.Head, "--"); err != nil {
++		return fmt.Errorf("knowledge delivery has a product diff")
++	}
++	dirty, err := gitRead(product, "status", "--porcelain", "--untracked-files=all")
++	if err != nil || dirty != "" {
++		return fmt.Errorf("knowledge product checkout is not clean")
++	}
++	// The snapshot must still bind the gate record checked under this lock.
++	current, err := os.ReadFile(entity)
++	if err != nil || !bytes.Equal(current, snapshot) {
++		return fmt.Errorf("knowledge entity changed during evidence checks")
++	}
++	return nil
++}
++
++func checkedKnowledgeSnapshot(path, workflowDir, status string, oldNode *yaml.Node, attempt *Attempt) ([]byte, error) {
++	snapshot, err := os.ReadFile(path)
++	if err != nil {
++		return nil, err
++	}
++	_, snapshotGate, err := readData(snapshot)
++	snapshotRoot, _, _, parseErr := frontmatterNode(snapshot)
++	if parseErr != nil {
++		return nil, parseErr
++	}
++	snapshotStatus := mappingValue(snapshotRoot, "status")
++	if err != nil || snapshotStatus == nil || snapshotStatus.Value != status || !sameYAMLNode(snapshotGate, oldNode) {
++		return nil, fmt.Errorf("knowledge approval changed during locked selection")
++	}
++	if err := validateKnowledgeDelivery(path, workflowDir, snapshot, attempt.Briefing); err != nil {
++		return nil, err
++	}
++	if attempt.Application.State == "consumed" {
++		verdictNode, completed := mappingValue(snapshotRoot, "verdict"), mappingValue(snapshotRoot, "completed")
++		if verdictNode == nil || verdictNode.Value != "PASSED" || completed == nil || completed.Value == "" {
++			return nil, fmt.Errorf("knowledge resume requires completed PASSED delivery")
++		}
++	}
++	return snapshot, nil
++}
++
++// LockKnowledgeArchive holds the native entity lock until the archive owner has
++// compared and moved the exact validated bytes. It never consumes an approval.
++func LockKnowledgeArchive(path, workflowDir string) ([]byte, func(), error) {
++	unlock, doc, node, status, _, err := lockPendingTerminalApproval(path, workflowDir, true)
++	if err != nil {
++		return nil, nil, err
++	}
++	record := doc.Records[len(doc.Records)-1]
++	attempt := &record.Attempts[len(record.Attempts)-1]
++	if attempt.Application.State != "consumed" {
++		unlock()
++		return nil, nil, fmt.Errorf("knowledge archive requires consumed delivery")
++	}
++	snapshot, err := checkedKnowledgeSnapshot(path, workflowDir, status, node, attempt)
++	if err != nil {
++		unlock()
++		return nil, nil, err
++	}
++	return snapshot, unlock, nil
++}
+diff --git a/internal/gates/delivery_test.go b/internal/gates/delivery_test.go
+index 6a8b2da..0fd0dd9 100644
+--- a/internal/gates/delivery_test.go
++++ b/internal/gates/delivery_test.go
+@@ -7,7 +7,10 @@ import (
+ 	"bytes"
+ 	"errors"
+ 	"fmt"
++	"github.com/spacedock-dev/spacedock/internal/gitsource"
++	"github.com/spacedock-dev/spacedock/internal/testgit"
+ 	"os"
++	"os/exec"
+ 	"path/filepath"
+ 	"strings"
+ 	"testing"
+@@ -219,3 +222,196 @@ func TestSupersedeTerminalApprovalRoutesDeclaredFeedback(t *testing.T) {
+ 		})
+ 	}
+ }
++
++func knowledgeApprovalFixture(t *testing.T, invalid ...string) (string, string) {
++	t.Helper()
++	writeFile := func(_ *testing.T, path, data string) {
++		t.Helper()
++		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
++			t.Fatal(err)
++		}
++		if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
++			t.Fatal(err)
++		}
++	}
++	gitOutput := func(_ *testing.T, dir string, args ...string) string {
++		t.Helper()
++		out, err := exec.Command("git", append([]string{"-C", dir}, args...)...).CombinedOutput()
++		if err != nil {
++			t.Fatalf("git: %v %s", err, out)
++		}
++		return string(out)
++	}
++
++	root := t.TempDir()
++	state := filepath.Join(root, ".state")
++	writeFile(t, filepath.Join(root, "README.md"), "---\nid-style: slug\nstate: .state\nstate-branch: spacedock-state/dev\nstages:\n  states:\n    - name: validation\n      initial: true\n      gate: true\n      feedback-to: validation\n    - name: done\n      terminal: true\n---\n")
++	writeFile(t, filepath.Join(root, ".gitignore"), ".state/\n")
++	writeFile(t, filepath.Join(root, "_mods", "pr-merge.md"), "---\nname: pr-merge\n---\n## Hook: merge\n")
++	testgit.InitRepo(t, root)
++	gitOutput(t, root, "branch", "-M", "main")
++	gitOutput(t, root, "add", ".")
++	gitOutput(t, root, "commit", "-qm", "product baseline")
++	head := strings.TrimSpace(gitOutput(t, root, "rev-parse", "HEAD"))
++	base := head
++	if len(invalid) > 0 && invalid[0] == "product-diff" {
++		gitOutput(t, root, "checkout", "-qb", "feature")
++		writeFile(t, filepath.Join(root, "product.txt"), "product change")
++		gitOutput(t, root, "add", ".")
++		gitOutput(t, root, "commit", "-qm", "product change")
++		head = strings.TrimSpace(gitOutput(t, root, "rev-parse", "HEAD"))
++	}
++	entity := filepath.Join(state, "task.md")
++	writeFile(t, entity, "---\nid: task\ntitle: Synthetic knowledge\nstatus: validation\n---\nSynthetic only.\n")
++	writeFile(t, filepath.Join(state, "evidence.md"), "Synthetic outcome: change; no product delivery.\n")
++	testgit.InitRepo(t, state)
++	gitOutput(t, state, "branch", "-M", "spacedock-state/dev")
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only evidence")
++	source, err := gitsource.Inspect(gitsource.Roots{Main: root, State: state}, filepath.Join(state, "evidence.md"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	declaration := fmt.Sprintf("```spacedock-knowledge-delivery\n{\"type\":\"KnowledgeDelivery\",\"version\":\"1\",\"outcome\":\"change\",\"product\":{\"root\":\"main\",\"base\":%q,\"head\":%q},\"evidence\":[{\"uri\":%q,\"rev\":%q}]}\n```\n", base, head, source.URI, source.Rev)
++	if len(invalid) > 0 {
++		switch invalid[0] {
++		case "evidence":
++			declaration = strings.Replace(declaration, source.Rev, "sha256:"+strings.Repeat("0", 64), 1)
++		case "product-claim":
++			declaration = strings.Replace(declaration, `"root":"main"`, `"root":"product-delivery"`, 1)
++		case "duplicate-declaration":
++			declaration = strings.Replace(declaration, `"outcome":"change"`, `"outcome":"product","outcome":"change"`, 1)
++		case "missing-declaration":
++			declaration = strings.Replace(declaration, "spacedock-knowledge-delivery", "json", 1)
++		}
++	}
++	artifact := filepath.Join(state, "knowledge.md")
++	writeFile(t, artifact, declaration)
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only declaration")
++	if _, err := Prepare(entity, PrepareInput{WorkflowDir: root, Artifact: artifact, Question: "Accept synthetic knowledge?", Summary: "TEST ONLY no human approval"}); err != nil {
++		t.Fatal(err)
++	}
++	if len(invalid) == 0 || invalid[0] != "missing-approval" {
++		if err := RecordSemantic(entity, RecordInput{WorkflowDir: root, Decision: "approve", Actor: "person:captain", Reason: "TEST ONLY"}); err != nil {
++			t.Fatal(err)
++		}
++	}
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only approval")
++	return root, entity
++}
++
++func knowledgeBinding(t *testing.T, entity string) KnowledgeApproval {
++	t.Helper()
++	doc, _, err := Read(entity)
++	if err != nil {
++		t.Fatal(err)
++	}
++	record := doc.Records[len(doc.Records)-1]
++	attempt := record.Attempts[len(record.Attempts)-1]
++	return KnowledgeApproval{Attempt: attempt.ID, BriefingDigest: attempt.Briefing.Digest}
++}
++
++func TestKnowledgeApprovalRefusalsAndResume(t *testing.T) {
++	for _, kind := range []string{"valid", "attempt", "digest", "changed-worktree", "open-pr", "reason-sentinel", "briefing", "evidence", "product-claim", "missing-declaration", "duplicate-declaration", "missing-approval", "dirty-product", "product-diff", "changed-head", "substitution"} {
++		t.Run(kind, func(t *testing.T) {
++			root, entity := knowledgeApprovalFixture(t, kind)
++			binding := knowledgeBinding(t, entity)
++			switch kind {
++			case "attempt":
++				binding.Attempt += "changed"
++			case "digest":
++				binding.BriefingDigest += "changed"
++			case "changed-worktree":
++				data, _ := os.ReadFile(entity)
++				data = bytes.Replace(data, []byte("status: validation"), []byte("status: validation\nworktree: .worktrees/other"), 1)
++				os.WriteFile(entity, data, 0o644)
++			case "open-pr", "reason-sentinel":
++				value := "'#42'"
++				if kind == "reason-sentinel" {
++					value = "local-merge:knowledge"
++				}
++				data, _ := os.ReadFile(entity)
++				data = bytes.Replace(data, []byte("status: validation"), []byte("status: validation\npr: "+value), 1)
++				os.WriteFile(entity, data, 0o644)
++			case "briefing":
++				doc, _, _ := Read(entity)
++				room, _ := ResolveRoomRef(entity, doc.Records[0].Attempts[0].Briefing.RoomRef)
++				os.WriteFile(filepath.Join(room, "index.json"), []byte("{}"), 0o644)
++			case "dirty-product":
++				os.WriteFile(filepath.Join(root, "product.txt"), []byte("uncommitted product"), 0o644)
++			case "changed-head":
++				cmd := exec.Command("git", "-C", root, "commit", "--allow-empty", "-qm", "new product head")
++				if out, err := cmd.CombinedOutput(); err != nil {
++					t.Fatalf("%v %s", err, out)
++				}
++			case "substitution":
++				if _, err := SupersedeTerminalApproval(entity, root); err != nil {
++					t.Fatal(err)
++				}
++				if _, err := Prepare(entity, PrepareInput{WorkflowDir: root, Artifact: filepath.Join(filepath.Dir(entity), "knowledge.md"), Question: "Synthetic successor?", Summary: "TEST ONLY"}); err != nil {
++					t.Fatal(err)
++				}
++				if err := RecordSemantic(entity, RecordInput{WorkflowDir: root, Decision: "approve", Actor: "person:captain", Reason: "TEST ONLY successor"}); err != nil {
++					t.Fatal(err)
++				}
++			}
++			before, _ := os.ReadFile(entity)
++			target, err := FinalizeTerminalApproval(entity, root, "PASSED", "2026-09-11T00:00:00Z", binding)
++			after, _ := os.ReadFile(entity)
++			if kind != "valid" {
++				if err == nil || !bytes.Equal(before, after) {
++					t.Fatalf("%s must refuse unchanged: %v", kind, err)
++				}
++				return
++			}
++			if err != nil || target != "done" {
++				t.Fatalf("knowledge consume: %s %v", target, err)
++			}
++			if _, err := FinalizeTerminalApproval(entity, root, "PASSED", "changed", binding); err != nil {
++				t.Fatalf("resume: %v", err)
++			}
++			resumed, _ := os.ReadFile(entity)
++			if !bytes.Equal(after, resumed) {
++				t.Fatal("resume spent or wrote approval twice")
++			}
++			for _, tamper := range []struct{ old, new string }{{"verdict: PASSED", "verdict: REJECTED"}, {"decision: approve", "decision: reject"}} {
++				changed := bytes.Replace(after, []byte(tamper.old), []byte(tamper.new), 1)
++				os.WriteFile(entity, changed, 0o644)
++				if _, err := FinalizeTerminalApproval(entity, root, "PASSED", "changed", binding); err == nil {
++					t.Fatal("tampered consumed authority resumed")
++				}
++				readback, _ := os.ReadFile(entity)
++				if !bytes.Equal(changed, readback) {
++					t.Fatal("refused resume changed entity")
++				}
++			}
++			os.WriteFile(entity, after, 0o644)
++			doc, _, _ := Read(entity)
++			if doc.Records[0].Attempts[0].Application.State != "consumed" {
++				t.Fatal("approval not consumed")
++			}
++		})
++	}
++}
++
++func TestKnowledgeWholeEntityExpectation(t *testing.T) {
++	for _, change := range []string{"\nchanged body\n", "pr: '#42'\n"} {
++		root, entity := knowledgeApprovalFixture(t)
++		_ = root
++		before, _ := os.ReadFile(entity)
++		doc, _, _ := Read(entity)
++		changed := append(append([]byte(nil), before...), []byte(change)...)
++		if strings.HasPrefix(change, "pr:") {
++			changed = bytes.Replace(before, []byte("status: validation\n"), []byte("status: validation\n"+change), 1)
++		}
++		os.WriteFile(entity, changed, 0o644)
++		status := "done"
++		err := writeEntityDocumentExpected(entity, entityExpectation{Bytes: before}, doc, &status)
++		after, _ := os.ReadFile(entity)
++		if err == nil || !bytes.Equal(changed, after) {
++			t.Fatalf("entity drift must refuse without overwrite: %v", err)
++		}
++	}
++}
+diff --git a/internal/gates/io.go b/internal/gates/io.go
+index 36309f4..735970a 100644
+--- a/internal/gates/io.go
++++ b/internal/gates/io.go
+@@ -311,11 +311,15 @@ type entityField struct {
+ var entityDocumentWriteFn = atomicWrite
+ 
+ func writeEntityDocument(path string, expected *yaml.Node, expectedStatus *string, doc *Document, status *string, fields ...entityField) error {
++	return writeEntityDocumentExpected(path, entityExpectation{Gates: expected, Status: expectedStatus}, doc, status, fields...)
++}
++
++func writeEntityDocumentExpected(path string, expectation entityExpectation, doc *Document, status *string, fields ...entityField) error {
+ 	if err := Validate(doc); err != nil {
+ 		return err
+ 	}
+-	if expected == nil {
+-		expected = &yaml.Node{}
++	if expectation.Bytes == nil && expectation.Gates == nil {
++		expectation.Gates = &yaml.Node{}
+ 	}
+ 	gatesBlock, err := yaml.Marshal(struct {
+ 		Gates *Document `yaml:"gates"`
+@@ -343,7 +347,7 @@ func writeEntityDocument(path string, expected *yaml.Node, expectedStatus *strin
+ 		// shape to the --set it replaces.
+ 		replacements = append(replacements, topLevelReplacement{key: f.key, data: []byte(f.key + ": " + f.value + "\n"), insert: true})
+ 	}
+-	return mutateEntity(path, entityExpectation{Gates: expected, Status: expectedStatus}, func(original []byte) ([]byte, error) {
++	return mutateEntity(path, expectation, func(original []byte) ([]byte, error) {
+ 		out, err := replaceTopLevels(original, replacements...)
+ 		if err != nil {
+ 			return nil, err
+diff --git a/internal/status/merge.go b/internal/status/merge.go
+index ec7763e..a881c3b 100644
+--- a/internal/status/merge.go
++++ b/internal/status/merge.go
+@@ -3,6 +3,7 @@
+ package status
+ 
+ import (
++	"bytes"
+ 	"errors"
+ 	"fmt"
+ 	"io"
+@@ -36,6 +37,13 @@ func MergeGuard(args []string, dir string, stdout, stderr io.Writer) int {
+ 	asJSON := contains(rest, "--json")
+ 	quiet := contains(rest, "--quiet")
+ 	rework := contains(rest, "--rework")
++	delivery, err := parseSingleArg(rest, "--delivery", "knowledge")
++	if err != nil {
++		return errExit(stderr, err.Error())
++	}
++	if delivery != "" && delivery != "knowledge" {
++		return errExit(stderr, "merge guard --delivery must be knowledge")
++	}
+ 
+ 	verdict, err := parseSingleArg(rest, "--verdict", "passed|rejected")
+ 	if err != nil {
+@@ -67,7 +75,7 @@ func MergeGuard(args []string, dir string, stdout, stderr io.Writer) int {
+ 		switch {
+ 		case a == "--json" || a == "--quiet" || a == "--rework":
+ 			continue
+-		case a == "--verdict":
++		case a == "--verdict" || a == "--delivery":
+ 			i++ // skip the flag's value, already parsed by parseSingleArg
+ 			continue
+ 		case strings.HasPrefix(a, "--"):
+@@ -136,6 +144,21 @@ func MergeGuard(args []string, dir string, stdout, stderr io.Writer) int {
+ 	// Selection reads the CURRENT frontmatter at action time (finalize /
+ 	// reworkDelivery classify fail-closed themselves).
+ 
++	if delivery == "knowledge" {
++		if rework || verdict != "passed" {
++			return errExit(stderr, "knowledge delivery requires --verdict passed")
++		}
++		doc, _, err := gates.Read(entityPath)
++		if err != nil {
++			return errExit(stderr, err.Error())
++		}
++		if len(doc.Records) == 0 || len(doc.Records[len(doc.Records)-1].Attempts) == 0 {
++			return errExit(stderr, "knowledge delivery requires terminal approval")
++		}
++		record := doc.Records[len(doc.Records)-1]
++		attempt := record.Attempts[len(record.Attempts)-1]
++		return finalize(roots, slug, modBlock, pr, verdict, worktree, hookRegistered, entityPath, quiet, asJSON, stdout, stderr, gates.KnowledgeApproval{Attempt: attempt.ID, BriefingDigest: attempt.Briefing.Digest})
++	}
+ 	if rework {
+ 		return reworkDelivery(roots, slug, entityPath, fields, quiet, asJSON, stdout, stderr)
+ 	}
+@@ -406,7 +429,7 @@ func arm(roots roots, slug, hook string, quiet, asJSON bool, stdout, stderr io.W
+ // find it on a re-run. So finalize snapshots the entity's pre-finalize bytes and live
+ // location before mutating, and on commit failure reverses the move and restores the
+ // original content, returning the entity to its exact pre-finalize state.
+-func finalize(roots roots, slug, modBlock, pr, verdict, worktree string, hookRegistered bool, entityPath string, quiet, asJSON bool, stdout, stderr io.Writer) int {
++func finalize(roots roots, slug, modBlock, pr, verdict, worktree string, hookRegistered bool, entityPath string, quiet, asJSON bool, stdout, stderr io.Writer, knowledge ...gates.KnowledgeApproval) int {
+ 	// Snapshot the pre-finalize state up front — before any mutation — so a failed
+ 	// archive commit can be rolled back to exactly the state the FO would re-run
+ 	// against. The live path and form resolve here while the file still sits at its
+@@ -435,11 +458,15 @@ func finalize(roots roots, slug, modBlock, pr, verdict, worktree string, hookReg
+ 	// disturbed briefing room or an unreadable gates record is a refusal, never
+ 	// a legacy finalize with authority left pending.
+ 	currentStatus := strings.TrimSpace(ParseFrontmatter(entityPath)["status"])
+-	_, pendingApproval, classErr := pendingTerminalApproval(entityPath, roots.definitionDir, currentStatus)
+-	if classErr != nil {
+-		return errExit(stderr, fmt.Sprintf("merge guard: refusing to finalize %s: %v", slug, classErr))
++	pendingApproval := true
++	if len(knowledge) == 0 {
++		var classErr error
++		_, pendingApproval, classErr = pendingTerminalApproval(entityPath, roots.definitionDir, currentStatus)
++		if classErr != nil {
++			return errExit(stderr, fmt.Sprintf("merge guard: refusing to finalize %s: %v", slug, classErr))
++		}
+ 	}
+-	if modBlock != "" {
++	if modBlock != "" && len(knowledge) == 0 {
+ 		if rc := emitSet(roots, slug, []fieldUpdate{{field: "mod-block", value: "", hasValue: true}}, stderr); rc != 0 {
+ 			return rc
+ 		}
+@@ -447,7 +474,7 @@ func finalize(roots roots, slug, modBlock, pr, verdict, worktree string, hookReg
+ 	if pendingApproval {
+ 		// Sole-consumer write: gates owns the locked candidate carrying the
+ 		// spend, terminal status, verdict, and completed together.
+-		if _, err := gates.FinalizeTerminalApproval(entityPath, roots.definitionDir, stored, nowTimestamp()); err != nil {
++		if _, err := gates.FinalizeTerminalApproval(entityPath, roots.definitionDir, stored, nowTimestamp(), knowledge...); err != nil {
+ 			return errExit(stderr, fmt.Sprintf("merge guard: terminal delivery write refused for %s: %v", slug, err))
+ 		}
+ 	} else {
+@@ -463,8 +490,19 @@ func finalize(roots roots, slug, modBlock, pr, verdict, worktree string, hookReg
+ 	if rc := runArchive(roots.definitionDir, roots.entityDir, roots.entityDirSpelling, slug, false, true, false, io.Discard, stderr); rc != 0 {
+ 		return rc
+ 	}
++	archivedPath := filepath.Join(roots.entityDir, "_archive", slug+".md")
++	if snapshot.isFolder {
++		archivedPath = filepath.Join(roots.entityDir, "_archive", slug, "index.md")
++	}
++	archivedBytes, _ := os.ReadFile(archivedPath)
+ 	if rc := commitArchiveMove(roots.entityDir, slug, snapshot, stderr); rc != 0 {
+-		if rbErr := rollbackArchive(roots.entityDir, slug, snapshot); rbErr != nil {
++		if len(knowledge) > 0 {
++			current, err := os.ReadFile(archivedPath)
++			if err != nil || !bytes.Equal(current, archivedBytes) || fileExists(snapshot.livePath) {
++				return errExit(stderr, "knowledge archive changed during failed commit; refusing rollback over intervening writes")
++			}
++		}
++		if rbErr := rollbackArchive(roots.entityDir, slug, snapshot, len(knowledge) > 0); rbErr != nil {
+ 			// The commit failed AND the rollback could not fully restore the
+ 			// pre-finalize state — the entity may be half-mutated with a partial archive
+ 			// or a leaked index entry. This needs human attention, not a silent rc=1, so
+@@ -737,7 +775,7 @@ func captureArchiveState(entityDir, slug string) (archiveSnapshot, error) {
+ //
+ // It attempts every step even if an earlier one fails, joining the errors, so a
+ // partial failure surfaces all of what went wrong rather than masking later steps.
+-func rollbackArchive(entityDir, slug string, snap archiveSnapshot) error {
++func rollbackArchive(entityDir, slug string, snap archiveSnapshot, preserveContent ...bool) error {
+ 	var errs []error
+ 
+ 	if snap.isFolder {
+@@ -761,7 +799,9 @@ func rollbackArchive(entityDir, slug string, snap archiveSnapshot) error {
+ 	}
+ 	// Restore the pre-archive content+mode only if the file is back at its live path
+ 	// (a failed reverse-rename leaves nothing to write to).
+-	if isRegularFile(snap.livePath) {
++	// Knowledge retries revalidate consumed authority; retain current bytes so
++	// edits accepted after the pre-finalize snapshot cannot be overwritten.
++	if isRegularFile(snap.livePath) && (len(preserveContent) == 0 || !preserveContent[0]) {
+ 		if err := os.WriteFile(snap.livePath, snap.content, snap.mode); err != nil {
+ 			errs = append(errs, fmt.Errorf("restore content: %w", err))
+ 		}
+diff --git a/internal/status/merge_guard_test.go b/internal/status/merge_guard_test.go
+index 7d694d5..c36602b 100644
+--- a/internal/status/merge_guard_test.go
++++ b/internal/status/merge_guard_test.go
+@@ -12,6 +12,11 @@ import (
+ 	"path/filepath"
+ 	"strings"
+ 	"testing"
++
++	"github.com/spacedock-dev/spacedock/internal/gates"
++	"github.com/spacedock-dev/spacedock/internal/gitsource"
++	"github.com/spacedock-dev/spacedock/internal/statesync"
++	"github.com/spacedock-dev/spacedock/internal/testgit"
+ )
+ 
+ func TestMergeGuardInlineJSONReportsOneDurabilityBoundResult(t *testing.T) {
+@@ -1159,3 +1164,241 @@ func TestMergeGuardRollbackPreservesFileMode(t *testing.T) {
+ 		t.Fatalf("rollback must restore the original mode 0o600, got %o", got)
+ 	}
+ }
++
++func knowledgeMergeFixture(t *testing.T) (string, string) {
++	t.Helper()
++	root := t.TempDir()
++	state := filepath.Join(root, ".state")
++	writeFile(t, filepath.Join(root, "README.md"), "---\nid-style: slug\nstate: .state\nstate-branch: spacedock-state/dev\nstages:\n  states:\n    - name: validation\n      initial: true\n      gate: true\n    - name: done\n      terminal: true\n---\n")
++	writeFile(t, filepath.Join(root, ".gitignore"), ".state/\n")
++	writeFile(t, filepath.Join(root, "_mods", "pr-merge.md"), "---\nname: pr-merge\n---\n## Hook: merge\n")
++	testgit.InitRepo(t, root)
++	gitOutput(t, root, "branch", "-M", "main")
++	gitOutput(t, root, "add", ".")
++	gitOutput(t, root, "commit", "-qm", "product baseline")
++	head := strings.TrimSpace(gitOutput(t, root, "rev-parse", "HEAD"))
++	entity := filepath.Join(state, "task.md")
++	writeFile(t, entity, "---\nid: task\ntitle: Synthetic knowledge\nstatus: validation\n---\nSynthetic only.\n")
++	writeFile(t, filepath.Join(state, "evidence.md"), "Synthetic outcome: change; no product delivery.\n")
++	testgit.InitRepo(t, state)
++	gitOutput(t, state, "branch", "-M", "spacedock-state/dev")
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only evidence")
++	source, err := gitsource.Inspect(gitsource.Roots{Main: root, State: state}, filepath.Join(state, "evidence.md"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	declaration := fmt.Sprintf("```spacedock-knowledge-delivery\n{\"type\":\"KnowledgeDelivery\",\"version\":\"1\",\"outcome\":\"change\",\"product\":{\"root\":\"main\",\"base\":%q,\"head\":%q},\"evidence\":[{\"uri\":%q,\"rev\":%q}]}\n```\n", head, head, source.URI, source.Rev)
++	artifact := filepath.Join(state, "knowledge.md")
++	writeFile(t, artifact, declaration)
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only declaration")
++	if _, err := gates.Prepare(entity, gates.PrepareInput{WorkflowDir: root, Artifact: artifact, Question: "Accept synthetic knowledge?", Summary: "TEST ONLY no human approval"}); err != nil {
++		t.Fatal(err)
++	}
++	if err := gates.RecordSemantic(entity, gates.RecordInput{WorkflowDir: root, Decision: "approve", Actor: "person:captain", Reason: "TEST ONLY"}); err != nil {
++		t.Fatal(err)
++	}
++	gitOutput(t, state, "add", ".")
++	gitOutput(t, state, "commit", "-qm", "test-only approval")
++	return root, entity
++}
++
++func TestKnowledgeMergeNativeArchive(t *testing.T) {
++	root, entity := knowledgeMergeFixture(t)
++	var out, errOut bytes.Buffer
++	code := MergeGuard([]string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed", "--json"}, root, &out, &errOut)
++	if doc, _, readErr := gates.Read(entity); readErr == nil {
++		t.Logf("active status=%s verdict=%s application=%s archive=%t", frontmatterField(t, entity, "status"), frontmatterField(t, entity, "verdict"), doc.Records[0].Attempts[0].Application.State, fileExists(filepath.Join(filepath.Dir(entity), "_archive", "task.md")))
++	}
++	if code != 0 || !strings.Contains(out.String(), `"signal":"finalized"`) {
++		t.Fatalf("knowledge finalize rc=%d out=%s err=%s", code, &out, &errOut)
++	}
++	archived := filepath.Join(filepath.Dir(entity), "_archive", "task.md")
++	if frontmatterField(t, archived, "verdict") != "PASSED" {
++		t.Fatal("knowledge not PASSED")
++	}
++	doc, _, err := gates.Read(archived)
++	if err != nil || doc.Records[0].Attempts[0].Application.State != "consumed" {
++		t.Fatalf("approval not consumed: %v", err)
++	}
++	if _, err := os.Stat(entity); !os.IsNotExist(err) {
++		t.Fatal("active task remains")
++	}
++}
++
++func TestKnowledgeArchivePublicationRecovery(t *testing.T) {
++	for _, conflict := range []bool{false, true} {
++		t.Run(fmt.Sprint(conflict), func(t *testing.T) {
++			root, entity := knowledgeMergeFixture(t)
++			state := filepath.Dir(entity)
++			bare := filepath.Join(t.TempDir(), "origin.git")
++			gitOutput(t, state, "init", "--bare", bare)
++			gitOutput(t, state, "remote", "add", "origin", bare)
++			gitOutput(t, state, "push", "origin", "HEAD:spacedock-state/dev")
++			hook := filepath.Join(bare, "hooks", "pre-receive")
++			if conflict {
++				peer := filepath.Join(t.TempDir(), "peer")
++				gitOutput(t, state, "clone", "--branch", "spacedock-state/dev", bare, peer)
++				gitOutput(t, peer, "config", "user.name", "Synthetic peer")
++				gitOutput(t, peer, "config", "user.email", "test@example.invalid")
++				data, _ := os.ReadFile(filepath.Join(peer, "task.md"))
++				writeFile(t, filepath.Join(peer, "task.md"), strings.Replace(string(data), "status: validation", "status: peer-stage", 1))
++				gitOutput(t, peer, "add", "task.md")
++				gitOutput(t, peer, "commit", "-qm", "peer task change")
++				gitOutput(t, peer, "push", "origin", "HEAD")
++			} else {
++				if err := os.WriteFile(hook, []byte("#!/bin/sh\nexit 1\n"), 0o755); err != nil {
++					t.Fatal(err)
++				}
++			}
++			remoteBefore := gitOutput(t, bare, "rev-parse", "refs/heads/spacedock-state/dev")
++			var out, errOut bytes.Buffer
++			code := MergeGuard([]string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed", "--json"}, root, &out, &errOut)
++			if code == 0 || !strings.Contains(out.String(), `"signal":"finalized"`) {
++				t.Fatalf("publication failure rc=%d out=%s err=%s", code, &out, &errOut)
++			}
++			archived := filepath.Join(state, "_archive", "task.md")
++			before, err := os.ReadFile(archived)
++			if err != nil {
++				t.Fatal(err)
++			}
++			head := gitOutput(t, state, "rev-parse", "HEAD")
++			if gitOutput(t, bare, "rev-parse", "refs/heads/spacedock-state/dev") != remoteBefore {
++				t.Fatal("failed publication overwrote remote")
++			}
++			if conflict {
++				if code != 3 || !strings.Contains(errOut.String(), "HALT") || gitOutput(t, state, "status", "--porcelain") != "" {
++					t.Fatalf("conflict not safely halted: %d %s", code, &errOut)
++				}
++				return
++			}
++			if err := os.Remove(hook); err != nil {
++				t.Fatal(err)
++			}
++			result := statesync.Publish(state, "spacedock-state/dev")
++			if result.Result != statesync.ResultPushed {
++				t.Fatalf("native publication resume: %+v", result)
++			}
++			again := statesync.Publish(state, "spacedock-state/dev")
++			after, _ := os.ReadFile(archived)
++			if again.Result != statesync.ResultNoOp || !bytes.Equal(before, after) || gitOutput(t, state, "rev-parse", "HEAD") != head {
++				t.Fatal("resume created another archive/spend/commit")
++			}
++			MergeGuard([]string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed"}, root, io.Discard, io.Discard)
++			if gitOutput(t, state, "rev-parse", "HEAD") != head {
++				t.Fatal("repeated merge archived again")
++			}
++		})
++	}
++}
++
++func TestKnowledgeArchiveRejectsTampering(t *testing.T) {
++	for _, kind := range []string{"pending", "decision", "verdict", "briefing", "changed-bytes"} {
++		t.Run(kind, func(t *testing.T) {
++			root, entity := knowledgeMergeFixture(t)
++			doc, _, _ := gates.Read(entity)
++			attempt := doc.Records[0].Attempts[0]
++			if kind != "pending" {
++				if _, err := gates.FinalizeTerminalApproval(entity, root, "PASSED", "2026-09-11T00:00:00Z", gates.KnowledgeApproval{Attempt: attempt.ID, BriefingDigest: attempt.Briefing.Digest}); err != nil {
++					t.Fatal(err)
++				}
++			}
++			original, _ := os.ReadFile(entity)
++			changed := original
++			switch kind {
++			case "decision":
++				changed = bytes.Replace(original, []byte("decision: approve"), []byte("decision: reject"), 1)
++			case "verdict":
++				changed = bytes.Replace(original, []byte("verdict: PASSED"), []byte("verdict: REJECTED"), 1)
++			case "briefing":
++				room, _ := gates.ResolveRoomRef(entity, attempt.Briefing.RoomRef)
++				writeFile(t, filepath.Join(room, "index.json"), "{}")
++			case "changed-bytes":
++				changed = append(append([]byte(nil), original...), []byte("Intervening edit.\n")...)
++			}
++			os.WriteFile(entity, changed, 0o644)
++			if kind == "changed-bytes" {
++				if _, err := updateFrontmatter(entity, []fieldUpdate{{field: "archived", value: "test", hasValue: true}}, original); err == nil {
++					t.Fatal("archive accepted different bytes")
++				}
++			} else if kind == "verdict" {
++				if _, unlock, err := gates.LockKnowledgeArchive(entity, root); err == nil {
++					unlock()
++					t.Fatal("rejected verdict accepted as knowledge")
++				}
++			} else if code := runArchive(root, filepath.Dir(entity), filepath.Dir(entity), "task", false, true, false, io.Discard, io.Discard); code == 0 {
++				t.Fatal("tampered authority archived")
++			}
++			after, _ := os.ReadFile(entity)
++			if !bytes.Equal(changed, after) {
++				t.Fatal("refusal changed task")
++			}
++		})
++	}
++}
++
++func TestKnowledgeFailedCommitPreservesInterveningEdit(t *testing.T) {
++	root, entity := knowledgeMergeFixture(t)
++	state := filepath.Dir(entity)
++	hook := filepath.Join(state, ".git", "hooks", "pre-commit")
++	if err := os.WriteFile(hook, []byte("#!/bin/sh\nprintf '\\nintervening edit\\n' >> _archive/task.md\nexit 1\n"), 0o755); err != nil {
++		t.Fatal(err)
++	}
++	var out, errOut bytes.Buffer
++	code := MergeGuard([]string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed"}, root, &out, &errOut)
++	archived, err := os.ReadFile(filepath.Join(state, "_archive", "task.md"))
++	if code == 0 || err != nil || !strings.Contains(string(archived), "intervening edit") || fileExists(entity) || !strings.Contains(errOut.String(), "refusing rollback") {
++		t.Fatalf("intervening write lost: rc=%d err=%v stderr=%s", code, err, &errOut)
++	}
++}
++
++// Both peer-edit windows must survive failed commit and consumed-state retry.
++func TestKnowledgeRollbackPreservesPeerEdit(t *testing.T) {
++	for _, timing := range []string{"before-consume", "after-consume"} {
++		t.Run(timing, func(t *testing.T) {
++			root, entity := knowledgeMergeFixture(t)
++			state := filepath.Dir(entity)
++			realGit, err := exec.LookPath("git")
++			if err != nil {
++				t.Fatal(err)
++			}
++			bin := t.TempDir()
++			marker := filepath.Join(bin, "injected")
++			condition := `case "$*" in *'ls-files -- :(literal)task') inject=yes;; esac`
++			if timing == "after-consume" {
++				condition = fmt.Sprintf("if grep -q '^status: done' %q 2>/dev/null; then inject=yes; fi", entity)
++			}
++			script := fmt.Sprintf("#!/bin/sh\n%s\nif [ \"$inject\" = yes ] && [ ! -f %q ]; then\n printf '\\npeer edit across finalization\\n' >> %q\n touch %q\nfi\nexec %q \"$@\"\n", condition, marker, entity, marker, realGit)
++			if err := os.WriteFile(filepath.Join(bin, "git"), []byte(script), 0755); err != nil {
++				t.Fatal(err)
++			}
++			t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
++			captured := filepath.Join(bin, "before-failed-commit")
++			hook := filepath.Join(state, ".git", "hooks", "pre-commit")
++			if err := os.WriteFile(hook, []byte(fmt.Sprintf("#!/bin/sh\ncp _archive/task.md %q\nexit 1\n", captured)), 0755); err != nil {
++				t.Fatal(err)
++			}
++			var out, errOut bytes.Buffer
++			args := []string{"task", "--workflow-dir", root, "--delivery", "knowledge", "--verdict", "passed", "--json"}
++			code := MergeGuard(args, root, &out, &errOut)
++			data, err := os.ReadFile(entity)
++			archived, captureErr := os.ReadFile(captured)
++			if code == 0 || err != nil || captureErr != nil || !bytes.Equal(data, archived) || !bytes.Contains(data, []byte("peer edit across finalization")) || !bytes.Contains(data, []byte("state: consumed")) {
++				t.Fatalf("failed commit must retain current consumed bytes: rc=%d read=%v capture=%v stdout=%s stderr=%s", code, err, captureErr, &out, &errOut)
++			}
++			if err := os.Remove(hook); err != nil {
++				t.Fatal(err)
++			}
++			out.Reset()
++			errOut.Reset()
++			if code := MergeGuard(args, root, &out, &errOut); code != 0 || !strings.Contains(out.String(), "finalized") {
++				t.Fatalf("consumed retry failed: rc=%d stdout=%s stderr=%s", code, &out, &errOut)
++			}
++			final := readBytes(t, filepath.Join(state, "_archive", "task.md"))
++			if fileExists(entity) || !strings.Contains(final, "peer edit across finalization") || strings.Count(final, "state: consumed") != 1 {
++				t.Fatal("retry must preserve edit and same single consumed approval")
++			}
++		})
++	}
++}
+diff --git a/internal/status/mutate.go b/internal/status/mutate.go
+index 5612be2..e6db417 100644
+--- a/internal/status/mutate.go
++++ b/internal/status/mutate.go
+@@ -3,7 +3,9 @@
+ package status
+ 
+ import (
++	"bytes"
+ 	"fmt"
++	"github.com/spacedock-dev/spacedock/internal/gates"
+ 	"io"
+ 	"os"
+ 	"path/filepath"
+@@ -68,7 +70,7 @@ func nowTimestamp() string {
+ // EOF-newline state byte-for-byte: the splice replaces only the in-fence
+ // body, leaving the opening/close fence lines and the post-fence body —
+ // including the file's terminal newline state — untouched.
+-func updateFrontmatter(path string, updates []fieldUpdate) (*resolvedFields, error) {
++func updateFrontmatter(path string, updates []fieldUpdate, expected ...[]byte) (*resolvedFields, error) {
+ 	if !hasOpeningFence(path) {
+ 		return nil, fmt.Errorf("No frontmatter found in %s", path)
+ 	}
+@@ -76,6 +78,9 @@ func updateFrontmatter(path string, updates []fieldUpdate) (*resolvedFields, err
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	if len(expected) > 0 && expected[0] != nil && !bytes.Equal(data, expected[0]) {
++		return nil, fmt.Errorf("entity changed after knowledge archive validation")
++	}
+ 	// Universal-newline normalize (so a CRLF entity comes out LF), preserve
+ 	// the file's trailing-newline state through split/join on "\n".
+ 	lines := strings.Split(normalizeNewlines(string(data)), "\n")
+@@ -353,15 +358,18 @@ func runArchive(definitionDir, entityDir, spellingDir, slug string, force, quiet
+ 		fmt.Fprintf(stderr, "Error: %s\n", perr)
+ 		return 1
+ 	}
++	var knowledgeSnapshot []byte
+ 	if !force && policy != mergeLocal && !isRejectedVerdict(verdict) && modBlock == "" && pr == "" {
+ 		mergeHooks := scanMods(definitionDir)["merge"]
+ 		if len(mergeHooks) > 0 {
+-			fmt.Fprintf(stderr,
+-				"Error: entity %s cannot be archived — workflow has merge hook(s) [%s] "+
+-					"that have not run (pr field is empty and mod-block is empty). "+
+-					"Invoke the hook first, or use --force to bypass.\n",
+-				slug, strings.Join(mergeHooks, ", "))
+-			return 1
++			var unlock func()
++			var err error
++			knowledgeSnapshot, unlock, err = gates.LockKnowledgeArchive(sourcePath, definitionDir)
++			if err != nil {
++				fmt.Fprintf(stderr, "Error: entity %s cannot be archived — workflow has merge hook(s) [%s] that have not run (pr field is empty and mod-block is empty). Invoke the hook first, or use --force to bypass.\n", slug, strings.Join(mergeHooks, ", "))
++				return 1
++			}
++			defer unlock()
+ 		}
+ 	}
+ 
+@@ -450,11 +458,12 @@ func runArchive(definitionDir, entityDir, spellingDir, slug string, force, quiet
+ 		fmt.Fprintf(stderr, "Error: %s\n", originalErr)
+ 		return 1
+ 	}
+-	if _, err := updateFrontmatter(sourcePath, []fieldUpdate{{field: "archived", value: nowTimestamp(), hasValue: true}}); err != nil {
++	if _, err := updateFrontmatter(sourcePath, []fieldUpdate{{field: "archived", value: nowTimestamp(), hasValue: true}}, knowledgeSnapshot); err != nil {
+ 		fmt.Fprintf(stderr, "Error: %s\n", err)
+ 		return 1
+ 	}
+ 
++	stamped, _ := os.ReadFile(sourcePath)
+ 	var moveErr error
+ 	if isFolder {
+ 		moveErr = os.Rename(folderRoot, destPath)
+@@ -468,7 +477,7 @@ func runArchive(definitionDir, entityDir, spellingDir, slug string, force, quiet
+ 		}
+ 	}
+ 	if moveErr != nil {
+-		if isRegularFile(sourcePath) {
++		if current, err := os.ReadFile(sourcePath); err == nil && (knowledgeSnapshot == nil || bytes.Equal(current, stamped)) {
+ 			_ = os.WriteFile(sourcePath, original, originalInfo.Mode().Perm())
+ 		}
+ 		fmt.Fprintf(stderr, "Error: %s\n", moveErr)
+diff --git a/mods/pr-merge.md b/mods/pr-merge.md
+index 9d0e6a7..63f8cd2 100644
+--- a/mods/pr-merge.md
++++ b/mods/pr-merge.md
+@@ -26,6 +26,22 @@ If `gh` is not available, warn the captain and skip PR state checks.
+ 
+ Check PR-pending entities using the same logic as the startup hook: a terminal row carrying a valid merged sentinel (`pr-merge:` or `local-merge:`) bypasses `gh` and resumes `merge guard` directly, while bare PR rows (including terminal rows still carrying `mod-block: merge:pr-merge`) run `gh pr view` and advance through the same committed sentinel then guard path. This is the workflow's PR-pending scan: the generic event loop fires this idle hook and owns no PR scan of its own, so a workflow with no `pr-merge` mod never reaches for `gh` in its loop. Report any advanced entities to the captain.
+ 
++## Explicit knowledge delivery
++
++Knowledge output uses `spacedock merge guard {slug} --workflow-dir {dir} --delivery knowledge --verdict passed`. It requires an approved terminal Briefing whose single committed Markdown artifact contains one declaration:
++
++````markdown
++```spacedock-knowledge-delivery
++{"type":"KnowledgeDelivery","version":"1","outcome":"change","product":{"root":"main","base":"FULL_TRUNK_COMMIT","head":"FULL_HEAD_COMMIT"},"evidence":[{"uri":"git-root://state/FULL_COMMIT/evidence.md","rev":"sha256:RAW_FILE_DIGEST"}]}
++```
++````
++
++The native locked consumer checks the exact selected attempt and Briefing digest, resolves the immutable declaration and evidence, rejects every PR/merge claim, and checks an empty product diff against the configured local trunk. Product HEAD must match the declaration and the checkout must be clean. Product and state must be separate Git roots; use `root: worktree` with the exact `product.worktree` path when the entity records a repository-relative worktree, otherwise `root: main`. Missing objects or evidence refuse without consuming approval. Plain prose, an arbitrary hash, and the flag alone supply no authority.
++
++The knowledge write checks the entire entity snapshot and clears its mod-block with approval consumption. Repeating that consumed delivery validates the original approval, frozen evidence, terminal PASSED state and completed stamp without spending again. Existing product sentinels keep their existing meaning; never invent `local-merge:{reason}` or mark accepted knowledge rejected.
++
++The command must report `signal: finalized` before cleanup; exit zero alone is insufficient. An archive refusal is not completion: retain the task and evidence until the native archive guard accepts the consumed knowledge proof; do not force archive or fabricate delivery. Existing approvals without the declaration require explicit native rebinding by their owner, preserving prior authority as history. Exercise the consumer/refusal contract with `go test ./internal/gates -run TestKnowledge` and the complete journey with `go test ./internal/status -run TestKnowledgeMergeNativeArchive`.
++
+ ## Hook: merge
+ 
+ Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})` — the workflow's configured integration trunk (default `main` when no `trunk:` key is set). `dispatch trunk` emits exactly a **bare branch name** (e.g. `main`), so `$( )` yields `$BASE` clean (command substitution strips the single trailing newline). Retain the workflow-supplied `{branch}` as the data value `BRANCH`. Always quote `"$BASE"` and `"$BRANCH"` at use sites; do not evaluate either as shell syntax.

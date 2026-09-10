@@ -1,0 +1,21 @@
+{
+  "command": [
+    "go",
+    "test",
+    "./internal/status",
+    "./internal/gates",
+    "-run",
+    "TestKnowledge|TestMergeGuard|TestFinalizeTerminal",
+    "-count=1",
+    "-json"
+  ],
+  "rc": 0,
+  "seconds": 28.143873957917094,
+  "candidate_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+  "tests": {
+    "pass": 76,
+    "fail": 0,
+    "skip": 0
+  },
+  "failures": []
+}

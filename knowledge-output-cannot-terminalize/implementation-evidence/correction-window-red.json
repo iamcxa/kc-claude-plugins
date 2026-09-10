@@ -1,0 +1,17 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-overlay",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmph8_j83i5/overlay.json",
+    "./internal/status",
+    "-run",
+    "TestKnowledgeRollbackPreservesPeerEdit",
+    "-count=1",
+    "-v"
+  ],
+  "test_only_overlay": "removes only correction to rollback content restoration",
+  "rc": 1,
+  "stdout": "=== RUN   TestKnowledgeRollbackPreservesPeerEdit\n=== RUN   TestKnowledgeRollbackPreservesPeerEdit/before-consume\n    merge_guard_test.go:1388: failed commit must retain current consumed bytes: rc=1 read=<nil> capture=<nil> stdout= stderr=Error: merge guard: failed to commit archive move for task: exit status 1\n=== RUN   TestKnowledgeRollbackPreservesPeerEdit/after-consume\n    merge_guard_test.go:1388: failed commit must retain current consumed bytes: rc=1 read=<nil> capture=<nil> stdout= stderr=Error: merge guard: failed to commit archive move for task: exit status 1\n--- FAIL: TestKnowledgeRollbackPreservesPeerEdit (4.73s)\n    --- FAIL: TestKnowledgeRollbackPreservesPeerEdit/before-consume (2.30s)\n    --- FAIL: TestKnowledgeRollbackPreservesPeerEdit/after-consume (2.43s)\nFAIL\nFAIL\tgithub.com/spacedock-dev/spacedock/internal/status\t5.143s\nFAIL\n",
+  "stderr": ""
+}

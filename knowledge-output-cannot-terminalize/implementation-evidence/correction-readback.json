@@ -1,0 +1,97 @@
+{
+  "upstream": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/spacedock-knowledge-delivery",
+    "base": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "head": "af70297ddae6ec64444849e8e3fcf57484bc16e1",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "diff_sha256": "6dc9e67966b29ba29eca9ce28a375081ff6c0345ac32f4ef13846bc8d0e2f93e",
+    "numstat": [
+      [
+        "3",
+        "0",
+        "internal/cli/help.go"
+      ],
+      [
+        "238",
+        "8",
+        "internal/gates/delivery.go"
+      ],
+      [
+        "196",
+        "0",
+        "internal/gates/delivery_test.go"
+      ],
+      [
+        "7",
+        "3",
+        "internal/gates/io.go"
+      ],
+      [
+        "50",
+        "10",
+        "internal/status/merge.go"
+      ],
+      [
+        "243",
+        "0",
+        "internal/status/merge_guard_test.go"
+      ],
+      [
+        "18",
+        "9",
+        "internal/status/mutate.go"
+      ],
+      [
+        "16",
+        "0",
+        "mods/pr-merge.md"
+      ]
+    ],
+    "gross": 801,
+    "diff_check_rc": 0
+  },
+  "coord": {
+    "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-knowledge-output-cannot-terminalize",
+    "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "head": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+    "branch": "spacedock-ensign/knowledge-output-cannot-terminalize",
+    "diff_sha256": "2ffa88aaef51a4b482a71d190b5f3cbcbc2a5579d539a7cb87adfab12d685d0c",
+    "numstat": [
+      [
+        "11",
+        "13",
+        "docs/dev/_mods/pr-merge.md"
+      ]
+    ],
+    "gross": 24,
+    "diff_check_rc": 0
+  },
+  "original_files": {
+    "evidence-attempt-2/cloud-events.json": "1e6fd27ec2fdf89813564a512c7ee2ec8adab7b6bc7590fd2b6a70260ee39710",
+    "evidence-attempt-2/cloud-final.md": "788d241914d18d74ecfac879a7803825e17376112485662a10582e5c8f38839e",
+    "evidence-attempt-2/cloud-usage.json": "7f23a41c4be2c8e31a93709bff8c57e32603dec865dd2f3df2e0eb7aff991e83",
+    "evidence-attempt-2/launch-envelope.json": "ebfb34858041350603c0e6d7c47319416b7fe85ebc66dbdd7aef06456b62f7fb",
+    "evidence-attempt-2/launch-prompt.md": "e31baf033a354c3de62132b0b7239b6393f07edcb129cd3fa3dbd803022c74b6",
+    "evidence-attempt-2/launch.json": "75f40a4bd1c025bc7d50e50f84573bad5e4651b2e52cbac9d8d42f5467f3515e",
+    "evidence-attempt-2/local-token-counter.json": "4621b345f6d168b982378d06144065623f5da992acac2b4136ba2f605f5e9e15",
+    "evidence-attempt-2/parent-token-counter.json": "0e99e1cfc07ac3734b08fd79d603d4e1b2bc23a780694502dd1fe48fde77c6b2",
+    "evidence-attempt-2/sha256.json": "0351daef531c80808d9b8c4735ae3f67a0303c7030adb28354bf7aa92f3ccba7",
+    "implementation-resumed-stage-pin.json": "68b3ff61d04038159a71d3a3b1f902f2bcf8d25b2e5396dbd1aaac8dcc61418a",
+    "implementation-stage-pin.json": "9efcf36ef17fd7786ee040557f966ead75afa1305f09145103103d93d324c69e",
+    "index.md": "2431bae3b5c6127ee06a38835ab8825a950d325e5db8b1f10f44cba64b47eff8",
+    "migration-20260910/authorization.json": "15ed684279f19975cea1fc6562722b2d709c11d1606d9f1ee5fff9b54b12c3af",
+    "migration-20260910/implementation-stage-pin.json": "9efcf36ef17fd7786ee040557f966ead75afa1305f09145103103d93d324c69e",
+    "migration-20260910/index.md": "2c44289325b5b5809d7a08142577aafa953bd44424752d4384df3b74b3010693",
+    "migration-20260910/original-pinned-work-item.md": "128c91d85506e6ad088cecbf6c16cd3419fb5fd067de17f9962d3e2f92e6cf8d",
+    "review/backlog/briefing-1/index.json": "23de7a0a17d9f53d6ff8d417451d6c875bdc61ce7ecf078b6f16f802dae80565",
+    "review/validation/briefing-1/index.json": "df83edab0a8f44440fc8612b0bab93d6ffd5a96473734e52e97cdaafd6d60367"
+  },
+  "pins": {
+    "implementation-stage-pin.json": "d8e261572377d9a930675e90ee42a1a4ada821a9f00511a44506ec3b13678c64",
+    "implementation-3-stage-pin.json": "c16eaa4be44b816f6faaa42aa7d2330bfc0101d6f0e01df0d4a79f78ca793e82",
+    "validation-1-rejected-stage-pin.json": "46b4309475d96c27b1a0df3050fbb8b1f0d3b347ad05709cf3d21ba250da250b",
+    "ideation-stage-pin.json": "c8f1c7c3b6770984ca66c1a2c8fdd07e32a0ac637a622749b0a573609b1df062",
+    "validation-stage-pin.json": "f684c57ea8e08233f27595db36c7751d55c7dc1bdf7f8fd777eabc9e78fd4615",
+    "implementation-2-stage-pin.json": "a58bc6cb8eab2c8fb26fe03d21266d21e870597148b90bf1f53509669835e175"
+  }
+}

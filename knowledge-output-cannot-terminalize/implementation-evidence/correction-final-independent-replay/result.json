@@ -1,0 +1,16 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-overlay",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-validation-overlay-29t89i3s/overlay.json",
+    "./internal/status",
+    "-run",
+    "^TestValidationKnowledgeRollbackPreservesPreLockPeerEdit$",
+    "-count=1",
+    "-v"
+  ],
+  "rc": 0,
+  "stdout": "=== RUN   TestValidationKnowledgeRollbackPreservesPreLockPeerEdit\n    merge_guard_test.go:1424: peer_edit_present_before_failed_commit=true\n    merge_guard_test.go:1425: rc=1 live=true peer_edit_retained=true stdout= stderr=Error: merge guard: failed to commit archive move for task: exit status 1\n--- PASS: TestValidationKnowledgeRollbackPreservesPreLockPeerEdit (2.15s)\nPASS\nok  \tgithub.com/spacedock-dev/spacedock/internal/status\t2.863s\n",
+  "stderr": ""
+}
