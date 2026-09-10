@@ -1,0 +1,22 @@
+[
+  {
+    "data": {
+      "repository": {
+        "pullRequest": {
+          "author": {
+            "login": "iamcxa"
+          },
+          "headRefOid": "f18c697db6751c473f2ff7618be6b87b671e72bf",
+          "number": 390,
+          "reviewThreads": {
+            "nodes": [],
+            "pageInfo": {
+              "endCursor": null,
+              "hasNextPage": false
+            }
+          }
+        }
+      }
+    }
+  }
+]

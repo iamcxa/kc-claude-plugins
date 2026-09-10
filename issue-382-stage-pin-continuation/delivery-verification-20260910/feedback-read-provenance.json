@@ -1,0 +1,17 @@
+{
+  "before_after_identity_match": true,
+  "canonical_bytes_sha256": "sha256:d0d171e7c5133b1da19c351ccc1ac81fb096c10bc49833fbf97c747e870a7377",
+  "canonical_input": "feedback-canonical-input.json",
+  "conversation_comments": "Outside the canonical review-feedback population, per pr-merge.md.",
+  "graphql_thread_pages": 1,
+  "observed_at_utc": "2026-09-10T08:44:47.082672+00:00",
+  "rest_review_pages": 1,
+  "review_count": 0,
+  "sources": [
+    "feedback-pr-before.json",
+    "feedback-graphql-thread-pages.json",
+    "feedback-rest-review-pages.json",
+    "feedback-pr-after.json"
+  ],
+  "thread_count": 0
+}

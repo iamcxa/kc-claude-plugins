@@ -1,0 +1,85 @@
+{
+  "observed_at_utc": "2026-09-10T08:40:09.489394+00:00",
+  "base": "6b408ac102978d4bbf3614a7109934191520aa9b",
+  "pr390_head": "f18c697db6751c473f2ff7618be6b87b671e72bf",
+  "accepted_source": "1d5139568122a3af97cbc28333171df3bc2e27be",
+  "close_repair": "1eae2f5a5467b4600783eaedc671cf5cd57d1969",
+  "pr390_paths": [
+    "ARCHITECTURE.md",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/contract-manifest.json",
+    "kc-dev-flow/scripts/profile-contract-loader.py",
+    "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+    "scripts/kc-dev-flow-contract-test.py"
+  ],
+  "accepted_to_current_changed_candidate_paths": [
+    "scripts/kc-dev-flow-contract-test.py"
+  ],
+  "shared_candidate_paths": [
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
+  ],
+  "skill_bytes": {
+    "main": 15896,
+    "pr390": 15989,
+    "close_repair": 15997,
+    "combined_in_memory": 16090
+  },
+  "combined_skill_sha256_in_memory": "2778c5198824eb5bec56145cfd6cd8bc134fb02079fb6787845ce29a8333d737",
+  "static_measurements": {
+    "poc-exploration/implementation": {
+      "close_repair_only": 39935,
+      "pr390_only": 39927,
+      "combined": 40028,
+      "ceiling": 40000
+    },
+    "poc-exploration/validation": {
+      "close_repair_only": 38532,
+      "pr390_only": 38524,
+      "combined": 38625,
+      "ceiling": 40000
+    },
+    "pilot-product-slice/ideation": {
+      "close_repair_only": 39972,
+      "pr390_only": 39964,
+      "combined": 40065,
+      "ceiling": 40000
+    },
+    "pilot-product-slice/implementation": {
+      "close_repair_only": 38854,
+      "pr390_only": 38846,
+      "combined": 38947,
+      "ceiling": 40000
+    },
+    "pilot-product-slice/validation": {
+      "close_repair_only": 38384,
+      "pr390_only": 38376,
+      "combined": 38477,
+      "ceiling": 40000
+    },
+    "production/ideation": {
+      "close_repair_only": 39632,
+      "pr390_only": 39624,
+      "combined": 39725,
+      "ceiling": 40000
+    },
+    "production/implementation": {
+      "close_repair_only": 38497,
+      "pr390_only": 38489,
+      "combined": 38590,
+      "ceiling": 40000
+    },
+    "production/validation": {
+      "close_repair_only": 38820,
+      "pr390_only": 38812,
+      "combined": 38913,
+      "ceiling": 40000
+    }
+  },
+  "method": "Read-only execution of existing static accounting and exact loader source with eight in-memory fixture reads. Combined only the disjoint skill hunk in memory. Canonical output byte counts equal before/after PR 390 for each fixture. No candidate or fixture file written; no suite or native runtime repeated.",
+  "repair_fingerprints": {
+    "kc-dev-flow/scripts/poc-close-guard.py": "33aed887b77cfbeab65bc8782a3cdafd3f214b4d7368c02d8fbc48ddd07094d7",
+    "kc-dev-flow/scripts/poc-close-guard.test.py": "d4299c0053ae1f701ffd085bbbe671d4dca039bbc31c6b33d300c1aec1128360",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": "0e200bdc8300c535ae68671e5c03843d28593882a55767becbe8e3cebbb3d734"
+  }
+}
