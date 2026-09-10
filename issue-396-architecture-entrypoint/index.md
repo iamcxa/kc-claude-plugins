@@ -38,6 +38,17 @@ gates:
                 id: briefing:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1
                 digest: sha256:e1c30c753d41c2b4d9723cf6c14879d4fc7ac999958b16c4d27ceb0b8380d959
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:m0e43swm7wrs71xy98ea43gp:ideation:1
+                briefing: briefing:m0e43swm7wrs71xy98ea43gp:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T09:38:30.021828Z"
+                decision: approve
+                reason: Captain Kent replied "批准" to the presented two-item ideation review, including this task snapshot e1c30c75. Accept the bounded architecture-entrypoint design and enter implementation; new model spend remains separately reserved.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
