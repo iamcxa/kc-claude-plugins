@@ -7,7 +7,7 @@ sprint-readiness: ready
 started: 2026-09-10T04:10:01Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-skills-mcp-dev-flow-feedback-poc
 issue:
 pr:
 mod-block:
