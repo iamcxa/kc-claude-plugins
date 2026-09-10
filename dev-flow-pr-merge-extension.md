@@ -1,16 +1,16 @@
 ---
 title: "kc-dev-flow owns the pr-merge extension: Residuals and without-it sections, synced to every adopter"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: dev-flow-pr-merge-extension
 sprint-readiness: ready
-started:
+started: 2026-09-10T16:04:05Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-dev-flow-pr-merge-extension
 issue:
 pr:
 mod-block:
