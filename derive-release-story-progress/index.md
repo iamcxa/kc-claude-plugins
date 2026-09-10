@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: validation
+status: implementation
 product: kc-journey-map
 source:
 planning-window:
@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-10T16:09:10Z
 completed:
 verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut
 issue:
 pr:
 mod-block:
