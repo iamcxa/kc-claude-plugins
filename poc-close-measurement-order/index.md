@@ -77,6 +77,7 @@ gates:
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
 mod-block: merge:pr-merge
+pr: iamcxa/kc-claude-plugins#412
 ---
 
 # Repair phase-aware POC close measurements
