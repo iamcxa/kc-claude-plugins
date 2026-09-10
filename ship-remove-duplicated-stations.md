@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
@@ -211,3 +211,20 @@ The cycle-2 report's "conductor cli changed" framing was specific to this sandbo
 `dispatch.test.sh`/`watch.test.sh` deliberately fail closed rather than skip when `conductor` is absent (their own header comments: "so a runner missing it never reports a false PASS") — a decision #406's author already made when they left these two suites *out* of `contract-test.py`'s aggregate on `main`. Wiring them in unconditionally, as this round's assignment literally asked, reintroduced exactly the false-CI-red case #406 had avoided.
 
 Fix (commit `af020cf4`): `contract-test.py` now runs `dispatch.test.sh`/`watch.test.sh` only when `shutil.which("conductor")` finds one, printing a named `SKIPPED dispatch.test.sh/watch.test.sh (conductor not on PATH)` line otherwise — never a silent pass. This preserves the fail-closed behavior for a developer machine that is supposed to have Conductor (a real mismatch there still fails), while not turning the required CI check red for an optional external CLI GitHub Actions doesn't install. Verified: (1) with the sandbox's unrelated `conductor` stripped from `PATH`, `contract-test.py` prints the named skip and proceeds (reaching the pre-existing, unrelated `e2e-gate ac2` sandbox gap, independently reproduced identically on unmodified `origin/main` at both `c9c5752f` and this branch's tip); (2) pushed and confirmed all three required checks — GitGuardian, multi-profile route gate, and version parity — pass on the real PR at candidate `af020cf4` (`gh pr checks 410`).
+
+## Stage Report: validation (cycle 2)
+
+- DONE: independently reproduce AC-1's git-grep-clean result, AC-2, and AC-3 in a fresh clone at the exact candidate SHA, not the authoring worktree
+  Fresh clone at `/tmp/validate-clone-r2`, candidate `af020cf4c6f80636af46834062d81cdae0f122fb`: `git grep -l -E 'accept-evidence|open-pr\.sh|disposition\.py|merge-station|ci-covers|dev-debrief|ship-debrief|notify\.sh|without-it\.sh' -- kc-ship-flow docs/ship` exits 1, no matches; `prose-placement-check.py` -> `PASS (28 segments, 11 placed, 17 residual)`; `marketplace-verify.sh` and `skill-frontmatter-lint.sh` both exit 0; `scripts/kc-dev-flow-contract-test.py` -> `PASS`. Also confirmed live: `fenced-dispatch.sh`, `fenced-dispatch.test.sh`, `intent.sh`, `holder.sh`, `worker-transcript.sh` are absent from the clone.
+- DONE: confirm the batch FO's four findings are addressed and the real required-CI surface is green
+  (1) `git log --graph` on the pushed branch shows a real `Merge remote-tracking branch 'origin/main'` commit (`4556588d`) with `#406`/`#407`/`#412` as merged-in parents, not a rebase. (2) The four stations `dispatch.sh` supersedes are deleted with their tests/docs/fixtures and 7 `placement.tsv` rows repointed to `residual` (verified above); `pin.py`/`e2e-gate.py`/`e2e-cli.sh`/`uat-doc.py`/`local-profile-check.py`/`parse-execute-external.py` all still present. (3) `dispatch.test.sh`/`watch.test.sh` are wired into `contract-test.py` (conditionally on `conductor`, per the FO correction above — a deliberate, documented deviation from the literal "wire them in" wording, made because the literal wording broke the real required CI check). (4) PR #410's title is a bare Conventional Commit subject with no Linear id; its body follows the `pr-merge` mod template (motivation lead, `## What changed` 5 bullets, `## Evidence` in N/N form, `## Residuals`, `## without-it unanswered`, `---`, and the resolved-state-tuple audit link `[pz](/iamcxa/kc-claude-plugins/blob/{state-sha}/ship-remove-duplicated-stations.md)` per the mod's Split-root audit-link correction). `gh pr checks 410` at candidate `af020cf4`: GitGuardian pass, multi-profile route gate pass, version parity pass — all three required checks green.
+
+### Residuals (not fixed, flagged for the next stage/task)
+
+- `kc-ship-flow/scripts/contract-test.py` still cannot reach exit 0 in this sandbox: past the conductor-skip fix, it hits the same pre-existing `e2e-gate ac2` gap this task's very first validation round already identified and reproduced on unmodified `main` — unrelated to this removal or to this feedback round.
+- `pin.py`'s `STATIONS` vocabulary still names the old five-stage set; no AC or feedback item required renaming it.
+- The dangling-vs-reachable-commit distinction in the `without-it unanswered` list (carried from cycle 1) is unresolved by design — flagged, not silently picked.
+
+### Summary
+
+Independently reproduced all findings the batch FO's feedback round identified as fixed: a real merge (not rebase) of `origin/main`/#406 with #406's README kept whole, the four stations `dispatch.sh` supersedes deleted with their placement.tsv rows repointed, their tests wired into `contract-test.py`, and PR #410's title/body rebuilt to the `pr-merge` mod template with the resolved-state-tuple audit link. Caught and fixed one thing the round's literal instructions would have broken: wiring `dispatch.test.sh`/`watch.test.sh` in unconditionally turns the real, previously-green required CI check red on GitHub Actions (no Conductor CLI there) — gated the wiring on `conductor` being present, confirmed real CI is green at the final candidate `af020cf4`, and documented the deviation and its evidence rather than silently complying or silently diverging.
