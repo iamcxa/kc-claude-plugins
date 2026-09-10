@@ -1,6 +1,6 @@
 ---
 title: "Pilot: one evidence-complete manual dev-flow improvement cycle"
-status: backlog
+status: ideation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -26,7 +26,7 @@ gates:
                 reason: Kent approved the proposed bounded manual Pilot with 同意 and resumed it with 繼續，額度回來了. Admit shaping of the recorded scope; no recurring activation, new cloud execution, product commit, merge or release authority is inferred.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 # One manually triggered dev-flow improvement cycle
