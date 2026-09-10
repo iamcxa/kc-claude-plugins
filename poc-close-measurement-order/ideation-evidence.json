@@ -1,0 +1,467 @@
+{
+  "synthetic_only": true,
+  "repo": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator",
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30",
+  "results": [
+    {
+      "label": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-qb",
+        "main"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-init",
+      "argv": [
+        "git",
+        "config",
+        "user.name",
+        "Synthetic probe"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-init",
+      "argv": [
+        "git",
+        "config",
+        "user.email",
+        "probe@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "new",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "new",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "created: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe.md id=5jeyzqd1r6421b439b9zbeqt\n",
+      "stderr": ""
+    },
+    {
+      "label": "commit",
+      "argv": [
+        "git",
+        "add",
+        "README.md",
+        "probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "commit",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "synthetic fixture"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "original-review",
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe.md",
+        "review"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: captain_wait_seconds must be a non-negative integer\n"
+    },
+    {
+      "label": "original-prepare",
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/poc-close-guard.py",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe.md",
+        "prepare",
+        "--question",
+        "Synthetic only?",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe.md",
+        "--summary",
+        "Synthetic pending outcome"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: captain_wait_seconds must be a non-negative integer\n"
+    },
+    {
+      "label": "native-transition",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--set",
+        "probe",
+        "status=validation",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "status: implementation -> validation\n",
+      "stderr": ""
+    },
+    {
+      "label": "durable",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "Committed probe in the inline workflow repository; nothing pushed.\n",
+      "stderr": ""
+    },
+    {
+      "label": "native-prepare",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "prepare",
+        "probe",
+        "--question",
+        "Synthetic only?",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe.md",
+        "--summary",
+        "Synthetic pending outcome",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "room=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/probe/review/validation/briefing-1\nbriefing=briefing:5jeyzqd1r6421b439b9zbeqt:validation:attempt-1:revision-1\ndigest=sha256:cc47cf07da3f747fbfddd44b337fdf239e95b6d43c7cfe85be4fdf4c6e7f5f9e\nstate=open\n",
+      "stderr": ""
+    },
+    {
+      "label": "unapproved-consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 1,
+      "stdout": "gate=gate:5jeyzqd1r6421b439b9zbeqt:validation attempt=gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1 application=/ condition=ineligible eligible=false consumed=false target-stage=\n",
+      "stderr": ""
+    },
+    {
+      "label": "commit-stale-before-approval",
+      "argv": [
+        "git",
+        "add",
+        "probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "commit-stale-before-approval",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "synthetic artifact drift"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "stale-approval",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "record",
+        "probe",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC stale test",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:5jeyzqd1r6421b439b9zbeqt:validation attempt=gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1 state=closed briefing=briefing:5jeyzqd1r6421b439b9zbeqt:validation:attempt-1:revision-1 resolution=resolution:spacedock:5jeyzqd1r6421b439b9zbeqt:validation:1 decision=approve\n",
+      "stderr": ""
+    },
+    {
+      "label": "restore-artifact",
+      "argv": [
+        "git",
+        "add",
+        "probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "restore-artifact",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "restore synthetic artifact"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "synthetic-approve",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "record",
+        "probe",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC TEST ONLY, not Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:5jeyzqd1r6421b439b9zbeqt:validation attempt=gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1 state=closed briefing=briefing:5jeyzqd1r6421b439b9zbeqt:validation:attempt-1:revision-1 resolution=resolution:spacedock:5jeyzqd1r6421b439b9zbeqt:validation:1 decision=approve\n",
+      "stderr": ""
+    },
+    {
+      "label": "approved-consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:5jeyzqd1r6421b439b9zbeqt:validation attempt=gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "label": "tampered-briefing-consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: bound canonical Briefing bytes do not match the frozen digest\n"
+    },
+    {
+      "label": "commit-post-approval-measurement",
+      "argv": [
+        "git",
+        "add",
+        "probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "commit-post-approval-measurement",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "synthetic post approval measurement"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "changed-measurement-consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:5jeyzqd1r6421b439b9zbeqt:validation attempt=gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "label": "restore-pending",
+      "argv": [
+        "git",
+        "add",
+        "probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "restore-pending",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "restore approved pending artifact"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "merge-finalize",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "merge",
+        "guard",
+        "probe",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"probe\",\"signal\":\"finalized\",\"status\":\"done\",\"verdict\":\"passed\",\"result\":\"inline\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "resolve-archived",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--resolve",
+        "probe",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: unknown reference: probe\n"
+    },
+    {
+      "label": "commit-final-measurements",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "spacedock state commit: archived entity \"probe\" is dirty; archived scope is publish-only and will not stage or commit it:\nM _archive/probe.md\n"
+    },
+    {
+      "label": "existing-owner-path-scoped-archive-commit",
+      "argv": [
+        "git",
+        "add",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "existing-owner-path-scoped-archive-commit",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "synthetic final close observations",
+        "--",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "publish-final-measurements",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 0,
+      "stdout": "Archived state for probe is already committed; an inline workflow publishes nothing.\n",
+      "stderr": ""
+    },
+    {
+      "label": "repeat-consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: Error: unknown reference: probe\n"
+    },
+    {
+      "label": "final-content",
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-order-test-rzuuzf30/_archive/probe.md",
+      "text": "---\nstatus: done\nstarted: 2026-08-30T00:00:00Z\nsprint: test/S1\nsprint-readiness: ready\nid: 5jeyzqd1r6421b439b9zbeqt\ngates:\n    version: 1\n    records:\n        - id: gate:5jeyzqd1r6421b439b9zbeqt:validation\n          stage: validation\n          attempts:\n            - id: gate-attempt:5jeyzqd1r6421b439b9zbeqt-validation-1\n              briefing:\n                id: briefing:5jeyzqd1r6421b439b9zbeqt:validation:attempt-1:revision-1\n                digest: sha256:cc47cf07da3f747fbfddd44b337fdf239e95b6d43c7cfe85be4fdf4c6e7f5f9e\n                room-ref: ./probe/review/validation/briefing-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:5jeyzqd1r6421b439b9zbeqt:validation:1\n                briefing: briefing:5jeyzqd1r6421b439b9zbeqt:validation:attempt-1:revision-1\n                by: person:captain\n                at: \"2026-09-10T13:45:32.567383Z\"\n                decision: approve\n                reason: SYNTHETIC TEST ONLY, not Kent approval\n              application:\n                target-stage: done\n                state: consumed\nverdict: PASSED\ncompleted: 2026-09-10T13:45:32Z\narchived: 2026-09-10T13:45:32Z\n---\n\n# POC fixture\n\n## Work profile receipt\n\n```yaml\nwork_profile:\n  schema: kc-dev-flow-work-profile/v3\n  selected: poc-exploration\n  recommended: poc-exploration\n  route: [build, prove]\n  basis: fixture\n  poc_decision: Choose whether to fund the delivery slice\n  poc_falsifier: The integrated probe loses the accepted state\n  poc_budget: One local run and one review\n  poc_stop_when: Stop after the first integrated result\n  poc_artifact: no-code\n  poc_safety_boundary: none\n```\n\n## POC outcome\n```yaml\npoc_outcome:\n  direction: change\n  admitted_at: 2026-08-30T00:00:00Z\n  decision_ready_at: 2026-08-30T00:15:00Z\n  decision_ready_elapsed_seconds: 900\n  captain_interventions_before_decision_ready: 0\n  evidence: exact read-only probe at revision abc123\n  strongest_limit: One provider was not evaluated\n  reversal_fact: A real run loses the accepted state\n  cleanup_status_at_decision: complete\n```\n\n## POC close measurement\n```yaml\npoc_close_measurement:\n  captain_wait_seconds: 12\n  terminal_cleanup_seconds: 3\n  cleanup_status: complete\n```\n\n\n## Stage Report: implementation\n\n- DONE: Synthetic observation.\n  Disposable local proof only.\n"
+    },
+    {
+      "label": "original-preserved-snapshot",
+      "error": "captain_wait_seconds must be a non-negative integer"
+    }
+  ],
+  "baseline_tests": "poc-close-guard.test.py: native regressions PASS; guard tests PASS",
+  "archived_read_work_item": "Existing read_work_item accepts explicit archived path with workflow_stage done"
+}
