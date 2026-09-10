@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: pzg36pjjn7tvtdtknpv9w82h
+gates:
+    version: 1
+    records:
+        - id: gate:pzg36pjjn7tvtdtknpv9w82h:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:pzg36pjjn7tvtdtknpv9w82h-backlog-1
+              briefing:
+                id: briefing:pzg36pjjn7tvtdtknpv9w82h:backlog:attempt-1:revision-1
+                digest: sha256:186f1b0de69b5ee65c483bf030a7d9a60e164a6154d5835f3c90395a691628f2
+                room-ref: ./ship-remove-duplicated-stations/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pzg36pjjn7tvtdtknpv9w82h:backlog:1
+                briefing: briefing:pzg36pjjn7tvtdtknpv9w82h:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T08:49:44.707214Z"
+                decision: approve
+                reason: 'Captain approved in chat: approve 2026-09-10'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
