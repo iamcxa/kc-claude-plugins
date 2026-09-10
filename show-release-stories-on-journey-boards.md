@@ -1,6 +1,6 @@
 ---
 title: Show release stories on journey boards with shared activity context
-status: backlog
+status: ideation
 source:
 product: kc-journey-map
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Kent approved the presented Pilot admission: release story boards, gap/unverified/exists, deferred host-selection verification, and preparation of the required local execution group.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
