@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): make retained architecture explanations discoverable"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -48,7 +48,7 @@ gates:
                 reason: Captain Kent replied "批准" to the presented two-item ideation review, including this task snapshot e1c30c75. Accept the bounded architecture-entrypoint design and enter implementation; new model spend remains separately reserved.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
