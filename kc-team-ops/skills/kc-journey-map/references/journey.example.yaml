@@ -48,7 +48,7 @@ steps:
     card: "Renders it onto the one canvas board"
     activity: "Put it on a board"
     stories:
-      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: exists, evidence: AskUserQuestion}
+      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: gap, question: "SKILL.md instructs the agent to call the host's AskUserQuestion tool; no symbol in this repository's own code issues that call, so nothing here backs it as run code"}
       - {id: default-to-the-journey-alone, card: "Get the user journey alone when nobody answers", release: r1, status: exists, evidence: DEFAULT_PROJECTIONS}
       - {id: draw-the-journey-board-if-ask, card: "Draw the per-release journey board, but only if asked for it", release: r1, status: exists, evidence: buildJourneyBoard}
       - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}

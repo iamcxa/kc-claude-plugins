@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { lintEvidenceNotFound, lintExistsWithoutEvidence, lintJourney, lintNoStatus } from './lint.mjs'
@@ -86,6 +86,51 @@ test('a symbol that greps only inside the journey file itself is still reported 
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'OnlyInTheJourneyFile' }] }])
 	const v = lintEvidenceNotFound(m, { repoRoot, journeyPath })
 	assert.equal(v.length, 1, 'a symbol cited only by the journey file passed as if real code proved it')
+})
+
+test('evidence that greps only in prose is reported missing, even though the string exists', () => {
+	// This is the repository's own real defect (kc-team-ops's journey cites AskUserQuestion,
+	// a string that greps only in .md files): a symbol named in a doc is not code that runs.
+	const repoRoot = tempRepo()
+	writeFileSync(join(repoRoot, 'docs.md'), 'See ProseOnlySymbol in the reference.\n')
+	execFileSync('git', ['add', '-A'], { cwd: repoRoot })
+	execFileSync('git', ['commit', '-q', '-m', 'docs'], { cwd: repoRoot })
+
+	const m = model([
+		{
+			id: 's',
+			stories: [
+				{ id: 's-0', card: 'x', status: 'exists', evidence: 'RealSymbol' },
+				{ id: 's-1', card: 'y', status: 'exists', evidence: 'ProseOnlySymbol' },
+			],
+		},
+	])
+	const v = lintEvidenceNotFound(m, { repoRoot })
+	assert.deepEqual(v.map((x) => x.story), ['s-1'], 's-1 must fail because the only match is a doc, not because the string is missing')
+	// Mutation this catches: dropping the isExecutableFile filter from filesCiting (the
+	// original defect) makes docs.md count as a hit, so ProseOnlySymbol wrongly passes and
+	// this assertion's list drops to empty — the earlier RenamedAway case above cannot
+	// catch that regression, since it never gives the symbol anywhere to match at all.
+})
+
+test('evidence found only in a shell script or a CI workflow still counts, since both are executable', () => {
+	const repoRoot = tempRepo()
+	writeFileSync(join(repoRoot, 'deploy.sh'), '# ScriptSymbol runs the release\n')
+	mkdirSync(join(repoRoot, '.github', 'workflows'), { recursive: true })
+	writeFileSync(join(repoRoot, '.github', 'workflows', 'ci.yml'), 'name: CI\n# WorkflowSymbol\n')
+	execFileSync('git', ['add', '-A'], { cwd: repoRoot })
+	execFileSync('git', ['commit', '-q', '-m', 'scripts'], { cwd: repoRoot })
+
+	const m = model([
+		{
+			id: 's',
+			stories: [
+				{ id: 's-0', card: 'x', status: 'exists', evidence: 'ScriptSymbol' },
+				{ id: 's-1', card: 'y', status: 'exists', evidence: 'WorkflowSymbol' },
+			],
+		},
+	])
+	assert.deepEqual(lintEvidenceNotFound(m, { repoRoot }), [], 'a shell script and a CI workflow both run; over-restricting to a narrower extension list would wrongly turn these into gaps')
 })
 
 test('lintJourney combines all three and reports nothing against a clean model', () => {
