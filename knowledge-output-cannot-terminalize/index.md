@@ -71,6 +71,17 @@ gates:
                 id: briefing:geef7a3dy7w12g7tq89h21te:validation:attempt-2:revision-1
                 digest: sha256:43650f3c2917f37368ab46dc91db90ccc84f2f8d3055258142d946f179219c14
                 room-ref: ./review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:geef7a3dy7w12g7tq89h21te:validation:2
+                briefing: briefing:geef7a3dy7w12g7tq89h21te:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-10T18:47:23.996724Z"
+                decision: approve
+                reason: 'Captain confirmed the presented validation briefing and exactly two local commits: eight upstream files and one local consumer mod. Accept the independently validated functional repair with the reproduced pre-existing cask-version failure retained. Scope is local commits and non-provider post-commit verification only; no product push, PR, merge, release, installation, cloud execution, or original experiment closure is authorized.'
+              application:
+                target-stage: done
+                state: pending
 review-round:
     id: round:geef7a3dy7w12g7tq89h21te:validation:1
     stage: validation
