@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import importlib.util
+import json
 import os
 import re
 import shutil
@@ -141,24 +142,39 @@ def parse_outcome(text: str, receipt: dict[str, object]) -> str:
         raise CloseError("decision_ready_elapsed_seconds does not match the timestamps")
     if (elapsed > int(receipt["poc_decision_ready_minutes"]) * 60 or interventions) and direction != "change":
         raise CloseError("budget exhaustion or Captain intervention requires direction change")
-    close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
-    unsigned(close, "captain_wait_seconds")
-    unsigned(close, "terminal_cleanup_seconds")
-    if one_field(close, "cleanup_status") not in {"complete", "failed", "not-applicable"}:
-        raise CloseError("cleanup_status is invalid")
     return direction
 
 
+def validate_measurements(text: str, *, final: bool) -> None:
+    close = one_yaml_section(text, "POC close measurement", "poc_close_measurement")
+    status = one_field(close, "cleanup_status")
+    if status not in {"pending", "complete", "failed", "not-applicable"}:
+        raise CloseError("cleanup_status is invalid")
+    pending = []
+    for field in ("captain_wait_seconds", "terminal_cleanup_seconds"):
+        if one_field(close, field) == "pending":
+            pending.append(f"{field}=pending")
+        else:
+            unsigned(close, field)
+    if final and (pending or status not in {"complete", "not-applicable"}):
+        raise CloseError(f"POC close incomplete: cleanup_status={status}" + ("; " + ", ".join(pending) if pending else ""))
+
+
 def validate(path: Path, phase: str) -> tuple[str, str, str, str]:
-    if phase not in {"prepare", "consume"}:
+    if phase not in {"prepare", "review", "consume", "check-final"}:
         raise CloseError(f"unsupported close phase: {phase}")
     text, item_id, receipt = read_work_item(path)
     proof_path = str(receipt["poc_proof_path"])
     stage = str(receipt["workflow_stage"])
-    allowed = {"validation", "implementation"} if phase == "prepare" and proof_path == "direct" else {"validation"}
+    allowed = {"validation", "implementation"} if phase in {"prepare", "review"} and proof_path == "direct" else {"validation"}
+    if phase == "check-final":
+        allowed = {"done"}
     if stage not in allowed:
         raise CloseError(f"POC {proof_path} close path requires work item status {' or '.join(sorted(allowed))}")
-    return item_id, parse_outcome(text, receipt), proof_path, stage
+    direction = parse_outcome(text, receipt)
+    if "poc_artifact" in receipt or phase == "check-final":
+        validate_measurements(text, final=phase == "check-final")
+    return item_id, direction, proof_path, stage
 
 
 def invoke_spacedock(
@@ -180,6 +196,80 @@ def invoke_spacedock(
     return result
 
 
+def read_json(result: subprocess.CompletedProcess[str]) -> dict:
+    try:
+        value = json.loads(result.stdout)
+    except (ValueError, TypeError) as exc:
+        raise CloseError("Spacedock did not return a JSON object") from exc
+    if not isinstance(value, dict):
+        raise CloseError("Spacedock did not return a JSON object")
+    return value
+
+
+def review_evidence(spacedock: Path, workflow_dir: Path, work_item: Path) -> dict:
+    item_id, direction, proof_path, _stage = validate(work_item, "review")
+    proof_stage = "implementation" if proof_path == "direct" else "validation"
+    command = [
+        "status", "--workflow-dir", str(workflow_dir), "--read", str(work_item),
+        "--stage", proof_stage,
+    ]
+    checklist = read_json(invoke_spacedock(spacedock, [*command, "--checklist", "--json"]))
+    items = checklist.get("checklist")
+    if checklist.get("stage") != proof_stage or not isinstance(items, list) or not items:
+        raise CloseError(f"{proof_stage} proof report has no checklist obligations")
+    lines = work_item.read_text(encoding="utf-8").splitlines()
+    citations: set[str] = set()
+    for item in items:
+        try:
+            start, end = int(item["start"]), int(item["end"])
+            complete = item["status"] in {"DONE", "SKIPPED"} and item["text"].strip()
+        except (KeyError, TypeError, ValueError, AttributeError) as exc:
+            raise CloseError("Spacedock returned a malformed checklist obligation") from exc
+        if not complete or not 1 <= start < end <= len(lines) or not any(line.strip() for line in lines[start:end]):
+            raise CloseError(f"{proof_stage} proof report has an unfinished or unevidenced obligation")
+        citations.update(re.findall(r"\bAC-[0-9A-Za-z]+\b", "\n".join(lines[start - 1:end])))
+
+    # Native selection owns report cycles and AC-section presence. Only its
+    # explicit absent-section diagnostic permits a POC without declared ACs.
+    scanned = subprocess.run(
+        [str(spacedock), *command, "--ac-scan", "--json"], text=True, capture_output=True,
+    )
+    if scanned.returncode != 0:
+        if scanned.stderr.strip() != "Error: no ## Acceptance criteria section in this file":
+            sys.stdout.write(scanned.stdout)
+            sys.stderr.write(scanned.stderr)
+            raise SystemExit(scanned.returncode)
+        if citations:
+            raise CloseError("proof report cites acceptance criteria but their section is absent")
+        acceptance = {"declared": False, "acs": []}
+    else:
+        scan = read_json(scanned)
+        acs = scan.get("acs")
+        if scan.get("stage") != proof_stage or not isinstance(acs, list) or not acs:
+            raise CloseError("declared Acceptance criteria section has no recognized criteria")
+        for ac in acs:
+            if not isinstance(ac, dict) or not ac.get("id") or ac.get("unevidenced") != "false" or not ac.get("citations"):
+                raise CloseError("declared acceptance criteria have missing evidence")
+        unknown = citations - {ac["id"] for ac in acs}
+        if unknown:
+            raise CloseError(f"proof report cites unknown acceptance criteria: {', '.join(sorted(unknown))}")
+        acceptance = {"declared": True, "acs": acs}
+
+    text, _item_id, receipt = read_work_item(work_item)
+    return {
+        "work_item": str(work_item),
+        "id": item_id,
+        "proof_path": proof_path,
+        "proof_stage": proof_stage,
+        "direction": direction,
+        "checklist": items,
+        "acceptance_criteria": acceptance,
+        "poc_outcome": one_yaml_section(text, "POC outcome", "poc_outcome"),
+        "poc_close_measurement": one_yaml_section(text, "POC close measurement", "poc_close_measurement")
+        if "poc_artifact" in receipt else None,
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     configured = os.environ.get("SPACEDOCK_BIN") or shutil.which("spacedock")
@@ -192,25 +282,47 @@ def parse_args() -> argparse.Namespace:
     prepare.add_argument("--question", required=True)
     prepare.add_argument("--artifact", required=True)
     prepare.add_argument("--summary", required=True)
+    commands.add_parser("review", help="Read the profile-selected proof report and POC evidence as JSON")
     commands.add_parser("consume")
+    commands.add_parser("check-final", help="Read-only check of terminal status and completed close measurements")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    if args.command == "check-final":
+        item_id, direction, _proof, _stage = validate(args.work_item, "check-final")
+        print(json.dumps({"id": item_id, "direction": direction, "close_complete": True}))
+        return 0
     if args.spacedock_bin is None:
         raise CloseError("spacedock executable is required")
     spacedock = args.spacedock_bin.expanduser().resolve()
     if not spacedock.is_file() or not os.access(spacedock, os.X_OK):
         raise CloseError(f"spacedock executable is not runnable: {spacedock}")
     workflow_dir = args.workflow_dir.expanduser().resolve()
+    work_item = args.work_item.expanduser().resolve()
+
+    if args.command == "review":
+        print(json.dumps(review_evidence(spacedock, workflow_dir, work_item), indent=2))
+        return 0
 
     if args.command == "prepare":
-        item_id, _outcome, proof_path, stage = validate(args.work_item, "prepare")
+        item_id, _outcome, proof_path, stage = validate(work_item, "prepare")
         if proof_path == "direct" and stage == "implementation":
+            resolved = read_json(invoke_spacedock(
+                spacedock,
+                ["status", "--workflow-dir", str(workflow_dir), "--resolve", item_id, "--json"],
+            ))
+            slug = resolved.get("slug")
+            if not isinstance(slug, str) or not slug or Path(resolved.get("path", "")).resolve() != work_item:
+                raise CloseError("Spacedock did not resolve the exact POC work item")
             invoke_spacedock(
                 spacedock,
                 ["status", "--workflow-dir", str(workflow_dir), "--set", item_id, "status=validation"],
+            )
+            invoke_spacedock(
+                spacedock,
+                ["state", "commit", slug, "--workflow-dir", str(workflow_dir)],
             )
         command = [
             "gate",
