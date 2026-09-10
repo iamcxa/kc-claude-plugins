@@ -42,6 +42,19 @@ flowchart LR
 The unit of work is a **batch**: the set of `docs/dev` tasks whose `sprint` equals one value.
 Ship adds no per-task state of its own beyond the workspace and session ids it created.
 
+**Adopters keep their `docs/ship` root.** A batch is still one commissioned entity on the
+adopter's ship state branch; what changes is its key and its stages. The entity's slug is the
+`sprint` value it wraps, and its body holds only per-batch state: the fence records, the
+questions asked and answered, the e2e result, the UAT document path, the close receipt. An
+adopter's existing batch entities that do not map to a `sprint` value are re-keyed or archived
+by that adopter's Captain; nothing in this design deletes them.
+
+**Any station that writes to a state branch derives the remote and branch from the checkout's
+own upstream and refuses when none is configured** (`intent.sh`'s `%(upstream:remotename)` /
+`%(upstream:strip=3)` derivation from #399, merged 2026-09-09). The claim fence and `watch.sh`
+inherit this; the hardcode it replaced would have pushed ship state onto the dev branch, and an
+adopter observed the refusal doing its job on 2026-09-10.
+
 ## Discriminator for every keep/delete question
 
 Anything dev flow or Spacedock already does **per task** leaves ship. Ship keeps only what
