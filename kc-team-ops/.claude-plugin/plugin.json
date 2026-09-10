@@ -1,7 +1,7 @@
 {
   "name": "kc-team-ops",
-  "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
-  "version": "1.7.0",
+  "description": "Team operations pipeline \u2014 EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult), and peer technical replies to another repo's maintainer (verified-claims-first, diagram + contract table, sized to the incoming message)",
+  "version": "1.8.0",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
@@ -25,6 +25,9 @@
     "second-opinion",
     "journey-map",
     "user-journey",
-    "figjam"
+    "figjam",
+    "peer-reply",
+    "boundary-negotiation",
+    "reverse-recovery"
   ]
 }
