@@ -45,10 +45,10 @@ steps:
     rules: [file-is-truth, no-cell-from-memory]
 
   - id: render
-    card: "Renders it onto the one canvas board"
+    card: "Renders the selected boards"
     activity: "Put it on a board"
     stories:
-      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: gap, question: "SKILL.md instructs the agent to call the host's AskUserQuestion tool; no symbol in this repository's own code issues that call, so nothing here backs it as run code"}
+      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: unverified, question: "The host selection instructions exist; the actual selection-to-render host run is unverified and deferred"}
       - {id: default-to-the-journey-alone, card: "Get the user journey alone when nobody answers", release: r1, status: exists, evidence: DEFAULT_PROJECTIONS}
       - {id: draw-the-journey-board-if-ask, card: "Draw the per-release journey board, but only if asked for it", release: r1, status: exists, evidence: buildJourneyBoard}
       - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}
@@ -57,7 +57,7 @@ steps:
     system:
       - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
       - "Which pages draw is a per-call choice, never a file property: buildAllPages(model, room, selection) defaults to story-map alone — even when the file models command/events, and even when selection is an explicit empty array"
-      - "journey-board is opt-in, not retired: buildJourneyBoard reproduces its pre-retirement per-release/whole-journey pages verbatim when selected"
+      - "journey-board is opt-in: buildJourneyBoard groups yellow release stories under green activities with shared system flow and constraints"
       - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
     cites: [kc-claude-plugins]
     rules: [board-is-a-cache, handmade-cards-survive, selection-is-per-call]
@@ -69,19 +69,18 @@ steps:
     state: "the room document"
     readmodel: "the story map a person looks at"
     note: >
-      journey-board drew for every release until b997dfdd retired it in favour of the
-      generated release contract; it is back here, but opt-in only — nothing selects it
-      unless the person (or the default) names it.
+      Release boards show each story status, evidence and question. Shared activity
+      context does not establish per-story implementation or release acceptance.
 
   - id: contract
-    card: "Generates a per-release contract instead of a second board"
+    card: "Generates a per-release contract alongside the boards"
     activity: "Check it against the code"
     stories:
       - {id: generate-a-contract-per-release, card: "Generate a per-release contract, never authored by hand", release: r2, status: exists, evidence: buildReleaseContract}
-      - {id: run-three-lints-that-can-fail, card: "Run three lints, each shown firing on a real defect", release: r2, status: exists, evidence: lintJourney}
+      - {id: run-three-lints-that-can-fail, card: "Run status and evidence lints, each shown firing on a real defect", release: r2, status: exists, evidence: lintJourney}
     system:
       - "lib/release-contract.mjs -> one document per release: each story's status, evidence symbol and rule ids"
-      - "lib/lint.mjs -> no-status, exists-without-evidence, evidence-not-found; the last re-greps the repository every run"
+      - "lib/lint.mjs -> no-status, invalid-status, exists-without-evidence, evidence-not-found; the last re-greps the repository every run"
     cites: [kc-claude-plugins]
     rules: [contract-is-generated, grep-is-the-check]
     command: "LintJourney(journeyFile, repoRoot)"
@@ -113,7 +112,7 @@ steps:
       - {id: apply-the-wording-and-the-or, card: "Apply the wording and the order", release: r1, status: exists, evidence: applyDiff}
     system:
       - "lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing"
-      - "--write applies card wording and column order only; it refuses a reorder when a nodeId is duplicated"
+      - "--write applies identity-based activity/story wording and story-map order, release and priority changes; duplicate identities and conflicting edits are refused, stale wording is skipped"
     cites: [kc-claude-plugins]
     rules: [lossy-inverse, ambiguity-refused]
     command: "ApplyDiff(journeyFile, roomId, outPath?)"
@@ -126,7 +125,7 @@ steps:
     state: "the journey file"
     readmodel: "the diff report"
     note: >
-      Read covers the story map only, and only the fields it always read: wording, order, release membership, story priority. A story's status, evidence and question are written by hand and not yet round-tripped from the canvas.
+      Read covers story-map and release-board wording, plus legacy activity cards. Release-detail positions do not change global order, release membership or story priority. A story's status, evidence and question are written by hand and not yet round-tripped from the canvas.
 
   - id: model
     card: "Names the command, the events and the state behind each step"
@@ -189,7 +188,7 @@ rules:
   - id: file-is-truth
     text: "The file in the repository is the source of truth; every board or document is generated from it"
   - id: board-is-a-cache
-    text: "Deleting .rooms/ loses nothing — the board can be re-rendered from its file"
+    text: "Read or export canvas edits before rerendering; the room is a projection of the journey file"
   - id: handmade-cards-survive
     text: "A shape with no meta.journey is never touched by a re-render, and is reported as unclaimed"
   - id: no-cell-from-memory

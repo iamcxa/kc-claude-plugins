@@ -17,7 +17,7 @@ from:
 npm install && npm run canvas          # from the plugin directory
 node lib/journey-tldr.mjs import skills/kc-journey-map/references/example/draw-a-journey.tldr demo
 open "http://localhost:3737/?room=demo"
-node lib/journey-read.mjs skills/kc-journey-map/references/example/journey.example.yaml demo
+node lib/journey-read.mjs skills/kc-journey-map/references/journey.example.yaml demo
 ```
 
 The read reports no drift, because the board was rendered from that file. Move a card and
@@ -30,12 +30,14 @@ run it again to see what it catches.
 | Page | Shows |
 |---|---|
 | Story map | the backbone, its stories, and three release bands |
-| RELEASE 1/2/3 — what is missing | one journey board per release, scoped to the steps that release touches |
+| RELEASE 1/2/3 — stories, flow & constraints | selected yellow stories with three-state labels beneath green activity groups; shared flow and constraints once per activity |
 | Function map | Command, Event, State and Read model over the same columns |
+
+Host selection is `unverified`; its actual host exercise remains deferred.
 
 Regenerate it after changing the example — all five pages need every projection selected:
 
 ```bash
-node lib/journey-render.mjs skills/kc-journey-map/references/journey.example.yaml draw-a-journey --pages story-map,journey-board,function-map
-node lib/journey-tldr.mjs export draw-a-journey skills/kc-journey-map/references/example/draw-a-journey.tldr
+node lib/journey-render.mjs skills/kc-journey-map/references/journey.example.yaml example-release-stories-fresh --pages story-map,journey-board,function-map
+node lib/journey-tldr.mjs export example-release-stories-fresh skills/kc-journey-map/references/example/draw-a-journey.tldr
 ```

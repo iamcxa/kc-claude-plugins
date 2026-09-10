@@ -41,7 +41,7 @@ For each step, locate the handler, the route registration, and the durable write
 `file:line` as you go. Three questions decide the column:
 
 - Can a person reach this step today? Split it into stories where the answer differs story
-  by story, and give each the `status` the answer implies — `exists` or `gap`.
+  by story, and give each the `status` the answer implies — `gap`, `unverified` or `exists`.
 - What does the system durably do here — which key, which write mode?
 - What would break if a future change ignored this step's rule?
 
@@ -52,7 +52,7 @@ tests can call is not a journey story.
 State plainly which ref was measured. Work living only in open PRs, worktrees, or a stack
 is not the current system, and the status card must say so.
 
-**4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). Give every story a `status` (`exists` or `gap`) and, when it exists, an `evidence` symbol — these are what the three lints in `lib/lint.mjs` check. The board is not the
+**4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). Give every story a `status` (`gap`, `unverified` or `exists`) and, when it exists, an `evidence` symbol — the meanings are defined in `references/cell-contract.md`; these are what the lints in `lib/lint.mjs` check. The board is not the
 artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
 by convention) and holds the steps, the stories with their status and evidence, the system
 lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one.

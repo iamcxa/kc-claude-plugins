@@ -38,3 +38,10 @@ test('buildReleaseContract carries status, evidence and rule ids per story', () 
 test('an unknown release throws rather than generating an empty contract', () => {
 	assert.throws(() => buildReleaseContract(fixture, 'nope'), /no release/)
 })
+
+test('release contract preserves all three story states', () => {
+	const model = structuredClone(fixture)
+	model.steps[0].stories = ['gap', 'unverified', 'exists'].map((status) => ({ id: status, card: status, release: 'r1', status }))
+	assert.deepEqual(releaseContractRows(model, 'r1').rows.map((r) => r.status), ['gap', 'unverified', 'exists'])
+	assert.match(buildReleaseContract(model, 'r1'), /\| unverified \| unverified \|/)
+})

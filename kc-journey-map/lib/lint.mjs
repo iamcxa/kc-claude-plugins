@@ -7,7 +7,7 @@
 
 import { execFileSync } from 'node:child_process'
 import { extname, resolve, sep } from 'node:path'
-import { iterStories } from './model.mjs'
+import { iterStories, STORY_STATUSES } from './model.mjs'
 
 // Extensions of something that runs. Prose (.md) and data (.yaml/.json/.tldr) can quote a
 // symbol back without the symbol being backed by code — that is the whole defect this
@@ -40,8 +40,9 @@ function filesCiting(symbol, repoRoot) {
 
 export function lintNoStatus(model) {
 	return iterStories(model)
-		.filter((s) => !s.status)
-		.map((s) => ({ lint: 'no-status', story: s.id, release: s.release, detail: `story ${s.id} (under step ${s.step.id}) carries no status` }))
+		.filter((s) => !STORY_STATUSES.includes(s.status))
+		.map((s) => ({ lint: s.status ? 'invalid-status' : 'no-status', story: s.id, release: s.release,
+			detail: s.status ? `story ${s.id} has unsupported status "${s.status}"; use ${STORY_STATUSES.join(', ')}` : `story ${s.id} (under step ${s.step.id}) carries no status` }))
 }
 
 export function lintExistsWithoutEvidence(model) {

@@ -101,3 +101,13 @@ test('a map past the 61st shape still gets valid ordered unique indexes', () => 
 		assert.doesNotThrow(() => schema.types.shape.validate(shape), `${shape.id} carries an index the schema rejects`)
 	}
 })
+
+test('story map labels all three states and counts exists alone', () => {
+	const three = { releases: [{ id: 'r', name: 'Release' }], steps: [{ id: 'a', card: 'Act', stories: ['gap', 'unverified', 'exists'].map((status) => ({ id: status, card: status, release: 'r', status })) }] }
+	const text = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
+	const records = buildStoryMap(three)
+	assert.deepEqual(kindOf(records, 'story-status').map(text), ['GAP', 'UNVERIFIED', 'EXISTS'])
+	assert.match(text(kindOf(records, 'release-label')[0]), /1\/3 exist/)
+	delete three.steps[0].stories[0].status
+	assert.equal(text(kindOf(buildStoryMap(three), 'story-status')[0]), 'UNASSESSED')
+})

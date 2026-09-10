@@ -53,16 +53,29 @@ node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map
 | **Release contract**, one per release | generated document, not canvas | the same question as the journey board, as a document a lint can check instead of a picture a person has to notice is wrong — `lib/journey-contract.mjs` |
 | **Function map** (`function-map`, opt-in) | canvas, one page | what does each step decide, and what becomes true when it does |
 
-**The release contract is generated, never authored.** It reads every story in a release and
-prints its status, its evidence symbol, and the rule ids that apply — the same facts the
-journey board used to draw, as a document a lint can check instead of a picture a person has
-to notice is wrong. See `lib/release-contract.mjs`.
+**Journey boards use stories as the review unit.** Each release page shows its selected
+stories as yellow cards under green activity headings (`activity`, falling back to
+`card`). A separate box below each story shows its status, evidence symbol and open
+question. `EXISTS` describes recorded implementation evidence, not delivery acceptance.
+With no releases, the whole-journey board also shows unassigned stories and marks
+activities that have no stories yet.
 
-**Three lints run against the file itself**, not the board:
+System flow and constraints span each activity group once. The file currently stores
+`system`, `cites`, `rules` and `note` on the activity, so the board labels them as shared
+context with no recorded mapping to individual stories. It does not copy those claims
+into each story's evidence. This is a **release story detail board**, not a sequence
+diagram: left-to-right story order alone does not establish calls or causality.
+
+**The release contract is generated, never authored.** It reads the stories in a release
+and prints their status, evidence symbol, and shared activity rule ids in a document.
+See `lib/release-contract.mjs`.
+
+**Lints run against the file itself**, not the board:
 
 | Lint | Fires on |
 |---|---|
 | `no-status` | a story with no `status` field at all — including a bare-string story, which cannot carry one |
+| `invalid-status` | a status outside `gap`, `unverified`, `exists` |
 | `exists-without-evidence` | a story marked `exists` with no `evidence` symbol |
 | `evidence-not-found` | an `evidence` symbol that no longer greps anywhere in the repository outside the journey file itself |
 
@@ -114,12 +127,12 @@ now:                       # the status quo — how the job gets done without th
   - {id: …, card: …, pain: …, workaround: …}
 steps:
   - id: …
-    card: …                # the journey card; `activity:` overrides it on the story map
+    card: …                # the journey card; `activity:` overrides it on both canvas projections
     stories:                # ordered top to bottom by priority, variants below the main path
       - id: …
         card: …
         release: …
-        status: exists      # or gap — required; a gap is drawn on the story, never the step
+        status: exists      # gap | unverified | exists — required; labeled per story
         evidence: …          # a bare symbol that greps in the repo; required when status is exists
         question: …          # optional — an unresolved decision, drawn violet
 later: [ … ]               # activities below the release boundary
@@ -129,7 +142,9 @@ slices:
   - {id: …, outcome: …}    # the outcome is the label at the line's left edge
 ```
 
-A release's label carries how many of its stories exist — computed from `status` on every
+Both projections label story states; an unsupported or missing value shows UNASSESSED
+and fails lint. See `cell-contract.md` for the status meanings and evidence boundary.
+A release's label carries how many of its stories have `status: exists` — computed from `status` on every
 render, never typed by hand.
 
 An unfinished implementation of the thing being proposed does not belong in `now:` —
@@ -171,33 +186,40 @@ for a save-as should end up with that file.
 are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
 A sticky someone added during a workshop survives every re-render.
 
-**The reader still understands a journey-board page if one exists.** A step is a
-`step-card` there and an `activity` on the story map; where the two disagree about the same
-field, neither wins — the conflict is reported and nothing is applied. The journey board
-renders only when selected, so this comparison only has two sides to disagree on a render
-that asked for both pages.
+**Wording round-trips across projections.** `lib/read.mjs` reads activity headings and
+story cards on the story map and release boards, plus legacy `step-card` records.
+One changed projection is enough; an untouched copy does not veto the edit. Matching
+edits apply once. Different edits of the same field produce a conflict and that field
+is not applied. A copied node within one page is ambiguous and is excluded from wording
+readback across projections; the same story rendered on different pages is expected.
 
-**Read reports; `--write` applies a subset.** What round-trips: the wording of a card, an
-activity and a story; the order of the columns; the priority of the stories under an
-activity. A story's `status`, `evidence` and `question` are not read back yet — they are
-written by hand, the same as a rule id. Lane 2 and lane 3 have a lossy inverse — a
-constraint is stored as a rule id and drawn as that rule's text, so canvas text cannot
-be mapped back to an id without guessing. Everything else is reported for a human to act on:
+**Position has a projection-specific meaning.** Activity column order is read from the
+story map or a whole-journey board. A release board is a subset, so moving its groups
+cannot reorder the whole journey. Release membership and story priority are read from
+the story map; dragging cards on a release detail board does not change either.
+
+**`--write` applies a subset.** It applies wording, supported column order, story-map
+release membership and story priority. Status, evidence, questions, system flow and
+constraints are display-only here; edit those in the journey file. Constraint text
+cannot be mapped back to rule ids without guessing.
 
 | Report | Meaning |
 |---|---|
-| `reordered` | columns are in a different left-to-right order than the file |
-| `reorderConflict` | the two pages are in different orders — neither is applied |
-| `reworded` | a card, an activity or a story was edited; carries the page and the field |
-| `rewordConflict` | the two pages give the same step different wording — neither is applied |
-| `storiesReordered` | stories under an activity were dragged into a new priority |
-| `duplicated` | a node id appears on more than one shape |
-| `unclaimed` | a note or geo with no `meta.journey` — someone added a card by hand. It carries the page and the column it sits under; a card straddling two columns reports `candidates` and no column. An arrow or a bare text shape is not seen |
-| `missing` | the file has a step with no shape on either page |
+| `reordered` | supported activity columns have a different left-to-right order |
+| `reorderConflict` | the story map and whole-journey board disagree on order |
+| `reworded` | a card, activity or story was edited; carries its page and field |
+| `rewordConflict` | distinct edits target the same field across projections |
+| `releaseMoved` | a story crossed a release boundary on the story map |
+| `storiesReordered` | stories changed priority within a story-map activity and release |
+| `duplicated` | a node id occurs more than once within a page's activity or story cards |
+| `unclaimed` | an untagged note or geo, with its page and activity column when unambiguous; straddling cards carry `candidates`. Arrows and bare text shapes are not read |
+| `missing` | the file has an activity with no activity shape among the selected pages |
 
-`--write` **refuses the reorder entirely** when anything is duplicated. tldraw copies
-`meta` verbatim on duplicate, so a copy carries its original's `nodeId` and there is no
-honest way to tell which is which.
+`applyDiff` skips activity/card/story wording if the file no longer matches the
+value read for that edit; read the canvas again before applying a fresh diff.
+
+`--write` refuses activity reordering when any node is duplicated. tldraw copies
+`meta` verbatim, so the original and copy cannot be distinguished by `nodeId`.
 
 ## Two traps, both verified in a browser
 

@@ -11,170 +11,94 @@ import { parse } from 'yaml'
 import { fitHeight, indexes, label, note, page, pageLink, releaseLine } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
+import { normalizeStory, storyStatusLabel } from './model.mjs'
 
-const PITCH = 320
-const COL_W = 300
+const STORY_PITCH = 240
+const STORY_W = 220
+const GROUP_GAP = 60
 const X0 = 320
 const LANE_X = 20
 const LANE_W = 270
-
-const Y_BADGE = 40
-const Y_CARD = 110
-const H_CARD = 200
-const GAP = 60
-
-// A badge changes what the column claims, so it is drawn as its own shape rather than
-// folded into the sticky text where it would compete with the user's own words.
-const BADGE_COLOR = {
-	NEW: 'blue',
-	NOT_BUILT: 'red',
-	NOT_RULED: 'orange',
-	CHANGED: 'violet',
-}
-
+const GAP = 40
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-// One board per release, scoped to the steps that release touches.
-//
-// The board exists to answer the question the story map raises and cannot answer: given
-// that we want this release, what does the system do today, what has to stay true, and
-// what is therefore missing. Scoped that way, the NOT BUILT columns on a release's board
-// are that release's build list. Drawn across the whole journey — which is what this did
-// — the same badges are a pile of unrelated gaps belonging to no particular decision.
+// Release stories are the units under discussion. Activity-level system/rule data spans
+// their group once; it is shared context, not evidence that each story is implemented.
 export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
 
 export function buildJourneyBoard(model, { release = null, room = null } = {}) {
-	const inRelease = (step) =>
-		!release || (step.stories ?? []).some((x) => x?.release === release.id)
-	const steps = (model.steps ?? []).filter(inRelease)
+	let right = X0
+	const groups = (model.steps ?? []).map((step) => {
+		const stories = (step.stories ?? []).map((story, j) => normalizeStory(step, story, j))
+			.filter((story) => !release || story.release === release.id)
+		if (release && !stories.length) return null
+		const w = Math.max(300, stories.length * STORY_PITCH - 20)
+		const group = { step, stories, x: right, w }
+		right += w + GROUP_GAP
+		return group
+	}).filter(Boolean)
 	const parentId = boardPageId(release?.id)
 	const idp = `shape:jm-${release?.id ?? 'all'}-`
 	const rulesById = new Map((model.rules ?? []).map((r) => [r.id, r.text]))
 	const put = []
-	const ix = indexes(Math.max(12, steps.length * 5 + 16))
+	const ix = indexes(20 + groups.length * 4 + groups.reduce((sum, g) => sum + g.stories.length * 2, 0))
 	let n = 0
-
-	// Shape ids are derived from the model, never from a coordinate: a position-derived
-	// id leaves an orphan behind the moment a row changes height.
-	const lane = (slug, text, y, h) =>
+	const box = (slug, nodeId, kind, text, x, y, w, h, color = 'black', extra = {}) => {
 		put.push({
-			...label({ id: `${idp}lane-${slug}`, text, x: LANE_X, y, w: LANE_W, h, index: ix[n++], parentId, color: 'grey' }),
-			meta: tag(`lane-${slug}`, 'lane-label'),
+			...label({ id: `${idp}${slug}`, parentId, text, x, y, w, h, index: ix[n++],
+				color, size: 's', align: 'start', verticalAlign: 'start', ...extra }),
+			meta: tag(nodeId, kind),
 		})
+	}
+	const lane = (slug, text, y, h) => box(`lane-${slug}`, `lane-${slug}`, 'lane-label', text, LANE_X, y, LANE_W, h, 'grey')
+	const activityText = (step) => step.activity ?? step.card
+	const proofText = (story) => [
+		storyStatusLabel(story.status),
+		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
+		story.question && `? ${story.question}`,
+	].filter(Boolean).join('\n')
+	const systemText = (step) => [
+		'SHARED ACTIVITY CONTEXT',
+		...(step.system?.length ? step.system.map((l) => `• ${l}`) : ['No system flow recorded.']),
+		step.cites?.length && `[${step.cites.join(', ')}]`,
+		step.note?.trim(),
+	].filter(Boolean).join('\n')
+	const ruleText = (step) => ['SHARED ACTIVITY CONSTRAINTS',
+		...(step.rules?.length ? step.rules.map((id) => `• ${rulesById.get(id) ?? id}`) : ['No constraints recorded.']),
+	].join('\n')
+	const activityH = Math.max(fitHeight('ACTIVITIES\nshared groups', LANE_W), ...groups.map((g) => fitHeight(activityText(g.step), g.w)))
+	const storyY = activityH + GAP
+	const proofY = storyY + 200 + 20
+	const proofH = Math.max(184, ...groups.flatMap((g) => g.stories.map((s) => fitHeight(proofText(s), STORY_W))))
+	const systemY = proofY + proofH + GAP
+	const systemH = Math.max(180, ...groups.map((g) => fitHeight(systemText(g.step), g.w)))
+	const rulesY = systemY + systemH + GAP
+	const rulesH = Math.max(160, ...groups.map((g) => fitHeight(ruleText(g.step), g.w)))
 
-	// Every column in a row shares the tallest cell's height, so the lanes stay lanes.
-	const systemText = (step) =>
-		(step.system ?? []).map((l) => `• ${l}`).join('\n') + (step.cites?.length ? `\n[${step.cites.join(', ')}]` : '')
-	const ruleText = (step) => (step.rules ?? []).map((id) => `• ${rulesById.get(id) ?? id}`).join('\n') || '—'
+	lane('activity', 'ACTIVITIES\nshared groups', 0, activityH)
+	lane('journey', 'RELEASE STORIES\nwhat a person can do', storyY, 200)
+	lane('evidence', 'STORY STATUS\nevidence and open questions\nEXISTS is not delivery acceptance', proofY, proofH)
+	lane('system', 'SYSTEM FLOW\nshared by the activity; story mapping not recorded', systemY, systemH)
+	lane('constraints', 'CONSTRAINTS\nshared by the activity; story mapping not recorded', rulesY, rulesH)
 
-	// Every row below the cards is placed relative to what is actually above it: a step
-	// note is optional and its height depends on its own text.
-	const noteOf = (step) => (step.note ? step.note.trim() : '')
-	const H_NOTE = Math.max(0, ...steps.map((s) => (noteOf(s) ? fitHeight(noteOf(s), COL_W) : 0)))
-	const Y_NOTE = Y_CARD + H_CARD + 20
-	const Y_SYSTEM = Y_NOTE + (H_NOTE ? H_NOTE + 20 : 0) + 20
-
-	const H_SYSTEM = Math.max(200, ...steps.map((s) => fitHeight(systemText(s), COL_W)))
-	const Y_RULES = Y_SYSTEM + H_SYSTEM + GAP
-	const H_RULES = Math.max(160, ...steps.map((s) => fitHeight(ruleText(s), COL_W)))
-
-	lane('journey', 'USER JOURNEY\nwhat a person does', Y_CARD, H_CARD)
-	lane('system', 'SYSTEM FLOW\nthe call, route or write', Y_SYSTEM, H_SYSTEM)
-	lane('constraints', 'CONSTRAINTS\nwhat must stay true', Y_RULES, H_RULES)
-
-	steps.forEach((step, i) => {
-		const x = X0 + i * PITCH
-
-		if (step.badge) {
-			put.push({
-				...label({
-					id: `${idp}badge-${step.id}`,
-					parentId,
-					text: step.badge.replace('_', ' '),
-					x: x + 60,
-					y: Y_BADGE,
-					w: 180,
-					h: 50,
-					index: ix[n++],
-					color: BADGE_COLOR[step.badge] ?? 'red',
-				}),
-				meta: tag(step.id, 'badge'),
-			})
+	for (const { step, stories, x, w } of groups) {
+		box(`card-${step.id}`, step.id, 'activity', activityText(step), x, 0, w, activityH, 'green')
+		if (!stories.length) {
+			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, 200, 'grey')
 		}
-
-		put.push({
-			...note({
-				id: `${idp}card-${step.id}`,
-				parentId,
-				text: `${i + 1}. ${step.card}`,
-				x: x + 50,
-				y: Y_CARD,
-				index: ix[n++],
-				color: 'green',
-			}),
-			meta: tag(step.id, 'step-card'),
-		})
-
-		// Citations name the repository, never a line number: a line number goes stale
-		// silently and a sticky is the wrong place to carry one. The file keeps the detail.
-		put.push({
-			...label({
-				id: `${idp}sys-${step.id}`,
-				parentId,
-				text: systemText(step),
-				x,
-				y: Y_SYSTEM,
-				w: COL_W,
-				h: H_SYSTEM,
-				index: ix[n++],
-				color: 'black',
-				size: 's',
-				align: 'start',
-				verticalAlign: 'start',
-			}),
-			meta: tag(step.id, 'system'),
-		})
-
-		// A note on a step is why the column matters, not what it does — it sits under the
-		// card rather than inside it, so the card stays the user's own words.
-		if (step.note) {
+		stories.forEach((story, j) => {
+			const sx = x + j * STORY_PITCH + (stories.length === 1 ? (w - STORY_W) / 2 : 0)
 			put.push({
-				...label({
-					id: `${idp}note-${step.id}`,
-					parentId,
-					text: noteOf(step),
-					x,
-					y: Y_NOTE,
-					w: COL_W,
-					h: H_NOTE,
-					index: ix[n++],
-					color: 'grey',
-					size: 's',
-					align: 'start',
-					verticalAlign: 'start',
-				}),
-				meta: tag(step.id, 'note'),
+				...note({ id: `${idp}story-${story.id}`, parentId, text: story.card,
+					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
+				meta: tag(story.id, 'story'),
 			})
-		}
-
-		put.push({
-			...label({
-				id: `${idp}rules-${step.id}`,
-				parentId,
-				text: ruleText(step),
-				x,
-				y: Y_RULES,
-				w: COL_W,
-				h: H_RULES,
-				index: ix[n++],
-				color: 'blue',
-				size: 's',
-				align: 'start',
-				verticalAlign: 'start',
-			}),
-			meta: tag(step.id, 'constraints'),
+			box(`proof-${story.id}`, story.id, 'story-proof', proofText(story), sx, proofY, STORY_W, proofH,
+				story.status === 'gap' ? 'red' : story.status === 'exists' ? 'grey' : 'violet')
 		})
-	})
+		box(`sys-${step.id}`, step.id, 'system', systemText(step), x, systemY, w, systemH)
+		box(`rules-${step.id}`, step.id, 'constraints', ruleText(step), x, rulesY, w, rulesH, 'blue')
+	}
 
 	const s = model.status ?? {}
 	const statusText = [
@@ -183,78 +107,29 @@ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
 		s.unmerged && `Unmerged: ${s.unmerged}`,
 		s.undeployed && `Undeployed: ${s.undeployed}`,
 		s.irreversible && `Irreversible: ${s.irreversible}`,
-	]
-		.filter(Boolean)
-		.join('\n')
+	].filter(Boolean).join('\n')
+	const statusW = Math.max(600, right - GROUP_GAP - X0)
+	box('status', 'status', 'status', statusText, X0, rulesY + rulesH + 100, statusW, fitHeight(statusText, statusW), 'red')
 
-	const statusW = Math.max(600, steps.length * PITCH - 20)
-	put.push({
-		...label({
-			id: `${idp}status`,
-			parentId,
-			text: statusText,
-			x: X0,
-			y: Y_RULES + H_RULES + 100,
-			w: statusW,
-			h: fitHeight(statusText, statusW),
-			index: ix[n++],
-			color: 'red',
-			size: 's',
-			align: 'start',
-			verticalAlign: 'start',
-		}),
-		meta: tag('status', 'status'),
-	})
-
-	const title = release ? `${release.name} — what is missing` : 'Journey board'
-	const relText = release ? `${release.name}\n${release.goal ?? ''}\n\n← back to the story map`.trim() : ''
-	const relH = relText ? fitHeight(relText, LANE_W) : 0
+	const title = release ? `${release.name} — stories, flow & constraints` : 'Journey board'
 	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
-
 	if (release) {
-		put.push({
-			...label({
-				id: `${idp}release`,
-				text: relText,
-				x: LANE_X,
-				// Sits clear of the first lane label rather than on top of it: the label's
-				// height follows the release goal, which is as long as somebody wrote it.
-				y: Y_CARD - relH - 40,
-				w: LANE_W,
-				h: relH,
-				index: ix[n++],
-				parentId,
-				color: 'blue',
-				size: 's',
-				url: room ? pageLink(room, STORY_PAGE_ID) : '',
-			}),
-			meta: tag(release.id, 'release-label'),
-		})
+		const stories = groups.flatMap((g) => g.stories)
+		const text = `${release.name}\n${release.goal ?? ''}\n\n${stories.filter((s) => s.status === 'exists').length}/${stories.length} stories exist\n← back to the story map`
+		const h = fitHeight(text, statusW)
+		box('release', release.id, 'release-label', text, X0, -h - GAP, statusW, h, 'blue',
+			{ url: room ? pageLink(room, STORY_PAGE_ID) : '' })
 	}
-
 	const slice = (model.slices ?? [])[0]
 	if (slice) {
-		const y = Y_RULES + H_RULES + 50
+		const y = rulesY + rulesH + 50
 		put.push({
-			...releaseLine({ id: `${idp}slice-line`, x: LANE_X, y, w: X0 + steps.length * PITCH, index: ix[n++], parentId }),
+			...releaseLine({ id: `${idp}slice-line`, x: LANE_X, y, w: right - LANE_X, index: ix[n++], parentId }),
 			meta: tag(slice.id, 'slice-line'),
 		})
-		put.push({
-			...label({
-				id: `${idp}slice-label`,
-				parentId,
-				text: `SLICE\n${slice.outcome}`,
-				x: LANE_X,
-				y: y + 50,
-				w: LANE_W,
-				h: fitHeight(`SLICE\n${slice.outcome}`, LANE_W),
-				index: ix[n++],
-				size: 's',
-			}),
-			meta: tag(slice.id, 'slice-label'),
-		})
+		const text = `SLICE\n${slice.outcome}`
+		box('slice-label', slice.id, 'slice-label', text, LANE_X, y + 50, LANE_W, fitHeight(text, LANE_W))
 	}
-
 	return put
 }
 

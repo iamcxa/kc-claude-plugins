@@ -5,6 +5,9 @@
 // `status`, `evidence` or `question` — which is exactly the shape the no-status lint
 // has to catch, not paper over.
 
+export const STORY_STATUSES = ['gap', 'unverified', 'exists']
+export const storyStatusLabel = (status) => STORY_STATUSES.includes(status) ? status.toUpperCase() : 'UNASSESSED'
+
 export const normalizeStory = (step, story, j) =>
 	typeof story === 'string'
 		? { id: `${step.id}-${j}`, card: story, release: null, status: undefined, evidence: undefined, question: undefined }

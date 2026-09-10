@@ -1,10 +1,5 @@
-// The document that replaces the per-release canvas board.
-//
-// The journey board's unique content was never the picture — it was a citation and a
-// constraint list, neither of which is spatial. This generates that content as a plain
-// document instead of a room: for every story in a release, its status, its evidence
-// symbol, and the rule ids that apply. Always derived from the journey file; nothing
-// here is hand-authored, and there is no `--edit` path.
+// A generated text projection alongside the release board: story status/evidence
+// and shared activity rules, derived from the journey file.
 
 import { iterStories } from './model.mjs'
 

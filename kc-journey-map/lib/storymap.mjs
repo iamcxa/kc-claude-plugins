@@ -10,13 +10,11 @@
 // is one when the bands cut across all the columns. Bands scoped to a set of columns —
 // which is what this drew before — cannot express a walking skeleton at all.
 //
-// This is the one canvas board a journey renders onto; the per-release detail that used
-// to be a second canvas page (the journey board) is a generated document instead — see
-// release-contract.mjs. A story's status (`exists`/`gap`) and open `question` are drawn
-// here, at story grain, not on the step: a step is too coarse a unit to be in or out.
+// The default story map shows status at story grain. Optional release boards and
+// generated contracts provide detail from the same model.
 
 import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
-import { normalizeStory } from './model.mjs'
+import { normalizeStory, storyStatusLabel } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -208,25 +206,21 @@ export function buildStoryMap(model, room = null) {
 					meta: tag(story.id, 'story'),
 				})
 
-				// The gap and the open question are drawn on the story itself, not the step it
-				// sits under: a step is too coarse a grain to be a build unit, and a story is not.
-				if (story.status === 'gap') {
-					put.push({
-						...label({
-							id: `shape:sm-story-status-${story.id}`,
-							text: 'GAP',
-							x,
-							y: y - 46,
-							w: 200,
-							h: 40,
-							index: ix[n++],
-							parentId,
-							color: 'red',
-							size: 's',
-						}),
-						meta: tag(story.id, 'story-status'),
-					})
-				}
+				put.push({
+					...label({
+						id: `shape:sm-story-status-${story.id}`,
+						text: storyStatusLabel(story.status),
+						x,
+						y: y - 46,
+						w: 200,
+						h: 40,
+						index: ix[n++],
+						parentId,
+						color: story.status === 'gap' ? 'red' : story.status === 'exists' ? 'grey' : 'violet',
+						size: 's',
+					}),
+					meta: tag(story.id, 'story-status'),
+				})
 
 				if (story.question) {
 					const w = 200

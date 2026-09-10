@@ -54,17 +54,22 @@ built; see "Stories".
 
 **Asserts:** whether a specific, nameable piece of the step is proven to exist.
 
-- `status: exists | gap` is required on every story. `exists` means a citation-grade
-  symbol backs it; `gap` means nothing does yet — draw it, never omit it.
+- `status: gap | unverified | exists` is required on every story. `gap` means known
+  missing implementation; `unverified` means the required behavior has not yet been
+  verified; `exists` means implementation evidence supports its relevant execution
+  boundary. Missing evidence alone does not prove absence.
+- Only `exists` counts toward the implemented-story total in `buildStoryMap` and
+  `buildJourneyBoard`. It does not mean delivery acceptance or release completion.
+  A symbol lookup checks citation consistency, not the complete execution boundary.
 - `evidence:` is a bare symbol — a function, const, or command name that greps in this
   repository — required whenever `status: exists`. Not a `file:line`: a line number goes
   stale silently and the lint would have nothing stable to search for.
 - `question:` is optional and orthogonal to status: an unresolved decision, on a story
-  that may itself exist or be a gap. Drawn violet.
+  in any of the three states. Drawn violet.
 - A bare string story (`- "some idea"`) cannot carry any of the three fields — it fires
   the `no-status` lint. Give it an id and object form as soon as it needs one.
 
-These three are what the three lints check — see `lib/lint.mjs` and the per-release
+The lints diagnose missing/unsupported status and missing/stale evidence — see `lib/lint.mjs` and the per-release
 contract generated from them (`lib/release-contract.mjs`).
 
 ## Lane 2 — System Flow (per step, narrative)

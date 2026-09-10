@@ -138,3 +138,10 @@ test('lintJourney combines all three and reports nothing against a clean model',
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'RealSymbol' }] }])
 	assert.deepEqual(lintJourney(m, { repoRoot }), [])
 })
+
+test('lint rejects unsupported status and accepts gap, unverified and exists', () => {
+	const m = model([{ id: 's', stories: ['gap', 'unverified', 'exists', 'made-up'].map((status) => ({ id: status, card: status, status, ...(status === 'exists' ? { evidence: 'RealSymbol' } : {}) })) }])
+	const dir = tempRepo()
+	const violations = lintJourney(m, { repoRoot: dir })
+	assert.deepEqual(violations.map((v) => [v.lint, v.story]), [['invalid-status', 'made-up']])
+})
