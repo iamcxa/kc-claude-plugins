@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1",
+  "question": "Admit the Captain-agreed bounded manual improvement Pilot to shaping?",
+  "artifacts": [
+    {
+      "id": "artifact:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/dc70870ce176a80a34a818b30e36c5e6eb8ad518/dev-flow-manual-improvement-pilot/index.md",
+      "rev": "sha256:7ad207b50219904cf5f54c66869722927f2c9f23225f453365df68d25e98140c",
+      "mediaType": "text/markdown",
+      "summary": "One manual cycle with raw test evidence, per-actor usage, independent verification and legitimate close. Reuse the existing knowledge-only delivery defect owner; shape first, no new cloud run or recurring activation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

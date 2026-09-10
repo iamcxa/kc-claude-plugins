@@ -5,6 +5,17 @@ product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
 id: 3w83fmy975y617nrfhcy1mqq
+gates:
+    version: 1
+    records:
+        - id: gate:3w83fmy975y617nrfhcy1mqq:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:3w83fmy975y617nrfhcy1mqq-backlog-1
+              briefing:
+                id: briefing:3w83fmy975y617nrfhcy1mqq:backlog:attempt-1:revision-1
+                digest: sha256:f4e4d284e5d60d57ff73cc00fdeaadeeb300eacee90a058825a018485ff7f528
+                room-ref: ./review/backlog/briefing-1
 ---
 
 # One manually triggered dev-flow improvement cycle
