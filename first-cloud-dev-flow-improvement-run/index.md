@@ -300,7 +300,7 @@ The dated paragraph above describes the runtime before PR #412. The following pe
 
 ```yaml
 poc_close_measurement:
-  captain_wait_seconds: pending
+  captain_wait_seconds: 75
   terminal_cleanup_seconds: pending
   cleanup_status: pending
 ```
@@ -361,6 +361,10 @@ The bounded experiment produced a local coordination falsifier before any cloud 
 - Cleanup/authority: safe prompt, launch JSON, available event transcript, final byte report, counters and hashes now retained outside disposable worktree in this task. Cloud resource and local worktree retained; no archive/deletion before the parent handles the unresolved Captain gate.
 
 Post-repair close preparation: PR #412 merged; the installed kc-dev-flow 4.3.0 package source is c9c5752fda853737d4a937ad7f59564c5651ca53. Pending wait and cleanup durations are truthful future observations. The outcome remains change; original cloud case proof stays owner-reported, and no new workload was executed. This reporting-only continuation preserves the historical pins and admitted scope; it is not a new stage dispatch, repin, approval or final-duration claim.
+
+Close attempt after Captain decision: Kent approved archive ("可以封存"); the validation approval was committed in 90e0ae13 and the no-product-diff sentinel in 08ca451e. Native merge guard then returned blocked for `local-merge:accepted-cloud-experiment-change-outcome-no-product-diff`. Installed Spacedock 0.27.2 `internal/status/merge.go:312-339` accepts `local-merge:` only with a nonempty hexadecimal suffix; `internal/status/format.go:446-450` defines that suffix as a real local-merge commit. The registered `docs/dev/_mods/pr-merge.md:29-41` instead documents `local-merge:{reason}` for knowledge-only delivery. This is a documented-contract/runtime mismatch; no fake hash or substitute merge proof was written, and the approved pending gate was preserved.
+
+The recorded Captain wait is 75 seconds, copied from the parent's `.context/original-poc-close-decision.json`: presentation prepared at 2026-09-10T15:27:24.497201+00:00; actual decision received at 2026-09-10T15:28:40.034094+00:00. This measures the parent's presentation-to-decision interval, not the user's read time. Terminalization is blocked; terminal cleanup duration and cleanup status remain pending. The parent reports that the original cloud workspace is still sleeping; no cleanup, archive, new workload, or new issue/PR was performed by this reporting continuation. Outcome remains change, and original cloud case proof remains owner-reported.
 
 ### Summary
 
