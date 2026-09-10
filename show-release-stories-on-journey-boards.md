@@ -1,6 +1,6 @@
 ---
 title: Show release stories on journey boards with shared activity context
-status: implementation
+status: validation
 source:
 product: kc-journey-map
 planning-window:
