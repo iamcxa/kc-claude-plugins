@@ -28,3 +28,6 @@ Finding 7 (2026-09-11): a cloud FO's own gate records pin commits that exist onl
 
 ## 2026-09-11 feedback round 2 (#410 only)
 Batch FO verdict at af020cf4: revise. kc-ship-flow first-officer skill collides with the Spacedock skill name and carries stale stage lines (per-station pins, plan-receipt args, plan-flow validator, deleted spec path). Rename to run-batch; merge main after #411 lands.
+
+## 2026-09-11 ship-verify-uat-close closed end-to-end
+#411 merged by the Captain (c1564b21); worker ran merge guard (pr: pr-merge:411, done, archived) and wrote its own debrief _debriefs/2026-09-11-01-claude-claude-sonnet-5.md (aaabe747). First task to complete the full cloud-wrapper loop. Worker testimonial names `gate record --round` as the one undocumented step.
