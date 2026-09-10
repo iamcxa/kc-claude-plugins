@@ -105,3 +105,53 @@ work_profile:
 ### Summary
 
 Deleted the nine per-task stations named in the spec's removal table plus their station docs, the evidence-block schema, and every fixture/contract-test case that only exercised them, then rewrote kernel.md, placement.tsv, docs/ship/README.md (five stages: dispatched, watching, verified, uat, closed), and the first-officer SKILL.md to describe the surviving cloud-wrapper shape. Left `fenced-dispatch.sh`/`intent.sh`/`holder.sh`/`worker-transcript.sh` and `pin.py`'s stage-name vocabulary untouched — none is named in AC-1's grep list, and the claim fence explicitly stays per the entity's Accepted outcome; renaming pin.py's `STATIONS` enum to the new five stage names would need a matching rewrite of ~15 cases in pin.test.py that no AC requires, so it's flagged rather than attempted under this stage's budget. AC-1's `git grep` and AC-2/AC-3 all pass at candidate d300d531; the one open item is `contract-test.py`'s exit code, blocked only by a `spacedock dispatch build` failure reproduced identically on the unmodified branch tip before this PR's changes (environment gap, not a regression from this removal).
+
+## Stage Report: validation
+
+- DONE: independently reproduce AC-1's git-grep-clean result, AC-2 (prose-placement-check.py), and AC-3 (marketplace-verify.sh, skill-frontmatter-lint.sh) in a fresh clone at the exact candidate SHA, not the authoring worktree
+  Fresh clone at /tmp/validate-clone checked out to `d300d531186a6f42a9fd1905f90c8227bdfd966c`: `git grep -l -E 'accept-evidence|open-pr\.sh|disposition\.py|merge-station|ci-covers|dev-debrief|ship-debrief|notify\.sh|without-it\.sh' -- kc-ship-flow docs/ship` exits 1 with no output; `python3 kc-ship-flow/scripts/prose-placement-check.py` prints `PASS (28 segments, 18 placed, 10 residual)` exit 0; `bash scripts/marketplace-verify.sh` prints `All checks passed` exit 0; `bash scripts/skill-frontmatter-lint.sh` prints `all skill directories have valid frontmatter` exit 0.
+- DONE: list every retained fixture that pins a real commit SHA under a `without-it unanswered` section, with its path, for the PR body (AC-4)
+  Derived independently (own grep + `git cat-file -t` filter, cross-checked by a second sub-agent run over the same clone) rather than reused from the entity's prior "17 fixtures" estimate, since that count predates this PR's deletions. 34 files under `kc-ship-flow/scripts/fixtures/` still contain a hex string that `git cat-file -t <hex>` resolves to a `commit` object at the candidate SHA; list below. `kc-ship-flow/scripts/contract-test.py` also embeds one such SHA literal but is the script, not a fixture, so it is called out separately, not counted in the 34.
+
+### without-it unanswered (AC-4 — retained fixtures pinning a real commit SHA)
+
+- kc-ship-flow/scripts/fixtures/DEV-90.md
+- kc-ship-flow/scripts/fixtures/DEV-91.md
+- kc-ship-flow/scripts/fixtures/DEV-92.md
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.DRAFT.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.blank-candidate-correction.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.blank-residual.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.disposition-mismatch.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.dispositioned.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.malformed-defect-id.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.malformed-fix-ticket.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.missing-dev-debrief.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.missing-rounds.json
+- kc-ship-flow/scripts/fixtures/close-receipt/close-receipt.per-issue-mismatch.json
+- kc-ship-flow/scripts/fixtures/control-double-assert.md
+- kc-ship-flow/scripts/fixtures/e2e-gate/recorded-evidence-block.txt
+- kc-ship-flow/scripts/fixtures/mutant-command-not-found.md
+- kc-ship-flow/scripts/fixtures/mutant-drop-path.md
+- kc-ship-flow/scripts/fixtures/mutant-extra-path.md
+- kc-ship-flow/scripts/fixtures/mutant-negation-variant.md
+- kc-ship-flow/scripts/fixtures/mutant-out-of-tree.md
+- kc-ship-flow/scripts/fixtures/mutant-prose-after-semicolon.md
+- kc-ship-flow/scripts/fixtures/mutant-sha-mismatch.md
+- kc-ship-flow/scripts/fixtures/mutant-unparseable.md
+- kc-ship-flow/scripts/fixtures/real-AC367-r2.md
+- kc-ship-flow/scripts/fixtures/real-AC4-r3-s29.md
+- kc-ship-flow/scripts/fixtures/real-AC5-r2.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-1016352e0223/evidence/uat.md.reference
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-1016352e0223/evidence/worker-evidence-DEV-90.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-1016352e0223/evidence/worker-evidence-DEV-91.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-1016352e0223/evidence/worker-evidence-DEV-92.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-1016352e0223/receipt/close-receipt.DRAFT.json
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-e56e9f09873c/README.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-e56e9f09873c/evidence/worker-evidence-DEV-104.md
+- kc-ship-flow/scripts/fixtures/uat-doc/batch-e56e9f09873c/evidence/worker-evidence-DEV-105.md
+
+Caveat carried forward, not resolved here: some qualifying SHAs (e.g. `00c4c05...`, `00d2dbf5...`, `3a733578...`, `470b3e41...`, `df43392f...`) resolve via `git cat-file -t` to `commit` but do not appear in `git log --all` on this clone — they are dangling/unreachable commit objects, not on any branch history. Kept in the list under the task's stated criterion ("pins a real commit SHA"); a stricter "reachable in history" reading would shrink the list, and that's a call for whoever writes the PR body, not this stage.
+
+### Summary
+
+Reproduced AC-1/AC-2/AC-3 from scratch in a throwaway clone (`/tmp/validate-clone`) at candidate `d300d531186a6f42a9fd1905f90c8227bdfd966c`, independent of the implementation-stage worktree — all three pass with the exact exit codes and output the spec names. For AC-4, re-derived the retained-fixture list from the current tree via `git cat-file -t` rather than trusting the entity's prior "17 fixtures" figure (which predates this PR's deletions and comes from an unrelated batch note); landed on 34 fixture files plus `contract-test.py` itself, cross-checked with an independent sub-agent pass over the same clone. Flagging the dangling-vs-reachable-commit distinction as an open call rather than silently picking one reading.
