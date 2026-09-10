@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: 7efj5b0dh4dh7616yma4nykm
+gates:
+    version: 1
+    records:
+        - id: gate:7efj5b0dh4dh7616yma4nykm:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:7efj5b0dh4dh7616yma4nykm-backlog-1
+              briefing:
+                id: briefing:7efj5b0dh4dh7616yma4nykm:backlog:attempt-1:revision-1
+                digest: sha256:5e72e261ae2278e8489b44c8db3040afa3f475a72ae1729da40db721405e4d3f
+                room-ref: ./ship-verify-uat-close/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7efj5b0dh4dh7616yma4nykm:backlog:1
+                briefing: briefing:7efj5b0dh4dh7616yma4nykm:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T08:49:47.915875Z"
+                decision: approve
+                reason: 'Captain approved in chat: approve 2026-09-10'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 After dispatch and watch exist and the duplicated stations are gone, the back half of a batch

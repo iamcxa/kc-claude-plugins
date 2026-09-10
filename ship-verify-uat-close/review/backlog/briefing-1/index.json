@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7efj5b0dh4dh7616yma4nykm:backlog:attempt-1:revision-1",
+  "question": "Admit ship-verify-uat-close into implementation under the POC profile, delivered by a cloud first officer?",
+  "artifacts": [
+    {
+      "id": "artifact:7efj5b0dh4dh7616yma4nykm:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4b20a91804cd3752e19928dd50628dbd1aab53c0/ship-verify-uat-close/review/backlog/backlog-review.md",
+      "rev": "sha256:fce75149033e0ea5681325780158ff93b27dc4481fa50b6e29bd60755b9ba33f",
+      "mediaType": "text/markdown",
+      "summary": "POC brief; cloud FO delivery via ship dispatch.sh"
+    }
+  ]
+}
