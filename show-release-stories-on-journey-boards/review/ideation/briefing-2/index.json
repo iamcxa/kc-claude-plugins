@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1",
+  "question": "Approve the bounded Pilot implementation: retain release-story boards, finish gap/unverified/exists across existing projections and example, and reject stale activity wording, while deferring full sprint-to-release migration and host-selection execution?",
+  "artifacts": [
+    {
+      "id": "artifact:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/5e49888523576893ba4716727b348d1d4a1bcf47/show-release-stories-on-journey-boards.md",
+      "rev": "sha256:24494e77edea20ac25dbfe69ab88a99cce4974ce6e7f13a512626062b2ea717a",
+      "mediaType": "text/markdown",
+      "summary": "The completed ideation report maps all six criteria explicitly to observed evidence and planned falsifiers. Existing 59 tests pass; targeted probes expose inconsistent status labels and stale activity wording overwriting a newer YAML edit. One bounded implementation route preserves the candidate and rooms, completes the three-state model/projections/example, and extends the existing stale-wording guard. Local release registration is authorized; full terminology migration and live host-selection proof remain deferred."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/6b408ac102978d4bbf3614a7109934191520aa9b/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}

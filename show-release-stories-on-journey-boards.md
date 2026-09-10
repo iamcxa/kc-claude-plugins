@@ -49,6 +49,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T09:50:50.348896Z"
                 reason: The committed ideation analysis covers all six criteria, but the stage report uses an AC-1 through AC-6 range that the required scanner does not expand. Add explicit per-criterion citations to the existing report before presentation; no scope or product change.
+            - id: gate-attempt:wwn8jfrh1f6k6zyj5tfcjb23-ideation-2
+              briefing:
+                id: briefing:wwn8jfrh1f6k6zyj5tfcjb23:ideation:attempt-2:revision-1
+                digest: sha256:14f60796cb791988e5b95555b6d6034c4b8e97f49a68940f8b42c44afd60d07b
+                room-ref: ./show-release-stories-on-journey-boards/review/ideation/briefing-2
 ---
 
 ## The problem
