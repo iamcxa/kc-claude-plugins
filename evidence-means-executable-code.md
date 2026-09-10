@@ -1,7 +1,7 @@
 ---
 id: d3xb3q0qwmjpkty23njq6t66
 title: Make evidence mean executable code, so the exists count stops lying
-status: backlog
+status: ideation
 source: captain
 product: kc-team-ops
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain: 先把 evidence 那個 glob 修掉,讓數字誠實了再切 — approving the fix before the plugin extraction, so the extraction carries an honest count rather than a documented lie.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
