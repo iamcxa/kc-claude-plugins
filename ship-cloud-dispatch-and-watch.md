@@ -1,16 +1,16 @@
 ---
 title: "ship-flow POC: dispatch one cloud first officer per dev task and watch the set to its validation gates"
-status: ideation
+status: implementation
 source:
 product: kc-ship-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
-started:
+started: 2026-09-10T04:22:51Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-cloud-dispatch-and-watch
 issue:
 pr:
 mod-block:
