@@ -1,0 +1,231 @@
+---
+title: "POC: validate the first cloud run of the dev-flow improvement loop"
+status: backlog
+product: kc-dev-flow
+sprint: S8
+sprint-readiness: ready
+id: 7ktmx2rsetq67yhbg4ezxm0q
+---
+
+# First cloud run of the dev-flow improvement loop
+
+Decide whether one bounded cloud run can yield trustworthy workload, workflow, and usage evidence plus actionable findings, sufficient to justify the next improvement-loop increment.
+
+## Captain admission
+
+Kent selected POC as the smallest starting profile, accepted the event-query workload and one-run/20-active-minute/no-auto-retry limits, then approved creating this task with "ok 就這樣走" after the task scope was presented. This is a standalone Captain-approved Exploration Brief; it has no Planning Receipt and no implied Linear admission. S8 is the existing kc-dev-flow improvement/dogfood execution group only; this admission does not engage its other tasks.
+
+Admission records this bounded experiment, not blanket authority for recurring jobs, publishing findings, product commits, PRs, merge, or release. Existing human-owned close and execution decisions remain with Kent. Resolve the actual model/runtime and account arrangement in the concrete launch configuration before starting a model execution; do not introduce a new paid provider arrangement. State capture and path-scoped synchronization of this approved task are authorized. Do not ask again merely to record the already selected profile or brief.
+
+## Exploration Brief
+
+- Decision: Can a single real cloud journey through load, implementation, proof, close and debrief produce attributable evidence and a usable improvement input, or must the execution/measurement approach change first?
+- Falsifier: The named cloud environment or exact loaded skill version cannot be established; a frozen workload case fails; a required flow step cannot be evidenced; or the available usage cannot support the claimed cost boundary. A correct program without flow evidence does not establish workflow success. Unknown usage limits the result to functional/workflow evidence rather than inventing zero cost.
+- Budget: One manually triggered baseline and at most 20 active execution minutes across its coordinator and workers, with no automatic reruns or new paid provider arrangement. Record aggregate actor time and wall time separately; parallel actors do not each receive a fresh 20-minute allowance. Human gate waiting is separate but any compute/token use during it is retained. Preparation before the experiment launch is recorded separately and is not benchmarked as execution.
+- Stop: Stop at the first invalid mandatory execution precondition, the agreed active-time limit, an unresolved human-owned gate, or completion of the one permitted journey. Preserve the strongest evidence, explicit limitations and outstanding work. No retry-until-green, candidate comparison, higher-profile expansion or automatic repair is admitted by this run.
+
+## Accepted outcome
+
+One evidence-backed proceed, stop or change decision, plus the actual workflow record and a debrief. Report workload acceptance, workflow completion, environment validity and usage coverage independently. Retain safe exact prompts, case bytes/digests, invocations and outputs, model/runtime and plugin/coordinator identities, stage effects, parent/child linkage, token/cache/auxiliary-model coverage, failed attempts, timings, findings and successful defaults. A validity failure or negative result can complete this experiment through the real Captain decision; fixing every finding is not a close criterion.
+
+Use the existing task/state/debrief owners. Prepare deduplicated issue proposals only; posting, recurring scheduling and delivery of repairs belong to separately scoped work. The three exact fixtures and their acceptance criteria are frozen in the specification snapshot below. The event-query program is disposable.
+
+## Non-goals
+
+No full coverage claim for Pilot or Production; no four-routine activation; no new collector or generalized evaluation framework; no change to shared rules based on one local example; no automatic issue or review posting; no automatic merge/release; no unrelated task mutation; no claim of token improvement from one baseline. Plugin repairs use their own scope-appropriate profile rather than inheriting this disposable experiment's POC route.
+
+## Long-term direction
+
+The larger objective is all kc-dev-flow profiles, every relevant self-inspection capability, and appropriate token consumption at preserved quality. Future coverage rotates bounded cases and includes controls where unnecessary steps should not fire. Real-run observations and proactive discovery feed one deduplicated issue queue; repair prioritizes actionable PR feedback, then eligible issues; independent verification binds to the exact candidate. These are retained design directions, not additional first-run acceptance obligations.
+
+## Execution entry observations
+
+- Working code snapshot observed at capture: 6b408ac102978d4bbf3614a7109934191520aa9b, kc-dev-flow 4.3.0. Pin the actual executed version separately.
+- Authenticated Conductor project listing includes kc-claude-plugins; model catalog access succeeds. Workspace creation, deployed instruction identity, cloud usage and close behavior are not yet proven.
+- Existing forge runner can reuse cloud workspaces and fall back to local execution. Do not count either as the required fresh cloud run; reuse only compatible existing mechanisms.
+- Earlier skills-mcp-inspired POC archived at `_archive/skills-mcp-dev-flow-feedback-poc/index.md` in another coordinator's state history produced one correct recommendation but no clean comparative proof. It is precedent, not this run's result.
+- Separate close-repair commit 1eae2f5a5467b4600783eaedc671cf5cd57d1969 was not resolvable locally or by exact GitHub lookup at preflight. Equivalent repair delivery/adoption remains to be checked; do not presume it is absent or installed.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: poc-exploration
+  recommended: poc-exploration
+  basis: One disposable bounded internal cloud experiment tests feasibility and evidence quality before an operational commitment.
+  route: [build, prove]
+  obligations:
+    architecture: [Reuse existing execution, state and debrief owners; verify real cloud and immutable configuration.]
+    implementation: [Execute only the disposable event-query baseline and retain attributable evidence.]
+    testing: [Prove the three frozen cases and observe required workflow steps; classify unsupported claims as unknown.]
+  scope_boundary: No recurring operation, production data, upstream product delivery, external issue/review posting, automatic merge or unrelated task changes.
+  poc_decision: Decide whether the bounded cloud journey supports the next improvement-loop increment or requires a changed approach.
+  poc_falsifier: Invalid environment or version boundary, failed frozen case, missing flow evidence, or unsupported usage claims.
+  poc_budget: One baseline, 20 active execution minutes across all actors, no automatic reruns or new paid provider arrangement.
+  poc_stop_when: Invalid mandatory precondition, time limit, unresolved Captain-owned gate, or completion of the single journey.
+  poc_artifact: disposable
+  poc_safety_boundary: none
+  poc_decision_ready_minutes: 20
+  poc_decision_ready_reason: Captain accepted 20 active minutes for a complete cloud workload and workflow observation; human waiting and preparation are reported separately.
+  promote_when: [Captain accepts recurring operation or retained automation as a separately scoped commitment.]
+  decision:
+    authority: Kent
+    at: "2026-09-10T08:50:51Z"
+```
+
+The decision timestamp is the recording time in this task-creation turn, not a reconstructed timestamp of the Captain's message.
+
+## Frozen execution specification snapshot
+
+The following specification was reviewed in the kinshasa session and is embedded so another worker does not depend on a machine-local ignored file. Its historical authorization paragraph describes the drafting turn; the Captain admission above records subsequent task approval. No runtime outcome is implied.
+
+Snapshot SHA-256: 37a1ade39fe78311f5644b15a841bf2fa6daed2ffdfae17a6a6c9af663ad86b6
+
+# First cloud run: review draft
+
+Authorization: Kent accepted the smallest starting workload and single-run bounds below; this turn updates the specification only. No cloud launch, recurring job, external posting, commit, push, or pull request (PR) occurred. Model choice stays open. Later standing delegation must define roles, manual gates, schedule, costs, and external writes; existing workflow gates remain manual, with no automatic merge.
+
+## Outcome and evidence boundary
+
+Exercise the actual `kc-dev-flow` proof-of-concept (POC) journey: load → implement → prove → close → debrief.
+The disposable workload is a Python standard-library command-line tool that filters JSON Lines (JSONL: one JSON object per line) events by level.
+A correct tool alone does not establish completion: retain evidence of each workflow stage, real manual decisions, cleanup, and the existing owner's debrief.
+POC is the smallest starting point; the long-term target is all kc-dev-flow profiles, their self-inspection capabilities, and appropriate token consumption.
+Run one manually launched cloud baseline first; review its result before considering four periodic jobs.
+
+This is end-to-end workload validation with the production skill configuration.
+It is not a clean baseline-versus-candidate (A/B) experiment or evidence that one instruction change improved performance.
+A fresh session or enumerated plugin list proves neither instruction-body loading nor clean isolation.
+If a later comparison is admitted, freeze its changed variable, verify its instruction boundary, and match all other relevant environment fields before execution.
+
+## Observed facts and unresolved preflight
+
+- The archived local experiment ran one Claude bare baseline and produced the correct recommendation; clean isolation remained unproven.
+- Its runtime reported per-model/cache usage and a $0.04927035 list-price estimate. This excludes unmeasured coordinator costs and is not cloud-cost evidence.
+- Its separate POC close repair is commit `1eae2f5a5467b4600783eaedc671cf5cd57d1969`; release and adoption are unverified.
+- Current checkout observation: `6b408ac102978d4bbf3614a7109934191520aa9b`, `kc-dev-flow` 4.3.0. The repair commit is not resolvable here. Parent GitHub lookup also returned HTTP 422 (no commit found) for that exact repair commit; this does not establish whether an equivalent repair was released.
+- Existing candidates are `kc-plugin-forge/reference/clean-profile-test.sh` and `skill-runner.py`; neither is presumed a valid cloud journey runner or clean comparison runner.
+- Local runner inspection found project-keyed cloud workspace reuse on `main`, no proven immutable candidate-plugin deployment, and automatic local fallback after cloud creation/authentication failure.
+- Cloud execution must use a fresh disposable workspace, prove the exact deployed plugin commit, and disable/reject local fallback. These are unresolved preflight requirements.
+- Top-level usage aggregation may omit auxiliary-model attribution. Preserve raw per-model records and reconcile totals without double counting.
+- Parent live preflight on 2026-09-10: authenticated Conductor project listing includes `kc-claude-plugins`, project ID `8f58f9d4-cb71-443a-b64d-c2a225248c7b`. The model catalog offers Codex `gpt-5.6-sol`, `gpt-6-astra`, and Claude `sonnet-4-6`, among others.
+- Those observations establish access and catalog availability only, not cloud workspace creation, plugin deployment, or usage telemetry; no model is selected or overridden.
+- Unknown until preflight: cloud execution/runtime, installed instruction bodies, coordinator version, applicable manual gates, telemetry coverage, model/effort, account/runtime cost controls, and adopted close behavior.
+
+Source: [archived experiment](../../kathmandu/.context/poc-coordinator/docs/dev/.spacedock-state/_archive/skills-mcp-dev-flow-feedback-poc/index.md), especially Retained experiment evidence, Attributable runner metadata and usage, and POC close measurement. Local runner findings were supplied by the coordinating agent; no cloud execution occurred during drafting.
+
+## Frozen workload and cases
+
+Case-set identifier: `event-query-v1` (the three fixtures below).
+Future runs must retain exact fixture and prompt bytes with hashes; changing either creates a new case set.
+Create `event_query.py` using only Python's standard library. Exact invocation:
+
+```text
+python3 event_query.py --level ERROR CASE_FILE
+```
+
+For this case set, every valid line is a JSON object with string `level` and `message` fields.
+Match `level` exactly and case-sensitively. Print matching original JSON lines in input order, each terminated by LF.
+Validate the complete input before writing stdout. Successful runs have empty stderr.
+Only the three cases below are acceptance scope; no network, package installation, or additional product features are required.
+
+1. `cases/mixed.jsonl`, UTF-8 with LF after each line:
+
+```jsonl
+{"level":"INFO","message":"started"}
+{"level":"ERROR","message":"first failure"}
+{"level":"WARN","message":"retrying"}
+{"level":"ERROR","message":"second failure"}
+```
+
+Invocation: `python3 event_query.py --level ERROR cases/mixed.jsonl`.
+Expected exit: 0; stdout exactly the following two lines with final LF; stderr empty:
+
+```jsonl
+{"level":"ERROR","message":"first failure"}
+{"level":"ERROR","message":"second failure"}
+```
+
+2. `cases/empty.jsonl` is exactly zero bytes.
+Invocation: `python3 event_query.py --level ERROR cases/empty.jsonl`.
+Expected exit: 0; stdout and stderr both exactly zero bytes.
+
+3. `cases/malformed.jsonl`, UTF-8 with LF after each line:
+
+```text
+{"level":"ERROR","message":"must not leak"}
+{not valid json}
+{"level":"ERROR","message":"after bad line"}
+```
+
+Invocation: `python3 event_query.py --level ERROR cases/malformed.jsonl`.
+Expected exit: nonzero; stdout exactly zero bytes; stderr contains `line 2` and identifies invalid JSON.
+Diagnostic wording beyond those requirements and the particular nonzero exit code are not scored.
+The matching first line makes partial-output failure observable.
+
+## Frozen first-run request
+
+Retain this request verbatim alongside the fixture bytes and actual launch envelope:
+
+> Use the pinned production kc-dev-flow POC configuration and its existing coordinator to complete load, implement, prove, close, and debrief for event-query-v1 in the assigned disposable cloud workspace. Implement only the Python standard-library event query tool specified here. Prove all three frozen cases using their exact invocations, stdout/stderr captures, and exit codes. Preserve existing manual gates and request the real Captain decision when required; never manufacture approval. Use the existing state and debrief owners. Record concrete friction, successful defaults, actual stage/tool outcomes, attributable usage, and remaining unknowns. Stop at the agreed limits or an invalid environment. Do not schedule jobs, post externally, merge, or introduce a collector or framework.
+
+## Manual first-run sequence and accepted bounds
+
+Accepted single-run bounds: one baseline, 20 minutes of active execution, no automatic reruns.
+
+1. Before launch, present the concrete model/effort, estimated exposure with its basis and uncertainty, and current granted execution scope. Record whether actual account/runtime cost controls exist; do not promise a hard cap. Confirm execution fits the granted scope and agreed bounds.
+2. Record a unique run ID, fresh workspace/session identity, frozen case hashes, immutable plugin/coordinator versions, and the exact launch configuration. Confirm required production instructions actually load through observable runtime/read traces; unresolved mandatory preconditions stop launch.
+3. Confirm applicable manual gates and that the existing coordinator can pause for Kent. Waiting is not approval.
+4. Load and implement through the workflow's existing owner and stages. Record gate waiting separately from active execution and total wall time; retain usage/spend incurred while waiting.
+5. Prove the frozen cases. Record each invocation, exit code, stdout, stderr, actual tool outcome, and implementing commit or equivalent immutable content identity.
+6. Present the actual close decision to Kent, then execute only the authorized close path and existing debrief. Record cleanup scope, leftover work, and terminal state; a worker cleanup report alone is not workflow closure.
+7. At 20 active minutes, invalid environment, missing mandatory precondition, or another agreed stop threshold: start no further work, use the existing stop/cleanup path, and preserve a bounded result. Do not automatically retry the parent, children, or failed stages.
+
+A monetary budget is optional. If chosen, distinguish an observed spending threshold (stop when telemetry reveals it) from an enforceable account/runtime cap; delayed telemetry can allow overshoot. No monetary ceiling or enforcement mechanism is presumed.
+Missing token telemetry may permit a functional-only result if the other mandatory conditions hold; it never permits a token-efficiency claim.
+An interrupted or manually paused journey is reported as incomplete, even when tool acceptance passes.
+
+## Evidence retained by existing owners
+
+Use the existing task state, runtime artifacts, and debrief; add no collector or framework.
+Retain safe evidence without credentials:
+
+- Identity: run ID, routine/manual role, case and fixture hashes, workspace/session IDs, parent/child links, start/end timestamps, implementation identity, and environment fingerprint.
+- Configuration: plugin source commit plus content/version identity; coordinator commit/version; relevant instruction/reference hashes and observed loading; runtime/OS/Python versions; model requested/observed, effort, permissions, tools, network, and launch parameters.
+- Actions: exact safe prompts and stage inputs, stage transitions, manual gate decisions, tool calls/outcomes, test output, stop reason, close result, cleanup, and debrief location.
+- Usage: per-stage and per-parent/child execution input/output tokens, cache read/write tokens, auxiliary-model usage, retries (including failed attempts), timing, and provider-reported cost or clearly labeled list estimate.
+- Reconciliation: state whether totals include coordinator, workers, reviewers, auxiliary models, and retries; avoid adding aggregate totals to their per-model components. Record unavailable fields as `unknown`, never zero.
+- Findings: concrete friction with reproduction/evidence, successful defaults with evidence, and a deduplicated issue proposal. Search existing issues/feedback before proposing; a proposal is not a posted issue.
+
+Report separately: workload acceptance, full workflow completion, environment validity, and usage coverage.
+No total-cost, efficiency, comparative, or clean-isolation claim may exceed the retained evidence.
+
+## Coverage progression and token measurement
+
+Progress from POC to Pilot (limited real adoption), then Production (maintained delivery), preserving common checks and each selected profile's own obligations.
+These are proposed test dimensions, not claims that current source implements them or that the first POC proves higher profiles.
+Build the coverage inventory from pinned local instructions and their executable consumers; retain unobserved mappings as unknown.
+
+- Common core: prove required rules actually execute, comments are necessary, scope is minimal, and the "without this change" case demonstrates need; check evidence truthfulness and regression verification.
+- Profile-specific obligations: exercise only the selected profile's required proof, review, delivery, and operational steps, with pause/resume/close where applicable. Map every self-inspection capability into the rotating inventory over time.
+- Negative controls: include cases where a comment, extra rule, review, tool call, or broader change is unnecessary and should not fire; evaluate according to the pinned profile's actual requirements.
+- Per run: choose one bounded journey case and its acceptance checks, rotate uncovered dimensions over successive runs, and prioritize an issue's original regression plus an unchanged control. Do not execute the full profile matrix on every run. The first workload and all three fixtures remain unchanged.
+
+Measure tokens and monetary cost per successfully accepted journey, including failed attempts, retries, and the entire coordinator/worker/reviewer/auxiliary-model chain attributable to that comparison group.
+Report accepted counts and failures beside usage; when no journey is accepted, report expenditure and zero acceptances without claiming a per-success rate.
+Group comparisons by profile, frozen case, model/effort, and plugin/coordinator/runtime version. Do not compare raw totals across profiles or claim improvement by skipping required quality checks.
+Retain cache usage and unknown coverage explicitly; token reduction is useful only alongside preserved acceptance and truthful evidence.
+
+## Four later periodic jobs: proposed responsibilities
+
+For the first workload, all four jobs pin `event-query-v1` and immutable instruction/coordinator versions. Later admitted cases have distinct frozen identities. Compare only matching cases and relevant environments; classify mismatches before comparing results.
+Each job inherits the agreed execution limits, any chosen monetary budget, and stop rules.
+
+1. Baseline: run the complete journey for the selected profile and bounded case, initially the POC workload above. Capture concrete friction and successful defaults, then prepare a deduplicated issue proposal with reproducible evidence. Escalate invalid setup instead of reporting a product failure.
+2. Repair: handle actionable feedback on an existing PR first; otherwise select the oldest eligible issue within the delegated scope. Eligibility requires reproducible evidence, a bounded authorized change, and no existing owner/conflicting work. Claim the selected issue exclusively through the existing ownership mechanism before editing; skip it if exclusive ownership cannot be established. Retest the original failing case plus an unchanged control, then the selected case set's required acceptance checks (all three frozen fixtures for the first workload). Deliver an actual plugin repair under the profile its scope requires; the disposable experiment's POC profile does not grant a repair delivery shortcut. If neither feedback nor an eligible issue exists, report no work.
+3. Independent verification: use a separate reviewing session without repair ownership; independently rerun evidence against the exact PR head commit and pinned environment. Recommend Request Changes when required evidence fails/is missing, otherwise recommend ready. Before posting an actual Request Changes review, verify a usable GitHub reviewer identity with the necessary repository access; this identity is not currently verified. Every PR head change invalidates the prior review and requires verification of the new commit.
+
+4. Proactive discovery: inspect approved local evidence and source for actionable gaps, feeding the same deduplicated issue queue as real-run observations. Use production/adopter debriefs, source-rule versus executable-consumer mismatches, tests/PR feedback, and repeated waste as distinct provenance sources. Reproduce evidence first; label an untested hypothesis separately from a confirmed failure. Search for existing issues and successful controls before proposing a change. One local case does not justify adding an upstream rule automatically. There is no issue quota; no finding is a valid result. Do not fetch arbitrary external data or install skills. Current output is suitability and issue proposals, not posting authority.
+
+The manual cloud result must identify which mandatory gaps remain before periodic execution is considered.
