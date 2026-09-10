@@ -58,6 +58,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T14:23:53.781506Z"
                 reason: Structured AC scan omits AC-2 and AC-3 because their evidence is below Summary; repair exact-stage checklist evidence citations before presenting a replacement snapshot. Product patch and test verdict unchanged.
+            - id: gate-attempt:aznp6gpr6zanmr8argy0jcdj-validation-2
+              briefing:
+                id: briefing:aznp6gpr6zanmr8argy0jcdj:validation:attempt-2:revision-1
+                digest: sha256:11f5fcb3c9443e8e15ad8a4b544183dd13d75bdaaccdc754e79bab8f61a316f0
+                room-ref: ./review/validation/briefing-2
 started: 2026-09-10T13:41:14Z
 worktree: .worktrees/spacedock-ensign-poc-close-measurement-order
 ---
