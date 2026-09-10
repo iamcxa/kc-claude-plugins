@@ -356,8 +356,10 @@ require(
     f"stderr={disposition_deps_no_changed_files.stderr!r}",
 )
 
+open_pr_batch_dir = ship_flow_fixtures / "open-pr" / "batch"
+
 open_pr_fork_branch = subprocess.run(
-    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md")],
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-fork-branch.md"), str(open_pr_batch_dir)],
     cwd=ROOT, capture_output=True, text=True,
 )
 require(
@@ -367,13 +369,288 @@ require(
 )
 
 open_pr_double_block = subprocess.run(
-    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-double-block.md")],
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr-evidence-double-block.md"), str(open_pr_batch_dir)],
     cwd=ROOT, capture_output=True, text=True,
 )
 require(
     open_pr_double_block.returncode == 2 and "'## Evidence' headings" in open_pr_double_block.stderr,
     "open-pr.sh did not refuse an evidence file with more than one '## Evidence' heading: "
     f"exit={open_pr_double_block.returncode} stderr={open_pr_double_block.stderr!r}",
+)
+
+open_pr_entity = ship_flow_fixtures / "open-pr" / "entity.md"
+open_pr_what_changed_file = ship_flow_fixtures / "open-pr" / "what-changed.txt"
+
+# AC-1 + falsifier: --entity-path derives the body from the dev entity's own
+# stage reports, not from a quoted Captain remark or a FILES-derived
+# "Update <path>" bullet list -- the round-1 mechanics-pass/content-fails bug.
+open_pr_dry_run_body = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence.md"), str(open_pr_batch_dir),
+        "--dry-run", "--entity-path", str(open_pr_entity),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+open_pr_dry_run_lines = open_pr_dry_run_body.stdout.splitlines()
+open_pr_dry_run_section_order = [
+    line for line in open_pr_dry_run_lines
+    if line in ("## What changed", "## Evidence", "---") or line.startswith("[") or line.startswith("Fixes ")
+]
+open_pr_expected_what_changed = [
+    "- Match BRANCH to one plan-receipt issue",
+    "- Build the pr-merge body from the batch entity",
+    "- Refuse when neither an entity nor a changed-file is given",
+]
+require(
+    open_pr_dry_run_body.returncode == 0
+    and open_pr_dry_run_lines
+    and "#" not in open_pr_dry_run_lines[0]
+    and len(open_pr_dry_run_lines[0].split()) <= 25
+    and "Captain" not in open_pr_dry_run_lines[0]
+    and len(open_pr_dry_run_section_order) == 5
+    and open_pr_dry_run_section_order[0] == "## What changed"
+    and open_pr_dry_run_section_order[1] == "## Evidence"
+    and open_pr_dry_run_section_order[2] == "---"
+    and open_pr_dry_run_section_order[3].startswith("[")
+    and open_pr_dry_run_section_order[4].startswith("Fixes ")
+    and open_pr_dry_run_lines[3:6] == open_pr_expected_what_changed
+    and "- contract-test.py: 12/12 passed" in open_pr_dry_run_lines,
+    "open-pr.sh --dry-run --entity-path did not derive the pr-merge body from the entity's own "
+    "stage reports (lead <=25 words with no '#' and no quoted Captain remark; What changed the "
+    "three [x] DONE items verbatim, [x] dropped; Evidence 'contract-test.py: 12/12 passed', not an "
+    "AC count): "
+    f"exit={open_pr_dry_run_body.returncode} stdout={open_pr_dry_run_body.stdout!r} stderr={open_pr_dry_run_body.stderr!r}",
+)
+
+# AC-2 (fallback mode): --what-changed-file supplies What changed verbatim; a
+# block lacking TESTS derives no suite-labeled token, so Evidence is omitted.
+open_pr_dry_run_no_tests = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-no-tests.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_dry_run_no_tests.returncode == 0 and "## Evidence" not in open_pr_dry_run_no_tests.stdout,
+    "open-pr.sh --dry-run --what-changed-file on a block lacking TESTS should print a body without "
+    "'## Evidence' and exit 0: "
+    f"exit={open_pr_dry_run_no_tests.returncode} stdout={open_pr_dry_run_no_tests.stdout!r} "
+    f"stderr={open_pr_dry_run_no_tests.stderr!r}",
+)
+
+# Fallback mode's Evidence comes from TESTS's own suite-labeled tokens, never
+# an AC count: only the recognized suite (contract-test.py) gets a bullet --
+# open-pr.sh itself, the script under test, is not a suite/runner.
+open_pr_dry_run_tests_evidence = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_dry_run_tests_evidence.returncode == 0
+    and "- kc-ship-flow/scripts/contract-test.py: exit 0" in open_pr_dry_run_tests_evidence.stdout.splitlines()
+    and "open-pr.sh: exit 0" not in open_pr_dry_run_tests_evidence.stdout,
+    "open-pr.sh --dry-run --what-changed-file did not admit only the recognized suite token from "
+    "TESTS (never an AC count, never the script under test itself): "
+    f"exit={open_pr_dry_run_tests_evidence.returncode} stdout={open_pr_dry_run_tests_evidence.stdout!r} "
+    f"stderr={open_pr_dry_run_tests_evidence.stderr!r}",
+)
+
+# Round-3 falsifier: a fixture/data path (evidence.md) beside a recognized
+# suite (contract-test.py) in TESTS must still yield exactly one bullet.
+open_pr_suite_filter = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-suite-filter.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+if "## Evidence" in open_pr_suite_filter.stdout:
+    open_pr_suite_filter_evidence_block = open_pr_suite_filter.stdout.split("## Evidence", 1)[1].split("---", 1)[0]
+    open_pr_suite_filter_evidence_bullets = [
+        line for line in open_pr_suite_filter_evidence_block.splitlines() if line.startswith("- ")
+    ]
+else:
+    open_pr_suite_filter_evidence_bullets = []
+require(
+    open_pr_suite_filter.returncode == 0
+    and open_pr_suite_filter_evidence_bullets == ["- contract-test.py: exit 0"],
+    "open-pr.sh --dry-run did not admit exactly one Evidence bullet ('contract-test.py: exit 0') "
+    "when TESTS also mentions a bare fixture path (evidence.md), which is never a suite: "
+    f"exit={open_pr_suite_filter.returncode} stdout={open_pr_suite_filter.stdout!r} "
+    f"stderr={open_pr_suite_filter.stderr!r}",
+)
+
+# Round-3 falsifier: a first sentence of 40 words with its only clause
+# boundary at word 18 closes there, period-terminated -- never a fragment
+# trailing at word 25.
+open_pr_clause_boundary = subprocess.run(
+    [
+        "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence-clause.md"), str(open_pr_batch_dir),
+        "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+    ],
+    cwd=ROOT, capture_output=True, text=True,
+)
+open_pr_clause_boundary_lead = open_pr_clause_boundary.stdout.splitlines()[0] if open_pr_clause_boundary.stdout else ""
+require(
+    open_pr_clause_boundary.returncode == 0
+    and open_pr_clause_boundary_lead == (
+        "This synthetic fixture sentence exists only to prove the clause boundary rule "
+        "closes right at word number eighteen."
+    ),
+    "open-pr.sh --dry-run did not close a 40-word first sentence at its word-18 clause boundary "
+    "(period-terminated, not a mid-sentence fragment): "
+    f"exit={open_pr_clause_boundary.returncode} stdout={open_pr_clause_boundary.stdout!r} "
+    f"stderr={open_pr_clause_boundary.stderr!r}",
+)
+
+open_pr_neither_flag = subprocess.run(
+    ["bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / "evidence.md"), str(open_pr_batch_dir), "--dry-run"],
+    cwd=ROOT, capture_output=True, text=True,
+)
+require(
+    open_pr_neither_flag.returncode == 2 and "what-changed required" in open_pr_neither_flag.stderr,
+    "open-pr.sh did not refuse (exit 2, 'what-changed required') when neither --entity-path nor "
+    "--what-changed-file is given: "
+    f"exit={open_pr_neither_flag.returncode} stderr={open_pr_neither_flag.stderr!r}",
+)
+
+
+def run_open_pr_dry(evidence_name: str, *extra_args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            "bash", str(open_pr_script), str(ship_flow_fixtures / "open-pr" / evidence_name),
+            str(open_pr_batch_dir), "--dry-run", "--what-changed-file", str(open_pr_what_changed_file),
+            *extra_args,
+        ],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+
+
+# DEV-151 round 3, F1 falsifier: an empty '## The problem' source paragraph
+# (DEV-9004's receipt body) must refuse ('lead required'), never emit an
+# empty first line -- the round-2 bug the `if lead is None` guard let through
+# because lead_from_problem returned "" instead of None.
+open_pr_empty_lead_refused = run_open_pr_dry("evidence-empty-lead.md")
+require(
+    open_pr_empty_lead_refused.returncode == 2 and "lead required" in open_pr_empty_lead_refused.stderr,
+    "open-pr.sh did not refuse (exit 2, 'lead required') on an empty '## The problem' source "
+    "paragraph with no --lead override: "
+    f"exit={open_pr_empty_lead_refused.returncode} stdout={open_pr_empty_lead_refused.stdout!r} "
+    f"stderr={open_pr_empty_lead_refused.stderr!r}",
+)
+
+# F1 + F4a: --lead rescues that same refused (empty-paragraph) lead.
+open_pr_empty_lead_rescued = run_open_pr_dry(
+    "evidence-empty-lead.md", "--lead", str(ship_flow_fixtures / "open-pr" / "lead-override.txt"),
+)
+open_pr_empty_lead_rescued_line = (
+    open_pr_empty_lead_rescued.stdout.splitlines()[0] if open_pr_empty_lead_rescued.stdout else ""
+)
+require(
+    open_pr_empty_lead_rescued.returncode == 0
+    and open_pr_empty_lead_rescued_line
+    == "The FO-authored override lead rescues a refused extraction.",
+    "open-pr.sh --lead did not rescue a refused (empty-paragraph) lead with the override sentence: "
+    f"exit={open_pr_empty_lead_rescued.returncode} stdout={open_pr_empty_lead_rescued.stdout!r} "
+    f"stderr={open_pr_empty_lead_rescued.stderr!r}",
+)
+
+# F4b falsifier: a 41-word first sentence with no clause boundary anywhere
+# (DEV-9005) refuses just like the empty-paragraph case, distinct from the
+# existing word-18-boundary fixture which closes instead of refusing.
+open_pr_noboundary_refused = run_open_pr_dry("evidence-noboundary.md")
+require(
+    open_pr_noboundary_refused.returncode == 2 and "lead required" in open_pr_noboundary_refused.stderr,
+    "open-pr.sh did not refuse (exit 2, 'lead required') on an over-25-word first sentence with no "
+    "clause boundary anywhere and no --lead override: "
+    f"exit={open_pr_noboundary_refused.returncode} stdout={open_pr_noboundary_refused.stdout!r} "
+    f"stderr={open_pr_noboundary_refused.stderr!r}",
+)
+
+# DEV-151 round 3, F2: --fixes DEV-9007 (repeatable) names a second receipt
+# issue this same PR also fixes -- matched by id, never by BRANCH -- and
+# emits one more 'Fixes' line after the BRANCH-matched issue's own (the
+# #397 one-PR-two-issues shape).
+open_pr_fixes_multi = run_open_pr_dry("evidence-multi-branch.md", "--fixes", "DEV-9007")
+open_pr_fixes_multi_lines = [
+    line for line in open_pr_fixes_multi.stdout.splitlines() if line.startswith("Fixes ")
+]
+require(
+    open_pr_fixes_multi.returncode == 0
+    and open_pr_fixes_multi_lines == ["Fixes DEV-9006", "Fixes DEV-9007"],
+    "open-pr.sh --fixes DEV-9007 did not append a second 'Fixes' line after the BRANCH-matched "
+    "issue's own: "
+    f"exit={open_pr_fixes_multi.returncode} stdout={open_pr_fixes_multi.stdout!r} "
+    f"stderr={open_pr_fixes_multi.stderr!r}",
+)
+
+# F2 falsifier: an unknown --fixes id refuses rather than being silently
+# dropped or crashing on a KeyError.
+open_pr_fixes_unknown = run_open_pr_dry("evidence-multi-branch.md", "--fixes", "DEV-9999")
+require(
+    open_pr_fixes_unknown.returncode == 2 and "DEV-9999" in open_pr_fixes_unknown.stderr,
+    "open-pr.sh did not refuse (exit 2, naming the unknown id) an unknown --fixes id: "
+    f"exit={open_pr_fixes_unknown.returncode} stderr={open_pr_fixes_unknown.stderr!r}",
+)
+
+# DEV-151 round 3, F3a falsifier: a bare suite name lacking its '.py'
+# extension ('contract-test -> exit 0', this batch's own TESTS shape) is
+# admitted the same as 'contract-test.py'.
+open_pr_suite_bare = run_open_pr_dry("evidence-suite-bare.md")
+require(
+    open_pr_suite_bare.returncode == 0
+    and "- contract-test: exit 0" in open_pr_suite_bare.stdout.splitlines(),
+    "open-pr.sh did not admit a bare suite name ('contract-test', no '.py') from TESTS: "
+    f"exit={open_pr_suite_bare.returncode} stdout={open_pr_suite_bare.stdout!r} "
+    f"stderr={open_pr_suite_bare.stderr!r}",
+)
+
+# F3b: a TESTS runner-shaped token ('custom-check.sh -> exit 0') that names
+# no recognized suite must notice on stderr rather than silently omit
+# '## Evidence' the same way an ordinary TESTS-less run does.
+open_pr_notice = run_open_pr_dry("evidence-notice.md")
+require(
+    open_pr_notice.returncode == 0
+    and "## Evidence" not in open_pr_notice.stdout
+    and "evidence: no suite token matched; pass --evidence-file" in open_pr_notice.stderr,
+    "open-pr.sh did not notice on stderr (and still omit '## Evidence', exit 0) when TESTS carries "
+    "a runner-shaped token matching no recognized suite: "
+    f"exit={open_pr_notice.returncode} stdout={open_pr_notice.stdout!r} stderr={open_pr_notice.stderr!r}",
+)
+
+# F4c: --evidence-file rescues that same unmatched TESTS scan; the notice
+# does not fire once the section is no longer omitted.
+open_pr_notice_rescued = run_open_pr_dry(
+    "evidence-notice.md", "--evidence-file",
+    str(ship_flow_fixtures / "open-pr" / "evidence-file-override.txt"),
+)
+require(
+    open_pr_notice_rescued.returncode == 0
+    and "- custom-check.sh: exit 0 (FO-supplied, not scanned from TESTS)"
+    in open_pr_notice_rescued.stdout.splitlines()
+    and "evidence: no suite token matched" not in open_pr_notice_rescued.stderr,
+    "open-pr.sh --evidence-file did not rescue an empty suite scan (bullets verbatim, no stale "
+    "notice on stderr): "
+    f"exit={open_pr_notice_rescued.returncode} stdout={open_pr_notice_rescued.stdout!r} "
+    f"stderr={open_pr_notice_rescued.stderr!r}",
+)
+
+# DEV-151 round 3, F5 falsifier: a backtick-wrapped quote-only attribution
+# ('Captain, 2026-09-09: `...`.') is skipped exactly like the 「...」/“...”/
+# '...'/"..." forms -- the real lead sentence is used instead.
+open_pr_backtick = run_open_pr_dry("evidence-backtick.md")
+open_pr_backtick_line = open_pr_backtick.stdout.splitlines()[0] if open_pr_backtick.stdout else ""
+require(
+    open_pr_backtick.returncode == 0
+    and open_pr_backtick_line
+    == "The real lead sentence follows here as the actual motivation.",
+    "open-pr.sh did not skip a backtick-wrapped quote-only attribution sentence as the lead: "
+    f"exit={open_pr_backtick.returncode} stdout={open_pr_backtick.stdout!r} "
+    f"stderr={open_pr_backtick.stderr!r}",
 )
 
 with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_name:
@@ -439,7 +716,10 @@ with tempfile.TemporaryDirectory(prefix="kc-ship-flow-open-pr-") as open_pr_dir_
         open_pr_env = dict(os.environ)
         open_pr_env["PATH"] = f"{fake_gh_dir}:{open_pr_env.get('PATH', '')}"
         return subprocess.run(
-            ["bash", str(open_pr_script), str(evidence)],
+            [
+                "bash", str(open_pr_script), str(evidence), str(open_pr_batch_dir),
+                "--what-changed-file", str(open_pr_what_changed_file),
+            ],
             cwd=open_pr_repo, capture_output=True, text=True, env=open_pr_env,
         )
 

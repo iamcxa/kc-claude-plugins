@@ -1,0 +1,2 @@
+Add a batch-dir argument to open-pr.sh
+Match the Evidence block's BRANCH to one plan-receipt issue

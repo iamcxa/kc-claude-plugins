@@ -1,0 +1,1 @@
+custom-check.sh: exit 0 (FO-supplied, not scanned from TESTS)
