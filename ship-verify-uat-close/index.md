@@ -197,3 +197,23 @@ scripts, out of this task's scope per the entity's own non-goals); and rewrote P
 the FO's exact template. All of `uat-doc.test.py` (14/14 checks) and `close.test.py` (9/9 checks)
 pass at this cycle's head; the pre-existing, unrelated `fenced-dispatch.test.sh` failure (3 of 4
 cases) was reverified identical on the clean merge commit before any of this cycle's edits.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Reproduce AC-1/AC-2/AC-3 live at this cycle's exact head (the merged-main, fence-shape-fixed commit), independent of the implementation worker's own claims
+  At worktree HEAD `8dc28e4faf7fe9a363742a4dbd6729c47690d1c8` (post-merge-#406, fence-shape-fixed): `uat-doc.py ship-cloud-wrapper --state-dir fixtures/uat-doc-v2/ready` exits 0 rendering both tasks + Q&A; `--state-dir fixtures/uat-doc-v2/missing-gate` exits 1 printing `DEV-203`. `close.py ship-cloud-wrapper --dry-run --state-dir fixtures/close-v2/dry-run` prints exactly one `conductor message create --session sess-301 ...` line; the same fixture without `--dry-run` exits 3 printing `not all tasks merged`. `close.py --validate fixtures/close-v2/receipts/valid.json` exits 0; `.../missing-debrief.json` exits 1 naming `DEV-301`. `uat-doc.test.py` and `close.test.py` both print "all checks passed", exit 0.
+- DONE: Confirm PR #411's body now matches docs/dev/_mods/pr-merge.md's template exactly (motivation/What changed/Evidence/Residuals/audit link, no Linear id) and that the branch actually contains #406's dispatch.sh/watch.sh after the merge
+  `gh pr view 411`: motivation lead is one semicolon-joined sentence (23 words, no parenthetical); `## What changed` has 4 action-verb bullets each under 15 words; `## Evidence` has 2 `N/N passed` bullets; `## Native stack exception` names the 23-file/+1117/-375 merge-base trigger (`git diff --shortstat origin/main...HEAD` reproduces the same 23/+1117/-375 live) with no mechanical/vendor/lock files in the diff to name; `## Residuals` lists only known limits; no Linear id anywhere; the audit link `[7e](/iamcxa/kc-claude-plugins/blob/750d44698a1f2865219d80ac8526643eea0b6424/ship-verify-uat-close.md)` resolves — `git cat-file -e 750d4469...:ship-verify-uat-close.md` succeeds — it predates this repo's later flat-to-folder entity conversion (`1c4a4981`, after PR construction), which is expected: the mod pins the tuple at construction and forbids reconstructing it. `ls kc-ship-flow/scripts/{dispatch,dispatch.test,watch,watch.test}.sh` all present on the branch post-merge.
+- DONE: Confirm the fence-shape fix reads the sibling task's real dispatch.sh output shape (not a hand-authored fixture) and that the skipped v1-schema-deletion finding is genuinely still blocked by other live readers
+  `kc-ship-flow/scripts/fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json` was committed by `0cc25fa3` (#406 itself, `git log --follow`), not authored by this task; `dispatch.sh` lines 156-157 (`d[slug] = {"workspace": ..., "session": ..., "message_sha256": ...}`) write exactly that top-level-slug shape, confirming the fixture is dispatch.sh's real output, not a guess. `grep -rl 'kc-ship-close-receipt.v1.schema.json\|kc-ship-close-receipt/v1' --include=*.py` (excl. fixtures) still lists all 5 files the skip cited (`docs/plan-flow/schema/validate-receipt.py`, `dev-debrief.py`, `e2e-gate.py`, `ship-debrief.py`, `contract-test.py`); `contract-test.py:118` runs a hard `require(CLOSE_RECEIPT_SCHEMA.is_file(), ...)` against the v1 schema file, and `validate-receipt.py:128` loads that same schema path in a real function — both would break immediately if the v1 schema were deleted now.
+
+### Summary
+
+Independently reproduced AC-1 through AC-3 live at cycle 2's head (`8dc28e4f`), separate from the
+implementation worker's own report. PR #411's body was checked section-by-section against the
+pr-merge.md template (all required sections present, correctly derived, no Linear id) and its
+pinned audit-link SHA verified to resolve; `dispatch.sh`/`watch.sh` confirmed present on the
+branch post-merge. The fence-shape fixture was traced to #406's own commit (not hand-authored)
+and matched against `dispatch.sh`'s literal output-construction code; the v1-schema-deletion skip
+was confirmed still blocked by two files that would break immediately (a hard existence check and
+a schema load) plus three more that reference the v1 receipt shape.
