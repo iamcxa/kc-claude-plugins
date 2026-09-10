@@ -13,29 +13,44 @@
       "layer": 1,
       "native_smoke": "passed; valid page accepted and malformed record rejected",
       "browser": "native note created in live editor; UI color edit persisted through reload and server restart; .tldr export/import preserved shape and red color; PNG 420x426",
-      "installation": "Claude marketplace add/install in isolated HOME succeeded; installed skills/kc-journey-map/SKILL.md resolved"
+      "installation": "Claude marketplace add/install in isolated HOME succeeded; installed skills/kc-journey-map/SKILL.md resolved",
+      "tree": "feec1a91f7479f9f1ff15b8a0bf8650d86271421"
     },
     {
       "layer": 2,
-      "tests": 17,
       "smoke": "16 shapes on 1 page; clean round trip",
       "browser": "live editor wording/activity-order/release-membership/story-priority changes applied to a YAML save-as; source index unchanged",
-      "refusal": "existing straddling-column test and temporary duplicate-identity/no-write probe passed"
+      "refusal": "existing straddling-column test and temporary duplicate-identity/no-write probe passed",
+      "tree": "9702db9d0b908b03d44e92dcc87ec20a16a61731",
+      "prior_full_tests": 17,
+      "prior_full_test_tree": "9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b",
+      "corrected_read_tests": 10,
+      "corrected_read_smoke": "passed",
+      "corrected_same_wording_control": "both passed at current tree",
+      "prior_evidence_scope": "Unchanged render/runtime/install/export evidence retained; affected readback and integration checks rerun."
     },
     {
       "layer": 3,
-      "tests": 44,
-      "smoke": "141 shapes on 5 pages; clean round trip"
+      "smoke": "141 shapes on 5 pages; clean round trip",
+      "tree": "1738d173046d750819cd40e8ee838dd3eace114e",
+      "prior_full_tests": 44,
+      "prior_full_test_tree": "55b4416f5b37649fc0fec4d7eeddcef3561bad9c",
+      "corrected_read_tests": 16,
+      "corrected_read_smoke": "passed",
+      "corrected_same_wording_control": "both passed at current tree",
+      "prior_evidence_scope": "Unchanged render/runtime/install/export evidence retained; affected readback and integration checks rerun."
     },
     {
       "layer": 4,
       "tests": 67,
-      "smoke": "258 shapes on 5 pages; clean round trip"
+      "smoke": "258 shapes on 5 pages; clean round trip",
+      "tree": "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff"
     },
     {
       "layer": 5,
       "tests": 72,
-      "smoke": "258 shapes on 5 pages; clean round trip; real Spacedock fixture CLI test exercises identity/refusal/reopening/archived/pending-acceptance/source-preservation cases"
+      "smoke": "258 shapes on 5 pages; clean round trip; real Spacedock fixture CLI test exercises identity/refusal/reopening/archived/pending-acceptance/source-preservation cases",
+      "tree": "cefe085d5d9b12b5679421b5607c808d6989a1b7"
     }
   ],
   "version_parity": "all 5 layers passed scripts/version-parity-check.sh",
@@ -53,5 +68,26 @@
     "detail": "No approved product commit or tip SHA for the recut candidates; tree-only review packet does not satisfy exact-tip contract",
     "request_count": 0,
     "confirmation_count": 0
+  },
+  "candidate_trees": [
+    "feec1a91f7479f9f1ff15b8a0bf8650d86271421",
+    "9702db9d0b908b03d44e92dcc87ec20a16a61731",
+    "1738d173046d750819cd40e8ee838dd3eace114e",
+    "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff",
+    "cefe085d5d9b12b5679421b5607c808d6989a1b7"
+  ],
+  "correction": {
+    "finding": "Distinct story IDs sharing old text wrote to the first story instead of the edited second ID in layers 2/3.",
+    "change": "Only existing layer-4 stable-ID selection and stale-wording refusal promoted into layers 2/3.",
+    "same_wording_and_control": "Both layers red before correction; both same-wording and distinct-wording cases green afterward, actual API PATCH and journey-read --out, CLI exit 0 and source hashes unchanged.",
+    "stale_wording": "Both layers refused a stale canvas edit, applied zero writes and preserved original source bytes.",
+    "scope": "read.mjs only in layers 2/3; all layers 1/4/5 unchanged; no product test added",
+    "scoped_checks": {
+      "layer2_read_tests": 10,
+      "layer3_read_tests": 16,
+      "layer2_smoke": "16 shapes, 1 page, clean round trip",
+      "layer3_smoke": "141 shapes, 5 pages, clean round trip"
+    },
+    "independent_recheck": "pending"
   }
 }

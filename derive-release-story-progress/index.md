@@ -424,3 +424,30 @@ Five exact cumulative candidates and replayable patches are ready for independen
 ### Summary
 
 FAIL for independently safe intermediate delivery: same-wording stories can be written to the wrong stable ID in layers 2/3. Final progress semantics and original AC evidence are not regressed by this finding; producer correction and one focused independent re-review are required before exact local-commit approval.
+
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Promote the existing stable-ID writeback safety hunk to layers2/3, preserving rejected evidence and final layer4/5 exact trees.
+  The sole independent finding is addressed by promoting the existing layer-4 +5/-1 `read.mjs` block: select the stable story ID and refuse stale source wording. No new final code/tests, feature, dependency, or scope was added.
+  Initial snapshots survive as code-worktree `.context/rejected-layer-2` and `rejected-layer-3`; raw/state `initial-rejected/` packets and the reviewer's initial evidence remain unchanged.
+  Corrected layer 2 is `9702db9d0b908b03d44e92dcc87ec20a16a61731`; layer 3 is `1738d173046d750819cd40e8ee838dd3eace114e`. `stack-recut-evidence/equivalence.json` proves each differs only by that existing hunk; layer-3 original extraction equality is qualified by the precise promoted patch.
+  Final layer 4 remains `6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff`; layer 5 remains `cefe085d5d9b12b5679421b5607c808d6989a1b7`, both equal the original expected current-main merge trees. Layer 1 also remains unchanged.
+- DONE: Prove the same-wording second-story edit targets the correct ID in both affected layers, and refresh exact candidate manifests/patches/size counts.
+  The same real API PATCH -> journey-read CLI --out instrument failed same-wording cases in both original layers and passed distinct-wording controls. Both cases now pass at both corrected trees with CLI exit 0, correct second-ID updates and unchanged source hashes; reverting to text selection restores the recorded red result.
+  Stale source wording is refused in both corrected layers, with zero applied writes and unchanged bytes. A temporary probe covers this existing safety block without adding final product tests.
+  Affected read tests passed 10/10 and 16/16; layer-2 one-page and layer-3 five-page boot/render/readback passed. Unchanged install/persistence/export and full layer-4/5 suites were not rerun.
+  Updated adjacent counts: 24/+6023/-0, 24/+1079/-334, 34/+1966/-139, 21/+620/-375, 10/+433/-27. `manifest.json` includes every path/generated share/hash; `patch-proof.json` replays all five corrected patches to their exact trees and confirms snapshot/index agreement.
+- DONE: Record closure evidence and a concrete updated local-commit packet in durable state; no product commits or provider effects.
+  Immutable closure: `stack-recut-evidence/correction/README.md`, SHA-256 `eb8601c22d0d6d84e099af605a6ec60613f9ee31289440f7a22344fd9081a8b0`, binds the exact patch and red/green/control results through `closure-proof.json`. Focused independent re-review remains pending.
+  `stack-recut-evidence/local-commit-review.md` replaces the stale proposal with current trees, hashes, paths and sizes, explicitly pending re-review and Kent's local-commit approval. No product commit/push/PR, task status/gate/approval write, provider request, or existing-service mutation occurred.
+  AC-1: unchanged standalone drawing and optional real refresh path retain prior exact final-tree evidence; introducing mandatory Spacedock in drawing would fail the empty-PATH check.
+  AC-2: unchanged final full-identity/task-versus-story evidence remains valid; the promoted early write path now also respects the requested stable story ID.
+  AC-3: unchanged final missing/partial/duplicate/unreadable/archived/reopened mapping checks retain their evidence; early source-staleness refusal passed independently.
+  AC-4: unchanged final three-color/provenance and pending-delivery-acceptance evidence remains bound to the unchanged layer-5 tree.
+  AC-5: the failed intermediate same-wording writeback now preserves story identity and source bytes in both layers; final derived-progress readback/source/task preservation remains unchanged.
+  CI cost remains unmeasured. RoboRev observation remains UNAVAILABLE(reason: unsupported), requests/confirmations 0/0, because this recut still has no authorized committed product tip. Existing inherited whitespace and external-icon proof limits remain unchanged.
+
+### Summary
+
+The single intermediate-layer safety finding has producer closure evidence from the same falsifiable runtime scenario and its passing control. Corrected exact candidates and the updated local-commit proposal are ready for the one focused independent re-review; final product endpoints and earlier approvals remain unchanged.

@@ -1,0 +1,17 @@
+diff --git a/kc-journey-map/lib/read.mjs b/kc-journey-map/lib/read.mjs
+index 942c727da154bdf53e4449a1b24d5e583b4a46b2..346338c197bc93bda2c217510a88fba0c2626f2c 100644
+--- a/kc-journey-map/lib/read.mjs
++++ b/kc-journey-map/lib/read.mjs
+@@ -171,7 +171,11 @@ export function applyDiff(path, diff, outPath = path) {
+ 		if (field === 'story') {
+ 			const node = findStep(steps, step)
+ 			const list = node?.get('stories')
+-			const item = list?.items.find((s) => (s.get ? s.get('card') : String(s)) === was)
++			const item = list?.items.find((s, j) => (s.get?.('id') ?? `${step}-${j}`) === id)
++			if (item && (item.get ? item.get('card') : String(item)) !== was) {
++				skipped.push(`${id} wording changed in the file — read the canvas again`)
++				continue
++			}
+ 			if (!item) continue
+ 			if (item.set) item.set('card', now)
+ 			else list.items[list.items.indexOf(item)] = doc.createNode(now)

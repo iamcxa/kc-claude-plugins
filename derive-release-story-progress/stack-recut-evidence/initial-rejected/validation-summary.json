@@ -1,0 +1,57 @@
+{
+  "runtime": "Node v24.18.0",
+  "dependency_install": {
+    "fresh_node_modules": true,
+    "command": "npm ci --prefix <layer-1>/kc-journey-map",
+    "packages_added": 267,
+    "audit_vulnerabilities": 0,
+    "layers_2_to_5": "shared symlink to layer-1 clean install; package and lock bytes identical"
+  },
+  "ci_cost_per_pr": "unmeasured",
+  "layers": [
+    {
+      "layer": 1,
+      "native_smoke": "passed; valid page accepted and malformed record rejected",
+      "browser": "native note created in live editor; UI color edit persisted through reload and server restart; .tldr export/import preserved shape and red color; PNG 420x426",
+      "installation": "Claude marketplace add/install in isolated HOME succeeded; installed skills/kc-journey-map/SKILL.md resolved"
+    },
+    {
+      "layer": 2,
+      "tests": 17,
+      "smoke": "16 shapes on 1 page; clean round trip",
+      "browser": "live editor wording/activity-order/release-membership/story-priority changes applied to a YAML save-as; source index unchanged",
+      "refusal": "existing straddling-column test and temporary duplicate-identity/no-write probe passed"
+    },
+    {
+      "layer": 3,
+      "tests": 44,
+      "smoke": "141 shapes on 5 pages; clean round trip"
+    },
+    {
+      "layer": 4,
+      "tests": 67,
+      "smoke": "258 shapes on 5 pages; clean round trip"
+    },
+    {
+      "layer": 5,
+      "tests": 72,
+      "smoke": "258 shapes on 5 pages; clean round trip; real Spacedock fixture CLI test exercises identity/refusal/reopening/archived/pending-acceptance/source-preservation cases"
+    }
+  ],
+  "version_parity": "all 5 layers passed scripts/version-parity-check.sh",
+  "prior_setup_failure": "Initial archive snapshots lacked their own Git index, so tracked-file evidence lookup failed. Candidate-local indexes fixed the test environment; no product repair was made for this failure.",
+  "browser_isolation": "unchanged layer-1 client/server on own ports 3811/5911; task proxy mapped advertised ports 3737/5858 only in named browser session; layer-2 runtime bytes identical",
+  "browser_limit": "Local-only probe proxy blocked external tldraw asset CDN, so screenshots contain blank toolbar icons; native shape text, editor actions, persistence and exports were exercised. No production visual polish claim.",
+  "cleanup": "Named browser session and listeners 3811/5911/5931 stopped; existing 3737/5858 listeners preserved",
+  "observation": {
+    "provider": "roborev",
+    "capability": "review_convergence",
+    "mode": "observe",
+    "profile": "pilot-product-slice",
+    "outcome": "UNAVAILABLE",
+    "reason": "unsupported",
+    "detail": "No approved product commit or tip SHA for the recut candidates; tree-only review packet does not satisfy exact-tip contract",
+    "request_count": 0,
+    "confirmation_count": 0
+  }
+}

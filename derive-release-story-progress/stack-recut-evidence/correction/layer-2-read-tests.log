@@ -1,0 +1,23 @@
+✔ a freshly rendered board reports no drift (2.839917ms)
+✔ rewording an activity on the story map is seen (0.535208ms)
+✔ dragging a story up inside its band is a priority change (0.405958ms)
+✔ dragging a story across a release line is read as a release change (0.985459ms)
+✔ a release change is written into the file (7.685667ms)
+✔ a hand-added card is placed under the column it sits beneath (0.453166ms)
+✔ a card straddling two columns is reported, never guessed (0.369167ms)
+✔ a story dragged up is reordered in the file (2.984791ms)
+✔ a reworded story is rewritten in the file (3.105916ms)
+✔ a story written in object form is reworded too (2.2635ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.252167
+200 17 shapes -> {"roomId":"smoke-74350","put":17,"removed":0,"clock":1}
+  first-trip: covers 3/3 activities
+  change-trip: covers 2/3 activities  not touched: keep
+ok  16 shapes across 1 pages: Story map
+ok  round trip clean

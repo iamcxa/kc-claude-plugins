@@ -1,0 +1,30 @@
+✔ a freshly rendered board reports no drift (3.579125ms)
+✔ rewording an activity on the story map is seen (1.253417ms)
+✔ dragging a story up inside its band is a priority change (0.671083ms)
+✔ dragging a story across a release line is read as a release change (0.542125ms)
+✔ a release change is written into the file (9.545791ms)
+✔ the two pages disagreeing about one card is a conflict, not a winner (0.606583ms)
+✔ the two pages in different column orders is a conflict (0.559084ms)
+✔ a hand-added card is placed under the column it sits beneath (1.099417ms)
+✔ a card straddling two columns is reported, never guessed (0.560125ms)
+✔ a story dragged up is reordered in the file (3.531ms)
+✔ a reworded story is rewritten in the file (3.202125ms)
+✔ a conflict is refused and nothing is written (2.087084ms)
+✔ a story written in object form is reworded too (2.577583ms)
+✔ with no selection, buildAllPages draws the story map alone (0.415542ms)
+✔ an empty selection falls back to the default rather than rendering nothing (0.278583ms)
+✔ selecting the journey board draws one page per release, alongside the story map (0.832125ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 193.117584
+200 146 shapes -> {"roomId":"smoke-74351","put":146,"removed":0,"clock":1}
+  r1: covers 4/8 activities  not touched: contract, model, funcmap, handoff
+  r2: covers 2/8 activities  not touched: render, workshop, readback, model, funcmap, handoff
+  r3: covers 3/8 activities  not touched: write, render, contract, workshop, readback
+ok  141 shapes across 5 pages: Function map, RELEASE 1 — what is missing, RELEASE 2 — what is missing, RELEASE 3 — what is missing, Story map
+ok  round trip clean

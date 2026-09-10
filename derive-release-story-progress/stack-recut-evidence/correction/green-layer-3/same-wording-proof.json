@@ -1,0 +1,126 @@
+{
+  "layer": 3,
+  "tree": "1738d173046d750819cd40e8ee838dd3eace114e",
+  "read_file_sha256": "5e2b3b3557958decd439ab397ff839d5270b7e191228bf1570c9339a675224a6",
+  "kind": "refusal",
+  "seam": "real server PATCH -> journey-read CLI --out -> YAML identity",
+  "cases": [
+    {
+      "name": "same-wording",
+      "render_status": 200,
+      "patch_status": 200,
+      "cli_exit": 0,
+      "cli_stdout": "{\n  \"reordered\": null,\n  \"reorderConflict\": null,\n  \"reworded\": [\n    {\n      \"id\": \"a-2\",\n      \"field\": \"story\",\n      \"page\": \"storymap\",\n      \"step\": \"a\",\n      \"was\": \"Names it\",\n      \"now\": \"Edited second story\"\n    }\n  ],\n  \"rewordConflict\": [],\n  \"releaseMoved\": [],\n  \"storiesReordered\": [],\n  \"duplicated\": [],\n  \"unclaimed\": [],\n  \"missing\": []\n}\napplied:\n  reworded story a-2\nwrote: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/correction-proof/green-layer-3/same-wording-out.yaml\n",
+      "cli_stderr": "",
+      "expected": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "NamesIt"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "ConfirmsIt"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2",
+          "status": "exists",
+          "evidence": "PicksTarget"
+        }
+      ],
+      "actual": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "NamesIt"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "ConfirmsIt"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2",
+          "status": "exists",
+          "evidence": "PicksTarget"
+        }
+      ],
+      "identity_preserved": true,
+      "source_hash_before": "b733d0cfbb08f4351a07ce4d360315106a56da67e43d9502b03a9d52658da169",
+      "source_hash_after": "b733d0cfbb08f4351a07ce4d360315106a56da67e43d9502b03a9d52658da169",
+      "source_preserved": true
+    },
+    {
+      "name": "distinct-wording",
+      "render_status": 200,
+      "patch_status": 200,
+      "cli_exit": 0,
+      "cli_stdout": "{\n  \"reordered\": null,\n  \"reorderConflict\": null,\n  \"reworded\": [\n    {\n      \"id\": \"a-2\",\n      \"field\": \"story\",\n      \"page\": \"storymap\",\n      \"step\": \"a\",\n      \"was\": \"Confirms it\",\n      \"now\": \"Edited second story\"\n    }\n  ],\n  \"rewordConflict\": [],\n  \"releaseMoved\": [],\n  \"storiesReordered\": [],\n  \"duplicated\": [],\n  \"unclaimed\": [],\n  \"missing\": []\n}\napplied:\n  reworded story a-2\nwrote: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/correction-proof/green-layer-3/distinct-wording-out.yaml\n",
+      "cli_stderr": "",
+      "expected": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "NamesIt"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "ConfirmsIt"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2",
+          "status": "exists",
+          "evidence": "PicksTarget"
+        }
+      ],
+      "actual": [
+        {
+          "id": "a-0",
+          "card": "Names it",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "NamesIt"
+        },
+        {
+          "id": "a-2",
+          "card": "Edited second story",
+          "release": "r1",
+          "status": "exists",
+          "evidence": "ConfirmsIt"
+        },
+        {
+          "id": "a-1",
+          "card": "Picks a target",
+          "release": "r2",
+          "status": "exists",
+          "evidence": "PicksTarget"
+        }
+      ],
+      "identity_preserved": true,
+      "source_hash_before": "0e565e6074c8181ef8174d32a4d48016e9192a7886e0c3de80f70851d1419b91",
+      "source_hash_after": "0e565e6074c8181ef8174d32a4d48016e9192a7886e0c3de80f70851d1419b91",
+      "source_preserved": true
+    }
+  ],
+  "owned_server_stopped": true
+}

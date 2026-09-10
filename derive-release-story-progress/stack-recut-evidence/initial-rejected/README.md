@@ -15,23 +15,14 @@ Raw patches, temporary indexes, test logs, isolated install, browser artifacts,
 and native exports live at
 `/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/journey-stack-recut`.
 
-## Correction status
-
-The initial stack failed independent validation: two stable story IDs with the same
-wording could write back to the wrong ID. The existing layer-4 ID-selection and
-stale-wording refusal hunk is now promoted into layers 2/3. Producer red/green proof
-and scoped checks passed; focused independent re-review remains pending. Initial
-packets are preserved in `initial-rejected/`, and the reviewer's original evidence
-remains untouched in `../stack-recut-independent-validation/initial/`.
-
 ## Review the actual candidates
 
 | Layer | Files | Added/deleted lines | Generated lines (share) | Cumulative tree |
 |---|---:|---:|---:|---|
 | 1 | 24 | +6023/-0 | 5309 (88.15%) | `feec1a91f7479f9f1ff15b8a0bf8650d86271421` |
-| 2 | 24 | +1079/-334 | 0 (0.00%) | `9702db9d0b908b03d44e92dcc87ec20a16a61731` |
-| 3 | 34 | +1966/-139 | 1 (0.05%) | `1738d173046d750819cd40e8ee838dd3eace114e` |
-| 4 | 21 | +620/-375 | 2 (0.20%) | `6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff` |
+| 2 | 24 | +1075/-334 | 0 (0.00%) | `9c3eb9fd9ace855df2654f3f122ed8d270cf6a3b` |
+| 3 | 34 | +1966/-139 | 1 (0.05%) | `55b4416f5b37649fc0fec4d7eeddcef3561bad9c` |
+| 4 | 21 | +625/-376 | 2 (0.20%) | `6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff` |
 | 5 | 10 | +433/-27 | 0 (0.00%) | `cefe085d5d9b12b5679421b5607c808d6989a1b7` |
 
 Counts are adjacent-layer Git diffs. Generated means `package-lock.json` and native
@@ -52,15 +43,13 @@ recut is separately authorized delivery preparation, not a threshold reset.
    drawing skill with the independently usable native story-map workflow here.
 3. **Inspect release detail and evidence.** Add optional system/constraint boards,
    function-map, selection, release contracts, executable citation lint, and the
-   full worked example. This tree equals pinned main merged with original #394 plus only the existing
-   write-selection safety hunk recorded in `correction/promoted-layer-3.patch`.
-4. **Apply existing border/story changes.** Original `1166747c..bc51b246` endpoint is retained, including its predecessor
-   corrections and roadmap entry; the promoted write-selection hunk now arrives
-   in layer 2 and no longer appears as an introduction in this adjacent delta.
+   full worked example. This tree equals pinned main merged with original #394.
+4. **Apply existing border/story changes.** Entire original `1166747c..bc51b246`
+   delta is retained, including its predecessor corrections and roadmap entry.
 5. **Apply local task progress.** Entire original `bc51b246..947501df` delta is retained.
 
-`equivalence.json` proves unchanged layer-4/5 expected merge trees and that corrected
-layer 3 differs from the original extraction tree only by the promoted safety hunk. `patch-proof.json` proves the
+`equivalence.json` records zero tree diffs against all three expected merges and
+both endpoints' touched-blob equality for layers 4/5. `patch-proof.json` proves the
 five review patches replay consecutively to these trees. This preserves unrelated
 current-main updates. Version parity passed in each layer, with package.json and
 package-lock.json unchanged across all five. Only layer 3's inherited final blank
@@ -69,10 +58,8 @@ source preservation leaves that upstream formatting intact.
 
 ## Evidence and limits
 
-`validation-summary.json` retains initial install/browser/export and 17/44/67/72
-full-suite evidence at its original trees. After the correction, layers 2/3 passed
-10/16 affected read tests, boot/readback, same-wording second-ID and distinct-wording
-control cases. `correction/README.md` explains the exact closure proof.
+`validation-summary.json` binds the observed install, browser, native persistence,
+export/import, 17/44/67/72 model tests, and isolated boot/render/readback results.
 Layer 5's real Spacedock fixtures cover AC-1 through AC-5, including empty-PATH
 standalone drawing, full identity, refusal, archived/reopened tasks, story/task
 ratio divergence, pending delivery acceptance, and source-preserving canvas readback.
