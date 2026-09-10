@@ -1,0 +1,21 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:geef7a3dy7w12g7tq89h21te:validation:round-1",
+  "question": "Does the exact uncommitted knowledge-delivery candidate preserve peer writes on failed archive commit?",
+  "artifacts": [
+    {
+      "id": "artifact:knowledge-candidate",
+      "uri": "../../../implementation-evidence/integrated-upstream.patch",
+      "mediaType": "text/x-diff",
+      "rev": "sha256:cabbdd5221aec0b94597f4aeaca455810fe75b90922d76c4226fefda7547efe5"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:independent-review",
+      "label": "Independent validation REJECTED, state commit 661ece460195dfa33665875c9abec9cf199a3e8f; validation-evidence/review.md"
+    }
+  ]
+}

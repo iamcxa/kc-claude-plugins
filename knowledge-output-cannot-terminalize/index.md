@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+review-round:
+    id: round:geef7a3dy7w12g7tq89h21te:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:geef7a3dy7w12g7tq89h21te:validation:round-1
+        digest: sha256:10781937c4a6172e523d5f82123405b13821fdbf090bce4b2ac34d1fef5796fb
+        room-ref: ./review/validation/round-1
 ---
 
 ## Historical problem and investigation
