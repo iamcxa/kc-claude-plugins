@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
@@ -275,3 +275,20 @@ Merged origin/main (`c1564b21`, carrying #411's `uat-doc.py`/`close.py` v2 rewri
 ### FO correction on AC-4 (2026-09-10)
 
 Independently re-ran the `git cat-file -t`-over-hex-strings scan across all of `kc-ship-flow/scripts/` at the merged candidate `375315e1` (not just #411's two new fixture trees, and matching abbreviated 7-40 hex, not only full 40-hex — the earlier scans undercounted at 32 by missing abbreviated SHAs like `470b3e41`, `3a733578` in `uat-doc/batch-e56e9f09873c/README.md`). Result: exactly the same 34 fixture files as cycle 2's list, confirming the count is unchanged by the #411 merge. Also found the PR body's extra line "`kc-ship-flow/scripts/contract-test.py` (the script itself embeds one such SHA literal)" is no longer accurate at this candidate — `contract-test.py`'s only hex-looking strings are `d708e82924c7` (a `placement.tsv` segment hash, not a git object) and placeholder UUIDs; neither resolves via `git cat-file -t`. Removed that line from the PR body.
+
+## Stage Report: validation (cycle 3, feedback round 2)
+
+- DONE: independently reproduce AC-1..AC-3, AC-4's fixture recount, and the skill rename/stale-instruction/design-doc-reference findings at the final merged candidate, not on the ensign's word
+  Fresh clone at `/tmp/validate-clone-r2` refreshed to `375315e1` (branch tip after the #411 merge): AC-1 grep 0 matches; AC-2 `prose-placement-check.py` -> `PASS (28 segments, 11 placed, 17 residual)`; AC-3 both scripts exit 0; `kc-dev-flow-contract-test.py` -> `PASS`. Confirmed `kc-ship-flow/skills/run-batch/SKILL.md` exists with `name: run-batch`, no `kc-ship-flow/skills/first-officer/` directory remains, and no reference to it survives in `docs/ship/README.md`/`kernel.md`/`placement.tsv`/`contract-test.py`. Confirmed the stale `pin.py --station`, plan-receipt-argument `e2e-gate.py`, and `docs/plan-flow/schema/validate-receipt.py` lines are gone from the skill. Confirmed the design-doc reference now points at `docs/dev/.spacedock-state/ship-cloud-dispatch-and-watch/design/2026-09-10-ship-flow-cloud-wrapper-design.md`, which exists on `spacedock-state/dev`. Re-ran the full hex-string/`git cat-file -t` scan myself (not reused from the implementation report) and got the same 34-file list, confirming the AC-4 correction above.
+- DONE: confirm the merge into origin/main (#411) is real, and PR #410's title/body/CI reflect the final state
+  `git log --graph` on the pushed branch shows `75883772` as a two-parent merge of `29488a8b` (this branch) and `c1564b21` (#411), not a rebase. `gh pr checks 410` at candidate `375315e1`/PR-body-refresh: GitGuardian pass, multi-profile route gate pass, version parity pass. PR title unchanged (bare Conventional Commit subject, no Linear id). PR body rebuilt to the cumulative current state (merge of #406+#411, station deletions, skill rename, conditional test wiring) per the `pr-merge` mod template, with the corrected 34-item `without-it unanswered` list and no stale `contract-test.py` line.
+
+### Residuals (not fixed, flagged for the next stage/task)
+
+- `kc-ship-flow/scripts/contract-test.py` still cannot reach exit 0 in this sandbox for the same pre-existing `conductor`/`e2e-gate` sandbox reasons documented in cycles 2 and 4; real CI is green.
+- `pin.py`'s `STATIONS` vocabulary still names the old five-stage set; no AC or feedback item required renaming it.
+- The dangling-vs-reachable-commit distinction in the `without-it unanswered` list is unresolved by design — flagged, not silently picked.
+
+### Summary
+
+Independently reproduced every finding from feedback round 2 at the final merged candidate `375315e1`: the skill is renamed to `run-batch` with every reference updated, the three stale instruction lines are gone, the design-doc reference points at its real location, and `origin/main`/#411 is merged in with a real merge (not a rebase), with `contract-test.py`/`uat-doc.test.py` conflicts resolved keeping both sides. Corrected one thing on my own pass: the AC-4 fixture count and the PR body's stale `contract-test.py` callout, verified with an independent full re-scan rather than trusting the implementation report's number. All three required CI checks are green at the final candidate; PR title/body reflect the PR's current cumulative state per the `pr-merge` mod template.
