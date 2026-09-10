@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-2:revision-1",
+  "question": "Does this PR complete the accepted station removal with every AC verified or honestly accounted for, and a green required-check surface, ready for Captain review?",
+  "artifacts": [
+    {
+      "id": "artifact:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/cc4336d9d01ca833dbb685e2b5aaf10c1e6226f1/ship-remove-duplicated-stations/review/validation/validation-review.md",
+      "rev": "sha256:cdaa0433fdfc964485568b7992c20ea0ab1f8df2842a39fb83468ed1c3a1787d",
+      "mediaType": "text/markdown",
+      "summary": "Draft PR #410: title/body now conform to the pr-merge mod template (no Linear reference); all three required checks green at candidate e5c2df15 after fixing two independent stale-fixture breaks; AC-1..AC-4 verified or honestly accounted for."
+    }
+  ]
+}

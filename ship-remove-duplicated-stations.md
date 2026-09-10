@@ -49,6 +49,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T09:40:43.215327302Z"
                 reason: 'Re-preparing after fixing PR #410: failing version-parity required check, DEV-157 references removed, and PR body brought in line with the pr-merge mod template'
+            - id: gate-attempt:pzg36pjjn7tvtdtknpv9w82h-validation-2
+              briefing:
+                id: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-2:revision-1
+                digest: sha256:e5d8eb8d1c8a331b1eb2ce0b1b4cf8c137c39f8a1237f9b18626f257cfee8c36
+                room-ref: ./ship-remove-duplicated-stations/review/validation/briefing-2
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
