@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: dispatch one cloud first officer per dev task and watch the set to its validation gates"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
