@@ -1,6 +1,6 @@
 ---
 title: "Repair POC close measurement ordering"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -45,7 +45,7 @@ gates:
                 reason: Kent explicitly approved the presented ideation design with 批准 after the close-order explanation; proceed to bounded implementation, preserving separate product commit confirmation and real POC outcome approval.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-10T13:41:14Z
 ---
 
