@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:aznp6gpr6zanmr8argy0jcdj:ideation:attempt-1:revision-1",
+  "question": "Approve the phase-aware POC close design for isolated implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:aznp6gpr6zanmr8argy0jcdj:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a76230c5474eeb7fde81b848cc2d226bec30e27e/poc-close-measurement-order/index.md",
+      "rev": "sha256:4a20f499beca549ee0f80f98a1dfedbad9d453172109055a389dda437d52ba70",
+      "mediaType": "text/markdown",
+      "summary": "Three assigned design checks passed. Native probes prove human approval and archive-before-cleanup ordering. Proposed five-file repair accepts pending measurements before closure and adds read-only final verification after existing-owner recording; implementation remains pending."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:aznp6gpr6zanmr8argy0jcdj:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
