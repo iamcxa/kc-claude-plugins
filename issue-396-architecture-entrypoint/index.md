@@ -8,6 +8,17 @@ issue: iamcxa/kc-claude-plugins#396
 provenance: https://github.com/iamcxa/kc-claude-plugins/issues/396
 id: m0e43swm7wrs71xy98ea43gp
 started: 2026-09-10T09:09:43Z
+gates:
+    version: 1
+    records:
+        - id: gate:m0e43swm7wrs71xy98ea43gp:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:m0e43swm7wrs71xy98ea43gp-backlog-1
+              briefing:
+                id: briefing:m0e43swm7wrs71xy98ea43gp:backlog:attempt-1:revision-1
+                digest: sha256:31e8caf4368d8f332b6fadbdecd3dbdac9c63b80def6e5cf14105656a540336b
+                room-ref: ./review/backlog/briefing-1
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.

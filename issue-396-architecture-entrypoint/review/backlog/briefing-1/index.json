@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:m0e43swm7wrs71xy98ea43gp:backlog:attempt-1:revision-1",
+  "question": "Admit the Captain-selected Pilot repair for issue #396 to shape its existing accepted scope?",
+  "artifacts": [
+    {
+      "id": "artifact:m0e43swm7wrs71xy98ea43gp:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f753b50efe0f66121076fce8a1a855f07ce963da/issue-396-architecture-entrypoint/index.md",
+      "rev": "sha256:87b542a3be358ecb3952336db758e50da7f23cd5953a418b30d38def3c70ceff",
+      "mediaType": "text/markdown",
+      "summary": "The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:m0e43swm7wrs71xy98ea43gp:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
