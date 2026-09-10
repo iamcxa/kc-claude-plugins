@@ -10,8 +10,9 @@ review?
 ## Candidate
 
 - Branch: `spacedock-ensign/ship-remove-duplicated-stations`
-- Candidate SHA: `d300d531186a6f42a9fd1905f90c8227bdfd966c`
-- Draft PR: https://github.com/iamcxa/kc-claude-plugins/pull/410
+- Candidate SHA: `e5c2df15dbae6b829f4dc832db0e4e99966f1ee0`
+- Draft PR: https://github.com/iamcxa/kc-claude-plugins/pull/410 (title/body conform to the `pr-merge` mod template; no Linear reference, per this sprint's ruling)
+- Required checks: GitGuardian, multi-profile route gate, and version parity — all green at the candidate SHA
 
 ## AC cross-check
 
@@ -35,10 +36,28 @@ review?
   resolved: some listed SHAs are dangling/unreachable commit objects, kept under the
   literal "pins a real commit SHA" reading.
 
+## Ship FO's four-item answer (2026-09-10), addressed in order
+
+1. Backlog gate's git-root reference recovered from `spacedock-state/dev-recovery-9826ffcf`
+   (fetched, not edited); gate record left untouched as instructed.
+2. `version parity` required check was failing; reproduced with
+   `scripts/kc-dev-flow-contract-test.py`, root-caused to a stale close-receipt hash
+   chain from this PR's own body edit, fixed and pushed (`69d99d25`); a second,
+   independent break in the same CI job (`kc-ship-flow/scripts/contract-test.py`'s
+   placement.tsv mutation fixture pointing at a row this PR turned residual) was
+   found and fixed the same way (`e5c2df15`). All three required checks are green
+   at the candidate SHA above.
+3. PR title retitled to a bare Conventional Commit subject, `(DEV-157)` dropped; no
+   Linear reference anywhere in the PR.
+4. PR body rebuilt to the `pr-merge` mod's exact template shape (motivation lead,
+   `## What changed`, `## Evidence 5/5`, `---`, audit link), `without-it unanswered`
+   kept verbatim, "Review guidance" and "Native stack exception" dropped/folded.
+
 ## Recommend
 
 Approve. Every AC has independently verified evidence except AC-1's exit-0 half,
 which is a pre-existing, reproducible-on-`main` environment gap unrelated to this
 removal — not a defect this PR introduced or could fix. The removal, prose rewrite,
 and fixture accounting match the design's removal table and this entity's Accepted
-outcome and Non-goals.
+outcome and Non-goals, and the Draft PR now carries a green required-check surface
+and a template-conformant title/body.
