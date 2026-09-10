@@ -26,6 +26,17 @@ gates:
                 id: briefing:d3xb3q0qwmjpkty23njq6t66:backlog:attempt-1:revision-1
                 digest: sha256:0115adc27e4220103f15f6645bacce4921e2fef6a93b9371a1dc9d887ae9896a
                 room-ref: ./evidence-means-executable-code/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:d3xb3q0qwmjpkty23njq6t66:backlog:1
+                briefing: briefing:d3xb3q0qwmjpkty23njq6t66:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T04:22:45.065196Z"
+                decision: approve
+                reason: 'Captain: 先把 evidence 那個 glob 修掉,讓數字誠實了再切 — approving the fix before the plugin extraction, so the extraction carries an honest count rather than a documented lie.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
