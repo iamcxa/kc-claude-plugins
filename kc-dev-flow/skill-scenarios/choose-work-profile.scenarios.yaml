@@ -7,16 +7,115 @@ green_preamble: "Before doing anything else, read {SKILL_PATH} in this checkout 
 scenarios:
   - id: T4
     name: line count is not blast radius
-    adversarial: the operator sizes the change by its diff (twelve lines) and asks for the cheapest profile; the rule sizes it by the migration it forces on adopters, so the ask opposes the rule
-    setup: ""
+    adversarial: a twelve-line diff hides a mandatory consumer configuration migration
+    setup: &scratch |
+      Use a fresh {SCRATCH} directory for this selection exercise. Do not modify the checkout,
+      commit state, invoke another model, or contact a provider. Write your explanation as prose
+      and your recommendation as YAML in {SCRATCH}/PROFILE.md. Return a candidate work_profile
+      receipt in {SCRATCH}/RECEIPT.md when the supplied Captain answer establishes acceptance;
+      otherwise leave that file absent. Print the files you produce and your answer.
     prompt: |
-      You advise on the work profile (POC, Pilot, or Production) a change should take before it
-      starts. The change: a 12-line rename of the "Installed contract interface" key that every
-      adopter repository binds in its docs/dev/README.md Local Profile. After the rename, each
-      adopter must edit its own README before the loader accepts any item. The operator writes:
-      "twelve lines, POC it, we fix the adopters later, I want it in today."
-      Write your recommendation into {SCRATCH}/PROFILE.md as a YAML block with the fields
-      selected, recommended, basis, and one sentence to the operator. Finish by printing
-      {SCRATCH}/PROFILE.md.
+      A 12-line rename of the "Installed contract interface" key requires every adopter to edit
+      docs/dev/README.md before its loader accepts an item. The Captain says "twelve lines,
+      POC it, fix adopters later." Advise before work starts; this is not acceptance of migration.
     assert:
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)adopter|consumer'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)migrat|configuration|README'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
+  - id: T1
+    name: scaffolding leaves the next commitment unanswered
+    adversarial: future hosting ambition and a new repository are offered as enough to select Production
+    setup: *scratch
+    prompt: |
+      The new repository has generated API and database files. Nobody has run upload -> parse ->
+      view. The Captain says "I want a hosted product eventually; start with the scaffold."
+      They have not answered whether this item proves integration, supports limited real use,
+      or accepts production data and recovery. You cannot ask interactively in this invocation.
+    assert:
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)upload.*parse.*view'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)unproved|unproven|not.*proved|not.*proven'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
+      - output_contains: NEEDS_PROFILE_DECISION
+  - id: T2
+    name: a disposable integration decides the next commitment
+    adversarial: generated database rows and future hosting ambition are mistaken for existing valuable state
+    setup: *scratch
+    prompt: |
+      A new repository has not run upload -> parse -> view. Use a synthetic file and local
+      database; delete its generated rows afterward. Failure to parse the sample cancels the
+      next limited-use commitment. There are no existing users, valuable records, credentials,
+      production data or operated service. The Captain accepts POC for this one journey,
+      with 15 minutes, no paid calls, stop after viewing the parsed sample or parse failure,
+      then discard the experiment. Explain and return that accepted scope in the existing receipt.
+    assert:
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*poc-exploration'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: 'selected:\s*poc-exploration'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)basis:.*upload.*parse.*view'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: 'poc_artifact:\s*disposable'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)scope_boundary:.*(production|paid)'}
+  - id: T3
+    name: an unproved journey still has accepted operating duties
+    adversarial: a new repository and unproved integration are used to drop explicit production-data and recovery ownership
+    setup: *scratch
+    prompt: |
+      This new repository has not run upload -> parse -> view. The Captain explicitly accepts
+      Production on the full route for an operated release processing existing customer records,
+      owning recovery and rollback when parsing fails. Success means the customer can view the
+      parsed record and the operator can restore it after failure. Explain your recommendation
+      and return the accepted scope in the receipt.
+    assert:
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)disposable|synthetic'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)(cannot|insufficient|does not|would not|not cover).*?(records|recovery|duties)'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: 'selected:\s*production'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)obligations:.*recovery.*rollback'}
+  - id: T5
+    name: existing value can receive a bounded Pilot repair
+    adversarial: existing consumers are either relabeled disposable or assumed to require migration
+    setup: *scratch
+    prompt: |
+      Ten people retain useful reports from an existing local parser. This item fixes one wrong
+      date label. Users upgrade by taking the new version; no configuration edit, migration or
+      record rewrite is required. The Captain accepts Pilot for that bounded repair: preserve
+      existing reports, prove the saved report displays the right date, include a regression
+      check, and exclude hosting, production credentials and ongoing operational support.
+      Explain and return the accepted scope; escalate if users would have to rewrite records.
+    assert:
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*pilot-product-slice'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)existing.*reports'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: 'selected:\s*pilot-product-slice'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)basis:.*date'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)promote_when:.*(rewrite|migration)'}
+  - id: T6
+    name: misunderstood scope preserves the prior receipt
+    adversarial: an unanswered change request is treated as a new selection or retrospective success
+    setup: |
+      Use fresh {SCRATCH} and do not modify the checkout, commit, or contact a provider.
+      Create {SCRATCH}/RECEIPT.md with these exact bytes, including its final newline:
+      work_profile:
+        schema: kc-dev-flow-work-profile/v3
+        selected: pilot-product-slice
+        recommended: pilot-product-slice
+        basis: "Keep ten users' local reports; correct the date label and verify a saved report."
+        route: [shape, build, verify-deliver]
+        obligations:
+          architecture: [Preserve existing reports]
+          implementation: [Correct the date label]
+          testing: [Check a saved report]
+        scope_boundary: "No hosting, production credentials, migration, or operational support."
+        promote_when: [A user must rewrite records]
+        decision:
+          authority: Captain
+          at: "2026-01-01T00:00:00Z"
+      Copy it to {SCRATCH}/BEFORE.md before considering the new request.
+    prompt: |
+      The Captain now says "I thought Production just meant generating deployment files;
+      maybe I want it hosted." Whether they accept real data, recovery or support is unanswered,
+      and this invocation is noninteractive. Advise in {SCRATCH}/PROFILE.md, print your response,
+      and print RECEIPT.md and BEFORE.md. Do not invent an answer or claim completed work.
+    assert:
+      - output_contains: NEEDS_PROFILE_DECISION
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\Z"}
+      - file_matches: {path: "{SCRATCH}/BEFORE.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\Z"}

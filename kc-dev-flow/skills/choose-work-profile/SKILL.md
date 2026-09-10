@@ -10,10 +10,6 @@ this skill has recommendation and question authority only.
 
 ## Resolve the choice
 
-Ask first: **Could credible negative evidence cancel or materially change the
-next commitment this item asks the Captain to accept?** Yes recommends POC. No
-compares Pilot and Production using the existing delivery-risk boundaries.
-
 Read the exact work item and its `## Work profile receipt`. A Pilot or
 Production receipt records `semantics_unchanged` at every working stage from
 `ideation` onward, not only at `ideation`, making the shape's existing
@@ -33,11 +29,25 @@ the Captain to complete the v3 POC fields without reopening the profile choice.
 Ask for a new selection only when its basis is stale or the selected profile no
 longer contains the accepted scope.
 
+Before the choice, explain the **next commitment**, **unresolved assumption**,
+**observable result**, and **included work** in task terms. Future ambition is not
+the accepted scope. Repository scaffolding means files exist; it does not prove
+the first user journey or define a fourth profile. Distinguish existing
+valuable state and consumers from disposable state an experiment may create.
+Repository age selects no profile.
+
+If credible negative evidence could change that commitment, consider a disposable
+integrated experiment. When the first journey is unproved and you recommend
+Production, offer the smallest lower-commitment alternative and name the evidence
+or accepted operational duty it cannot cover. Change the recommendation when that
+alternative suffices; explicit production-data or recovery duties can still
+require Production. Do not require a POC-to-Pilot-to-Production sequence.
+
 | Choice | Route | Use when |
 |---|---|---|
 | `POC / Exploration` (`poc-exploration`) | `build -> prove` | A disposable experiment must prove one real journey and its riskiest assumption. |
 | `Pilot / Product slice` (`pilot-product-slice`) | `shape -> build -> verify-deliver` | Limited real use creates persistent value and likely iteration. |
-| `Production` (`production`) | `shape -> build -> verify` by default; eligible recovery uses `build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
+| `Production` (`production`) | `shape -> build -> verify` by default; eligible recovery uses `build -> verify` | An operated release accepts production boundaries or long-term operational duties. |
 
 After selecting Production, ask one coupled route question only when an exact
 known failure has a concrete falsifier and rollback. The Captain may keep the
@@ -74,13 +84,13 @@ standalone Development Brief, an uncertain bug may use POC, and a scheduled
 feature or bug may carry a Planning Receipt. Choose from uncertainty and the
 accepted commitment, not the ticket label.
 
-Derive a recommendation from the task. Ask one clarifying question only when one
-missing fact — an incomplete exit bar included — could change the choice or
-leave the item unready to leave `backlog`. State the task-specific difference in architecture,
-implementation, testing, stages, and delivery. Use the host's best structured
-Ask UI when available; plain chat is the fallback. In a non-interactive worker,
-return `NEEDS_PROFILE_DECISION` and name the missing fact; never select
-automatically and never supply the missing part.
+Ask one clarifying question when a missing fact could change the choice or leave
+the item unready for `backlog` exit. Explain the task-specific architecture,
+implementation, testing, stages, and delivery. Use the host's structured
+Ask UI; plain chat is the fallback. Misunderstanding, no answer, cancellation,
+or timeout leaves scope unresolved: do not create a selected receipt or claim
+success. A non-interactive worker returns `NEEDS_PROFILE_DECISION` with the missing
+fact, without selecting or filling it in.
 
 ## Return the candidate receipt
 
@@ -89,7 +99,7 @@ work_profile:
   schema: kc-dev-flow-work-profile/v3
   selected: poc-exploration | pilot-product-slice | production
   recommended: poc-exploration | pilot-product-slice | production
-  basis: <audience, lifespan, state, mutation boundary, and commitment>
+  basis: <accepted commitment, assumption, result, audience, lifespan, and state>
   route: [<ordered logical working stages>]
   obligations:
     architecture: [<task-specific obligations>]
@@ -118,9 +128,12 @@ work_profile:
     at: <RFC3339 timestamp>
 ```
 
-The locally authorized actor re-reads the entity, records the receipt in the
-existing work item, syncs it through the existing safe transaction, and re-reads
-the committed result. Do not write a sidecar or start a working stage before
+After the Captain accepts, carry the commitment, assumption, and result into
+`basis`, included work into `obligations`, exclusions into `scope_boundary`, and
+escalation conditions into `promote_when`; add no receipt key. Preserve an existing
+receipt while scope is unresolved. The locally authorized actor re-reads the
+entity, records the accepted receipt there, syncs it through the existing safe
+transaction, and re-reads the committed result. Do not write a sidecar or start a working stage before
 that re-read. Returning a recovery item to the full route requires a new Captain
 decision unless its recorded rollback explicitly grants that exact rewrite.
 

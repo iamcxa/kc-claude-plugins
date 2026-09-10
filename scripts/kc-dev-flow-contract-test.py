@@ -909,7 +909,7 @@ for relative, phrases in {
         "POC — bounded exploration or technical proof",
     ],
     "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
-        "Could credible negative evidence cancel or materially change the next commitment",
+        "If credible negative evidence could change that commitment",
         "kc-dev-flow-work-profile/v3",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
@@ -1159,6 +1159,14 @@ for label, section in (("3.x migration", migration_3x), ("2.x migration", migrat
 
 for phrase in [
     "structured Ask UI",
+    "**next commitment**, **unresolved assumption**, **observable result**, and **included work**",
+    "Repository age selects no profile",
+    "existing valuable state and consumers from disposable state",
+    "smallest lower-commitment alternative",
+    "accepted operational duty it cannot cover",
+    "do not create a selected receipt or claim success",
+    "Preserve an existing receipt while scope is unresolved",
+    "`basis`, included work into `obligations`, exclusions into `scope_boundary`",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
 require_production_route(chooser, "`Production` (`production`)", "`shape -> build -> verify`")
