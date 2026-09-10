@@ -1,0 +1,82 @@
+[
+  {
+    "path": "kc-journey-map/lib/read.mjs",
+    "old_blob_sha256": "21c1c45167d2066d584e454e1c64196c9ac3f9694bed0195f77538405989515f",
+    "new_blob_sha256": "21c1c45167d2066d584e454e1c64196c9ac3f9694bed0195f77538405989515f",
+    "identity": "exact bytes",
+    "normalized_sha256": "1d074cf766817fa12a362dc6ab4fb0e689cadbb5a691c06bf619c4612bd8eb1c"
+  },
+  {
+    "path": "kc-journey-map/lib/progress.mjs",
+    "old_blob_sha256": "13f86de5453e7ee0da000f64a8c2bf2fc873c01b8314d7521203a81b1affb3ef",
+    "new_blob_sha256": "13f86de5453e7ee0da000f64a8c2bf2fc873c01b8314d7521203a81b1affb3ef",
+    "identity": "exact bytes",
+    "normalized_sha256": "4faf63e9df6a9ffaca614960bd500857930712d89b770890be44aa4aaa0e1b2e"
+  },
+  {
+    "path": "kc-journey-map/lib/journey-progress.mjs",
+    "old_blob_sha256": "0ee50a912cfc61b47c1435a68be0f659feff249a079ba7b7def3830268cd7506",
+    "new_blob_sha256": "0ee50a912cfc61b47c1435a68be0f659feff249a079ba7b7def3830268cd7506",
+    "identity": "exact bytes",
+    "normalized_sha256": "5bccdf95113a551644157f229b12863d4ff1e788f40aabdc0201a2ac27b32e05"
+  },
+  {
+    "path": "kc-journey-map/server/rooms.ts",
+    "old_blob_sha256": "80e53acaad8dc64bf33538c0b44604c9cdd0c7baa778905adfbdbf2d272c42c0",
+    "new_blob_sha256": "43955134ae11f477445409042d297bda27018cd6b431571ed97955913c148e59",
+    "identity": "exact nonblank lines after removing whole-line // comments",
+    "normalized_sha256": "7a2094730baaede11475ffa4f916a41e64939838d698b3d2e8b673e9956c088d"
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "old_blob_sha256": "2dd7d85867fd65d7770c7f57fe1d81de65f00532f9e9e0ba9135a4ea0b7f5652",
+    "new_blob_sha256": "1fc65b615c28547055d12e6cc2f8be95980a99ad504b517ef1796d74d3840b53",
+    "identity": "exact nonblank lines after removing whole-line // comments",
+    "normalized_sha256": "ad2730bf852e8533b51aa2733e8fb8685a271e3cae9d6f35be46c87f3f664de7"
+  },
+  {
+    "path": "kc-journey-map/lib/lint.mjs",
+    "old_blob_sha256": "0f4878b12e16b7ddeebad5509fafae71b1ed6ea88fc170f41f3fc12f3abf1c2c",
+    "new_blob_sha256": "9f513ec570d80a3a8791a2eeb610be52e4d3f6cdcf52c39ae227271ec14bc3f7",
+    "identity": "exact nonblank lines after removing whole-line // comments",
+    "normalized_sha256": "50f21608670914d4bf130023cae6c1d9fac70b86e1c915226eeae91f4c640c84"
+  },
+  {
+    "path": "kc-journey-map/lib/render.mjs",
+    "old_blob_sha256": "14589d020a4f44cdbd9cf6cd99598837924745045d92ee4812d62254315b5b35",
+    "new_blob_sha256": "54c15441c945fea93d7407f088f9ad8f39c371e46eff5e2404acb08e60bf593a",
+    "identity": "exact nonblank lines after removing whole-line // comments",
+    "normalized_sha256": "8573cbaab918cc501abbfcfdad1e38ff09cd4ac367c9905bb3dab0014d7c5e0c"
+  },
+  {
+    "path": "kc-journey-map/server/client/App.tsx",
+    "old_blob_sha256": "ef42a7b1e09d7569bede4bc3b49ada2fa324bf84997d8254c5f5ac4dd68c7671",
+    "new_blob_sha256": "ef42a7b1e09d7569bede4bc3b49ada2fa324bf84997d8254c5f5ac4dd68c7671",
+    "identity": "exact bytes",
+    "normalized_sha256": "b0849defc85c9292f1065ac8e43cc7c1057f9e4329b2c8800eb89a62167ebe06"
+  },
+  {
+    "path": "kc-journey-map/lib/journey-tldr.mjs",
+    "old_blob_sha256": "baae89755230d96b89280ce9797d625701aecbaa86fba7bf059d15318c9ef893",
+    "new_blob_sha256": "baae89755230d96b89280ce9797d625701aecbaa86fba7bf059d15318c9ef893",
+    "identity": "exact bytes",
+    "normalized_sha256": "a7783497645d3064e306f7b2fec912a571a14884879b732cb7f648f3591db5f3"
+  },
+  {
+    "path": "kc-journey-map/lib/journey-export.mjs",
+    "old_blob_sha256": "5571638eabf9af479b5b29ef56cdb540c36fbe5e59a4312d92094974110d20a1",
+    "new_blob_sha256": "5571638eabf9af479b5b29ef56cdb540c36fbe5e59a4312d92094974110d20a1",
+    "identity": "exact bytes",
+    "normalized_sha256": "4df3e84533b92bcd03f56fc0a1d5112c63f804abcbcbbdd692512aeaa7fe682c"
+  },
+  {
+    "path": "kc-journey-map/lib/records.mjs",
+    "identity": "exact after approved frame/CORS removal and whole-line comment removal",
+    "normalized_sha256": "9f476320de55712946f5a7d162808abe028b3ddad37a9d9b8c79be00bd8bcc0b"
+  },
+  {
+    "path": "kc-journey-map/server/canvas-server.ts",
+    "identity": "exact after approved frame/CORS removal and whole-line comment removal",
+    "normalized_sha256": "ae4dc24377a0d889d8d64dd1688f867192528035c397a52745f63235a364730f"
+  }
+]

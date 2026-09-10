@@ -1,0 +1,15 @@
+{
+  "variant": "unit-2",
+  "mode": "schema",
+  "kind": "mutation",
+  "checks": [
+    {
+      "claim": "reject malformed native shape before persistence",
+      "passed": true,
+      "atomic": true,
+      "http_status": 400,
+      "response": "{\"error\":\"validation failed\",\"errors\":[\"record shape:malformed failed validation: At shape(type = note).props.color: Expected \\\"black\\\" or \\\"grey\\\" or \\\"light-violet\\\" or \\\"violet\\\" or \\\"blue\\\" or \\\"light-blue\\\" or \\\"yellow\\\" or \\\"orange\\\" or \\\"green\\\" or \\\"light-green\\\" or \\\"light-red\\\" or \\\"red\\\" or \\\"white\\\", got INVALID\"]}"
+    }
+  ],
+  "owned_server_stopped": true
+}

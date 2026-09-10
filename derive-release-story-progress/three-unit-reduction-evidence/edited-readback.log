@@ -1,0 +1,20 @@
+{
+  "reordered": null,
+  "reorderConflict": null,
+  "reworded": [
+    {
+      "id": "ask-which-boards-to-draw",
+      "field": "story",
+      "page": "storymap",
+      "step": "render",
+      "was": "Ask which boards to draw, through the host's selection UI",
+      "now": "Native browser edit"
+    }
+  ],
+  "rewordConflict": [],
+  "releaseMoved": [],
+  "storiesReordered": [],
+  "duplicated": [],
+  "unclaimed": [],
+  "missing": []
+}

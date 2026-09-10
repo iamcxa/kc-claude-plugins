@@ -1,0 +1,17 @@
+✔ this skill's own journey file passes every lint (1924.864ms)
+✔ every story in the migrated file carries a status (7.347083ms)
+✔ a release contract generates for every release the migrated file declares (4.724542ms)
+✔ worked host selection stays unverified across projections and contract (7.313542ms)
+✔ real archived reader distinguishes task/story ratios, full identities, and reopening (1578.488875ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (1599.676833ms)
+✔ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (454.32975ms)
+✔ derived projections use three borders without entering story wording or source readback (96.8395ms)
+✔ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (1368.31675ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5213.350333

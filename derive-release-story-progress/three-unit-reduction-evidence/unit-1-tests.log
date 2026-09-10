@@ -1,0 +1,25 @@
+✔ a freshly rendered board reports no drift (2.912667ms)
+✔ rewording an activity on the story map is seen (0.564292ms)
+✔ dragging a story up inside its band is a priority change (0.430333ms)
+✔ dragging a story across a release line is read as a release change (1.127708ms)
+✔ a release change is written into the file (9.177375ms)
+✔ a hand-added card is placed under the column it sits beneath (0.509959ms)
+✔ a card straddling two columns is reported, never guessed (0.381291ms)
+✔ a story dragged up is reordered in the file (2.928375ms)
+✔ a reworded story is rewritten in the file (3.115166ms)
+✔ a story written in object form is reworded too (2.10625ms)
+✔ the story map draws every element the method calls for (2.150875ms)
+✔ a story is drawn in its own release band, not its declaring order (0.454667ms)
+✔ a release line spans every activity, not a range of them (0.335084ms)
+✔ a story with no release is drawn in an UNASSIGNED band, never dropped (0.357417ms)
+✔ bands do not overlap (0.364834ms)
+✔ no shape carries a note fontSizeAdjustment of 0 (0.298416ms)
+✔ a map past the 61st shape still gets valid ordered unique indexes (12.819083ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 244.095959

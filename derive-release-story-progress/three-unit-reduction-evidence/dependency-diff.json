@@ -1,0 +1,17 @@
+{
+  "removed_direct": [
+    "@fastify/cors",
+    "typescript"
+  ],
+  "removed_package_nodes": [
+    "node_modules/@fastify/cors",
+    "node_modules/fastify-plugin",
+    "node_modules/mnemonist",
+    "node_modules/obliterator",
+    "node_modules/typescript"
+  ],
+  "removed_package_node_count": 5,
+  "added_nodes": [],
+  "changed_retained_nodes": [],
+  "react_plugin_preserved": true
+}

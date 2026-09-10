@@ -1,0 +1,212 @@
+[
+  {
+    "path": ".claude-plugin/marketplace.json",
+    "added": 4,
+    "deleted": 2,
+    "generated": false
+  },
+  {
+    "path": "docs/dev/ROADMAP.md",
+    "added": 15,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/.claude-plugin/plugin.json",
+    "added": 6,
+    "deleted": 2,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/.codex-plugin/plugin.json",
+    "added": 10,
+    "deleted": 5,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/doctor.mjs",
+    "added": 1,
+    "deleted": 1,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/fixture.mjs",
+    "added": 18,
+    "deleted": 6,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/funcmap.mjs",
+    "added": 95,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/funcmap.test.mjs",
+    "added": 56,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/journey-contract.mjs",
+    "added": 24,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/journey-example.test.mjs",
+    "added": 60,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/journey-lint.mjs",
+    "added": 28,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/journey-render.mjs",
+    "added": 19,
+    "deleted": 9,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/journey-tldr.mjs",
+    "added": 5,
+    "deleted": 1,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/lint.mjs",
+    "added": 67,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/lint.test.mjs",
+    "added": 147,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/model.mjs",
+    "added": 24,
+    "deleted": 4,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/read.mjs",
+    "added": 94,
+    "deleted": 22,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/read.test.mjs",
+    "added": 205,
+    "deleted": 3,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/records.mjs",
+    "added": 47,
+    "deleted": 2,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/release-contract.mjs",
+    "added": 38,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/release-contract.test.mjs",
+    "added": 47,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/render.mjs",
+    "added": 159,
+    "deleted": 4,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/render.test.mjs",
+    "added": 93,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "added": 32,
+    "deleted": 6,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.test.mjs",
+    "added": 26,
+    "deleted": 5,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/scripts/canvas-smoke.sh",
+    "added": 17,
+    "deleted": 9,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/server/client/App.tsx",
+    "added": 24,
+    "deleted": 2,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/server/rooms.ts",
+    "added": 2,
+    "deleted": 1,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+    "added": 134,
+    "deleted": 16,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+    "added": 242,
+    "deleted": 18,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+    "added": 122,
+    "deleted": 24,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/example/README.md",
+    "added": 46,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/example/draw-a-journey.tldr",
+    "added": 1,
+    "deleted": 0,
+    "generated": true
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml",
+    "added": 214,
+    "deleted": 18,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/map-from-conversation.md",
+    "added": 72,
+    "deleted": 0,
+    "generated": false
+  }
+]

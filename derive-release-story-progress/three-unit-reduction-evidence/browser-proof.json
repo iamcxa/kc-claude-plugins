@@ -1,0 +1,27 @@
+{
+  "pages": [
+    {
+      "id": "page:page",
+      "name": "Story map"
+    },
+    {
+      "id": "page:jm-funcmap",
+      "name": "Function map"
+    },
+    {
+      "id": "page:jm-board-r1",
+      "name": "RELEASE 1 \u2014 stories, flow & constraints"
+    },
+    {
+      "id": "page:jm-board-r2",
+      "name": "RELEASE 2 \u2014 stories, flow & constraints"
+    },
+    {
+      "id": "page:jm-board-r3",
+      "name": "RELEASE 3 \u2014 stories, flow & constraints"
+    }
+  ],
+  "shapes": 258,
+  "origin": "http://127.0.0.1:52248",
+  "refresh": true
+}

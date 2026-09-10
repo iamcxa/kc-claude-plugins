@@ -1,0 +1,12 @@
+{
+  "variant": "unit-2",
+  "mode": "persistence",
+  "kind": "mutation",
+  "checks": [
+    {
+      "claim": "native hand-authored note survives server restart",
+      "passed": true
+    }
+  ],
+  "owned_server_stopped": true
+}

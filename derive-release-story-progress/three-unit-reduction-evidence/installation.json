@@ -1,0 +1,13 @@
+{
+  "command": "npm ci --prefix /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-1/kc-journey-map",
+  "tool_session": 77674,
+  "exit": 0,
+  "installed_packages": 262,
+  "audited_packages": 263,
+  "vulnerabilities": 0,
+  "installation": "fresh private unit-1 node_modules; unit 2/3 reference same dependency bytes; not part of any candidate tree",
+  "warnings": [
+    "deprecated lodash.isequal@4.5.0",
+    "existing npm user configuration minimum-release-age unrecognized"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "base": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+  "units": [
+    {
+      "unit": 1,
+      "subject": "feat(journey-map): add editable native planning canvas",
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-1",
+      "source_tree": "9702db9d0b908b03d44e92dcc87ec20a16a61731",
+      "parent_tree_or_commit": "c9c5752fda853737d4a937ad7f59564c5651ca53",
+      "tree": "063df758d06b2b2170a3378cdff01c4195fbc2b0",
+      "patch_sha256": "1a0dfbb705458e28797b42aa407fe94274518538fdc65f5dcb42923525f77131",
+      "files": 42,
+      "added": 6996,
+      "deleted": 311,
+      "generated_added": 5245,
+      "generated_deleted": 0
+    },
+    {
+      "unit": 2,
+      "subject": "feat(journey-map): add release evidence details and status borders",
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-2",
+      "source_tree": "6b4d5e8a747d9d13a4c8d2a832e0b9395b04beff",
+      "parent_tree_or_commit": "063df758d06b2b2170a3378cdff01c4195fbc2b0",
+      "tree": "a117b410f9b7dde03ee081f5545b4d9755d77e7b",
+      "patch_sha256": "ce2f6420eadca4f8c59afa624023edd34396055cc693e3c2baafdd872617ac13",
+      "files": 35,
+      "added": 2194,
+      "deleted": 160,
+      "generated_added": 1,
+      "generated_deleted": 0
+    },
+    {
+      "unit": 3,
+      "subject": "feat(journey-map): derive optional local task progress",
+      "snapshot": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3",
+      "source_tree": "cefe085d5d9b12b5679421b5607c808d6989a1b7",
+      "parent_tree_or_commit": "a117b410f9b7dde03ee081f5545b4d9755d77e7b",
+      "tree": "b52f204f4c6a2b6ec09f2657adcca272e97dc1a0",
+      "patch_sha256": "33be3cb23e8ed75dd68f5ba6ba300e1e12ada38dbcaaf5ff83a4d6ddc27c67af",
+      "files": 10,
+      "added": 427,
+      "deleted": 27,
+      "generated_added": 0,
+      "generated_deleted": 0
+    }
+  ]
+}

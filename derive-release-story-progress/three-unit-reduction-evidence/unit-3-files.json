@@ -1,0 +1,62 @@
+[
+  {
+    "path": "kc-journey-map/lib/journey-progress.mjs",
+    "added": 28,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/progress.mjs",
+    "added": 97,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/progress.test.mjs",
+    "added": 174,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/records.mjs",
+    "added": 23,
+    "deleted": 5,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/render.mjs",
+    "added": 17,
+    "deleted": 13,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "added": 6,
+    "deleted": 8,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/SKILL.md",
+    "added": 4,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+    "added": 10,
+    "deleted": 1,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-map/references/cell-contract.md",
+    "added": 10,
+    "deleted": 0,
+    "generated": false
+  },
+  {
+    "path": "kc-journey-map/skills/kc-journey-progress/SKILL.md",
+    "added": 58,
+    "deleted": 0,
+    "generated": false
+  }
+]

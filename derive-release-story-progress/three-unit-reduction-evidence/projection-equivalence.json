@@ -1,0 +1,165 @@
+{
+  "normalization": "rank per parent replaces random fractional index suffix; all other record fields exact",
+  "cases": [
+    {
+      "unit": 1,
+      "name": "fixture",
+      "selection": [
+        "story-map"
+      ],
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "fixture",
+      "selection": [
+        "story-map"
+      ],
+      "records": 33,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "fixture",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 57,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "fixture",
+      "selection": [
+        "function-map"
+      ],
+      "records": 18,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "fixture",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 108,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "updated-example",
+      "selection": [
+        "story-map"
+      ],
+      "records": 77,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "updated-example",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 141,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "updated-example",
+      "selection": [
+        "function-map"
+      ],
+      "records": 45,
+      "equal": true
+    },
+    {
+      "unit": 2,
+      "name": "updated-example",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 263,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "fixture",
+      "selection": [
+        "story-map"
+      ],
+      "records": 33,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "fixture",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 57,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "fixture",
+      "selection": [
+        "function-map"
+      ],
+      "records": 18,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "fixture",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 108,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "updated-example",
+      "selection": [
+        "story-map"
+      ],
+      "records": 77,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "updated-example",
+      "selection": [
+        "journey-board"
+      ],
+      "records": 141,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "updated-example",
+      "selection": [
+        "function-map"
+      ],
+      "records": 45,
+      "equal": true
+    },
+    {
+      "unit": 3,
+      "name": "updated-example",
+      "selection": [
+        "story-map",
+        "journey-board",
+        "function-map"
+      ],
+      "records": 263,
+      "equal": true
+    }
+  ]
+}
