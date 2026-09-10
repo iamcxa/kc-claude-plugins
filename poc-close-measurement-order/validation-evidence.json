@@ -1,0 +1,638 @@
+{
+  "result": "PASS",
+  "fixture_root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc",
+  "synthetic_only": true,
+  "additional_claim": "publication interruption after final-body commit resumes without approval/cloud rerun; complete fixture byte hash unchanged by final checker",
+  "approval_records": 1,
+  "cloud_runs": 0,
+  "frozen_briefing_sha256": "aa951441ce5bbb694c7e85b588ec5121ca0b528856e62a8087472db6d1b0ab54",
+  "archived_frontmatter_sha256": "fcf50fa065988810284f04ce0ee506a832f53b080acd2021ec44482e8353c759",
+  "published_final_head": "893f6dc8985b74c726cad4e51e9143d701155ec2",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "init",
+        "-qb",
+        "main"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "config",
+        "user.name",
+        "Independent synthetic validation"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "config",
+        "user.email",
+        "validation@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "add",
+        ".gitignore",
+        "docs/dev/README.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "commit",
+        "-qm",
+        "synthetic workflow"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "init",
+        "--bare",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git"
+      ],
+      "rc": 0,
+      "stdout": "Initialized empty Git repository in /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "remote",
+        "add",
+        "origin",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "push",
+        "-u",
+        "origin",
+        "main"
+      ],
+      "rc": 0,
+      "stdout": "branch 'main' set up to track 'origin/main'.\n",
+      "stderr": "To /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git\n * [new branch]      main -> main\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo",
+        "worktree",
+        "add",
+        "--detach",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "HEAD is now at 7b3b2fc synthetic workflow\n",
+      "stderr": "Preparing worktree (detached HEAD 7b3b2fc)\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "switch",
+        "--orphan",
+        "spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Previous HEAD position was 7b3b2fc synthetic workflow\nSwitched to a new branch 'spacedock-state/dev'\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "add",
+        ".keep"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "commit",
+        "-qm",
+        "synthetic state"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "push",
+        "-u",
+        "origin",
+        "spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "branch 'spacedock-state/dev' set up to track 'origin/spacedock-state/dev'.\n",
+      "stderr": "To /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git\n * [new branch]      spacedock-state/dev -> spacedock-state/dev\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "new",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "created: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md id=xbdq5mvr4dev1300he9nr82r\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--resolve",
+        "probe",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"resolve\",\"workflow\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state\",\"scope\":\"active\",\"slug\":\"probe\",\"id\":\"xb\",\"stored_id\":\"xbdq5mvr4dev1300he9nr82r\",\"path\":\"/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed and pushed probe to spacedock-state/dev.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "review"
+      ],
+      "rc": 0,
+      "stdout": "{\n  \"work_item\": \"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md\",\n  \"id\": \"xbdq5mvr4dev1300he9nr82r\",\n  \"proof_path\": \"direct\",\n  \"proof_stage\": \"implementation\",\n  \"direction\": \"change\",\n  \"checklist\": [\n    {\n      \"status\": \"DONE\",\n      \"text\": \"Local synthetic observation.\",\n      \"start\": \"53\",\n      \"end\": \"54\"\n    }\n  ],\n  \"acceptance_criteria\": {\n    \"declared\": false,\n    \"acs\": []\n  },\n  \"poc_outcome\": \"poc_outcome:\\n  direction: change\\n  admitted_at: 2026-08-30T00:00:00Z\\n  decision_ready_at: 2026-08-30T00:15:00Z\\n  decision_ready_elapsed_seconds: 900\\n  captain_interventions_before_decision_ready: 0\\n  evidence: exact read-only probe at revision abc123\\n  strongest_limit: One provider was not evaluated\\n  reversal_fact: A real run loses the accepted state\\n  cleanup_status_at_decision: complete\\n\",\n  \"poc_close_measurement\": \"poc_close_measurement:\\n  captain_wait_seconds: pending\\n  terminal_cleanup_seconds: pending\\n  cleanup_status: pending\\n\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "prepare",
+        "--question",
+        "Synthetic recovery only?",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--summary",
+        "Independent local fixture"
+      ],
+      "rc": 0,
+      "stdout": "room=/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe/review/validation/briefing-1\nbriefing=briefing:xbdq5mvr4dev1300he9nr82r:validation:attempt-1:revision-1\ndigest=sha256:7a5c6f4008e4d02903652e3192661a3ab27edb79379266dadaf2146c5fc13c3e\nstate=open\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "consume"
+      ],
+      "rc": 1,
+      "stdout": "gate=gate:xbdq5mvr4dev1300he9nr82r:validation attempt=gate-attempt:xbdq5mvr4dev1300he9nr82r-validation-1 application=/ condition=ineligible eligible=false consumed=false target-stage=\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "record",
+        "probe",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC TEST ONLY, no Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:xbdq5mvr4dev1300he9nr82r:validation attempt=gate-attempt:xbdq5mvr4dev1300he9nr82r-validation-1 state=closed briefing=briefing:xbdq5mvr4dev1300he9nr82r:validation:attempt-1:revision-1 resolution=resolution:spacedock:xbdq5mvr4dev1300he9nr82r:validation:1 decision=approve\nsync=pushed phase=record\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "consume"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: bound canonical Briefing bytes do not match the frozen digest\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Committed and pushed probe to spacedock-state/dev.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "consume"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:xbdq5mvr4dev1300he9nr82r:validation attempt=gate-attempt:xbdq5mvr4dev1300he9nr82r-validation-1 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "merge",
+        "guard",
+        "probe",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"probe\",\"signal\":\"finalized\",\"status\":\"done\",\"verdict\":\"passed\",\"result\":\"pushed\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=pending; terminal_cleanup_seconds=pending\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=failed; terminal_cleanup_seconds=pending\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "spacedock state commit: archived entity \"probe\" is dirty; archived scope is publish-only and will not stage or commit it:\nM _archive/probe.md\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "add",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "commit",
+        "-qm",
+        "synthetic final measurements",
+        "--",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "893f6dc8985b74c726cad4e51e9143d701155ec2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "--git-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git",
+        "rev-parse",
+        "refs/heads/spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "b0b7dd2748715d08ec8b154b0f93cfbc26a8b1a9\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "spacedock state commit: state publication failed; the existing archive commit remains recoverable:\nremote: synthetic publication interruption        \nTo /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git\n ! [remote rejected] HEAD -> spacedock-state/dev (pre-receive hook declined)\nerror: failed to push some refs to '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git'\n\n"
+    },
+    {
+      "argv": [
+        "git",
+        "--git-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git",
+        "rev-parse",
+        "refs/heads/spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "b0b7dd2748715d08ec8b154b0f93cfbc26a8b1a9\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 0,
+      "stdout": "Published existing archived state for probe to spacedock-state/dev.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "--git-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git",
+        "rev-parse",
+        "refs/heads/spacedock-state/dev"
+      ],
+      "rc": 0,
+      "stdout": "893f6dc8985b74c726cad4e51e9143d701155ec2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 0,
+      "stdout": "{\"id\": \"xbdq5mvr4dev1300he9nr82r\", \"direction\": \"change\", \"close_complete\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--branch",
+        "spacedock-state/dev",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/remote.git",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/reader"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/reader'...\ndone.\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/reader/_archive/probe.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 0,
+      "stdout": "{\"id\": \"xbdq5mvr4dev1300he9nr82r\", \"direction\": \"change\", \"close_complete\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: Error: unknown reference: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev/.spacedock-state/_archive/probe.md\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/adversarial.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC direct close path requires work item status done\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/adversarial.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=failed\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/adversarial.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: POC close incomplete: cleanup_status=complete; captain_wait_seconds=pending\n"
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order/kc-dev-flow/scripts/poc-close-guard.py",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/repo/docs/dev",
+        "--work-item",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/poc-independent-recovery-bw26z1nc/adversarial.md",
+        "--spacedock-bin",
+        "/Users/kent/.local/bin/spacedock",
+        "check-final"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "POC close guard: terminal_cleanup_seconds must be a non-negative integer\n"
+    }
+  ],
+  "patch_sha256": "8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18",
+  "file_sha256": {
+    "kc-dev-flow/references/profiles/poc-exploration/build.md": "736ea46354d5813d98cd9c5a35e7c3ae716df95f2e1efd48de615589edffe15e",
+    "kc-dev-flow/references/profiles/poc-exploration/prove.md": "c2a996268d2e35f8386de1244ec073fdbaadc3908d488dab93a9b0fbda01cbab",
+    "kc-dev-flow/scripts/poc-close-guard.py": "56606dfcd8b1d475df71a8e264e4b155a225f4c2dc45d8b4263b76d6c84b5a8b",
+    "kc-dev-flow/scripts/poc-close-guard.test.py": "a8d4e5fdaf7240d059098a0d19440baff001d5962625effb859b90505bfa74f2",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": "5db194ead89a44abc234ed261f5af8bb367eece385698ca91a17330629a94f83"
+  },
+  "product_head": "c2c62bf9dff5c3af1e27eb643a15eadf9023485f",
+  "terminal_application": "native merge guard changed pending to consumed; archived task rejects repeat reference",
+  "stage_pin": "validation/1",
+  "contract_digest": "8cd3a8c40ab258ebb2541b9b0346e56686f9d90d9e400ef4e575526fc0e3df5e",
+  "original_source_sha256": "7d918157b36f8ee0b3fa087ffb1671c969cc8bafcaabea5fe38e4828e616900d"
+}

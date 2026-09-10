@@ -216,3 +216,41 @@ Implemented the approved five-file shape without migration, new approval/state a
 - File SHA-256 kc-dev-flow/skills/continue-dev-flow/SKILL.md: 5db194ead89a44abc234ed261f5af8bb367eece385698ca91a17330629a94f83.
 
 State-only report/evidence commit through registered native state commit is authorized; product patch remains uncommitted for independent verification and Kent confirmation. No CI changes; measured cost per PR is unavailable/not applicable.
+
+
+## Stage Report: validation
+
+- DONE: Independently attack the exact patch against AC-1 through AC-5: manual approval/freshness, final truthful measurements, read-only completeness, compatibility, interruption recovery and original blocked snapshot.
+  PASSED for the uncommitted patch below. Independent native refusal cases and publication-interruption recovery pass; producer snapshot/regression evidence supplies AC-4/AC-5 without claiming independent cloud verification.
+- DONE: Verify producer-owned native proof and required regression results; run only missing or newly justified adversarial cases, and inspect instruction claims and minimal necessity against the exact five-file diff.
+  Inspected required four-suite exit-0 evidence, native fixture assertions and original-failure reproducer; added only the missing actual publication failure/retry and full-fixture byte-preservation checks in validation-probe.py.
+- DONE: Record PASSED or REJECTED with precise findings, patch hashes, AC evidence and delivery limitations; leave product files unchanged and uncommitted.
+  PASSED; no material findings. Product branch remains spacedock-ensign/poc-close-measurement-order at c2c62bf9dff5c3af1e27eb643a15eadf9023485f with empty index and the same five modified files.
+- SKIPPED: Repeat already-green suites, optional provider review, product delivery and original experiment close.
+  No new falsifier justified full-suite repetition; optional RoboRev remains UNAVAILABLE, no provider request. Product commit requires Kent's exact-file approval; no PR, merge, install, cloud rerun or real POC outcome approval is implied.
+
+### Summary
+
+The exact candidate satisfies the bounded close-order repair: pending observations survive the manual gate, native terminalization consumes the approval, and final reporting refuses incomplete cleanup. The independent additional falsifier rejected a real local-remote publication attempt after the final archived-body commit; retry then published those same bytes without another approval, and a fresh clone passed the read-only final check. Goal sufficiency is established for this repair, not delivery or acceptance of the original cloud experiment.
+
+### Evidence
+
+- AC-1/AC-2: pending direct review/prepare passed; prepare reported open; unapproved consume exited 1 with unchanged task bytes; canonical Briefing tamper exited 1 on frozen-digest mismatch. Producer pending fresh-route proof and malformed/missing/duplicate controls were inspected, not rerun.
+- AC-3: source measurement commit preserved the frozen Briefing; consume returned approved-awaiting-merge with consumed=false; native merge guard recorded done, PASSED and application consumed. Historical archived frontmatter and Briefing bytes survived final observation commit/publication; repeated archived consumption refused (native archive resolution, not a new guard-owned authority).
+- AC-3 recovery refusal control: local bare-remote pre-receive rejection made native state commit exit 1 and retain recoverable local commit 893f6dc8985b74c726cad4e51e9143d701155ec2; removing the synthetic interruption and retrying published that exact commit. A second clone received identical archive bytes; only one synthetic gate record, zero cloud runs.
+- AC-3 final truth/read-only control: nonterminal, pending, failed and negative-duration cases exited 2; completed terminal record exited 0. SHA-256 maps of every fixture file, including Git/state/remote files, stayed identical before/after each final-check call; returning success for a refusal case or writing any fixture byte fails the probe.
+- AC-4: implementation-checks.json records exit 0 for poc-close-guard.test.py, profile-contract-loader.test.py, profile-spacedock-route.test.py and scripts/kc-dev-flow-contract-test.py. Inspected completed/not-applicable, proceed/stop/change, direct/fresh selected reports and malformed/uncovered/unknown-criterion assertions; no migration, schema, manifest or version edit.
+- AC-5: inspected implementation-probe.py and native command evidence: full blocked snapshot retains source body/evidence with test-only native bindings removed and pending YAML supplied; baseline refuses non-integer wait, candidate completes synthetic lifecycle. Rehashed untouched original source as 7d918157b36f8ee0b3fa087ffb1671c969cc8bafcaabea5fe38e4828e616900d; original remains implementation. Original three cloud cases remain owner-reported.
+- Reproduce independent gap: rtk proxy python3 /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/poc-close-measurement-order/validation-probe.py /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-poc-close-measurement-order /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/docs/dev/.spacedock-state/poc-close-measurement-order/validation-evidence.json ; exact subprocess arguments/results are retained in validation-evidence.json.
+- Contract: installed 4.3.0 profile-contract-loader.py --work-item <task>/index.md --local-profile <workflow>/README.md --stage-pin <task>/validation-stage-pin.json --stage-attempt validation/1 --format json exited 0, digest 8cd3a8c40ab258ebb2541b9b0346e56686f9d90d9e400ef4e575526fc0e3df5e; committed pin bytes unchanged, no repin.
+- Retained-document policy: three existing instruction files repaired in place (Rule 8), no addition/deletion or diagram. Native prepare/consume/check-final and actual failed/resumed state publication exercise the changed claims; retaining pre-change eager measurements makes the original accepted journey fail. Tests map falsifiers; each instruction file supplies its direct/fresh or reporting-owner obligation. Condensation preserves authority/observation boundaries; no unmapped retained surface found.
+- project_context: impact none; authority PRODUCT.md, ARCHITECTURE.md, CLAUDE.md; claim_locator ARCHITECTURE.md v3 outcome/direct terminal gate and PRODUCT.md profile-native authority; stale_claim/approved_change/landed_change none. validation_evidence: fresh native pending/open/consumed/archive behavior, refusal controls and read-only check preserve named owner/gate boundaries; exact diff adds no downstream work or profile/delivery authority, so accepted classification remains valid.
+- Scope/budget: five files, +198/-48 = 246 changed lines (limit 360); guard +26/-6 = 32 (limit 110). Inspected unchanged static-budget accounting and exact producer result 39979/40000 BYTES; no ceiling expansion. git diff --check passes. No CI change; cost per PR not measured/not applicable.
+- Patch SHA-256: 8269d36074756c06edfd66a60b4569342692f0e6886a64c6db930100b0bdfc18 (git diff bytes, not unchanged HEAD).
+- File SHA-256 kc-dev-flow/references/profiles/poc-exploration/build.md: 736ea46354d5813d98cd9c5a35e7c3ae716df95f2e1efd48de615589edffe15e.
+- File SHA-256 kc-dev-flow/references/profiles/poc-exploration/prove.md: c2a996268d2e35f8386de1244ec073fdbaadc3908d488dab93a9b0fbda01cbab.
+- File SHA-256 kc-dev-flow/scripts/poc-close-guard.py: 56606dfcd8b1d475df71a8e264e4b155a225f4c2dc45d8b4263b76d6c84b5a8b.
+- File SHA-256 kc-dev-flow/scripts/poc-close-guard.test.py: a8d4e5fdaf7240d059098a0d19440baff001d5962625effb859b90505bfa74f2.
+- File SHA-256 kc-dev-flow/skills/continue-dev-flow/SKILL.md: 5db194ead89a44abc234ed261f5af8bb367eece385698ca91a17330629a94f83.
+
+Checklist total: 4 items (3 DONE, 1 SKIPPED, 0 FAILED). Product changes remain uncommitted; state report publication is separate from product delivery or original experiment acceptance.
