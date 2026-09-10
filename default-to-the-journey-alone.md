@@ -1,7 +1,7 @@
 ---
 id: g87dzxbq3j3rdwzneqr4g5nt
 title: Ask which boards to draw, and default to the user journey alone
-status: backlog
+status: ideation
 source: captain
 product: kc-team-ops
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain: 同意 — approving the two-part split he proposed, of which this is part one: keep the skeleton able to draw all three originally-defined boards, ask through a multi-select, and default to the user journey alone. Integration is explicitly part two and excluded here.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
