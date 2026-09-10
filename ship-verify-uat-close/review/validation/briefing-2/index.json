@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-2:revision-1",
+  "question": "Correction round 1 delivered and independently re-reviewed. AC-1/2/3 reproduced twice, AC-4 correctly deferred pending the sibling dispatch/watch task, PR #411 body matches the pr-merge.md template. Approve for merge, or hold/revise further?",
+  "artifacts": [
+    {
+      "id": "artifact:7efj5b0dh4dh7616yma4nykm:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/817384691a8602b2f4e2e598c378a84c527e5066/ship-verify-uat-close/review/validation-2/validation-review.md",
+      "rev": "sha256:0e7b23d561697314bc3de994e47e05895976aa00ae9f2778e442381617807c06",
+      "mediaType": "text/markdown",
+      "summary": "Round 1 fixed: main merged (#406), fence-shape corrected to dispatch.sh's real output, v2 schema shipped as a file, PR #411 body rewritten to template. Round-2 independent review reproduced AC-1/2/3 and confirmed all four fixes; AC-4 and v1-schema-deletion remain correctly out of scope."
+    }
+  ]
+}

@@ -56,6 +56,11 @@ gates:
                 conn:
                     quote: '批 (2026-09-10, answering the First Officer: "#410/#411 各一輪 feedback ... 合了我就對兩個雲端 workspace 各送一則 feedback")'
                     source: Captain chat reply 2026-09-10 to the three-gate table
+            - id: gate-attempt:7efj5b0dh4dh7616yma4nykm-validation-2
+              briefing:
+                id: briefing:7efj5b0dh4dh7616yma4nykm:validation:attempt-2:revision-1
+                digest: sha256:e28fcb6fff59b9600ff83fe77a9d14476e94aa85030a0b62be5653048df03f80
+                room-ref: ./review/validation/briefing-2
 review-round:
     id: round:7efj5b0dh4dh7616yma4nykm:validation:1
     stage: validation
