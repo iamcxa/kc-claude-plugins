@@ -1,0 +1,205 @@
+{
+  "synthetic_only": true,
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9",
+  "binary": "/Users/kent/.local/bin/spacedock",
+  "binary_sha256": "86974bf3eb974087bf47ab2fee5a5a026405651744ccf1a34a8525891be8050a",
+  "results": [
+    {
+      "label": "git-setup",
+      "argv": [
+        "git",
+        "init",
+        "-qb",
+        "main"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-setup",
+      "argv": [
+        "git",
+        "config",
+        "user.name",
+        "Synthetic fixture"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-setup",
+      "argv": [
+        "git",
+        "config",
+        "user.email",
+        "fixture@example.invalid"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-setup",
+      "argv": [
+        "git",
+        "add",
+        "README.md",
+        "_mods/pr-merge.md"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "git-setup",
+      "argv": [
+        "git",
+        "commit",
+        "-qm",
+        "synthetic fixture"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "new",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "new",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "created: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9/probe.md id=t63x8s1ny1k7xbmc6x1csjcv\n",
+      "stderr": ""
+    },
+    {
+      "label": "durable",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "state",
+        "commit",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "Committed probe in the inline workflow repository; nothing pushed.\n",
+      "stderr": ""
+    },
+    {
+      "label": "prepare",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "prepare",
+        "probe",
+        "--question",
+        "Synthetic approval?",
+        "--artifact",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9/probe.md",
+        "--summary",
+        "SYNTHETIC ONLY accepted knowledge",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "room=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9/probe/review/validation/briefing-1\nbriefing=briefing:t63x8s1ny1k7xbmc6x1csjcv:validation:attempt-1:revision-1\ndigest=sha256:b32bce441cd0186ef45c9286cd4cb8dd415d2fb54350b707f25972f5c9c050e3\nstate=open\n",
+      "stderr": ""
+    },
+    {
+      "label": "approve",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "record",
+        "probe",
+        "--decision",
+        "approve",
+        "--actor",
+        "person:captain",
+        "--reason",
+        "SYNTHETIC ONLY, not Kent approval",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "recorded gate=gate:t63x8s1ny1k7xbmc6x1csjcv:validation attempt=gate-attempt:t63x8s1ny1k7xbmc6x1csjcv-validation-1 state=closed briefing=briefing:t63x8s1ny1k7xbmc6x1csjcv:validation:attempt-1:revision-1 resolution=resolution:spacedock:t63x8s1ny1k7xbmc6x1csjcv:validation:1 decision=approve\n",
+      "stderr": ""
+    },
+    {
+      "label": "consume",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "gate",
+        "consume",
+        "probe",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "gate=gate:t63x8s1ny1k7xbmc6x1csjcv:validation attempt=gate-attempt:t63x8s1ny1k7xbmc6x1csjcv-validation-1 application=advance/pending condition=approved-pending eligible=true consumed=false target-stage=done route=approved-awaiting-merge\n",
+      "stderr": ""
+    },
+    {
+      "label": "passed-knowledge",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "merge",
+        "guard",
+        "probe",
+        "--verdict",
+        "passed",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"probe\",\"signal\":\"blocked\",\"action\":\"await-pr\",\"pr\":\"local-merge:accepted-knowledge-no-product-diff\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "readback",
+      "unchanged": true,
+      "active_exists": true,
+      "archive_exists": false,
+      "body": "---\ntitle: Synthetic accepted knowledge outcome\nstatus: validation\npr: local-merge:accepted-knowledge-no-product-diff\nid: t63x8s1ny1k7xbmc6x1csjcv\ngates:\n    version: 1\n    records:\n        - id: gate:t63x8s1ny1k7xbmc6x1csjcv:validation\n          stage: validation\n          attempts:\n            - id: gate-attempt:t63x8s1ny1k7xbmc6x1csjcv-validation-1\n              briefing:\n                id: briefing:t63x8s1ny1k7xbmc6x1csjcv:validation:attempt-1:revision-1\n                digest: sha256:b32bce441cd0186ef45c9286cd4cb8dd415d2fb54350b707f25972f5c9c050e3\n                room-ref: ./probe/review/validation/briefing-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:t63x8s1ny1k7xbmc6x1csjcv:validation:1\n                briefing: briefing:t63x8s1ny1k7xbmc6x1csjcv:validation:attempt-1:revision-1\n                by: person:captain\n                at: \"2026-09-10T16:14:14.830391Z\"\n                decision: approve\n                reason: SYNTHETIC ONLY, not Kent approval\n              application:\n                target-stage: done\n                state: pending\n---\n# Synthetic evidence\nAccepted answer is change, not rejected work. No live approval.\n"
+    },
+    {
+      "label": "rejected-syntax-only",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "merge",
+        "guard",
+        "probe",
+        "--verdict",
+        "rejected",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 0,
+      "stdout": "{\"command\":\"merge-guard\",\"slug\":\"probe\",\"signal\":\"finalized\",\"status\":\"done\",\"verdict\":\"rejected\",\"result\":\"inline\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "resolve",
+      "argv": [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--resolve",
+        "probe",
+        "--json",
+        "--workflow-dir",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/knowledge-close-shape-jev0llr9"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Error: unknown reference: probe\n"
+    }
+  ]
+}
