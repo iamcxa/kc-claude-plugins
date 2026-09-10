@@ -26,6 +26,17 @@ gates:
                 id: briefing:g0nx8a1ht539e12e9jm54fbw:backlog:attempt-1:revision-1
                 digest: sha256:b47e20f4f1ad241b14c1e741691b9ca7f7b5316f787e7182b0a0c2b03fe18c1d
                 room-ref: ./extract-the-journey-map-plugin/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:g0nx8a1ht539e12e9jm54fbw:backlog:1
+                briefing: briefing:g0nx8a1ht539e12e9jm54fbw:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T04:38:14.224865Z"
+                decision: approve
+                reason: 'Captain: 開切票,然後切成新的 plugin — and named it kc-journey-map after being told the -flow suffix is reserved for staged workflows. He also ruled the plan line is out of scope for now: focus on finishing journey-map well, integrate with plan later.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
