@@ -1,14 +1,14 @@
 ---
 id: d3xb3q0qwmjpkty23njq6t66
 title: Make evidence mean executable code, so the exists count stops lying
-status: ideation
+status: implementation
 source: captain
 product: kc-team-ops
 planning-window:
 planning-outcome:
 sprint: journey-map-poc
 sprint-readiness: ready
-started:
+started: 2026-09-10T04:24:57Z
 completed:
 verdict:
 worktree:
