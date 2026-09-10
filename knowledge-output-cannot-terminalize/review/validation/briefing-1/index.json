@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:geef7a3dy7w12g7tq89h21te:validation:attempt-1:revision-1",
+  "question": "Accept the independently validated functional repair with the reproduced pre-existing cask-version test failure retained, and authorize two local product commits containing exactly the eight reviewed upstream files and one local consumer mod? This grants no push, PR, merge, release, installation, cloud execution, or original experiment closure.",
+  "artifacts": [
+    {
+      "id": "artifact:geef7a3dy7w12g7tq89h21te:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/10cf336519c2459624fc9839e76bb475d2eda4e8/knowledge-output-cannot-terminalize/index.md",
+      "rev": "sha256:1e1fc49c458f5d73cc6f635288ca2f08c55ef4798ecc3ea54709df6674ff3c6c",
+      "mediaType": "text/markdown",
+      "summary": "Independent validation cycle 2 passed all five scoped criteria; 77 focused checks passed. Upstream eight files total 801 gross changed lines; local consumer one file totals 24. Actual archive-commit failure now preserves peer edits in both timing windows and retries the same consumed authority. Full and race suites remain red only at the cask-version assertion reproduced on the untouched base. Exact candidate hashes, file lists, retained proof limits, and unavailable pre-commit object checks are recorded in the report. Recommendation: approve the two exact-file local commits with that baseline residual retained; all external delivery and live experiment closure remain separate."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:geef7a3dy7w12g7tq89h21te:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
