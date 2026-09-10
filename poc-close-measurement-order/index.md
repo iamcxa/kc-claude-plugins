@@ -35,6 +35,17 @@ gates:
                 id: briefing:aznp6gpr6zanmr8argy0jcdj:ideation:attempt-1:revision-1
                 digest: sha256:6b846f2baaf7b2d22c9730bb8d1a0c1889e04e971e141fa7fb9a85c50946ba9d
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:aznp6gpr6zanmr8argy0jcdj:ideation:1
+                briefing: briefing:aznp6gpr6zanmr8argy0jcdj:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-10T13:58:20.948302Z"
+                decision: approve
+                reason: Kent explicitly approved the presented ideation design with 批准 after the close-order explanation; proceed to bounded implementation, preserving separate product commit confirmation and real POC outcome approval.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-10T13:41:14Z
 ---
 
