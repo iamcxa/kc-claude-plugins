@@ -8,6 +8,17 @@ issue: iamcxa/kc-claude-plugins#393
 provenance: https://github.com/iamcxa/kc-claude-plugins/issues/393
 id: td0yhsww2jnwnrzh5c6wc6er
 started: 2026-09-10T09:09:39Z
+gates:
+    version: 1
+    records:
+        - id: gate:td0yhsww2jnwnrzh5c6wc6er:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:td0yhsww2jnwnrzh5c6wc6er-backlog-1
+              briefing:
+                id: briefing:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1
+                digest: sha256:68a25b098d6ffe011b12240fa4392e022eda7c5dbe98d22b3c51707a37c2872f
+                room-ref: ./review/backlog/briefing-1
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.

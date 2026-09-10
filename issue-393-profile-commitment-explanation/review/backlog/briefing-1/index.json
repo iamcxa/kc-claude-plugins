@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1",
+  "question": "Admit the Captain-selected Pilot repair for issue #393 to shape its existing accepted scope?",
+  "artifacts": [
+    {
+      "id": "artifact:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/605d3ac0f131103a52dfb3bef2749311515a1768/issue-393-profile-commitment-explanation/index.md",
+      "rev": "sha256:551f9b43b3c030f3da784e4e33f6902e2a06588878d40549b5f69cdb007d00db",
+      "mediaType": "text/markdown",
+      "summary": "The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:td0yhsww2jnwnrzh5c6wc6er:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
