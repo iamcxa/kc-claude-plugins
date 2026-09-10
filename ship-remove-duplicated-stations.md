@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: backlog
+status: ideation
 source:
 product: kc-ship-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat: approve 2026-09-10'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
