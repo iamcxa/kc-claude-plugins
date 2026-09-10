@@ -1,7 +1,7 @@
 {
   "name": "kc-team-ops",
   "version": "1.7.0",
-  "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
+  "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
@@ -24,16 +24,13 @@
     "keystone-verification",
     "gemini",
     "cross-model",
-    "second-opinion",
-    "journey-map",
-    "user-journey",
-    "figjam"
+    "second-opinion"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "KC Team Ops",
-    "shortDescription": "EM triage, plan review, project pulse, journey maps, and rule-set audits",
-    "longDescription": "Team operations for Codex and Claude Code. Triage Linear issues with a strategic lens, review a teammate's plan before build, draft and post project status updates, draw user journeys checked against the code, take a cross-model second opinion, and audit an agent's own operating rules against what actually happened in past sessions.",
+    "shortDescription": "EM triage, plan review, project pulse, and rule-set audits",
+    "longDescription": "Team operations for Codex and Claude Code. Triage Linear issues with a strategic lens, review a teammate's plan before build, draft and post project status updates, take a cross-model second opinion, and audit an agent's own operating rules against what actually happened in past sessions.",
     "developerName": "Kent Chen",
     "category": "Productivity",
     "capabilities": [

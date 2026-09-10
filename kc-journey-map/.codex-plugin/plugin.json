@@ -1,0 +1,37 @@
+{
+  "name": "kc-journey-map",
+  "version": "0.1.0",
+  "description": "Draw a user journey from what a codebase actually does, or check an existing journey against current reality, on an editable canvas (FigJam or a self-contained HTML/PNG fallback) — every system claim cited to file:line, with a mandatory status card for what is unproven, unmerged, or undeployed",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "journey-map",
+    "user-journey",
+    "story-map",
+    "figjam",
+    "canvas",
+    "tldraw",
+    "evidence-cited"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Journey Map",
+    "shortDescription": "Draw or check a user journey against the code, on an editable canvas",
+    "longDescription": "Draw a user journey from what a codebase actually does, or check an existing journey against current reality. Three lanes per step (person / system / invariant), every system claim cited to file:line, and a mandatory status card for what is unproven, unmerged, or undeployed. FigJam when available, self-contained HTML + PNG otherwise.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-journey-map",
+    "defaultPrompt": [
+      "Draw a journey map for this feature with kc-journey-map",
+      "Check this journey board against the code"
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}

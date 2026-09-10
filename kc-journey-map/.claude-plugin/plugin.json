@@ -1,0 +1,19 @@
+{
+  "name": "kc-journey-map",
+  "description": "Draw a user journey from what a codebase actually does, or check an existing journey against current reality, on an editable canvas (FigJam or a self-contained HTML/PNG fallback) — every system claim cited to file:line, with a mandatory status card for what is unproven, unmerged, or undeployed",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "journey-map",
+    "user-journey",
+    "story-map",
+    "figjam",
+    "canvas",
+    "tldraw",
+    "evidence-cited"
+  ]
+}
