@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-4:revision-1",
+  "question": "Does PR #410 now address all four round-2 batch-FO findings (skill rename, stale instructions, design-doc reference, #411 merge) with a green required-check surface, ready for Captain review?",
+  "artifacts": [
+    {
+      "id": "artifact:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-4:revision-1:item-1",
+      "uri": "git-root://state/9024849c136117c9d88016d2f1cf0849832e3227/ship-remove-duplicated-stations/review/validation/validation-review-r3.md",
+      "rev": "sha256:405b405d7113c6723dc5338e0ecc9cf2b09ce049342cf5ab063099e1b3aa92c9",
+      "mediaType": "text/markdown",
+      "summary": "Feedback round 2 addressed: skill renamed to run-batch, stale instructions removed, design-doc reference fixed, #411 merged with a real merge and conflicts resolved. FO's own AC-4 recount corrected the PR body. All 3 required checks green at candidate 375315e1."
+    }
+  ]
+}
