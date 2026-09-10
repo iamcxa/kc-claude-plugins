@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:g87dzxbq3j3rdwzneqr4g5nt:backlog:attempt-1:revision-1",
+  "question": "Is one default board plus an explicit multi-select choice enough, before any integration work is admitted?",
+  "artifacts": [
+    {
+      "id": "artifact:g87dzxbq3j3rdwzneqr4g5nt:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/716fd7ad63702682cd0cb9e758c7142cd96f382b/default-to-the-journey-alone.md",
+      "rev": "sha256:cf68dfdabd278c6a41b14a2650c856ccc7b3ba4c3d9f2e1c2b6c846a577092c4",
+      "mediaType": "text/markdown",
+      "summary": "POC seed. The tool currently decides which boards appear — the story map always, and the function map whenever the file happens to carry a command field, which is a hidden rule. Ask instead, allow more than one, and draw the user journey alone when nothing is said. All three projections already exist and none is deleted; this changes the default and who chooses, not what any board draws. No integration with plan-flow, dev-flow or spacedock in this task."
+    }
+  ]
+}

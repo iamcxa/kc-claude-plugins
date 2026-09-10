@@ -15,6 +15,17 @@ worktree:
 issue:
 pr:
 mod-block:
+gates:
+    version: 1
+    records:
+        - id: gate:g87dzxbq3j3rdwzneqr4g5nt:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:g87dzxbq3j3rdwzneqr4g5nt-backlog-1
+              briefing:
+                id: briefing:g87dzxbq3j3rdwzneqr4g5nt:backlog:attempt-1:revision-1
+                digest: sha256:ed32b487f4e99d5ea7f2d585335879fade38136431bd574a3fab353dbcb829c9
+                room-ref: ./default-to-the-journey-alone/review/backlog/briefing-1
 ---
 
 ## The problem
