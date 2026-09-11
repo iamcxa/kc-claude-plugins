@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-11T05:03:16.359Z",
+  "coverage": [
+    {
+      "release": "prepare-release",
+      "covered": 6,
+      "of": 6,
+      "missing": []
+    }
+  ],
+  "records": 45,
+  "live_host": false,
+  "status": "Planning intent omits development status by existing conversation-map contract; generated MISSING statuses are not implementation gaps."
+}

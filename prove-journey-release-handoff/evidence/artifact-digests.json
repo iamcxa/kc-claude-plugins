@@ -1,0 +1,23 @@
+{
+  "accepted-source.md": "4330647ddacdf96f1bfd2d47803842470fda6e931ae7ba3fda550c7d1452c695",
+  "admission-shape-result.json": "2fcee3843a8775ac26afb1e62b351adf608da61c28ab8a451fe0c9fafb825fa9",
+  "board-records.json": "8ad7e6d8e86959444e1f6ddad52625870d26b75d355bfb8efd709735aadb6649",
+  "board-result.json": "85d36bde167796bff52ca63a3f564164aaa3c681cbdf76c08f008e2dc162a2d0",
+  "consumer-result.json": "f7ad7b4487f15faea920d018101363b80b27f4ae3809762842fd9d7be0329759",
+  "control-observation.json": "b1437ae6baa9cfce3441227cf07c6fd7a9e984df62072eda0ab8a184f5d2fb3a",
+  "development-brief.md": "c502adc10ec7f502f6ab54ab0f87a24c42ed847f3ede5f60339697fe00576eaa",
+  "facts/admission-format.txt": "ecd59ab4002ff9a1e12cf521d2e735da31acbe20f67a50550c3c5f1b22ee0d86",
+  "facts/map-from-conversation.md": "b1b903e88bfc69c399362e13ae394e3c9581f72351d0298c44469f93025f8c1a",
+  "facts/read.mjs": "9458115b016c2b062213be4f541e1db8829a56d949f9b7ce3ca88c65e3cf3033",
+  "facts/release-contract.mjs": "114dd0d4f024725e005e55caff7d9ce5c20382b7d4c99ef85bb34716807e67a5",
+  "facts/render.mjs": "2c86ba5f4223deed74f0e3929b94a3ab365962df3b8a311eb901157ea8a48e65",
+  "facts-digests.json": "f321daf73bc659f371bcbab7afc07d80386bd45cb4305fcca8fb323e1248430e",
+  "generated-release-contract.md": "76e62d1695edd830afce2366f0b848f1b5b74d989de62c6e7fc847c04c764cd8",
+  "journey.yaml": "edc686988b4b37e770a773aa552aad98e7054437892686cc8acb28bcdc0e7be9",
+  "limitations.md": "dfe949e6e11a21396f5ed16d4a693aebabbc75a335319f72f07888d1d8699fca",
+  "measurements.json": "b8def55a65bd78f4f5c0855848c3e12333c78f0db649800f2114775566b3fdcf",
+  "missing-decision-control.md": "91c388f31bf347d84dd65eea9a3a2d1c74e92de89ea9d6ce3e1172116345d425",
+  "policy-comparison.md": "59aa6bfb002913ff4c91c152b6845a87ab99a19827f026a21699042aea0650c4",
+  "renderer-provenance.json": "0f23b40e732a4be0aece5f504cf7fb64d783931e2d864f31b3535837ebdcea23",
+  "source-revision.json": "a80c98a0b1a4a4dfc64924f5fbebc015467855c28a559afbfb0367ee4d2e5d5d"
+}

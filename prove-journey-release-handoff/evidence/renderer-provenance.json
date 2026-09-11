@@ -1,0 +1,16 @@
+{
+  "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-local-progress/kc-journey-map/lib",
+  "files": {
+    "render.mjs": "2c86ba5f4223deed74f0e3929b94a3ab365962df3b8a311eb901157ea8a48e65",
+    "records.mjs": "e5ab82f896724660ddf2082d1bb21ff6fd097edfbbe05bce5db89465350ce8f1",
+    "storymap.mjs": "03ef432e3635df274ea98c4d8f1ed0efc648dd488c89164866c304e2a247fe95",
+    "funcmap.mjs": "6b44a2b0a648e9ec9bf52b2abd5b89ac1d722ec76fc9a62547827b42781fef86",
+    "model.mjs": "b9d9fc626073058d80867e56885dadaf02ac4b7a358c04fd0e4ab0c2f808caab",
+    "release-contract.mjs": "114dd0d4f024725e005e55caff7d9ce5c20382b7d4c99ef85bb34716807e67a5"
+  },
+  "yaml_source": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/kc-journey-map/node_modules/yaml",
+  "yaml_version": "2.9.0",
+  "reason": "Read-only selected stack lacks node_modules; copied unchanged source and existing yaml dependency to disposable worktree; no installation/network.",
+  "tldraw_source": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/kc-journey-map/node_modules/@tldraw",
+  "tldraw_utils_version": "5.4.0"
+}

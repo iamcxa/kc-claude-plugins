@@ -1,0 +1,6 @@
+{
+  "at": "2026-09-11T05:01:33.247162+00:00",
+  "validator": "validate_admission_brief; schema validation only, no profile selection",
+  "digest": "4895911f195cb658be3ecc3319828ddc1685096c1a17b2201316b448a7657745",
+  "profile_selected": false
+}

@@ -1,0 +1,125 @@
+{
+  "journey": "prepare-development-from-release",
+  "title": "Prepare one release for development",
+  "persona": "Kent, planning one release with existing journey decisions",
+  "one_journey": "Reuse selected-release decisions, investigate relevant facts, prepare one brief, and shape necessary development once.",
+  "releases": [
+    {
+      "id": "prepare-release",
+      "name": "Prepare one release",
+      "goal": "One selected release becomes one development-ready brief without repeating settled questions or manufacturing tasks."
+    }
+  ],
+  "steps": [
+    {
+      "id": "reuse-decisions-step",
+      "card": "Reuse the chosen release",
+      "activity": "Reuse the chosen release",
+      "stories": [
+        {
+          "id": "reuse-decisions",
+          "card": "Reuse settled persona, value and scope decisions",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    },
+    {
+      "id": "investigate-uncertainty-step",
+      "card": "Inspect relevant uncertainty",
+      "activity": "Inspect relevant uncertainty",
+      "stories": [
+        {
+          "id": "investigate-uncertainty",
+          "card": "Investigate facts before asking a value question",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    },
+    {
+      "id": "preserve-identities-step",
+      "card": "Preserve the decision",
+      "activity": "Preserve the decision",
+      "stories": [
+        {
+          "id": "preserve-identities",
+          "card": "Keep source, release and story identity stable",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    },
+    {
+      "id": "produce-development-brief-step",
+      "card": "Prepare one brief",
+      "activity": "Prepare one brief",
+      "stories": [
+        {
+          "id": "produce-development-brief",
+          "card": "Create one Development Brief from accepted intent",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    },
+    {
+      "id": "shape-necessary-work-step",
+      "card": "Shape the development",
+      "activity": "Shape the development",
+      "stories": [
+        {
+          "id": "shape-necessary-work",
+          "card": "Propose necessary development work once",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    },
+    {
+      "id": "preserve-independent-entry-step",
+      "card": "Keep independent entry",
+      "activity": "Keep independent entry",
+      "stories": [
+        {
+          "id": "preserve-independent-entry",
+          "card": "Keep map-only and standalone development usable",
+          "release": "prepare-release"
+        }
+      ],
+      "rules": [
+        "accepted-intent",
+        "unknown-is-not-gap"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "accepted-intent",
+      "text": "Accepted source owns the decisions; this disposable projection adds no authority."
+    },
+    {
+      "id": "unknown-is-not-gap",
+      "text": "Missing observation is unknown evidence, not missing implementation."
+    }
+  ],
+  "status": {
+    "unproven": "Agent-authored intent projection; not independent user acceptance or product verification.",
+    "as_of": "2026-09-11"
+  }
+}

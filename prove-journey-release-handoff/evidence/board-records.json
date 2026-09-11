@@ -1,0 +1,2488 @@
+[
+  {
+    "id": "page:jm-board-prepare-release",
+    "typeName": "page",
+    "name": "Prepare one release — stories, flow & constraints",
+    "index": "a5",
+    "meta": {}
+  },
+  {
+    "id": "shape:jm-prepare-release-lane-activity",
+    "typeName": "shape",
+    "x": 20,
+    "y": 0,
+    "rotation": 0,
+    "index": "a1",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "lane-activity",
+        "kind": "lane-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 270,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "ACTIVITIES"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "shared groups"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-lane-journey",
+    "typeName": "shape",
+    "x": 20,
+    "y": 128,
+    "rotation": 0,
+    "index": "a2zIP",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "lane-journey",
+        "kind": "lane-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 270,
+      "h": 200,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "RELEASE STORIES"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "what a person can do"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-lane-evidence",
+    "typeName": "shape",
+    "x": 20,
+    "y": 348,
+    "rotation": 0,
+    "index": "a3eVM",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "lane-evidence",
+        "kind": "lane-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 270,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "STORY EVIDENCE"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "evidence and open questions"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-lane-system",
+    "typeName": "shape",
+    "x": 20,
+    "y": 572,
+    "rotation": 0,
+    "index": "a4Aif",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "lane-system",
+        "kind": "lane-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 270,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SYSTEM FLOW"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "shared by the activity; story mapping not recorded"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-lane-constraints",
+    "typeName": "shape",
+    "x": 20,
+    "y": 792,
+    "rotation": 0,
+    "index": "a5Yv6",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "lane-constraints",
+        "kind": "lane-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 270,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "shared by the activity; story mapping not recorded"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-reuse-decisions-step",
+    "typeName": "shape",
+    "x": 320,
+    "y": 0,
+    "rotation": 0,
+    "index": "a6yen",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "reuse-decisions-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Reuse the chosen release"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-reuse-decisions",
+    "typeName": "shape",
+    "x": 370,
+    "y": 128,
+    "rotation": 0,
+    "index": "a7GUe",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "reuse-decisions",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Reuse settled persona, value and scope decisions"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-reuse-decisions",
+    "typeName": "shape",
+    "x": 360,
+    "y": 348,
+    "rotation": 0,
+    "index": "a8Clz",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "reuse-decisions",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-reuse-decisions-step",
+    "typeName": "shape",
+    "x": 320,
+    "y": 572,
+    "rotation": 0,
+    "index": "a9jdX",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "reuse-decisions-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-reuse-decisions-step",
+    "typeName": "shape",
+    "x": 320,
+    "y": 792,
+    "rotation": 0,
+    "index": "aAqOr",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "reuse-decisions-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-investigate-uncertainty-step",
+    "typeName": "shape",
+    "x": 680,
+    "y": 0,
+    "rotation": 0,
+    "index": "aBbDA",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "investigate-uncertainty-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Inspect relevant uncertainty"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-investigate-uncertainty",
+    "typeName": "shape",
+    "x": 730,
+    "y": 128,
+    "rotation": 0,
+    "index": "aCtGM",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "investigate-uncertainty",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Investigate facts before asking a value question"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-investigate-uncertainty",
+    "typeName": "shape",
+    "x": 720,
+    "y": 348,
+    "rotation": 0,
+    "index": "aDtW2",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "investigate-uncertainty",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-investigate-uncertainty-step",
+    "typeName": "shape",
+    "x": 680,
+    "y": 572,
+    "rotation": 0,
+    "index": "aEhwz",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "investigate-uncertainty-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-investigate-uncertainty-step",
+    "typeName": "shape",
+    "x": 680,
+    "y": 792,
+    "rotation": 0,
+    "index": "aFkWj",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "investigate-uncertainty-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-preserve-identities-step",
+    "typeName": "shape",
+    "x": 1040,
+    "y": 0,
+    "rotation": 0,
+    "index": "aGqXE",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-identities-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Preserve the decision"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-preserve-identities",
+    "typeName": "shape",
+    "x": 1090,
+    "y": 128,
+    "rotation": 0,
+    "index": "aH3DI",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-identities",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Keep source, release and story identity stable"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-preserve-identities",
+    "typeName": "shape",
+    "x": 1080,
+    "y": 348,
+    "rotation": 0,
+    "index": "aIUKg",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-identities",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-preserve-identities-step",
+    "typeName": "shape",
+    "x": 1040,
+    "y": 572,
+    "rotation": 0,
+    "index": "aJT0M",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-identities-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-preserve-identities-step",
+    "typeName": "shape",
+    "x": 1040,
+    "y": 792,
+    "rotation": 0,
+    "index": "aKTrE",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-identities-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-produce-development-brief-step",
+    "typeName": "shape",
+    "x": 1400,
+    "y": 0,
+    "rotation": 0,
+    "index": "aLey6",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "produce-development-brief-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Prepare one brief"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-produce-development-brief",
+    "typeName": "shape",
+    "x": 1450,
+    "y": 128,
+    "rotation": 0,
+    "index": "aM4lj",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "produce-development-brief",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Create one Development Brief from accepted intent"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-produce-development-brief",
+    "typeName": "shape",
+    "x": 1440,
+    "y": 348,
+    "rotation": 0,
+    "index": "aN2vX",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "produce-development-brief",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-produce-development-brief-step",
+    "typeName": "shape",
+    "x": 1400,
+    "y": 572,
+    "rotation": 0,
+    "index": "aOYmb",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "produce-development-brief-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-produce-development-brief-step",
+    "typeName": "shape",
+    "x": 1400,
+    "y": 792,
+    "rotation": 0,
+    "index": "aP1EX",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "produce-development-brief-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-shape-necessary-work-step",
+    "typeName": "shape",
+    "x": 1760,
+    "y": 0,
+    "rotation": 0,
+    "index": "aQkU7",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "shape-necessary-work-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Shape the development"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-shape-necessary-work",
+    "typeName": "shape",
+    "x": 1810,
+    "y": 128,
+    "rotation": 0,
+    "index": "aReab",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "shape-necessary-work",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Propose necessary development work once"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-shape-necessary-work",
+    "typeName": "shape",
+    "x": 1800,
+    "y": 348,
+    "rotation": 0,
+    "index": "aSeZv",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "shape-necessary-work",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-shape-necessary-work-step",
+    "typeName": "shape",
+    "x": 1760,
+    "y": 572,
+    "rotation": 0,
+    "index": "aT68f",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "shape-necessary-work-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-shape-necessary-work-step",
+    "typeName": "shape",
+    "x": 1760,
+    "y": 792,
+    "rotation": 0,
+    "index": "aUUZF",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "shape-necessary-work-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-card-preserve-independent-entry-step",
+    "typeName": "shape",
+    "x": 2120,
+    "y": 0,
+    "rotation": 0,
+    "index": "aVA2A",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-independent-entry-step",
+        "kind": "activity"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Keep independent entry"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-story-preserve-independent-entry",
+    "typeName": "shape",
+    "x": 2170,
+    "y": 128,
+    "rotation": 0,
+    "index": "aWUTD",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-independent-entry",
+        "kind": "story"
+      }
+    },
+    "type": "note",
+    "props": {
+      "color": "yellow",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Keep map-only and standalone development usable"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-proof-preserve-independent-entry",
+    "typeName": "shape",
+    "x": 2160,
+    "y": 348,
+    "rotation": 0,
+    "index": "aXtrX",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-independent-entry",
+        "kind": "story-proof"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 220,
+      "h": 184,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNASSESSED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No story evidence recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-sys-preserve-independent-entry-step",
+    "typeName": "shape",
+    "x": 2120,
+    "y": 572,
+    "rotation": 0,
+    "index": "aYMTI",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-independent-entry-step",
+        "kind": "system"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 180,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONTEXT"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "No system flow recorded."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-rules-preserve-independent-entry-step",
+    "typeName": "shape",
+    "x": 2120,
+    "y": 792,
+    "rotation": 0,
+    "index": "aZ6oA",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "preserve-independent-entry-step",
+        "kind": "constraints"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 300,
+      "h": 256,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "SHARED ACTIVITY CONSTRAINTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Accepted source owns the decisions; this disposable projection adds no authority."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "• Missing observation is unknown evidence, not missing implementation."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-status",
+    "typeName": "shape",
+    "x": 320,
+    "y": 1148,
+    "rotation": 0,
+    "index": "aaMGj",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "status",
+        "kind": "status"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 2100,
+      "h": 88,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "red",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "STATUS — as of 2026-09-11"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Unproven: Agent-authored intent projection; not independent user acceptance or product verification."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-prepare-release-release",
+    "typeName": "shape",
+    "x": 320,
+    "y": -200,
+    "rotation": 0,
+    "index": "abHj2",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "nodeId": "prepare-release",
+        "kind": "release-label"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 2100,
+      "h": 160,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "blue",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "start",
+      "verticalAlign": "start",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Prepare one release"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "One selected release becomes one development-ready brief without repeating settled questions or manufacturing tasks."
+              }
+            ]
+          },
+          {
+            "type": "paragraph"
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "0/6 stories exist"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "← back to the story map"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-exists",
+    "typeName": "shape",
+    "x": 300,
+    "y": -390,
+    "rotation": 0,
+    "index": "acXS2",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "status-legend",
+        "nodeId": "exists"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "EXISTS"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "evidence supported"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-exists-border",
+    "typeName": "shape",
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "index": "a1",
+    "parentId": "shape:jm-board-prepare-release-status-legend-exists",
+    "isLocked": true,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "legend-border",
+        "nodeId": "exists"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "solid",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "green",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "xl",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-gap",
+    "typeName": "shape",
+    "x": 680,
+    "y": -390,
+    "rotation": 0,
+    "index": "adfbE",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "status-legend",
+        "nodeId": "gap"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "red",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "GAP"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "known missing"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-gap-border",
+    "typeName": "shape",
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "index": "a1",
+    "parentId": "shape:jm-board-prepare-release-status-legend-gap",
+    "isLocked": true,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "legend-border",
+        "nodeId": "gap"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "solid",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "red",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "xl",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-unverified",
+    "typeName": "shape",
+    "x": 1060,
+    "y": -390,
+    "rotation": 0,
+    "index": "aeblz",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "status-legend",
+        "nodeId": "unverified"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "violet",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "UNVERIFIED"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "pending verification"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-unverified-border",
+    "typeName": "shape",
+    "x": 0,
+    "y": 0,
+    "rotation": 0,
+    "index": "a1",
+    "parentId": "shape:jm-board-prepare-release-status-legend-unverified",
+    "isLocked": true,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "legend-border",
+        "nodeId": "unverified"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 360,
+      "h": 90,
+      "geo": "rectangle",
+      "dash": "solid",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "violet",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "xl",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "shape:jm-board-prepare-release-status-legend-caption",
+    "typeName": "shape",
+    "x": 300,
+    "y": -290,
+    "rotation": 0,
+    "index": "afzSu",
+    "parentId": "page:jm-board-prepare-release",
+    "isLocked": false,
+    "opacity": 1,
+    "meta": {
+      "journey": {
+        "kind": "status-legend-caption",
+        "nodeId": "status-legend"
+      }
+    },
+    "type": "geo",
+    "props": {
+      "w": 1120,
+      "h": 64,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "grey",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "s",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Story status is not delivery acceptance."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]

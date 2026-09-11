@@ -1,0 +1,12 @@
+{
+  "observed_start": "2026-09-11T05:02:32Z",
+  "observed_end": "2026-09-11T05:02:35Z",
+  "relay_owner": "First Officer",
+  "question": "Should this release end with a usable planning map and recorded decisions, or include the full Development Brief and development handoff?",
+  "recommended": "map endpoint",
+  "decision_supplied": false,
+  "implementation_tasks_admitted": 0,
+  "bounded_independent_work": "verification of host behavior and answer reuse; missing observation kept unknown",
+  "instrument": "actual clean-context consumer agent output relayed by FO; no deterministic semantic guard or UI call claimed",
+  "context_order": "control first; complete brief supplied only afterward at approximately 05:02:59Z"
+}

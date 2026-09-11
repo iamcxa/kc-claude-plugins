@@ -93,3 +93,51 @@ profile contract: workflow stage 'ideation' is outside poc-exploration; expected
 No worker was dispatched; no integrated product journey, timing comparison or handoff proof occurred. Do not report this as a completed or failed product experiment. Existing backlog approval is consumed; do not replay it. The recorded state is ideation and is held from dispatch because it has no POC working contract.
 
 Smallest proposed recovery: Captain explicitly authorizes a one-task status correction to implementation in accordance with the already selected POC route, then the First Officer writes and commits the installed 4.3.0 implementation pin and performs normal stamped dispatch. This leaves the shared workflow graph and product contracts unchanged. Generic FO gate rules forbid silently using a status setter to advance a gate, so the exception must be explicit. No permanent route fix or chooser/kernel principle is claimed proven.
+
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: change
+  admitted_at: 2026-09-11T04:57:31Z
+  decision_ready_at: 2026-09-11T05:04:40Z
+  decision_ready_elapsed_seconds: 429
+  captain_interventions_before_decision_ready: 1
+  evidence: evidence/consumer-result.json, evidence/control-observation.json, evidence/board-result.json; actual clean-context shaping, missing-decision refusal, and local board generation observed.
+  strongest_limit: Source already contained a complete brief; board-to-brief value elicitation and comparative speed remain unproved; original admission-to-decision was 1163 seconds with one extra Captain intervention.
+  reversal_fact: A bounded run from accepted board decisions without a prewritten complete brief produces the handoff and independent necessary-work shaping within measured budget, with any real missing decision left to Captain.
+  cleanup_status_at_decision: pending
+```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: pending
+  terminal_cleanup_seconds: pending
+  cleanup_status: pending
+```
+
+## Execution measurement and boundaries
+
+Original admission remains 2026-09-11T04:45:17Z; working started remains 2026-09-11T04:57:31Z. The installed close guard requires `admitted_at` to equal frontmatter `started`, so its 429-second measurement is the working interval; the separately preserved total is 1163 seconds, including 734 seconds of routing/setup overhead. One extra Captain intervention authorized the one-task routing correction and resumed functional experiment; it is not zero-overhead success.
+
+Two workers total performed one control and one happy handoff. The actual consumer needed zero repeated value questions; the control surfaced one missing endpoint decision and supplied no answer. Model token/dollar cost is unmeasured; no paid external provider call, product PR, CI run or retained product edit occurred. CI cost per PR is unmeasured. Full costs and timestamps: [measurements](evidence/measurements.json).
+
+Disposable artifacts are at `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-prove-journey-release-handoff/.context/journey-handoff-poc`; `node <that-directory>/render-board.mjs` reproduces the 45 records with the declared local dependencies. Remove that directory after outcome approval and durable evidence acceptance; approval wait and cleanup remain pending. No source, version, CI, provider or PR changes were retained.
+
+## Stage Report: implementation
+
+- DONE: Exercise the selected release planning handoff using a disposable board and Development Brief grounded in accepted source decisions.
+  [Source revision](evidence/source-revision.json), [brief](evidence/development-brief.md), [board result](evidence/board-result.json): local generator emitted 45 records and six-of-six activity coverage. No live host selection/rendering was exercised.
+- DONE: Demonstrate a clean-context dev consumer and one missing-decision control without invented tasks or repeated settled questions.
+  [Actual consumer](evidence/consumer-result.json) consumed brief SHA-256 c502adc10ec7f502f6ab54ab0f87a24c42ed847f3ede5f60339697fe00576eaa and shaped necessary work with zero extra value questions; [control](evidence/control-observation.json) asked only the absent release endpoint and withheld dependent implementation. Removing that endpoint caused the observed refusal; restoring it allowed shaping.
+- DONE: Record measured costs, limitations, a truthful POC outcome, and a minimal chooser/kernel recommendation without retained product edits.
+  [Measurements](evidence/measurements.json), [limitations](evidence/limitations.md), [policy comparison](evidence/policy-comparison.md): direction change, one extra Captain intervention, 1163-second full interval, no comparative speed evidence, no chooser/kernel edit recommended.
+
+Read-only installed `poc-close-guard.py review` passed: direct implementation proof, three evidenced obligations, direction change, and pending close measurements. No gate prepare or terminal mutation was performed.
+
+### Summary
+
+The local source/brief-to-consumer seam and missing-decision control worked; an actual consumer proposed one dependency sequence and one shared integration task with multiple textual story origins, preserving unknown facts and all admission/profile authority. The accepted source was already a complete brief and the board was generated alongside it, so the full board-to-brief value-elicitation claim remains unproved; next proof should begin with accepted board decisions that have no prewritten brief. This direct disposable POC returns change for outcome approval, with cleanup pending and no automatic delivery commitment.
