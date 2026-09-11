@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-2:revision-1",
+  "question": "Approve validation of dev-flow-pr-merge-extension (d34abf13) and merge #414?",
+  "artifacts": [
+    {
+      "id": "artifact:rca7s3d89e103ajfdpbj2awe:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/6a28415fcea126d4a83486fa6f2851e46b996e6e/dev-flow-pr-merge-extension/review/validation/validation-review-2.md",
+      "rev": "sha256:cbe1cd6cd7c01f6cd65b39eace1bbcece0e56af21d653898b5faa4cb4dcefb76",
+      "mediaType": "text/markdown",
+      "summary": "released-body sha256 pinned and enforced; AC-1..AC-4 + mutations reproduced in cycle 3"
+    }
+  ]
+}

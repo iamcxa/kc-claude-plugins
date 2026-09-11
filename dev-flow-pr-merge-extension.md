@@ -56,6 +56,22 @@ gates:
                 conn:
                     quote: 可以 (Captain, 2026-09-11, approving the kc-dev-flow-owned pr-merge extension plan with a drift check that fails CI)
                     source: Captain chat 2026-09-11
+            - id: gate-attempt:rca7s3d89e103ajfdpbj2awe-validation-2
+              briefing:
+                id: briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-2:revision-1
+                digest: sha256:dd82b5684d663d2f1f021dee392ef3cf9b8a4a29c5c64a6b3e9c6648315b80aa
+                room-ref: ./dev-flow-pr-merge-extension/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:rca7s3d89e103ajfdpbj2awe:validation:2
+                briefing: briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-11T10:54:46.384443Z"
+                decision: approve
+                reason: 'Captain merged #414 (2026-09-11) after the FO presented attempt 2'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a
