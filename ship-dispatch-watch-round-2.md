@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: watch reads the right signals, the boot message carries identity and conn, and the Conductor CLI is a used-surface contract"
-status: validation
+status: implementation
 source:
 product: kc-ship-flow
 planning-window:
@@ -152,3 +152,9 @@ Implemented in worktree `.worktrees/spacedock-ensign-ship-dispatch-watch-round-2
 ### Summary
 
 Independently reran both test suites and contract-test.py under a `conductor`-stripped PATH; all pass counts (11/11 watch, 10/10 dispatch) and the contract-test exit code (0) match the implementation report bit for bit. AC-5's grep is clean and the pin file rename is confirmed on disk. Cross-checked each AC's specific claim (not just the report's summary line) against the entity's acceptance-criteria text, including verifying that the implementation report's disclosed gap on AC-3's probe-ordering assertion is accurately disclosed rather than glossed over. No discrepancies found; validation passes.
+
+### Feedback Cycles
+
+- **Round validation/1** — decision: revise, actor: person:captain (dispatch token r2-7f3a9c1e)
+  Reason: 「423 註解太多了,請確保只留下必要的」— comment density in PR #423 measured at 24% of added script lines (111/470), against a 3% repo baseline (CLAUDE.md comment rules).
+  Assignment to `implementation`: apply the repository's four comment rules to every added comment line in `dispatch.sh`, `watch.sh`, their test scripts, and `pins/conductor-cli.contract` — delete narration of the change/history, delete restatement of adjacent code, keep only comments carrying a fact the code cannot state (one line, no rationale paragraphs), remove file:line/PR/task-number citations. Usage/help blocks at the top of each script may stay as a compact flags-and-defaults block. Target: added comment lines ≤ 5% of added script lines. Re-run `dispatch.test.sh`, `watch.test.sh`, `contract-test.py` (foreground, `timeout 300`) after the trim. Merge `origin/main` first if it moved (merge, never rebase), then push to the same branch.
