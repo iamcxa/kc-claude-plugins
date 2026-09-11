@@ -1,13 +1,13 @@
 ---
 title: "ship-flow round 2: close.py and uat-doc.py read archived and folder-form entities from the dev state root, and record debriefs"
-status: ideation
+status: implementation
 source:
 product: kc-ship-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper-r2
 sprint-readiness: ready
-started:
+started: 2026-09-11T07:37:10Z
 completed:
 verdict:
 worktree:
