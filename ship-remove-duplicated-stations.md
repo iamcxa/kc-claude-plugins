@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-remove-duplicated-stations
 issue:
-pr: 410
+pr: pr-merge:410
 mod-block:
 id: pzg36pjjn7tvtdtknpv9w82h
 gates:
