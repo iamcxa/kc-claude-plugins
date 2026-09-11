@@ -16,7 +16,17 @@ it. That is the whole design:
 
 ## Run it
 
-From the plugin directory, once per machine:
+Before starting, inspect any existing service's source/version provenance and the
+capabilities needed for this request. Reuse a suitable running service of the required
+version. Do not stop or restart a service you did not start merely to free a port or
+clean up. Unknown provenance is not proof of compatibility; report that limit and
+resolve setup within the user's authority, without killing the existing service.
+Keep services backing a delivered board link running, even if this session started
+them. Unless the user asks to stop, cleanup may stop only owned test services that
+serve no delivered board link.
+These are operator checks, not automatic version detection or lifecycle protection.
+
+From the plugin directory, when installation or startup is needed:
 
 ```bash
 npm ci
@@ -36,6 +46,11 @@ canvas and `agent-browser`; it is not a dependency-free fallback.
 
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
+
+Open the live canvas for normal review; Process step 5 in `SKILL.md` owns visual
+verification and optional PNG output. A native `.tldr` backup preserves unread canvas
+edits and is separate from image output. Read back or preserve those edits before
+redrawing; the renderer does not apply them to the source automatically.
 
 ## Three projections, drawn by request
 
