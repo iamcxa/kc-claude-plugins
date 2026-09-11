@@ -1,0 +1,23 @@
+[
+  {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-planning",
+    "branch": "codex/journey-planning",
+    "head": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+    "tree": "b5bbc4d8ef0f800072fd9635389c481590ff05fb",
+    "status": " M kc-journey-map/lib/doctor.mjs\n M kc-journey-map/lib/fixture.mjs\n M kc-journey-map/lib/journey-export.mjs\n M kc-journey-map/lib/journey-read.mjs\n M kc-journey-map/lib/journey-render.mjs\n M kc-journey-map/lib/journey-tldr.mjs\n M kc-journey-map/lib/model.mjs\n M kc-journey-map/lib/read.mjs\n M kc-journey-map/lib/read.test.mjs\n M kc-journey-map/lib/records.mjs\n M kc-journey-map/lib/render.mjs\n M kc-journey-map/lib/storymap.mjs\n M kc-journey-map/lib/storymap.test.mjs\n M kc-journey-map/scripts/canvas-smoke.sh\n M kc-journey-map/server/canvas-server.ts\n M kc-journey-map/server/client/App.tsx\n M kc-journey-map/server/rooms.ts\n"
+  },
+  {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-release-inspection",
+    "branch": "codex/journey-release-inspection",
+    "head": "818260a8c14b504dae8d3989ba9c710226255b74",
+    "tree": "058298ebd763f16e395c77ebeea1474a193cddc0",
+    "status": " M kc-journey-map/lib/fixture.mjs\n M kc-journey-map/lib/funcmap.mjs\n M kc-journey-map/lib/funcmap.test.mjs\n M kc-journey-map/lib/journey-contract.mjs\n M kc-journey-map/lib/journey-example.test.mjs\n M kc-journey-map/lib/journey-lint.mjs\n M kc-journey-map/lib/journey-render.mjs\n M kc-journey-map/lib/journey-tldr.mjs\n M kc-journey-map/lib/lint.mjs\n M kc-journey-map/lib/lint.test.mjs\n M kc-journey-map/lib/model.mjs\n M kc-journey-map/lib/read.mjs\n M kc-journey-map/lib/read.test.mjs\n M kc-journey-map/lib/records.mjs\n M kc-journey-map/lib/release-contract.mjs\n M kc-journey-map/lib/release-contract.test.mjs\n M kc-journey-map/lib/render.mjs\n M kc-journey-map/lib/storymap.mjs\n M kc-journey-map/scripts/canvas-smoke.sh\n M kc-journey-map/server/rooms.ts\n"
+  },
+  {
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-local-progress",
+    "branch": "codex/journey-local-progress",
+    "head": "a5c08cbdf812826125decb6b55a286c4bcd2f1be",
+    "tree": "64ca7b19f431188830b43f6824f485e7c90206df",
+    "status": ""
+  }
+]

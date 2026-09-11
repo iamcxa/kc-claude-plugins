@@ -1,0 +1,16 @@
+[
+  {
+    "branch": "codex/journey-planning",
+    "commit": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+    "parent": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+    "tree": "d6a0ff4ac49e6a2fca2ebc070259dd89b5c76c1b",
+    "subject": "refactor(kc-journey-map): trim planning canvas comments"
+  },
+  {
+    "branch": "codex/journey-release-inspection",
+    "commit": "77732892d2024abdae7589d576f2e3aabca01275",
+    "parent": "818260a8c14b504dae8d3989ba9c710226255b74",
+    "tree": "7711a3d343cedaae24bc007928c2cc32702d0d57",
+    "subject": "refactor(kc-journey-map): trim release inspection comments"
+  }
+]

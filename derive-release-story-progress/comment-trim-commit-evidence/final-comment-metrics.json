@@ -1,0 +1,35 @@
+[
+  {
+    "branch": "codex/journey-planning",
+    "before": {
+      "lines": 1428,
+      "comments": 164
+    },
+    "after": {
+      "lines": 1281,
+      "comments": 17
+    }
+  },
+  {
+    "branch": "codex/journey-release-inspection",
+    "before": {
+      "lines": 2681,
+      "comments": 301
+    },
+    "after": {
+      "lines": 2411,
+      "comments": 31
+    }
+  },
+  {
+    "branch": "codex/journey-local-progress",
+    "before": {
+      "lines": 3000,
+      "comments": 300
+    },
+    "after": {
+      "lines": 2732,
+      "comments": 32
+    }
+  }
+]

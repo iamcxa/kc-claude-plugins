@@ -1,0 +1,85 @@
+{
+  "prs": [
+    {
+      "baseRefName": "main",
+      "baseRefOid": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+      "body": "Engineers can turn journey plans into editable native story maps and safely bring workshop edits back into the source.\n\n## What changed\n\n- Add native story maps with release bands.\n- Persist room edits and preserve manual notes during redraw.\n- Render journey YAML and read edits back by stable story ID.\n\n## Evidence\n\n- Producer model/readback checks: 17/17 passed.\n- Producer live editing/persistence checks and retained independent negative/control evidence cover source safety.\n\n[Exact 42-file manifest](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/schema-comment-correction-evidence/unit-1-files.json): +6994/-311; generated +5245/-0. [Retained independent evidence](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/three-unit-independent-validation/README.md). CI cost per PR is unmeasured.\n\n---\nCandidate: 0d69be164ccdcd1b3509f3577d6bd03a468f8f36\nTask audit: [91](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/index.md)\n",
+      "headRefName": "codex/journey-planning",
+      "headRefOid": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+      "isDraft": true,
+      "number": 415,
+      "state": "OPEN",
+      "title": "feat(kc-journey-map): add editable native planning canvas",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/415"
+    },
+    {
+      "baseRefName": "codex/journey-planning",
+      "baseRefOid": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+      "body": "Engineers can inspect release details and distinguish existing, unverified and missing story evidence across native boards.\n\n## What changed\n\n- Add release-detail and function-map projections.\n- Check authored evidence and generate release contracts.\n- Display standard status borders and a portable worked example.\n\n## Evidence\n\n- Producer model/example/evidence checks: 67/67 passed.\n- Producer browser export/import/readback passed; retained independent proof covers borders, schema diagnostics and dependency reduction.\n\n[Exact 35-file manifest](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/schema-comment-correction-evidence/unit-2-files.json): +2194/-160; generated +1/-0. [Retained independent evidence](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/three-unit-independent-validation/README.md). CI cost per PR is unmeasured.\n\n---\nCandidate: 818260a8c14b504dae8d3989ba9c710226255b74\nTask audit: [91](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/index.md)\n",
+      "headRefName": "codex/journey-release-inspection",
+      "headRefOid": "818260a8c14b504dae8d3989ba9c710226255b74",
+      "isDraft": true,
+      "number": 416,
+      "state": "OPEN",
+      "title": "feat(kc-journey-map): add release evidence details and status borders",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/416"
+    },
+    {
+      "baseRefName": "codex/journey-release-inspection",
+      "baseRefOid": "818260a8c14b504dae8d3989ba9c710226255b74",
+      "body": "Engineers can explicitly refresh story progress from local development tasks while preserving independent planning and source files.\n\n## What changed\n\n- Add an explicit local-task progress refresh command.\n- Match journey, release and story identities without automatic source writes.\n- Show task provenance while keeping delivery acceptance pending.\n- Install checksum-pinned Spacedock v0.27.2 for existing CI reader tests.\n\n## Evidence\n\n- Producer affected progress/example checks: 9/9 passed. Pinned-reader checks: 5/5 locally; Linux hosted verification pending.\n- Retained independent proof and six producer mutations cover matching, refusal and source safety.\n\n[Original exact 10-file manifest](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/schema-comment-correction-evidence/unit-3-files.json): +427/-27; generated +0/-0. [Retained independent evidence](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/three-unit-independent-validation/README.md). CI cost per PR is unmeasured.\n\n[CI prerequisite patch](https://github.com/iamcxa/kc-claude-plugins/blob/285c84b18c9b373fc85ff301123b19666076bc2e/derive-release-story-progress/ci-reader-bootstrap-evidence/candidate.patch): +15/-0; total 11 files, +442/-27.\n\n---\nCandidate: a5c08cbdf812826125decb6b55a286c4bcd2f1be\nTask audit: [91](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/index.md)\n",
+      "headRefName": "codex/journey-local-progress",
+      "headRefOid": "a5c08cbdf812826125decb6b55a286c4bcd2f1be",
+      "isDraft": true,
+      "number": 417,
+      "state": "OPEN",
+      "title": "feat(kc-journey-map): derive optional local task progress",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/417"
+    }
+  ],
+  "stack": [
+    {
+      "id": 1039062,
+      "number": 418,
+      "node_id": "PRS_kwDORid8-c4AD9rW",
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/stacks/418",
+      "base": {
+        "ref": "main"
+      },
+      "open": true,
+      "created_at": "2026-09-11T00:48:35Z",
+      "pull_requests": [
+        {
+          "number": 415,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-planning",
+            "sha": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36"
+          }
+        },
+        {
+          "number": 416,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-release-inspection",
+            "sha": "818260a8c14b504dae8d3989ba9c710226255b74"
+          }
+        },
+        {
+          "number": 417,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-local-progress",
+            "sha": "a5c08cbdf812826125decb6b55a286c4bcd2f1be"
+          }
+        }
+      ]
+    }
+  ]
+}

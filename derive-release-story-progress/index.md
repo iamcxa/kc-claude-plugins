@@ -600,3 +600,14 @@ The PR416-only comment draft is complete and uncommitted, with consistent increm
 ### Summary
 
 The exact authorized CI repair local commit is complete. PR417 publication and exact body update are concrete and held for a separate Captain decision.
+
+## Stage Report: implementation (cycle 11)
+
+- DONE: Both exact comment drafts are committed and propagated through the local three-layer stack with clean owned worktrees and preserved CI/runtime behavior.
+  Approval provenance: Kent instructed “移除冗餘後提交”. Exact ordinary commits: planning `c035e3ee792effb2708f646c2761d70ac17d9dbb`; inspection `77732892d2024abdae7589d576f2e3aabca01275`, matching approved trees/parents/subjects. Explicit-base rebases preserved all feature/CI commits and resolved overlapping comments only. Final heads: `c035e3ee792effb2708f646c2761d70ac17d9dbb` → `d339355faf2c2833df91cf9dde42a5ee12098341` → `36a969a6f890a63c541fad4bfa30071ac7115c64`. [Exact original/final stack and conflict disposition](comment-trim-commit-evidence/README.md).
+- DONE: Exact comment-only equivalence and final ancestry are recorded; one concrete stack publication packet is ready without any remote mutation.
+  Exact noncomment/compiler comparisons pass for each starting/final layer, shell/heredoc handled separately; removed explanatory blocks are absent, CI workflow hash unchanged, and owned worktrees clean. Whole-source comments 164→17, 301→31, 300→32 include inherited propagation. No runtime/install/reviewer reruns or new PR417 audit. [Equivalence](comment-trim-commit-evidence/final-equivalence.json), [final paths/stats](comment-trim-commit-evidence/final-stack.json) and [complete publication packet](comment-trim-commit-evidence/push-review.md) retain live old heads, exact proposed bases/candidates and body hashes plus explicit per-ref leases. All pair preflights pass. Hosted checks at new heads remain pending; prior CI proof is historical and CI cost unmeasured. AC-1..AC-5 executable behavior is unchanged. No remote push/PR edit/Ready/merge occurred.
+
+### Summary
+
+Both authorized comment removals are committed and inherited through the clean local stack. The exact three-PR push/body-update package is ready for the Captain's separate publication decision.

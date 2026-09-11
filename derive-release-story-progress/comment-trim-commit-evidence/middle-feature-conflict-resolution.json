@@ -1,0 +1,77 @@
+[
+  {
+    "path": "kc-journey-map/lib/fixture.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/journey-render.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/journey-tldr.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/model.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/read.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/read.mjs",
+    "hunk": 2,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/records.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/records.mjs",
+    "hunk": 2,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/render.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/render.mjs",
+    "hunk": 2,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/lib/storymap.test.mjs",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/scripts/canvas-smoke.sh",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/scripts/canvas-smoke.sh",
+    "hunk": 2,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  },
+  {
+    "path": "kc-journey-map/server/client/App.tsx",
+    "hunk": 1,
+    "resolution": "Preserve incoming release-layer statements; compose only previously approved bottom comment removals/consolidations."
+  }
+]
