@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-dispatch-watch-round-2
 issue:
-pr:
+pr: 423
 mod-block:
 id: 7z61dwwgjsffrpgk7ga4m60r
 gates:
