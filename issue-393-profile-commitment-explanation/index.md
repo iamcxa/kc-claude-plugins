@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): explain the next commitment during profile selection"
-status: implementation
+status: validation
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
