@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-cloud-dispatch-and-watch
 issue:
-pr: 406
+pr: pr-merge:406
 mod-block:
 id: zbkw7v9dsgxgf048qvrmxmwy
 gates:
