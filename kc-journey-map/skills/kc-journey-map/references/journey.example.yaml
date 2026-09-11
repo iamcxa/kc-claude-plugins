@@ -1,0 +1,22 @@
+journey: plan-a-trip
+persona: A person arranging a weekend trip.
+one_journey: Choose a destination, reserve a stay, and keep the itinerary.
+releases:
+  - {id: first-trip, name: FIRST TRIP, goal: Arrange one weekend.}
+  - {id: change-trip, name: CHANGE A TRIP, goal: Adapt an existing reservation.}
+steps:
+  - id: choose
+    card: Choose a destination
+    stories:
+      - {id: choose-city, card: Pick a city, release: first-trip}
+      - {id: change-city, card: Change the destination, release: change-trip}
+  - id: reserve
+    card: Reserve a stay
+    stories:
+      - {id: reserve-room, card: Reserve a room, release: first-trip}
+      - {id: change-room, card: Adjust the reservation, release: change-trip}
+  - id: keep
+    card: Keep the itinerary
+    stories:
+      - {id: save-itinerary, card: Save the details, release: first-trip}
+      - {id: open-idea, card: Share an itinerary}

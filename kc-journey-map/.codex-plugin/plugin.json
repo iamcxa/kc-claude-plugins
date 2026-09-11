@@ -1,0 +1,32 @@
+{
+  "name": "kc-journey-map",
+  "version": "0.1.0",
+  "description": "Plan a user journey on an editable story map with horizontal release bands and YAML readback.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "journey-map",
+    "canvas",
+    "tldraw"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Journey Map",
+    "shortDescription": "Plan and edit a journey story map",
+    "longDescription": "Plan a user journey on an editable story map with horizontal release bands and YAML readback.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-journey-map",
+    "defaultPrompt": [
+      "Plan a journey story map with kc-journey-map"
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}
