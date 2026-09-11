@@ -1,0 +1,3 @@
+Independently assess the exact two-file candidate and same-case before/after evidence; confirm the baseline and known overbroad producer are caught while strict, explicit-map and ordinary Go enforcement remain correct.
+Review scope/necessity, single-case selection and duplicate handling, raw provenance, and honest per-actor usage boundaries; distinguish local functional proof from autonomous operation, delivery, full cost and native closure.
+Write a durable validation report citing AC-1, AC-2, AC-3, AC-4 and AC-5 explicitly, with exact candidate hash, remaining limitations and only scoped findings; no product edits, commits, external posts or terminalization.

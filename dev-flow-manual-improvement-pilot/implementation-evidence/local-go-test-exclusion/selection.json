@@ -1,0 +1,30 @@
+{
+  "identity": "kc-dev-flow:surface-map-default-go-test-exclusion",
+  "mode": "one manually triggered local attempt",
+  "ownership": {
+    "kc-dev-flow:surface-map-default-go-test-exclusion": "spacedock-ensign-3w83fmy975-implementation"
+  },
+  "duplicate_disposition": [
+    {
+      "input": "kc-dev-flow:surface-map-default-go-test-exclusion",
+      "decision": "resume assigned selected case",
+      "worker": "spacedock-ensign-3w83fmy975-implementation",
+      "new_worker_launch": false
+    },
+    {
+      "input": "kc-dev-flow:surface-map-default-go-test-exclusion",
+      "decision": "refuse duplicate launch; existing owner",
+      "worker": "spacedock-ensign-3w83fmy975-implementation",
+      "new_worker_launch": false
+    }
+  ],
+  "unique_cases_executed": 1,
+  "automatic_retries": 0,
+  "per_subprocess_timeout_seconds": 60,
+  "scope_limit": {
+    "product_files": 2,
+    "gross_changed_lines": 150
+  },
+  "cost_hard_cap": null,
+  "scope_estimates_are_not_hard_cost_caps": true
+}

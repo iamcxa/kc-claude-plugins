@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-09-11T07:50:27.190685+00:00",
+  "base": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+  "branch": "spacedock-ensign/dev-flow-manual-improvement-pilot",
+  "product_candidate_commit": null,
+  "patch_sha256": "c1d7ed2b15b237450dea31c6ca1de0fb288986d49516b311d544560d83cdd21c",
+  "files": {
+    "kc-dev-flow/scripts/surface-map-check.py": {
+      "candidate_sha256": "c2ccce5a00d9beccda016ab2234bafb4c62ca66d43d8a28d847ce36bc8549bd1",
+      "baseline_sha256": "b3a35b32caed183863e7bff77545c014e6122641512f7b9f47ec2a79ef758757"
+    },
+    "scripts/kc-dev-flow-contract-test.py": {
+      "candidate_sha256": "d8626db0ed3601fcf79df0b24250c49dcd34349ae29d4596a8cb7563b1269703",
+      "baseline_sha256": "c93cacd816020a4458f2154d0f42f6e44dc505c457ade6f010b8cafa45dd0b19"
+    }
+  },
+  "checks": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "stdout": "## spacedock-ensign/dev-flow-manual-improvement-pilot\n M kc-dev-flow/scripts/surface-map-check.py\n M scripts/kc-dev-flow-contract-test.py\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "diff",
+        "--check"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "diff",
+        "--numstat"
+      ],
+      "stdout": "1\t1\tkc-dev-flow/scripts/surface-map-check.py\n47\t1\tscripts/kc-dev-flow-contract-test.py\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-c",
+        "import ast, pathlib, sys; [ast.parse(pathlib.Path(p).read_text()) for p in sys.argv[1:]]",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/scripts/kc-dev-flow-contract-test.py"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    }
+  ],
+  "support_sha256": {
+    "kc-dev-flow/scripts/profile-contract-loader.py": "ae08b9265b25be0a48e6b0da97c15f1c7080484a6646db1d11a66b5bd77983ed",
+    "kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md": "79ead6b29c5417c8bdcbc451a413fd3d0ac9357f4aa6ab4ca3189577aadbfa73",
+    "kc-dev-flow/references/profiles/pilot-product-slice/build.md": "76d809f5405c0fb4bb4b99fc69f0fadf8f020bb6661e4da4bb087bcc8edee467"
+  }
+}

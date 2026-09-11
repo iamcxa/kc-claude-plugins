@@ -1,0 +1,54 @@
+{
+  "first_officer": {
+    "source": "FO-attributed own rollout-2026-09-10T16-17-51-01a08a64-fc57-7e82-8424-76541a8fe60a.jsonl",
+    "boundary_start": {
+      "line": 5750,
+      "timestamp": "2026-09-11T07:36:43.642Z",
+      "event": "latest exact Captain confirmation"
+    },
+    "epoch_start": {
+      "line": 5760,
+      "input": 132514,
+      "cached_input": 7808,
+      "output": 496,
+      "reasoning": 295,
+      "basis": "total equals last; reset epoch starts at zero"
+    },
+    "snapshot": {
+      "line": 5953,
+      "timestamp": "2026-09-11T07:44:56.104Z",
+      "input": 4539474,
+      "cached_input": 4357760,
+      "output": 11411,
+      "reasoning": 4945,
+      "total": 4550885,
+      "token_records_since_start": 27
+    },
+    "scope": "FO-only selection and coordination snapshot; not final or whole-cycle; not independently recaptured by worker"
+  },
+  "ideation_worker": {
+    "input": null,
+    "cached_input": null,
+    "output": null,
+    "reasoning": null,
+    "reason": "unique task usage source unavailable"
+  },
+  "implementation_worker": {
+    "input": null,
+    "cached_input": null,
+    "output": null,
+    "reasoning": null,
+    "reason": "unique child task usage source not exposed; shared CODEX_THREAD_ID is not separate attribution"
+  },
+  "independent_reviewer": {
+    "input": null,
+    "cached_input": null,
+    "output": null,
+    "reasoning": null,
+    "reason": "not yet dispatched"
+  },
+  "accounting": "cached input is subset of input; reasoning is subset of output; never add subsets again or subtract across prior counter reset",
+  "quality": "old regression fails; candidate passes scoped behavior; overbroad mutant fails control; fresh independent review pending",
+  "complete_cost_claim": false,
+  "efficiency_claim": false
+}

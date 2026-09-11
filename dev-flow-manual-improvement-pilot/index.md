@@ -139,3 +139,27 @@ Completed the bounded Pilot shape and retained a runnable native refusal probe w
 ### Summary
 
 One bounded local case is ready for implementation dispatch under the confirmed local-only scope. Its real baseline defect and strict-mode refusal are observed; the two-file correction, same-case after-results, negative control and independent review remain pending. Historical shape/report/approval bytes are preserved, and no original closure or complete-cost claim is made.
+
+
+## Stage Report: implementation
+
+- DONE: Reproduce and repair the selected Go-test exclusion case against the frozen latest main, with real same-case before/after and defective-producer controls.
+  AC-2: [before](implementation-evidence/local-go-test-exclusion/before.json)/[after](implementation-evidence/local-go-test-exclusion/after.json) retain identical fixture commits and raw command streams: default 1→0, strict 1→1. The actual new regression fails with the old producer; the overbroad `.go` producer fails the normal-Go control. [Exact provenance](implementation-evidence/local-go-test-exclusion/provenance.json).
+- DONE: Keep the repair within two product files and 150 gross changed lines, preserve explicit enforcement and unrelated production-file checks, and leave product changes uncommitted.
+  AC-2, AC-4: [candidate patch](implementation-evidence/local-go-test-exclusion/candidate.patch) is 50 gross lines across the checker and existing contract test; HEAD remains 0ec3380f. Seven existing surface-map cases and six Go cases pass, including strict mode, invalid target/pair, valid explicit map and normal Go refusal. Removing `_test.go` or broadening it to `.go` makes these new checks fail. Compilation and diff check pass.
+- DONE: Retain raw evidence, selection/deduplication outcome, exact provenance, actor usage with unknowns, and an AC-1 through AC-5 Stage Report that leaves original/native closure incomplete.
+  [Reproduction and limitations](implementation-evidence/local-go-test-exclusion/reproduce.md) bind raw stdout/stderr/exit, runtime/source hashes, scope and the one-run composition; original/native knowledge terminalization, archive, cleanup and final check remain explicitly incomplete.
+- DONE: AC-1 — preserve PR-feedback-first selection and refuse duplicate execution of the selected identity.
+  [Live queue](implementation-evidence/local-go-test-exclusion/queue.json): all open PRs inspected for scope; PRs 414/413/321 have no reviews, threads or general comments, complete pages and unchanged heads. Four issue dispositions retained; [selection](implementation-evidence/local-go-test-exclusion/selection.json) refuses a repeated selected key under the existing owner, executes one case, records zero automatic retries and 60-second subprocess limits. This proves manual disposition, not a durable deduplication service.
+- DONE: AC-3 — record participating-actor measurement boundaries without inventing usage or cost.
+  [Usage](implementation-evidence/local-go-test-exclusion/usage.json) retains the FO-attributed reset-epoch snapshot anchored after Captain confirmation, with source offsets. Ideation/implementation/reviewer input, cached input, output and reasoning remain unknown; shared thread identity is not separate attribution. No complete-cost, efficiency or hard-cost-cap claim.
+- SKIPPED: AC-4 — fresh independent review, product commit and product-object-based implementation-exit mapping.
+  Fresh review is next-stage work against these exact bytes. Product commit needs exact-file Captain confirmation; the object-based checker cannot yet map the uncommitted product candidate, and no candidate object was fabricated. No product push, PR, external review, install, merge or new provider/runtime launch.
+- SKIPPED: Separate-provider implementation observation and unrelated full-suite rerun.
+  Captain's local-only scope prohibits separate provider calls; only relevant surface-map integration and compilation were exercised. No CI configuration changed, and no per-PR CI cost was measured.
+- SKIPPED: AC-5 — original/native knowledge terminalization, archive, cleanup and final check.
+  These remain incomplete and separately owned. No stopped repair tree, upstream source, old approval consumption, forced state or sentinel was used by this worker.
+
+### Summary
+
+The selected Go-test exclusion defect is repaired locally with same-case red/green evidence and two meaningful faulty-producer controls. The two-file candidate remains uncommitted, independently unreviewed and unaccepted for delivery; missing usage and original/native closure remain explicit limitations.

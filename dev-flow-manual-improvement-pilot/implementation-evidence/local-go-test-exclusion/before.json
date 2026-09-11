@@ -1,0 +1,150 @@
+{
+  "timestamp": "2026-09-11T07:47:21.470232+00:00",
+  "baseline": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a",
+  "runtime": "3.11.14 (main, Oct 13 2025, 15:28:41) [Clang 17.0.0 (clang-1700.0.13.5)]",
+  "python": "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "checker_sha256": "b3a35b32caed183863e7bff77545c014e6122641512f7b9f47ec2a79ef758757",
+  "fixture_base": "396da4aae0d07f7944c8adb7bfbc2121c1629b87",
+  "fixture_candidate": "153fffe662556e4426a7c140ba778a5acc180c5f",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case"
+      ],
+      "cwd": null,
+      "stdout": "Initialized empty Git repository in /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case/.git/\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "add",
+        "seed"
+      ],
+      "cwd": null,
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "-c",
+        "user.name=fixture",
+        "-c",
+        "user.email=fixture@example.test",
+        "commit",
+        "-m",
+        "base"
+      ],
+      "cwd": null,
+      "stdout": "[main (root-commit) 396da4a] base\n 1 file changed, 1 insertion(+)\n create mode 100644 seed\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": null,
+      "stdout": "396da4aae0d07f7944c8adb7bfbc2121c1629b87\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "add",
+        "internal/task_test.go"
+      ],
+      "cwd": null,
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "-c",
+        "user.name=fixture",
+        "-c",
+        "user.email=fixture@example.test",
+        "commit",
+        "-m",
+        "Go test"
+      ],
+      "cwd": null,
+      "stdout": "[main 153fffe] Go test\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task_test.go\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": null,
+      "stdout": "153fffe662556e4426a7c140ba778a5acc180c5f\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "396da4aae0d07f7944c8adb7bfbc2121c1629b87",
+        "153fffe662556e4426a7c140ba778a5acc180c5f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/empty.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case"
+      ],
+      "cwd": null,
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "396da4aae0d07f7944c8adb7bfbc2121c1629b87",
+        "153fffe662556e4426a7c140ba778a5acc180c5f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/empty.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case",
+        "--no-exclude"
+      ],
+      "cwd": null,
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    }
+  ]
+}

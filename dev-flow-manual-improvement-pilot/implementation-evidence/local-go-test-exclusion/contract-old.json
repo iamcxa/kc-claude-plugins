@@ -1,0 +1,314 @@
+{
+  "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/scripts/kc-dev-flow-contract-test.py",
+  "extracted_line_start": 2081,
+  "extracted_line_end": 2281,
+  "commands": [
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-m",
+        "py_compile",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "init",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "Initialized empty Git repository in /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8/.git/\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "add",
+        "-A"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "-c",
+        "user.name=fixture",
+        "-c",
+        "user.email=fixture@example.test",
+        "commit",
+        "-m",
+        "base"
+      ],
+      "stdout": "[main (root-commit) c037c1b] base\n 3 files changed, 4 insertions(+)\n create mode 100644 docs/dev/README.md\n create mode 100644 scripts/kc-dev-flow-contract-test.py\n create mode 100644 scripts/ship-flow/legacy-runner.sh\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "c037c1b8ce0dc60698693b3a27ee949a0bc58e10\n",
+      "stderr": null,
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "rm",
+        "-q",
+        "scripts/ship-flow/legacy-runner.sh"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "add",
+        "-A"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "-c",
+        "user.name=fixture",
+        "-c",
+        "user.email=fixture@example.test",
+        "commit",
+        "-m",
+        "candidate"
+      ],
+      "stdout": "[main 554d152] candidate\n 7 files changed, 6 insertions(+), 4 deletions(-)\n create mode 100644 scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\n create mode 100644 scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\n create mode 100644 scripts/ship-flow/e2e-cli.sh\n delete mode 100644 scripts/ship-flow/legacy-runner.sh\n create mode 100644 scripts/ship-flow/parse-execute-external.py\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "554d1529ef95fb32c0a0fdada54bf71f63d22480\n",
+      "stderr": null,
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-round0-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: FAIL\nmissing SURFACE line: docs/dev/README.md\nmissing SURFACE line: scripts/kc-dev-flow-contract-test.py\nmissing SURFACE line: scripts/ship-flow/e2e-cli.sh\nmissing SURFACE line: scripts/ship-flow/legacy-runner.sh\nmissing SURFACE line: scripts/ship-flow/parse-execute-external.py\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/free-text-target-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: FAIL\nmissing SURFACE line: scripts/ship-flow/legacy-runner.sh\ninvalid target: scripts/ship-flow/parse-execute-external.py -> handles the fixture path\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-round0-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/poc-work-item-not-in-diff.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/poc-work-item-not-in-diff.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "surface-map-check: FAIL\nretained surface not in diff: scripts/ship-flow/does-not-exist-in-diff.py\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/without-it-true-true-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: FAIL\nwithout-it pair does not bind docs/dev/README.md\nmissing SURFACE line: scripts/kc-dev-flow-contract-test.py\nmissing SURFACE line: scripts/ship-flow/e2e-cli.sh\nmissing SURFACE line: scripts/ship-flow/legacy-runner.sh\nmissing SURFACE line: scripts/ship-flow/parse-execute-external.py\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/deletion-only-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: FAIL\nmissing SURFACE line: docs/dev/README.md\nmissing SURFACE line: scripts/kc-dev-flow-contract-test.py\nmissing SURFACE line: scripts/ship-flow/e2e-cli.sh\nmissing SURFACE line: scripts/ship-flow/parse-execute-external.py\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-mismatch-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/production-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/production-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "--shape-mapping",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/shape-mapping-fixture.txt"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: FAIL\nshape mapping says AC-1, evidence says AC-2\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c037c1b8ce0dc60698693b3a27ee949a0bc58e10",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/full-coverage-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "excluded: scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml\nexcluded: scripts/fixtures/ship-flow/dev-50-cli-flow.yaml\nsurface-map-check: OK (5 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "add",
+        "internal/task_test.go"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "-c",
+        "user.name=fixture",
+        "-c",
+        "user.email=fixture@example.test",
+        "commit",
+        "-m",
+        "Go test"
+      ],
+      "stdout": "[main 228cf31] Go test\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task_test.go\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "228cf31fa2c6b12f3512da570e8bb124104e7732\n",
+      "stderr": null,
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "554d1529ef95fb32c0a0fdada54bf71f63d22480",
+        "228cf31fa2c6b12f3512da570e8bb124104e7732",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8/go-evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    }
+  ],
+  "outcome": {
+    "exit": 1,
+    "message": "Go test default exclusion failed: CompletedProcess(args=['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py', '554d1529ef95fb32c0a0fdada54bf71f63d22480', '228cf31fa2c6b12f3512da570e8bb124104e7732', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8/go-evidence.md', '--work-item', '/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md', '--brief', '/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md', '--repo', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kc-dev-flow-surface-map-0vzjzyz8'], returncode=1, stdout='surface-map-check: FAIL\\nmissing SURFACE line: internal/task_test.go\\n', stderr='')"
+  }
+}

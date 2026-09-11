@@ -1,0 +1,79 @@
+diff --git a/kc-dev-flow/scripts/surface-map-check.py b/kc-dev-flow/scripts/surface-map-check.py
+index 4d66da97..e4bab818 100755
+--- a/kc-dev-flow/scripts/surface-map-check.py
++++ b/kc-dev-flow/scripts/surface-map-check.py
+@@ -41,7 +41,7 @@ def load_profile_loader():
+ LOADER = load_profile_loader()
+ 
+ EXCLUDE_DIR_RE = re.compile(r"(^|/)(tests?|fixtures?|__tests__)/")
+-EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts")
++EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts", "_test.go")
+ 
+ AC_HEADING_RE = re.compile(r"\*\*AC-(\d+)\s*\*\*")
+ AC_TARGET_RE = re.compile(r"^AC-(\d+)$")
+diff --git a/scripts/kc-dev-flow-contract-test.py b/scripts/kc-dev-flow-contract-test.py
+index dff8b552..cddef072 100755
+--- a/scripts/kc-dev-flow-contract-test.py
++++ b/scripts/kc-dev-flow-contract-test.py
+@@ -2171,7 +2171,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
+             command += ["--shape-mapping", str(shape_mapping)]
+         if extra_args:
+             command += extra_args
+-        return subprocess.run(command, capture_output=True, text=True)
++        return subprocess.run(command, capture_output=True, text=True, timeout=60)
+ 
+     round0 = run_surface_map_check(surface_map_round0_evidence)
+     require(
+@@ -2234,6 +2234,52 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
+         f"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}",
+     )
+ 
++
++    # Go colocates tests with production code; only the _test.go suffix is excluded.
++    surface_map_base = surface_map_candidate
++    (surface_map_repo / "internal").mkdir()
++    go_test_path = "internal/task_test.go"
++    (surface_map_repo / go_test_path).write_text("package internal\n", encoding="utf-8")
++    subprocess.run(["git", "-C", str(surface_map_repo), "add", go_test_path],
++                   check=True, capture_output=True, timeout=60)
++    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "Go test"],
++                   check=True, capture_output=True, timeout=60)
++    surface_map_candidate = subprocess.check_output(
++        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
++    ).strip()
++    go_evidence = surface_map_repo / "go-evidence.md"
++    go_evidence.write_text("", encoding="utf-8")
++    go_default = run_surface_map_check(go_evidence)
++    require(go_default.returncode == 0 and f"excluded: {go_test_path}" in go_default.stdout,
++            f"Go test default exclusion failed: {go_default}")
++    go_strict = run_surface_map_check(go_evidence, extra_args=["--no-exclude"])
++    require(go_strict.returncode == 1 and f"missing SURFACE line: {go_test_path}" in go_strict.stdout,
++            f"Go test strict checking weakened: {go_strict}")
++    for target, pair, expected, diagnostic in (
++        ("AC-999", f"go test {go_test_path} | git restore {go_test_path}", 1, "unknown AC"),
++        ("AC-1", "true | true", 1, "without-it pair does not bind"),
++        ("AC-1", f"go test {go_test_path} | git restore {go_test_path}", 0, "1 files checked"),
++    ):
++        go_evidence.write_text(f"SURFACE: {go_test_path} -> {target} | {pair}\n", encoding="utf-8")
++        go_mapped = run_surface_map_check(go_evidence)
++        require(go_mapped.returncode == expected and diagnostic in go_mapped.stdout,
++                f"Explicit Go test mapping was not checked: {go_mapped}")
++    surface_map_base = surface_map_candidate
++    go_production_path = "internal/task.go"
++    (surface_map_repo / go_production_path).write_text("package internal\n", encoding="utf-8")
++    subprocess.run(["git", "-C", str(surface_map_repo), "add", go_production_path],
++                   check=True, capture_output=True, timeout=60)
++    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "Go production"],
++                   check=True, capture_output=True, timeout=60)
++    surface_map_candidate = subprocess.check_output(
++        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
++    ).strip()
++    go_evidence.write_text("", encoding="utf-8")
++    go_production = run_surface_map_check(go_evidence)
++    require(go_production.returncode == 1
++            and f"missing SURFACE line: {go_production_path}" in go_production.stdout,
++            f"Non-test Go enforcement weakened: {go_production}")
++
+ run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
+ run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
+ 
