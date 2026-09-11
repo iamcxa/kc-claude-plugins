@@ -67,6 +67,7 @@ gates:
                 state: pending
 started: 2026-09-10T16:11:49Z
 worktree: .worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot
+pr: https://github.com/iamcxa/kc-claude-plugins/pull/421
 ---
 
 # One manually triggered local dev-flow improvement cycle
