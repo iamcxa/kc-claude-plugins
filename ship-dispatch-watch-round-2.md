@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: 7z61dwwgjsffrpgk7ga4m60r
+gates:
+    version: 1
+    records:
+        - id: gate:7z61dwwgjsffrpgk7ga4m60r:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:7z61dwwgjsffrpgk7ga4m60r-backlog-1
+              briefing:
+                id: briefing:7z61dwwgjsffrpgk7ga4m60r:backlog:attempt-1:revision-1
+                digest: sha256:af9ea0ba813868f38b9b8b9e1b7baa305d4de38fb3a01f5ba8e554ba224d4678
+                room-ref: ./ship-dispatch-watch-round-2/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7z61dwwgjsffrpgk7ga4m60r:backlog:1
+                briefing: briefing:7z61dwwgjsffrpgk7ga4m60r:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T07:36:53.776853Z"
+                decision: approve
+                reason: 'Captain approved in chat: 「確認」 2026-09-11 (after the plain-language summary of both r2 tasks)'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The first real batch (`sprint: ship-cloud-wrapper`, 2026-09-10/11) delivered two tasks through cloud

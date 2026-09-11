@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7z61dwwgjsffrpgk7ga4m60r:backlog:attempt-1:revision-1",
+  "question": "Admit ship-dispatch-watch-round-2 into implementation under the POC profile, delivered by a cloud first officer?",
+  "artifacts": [
+    {
+      "id": "artifact:7z61dwwgjsffrpgk7ga4m60r:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c48b441571e96adb4edd2790cc97bfbdcf3cf003/ship-dispatch-watch-round-2/review/backlog/backlog-review.md",
+      "rev": "sha256:14d8b9a1e5287e15dc3af201ece8f67e1f250a987fc2334c81283a1dae77834c",
+      "mediaType": "text/markdown",
+      "summary": "Round-2 hardening from the first real batch"
+    }
+  ]
+}
