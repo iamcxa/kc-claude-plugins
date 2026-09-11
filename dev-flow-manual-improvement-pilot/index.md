@@ -196,3 +196,14 @@ The selected Go-test exclusion defect is repaired locally with same-case red/gre
 ### Summary
 
 PASS for this exact bounded local candidate: independent behavior evidence supports the repair with no scoped correction required. Product delivery and native closure remain unaccepted; no upstream/stopped-tree access, paid runtime, provider/cloud execution, product mutation, external post or authority change was performed, and only state evidence/report durability is authorized.
+
+
+## Delivery receipt: Captain-authorized Draft PR
+
+Kent explicitly requested 「開 PR」 after the exact two-file explanation. This expands the earlier local-only delivery restriction to committing these exact files, pushing this branch and creating a Draft PR; merge, installation, recurring operation, upstream changes and native terminalization remain outside scope. The First Officer reports the validation approval recorded and pushed, intentionally not consumed.
+
+- Product commit: `715f8871ee33e7d42e3f22b6b346ac3a3e05938a`; base `0ec3380f590cbaf5b01ee1c325eb222da99a3c5a`; reviewed binary patch SHA256 remains `c1d7ed2b15b237450dea31c6ca1de0fb288986d49516b311d544560d83cdd21c`.
+- Draft PR: [#421](https://github.com/iamcxa/kc-claude-plugins/pull/421), `spacedock-ensign/dev-flow-manual-improvement-pilot` → `main`, assigned to the authenticated owner. GitHub readback confirms exactly `kc-dev-flow/scripts/surface-map-check.py` (+1/-1) and `scripts/kc-dev-flow-contract-test.py` (+47/-1), one commit, +48/-2 overall.
+- State prerequisite passed before outward action; current remote main matched the reviewed base, duplicate branch/repair checks were clear, exact-base merge preflight passed, and only the two approved paths were staged. Product worktree is clean after commit. No rebase, extra product edit, version bump, test rerun, coauthor insertion, external announcement/comment or gate consumption occurred.
+- Existing evidence remains 13/13 scoped contract scenarios and 11/11 independent checks. [Raw delivery readback](delivery-evidence/local-go-test-exclusion/draft-pr-receipt.json) captures the exact PR metadata and check snapshot: multi-profile route gate and security check succeeded; required version parity was still in progress. This is not a full-suite or all-CI-passed claim.
+- [Exact PR body](delivery-evidence/local-go-test-exclusion/pr-body.md) retains the approved candidate and immutable state audit link. PR remains OPEN and Draft; readiness, merge and original/native knowledge terminalization, archive, cleanup and final check remain incomplete. Native PR-field tracking remains First Officer-owned.
