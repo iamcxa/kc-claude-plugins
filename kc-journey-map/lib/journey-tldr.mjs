@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-// node lib/journey-tldr.mjs export <roomId> <out.tldr>
-// node lib/journey-tldr.mjs import <in.tldr>  <roomId>
-//
-// Native tldraw files retain editable shapes and their metadata.
-//
-// Import writes the whole document. Anything already in the target room is replaced.
 
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -17,8 +11,6 @@ if (mode === 'export') {
 	const sh = (args) => execFileSync('agent-browser', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
 	sh(['open', `http://localhost:3737/?room=${a}`, '--viewport', '1400x900'])
 
-	// serializeTldrawJson is bound to a live editor, so the export goes through the
-	// browser. Ask until the canvas has finished connecting rather than sleeping blind.
 	let json
 	for (let attempt = 0; attempt < 12; attempt++) {
 		const raw = sh(['eval', 'window.serializeTldrawJson ? window.serializeTldrawJson() : Promise.resolve("")']).trim()
@@ -45,8 +37,7 @@ if (mode === 'import') {
 		process.exit(1)
 	}
 
-	// A .tldr's records and schema are exactly a TLStoreSnapshot, which loadSnapshot
-	// takes, so the file goes in without tldraw having to be imported here.
+	// Import replaces the entire target document, including manually drawn content.
 	const snapshot = { store: Object.fromEntries(file.records.map((r) => [r.id, r])), schema: file.schema }
 	const res = await fetch(`${API}/doc?room=${b}`, {
 		method: 'PUT',

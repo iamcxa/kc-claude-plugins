@@ -5,12 +5,10 @@ import type { RawData } from 'ws'
 import { createTLSchema } from '@tldraw/tlschema'
 import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
 
-// Overridable so a check can run its own server on its own port instead of silently
-// talking to whichever canvas the developer already had open.
+// Separate ports keep checks from mutating another running canvas.
 const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
 const DEFAULT_ROOM = 'default'
 
-// Validate PATCH records before writing so malformed client input receives detailed HTTP 400 diagnostics.
 const schema = createTLSchema()
 
 function validateRecord(record: any): string | null {
@@ -40,7 +38,6 @@ app.register(async (app) => {
 		const roomId = (req.params as any).roomId as string
 		const sessionId = (req.query as any)?.['sessionId'] as string
 
-		// Messages that arrive before the room finishes loading are collected and replayed.
 		const caughtMessages: RawData[] = []
 		const collect = (message: RawData) => caughtMessages.push(message)
 		socket.on('message', collect)
@@ -60,7 +57,6 @@ app.register(async (app) => {
 		active: activeRooms(),
 	}))
 
-	// Whole-document snapshot: {clock, documents:[{state, lastChangedClock}], schema, tombstones}
 	app.get('/doc', async (req) => {
 		const roomId = roomIdOf(req)
 		return { roomId, snapshot: makeOrLoadRoom(roomId).getCurrentSnapshot() }
@@ -87,7 +83,6 @@ app.register(async (app) => {
 		return { roomId, put: put.length, removed: remove.length, clock: room.getCurrentDocumentClock() }
 	})
 
-	// Whole-document replace. Every page not in the snapshot is dropped.
 	app.put('/doc', async (req, res) => {
 		const roomId = roomIdOf(req)
 		const body = req.body as any

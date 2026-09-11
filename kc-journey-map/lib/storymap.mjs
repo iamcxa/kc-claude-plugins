@@ -1,15 +1,3 @@
-// The story-map projection: the page people talk over.
-//
-// Jeff Patton's shape: blue for the persona and for release boundaries, green for the
-// backbone of activities, yellow for the stories beneath them, small labels for ownership
-// and for evidence status. The backbone reads left to right as a narrative.
-//
-// A release is a horizontal band across every activity, named at the left margin, with a
-// full-width line above it. That is what makes the map plannable: the first band has to be
-// a thin line through the whole backbone that still works, and you can only see whether it
-// is one when the bands cut across all the columns. Bands scoped to a set of columns —
-// which is what this drew before — cannot express a walking skeleton at all.
-//
 import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
 import { normalizeStory } from './model.mjs'
 
@@ -21,12 +9,8 @@ const LEFT_W = 250
 const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
-// The Now row's height depends on how much pain a step carries, so every row below it
-// is placed relative to the tallest thing above rather than at a fixed offset.
 const GAP = 40
 
-// tldraw's default page, so the map people should land on is the one they land on and
-// no empty 'Page 1' is left beside it.
 export const STORY_PAGE_ID = 'page:page'
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
@@ -51,8 +35,6 @@ export function buildStoryMap(model) {
 		0,
 		...nowTexts.map((t) => fitHeight(t, 220))
 	)
-	// A band is as tall as the wordiest band in the row, so a long owner note cannot
-	// spill over its neighbour.
 	const bandH = Math.max(
 		BAND_H,
 		...(model.ownership ?? []).map((b) => fitHeight(`${b.owner} — ${b.note ?? ''}`.trim(), (steps.length ? PITCH : 240)))
@@ -81,8 +63,6 @@ export function buildStoryMap(model) {
 		})
 	}
 
-	// The status quo, when the file records one. CL's rule, kept: an unfinished
-	// implementation of the thing being proposed is not the user's current world.
 	;(model.now ?? []).forEach((item, i) => {
 		const text = nowTexts[i]
 		put.push({
@@ -102,8 +82,6 @@ export function buildStoryMap(model) {
 		})
 	})
 
-	// One sentence naming what is true when the whole loop works, read above the
-	// backbone it sits over rather than folded into the persona note it is not part of.
 	if (model.one_journey) {
 		put.push({
 			...label({
@@ -140,12 +118,9 @@ export function buildStoryMap(model) {
 		})
 	})
 
-	// ── release bands ────────────────────────────────────────────────────────────
 	const releases = model.releases ?? []
 	const all = steps.flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))
 
-	// A story nobody has placed is drawn in a band of its own rather than dropped: where it
-	// belongs is a decision someone still owes, and a silent omission hides that.
 	const bands = [
 		...releases.map((r) => ({ ...r, stories: all.filter((s) => s.release === r.id) })),
 		{ id: null, name: 'UNASSIGNED', goal: 'No release decided yet.', stories: all.filter((s) => !s.release || !releases.some((r) => r.id === s.release)) },
@@ -179,7 +154,6 @@ export function buildStoryMap(model) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		// Priority runs top to bottom inside a band, per column.
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []

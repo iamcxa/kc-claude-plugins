@@ -1,4 +1,3 @@
-// Test fixture for story planning.
 export const fixtureModel = {
 	journey: 'fixture',
 	persona: 'A person who has to do the thing.',

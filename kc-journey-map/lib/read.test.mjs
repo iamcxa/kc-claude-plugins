@@ -1,7 +1,3 @@
-// node --test lib/*.test.mjs
-//
-// Drives the reader against shapes the renderer actually produced, not hand-built ones,
-// so a change in what the renderer tags is caught here rather than in a browser.
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -42,7 +38,6 @@ test('dragging a story up inside its band is a priority change', () => {
 })
 
 test('dragging a story across a release line is read as a release change', () => {
-	// The planning gesture: this belongs in a later release, or has been pulled forward.
 	const shapes = rendered()
 	const line = shapes.filter((s) => s.meta?.journey?.kind === 'release-line').sort((a, b) => a.y - b.y)[0]
 	find(shapes, 'shape:sm-story-a-0').y = line.y + 50
@@ -75,7 +70,6 @@ test('a card straddling two columns is reported, never guessed', () => {
 	assert.deepEqual(card.candidates.map((c) => c.step).sort(), ['b', 'c'])
 })
 
-// ── applying it back to the file ────────────────────────────────────────────────
 
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -108,8 +102,6 @@ test('a reworded story is rewritten in the file', () => {
 })
 
 test('a story written in object form is reworded too', () => {
-	// Stories may be a bare string or {id, card}; they take different branches on the way
-	// back into the file, and only the string one was covered.
 	const path = onDisk()
 	applyDiff(path, {
 		...clean,
@@ -117,7 +109,5 @@ test('a story written in object form is reworded too', () => {
 	})
 	const after = readFileSync(path, 'utf8')
 	assert.match(after, /Watches it land/)
-	// Rewriting the whole entry as a bare string would also satisfy the line above while
-	// silently dropping the story's id, so the id is what the assertion is really for.
 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
 })

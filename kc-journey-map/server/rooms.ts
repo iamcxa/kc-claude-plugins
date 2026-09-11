@@ -24,8 +24,7 @@ export function makeOrLoadRoom(roomId: string): TLSocketRoom<any, void> {
 	const sql = new NodeSqliteWrapper(db)
 	const storage = new SQLiteSyncStorage({ sql })
 
-	// The room is kept open after the last socket leaves. A PATCH must be able to reach
-	// a room nobody has open, and reopening on every request would drop the sync clock.
+	// Keep rooms available for PATCH requests without connected browser sessions.
 	const room = new TLSocketRoom({ storage })
 
 	rooms.set(roomId, { room, db })

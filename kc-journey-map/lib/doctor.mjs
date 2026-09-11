@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-// node lib/doctor.mjs
-//
-// Says why the canvas will not start, in the terms of the thing to go fix. Without it
-// the failures are a Node built-in that "does not exist", a bare module-not-found, and
-// a port bind error — none of which name what an adopter has to do.
 
 import { connect } from 'node:net'
 import { existsSync } from 'node:fs'
@@ -30,10 +25,7 @@ else
 if (existsSync(join(ROOT, 'node_modules', 'tldraw'))) ok('dependencies', 'installed')
 else bad('dependencies', 'node_modules is missing or incomplete', `npm install --prefix ${ROOT}`)
 
-// Connects rather than binds. Two bind probes each lied here: an IPv4 probe called
-// *:3737 free because the dev client holds it over IPv6, and a wildcard probe called
-// 127.0.0.1:5858 free because the doc API holds only the loopback address. Whether
-// something already answers on the port is the question, and connecting asks it.
+// Bind probes can miss listeners using a different IPv4/IPv6 address.
 const portFree = (port) =>
 	new Promise((resolve) => {
 		const socket = connect({ port, host: '127.0.0.1' })

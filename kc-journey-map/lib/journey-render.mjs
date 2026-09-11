@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// node lib/journey-render.mjs <journey.yaml> [roomId]
 import { renderToRoom } from './render.mjs'
 const [path, room, ...extra] = process.argv.slice(2)
 if (!path || path.startsWith('--') || room?.startsWith('--') || extra.length) {

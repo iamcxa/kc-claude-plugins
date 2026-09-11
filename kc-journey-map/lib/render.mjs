@@ -1,4 +1,3 @@
-// Projects journey YAML onto a persisted story-map canvas.
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
@@ -8,7 +7,6 @@ export function loadJourney(path) {
 	return parse(readFileSync(path, 'utf8'))
 }
 
-// Report which activities each declared release covers.
 export function releaseCoverage(model) {
 	const steps = model.steps ?? []
 	return (model.releases ?? []).map((r) => {
@@ -17,10 +15,7 @@ export function releaseCoverage(model) {
 	})
 }
 
-// Render is a reconcile, not an append: shapes this renderer owns that the model no
-// longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
-// and are never touched — the room is where a workshop happens, not only where a file
-// is displayed.
+// Untagged shapes belong to the user and must survive redraw.
 export async function renderToRoom({ path, room, api = API }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
@@ -29,7 +24,7 @@ export async function renderToRoom({ path, room, api = API }) {
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
-	// Only shapes are reconciled. Deleting a page would take a person's own pages with it.
+	// Preserve manually created pages.
 	const remove = (current.snapshot?.documents ?? [])
 		.map((d) => d.state)
 		.filter((r) => r.typeName === 'shape' && r.meta?.journey && !wanted.has(r.id))

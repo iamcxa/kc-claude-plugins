@@ -1,13 +1,4 @@
 #!/usr/bin/env node
-// node lib/journey-export.mjs <roomId> <out.png> [pageId]
-//
-// Exports with tldraw's own exporter rather than a screenshot: `toImage` captures the
-// shapes' own bounds, so the whole board comes out at full resolution instead of
-// whatever happened to be inside the viewport.
-//
-// It drives the already-open canvas through agent-browser, which is the only browser
-// this repository automates. Without agent-browser, open the room and run the same
-// `editor.toImage` call from the console.
 
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
@@ -37,8 +28,6 @@ const script = `
 })()
 `
 
-// The canvas has to finish connecting before the editor exists; a fixed sleep would
-// either waste time or race, so this asks until it answers.
 let payload
 for (let attempt = 0; attempt < 12; attempt++) {
 	const raw = sh(['eval', script]).trim()

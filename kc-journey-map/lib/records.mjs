@@ -1,15 +1,5 @@
 import { getIndices } from '@tldraw/utils'
 
-// Record factories for agent-authored story maps.
-//
-// Every default here was read off a shape the tldraw editor created in a browser,
-// not written from the docs. That matters for one prop in particular: the editor sets
-// a note's `fontSizeAdjustment` to 1, and a note carrying 0 passes schema validation
-// and then renders its label at font-size 0px — a blank sticky. The server's PATCH
-// validator cannot catch it, so the fix lives here.
-//
-// A 12-word card at size `m` wraps and shrinks to fit a 200x200 note with growY 0
-// (verified in the browser); longer text has not been tried.
 
 export const richText = (text) => ({
 	type: 'doc',
@@ -43,6 +33,7 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 			verticalAlign: 'middle',
 			labelColor: 'black',
 			growY: 0,
+			// Zero passes schema validation but renders invisible note text.
 			fontSizeAdjustment: 1,
 			url: '',
 			scale: 1,
@@ -76,12 +67,10 @@ const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', a
 	},
 })
 
-// A release boundary: a thin solid bar drawn across the journey.
 export function releaseLine({ id, x, y, w, index = 'a1', parentId = 'page:page', color = 'blue', thickness = 5 }) {
 	return geo({ id, x, y, w, h: thickness, index, parentId, color, fill: 'solid' })
 }
 
-// An outlined box for a slice name, an ownership band, or a status card.
 export function label({
 	id,
 	text,
@@ -100,9 +89,7 @@ export function label({
 	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
 }
 
-// A geo box does not grow to fit its label — text past the bottom edge is simply drawn
-// outside the box. These numbers were measured in the browser on a 300px-wide box at
-// size 's': 18px draw font, 24px line box, about 26 characters before it wraps.
+// Geo labels do not auto-grow; these text metrics were measured at 300px, size s.
 const LINE_H = { s: 24, m: 32 }
 const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
 
@@ -114,17 +101,11 @@ export function fitHeight(text, width, size = 's', padding = 40) {
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
-// Ascending fractional indexes, from tldraw's own generator.
-//
-// A hand-rolled two-character run looked right and was not: the leading letter encodes
-// how many characters the rest must have, so `a1` validates and `b1` does not — it needs
-// `b11`. A run past 61 shapes produced keys the schema rejected, and a test that checked
-// only uniqueness and order passed the whole way.
+// Fractional-index keys encode length; hand-built sequences can fail schema validation.
 export function indexes(n) {
 	return getIndices(n)
 }
 
-// The story map uses the default page so opening the room lands on its content.
 export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
 }

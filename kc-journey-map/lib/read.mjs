@@ -1,4 +1,3 @@
-// Reads wording, order, and release membership from a story-map canvas.
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
@@ -22,8 +21,7 @@ export async function readRoom({ room, api = API }) {
 
 const byKind = (shapes, kind) => shapes.filter((s) => s.meta?.journey?.kind === kind)
 
-// A node id appearing twice means a card was duplicated. tldraw copies meta verbatim, so
-// the copy is indistinguishable from its original and neither is trusted.
+// tldraw duplicates metadata verbatim, so duplicated node IDs cannot be trusted.
 function duplicatesOf(shapes) {
 	const seen = new Map()
 	for (const s of shapes) seen.set(s.meta.journey.nodeId, (seen.get(s.meta.journey.nodeId) ?? 0) + 1)
@@ -36,8 +34,6 @@ const indexByNode = (shapes, dupes) =>
 const orderOf = (map) =>
 	[...map.entries()].sort((a, b) => a[1].x - b[1].x).map(([id]) => id)
 
-// Which column a shape sits under, measured as the share of its own width that overlaps
-// each anchor. A card straddling two columns is reported rather than assigned.
 function placeUnderColumn(shape, anchors) {
 	const scored = anchors
 		.map(({ nodeId, x }) => ({
@@ -87,10 +83,6 @@ export function diffAgainstModel(shapes, model) {
 	const storyMoved = storyOrder.length && storyOrder.join() !== modelOrder.filter((id) => actBy.has(id)).join()
 	const reordered = storyMoved ? storyOrder : null
 
-	// ── release membership ───────────────────────────────────────────────────────
-	// Dragging a story across a release line is the planning gesture — it says this
-	// belongs in a later release, or has been pulled into the first one. The lines are on
-	// the canvas, so which band a story landed in is read from its y against them.
 	const lines = byKind(story, 'release-line').sort((a, b) => a.y - b.y)
 	const declaredReleases = (model.releases ?? []).map((r) => r.id)
 	const bandOf = (shape) => {
@@ -116,8 +108,6 @@ export function diffAgainstModel(shapes, model) {
 		}
 	}
 
-	// ── story priority ───────────────────────────────────────────────────────────
-	// Priority runs top to bottom within a band, so only stories sharing a band compare.
 	const storiesReordered = []
 	for (const step of steps) {
 		const inStep = [...storyMeta.entries()].filter(([, m]) => m.step === step.id).map(([id]) => id)
@@ -136,7 +126,6 @@ export function diffAgainstModel(shapes, model) {
 		}
 	}
 
-	// ── cards nobody claimed ─────────────────────────────────────────────────────
 	const storyAnchors = [...actBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
 
 	const unclaimed = shapes
@@ -154,9 +143,7 @@ export function diffAgainstModel(shapes, model) {
 	return { reordered, reworded, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
 }
 
-// `lineWidth: 0` and `flowCollectionPadding: false` keep the writer from reflowing lines it
-// did not change. Without them a one-card reorder rewrites every wrapped string in the
-// file, and the diff — the reason the journey lives in git at all — stops being readable.
+// Preserve untouched YAML wrapping when writing individual edits.
 const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
 
 const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
@@ -188,8 +175,6 @@ export function applyDiff(path, diff, outPath = path) {
 		applied.push(`reworded ${id}.${field}`)
 	}
 
-	// A story that changed release is rewritten in place; its position inside the band is
-	// a separate report and applies on top.
 	for (const { id, step, now } of diff.releaseMoved) {
 		const node = findStep(steps, step)
 		const item = node?.get('stories')?.items.find((s) => s.get && s.get('id') === id)
@@ -225,8 +210,6 @@ export function applyDiff(path, diff, outPath = path) {
 		applied.push(`reordered to ${diff.reordered.join(' -> ')}`)
 	}
 
-	// A save-as is written even when nothing applied: a caller who asked for that file
-	// should end up with it.
 	if (applied.length || outPath !== path) writeFileSync(outPath, doc.toString(WRITE_OPTS))
 	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null }
 }

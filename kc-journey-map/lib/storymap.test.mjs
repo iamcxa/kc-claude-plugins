@@ -1,5 +1,3 @@
-// node --test lib/*.test.mjs
-//
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildStoryMap } from './storymap.mjs'
@@ -28,8 +26,6 @@ const kindOf = (put, kind) => put.filter((r) => r.meta?.journey?.kind === kind)
 const byId = (put, id) => put.find((r) => r.id === id)
 
 test('a story is drawn in its own release band, not its declaring order', () => {
-	// a-0 is in release 1 and a-1 in release 2, so a-1 sits below the line even though it
-	// is second in the same activity's list.
 	const put = buildStoryMap(model)
 	const line = kindOf(put, 'release-line')[0]
 	assert.ok(byId(put, 'shape:sm-story-a-0').y < line.y, 'a release-1 story is below the first line')
@@ -37,7 +33,6 @@ test('a story is drawn in its own release band, not its declaring order', () => 
 })
 
 test('a release line spans every activity, not a range of them', () => {
-	// A band scoped to some columns cannot express a walking skeleton; that was the defect.
 	const put = buildStoryMap(model)
 	const line = kindOf(put, 'release-line')[0]
 	const activities = kindOf(put, 'activity')
@@ -67,16 +62,12 @@ test('bands do not overlap', () => {
 
 
 test('no shape carries a note fontSizeAdjustment of 0', () => {
-	// A zero passes schema validation and renders the label at font-size 0px.
 	for (const r of buildStoryMap(model)) {
 		if (r.type === 'note') assert.equal(r.props.fontSizeAdjustment, 1, `${r.id} would render blank`)
 	}
 })
 
 test('a map past the 61st shape still gets valid ordered unique indexes', () => {
-	// Sized to emit more than 61 shapes on one page, which is where a hand-rolled run
-	// started producing keys the schema rejects. A nine-activity map emits 47 and would
-	// have passed either way.
 	const steps = Array.from({ length: 16 }, (_, i) => ({ id: `s${i}`, card: `Step ${i}`, stories: ['a', 'b', 'c', 'd'] }))
 	const shapes = buildStoryMap({ journey: 'big', steps, slices: [{ id: 'f', outcome: 'x' }] }).filter(
 		(r) => r.typeName === 'shape'
@@ -86,8 +77,6 @@ test('a map past the 61st shape still gets valid ordered unique indexes', () => 
 	assert.equal(new Set(ix).size, ix.length, 'two shapes share an index')
 	assert.deepEqual(ix, [...ix].sort(), 'indexes are not in ascending order')
 
-	// Unique and ordered is not the same as valid: the leading letter encodes how long the
-	// rest must be, and a run that looked fine produced keys the schema rejected at 62.
 	const schema = createTLSchema()
 	for (const shape of shapes) {
 		assert.doesNotThrow(() => schema.types.shape.validate(shape), `${shape.id} carries an index the schema rejects`)
