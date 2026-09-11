@@ -1,0 +1,5 @@
+{
+  "DEV-401": {"workspace": "ws-401", "session": "sess-401", "message_sha256": "c1"},
+  "DEV-402": {"workspace": "ws-402", "session": "sess-402", "message_sha256": "c2"},
+  "questions": []
+}

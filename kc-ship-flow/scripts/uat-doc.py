@@ -1,24 +1,34 @@
 #!/usr/bin/env python3
 """Build the ship-flow UAT document straight from a sprint's `docs/dev` entities.
 
-usage: uat-doc.py <sprint> --state-dir <dir> [--root <path>] [--flows <path>]
+usage: uat-doc.py <sprint> --dev-state <dir> --ship-state <dir> [--root <path>] [--flows <path>]
+       uat-doc.py <sprint> --state-dir <dir> [--root <path>] [--flows <path>]
+
+`--state-dir <dir>` is shorthand for `--dev-state <dir> --ship-state <dir>` -- both roots the same
+directory. Split-root usage reads task entities (see `load_task_entities` below) from
+`<dev-state>` (`docs/dev/.spacedock-state` in the real checkout) and the `_ship_fence/<sprint>.json`
+batch record from `<ship-state>` (`docs/ship/.spacedock-state`).
 
 This is the cloud-wrapper redesign's `uat-doc.py`
 (`docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md`, section "uat"): no
 `plan-receipt.json`, no `plan-approval.json`, no `close-receipt.json` -- those belonged to the
 plan-flow batch-dir world this sprint's sibling task (dispatch/watch) is replacing. Reads:
 
-  <state-dir>/*.md                    every top-level entity file whose frontmatter `sprint:`
-                                       equals the given sprint (a task of this batch); a task's
-                                       PR link and validation-gate status come only from its own
-                                       frontmatter -- no other file is trusted for those fields.
-  <state-dir>/_ship_fence/<sprint>.json   the batch record dispatch.sh/watch.sh write: per-task
+  <dev-state>/*.md, <dev-state>/*/index.md,
+  <dev-state>/_archive/*.md, <dev-state>/_archive/*/index.md
+                                       every flat or folder-form entity file (live or already
+                                       archived by the pr-merge merge guard) whose frontmatter
+                                       `sprint:` equals the given sprint (a task of this batch); a
+                                       task's PR link and validation-gate status come only from
+                                       its own frontmatter -- no other file is trusted for those
+                                       fields.
+  <ship-state>/_ship_fence/<sprint>.json   the batch record dispatch.sh/watch.sh write: per-task
                                        workspace/session ids, and the questions a cloud worker
                                        asked with the answer sent (design's "Answering
                                        principle"). Optional -- a sprint with no fence file yet
                                        still gets a document, just with no Q&A section content.
 
-`--root` (default: `--state-dir`, resolved) and `--flows` (default: the `E2E flows` Local
+`--root` (default: `--ship-state`, resolved) and `--flows` (default: the `E2E flows` Local
 Profile row, read from `<root>/docs/ship/README.md`) locate the checkout `e2e-gate.py` is run
 against for the "verified" stage's own check, at the **integrated head** -- which head that is
 (`preview`/`trunk`/`staging`) is read from the same README's `Integrated head` Local Profile row,
@@ -132,17 +142,43 @@ def validation_gate_status(frontmatter_text):
     return "resolved" if has_decision else "prepared"
 
 
+def _skip_name(name):
+    """Dotfile or underscore-prefixed -- never an entity or an entity-holding directory
+    (`_archive`, `_debriefs`, `_ship_fence`, `.git`, ...)."""
+    return name.startswith("_") or name.startswith(".")
+
+
+def _iter_entity_paths(state_dir):
+    """Every entity file directly under `state_dir`: flat `<slug>.md`, folder-form
+    `<slug>/index.md`, and the same two shapes again under `_archive/` (where the pr-merge merge
+    guard moves a closed task) -- never recursing into `_debriefs/`, `_ship_fence/`, or any other
+    dotfile/underscore-prefixed directory, and never double-counting `_archive` itself as an
+    entity."""
+    root = Path(state_dir)
+    roots = [root]
+    archive = root / "_archive"
+    if archive.is_dir():
+        roots.append(archive)
+    for r in roots:
+        for path in sorted(r.glob("*.md")):
+            if _skip_name(path.name):
+                continue
+            yield path
+        for path in sorted(r.glob("*/index.md")):
+            if _skip_name(path.parent.name):
+                continue
+            yield path
+
+
 def load_task_entities(state_dir, sprint):
     tasks = {}
-    for path in sorted(Path(state_dir).glob("*.md")):
-        if path.name.startswith("_"):
-            continue
+    for path in _iter_entity_paths(state_dir):
         text = path.read_text(encoding="utf-8")
         frontmatter_text = read_frontmatter_text(text)
         fields = top_fields(frontmatter_text)
         if fields.get("sprint") != sprint:
             continue
-        slug = path.stem
+        slug = path.parent.name if path.name == "index.md" else path.stem
         tasks[slug] = {
             "title": fields.get("title", slug),
             "status": fields.get("status", ""),
@@ -274,21 +310,21 @@ class MissingValidationGate(Exception):
         self.slugs = slugs
 
 
-def build_doc(sprint, state_dir, root=None, flows=None):
-    tasks = load_task_entities(state_dir, sprint)
+def build_doc(sprint, dev_state, ship_state, root=None, flows=None):
+    tasks = load_task_entities(dev_state, sprint)
     if not tasks:
-        raise LookupError(f"no docs/dev entities found for sprint {sprint!r} under {state_dir}")
+        raise LookupError(f"no docs/dev entities found for sprint {sprint!r} under {dev_state}")
 
     missing = sorted(slug for slug, t in tasks.items() if t["validation_gate"] != "prepared")
     if missing:
         raise MissingValidationGate(missing)
 
-    record = load_batch_record(state_dir, sprint)
+    record = load_batch_record(ship_state, sprint)
 
-    resolved_root = str(Path(root).resolve()) if root else str(Path(state_dir).resolve())
+    resolved_root = str(Path(root).resolve()) if root else str(Path(ship_state).resolve())
     readme_path = Path(resolved_root) / "docs" / "ship" / "README.md"
     if not readme_path.is_file():
-        readme_path = Path(state_dir) / "docs" / "ship" / "README.md"
+        readme_path = Path(ship_state) / "docs" / "ship" / "README.md"
     resolved_flows = flows or read_local_profile_row(readme_path, "E2E flows")
     integrated_head = read_local_profile_row(readme_path, "Integrated head")
 
@@ -371,7 +407,9 @@ def load_defaults_decisions(batch_dir):
 def main(argv):
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("sprint")
-    parser.add_argument("--state-dir", required=True)
+    parser.add_argument("--state-dir")
+    parser.add_argument("--dev-state")
+    parser.add_argument("--ship-state")
     parser.add_argument("--root")
     parser.add_argument("--flows")
     try:
@@ -379,8 +417,14 @@ def main(argv):
     except SystemExit:
         return 2
 
+    dev_state = args.dev_state or args.state_dir
+    ship_state = args.ship_state or args.state_dir
+    if not dev_state or not ship_state:
+        print(__doc__, file=sys.stderr)
+        return 2
+
     try:
-        doc = build_doc(args.sprint, args.state_dir, root=args.root, flows=args.flows)
+        doc = build_doc(args.sprint, dev_state, ship_state, root=args.root, flows=args.flows)
     except MissingValidationGate as exc:
         for slug in exc.slugs:
             print(slug)
