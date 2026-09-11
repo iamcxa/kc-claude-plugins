@@ -1,6 +1,6 @@
 ---
 title: "Pilot: one evidence-complete manual dev-flow improvement cycle"
-status: ideation
+status: implementation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -45,7 +45,7 @@ gates:
                 reason: Kent explicitly approved the presented ef2a0045 Pilot design and upstream knowledge-only closure scope with 批准. Implement the existing defect owner first, preserving native approval/evidence and product delivery refusal. Original POC close approval remains valid; no product commit, cloud launch, external post, merge or release authorization is inferred.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-10T16:11:49Z
 ---
 
