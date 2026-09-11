@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: close.py and uat-doc.py read archived and folder-form entities from the dev state root, and record debriefs"
-status: backlog
+status: ideation
 source:
 product: kc-ship-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat: 「確認」 2026-09-11 (after the plain-language summary of both r2 tasks)'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 The first real close of a batch (`sprint: ship-cloud-wrapper`, 2026-09-11) could not run: `close.py`
