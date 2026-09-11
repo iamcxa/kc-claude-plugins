@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: close.py and uat-doc.py read archived and folder-form entities from the dev state root, and record debriefs"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
@@ -89,3 +89,49 @@ work_profile:
   scope_boundary: No schema change; no debrief authored by ship; no Linear.
   semantics_unchanged: false
 ```
+
+## Implementation stage report
+
+`close.py`/`uat-doc.py` both take `--dev-state`/`--ship-state` (`--state-dir` kept as shorthand
+for both roots being the same directory, so every existing fixture keeps working unchanged).
+Entity discovery (`load_task_entities` / `_iter_entity_paths`) now reads flat `<dev-state>/*.md`,
+folder-form `<dev-state>/*/index.md`, and both shapes again under `<dev-state>/_archive/`, skipping
+`_debriefs/`, `_ship_fence/`, and any other dotfile/underscore-prefixed entry. `close.py` gained
+`find_debrief_path`/`scan_and_record_debriefs`: before messaging or receipting, it scans
+`<dev-state>/_debriefs/*.md` for a whole-token match of a merged task's slug and records
+`<slug>.debrief -> {status: pushed, path}` into the fence in place of requiring that hand-authored;
+outside `--dry-run` a changed fence is written back and (unless `--no-commit`) committed
+path-scoped and pushed (`git pull --no-rebase` retry once, never rebase) in the `ship-state`
+checkout, skipped with a stderr warning when `ship-state` isn't a git checkout with a remote so
+fixture directories keep working. No schema change: the receipt's `debrief` field stays a string;
+only the in-memory/on-disk fence gained the `{status, path}` object already used by the real fence
+file's shape.
+
+- [x] AC-1 — `uat-doc.test.py` extended with `fixtures/uat-doc-v2/two-root/` (split dev/ship roots)
+  and `two-root-merged/` (single `--state-dir`), each with one flat, one folder-form, and one
+  `_archive/`-flat entity; both list all three tasks and exit 0.
+- [x] AC-2 — `close.test.py` extended with `fixtures/close-v2/debrief-scan/`: `--dry-run` prints no
+  message for the task whose `_debriefs/` file already names it and one for the task that has none
+  yet; a non-dry run records `<slug>.debrief.status: pushed` with the matched path into the
+  `ship-state` fence.
+- [x] AC-3 — regenerated the receipt for the real `ship-cloud-wrapper` sprint against a scratch
+  copy of `docs/ship/.spacedock-state` (`--no-commit`, no push, real checkouts left untouched):
+  `close.py ship-cloud-wrapper --dev-state docs/dev/.spacedock-state --ship-state <scratch>` exits 0
+  and its `tasks` key set (`ship-cloud-dispatch-and-watch`, `ship-remove-duplicated-stations`,
+  `ship-verify-uat-close`) matches the hand-written
+  `_ship_fence/close-receipt-ship-cloud-wrapper.json` exactly; `close.py --validate` on the
+  regenerated file exits 0.
+- [x] AC-4 — `debrief-scan` fixture's task with no fence entry appears with `workspace_id: null`
+  and is still counted as merged from its own `pr:` field alone.
+
+Rerun: `python3 kc-ship-flow/scripts/close.test.py` and `python3 kc-ship-flow/scripts/uat-doc.test.py`
+both print "all checks passed". `dispatch.test.sh`/`watch.test.sh`/`contract-test.py` show the same
+pre-existing `conductor cli changed: read the diff, then re-pin` failures as the unmodified branch
+(sandbox's `conductor` binary doesn't match the scripts' pin) — confirmed unrelated by stashing this
+change and observing identical failure counts; neither `dispatch.sh` nor `watch.sh` nor any pin file
+was touched by this task.
+
+Residual: `commit_and_push_fence`'s real git commit+push path is exercised only against a
+non-git fixture directory (correctly skipped with a warning); it was not exercised end-to-end
+against a real git checkout with a remote, since doing so in-test would risk pushing to
+`origin/spacedock-state/ship`.
