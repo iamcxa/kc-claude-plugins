@@ -50,6 +50,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 worktree: .worktrees/spacedock-ensign-issue-396-architecture-entrypoint
+pr: iamcxa/kc-claude-plugins#426
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
