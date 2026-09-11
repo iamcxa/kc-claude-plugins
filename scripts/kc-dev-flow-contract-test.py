@@ -898,9 +898,9 @@ for relative in [
 # is only read when a profile is being chosen.
 normalized_choose = " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split())
 require(
-    "asks whether a consumer must do something, not whether the change is published"
+    "Compatibility means a consumer must migrate, edit configuration, or rewrite owned records to upgrade; publication alone is not that trigger"
     in normalized_choose
-    and "it has to run a migration" in normalized_choose,
+    and "Unless you can state that consumers upgrade by taking the version without acting, recommend Production" in normalized_choose,
     "choose-work-profile no longer states the consumer-migration test",
 )
 for relative, phrases in {
@@ -909,7 +909,7 @@ for relative, phrases in {
         "POC — bounded exploration or technical proof",
     ],
     "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
-        "If credible negative evidence could change that commitment",
+        "Before acceptance, recommend the experiment if credible negative evidence could change the commitment",
         "kc-dev-flow-work-profile/v3",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
@@ -1158,17 +1158,44 @@ for label, section in (("3.x migration", migration_3x), ("2.x migration", migrat
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
 
 for phrase in [
+    "Use the first applicable path",
+    "Recorded unchanged choice",
+    "With no change requested, reuse the supported receipt and stop selection",
+    "Supplied acceptance",
+    "not a reconstructed conversation",
+    "Unaccepted recommendation",
+    "Only the unaccepted path requests a profile choice",
+    "For Production with no supplied route",
+    "Use the actual Captain answer",
     "structured Ask UI",
+    "Label unaccepted commitments as proposals",
+    "Without accepted exclusions, describe accepted work",
+    "explain both, including after acceptance",
+    "A candidate with unknown facts is not ready to record",
+    "The comparison explains scope, without replacing supplied acceptance",
+    "<work's declared true | false; omit if unknown>",
+    "<supplied or clock-read RFC3339 time; omit if unknown> # label capture here",
     "**next commitment**, **unresolved assumption**, **observable result**, and **included work**",
     "Repository age selects no profile",
     "existing valuable state and consumers from disposable state",
-    "smallest lower-commitment alternative",
-    "accepted operational duty it cannot cover",
+    "concrete actions through the same end-to-end journey on disposable inputs",
+    "the evidence or accepted duty that experiment cannot cover",
     "do not create a selected receipt or claim success",
     "Preserve an existing receipt while scope is unresolved",
-    "`basis`, included work into `obligations`, exclusions into `scope_boundary`",
+    "`basis`, included work into `obligations`, scope into `scope_boundary`",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
+handoff_steps = [
+    "Recorded unchanged choice", "Supplied acceptance", "Unaccepted recommendation",
+    "## Explain and resolve", "For Production with no supplied route",
+    "## Return the candidate receipt",
+]
+handoff_positions = [chooser.find(step) for step in handoff_steps]
+require(
+    all(pos >= 0 for pos in handoff_positions)
+    and handoff_positions == sorted(handoff_positions),
+    "chooser must route existing entry states before shared explanation and receipt return",
+)
 require_production_route(chooser, "`Production` (`production`)", "`shape -> build -> verify`")
 require(
     "shape -> build -> verify -> release" not in normalized_chooser,

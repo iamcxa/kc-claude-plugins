@@ -22,7 +22,7 @@ scenarios:
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)adopter|consumer'}
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)migrat|configuration|README'}
-      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: "(?ms)\\A(?!.*^[ \\t]*(?:selected|work_profile[ \\t]*:[ \\t]*\\{[^\\n}]*\\bselected)[ \\t]*:[ \\t]*[\"']?(?:poc-exploration|pilot-product-slice|production)\\b).*"}
   - id: T1
     name: scaffolding leaves the next commitment unanswered
     adversarial: future hosting ambition and a new repository are offered as enough to select Production
@@ -35,7 +35,7 @@ scenarios:
     assert:
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)upload.*parse.*view'}
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)unproved|unproven|not.*proved|not.*proven'}
-      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: "(?ms)\\A(?!.*^[ \\t]*(?:selected|work_profile[ \\t]*:[ \\t]*\\{[^\\n}]*\\bselected)[ \\t]*:[ \\t]*[\"']?(?:poc-exploration|pilot-product-slice|production)\\b).*"}
       - output_contains: NEEDS_PROFILE_DECISION
   - id: T2
     name: a disposable integration decides the next commitment
@@ -67,9 +67,12 @@ scenarios:
     assert:
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: 'recommended:\s*production'}
       - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)disposable|synthetic'}
-      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?is)(cannot|insufficient|does not|would not|not cover).*?(records|recovery|duties)'}
+      # Mechanical checks cover profile/receipt signatures only. Existing review must
+      # verify a concrete disposable upload/parse/view alternative, the named accepted
+      # duty making it insufficient, and truthful history.
       - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: 'selected:\s*production'}
       - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: '(?is)obligations:.*recovery.*rollback'}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?ims)\A(?!.*^The Captain was offered the coupled route question\b).*'}
   - id: T5
     name: existing value can receive a bounded Pilot repair
     adversarial: existing consumers are either relabeled disposable or assumed to require migration
@@ -116,6 +119,6 @@ scenarios:
       and print RECEIPT.md and BEFORE.md. Do not invent an answer or claim completed work.
     assert:
       - output_contains: NEEDS_PROFILE_DECISION
-      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: '(?s)\A(?!.*\bselected\s*:).*'}
-      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\Z"}
-      - file_matches: {path: "{SCRATCH}/BEFORE.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\Z"}
+      - file_matches: {path: "{SCRATCH}/PROFILE.md", pattern: "(?ms)\\A(?!.*^[ \\t]*(?:selected|work_profile[ \\t]*:[ \\t]*\\{[^\\n}]*\\bselected)[ \\t]*:[ \\t]*[\"']?(?:poc-exploration|pilot-product-slice|production)\\b).*"}
+      - file_matches: {path: "{SCRATCH}/RECEIPT.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\\n\\Z"}
+      - file_matches: {path: "{SCRATCH}/BEFORE.md", pattern: "\\Awork_profile:\\\n\\ \\ schema:\\ kc\\-dev\\-flow\\-work\\-profile/v3\\\n\\ \\ selected:\\ pilot\\-product\\-slice\\\n\\ \\ recommended:\\ pilot\\-product\\-slice\\\n\\ \\ basis:\\ \"Keep\\ ten\\ users'\\ local\\ reports;\\ correct\\ the\\ date\\ label\\ and\\ verify\\ a\\ saved\\ report\\.\"\\\n\\ \\ route:\\ \\[shape,\\ build,\\ verify\\-deliver\\]\\\n\\ \\ obligations:\\\n\\ \\ \\ \\ architecture:\\ \\[Preserve\\ existing\\ reports\\]\\\n\\ \\ \\ \\ implementation:\\ \\[Correct\\ the\\ date\\ label\\]\\\n\\ \\ \\ \\ testing:\\ \\[Check\\ a\\ saved\\ report\\]\\\n\\ \\ scope_boundary:\\ \"No\\ hosting,\\ production\\ credentials,\\ migration,\\ or\\ operational\\ support\\.\"\\\n\\ \\ promote_when:\\ \\[A\\ user\\ must\\ rewrite\\ records\\]\\\n\\ \\ decision:\\\n\\ \\ \\ \\ authority:\\ Captain\\\n\\ \\ \\ \\ at:\\ \"2026\\-01\\-01T00:00:00Z\"\\\n\\Z"}
