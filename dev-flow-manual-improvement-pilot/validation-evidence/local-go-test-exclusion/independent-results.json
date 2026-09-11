@@ -1,0 +1,660 @@
+{
+  "timestamp": "2026-09-11T07:57:23.704018+00:00",
+  "runtime": "3.11.14 (main, Oct 13 2025, 15:28:41) [Clang 17.0.0 (clang-1700.0.13.5)]",
+  "executable": "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+  "base": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a",
+  "candidate_commit": null,
+  "patch_sha256": "c1d7ed2b15b237450dea31c6ca1de0fb288986d49516b311d544560d83cdd21c",
+  "status": "## spacedock-ensign/dev-flow-manual-improvement-pilot\n M kc-dev-flow/scripts/surface-map-check.py\n M scripts/kc-dev-flow-contract-test.py\n",
+  "checks": [
+    {
+      "name": "baseline reproduces defect",
+      "variant": "baseline",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "",
+      "expected": 1,
+      "diagnostic": "missing SURFACE line",
+      "record_index": 9
+    },
+    {
+      "name": "same-case candidate repairs defect",
+      "variant": "candidate",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "",
+      "expected": 0,
+      "diagnostic": "excluded: internal/task_test.go",
+      "record_index": 10
+    },
+    {
+      "name": "strict checks test file",
+      "variant": "candidate",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "",
+      "expected": 1,
+      "diagnostic": "missing SURFACE line",
+      "record_index": 11
+    },
+    {
+      "name": "explicit unknown target refused",
+      "variant": "candidate",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "SURFACE: internal/task_test.go -> AC-999 | go test internal/task_test.go | git restore internal/task_test.go\n",
+      "expected": 1,
+      "diagnostic": "unknown AC",
+      "record_index": 12
+    },
+    {
+      "name": "explicit stub refused",
+      "variant": "candidate",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "SURFACE: internal/task_test.go -> AC-1 | true | true\n",
+      "expected": 1,
+      "diagnostic": "without-it pair does not bind",
+      "record_index": 13
+    },
+    {
+      "name": "explicit valid map enforced",
+      "variant": "candidate",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "SURFACE: internal/task_test.go -> AC-1 | go test internal/task_test.go | git restore internal/task_test.go\n",
+      "expected": 0,
+      "diagnostic": "1 files checked",
+      "record_index": 14
+    },
+    {
+      "name": "explicit-map bypass mutant detected",
+      "variant": "bypass",
+      "base": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+      "candidate": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "evidence": "SURFACE: internal/task_test.go -> AC-999 | go test internal/task_test.go | git restore internal/task_test.go\n",
+      "expected": 0,
+      "diagnostic": "excluded: internal/task_test.go",
+      "record_index": 15
+    },
+    {
+      "name": "ordinary/non-suffix path enforced: task.go",
+      "variant": "candidate",
+      "base": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "candidate": "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+      "evidence": "",
+      "expected": 1,
+      "diagnostic": "missing SURFACE line: internal/task.go",
+      "record_index": 19
+    },
+    {
+      "name": "overbroad mutant detected",
+      "variant": "overbroad",
+      "base": "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+      "candidate": "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+      "evidence": "",
+      "expected": 0,
+      "diagnostic": "excluded: internal/task.go",
+      "record_index": 20
+    },
+    {
+      "name": "ordinary/non-suffix path enforced: contest.go",
+      "variant": "candidate",
+      "base": "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+      "candidate": "6edbc8ab831689190f53c3fa1a7b09d07da32e31",
+      "evidence": "",
+      "expected": 1,
+      "diagnostic": "missing SURFACE line: internal/contest.go",
+      "record_index": 24
+    },
+    {
+      "name": "ordinary/non-suffix path enforced: task_test.go.bak",
+      "variant": "candidate",
+      "base": "6edbc8ab831689190f53c3fa1a7b09d07da32e31",
+      "candidate": "df389086da85b4271ff432c6900aef7f0e107cee",
+      "evidence": "",
+      "expected": 1,
+      "diagnostic": "missing SURFACE line: internal/task_test.go.bak",
+      "record_index": 28
+    }
+  ],
+  "records": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "diff",
+        "--binary",
+        "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a"
+      ],
+      "stdout": "diff --git a/kc-dev-flow/scripts/surface-map-check.py b/kc-dev-flow/scripts/surface-map-check.py\nindex 4d66da97..e4bab818 100755\n--- a/kc-dev-flow/scripts/surface-map-check.py\n+++ b/kc-dev-flow/scripts/surface-map-check.py\n@@ -41,7 +41,7 @@ def load_profile_loader():\n LOADER = load_profile_loader()\n \n EXCLUDE_DIR_RE = re.compile(r\"(^|/)(tests?|fixtures?|__tests__)/\")\n-EXCLUDE_SUFFIXES = (\".test.py\", \"_test.py\", \".test.ts\", \".spec.ts\")\n+EXCLUDE_SUFFIXES = (\".test.py\", \"_test.py\", \".test.ts\", \".spec.ts\", \"_test.go\")\n \n AC_HEADING_RE = re.compile(r\"\\*\\*AC-(\\d+)\\s*\\*\\*\")\n AC_TARGET_RE = re.compile(r\"^AC-(\\d+)$\")\ndiff --git a/scripts/kc-dev-flow-contract-test.py b/scripts/kc-dev-flow-contract-test.py\nindex dff8b552..cddef072 100755\n--- a/scripts/kc-dev-flow-contract-test.py\n+++ b/scripts/kc-dev-flow-contract-test.py\n@@ -2171,7 +2171,7 @@ with tempfile.TemporaryDirectory(prefix=\"kc-dev-flow-surface-map-\") as surface_m\n             command += [\"--shape-mapping\", str(shape_mapping)]\n         if extra_args:\n             command += extra_args\n-        return subprocess.run(command, capture_output=True, text=True)\n+        return subprocess.run(command, capture_output=True, text=True, timeout=60)\n \n     round0 = run_surface_map_check(surface_map_round0_evidence)\n     require(\n@@ -2234,6 +2234,52 @@ with tempfile.TemporaryDirectory(prefix=\"kc-dev-flow-surface-map-\") as surface_m\n         f\"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}\",\n     )\n \n+\n+    # Go colocates tests with production code; only the _test.go suffix is excluded.\n+    surface_map_base = surface_map_candidate\n+    (surface_map_repo / \"internal\").mkdir()\n+    go_test_path = \"internal/task_test.go\"\n+    (surface_map_repo / go_test_path).write_text(\"package internal\\n\", encoding=\"utf-8\")\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), \"add\", go_test_path],\n+                   check=True, capture_output=True, timeout=60)\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), *git_user, \"commit\", \"-m\", \"Go test\"],\n+                   check=True, capture_output=True, timeout=60)\n+    surface_map_candidate = subprocess.check_output(\n+        [\"git\", \"-C\", str(surface_map_repo), \"rev-parse\", \"HEAD\"], text=True, timeout=60\n+    ).strip()\n+    go_evidence = surface_map_repo / \"go-evidence.md\"\n+    go_evidence.write_text(\"\", encoding=\"utf-8\")\n+    go_default = run_surface_map_check(go_evidence)\n+    require(go_default.returncode == 0 and f\"excluded: {go_test_path}\" in go_default.stdout,\n+            f\"Go test default exclusion failed: {go_default}\")\n+    go_strict = run_surface_map_check(go_evidence, extra_args=[\"--no-exclude\"])\n+    require(go_strict.returncode == 1 and f\"missing SURFACE line: {go_test_path}\" in go_strict.stdout,\n+            f\"Go test strict checking weakened: {go_strict}\")\n+    for target, pair, expected, diagnostic in (\n+        (\"AC-999\", f\"go test {go_test_path} | git restore {go_test_path}\", 1, \"unknown AC\"),\n+        (\"AC-1\", \"true | true\", 1, \"without-it pair does not bind\"),\n+        (\"AC-1\", f\"go test {go_test_path} | git restore {go_test_path}\", 0, \"1 files checked\"),\n+    ):\n+        go_evidence.write_text(f\"SURFACE: {go_test_path} -> {target} | {pair}\\n\", encoding=\"utf-8\")\n+        go_mapped = run_surface_map_check(go_evidence)\n+        require(go_mapped.returncode == expected and diagnostic in go_mapped.stdout,\n+                f\"Explicit Go test mapping was not checked: {go_mapped}\")\n+    surface_map_base = surface_map_candidate\n+    go_production_path = \"internal/task.go\"\n+    (surface_map_repo / go_production_path).write_text(\"package internal\\n\", encoding=\"utf-8\")\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), \"add\", go_production_path],\n+                   check=True, capture_output=True, timeout=60)\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), *git_user, \"commit\", \"-m\", \"Go production\"],\n+                   check=True, capture_output=True, timeout=60)\n+    surface_map_candidate = subprocess.check_output(\n+        [\"git\", \"-C\", str(surface_map_repo), \"rev-parse\", \"HEAD\"], text=True, timeout=60\n+    ).strip()\n+    go_evidence.write_text(\"\", encoding=\"utf-8\")\n+    go_production = run_surface_map_check(go_evidence)\n+    require(go_production.returncode == 1\n+            and f\"missing SURFACE line: {go_production_path}\" in go_production.stdout,\n+            f\"Non-test Go enforcement weakened: {go_production}\")\n+\n run([sys.executable, \"-m\", \"py_compile\", str(loader_path)], \"loader compile\")\n run([sys.executable, \"-m\", \"py_compile\", str(linear_admission)], \"Linear admission compile\")\n \n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "show",
+        "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a:kc-dev-flow/scripts/surface-map-check.py"
+      ],
+      "stdout": "#!/usr/bin/env python3\n\"\"\"Check that a candidate's changed files map to declared obligations.\n\nReads the real `git diff` between two revisions, then requires the worker's\nEvidence block to carry one `SURFACE:` line per checked changed file, naming\nan AC declared in the Brief, a falsifier, a safety boundary, a lifecycle\nobligation, or (for a deleted file) removal \u2014 each backed by a without-it\ncommand and removed variant that actually binds the surface's path, not a\nstub. Profile and (for POC) the retained-surface set are read from the work\nitem's own receipt, not from caller-supplied flags: a caller-declared scope\nis exactly the kind of unchecked input this script exists to remove.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport argparse\nimport importlib.util\nimport re\nimport subprocess\nimport sys\nfrom pathlib import Path\n\n\nclass CheckError(RuntimeError):\n    pass\n\n\nHERE = Path(__file__).resolve().parent\nLOADER_PATH = HERE / \"profile-contract-loader.py\"\n\n\ndef load_profile_loader():\n    spec = importlib.util.spec_from_file_location(\"profile_contract_loader\", LOADER_PATH)\n    if spec is None or spec.loader is None:\n        raise CheckError(f\"cannot import profile loader at {LOADER_PATH}\")\n    module = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(module)\n    return module\n\n\nLOADER = load_profile_loader()\n\nEXCLUDE_DIR_RE = re.compile(r\"(^|/)(tests?|fixtures?|__tests__)/\")\nEXCLUDE_SUFFIXES = (\".test.py\", \"_test.py\", \".test.ts\", \".spec.ts\")\n\nAC_HEADING_RE = re.compile(r\"\\*\\*AC-(\\d+)\\s*\\*\\*\")\nAC_TARGET_RE = re.compile(r\"^AC-(\\d+)$\")\nLIFECYCLE_TARGET_RE = re.compile(r\"^lifecycle:[A-Za-z0-9_-]+$\")\nLITERAL_TARGETS = {\"falsifier\", \"safety-boundary\"}\nFORBIDDEN_WITHOUT_IT = {\"true\", \":\", \"exit 0\"}\n\nSURFACE_LINE_RE = re.compile(\n    r\"^SURFACE:\\s*(?P<path>\\S+)\\s*->\\s*(?P<target>[^|\\n]+?)\\s*\\|\"\n    r\"\\s*(?P<without_it>[^|\\n]*?)\\s*\\|\\s*(?P<removed>[^|\\n]*?)\\s*$\",\n    re.MULTILINE,\n)\n\n\ndef read_text(path: Path, *, label: str) -> str:\n    try:\n        return path.read_text(encoding=\"utf-8\")\n    except OSError as exc:\n        raise CheckError(f\"cannot read {label} {path}: {exc}\") from exc\n\n\ndef git_changed_files(base: str, candidate: str, *, repo: Path) -> list[tuple[str, str]]:\n    for sha in (base, candidate):\n        verify = subprocess.run(\n            [\"git\", \"-C\", str(repo), \"rev-parse\", \"--verify\", f\"{sha}^{{commit}}\"],\n            capture_output=True,\n            text=True,\n        )\n        if verify.returncode != 0:\n            raise CheckError(f\"unreachable revision: {sha}\")\n    result = subprocess.run(\n        [\"git\", \"-C\", str(repo), \"diff\", \"--name-status\", \"--diff-filter=ACMRD\", base, candidate],\n        capture_output=True,\n        text=True,\n    )\n    if result.returncode != 0:\n        raise CheckError(f\"git diff failed: {result.stderr.strip()}\")\n    entries: list[tuple[str, str]] = []\n    for line in result.stdout.splitlines():\n        if not line.strip():\n            continue\n        parts = line.split(\"\\t\")\n        # Renames carry old\\tnew; the last column is always the current path.\n        entries.append((parts[0][0], parts[-1]))\n    return sorted(entries, key=lambda entry: entry[1])\n\n\ndef is_excluded(path: str) -> bool:\n    return bool(EXCLUDE_DIR_RE.search(path)) or path.endswith(EXCLUDE_SUFFIXES)\n\n\ndef parse_brief_acs(text: str) -> set[str]:\n    return {f\"AC-{number}\" for number in AC_HEADING_RE.findall(text)}\n\n\ndef parse_mapping(text: str) -> dict[str, str]:\n    pattern = re.compile(r\"^(?P<path>\\S+)\\s*->\\s*(?P<target>.+?)\\s*$\", re.MULTILINE)\n    return {m.group(\"path\"): m.group(\"target\").strip() for m in pattern.finditer(text)}\n\n\ndef parse_surface_lines(text: str) -> dict[str, tuple[str, str, str]]:\n    mapping: dict[str, tuple[str, str, str]] = {}\n    for match in SURFACE_LINE_RE.finditer(text):\n        mapping[match.group(\"path\")] = (\n            match.group(\"target\").strip(),\n            match.group(\"without_it\").strip(),\n            match.group(\"removed\").strip(),\n        )\n    return mapping\n\n\ndef extract_retained_surfaces(work_item_text: str) -> list[str]:\n    headings = list(re.finditer(r\"^## POC outcome\\s*$\", work_item_text, re.MULTILINE))\n    if not headings:\n        return []\n    start = headings[-1].end()\n    next_heading = re.search(r\"^##\\s+\", work_item_text[start:], re.MULTILINE)\n    section = work_item_text[start : start + next_heading.start()] if next_heading else work_item_text[start:]\n    field = re.search(r\"^  retained_surfaces:[ \\t]*(.*)$\", section, re.MULTILINE)\n    if not field:\n        return []\n    inline = field.group(1).strip()\n    if inline.startswith(\"[\") and inline.endswith(\"]\"):\n        inline = inline[1:-1]\n    if inline:\n        return [item.strip().strip(\"\\\"'\") for item in inline.split(\",\") if item.strip()]\n    items = []\n    for line in section[field.end():].splitlines():\n        if not line.strip():\n            continue\n        if re.match(r\"^\\s{2,}-\\s\", line):\n            items.append(line.split(\"- \", 1)[1].strip().strip(\"\\\"'\"))\n            continue\n        break\n    return items\n\n\ndef target_problem(path: str, target: str, declared_acs: set[str], is_deleted: bool) -> str | None:\n    if AC_TARGET_RE.match(target):\n        if target not in declared_acs:\n            return f\"unknown AC: {path} -> {target}\"\n        return None\n    if target == \"removal\":\n        return None if is_deleted else f\"invalid target: {path} -> {target}\"\n    if target in LITERAL_TARGETS or LIFECYCLE_TARGET_RE.match(target):\n        return None\n    return f\"invalid target: {path} -> {target}\"\n\n\ndef without_it_binds(target: str, without_it: str, removed_variant: str, path: str, changed_files: list[str]) -> bool:\n    if target == \"removal\":\n        return without_it.strip() == \"-\" and removed_variant.strip() == \"-\"\n    if not without_it or not removed_variant:\n        return False\n    if without_it.strip() in FORBIDDEN_WITHOUT_IT:\n        return False\n    if not any(candidate in without_it for candidate in changed_files):\n        return False\n    removed_tokens = removed_variant.strip().split()\n    if not removed_tokens or removed_tokens[0] != \"git\":\n        return False\n    return path in removed_variant\n\n\ndef parse_args() -> argparse.Namespace:\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"base_sha\")\n    parser.add_argument(\"candidate_sha\")\n    parser.add_argument(\"evidence_file\", type=Path)\n    parser.add_argument(\"--work-item\", type=Path, required=True, help=\"work item whose receipt selects the profile\")\n    parser.add_argument(\"--brief\", type=Path, required=True, help=\"Brief file declaring AC-N headings\")\n    parser.add_argument(\n        \"--shape-mapping\",\n        type=Path,\n        default=None,\n        help=\"required for a production profile: `path -> obligation` lines from the shape contract\",\n    )\n    parser.add_argument(\n        \"--no-exclude\",\n        action=\"store_true\",\n        help=\"check every changed file, ignoring the fixed test/fixture exclusion pattern\",\n    )\n    parser.add_argument(\"--repo\", type=Path, default=None)\n    return parser.parse_args()\n\n\ndef main() -> int:\n    args = parse_args()\n    repo = (args.repo or Path.cwd()).resolve()\n\n    diff_entries = git_changed_files(args.base_sha, args.candidate_sha, repo=repo)\n    changed = [path for _, path in diff_entries]\n    deleted_paths = {path for status, path in diff_entries if status == \"D\"}\n\n    evidence_text = read_text(args.evidence_file, label=\"evidence file\")\n    brief_text = read_text(args.brief, label=\"brief\")\n    declared_acs = parse_brief_acs(brief_text)\n    surface_map = parse_surface_lines(evidence_text)\n\n    work_item_path = args.work_item.expanduser().resolve()\n    work_item_text = read_text(work_item_path, label=\"work item\")\n    try:\n        receipt = LOADER.resolve_work_item(work_item_path)\n    except LOADER.ContractError as exc:\n        raise CheckError(str(exc)) from exc\n    profile = receipt[\"profile\"]\n\n    violations: list[str] = []\n    excluded: list[str] = []\n\n    if profile == \"poc-exploration\":\n        retained = extract_retained_surfaces(work_item_text)\n        if not retained:\n            raise CheckError(\"POC declares no retained surface\")\n        changed_set = set(changed)\n        checked = []\n        for path in retained:\n            if path not in changed_set:\n                violations.append(f\"retained surface not in diff: {path}\")\n            else:\n                checked.append(path)\n    else:\n        checked = []\n        for path in changed:\n            if not args.no_exclude and is_excluded(path) and path not in surface_map:\n                excluded.append(path)\n            else:\n                checked.append(path)\n\n    shape_map: dict[str, str] | None = None\n    if profile == \"production\":\n        if args.shape_mapping is None:\n            raise CheckError(\"--shape-mapping is required for production profile\")\n        shape_map = parse_mapping(read_text(args.shape_mapping, label=\"shape mapping\"))\n\n    for path in checked:\n        entry = surface_map.get(path)\n        if entry is None:\n            violations.append(f\"missing SURFACE line: {path}\")\n            continue\n        target, without_it, removed_variant = entry\n        problem = target_problem(path, target, declared_acs, path in deleted_paths)\n        if problem:\n            violations.append(problem)\n        if not without_it_binds(target, without_it, removed_variant, path, changed):\n            violations.append(f\"without-it pair does not bind {path}\")\n        if shape_map is not None:\n            declared_obligation = shape_map.get(path)\n            if declared_obligation is None:\n                violations.append(f\"unmapped in shape: {path}\")\n            elif declared_obligation.strip() != target.strip():\n                violations.append(\n                    f\"shape mapping says {declared_obligation.strip()}, evidence says {target.strip()}\"\n                )\n\n    for path in excluded:\n        print(f\"excluded: {path}\")\n\n    if violations:\n        print(\"surface-map-check: FAIL\")\n        for violation in violations:\n            print(violation)\n        return 1\n\n    print(f\"surface-map-check: OK ({len(checked)} files checked)\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    try:\n        raise SystemExit(main())\n    except CheckError as exc:\n        print(f\"surface-map-check: {exc}\", file=sys.stderr)\n        raise SystemExit(2)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "init",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1"
+      ],
+      "stdout": "Initialized empty Git repository in /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1/.git/\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "add",
+        "seed"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "-c",
+        "user.name=review-fixture",
+        "-c",
+        "user.email=review@example.test",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "seed"
+      ],
+      "stdout": "[main (root-commit) c8d3495] seed\n 1 file changed, 1 insertion(+)\n create mode 100644 seed\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "add",
+        "internal/task_test.go"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "-c",
+        "user.name=review-fixture",
+        "-c",
+        "user.email=review@example.test",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "internal/task_test.go"
+      ],
+      "stdout": "[main aade15a] internal/task_test.go\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task_test.go\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "aade15a2cf140bb9703b045ce65ef05d4b6f866f\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/baseline/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "excluded: internal/task_test.go\nsurface-map-check: OK (0 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--no-exclude"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nunknown AC: internal/task_test.go -> AC-999\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nwithout-it pair does not bind internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: OK (1 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/bypass/surface-map-check.py",
+        "c8d34955efcb4efd88c4ce23ebaf3dfa3d4d8a71",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "excluded: internal/task_test.go\nsurface-map-check: OK (0 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "add",
+        "internal/task.go"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "-c",
+        "user.name=review-fixture",
+        "-c",
+        "user.email=review@example.test",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "internal/task.go"
+      ],
+      "stdout": "[main 25a5ae2] internal/task.go\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task.go\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "25a5ae238ef3cded9e1fbd170c6d080b78974073\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/overbroad/surface-map-check.py",
+        "aade15a2cf140bb9703b045ce65ef05d4b6f866f",
+        "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "excluded: internal/task.go\nsurface-map-check: OK (0 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "add",
+        "internal/contest.go"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "-c",
+        "user.name=review-fixture",
+        "-c",
+        "user.email=review@example.test",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "internal/contest.go"
+      ],
+      "stdout": "[main 6edbc8a] internal/contest.go\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/contest.go\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "6edbc8ab831689190f53c3fa1a7b09d07da32e31\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "25a5ae238ef3cded9e1fbd170c6d080b78974073",
+        "6edbc8ab831689190f53c3fa1a7b09d07da32e31",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/contest.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "add",
+        "internal/task_test.go.bak"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "-c",
+        "user.name=review-fixture",
+        "-c",
+        "user.email=review@example.test",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "commit",
+        "-m",
+        "internal/task_test.go.bak"
+      ],
+      "stdout": "[main df38908] internal/task_test.go.bak\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task_test.go.bak\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "rev-parse",
+        "HEAD"
+      ],
+      "stdout": "df389086da85b4271ff432c6900aef7f0e107cee\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "6edbc8ab831689190f53c3fa1a7b09d07da32e31",
+        "df389086da85b4271ff432c6900aef7f0e107cee",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/evidence.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/fixture-jr2ppcw1",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go.bak\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/independent-go-review/baseline/surface-map-check.py",
+        "396da4aae0d07f7944c8adb7bfbc2121c1629b87",
+        "153fffe662556e4426a7c140ba778a5acc180c5f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/empty.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case"
+      ],
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": "",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/surface-map-check.py",
+        "396da4aae0d07f7944c8adb7bfbc2121c1629b87",
+        "153fffe662556e4426a7c140ba778a5acc180c5f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/empty.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/go-test-probe/case"
+      ],
+      "stdout": "excluded: internal/task_test.go\nsurface-map-check: OK (0 files checked)\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "diff",
+        "--check"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "stdout": "## spacedock-ensign/dev-flow-manual-improvement-pilot\n M kc-dev-flow/scripts/surface-map-check.py\n M scripts/kc-dev-flow-contract-test.py\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "diff",
+        "--binary",
+        "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a"
+      ],
+      "stdout": "diff --git a/kc-dev-flow/scripts/surface-map-check.py b/kc-dev-flow/scripts/surface-map-check.py\nindex 4d66da97..e4bab818 100755\n--- a/kc-dev-flow/scripts/surface-map-check.py\n+++ b/kc-dev-flow/scripts/surface-map-check.py\n@@ -41,7 +41,7 @@ def load_profile_loader():\n LOADER = load_profile_loader()\n \n EXCLUDE_DIR_RE = re.compile(r\"(^|/)(tests?|fixtures?|__tests__)/\")\n-EXCLUDE_SUFFIXES = (\".test.py\", \"_test.py\", \".test.ts\", \".spec.ts\")\n+EXCLUDE_SUFFIXES = (\".test.py\", \"_test.py\", \".test.ts\", \".spec.ts\", \"_test.go\")\n \n AC_HEADING_RE = re.compile(r\"\\*\\*AC-(\\d+)\\s*\\*\\*\")\n AC_TARGET_RE = re.compile(r\"^AC-(\\d+)$\")\ndiff --git a/scripts/kc-dev-flow-contract-test.py b/scripts/kc-dev-flow-contract-test.py\nindex dff8b552..cddef072 100755\n--- a/scripts/kc-dev-flow-contract-test.py\n+++ b/scripts/kc-dev-flow-contract-test.py\n@@ -2171,7 +2171,7 @@ with tempfile.TemporaryDirectory(prefix=\"kc-dev-flow-surface-map-\") as surface_m\n             command += [\"--shape-mapping\", str(shape_mapping)]\n         if extra_args:\n             command += extra_args\n-        return subprocess.run(command, capture_output=True, text=True)\n+        return subprocess.run(command, capture_output=True, text=True, timeout=60)\n \n     round0 = run_surface_map_check(surface_map_round0_evidence)\n     require(\n@@ -2234,6 +2234,52 @@ with tempfile.TemporaryDirectory(prefix=\"kc-dev-flow-surface-map-\") as surface_m\n         f\"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}\",\n     )\n \n+\n+    # Go colocates tests with production code; only the _test.go suffix is excluded.\n+    surface_map_base = surface_map_candidate\n+    (surface_map_repo / \"internal\").mkdir()\n+    go_test_path = \"internal/task_test.go\"\n+    (surface_map_repo / go_test_path).write_text(\"package internal\\n\", encoding=\"utf-8\")\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), \"add\", go_test_path],\n+                   check=True, capture_output=True, timeout=60)\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), *git_user, \"commit\", \"-m\", \"Go test\"],\n+                   check=True, capture_output=True, timeout=60)\n+    surface_map_candidate = subprocess.check_output(\n+        [\"git\", \"-C\", str(surface_map_repo), \"rev-parse\", \"HEAD\"], text=True, timeout=60\n+    ).strip()\n+    go_evidence = surface_map_repo / \"go-evidence.md\"\n+    go_evidence.write_text(\"\", encoding=\"utf-8\")\n+    go_default = run_surface_map_check(go_evidence)\n+    require(go_default.returncode == 0 and f\"excluded: {go_test_path}\" in go_default.stdout,\n+            f\"Go test default exclusion failed: {go_default}\")\n+    go_strict = run_surface_map_check(go_evidence, extra_args=[\"--no-exclude\"])\n+    require(go_strict.returncode == 1 and f\"missing SURFACE line: {go_test_path}\" in go_strict.stdout,\n+            f\"Go test strict checking weakened: {go_strict}\")\n+    for target, pair, expected, diagnostic in (\n+        (\"AC-999\", f\"go test {go_test_path} | git restore {go_test_path}\", 1, \"unknown AC\"),\n+        (\"AC-1\", \"true | true\", 1, \"without-it pair does not bind\"),\n+        (\"AC-1\", f\"go test {go_test_path} | git restore {go_test_path}\", 0, \"1 files checked\"),\n+    ):\n+        go_evidence.write_text(f\"SURFACE: {go_test_path} -> {target} | {pair}\\n\", encoding=\"utf-8\")\n+        go_mapped = run_surface_map_check(go_evidence)\n+        require(go_mapped.returncode == expected and diagnostic in go_mapped.stdout,\n+                f\"Explicit Go test mapping was not checked: {go_mapped}\")\n+    surface_map_base = surface_map_candidate\n+    go_production_path = \"internal/task.go\"\n+    (surface_map_repo / go_production_path).write_text(\"package internal\\n\", encoding=\"utf-8\")\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), \"add\", go_production_path],\n+                   check=True, capture_output=True, timeout=60)\n+    subprocess.run([\"git\", \"-C\", str(surface_map_repo), *git_user, \"commit\", \"-m\", \"Go production\"],\n+                   check=True, capture_output=True, timeout=60)\n+    surface_map_candidate = subprocess.check_output(\n+        [\"git\", \"-C\", str(surface_map_repo), \"rev-parse\", \"HEAD\"], text=True, timeout=60\n+    ).strip()\n+    go_evidence.write_text(\"\", encoding=\"utf-8\")\n+    go_production = run_surface_map_check(go_evidence)\n+    require(go_production.returncode == 1\n+            and f\"missing SURFACE line: {go_production_path}\" in go_production.stdout,\n+            f\"Non-test Go enforcement weakened: {go_production}\")\n+\n run([sys.executable, \"-m\", \"py_compile\", str(loader_path)], \"loader compile\")\n run([sys.executable, \"-m\", \"py_compile\", str(linear_admission)], \"Linear admission compile\")\n \n",
+      "stderr": "",
+      "exit": 0
+    }
+  ],
+  "variant_hashes": {
+    "candidate": "c2ccce5a00d9beccda016ab2234bafb4c62ca66d43d8a28d847ce36bc8549bd1",
+    "baseline": "b3a35b32caed183863e7bff77545c014e6122641512f7b9f47ec2a79ef758757",
+    "overbroad": "e32e6f9de6d78f28d48f918608d24d1bc0e1386687f8b14de400009d552e518a",
+    "bypass": "01f334a26e22b65177b2860ab8bbb7cca9e00ef0282268a963b54b7dab0ff80b"
+  },
+  "reviewer_usage": {
+    "input": null,
+    "cached_input": null,
+    "output": null,
+    "reasoning": null,
+    "reason": "Existing host reviewer ran; unique attributable usage source unavailable. Inherited root thread ID not used."
+  },
+  "result": "PASS local candidate; baseline, overbroad and explicit-map-bypass mutants detected. Mutant checker exits zero are expected evidence of defects, never readiness."
+}

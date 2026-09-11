@@ -163,3 +163,17 @@ One bounded local case is ready for implementation dispatch under the confirmed 
 ### Summary
 
 The selected Go-test exclusion defect is repaired locally with same-case red/green evidence and two meaningful faulty-producer controls. The two-file candidate remains uncommitted, independently unreviewed and unaccepted for delivery; missing usage and original/native closure remain explicit limitations.
+
+
+## Stage Report: validation
+
+- DONE: Independently assess the exact two-file candidate and same-case before/after evidence; confirm the baseline and known overbroad producer are caught while strict, explicit-map and ordinary Go enforcement remain correct.
+  AC-2, AC-4: [independent raw results](validation-evidence/local-go-test-exclusion/independent-results.json) retain 11 discriminating checks plus exact producer-fixture replay, stdout/stderr/exit and fixture objects; old default fails, candidate passes, strict/invalid mappings refuse, and ordinary Go catches the overbroad producer; an explicit-map-bypass mutant is also detected.
+- DONE: Review scope/necessity, single-case selection and duplicate handling, raw provenance, and honest per-actor usage boundaries; distinguish local functional proof from autonomous operation, delivery, full cost and native closure.
+  AC-1, AC-3: [review and limits](validation-evidence/local-go-test-exclusion/review.md) accept one manually selected case with recorded duplicate refusal only, not executable/concurrent deduplication assurance; raw captured queue inspected, reviewer now ran with all usage unknown, and attributed first-officer snapshots remain partial without counting cached/reasoning subsets twice.
+- DONE: Write a durable validation report citing AC-1, AC-2, AC-3, AC-4 and AC-5 explicitly, with exact candidate hash, remaining limitations and only scoped findings; no product edits, commits, external posts or terminalization.
+  AC-4, AC-5: binary diff SHA256 `c1d7ed2b15b237450dea31c6ca1de0fb288986d49516b311d544560d83cdd21c` against `0ec3380f590cbaf5b01ee1c325eb222da99a3c5a`; two product files/50 gross lines remain uncommitted; [report](validation-evidence/local-go-test-exclusion/review.md) preserves exact-file approval, unavailable optional model/provider and precommit object mapping, unknown full cost, and incomplete original/native terminalization/archive/cleanup/final check.
+
+### Summary
+
+PASS for this exact bounded local candidate: independent behavior evidence supports the repair with no scoped correction required. Product delivery and native closure remain unaccepted; no upstream/stopped-tree access, paid runtime, provider/cloud execution, product mutation, external post or authority change was performed, and only state evidence/report durability is authorized.
