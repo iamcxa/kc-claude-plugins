@@ -1,5 +1,3 @@
-// A generated text projection alongside the release board: story status/evidence
-// and shared activity rules, derived from the journey file.
 
 import { iterStories } from './model.mjs'
 

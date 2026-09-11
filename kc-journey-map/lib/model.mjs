@@ -1,9 +1,3 @@
-// Shared story normalization.
-//
-// A story is a bare string or an object; every reader of `steps[].stories[]` used to
-// re-derive its own id/card/release, and a bare string structurally cannot carry
-// `status`, `evidence` or `question` — which is exactly the shape the no-status lint
-// has to catch, not paper over.
 
 export const STORY_STATUSES = ['gap', 'unverified', 'exists']
 export const storyStatusLabel = (status) => STORY_STATUSES.includes(status) ? status.toUpperCase() : 'UNASSESSED'
@@ -20,6 +14,5 @@ export const normalizeStory = (step, story, j) =>
 				question: story.question,
 			}
 
-// Every story in the model, each carrying the step it belongs to.
 export const iterStories = (model) =>
 	(model.steps ?? []).flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))

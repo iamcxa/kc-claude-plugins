@@ -1,12 +1,3 @@
-// The function-map projection: Event Modeling's swimlanes over the journey's own columns.
-//
-// The columns are the journey's steps, unchanged. Only the lanes differ — Command, Event,
-// State, Read model — which is why this is a third page of the same file rather than a
-// second tool. The vocabulary is fmodel's tactical grammar (a decider takes a command and
-// current state and emits events; a view folds events into something readable), borrowed
-// as nouns. Nothing here runs Kotlin or event-sources anything.
-//
-// Event order is authored model input, not inferred causality or build order.
 
 import { fitHeight, indexes, label, note, page } from './records.mjs'
 
@@ -22,8 +13,6 @@ export const FUNC_PAGE_ID = 'page:jm-funcmap'
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-// A step nobody has modelled is drawn as a gap, not left blank: an empty column reads as
-// "nothing happens here", and the whole point is to see which steps have no model yet.
 const UNMODELLED = '— not modelled —'
 
 export function buildFunctionMap(model) {
@@ -40,8 +29,7 @@ export function buildFunctionMap(model) {
 
 	const H_CMD = Math.max(120, ...steps.map((s) => fitHeight(commandOf(s), COL_W)))
 	const maxEvents = Math.max(1, ...steps.map((s) => eventsOf(s).length))
-	// A size-m note is 200 tall, so the row pitch has to clear it. At 130 the stickies
-	// overlapped each other into one orange block and ran into the State lane below.
+	// tldraw size-m notes are 200px tall; row pitch must clear their bounds.
 	const NOTE_H = 200
 	const H_EVENT = NOTE_H + 40
 	const H_EVENTS = (maxEvents - 1) * H_EVENT + NOTE_H
@@ -72,7 +60,6 @@ export function buildFunctionMap(model) {
 			meta: tag(step.id, 'command'),
 		})
 
-		// Keep each authored event independently visible.
 		eventsOf(step).forEach((event, j) => {
 			put.push({
 				...note({ id: `shape:fm-event-${step.id}-${j}`, text: event, x: x + 50, y: Y_EVENTS + j * H_EVENT, index: ix[n++], parentId, color: 'orange', size: 's' }),

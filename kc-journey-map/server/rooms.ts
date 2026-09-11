@@ -4,8 +4,7 @@ import { join } from 'path'
 import { NodeSqliteWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync-core'
 import { DatabaseSync } from 'node:sqlite'
 
-// Room databases preserve native edits as well as generated journey records.
-// Export or read back edits before deleting a room.
+// Export or read back native edits before deleting a room database.
 const DIR = process.env.JOURNEY_ROOMS_DIR ?? './.rooms'
 mkdirSync(DIR, { recursive: true })
 

@@ -1,4 +1,3 @@
-// node --test lib/*.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildReleaseContract, releaseContractRows } from './release-contract.mjs'
@@ -23,8 +22,6 @@ const fixture = {
 test('releaseContractRows scopes to one release only, in step/story order', () => {
 	const { rows } = releaseContractRows(fixture, 'r1')
 	assert.deepEqual(rows.map((r) => r.id), ['s-0', 's-1'])
-	// Mutation this catches: filtering on step membership instead of story.release would
-	// also pull in s-2, which belongs to r2 under the same step.
 })
 
 test('buildReleaseContract carries status, evidence and rule ids per story', () => {

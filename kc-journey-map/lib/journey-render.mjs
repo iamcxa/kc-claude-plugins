@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// node lib/journey-render.mjs <journey.yaml> [roomId] [--pages story-map,journey-board,function-map]
 import { renderToRoom, PROJECTION_KEYS, DEFAULT_PROJECTIONS } from './render.mjs'
 
 const argv = process.argv.slice(2)

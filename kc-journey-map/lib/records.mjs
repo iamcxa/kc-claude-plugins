@@ -89,9 +89,7 @@ export function label({
 	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
 }
 
-// tldraw draws a shape's `url` as a real anchor inside the shape, and a deep link needs
-// only a page: the camera numbers are normalised on arrival. That is enough to walk from
-// a release to the board that shows what it is missing.
+// tldraw normalizes deep-link camera bounds; the page ID is sufficient.
 export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d=v0.0.1.1.${pageId.replace('page:', '')}`
 
 // Geo labels do not auto-grow; these text metrics were measured at 300px, size s.
@@ -111,15 +109,13 @@ export function indexes(n) {
 	return getIndices(n)
 }
 
-// Native page records for the requested projections.
 export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
 }
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
-// Standard child shapes keep portable exports readable without changing a story's
-// page parent or direct coordinates, which read.mjs uses for release membership.
+// Child borders preserve story coordinates used by release readback.
 export function storyBorder(story) {
 	const status = story.meta?.journey?.status
 	if (story.type !== 'note' || story.meta?.journey?.kind !== 'story' || !Object.hasOwn(STORY_STATUS_COLORS, status)) return null

@@ -8,7 +8,6 @@ import { fixtureModel } from './fixture.mjs'
 
 const rt = (text) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
 
-// One whole-journey board, so the tests that exercise column order have an order to read.
 const board = () => buildJourneyBoard(fixtureModel).filter((r) => r.typeName === 'shape')
 const story = () => buildStoryMap(fixtureModel).filter((r) => r.typeName === 'shape')
 const rendered = () => [...board(), ...story()]
@@ -150,7 +149,6 @@ test('a story written in object form is reworded too', () => {
 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
 })
 
-// ── which projections render is a choice, not a file property ───────────────────
 import { buildAllPages } from './render.mjs'
 
 test('with no selection, buildAllPages draws the story map alone', () => {
@@ -159,8 +157,7 @@ test('with no selection, buildAllPages draws the story map alone', () => {
 })
 
 test('an empty selection falls back to the default rather than rendering nothing', () => {
-	// An explicit [] must not reach renderToRoom's reconcile as "draw nothing" — that
-	// would read back as every existing journey shape in the room being stale and removed.
+	// An empty selection must not reconcile away every journey shape.
 	const pages = buildAllPages(fixtureModel, null, []).filter((r) => r.typeName === 'page').map((r) => r.id)
 	assert.deepEqual(pages, ['page:page'])
 })

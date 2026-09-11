@@ -1,13 +1,4 @@
-// Reads a rendered room back and reports what a person changed on the canvas.
-//
-// Projections share activity and story identities but give positions different meanings.
-// Changed wording is compared across projections; competing edits are reported as a
-// conflict and that field is not applied.
-//
-// What round-trips is what a workshop actually changes — the wording of a card, the order
-// of the columns, the priority of the stories under an activity. System/constraint lanes have a
-// lossy inverse: a constraint is stored as a rule id and drawn as that rule's text, so
-// canvas text cannot be mapped back to an id without guessing. Those are never applied.
+// Constraint text has no safe inverse to rule IDs; readback never guesses.
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
@@ -68,8 +59,7 @@ export function diffAgainstModel(shapes, model) {
 	const steps = model.steps ?? []
 	const modelOrder = steps.map((s) => s.id)
 
-	// A step in two releases appears on both of their boards. That is not a duplicate, so
-	// cards are collected per page and only compared within one.
+	// Activity IDs repeated across release pages are not duplicates.
 	const boardPages = [...new Set(shapes.filter((s) => isBoard(s.parentId)).map((s) => s.parentId))]
 	const story = shapes.filter((s) => s.parentId === STORY_PAGE)
 
@@ -89,10 +79,7 @@ export function diffAgainstModel(shapes, model) {
 	const actBy = indexByNode(activities, duplicated)
 	const storyBy = indexByNode(stories, duplicated)
 
-	// ── wording ──────────────────────────────────────────────────────────────────
-	// Compare changed observations with the file, so an untouched projection does not
-	// veto an edit elsewhere. Distinct edits of the same field are conflicts. A duplicate
-	// within any one page makes that entity ambiguous across all projections.
+	// A duplicate on any page makes that entity ambiguous across projections.
 	const reworded = []
 	const rewordConflict = []
 	const observations = (records, id) => records.filter((s) => s.meta.journey.nodeId === id)
@@ -128,9 +115,7 @@ export function diffAgainstModel(shapes, model) {
 		})
 	}
 
-	// ── column order ─────────────────────────────────────────────────────────────
-	// Column order only round-trips from a whole-journey board: a release board shows a
-	// subset, so its left-to-right order says nothing about the steps it does not draw.
+	// Release pages omit activities, so their column order cannot define whole-journey order.
 	const boardOrder = orderOf(cardBy)
 	const storyOrder = orderOf(actBy)
 	const boardMoved = boardOrder.length && boardOrder.join() !== modelOrder.filter((id) => cardBy.has(id)).join()
@@ -193,8 +178,6 @@ export function diffAgainstModel(shapes, model) {
 	const unclaimed = shapes
 		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
 		.map((s) => {
-			// A page this reader does not model still names itself, so a card added on the
-			// function map is not reported as if it were on the board.
 			const page = pageName(s.parentId)
 			const anchors = page === 'storymap' ? storyAnchors : page.startsWith('board:') ? (boardAnchors.get(s.parentId) ?? []) : []
 			const placed = anchors.length ? placeUnderColumn(s, anchors) : { column: null }

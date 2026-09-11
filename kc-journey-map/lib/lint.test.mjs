@@ -1,7 +1,3 @@
-// node --test lib/*.test.mjs
-//
-// Each lint is exercised against a real defect first, so a lint nobody can make fail is
-// caught here rather than shipped as decoration.
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -18,12 +14,9 @@ test('lintNoStatus fires on a story with no status field, not on one with an exp
 	const v = lintNoStatus(m)
 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
 	assert.equal(v[0].lint, 'no-status')
-	// Mutation this catches: a lint that defaults a missing status to 'gap' before
-	// checking would never fire here, though nothing that fires makes it pass either.
 })
 
 test('a bare-string story cannot carry a status, so it fires the same lint', () => {
-	// Absorbed constraint: a bare string structurally cannot carry status/evidence/question.
 	const m = model([{ id: 's', stories: ['just a string'] }])
 	assert.deepEqual(lintNoStatus(m).map((x) => x.story), ['s-0'])
 })
@@ -41,8 +34,6 @@ test('lintExistsWithoutEvidence fires only on exists with no evidence', () => {
 	])
 	const v = lintExistsWithoutEvidence(m)
 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
-	// Mutation this catches: a lint that checks only `status === 'exists'` (dropping the
-	// `!evidence` half) would also fire on s-1, which carries real evidence.
 })
 
 function tempRepo() {
@@ -70,13 +61,9 @@ test('lintEvidenceNotFound fires when the cited symbol no longer greps, and pass
 	const v = lintEvidenceNotFound(m, { repoRoot })
 	assert.deepEqual(v.map((x) => x.story), ['s-1'])
 	assert.match(v[0].detail, /RenamedAway/, 'the violation must name the missing symbol, not just report a count')
-	// Mutation this catches: a lint that only checks `evidence` is truthy (never greps)
-	// would report neither s-0 nor s-1 — this fixture is built so that check alone passes.
 })
 
 test('a symbol that greps only inside the journey file itself is still reported missing', () => {
-	// This is the check a table could never do: the file citing its own claim is not
-	// evidence that the claim is still true of the code.
 	const repoRoot = tempRepo()
 	const journeyPath = join(repoRoot, 'journey.yaml')
 	writeFileSync(journeyPath, 'evidence: OnlyInTheJourneyFile\n')
@@ -89,8 +76,6 @@ test('a symbol that greps only inside the journey file itself is still reported 
 })
 
 test('evidence that greps only in prose is reported missing, even though the string exists', () => {
-	// This is the repository's own real defect (kc-team-ops's journey cites AskUserQuestion,
-	// a string that greps only in .md files): a symbol named in a doc is not code that runs.
 	const repoRoot = tempRepo()
 	writeFileSync(join(repoRoot, 'docs.md'), 'See ProseOnlySymbol in the reference.\n')
 	execFileSync('git', ['add', '-A'], { cwd: repoRoot })
@@ -107,10 +92,6 @@ test('evidence that greps only in prose is reported missing, even though the str
 	])
 	const v = lintEvidenceNotFound(m, { repoRoot })
 	assert.deepEqual(v.map((x) => x.story), ['s-1'], 's-1 must fail because the only match is a doc, not because the string is missing')
-	// Mutation this catches: dropping the isExecutableFile filter from filesCiting (the
-	// original defect) makes docs.md count as a hit, so ProseOnlySymbol wrongly passes and
-	// this assertion's list drops to empty — the earlier RenamedAway case above cannot
-	// catch that regression, since it never gives the symbol anywhere to match at all.
 })
 
 test('evidence found only in a shell script or a CI workflow still counts, since both are executable', () => {

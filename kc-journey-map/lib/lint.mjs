@@ -1,24 +1,16 @@
-// Checks authored story status and executable citation consistency.
 
 import { execFileSync } from 'node:child_process'
 import { extname, resolve, sep } from 'node:path'
 import { iterStories, STORY_STATUSES } from './model.mjs'
 
-// Extensions of something that runs. Prose (.md) and data (.yaml/.json/.tldr) can quote a
-// symbol back without the symbol being backed by code — that is the whole defect this
-// lint exists to catch, so those extensions never qualify as evidence on their own.
+// Prose/data matches must not count as executable evidence.
 const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
 
-// A CI workflow file is YAML that runs, unlike the YAML the journey itself is written in —
-// so it earns a path-based exception rather than a blanket extension one.
 const isWorkflowFile = (f) => /\.ya?ml$/.test(f) && f.split(sep).includes('.github') && f.includes(`${sep}workflows${sep}`)
 
 const isExecutableFile = (f) => EXECUTABLE_EXTENSIONS.has(extname(f)) || isWorkflowFile(f)
 
-// Files that grep-match a symbol, scoped to `repoRoot` via cwd (git resolves paths
-// relative to the working directory, not the repository root, when none is given), and
-// narrowed to files something can execute — a match in a doc or a data file is prose, not
-// evidence, even when it names a real symbol.
+// git grep returns tracked paths relative to cwd, not necessarily the repository root.
 function filesCiting(symbol, repoRoot) {
 	try {
 		const out = execFileSync('git', ['grep', '-l', '-w', '-F', symbol], { cwd: repoRoot, encoding: 'utf8' })
@@ -46,8 +38,7 @@ export function lintExistsWithoutEvidence(model) {
 		.map((s) => ({ lint: 'exists-without-evidence', story: s.id, release: s.release, detail: `story ${s.id} is marked exists but carries no evidence symbol` }))
 }
 
-// Excludes the journey file itself, and anything else named: a generated contract that
-// merely quotes the symbol back would otherwise make the check pass on its own say-so.
+// Exclude generated self-citations; quoting a symbol is not executable evidence.
 export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [] } = {}) {
 	if (!repoRoot) throw new Error('lintEvidenceNotFound needs repoRoot to grep against')
 	const ignore = new Set([journeyPath, ...exclude].filter(Boolean).map((p) => resolve(p)))

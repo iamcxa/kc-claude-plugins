@@ -1,7 +1,3 @@
-// A test fixture, and nothing else — it is not a journey of any product.
-//
-// The shipped example is a real board and declares no stories, no Now row and no
-// ownership band, so those paths need a model of their own.
 
 export const fixtureModel = {
 	journey: 'fixture',
@@ -28,8 +24,6 @@ export const fixtureModel = {
 		{
 			id: 'b',
 			card: 'Gets the thing',
-			// The gap moved from the step (badge: NOT_BUILT) to the story it actually blocks —
-			// a step is too coarse a grain to be a build unit.
 			stories: [{ id: 'b-see', card: 'Sees it arrive', release: 'r1', status: 'gap', question: 'Should delivery be push or pull?' }],
 			command: 'GetTheThing(id)',
 			events: ['ThingDelivered', 'DeliveryRefused'],

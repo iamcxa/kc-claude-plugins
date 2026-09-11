@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// node lib/journey-contract.mjs <journey.yaml> <releaseId> [--out <path>]
 import { writeFileSync } from 'node:fs'
 import { loadModel } from './read.mjs'
 import { buildReleaseContract } from './release-contract.mjs'

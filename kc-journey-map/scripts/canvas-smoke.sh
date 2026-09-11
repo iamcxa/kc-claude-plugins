@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# Boots the canvas server, renders the worked example into a throwaway room, and asserts
-# the document came back with the shapes the model produces.
-#
-# This is the check that answers "can somebody who installed this actually run it". The
-# unit tests prove the model builds records; only booting the server and pushing them
-# through the schema validator proves the records are accepted. No browser is involved —
-# the client is not exercised here.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -39,8 +32,6 @@ fi
 export JOURNEY_API_PORT="$PORT"
 curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server started but does not answer"; exit 1; }
 
-# Every projection selected, so the smoke exercises the schema validator against all of
-# them, not only the default one board.
 PAGES="story-map,journey-board,function-map"
 node lib/journey-render.mjs "$EXAMPLE" "$ROOM" --pages "$PAGES"
 

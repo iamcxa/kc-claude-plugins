@@ -1,4 +1,3 @@
-// node --test lib/*.test.mjs
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -33,8 +32,6 @@ test('every event gets its own shape, in the order the file lists them', () => {
 })
 
 test('event stickies do not overlap each other', () => {
-	// A size-m note is 200 tall; a pitch under that drew them as one block and spilled
-	// the last one into the State lane.
 	const events = buildFunctionMap(fixtureModel).filter((r) => r.meta?.journey?.kind === 'event' && r.id.includes('-b-'))
 	assert.ok(events[1].y - events[0].y >= 200, `pitch ${events[1].y - events[0].y} is smaller than a sticky`)
 })

@@ -1,5 +1,3 @@
-// The default story map shows status at story grain. Optional release boards and
-// generated contracts provide detail from the same model.
 
 import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus } from './records.mjs'
 import { normalizeStory } from './model.mjs'
@@ -140,8 +138,6 @@ export function buildStoryMap(model, room = null) {
 			bandTop += 40
 		}
 
-		// The release label carries how many of its stories exist, computed from the model
-		// on every render — never typed by hand, so it cannot drift from the stories below it.
 		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
 		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${existsCount}/${band.stories.length} exist` : ''}`.trim()
 		put.push({

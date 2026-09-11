@@ -1,8 +1,3 @@
-// Projects a journey file onto a tldraw room.
-//
-// The file in the repository is the source of truth; the room is a rendering of it.
-// Nothing here reads the room back — that is `read.mjs`. Positions are computed from
-// the model's order, never stored in the model, so a journey file stays diffable.
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
@@ -22,8 +17,7 @@ const LANE_W = 270
 const GAP = 40
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-// Release stories are the units under discussion. Activity-level system/rule data spans
-// their group once; it is shared context, not evidence that each story is implemented.
+// Shared activity rules are context, not proof that each story exists.
 export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
 
 export function buildJourneyBoard(model, { release = null, room = null } = {}) {
@@ -145,8 +139,6 @@ export function releaseCoverage(model) {
 	})
 }
 
-// A board per release when the file has releases; one whole-journey board when it does
-// not, so a map drawn before anyone has sliced it still renders.
 const journeyBoardPages = (model, room) => {
 	const releases = model.releases ?? []
 	return releases.length
@@ -154,8 +146,6 @@ const journeyBoardPages = (model, room) => {
 		: buildJourneyBoard(model, { room })
 }
 
-// Which projections a render draws is a choice made per call, never a property of the
-// file — the same journey renders one way for a stand-up and another for a release review.
 export const PROJECTIONS = {
 	'story-map': (model, room) => buildStoryMap(model, room),
 	'journey-board': journeyBoardPages,

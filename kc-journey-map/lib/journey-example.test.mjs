@@ -1,5 +1,3 @@
-// Checks the worked example against the plugin schema and citation lints.
-// Self-citation consistency does not establish delivery or target-user usability.
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -19,9 +17,6 @@ test("this skill's own journey file passes every lint", () => {
 })
 
 test('every story in the migrated file carries a status', () => {
-	// Guards the format itself, not just the lint: a story that slipped past migration
-	// with no status field would still be caught above, but this names what "every lint
-	// passes" actually proved for this file — nobody left a story unmigrated.
 	const model = loadModel(JOURNEY)
 	const stories = (model.steps ?? []).flatMap((s) => s.stories ?? [])
 	assert.ok(stories.length > 0, 'the file has no stories to check')
