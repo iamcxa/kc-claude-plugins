@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: dispatch one cloud first officer per dev task and watch the set to its validation gates"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: defer
 started: 2026-09-10T04:22:51Z
-completed:
-verdict:
+completed: 2026-09-11T00:51:22Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-cloud-dispatch-and-watch
 issue:
 pr: pr-merge:406
@@ -55,7 +55,8 @@ gates:
                 reason: 'Captain approved in chat: 「批」 2026-09-10 (validation gate + merge #406)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T00:51:22Z
 ---
 
 kc-ship-flow re-implemented per-task acceptance, PR opening, review disposition and merging that
