@@ -100,3 +100,27 @@ Use one real selected-release planning session to exercise the closed loop: reus
 ## Route-back conditions
 
 Stop and return the changed premise, affected acceptance evidence and recommended change or stop if the accepted outcome or non-goals change. Also return for an unavoidable consumer migration, a new authoritative planning store, automatic status/task writes, or a technical fact that changes the selected release value. Current task mapping cannot be assumed to support shared/integration tasks; shaping must state the bounded handling without broadening the progress feature silently.
+
+### Feedback Cycles
+
+#### Captain-approved planning delta — 2026-09-11
+
+- Changed premise: predecessor PRs #415, #416, and #417 are still open. This
+  work depends on their journey-map source, so a trunk-based independent
+  implementation would repeat their unmerged work.
+- Captain decision: Kent replied "可以" to allowing a separate new layer based
+  on #417. This explicitly supersedes only the non-goal forbidding extension of
+  the predecessor stack. The existing three PRs remain unchanged.
+- Accepted replacement boundary: prepare the new work on a separate branch
+  based on `codex/journey-local-progress` at
+  `36a969a6f890a63c541fad4bfa30071ac7115c64`; any later PR targets that dependency
+  branch while it remains open. Push, PR creation, and merge keep their existing
+  authorization boundaries. All other accepted outcomes and non-goals remain.
+- Affected evidence: shape and without-it measurements must use this exact
+  delivery base, excluding predecessor changes. The minimum file table must
+  justify any development-consumer change before including it.
+- Remaining admission prerequisite: the active definition checkout has no
+  `kc-journey-map` execution-group registration. The dependency branch registers
+  only S1, for inspecting release evidence, with pre-merge authority scoped to
+  the older board task. This new release needs its own local registration; do
+  not borrow S1 or claim its existing grant covers this task.
