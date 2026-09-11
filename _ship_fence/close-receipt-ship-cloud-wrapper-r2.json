@@ -1,0 +1,28 @@
+{
+  "e2e": {
+    "result": "not recorded"
+  },
+  "questions": [],
+  "receipt_sha256": "1c1a9fcd771437ecc543fafb24046a13e55553a3a5c8d1a13893614b65f47edc",
+  "residuals": [],
+  "schema": "kc-ship-close-receipt/v2",
+  "sprint": "ship-cloud-wrapper-r2",
+  "tasks": {
+    "ship-dispatch-watch-round-2": {
+      "debrief": "_debriefs/2026-09-11-05-claude-claude-sonnet-5.md",
+      "merged_sha": "b4c34965",
+      "pr": "pr-merge:423",
+      "session_id": "9ff36ec8-4bec-4bc6-92fa-814036e95564",
+      "slug": "ship-dispatch-watch-round-2",
+      "workspace_id": "0cc46893-ff8e-40c7-9958-21c62d38e089"
+    },
+    "ship-verify-uat-close-round-2": {
+      "debrief": "_debriefs/2026-09-11-04-claude-claude-sonnet-5.md",
+      "merged_sha": "916010b3",
+      "pr": "pr-merge:420",
+      "session_id": "c3a91011-ce4c-43a7-a172-956c2c747551",
+      "slug": "ship-verify-uat-close-round-2",
+      "workspace_id": "ac3018f5-1d7c-4083-a9da-8252621774ed"
+    }
+  }
+}
