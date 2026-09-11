@@ -49,6 +49,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:m0e43swm7wrs71xy98ea43gp:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:m0e43swm7wrs71xy98ea43gp-validation-1
+              briefing:
+                id: briefing:m0e43swm7wrs71xy98ea43gp:validation:attempt-1:revision-1
+                digest: sha256:db828450a509750b8df4ef5e510076b829712a5af98b6e122dacfe483f7dfe35
+                room-ref: ./review/validation/briefing-1
 worktree: .worktrees/spacedock-ensign-issue-396-architecture-entrypoint
 pr: pr-merge:426
 ---
