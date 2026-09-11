@@ -1,15 +1,15 @@
 ---
 title: Prove one journey-board to development handoff
-status: validation
+status: done
 product: kc-journey-map
 sprint: journey-planning-proof
 sprint-readiness: ready
 started: 2026-09-11T04:57:31Z
-completed:
-verdict:
+completed: 2026-09-11T05:12:24Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-prove-journey-release-handoff
 pr: local-merge:0492a5507eec46bed567607c725f99c00c41b989
-mod-block: merge:pr-merge
+mod-block:
 id: ndmwj51qjzktmqsxtzv3etr7
 gates:
     version: 1
@@ -51,7 +51,8 @@ gates:
                 reason: 'Captain approved the presented change outcome and scoped disposable experiment cleanup in current chat: 核准，所以下一步是什麼？ Bound review c1a958e761bf. No Pilot admission or product release is included.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T05:12:24Z
 ---
 
 ## Exploration Brief
