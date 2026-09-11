@@ -1,0 +1,164 @@
+{
+  "at": "2026-09-11T07:41:55.973011+00:00",
+  "product_base": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a",
+  "source": {
+    "kc-dev-flow/scripts/surface-map-check.py": {
+      "sha256": "b3a35b32caed183863e7bff77545c014e6122641512f7b9f47ec2a79ef758757",
+      "lines": 278,
+      "working_bytes_equal_pinned_source": true
+    },
+    "scripts/kc-dev-flow-contract-test.py": {
+      "sha256": "c93cacd816020a4458f2154d0f42f6e44dc505c457ade6f010b8cafa45dd0b19",
+      "lines": 2405,
+      "working_bytes_equal_pinned_source": true
+    },
+    "kc-dev-flow/references/profiles/pilot-product-slice/build.md": {
+      "sha256": "76d809f5405c0fb4bb4b99fc69f0fadf8f020bb6661e4da4bb087bcc8edee467",
+      "lines": 75,
+      "working_bytes_equal_pinned_source": true
+    },
+    "kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md": {
+      "sha256": "79ead6b29c5417c8bdcbc451a413fd3d0ac9357f4aa6ab4ca3189577aadbfa73",
+      "lines": 21,
+      "working_bytes_equal_pinned_source": true
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo"
+      ],
+      "rc": 0,
+      "stdout": "Initialized empty Git repository in /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo/.git/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "-c",
+        "user.name=Pilot fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "commit",
+        "--allow-empty",
+        "-m",
+        "fixture baseline"
+      ],
+      "rc": 0,
+      "stdout": "[main (root-commit) 83b4ba3] fixture baseline\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "83b4ba359942013e56be9dcb1da777092cd5661b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "add",
+        "--",
+        "internal/task_test.go"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "-c",
+        "user.name=Pilot fixture",
+        "-c",
+        "user.email=fixture@example.invalid",
+        "commit",
+        "-m",
+        "Go test only"
+      ],
+      "rc": 0,
+      "stdout": "[main ea7d7ab] Go test only\n 1 file changed, 1 insertion(+)\n create mode 100644 internal/task_test.go\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rc": 0,
+      "stdout": "ea7d7abcb729763c6f1d923c4bedf32d2736a238\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/surface-map-check.py",
+        "83b4ba359942013e56be9dcb1da777092cd5661b",
+        "ea7d7abcb729763c6f1d923c4bedf32d2736a238",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo"
+      ],
+      "rc": 1,
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/surface-map-check.py",
+        "83b4ba359942013e56be9dcb1da777092cd5661b",
+        "ea7d7abcb729763c6f1d923c4bedf32d2736a238",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/evidence.md",
+        "--work-item",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--brief",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/kc-dev-flow/scripts/fixtures/surface-map/dev-66-work-item-fixture.md",
+        "--repo",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pilot-go-test-shape-oar_7d0v/repo",
+        "--no-exclude"
+      ],
+      "rc": 1,
+      "stdout": "surface-map-check: FAIL\nmissing SURFACE line: internal/task_test.go\n",
+      "stderr": ""
+    }
+  ],
+  "contract_excerpt": "# Pilot Build Working perspective: product engineer. ## Mission Implement the accepted journey through its real seams with enough diagnostics and recovery for bounded use. ## Conditional references ```json { \"schema\": \"kc-dev-flow-conditional-references/v1\", \"references\": [ { \"path\": \"../../roborev-implementation-exit.md\", \"trigger\": \"implementation_exit_observation_declared\", \"receipt\": null }, { \"path\": \"../../delivery-branch-base.md\", \"trigger\": \"delivery_artifact_review\", \"receipt\": null }, { \"path\": \"../../pr-delivery.md\", \"trigger\": \"pr_delivery_selected\", \"receipt\": null }, { \"path\": \"../../retained-document-policy.md\", \"trigger\": \"retained_document_change\", \"receipt\": null }, { \"path\": \"../../project-context-maintenance.md\", \"trigger\": \"project_context_claim_may_change\", \"receipt\": \"project_context\" } ] } ``` ## Required output - runnable integrated slice; - focused tests for owned logic and seam behavior; - diagnostics and bounded retry/recovery required by the shape contract. Stop here on crossing a stop number the shape contract declared. Run scoped tests while iterating and the relevant integrated checks at exit. Do not add production lifecycle surfaces or a standing review loop. At implementation exit, run `kc-dev-flow/scripts/surface-map-check.py` against the candidate diff and the Evidence block, checking every non-test changed file. ## Implementation exit observation ```json { \"schema\": \"kc-dev-flow-observation/v1\", \"capability\": \"review_convergence\", \"mode\": \"observe\", \"provider\": \"roborev\", \"trigger\": \"implementation_exit\", \"reasoning\": \"medium\", \"minimum_severity\": \"medium\", \"panel\": \"none\", \"live_batch_timeout_seconds\": 900, \"request_cap\": 1, \"repair_confirmation_cap\": 1 } ```",
+  "observations": {
+    "default": {
+      "expected_rc": 0,
+      "actual_rc": 1,
+      "defect_reproduced": true
+    },
+    "no_exclude": {
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "guard_observed": true
+    },
+    "fixture_base": "83b4ba359942013e56be9dcb1da777092cd5661b",
+    "fixture_candidate": "ea7d7abcb729763c6f1d923c4bedf32d2736a238",
+    "fixture_changed_path": "internal/task_test.go",
+    "fixture_content": "package internal\n"
+  }
+}

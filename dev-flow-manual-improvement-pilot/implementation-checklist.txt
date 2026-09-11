@@ -1,0 +1,3 @@
+Reproduce and repair the selected Go-test exclusion case against the frozen latest main, with real same-case before/after and defective-producer controls.
+Keep the repair within two product files and 150 gross changed lines, preserve explicit enforcement and unrelated production-file checks, and leave product changes uncommitted.
+Retain raw evidence, selection/deduplication outcome, exact provenance, actor usage with unknowns, and an AC-1 through AC-5 Stage Report that leaves original/native closure incomplete.

@@ -122,3 +122,19 @@ The prior active scope required an upstream knowledge-close repair and original 
 ### Summary
 
 Completed the bounded Pilot shape and retained a runnable native refusal probe with raw results. The recommended route reuses local tools and existing state ownership; upstream knowledge-delivery authority is the blocking dependency, and the next decision is its explicit scope delta. No positive implementation, independent cloud result, complete cost comparison, or terminal completion is claimed.
+
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Select one eligible local case after PR-feedback-first queue disposition, within the current Captain-confirmed Pilot scope.
+  AC-1: selected Go `_test.go` default-exclusion defect with one stable finding identity. FO reports three PRs without actionable review feedback and four issue dispositions; raw PR JSON is unavailable, so this is attributed evidence. [Current shape](shape-evidence/local-go-test-exclusion/current-shape.md).
+- DONE: Retain exact checker/contract provenance, observed raw baseline and the smallest falsifiable local repair plan.
+  AC-2: fresh real-Git default check returned 1 instead of expected 0; `--no-exclude` returned intended 1. [Raw baseline](shape-evidence/local-go-test-exclusion/baseline.json). Exact main object 0ec3380f590cbaf5b01ee1c325eb222da99a3c5a; proposed files measured at 278 and 2,405 lines. Design estimate 67–119 gross, hard limit two files/150. Before/after, normal-Go enforcement, strict mode, explicit-map and defective-producer controls are designed; candidate proof is pending.
+- DONE: Bound existing-session execution, actor usage, independent review and honest reporting without upstream/native closure dependencies.
+  AC-3: usage windows unknown; FO's supplied cumulative observation is preserved without claiming Pilot totals or complete cost. AC-4: fresh exact-candidate reviewer planned. AC-5: original/native terminal/archive/cleanup/final check remain explicitly incomplete. FO reports old ideation approval was consumed natively after amendment; this worker changed no gates/frontmatter/pins, and a fresh implementation pin remains FO-owned.
+- SKIPPED: Implement the selected repair, run candidate/negative-control verification, publish review, commit product files or terminalize a task.
+  This assignment completes current ideation/report preparation only. No stopped upstream/product repair worktree, paid runtime, provider, cloud or product mutation was used.
+
+### Summary
+
+One bounded local case is ready for implementation dispatch under the confirmed local-only scope. Its real baseline defect and strict-mode refusal are observed; the two-file correction, same-case after-results, negative control and independent review remain pending. Historical shape/report/approval bytes are preserved, and no original closure or complete-cost claim is made.
