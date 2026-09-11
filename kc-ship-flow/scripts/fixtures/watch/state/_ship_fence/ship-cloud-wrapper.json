@@ -4,5 +4,9 @@
   "task-question": {"workspace": "ws-3", "session": "sess-question", "message_sha256": "cc"},
   "task-stopped": {"workspace": "ws-4", "session": "sess-stopped", "message_sha256": "dd"},
   "task-resumed-after-quota": {"workspace": "ws-5", "session": "sess-resumed-after-quota", "message_sha256": "ee"},
-  "it's-a-slug": {"workspace": "ws-6", "session": "sess-quote-slug", "message_sha256": "ff"}
+  "it's-a-slug": {"workspace": "ws-6", "session": "sess-quote-slug", "message_sha256": "ff"},
+  "task-pending": {"workspace": "ws-pending-1", "session": null, "message_sha256": "gg"},
+  "task-folder-gate": {"workspace": "ws-7", "session": "sess-folder-gate", "message_sha256": "hh"},
+  "task-question-q-marker": {"workspace": "ws-8", "session": "sess-question-q-marker", "message_sha256": "ii"},
+  "task-question-decision-marker": {"workspace": "ws-9", "session": "sess-question-decision-marker", "message_sha256": "jj"}
 }

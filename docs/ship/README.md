@@ -44,7 +44,7 @@ This table is the `run-batch` skill's declared input before dispatching a batch,
 | UAT delivery | Subspace `/r` |
 | Approval defaults | `receipt/plan-approval.json` in the batch dir |
 | E2E flows | `docs/ship/flows/` |
-| Pin | `kc-ship-flow/pins/conductor-cli.txt` (the Conductor CLI this plugin was written against) |
+| Pin | `kc-ship-flow/pins/conductor-cli.contract` (the argv shapes `dispatch.sh`/`watch.sh` call; checked against live `conductor --help`, not version-gated) |
 | Installed contract interface | `kc-ship-flow-batch-pin/v1` |
 | Integrated head | `trunk` (placeholder, not yet a Captain ruling — one of `preview`, `trunk`, or `staging`; decides whether `verified` runs before or after the Captain's merge) |
 <!-- kc-ship-flow-static-local-profile:end -->
@@ -53,21 +53,33 @@ This table is the `run-batch` skill's declared input before dispatching a batch,
 
 ### `dispatched` — one workspace per ready task
 
-Script: `kc-ship-flow/scripts/dispatch.sh <sprint> [--dry-run]`. One `conductor workspace create`
-per `docs/dev` task whose `sprint` matches and whose `sprint-readiness` is `ready`, each carrying a
-fixed first-officer boot message (not a per-stage ensign dispatch). Records a claim fence
+Script: `kc-ship-flow/scripts/dispatch.sh <sprint> [--dry-run] --conn-quote QUOTE --conn-source
+SOURCE`. One `conductor workspace create` per `docs/dev` task whose `sprint` matches and whose
+`sprint-readiness` is `ready`, each carrying a fixed first-officer boot message (not a per-stage
+ensign dispatch). The boot message names the sender (`workspace_creator_id` from `conductor auth
+whoami`), a per-dispatch 12-hex token every worker report must echo, the Captain's verbatim batch
+approval (`--conn-quote`/`--conn-source`), and "sync state by merge, never rebase" — round 1 showed
+a worker treat an unnamed sender's answer as an injection and another refuse `git push` with no
+conn to point to. `--conn-quote` (and its `--conn-source`) are required; missing either refuses
+(exit 2, `conn required`) before any conductor call. Records a claim fence
 (`<state-dir>/_ship_fence/<sprint>.json`) before each create so a re-run skips an
 already-dispatched slug. Refuses (exit 2, `conductor unavailable`) when `conductor auth whoami`
-fails; refuses (exit 6) when the workspace project id cannot be resolved from the repo remote.
+fails; refuses (exit 6) when the workspace project id cannot be resolved from the repo remote;
+refuses (exit 5) when a used argv shape in `kc-ship-flow/pins/conductor-cli.contract` is missing
+from the installed `conductor --help`.
 
 ### `watching` — poll to a prepared gate or an exit condition
 
 Script: `kc-ship-flow/scripts/watch.sh <sprint> [--once]`. Reads the docs/dev state branch for a
-prepared `validation` gate first; only when a task's session is idle does it fall back to reading
-the transcript tail (`conductor sql`, never `session message --after` — see
-`docs/ship/runbooks/conductor-cloud.md`) for a usage-limit banner (`quota`) or a trailing question
-(`question`). Recording each question and its answer on the batch record is a residual: this
-stage only reports the `question` exit today, it does not yet write that record.
+prepared `validation` gate first (flat `<slug>.md` or folder `<slug>/index.md`), then
+`conductor workspace status` (an `initializing`-like workspace reads as `pending`); only when a
+task's session is idle does it fall back to reading the transcript tail (`conductor sql`, never
+`session message --after` — see `docs/ship/runbooks/conductor-cloud.md`) for a usage-limit banner
+(`quota`) or a question (a trailing `?`, or a line opening `Q:`/`Question:`/`Decision:`/
+`Could you`). A `stopped` verdict is only reported after two consecutive idle polls, since the
+outer session can read idle while the FO's own subagent is still running. Recording each question
+and its answer on the batch record is a residual: this stage only reports the `question` exit
+today, it does not yet write that record.
 
 ### `verified` — e2e at the integrated head
 

@@ -1,24 +1,13 @@
 #!/usr/bin/env bash
-# One Conductor workspace + first-officer boot per ready docs/dev task sharing a sprint.
-# Usage: dispatch.sh <sprint> [--dry-run] [--workflow-dir DIR] [--state-dir DIR]
-#          [--project-id UUID] [--model NAME] [--effort LEVEL]
-#
-# <workflow-dir> defaults to the repo's docs/dev (the dev-flow tasks being wrapped).
-# <state-dir> is ship's own split-root state checkout (default docs/ship/.spacedock-state)
-# where the claim fence is committed; it does not need to exist yet for --dry-run.
-#
-# The claim fence records <slug> -> {workspace, session, message_sha256} in
-# <state-dir>/_ship_fence/<sprint>.json before the create call; a slug already present
-# there is reported already-recorded rather than re-created.
-#
-# No `spacedock dispatch build` here: the message this station writes is a fixed
-# first-officer boot (run the whole docs/dev route to a prepared validation gate), not
-# an ensign single-stage envelope, so there is no per-stage artifact to build.
+# Usage: dispatch.sh <sprint> [--dry-run] --conn-quote QUOTE --conn-source SOURCE
+#          [--workflow-dir DIR] [--state-dir DIR] [--project-id UUID] [--model NAME] [--effort LEVEL]
+# workflow-dir default: docs/dev. state-dir default: docs/ship/.spacedock-state.
+# Claim fence: <state-dir>/_ship_fence/<sprint>.json maps slug -> {workspace, session, message_sha256}.
 set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 repo_root=$(cd "$here/../.." && pwd)
-pin_file="$here/../pins/conductor-cli.txt"
+contract_file="$here/../pins/conductor-cli.contract"
 
 die() { echo "$1" >&2; exit "${2:-1}"; }
 
@@ -27,8 +16,9 @@ DRYRUN=0
 workflow_dir="$repo_root/docs/dev"
 state_dir="$repo_root/docs/ship/.spacedock-state"
 project_id=""
-# Both defaults are listed by `conductor model` (agent claude) as of the pinned CLI version;
-# "sonnet" alone is not a valid model id there.
+conn_quote=""
+conn_source=""
+# "sonnet" alone is not a valid model id for `conductor model` (agent claude); needs the full id.
 model="${SHIP_DISPATCH_MODEL:-sonnet-5-1m}"
 effort="${SHIP_DISPATCH_EFFORT:-medium}"
 
@@ -40,24 +30,65 @@ while [ $# -gt 0 ]; do
     --project-id) project_id=$2; shift ;;
     --model) model=$2; shift ;;
     --effort) effort=$2; shift ;;
+    --conn-quote) conn_quote=$2; shift ;;
+    --conn-source) conn_source=$2; shift ;;
     -*) die "unknown flag $1" 2 ;;
     *) [ -z "$sprint" ] || die "unexpected argument $1" 2; sprint=$1 ;;
   esac
   shift
 done
-[ -n "$sprint" ] || die "usage: dispatch.sh <sprint> [--dry-run] [--workflow-dir DIR] [--state-dir DIR]" 2
+[ -n "$sprint" ] || die "usage: dispatch.sh <sprint> [--dry-run] --conn-quote QUOTE --conn-source SOURCE [--workflow-dir DIR] [--state-dir DIR]" 2
 
-# Pin check first, before any other conductor call: a version drift means the flags below
-# may no longer mean what this script assumes, so nothing else runs until it is re-pinned.
-[ -f "$pin_file" ] || die "conductor cli pin missing: $pin_file" 2
-pinned_version=$(head -n1 "$pin_file")
-installed_version=$(conductor --version 2>&1) || die "conductor unavailable: $installed_version" 2
-if [ "$installed_version" != "$pinned_version" ]; then
-  diff <(tail -n +2 "$pin_file") <(conductor --help 2>&1) || true
-  die "conductor cli changed: read the diff, then re-pin" 5
-fi
+[ -n "$conn_quote" ] || die "conn required" 2
+[ -n "$conn_source" ] || die "conn required" 2
 
-conductor auth whoami >/dev/null 2>&1 || die "conductor unavailable" 2
+# contract_file: one argv shape per line; --flags checked against live --help output,
+# the remaining command tokens checked as a literal substring.
+check_contract() {
+  [ -f "$contract_file" ] || die "conductor cli contract missing: $contract_file" 2
+  local version help_text line cmd tok ok missing
+  version=$(conductor --version 2>&1) || die "conductor unavailable: $version" 2
+  help_text=$(conductor --help 2>&1) || die "conductor unavailable: $help_text" 2
+  missing=""
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    cmd=""
+    ok=1
+    for tok in $line; do
+      case "$tok" in
+        --*)
+          case "$help_text" in
+            *"$tok"*) : ;;
+            *) ok=0 ;;
+          esac
+          ;;
+        *)
+          cmd="${cmd:+$cmd }$tok"
+          ;;
+      esac
+    done
+    case "$help_text" in
+      *"$cmd"*) : ;;
+      *) ok=0 ;;
+    esac
+    if [ "$ok" != 1 ]; then
+      missing="$cmd"
+      break
+    fi
+  done < "$contract_file"
+  if [ -n "$missing" ]; then
+    die "conductor cli used-surface changed: missing shape '$missing' (re-check $contract_file against \`conductor --help\`)" 5
+  fi
+  echo "conductor $version: used surface unchanged"
+}
+check_contract
+
+# conductor auth whoami has no --json output; sender id is parsed from its table.
+whoami_out=$(conductor auth whoami 2>&1) || die "conductor unavailable" 2
+sender_id=$(printf '%s\n' "$whoami_out" | sed -nE 's/^User ID[[:space:]]+//p' | head -n1)
+[ -n "$sender_id" ] || die "conductor unavailable: no User ID in auth whoami output" 2
+conductor workspace list --limit 1 >/dev/null 2>&1 || die "conductor unavailable: workspace list probe failed" 2
+conductor --json sql "SELECT 1" >/dev/null 2>&1 || die "conductor unavailable: sql probe failed" 2
 
 trunk=$(sed -n 's/^trunk: *//p' "$workflow_dir/README.md" | head -n1)
 trunk=${trunk:-main}
@@ -102,11 +133,11 @@ if [ -z "$slugs" ]; then
   exit 0
 fi
 
+token=$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')
+
 while IFS= read -r slug; do
   [ -n "$slug" ] || continue
 
-  # Values reach Python only as argv, never interpolated into the source: a slug can
-  # contain a quote (it comes off an adopter's state branch, not this repo).
   already=$(python3 -c '
 import json, sys
 path, slug = sys.argv[1], sys.argv[2]
@@ -124,17 +155,23 @@ print("yes" if slug in d else "no")
   [ -f "$entity_path" ] || die "resolved entity path missing: $entity_path" 2
 
   msg="$run/$slug.boot.md"
-  cat > "$msg" <<BOOTMSG
-Boot as the docs/dev first officer for exactly one entity.
-
-1. Become the first officer for the entity at slug \`$slug\` in workflow \`docs/dev\`
-   (\`spacedock claude $slug\`; run \`spacedock state init\` first if this split-root
-   checkout's state directory is absent).
-2. Run that entity through its route to a prepared \`validation\` gate
-   (\`spacedock gate prepare\`); deliver the Draft PR through the \`pr-merge\` mod as the
-   Local Profile already requires.
-3. Stop at the gate. Do not merge. Push every state change to the state branch.
-BOOTMSG
+  {
+    printf 'Sender identity: workspace_creator_id=%s\n\n' "$sender_id"
+    printf 'Answers to your questions arrive as further messages from this sender; no Captain message will appear in this session.\n\n'
+    printf 'Dispatch token: %s\n' "$token"
+    printf 'Echo this token in every report you send back, so the sender above can match your reports to this dispatch.\n\n'
+    printf "Captain's batch approval (conn-quote): %s\n" "$conn_quote"
+    printf 'conn-source: %s\n\n' "$conn_source"
+    printf 'Sync state by merge, never rebase.\n\n'
+    printf 'Boot as the docs/dev first officer for exactly one entity.\n\n'
+    printf '1. Become the first officer for the entity at slug `%s` in workflow `docs/dev`\n' "$slug"
+    printf '   (`spacedock claude %s`; run `spacedock state init` first if this split-root\n' "$slug"
+    printf "   checkout's state directory is absent).\n"
+    printf '2. Run that entity through its route to a prepared `validation` gate\n'
+    printf '   (`spacedock gate prepare`); deliver the Draft PR through the `pr-merge` mod as the\n'
+    printf '   Local Profile already requires.\n'
+    printf '3. Stop at the gate. Do not merge. Push every state change to the state branch.\n'
+  } > "$msg"
   msg_sha=$(sha256sum "$msg" | cut -d' ' -f1)
   name="$sprint-$slug"
 
@@ -177,9 +214,6 @@ d[slug]["workspace"] = wid
 d[slug]["session"] = sid or None
 json.dump(d, open(path, "w"), indent=1, sort_keys=True)
 ' "$fence_file" "$slug" "$wid" "$sid"
-  # Keep the loop's in-memory view of "already recorded" in sync with what was just
-  # committed: the next slug's "already" check and its own fence_scratch base both read
-  # existing_copy, and without this it would still see this slug's workspace as null.
   cp "$fence_file" "$existing_copy"
   git -C "$state_dir" add "_ship_fence/$sprint.json"
   git -C "$state_dir" -c user.name=ship-dispatch -c user.email=ship-dispatch@local commit -q \
