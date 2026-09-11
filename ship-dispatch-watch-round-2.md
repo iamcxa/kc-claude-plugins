@@ -55,7 +55,12 @@ gates:
                 reason: 'Captain approved via chat: ''push it'' (immediately after gate presentation recommending approve; AC-1..AC-5 independently re-verified twice with matching results)'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
+            - id: gate-attempt:7z61dwwgjsffrpgk7ga4m60r-validation-2
+              briefing:
+                id: briefing:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-2:revision-1
+                digest: sha256:6c8dd7f01c0a7b481290cb262452acbe93a9938429a0dc9e06e4f51c10ed18bb
+                room-ref: ./ship-dispatch-watch-round-2/review/validation/briefing-2
 ---
 
 The first real batch (`sprint: ship-cloud-wrapper`, 2026-09-10/11) delivered two tasks through cloud
