@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:7z61dwwgjsffrpgk7ga4m60r:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:7z61dwwgjsffrpgk7ga4m60r-validation-1
+              briefing:
+                id: briefing:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-1:revision-1
+                digest: sha256:e00d5805ee76e9a0e542f3b2ad1f0ff0ff623cd44efb2fdb461bfbf7b68f5fae
+                room-ref: ./ship-dispatch-watch-round-2/review/validation/briefing-1
 ---
 
 The first real batch (`sprint: ship-cloud-wrapper`, 2026-09-10/11) delivered two tasks through cloud

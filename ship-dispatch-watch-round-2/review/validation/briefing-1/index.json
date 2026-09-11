@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-1:revision-1",
+  "question": "Does the round-2 hardening satisfy AC-1..AC-5 and is it ready to deliver as a Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/13ec19970f8154a3e02156c83700628b6cf93750/ship-dispatch-watch-round-2.md",
+      "rev": "sha256:a95d79a60f2869c51c353500885e7eeb623f10fe3d222521fcb6d70704876670",
+      "mediaType": "text/markdown",
+      "summary": "watch.sh/dispatch.sh hardened per the first batch's defects; contract-test.py now runs both suites without a real conductor CLI; pins/conductor-cli.txt replaced by conductor-cli.contract. Implementation and validation stage reports both independently re-verify all 5 ACs; no discrepancies found."
+    }
+  ]
+}
