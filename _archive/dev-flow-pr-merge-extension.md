@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow owns the pr-merge extension: Residuals and without-it sections, synced to every adopter"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: dev-flow-pr-merge-extension
 sprint-readiness: ready
 started: 2026-09-10T16:04:05Z
-completed:
-verdict:
+completed: 2026-09-11T10:54:52Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-dev-flow-pr-merge-extension
 issue:
 pr: pr-merge:414
@@ -71,7 +71,8 @@ gates:
                 reason: 'Captain merged #414 (2026-09-11) after the FO presented attempt 2'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T10:54:53Z
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a
