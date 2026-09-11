@@ -41,7 +41,7 @@ def load_profile_loader():
 LOADER = load_profile_loader()
 
 EXCLUDE_DIR_RE = re.compile(r"(^|/)(tests?|fixtures?|__tests__)/")
-EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts")
+EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts", "_test.go")
 
 AC_HEADING_RE = re.compile(r"\*\*AC-(\d+)\s*\*\*")
 AC_TARGET_RE = re.compile(r"^AC-(\d+)$")
