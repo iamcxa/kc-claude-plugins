@@ -47,6 +47,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-09-10T16:11:49Z
+worktree: .worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot
 ---
 
 # One manually triggered local dev-flow improvement cycle
