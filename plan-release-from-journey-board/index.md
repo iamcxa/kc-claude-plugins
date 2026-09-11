@@ -181,11 +181,13 @@ part of the admission scope; the shape worker must consolidate these explicitly
 approved decisions in the task before presenting the implementation plan.
 
 
-## Implementation route proposed at ideation
+## Stage Report: ideation
+
+### Implementation route proposed at ideation
 
 One integrated Pilot slice: teach the existing journey entry to prepare one selected release and hand one Development Brief to existing dev-flow shaping. Product edits remain gated. `semantics_unchanged: false`: selected-release questioning and handoff guidance change; command grammar, source schema, progress calculation and admission authority do not.
 
-### Authority and delivery baseline
+#### Authority and delivery baseline
 
 The Captain-approved Feedback Cycles take precedence over historical pending-selection/admission prose and the superseded prohibition on extending the predecessor stack. Pilot selection, two independent entrypoints, one Development Brief, the separate layer above PR #417, and S2 registration/use before merge are settled. Accepted outcome, non-goals, receipt and stage pin remain byte-preserved; this plan does not reinterpret their historical text.
 
@@ -193,7 +195,7 @@ Code root is `/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context
 
 The installed 4.3.0 loader accepted state-owned attempt `ideation-1` with contract digest `cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558`. Only shared core, Pilot base/shape, reverse recovery, retained-document policy and project-context maintenance were loaded. Multi-slice is false: one integrated user journey is sufficient.
 
-### Journey and failure behavior
+#### Journey and failure behavior
 
 1. **DESIGNED — Codex or Claude running the journey entry:** on explicit planning/resume/release preparation, open the named repository journey YAML, take the selected release ID, persona, journey, release goal and recorded decisions as inputs. Inspect an existing relevant board proactively within that request; map-only requests keep their independent intent-only path.
 2. **DESIGNED — The same host agent:** inspect selected-release gap/unverified stories and questions in every status, plus dependencies that can affect the selected outcome. Read accessible symbols, source-authored models and existing task observations before proposing value choices. A model authored through an agent may have no standalone handler; unavailable/incomplete Spacedock observation is separate from authored implementation uncertainty. Retain both as unknown unless their own evidence resolves them.
@@ -205,7 +207,7 @@ The installed 4.3.0 loader accepted state-owned attempt `ideation-1` with contra
 
 Persistence uses the consumer repository's existing journey YAML and one reviewed Markdown snapshot. Git review provides recovery for source edits; retry re-reads identities, the selected revision and the decision disposition rather than duplicating work. Canvas failure returns source plus Markdown and reports unavailable rendering. A planning change after admission produces a new planning delta, never automatic rewrites of running tasks; source provenance stays in body text, not a partial provider Planning Receipt.
 
-### Where it touches and without-it justification
+#### Where it touches and without-it justification
 
 Paths below are relative to the code root. Counts are measured at `36099fab`; resulting counts are estimates, not pass criteria.
 
@@ -223,7 +225,7 @@ Stop and report before continuing if the diff against `36a969a6f890a63c541fad4bf
 
 Release compatibility is additive guidance: existing source files, commands, independent map use and valid standalone briefs remain supported. Put that no-migration instruction in the existing reference; use a journey-map-scoped feature commit and the existing release-please component for the eventual version/changelog. Do not hand-bump predecessor versions or add a parallel migration template. Existing release metadata checks remain applicable; publication remains separately authorized.
 
-### Acceptance checks and decisive falsifiers
+#### Acceptance checks and decisive falsifiers
 
 All changed-entry checks below are **planned**, not passed. Use the real prior Release 3 source and settled decisions as the bounded starting scenario, then one controlled deferral of `hand-the-order-to-planning`; label the variant hypothetical.
 
@@ -240,7 +242,7 @@ Implementation owns the actual changed-entry session and recorded artifacts; val
 
 Existing checks to reuse are `scripts/skill-frontmatter-lint.sh`, `scripts/version-parity-check.sh`, and the journey `read.test.mjs`, `release-contract.test.mjs`, `progress.test.mjs` checks relevant to the claimed unchanged seams. Use the declared `npm ci` prerequisites when those suites/CLI need dependencies; do not report core tests as CLI or rendered proof. No CI change or trigger is proposed; cost per PR is unmeasured. No speed comparison was performed.
 
-### Bounded audit receipts
+#### Bounded audit receipts
 
 ```yaml
 reverse_recovery:
@@ -266,7 +268,6 @@ project_context:
 
 The audit used file enumeration plus scoped content/entry-path tracing; it claims a broken integration boundary, not universal absence of a capability. Root catalog counts and unrelated reviewer prose were already stale in the base and are not caused or repaired by this slice. Retained-document policy applies to the two existing skill documents under repair-in-place: entry routing points to one detailed reference, the brief section schema remains owned by dev-flow, and the source/board boundary stays owned by canvas/cell contracts. No retained document is added or removed.
 
-## Stage Report: ideation
 
 - DONE: Define one faithful selected-release planning-to-development journey, preserve settled decisions and unknown evidence, and assign every AC a falsifier.
   AC-1, AC-2, AC-3, AC-4, AC-5, AC-6: the journey and falsifier table above bind one release, existing identities, facts-before-choice, deferred scope, stale snapshots and independent entrypoints; changed-entry proof remains planned.
