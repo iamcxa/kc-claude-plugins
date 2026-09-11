@@ -160,3 +160,108 @@ The earlier pending-selection prose is historical: Pilot is selected and the
 Captain has authorized this task's start. The accepted stack delta above is
 part of the admission scope; the shape worker must consolidate these explicitly
 approved decisions in the task before presenting the implementation plan.
+
+
+## Implementation route proposed at ideation
+
+One integrated Pilot slice: teach the existing journey entry to prepare one selected release and hand one Development Brief to existing dev-flow shaping. Product edits remain gated. `semantics_unchanged: false`: selected-release questioning and handoff guidance change; command grammar, source schema, progress calculation and admission authority do not.
+
+### Authority and delivery baseline
+
+The Captain-approved Feedback Cycles take precedence over historical pending-selection/admission prose and the superseded prohibition on extending the predecessor stack. Pilot selection, two independent entrypoints, one Development Brief, the separate layer above PR #417, and S2 registration/use before merge are settled. Accepted outcome, non-goals, receipt and stage pin remain byte-preserved; this plan does not reinterpret their historical text.
+
+Code root is `/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning`, branch `codex/journey-release-planning`, HEAD `36099fab28b9d19f73fc40e9d3e55614202e9b8a`. Delivery base is `36a969a6f890a63c541fad4bfa30071ac7115c64`; live GitHub read confirmed PR #417 OPEN at that exact head on `codex/journey-local-progress`, targeting `codex/journey-release-inspection`. The existing difference is only 13 added roadmap lines. No predecessor mutation, code push, PR creation or merge is part of ideation.
+
+The installed 4.3.0 loader accepted state-owned attempt `ideation-1` with contract digest `cc4915cc2e4d5407d174a5eef77bb64ca078bc098f533e83db00f98785413558`. Only shared core, Pilot base/shape, reverse recovery, retained-document policy and project-context maintenance were loaded. Multi-slice is false: one integrated user journey is sufficient.
+
+### Journey and failure behavior
+
+1. **DESIGNED — Codex or Claude running the journey entry:** on explicit planning/resume/release preparation, open the named repository journey YAML, take the selected release ID, persona, journey, release goal and recorded decisions as inputs. Inspect an existing relevant board proactively within that request; map-only requests keep their independent intent-only path.
+2. **DESIGNED — The same host agent:** inspect selected-release gap/unverified stories and questions in every status, plus dependencies that can affect the selected outcome. Read accessible symbols, source-authored models and existing task observations before proposing value choices. A model authored through an agent may have no standalone handler; unavailable/incomplete Spacedock observation is separate from authored implementation uncertainty. Retain both as unknown unless their own evidence resolves them.
+3. **DESIGNED — The host interaction surface:** ask one unresolved value/scope/acceptance decision, with recommendation and effect. Reuse answered, assigned and deferred decisions unless their premises changed. A later-release unknown stays visible without blocking an independent current release. No answer, abandonment or host interruption preserves the unresolved choice; dependent scope is not approved and a draft brief cannot be presented as ready. Resume from the source and recorded answer, not from a restarted interview.
+4. **DESIGNED — The host agent edits the existing YAML:** preserve release/story IDs and record the decision beside existing story/release content, using its existing decision container where present or an existing note/rule with the relevant IDs. Add no required decision schema. Use `journey-read` only for supported readback; ambiguous/duplicated/unclaimed edits require disposition before applying. Re-read the source before writeback to avoid overwriting concurrent edits. Function-model edits remain source edits followed by redraw; no direct function-map writeback.
+5. **DESIGNED — The host agent produces one Markdown Development Brief:** reuse the five sections owned by `kc-dev-flow/skills/adopt-dev-flow/SKILL.md:73-102`, with ascending AC identifiers. Put source path plus committed revision (or an explicit uncommitted content hash), release/story origins, observed facts, assumptions and technical unknowns inside those sections; create no duplicate template or sixth authority section. Generate the snapshot after decisions are reviewed. Keep the generated release contract as evidence, not as the Development Brief.
+6. **OBSERVED, bounded — Python runs the existing consumer format seam:** `validate_admission_brief` accepts the prior actual and hypothetical briefs and refuses a missing Acceptance criteria section. The earlier independent consumer accepted both matched source/brief pairs and rejected a stale pairing. Those observations do not establish native admission or changed-entry behavior.
+7. **DESIGNED — An agent running existing dev-flow ideation:** consume the reviewed brief and its evidence, perform technical gap/dependency/without-it work once, and propose the smallest necessary integrated work. Journey-map does not pre-split implementation tasks. Record multi-story/shared origins in task prose; the scalar `journey-story` progress mapping cannot represent shared work truthfully, so omit unsupported progress declarations and preserve unknown progress. Existing profile, admission and implementation gates remain in force; standalone dev takes a valid brief without a board.
+
+Persistence uses the consumer repository's existing journey YAML and one reviewed Markdown snapshot. Git review provides recovery for source edits; retry re-reads identities, the selected revision and the decision disposition rather than duplicating work. Canvas failure returns source plus Markdown and reports unavailable rendering. A planning change after admission produces a new planning delta, never automatic rewrites of running tasks; source provenance stays in body text, not a partial provider Planning Receipt.
+
+### Where it touches and without-it justification
+
+Paths below are relative to the code root. Counts are measured at `36099fab`; resulting counts are estimates, not pass criteria.
+
+| Path | Lines now | Estimated after | Why retained / what absence would break |
+|---|---:|---:|---|
+| `kc-journey-map/skills/kc-journey-map/SKILL.md` | 148 | 160–175 | Route explicit selected-release planning to the existing conversation reference, scope evidence checks to that route, and use the available host question surface. Without the entry change, the current map/draw/check routing does not expose selected-release preparation or its handoff. AC-1, AC-2, AC-6. |
+| `kc-journey-map/skills/kc-journey-map/references/map-from-conversation.md` | 72 | 125–150 | Retain the four-pass new-map path; add existing-board decision reuse, facts-before-choice, persistence and brief handoff in one explanatory home. Without it, the current reference explicitly forbids code inspection and stops at rendering/readback, with no development-ready release handoff. AC-1–AC-6. |
+| `docs/dev/ROADMAP.md` | 478 | 478 | Already committed S2 registration (`36099fab`), +13 versus delivery base; no further edit planned. Without the existing registration, the authorized execution group cannot be used for this task. |
+
+Unchanged dependencies were inspected and are deliberately not changes: `canvas.md` (258 lines), `cell-contract.md`, `lib/read.mjs`, `lib/progress.mjs`, dev-flow `continue-dev-flow/SKILL.md` (266), `adopt-dev-flow/SKILL.md` (268), `profile-contract-loader.py` (1119), and Pilot `shape.md` (89). The four inspected dev-flow intake/shape files are byte-identical to installed 4.3.0; the warning about older source does not describe these measured files. Reuse their five-section admission, profile routing, reverse-recovery and technical-shape contracts. No newer runtime contract import, consumer migration or consumer edit is justified by the observed format seam.
+
+Source inspection is the shape-tier without-it observation, not a changed-entry behavioral ablation. During build, exercise the accepted goal against the unchanged entry/reference as the control and the changed pair as the candidate; name the actual missing behavior. If a retained edit has no distinguishable contribution to the accepted goal or a named boundary, remove it. Do not equate a searched phrase with behavior proof.
+
+Stop and report before continuing if the diff against `36a969a6f890a63c541fad4bfa30071ac7115c64` exceeds **3 changed code-tree files**, **220 added plus deleted lines**, or **160 added plus deleted lines in `map-from-conversation.md`**. These include the existing 13 roadmap additions. Any dev-flow consumer/code/schema/renderer/progress edit is an unplanned surface and returns to shape even below those counts. State report and disposable exercise output are outside the product diff; no retained harness is authorized.
+
+Release compatibility is additive guidance: existing source files, commands, independent map use and valid standalone briefs remain supported. Put that no-migration instruction in the existing reference; use a journey-map-scoped feature commit and the existing release-please component for the eventual version/changelog. Do not hand-bump predecessor versions or add a parallel migration template. Existing release metadata checks remain applicable; publication remains separately authorized.
+
+### Acceptance checks and decisive falsifiers
+
+All changed-entry checks below are **planned**, not passed. Use the real prior Release 3 source and settled decisions as the bounded starting scenario, then one controlled deferral of `hand-the-order-to-planning`; label the variant hypothetical.
+
+| Criterion | Existing surface and planned check | Falsifier |
+|---|---|---|
+| AC-1 | Actual host interaction starts from the existing source's persona, journey, r3 goal and format decision, then asks the one remaining material choice with recommendation/effect. | Re-asking a settled answer or issuing a fixed interview fails; a changed premise permits only its affected question. |
+| AC-2 | Feed source-authored unverified model stories, an accessible model symbol, an unavailable/partial task observation, a question on an exists story, and assigned/deferred work. Inspect facts before deciding. | Inferring a missing handler/task from either unknown, skipping the exists-story question, or reopening unchanged deferred scope fails. |
+| AC-3 | Preserve all existing IDs and nonselected releases; apply one approved source decision, and exercise the existing conflicting-readback refusal. Include a later-release unknown and a current-scope unanswered choice. | Silent ID replacement, ambiguous writeback, blocking only on independent later work, or accepting unanswered current scope fails. |
+| AC-4 | Run the existing format consumer on the generated brief; compare bound source revision/release membership and facts. Change the source's handoff membership while retaining the old brief as a negative. | Missing canonical section/AC, conflated assumption, missing provenance, stale scope accepted, or automatic task rewrite fails. Format validation alone does not detect stale source. |
+| AC-5 | A real separately observed agent consumes the brief through the existing selected ideation contract and proposes necessary shared/model/handoff work with origins; repeat the controlled deferral. | Repeating value interviews, preselected framework/handler tasks without evidence, duplicated shared work, false scalar story mapping, or changed authority fails. Record exactly which native boundary ran; do not call contract-guided assessment full native admission. |
+| AC-6 | Run the existing map-only entry on intent with no code/Spacedock; run dev-flow on a valid standalone brief with no board; exercise a host without a question tool via plain text. | Any mandatory board/provider/evidence demand, absent text fallback, or new standing test framework fails. No tool answer is not scope approval. |
+
+Implementation owns the actual changed-entry session and recorded artifacts; validation owns a fresh brief consumer and final recheck, dispatched through the existing workflow by the First Officer. No child agent, self-roleplayed independent proof or new native work item is authorized by this shape report. A required consumer change discovered by that exercise returns here with its concrete failure instead of silently expanding this two-file route.
+
+Existing checks to reuse are `scripts/skill-frontmatter-lint.sh`, `scripts/version-parity-check.sh`, and the journey `read.test.mjs`, `release-contract.test.mjs`, `progress.test.mjs` checks relevant to the claimed unchanged seams. Use the declared `npm ci` prerequisites when those suites/CLI need dependencies; do not report core tests as CLI or rendered proof. No CI change or trigger is proposed; cost per PR is unmeasured. No speed comparison was performed.
+
+### Bounded audit receipts
+
+```yaml
+reverse_recovery:
+  trigger: selected-release planning and brief handoff in an existing skill
+  boundary: journey entry/conversation/canvas/cell contract and dev-flow intake/shape/loader; existing libs; external or historical planning packages excluded
+  layers:
+    - {surface: entry and conversation handoff, location: 'kc-journey-map/skills/kc-journey-map/{SKILL.md,references/map-from-conversation.md}', completeness: EXISTS_BROKEN, need: REQUIRED, evidence: 'current map route forbids factual inspection and ends at board readback; AC-1 through AC-6 need selected-release preparation', disproof_hook: 'unchanged-entry exercise produces the faithful brief without extra task-specific coaching'}
+    - {surface: selected-release evidence contract, location: kc-journey-map/lib/release-contract.mjs, completeness: WORKING_UNIT_UNPROVEN, need: REQUIRED, evidence: '4 existing tests passed including unknown-release refusal and three statuses; no CLI/render claim', disproof_hook: 'another release leaks into rows or unknown becomes gap'}
+    - {surface: canvas persistence and task observation, location: 'kc-journey-map/lib/{read,progress}.mjs', completeness: WORKING_UNIT_UNPROVEN, need: REQUIRED, evidence: 'prior bounded core proof and existing refusal tests; complete changed-entry wiring unproven', disproof_hook: 'fresh readback/conflicting-ID and partial-observation tests fail'}
+    - {surface: brief intake and technical shaping, location: 'kc-dev-flow/{skills/continue-dev-flow/SKILL.md,scripts/profile-contract-loader.py,references/profiles/pilot-product-slice/shape.md}', completeness: WORKING_UNIT_UNPROVEN, need: REQUIRED, evidence: 'live format positive/negative probe; earlier independent paired consumer; native changed-entry ideation unproven', disproof_hook: 'actual consumer needs repeated value decisions or incompatible format'}
+  decision: recover the two existing journey guidance surfaces; reuse consumer and persistence
+project_context:
+  impact: none
+  authority: 'Local Profile root PRODUCT.md, ARCHITECTURE.md and CLAUDE.md'
+  claim_locator: 'PRODUCT.md Repository plugin catalog / kc-dev-flow; ARCHITECTURE.md kc-dev-flow profile-native loading'
+  surface: independent plugin boundaries and five-section standalone admission
+  stale_claim: none
+  approved_change: none
+  landed_change: none
+  planned_check: compare delivered entry behavior with independent map/dev use and unchanged authority/loading claims; return newly affected claims to shape
+  validation_evidence: pending
+```
+
+The audit used file enumeration plus scoped content/entry-path tracing; it claims a broken integration boundary, not universal absence of a capability. Root catalog counts and unrelated reviewer prose were already stale in the base and are not caused or repaired by this slice. Retained-document policy applies to the two existing skill documents under repair-in-place: entry routing points to one detailed reference, the brief section schema remains owned by dev-flow, and the source/board boundary stays owned by canvas/cell contracts. No retained document is added or removed.
+
+## Stage Report: ideation
+
+- DONE: Define one faithful selected-release planning-to-development journey, preserve settled decisions and unknown evidence, and assign every AC a falsifier.
+  AC-1, AC-2, AC-3, AC-4, AC-5, AC-6: the journey and falsifier table above bind one release, existing identities, facts-before-choice, deferred scope, stale snapshots and independent entrypoints; changed-entry proof remains planned.
+- DONE: Justify the smallest file-level change against PR #417 with measured current lines, estimated resulting lines, without-it reasoning, and explicit stop thresholds.
+  Two guidance edits (148 and 72 current lines), plus the already committed 13-line roadmap registration; stop above 3 files / 220 changed lines / 160 conversation-reference changed lines against exact base `36a969a6`.
+- DONE: Identify and exercise the existing brief consumer seam as far as shaping requires, reuse prior bounded evidence honestly, and return one reviewable implementation route without product edits.
+  AC-4, AC-5, AC-6: candidate `validate_admission_brief` refused a removed Acceptance criteria heading, then accepted both prior briefs with digests `2184f8e1` and `371833cc`; measured intake/adopt/loader/shape bytes equal installed 4.3.0, so no consumer edit is justified.
+- DONE: Preserve the accepted planning delta and the pinned authority.
+  The Feedback Cycles supersede historical pending prose and the no-stack restriction; Pilot/S2/pre-merge use are approved, while the accepted brief, receipt and `ideation-1` pin remain unchanged.
+- DONE: Exercise the unchanged selected-release evidence core at the shaping boundary.
+  AC-2, AC-3, AC-4: `node --test kc-journey-map/lib/release-contract.test.mjs` passed 4 tests; unknown release is refused, other-release stories excluded, and gap/unverified remain distinct. Leaking membership or collapsing statuses would fail these checks.
+- SKIPPED: Product implementation, changed-entry interaction, native admission/ideation, rendered canvas and comparative speed proof.
+  These are outside ideation or belong to later authorized exercises; prior `consumer-result.md` is bounded independent assessment and prior CLI lint failed for missing `yaml`, neither is relabeled as native or visual proof.
+
+### Summary
+
+Recommend one two-file journey guidance change above PR #417, reusing the existing Development Brief consumer with no dev-flow code or contract change. The plan records the approved delta, all six falsifiers, measured stop numbers, recovery boundaries and the remaining real interaction/consumer proof; implementation awaits the ideation gate.
