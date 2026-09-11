@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: watch reads the right signals, the boot message carries identity and conn, and the Conductor CLI is a used-surface contract"
-status: implementation
+status: validation
 source:
 product: kc-ship-flow
 planning-window:
