@@ -66,6 +66,17 @@ gates:
                 id: briefing:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1
                 digest: sha256:00f3031ccf91ead6ed40ca3655e26c5141a386e7a3d5c832e290075d281b4643
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:td0yhsww2jnwnrzh5c6wc6er:validation:1
+                briefing: briefing:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T10:40:43.506561Z"
+                decision: approve
+                reason: 'Captain said 合併了 after reviewing the Ready delivery and personally merged PR #425 as iamcxa at 2026-09-11T10:36:31Z. Record this observed acceptance now for post-merge reconciliation; do not backdate approval. Exact reviewed head, required checks, and complete feedback observation match.'
+              application:
+                target-stage: done
+                state: pending
 worktree: .worktrees/spacedock-ensign-issue-393-profile-commitment-explanation
 pr: pr-merge:425
 ---
