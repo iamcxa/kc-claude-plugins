@@ -1,25 +1,8 @@
 #!/usr/bin/env bash
-# One Conductor workspace + first-officer boot per ready docs/dev task sharing a sprint.
 # Usage: dispatch.sh <sprint> [--dry-run] --conn-quote QUOTE --conn-source SOURCE
-#          [--workflow-dir DIR] [--state-dir DIR]
-#          [--project-id UUID] [--model NAME] [--effort LEVEL]
-#
-# <workflow-dir> defaults to the repo's docs/dev (the dev-flow tasks being wrapped).
-# <state-dir> is ship's own split-root state checkout (default docs/ship/.spacedock-state)
-# where the claim fence is committed; it does not need to exist yet for --dry-run.
-#
-# The claim fence records <slug> -> {workspace, session, message_sha256} in
-# <state-dir>/_ship_fence/<sprint>.json before the create call; a slug already present
-# there is reported already-recorded rather than re-created.
-#
-# --conn-quote/--conn-source carry the Captain's verbatim batch approval into every
-# worker's boot message (round 1's batch showed a worker refuse `git push` under the
-# pr-merge mod until the Captain typed the conn into the session by hand); both are
-# required, since a dispatch with no conn to quote is the same failure mode again.
-#
-# No `spacedock dispatch build` here: the message this station writes is a fixed
-# first-officer boot (run the whole docs/dev route to a prepared validation gate), not
-# an ensign single-stage envelope, so there is no per-stage artifact to build.
+#          [--workflow-dir DIR] [--state-dir DIR] [--project-id UUID] [--model NAME] [--effort LEVEL]
+# workflow-dir default: docs/dev. state-dir default: docs/ship/.spacedock-state.
+# Claim fence: <state-dir>/_ship_fence/<sprint>.json maps slug -> {workspace, session, message_sha256}.
 set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -35,8 +18,7 @@ state_dir="$repo_root/docs/ship/.spacedock-state"
 project_id=""
 conn_quote=""
 conn_source=""
-# Both defaults are listed by `conductor model` (agent claude) as of the pinned CLI version;
-# "sonnet" alone is not a valid model id there.
+# "sonnet" alone is not a valid model id for `conductor model` (agent claude); needs the full id.
 model="${SHIP_DISPATCH_MODEL:-sonnet-5-1m}"
 effort="${SHIP_DISPATCH_EFFORT:-medium}"
 
@@ -57,17 +39,11 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$sprint" ] || die "usage: dispatch.sh <sprint> [--dry-run] --conn-quote QUOTE --conn-source SOURCE [--workflow-dir DIR] [--state-dir DIR]" 2
 
-# The Captain's batch approval must reach every worker's boot message; a dispatch run
-# carrying nothing to quote reproduces the exact failure round 1 hit (a worker refusing
-# `git push` until the Captain typed the conn in by hand). Checked before any network
-# call -- this is a local usage error, not a Conductor-availability one.
 [ -n "$conn_quote" ] || die "conn required" 2
 [ -n "$conn_source" ] || die "conn required" 2
 
-# Used-surface contract: the argv shapes this script and watch.sh actually call, one per
-# line in $contract_file. The installed CLI's version is printed (never gated on); every
-# shape is checked against live `conductor --help` and a missing one refuses by name, since
-# a version drift is only safe to ignore when the surface this script depends on is intact.
+# contract_file: one argv shape per line; --flags checked against live --help output,
+# the remaining command tokens checked as a literal substring.
 check_contract() {
   [ -f "$contract_file" ] || die "conductor cli contract missing: $contract_file" 2
   local version help_text line cmd tok ok missing
@@ -107,11 +83,7 @@ check_contract() {
 }
 check_contract
 
-# Read-only probes, run before the first mutating call (`workspace create`, below). Also
-# recovers the sender identity (`workspace_creator_id`, from the human-readable table
-# `conductor auth whoami` prints -- `--json` output for auth commands is not JSON; see
-# `conductor --help`'s Global options note) that the boot message names, so every worker
-# knows who its answers come back from.
+# conductor auth whoami has no --json output; sender id is parsed from its table.
 whoami_out=$(conductor auth whoami 2>&1) || die "conductor unavailable" 2
 sender_id=$(printf '%s\n' "$whoami_out" | sed -nE 's/^User ID[[:space:]]+//p' | head -n1)
 [ -n "$sender_id" ] || die "conductor unavailable: no User ID in auth whoami output" 2
@@ -161,16 +133,11 @@ if [ -z "$slugs" ]; then
   exit 0
 fi
 
-# A 12-hex-char token unique to this dispatch run, not per-slug: every worker booted by
-# this invocation echoes the same token in its reports, so the sender above can tell a
-# real report apart from anything else arriving in the session.
 token=$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')
 
 while IFS= read -r slug; do
   [ -n "$slug" ] || continue
 
-  # Values reach Python only as argv, never interpolated into the source: a slug can
-  # contain a quote (it comes off an adopter's state branch, not this repo).
   already=$(python3 -c '
 import json, sys
 path, slug = sys.argv[1], sys.argv[2]
@@ -188,9 +155,6 @@ print("yes" if slug in d else "no")
   [ -f "$entity_path" ] || die "resolved entity path missing: $entity_path" 2
 
   msg="$run/$slug.boot.md"
-  # Built with printf, not an unquoted heredoc: $conn_quote is Captain-typed text from the
-  # batch approval and must never be re-interpreted by the shell (a literal $(...) or
-  # backtick in a quote must land in the file as text, not run as a command).
   {
     printf 'Sender identity: workspace_creator_id=%s\n\n' "$sender_id"
     printf 'Answers to your questions arrive as further messages from this sender; no Captain message will appear in this session.\n\n'
@@ -250,9 +214,6 @@ d[slug]["workspace"] = wid
 d[slug]["session"] = sid or None
 json.dump(d, open(path, "w"), indent=1, sort_keys=True)
 ' "$fence_file" "$slug" "$wid" "$sid"
-  # Keep the loop's in-memory view of "already recorded" in sync with what was just
-  # committed: the next slug's "already" check and its own fence_scratch base both read
-  # existing_copy, and without this it would still see this slug's workspace as null.
   cp "$fence_file" "$existing_copy"
   git -C "$state_dir" add "_ship_fence/$sprint.json"
   git -C "$state_dir" -c user.name=ship-dispatch -c user.email=ship-dispatch@local commit -q \

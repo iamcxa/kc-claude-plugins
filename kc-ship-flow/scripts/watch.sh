@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
-# Poll every task dispatch.sh recorded for a sprint and print one exit per task.
 # Usage: watch.sh <sprint> [--once] [--workflow-dir DIR] [--state-dir DIR] [--stage STAGE]
-#
-# Output: one line per task, "<slug> <exit>", where <exit> is one of
-#   gate-prepared | pending | quota | question | stopped
-#
-# Primary signal is the docs/dev state branch (a prepared gate at --stage, default
-# "validation", read from the entity file's own gates record -- `spacedock status --json`
-# does not expose the nested gates block, so this reads the frontmatter YAML directly).
-# Second signal is `conductor workspace status`: an initializing-like workspace (still
-# provisioning, before the FO's own session can even be created) reads as `pending`, not
-# `stopped`. Third signal, only consulted once a task's session reports idle, is the
-# transcript tail read through `conductor sql` (never `session message --after`; see
-# docs/ship/runbooks/conductor-cloud.md). A first idle poll is only a candidate for
-# `stopped` -- the FO's own subagent can still be running while the outer session looks
-# idle -- so `stopped` is only reported after two consecutive idle polls; `quota` and
-# `question` are decisive signals in the transcript itself and are reported on the first
-# idle poll. A task whose session is still running, or is on its first idle poll pending
-# confirmation, is left out of this poll's output -- there is nothing yet to report and a
-# caller running this in a loop (omitting --once) will see it on the next pass.
+# Output: one line per task, "<slug> <exit>": gate-prepared | pending | quota | question | stopped.
+# `spacedock status --json` does not expose the nested gates block, so gate state is read
+# from the entity frontmatter YAML directly. Transcript tail read via `conductor sql`, never
+# `session message --after` (see docs/ship/runbooks/conductor-cloud.md).
 set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -46,10 +31,8 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$sprint" ] || die "usage: watch.sh <sprint> [--once] [--workflow-dir DIR] [--state-dir DIR]" 2
 
-# Used-surface contract: the argv shapes this script and dispatch.sh actually call, one per
-# line in $contract_file. The installed CLI's version is printed (never gated on); every
-# shape is checked against live `conductor --help` and a missing one refuses by name, since
-# a version drift is only safe to ignore when the surface this script depends on is intact.
+# contract_file: one argv shape per line; --flags checked against live --help output,
+# the remaining command tokens checked as a literal substring.
 check_contract() {
   [ -f "$contract_file" ] || die "conductor cli contract missing: $contract_file" 2
   local version help_text line cmd tok ok missing
@@ -89,9 +72,6 @@ check_contract() {
 }
 check_contract
 
-# Read-only probes, run before any mutating call (this script makes none, but the same
-# probes gate dispatch.sh's `workspace create`, and running them here too means a broken
-# read-only surface is caught by whichever station runs first).
 conductor auth whoami >/dev/null 2>&1 || die "conductor unavailable" 2
 conductor workspace list --limit 1 >/dev/null 2>&1 || die "conductor unavailable: workspace list probe failed" 2
 conductor --json sql "SELECT 1" >/dev/null 2>&1 || die "conductor unavailable: sql probe failed" 2
@@ -99,9 +79,6 @@ conductor --json sql "SELECT 1" >/dev/null 2>&1 || die "conductor unavailable: s
 fence_file="$state_dir/_ship_fence/$sprint.json"
 [ -f "$fence_file" ] || die "no fence records for sprint=$sprint: $fence_file" 2
 
-# Small scratch state -- not the committed claim fence -- remembering, per slug, how many
-# consecutive polls have seen the session idle. Lives under --state-dir so a caller pointed
-# at a fixture state dir gets a fixture-scoped scratch file; never committed by this script.
 poll_state_dir="$state_dir/.ship-watch-scratch"
 mkdir -p "$poll_state_dir"
 poll_state_file="$poll_state_dir/$sprint.json"
@@ -163,8 +140,6 @@ print('not-prepared')
 " "$1" "$2"
 }
 
-# A ready entity lives at either "<slug>.md" or the folder form "<slug>/index.md"; prefer
-# whichever exists (the file form first, since it is the common case).
 entity_path_for() {
   local slug="$1" flat folder
   flat="$workflow_dir/.spacedock-state/$slug.md"
@@ -177,7 +152,6 @@ entity_path_for() {
 }
 
 workspace_status() {
-  # prints the raw workspace status string (may be empty on any parse failure).
   local workspace_id="$1"
   conductor --json workspace status "$workspace_id" 2>/dev/null | python3 -c "
 import json, sys
@@ -204,23 +178,16 @@ except ValueError:
 rows = d.get('rows') or []
 transcript = rows[0].get('transcript', '') if rows else ''
 
-# The tail only: a banner earlier in a long transcript (already resolved -- the worker kept
-# going after a resumed session) must not read as quota forever, and only the tail bears on
-# what the worker is doing right now.
 blocks = re.split(r'(?m)^## Assistant\$', transcript)
 last_block = blocks[-1] if blocks else ''
 
-# Verified real-transcript wording (2026-09-10, via conductor sql): 'You've hit your
-# session limit · resets 9pm (Asia/Taipei)'. The 'usage limit' alternative is an
-# unverified guess at another phrasing of the same product banner.
+# 'usage limit reached' is an unverified guess at a second phrasing of the same banner.
 if re.search(r'hit your session limit|usage limit reached', last_block, re.IGNORECASE):
     print('quota')
     raise SystemExit
 
 lines = [line for line in last_block.splitlines() if line.strip()]
 last_line = lines[-1].strip() if lines else ''
-# Broadened beyond 'ends in ?': a line opening a question in report-writing style also
-# counts, even when the assistant's actual final line is a following statement.
 question_line = re.compile(r'^(Q:|Question:|Decision:|Could you)', re.IGNORECASE)
 is_question = last_line.endswith('?') or any(question_line.match(l.strip()) for l in lines)
 print('question' if is_question else 'stopped')
@@ -292,8 +259,6 @@ except ValueError:
         continue
         ;;
     esac
-    # verdict is the "stopped" candidate: idle is confirmed only after two consecutive
-    # idle polls, since the outer session can read idle while the FO's own subagent runs.
     streak=$(idle_streak_get "$slug")
     streak=$((streak + 1))
     idle_streak_set "$slug" "$streak"
