@@ -1,12 +1,12 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, or checking an existing journey against current reality. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — the user journey (story map) by default, plus a per-release journey board or a function map of commands and events, each drawn only on request — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and journey-board status cards name what is unproven, unmerged, or undeployed.
+description: Use when drawing a user journey from what a codebase actually does, checking an existing journey against current reality, or preparing a selected release from an existing board for development. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", "plan this release", "準備這個 release 開發", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — the user journey (story map) by default, plus a per-release journey board or a function map of commands and events, each drawn only on request — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and journey-board status cards name what is unproven, unmerged, or undeployed.
 ---
 
 # Journey Map
 
-Draw a journey from the code, or check a journey against the code. Same core either way:
-establish the steps and their evidence, then render the requested projections.
+Map intent, draw or check a journey against code, or prepare an existing release for
+development. Draw/check establish evidence and render the requested projections.
 Journey-board pages include system flow, constraints and a status card.
 
 The board's value is not the picture. It is that each column forces three answers next to
@@ -21,11 +21,17 @@ is judged against.
 | Mode | Trigger | Output |
 |---|---|---|
 | **map** | nothing is built yet, or the question is what to build | a story map with releases, drawn from a conversation — `references/map-from-conversation.md` |
+| **plan-release** | planning/resuming an existing board or preparing a selected release for development | reviewed Development Brief, or draft with the missing decision — `references/map-from-conversation.md` |
 | **draw** | no journey exists yet | the board, derived from code |
 | **check** | a journey exists — board, screenshot, or a list of cards | the mismatch table **first**, then the corrected board |
 
-Map mode comes before the other two and is held to a different bar: it asserts intent, so
+Map mode comes before draw/check and is held to a different bar: it asserts intent, so
 it cites nothing and badges nothing. See `references/cell-contract.md`.
+
+On an explicit planning/resume request, inspect the relevant existing journey source
+and selected release before asking questions. Follow the conversation reference for
+map and plan-release; the evidence process below is for draw/check. Preparing a
+brief does not require rendering or start development.
 
 In check mode the mismatches are the deliverable. Do not quietly redraw someone's board
 into the "right" answer: quote their card, state the code fact, name the verdict.
