@@ -41,6 +41,17 @@ gates:
                 id: briefing:ndmwj51qjzktmqsxtzv3etr7:validation:attempt-1:revision-1
                 digest: sha256:c1a958e761bf433619ea0b53d1d738eb05dc4a9d98e951e8c0f39d51022935c7
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ndmwj51qjzktmqsxtzv3etr7:validation:1
+                briefing: briefing:ndmwj51qjzktmqsxtzv3etr7:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T05:11:03.067959Z"
+                decision: approve
+                reason: 'Captain approved the presented change outcome and scoped disposable experiment cleanup in current chat: 核准，所以下一步是什麼？ Bound review c1a958e761bf. No Pilot admission or product release is included.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## Exploration Brief
