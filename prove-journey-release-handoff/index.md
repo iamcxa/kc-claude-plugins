@@ -7,7 +7,7 @@ sprint-readiness: ready
 started: 2026-09-11T04:57:31Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-prove-journey-release-handoff
 pr:
 mod-block:
 id: ndmwj51qjzktmqsxtzv3etr7
