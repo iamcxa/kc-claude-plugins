@@ -49,37 +49,37 @@ gates:
 started: 2026-09-10T16:11:49Z
 ---
 
-# One manually triggered dev-flow improvement cycle
+# One manually triggered local dev-flow improvement cycle
 
-Kent accepted the proposed Pilot with “同意” after the 2026-09-10 experiment debrief: repair the knowledge-only close gap, complete the original archive, then run one manually triggered improvement cycle with complete test evidence and token accounting. This standalone Development Brief records that scope and profile; S8 is execution grouping only, with no provider planning receipt. Automatic scheduling remains a later decision.
+Kent confirmed the controlled local-only route with 「確認」 after directing 「不要去動 ＳD 上游」. Select one existing kc-dev-flow case, retain raw before/after and negative-control evidence, obtain fresh independent review, record per-actor usage with unknowns preserved, and report the result. This standalone Development Brief remains Pilot; S8 is execution grouping only, with no provider planning receipt or recurring activation.
 
 ## Problem
 
-The initial event-query cloud experiment produced one merged repair (#412), but individual raw test results and whole-cycle actor usage were incomplete. Actual knowledge-only terminalization remains blocked: the mod documents a reason sentinel while Spacedock 0.27.2 accepts a real local-merge hash. The existing `knowledge-output-cannot-terminalize` task owns that defect; do not file a duplicate. A recurring loop would currently repeat these evidence and completion gaps.
+The initial event-query experiment produced a repair, but raw case evidence and whole-cycle actor usage were incomplete. One controlled local case can test whether the improvement process produces reproducible repair evidence and an honest report. Original/native knowledge closure remains incomplete and is not a prerequisite for this local replay; the stopped upstream repair is not part of the current plan.
 
 ## Accepted outcome
 
-A bounded, manually triggered improvement cycle can select one eligible finding, preserve reproducible failure evidence, produce and independently verify a focused repair, and reach an honest close with complete evidence and measured usage. The original experiment's already-approved archive is a prerequisite to live replay. The shape stage first proves or names the exact knowledge-only closure dependency, checks existing fixes, and proposes the smallest reviewable implementation and execution budget.
+One manually triggered execution selects an eligible PR feedback item first, otherwise an eligible issue/finding, reproduces it locally, makes the smallest selected repair, and retains same-case before/after results plus a meaningful negative control and fresh independent review. Report the observed outcome and each actor's available usage without claiming complete cost when measurements are missing. The original experiment's native terminalization/archive, cleanup and final check remain explicitly incomplete and separately owned; this Pilot does not fabricate or require their completion before local replay.
 
 ## Non-goals
 
-No recurring or unattended Routine activation, automatic merge or release, whole-profile coverage claim, new paid provider arrangement, automatic external issue/review posting, production data, destructive cleanup, replacement workflow engine, fabricated usage or delivery proof, or duplicated knowledge-terminalization repair task. This admission authorizes shaping and local proof preparation; a new cloud/model execution waits for its concrete budget and launch configuration. Product commits require Kent's confirmation of exact files. Existing state-tracking commits and original archive approval remain authorized.
+No Spacedock upstream work or consumer migration dependency. Do not read or write the stopped upstream/product repair worktrees. No recurring or unattended activation, new workflow engine, whole-profile coverage, production data, paid runtime launch, cloud execution, separate provider/model call, product push/PR creation, external review publication, merge, installation, live original cleanup or forced terminalization. Existing-session host workers perform the controlled local execution; unavailable usage stays unknown and forbids complete-cost claims. Product commits require Kent's confirmation of the exact selected files. State-tracking commits remain authorized.
 
 ## Acceptance criteria
 
-- **AC-1** One manually triggered execution selects one eligible PR feedback item first, otherwise one eligible issue/finding, with a stable deduplication identity and explicit stop/retry limits; duplicate input does not start duplicate work.
-- **AC-2** The selected case has retained raw stdout, stderr, exit status and exact code/runtime provenance; a same-case before/after retest and a negative control distinguish an actual repair from a misleading success summary.
-- **AC-3** Every participating actor has an explicit usage boundary covering input, cached input, output and reasoning where available; missing fields remain unknown, subsets are not double-counted, and quality outcomes accompany any cost comparison.
-- **AC-4** A fresh reviewer evaluates the exact candidate and retained evidence; a known failing control cannot be reported ready. External review publication and merge remain human-authorized.
-- **AC-5** The original experiment and the Pilot's selected delivery route reach a legitimate native terminal/archive path, with consumed approval, evidence retained, actual cleanup measurement and successful final check; no forced state or invented merge sentinel is accepted.
+- **AC-1** One manual execution selects one eligible PR feedback item first, otherwise one eligible issue/finding, with stable deduplication identity and explicit stop/retry limits; duplicate input does not start duplicate work.
+- **AC-2** Retain raw stdout, stderr, exit status and exact code/runtime provenance for the selected case; same-case before/after retest and a meaningful negative control distinguish repair from a misleading success summary.
+- **AC-3** Record every participating actor's usage boundary for input, cached input, output and reasoning where available. Missing fields remain unknown; do not double-count subsets or claim complete cost. Quality outcomes accompany any measured comparison. Existing-session host workers only; no paid new runtime launch or separate provider call.
+- **AC-4** A fresh independent reviewer evaluates the exact selected candidate and retained evidence; a known failing control cannot be reported ready. Product commit requires exact-file confirmation; push, PR/review publication, merge and installation remain outside this authorization.
+- **AC-5** Retain a factual local report and raw evidence stating the observed result and limitations. Explicitly record that original/native knowledge terminalization, archive, cleanup and final check remain incomplete. Do not manufacture completion, consume an old approval, force state or invent a merge sentinel.
 
 ## Route-back conditions
 
-Return a concrete scope delta if closure requires changing upstream Spacedock authority, consumer migration, replacing the state engine, paid execution beyond an approved budget, unattended operation, expanded permissions, or a new production commitment. Preserve pending original approval and existing evidence. Unavailable usage or provider evidence is a limitation, not a zero or pass.
+Stop and return a concrete scope delta if the selected repair needs more than two product files or 150 added-plus-deleted lines, another case, stopped upstream/product-root access, consumer migration, a new paid runtime, separate provider/cloud execution, broader permissions or recurring operation. Preserve pending original approvals and existing evidence. Missing usage or native closure evidence is a reported limitation, never a zero, pass or reason to reopen stopped upstream work.
 
-## Dependency and next proof
+## Current local plan and limits
 
-`knowledge-output-cannot-terminalize` is the existing defect owner. Establish live upstream status before implementing a second local workaround. The first shape output must explain the true terminal consumer and demonstrate its riskiest path in a disposable local fixture or explicitly report it blocked. Do not run another cloud baseline merely to rediscover the close defect.
+The First Officer checks the existing input queue: eligible PR feedback first, otherwise one eligible issue/finding, with no duplicate owner. Select one existing kc-dev-flow case and bind its product root, exact baseline, failure, negative control, participating existing-session workers, usage fields and stop/retry limits before local execution. The selected repair is limited to two product files and 150 gross added-plus-deleted lines; tests count. No product commit until Kent confirms exact files. No upstream repair, consumer migration, installation or original archive prerequisite is part of this plan.
 
 ## Work profile receipt
 
@@ -88,19 +88,25 @@ work_profile:
   schema: kc-dev-flow-work-profile/v3
   selected: pilot-product-slice
   recommended: pilot-product-slice
-  basis: Retained tooling and evidence for Kent's limited manual improvement runs, with human-owned external mutations and no unattended service commitment.
+  basis: One Captain-confirmed local case with raw repair evidence and honest actor usage, using existing-session workers only.
   route: [shape, build, verify-deliver]
   obligations:
-    architecture: [Keep native state and approval authority, reuse the existing finding owner and queue]
-    implementation: [Bound one manual cycle and preserve raw evidence and actor usage]
-    testing: [Exercise same-case failure and repair plus negative controls and real terminalization]
-  scope_boundary: One manual improvement cycle; recurring operation, release, production use and broad profile coverage excluded.
+    architecture: [Keep native state and approval authority, reuse one existing finding owner and queue, leave original native closure explicitly incomplete]
+    implementation: [Bound one manual local case to two product files and 150 gross lines, preserve raw evidence and actor usage unknowns, exclude stopped upstream and product repair worktrees]
+    testing: [Exercise same-case before and after plus a meaningful negative control, obtain fresh independent review, retain a factual report without claiming native closure or complete cost]
+  scope_boundary: One manual local case using existing-session host workers; no paid new runtime, separate provider or cloud call, recurring operation, product commit without exact-file confirmation, external delivery, installation or original cleanup.
   semantics_unchanged: false
-  promote_when: [Unattended recurring operation, consumer migration, production support or rollback duty]
+  promote_when: [Unattended recurring operation, new paid runtime, expanded production or delivery obligations]
   decision:
-    authority: Kent, current conversation approval of the proposed Pilot
-    at: 2026-09-10T16:04:06.089743+00:00
+    authority: Kent, current conversation confirmation of the local-only Pilot proposal
+    at: 2026-09-11T07:39:22.469305+00:00
 ```
+
+## Captain scope amendment — current local-only route
+
+After Kent instructed 「不要去動 ＳD 上游」, the First Officer proposed a controlled local improvement loop: one existing kc-dev-flow case, raw before/after and a negative control, independent review, per-actor usage preserving unknowns, then a factual report; original/native knowledge closure stays explicitly incomplete and no recurring activation follows. Kent replied exactly 「確認」. This records that existing Captain authority; it is not a request for another approval.
+
+The prior active scope required an upstream knowledge-close repair and original archive before replay. It is superseded by the local-only scope above. [Complete pre-amendment task bytes](scope-history/2026-09-11-before-local-only-amendment.md) preserve the original brief, receipt, frontmatter and historical reports. Existing Stage Reports below, stage pins, gates, frozen Briefing and approval history remain unchanged. Their old dependency and closure claims are historical, not the current plan. This amendment does not advance task state, rewrite a pin, consume the old pending approval or claim implementation completed.
 
 ## Stage Report: ideation
 
