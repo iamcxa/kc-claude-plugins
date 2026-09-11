@@ -152,11 +152,20 @@ slices:
 
 An unsupported or missing status fails evidence lint; the journey-board detail
 labels it UNASSESSED. The story-map card does not promise that label. See `cell-contract.md` for the status meanings and evidence boundary.
-A release's label carries how many of its stories have `status: exists` — computed from `status` on every
+Drawing without task progress, a release's label carries how many of its stories have `status: exists` — computed from `status` on every
 render, never typed by hand.
 
 An unfinished implementation of the thing being proposed does not belong in `now:` —
 that is the status card's job, not the user's current world.
+
+## Draw a task observation
+
+Use [the progress skill](../../kc-journey-progress/SKILL.md) for explicit local-task
+refresh and its mapping contract. Its derived snapshot supplies release counts and
+story colors without entering editable wording or authored evidence. All required
+stories complete means **pending delivery acceptance**. Native wording, order and
+release edits still round-trip; `node --test lib/progress.test.mjs` exercises both
+routes from the plugin root.
 
 ## Moving a board somewhere else
 

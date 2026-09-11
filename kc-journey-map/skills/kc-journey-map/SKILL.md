@@ -71,6 +71,10 @@ Ship what you saw, not what you wrote.
 (`node lib/journey-contract.mjs`), and `node lib/journey-lint.mjs` run against the file — cite
 what it found, not just that it ran. Check mode: the mismatch table first.
 
+For optional local task development progress, use the sibling
+`../kc-journey-progress/SKILL.md`. Its derived display leaves authored status and
+evidence intact; drawing alone does not require Spacedock.
+
 ## Rendering
 
 **Ask what to draw, before rendering.** (`AskUserQuestion`, multi-select): `User journey`
