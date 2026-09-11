@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ndmwj51qjzktmqsxtzv3etr7:validation:attempt-1:revision-1",
+  "question": "Accept this bounded POC change outcome and authorize terminal close with cleanup of its disposable experiment directory?",
+  "artifacts": [
+    {
+      "id": "artifact:ndmwj51qjzktmqsxtzv3etr7:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/83fecc6c01dcdf5f7ee2d6c03526e7f939870cf5/prove-journey-release-handoff/index.md",
+      "rev": "sha256:f1970b94f4240e9775ee7bd2e787b1f7aa2a452454f5418938bc22330237c68d",
+      "mediaType": "text/markdown",
+      "summary": "Actual brief handoff and missing-decision refusal observed; zero repeated value questions. Board-to-brief causality and speed improvement unproved. Full admission-to-decision interval 19m23s with one routing intervention. No product edits or automatic Pilot."
+    }
+  ]
+}

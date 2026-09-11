@@ -33,6 +33,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ndmwj51qjzktmqsxtzv3etr7:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ndmwj51qjzktmqsxtzv3etr7-validation-1
+              briefing:
+                id: briefing:ndmwj51qjzktmqsxtzv3etr7:validation:attempt-1:revision-1
+                digest: sha256:c1a958e761bf433619ea0b53d1d738eb05dc4a9d98e951e8c0f39d51022935c7
+                room-ref: ./review/validation/briefing-1
 ---
 
 ## Exploration Brief
