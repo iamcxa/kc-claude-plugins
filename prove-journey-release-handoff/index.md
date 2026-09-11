@@ -79,3 +79,17 @@ Compare the existing choose-work-profile and kernel wording against the result. 
 ## Authorization
 
 Captain: "如果這樣會更快，也應該納入 profile chosen skill / kernel 作為原則之一。就先做這個完整流程的 poc". This authorizes the bounded experiment, not terminal acceptance or automatic Pilot promotion.
+
+### Feedback Cycles
+
+#### Admission routing blocker — First Officer
+
+The Captain-authorized backlog gate was recorded and consumed durably. Native Spacedock selected `target-stage=ideation`, while the selected v3 POC route and repository Local Profile require backlog directly to implementation. The current installed 4.3.0 profile loader refused before creating a stage pin or dispatch envelope:
+
+```text
+profile contract: workflow stage 'ideation' is outside poc-exploration; expected: implementation, validation
+```
+
+No worker was dispatched; no integrated product journey, timing comparison or handoff proof occurred. Do not report this as a completed or failed product experiment. Existing backlog approval is consumed; do not replay it. The recorded state is ideation and is held from dispatch because it has no POC working contract.
+
+Smallest proposed recovery: Captain explicitly authorizes a one-task status correction to implementation in accordance with the already selected POC route, then the First Officer writes and commits the installed 4.3.0 implementation pin and performs normal stamped dispatch. This leaves the shared workflow graph and product contracts unchanged. Generic FO gate rules forbid silently using a status setter to advance a gate, so the exception must be explicit. No permanent route fix or chooser/kernel principle is claimed proven.
