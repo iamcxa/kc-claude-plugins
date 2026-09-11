@@ -118,12 +118,16 @@ def missing_pilot(fixture: Path) -> None:
 
 
 def permit_poc_ideation(fixture: Path) -> None:
+    # The off-route state carries POC's smallest stage contract because the padding
+    # below is also static input at the padded profile's `build` stage: a heavier
+    # one pushes that stage past STATIC_INSTRUCTION_CEILING_BYTES and the mutant
+    # dies on the ceiling instead of the off-route claim.
     replace_once(
         fixture / LOADER,
         '    "poc-exploration": {\n'
         '        "implementation": ("build", "validation"),\n',
         '    "poc-exploration": {\n'
-        '        "ideation": ("build", "implementation"),\n'
+        '        "ideation": ("prove", "implementation"),\n'
         '        "implementation": ("build", "validation"),\n',
     )
     contracts = fixture / "kc-dev-flow/references"
@@ -638,7 +642,7 @@ def main() -> int:
         "installed-digest-disabled",
         "        digest.update(raw)\n",
         "        digest.update(b\"\")\n",
-        "compatible next-stage upgrade did not bind the new package",
+        "feedback accepted changed package bytes",
     )
     run_loader_admission_mutant(
         "stage-pin-portable-identity-removed",
@@ -652,7 +656,7 @@ def main() -> int:
         "            previous.get(key) != value for key, value in exact.items()\n"
         "        ):\n",
         "        if False:\n",
-        "active stage accepted changed installed version or bytes",
+        "accepted authority drift",
     )
     run_loader_multi_mutant(
         "local-interface-compatibility-disabled",
