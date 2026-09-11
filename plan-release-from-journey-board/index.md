@@ -124,3 +124,17 @@ Stop and return the changed premise, affected acceptance evidence and recommende
   only S1, for inspecting release evidence, with pre-merge authority scoped to
   the older board task. This new release needs its own local registration; do
   not borrow S1 or claim its existing grant covers this task.
+
+#### Captain-approved release registration and start — 2026-09-11
+
+Kent replied "可以" to direct FO registration of `kc-journey-map/S2` in the
+new branch's `docs/dev/ROADMAP.md` and use of that registration before merge to
+start this task. Registration commit: `36099fab`, branch
+`codex/journey-release-planning`. The bound context validator passed with no
+findings against that branch's marketplace and roadmap. S2 names the new
+release value, not a time cycle. This resolves the admission prerequisite above.
+
+The earlier pending-selection prose is historical: Pilot is selected and the
+Captain has authorized this task's start. The accepted stack delta above is
+part of the admission scope; the shape worker must consolidate these explicitly
+approved decisions in the task before presenting the implementation plan.
