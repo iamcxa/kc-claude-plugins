@@ -4,7 +4,7 @@ import { join } from 'path'
 import { NodeSqliteWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync-core'
 import { DatabaseSync } from 'node:sqlite'
 
-// Room databases persist the editable canvas. Export a .tldr backup before deleting one.
+// Export or read back native edits before deleting a room database.
 const DIR = process.env.JOURNEY_ROOMS_DIR ?? './.rooms'
 mkdirSync(DIR, { recursive: true })
 

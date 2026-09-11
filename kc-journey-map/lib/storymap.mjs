@@ -1,4 +1,5 @@
-import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
+
+import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus } from './records.mjs'
 import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
@@ -15,7 +16,7 @@ export const STORY_PAGE_ID = 'page:page'
 
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-export function buildStoryMap(model) {
+export function buildStoryMap(model, room = null) {
 	const steps = model.steps ?? []
 	const put = [page({ id: STORY_PAGE_ID, name: 'Story map', index: 'a1' })]
 
@@ -137,7 +138,8 @@ export function buildStoryMap(model) {
 			bandTop += 40
 		}
 
-		const text = `${band.name}\n${band.goal ?? ''}`.trim()
+		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
+		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${existsCount}/${band.stories.length} exist` : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
@@ -167,9 +169,28 @@ export function buildStoryMap(model) {
 				const y = bandTop + j * STORY_PITCH
 				put.push({
 					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
-					meta: tag(story.id, 'story'),
+					meta: { journey: { nodeId: story.id, kind: 'story', ...(story.status ? { status: story.status } : {}) } },
 				})
 
+				if (story.question) {
+					const w = 200
+					put.push({
+						...label({
+							id: `shape:sm-story-question-${story.id}`,
+							text: `? ${story.question}`,
+							x: x + 210,
+							y,
+							w,
+							h: fitHeight(story.question, w),
+							index: ix[n++],
+							parentId,
+							color: 'violet',
+							size: 's',
+							align: 'start',
+						}),
+						meta: tag(story.id, 'story-question'),
+					})
+				}
 			})
 		}
 
@@ -198,5 +219,6 @@ export function buildStoryMap(model) {
 		})
 	})
 
-	return put
+	return withStoryStatus(put)
 }
+

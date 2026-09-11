@@ -1,4 +1,18 @@
+
+export const STORY_STATUSES = ['gap', 'unverified', 'exists']
+export const storyStatusLabel = (status) => STORY_STATUSES.includes(status) ? status.toUpperCase() : 'UNASSESSED'
+
 export const normalizeStory = (step, story, j) =>
- typeof story === 'string'
-  ? { id: `${step.id}-${j}`, card: story, release: null }
-  : { id: story.id ?? `${step.id}-${j}`, card: story.card, release: story.release ?? null }
+	typeof story === 'string'
+		? { id: `${step.id}-${j}`, card: story, release: null, status: undefined, evidence: undefined, question: undefined }
+		: {
+				id: story.id ?? `${step.id}-${j}`,
+				card: story.card,
+				release: story.release ?? null,
+				status: story.status,
+				evidence: story.evidence,
+				question: story.question,
+			}
+
+export const iterStories = (model) =>
+	(model.steps ?? []).flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))

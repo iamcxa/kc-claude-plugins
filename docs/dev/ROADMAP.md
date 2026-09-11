@@ -448,3 +448,18 @@ be merged.
 scored `0` while one citing a single path scored `2`. The README makes that scan a hard
 precondition for the ideation gate, so the first entity through it will hit this. Record the scan
 output and the discrepancy in the stage report rather than treating a `0` as a finding about the AC.
+
+## `kc-journey-map`
+
+### Sprint S1 — inspect release stories with honest evidence states
+
+This standalone Pilot release lets Kent inspect the stories in a selected
+release slice, understand their shared system flow and constraints, and
+distinguish known gaps from unverified behavior and evidence-backed behavior.
+The existing heading and stored `sprint: S1` remain compatibility identifiers
+until the separate sprint-to-release contract migration. This release has no
+fixed time cycle.
+
+Kent authorized this local registration to be used for the approved journey
+board task before the registration is merged into main. The task retains its
+Captain-approved brief; local checks do not establish delivery acceptance.

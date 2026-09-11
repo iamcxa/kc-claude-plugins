@@ -32,15 +32,15 @@ fi
 export JOURNEY_API_PORT="$PORT"
 curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server started but does not answer"; exit 1; }
 
-node lib/journey-render.mjs "$EXAMPLE" "$ROOM"
+PAGES="story-map,journey-board,function-map"
+node lib/journey-render.mjs "$EXAMPLE" "$ROOM" --pages "$PAGES"
 
-node - "$ROOM" "$PORT" "$EXAMPLE" <<'NODE'
-const [room, port, example] = process.argv.slice(2)
-const { loadJourney } = await import('./lib/render.mjs')
-const { buildStoryMap } = await import('./lib/storymap.mjs')
+node - "$ROOM" "$PORT" "$EXAMPLE" "$PAGES" <<'NODE'
+const [room, port, example, selection] = process.argv.slice(2)
+const { loadJourney, buildAllPages } = await import('./lib/render.mjs')
 
 const model = loadJourney(example)
-const built = buildStoryMap(model)
+const built = buildAllPages(model, null, selection.split(','))
 const expected = new Set(built.filter((r) => r.typeName === 'shape').map((r) => r.id))
 const expectedPages = built.filter((r) => r.typeName === 'page').map((r) => r.name).sort()
 
@@ -57,8 +57,8 @@ if (pages.join() !== expectedPages.join()) {
   console.error(`FAIL: expected ${JSON.stringify(expectedPages)}, got ${JSON.stringify(pages)}`)
   process.exit(1)
 }
-if (pages.length !== 1) {
-  console.error(`FAIL: the story map must occupy one page, got ${JSON.stringify(pages)}`)
+if (pages.length < 2) {
+  console.error(`FAIL: the example must exercise more than one page, got ${JSON.stringify(pages)}`)
   process.exit(1)
 }
 console.log(`ok  ${expected.size} shapes across ${pages.length} pages: ${pages.join(', ')}`)
