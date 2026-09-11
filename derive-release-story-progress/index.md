@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut
 issue:
-pr:
+pr: iamcxa/kc-claude-plugins#417
 mod-block:
 id: 91n5fvm5qtpf6gxd4bwhxxkg
 gates:
