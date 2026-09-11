@@ -1,0 +1,7 @@
+auth whoami
+workspace list --limit
+project list --limit --json
+workspace create --project-id --branch --name --agent --model --effort --message-file --json
+workspace status
+session status
+sql
