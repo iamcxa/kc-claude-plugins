@@ -1,6 +1,6 @@
 ---
 title: Prove one journey-board to development handoff
-status: backlog
+status: ideation
 product: kc-journey-map
 sprint: journey-planning-proof
 sprint-readiness: ready
@@ -32,7 +32,7 @@ gates:
                 reason: 'Captain explicitly selected this complete-flow POC in current chat: 就先做這個完整流程的 poc. Scope is the preceding agreed planning-to-dev handoff; this is execution admission, not terminal acceptance.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Exploration Brief
