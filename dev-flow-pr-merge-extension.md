@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:rca7s3d89e103ajfdpbj2awe:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:rca7s3d89e103ajfdpbj2awe-validation-1
+              briefing:
+                id: briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-1:revision-1
+                digest: sha256:f42a4d3151de410f34d373333a095e2bf47134ea2d62924de5ab3a399657447d
+                room-ref: ./dev-flow-pr-merge-extension/review/validation/briefing-1
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a
@@ -118,3 +126,16 @@ Shipped `kc-dev-flow/references/pr-merge-extension.md` as the canonical pr-merge
 ### Summary
 
 All four ACs reproduced clean at f4b522e4 with recorded exit codes; the byte-for-byte block-drift guard, the structural portable-delivery guard, and the AC-4 fixture-render cap enforcement were each falsified with a live must-catch mutation (drift byte named, missing-phrase named, cap-violation named) and one harmless pre-marker edit correctly passed through both guards untouched — every mutation was restored before this report and the worktree is clean at HEAD. Flagging the FO-noted scope caveat found during this pass: `origin/main..f4b522e4` is no longer a scoped diff because main has moved past the merge-base; use `c9c5752f..f4b522e4` for this candidate. The implementation stage's open question (no format yet defined for marking a "residual item" inside a validation stage report, needed for the Residuals extraction rule) remains unresolved — not in this stage's checklist to invent, surfacing for the Captain/FO.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Re-verified AC-1..AC-4 in an isolated fresh checkout (`git worktree add --detach f4b522e4`, never the shared worktree). AC-1 True; `kc-dev-flow-contract-test.py` exit 0 (~80s runtime); `pr-merge-portable-delivery.test.py` exit 0, all 14 built-in mutants REJECTED, both fixtures PASS.
+  Same recorded exit codes as cycle 1, reproduced independently.
+- FAILED: Cycle 1's "Mutation B (released-body edit)" does not test the released body. `Candidate: {full approved SHA}` sits at line 199 of `docs/dev/_mods/pr-merge.md`, after the extension-start marker at line 119 — inside the local override block, not the pre-marker released Spacedock body (lines 1-118). Mutating a one-word line in the true released body (`Manages the PR lifecycle` at line 9) leaves both `kc-dev-flow-contract-test.py` and `pr-merge-portable-delivery.test.py` at exit 0 — neither guard inspects the released body's content. This contradicts the extension doc's own claim ("The structural hash assertion in `scripts/kc-dev-flow-contract-test.py` rejects any other drift in the released body") — no such assertion exists. Residual for the Captain: AC-3's "released body's structural hash is unchanged" currently holds only because no one edited it, not because a guard would catch it.
+- DONE: Independently reproduced cycle 1's Mutation A (block drift, byte 179 on a different injected byte) and Mutation C (render cap removed, `fixture-with-items` names the 4-item violation) — both caught, exit 1. Reproduced the harmless-edit case (trailing blank line in root `README.md`) — both scripts exit 0.
+  All mutations applied and restored only inside the isolated checkout; `git status --porcelain` clean there and in the shared worktree throughout.
+- DONE: Confirmed scope with `git diff --stat c9c5752f..f4b522e4` (merge-base, since `origin/main` has moved further): the same 6 files as cycle 1, no Spacedock file touched.
+
+### Summary
+
+Cycle 1's guard falsification for the released-body edit was mislabeled and did not exercise what it claimed; direct re-testing shows no guard currently protects the released Spacedock body's content from drift, despite the extension doc's claim to the contrary. All other cycle 1 findings (AC-1..AC-4, block-drift guard, render-cap guard, harmless edit, scope) reproduce independently. This is a residual gap, not a regression introduced by this candidate — the released body itself is untouched by the diff (confirmed via `git diff -- docs/dev/_mods/pr-merge.md` against the merge-base, only content after the extension marker changed). Also found and restored one stray uncommitted mutation in the shared code worktree, left over from an earlier interrupted test run in this same session; the worktree is verified clean at HEAD `f4b522e4` as of this report.
