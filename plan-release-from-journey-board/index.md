@@ -5,12 +5,12 @@ product: kc-journey-map
 source:
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: S2
+sprint-readiness: ready
 started:
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning
 issue:
 pr:
 mod-block:
