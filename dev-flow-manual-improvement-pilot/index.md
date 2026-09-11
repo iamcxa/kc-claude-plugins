@@ -54,6 +54,17 @@ gates:
                 id: briefing:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1
                 digest: sha256:4be0dadebb3429c74b68c29614bf3a596849b4315088fd2581a97f1c19fb65f2
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:3w83fmy975y617nrfhcy1mqq:validation:1
+                briefing: briefing:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T08:07:10.986142Z"
+                decision: approve
+                reason: Kent requested 開 PR after the exact two-file fix and independent validation were presented. This approves that candidate commit and expands delivery authority only to pushing its branch and creating a Draft PR against main. No merge, installation, Spacedock upstream work, recurring activation or original/native terminalization is authorized.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-10T16:11:49Z
 worktree: .worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot
 ---
