@@ -8,7 +8,7 @@ started: 2026-09-11T04:57:31Z
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-prove-journey-release-handoff
-pr: local-merge:accepted-disposable-poc-change-outcome-no-product-diff
+pr: local-merge:0492a5507eec46bed567607c725f99c00c41b989
 mod-block: merge:pr-merge
 id: ndmwj51qjzktmqsxtzv3etr7
 gates:
