@@ -289,18 +289,6 @@ Recommend one two-file journey guidance change above PR #417, reusing the existi
 
 ## Stage Report: implementation
 
-### Exit observation claim
-
-```yaml
-review_convergence_claim:
-  identity: 08da679c6737e704bcd967ca24161e4979a77f74359a11adb2c3974e0e380f36
-  claimant: codex-implementation-1-74fe2308
-  observed_state_revision: bfd2653e37377b268c06bda485d7de795df58851
-  state: claimed
-```
-
-### Implementation evidence
-
 - DONE: Implement only the two approved existing journey guidance edits; preserve independent map/dev use and all six accepted criteria within the recorded stop thresholds.
   AC-1–AC-6: local commit `74fe23086e4e34c5e288c46a43c6d559bd89ebf2` adds selected-release routing and one conversation-reference procedure; no consumer/schema/renderer/progress changes. Against `36a969a6f890a63c541fad4bfa30071ac7115c64`: 3 files / 114 added+deleted lines, including prior ROADMAP +13; conversation reference 87 changed lines. Product branch remains `codex/journey-release-planning`.
 - DONE: Demonstrate changed-entry behavior and meaningful without-it evidence through actual bounded agent execution plus existing mechanical checks; preserve unknowns, provenance, and authority.
@@ -315,11 +303,21 @@ review_convergence_claim:
 - SKIPPED: Fresh brief-to-ideation consumer, standalone dev behavior confirmation, native admission, rendered/installed interaction UI, and delivery acceptance.
   AC-5 and final AC-6 consumer proof belong to the separately dispatched validation worker in the approved plan. Actual host was Codex; plain-text fallback was exercised. Prior hypothetical-deferral consumer evidence remains historical, not exact-candidate proof. No push/PR/merge or speed claim is authorized by these observations.
 
-### Evidence locations and context
+### Summary
+
+Implemented one two-file release-preparation route and committed it locally at `74fe2308`, with passing proportional checks and a concrete unchanged/candidate admission contrast. Forward this exact candidate and actor artifacts to fresh validation for the actual ideation consumer and remaining acceptance checks; scope and delivery authorization remain unchanged.
+
+#### Evidence locations and context
 
 Product-local mechanical logs, the three-file SURFACE mapping, observation input/result and comment pass: `.context/implementation-proof/` under the assigned code worktree. FO actor artifacts: `/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/journey-release-planning-dispatch/{control-result,candidate-result}/`; the source and brief fingerprints bind the exact frozen candidate. These are task-owned disposable artifacts, not a standing harness.
 Project-context impact remains `none`: PRODUCT.md's dev-flow catalog and ARCHITECTURE.md's profile-native admission/loading retain their existing standalone brief and authority claims; fresh validation still owes its receipt confirmation. The accepted body, receipt, implementation-1 pin, gates and reviewed Briefings were preserved; installed 4.3.0 loader readback accepted the report-only state change.
 
-### Summary
+#### Exit observation claim
 
-Implemented one two-file release-preparation route and committed it locally at `74fe2308`, with passing proportional checks and a concrete unchanged/candidate admission contrast. Forward this exact candidate and actor artifacts to fresh validation for the actual ideation consumer and remaining acceptance checks; scope and delivery authorization remain unchanged.
+```yaml
+review_convergence_claim:
+  identity: 08da679c6737e704bcd967ca24161e4979a77f74359a11adb2c3974e0e380f36
+  claimant: codex-implementation-1-74fe2308
+  observed_state_revision: bfd2653e37377b268c06bda485d7de795df58851
+  state: claimed
+```
