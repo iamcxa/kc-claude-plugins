@@ -134,9 +134,9 @@ poc_outcome:
 
 ```yaml
 poc_close_measurement:
-  captain_wait_seconds: pending
-  terminal_cleanup_seconds: pending
-  cleanup_status: pending
+  captain_wait_seconds: 192
+  terminal_cleanup_seconds: 1
+  cleanup_status: complete
 ```
 
 ## Execution measurement and boundaries
@@ -161,3 +161,11 @@ Read-only installed `poc-close-guard.py review` passed: direct implementation pr
 ### Summary
 
 The local source/brief-to-consumer seam and missing-decision control worked; an actual consumer proposed one dependency sequence and one shared integration task with multiple textual story origins, preserving unknown facts and all admission/profile authority. The accepted source was already a complete brief and the board was generated alongside it, so the full board-to-brief value-elicitation claim remains unproved; next proof should begin with accepted board decisions that have no prewritten brief. This direct disposable POC returns change for outcome approval, with cleanup pending and no automatic delivery commitment.
+
+## Final close measurement
+
+Captain accepted the change outcome. Native guard archived this task and consumed the approval; the local delivery marker binds the existing evidence commit `0492a5507eec46bed567607c725f99c00c41b989`. No product merge or PR occurred. The old mod's textual no-PR reason was incompatible with the installed hexadecimal commit marker; delivery is the accepted state evidence.
+
+Approval wait is measured from durable gate binding `2026-09-11T13:07:51+08:00` to recorded approval `2026-09-11T05:11:03.067959Z` (192 seconds). This interval includes presentation and recorder latency and is not isolated human thinking time; an exact chat-display timestamp was not captured. Cleanup ran from `2026-09-11T05:14:09.286589+00:00` to `2026-09-11T05:14:09.530925+00:00` (1 seconds rounded up). Only the approved disposable experiment directory, its otherwise clean code worktree and local branch were removed. No open PR referenced the branch. Both workers had completed and received cooperative closure notices; this host has no shutdown-specific tool.
+
+Frozen Briefing bytes and archived frontmatter remain unchanged. Historical measurements and cleanup-pending statements in the evidence describe the decision-ready snapshot; this final section and POC close measurement record the completed cleanup. The archived evidence remains available.
