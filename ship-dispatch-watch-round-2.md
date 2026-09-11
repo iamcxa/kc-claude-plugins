@@ -158,3 +158,26 @@ Independently reran both test suites and contract-test.py under a `conductor`-st
 - **Round validation/1** — decision: revise, actor: person:captain (dispatch token r2-7f3a9c1e)
   Reason: 「423 註解太多了,請確保只留下必要的」— comment density in PR #423 measured at 24% of added script lines (111/470), against a 3% repo baseline (CLAUDE.md comment rules).
   Assignment to `implementation`: apply the repository's four comment rules to every added comment line in `dispatch.sh`, `watch.sh`, their test scripts, and `pins/conductor-cli.contract` — delete narration of the change/history, delete restatement of adjacent code, keep only comments carrying a fact the code cannot state (one line, no rationale paragraphs), remove file:line/PR/task-number citations. Usage/help blocks at the top of each script may stay as a compact flags-and-defaults block. Target: added comment lines ≤ 5% of added script lines. Re-run `dispatch.test.sh`, `watch.test.sh`, `contract-test.py` (foreground, `timeout 300`) after the trim. Merge `origin/main` first if it moved (merge, never rebase), then push to the same branch.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: watch.sh distinguishes initializing/pending from idle/stopped via transcript-tail confirmation and recognizes question tails (AC-1)
+  Unaffected by the comment trim; `watch.test.sh` still 11/11 PASS after edits (see below).
+- DONE: dispatch.sh boot message carries sender identity, per-dispatch token, conn-quote/conn-source, and merge-not-rebase sentence, gated on --conn-quote (AC-2)
+  Unaffected by the comment trim; `dispatch.test.sh` still 10/10 PASS after edits (see below).
+- DONE: Both scripts validate the conductor CLI used-surface against live --help and run read-only probes before mutating calls (AC-3)
+  Unaffected by the comment trim; case d/j and d2/k in both suites still pass (see below).
+- DONE: contract-test.py runs dispatch.test.sh and watch.test.sh against fake conductor fixtures in CI with no real CLI required (AC-4)
+  Re-ran `python3 kc-ship-flow/scripts/contract-test.py`: exit 0, `dispatch.test: 10 passed, 0 failed`, `watch.test: 11 passed, 0 failed`, `kc-ship-flow contract: PASS`.
+- DONE: pins/conductor-cli.txt is removed/renamed to conductor-cli.contract with no remaining references (AC-5)
+  Untouched by this cycle; still 7 one-line argv shapes, no `conductor-cli.txt` references.
+- DONE: Apply the repository's comment rules to dispatch.sh, watch.sh, dispatch.test.sh, watch.test.sh, pins/conductor-cli.contract; target added comment lines <= 5% of added script lines
+  Before: `git diff origin/main...HEAD -- 'kc-ship-flow/scripts/*.sh'` → added=476, comment=103 (21.6%). After trimming all narration/history comments (e.g. "round 1's batch showed...", "the exact failure round 1 hit...", printf-vs-heredoc rationale), all restatement-of-code comments (e.g. "checked before any network call", "prefer whichever exists (file form first)"), and every `# --- case (x): ... ---` test-block comment (each duplicated the adjacent `pass`/`fail` message string verbatim): `git diff origin/main -- 'kc-ship-flow/scripts/*.sh' 'kc-ship-flow/pins/*'` → added=397, comment=17 (4.3%). Kept: compact usage/output header lines, the `conductor auth whoami` non-JSON fact, the `contract_file` line grammar, the "sonnet alone is not a valid model id" fact, the unverified-alternate-banner-wording fact, and the `spacedock status --json` nested-gates-block fact — one line each, no file:line/PR/task citations.
+- DONE: Re-run dispatch.test.sh, watch.test.sh, contract-test.py (foreground, timeout 300) after the trim, confirm pass counts unchanged
+  `timeout 300 bash dispatch.test.sh` → `dispatch.test: 10 passed, 0 failed` (exit 0), same as pre-trim. `timeout 300 bash watch.test.sh` → `watch.test: 11 passed, 0 failed` (exit 0), same as pre-trim. `timeout 300 python3 contract-test.py` → both suites' pass lines, exit 0. Counts match the implementation/validation reports above exactly.
+- DONE: Merge origin/main first if it moved (merge, never rebase), then push corrected commits to the same branch backing PR #423
+  `origin/main` had moved (kc-dev-flow pr-merge-extension commits); `git merge origin/main --no-edit` merged cleanly with no conflicts in kc-ship-flow files (commit `7eb6fa69`). Re-ran all three test commands post-merge — same pass counts and exit 0. Pushed `spacedock-ensign/ship-dispatch-watch-round-2` to origin; `gh pr view 423 --json headRefOid` confirms `7eb6fa69` is the PR's current head. No new PR opened.
+
+### Summary
+
+Cut comment density in `dispatch.sh`/`watch.sh`/their test scripts/`pins/conductor-cli.contract` from 21.6% to 4.3% of added script lines (commit `dfbeb89a`), removing every history-narration and code-restatement comment and all 18 duplicated `# --- case ... ---` test-block headers (their text was already carried by the adjacent `pass`/`fail` message string). All three test surfaces (`dispatch.test.sh` 10/10, `watch.test.sh` 11/11, `contract-test.py` exit 0) were re-run in the foreground both before and after merging `origin/main` (merge commit `7eb6fa69`, no conflicts), with identical pass counts throughout. Pushed to the existing `spacedock-ensign/ship-dispatch-watch-round-2` branch backing PR #423; no new PR opened.
