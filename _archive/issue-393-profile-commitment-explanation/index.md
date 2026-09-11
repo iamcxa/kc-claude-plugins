@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): explain the next commitment during profile selection"
-status: validation
+status: done
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -76,9 +76,12 @@ gates:
                 reason: 'Captain said 合併了 after reviewing the Ready delivery and personally merged PR #425 as iamcxa at 2026-09-11T10:36:31Z. Record this observed acceptance now for post-merge reconciliation; do not backdate approval. Exact reviewed head, required checks, and complete feedback observation match.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 worktree: .worktrees/spacedock-ensign-issue-393-profile-commitment-explanation
 pr: pr-merge:425
+verdict: PASSED
+completed: 2026-09-11T10:40:53Z
+archived: 2026-09-11T10:40:53Z
 ---
 
 The existing selection conversation explains this item's next commitment, unresolved assumption, observable result, and included operational duties before the Captain chooses. Its existing profile receipt preserves that accepted scope.
