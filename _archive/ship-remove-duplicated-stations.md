@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
 started: 2026-09-10T08:58:02Z
-completed:
-verdict:
+completed: 2026-09-11T00:51:03Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-remove-duplicated-stations
 issue:
 pr: pr-merge:410
@@ -99,7 +99,8 @@ gates:
                     source: Captain chat 2026-09-11
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T00:51:03Z
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
