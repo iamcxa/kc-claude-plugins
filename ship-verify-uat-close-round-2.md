@@ -45,6 +45,17 @@ gates:
                 id: briefing:esc73128rg68pqmtpck3a90q:validation:attempt-1:revision-1
                 digest: sha256:da74ccdcb3b0bc2748b494984d1e615ccb726363aef8e5dd12e2e4c53eef0c46
                 room-ref: ./ship-verify-uat-close-round-2/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:esc73128rg68pqmtpck3a90q:validation:1
+                briefing: briefing:esc73128rg68pqmtpck3a90q:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T08:55:01.424512Z"
+                decision: approve
+                reason: 'Captain merged #420 in chat: 「合併420」 2026-09-11'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 The first real close of a batch (`sprint: ship-cloud-wrapper`, 2026-09-11) could not run: `close.py`
