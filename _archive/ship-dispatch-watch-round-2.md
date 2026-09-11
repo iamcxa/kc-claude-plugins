@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: watch reads the right signals, the boot message carries identity and conn, and the Conductor CLI is a used-surface contract"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper-r2
 sprint-readiness: ready
 started: 2026-09-11T07:37:00Z
-completed:
-verdict:
+completed: 2026-09-11T11:15:12Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-dispatch-watch-round-2
 issue:
 pr: pr-merge:423
@@ -71,7 +71,8 @@ gates:
                 reason: 'Captain approved in chat: 「423 approve」 2026-09-11 (comment trim 111->25 lines audited by the FO)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T11:15:12Z
 ---
 
 The first real batch (`sprint: ship-cloud-wrapper`, 2026-09-10/11) delivered two tasks through cloud
