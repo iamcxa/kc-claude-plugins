@@ -22,6 +22,17 @@ gates:
                 id: briefing:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1
                 digest: sha256:f687c5ddd99ae51a6ebd3539a8752fc2e0403c4cdaa560f96de925f30e3d4b4a
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ndmwj51qjzktmqsxtzv3etr7:backlog:1
+                briefing: briefing:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T04:45:17.378668Z"
+                decision: approve
+                reason: 'Captain explicitly selected this complete-flow POC in current chat: 就先做這個完整流程的 poc. Scope is the preceding agreed planning-to-dev handoff; this is execution admission, not terminal acceptance.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Exploration Brief
