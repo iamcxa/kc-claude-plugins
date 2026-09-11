@@ -11,6 +11,17 @@ worktree:
 pr:
 mod-block:
 id: ndmwj51qjzktmqsxtzv3etr7
+gates:
+    version: 1
+    records:
+        - id: gate:ndmwj51qjzktmqsxtzv3etr7:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ndmwj51qjzktmqsxtzv3etr7-backlog-1
+              briefing:
+                id: briefing:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1
+                digest: sha256:f687c5ddd99ae51a6ebd3539a8752fc2e0403c4cdaa560f96de925f30e3d4b4a
+                room-ref: ./review/backlog/briefing-1
 ---
 
 ## Exploration Brief

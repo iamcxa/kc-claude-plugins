@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1",
+  "question": "Run the Captain-selected bounded end-to-end planning handoff POC?",
+  "artifacts": [
+    {
+      "id": "artifact:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b41968db00989473849b5a5a117ccf4a9f29c7c3/prove-journey-release-handoff/index.md",
+      "rev": "sha256:0bc700a6c82a7141f6de48bd2d726065b808f0beb8730cf36f4df57c8dd47e56",
+      "mediaType": "text/markdown",
+      "summary": "One disposable integrated handoff and one missing-decision control; two workers maximum; 15-minute proof budget; no automatic Pilot or product edits."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:ndmwj51qjzktmqsxtzv3etr7:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/96defe1d2a4be5c9edd39db08be2649ad71fd28a/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
