@@ -198,3 +198,31 @@ Actual root PRODUCT.md/ARCHITECTURE.md/CLAUDE.md authority bindings, historical 
 Pinned Pilot RoboRev eligibility is declared; CLI/JSON help, daemon and Codex-login probes passed. Same-host v0.62.0 actual JSON lacks required configuration hash, provider/JSON identity, caps and timeout envelope, so the observation is non-gating UNAVAILABLE(reason: unsupported), with zero requests/confirmations and no current-job verdict; unrelated job data was only a schema capability sample.
 
 Evidence directory: [/Users/kent/conductor/workspaces/kc-claude-plugins/kathmandu/.context/poc-coordinator/.context/pilot-maintenance/ready-delivery/architecture](/Users/kent/conductor/workspaces/kc-claude-plugins/kathmandu/.context/poc-coordinator/.context/pilot-maintenance/ready-delivery/architecture). Read implementation-stage-report.md for full scope/evidence detail; candidate.json, integrated.patch, validation-commands.md, contract-result.json, final-contract-ablation-check-result.json, architecture-ablation-result.json, fixture-results.json, fixture-provenance.json, instruction-budget.json, map-input-accounting.json and roborev-observation.json bind the exact claims. The old SIGTERM/literal-check failures remain recorded, not relabeled as passes.
+
+## Stage Report: validation
+
+- DONE: Independently review the exact candidate against accepted behavior and retained authority boundaries.
+  Candidate 3ce12bdced8e3cf56ff6cb1a62949821fc346221 vs base 790278b7165682bfae8b0e61e091b40989328a16 is clean; all source hashes match. Mandatory useful map, pin-before-read ordering, recovery bootstrap ownership and compatible-upgrade wording align with the Captain amendment.
+- DONE: Complete missing required checks and verify actual evidence without relabeling historic model results.
+  Exact candidate marketplace/parity/schema/eight installs pass. Frontmatter covers all 46 tracked candidate skills; 136 aggregate includes 90 ignored copies. Sanitizer 0 BLOCK/REJECT, 9 inherited WARN; clean peer merge passes scoped contract and static 39979/40000. Full final contract remains required Draft CI.
+- DONE: Prepare a truthful validation report, actionable defect dispositions and PR-readiness recommendation.
+  No material defect; local verification supports authorized Draft creation. Ready remains pending exact-head required CI and provider feedback. Report and exact argv/log/hash records: /Users/kent/conductor/workspaces/kc-claude-plugins/kathmandu/.context/poc-coordinator/.context/pilot-maintenance/ready-delivery/architecture/validation-evidence/report.md.
+
+### Summary
+
+Local independent validation is complete; Draft creation, full exact-head CI and native provider-feedback disposition are still pending. The accepted overview/read-order policy is coherent across continuation, adoption and profile guidance; implementation owns bootstrap/alignment and validators return defects. Source/manual review and synthetic/removal controls do not prove universal model obedience or whole-issue closure.
+
+### Acceptance and context evidence
+
+- AC-1: POC creation exemption and disposable outline remain; forced-map negative control rejects permanent-doc churn.
+- AC-2: Retained linked components/IO/storage/package/check obligations remain; missing, wrong-root, empty and link-only controls reject absent useful maps.
+- AC-3: Amendment requires useful docs/architecture.md despite existing detailed docs; controls preserve deeper guide and reject alternate-only/missing recovery map.
+- AC-4: Read follows authority/profile/pin checks and precedes exploration; same-slice map/guide updates and recovery/validation ownership are explicit. Chronology is source/manual/removal proof only.
+- AC-5: Eight schemas and sixteen handcrafted controls hash-match candidate; unchanged-map churn rejects. Owner final scoped checks and seven missing-clause rejections pass; full actual-head CI remains pending.
+- Integration: architecture candidate plus peer 7623ff78dbd6d1331050c4552db21672f4235fd8 merges cleanly without owner-branch changes; tree 97dcaef3bf9cdda94bbccdc56d390199997a5782 passes existing --ablation-check and assert_proportional_load. Removing shared assertions or exceeding static budget fails these checks.
+- Project-context `none` revalidated against root PRODUCT.md catalog, ARCHITECTURE.md profile/pin topology and CLAUDE.md release conventions; no contradiction or new authority found. Main Advance/POC closing text is byte-identical. Amendment exempts retrofitting this pinned adopter.
+- Full-index patch SHA256 f8c9c20319857f468a9937f2506a1035d3c830cc16e671d7ee147172c2fa9d3d independently matches. Static budget excludes map/conditional-policy input; no universal byte cap or current-model reliability claim. No CI change; cost per PR unmeasured.
+- Skips: parent assigns full exact-head contract to Draft CI, so unchanged mechanism suites are not rerun locally; no new model/provider/cloud smoke. No diagram or architecture-map artifact changed, so rendering/page-count checks are inapplicable. Older A1 proves only its older default-home policy.
+- Frontmatter scope: existing script excludes only .git/node_modules, so its 136 successful files include 45 each under ignored .context/issue-396-combined and .context/issue-396-model-baseline; frontmatter-scope.json records all paths. This is not 136 distinct tracked skills.
+
+Counts: DONE 3 / SKIPPED 0 / FAILED 0 for the dispatched completion checklist. Deliberate execution skips and pending delivery obligations are explicit above; they are not final CI passes.
