@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Behavior contract for kc-ship-flow/scripts/dispatch.sh, against the fixture workflow under
-# kc-ship-flow/scripts/fixtures/dispatch-argv/dev/. Requires the real `conductor` CLI on PATH
-# (used only for --version/--help, which the fake conductor delegates to it) and `spacedock`
-# (to resolve entity paths) -- fails closed rather than skipping when either is absent.
+# kc-ship-flow/scripts/fixtures/dispatch-argv/dev/. Runs entirely against the
+# self-contained fake `conductor` at fixtures/fake-conductor-dispatch/ -- no real conductor
+# CLI required. `spacedock` (to resolve entity paths) is still a real dependency and this
+# suite fails closed rather than skipping when it is absent, so a runner missing it never
+# reports a false PASS.
 set -u
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -11,17 +13,14 @@ FIXTURES="$HERE/fixtures/dispatch-argv"
 FAKE_CONDUCTOR_DIR="$HERE/fixtures/fake-conductor-dispatch"
 REPO_ROOT="$(cd "$HERE/../.." && pwd)"
 
-if ! command -v conductor >/dev/null 2>&1; then
-  echo "conductor required on PATH" >&2
-  exit 1
-fi
 if ! command -v spacedock >/dev/null 2>&1; then
   echo "spacedock required on PATH" >&2
   exit 1
 fi
-REAL_CONDUCTOR="$(command -v conductor)"
-REAL_REMOTE="$(git -C "$REPO_ROOT" remote get-url origin)"
+REAL_REMOTE="$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || echo "https://example.test/fixture-remote.git")"
 FIXTURE_PROJECT_ID="11111111-1111-1111-1111-111111111111"
+CONN_QUOTE="go, synthetic fixture approval"
+CONN_SOURCE="fixture, not a real approval"
 
 PASS=0
 FAIL=0
@@ -32,10 +31,11 @@ STATE_DIR="$(mktemp -d)"
 LOG="$(mktemp)"
 
 run_dispatch() {
-  FAKE_CONDUCTOR_REAL="$REAL_CONDUCTOR" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+  FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
     FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" FAKE_CONDUCTOR_LOG="$LOG" \
     PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
     bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+    --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
     --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1
 }
 
@@ -67,6 +67,26 @@ else
   fail a "one argv per ready task, project-id resolved, message sha256 matches, no create call"
 fi
 
+# --- case (a2): the boot message file for a ready task carries the sender id, a 12-hex
+# dispatch token (the same token across every task in the run), the "no Captain message"
+# sentence verbatim, the conn-quote and its conn-source as passed on the command line, and
+# the merge-not-rebase sentence verbatim ---
+msgfile_a=$(grep -oE -- '--message-file [^ ]+' <<<"$out_a" | head -n1 | cut -d' ' -f2)
+msg_body_a="$(cat "$msgfile_a" 2>/dev/null)"
+ok=1
+grep -q "workspace_creator_id=usr-fixture-1" <<<"$msg_body_a" || ok=0
+grep -qE 'Dispatch token: [0-9a-f]{12}$' <<<"$msg_body_a" || ok=0
+grep -qi "answers to your questions arrive as further messages from this sender; no Captain message will appear in this session" <<<"$msg_body_a" || ok=0
+grep -qF "$CONN_QUOTE" <<<"$msg_body_a" || ok=0
+grep -qF "$CONN_SOURCE" <<<"$msg_body_a" || ok=0
+grep -qi "sync state by merge, never rebase" <<<"$msg_body_a" || ok=0
+if [ "$ok" = 1 ]; then
+  pass a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, merge-not-rebase"
+else
+  printf '  msg=%s\n' "$msg_body_a"
+  fail a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, merge-not-rebase"
+fi
+
 # --- case (b): a re-run against the same sprint after one task's fence record is already
 # recorded reports that task already-recorded instead of printing another argv for it ---
 mkdir -p "$STATE_DIR/_ship_fence"
@@ -85,9 +105,10 @@ rm -rf "$STATE_DIR/_ship_fence"
 
 # --- case (c): conductor auth whoami failing refuses with exit 2 and "conductor unavailable",
 # even in --dry-run ---
-out_c="$(FAKE_CONDUCTOR_AUTH_FAIL=1 FAKE_CONDUCTOR_REAL="$REAL_CONDUCTOR" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+out_c="$(FAKE_CONDUCTOR_AUTH_FAIL=1 FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
   FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
   bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
   --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
 rc_c=$?
 if [ "$rc_c" -eq 2 ] && grep -q "conductor unavailable" <<<"$out_c"; then
@@ -97,24 +118,63 @@ else
   fail c "conductor auth whoami failure refuses (exit 2, conductor unavailable)"
 fi
 
-# --- case (d): a conductor CLI pin mismatch refuses (exit 5), prints a diff, and never
-# reaches auth whoami or project list (the fake conductor errors loudly on anything past
-# --version/--help) ---
-BAD_PIN_DIR="$(mktemp -d)"
-mkdir -p "$BAD_PIN_DIR/kc-ship-flow/scripts" "$BAD_PIN_DIR/kc-ship-flow/pins"
-cp "$SCRIPT" "$BAD_PIN_DIR/kc-ship-flow/scripts/dispatch.sh"
-printf '9.9.9\nsomething else entirely\n' > "$BAD_PIN_DIR/kc-ship-flow/pins/conductor-cli.txt"
-out_d="$(FAKE_CONDUCTOR_REAL="$REAL_CONDUCTOR" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+# --- case (d): the conductor cli used-surface contract mismatch refusal -- one shape
+# (workspace create) dropped from live --help exits 5 naming that shape, and never
+# reaches `workspace create` (the fake conductor errors loudly on that past
+# --version/--help when FAKE_CONDUCTOR_ALLOW_CREATE is unset) ---
+out_d="$(FAKE_CONDUCTOR_DROP_SHAPE="workspace create" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
   FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
-  bash "$BAD_PIN_DIR/kc-ship-flow/scripts/dispatch.sh" ship-cloud-wrapper-fixture --dry-run \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
   --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
 rc_d=$?
-rm -rf "$BAD_PIN_DIR"
-if [ "$rc_d" -eq 5 ] && grep -q "conductor cli changed" <<<"$out_d"; then
-  pass d "pin mismatch refuses (exit 5, conductor cli changed, no other call)"
+if [ "$rc_d" -eq 5 ] && grep -q "workspace create" <<<"$out_d"; then
+  pass d "used-surface contract mismatch refuses (exit 5, names the missing shape)"
 else
   printf '  out=%s\n' "$out_d"
-  fail d "pin mismatch refuses (exit 5, conductor cli changed, no other call)"
+  fail d "used-surface contract mismatch refuses (exit 5, names the missing shape)"
+fi
+
+# --- case (d2): a version-only change (no shape dropped) proceeds and prints the
+# "used surface unchanged" line -- the version is printed, never gated on ---
+out_d2="$(FAKE_CONDUCTOR_VERSION="9.9.9" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+  FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_d2=$?
+if [ "$rc_d2" -eq 0 ] && grep -q "conductor 9.9.9: used surface unchanged" <<<"$out_d2"; then
+  pass d2 "version-only change proceeds and prints the version, unchanged-surface line"
+else
+  printf '  out=%s\n' "$out_d2"
+  fail d2 "version-only change proceeds and prints the version, unchanged-surface line"
+fi
+
+# --- case (d3): without --conn-quote, dispatch.sh refuses before any conductor call --
+# exit 2, "conn required" ---
+out_d3="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_d3=$?
+if [ "$rc_d3" -eq 2 ] && grep -qx "conn required" <<<"$out_d3"; then
+  pass d3 "missing --conn-quote refuses (exit 2, conn required)"
+else
+  printf '  out=%s\n' "$out_d3"
+  fail d3 "missing --conn-quote refuses (exit 2, conn required)"
+fi
+
+# --- case (d4): --conn-quote without --conn-source also refuses (exit 2, conn required) ---
+out_d4="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run --conn-quote "$CONN_QUOTE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_d4=$?
+if [ "$rc_d4" -eq 2 ] && grep -qx "conn required" <<<"$out_d4"; then
+  pass d4 "missing --conn-source refuses (exit 2, conn required)"
+else
+  printf '  out=%s\n' "$out_d4"
+  fail d4 "missing --conn-source refuses (exit 2, conn required)"
 fi
 
 # --- case (e): real (non-dry-run) mode against a local bare-origin state checkout with no
@@ -133,10 +193,11 @@ git -C "$REAL_STATE_WT/wt" -c user.name=fixture -c user.email=fixture@example.te
   checkout -q -b detached-no-upstream
 REAL_STATE="$REAL_STATE_WT/wt"
 
-out_e="$(FAKE_CONDUCTOR_REAL="$REAL_CONDUCTOR" FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+out_e="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
   FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" FAKE_CONDUCTOR_ALLOW_CREATE=1 \
   PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
   bash "$SCRIPT" ship-cloud-wrapper-fixture \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
   --workflow-dir "$FIXTURES/dev" --state-dir "$REAL_STATE" 2>&1)"
 rc_e=$?
 fence_e="$REAL_STATE/_ship_fence/ship-cloud-wrapper-fixture.json"

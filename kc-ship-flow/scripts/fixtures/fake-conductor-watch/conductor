@@ -1,14 +1,52 @@
 #!/usr/bin/env bash
-# Stub `conductor` for watch.test.sh. No network. Every invocation's argv is appended to
-# $FAKE_CONDUCTOR_LOG when set. --version/--help delegate to the real binary (already pinned
-# from it) so the pin check passes unchanged; auth whoami always succeeds; session status
-# always reports idle; sql returns one canned transcript per session id from
-# $FAKE_CONDUCTOR_TRANSCRIPTS (a JSON file: {"<session-id>": "<transcript text>"}).
+# Stub `conductor` for watch.test.sh. No network, no real conductor binary required:
+# --version/--help are synthesized here, covering exactly the argv shapes in
+# kc-ship-flow/pins/conductor-cli.contract. Every invocation's argv is appended to
+# $FAKE_CONDUCTOR_LOG when set.
+#
+# Env knobs:
+#   FAKE_CONDUCTOR_VERSION        overrides the printed version (default 0.85.0); a version
+#                                 bump alone must not trip the used-surface refusal.
+#   FAKE_CONDUCTOR_DROP_SHAPE     omits one shape's line from --help (e.g. "workspace status").
+#   FAKE_CONDUCTOR_TRANSCRIPTS    JSON file: {"<session-id>": "<transcript text>"}, read by
+#                                 `sql` to answer a transcript-tail query for that session.
+#   FAKE_CONDUCTOR_WORKSPACE_STATUS  JSON file: {"<workspace-id>": "<status>"}; a workspace
+#                                 id absent from the map reports "running".
+#   FAKE_CONDUCTOR_SESSION_STATUS   JSON file: {"<session-id>": "<status>"}; a session id
+#                                 absent from the map reports "idle" (the prior fixed
+#                                 behaviour), so existing callers that never set this still
+#                                 see every session idle.
 set -euo pipefail
 
 [ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
 
-REAL_CONDUCTOR="${FAKE_CONDUCTOR_REAL:?FAKE_CONDUCTOR_REAL must be set to the real conductor binary}"
+VERSION="${FAKE_CONDUCTOR_VERSION:-0.85.0}"
+DROP="${FAKE_CONDUCTOR_DROP_SHAPE:-}"
+
+print_help() {
+  echo "conductor $VERSION"
+  echo "conductor - manage cloud workspaces and coding agents (fake fixture)"
+  echo
+  echo "Authentication:"
+  [ "$DROP" = "auth whoami" ] || echo "  conductor auth whoami               Show the configured token + base URL and verify against the API"
+  echo
+  echo "Project:"
+  [ "$DROP" = "project list" ] || echo "  conductor project list [--limit <n>] [--offset <n>] [--json]"
+  echo
+  echo "Workspace:"
+  [ "$DROP" = "workspace list" ] || echo "  conductor workspace list [--creator <userId>] [--limit <n>] [--offset <n>]"
+  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--message-file <path>] [--json]"
+  [ "$DROP" = "workspace status" ] || echo "  conductor workspace status [workspaceId]"
+  echo
+  echo "Session:"
+  [ "$DROP" = "session status" ] || echo "  conductor session status <sessionId>"
+  echo
+  echo "Other commands:"
+  [ "$DROP" = "sql" ] || echo "  conductor sql <query>               Run a read-only SQL query over session_transcripts_view"
+  echo
+  echo "Global options:"
+  echo "  --json                               Output JSON instead of human-readable tables (auth commands excepted)"
+}
 
 args=("$@")
 if [ "${1:-}" = "--json" ]; then
@@ -16,17 +54,47 @@ if [ "${1:-}" = "--json" ]; then
 fi
 
 case "${1:-}" in
-  --version) exec "$REAL_CONDUCTOR" --version ;;
-  --help) exec "$REAL_CONDUCTOR" --help ;;
+  --version) echo "$VERSION"; exit 0 ;;
+  --help) print_help; exit 0 ;;
 esac
 
 if [ "${1:-}" = "auth" ] && [ "${2:-}" = "whoami" ]; then
-  echo "authenticated (fake)"
+  echo "User ID          usr-fixture-1"
+  exit 0
+fi
+
+if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "list" ]; then
+  echo '{"data": [], "offset": 0, "hasMore": false}'
+  exit 0
+fi
+
+if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "status" ]; then
+  workspace_id="${3:-}"
+  python3 -c "
+import json, sys
+wid = sys.argv[1]
+store_path = sys.argv[2]
+try:
+    store = json.load(open(store_path)) if store_path else {}
+except OSError:
+    store = {}
+print(json.dumps({'status': store.get(wid, 'running')}))
+" "$workspace_id" "${FAKE_CONDUCTOR_WORKSPACE_STATUS:-}"
   exit 0
 fi
 
 if [ "${1:-}" = "session" ] && [ "${2:-}" = "status" ]; then
-  echo '{"status":"idle"}'
+  session_id="${3:-}"
+  python3 -c "
+import json, sys
+sid = sys.argv[1]
+store_path = sys.argv[2]
+try:
+    store = json.load(open(store_path)) if store_path else {}
+except OSError:
+    store = {}
+print(json.dumps({'status': store.get(sid, 'idle')}))
+" "$session_id" "${FAKE_CONDUCTOR_SESSION_STATUS:-}"
   exit 0
 fi
 
@@ -38,13 +106,13 @@ import json, sys
 sid = sys.argv[1]
 store_path = sys.argv[2]
 try:
-    store = json.load(open(store_path))
+    store = json.load(open(store_path)) if store_path else {}
 except OSError:
     store = {}
 transcript = store.get(sid)
 rows = [{'transcript': transcript}] if transcript is not None else []
 print(json.dumps({'rows': rows, 'rowCount': len(rows), 'truncated': False}))
-" "$session_id" "${FAKE_CONDUCTOR_TRANSCRIPTS:?FAKE_CONDUCTOR_TRANSCRIPTS must be set}"
+" "$session_id" "${FAKE_CONDUCTOR_TRANSCRIPTS:-}"
   exit 0
 fi
 

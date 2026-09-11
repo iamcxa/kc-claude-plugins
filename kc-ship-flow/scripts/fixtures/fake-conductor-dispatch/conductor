@@ -1,19 +1,59 @@
 #!/usr/bin/env bash
-# Stub `conductor` for dispatch.test.sh. No network. --version/--help delegate to the real
-# binary (already pinned from it); auth whoami and project list are scripted so dispatch.sh
-# never needs a real account. Every invocation's argv is appended to $FAKE_CONDUCTOR_LOG
-# when set -- used to prove --dry-run makes no `workspace create` call.
+# Stub `conductor` for dispatch.test.sh. No network, no real conductor binary required:
+# --version/--help are synthesized here, covering exactly the argv shapes in
+# kc-ship-flow/pins/conductor-cli.contract. Every invocation's argv is appended to
+# $FAKE_CONDUCTOR_LOG when set -- used to prove --dry-run makes no `workspace create` call,
+# and that read-only probes run before any mutating call.
+#
+# Env knobs:
+#   FAKE_CONDUCTOR_VERSION       overrides the printed version (default 0.85.0); a version
+#                                bump alone must not trip the used-surface refusal.
+#   FAKE_CONDUCTOR_DROP_SHAPE    omits one shape's line from --help (e.g. "workspace create"),
+#                                to prove the missing-shape refusal names it.
+#   FAKE_CONDUCTOR_PROJECT_ID    project id `project list` reports for FAKE_CONDUCTOR_REMOTE.
+#   FAKE_CONDUCTOR_REMOTE        git remote `project list` matches the fixture project to.
+#   FAKE_CONDUCTOR_USER_ID       User ID line `auth whoami` reports (default usr-fixture-1).
+#   FAKE_CONDUCTOR_AUTH_FAIL     when 1, `auth whoami` fails (exit 3).
+#   FAKE_CONDUCTOR_ALLOW_CREATE  when 1, `workspace create` succeeds; otherwise it errors
+#                                loudly (exit 64) since --dry-run must never reach it.
 set -euo pipefail
 
 [ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
 
-REAL_CONDUCTOR="${FAKE_CONDUCTOR_REAL:?FAKE_CONDUCTOR_REAL must be set to the real conductor binary}"
+VERSION="${FAKE_CONDUCTOR_VERSION:-0.85.0}"
+DROP="${FAKE_CONDUCTOR_DROP_SHAPE:-}"
 PROJECT_ID="${FAKE_CONDUCTOR_PROJECT_ID:?FAKE_CONDUCTOR_PROJECT_ID must be set}"
 REMOTE="${FAKE_CONDUCTOR_REMOTE:?FAKE_CONDUCTOR_REMOTE must be set}"
+USER_ID="${FAKE_CONDUCTOR_USER_ID:-usr-fixture-1}"
+
+print_help() {
+  echo "conductor $VERSION"
+  echo "conductor - manage cloud workspaces and coding agents (fake fixture)"
+  echo
+  echo "Authentication:"
+  [ "$DROP" = "auth whoami" ] || echo "  conductor auth whoami               Show the configured token + base URL and verify against the API"
+  echo
+  echo "Project:"
+  [ "$DROP" = "project list" ] || echo "  conductor project list [--limit <n>] [--offset <n>] [--json]"
+  echo
+  echo "Workspace:"
+  [ "$DROP" = "workspace list" ] || echo "  conductor workspace list [--creator <userId>] [--limit <n>] [--offset <n>]"
+  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--message-file <path>] [--json]"
+  [ "$DROP" = "workspace status" ] || echo "  conductor workspace status [workspaceId]"
+  echo
+  echo "Session:"
+  [ "$DROP" = "session status" ] || echo "  conductor session status <sessionId>"
+  echo
+  echo "Other commands:"
+  [ "$DROP" = "sql" ] || echo "  conductor sql <query>               Run a read-only SQL query over session_transcripts_view"
+  echo
+  echo "Global options:"
+  echo "  --json                               Output JSON instead of human-readable tables (auth commands excepted)"
+}
 
 case "${1:-}" in
-  --version) exec "$REAL_CONDUCTOR" --version ;;
-  --help) exec "$REAL_CONDUCTOR" --help ;;
+  --version) echo "$VERSION"; exit 0 ;;
+  --help) print_help; exit 0 ;;
 esac
 
 if [ "${1:-}" = "auth" ] && [ "${2:-}" = "whoami" ]; then
@@ -21,7 +61,23 @@ if [ "${1:-}" = "auth" ] && [ "${2:-}" = "whoami" ]; then
     echo "not authenticated" >&2
     exit 3
   fi
-  echo "authenticated (fake)"
+  cat <<TABLE
+Token source     CONDUCTOR_API_KEY env var
+API URL          https://api.conductor.build (CONDUCTOR_API_URL)
+Verification     (fake) authenticated
+User ID          $USER_ID
+Email            fixture@example.test
+TABLE
+  exit 0
+fi
+
+if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "list" ]; then
+  echo '{"data": [], "offset": 0, "hasMore": false}'
+  exit 0
+fi
+
+if [ "${1:-}" = "sql" ] || { [ "${1:-}" = "--json" ] && [ "${2:-}" = "sql" ]; }; then
+  echo '{"rows": [], "rowCount": 0, "truncated": false}'
   exit 0
 fi
 
