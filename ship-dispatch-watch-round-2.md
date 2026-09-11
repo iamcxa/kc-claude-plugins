@@ -101,3 +101,20 @@ work_profile:
   scope_boundary: No cloud FO behaviour change; no mod edit; no Linear.
   semantics_unchanged: false
 ```
+
+## Stage Report: implementation
+
+- DONE: watch.sh distinguishes initializing/pending from idle/stopped via transcript-tail confirmation and recognizes question tails (AC-1)
+  `watch.test.sh` cases a/d/g/h/i (11/11 PASS): g=`initializing`→`pending`; a/d=idle needs two consecutive polls before `stopped`; h=`<slug>/index.md` folder-form gate-prepared; i=3/3 question shapes (`?`, `Q:`, `Decision:`).
+- DONE: dispatch.sh boot message carries sender identity, per-dispatch token, conn-quote/conn-source, and merge-not-rebase sentence, gated on --conn-quote (AC-2)
+  `dispatch.test.sh` case a2 asserts all elements present; d3/d4 assert exit 2 `conn required` when `--conn-quote`/`--conn-source` is missing. Manually re-verified: `bash kc-ship-flow/scripts/dispatch.sh ship-cloud-wrapper-fixture --dry-run ... --conn-quote "Captain approved: 確認" --conn-source "chat 2026-09-11"` produced a boot file containing `Sender identity: workspace_creator_id=...`, a 12-hex `Dispatch token:`, the verbatim "no Captain message" sentence, the conn-quote/conn-source lines, and "Sync state by merge, never rebase."
+- DONE: Both scripts validate the conductor CLI used-surface against live --help and run read-only probes before mutating calls (AC-3)
+  `dispatch.test.sh` case d / `watch.test.sh` case j: one shape dropped from fake `--help` → exit 5 naming the shape. Case d2/k: version-only bump, all shapes present → exit 0, `conductor <version>: used surface unchanged`. Probe-before-mutate order (auth whoami, workspace list, sql, all before workspace create) confirmed by hand via `FAKE_CONDUCTOR_LOG` call order (existing `--dry-run` tests already prove no `workspace create` call happens at all; full ordering re-checked manually, not asserted as a distinct automated case in the non-dry-run path).
+- DONE: contract-test.py runs dispatch.test.sh and watch.test.sh against fake conductor fixtures in CI with no real CLI required (AC-4)
+  Ran `python3 kc-ship-flow/scripts/contract-test.py` with `conductor` stripped entirely from `PATH` (`PATH=$(echo "$PATH" | tr ':' '\n' | grep -v conductor | paste -sd: -)`): exit 0, both suites' PASS lines printed (10/10 dispatch, 11/11 watch), no `SKIPPED` line. The `shutil.which("conductor")` skip gate is removed from `contract-test.py`.
+- DONE: pins/conductor-cli.txt is removed/renamed to conductor-cli.contract with no remaining references (AC-5)
+  `git grep -c 'conductor-cli.txt' kc-ship-flow docs/ship` returns no matches (grep exit 1, empty output). New `kc-ship-flow/pins/conductor-cli.contract` lists 7 one-line argv shapes (`auth whoami`, `workspace list --limit`, `project list --limit --json`, `workspace create ...`, `workspace status`, `session status`, `sql`) instead of the old 143-line pinned `--help` text.
+
+### Summary
+
+Implemented in worktree `.worktrees/spacedock-ensign-ship-dispatch-watch-round-2` (branch `spacedock-ensign/ship-dispatch-watch-round-2`), 3 commits: `33566681` (scripts+contract+docs), `d4d52f2a` (fixtures+tests), `5130d454` (CI wiring). All 5 ACs independently re-verified by the ensign (not just the sub-implementation report): contract-test.py exits 0 with conductor absent from PATH, both test suites pass in full, AC-5's grep is clean, and dispatch.sh's boot message was manually inspected end to end. One judgment call carried from implementation: the real batch's exact question-tail wording lives only on the `spacedock-state/ship` branch, not this checkout, so the question-recognizer fixtures use tails that match the recognizer's documented shapes (`?`, `Q:`, `Decision:`) rather than the unrecoverable verbatim originals.
