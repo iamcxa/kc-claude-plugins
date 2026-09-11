@@ -187,7 +187,7 @@ workflow prose.
 
 Each working continuation/worker, after authority/profile/pin
 checks, read repository-root `docs/architecture.md` before exploration or implementation.
-Read task-relevant code/docs; code overrides stale claims. POC permits absence;
+Read task-relevant code/docs; code overrides stale claims. If absent, POC continues;
 otherwise FO assigns implementation useful context/code bootstrap before feature
 work; validation returns missing/stale maps to that owner. Follow `project-context-maintenance.md`; include these instructions in every dispatch,
 including Production recovery that skips shape. No empty or link-only map.

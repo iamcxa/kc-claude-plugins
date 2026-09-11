@@ -10,8 +10,10 @@ continuation. Preserve the value; do not reinterpret it as provider identity.
 
 Pilot/Production consumers now need a useful repository-root `docs/architecture.md`,
 even with existing architecture documentation. This intentional file requirement
-requires consumer action: route existing authority to the overview, link deeper docs,
-and bootstrap a missing map before feature work. POC creation remains exempt.
+requires consumer action in normal implementation after a compatible upgrade:
+the authorized implementation owner routes existing authority to the overview, links
+deeper docs, and bootstraps a missing map before feature work. No upgrade-time schema,
+configuration, or record migration is required. POC creation remains exempt.
 Every continuation/worker reads available maps before exploration, including recovery
 build. See [Architecture home](references/project-context-maintenance.md#architecture-home).
 Same-stage pins retain their recorded contracts; never rewrite active pinned bytes
