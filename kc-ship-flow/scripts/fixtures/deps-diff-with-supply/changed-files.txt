@@ -1,2 +1,0 @@
-scripts/example.py
-package-lock.json

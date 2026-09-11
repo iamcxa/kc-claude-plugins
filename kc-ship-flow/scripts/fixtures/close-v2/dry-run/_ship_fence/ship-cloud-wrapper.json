@@ -1,0 +1,10 @@
+{
+  "DEV-301": {
+    "workspace": "ws-301",
+    "session": "sess-301",
+    "message_sha256": "a1",
+    "merged_sha": "abc1230000000000000000000000000000000000"
+  },
+  "DEV-302": {"workspace": "ws-302", "session": "sess-302", "message_sha256": "a2"},
+  "questions": []
+}

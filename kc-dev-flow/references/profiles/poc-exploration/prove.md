@@ -42,6 +42,9 @@ question.
 Record one `poc_outcome`: direction `proceed`, `stop`, or `change`, exact
 evidence, strongest limit, reversal fact, and cleanup. Return it to planning
 after terminalization; it grants no downstream creation or profile authority.
+Future close measurements stay `pending` through approval. Outcome acceptance
+is not completed cleanup: follow `continue-dev-flow` Advance, then run the
+guard's read-only `check-final` against the archived task.
 
 - observed journey result and artifact revision;
 - result of the critical-risk check;

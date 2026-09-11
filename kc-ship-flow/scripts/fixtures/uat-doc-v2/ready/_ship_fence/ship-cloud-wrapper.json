@@ -1,0 +1,11 @@
+{
+  "DEV-201": {"workspace": "ws-201", "session": "sess-201", "message_sha256": "a1"},
+  "DEV-202": {"workspace": "ws-202", "session": "sess-202", "message_sha256": "a2"},
+  "questions": [
+    {
+      "task": "DEV-202",
+      "question": "Does this task's Local Profile row cover the delivery branch base?",
+      "answer": "Yes, see the Local Profile's delivery-branch-base policy row."
+    }
+  ]
+}

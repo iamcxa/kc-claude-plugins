@@ -448,3 +448,31 @@ be merged.
 scored `0` while one citing a single path scored `2`. The README makes that scan a hard
 precondition for the ideation gate, so the first entity through it will hit this. Record the scan
 output and the discrepancy in the stage report rather than treating a `0` as a finding about the AC.
+
+## `kc-journey-map`
+
+### Sprint S1 — inspect release stories with honest evidence states
+
+This standalone Pilot release lets Kent inspect the stories in a selected
+release slice, understand their shared system flow and constraints, and
+distinguish known gaps from unverified behavior and evidence-backed behavior.
+The existing heading and stored `sprint: S1` remain compatibility identifiers
+until the separate sprint-to-release contract migration. This release has no
+fixed time cycle.
+
+Kent authorized this local registration to be used for the approved journey
+board task before the registration is merged into main. The task retains its
+Captain-approved brief; local checks do not establish delivery acceptance.
+
+### Sprint S2 — plan one release into a development brief
+
+This standalone Pilot release lets a planner reuse journey decisions, resolve
+only the selected release's material value questions, and hand one reviewed
+Development Brief to existing dev-flow technical shaping. The release serves
+that user journey value and has no fixed time cycle. `sprint: S2` is the stored
+compatibility identifier until the separate release terminology migration.
+
+Kent authorized this registration and its use before merge for
+`plan-release-from-journey-board` on 2026-09-11. The work is a separate layer
+based on PR #417; its existing predecessors remain unchanged. This registration
+neither accepts delivery nor authorizes a push, PR creation, or merge.
