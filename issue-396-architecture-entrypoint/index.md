@@ -227,3 +227,27 @@ Local independent validation is complete; Draft creation, full exact-head CI and
 - Frontmatter scope: existing script excludes only .git/node_modules, so its 136 successful files include 45 each under ignored .context/issue-396-combined and .context/issue-396-model-baseline; frontmatter-scope.json records all paths. This is not 136 distinct tracked skills.
 
 Counts: DONE 3 / SKIPPED 0 / FAILED 0 for the dispatched completion checklist. Deliberate execution skips and pending delivery obligations are explicit above; they are not final CI passes.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independently review the exact candidate against accepted behavior and retained authority boundaries.
+  PR iamcxa/kc-claude-plugins#426 remains exact head 3ce12bdced8e3cf56ff6cb1a62949821fc346221, OPEN/Draft/MERGEABLE/CLEAN. Prior independent source review and combined-peer result remain valid; no product change or new defect occurred.
+- DONE: Complete missing required checks and verify actual evidence without relabeling historic model results.
+  All 3 observed checks pass, including both required checks; job 103230011063 logs actual ./scripts/kc-dev-flow-contract-test.py with PASS. Complete native feedback observation at 2026-09-11T10:30:19Z has no retained items or missing dispositions.
+- DONE: Prepare a truthful validation report, actionable defect dispositions and PR-readiness recommendation.
+  Recommend parent mark this exact revision Ready. Detailed evidence remains in ready-delivery/architecture/validation-evidence/report.md; parent retains Ready orchestration and Kent retains merge/release authority.
+
+### Summary
+
+Local validation, full exact-head CI and complete pre-Ready native feedback are green; no material defect remains for PR readiness. This completes the previously pending full-contract obligation without a duplicate local run. General model obedience, read-order transcripts and whole-issue reliability remain outside the proof.
+
+### Exact-head delivery evidence
+
+- Required check: version parity (plugin.json / marketplace.json / codex / README), run 34589094057/job 103230011063, SUCCESS; pr426-full-contract-ci.log records the actual full contract command and PASS, alongside marketplace/frontmatter checks.
+- Required check: multi-profile route gate (live Spacedock), run 34589094090/job 103230011273, SUCCESS. GitGuardian Security Checks is also SUCCESS; pr426-ci.log binds all three to head 3ce12bdced8e3cf56ff6cb1a62949821fc346221.
+- Native observation: explicit repository/PR views before and after reads match; one complete GraphQL thread page and one complete REST review page, zero threads/reviews/retained items, empty dispositions. pr426-before-ready-final/observation.json and normalized.json bind the fingerprint below; conversation-tab issue comments are outside this defined review slice.
+- Factual correction to prior local report: marketplace.log passed nine plugin installs, not eight. Frontmatter correctly covered 46 tracked candidate skills; 136 aggregate additionally includes 90 ignored-copy files. No check rerun or source change was needed.
+- AC-1/AC-2/AC-3/AC-4: prior source/manual and fixture evidence remains unchanged, including POC exemption, required overview, retained detail, recovery bootstrap ownership and same-slice alignment. AC-5 now additionally has full final CI PASS; prior clean peer merge and static 39979/40000 remain valid.
+- Known boundaries: older A1 is old default-home model proof; schema 8/8 is scenario schema validation, not eight model runs. No new cloud/model proof, standing checker, CI trigger change or measured cost-per-PR claim.
+
+PR feedback: {"dispositions":[],"fingerprint":"sha256:c7e7f6215a739d64cbfbd5f8f9c373e557cd9d1b2512c934e09e52fd84e764d5","head":"3ce12bdced8e3cf56ff6cb1a62949821fc346221","layer":"single","pr_number":426,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}
