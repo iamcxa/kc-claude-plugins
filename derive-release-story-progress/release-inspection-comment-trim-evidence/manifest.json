@@ -1,0 +1,155 @@
+{
+  "base_sha": "818260a8c14b504dae8d3989ba9c710226255b74",
+  "published_base_sha": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+  "candidate_tree": "7711a3d343cedaae24bc007928c2cc32702d0d57",
+  "branch": "codex/journey-release-inspection",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-release-inspection",
+  "proposed_subject": "refactor(kc-journey-map): trim release inspection comments",
+  "files": [
+    {
+      "path": "kc-journey-map/lib/fixture.mjs",
+      "added": 0,
+      "deleted": 6,
+      "sha256": "c8e8c98d8f3425563a170c7d9a2073a2daa0889dc4c3c5d581dc44fec036658a"
+    },
+    {
+      "path": "kc-journey-map/lib/funcmap.mjs",
+      "added": 1,
+      "deleted": 14,
+      "sha256": "6b44a2b0a648e9ec9bf52b2abd5b89ac1d722ec76fc9a62547827b42781fef86"
+    },
+    {
+      "path": "kc-journey-map/lib/funcmap.test.mjs",
+      "added": 0,
+      "deleted": 3,
+      "sha256": "dbf2feab18bc93850711d09b03919affca6e71d935917ce5a73037a1ba6b6aa9"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-contract.mjs",
+      "added": 0,
+      "deleted": 1,
+      "sha256": "1191412b33dda13dd5bd5ccc4837a87e4ff322584f4ed2ea69f2282d759fafac"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-example.test.mjs",
+      "added": 0,
+      "deleted": 5,
+      "sha256": "6d925e61097ba1afc4373d5e03e5851993ca05fb90925cdb92ff79a2554f9c6f"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-lint.mjs",
+      "added": 0,
+      "deleted": 9,
+      "sha256": "a52d2f35f926f14608acf7518db2d25ae98ef401f2951e0c1d0a1b13915b4cdc"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-render.mjs",
+      "added": 0,
+      "deleted": 1,
+      "sha256": "d986b43d44f5ee056749f00d05a1ea78f4770454df92d83c161ce3c635003a1e"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-tldr.mjs",
+      "added": 0,
+      "deleted": 5,
+      "sha256": "4db87eb7932572e753bdd6fb22e52f22279071ee6628b5075613bfe156845c62"
+    },
+    {
+      "path": "kc-journey-map/lib/lint.mjs",
+      "added": 3,
+      "deleted": 12,
+      "sha256": "1bedd5ca8dfcd520db8c191158112cc5d7e5d231ed669cc64f7c9f1bff18e748"
+    },
+    {
+      "path": "kc-journey-map/lib/lint.test.mjs",
+      "added": 0,
+      "deleted": 19,
+      "sha256": "705b84792c594138113f3e9aa95c72a61ba495b719b74a508850e409c1f5c83e"
+    },
+    {
+      "path": "kc-journey-map/lib/model.mjs",
+      "added": 0,
+      "deleted": 7,
+      "sha256": "b9d9fc626073058d80867e56885dadaf02ac4b7a358c04fd0e4ab0c2f808caab"
+    },
+    {
+      "path": "kc-journey-map/lib/read.mjs",
+      "added": 4,
+      "deleted": 21,
+      "sha256": "be332fe40de3517d5c33cbbaa31dbeec6f500ce2e610a81b9b867a91cd0406c2"
+    },
+    {
+      "path": "kc-journey-map/lib/read.test.mjs",
+      "added": 1,
+      "deleted": 4,
+      "sha256": "9975ef1f2eb845247aacec1be71b2061a65117ccba9324b4c0337ddb017562e7"
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "added": 2,
+      "deleted": 6,
+      "sha256": "706a44a00871d5b914501fe6bc83d6caf6f18e4ef03e9991d27e035c72fd6053"
+    },
+    {
+      "path": "kc-journey-map/lib/release-contract.mjs",
+      "added": 0,
+      "deleted": 2,
+      "sha256": "114dd0d4f024725e005e55caff7d9ce5c20382b7d4c99ef85bb34716807e67a5"
+    },
+    {
+      "path": "kc-journey-map/lib/release-contract.test.mjs",
+      "added": 0,
+      "deleted": 3,
+      "sha256": "f8e8cd86c893f623720a607b480201e68077313078eb3be142ab4ad5675b6158"
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "added": 1,
+      "deleted": 11,
+      "sha256": "abdb6e9aee8a7719a28913fa2a708c1a18cf9732fe885be304be85412b3f375a"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "added": 0,
+      "deleted": 4,
+      "sha256": "afc43a8468acc97dfc47912e01165b4e551f921f1f7a80c91d65687d7fa31243"
+    },
+    {
+      "path": "kc-journey-map/scripts/canvas-smoke.sh",
+      "added": 0,
+      "deleted": 9,
+      "sha256": "a8247c9e5ca5e58f74b21ea9ceb345eec9add2eaf12632b3610c74719c5a221d"
+    },
+    {
+      "path": "kc-journey-map/server/rooms.ts",
+      "added": 1,
+      "deleted": 2,
+      "sha256": "9d0c6d202792f04cd0548ebe8c9ccf192dbee6f325556e82925b581d27e5f3d9"
+    }
+  ],
+  "added": 13,
+  "deleted": 144,
+  "patch_sha256": "e5ed4f30f5bcfa14f68d08d43734b03d33a6c497f028870eaa2ce633d240c4e8",
+  "incremental_comment_lines_after_recomputed_from_upstream_diff": 17,
+  "pending_bottom_overlap": [
+    "kc-journey-map/lib/fixture.mjs",
+    "kc-journey-map/lib/journey-render.mjs",
+    "kc-journey-map/lib/journey-tldr.mjs",
+    "kc-journey-map/lib/model.mjs",
+    "kc-journey-map/lib/read.mjs",
+    "kc-journey-map/lib/read.test.mjs",
+    "kc-journey-map/lib/records.mjs",
+    "kc-journey-map/lib/render.mjs",
+    "kc-journey-map/lib/storymap.mjs",
+    "kc-journey-map/scripts/canvas-smoke.sh",
+    "kc-journey-map/server/rooms.ts"
+  ],
+  "published_top_overlap": [
+    "kc-journey-map/lib/records.mjs",
+    "kc-journey-map/lib/render.mjs",
+    "kc-journey-map/lib/storymap.mjs"
+  ],
+  "sibling_pending_patches_byte_identical": true,
+  "product_commit": "not created",
+  "real_index": "unstaged"
+}

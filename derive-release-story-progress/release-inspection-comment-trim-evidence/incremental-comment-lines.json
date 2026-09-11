@@ -1,0 +1,192 @@
+{
+  "kc-journey-map/lib/fixture.mjs": [
+    1,
+    2,
+    3,
+    4,
+    31,
+    32
+  ],
+  "kc-journey-map/lib/funcmap.mjs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    25,
+    26,
+    43,
+    44,
+    75
+  ],
+  "kc-journey-map/lib/funcmap.test.mjs": [
+    1,
+    36,
+    37
+  ],
+  "kc-journey-map/lib/journey-contract.mjs": [
+    2
+  ],
+  "kc-journey-map/lib/journey-example.test.mjs": [
+    1,
+    2,
+    22,
+    23,
+    24
+  ],
+  "kc-journey-map/lib/journey-lint.mjs": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "kc-journey-map/lib/journey-render.mjs": [
+    2
+  ],
+  "kc-journey-map/lib/journey-tldr.mjs": [
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "kc-journey-map/lib/lint.mjs": [
+    1,
+    7,
+    8,
+    9,
+    12,
+    13,
+    18,
+    19,
+    20,
+    21,
+    49,
+    50
+  ],
+  "kc-journey-map/lib/lint.test.mjs": [
+    1,
+    2,
+    3,
+    4,
+    21,
+    22,
+    26,
+    44,
+    45,
+    73,
+    74,
+    78,
+    79,
+    92,
+    93,
+    110,
+    111,
+    112,
+    113
+  ],
+  "kc-journey-map/lib/model.mjs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    23
+  ],
+  "kc-journey-map/lib/read.mjs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    74,
+    75,
+    95,
+    96,
+    97,
+    98,
+    134,
+    135,
+    136,
+    206,
+    207
+  ],
+  "kc-journey-map/lib/read.test.mjs": [
+    15,
+    163,
+    172,
+    173
+  ],
+  "kc-journey-map/lib/records.mjs": [
+    103,
+    104,
+    105,
+    132,
+    139,
+    140
+  ],
+  "kc-journey-map/lib/release-contract.mjs": [
+    1,
+    2
+  ],
+  "kc-journey-map/lib/release-contract.test.mjs": [
+    1,
+    26,
+    27
+  ],
+  "kc-journey-map/lib/render.mjs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    25,
+    26,
+    149,
+    150,
+    158,
+    159
+  ],
+  "kc-journey-map/lib/storymap.mjs": [
+    5,
+    13,
+    14,
+    168,
+    169
+  ],
+  "kc-journey-map/scripts/canvas-smoke.sh": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    46,
+    47
+  ],
+  "kc-journey-map/server/client/App.tsx": [
+    9,
+    20,
+    21
+  ],
+  "kc-journey-map/server/rooms.ts": [
+    7,
+    8
+  ]
+}

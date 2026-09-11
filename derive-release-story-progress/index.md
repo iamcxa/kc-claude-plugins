@@ -578,3 +578,14 @@ The bounded CI reader bootstrap correction is prepared, uncommitted, with actual
 ### Summary
 
 The authorized PR415 comment-only draft is concrete and uncommitted, with measured reduction, retained reasons and executable-equivalence proof. Captain local-commit authority is next; sibling restacking and the separate CI repair remain pending.
+
+## Stage Report: implementation (cycle 9)
+
+- DONE: PR416 incremental comments are concise under the approved standard, with consistent before/after counts and representative reasons.
+  Approval provenance: Kent said “416 也有一樣的問題” under the accepted PR415 standard. Published incremental comment lines 148 → 17; whole-source comments 301 → 170, with all 153 inherited lines untouched. Exactly 20 files, +13/-144. Removed method/history/usage/test narration; kept terse library/evidence/readback safety facts. Two mixed inherited blocks are deliberately deferred to bottom-trim propagation. [Counts and reasons](release-inspection-comment-trim-evidence/README.md).
+- DONE: Exact executable equality passes and PR415 trim plus PR417 CI repair remain byte-identical; concrete uncommitted patch and local-commit packet are reported.
+  Existing compiler and exact noncomment comparisons pass for all 20 files, with inherited comment/licence/directive preservation and separate shell/heredoc handling. No runtime/install/reviewer run. Base `818260a8c14b504dae8d3989ba9c710226255b74`, candidate tree `7711a3d343cedaae24bc007928c2cc32702d0d57`; [manifest](release-inspection-comment-trim-evidence/manifest.json), [equivalence](release-inspection-comment-trim-evidence/executable-equivalence.json), [local-commit packet](release-inspection-comment-trim-evidence/local-commit-review.md). Pending sibling patches match their exact prior hashes; no restack or published mutation. PR417 propagation overlaps records/render/storymap only. AC-1..AC-5 executable behavior and prior evidence remain unchanged; no new runtime PASS is asserted.
+
+### Summary
+
+The PR416-only comment draft is complete and uncommitted, with consistent incremental counts and exact executable proof. Captain local-commit authority and later sibling propagation remain pending.

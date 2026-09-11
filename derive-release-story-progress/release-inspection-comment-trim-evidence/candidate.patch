@@ -1,0 +1,540 @@
+diff --git a/kc-journey-map/lib/fixture.mjs b/kc-journey-map/lib/fixture.mjs
+index b3c8327ba069c25002ea7aaadc331cecbff90dde..d9d86826874b64162e85efe092eeb9ac9810f269 100644
+--- a/kc-journey-map/lib/fixture.mjs
++++ b/kc-journey-map/lib/fixture.mjs
+@@ -1,7 +1,3 @@
+-// A test fixture, and nothing else — it is not a journey of any product.
+-//
+-// The shipped example is a real board and declares no stories, no Now row and no
+-// ownership band, so those paths need a model of their own.
+ 
+ export const fixtureModel = {
+ 	journey: 'fixture',
+@@ -28,8 +24,6 @@ export const fixtureModel = {
+ 		{
+ 			id: 'b',
+ 			card: 'Gets the thing',
+-			// The gap moved from the step (badge: NOT_BUILT) to the story it actually blocks —
+-			// a step is too coarse a grain to be a build unit.
+ 			stories: [{ id: 'b-see', card: 'Sees it arrive', release: 'r1', status: 'gap', question: 'Should delivery be push or pull?' }],
+ 			command: 'GetTheThing(id)',
+ 			events: ['ThingDelivered', 'DeliveryRefused'],
+diff --git a/kc-journey-map/lib/funcmap.mjs b/kc-journey-map/lib/funcmap.mjs
+index a9f7d4e4cbf0bf814c590ff131b8a8c3dc14f7dd..d8f206bff170c38d3168f298ddfcaad979de972c 100644
+--- a/kc-journey-map/lib/funcmap.mjs
++++ b/kc-journey-map/lib/funcmap.mjs
+@@ -1,12 +1,3 @@
+-// The function-map projection: Event Modeling's swimlanes over the journey's own columns.
+-//
+-// The columns are the journey's steps, unchanged. Only the lanes differ — Command, Event,
+-// State, Read model — which is why this is a third page of the same file rather than a
+-// second tool. The vocabulary is fmodel's tactical grammar (a decider takes a command and
+-// current state and emits events; a view folds events into something readable), borrowed
+-// as nouns. Nothing here runs Kotlin or event-sources anything.
+-//
+-// Event order is authored model input, not inferred causality or build order.
+ 
+ import { fitHeight, indexes, label, note, page } from './records.mjs'
+ 
+@@ -22,8 +13,6 @@ export const FUNC_PAGE_ID = 'page:jm-funcmap'
+ 
+ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
+ 
+-// A step nobody has modelled is drawn as a gap, not left blank: an empty column reads as
+-// "nothing happens here", and the whole point is to see which steps have no model yet.
+ const UNMODELLED = '— not modelled —'
+ 
+ export function buildFunctionMap(model) {
+@@ -40,8 +29,7 @@ export function buildFunctionMap(model) {
+ 
+ 	const H_CMD = Math.max(120, ...steps.map((s) => fitHeight(commandOf(s), COL_W)))
+ 	const maxEvents = Math.max(1, ...steps.map((s) => eventsOf(s).length))
+-	// A size-m note is 200 tall, so the row pitch has to clear it. At 130 the stickies
+-	// overlapped each other into one orange block and ran into the State lane below.
++	// tldraw size-m notes are 200px tall; row pitch must clear their bounds.
+ 	const NOTE_H = 200
+ 	const H_EVENT = NOTE_H + 40
+ 	const H_EVENTS = (maxEvents - 1) * H_EVENT + NOTE_H
+@@ -72,7 +60,6 @@ export function buildFunctionMap(model) {
+ 			meta: tag(step.id, 'command'),
+ 		})
+ 
+-		// Keep each authored event independently visible.
+ 		eventsOf(step).forEach((event, j) => {
+ 			put.push({
+ 				...note({ id: `shape:fm-event-${step.id}-${j}`, text: event, x: x + 50, y: Y_EVENTS + j * H_EVENT, index: ix[n++], parentId, color: 'orange', size: 's' }),
+diff --git a/kc-journey-map/lib/funcmap.test.mjs b/kc-journey-map/lib/funcmap.test.mjs
+index 0d9c2866955e4fc5733b598aea1522a04e0f024c..e2b924e375d7b8cadb4e53c2d9083430a2e22f4e 100644
+--- a/kc-journey-map/lib/funcmap.test.mjs
++++ b/kc-journey-map/lib/funcmap.test.mjs
+@@ -1,4 +1,3 @@
+-// node --test lib/*.test.mjs
+ 
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+@@ -33,8 +32,6 @@ test('every event gets its own shape, in the order the file lists them', () => {
+ })
+ 
+ test('event stickies do not overlap each other', () => {
+-	// A size-m note is 200 tall; a pitch under that drew them as one block and spilled
+-	// the last one into the State lane.
+ 	const events = buildFunctionMap(fixtureModel).filter((r) => r.meta?.journey?.kind === 'event' && r.id.includes('-b-'))
+ 	assert.ok(events[1].y - events[0].y >= 200, `pitch ${events[1].y - events[0].y} is smaller than a sticky`)
+ })
+diff --git a/kc-journey-map/lib/journey-contract.mjs b/kc-journey-map/lib/journey-contract.mjs
+index d8dfebc58bf184f267f0ee65bce8ad79e2bdc20e..5e451f6c762b6ce984b9a2d5f0852647ad5af7c5 100644
+--- a/kc-journey-map/lib/journey-contract.mjs
++++ b/kc-journey-map/lib/journey-contract.mjs
+@@ -1,5 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-contract.mjs <journey.yaml> <releaseId> [--out <path>]
+ import { writeFileSync } from 'node:fs'
+ import { loadModel } from './read.mjs'
+ import { buildReleaseContract } from './release-contract.mjs'
+diff --git a/kc-journey-map/lib/journey-example.test.mjs b/kc-journey-map/lib/journey-example.test.mjs
+index 78044eb1b2e97f7736285b8f02ced92d0d056927..2d74abc08c3e37ff18c145471c20226acd8169e7 100644
+--- a/kc-journey-map/lib/journey-example.test.mjs
++++ b/kc-journey-map/lib/journey-example.test.mjs
+@@ -1,5 +1,3 @@
+-// Checks the worked example against the plugin schema and citation lints.
+-// Self-citation consistency does not establish delivery or target-user usability.
+ 
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+@@ -19,9 +17,6 @@ test("this skill's own journey file passes every lint", () => {
+ })
+ 
+ test('every story in the migrated file carries a status', () => {
+-	// Guards the format itself, not just the lint: a story that slipped past migration
+-	// with no status field would still be caught above, but this names what "every lint
+-	// passes" actually proved for this file — nobody left a story unmigrated.
+ 	const model = loadModel(JOURNEY)
+ 	const stories = (model.steps ?? []).flatMap((s) => s.stories ?? [])
+ 	assert.ok(stories.length > 0, 'the file has no stories to check')
+diff --git a/kc-journey-map/lib/journey-lint.mjs b/kc-journey-map/lib/journey-lint.mjs
+index 52f1192839ef44dcae0481d5e9f87518892a55ce..95c4095e9265722deccb4bd7d08ca2b564234370 100644
+--- a/kc-journey-map/lib/journey-lint.mjs
++++ b/kc-journey-map/lib/journey-lint.mjs
+@@ -1,13 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-lint.mjs <journey.yaml> [repoRoot]
+-//
+-// repoRoot defaults to this package's own directory: the journey files this skill ships
+-// cite this repository's own code, and an adopter's journey should pass repoRoot
+-// explicitly if its evidence lives somewhere else.
+-//
+-// The grep is `git grep`, which only sees tracked content: a symbol added in the same
+-// uncommitted change as the story that cites it needs `git add` first, or this reports
+-// it missing.
+ import { fileURLToPath } from 'node:url'
+ import { dirname, join, resolve } from 'node:path'
+ import { loadModel } from './read.mjs'
+diff --git a/kc-journey-map/lib/journey-render.mjs b/kc-journey-map/lib/journey-render.mjs
+index 7740e880e87130f3735f48e16beeca7cdbc9b759..65293292153bffee02e4cd5e6eb513ced1155ba6 100644
+--- a/kc-journey-map/lib/journey-render.mjs
++++ b/kc-journey-map/lib/journey-render.mjs
+@@ -1,5 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-render.mjs <journey.yaml> [roomId] [--pages story-map,journey-board,function-map]
+ import { renderToRoom, PROJECTION_KEYS, DEFAULT_PROJECTIONS } from './render.mjs'
+ 
+ const argv = process.argv.slice(2)
+diff --git a/kc-journey-map/lib/journey-tldr.mjs b/kc-journey-map/lib/journey-tldr.mjs
+index 2dea4d6743e1a6410191f008fb146163a2abb6f1..77546750609492a6f6fd1784c295428474499f2d 100644
+--- a/kc-journey-map/lib/journey-tldr.mjs
++++ b/kc-journey-map/lib/journey-tldr.mjs
+@@ -2,11 +2,6 @@
+ // node lib/journey-tldr.mjs export <roomId> <out.tldr>
+ // node lib/journey-tldr.mjs import <in.tldr>  <roomId>
+ //
+-// tldraw's own file format, used for what it is good at: moving a board between tools
+-// without losing a pixel. It is not a journey file — it stores coordinates and colours,
+-// not steps and citations. The two compose because `meta.journey` rides inside the
+-// records, so a board can leave here, be opened in any tldraw, come back, and still be
+-// read against its journey file.
+ //
+ // Import writes the whole document. Anything already in the target room is replaced.
+ 
+diff --git a/kc-journey-map/lib/lint.mjs b/kc-journey-map/lib/lint.mjs
+index 04c85e110accbf37c4962870126d43454a2bc75b..dd5979735c6b2454c4fdb349ea14c5f15bffff17 100644
+--- a/kc-journey-map/lib/lint.mjs
++++ b/kc-journey-map/lib/lint.mjs
+@@ -1,24 +1,16 @@
+-// Checks authored story status and executable citation consistency.
+ 
+ import { execFileSync } from 'node:child_process'
+ import { extname, resolve, sep } from 'node:path'
+ import { iterStories, STORY_STATUSES } from './model.mjs'
+ 
+-// Extensions of something that runs. Prose (.md) and data (.yaml/.json/.tldr) can quote a
+-// symbol back without the symbol being backed by code — that is the whole defect this
+-// lint exists to catch, so those extensions never qualify as evidence on their own.
++// Prose/data matches must not count as executable evidence.
+ const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
+ 
+-// A CI workflow file is YAML that runs, unlike the YAML the journey itself is written in —
+-// so it earns a path-based exception rather than a blanket extension one.
+ const isWorkflowFile = (f) => /\.ya?ml$/.test(f) && f.split(sep).includes('.github') && f.includes(`${sep}workflows${sep}`)
+ 
+ const isExecutableFile = (f) => EXECUTABLE_EXTENSIONS.has(extname(f)) || isWorkflowFile(f)
+ 
+-// Files that grep-match a symbol, scoped to `repoRoot` via cwd (git resolves paths
+-// relative to the working directory, not the repository root, when none is given), and
+-// narrowed to files something can execute — a match in a doc or a data file is prose, not
+-// evidence, even when it names a real symbol.
++// git grep returns tracked paths relative to cwd, not necessarily the repository root.
+ function filesCiting(symbol, repoRoot) {
+ 	try {
+ 		const out = execFileSync('git', ['grep', '-l', '-w', '-F', symbol], { cwd: repoRoot, encoding: 'utf8' })
+@@ -46,8 +38,7 @@ export function lintExistsWithoutEvidence(model) {
+ 		.map((s) => ({ lint: 'exists-without-evidence', story: s.id, release: s.release, detail: `story ${s.id} is marked exists but carries no evidence symbol` }))
+ }
+ 
+-// Excludes the journey file itself, and anything else named: a generated contract that
+-// merely quotes the symbol back would otherwise make the check pass on its own say-so.
++// Exclude generated self-citations; quoting a symbol is not executable evidence.
+ export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [] } = {}) {
+ 	if (!repoRoot) throw new Error('lintEvidenceNotFound needs repoRoot to grep against')
+ 	const ignore = new Set([journeyPath, ...exclude].filter(Boolean).map((p) => resolve(p)))
+diff --git a/kc-journey-map/lib/lint.test.mjs b/kc-journey-map/lib/lint.test.mjs
+index 3c9a7476da03db3fed8177f277f58dcf4b7ffe3e..cf80c500042ca59a830bb170c8d3afbd98aa00fa 100644
+--- a/kc-journey-map/lib/lint.test.mjs
++++ b/kc-journey-map/lib/lint.test.mjs
+@@ -1,7 +1,3 @@
+-// node --test lib/*.test.mjs
+-//
+-// Each lint is exercised against a real defect first, so a lint nobody can make fail is
+-// caught here rather than shipped as decoration.
+ 
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+@@ -18,12 +14,9 @@ test('lintNoStatus fires on a story with no status field, not on one with an exp
+ 	const v = lintNoStatus(m)
+ 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+ 	assert.equal(v[0].lint, 'no-status')
+-	// Mutation this catches: a lint that defaults a missing status to 'gap' before
+-	// checking would never fire here, though nothing that fires makes it pass either.
+ })
+ 
+ test('a bare-string story cannot carry a status, so it fires the same lint', () => {
+-	// Absorbed constraint: a bare string structurally cannot carry status/evidence/question.
+ 	const m = model([{ id: 's', stories: ['just a string'] }])
+ 	assert.deepEqual(lintNoStatus(m).map((x) => x.story), ['s-0'])
+ })
+@@ -41,8 +34,6 @@ test('lintExistsWithoutEvidence fires only on exists with no evidence', () => {
+ 	])
+ 	const v = lintExistsWithoutEvidence(m)
+ 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+-	// Mutation this catches: a lint that checks only `status === 'exists'` (dropping the
+-	// `!evidence` half) would also fire on s-1, which carries real evidence.
+ })
+ 
+ function tempRepo() {
+@@ -70,13 +61,9 @@ test('lintEvidenceNotFound fires when the cited symbol no longer greps, and pass
+ 	const v = lintEvidenceNotFound(m, { repoRoot })
+ 	assert.deepEqual(v.map((x) => x.story), ['s-1'])
+ 	assert.match(v[0].detail, /RenamedAway/, 'the violation must name the missing symbol, not just report a count')
+-	// Mutation this catches: a lint that only checks `evidence` is truthy (never greps)
+-	// would report neither s-0 nor s-1 — this fixture is built so that check alone passes.
+ })
+ 
+ test('a symbol that greps only inside the journey file itself is still reported missing', () => {
+-	// This is the check a table could never do: the file citing its own claim is not
+-	// evidence that the claim is still true of the code.
+ 	const repoRoot = tempRepo()
+ 	const journeyPath = join(repoRoot, 'journey.yaml')
+ 	writeFileSync(journeyPath, 'evidence: OnlyInTheJourneyFile\n')
+@@ -89,8 +76,6 @@ test('a symbol that greps only inside the journey file itself is still reported
+ })
+ 
+ test('evidence that greps only in prose is reported missing, even though the string exists', () => {
+-	// This is the repository's own real defect (kc-team-ops's journey cites AskUserQuestion,
+-	// a string that greps only in .md files): a symbol named in a doc is not code that runs.
+ 	const repoRoot = tempRepo()
+ 	writeFileSync(join(repoRoot, 'docs.md'), 'See ProseOnlySymbol in the reference.\n')
+ 	execFileSync('git', ['add', '-A'], { cwd: repoRoot })
+@@ -107,10 +92,6 @@ test('evidence that greps only in prose is reported missing, even though the str
+ 	])
+ 	const v = lintEvidenceNotFound(m, { repoRoot })
+ 	assert.deepEqual(v.map((x) => x.story), ['s-1'], 's-1 must fail because the only match is a doc, not because the string is missing')
+-	// Mutation this catches: dropping the isExecutableFile filter from filesCiting (the
+-	// original defect) makes docs.md count as a hit, so ProseOnlySymbol wrongly passes and
+-	// this assertion's list drops to empty — the earlier RenamedAway case above cannot
+-	// catch that regression, since it never gives the symbol anywhere to match at all.
+ })
+ 
+ test('evidence found only in a shell script or a CI workflow still counts, since both are executable', () => {
+diff --git a/kc-journey-map/lib/model.mjs b/kc-journey-map/lib/model.mjs
+index 8fec8ca27f6f82ef5d226f57f7b6a9150fc0931d..fb9a6316bd3cb51e9cd56f2ce808068e37a2a2bc 100644
+--- a/kc-journey-map/lib/model.mjs
++++ b/kc-journey-map/lib/model.mjs
+@@ -1,9 +1,3 @@
+-// Shared story normalization.
+-//
+-// A story is a bare string or an object; every reader of `steps[].stories[]` used to
+-// re-derive its own id/card/release, and a bare string structurally cannot carry
+-// `status`, `evidence` or `question` — which is exactly the shape the no-status lint
+-// has to catch, not paper over.
+ 
+ export const STORY_STATUSES = ['gap', 'unverified', 'exists']
+ export const storyStatusLabel = (status) => STORY_STATUSES.includes(status) ? status.toUpperCase() : 'UNASSESSED'
+@@ -20,6 +14,5 @@ export const normalizeStory = (step, story, j) =>
+ 				question: story.question,
+ 			}
+ 
+-// Every story in the model, each carrying the step it belongs to.
+ export const iterStories = (model) =>
+ 	(model.steps ?? []).flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))
+diff --git a/kc-journey-map/lib/read.mjs b/kc-journey-map/lib/read.mjs
+index aec3cebf7a587adce65fba2d50875f689f7aa346..9ba7f135c25759bb1fb24e5364f21b5ba38f3642 100644
+--- a/kc-journey-map/lib/read.mjs
++++ b/kc-journey-map/lib/read.mjs
+@@ -1,13 +1,4 @@
+-// Reads a rendered room back and reports what a person changed on the canvas.
+-//
+-// Projections share activity and story identities but give positions different meanings.
+-// Changed wording is compared across projections; competing edits are reported as a
+-// conflict and that field is not applied.
+-//
+-// What round-trips is what a workshop actually changes — the wording of a card, the order
+-// of the columns, the priority of the stories under an activity. System/constraint lanes have a
+-// lossy inverse: a constraint is stored as a rule id and drawn as that rule's text, so
+-// canvas text cannot be mapped back to an id without guessing. Those are never applied.
++// Constraint text has no safe inverse to rule IDs; readback never guesses.
+ 
+ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+ 
+@@ -71,8 +62,7 @@ export function diffAgainstModel(shapes, model) {
+ 	const steps = model.steps ?? []
+ 	const modelOrder = steps.map((s) => s.id)
+ 
+-	// A step in two releases appears on both of their boards. That is not a duplicate, so
+-	// cards are collected per page and only compared within one.
++	// Activity IDs repeated across release pages are not duplicates.
+ 	const boardPages = [...new Set(shapes.filter((s) => isBoard(s.parentId)).map((s) => s.parentId))]
+ 	const story = shapes.filter((s) => s.parentId === STORY_PAGE)
+ 
+@@ -92,10 +82,7 @@ export function diffAgainstModel(shapes, model) {
+ 	const actBy = indexByNode(activities, duplicated)
+ 	const storyBy = indexByNode(stories, duplicated)
+ 
+-	// ── wording ──────────────────────────────────────────────────────────────────
+-	// Compare changed observations with the file, so an untouched projection does not
+-	// veto an edit elsewhere. Distinct edits of the same field are conflicts. A duplicate
+-	// within any one page makes that entity ambiguous across all projections.
++	// A duplicate on any page makes that entity ambiguous across projections.
+ 	const reworded = []
+ 	const rewordConflict = []
+ 	const observations = (records, id) => records.filter((s) => s.meta.journey.nodeId === id)
+@@ -131,9 +118,7 @@ export function diffAgainstModel(shapes, model) {
+ 		})
+ 	}
+ 
+-	// ── column order ─────────────────────────────────────────────────────────────
+-	// Column order only round-trips from a whole-journey board: a release board shows a
+-	// subset, so its left-to-right order says nothing about the steps it does not draw.
++	// Release pages omit activities, so their column order cannot define whole-journey order.
+ 	const boardOrder = orderOf(cardBy)
+ 	const storyOrder = orderOf(actBy)
+ 	const boardMoved = boardOrder.length && boardOrder.join() !== modelOrder.filter((id) => cardBy.has(id)).join()
+@@ -203,8 +188,6 @@ export function diffAgainstModel(shapes, model) {
+ 	const unclaimed = shapes
+ 		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
+ 		.map((s) => {
+-			// A page this reader does not model still names itself, so a card added on the
+-			// function map is not reported as if it were on the board.
+ 			const page = pageName(s.parentId)
+ 			const anchors = page === 'storymap' ? storyAnchors : page.startsWith('board:') ? (boardAnchors.get(s.parentId) ?? []) : []
+ 			const placed = anchors.length ? placeUnderColumn(s, anchors) : { column: null }
+diff --git a/kc-journey-map/lib/read.test.mjs b/kc-journey-map/lib/read.test.mjs
+index 504b4dfce2391c139b2ae1f39e6fdc10e8f21e93..74095ac7fd635b2911ae07114a730bdd85585ce4 100644
+--- a/kc-journey-map/lib/read.test.mjs
++++ b/kc-journey-map/lib/read.test.mjs
+@@ -12,7 +12,6 @@ import { fixtureModel } from './fixture.mjs'
+ 
+ const rt = (text) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
+ 
+-// One whole-journey board, so the tests that exercise column order have an order to read.
+ const board = () => buildJourneyBoard(fixtureModel).filter((r) => r.typeName === 'shape')
+ const story = () => buildStoryMap(fixtureModel).filter((r) => r.typeName === 'shape')
+ const rendered = () => [...board(), ...story()]
+@@ -160,7 +159,6 @@ test('a story written in object form is reworded too', () => {
+ 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
+ })
+ 
+-// ── which projections render is a choice, not a file property ───────────────────
+ import { buildAllPages } from './render.mjs'
+ 
+ test('with no selection, buildAllPages draws the story map alone', () => {
+@@ -169,8 +167,7 @@ test('with no selection, buildAllPages draws the story map alone', () => {
+ })
+ 
+ test('an empty selection falls back to the default rather than rendering nothing', () => {
+-	// An explicit [] must not reach renderToRoom's reconcile as "draw nothing" — that
+-	// would read back as every existing journey shape in the room being stale and removed.
++	// An empty selection must not reconcile away every journey shape.
+ 	const pages = buildAllPages(fixtureModel, null, []).filter((r) => r.typeName === 'page').map((r) => r.id)
+ 	assert.deepEqual(pages, ['page:page'])
+ })
+diff --git a/kc-journey-map/lib/records.mjs b/kc-journey-map/lib/records.mjs
+index ae7bb179403d23b6b7efddc01e136f531ddd35e9..b7bd1f3bd143cdabbbda4042e80f814dfa8f2393 100644
+--- a/kc-journey-map/lib/records.mjs
++++ b/kc-journey-map/lib/records.mjs
+@@ -100,9 +100,7 @@ export function label({
+ 	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
+ }
+ 
+-// tldraw draws a shape's `url` as a real anchor inside the shape, and a deep link needs
+-// only a page: the camera numbers are normalised on arrival. That is enough to walk from
+-// a release to the board that shows what it is missing.
++// tldraw normalizes deep-link camera bounds; the page ID is sufficient.
+ export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d=v0.0.1.1.${pageId.replace('page:', '')}`
+ 
+ // A geo box does not grow to fit its label — text past the bottom edge is simply drawn
+@@ -129,15 +127,13 @@ export function indexes(n) {
+ 	return getIndices(n)
+ }
+ 
+-// Native page records for the requested projections.
+ export function page({ id, name, index = 'a1' }) {
+ 	return { id, typeName: 'page', name, index, meta: {} }
+ }
+ 
+ export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
+ 
+-// Standard child shapes keep portable exports readable without changing a story's
+-// page parent or direct coordinates, which read.mjs uses for release membership.
++// Child borders preserve story coordinates used by release readback.
+ export function storyBorder(story) {
+ 	const status = story.meta?.journey?.status
+ 	if (story.type !== 'note' || story.meta?.journey?.kind !== 'story' || !Object.hasOwn(STORY_STATUS_COLORS, status)) return null
+diff --git a/kc-journey-map/lib/release-contract.mjs b/kc-journey-map/lib/release-contract.mjs
+index a5771089050229d69846327728215d5d05fffdd8..613ae2beae8d428081a57669910776fdcc2278aa 100644
+--- a/kc-journey-map/lib/release-contract.mjs
++++ b/kc-journey-map/lib/release-contract.mjs
+@@ -1,5 +1,3 @@
+-// A generated text projection alongside the release board: story status/evidence
+-// and shared activity rules, derived from the journey file.
+ 
+ import { iterStories } from './model.mjs'
+ 
+diff --git a/kc-journey-map/lib/release-contract.test.mjs b/kc-journey-map/lib/release-contract.test.mjs
+index c8a95eafc69070552d132e5e465d016ef1aa9eea..8b12c36815a2a71fe8c795e8dcda8becaaba6291 100644
+--- a/kc-journey-map/lib/release-contract.test.mjs
++++ b/kc-journey-map/lib/release-contract.test.mjs
+@@ -1,4 +1,3 @@
+-// node --test lib/*.test.mjs
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+ import { buildReleaseContract, releaseContractRows } from './release-contract.mjs'
+@@ -23,8 +22,6 @@ const fixture = {
+ test('releaseContractRows scopes to one release only, in step/story order', () => {
+ 	const { rows } = releaseContractRows(fixture, 'r1')
+ 	assert.deepEqual(rows.map((r) => r.id), ['s-0', 's-1'])
+-	// Mutation this catches: filtering on step membership instead of story.release would
+-	// also pull in s-2, which belongs to r2 under the same step.
+ })
+ 
+ test('buildReleaseContract carries status, evidence and rule ids per story', () => {
+diff --git a/kc-journey-map/lib/render.mjs b/kc-journey-map/lib/render.mjs
+index 0912b957faaa3a8191dcc9334a774971c509de96..d57adbad95ae1d93a2666d6e7378ce1e7f7c0452 100644
+--- a/kc-journey-map/lib/render.mjs
++++ b/kc-journey-map/lib/render.mjs
+@@ -1,8 +1,3 @@
+-// Projects a journey file onto a tldraw room.
+-//
+-// The file in the repository is the source of truth; the room is a rendering of it.
+-// Nothing here reads the room back — that is `read.mjs`. Positions are computed from
+-// the model's order, never stored in the model, so a journey file stays diffable.
+ 
+ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+ 
+@@ -22,8 +17,7 @@ const LANE_W = 270
+ const GAP = 40
+ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
+ 
+-// Release stories are the units under discussion. Activity-level system/rule data spans
+-// their group once; it is shared context, not evidence that each story is implemented.
++// Shared activity rules are context, not proof that each story exists.
+ export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
+ 
+ export function buildJourneyBoard(model, { release = null, room = null } = {}) {
+@@ -146,8 +140,6 @@ export function releaseCoverage(model) {
+ 	})
+ }
+ 
+-// A board per release when the file has releases; one whole-journey board when it does
+-// not, so a map drawn before anyone has sliced it still renders.
+ const journeyBoardPages = (model, room) => {
+ 	const releases = model.releases ?? []
+ 	return releases.length
+@@ -155,8 +147,6 @@ const journeyBoardPages = (model, room) => {
+ 		: buildJourneyBoard(model, { room })
+ }
+ 
+-// Which projections a render draws is a choice made per call, never a property of the
+-// file — the same journey renders one way for a stand-up and another for a release review.
+ export const PROJECTIONS = {
+ 	'story-map': (model, room) => buildStoryMap(model, room),
+ 	'journey-board': journeyBoardPages,
+diff --git a/kc-journey-map/lib/storymap.mjs b/kc-journey-map/lib/storymap.mjs
+index 31a77887c8f6fb61827f9846e03ec39f9df9d350..2a509d2f00e8aa9931cf0de00da0138042ed60b3 100644
+--- a/kc-journey-map/lib/storymap.mjs
++++ b/kc-journey-map/lib/storymap.mjs
+@@ -10,8 +10,6 @@
+ // is one when the bands cut across all the columns. Bands scoped to a set of columns —
+ // which is what this drew before — cannot express a walking skeleton at all.
+ //
+-// The default story map shows status at story grain. Optional release boards and
+-// generated contracts provide detail from the same model.
+ 
+ import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus } from './records.mjs'
+ import { normalizeStory } from './model.mjs'
+@@ -165,8 +163,6 @@ export function buildStoryMap(model, room = null) {
+ 			bandTop += 40
+ 		}
+ 
+-		// The release label carries how many of its stories exist, computed from the model
+-		// on every render — never typed by hand, so it cannot drift from the stories below it.
+ 		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
+ 		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${existsCount}/${band.stories.length} exist` : ''}`.trim()
+ 		put.push({
+diff --git a/kc-journey-map/scripts/canvas-smoke.sh b/kc-journey-map/scripts/canvas-smoke.sh
+index bf3831d44d775bbdf8e305cc86cabe00d8dc974f..420c40b8967a9dac099a9f48aa02884c0b776598 100755
+--- a/kc-journey-map/scripts/canvas-smoke.sh
++++ b/kc-journey-map/scripts/canvas-smoke.sh
+@@ -1,11 +1,4 @@
+ #!/usr/bin/env bash
+-# Boots the canvas server, renders the worked example into a throwaway room, and asserts
+-# the document came back with the shapes the model produces.
+-#
+-# This is the check that answers "can somebody who installed this actually run it". The
+-# unit tests prove the model builds records; only booting the server and pushing them
+-# through the schema validator proves the records are accepted. No browser is involved —
+-# the client is not exercised here.
+ set -euo pipefail
+ 
+ cd "$(dirname "$0")/.."
+@@ -43,8 +36,6 @@ fi
+ export JOURNEY_API_PORT="$PORT"
+ curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server started but does not answer"; exit 1; }
+ 
+-# Every projection selected, so the smoke exercises the schema validator against all of
+-# them, not only the default one board.
+ PAGES="story-map,journey-board,function-map"
+ node lib/journey-render.mjs "$EXAMPLE" "$ROOM" --pages "$PAGES"
+ 
+diff --git a/kc-journey-map/server/rooms.ts b/kc-journey-map/server/rooms.ts
+index 196534182edcb8805a54efbeda944177ef3f1cbb..baacd58cc45060f37575dcb7384e81e53732addf 100644
+--- a/kc-journey-map/server/rooms.ts
++++ b/kc-journey-map/server/rooms.ts
+@@ -4,8 +4,7 @@ import { join } from 'path'
+ import { NodeSqliteWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync-core'
+ import { DatabaseSync } from 'node:sqlite'
+ 
+-// Room databases preserve native edits as well as generated journey records.
+-// Export or read back edits before deleting a room.
++// Export or read back native edits before deleting a room database.
+ const DIR = process.env.JOURNEY_ROOMS_DIR ?? './.rooms'
+ mkdirSync(DIR, { recursive: true })
+ 

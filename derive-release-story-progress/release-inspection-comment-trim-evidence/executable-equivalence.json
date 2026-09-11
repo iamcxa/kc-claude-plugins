@@ -1,0 +1,154 @@
+{
+  "instrument": "existing esbuild 0.28.2",
+  "options": {
+    "legalComments": "none",
+    "minifyWhitespace": true,
+    "minifySyntax": false,
+    "minifyIdentifiers": false,
+    "sourcemap": false
+  },
+  "files": [
+    {
+      "path": "kc-journey-map/lib/fixture.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "6a3215a0b4ef5572012025e23e7a2733c92b1724974b3e1bda1499c5f6a9fce7"
+    },
+    {
+      "path": "kc-journey-map/lib/funcmap.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "414431442b08a00e227ac60ab73d9d0d65698089d5b2c77070b16cf90d3a9ec2"
+    },
+    {
+      "path": "kc-journey-map/lib/funcmap.test.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "0918a193cf40088d50b092a3ae46f85c68b8ea350bc1f42554345ca46631cb2a"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-contract.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "519bc2ca715ec0a077e2b8f072fa4fc0d06ebc036d535e10abac59c5df301a36"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-example.test.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "cdf467c3d582383cec001f2ea05b6191c1bb4a2b8e356df9e240d6b540903691"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-lint.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "22fa72ca5d7e0ad72aa68e6788f13fb74440b468605a61ef3c84ae0da8778ddc"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-render.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "f38bd938e646c91a3a32269ff575044d84aca9c88c8fe1977f21068808678002"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-tldr.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "a2150d1785f8883d1ec8d8c4afc4d38231276b6838545ce08c77c613594e264c"
+    },
+    {
+      "path": "kc-journey-map/lib/lint.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "c76b6db62fe211e160d83b7ff1f4f5657b4956ddd866e65706f08c68fc4f9861"
+    },
+    {
+      "path": "kc-journey-map/lib/lint.test.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "ae0396c5a9c03a38a6e0f592bf270a71ef093baeff5de33fb2b3aec7076cfcdc"
+    },
+    {
+      "path": "kc-journey-map/lib/model.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "9b45487f6d30a1df73c0c1b00586415e3766840fbab8b6353acf166741c1648d"
+    },
+    {
+      "path": "kc-journey-map/lib/read.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "59577a7bd278d7fd53ebed7575c31e86c32c6c0d0376055556482afee13b2978"
+    },
+    {
+      "path": "kc-journey-map/lib/read.test.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "93d53e1a15bd3e7606d36ee69ba3526b49b07cf273f5c58e38a5253b196d7e04"
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "fd64b0e41db580a1c0f6d62893255311f8c6f874ef3599d25c3badd4e43422f0"
+    },
+    {
+      "path": "kc-journey-map/lib/release-contract.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "846286be02c1d974223bc4cc3ecfb87d0a2c43f0ea06cb8c92760b5176fe3d31"
+    },
+    {
+      "path": "kc-journey-map/lib/release-contract.test.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "ce595bf298db9c59a4b11ed3d0180bc13ab6f12dd619173d9edffd6fe811a89f"
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "68de52da3707b8f505887179699576ff81c7a19a3ce5302f308c8df26ae76f43"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "d9b128d098ddd3e99fd32e847bacb229a44976b6969751c35ddddd5e46ae25dc"
+    },
+    {
+      "path": "kc-journey-map/scripts/canvas-smoke.sh",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "shell_syntax": true,
+      "embedded_js_compiled_equal": true
+    },
+    {
+      "path": "kc-journey-map/server/rooms.ts",
+      "noncomment_lines_identical": true,
+      "inherited_comments_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "1efecc34610c90906fed22b946e65f8016e91e3512d9a23ccd09a8995acf638f"
+    }
+  ],
+  "instrument_negative": "Same prior in-memory 1-to-0 font-size mutation changes compiled output; no product mutation written",
+  "runtime_tests_run": 0
+}
