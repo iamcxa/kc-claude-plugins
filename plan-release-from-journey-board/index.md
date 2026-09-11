@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: S2
 sprint-readiness: ready
-started:
+started: 2026-09-11T05:56:22Z
 completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning
