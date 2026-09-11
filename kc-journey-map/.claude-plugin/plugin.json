@@ -1,0 +1,15 @@
+{
+  "name": "kc-journey-map",
+  "description": "Plan a user journey on an editable story map with horizontal release bands and YAML readback.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "journey-map",
+    "canvas",
+    "tldraw"
+  ]
+}

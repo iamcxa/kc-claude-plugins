@@ -54,6 +54,16 @@
         { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-team-ops\")].version" }
       ]
     },
+    "kc-journey-map": {
+      "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
+      "component": "kc-journey-map",
+      "extra-files": [
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-journey-map\")].version" }
+      ]
+    },
     "kc-pr-flow": {
       "release-type": "simple",
       "exclude-paths": ["docs/dev"],

@@ -1,0 +1,8 @@
+# Dev build artifacts
+dist/
+
+# Canvas dependencies — installed on first launch, never committed
+node_modules/
+
+# Local native state; export or read back edits before deleting rooms.
+.rooms/
