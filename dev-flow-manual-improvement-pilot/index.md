@@ -1,6 +1,6 @@
 ---
 title: "Pilot: one evidence-complete manual dev-flow improvement cycle"
-status: implementation
+status: validation
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
