@@ -1,0 +1,639 @@
+diff --git a/kc-journey-map/lib/doctor.mjs b/kc-journey-map/lib/doctor.mjs
+index 813ed9ff4dd5e14649090d7b3212bfe17a123c4b..45084c04600a8a6966426d212d2881f0a0616ae9 100644
+--- a/kc-journey-map/lib/doctor.mjs
++++ b/kc-journey-map/lib/doctor.mjs
+@@ -1,9 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/doctor.mjs
+-//
+-// Says why the canvas will not start, in the terms of the thing to go fix. Without it
+-// the failures are a Node built-in that "does not exist", a bare module-not-found, and
+-// a port bind error — none of which name what an adopter has to do.
+ 
+ import { connect } from 'node:net'
+ import { existsSync } from 'node:fs'
+@@ -30,10 +25,7 @@ else
+ if (existsSync(join(ROOT, 'node_modules', 'tldraw'))) ok('dependencies', 'installed')
+ else bad('dependencies', 'node_modules is missing or incomplete', `npm install --prefix ${ROOT}`)
+ 
+-// Connects rather than binds. Two bind probes each lied here: an IPv4 probe called
+-// *:3737 free because the dev client holds it over IPv6, and a wildcard probe called
+-// 127.0.0.1:5858 free because the doc API holds only the loopback address. Whether
+-// something already answers on the port is the question, and connecting asks it.
++// Bind probes can miss listeners using a different IPv4/IPv6 address.
+ const portFree = (port) =>
+ 	new Promise((resolve) => {
+ 		const socket = connect({ port, host: '127.0.0.1' })
+diff --git a/kc-journey-map/lib/fixture.mjs b/kc-journey-map/lib/fixture.mjs
+index 322552cb7a5388889e21a48a8da7ff3414d50189..fbeb9a6a1e376599020ce6f4e29fd8961b009f59 100644
+--- a/kc-journey-map/lib/fixture.mjs
++++ b/kc-journey-map/lib/fixture.mjs
+@@ -1,4 +1,3 @@
+-// Test fixture for story planning.
+ export const fixtureModel = {
+ 	journey: 'fixture',
+ 	persona: 'A person who has to do the thing.',
+diff --git a/kc-journey-map/lib/journey-export.mjs b/kc-journey-map/lib/journey-export.mjs
+index 28a900d4325ec34d8bd00cad63755dc35d95b55a..1d078807888ffa4ef6dad2992d269018b9c88b98 100644
+--- a/kc-journey-map/lib/journey-export.mjs
++++ b/kc-journey-map/lib/journey-export.mjs
+@@ -1,13 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-export.mjs <roomId> <out.png> [pageId]
+-//
+-// Exports with tldraw's own exporter rather than a screenshot: `toImage` captures the
+-// shapes' own bounds, so the whole board comes out at full resolution instead of
+-// whatever happened to be inside the viewport.
+-//
+-// It drives the already-open canvas through agent-browser, which is the only browser
+-// this repository automates. Without agent-browser, open the room and run the same
+-// `editor.toImage` call from the console.
+ 
+ import { execFileSync } from 'node:child_process'
+ import { writeFileSync } from 'node:fs'
+@@ -37,8 +28,6 @@ const script = `
+ })()
+ `
+ 
+-// The canvas has to finish connecting before the editor exists; a fixed sleep would
+-// either waste time or race, so this asks until it answers.
+ let payload
+ for (let attempt = 0; attempt < 12; attempt++) {
+ 	const raw = sh(['eval', script]).trim()
+diff --git a/kc-journey-map/lib/journey-read.mjs b/kc-journey-map/lib/journey-read.mjs
+index d4afb93c70db7fe589e358685ec70dc0063f3d16..15ec3f6e0caae2305348f3fe8d229d1cf2cda80c 100644
+--- a/kc-journey-map/lib/journey-read.mjs
++++ b/kc-journey-map/lib/journey-read.mjs
+@@ -1,14 +1,9 @@
+ #!/usr/bin/env node
+-// node lib/journey-read.mjs <journey.yaml> <roomId> [--write] [--out <path>]
+-//
+-// Without --write it only reports. With --write it applies the safe subset over the
+-// same file; add --out to save the result somewhere else and leave the original alone.
+ import { applyDiff, diffAgainstModel, loadModel, readRoom } from './read.mjs'
+ 
+ const argv = process.argv.slice(2)
+ const outIndex = argv.indexOf('--out')
+ const outPath = outIndex >= 0 ? argv[outIndex + 1] : undefined
+-// Guard the -1: without --out, `outIndex + 1` is 0 and would drop the first positional.
+ const outValueIndex = outIndex >= 0 ? outIndex + 1 : -1
+ const positional = argv.filter((a, i) => !a.startsWith('--') && i !== outValueIndex)
+ const [path, room] = positional
+diff --git a/kc-journey-map/lib/journey-render.mjs b/kc-journey-map/lib/journey-render.mjs
+index 63001db1102049fd5d5eb1b7c27efc3c618cdf83..79fd50e5ab5eccca8eb24d3a2522dd004321bee8 100644
+--- a/kc-journey-map/lib/journey-render.mjs
++++ b/kc-journey-map/lib/journey-render.mjs
+@@ -1,5 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-render.mjs <journey.yaml> [roomId]
+ import { renderToRoom } from './render.mjs'
+ const [path, room, ...extra] = process.argv.slice(2)
+ if (!path || path.startsWith('--') || room?.startsWith('--') || extra.length) {
+diff --git a/kc-journey-map/lib/journey-tldr.mjs b/kc-journey-map/lib/journey-tldr.mjs
+index 0b40ac1484e4fe0ef649780175e494314c85062a..03bfa18581aa71543c6c15c0cf43f9e128062616 100644
+--- a/kc-journey-map/lib/journey-tldr.mjs
++++ b/kc-journey-map/lib/journey-tldr.mjs
+@@ -1,10 +1,4 @@
+ #!/usr/bin/env node
+-// node lib/journey-tldr.mjs export <roomId> <out.tldr>
+-// node lib/journey-tldr.mjs import <in.tldr>  <roomId>
+-//
+-// Native tldraw files retain editable shapes and their metadata.
+-//
+-// Import writes the whole document. Anything already in the target room is replaced.
+ 
+ import { execFileSync } from 'node:child_process'
+ import { readFileSync, writeFileSync } from 'node:fs'
+@@ -17,8 +11,6 @@ if (mode === 'export') {
+ 	const sh = (args) => execFileSync('agent-browser', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+ 	sh(['open', `http://localhost:3737/?room=${a}`, '--viewport', '1400x900'])
+ 
+-	// serializeTldrawJson is bound to a live editor, so the export goes through the
+-	// browser. Ask until the canvas has finished connecting rather than sleeping blind.
+ 	let json
+ 	for (let attempt = 0; attempt < 12; attempt++) {
+ 		const raw = sh(['eval', 'window.serializeTldrawJson ? window.serializeTldrawJson() : Promise.resolve("")']).trim()
+@@ -45,8 +37,7 @@ if (mode === 'import') {
+ 		process.exit(1)
+ 	}
+ 
+-	// A .tldr's records and schema are exactly a TLStoreSnapshot, which loadSnapshot
+-	// takes, so the file goes in without tldraw having to be imported here.
++	// Import replaces the entire target document, including manually drawn content.
+ 	const snapshot = { store: Object.fromEntries(file.records.map((r) => [r.id, r])), schema: file.schema }
+ 	const res = await fetch(`${API}/doc?room=${b}`, {
+ 		method: 'PUT',
+diff --git a/kc-journey-map/lib/model.mjs b/kc-journey-map/lib/model.mjs
+index de66ef9a12183bb3881e9deda27fd371a614a1aa..1a9fe8eba54a15ba77f19e3c585a94344642fd2f 100644
+--- a/kc-journey-map/lib/model.mjs
++++ b/kc-journey-map/lib/model.mjs
+@@ -1,4 +1,3 @@
+-// Normalize the two supported story forms without changing their identity.
+ export const normalizeStory = (step, story, j) =>
+  typeof story === 'string'
+   ? { id: `${step.id}-${j}`, card: story, release: null }
+diff --git a/kc-journey-map/lib/read.mjs b/kc-journey-map/lib/read.mjs
+index 346338c197bc93bda2c217510a88fba0c2626f2c..0b1f20641d720bf0b9f905699f0d0ce14e919a71 100644
+--- a/kc-journey-map/lib/read.mjs
++++ b/kc-journey-map/lib/read.mjs
+@@ -1,4 +1,3 @@
+-// Reads wording, order, and release membership from a story-map canvas.
+ 
+ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+ 
+@@ -22,8 +21,7 @@ export async function readRoom({ room, api = API }) {
+ 
+ const byKind = (shapes, kind) => shapes.filter((s) => s.meta?.journey?.kind === kind)
+ 
+-// A node id appearing twice means a card was duplicated. tldraw copies meta verbatim, so
+-// the copy is indistinguishable from its original and neither is trusted.
++// tldraw duplicates metadata verbatim, so duplicated node IDs cannot be trusted.
+ function duplicatesOf(shapes) {
+ 	const seen = new Map()
+ 	for (const s of shapes) seen.set(s.meta.journey.nodeId, (seen.get(s.meta.journey.nodeId) ?? 0) + 1)
+@@ -36,8 +34,6 @@ const indexByNode = (shapes, dupes) =>
+ const orderOf = (map) =>
+ 	[...map.entries()].sort((a, b) => a[1].x - b[1].x).map(([id]) => id)
+ 
+-// Which column a shape sits under, measured as the share of its own width that overlaps
+-// each anchor. A card straddling two columns is reported rather than assigned.
+ function placeUnderColumn(shape, anchors) {
+ 	const scored = anchors
+ 		.map(({ nodeId, x }) => ({
+@@ -87,10 +83,6 @@ export function diffAgainstModel(shapes, model) {
+ 	const storyMoved = storyOrder.length && storyOrder.join() !== modelOrder.filter((id) => actBy.has(id)).join()
+ 	const reordered = storyMoved ? storyOrder : null
+ 
+-	// ── release membership ───────────────────────────────────────────────────────
+-	// Dragging a story across a release line is the planning gesture — it says this
+-	// belongs in a later release, or has been pulled into the first one. The lines are on
+-	// the canvas, so which band a story landed in is read from its y against them.
+ 	const lines = byKind(story, 'release-line').sort((a, b) => a.y - b.y)
+ 	const declaredReleases = (model.releases ?? []).map((r) => r.id)
+ 	const bandOf = (shape) => {
+@@ -116,8 +108,6 @@ export function diffAgainstModel(shapes, model) {
+ 		}
+ 	}
+ 
+-	// ── story priority ───────────────────────────────────────────────────────────
+-	// Priority runs top to bottom within a band, so only stories sharing a band compare.
+ 	const storiesReordered = []
+ 	for (const step of steps) {
+ 		const inStep = [...storyMeta.entries()].filter(([, m]) => m.step === step.id).map(([id]) => id)
+@@ -136,7 +126,6 @@ export function diffAgainstModel(shapes, model) {
+ 		}
+ 	}
+ 
+-	// ── cards nobody claimed ─────────────────────────────────────────────────────
+ 	const storyAnchors = [...actBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
+ 
+ 	const unclaimed = shapes
+@@ -154,9 +143,7 @@ export function diffAgainstModel(shapes, model) {
+ 	return { reordered, reworded, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
+ }
+ 
+-// `lineWidth: 0` and `flowCollectionPadding: false` keep the writer from reflowing lines it
+-// did not change. Without them a one-card reorder rewrites every wrapped string in the
+-// file, and the diff — the reason the journey lives in git at all — stops being readable.
++// Preserve untouched YAML wrapping when writing individual edits.
+ const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
+ 
+ const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
+@@ -188,8 +175,6 @@ export function applyDiff(path, diff, outPath = path) {
+ 		applied.push(`reworded ${id}.${field}`)
+ 	}
+ 
+-	// A story that changed release is rewritten in place; its position inside the band is
+-	// a separate report and applies on top.
+ 	for (const { id, step, now } of diff.releaseMoved) {
+ 		const node = findStep(steps, step)
+ 		const item = node?.get('stories')?.items.find((s) => s.get && s.get('id') === id)
+@@ -225,8 +210,6 @@ export function applyDiff(path, diff, outPath = path) {
+ 		applied.push(`reordered to ${diff.reordered.join(' -> ')}`)
+ 	}
+ 
+-	// A save-as is written even when nothing applied: a caller who asked for that file
+-	// should end up with it.
+ 	if (applied.length || outPath !== path) writeFileSync(outPath, doc.toString(WRITE_OPTS))
+ 	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null }
+ }
+diff --git a/kc-journey-map/lib/read.test.mjs b/kc-journey-map/lib/read.test.mjs
+index e5dcc8458fe669a9f2bb80450b4e80a013ea97df..0ff01092c1a410d2ec49e5f057b1193b5aadef39 100644
+--- a/kc-journey-map/lib/read.test.mjs
++++ b/kc-journey-map/lib/read.test.mjs
+@@ -1,7 +1,3 @@
+-// node --test lib/*.test.mjs
+-//
+-// Drives the reader against shapes the renderer actually produced, not hand-built ones,
+-// so a change in what the renderer tags is caught here rather than in a browser.
+ 
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+@@ -42,7 +38,6 @@ test('dragging a story up inside its band is a priority change', () => {
+ })
+ 
+ test('dragging a story across a release line is read as a release change', () => {
+-	// The planning gesture: this belongs in a later release, or has been pulled forward.
+ 	const shapes = rendered()
+ 	const line = shapes.filter((s) => s.meta?.journey?.kind === 'release-line').sort((a, b) => a.y - b.y)[0]
+ 	find(shapes, 'shape:sm-story-a-0').y = line.y + 50
+@@ -75,7 +70,6 @@ test('a card straddling two columns is reported, never guessed', () => {
+ 	assert.deepEqual(card.candidates.map((c) => c.step).sort(), ['b', 'c'])
+ })
+ 
+-// ── applying it back to the file ────────────────────────────────────────────────
+ 
+ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+ import { tmpdir } from 'node:os'
+@@ -108,8 +102,6 @@ test('a reworded story is rewritten in the file', () => {
+ })
+ 
+ test('a story written in object form is reworded too', () => {
+-	// Stories may be a bare string or {id, card}; they take different branches on the way
+-	// back into the file, and only the string one was covered.
+ 	const path = onDisk()
+ 	applyDiff(path, {
+ 		...clean,
+@@ -117,7 +109,5 @@ test('a story written in object form is reworded too', () => {
+ 	})
+ 	const after = readFileSync(path, 'utf8')
+ 	assert.match(after, /Watches it land/)
+-	// Rewriting the whole entry as a bare string would also satisfy the line above while
+-	// silently dropping the story's id, so the id is what the assertion is really for.
+ 	assert.match(after, /id: b-see/, 'the story lost its id and became a bare string')
+ })
+diff --git a/kc-journey-map/lib/records.mjs b/kc-journey-map/lib/records.mjs
+index 221f7bf25e4b77fa55a9fe786209596d05614e98..44b9a44fd3b6a3f0cfb3ad8c14694557b6aad357 100644
+--- a/kc-journey-map/lib/records.mjs
++++ b/kc-journey-map/lib/records.mjs
+@@ -1,15 +1,5 @@
+ import { getIndices } from '@tldraw/utils'
+ 
+-// Record factories for agent-authored story maps.
+-//
+-// Every default here was read off a shape the tldraw editor created in a browser,
+-// not written from the docs. That matters for one prop in particular: the editor sets
+-// a note's `fontSizeAdjustment` to 1, and a note carrying 0 passes schema validation
+-// and then renders its label at font-size 0px — a blank sticky. The server's PATCH
+-// validator cannot catch it, so the fix lives here.
+-//
+-// A 12-word card at size `m` wraps and shrinks to fit a 200x200 note with growY 0
+-// (verified in the browser); longer text has not been tried.
+ 
+ export const richText = (text) => ({
+ 	type: 'doc',
+@@ -43,6 +33,7 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
+ 			verticalAlign: 'middle',
+ 			labelColor: 'black',
+ 			growY: 0,
++			// Zero passes schema validation but renders invisible note text.
+ 			fontSizeAdjustment: 1,
+ 			url: '',
+ 			scale: 1,
+@@ -76,12 +67,10 @@ const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', a
+ 	},
+ })
+ 
+-// A release boundary: a thin solid bar drawn across the journey.
+ export function releaseLine({ id, x, y, w, index = 'a1', parentId = 'page:page', color = 'blue', thickness = 5 }) {
+ 	return geo({ id, x, y, w, h: thickness, index, parentId, color, fill: 'solid' })
+ }
+ 
+-// An outlined box for a slice name, an ownership band, or a status card.
+ export function label({
+ 	id,
+ 	text,
+@@ -100,9 +89,7 @@ export function label({
+ 	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
+ }
+ 
+-// A geo box does not grow to fit its label — text past the bottom edge is simply drawn
+-// outside the box. These numbers were measured in the browser on a 300px-wide box at
+-// size 's': 18px draw font, 24px line box, about 26 characters before it wraps.
++// Geo labels do not auto-grow; these text metrics were measured at 300px, size s.
+ const LINE_H = { s: 24, m: 32 }
+ const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
+ 
+@@ -114,17 +101,11 @@ export function fitHeight(text, width, size = 's', padding = 40) {
+ 	return Math.ceil(lines * LINE_H[size] + padding)
+ }
+ 
+-// Ascending fractional indexes, from tldraw's own generator.
+-//
+-// A hand-rolled two-character run looked right and was not: the leading letter encodes
+-// how many characters the rest must have, so `a1` validates and `b1` does not — it needs
+-// `b11`. A run past 61 shapes produced keys the schema rejected, and a test that checked
+-// only uniqueness and order passed the whole way.
++// Fractional-index keys encode length; hand-built sequences can fail schema validation.
+ export function indexes(n) {
+ 	return getIndices(n)
+ }
+ 
+-// The story map uses the default page so opening the room lands on its content.
+ export function page({ id, name, index = 'a1' }) {
+ 	return { id, typeName: 'page', name, index, meta: {} }
+ }
+diff --git a/kc-journey-map/lib/render.mjs b/kc-journey-map/lib/render.mjs
+index c84f55ebaa6ce37f246d8f1e2d1dc24324469079..f47247c034322731840451a173f927482a7da3a3 100644
+--- a/kc-journey-map/lib/render.mjs
++++ b/kc-journey-map/lib/render.mjs
+@@ -1,4 +1,3 @@
+-// Projects journey YAML onto a persisted story-map canvas.
+ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+ import { readFileSync } from 'node:fs'
+ import { parse } from 'yaml'
+@@ -8,7 +7,6 @@ export function loadJourney(path) {
+ 	return parse(readFileSync(path, 'utf8'))
+ }
+ 
+-// Report which activities each declared release covers.
+ export function releaseCoverage(model) {
+ 	const steps = model.steps ?? []
+ 	return (model.releases ?? []).map((r) => {
+@@ -17,10 +15,7 @@ export function releaseCoverage(model) {
+ 	})
+ }
+ 
+-// Render is a reconcile, not an append: shapes this renderer owns that the model no
+-// longer produces are removed. Shapes a person drew by hand carry no `meta.journey`
+-// and are never touched — the room is where a workshop happens, not only where a file
+-// is displayed.
++// Untagged shapes belong to the user and must survive redraw.
+ export async function renderToRoom({ path, room, api = API }) {
+ 	const model = loadJourney(path)
+ 	const roomId = room ?? model.journey
+@@ -29,7 +24,7 @@ export async function renderToRoom({ path, room, api = API }) {
+ 	const wanted = new Set(put.map((r) => r.id))
+ 
+ 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
+-	// Only shapes are reconciled. Deleting a page would take a person's own pages with it.
++	// Preserve manually created pages.
+ 	const remove = (current.snapshot?.documents ?? [])
+ 		.map((d) => d.state)
+ 		.filter((r) => r.typeName === 'shape' && r.meta?.journey && !wanted.has(r.id))
+diff --git a/kc-journey-map/lib/storymap.mjs b/kc-journey-map/lib/storymap.mjs
+index 02127c302d9a4dfb12e47b0272e27dc758f0ba9e..cd136760393896decd5973f5f8750a2b8ae6cc9d 100644
+--- a/kc-journey-map/lib/storymap.mjs
++++ b/kc-journey-map/lib/storymap.mjs
+@@ -1,15 +1,3 @@
+-// The story-map projection: the page people talk over.
+-//
+-// Jeff Patton's shape: blue for the persona and for release boundaries, green for the
+-// backbone of activities, yellow for the stories beneath them, small labels for ownership
+-// and for evidence status. The backbone reads left to right as a narrative.
+-//
+-// A release is a horizontal band across every activity, named at the left margin, with a
+-// full-width line above it. That is what makes the map plannable: the first band has to be
+-// a thin line through the whole backbone that still works, and you can only see whether it
+-// is one when the bands cut across all the columns. Bands scoped to a set of columns —
+-// which is what this drew before — cannot express a walking skeleton at all.
+-//
+ import { fitHeight, indexes, label, note, page, releaseLine } from './records.mjs'
+ import { normalizeStory } from './model.mjs'
+ 
+@@ -21,12 +9,8 @@ const LEFT_W = 250
+ const Y_PERSONA = 40
+ const BAND_H = 60
+ const STORY_PITCH = 250
+-// The Now row's height depends on how much pain a step carries, so every row below it
+-// is placed relative to the tallest thing above rather than at a fixed offset.
+ const GAP = 40
+ 
+-// tldraw's default page, so the map people should land on is the one they land on and
+-// no empty 'Page 1' is left beside it.
+ export const STORY_PAGE_ID = 'page:page'
+ 
+ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
+@@ -51,8 +35,6 @@ export function buildStoryMap(model) {
+ 		0,
+ 		...nowTexts.map((t) => fitHeight(t, 220))
+ 	)
+-	// A band is as tall as the wordiest band in the row, so a long owner note cannot
+-	// spill over its neighbour.
+ 	const bandH = Math.max(
+ 		BAND_H,
+ 		...(model.ownership ?? []).map((b) => fitHeight(`${b.owner} — ${b.note ?? ''}`.trim(), (steps.length ? PITCH : 240)))
+@@ -81,8 +63,6 @@ export function buildStoryMap(model) {
+ 		})
+ 	}
+ 
+-	// The status quo, when the file records one. CL's rule, kept: an unfinished
+-	// implementation of the thing being proposed is not the user's current world.
+ 	;(model.now ?? []).forEach((item, i) => {
+ 		const text = nowTexts[i]
+ 		put.push({
+@@ -102,8 +82,6 @@ export function buildStoryMap(model) {
+ 		})
+ 	})
+ 
+-	// One sentence naming what is true when the whole loop works, read above the
+-	// backbone it sits over rather than folded into the persona note it is not part of.
+ 	if (model.one_journey) {
+ 		put.push({
+ 			...label({
+@@ -140,12 +118,9 @@ export function buildStoryMap(model) {
+ 		})
+ 	})
+ 
+-	// ── release bands ────────────────────────────────────────────────────────────
+ 	const releases = model.releases ?? []
+ 	const all = steps.flatMap((step) => (step.stories ?? []).map((story, j) => ({ step, ...normalizeStory(step, story, j) })))
+ 
+-	// A story nobody has placed is drawn in a band of its own rather than dropped: where it
+-	// belongs is a decision someone still owes, and a silent omission hides that.
+ 	const bands = [
+ 		...releases.map((r) => ({ ...r, stories: all.filter((s) => s.release === r.id) })),
+ 		{ id: null, name: 'UNASSIGNED', goal: 'No release decided yet.', stories: all.filter((s) => !s.release || !releases.some((r) => r.id === s.release)) },
+@@ -179,7 +154,6 @@ export function buildStoryMap(model) {
+ 			meta: tag(band.id ?? 'unassigned', 'release-label'),
+ 		})
+ 
+-		// Priority runs top to bottom inside a band, per column.
+ 		const perColumn = new Map()
+ 		for (const story of band.stories) {
+ 			const list = perColumn.get(story.step.id) ?? []
+diff --git a/kc-journey-map/lib/storymap.test.mjs b/kc-journey-map/lib/storymap.test.mjs
+index 457dc898461181f99aa73e3a1d04f01ad57c36fc..77ef3bc43d70f64b048860d90b3f6e0244862648 100644
+--- a/kc-journey-map/lib/storymap.test.mjs
++++ b/kc-journey-map/lib/storymap.test.mjs
+@@ -1,5 +1,3 @@
+-// node --test lib/*.test.mjs
+-//
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+ import { buildStoryMap } from './storymap.mjs'
+@@ -28,8 +26,6 @@ const kindOf = (put, kind) => put.filter((r) => r.meta?.journey?.kind === kind)
+ const byId = (put, id) => put.find((r) => r.id === id)
+ 
+ test('a story is drawn in its own release band, not its declaring order', () => {
+-	// a-0 is in release 1 and a-1 in release 2, so a-1 sits below the line even though it
+-	// is second in the same activity's list.
+ 	const put = buildStoryMap(model)
+ 	const line = kindOf(put, 'release-line')[0]
+ 	assert.ok(byId(put, 'shape:sm-story-a-0').y < line.y, 'a release-1 story is below the first line')
+@@ -37,7 +33,6 @@ test('a story is drawn in its own release band, not its declaring order', () =>
+ })
+ 
+ test('a release line spans every activity, not a range of them', () => {
+-	// A band scoped to some columns cannot express a walking skeleton; that was the defect.
+ 	const put = buildStoryMap(model)
+ 	const line = kindOf(put, 'release-line')[0]
+ 	const activities = kindOf(put, 'activity')
+@@ -67,16 +62,12 @@ test('bands do not overlap', () => {
+ 
+ 
+ test('no shape carries a note fontSizeAdjustment of 0', () => {
+-	// A zero passes schema validation and renders the label at font-size 0px.
+ 	for (const r of buildStoryMap(model)) {
+ 		if (r.type === 'note') assert.equal(r.props.fontSizeAdjustment, 1, `${r.id} would render blank`)
+ 	}
+ })
+ 
+ test('a map past the 61st shape still gets valid ordered unique indexes', () => {
+-	// Sized to emit more than 61 shapes on one page, which is where a hand-rolled run
+-	// started producing keys the schema rejects. A nine-activity map emits 47 and would
+-	// have passed either way.
+ 	const steps = Array.from({ length: 16 }, (_, i) => ({ id: `s${i}`, card: `Step ${i}`, stories: ['a', 'b', 'c', 'd'] }))
+ 	const shapes = buildStoryMap({ journey: 'big', steps, slices: [{ id: 'f', outcome: 'x' }] }).filter(
+ 		(r) => r.typeName === 'shape'
+@@ -86,8 +77,6 @@ test('a map past the 61st shape still gets valid ordered unique indexes', () =>
+ 	assert.equal(new Set(ix).size, ix.length, 'two shapes share an index')
+ 	assert.deepEqual(ix, [...ix].sort(), 'indexes are not in ascending order')
+ 
+-	// Unique and ordered is not the same as valid: the leading letter encodes how long the
+-	// rest must be, and a run that looked fine produced keys the schema rejected at 62.
+ 	const schema = createTLSchema()
+ 	for (const shape of shapes) {
+ 		assert.doesNotThrow(() => schema.types.shape.validate(shape), `${shape.id} carries an index the schema rejects`)
+diff --git a/kc-journey-map/scripts/canvas-smoke.sh b/kc-journey-map/scripts/canvas-smoke.sh
+index 9278eb217119959271e0ff5bc644873a0cec6988..cb7b9df1508ffe6aa20457ca58b42781382f1685 100755
+--- a/kc-journey-map/scripts/canvas-smoke.sh
++++ b/kc-journey-map/scripts/canvas-smoke.sh
+@@ -1,11 +1,8 @@
+ #!/usr/bin/env bash
+-# Boots an isolated document server and exercises this layer's persisted records.
+ set -euo pipefail
+ 
+ cd "$(dirname "$0")/.."
+ 
+-# The server picks its own port and reports it. Choosing one here first raced with the
+-# probe socket's own close, and on a developer's machine 5858 is usually taken anyway.
+ export JOURNEY_API_PORT="${JOURNEY_API_PORT:-0}"
+ ROOM="smoke-$$"
+ ROOMS_DIR="$(mktemp -d)"
+@@ -17,9 +14,7 @@ cleanup() {
+ }
+ trap cleanup EXIT
+ 
+-# Waiting for /health alone is not enough: if the bind fails, some other canvas already
+-# listening on that port answers happily and the whole check passes without this server
+-# ever having started. The server's own startup line is the identity assertion.
++# Use this process's startup log; a shared-port health check can hit another canvas.
+ LOG="$ROOMS_DIR/server.log"
+ JOURNEY_ROOMS_DIR="$ROOMS_DIR" npx tsx ./server/canvas-server.ts >"$LOG" 2>&1 &
+ SERVER_PID=$!
+@@ -39,13 +34,8 @@ curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "FAIL: server star
+ 
+ node lib/journey-render.mjs "$EXAMPLE" "$ROOM"
+ 
+-# The renderer reports what it sent; this reads back what the server kept, so a record
+-# the validator silently dropped would show up as a count mismatch rather than a pass.
+ node - "$ROOM" "$PORT" "$EXAMPLE" <<'NODE'
+ const [room, port, example] = process.argv.slice(2)
+-// Expected shapes and pages both come from the model, so adding a page is not a change
+-// this check has to be told about. Hard-coding the page list broke it the first time a
+-// third page arrived.
+ const { loadJourney } = await import('./lib/render.mjs')
+ const { buildStoryMap } = await import('./lib/storymap.mjs')
+ 
+@@ -74,7 +64,6 @@ if (pages.length !== 1) {
+ console.log(`ok  ${expected.size} shapes across ${pages.length} pages: ${pages.join(', ')}`)
+ NODE
+ 
+-# Reading the freshly rendered room back must report no drift, or the two halves disagree.
+ DRIFT=$(node lib/journey-read.mjs "$EXAMPLE" "$ROOM" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);const n=Object.values(d).filter(v=>Array.isArray(v)?v.length:v).length;console.log(n)})')
+ [ "$DRIFT" = "0" ] || { echo "FAIL: a freshly rendered room reports drift"; exit 1; }
+ 
+diff --git a/kc-journey-map/server/canvas-server.ts b/kc-journey-map/server/canvas-server.ts
+index 2fc8245c59d4222f3505ccfc4ff3ecb7df4e7656..6ace7e3a639d6d32f5405bcc407143e8a4521fcb 100644
+--- a/kc-journey-map/server/canvas-server.ts
++++ b/kc-journey-map/server/canvas-server.ts
+@@ -5,12 +5,10 @@ import type { RawData } from 'ws'
+ import { createTLSchema } from '@tldraw/tlschema'
+ import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
+ 
+-// Overridable so a check can run its own server on its own port instead of silently
+-// talking to whichever canvas the developer already had open.
++// Separate ports keep checks from mutating another running canvas.
+ const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
+ const DEFAULT_ROOM = 'default'
+ 
+-// Validate PATCH records before writing so malformed client input receives detailed HTTP 400 diagnostics.
+ const schema = createTLSchema()
+ 
+ function validateRecord(record: any): string | null {
+@@ -40,7 +38,6 @@ app.register(async (app) => {
+ 		const roomId = (req.params as any).roomId as string
+ 		const sessionId = (req.query as any)?.['sessionId'] as string
+ 
+-		// Messages that arrive before the room finishes loading are collected and replayed.
+ 		const caughtMessages: RawData[] = []
+ 		const collect = (message: RawData) => caughtMessages.push(message)
+ 		socket.on('message', collect)
+@@ -60,7 +57,6 @@ app.register(async (app) => {
+ 		active: activeRooms(),
+ 	}))
+ 
+-	// Whole-document snapshot: {clock, documents:[{state, lastChangedClock}], schema, tombstones}
+ 	app.get('/doc', async (req) => {
+ 		const roomId = roomIdOf(req)
+ 		return { roomId, snapshot: makeOrLoadRoom(roomId).getCurrentSnapshot() }
+@@ -87,7 +83,6 @@ app.register(async (app) => {
+ 		return { roomId, put: put.length, removed: remove.length, clock: room.getCurrentDocumentClock() }
+ 	})
+ 
+-	// Whole-document replace. Every page not in the snapshot is dropped.
+ 	app.put('/doc', async (req, res) => {
+ 		const roomId = roomIdOf(req)
+ 		const body = req.body as any
+diff --git a/kc-journey-map/server/client/App.tsx b/kc-journey-map/server/client/App.tsx
+index 0ad5ccdefd7effb61334263047e572b5b1260c49..4779986f492af52576127eae5ed227486cdee0bd 100644
+--- a/kc-journey-map/server/client/App.tsx
++++ b/kc-journey-map/server/client/App.tsx
+@@ -5,8 +5,6 @@ import 'tldraw/tldraw.css'
+ 
+ const SERVER_URL = `http://localhost:5858`
+ 
+-// Canvases support notes, frames and lines. Image upload is deliberately absent — there is
+-// no blob endpoint on the server, so a paste would fail late instead of here.
+ const noAssets: TLAssetStore = {
+ 	async upload() {
+ 		throw new Error('This canvas has no asset storage. Use notes and shapes, not images.')
+@@ -28,13 +26,9 @@ export default function App() {
+ 		<div style={{ position: 'fixed', inset: 0 }}>
+ 			<Tldraw
+ 				store={store}
+-				// Puts the camera and page in the URL as ?d=..., so a screenshot run can be
+-				// pointed at one page of one map.
+ 				deepLinks
+ 				onMount={(editor) => {
+ 					;(window as any).editor = editor
+-					// tldraw's own file format, so a board can leave here and be opened in any
+-					// tldraw — and come back with its meta intact.
+ 					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
+ 				}}
+ 			/>
+diff --git a/kc-journey-map/server/rooms.ts b/kc-journey-map/server/rooms.ts
+index 4b2627595da4ddc8eeaff3baad13c53a0d93cfec..9de86454fbdb349c4a97776d9419e731f4f0a1d7 100644
+--- a/kc-journey-map/server/rooms.ts
++++ b/kc-journey-map/server/rooms.ts
+@@ -24,8 +24,7 @@ export function makeOrLoadRoom(roomId: string): TLSocketRoom<any, void> {
+ 	const sql = new NodeSqliteWrapper(db)
+ 	const storage = new SQLiteSyncStorage({ sql })
+ 
+-	// The room is kept open after the last socket leaves. A PATCH must be able to reach
+-	// a room nobody has open, and reopening on every request would drop the sync clock.
++	// Keep rooms available for PATCH requests without connected browser sessions.
+ 	const room = new TLSocketRoom({ storage })
+ 
+ 	rooms.set(roomId, { room, db })

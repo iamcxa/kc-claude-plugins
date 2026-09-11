@@ -1,0 +1,150 @@
+{
+  "base_sha": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+  "candidate_tree": "d6a0ff4ac49e6a2fca2ebc070259dd89b5c76c1b",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-planning",
+  "branch": "codex/journey-planning",
+  "proposed_subject": "refactor(kc-journey-map): trim planning canvas comments",
+  "files": [
+    {
+      "path": "kc-journey-map/lib/doctor.mjs",
+      "added": 1,
+      "deleted": 9,
+      "sha256": "457cd610330c65f1a42f044a589a917ce7208aa18ac5d5fbf042afaae490a9e7"
+    },
+    {
+      "path": "kc-journey-map/lib/fixture.mjs",
+      "added": 0,
+      "deleted": 1,
+      "sha256": "99a6ca6eb8e78dbcc439c794114cea2c902902e54538046eb35529d6fb9bf132"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-export.mjs",
+      "added": 0,
+      "deleted": 11,
+      "sha256": "9a1ec42313aacdad63d1e66e8242dced1ea962c18dc7a3b6c27b35e5f50c60f4"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-read.mjs",
+      "added": 0,
+      "deleted": 5,
+      "sha256": "fc76eeb2314394702156311ff4b0da09fa091fadbde03c2098ccbc709c578104"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-render.mjs",
+      "added": 0,
+      "deleted": 1,
+      "sha256": "af6a075a505f66b637cb1b4a7fef4a200792f68de6f186bd00717923580d4df7"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-tldr.mjs",
+      "added": 1,
+      "deleted": 10,
+      "sha256": "d89ac5f636cf6f5fbd934b4e30035364b4afc7d0f6d1e71def517a8eebf502c3"
+    },
+    {
+      "path": "kc-journey-map/lib/model.mjs",
+      "added": 0,
+      "deleted": 1,
+      "sha256": "44b495f30563038a6632eeeb5f81dd23293c0faea5ad9f20245a1dcf70872abd"
+    },
+    {
+      "path": "kc-journey-map/lib/read.mjs",
+      "added": 2,
+      "deleted": 19,
+      "sha256": "ead93c0831321840507755ab6f59d240d64e885bceb28d0762ce25eeef1d4370"
+    },
+    {
+      "path": "kc-journey-map/lib/read.test.mjs",
+      "added": 0,
+      "deleted": 10,
+      "sha256": "b4484ddb211b694157a02b73e355c5575dec251f04041dabacc28606461fc280"
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "added": 3,
+      "deleted": 22,
+      "sha256": "ca6085d48f2516ac37dcbdb9f77af51eb51569a70218b70a07fec7dd7b223e71"
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "added": 2,
+      "deleted": 7,
+      "sha256": "c1b495c363bbb439fe6a0e25ad68c37dda689d6d38b5232ef70e7890ea4a33bc"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "added": 0,
+      "deleted": 26,
+      "sha256": "ee1efb4e13af331dbe3da2d0586f29c15882565a9c5afb9814ddc6b1517ebbf8"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.test.mjs",
+      "added": 0,
+      "deleted": 11,
+      "sha256": "c488d65d955fdf55bbaeca4091f17c538fba3b8c7119781d6c9a9089a6cf2407"
+    },
+    {
+      "path": "kc-journey-map/scripts/canvas-smoke.sh",
+      "added": 1,
+      "deleted": 12,
+      "sha256": "d9fc0e44cc2c056c812885a8af6303a0855a8ed55f4d7bad3fd8ef6d48c84d4c"
+    },
+    {
+      "path": "kc-journey-map/server/canvas-server.ts",
+      "added": 1,
+      "deleted": 6,
+      "sha256": "7c273d95dd27e418e082a17f8f6f0361669815ad295d22503c678b2e2b6d9c0b"
+    },
+    {
+      "path": "kc-journey-map/server/client/App.tsx",
+      "added": 0,
+      "deleted": 6,
+      "sha256": "d15513d04b78febcee627f2d43c5e3826fc1004abf71478b9a7dc80fd59cf9c6"
+    },
+    {
+      "path": "kc-journey-map/server/rooms.ts",
+      "added": 1,
+      "deleted": 2,
+      "sha256": "b138cdbc6e1bf20787072a7d4ca66df4ab578aa0c8269b32a4e9325a669c8299"
+    }
+  ],
+  "added": 12,
+  "deleted": 159,
+  "patch_sha256": "1a0f9d6854f136121881f4fbb4b9bb57cfde4f8666d27dd0790ba30946ffe0f0",
+  "sibling_overlap": [
+    {
+      "pr": 416,
+      "head": "818260a8c14b504dae8d3989ba9c710226255b74",
+      "overlapping_paths": [
+        "kc-journey-map/lib/doctor.mjs",
+        "kc-journey-map/lib/fixture.mjs",
+        "kc-journey-map/lib/journey-render.mjs",
+        "kc-journey-map/lib/journey-tldr.mjs",
+        "kc-journey-map/lib/model.mjs",
+        "kc-journey-map/lib/read.mjs",
+        "kc-journey-map/lib/read.test.mjs",
+        "kc-journey-map/lib/records.mjs",
+        "kc-journey-map/lib/render.mjs",
+        "kc-journey-map/lib/storymap.mjs",
+        "kc-journey-map/lib/storymap.test.mjs",
+        "kc-journey-map/scripts/canvas-smoke.sh",
+        "kc-journey-map/server/client/App.tsx",
+        "kc-journey-map/server/rooms.ts"
+      ],
+      "note": "Read-only overlap inventory; propagation/restack and conflict resolution not attempted."
+    },
+    {
+      "pr": 417,
+      "head": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+      "overlapping_paths": [
+        "kc-journey-map/lib/records.mjs",
+        "kc-journey-map/lib/render.mjs",
+        "kc-journey-map/lib/storymap.mjs"
+      ],
+      "note": "Read-only overlap inventory; propagation/restack and conflict resolution not attempted."
+    }
+  ],
+  "pending_ci_file_sha256": "bf12382df016eca71c2757a040167fad7b6855ad4eacb3bda1d69a2470d7f5ba",
+  "product_commit": "not created",
+  "real_index": "unstaged"
+}

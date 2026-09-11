@@ -567,3 +567,14 @@ Exactly three authorized local product commits are complete. The full native-sta
 ### Summary
 
 The bounded CI reader bootstrap correction is prepared, uncommitted, with actual missing/present-reader proof and explicit hosted-verification limits. First Officer owns the next exact local-commit authority.
+
+## Stage Report: implementation (cycle 8)
+
+- DONE: Trim only PR415 descriptive comments to the Captain-approved standard, preserving indispensable library/data-safety/licence facts and all executable behavior.
+  Approval provenance: Kent raised excess PR415 comments and approved the specified trim standard with **好**. Removed method/history/tutorial and adjacent-code/test narration; retained concise library/data-safety warnings and exact MIT attribution. Same metric: 164/1,428 comment/total lines → 17/1,281; 17 files, +12/-159. [Measured scope and retained reasons](planning-comment-trim-evidence/README.md).
+- DONE: Prove the exact comment-only delta, measure before/after and retained reasons, preserve sibling/CI work, and prepare a compact uncommitted exact-file packet.
+  Exact noncomment lines and existing esbuild compiled output match; shell/heredoc comparison and syntax pass. In-memory executable mutation changes compiler output; no runtime suite/install/reviewer run. Base `0d69be164ccdcd1b3509f3577d6bd03a468f8f36`, candidate tree `d6a0ff4ac49e6a2fca2ebc070259dd89b5c76c1b`; [manifest](planning-comment-trim-evidence/manifest.json), [equivalence proof](planning-comment-trim-evidence/executable-equivalence.json), [pending local-commit packet](planning-comment-trim-evidence/local-commit-review.md). Read-only sibling overlap is 14 paths with PR416 and 3 with PR417; no propagation/restack attempted. The separate pending CI patch hash remains unchanged. Published candidates/bodies, original root, source/rooms, old evidence and AC-1..AC-5 executable behavior are preserved; no fresh runtime PASS is claimed.
+
+### Summary
+
+The authorized PR415 comment-only draft is concrete and uncommitted, with measured reduction, retained reasons and executable-equivalence proof. Captain local-commit authority is next; sibling restacking and the separate CI repair remain pending.

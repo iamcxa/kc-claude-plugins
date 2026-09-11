@@ -1,0 +1,119 @@
+{
+  "instrument": "existing esbuild 0.28.2",
+  "options": {
+    "legalComments": "none",
+    "minifyWhitespace": true,
+    "minifySyntax": false,
+    "minifyIdentifiers": false,
+    "sourcemap": false
+  },
+  "kind": "in-memory executable mutation falsifier plus exact comment-only comparison",
+  "files": [
+    {
+      "path": "kc-journey-map/lib/doctor.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "75109010c4bf74e31fe5fcd994a19432be6dbc0f421ced5cfc8ee8ef9646e9f7"
+    },
+    {
+      "path": "kc-journey-map/lib/fixture.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "5942546be9e8aeef0a6bf3b553581842763aaabd20d1afb74107d3b4f6736936"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-export.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "60819acd93f94437a9bdbfe322bcb477476e0a71105882cf9fe4de5f6402001c"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-read.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "f58beaac68d20641823f7822d873269aeebc5a42b1847a1a10fefe688f0fdada"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-render.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "00eac300729ff6b8e405d4305bc14cd9f64847ca049c0a81dcd36cc5e33c5fde"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-tldr.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "a2150d1785f8883d1ec8d8c4afc4d38231276b6838545ce08c77c613594e264c"
+    },
+    {
+      "path": "kc-journey-map/lib/model.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "02476b6d7a73bd6a483cd43d7cd3dcf370065b01dea14f2583eb18f2ea0c60c8"
+    },
+    {
+      "path": "kc-journey-map/lib/read.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "ad3b1b0c4ebd4489096bef74a80e3f31eb5229d3e1c5a6978cf62681b29b5b37"
+    },
+    {
+      "path": "kc-journey-map/lib/read.test.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "15c5066301af8371f145133e630f07c73994773162411ba0753145e7b54310f4"
+    },
+    {
+      "path": "kc-journey-map/lib/records.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "65ee20d000483b8952fe150ea3a0b37c1899984237e0e0b8589d9f317f368386"
+    },
+    {
+      "path": "kc-journey-map/lib/render.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "a2c054dac2cf3ebc403f78270c9d48a1218872ca35f00092046a3672382e1010"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "cc53dfcb867d6e9302121bb644ddf444fb6b9b1fc13621bc896817c3cd62fd94"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.test.mjs",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "0946d8d732a4d3abc10a9ef2270ad8516b7259d6ddb1f2c5a35c8767281fd87f"
+    },
+    {
+      "path": "kc-journey-map/server/canvas-server.ts",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "ee6df1129f992291b1bf548e9c57b383c38068da355d4fa66ba17df57234b26f"
+    },
+    {
+      "path": "kc-journey-map/server/client/App.tsx",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "a4c4100dd8ab133fdb43e90cd8d3912adb9487286072c115ae489b957d7a6bba"
+    },
+    {
+      "path": "kc-journey-map/server/rooms.ts",
+      "noncomment_lines_identical": true,
+      "compiled_output_identical": true,
+      "compiled_sha256": "1efecc34610c90906fed22b946e65f8016e91e3512d9a23ccd09a8995acf638f"
+    },
+    {
+      "path": "kc-journey-map/scripts/canvas-smoke.sh",
+      "noncomment_lines_identical": true,
+      "shell_syntax": true,
+      "embedded_js_compiled_equal": true,
+      "noncomment_sha256": "54e9204a58d67095b60728c78ea8980241adf2e817603fd9658d101738153b02"
+    }
+  ],
+  "instrument_negative": "Changing fontSizeAdjustment 1 to 0 in memory changes compiled output; no product mutation written",
+  "note": "Initial non-minified output retained a moved property comment; whitespace-only compiler normalization removes comments without syntax/identifier minification.",
+  "runtime_tests_run": 0
+}
