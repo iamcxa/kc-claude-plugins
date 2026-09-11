@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-09-11T08:15:20.873714+00:00",
+  "authority": "Kent reported \u5408\u4f75\u4e86; state-only delivery bookkeeping",
+  "pr": "https://github.com/iamcxa/kc-claude-plugins/pull/421",
+  "product_merge_commit": "790278b7165682bfae8b0e61e091b40989328a16",
+  "reviewed_head": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+  "merged_at": "2026-09-11T08:13:57Z",
+  "state": "MERGED",
+  "snapshot_records": [
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "view",
+        "421",
+        "--repo",
+        "iamcxa/kc-claude-plugins",
+        "--json",
+        "number,url,title,state,isDraft,headRefOid,baseRefName,mergedAt,mergeCommit,files,additions,deletions,statusCheckRollup"
+      ],
+      "stdout": "{\"additions\":48,\"baseRefName\":\"main\",\"deletions\":2,\"files\":[{\"path\":\"kc-dev-flow/scripts/surface-map-check.py\",\"additions\":1,\"deletions\":1,\"changeType\":\"MODIFIED\"},{\"path\":\"scripts/kc-dev-flow-contract-test.py\",\"additions\":47,\"deletions\":1,\"changeType\":\"MODIFIED\"}],\"headRefOid\":\"715f8871ee33e7d42e3f22b6b346ac3a3e05938a\",\"isDraft\":false,\"mergeCommit\":{\"oid\":\"790278b7165682bfae8b0e61e091b40989328a16\"},\"mergedAt\":\"2026-09-11T08:13:57Z\",\"number\":421,\"state\":\"MERGED\",\"statusCheckRollup\":[{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:10:41Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888075/job/103194435714\",\"name\":\"multi-profile route gate (live Spacedock)\",\"startedAt\":\"2026-09-11T08:10:34Z\",\"status\":\"COMPLETED\",\"workflowName\":\"kc-dev-flow release gate\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:14:01Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\",\"name\":\"multi-profile route gate (live Spacedock)\",\"startedAt\":\"2026-09-11T08:13:56Z\",\"status\":\"COMPLETED\",\"workflowName\":\"kc-dev-flow release gate\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:11:18Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\",\"name\":\"version parity (plugin.json / marketplace.json / codex / README)\",\"startedAt\":\"2026-09-11T08:10:34Z\",\"status\":\"COMPLETED\",\"workflowName\":\"marketplace version parity\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:10:33Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://dashboard.gitguardian.com\",\"name\":\"GitGuardian Security Checks\",\"startedAt\":\"2026-09-11T08:10:32Z\",\"status\":\"COMPLETED\",\"workflowName\":\"\"}],\"title\":\"fix(kc-dev-flow): exclude Go test files from surface mapping\",\"url\":\"https://github.com/iamcxa/kc-claude-plugins/pull/421\"}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "checks",
+        "421",
+        "--repo",
+        "iamcxa/kc-claude-plugins",
+        "--json",
+        "name,state,bucket,link"
+      ],
+      "stdout": "[{\"bucket\":\"pass\",\"link\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\",\"name\":\"multi-profile route gate (live Spacedock)\",\"state\":\"SUCCESS\"},{\"bucket\":\"pass\",\"link\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\",\"name\":\"version parity (plugin.json / marketplace.json / codex / README)\",\"state\":\"SUCCESS\"},{\"bucket\":\"pass\",\"link\":\"https://dashboard.gitguardian.com\",\"name\":\"GitGuardian Security Checks\",\"state\":\"SUCCESS\"}]\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "gh",
+        "pr",
+        "checks",
+        "421",
+        "--repo",
+        "iamcxa/kc-claude-plugins",
+        "--required",
+        "--json",
+        "name,state,bucket,link"
+      ],
+      "stdout": "[{\"bucket\":\"pass\",\"link\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\",\"name\":\"multi-profile route gate (live Spacedock)\",\"state\":\"SUCCESS\"},{\"bucket\":\"pass\",\"link\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\",\"name\":\"version parity (plugin.json / marketplace.json / codex / README)\",\"state\":\"SUCCESS\"}]\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "stdout": "## spacedock-ensign/dev-flow-manual-improvement-pilot\n",
+      "stderr": "",
+      "exit": 0
+    }
+  ],
+  "shipped_file_matches": [
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/iamcxa/kc-claude-plugins/contents/kc-dev-flow/scripts/surface-map-check.py?ref=790278b7165682bfae8b0e61e091b40989328a16"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "path": "kc-dev-flow/scripts/surface-map-check.py",
+      "remote_blob_sha": "e4bab81869166df5607940abcb7535175c55d634",
+      "remote_size": 10374,
+      "remote_api_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/contents/kc-dev-flow/scripts/surface-map-check.py?ref=790278b7165682bfae8b0e61e091b40989328a16",
+      "merged_sha256": "c2ccce5a00d9beccda016ab2234bafb4c62ca66d43d8a28d847ce36bc8549bd1",
+      "candidate_commit": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+      "candidate_sha256": "c2ccce5a00d9beccda016ab2234bafb4c62ca66d43d8a28d847ce36bc8549bd1",
+      "equal": true
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/iamcxa/kc-claude-plugins/contents/scripts/kc-dev-flow-contract-test.py?ref=790278b7165682bfae8b0e61e091b40989328a16"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "path": "scripts/kc-dev-flow-contract-test.py",
+      "remote_blob_sha": "cddef07297a926fc7b7a4936498ac5068eb32f65",
+      "remote_size": 110033,
+      "remote_api_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/contents/scripts/kc-dev-flow-contract-test.py?ref=790278b7165682bfae8b0e61e091b40989328a16",
+      "merged_sha256": "d8626db0ed3601fcf79df0b24250c49dcd34349ae29d4596a8cb7563b1269703",
+      "candidate_commit": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+      "candidate_sha256": "d8626db0ed3601fcf79df0b24250c49dcd34349ae29d4596a8cb7563b1269703",
+      "equal": true
+    }
+  ],
+  "checks_summary": {
+    "total": 3,
+    "passed": 3,
+    "required_total": 2,
+    "required_passed": 2
+  },
+  "limits": "No product edits, branch changes, installation, worktree removal, upstream or stopped-root access, gate consumption, native terminalization, original cleanup, automation or whole-cycle cost claim."
+}
