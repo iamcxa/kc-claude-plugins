@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree:
 issue:
-pr:
+pr: "#420"
 mod-block:
 id: esc73128rg68pqmtpck3a90q
 gates:
