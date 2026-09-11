@@ -1,0 +1,73 @@
+{
+  "prs": [
+    {
+      "baseRefName": "main",
+      "headRefOid": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+      "isDraft": true,
+      "number": 415,
+      "state": "OPEN",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/415"
+    },
+    {
+      "baseRefName": "codex/journey-planning",
+      "headRefOid": "818260a8c14b504dae8d3989ba9c710226255b74",
+      "isDraft": true,
+      "number": 416,
+      "state": "OPEN",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/416"
+    },
+    {
+      "baseRefName": "codex/journey-release-inspection",
+      "headRefOid": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+      "isDraft": true,
+      "number": 417,
+      "state": "OPEN",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/417"
+    }
+  ],
+  "stack": [
+    {
+      "id": 1039062,
+      "number": 418,
+      "node_id": "PRS_kwDORid8-c4AD9rW",
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/stacks/418",
+      "base": {
+        "ref": "main"
+      },
+      "open": true,
+      "created_at": "2026-09-11T00:48:35Z",
+      "pull_requests": [
+        {
+          "number": 415,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-planning",
+            "sha": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36"
+          }
+        },
+        {
+          "number": 416,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-release-inspection",
+            "sha": "818260a8c14b504dae8d3989ba9c710226255b74"
+          }
+        },
+        {
+          "number": 417,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-local-progress",
+            "sha": "aabb8e7e8320b65fa852feae961df2e438d8f002"
+          }
+        }
+      ]
+    }
+  ]
+}

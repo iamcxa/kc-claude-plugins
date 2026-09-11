@@ -1,0 +1,26 @@
+diff --git a/.github/workflows/kc-journey-map-tests.yml b/.github/workflows/kc-journey-map-tests.yml
+index 9d8e7434d58a43d356b4ace8cecc1a0fc1d6c70e..2d7de4435542da07dd0f0a01021e3f3a6ee31d47 100644
+--- a/.github/workflows/kc-journey-map-tests.yml
++++ b/.github/workflows/kc-journey-map-tests.yml
+@@ -55,6 +55,21 @@ jobs:
+       - name: Preflight
+         run: npm run doctor
+ 
++      - name: Install pinned Spacedock
++        env:
++          SPACEDOCK_VERSION: v0.27.2
++          SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
++        run: |
++          set -euo pipefail
++          asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"
++          curl -fsSL -o /tmp/spacedock.tar.gz \
++            "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
++          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
++          tar -xzf /tmp/spacedock.tar.gz -C /tmp
++          mkdir -p "$HOME/.local/bin"
++          install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
++          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
++
+       - name: Model tests
+         run: node --test lib/*.test.mjs
+ 

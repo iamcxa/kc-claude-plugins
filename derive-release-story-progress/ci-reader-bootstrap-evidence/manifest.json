@@ -1,0 +1,32 @@
+{
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-local-progress",
+  "branch": "codex/journey-local-progress",
+  "base_sha": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+  "candidate_tree": "64ca7b19f431188830b43f6824f485e7c90206df",
+  "proposed_subject": "fix(kc-journey-map): install pinned Spacedock for CI reader tests",
+  "files": [
+    {
+      "path": ".github/workflows/kc-journey-map-tests.yml",
+      "added": 15,
+      "deleted": 0,
+      "blob": "2d7de4435542da07dd0f0a01021e3f3a6ee31d47",
+      "sha256": "bf12382df016eca71c2757a040167fad7b6855ad4eacb3bda1d69a2470d7f5ba"
+    }
+  ],
+  "patch_sha256": "44d67cc90931d480a3bf2e98b8b32cd748bd2fe45b29511788aa8b5ee9434181",
+  "missing_reader": {
+    "tests": 5,
+    "pass": 1,
+    "fail": 4,
+    "exit": 1
+  },
+  "present_reader": {
+    "tests": 5,
+    "pass": 5,
+    "fail": 0,
+    "exit": 0
+  },
+  "hosted_linux_amd64_verification": "pending later approved commit/push",
+  "cost_per_pr": "unmeasured",
+  "product_commit": "not created"
+}

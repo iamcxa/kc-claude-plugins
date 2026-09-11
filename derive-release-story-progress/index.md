@@ -556,3 +556,14 @@ The sole prescribed comment correction is complete and bound to three corrected 
 ### Summary
 
 Exactly three authorized local product commits are complete. The full native-stack Draft delivery package is concrete and held for separate Captain push/PR approval; task status remains implementation.
+
+## Stage Report: implementation (cycle 7)
+
+- DONE: Repair only the observed missing Spacedock prerequisite in the existing top-layer CI job with a pinned, verified installation and unchanged matrix/triggers/test meaning.
+  Published Drafts #415/#416/#417 are linked in native stack #418 at unchanged approved heads. Hosted run 34548053072 reports 4/72 missing-reader failures on both Node matrix entries. Added only a 15-line pinned v0.27.2 setup in `.github/workflows/kc-journey-map-tests.yml`, following the existing repository checksum pattern. Official Linux amd64 archive digest/checksums verified; parsed YAML equals the original after removing only the new step, and Bash syntax passes. [Diagnosis and evidence](ci-reader-bootstrap-evidence/README.md).
+- DONE: Provide actual missing/present-reader evidence, exact one-file uncommitted patch, CI cost limits and a concrete local-commit packet while preserving all published candidates and state history.
+  Existing real-reader tests reproduce 4/5 failures without the CLI and pass 5/5 with the freshly verified v0.27.2 reader on macOS ARM64. No test/semantic/dependency/matrix/trigger changes, fake reader, new environment or review loop. Exact Linux amd64 hosted verification remains pending a later approved commit/push; CI cost per PR unmeasured. Base `aabb8e7e8320b65fa852feae961df2e438d8f002`, candidate tree `64ca7b19f431188830b43f6824f485e7c90206df`; [one-file manifest](ci-reader-bootstrap-evidence/manifest.json), [exact patch](ci-reader-bootstrap-evidence/candidate.patch) and [local-commit packet](ci-reader-bootstrap-evidence/local-commit-review.md). Product commit/push/PR edits/ready/merge remain unauthorized. Published heads/bodies, lower layers, original root, user source/rooms and prior evidence remain unchanged. AC-1..AC-5 product evidence is retained; this change repairs only the CI execution prerequisite.
+
+### Summary
+
+The bounded CI reader bootstrap correction is prepared, uncommitted, with actual missing/present-reader proof and explicit hosted-verification limits. First Officer owns the next exact local-commit authority.

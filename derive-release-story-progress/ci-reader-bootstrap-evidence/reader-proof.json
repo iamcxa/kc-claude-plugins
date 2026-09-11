@@ -1,0 +1,35 @@
+{
+  "test_source": "existing private source-identical unit-3 dependency installation",
+  "test_files_equal_to_published_top": [
+    "lib/progress.test.mjs",
+    "lib/progress.mjs",
+    "lib/journey-progress.mjs"
+  ],
+  "version": "0.27.2",
+  "platform": "darwin/arm64",
+  "node": "v24.18.0",
+  "cases": [
+    {
+      "name": "missing",
+      "command": [
+        "/Users/kent/n/bin/node",
+        "--test",
+        "lib/progress.test.mjs"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map",
+      "PATH": "/usr/bin:/bin",
+      "exit": 1
+    },
+    {
+      "name": "present",
+      "command": [
+        "/Users/kent/n/bin/node",
+        "--test",
+        "lib/progress.test.mjs"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map",
+      "PATH": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/ci-reader-bootstrap/bin:/usr/bin:/bin",
+      "exit": 0
+    }
+  ]
+}

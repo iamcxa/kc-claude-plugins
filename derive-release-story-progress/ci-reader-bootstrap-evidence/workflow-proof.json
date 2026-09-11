@@ -1,0 +1,9 @@
+{
+  "yaml_parse": true,
+  "bash_syntax": true,
+  "only_new_install_step": true,
+  "version": "v0.27.2",
+  "sha256": "8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584",
+  "matrix_and_triggers_unchanged": true,
+  "existing_test_steps_unchanged": true
+}

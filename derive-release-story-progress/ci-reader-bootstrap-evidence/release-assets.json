@@ -1,0 +1,51 @@
+{
+  "tag_name": "v0.27.2",
+  "html_url": "https://github.com/spacedock-dev/spacedock/releases/tag/v0.27.2",
+  "assets": [
+    {
+      "name": "checksums.txt",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/checksums.txt",
+      "digest": "sha256:11e0f27114465b326d92b8ca98418ae9f60161f1a67e112f0590994664b1a19f"
+    },
+    {
+      "name": "spacedock_0.27.2_darwin_amd64.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_darwin_amd64.tar.gz",
+      "digest": "sha256:10004b39916eeca3fc978f8f4c260ae71c7d9246566e7f98b066ac5ef0b28b93"
+    },
+    {
+      "name": "spacedock_0.27.2_darwin_amd64_edge.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_darwin_amd64_edge.tar.gz",
+      "digest": "sha256:bb3e0d8f5d7406aecc6d06ace304422dd64bf4537e32cc48982259c3b5633e1d"
+    },
+    {
+      "name": "spacedock_0.27.2_darwin_arm64.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_darwin_arm64.tar.gz",
+      "digest": "sha256:6169f9db6981618249fcf86c84ba7805e2537782f7edb989babf9a5daf62ddb3"
+    },
+    {
+      "name": "spacedock_0.27.2_darwin_arm64_edge.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_darwin_arm64_edge.tar.gz",
+      "digest": "sha256:5e02eb2e121bab8f0f4af6751705d3adb271b3c99f3930030374fd4b35854a53"
+    },
+    {
+      "name": "spacedock_0.27.2_linux_amd64.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_linux_amd64.tar.gz",
+      "digest": "sha256:8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584"
+    },
+    {
+      "name": "spacedock_0.27.2_linux_amd64_edge.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_linux_amd64_edge.tar.gz",
+      "digest": "sha256:5b2b36aec4ee75fbdb859ef1517750ebe22b90ae9d7f826b1a74ddb8b872c67f"
+    },
+    {
+      "name": "spacedock_0.27.2_linux_arm64.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_linux_arm64.tar.gz",
+      "digest": "sha256:f30b8849077faf07e07432398a6c2527a2ed636ce2c8af40d95c2549f96b2659"
+    },
+    {
+      "name": "spacedock_0.27.2_linux_arm64_edge.tar.gz",
+      "browser_download_url": "https://github.com/spacedock-dev/spacedock/releases/download/v0.27.2/spacedock_0.27.2_linux_arm64_edge.tar.gz",
+      "digest": "sha256:6ab3d45066dfc4bd8662cec222b176e0b6fbb00fdcb1f9d8fe50023dfbc63082"
+    }
+  ]
+}

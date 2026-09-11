@@ -1,0 +1,121 @@
+✖ real archived reader distinguishes task/story ratios, full identities, and reopening (9.910333ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (34.416375ms)
+✖ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (3.146833ms)
+✖ derived projections use three borders without entering story wording or source readback (6.718084ms)
+✖ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (1364.273916ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1567.461541
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:51:1
+✖ real archived reader distinguishes task/story ratios, full identities, and reopening (9.910333ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Local task observation unavailable: spawnSync spacedock ENOENT'
+  - null
+  
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:53:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Local task observation unavailable: spawnSync spacedock ENOENT',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at lib/progress.test.mjs:101:1
+✖ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (3.146833ms)
+  Error: spawnSync spacedock ENOENT
+      at Object.spawnSync (node:internal/child_process:1143:20)
+      at spawnSync (node:child_process:911:24)
+      at execFileSync (node:child_process:954:15)
+      at cli (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:23:26)
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:103:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'spawnSync spacedock',
+    path: 'spacedock',
+    spawnargs: [ 'status', '--workflow-dir', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-6QQWxP/workflow', '--archived', '--all-fields', '--limit', '2', '--page', '1', '--json' ],
+    error: Error: spawnSync spacedock ENOENT
+        at Object.spawnSync (node:internal/child_process:1143:20)
+        at spawnSync (node:child_process:911:24)
+        at execFileSync (node:child_process:954:15)
+        at cli (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:23:26)
+        at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:103:29)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1325:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+        at Test.postRun (node:internal/test_runner/test:1465:19)
+        at Test.run (node:internal/test_runner/test:1390:12),
+    status: null,
+    signal: null,
+    output: null,
+    pid: 0,
+    stdout: undefined,
+    stderr: undefined
+  }
+
+test at lib/progress.test.mjs:120:1
+✖ derived projections use three borders without entering story wording or source readback (6.718084ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  -   'red',
+  -   'green',
+      'violet',
+  +   'violet',
+  +   'violet'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:126:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'violet', 'violet', 'violet' ],
+    expected: [ 'red', 'green', 'violet' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at lib/progress.test.mjs:141:1
+✖ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (1364.273916ms)
+  Error: Command failed: /Users/kent/n/bin/node lib/journey-progress.mjs /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-IRfC2C/journey.yaml --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-IRfC2C/workflow --draw progress-test --pages story-map,journey-board
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at run (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:151:27)
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/three-unit/unit-3/kc-journey-map/lib/progress.test.mjs:154:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    status: 1,
+    signal: null,
+    output: [ null, '{\n  "progress": {\n    "schema": "journey-progress/v1",\n    "journey": "demo",\n    "source": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-IRfC2C/workflow",\n    "observedAt": "2026-09-11T00:54:39.842Z",\n    "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT",\n    "stories": [\n      {\n        "journey": "demo",\n        "release": "R1",\n        "story": "alpha",\n        "status": "unverified",\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "taskIds": [],\n        "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT"\n      },\n      {\n        "journey": "demo",\n        "release": "R1",\n        "story": "beta",\n        "status": "unverified",\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "taskIds": [],\n        "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT"\n      }\n    ],\n    "releases": [\n      {\n        "release": "R1",\n        "totalStories": 2,\n        "doneStories": 0,\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "status": "unverified",\n        "acceptance": "delivery acceptance not established"\n      }\n    ]\n  },\n  "drawn": {\n    "status": 200,\n    "body": "{\\"roomId\\":\\"progress-test\\",\\"put\\":38,\\"removed\\":0,\\"clock\\":1}",\n    "shapes": 38,\n    "removed": 0,\n    "coverage": [\n      {\n        "release": "R1",\n        "covered": 1,\n        "of": 1,\n        "missing": []\n      }\n    ]\n  }\n}\n', '' ],
+    pid: 19584,
+    stdout: '{\n  "progress": {\n    "schema": "journey-progress/v1",\n    "journey": "demo",\n    "source": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/journey-progress-IRfC2C/workflow",\n    "observedAt": "2026-09-11T00:54:39.842Z",\n    "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT",\n    "stories": [\n      {\n        "journey": "demo",\n        "release": "R1",\n        "story": "alpha",\n        "status": "unverified",\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "taskIds": [],\n        "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT"\n      },\n      {\n        "journey": "demo",\n        "release": "R1",\n        "story": "beta",\n        "status": "unverified",\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "taskIds": [],\n        "diagnostic": "Local task observation unavailable: spawnSync spacedock ENOENT"\n      }\n    ],\n    "releases": [\n      {\n        "release": "R1",\n        "totalStories": 2,\n        "doneStories": 0,\n        "requiredTasks": 0,\n        "doneTasks": 0,\n        "status": "unverified",\n        "acceptance": "delivery acceptance not established"\n      }\n    ]\n  },\n  "drawn": {\n    "status": 200,\n    "body": "{\\"roomId\\":\\"progress-test\\",\\"put\\":38,\\"removed\\":0,\\"clock\\":1}",\n    "shapes": 38,\n    "removed": 0,\n    "coverage": [\n      {\n        "release": "R1",\n        "covered": 1,\n        "of": 1,\n        "missing": []\n      }\n    ]\n  }\n}\n',
+    stderr: ''
+  }
