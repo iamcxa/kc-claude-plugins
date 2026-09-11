@@ -1,10 +1,30 @@
 {
+ "ship-cloud-dispatch-and-watch": {
+  "debrief": {
+   "path": "_debriefs/2026-09-11-03-claude-claude-fable-5-1.md",
+   "status": "pushed"
+  },
+  "merged_sha": "0cc25fa3",
+  "message_sha256": null,
+  "session": null,
+  "workspace": null
+ },
  "ship-remove-duplicated-stations": {
+  "debrief": {
+   "path": "_debriefs/2026-09-11-02-claude-claude-sonnet-5.md",
+   "status": "pushed"
+  },
+  "merged_sha": "96defe1d",
   "message_sha256": "f83d2ccb7a627f0adb00fd15097abf5c79603426d3985a86ce9a47cfbfe90e47",
   "session": "b2811dee-2bca-46ce-a796-9b2f463c8a50",
   "workspace": "20c25f00-cfab-4de2-8014-7ec6171d5d65"
  },
  "ship-verify-uat-close": {
+  "debrief": {
+   "path": "_debriefs/2026-09-11-01-claude-claude-sonnet-5.md",
+   "status": "pushed"
+  },
+  "merged_sha": "c1564b21",
   "message_sha256": "36bfef64834acea9fe87d386358b360dfdf25fad4d0d582d41a5d1d48f222a02",
   "session": "abc9855f-5b8a-42bb-8384-8f3e4d8a3fdd",
   "workspace": "9081b7d7-e95a-4578-a166-01e2be6ad432"

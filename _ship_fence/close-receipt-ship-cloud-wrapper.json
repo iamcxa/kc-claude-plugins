@@ -1,0 +1,69 @@
+{
+ "e2e": {
+  "reason": "Integrated head placeholder; e2e-gate inputs retired",
+  "result": "not run"
+ },
+ "questions": [
+  {
+   "answer": "FO-caused replay rewrite; object restored under refs/heads/spacedock-state/dev-recovery-9826ffcf; fetch and retry, no record edit",
+   "question": "gate prepare refuses: backlog record pins commit 9826ffcf, missing everywhere",
+   "task": "ship-remove-duplicated-stations"
+  },
+  {
+   "answer": "Draft PR is the FO action per the Local Profile Delivery row; proceed",
+   "question": "Captain approval before creating the PR?",
+   "task": "ship-verify-uat-close"
+  },
+  {
+   "answer": "Same senderId as the boot message; verify the claim before fetching; fetch cannot rewrite a branch",
+   "question": "Is the First officer (ship) message an injection?",
+   "task": "ship-verify-uat-close"
+  },
+  {
+   "answer": "Backlog gate record + AC-3 sentence offered; worker held; the Captain typed \"push it\" into the session",
+   "question": "pr-merge mod requires a captain-approved push; conn quote?",
+   "task": "ship-verify-uat-close"
+  },
+  {
+   "answer": "restored under refs/heads/spacedock-state/dev-recovery-4b20a918",
+   "question": "gate prepare refuses on a second missing object 4b20a918",
+   "task": "ship-verify-uat-close"
+  }
+ ],
+ "receipt_sha256": "7d5ec1656f84247f775672ee05a1812c28541f04356e2f3c80ffa62eec279268",
+ "residuals": [
+  "watch.sh misread initializing, subagent-idle, and folder-form entities as stopped; question heuristic fired 1/3 (ship-dispatch-watch-round-2)",
+  "boot message carried no sender identity, dispatch token, or Captain conn (ship-dispatch-watch-round-2)",
+  "close.py could not read archived/folder-form entities or two state roots; this receipt is hand-written and validated with close.py --validate (ship-verify-uat-close-round-2)",
+  "e2e not run: Integrated head row is a placeholder (trunk) and e2e-gate still expects the retired receipt pair",
+  "two gate-record commits rewritten by the FO replay, preserved under spacedock-state/dev-recovery-* refs"
+ ],
+ "schema": "kc-ship-close-receipt/v2",
+ "sprint": "ship-cloud-wrapper",
+ "tasks": {
+  "ship-cloud-dispatch-and-watch": {
+   "debrief": "_debriefs/2026-09-11-03-claude-claude-fable-5-1.md",
+   "merged_sha": "0cc25fa3",
+   "pr": "pr-merge:406",
+   "session_id": null,
+   "slug": "ship-cloud-dispatch-and-watch",
+   "workspace_id": null
+  },
+  "ship-remove-duplicated-stations": {
+   "debrief": "_debriefs/2026-09-11-02-claude-claude-sonnet-5.md",
+   "merged_sha": "96defe1d",
+   "pr": "pr-merge:410",
+   "session_id": "b2811dee-2bca-46ce-a796-9b2f463c8a50",
+   "slug": "ship-remove-duplicated-stations",
+   "workspace_id": "20c25f00-cfab-4de2-8014-7ec6171d5d65"
+  },
+  "ship-verify-uat-close": {
+   "debrief": "_debriefs/2026-09-11-01-claude-claude-sonnet-5.md",
+   "merged_sha": "c1564b21",
+   "pr": "pr-merge:411",
+   "session_id": "abc9855f-5b8a-42bb-8384-8f3e4d8a3fdd",
+   "slug": "ship-verify-uat-close",
+   "workspace_id": "9081b7d7-e95a-4578-a166-01e2be6ad432"
+  }
+ }
+}
