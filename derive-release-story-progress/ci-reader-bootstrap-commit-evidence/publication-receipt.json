@@ -1,0 +1,97 @@
+{
+  "at": "2026-09-11T03:33:23.658601+00:00",
+  "approval": "Kent answered \u53ef\u4ee5 to the exact PR417 candidate push and full body update packet.",
+  "candidate": "a5c08cbdf812826125decb6b55a286c4bcd2f1be",
+  "body_sha256": "b3eff4c4e5a704d6da145308890f76b687767b9217540f0bf939eb2b374cbb16",
+  "remote": {
+    "baseRefOid": "818260a8c14b504dae8d3989ba9c710226255b74",
+    "headRefOid": "a5c08cbdf812826125decb6b55a286c4bcd2f1be",
+    "isDraft": true,
+    "state": "OPEN"
+  },
+  "checks": [
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34558776539/job/103136990013",
+      "name": "multi-profile route gate (live Spacedock)",
+      "state": "SUCCESS"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34558776549/job/103136990358",
+      "name": "review CI routing and static contracts",
+      "state": "SUCCESS"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34558776541/job/103136990278",
+      "name": "model tests + boot smoke (node 22.13.0)",
+      "state": "SUCCESS"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34558776587/job/103136990265",
+      "name": "version parity (plugin.json / marketplace.json / codex / README)",
+      "state": "SUCCESS"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34558776541/job/103136990099",
+      "name": "model tests + boot smoke (node 24)",
+      "state": "SUCCESS"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://dashboard.gitguardian.com",
+      "name": "GitGuardian Security Checks",
+      "state": "SUCCESS"
+    }
+  ],
+  "stack": [
+    {
+      "id": 1039062,
+      "number": 418,
+      "node_id": "PRS_kwDORid8-c4AD9rW",
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/stacks/418",
+      "base": {
+        "ref": "main"
+      },
+      "open": true,
+      "created_at": "2026-09-11T00:48:35Z",
+      "pull_requests": [
+        {
+          "number": 415,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-planning",
+            "sha": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36"
+          }
+        },
+        {
+          "number": 416,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-release-inspection",
+            "sha": "818260a8c14b504dae8d3989ba9c710226255b74"
+          }
+        },
+        {
+          "number": 417,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-local-progress",
+            "sha": "a5c08cbdf812826125decb6b55a286c4bcd2f1be"
+          }
+        }
+      ]
+    }
+  ],
+  "ci_cost_per_pr": "unmeasured",
+  "remaining": "PR415 and PR416 comment drafts remain pending local commit approval. All PRs remain Draft; no ready/merge authorization."
+}
