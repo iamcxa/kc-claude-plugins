@@ -120,9 +120,10 @@ do not duplicate it per technical package. Reuse an existing canonical source in
 of creating a competing copy. YAML is the versioned authority; optional `.md` citations
 and native editable `.tldr` snapshots sit beside it (see [canvas.md](references/canvas.md)).
 
-Existing teaching fixtures remain in `references/journey.example.yaml` and
-`references/example/`. New ongoing planning for this plugin belongs in the consuming
-marketplace repository at `docs/journey/kc-journey-map/<journey>.yaml`; no fixtures move.
+The fictional book-pickup teaching fixture is packaged in `references/journey.example.yaml`
+and `references/example/`. This plugin's ongoing product plan lives in the consuming
+marketplace repository at `docs/journey/kc-journey-map/draw-a-journey.yaml`, with its
+evidence README and native snapshot beside it; installed-plugin examples do not depend on it.
 
 ## Hard rules
 
