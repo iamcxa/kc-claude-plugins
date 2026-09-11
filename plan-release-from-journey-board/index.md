@@ -13,7 +13,7 @@ verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 id: r1fa7xv14afj9npcfe1wbx76
 gates:
     version: 1
