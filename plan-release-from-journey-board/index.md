@@ -1,6 +1,6 @@
 ---
 title: Plan a release from journey-board decisions into a development brief
-status: ideation
+status: implementation
 product: kc-journey-map
 source:
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: Kent confirmed the presented two-file implementation plan and local commits after reviewing the integrated journey-map to dev-flow usage flow. Preserve the recorded thresholds and deferred delivery authority.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
