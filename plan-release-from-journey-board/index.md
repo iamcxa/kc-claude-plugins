@@ -321,3 +321,51 @@ review_convergence_claim:
   observed_state_revision: bfd2653e37377b268c06bda485d7de795df58851
   state: claimed
 ```
+
+
+## Stage Report: validation
+
+- DONE: Verify all six accepted criteria at the exact candidate, distinguish observed behavior from source rules, and assess minimal necessity without repeating already-owned green checks.
+  AC-1, AC-2, AC-3, AC-4, AC-5, AC-6: assessed exact `74fe23086e4e34c5e288c46a43c6d559bd89ebf2`; 3 files / 114 total changed lines / 87 conversation-reference changed lines against `36a969a6f890a63c541fad4bfa30071ac7115c64`, within 3 / 220 / 160 thresholds. Existing green deterministic evidence was inspected, not rerun.
+- DONE: Act as the independent existing development-shaping consumer for the produced brief, reject the controlled stale-source pairing, and demonstrate valid standalone brief use without a board.
+  Fresh consumer [assessment](/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning/.context/validation-proof/consumer.md) derives shared authoring, projection/discussion and handoff verification with plural origins; [source contrast](/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning/.context/validation-proof/source-pairing-result.json) rejects the deferred-handoff pairing; [standalone validator result](/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning/.context/validation-proof/standalone-result.json) rejects a missing criteria heading before accepting the no-board brief.
+- DONE: Record one concise exact-revision verdict with residuals, comment/minimal-stack assessment and Captain-owned acceptance/delivery boundaries; do not implement repairs or publish.
+  Verdict: PASSED for the accepted bounded local validation scope. No material product defect found; no product edits, new standing harness, code push, PR, gate/readiness change or delivery acceptance performed.
+
+### Summary
+
+The real candidate-produced Development Brief is consumable through existing intake/Pilot shaping: this fresh worker proposed necessary shared work and dependencies without re-interviewing value, importing plan-detail or inventing one task per card. The controlled source mutation changes the decision to stale/review-required, while a valid standalone brief needs neither board nor provider; this is an actual contract-guided consumer exercise, not native task admission or a new profile selection.
+
+### Accepted-criterion evidence
+
+| Criterion | Observed evidence and falsifier |
+|---|---|
+| AC-1 | Candidate actor reused settled persona, release and decisions; supplemental exists-story question asked one recommended plain-text choice and retained draft with no answer. Re-interviewing settled facts or treating silence as approval would fail. |
+| AC-2 | Candidate inspected funcmap/render/source support, retained implementation uncertainty separately from uninspected task observations, and kept deferred scope. This consumer finds no evidence demanding new handlers/schema; non-green-to-task inference would fail. |
+| AC-3 | Candidate preserved six source IDs, fingerprint and nonselected/deferred content; hypothetical unanswered acceptance remained draft. Recorded 38-test read/release/progress run includes conflicting, duplicate and stale readback refusal. No live source-decision write or canvas roundtrip ran; existing persistence rules/tests support this text-only scope, not new visual proof. |
+| AC-4 | Actual control brief was refused by `validate_admission_brief` for AC syntax; actual candidate brief accepted at `db8ca25350ffff2fab4f9ce69ca07e82b109b64ec5e247b40f98ed1298e13c59`. Fresh source comparison finds original hash and six IDs consistent; hypothetical hash `21d6d67c...` removes `hand-the-order-to-planning`, so the unchanged brief's outcome/AC-5 cannot be reused. Format acceptance alone is insufficient. |
+| AC-5 | Fresh [consumer](/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning/.context/validation-proof/consumer.md) uses existing intake/shape and current code facts to propose shared authoring verification, dependent projection/discussion proof and one handoff check. Multiple release/story origins remain prose; no scalar mapping, native work item, task transition or automatic rewrite. |
+| AC-6 | Actual coffee-shop source draft preserves intent-only mapping and deferred preorder with no code/evidence requirement. Fresh standalone format/shape exercise passes at `c41f7ea3...`; missing Acceptance criteria heading is refused. Plain-text fallback was observed; host selection UI and installed discovery were not. |
+
+### Necessity and residuals
+
+The paired two-guidance-file ablation is one bounded comparison: control still made a plausible brief and reused answers, but omitted stable IDs/factual inspection and failed canonical AC syntax; candidate repaired those observed gaps. This is not a reliability or speed measurement. The lifecycle registration's recorded removal caused `sprint_unregistered`; retaining it is required by the approved local start. No fourth file, dev-flow/library edit, dependency, duplicated brief template or new abstraction is justified.
+
+The retained entry routes to one explanatory reference; the reference owns decision reuse, facts-before-choice, unresolved-state handling, safe persistence and canonical handoff. Canonical format remains with dev-flow and canvas rules with canvas.md. The implementation's removed draft rendering-selection wording was unnecessary to this route; no further removal is supported by this exact diff. Fresh standalone refusal/acceptance and source comparison spot-check those retained claims without repeating the recorded green frontmatter/version/CLI/seam checks.
+
+RoboRev remains non-gating `UNKNOWN(reason: stale)`: recorded terminal output lacks required provider binding metadata; no extra observation was run. Live selection UI, rendered canvas, fresh live decision persistence, native admission and target-user acceptance remain unexercised. They are not evidence of failure in the accepted text-only preparation/consumer scope; Kent retains normal product acceptance and all code push/PR/merge/release decisions. No CI changes; CI cost per PR and comparative speed remain unmeasured.
+
+### Project context confirmation
+
+```yaml
+project_context:
+  impact: none
+  authority: Local Profile root PRODUCT.md, ARCHITECTURE.md and CLAUDE.md
+  claim_locator: PRODUCT.md kc-dev-flow catalog; ARCHITECTURE.md profile-native loading
+  surface: independent standalone brief intake and unchanged profile/admission authority
+  stale_claim: none
+  approved_change: none
+  landed_change: none
+  planned_check: consume the actual journey brief and a valid standalone brief through existing intake and shaping
+  validation_evidence: '/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning/.context/validation-proof/consumer.md; standalone-result.json; source-pairing-result.json; unchanged validation-1 loader readback'
+```
