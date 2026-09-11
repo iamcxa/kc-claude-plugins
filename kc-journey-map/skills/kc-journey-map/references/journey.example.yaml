@@ -48,19 +48,18 @@ steps:
     card: "Renders the selected boards"
     activity: "Put it on a board"
     stories:
-      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: unverified, question: "The host selection instructions exist; the actual selection-to-render host run is unverified and deferred"}
+      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: exists, evidence: buildAllPages}
       - {id: default-to-the-journey-alone, card: "Get the user journey alone when nobody answers", release: r1, status: exists, evidence: DEFAULT_PROJECTIONS}
       - {id: draw-the-journey-board-if-ask, card: "Draw the per-release journey board, but only if asked for it", release: r1, status: exists, evidence: buildJourneyBoard}
       - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}
       - {id: re-render-after-every-change, card: "Re-render after every change", release: r1, status: exists, evidence: renderToRoom}
       - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1, status: exists, evidence: toImage}
+      - {id: see-updated-map-without-waiting, card: "See the updated map quickly after each discussion change", release: r3, status: unverified}
     system:
-      - "lib/journey-render.mjs -> PATCH /doc — reconciles, so a stale shape is removed"
-      - "Which pages draw is a per-call choice, never a file property: buildAllPages(model, room, selection) defaults to story-map alone — even when the file models command/events, and even when selection is an explicit empty array"
-      - "journey-board is opt-in: buildJourneyBoard groups yellow release stories under green activities with shared system flow and constraints"
-      - "lib/journey-export.mjs uses tldraw's own exporter, so the whole board comes out"
+      - "Current: buildAllPages/renderToRoom batch chosen projections in one PATCH; journey-board includes all releases."
+      - "R3 direction: show the verified live board first; reuse an existing compatible server. Export PNGs on user request or when justified by the conversation context."
     cites: [kc-claude-plugins]
-    rules: [board-is-a-cache, handmade-cards-survive, selection-is-per-call]
+    rules: [board-is-a-cache, handmade-cards-survive, selection-is-per-call, r3-feedback-measurement]
     command: "RenderJourney(journeyFile, roomId, selection)"
     events:
       - "ShapesUpserted"
@@ -69,8 +68,9 @@ steps:
     state: "the room document"
     readmodel: "the story map a person looks at"
     note: >
-      Release boards show each story status, evidence and question. Shared activity
-      context does not establish per-story implementation or release acceptance.
+      R1: scoped Codex Plan-mode selection and Default-mode rendering were verified; see
+      example/README.md. buildAllPages supports rendering, not host-UI proof. Native multi-select,
+      Default-mode async UI and other hosts remain unverified.
 
   - id: contract
     card: "Generates a per-release contract alongside the boards"
@@ -131,35 +131,42 @@ steps:
     card: "Names the command, the events and the state behind each step"
     activity: "Model the functions"
     stories:
-      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3, status: gap}
-      - {id: name-one-command-per-step, card: "Name one command per step", release: r3, status: gap}
-      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3, status: gap}
-      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3, status: gap}
+      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3, status: unverified}
+      - {id: name-one-command-per-step, card: "Name one command per step", release: r3, status: unverified}
+      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3, status: unverified}
+      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3, status: unverified}
     system:
-      - "write, render, contract and readback carry command/events/state/readmodel already; workshop and model do not yet"
+      - "Current: canvas.md documents source command, events including refusals, state and readmodel; funcmap.mjs reads these authored fields."
     cites: [kc-claude-plugins]
-    rules: [model-is-written-not-derived, no-cell-from-memory]
+    rules: [file-is-truth, r3-model-authoring]
+    note: >
+      Source authoring support exists; the complete user exercise remains unverified.
 
   - id: funcmap
     card: "Reads the function map beside the journey"
     activity: "Put it on a board"
     stories:
       - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3, status: exists, evidence: buildFunctionMap}
-      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: r3, status: gap, question: "readRoom never looks at page:jm-funcmap — is a fourth read path worth it, or does the function map stay generated-only?"}
+      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: null, status: gap}
     system:
-      - "lib/funcmap.mjs draws the page whenever function-map is selected — one row per step whether or not it is modelled (an unmodelled step draws '— not modelled —', not a blank); nothing reads it back yet"
+      - "Current: buildFunctionMap projects authored fields when requested and labels missing fields as not modelled."
     cites: [kc-claude-plugins]
-    rules: [same-columns-new-lanes]
+    rules: [same-columns-new-lanes, r3-model-authoring]
+    note: >
+      Edit the source and redraw. Direct function-model canvas writeback is deferred; supported
+      story-card readback is separate.
 
   - id: handoff
     card: "Discusses the event order with planning"
     activity: "Hand it to planning"
     stories:
-      - {id: hand-the-order-to-planning, card: "Hand the event order to planning", release: r3, status: gap, question: "What does planning receive, and in what format?"}
+      - {id: hand-the-order-to-planning, card: "Hand the agreed release to development planning", release: r3, status: unverified}
     system:
-      - "Nothing implements this, and nothing has decided what planning receives or in what format"
+      - "Current guidance: Prepare one release reuses decisions, asks only material unresolved questions, and produces one Development Brief for later dev-flow technical shaping."
     cites: [kc-claude-plugins]
-    rules: [events-carry-order]
+    rules: [r3-handoff-authority]
+    note: >
+      Producer/consumer proof exists; complete journey acceptance remains unverified.
 
 releases:
   - id: r1
@@ -170,7 +177,7 @@ releases:
     goal: "The same map can be checked against the code that exists."
   - id: r3
     name: "RELEASE 3"
-    goal: "Use the function model to discuss implementation order."
+    goal: "Author a function model, iterate on it quickly, and hand one agreed Development Brief to development planning."
 
 ownership:
   - id: own-author
@@ -210,9 +217,16 @@ rules:
   - id: selection-is-per-call
     text: "Which projections a render draws is chosen per call, never stored in the journey file — the same file renders one way for a stand-up and another for a release review"
 
+  - id: r3-feedback-measurement
+    text: "R3 direction: keep an existing compatible server running; never stop a non-owned server for cleanup. Full request-to-visible-link timing and compatibility detection remain unverified; baseline and target are unset. The POC does not justify renderer optimization."
+  - id: r3-model-authoring
+    text: "Author the model in the source; a standalone handler is not required. Edit then redraw; direct function-map canvas writeback stays deferred. Event order alone does not establish causality or a build schedule."
+  - id: r3-handoff-authority
+    text: "Dev-flow owns technical shaping once, under existing profile/admission authority. No automatic task creation or scheduling; task counts do not prove a story exists or a journey is accepted."
+
 status:
-  unproven: "A story's status, evidence and question are written by hand and not yet read back from an edit made on the canvas. This illustrative status is not evidence of target-user usability."
-  unmerged: "Historical example observation (2026-09-10): PR #394 was a draft; inspect the live ref before using this as evidence."
-  undeployed: "This example supplies no deployment evidence; the canvas is a local development environment."
+  unproven: "2026-09-11: R3 direction is accepted; the complete model-authoring and development-handoff journey remains unverified. Local feedback timing excludes LLM/human delay and does not establish full request-to-link latency."
+  unmerged: "This example records scoped observations and accepted direction; it does not report current repository-wide PR or merge state."
+  undeployed: "Local canvas evidence only; no production deployment or full R3 target-user acceptance is claimed."
   irreversible: "Deleting a room loses unexported native edits. Read back edits or export a .tldr backup first; generated contracts can be rebuilt."
-  as_of: 2026-09-10
+  as_of: "2026-09-11"

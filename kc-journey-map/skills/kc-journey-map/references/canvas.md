@@ -6,7 +6,7 @@ room with other people instead of only read as a PNG.
 ## The split that makes it worth having
 
 The journey file in the repository is the source of truth. The room is a rendering of
-it. That is the whole design:
+it. Follow [Source placement](../SKILL.md#source-placement) for the canonical path:
 
 - **The file goes in git.** It diffs, it reviews, it survives tldraw.
 - **The room preserves native edits.** Read edits back or export a `.tldr` backup
@@ -14,9 +14,25 @@ it. That is the whole design:
 - **No coordinates in the file.** Position is computed from the model's order. Writing
   `x`/`y` back would make the file a tldraw shadow and destroy the diff.
 
+A `.tldr` snapshot beside the source is an optional, deliberate backup or sharing
+artifact, not an export required after every update; YAML remains the authority.
+Keep room databases (`.rooms/*.db`) out of git: they are local runtime data.
+`server/rooms.ts` uses `JOURNEY_ROOMS_DIR`, or `./.rooms` relative to the service working
+directory by default; it does not automatically place rooms in the consuming repository.
+
 ## Run it
 
-From the plugin directory, once per machine:
+Before starting, inspect any existing service's source/version provenance and the
+capabilities needed for this request. Reuse a suitable running service of the required
+version. Do not stop or restart a service you did not start merely to free a port or
+clean up. Unknown provenance is not proof of compatibility; report that limit and
+resolve setup within the user's authority, without killing the existing service.
+Keep services backing a delivered board link running, even if this session started
+them. Unless the user asks to stop, cleanup may stop only owned test services that
+serve no delivered board link.
+These are operator checks, not automatic version detection or lifecycle protection.
+
+From the plugin directory, when installation or startup is needed:
 
 ```bash
 npm ci
@@ -36,6 +52,11 @@ canvas and `agent-browser`; it is not a dependency-free fallback.
 
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
+
+Open the live canvas for normal review; Process step 5 in `SKILL.md` owns visual
+verification and optional PNG output. A native `.tldr` backup preserves unread canvas
+edits and is separate from image output. Read back or preserve those edits before
+redrawing; the renderer does not apply them to the source automatically.
 
 ## Three projections, drawn by request
 

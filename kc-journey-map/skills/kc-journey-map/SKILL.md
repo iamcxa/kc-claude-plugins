@@ -60,18 +60,22 @@ State plainly which ref was measured. Work living only in open PRs, worktrees, o
 is not the current system, and the status card must say so.
 
 **4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). In draw/check mode, give every story a `status` (`gap`, `unverified` or `exists`) and, when it exists, an `evidence` symbol — the meanings are defined in `references/cell-contract.md`; these are what the lints in `lib/lint.mjs` check. The board is not the
-artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
-by convention) and holds the steps, the stories with their status and evidence, the system
+artifact — the file is. It lives in the consuming repository (see [Source placement](#source-placement))
+and holds the steps, the stories with their status and evidence, the system
 lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one. Story map and release-board story cards use yellow fill and green/red/violet status borders, with one shared legend per page; `references/canvas.md` describes native editing and export behavior.
 
 Positions are never written to the file. Every layout number is computed from the model's
 order, so a reordered board is a one-line diff instead of a rewritten file.
 
-**5. Render** (see below), then **look at the render**. A rendered board is not a verified
-board. A note whose `fontSizeAdjustment` is 0 validates and draws a blank sticky; a geo box
-draws its overflow outside itself; a row placed at a fixed offset lands on top of the row
-above once its text grows. Every one of those happened here. Export the image and read it.
-Ship what you saw, not what you wrote.
+**5. Render** (see below), then **visually check the live canvas**. On the first map,
+inspect the requested views; on updates, inspect the changed views and confirm the
+expected content and shapes are visible. A note with `fontSizeAdjustment: 0` can be blank,
+a geo box can overflow, and growing rows can overlap. Check these failures on the
+actual canvas.
+
+Promptly return the usable live-board link after that check. Export a PNG only when the
+user requests it or the conversation context justifies an image; if exported, open and
+inspect it. Do not repeat unrelated outputs before returning an updated live link.
 
 **6. Report.** Draw mode: the board, the release contract per release
 (`node lib/journey-contract.mjs`), and `node lib/journey-lint.mjs` run against the file — cite
@@ -83,7 +87,8 @@ evidence intact; drawing alone does not require Spacedock.
 
 ## Rendering
 
-**Ask what to draw, before rendering.** (`AskUserQuestion`, multi-select): `User journey`
+**Reuse the settled projection choice within the same request.** Ask what to draw when
+that choice is missing or changes (`AskUserQuestion`, multi-select): `User journey`
 (story map — default, preselected) / `Journey board` (one page per release) / `Function map`
 (commands and events). If the tool is unavailable, or nobody answers, render the user
 journey alone — that default is load-bearing, not a fallback of convenience.
@@ -101,8 +106,23 @@ in one line and carry on with the canvas.
 `.md` — both are readable, both go in git, and the file is the artifact the board renders
 from. Do not stall, and do not hand-draw a substitute board that no file backs.
 
-Artifact path: `docs/journey/<slug>.yaml` in the repository the journey describes, with the
-`.md` beside it carrying the citations.
+## Source placement
+
+Paths are relative to the consuming repository root:
+
+| Repository scope | Journey source |
+| --- | --- |
+| Single repository or single-product monorepo | `docs/journey/<journey>.yaml` |
+| Multi-product monorepo | `docs/journey/<product>/<journey>.yaml` |
+
+Organize by user journey and product: one source spans frontend, API and shared packages;
+do not duplicate it per technical package. Reuse an existing canonical source instead
+of creating a competing copy. YAML is the versioned authority; optional `.md` citations
+and native editable `.tldr` snapshots sit beside it (see [canvas.md](references/canvas.md)).
+
+Existing teaching fixtures remain in `references/journey.example.yaml` and
+`references/example/`. New ongoing planning for this plugin belongs in the consuming
+marketplace repository at `docs/journey/kc-journey-map/<journey>.yaml`; no fixtures move.
 
 ## Hard rules
 
@@ -142,7 +162,7 @@ route can reach.
 - In draw/check mode, every story carries a `status`; every `exists` story carries `evidence`.
 - For evidence checks, `node lib/journey-lint.mjs <file>` exits 0; run it and report its findings.
 - Journey-board status cards, or the story-map-only report, name merge and deployment state.
-- The exported image was opened and read, not just written.
+- The current or changed canvas views passed the visual check in Process step 5.
 - Check mode: every mismatch row names a file or route, not an impression.
 - Canvas: the file was re-rendered after the last edit, and `journey-read` reports nothing
   unclaimed that has not been dispositioned.

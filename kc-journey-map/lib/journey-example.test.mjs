@@ -39,17 +39,21 @@ test('a release contract generates for every release the migrated file declares'
 import { buildJourneyBoard } from './render.mjs'
 import { buildStoryMap } from './storymap.mjs'
 
-test('worked host selection stays unverified across projections and contract', () => {
+test('worked host selection evidence updates projections and contract', () => {
 	const model = loadModel(JOURNEY)
 	const host = model.steps.flatMap((s) => s.stories ?? []).find((s) => s.id === 'ask-which-boards-to-draw')
-	assert.equal(host.status, 'unverified')
+	assert.equal(host.status, 'exists')
+	assert.equal(host.evidence, 'buildAllPages')
+	assert.equal(host.question, undefined)
 	const release = model.releases.find((r) => r.id === host.release)
 	const text = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
 	for (const [records, kind] of [[buildStoryMap(model), 'story-border'], [buildJourneyBoard(model, { release }), 'story-border']]) {
-		assert.equal(records.find((s) => s.meta?.journey?.nodeId === host.id && s.meta.journey.kind === kind).props.color, 'violet')
+		assert.equal(records.find((s) => s.meta?.journey?.nodeId === host.id && s.meta.journey.kind === kind).props.color, 'green')
 		const stories = model.steps.flatMap((s) => s.stories ?? []).filter((s) => s.release === release.id)
 		const count = stories.filter((s) => s.status === 'exists').length
+		assert.equal(stories.length, 12)
+		assert.equal(count, 12)
 		assert.match(text(records.find((s) => s.meta?.journey?.nodeId === release.id && s.meta.journey.kind === 'release-label')), new RegExp(`${count}/${stories.length} (stories )?exist`))
 	}
-	assert.match(buildReleaseContract(model, release.id), /Ask which boards[^\n]*\| unverified \|/)
+	assert.match(buildReleaseContract(model, release.id), /Ask which boards[^\n]*\| exists \| `buildAllPages` \| — \|/)
 })
