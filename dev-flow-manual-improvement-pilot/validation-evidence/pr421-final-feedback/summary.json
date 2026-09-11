@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-09-11T08:22:07.880780+00:00",
+  "status": "COMPLETE",
+  "canonical": {
+    "scheme": "github-pr-feedback/v1",
+    "repository": "iamcxa/kc-claude-plugins",
+    "pr_number": 421,
+    "layer": "single",
+    "head": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+    "items": []
+  },
+  "fingerprint": "sha256:c3a22abce97e0ccf68fccbb18395a2c503633efeeaebdd7e29f533901a683091",
+  "thread_pages": 1,
+  "total_threads": 0,
+  "review_pages": 1,
+  "total_reviews": 0,
+  "start": {
+    "author": {
+      "id": "MDQ6VXNlcjE1MjI4MDg=",
+      "is_bot": false,
+      "login": "iamcxa",
+      "name": "Kent Chen"
+    },
+    "headRefOid": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+    "isDraft": false,
+    "number": 421,
+    "state": "MERGED",
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/421"
+  },
+  "end": {
+    "author": {
+      "id": "MDQ6VXNlcjE1MjI4MDg=",
+      "is_bot": false,
+      "login": "iamcxa",
+      "name": "Kent Chen"
+    },
+    "headRefOid": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+    "isDraft": false,
+    "number": 421,
+    "state": "MERGED",
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/421"
+  },
+  "mergedAt": "2026-09-11T08:13:57Z",
+  "mergeCommit": {
+    "oid": "790278b7165682bfae8b0e61e091b40989328a16"
+  },
+  "required_checks": {
+    "exit": 0,
+    "stdout": "multi-profile route gate (live Spacedock)\tpass\t5s\thttps://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\t\nversion parity (plugin.json / marketplace.json / codex / README)\tpass\t44s\thttps://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\t\n"
+  },
+  "raw_local_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa/.context/routine-coordinator/.worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot/.context/pr421-final-feedback/raw-observation.json",
+  "raw_sha256": "3d9acc4271b8fb5c5fc26f8c240d1e1a73e014fefffda10338f86cdaa557fe8b",
+  "candidate_body_lines": [
+    "Candidate: 715f8871ee33e7d42e3f22b6b346ac3a3e05938a"
+  ],
+  "local_candidate_verification": {
+    "head": "715f8871ee33e7d42e3f22b6b346ac3a3e05938a",
+    "worktree_clean": true,
+    "base": "0ec3380f590cbaf5b01ee1c325eb222da99a3c5a",
+    "binary_diff_sha256": "c1d7ed2b15b237450dea31c6ca1de0fb288986d49516b311d544560d83cdd21c"
+  }
+}

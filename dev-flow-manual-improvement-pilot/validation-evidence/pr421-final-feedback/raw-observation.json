@@ -1,0 +1,91 @@
+[
+  {
+    "argv": [
+      "gh",
+      "pr",
+      "view",
+      "421",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "author,headRefOid,isDraft,number,state,url"
+    ],
+    "stdout": "{\"author\":{\"id\":\"MDQ6VXNlcjE1MjI4MDg=\",\"is_bot\":false,\"login\":\"iamcxa\",\"name\":\"Kent Chen\"},\"headRefOid\":\"715f8871ee33e7d42e3f22b6b346ac3a3e05938a\",\"isDraft\":false,\"number\":421,\"state\":\"MERGED\",\"url\":\"https://github.com/iamcxa/kc-claude-plugins/pull/421\"}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "gh",
+      "api",
+      "graphql",
+      "-F",
+      "owner=iamcxa",
+      "-F",
+      "name=kc-claude-plugins",
+      "-F",
+      "number=421",
+      "-f",
+      "query=query($owner: String!, $name: String!, $number: Int!, $cursor: String) { repository(owner: $owner, name: $name) { pullRequest(number: $number) { number headRefOid author { login } reviewThreads(first: 100, after: $cursor) { pageInfo { hasNextPage endCursor } nodes { id isResolved comments(first: 100) { pageInfo { hasNextPage endCursor } nodes { id author { login } body commit { oid } } } } } } } }"
+    ],
+    "stdout": "{\"data\":{\"repository\":{\"pullRequest\":{\"number\":421,\"headRefOid\":\"715f8871ee33e7d42e3f22b6b346ac3a3e05938a\",\"author\":{\"login\":\"iamcxa\"},\"reviewThreads\":{\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":null},\"nodes\":[]}}}}}",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "gh",
+      "api",
+      "--paginate",
+      "--slurp",
+      "repos/iamcxa/kc-claude-plugins/pulls/421/reviews?per_page=100"
+    ],
+    "stdout": "[[]]",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "gh",
+      "pr",
+      "view",
+      "421",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "author,headRefOid,isDraft,number,state,url"
+    ],
+    "stdout": "{\"author\":{\"id\":\"MDQ6VXNlcjE1MjI4MDg=\",\"is_bot\":false,\"login\":\"iamcxa\",\"name\":\"Kent Chen\"},\"headRefOid\":\"715f8871ee33e7d42e3f22b6b346ac3a3e05938a\",\"isDraft\":false,\"number\":421,\"state\":\"MERGED\",\"url\":\"https://github.com/iamcxa/kc-claude-plugins/pull/421\"}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "gh",
+      "pr",
+      "view",
+      "421",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "body,headRefOid,mergedAt,state,mergeCommit,statusCheckRollup"
+    ],
+    "stdout": "{\"body\":\"Go test-only changes should pass default surface mapping without requiring non-test implementation evidence.\\n\\n## What changed\\n\\n- Add `_test.go` to default test exclusions.\\n- Preserve strict mode, explicit mappings, and ordinary Go enforcement.\\n- Extend the existing Git-backed regression cases with bounded checker timeouts.\\n\\n## Evidence\\n\\n- Focused surface-map contract scenarios: 13/13 passed, including seven existing and six Go scenarios.\\n- Independent checks: 11/11 passed, detecting old, overbroad, and explicit-mapping-bypass producers.\\n\\nSame-fixture default result changed from failure to success; strict mode still refused missing evidence. The full suite was not rerun; CI status is pending.\\n\\nCandidate: 715f8871ee33e7d42e3f22b6b346ac3a3e05938a\\n\\n---\\n[3w8 \u2014 local Pilot review record](/iamcxa/kc-claude-plugins/blob/03582b667be624e83bf7d1a156ca682a4203e0b1/dev-flow-manual-improvement-pilot/index.md)\\n\",\"headRefOid\":\"715f8871ee33e7d42e3f22b6b346ac3a3e05938a\",\"mergeCommit\":{\"oid\":\"790278b7165682bfae8b0e61e091b40989328a16\"},\"mergedAt\":\"2026-09-11T08:13:57Z\",\"state\":\"MERGED\",\"statusCheckRollup\":[{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:10:41Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888075/job/103194435714\",\"name\":\"multi-profile route gate (live Spacedock)\",\"startedAt\":\"2026-09-11T08:10:34Z\",\"status\":\"COMPLETED\",\"workflowName\":\"kc-dev-flow release gate\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:14:01Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\",\"name\":\"multi-profile route gate (live Spacedock)\",\"startedAt\":\"2026-09-11T08:13:56Z\",\"status\":\"COMPLETED\",\"workflowName\":\"kc-dev-flow release gate\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:11:18Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\",\"name\":\"version parity (plugin.json / marketplace.json / codex / README)\",\"startedAt\":\"2026-09-11T08:10:34Z\",\"status\":\"COMPLETED\",\"workflowName\":\"marketplace version parity\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"2026-09-11T08:10:33Z\",\"conclusion\":\"SUCCESS\",\"detailsUrl\":\"https://dashboard.gitguardian.com\",\"name\":\"GitGuardian Security Checks\",\"startedAt\":\"2026-09-11T08:10:32Z\",\"status\":\"COMPLETED\",\"workflowName\":\"\"}]}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "gh",
+      "pr",
+      "checks",
+      "421",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--required"
+    ],
+    "stdout": "multi-profile route gate (live Spacedock)\tpass\t5s\thttps://github.com/iamcxa/kc-claude-plugins/actions/runs/34578158440/job/103195304295\t\nversion parity (plugin.json / marketplace.json / codex / README)\tpass\t44s\thttps://github.com/iamcxa/kc-claude-plugins/actions/runs/34577888099/job/103194435581\t\n",
+    "stderr": "",
+    "exit": 0
+  }
+]
