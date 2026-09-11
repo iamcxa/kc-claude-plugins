@@ -463,3 +463,16 @@ fixed time cycle.
 Kent authorized this local registration to be used for the approved journey
 board task before the registration is merged into main. The task retains its
 Captain-approved brief; local checks do not establish delivery acceptance.
+
+### Sprint S2 — plan one release into a development brief
+
+This standalone Pilot release lets a planner reuse journey decisions, resolve
+only the selected release's material value questions, and hand one reviewed
+Development Brief to existing dev-flow technical shaping. The release serves
+that user journey value and has no fixed time cycle. `sprint: S2` is the stored
+compatibility identifier until the separate release terminology migration.
+
+Kent authorized this registration and its use before merge for
+`plan-release-from-journey-board` on 2026-09-11. The work is a separate layer
+based on PR #417; its existing predecessors remain unchanged. This registration
+neither accepts delivery nor authorizes a push, PR creation, or merge.
