@@ -3,9 +3,11 @@
 
 This bounded kc-dev-flow extension retains the exact released Spacedock
 `pr-merge` 0.12.2 body with one `--draft` adjustment, then overrides its unsafe
-delivery and split-root seams below. The structural hash assertion in
-`scripts/kc-dev-flow-contract-test.py` rejects any other drift in the released
-body. The runtime entry remains
+delivery and split-root seams below. Every adopter contract test compares its
+`docs/dev/_mods/pr-merge.md` released body (everything before this marker)
+against the sha256 pinned at `contract-manifest.json`
+`pr_merge_released_body.sha256`, and fails naming the pin key when the body
+drifts. The runtime entry remains
 `spacedock merge guard {slug} --verdict passed|rejected --workflow-dir {dir}`.
 
 ### Residuals and without-it sections

@@ -517,6 +517,35 @@ if pr_merge_mod_extension != pr_merge_extension_resource:
         f"{first_diff}: mod={pr_merge_mod_extension[context_start:first_diff + 20]!r} "
         f"resource={pr_merge_extension_resource[context_start:first_diff + 20]!r}",
     )
+# The block-drift check above only proves the synced extension matches the
+# plugin's copy; it says nothing about the released Spacedock body the
+# extension sits on top of. Pin that body's digest in contract-manifest.json
+# so a released-body edit is caught here even though block==resource still
+# holds (the two checks guard disjoint byte ranges of the same file).
+pr_merge_released_body = pr_merge_mod.split(pr_merge_extension_marker, 1)[0].rstrip("\n")
+pr_merge_released_body_bytes = pr_merge_released_body.encode("utf-8")
+pr_merge_released_body_pin = manifest.get("pr_merge_released_body", {})
+expected_released_body_sha256 = pr_merge_released_body_pin.get("sha256")
+actual_released_body_sha256 = hashlib.sha256(pr_merge_released_body_bytes).hexdigest()
+require(
+    isinstance(expected_released_body_sha256, str) and len(expected_released_body_sha256) == 64,
+    "contract-manifest.json is missing a pinned pr_merge_released_body.sha256",
+)
+if actual_released_body_sha256 != expected_released_body_sha256:
+    require(
+        False,
+        "docs/dev/_mods/pr-merge.md released Spacedock pr-merge body (bytes "
+        f"0..{len(pr_merge_released_body_bytes)}, everything before the "
+        "'<!-- kc-dev-flow runtime extension:start -->' marker) drifted from the "
+        "pin in kc-dev-flow/contract-manifest.json pr_merge_released_body.sha256: "
+        f"expected sha256:{expected_released_body_sha256} "
+        f"got sha256:{actual_released_body_sha256} "
+        f"(expected {pr_merge_released_body_pin.get('bytes')} bytes, got "
+        f"{len(pr_merge_released_body_bytes)}). A sha256 pin has no reference "
+        "bytes to diff against, so no first-differing byte offset is named "
+        "here; naming one would require vendoring a second copy of the "
+        "released body in kc-dev-flow/.",
+    )
 # `release` was a Production-only runtime state until it stranded a Pilot item
 # outside its declared route. Nothing else reads adoption prose, so the retired
 # state is guarded here rather than trusted to a reviewer.
