@@ -122,4 +122,74 @@ require(
     f"build_receipt did not read workspace/session from dispatch.sh's real field names: {receipt!r}",
 )
 
+# --- AC-1/AC-2/AC-4 two-root flags: --dev-state/--ship-state and --state-dir shorthand ---
+require(
+    run(["ship-cloud-wrapper", "--dry-run", "--dev-state", str(dry_run_dir), "--ship-state", str(dry_run_dir)]).returncode == 0,
+    "--dev-state/--ship-state pointed at the same dir did not behave like --state-dir",
+)
+usage_err = run(["ship-cloud-wrapper", "--dry-run", "--dev-state", str(dry_run_dir)])
+require(
+    usage_err.returncode == 2,
+    f"missing --ship-state (and no --state-dir) did not exit 2: {usage_err.returncode}",
+)
+
+# --- AC-2: close.py itself scans `_debriefs/` and finds a task's pushed debrief the fence has
+# not recorded yet -- no message for it even in --dry-run, and a non-dry-run writes
+# `<slug>.debrief.status: pushed` with the matched path into the ship-state fence.
+# AC-4: a merged task with *no* fence entry at all still shows up "merged" from its own `pr:`
+# field, is not counted as a dispatch/merge failure, and appears in the receipt with
+# `workspace_id: null`.
+scan_fixtures = FIXTURES / "debrief-scan"
+scan_dev = scan_fixtures / "dev-state"
+scan_ship = scan_fixtures / "ship-state"
+
+scan_dry_run = run(["ship-cloud-wrapper", "--dry-run", "--dev-state", str(scan_dev), "--ship-state", str(scan_ship)])
+require(
+    scan_dry_run.returncode == 0,
+    f"debrief-scan fixture --dry-run did not exit 0: {scan_dry_run.returncode} stderr={scan_dry_run.stderr!r}",
+)
+require(
+    not [l for l in scan_dry_run.stdout.splitlines() if l.strip()],
+    f"debrief-scan fixture --dry-run printed a message for a task whose debrief is already "
+    f"findable under _debriefs/: {scan_dry_run.stdout!r}",
+)
+
+with tempfile.TemporaryDirectory() as scratch_name:
+    import shutil as _shutil  # noqa: E402
+
+    scratch = Path(scratch_name)
+    scratch_dev = scratch / "dev-state"
+    scratch_ship = scratch / "ship-state"
+    _shutil.copytree(scan_dev, scratch_dev)
+    _shutil.copytree(scan_ship, scratch_ship)
+
+    scan_live = run(["ship-cloud-wrapper", "--dev-state", str(scratch_dev), "--ship-state", str(scratch_ship)])
+    require(
+        scan_live.returncode == 0,
+        f"debrief-scan fixture non-dry-run did not exit 0: {scan_live.returncode} "
+        f"stdout={scan_live.stdout!r} stderr={scan_live.stderr!r}",
+    )
+
+    updated_fence = json.loads((scratch_ship / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8"))
+    require(
+        updated_fence["DEV-303"]["debrief"] == {"status": "pushed", "path": "_debriefs/2026-09-11-fixture-303.md"},
+        f"close.py did not scan _debriefs/ and record DEV-303's pushed debrief into the fence: {updated_fence!r}",
+    )
+    require(
+        updated_fence.get("DEV-304", {}).get("debrief") == {"status": "pushed", "path": "_debriefs/2026-09-11-fixture-304.md"},
+        f"close.py did not record a debrief found only in a _debriefs/ file's body: {updated_fence!r}",
+    )
+
+    scan_receipt_path = scratch_ship / "_ship_fence" / "close-receipt-ship-cloud-wrapper.json"
+    require(scan_receipt_path.is_file(), "debrief-scan fixture did not write a receipt")
+    scan_receipt = json.loads(scan_receipt_path.read_text(encoding="utf-8"))
+    require(
+        scan_receipt["tasks"]["DEV-304"]["workspace_id"] is None,
+        f"a task with no fence entry did not carry workspace_id: null in the receipt: {scan_receipt['tasks']['DEV-304']!r}",
+    )
+    require(
+        set(scan_receipt["tasks"]) == {"DEV-303", "DEV-304"},
+        f"receipt task set did not include the fence-less merged task: {sorted(scan_receipt['tasks'])!r}",
+    )
+
 print("close test: all checks passed")
