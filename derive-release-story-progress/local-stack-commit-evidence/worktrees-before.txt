@@ -1,0 +1,603 @@
+worktree /Users/kent/Project/kc-claude-workspace/kc-claude-plugins
+HEAD 3935988eb2cc4fe245b447096d8497877b3cfce4
+branch refs/heads/kc-pr-flow/review-only-daemon
+
+worktree /private/tmp/pin-worktree-52548
+HEAD c72ad25b6fae98bd0eca9016e8166acb0a6962c0
+detached
+prunable gitdir file points to non-existent location
+
+worktree /private/tmp/v-ext
+HEAD fcaeaf62fe14c3aeeabc8f722a4b3a825ddd853f
+detached
+
+worktree /private/tmp/v410
+HEAD 375315e144f5ce89914e2a98b35f3e2d7346a9fa
+detached
+
+worktree /private/tmp/v411
+HEAD 8dc28e4faf7fe9a363742a4dbd6729c47690d1c8
+detached
+
+worktree /private/tmp/validate-f4b522e4
+HEAD f4b522e49f0776d89b9596db67cd1f6cdb3572c2
+detached
+
+worktree /private/tmp/zb-verify
+HEAD 8b27fae190a5f09fdd3fe41fce1d65692ac20585
+detached
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.2IKCe1IuRx/wt
+HEAD c1bd1c0396bfaefe18bde41244b9f6a47e17ec3f
+branch refs/heads/feature/dev-134-accept-station-ac-3-path-extraction-must-accept-any-tracked
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.b7Ft8ElvPN/wt
+HEAD 1b1cefe155cd503a3b67b3e91b15a539ee88a02b
+branch refs/heads/feature/dev-148-kc-ship-flow-review-station-a-diff-that-touches-a-dependency
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.dDbBVmnOIF/wt
+HEAD 2c7363d75e67c3cda2053dbc7d5a827c105f951a
+branch refs/heads/feature/dev-129-plan-lint-admitted-only-l4-l8-l10-l6-advisory
+prunable gitdir file points to non-existent location
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.dn37zb9dZR/wt
+HEAD 6cd2c881e3343a8af1a03be6d4a1f86ea77699a2
+branch refs/heads/feature/dev-151-kc-ship-flow-open-prsh-write-the-pr-body-per-the-pr-merge
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.RmHLCc1q6c/wt
+HEAD 87d13967ea576f680f82065367a6425f366a96df
+branch refs/heads/feature/dev-156-kc-ship-flow-dispatch-station-dispatch-dev-entities-via
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.RzyxG2eMpc/wt
+HEAD 7d76023f2674dcb995ff361da47333dd52922173
+branch refs/heads/feature/dev-147-ship-flow-close-receipt-schema-forbids-the-debrief-writers
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.SIqzjSrCIY/wt
+HEAD fc046e98bbd95359a6536594f0d5084e43e22b0d
+branch refs/heads/feature/dev-149-kc-ship-flow-merge-verdict-verify-the-named-ci-check
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.W22HIXMjvJ/wt
+HEAD 2d54370c3d3832880a1195fd9d26d86c5994fa19
+branch refs/heads/feature/dev-153-kc-ship-flow-e2e-gatepy-root-resolves-from-the-plugin-file
+
+worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.ZFO2Jw6lzf/wt
+HEAD 930214ab5e4edf4fb36d5e46953a56118032d26b
+branch refs/heads/feature/dev-114-ship-flow-merge-station-ready-all-wait-clean-merge-in-order
+prunable gitdir file points to non-existent location
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/agent-native-pr-review-runtime-prep
+HEAD 914458dbddd079e2bb543c56a38cbbf02c0a86ac
+branch refs/heads/iamcxa/agent-native-pr-review-runtime
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/agent-native-pr-review-runtime-prep/.claude/worktrees/002-agent-native-pr-review-runtime
+HEAD 22f04047b75a10f289cf94ee41668335eca70b51
+branch refs/heads/iamcxa/agent-native-pr-review-shadow
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-evidence-intake
+HEAD 5294632d210c0b7e2137e44fc1eaff8bd4887c2d
+branch refs/heads/iamcxa/kc-dev-flow-evidence-intake
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-modular-distribution
+HEAD ae519f0fa703f063c9e8ba5d043654ea079f255f
+branch refs/heads/codex/dev-flow-modular-distribution
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-pressure-main
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round1-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round2-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round3-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round4-eval
+HEAD 22fe4e173fa98e4a781e15b2d5507a73a56a1190
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-test-strengthening
+HEAD d1ca2177cf0599607e3a28faabefc5b2872bbaaf
+branch refs/heads/iamcxa/kc-dev-flow-test-strengthening
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/e2e-browser-profile-lifecycle
+HEAD 1745b13563dd60ee41f51066ef15d0bff4929cb0
+branch refs/heads/main
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/e2e-issue-promotion
+HEAD b85126a1c27e9de3335257c3b7e9061708be45cb
+branch refs/heads/feat/e2e-issue-promotion
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-browser-runtime-isolation
+HEAD de2609cabafd70db04882bfe26697017e72c57ce
+branch refs/heads/fix/e2e-browser-runtime-isolation
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-flow-managed-auth
+HEAD eba572a138bac96d66411db812feb2fcc6d286d3
+branch refs/heads/fix/e2e-flow-managed-auth
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-runtime-ownership-services
+HEAD 02dedd85db154f66b120669a4c7891bf2b6121ac
+branch refs/heads/fix/e2e-runtime-ownership-services
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-trace-finalization
+HEAD 83077f855163f5fc30cffe7da191a3da634984de
+branch refs/heads/fix/e2e-trace-finalization
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-pr-185-policy-mod-selection
+HEAD 3d2e086a6105f56127f4d3e63a4e2a600f93969b
+branch refs/heads/iamcxa/fix-pr-185-policy-mod-selection
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/review-pr-193
+HEAD 9fc5878ffa7c30bd3dc8f12370d66c100aa083a1
+branch refs/heads/codex/fix-pr-193-review
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins-journey-map
+HEAD 671a9a83b9fb6469aaef3b12955f58f07c5a9c6a
+branch refs/heads/kc-team-ops/journey-map
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.harvest-journey-slicing
+HEAD ee9a5ac2d77c891bcd2316d749a760986473c406
+branch refs/heads/iamcxa/kc-dev-flow-journey-slicing
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-backlog-bar
+HEAD 10e48261c79b0401e8337f400d2665f1ddb805c9
+branch refs/heads/fix/kc-dev-flow-fo-relay-licence
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-kernel-iterate
+HEAD da0eae84d37fefa66f85d679e911590c1b729999
+branch refs/heads/iamcxa/kernel-integrate-early
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-source-binding
+HEAD 254b2d2f169de0ea13df4e0234b2bcfc7ffb220b
+branch refs/heads/iamcxa/kernel-scope-spacedock
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-verify-binding
+HEAD 9826fd4a6d0dc2ccf52db59d3083dff34febfe22
+branch refs/heads/iamcxa/verify-binding
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/dev-flow-382-repair
+HEAD dc4c8b13c0d86d81e4d79679d8ccb735117a9e52
+branch refs/heads/fix/kc-dev-flow-stage-pin-continuation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kathmandu
+HEAD 6b408ac102978d4bbf3614a7109934191520aa9b
+branch refs/heads/iamcxa/skills-mcp-dev-flow-review
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-capability-pilot
+HEAD 0d2e3164ccd2d60006688c5443717b818825a305
+branch refs/heads/feature/kc-pr-review-capability-protocol-pilot
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-speed
+HEAD 8d9018416c4783d17ad7456f9264318cc46b0142
+branch refs/heads/feature/kc-pr-review-delta-fast-path
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1
+HEAD 5ad8133d1ce123c8ee22aa2f9655e6cdd537f644
+branch refs/heads/feature/kc-pr-review-runtime-authority
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1-r2
+HEAD 826a278b2d3ffc31aacb200dcc9bf2c58460ff16
+branch refs/heads/feature/kc-pr-review-runtime-authority-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1-repin
+HEAD d266f0d6de9f8e7be9ce3fa15e99f241eea5e427
+branch refs/heads/feature/kc-pr-review-runtime-authority-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2
+HEAD ff7f44e9a7ca41494914bc75b9bd299d19b7362f
+branch refs/heads/feature/kc-pr-review-delta-routing
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2-r2
+HEAD 0b7be45758aa62441db8863d2b3a464d75f79e06
+branch refs/heads/feature/kc-pr-review-delta-routing-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2-repin
+HEAD 37343fc198ea7083c15f7471ea8d1b88f0c4c213
+branch refs/heads/feature/kc-pr-review-delta-routing-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3
+HEAD 3441a3f44db1e392f422ee5c233e09cef6612edc
+branch refs/heads/feature/kc-pr-review-evaluation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-r2
+HEAD eed9f4f651c1829017ea0b64f995051eb61ee028
+branch refs/heads/feature/kc-pr-review-evaluation-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-repair
+HEAD e77d8c4fe6b5353ca5919344b06f02a1a9799d69
+branch refs/heads/feature/kc-pr-review-evaluation-rebuilt
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-repin
+HEAD 786056f63c9b66b80a232757b960c89133f2bcbe
+branch refs/heads/feature/kc-pr-review-evaluation-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4
+HEAD f4d8b36ac5f68cf96bda5cb7c105981ef19e464f
+branch refs/heads/feature/kc-pr-review-skill-slimming
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-historical
+HEAD 26de054685526e58e9e96f8649ff3d01250c8a56
+branch refs/heads/archive/kc-pr-review-skill-slimming-26de0546
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-r2
+HEAD 1bc473ff471dbce21aef9c0e1212be5c66856a7e
+branch refs/heads/feature/kc-pr-review-skill-slimming-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-repair
+HEAD 9e57700a9c330f80b54ed273131177cd32ad863d
+branch refs/heads/feature/kc-pr-review-skill-slimming-rebuilt
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-repin
+HEAD 39c8c080e94b6615e43fef3cf58be5684a440960
+branch refs/heads/feature/kc-pr-review-skill-slimming-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kinshasa
+HEAD 6b408ac102978d4bbf3614a7109934191520aa9b
+branch refs/heads/iamcxa/conductor-local-routines
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1
+HEAD 6b408ac102978d4bbf3614a7109934191520aa9b
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/kc-dev-flow-kernel-diet
+HEAD f7ed5f1a97badcb4f5c617988cae35356a1020fe
+branch refs/heads/refactor/kc-dev-flow-kernel-diet
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/projection-main-54594f
+HEAD 54594f1871a1a693528f8bdbbe132010ea4fb6db
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/provider-linkage
+HEAD 017a8653bef82ebdfa2f1540d061fb00c84e5d6f
+branch refs/heads/fix/kc-dev-flow-provider-linkage
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/q0n-draft-route.W1KeQY
+HEAD 6b8e27ec2386fa852226041fb0e8fdfad5ef5c84
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/q0n-shrink-state
+HEAD 5da4cc684b2173646e173dd32d3f766478350b6c
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/q0n-state-append.RvSki3/docs/dev/.spacedock-state
+HEAD aaaa38581aa48239832b7d0623fc6f1119dca380
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/structured-output-review-base
+HEAD 215c5d48b1103bbc9e09fc7fb6ceec408028e765
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/verify-kc-dev-flow-audit-3d854b6
+HEAD 3d854b6d3464498419f68b21741ac455fa8dd5ed
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/ci-contract-signal
+HEAD 53c08eab4a42e3cc31731a86bbfcad691d93a54f
+branch refs/heads/iamcxa/ci-contract-signal
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/ci-decision-quality
+HEAD 4f98fd08959d52be2b3e90c0110d016ed3c55e21
+branch refs/heads/iamcxa/ci-decision-quality
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/dev-flow-behavioral-gate-design
+HEAD 747b6d59f230dab65fb65a32e85aed88615bb365
+branch refs/heads/iamcxa/dev-flow-behavioral-gate-design
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/dev-flow-explore-router
+HEAD 654c8cfa8dba465004768c8ee5fdcf1010f49700
+branch refs/heads/iamcxa/dev-flow-explore-router
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-admission-compatibility
+HEAD a246fe845aa60cdf446ec1ed143c865fb1bd137a
+branch refs/heads/fix/kc-dev-flow-admission-compatibility
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-adoption-correctness
+HEAD abbe926929af915c2bbb8bb243eca0f6e3ac11f2
+branch refs/heads/fix/kc-dev-flow-adoption-correctness
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-installed-linear-admission
+HEAD 55a07d087963d3478aa1c8bd89f1f9979af5b56d
+branch refs/heads/fix/kc-dev-flow-installed-linear-admission
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-linear-admission-runtime
+HEAD b4720d12426c898fa5647283cee0af0b64bd82f2
+branch refs/heads/fix/kc-dev-flow-linear-admission-runtime
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-multi-tag-smoke
+HEAD daf4c3d75163bbc9be31d1977db57a16f5e4d73f
+branch refs/heads/fix/kc-dev-flow-multi-tag-smoke
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-package-main-validation
+HEAD bd054355e326fadb60d84804bf3d11bd54071ff3
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-plugin-runtime
+HEAD 9d4e499ac5ac66d668131d378be41d487f89d446
+branch refs/heads/refactor/kc-dev-flow-plugin-runtime-v2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-prerelease-diet
+HEAD d97dfd87ad55fe0697b86f0098150c45b0241661
+branch refs/heads/fix/kc-dev-flow-prerelease-diet
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-release-receipt-binding
+HEAD c532f1dae472d319ec5778693110ed88f7df115d
+branch refs/heads/fix/kc-dev-flow-release-receipt-binding
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-release-safe-version-test
+HEAD 1d683d53588579202eddcf7110c63e1ebc177771
+branch refs/heads/fix/kc-dev-flow-release-safe-version-test
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-release-v410
+HEAD 18b1dba6047d5b7a34d064366ac5af622944af7d
+branch refs/heads/release-please--branches--main-v410
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-standalone-migration-doc
+HEAD c42660dd797f15b2065ddd4040f55852044dda33
+branch refs/heads/fix/kc-dev-flow-standalone-migration-doc
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-v411-candidate
+HEAD bd38b3e900c4069cfa19a5a9ca11c6141aaae101
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-v412-candidate
+HEAD f80c0014a3c2eb896308e3d77bb3a8aa0219ee6b
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/pr385-pin-integrity
+HEAD e3cf2d36983b7050b8fd4d54e884a6e014d88aa7
+branch refs/heads/fix/kc-ship-flow-pr385-pin-integrity
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-install
+HEAD cf61b4b5d631358d0f85f28a046c773737cf802f
+branch refs/heads/iamcxa/install-spacedock-project-projection
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-live-main
+HEAD c00de6c2140db268eb1fe693abfa347b13a9e0b4
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-live-state
+HEAD d1c9208e0737cdc42a9021e595e16bf875a14ba8
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-state-33bed021
+HEAD 33bed021d985867d7652c034bb3642e6c2bfa2fa
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-state-751bd351
+HEAD 751bd3519c7524c9c07a779ee951122ba2b1c1b3
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-projection
+HEAD dfbecb4211ade2aff55f00256212376a8a5b8182
+branch refs/heads/iamcxa/spacedock-github-project-projection
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-s3-schedule
+HEAD 654ea317455b87be246ba25563165c4f1ecf4f6e
+branch refs/heads/iamcxa/split-project-status-updates
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/release-341
+HEAD aa13c3bb61fefcfe3fa34cf108e8fe0f45bdbdd6
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/review-runtime-ci-routing
+HEAD 22cc394f8c9357ac4b9389dd05576b6bafa2b11f
+branch refs/heads/iamcxa/decouple-review-runtime-ci
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/roborev-state-em
+HEAD 223a073e2b66e021774eeb1fa3ea6f6ec5f83b74
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/rp-fix
+HEAD 20e03d6be65b89a5150154d9a8d8d151f9d0bd36
+branch refs/heads/iamcxa/release-please-exclude-empty-commits
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/rules-review-report-validity
+HEAD 12635f9227a1095383c3ac6e1d35cfccc955eac7
+branch refs/heads/iamcxa/rules-review-report-validity
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-projection-issue-fidelity
+HEAD bdd4dee58e373711a793bfe397bfdff71af08c13
+branch refs/heads/iamcxa/spacedock-projection-issue-fidelity
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/v4-release-control
+HEAD 844edfa75a021cc6c013186bb88fba81f598f912
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-completion-invariant
+HEAD 6448700695495143fc2bbb8bfdb5eaf73363e886
+branch refs/heads/refactor/kc-dev-flow-completion-invariant
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-engage-reconcile
+HEAD 6140782b63ddb2122248593c36d4bdcf3dfaef7b
+branch refs/heads/fix/kc-dev-flow-engage-reconcile
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-journey-activation
+HEAD 11832695d7c3a2a9b6beb103152f0c5667d2ce06
+branch refs/heads/fix/kc-dev-flow-journey-activation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-main-audit
+HEAD 40c223b7580dfad1900fe5d028ed0000b4200078
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-provider-neutral-planning
+HEAD 781c88c3ddacfb73758950aad58c4d843d2401f3
+branch refs/heads/refactor/kc-dev-flow-provider-neutral-planning
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-pr200
+HEAD 88cafd598d1aceff27ded9d58c0f5bf072c00c60
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-s2-schedule
+HEAD 0663691adee066e3c2137ed37780a72ec9e5643e
+branch refs/heads/spacedock-ensign/kc-dev-flow-s2-schedule
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-seed-normalization
+HEAD 4f07d558ad9f324bbde6b8d370578f2f66d57e17
+branch refs/heads/fix/kc-dev-flow-seed-normalization
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-v4-gate-fix
+HEAD 54eedc21c2809828c3168d8939a8d4c8a49947ee
+branch refs/heads/iamcxa/kc-dev-flow-v4-gate-fix
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/proportional-work-profile-evaluator-v1
+HEAD 762b6bfa1d5ea8975b69b69378b658498a754440
+branch refs/heads/prototype/proportional-work-profile-evaluator-v1
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/release-202
+HEAD 1fd7a9072083edee9fac0cf718d90536497f3b08
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/release-202-v2
+HEAD ddcd98c884b67513cefe78c704d031fea6472297
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/release-202-v3
+HEAD 543425a2b7ca1d38eac5d3cc9175004da99aaf1c
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit
+HEAD 78ae901808445f11bbf143dda51be741f245fb17
+branch refs/heads/iamcxa/roborev-implementation-exit
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-recut
+HEAD 307f1b20647f88509ac69d31c092f81eae2d2fc9
+branch refs/heads/iamcxa/roborev-implementation-exit-recut
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-agent-native-skill-eval-boundary
+HEAD 54594f1871a1a693528f8bdbbe132010ea4fb6db
+branch refs/heads/spacedock-ensign/agent-native-skill-eval-boundary
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-collapse-to-one-board
+HEAD b997dfdd46dddb20b919128ce422620f4742e5dc
+branch refs/heads/spacedock-ensign/collapse-to-one-board
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-comment-retention-discipline
+HEAD f187ddbdf3442b883512dc1d37c05442edf28e08
+branch refs/heads/spacedock-ensign/comment-retention-discipline
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-default-to-the-journey-alone
+HEAD 7dc97cc98c3e16aaedcfb405605bd929bf2459bc
+branch refs/heads/spacedock-ensign/default-to-the-journey-alone
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-derive-release-story-progress
+HEAD 6b408ac102978d4bbf3614a7109934191520aa9b
+branch refs/heads/spacedock-ensign/derive-release-story-progress
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-dev-flow-pr-merge-extension
+HEAD f4b522e49f0776d89b9596db67cd1f6cdb3572c2
+branch refs/heads/spacedock-ensign/dev-flow-pr-merge-extension
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-evidence-means-executable-code
+HEAD f97e4ff83dc059f2f62004c0a4fe85826f1ff506
+branch refs/heads/spacedock-ensign/evidence-means-executable-code
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-extract-the-journey-map-plugin
+HEAD dc317b5e88f72ca2ad7f1dbcdb3fd84b0c364bd9
+branch refs/heads/spacedock-ensign/extract-the-journey-map-plugin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy
+HEAD 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543
+branch refs/heads/spacedock-ensign/native-stacked-pr-policy
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy-v2
+HEAD e5b2e07fe45da7fe6104b15573f7a199ecf4da8f
+branch refs/heads/spacedock-ensign/native-stacked-pr-policy-v2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy-v3
+HEAD a87326b901bebd88858beea85a463b1fbd1a26cf
+branch refs/heads/spacedock-ensign/native-stacked-pr-policy-v3
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-routing
+HEAD 7b315696705840b0db4941d8205e53247ccafdd8
+branch refs/heads/spacedock-ensign/native-stacked-pr-routing
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment
+HEAD 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae
+branch refs/heads/spacedock-ensign/pr-merge-runtime-alignment
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment-v2
+HEAD 264aabb017a36dcda0a740f28896086eab96bcc6
+branch refs/heads/spacedock-ensign/pr-merge-runtime-alignment-v2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment-v3
+HEAD 647d4c87805f0dde8b71d1153d2c226edb129d87
+branch refs/heads/spacedock-ensign/pr-merge-runtime-alignment-v3
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment-v4
+HEAD 937f5266f5da6f53a196c5c88c6d51ca42ecccdd
+branch refs/heads/spacedock-ensign/pr-merge-runtime-alignment-v4
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-profiled-pr-review-capability-protocol
+HEAD 4cb7d57e2b445932371158a6cd09a63f933cd760
+branch refs/heads/spacedock-ensign/profiled-pr-review-capability-protocol
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-reverse-a-story-map-from-linear
+HEAD ba9625ce0701bb5ab27e6c15affa8078f851fab5
+branch refs/heads/spacedock-ensign/reverse-a-story-map-from-linear
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-ship-cloud-dispatch-and-watch
+HEAD 8b27fae190a5f09fdd3fe41fce1d65692ac20585
+branch refs/heads/spacedock-ensign/ship-cloud-dispatch-and-watch
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-show-release-stories-on-journey-boards
+HEAD 6b408ac102978d4bbf3614a7109934191520aa9b
+branch refs/heads/spacedock-ensign/show-release-stories-on-journey-boards
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-project-status-updates
+HEAD f187ddbdf3442b883512dc1d37c05442edf28e08
+branch refs/heads/iamcxa/spacedock-project-status-updates
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev/.spacedock-state
+HEAD 6c2d5af977ffa659bbd94ab862e56be7c225ff6e
+branch refs/heads/spacedock-state/dev
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/ship/.spacedock-state
+HEAD 86dd13b98f646774043ab1124cfac126c08e1bb4
+branch refs/heads/spacedock-state/ship
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/plan-flow-392
+HEAD 61d366850edd698fc6314d8955eaebdb6dd0bcbe
+branch refs/heads/fix/ship-state-branch-from-the-checkout
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/pr384-contract-repair
+HEAD 408fd12bf2f1093efabe6e38e828a865464aa86b
+branch refs/heads/fix/kc-ship-flow-manifest-contract-pr384
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/rules-review-skill
+HEAD 126a1e55e25d478521565024402d7d8907e42f73
+branch refs/heads/iamcxa/workflow-scope-plugin-dev
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma
+HEAD 1166747c22f0d6c62db098e5f8cad61bf81174bd
+branch refs/heads/iamcxa/journey-map-skill-merge
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-board-stories
+HEAD bc51b2464659594d3c06806442c77ec15319962b
+branch refs/heads/codex/journey-board-stories
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-progress
+HEAD 947501df45dea7d139ff030eed4549701170fcab
+branch refs/heads/codex/journey-progress
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut
+HEAD c9c5752fda853737d4a937ad7f59564c5651ca53
+branch refs/heads/codex/journey-stack-recut
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/wt-devflow-trunk-clause
+HEAD 5e939c7fd98d04b3854f126754a333185deabc53
+branch refs/heads/iamcxa/dev-flow-audit-trunk-target
+
+worktree /Users/kent/Project/kc-claude-workspace/.worktrees/kc-pr-review-architecture-diagrams
+HEAD 454d4ecbf47149da8b6e6729780515bf38a0171f
+branch refs/heads/feat/kc-pr-review-architecture-diagrams
+
+worktree /Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.worktrees/fix-resolve-state-slug
+HEAD e97b349b7bfc3d6cb88bbac288a7bebb283f7652
+branch refs/heads/fix/kc-pr-review-resolve-state-file-slug
+

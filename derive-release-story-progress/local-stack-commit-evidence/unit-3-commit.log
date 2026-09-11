@@ -1,0 +1,7 @@
+HEAD is now at 818260a8 feat(kc-journey-map): add release evidence details and status borders
+[codex/journey-local-progress aabb8e7e] feat(kc-journey-map): derive optional local task progress
+ 10 files changed, 427 insertions(+), 27 deletions(-)
+ create mode 100644 kc-journey-map/lib/journey-progress.mjs
+ create mode 100644 kc-journey-map/lib/progress.mjs
+ create mode 100644 kc-journey-map/lib/progress.test.mjs
+ create mode 100644 kc-journey-map/skills/kc-journey-progress/SKILL.md

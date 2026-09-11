@@ -545,3 +545,14 @@ Behavior, exact candidate integrations, approved code/dependency reductions and 
 ### Summary
 
 The sole prescribed comment correction is complete and bound to three corrected cumulative trees. The packet is held for the Captain decision through First Officer orchestration; this closure adds no independent runtime verdict or delivery authority.
+
+## Stage Report: implementation (cycle 6)
+
+- DONE: Create exactly the three Captain-approved local commits with exact tree/parent/file/subject equality while preserving existing worktrees and unrelated changes.
+  Approval provenance: Kent answered **批准** to accepting the round-3 exact schema comment correction and approving the local-commit packet. Created `codex/journey-planning` at `0d69be164ccdcd1b3509f3577d6bd03a468f8f36`, `codex/journey-release-inspection` at `818260a8c14b504dae8d3989ba9c710226255b74`, and `codex/journey-local-progress` at `aabb8e7e8320b65fa852feae961df2e438d8f002`, each with the approved single parent/tree/subject/path set. [Exact commit evidence](local-stack-commit-evidence/commits.json) and [preservation/limits](local-stack-commit-evidence/README.md). Ordinary commits, no hook bypass, no new code edits or tests. Root and all pre-existing worktree tuples unchanged; three owned isolated commit worktrees added. Retained version parity and AC-1..AC-5 source/runtime evidence carry through exact approved tree equality.
+- DONE: Prepare full three-unit Draft PR bindings and exact body files with pinned pair preflight, then durably report completed local commits and pending delivery authority.
+  [Complete unpublished stack draft](local-stack-commit-evidence/draft-stack-review.md) and [canonical delivery tuples](local-stack-commit-evidence/draft-units.json) bind actual mode-0600 body files, hashes, full candidate/base SHAs, explicit code repository and immutable split-root audit links. Live main is `c1564b218799b3baf07fc5e6c346bb6dcc476a7e`; no rebase. All three exact pair merge-tree preflights pass; bottom combined tree `3319ba6f63257f636ea848a56443cbe9b73bc1c0`. No runtime claim attaches to that merged tree. Draft bodies use relevant retained 17/17, 67/67, 9/9 evidence; CI cost is unmeasured. No push/PR/link/ready/merge/release/provider/reviewer/gate action ran. Existing Draft #394 and prior immutable verdicts remain unchanged.
+
+### Summary
+
+Exactly three authorized local product commits are complete. The full native-stack Draft delivery package is concrete and held for separate Captain push/PR approval; task status remains implementation.

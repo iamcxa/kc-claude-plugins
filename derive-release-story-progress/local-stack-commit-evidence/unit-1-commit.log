@@ -1,0 +1,39 @@
+HEAD is now at c9c5752f fix(kc-dev-flow): separate pending and final POC close measurements (#412)
+[codex/journey-planning 0d69be16] feat(kc-journey-map): add editable native planning canvas
+ 42 files changed, 6994 insertions(+), 311 deletions(-)
+ create mode 100644 .github/workflows/kc-journey-map-tests.yml
+ create mode 100644 kc-journey-map/.claude-plugin/plugin.json
+ create mode 100644 kc-journey-map/.codex-plugin/plugin.json
+ create mode 100644 kc-journey-map/.gitignore
+ create mode 100644 kc-journey-map/lib/doctor.mjs
+ create mode 100644 kc-journey-map/lib/fixture.mjs
+ create mode 100644 kc-journey-map/lib/journey-export.mjs
+ create mode 100644 kc-journey-map/lib/journey-read.mjs
+ create mode 100644 kc-journey-map/lib/journey-render.mjs
+ create mode 100644 kc-journey-map/lib/journey-tldr.mjs
+ create mode 100644 kc-journey-map/lib/model.mjs
+ create mode 100644 kc-journey-map/lib/read.mjs
+ create mode 100644 kc-journey-map/lib/read.test.mjs
+ create mode 100644 kc-journey-map/lib/records.mjs
+ create mode 100644 kc-journey-map/lib/render.mjs
+ create mode 100644 kc-journey-map/lib/storymap.mjs
+ create mode 100644 kc-journey-map/lib/storymap.test.mjs
+ create mode 100644 kc-journey-map/package-lock.json
+ create mode 100644 kc-journey-map/package.json
+ create mode 100755 kc-journey-map/scripts/canvas-smoke.sh
+ create mode 100644 kc-journey-map/server/canvas-server.ts
+ create mode 100644 kc-journey-map/server/client/App.tsx
+ create mode 100644 kc-journey-map/server/client/index.css
+ create mode 100644 kc-journey-map/server/client/index.html
+ create mode 100644 kc-journey-map/server/client/main.tsx
+ create mode 100644 kc-journey-map/server/client/vite-env.d.ts
+ create mode 100644 kc-journey-map/server/rooms.ts
+ create mode 100644 kc-journey-map/skills/kc-journey-map/SKILL.md
+ create mode 100644 kc-journey-map/skills/kc-journey-map/references/canvas.md
+ create mode 100644 kc-journey-map/skills/kc-journey-map/references/cell-contract.md
+ create mode 100644 kc-journey-map/skills/kc-journey-map/references/journey.example.yaml
+ create mode 100644 kc-journey-map/tsconfig.json
+ create mode 100644 kc-journey-map/vite.config.mts
+ delete mode 100644 kc-team-ops/skills/kc-journey-map/SKILL.md
+ delete mode 100644 kc-team-ops/skills/kc-journey-map/references/board-template.html
+ delete mode 100644 kc-team-ops/skills/kc-journey-map/references/cell-contract.md

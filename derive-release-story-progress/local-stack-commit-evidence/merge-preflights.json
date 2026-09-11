@@ -1,0 +1,53 @@
+[
+  {
+    "unit": 1,
+    "base": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+    "candidate": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-planning",
+      "merge-tree",
+      "--write-tree",
+      "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+      "0d69be164ccdcd1b3509f3577d6bd03a468f8f36"
+    ],
+    "exit": 0,
+    "result": "3319ba6f63257f636ea848a56443cbe9b73bc1c0\n",
+    "stderr": ""
+  },
+  {
+    "unit": 2,
+    "base": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+    "candidate": "818260a8c14b504dae8d3989ba9c710226255b74",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-release-inspection",
+      "merge-tree",
+      "--write-tree",
+      "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+      "818260a8c14b504dae8d3989ba9c710226255b74"
+    ],
+    "exit": 0,
+    "result": "058298ebd763f16e395c77ebeea1474a193cddc0\n",
+    "stderr": ""
+  },
+  {
+    "unit": 3,
+    "base": "818260a8c14b504dae8d3989ba9c710226255b74",
+    "candidate": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-local-progress",
+      "merge-tree",
+      "--write-tree",
+      "818260a8c14b504dae8d3989ba9c710226255b74",
+      "aabb8e7e8320b65fa852feae961df2e438d8f002"
+    ],
+    "exit": 0,
+    "result": "8a581c3c1bdbc2d11783f35cc040cfafd72c9f3f\n",
+    "stderr": ""
+  }
+]
