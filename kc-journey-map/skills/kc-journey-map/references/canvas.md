@@ -6,13 +6,19 @@ room with other people instead of only read as a PNG.
 ## The split that makes it worth having
 
 The journey file in the repository is the source of truth. The room is a rendering of
-it. That is the whole design:
+it. Follow [Source placement](../SKILL.md#source-placement) for the canonical path:
 
 - **The file goes in git.** It diffs, it reviews, it survives tldraw.
 - **The room preserves native edits.** Read edits back or export a `.tldr` backup
   before deleting `.rooms/`; re-rendering cannot recover unexported manual state.
 - **No coordinates in the file.** Position is computed from the model's order. Writing
   `x`/`y` back would make the file a tldraw shadow and destroy the diff.
+
+A `.tldr` snapshot beside the source is an optional, deliberate backup or sharing
+artifact, not an export required after every update; YAML remains the authority.
+Keep room databases (`.rooms/*.db`) out of git: they are local runtime data.
+`server/rooms.ts` uses `JOURNEY_ROOMS_DIR`, or `./.rooms` relative to the service working
+directory by default; it does not automatically place rooms in the consuming repository.
 
 ## Run it
 

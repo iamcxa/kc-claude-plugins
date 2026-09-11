@@ -60,8 +60,8 @@ State plainly which ref was measured. Work living only in open PRs, worktrees, o
 is not the current system, and the status card must say so.
 
 **4. Write the journey file.** `references/cell-contract.md` rules what each evidence lane may assert; `references/canvas.md` lists the story-map fields (persona, one_journey, now, stories, ownership, slices). In draw/check mode, give every story a `status` (`gap`, `unverified` or `exists`) and, when it exists, an `evidence` symbol — the meanings are defined in `references/cell-contract.md`; these are what the lints in `lib/lint.mjs` check. The board is not the
-artifact — the file is. It lives in the consuming repository (`docs/journey/<slug>.yaml`
-by convention) and holds the steps, the stories with their status and evidence, the system
+artifact — the file is. It lives in the consuming repository (see [Source placement](#source-placement))
+and holds the steps, the stories with their status and evidence, the system
 lines with their citations, the rules, the slices and the status card. `references/journey.example.yaml` is a worked one. Story map and release-board story cards use yellow fill and green/red/violet status borders, with one shared legend per page; `references/canvas.md` describes native editing and export behavior.
 
 Positions are never written to the file. Every layout number is computed from the model's
@@ -106,8 +106,23 @@ in one line and carry on with the canvas.
 `.md` — both are readable, both go in git, and the file is the artifact the board renders
 from. Do not stall, and do not hand-draw a substitute board that no file backs.
 
-Artifact path: `docs/journey/<slug>.yaml` in the repository the journey describes, with the
-`.md` beside it carrying the citations.
+## Source placement
+
+Paths are relative to the consuming repository root:
+
+| Repository scope | Journey source |
+| --- | --- |
+| Single repository or single-product monorepo | `docs/journey/<journey>.yaml` |
+| Multi-product monorepo | `docs/journey/<product>/<journey>.yaml` |
+
+Organize by user journey and product: one source spans frontend, API and shared packages;
+do not duplicate it per technical package. Reuse an existing canonical source instead
+of creating a competing copy. YAML is the versioned authority; optional `.md` citations
+and native editable `.tldr` snapshots sit beside it (see [canvas.md](references/canvas.md)).
+
+Existing teaching fixtures remain in `references/journey.example.yaml` and
+`references/example/`. New ongoing planning for this plugin belongs in the consuming
+marketplace repository at `docs/journey/kc-journey-map/<journey>.yaml`; no fixtures move.
 
 ## Hard rules
 
