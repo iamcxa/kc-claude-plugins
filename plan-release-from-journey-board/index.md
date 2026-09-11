@@ -1,6 +1,6 @@
 ---
 title: Plan a release from journey-board decisions into a development brief
-status: implementation
+status: validation
 product: kc-journey-map
 source:
 planning-window:
