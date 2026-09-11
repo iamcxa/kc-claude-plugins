@@ -1,3 +1,13 @@
+// Reads a rendered room back and reports what a person changed on the canvas.
+//
+// Projections share activity and story identities but give positions different meanings.
+// Changed wording is compared across projections; competing edits are reported as a
+// conflict and that field is not applied.
+//
+// What round-trips is what a workshop actually changes — the wording of a card, the order
+// of the columns, the priority of the stories under an activity. System/constraint lanes have a
+// lossy inverse: a constraint is stored as a rule id and drawn as that rule's text, so
+// canvas text cannot be mapped back to an id without guessing. Those are never applied.
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
@@ -5,7 +15,10 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { parse, parseDocument } from 'yaml'
 
 const STORY_PAGE = 'page:page'
-const pageName = (parentId) => parentId === STORY_PAGE ? 'storymap' : parentId
+const BOARD_PREFIX = 'page:jm-board-'
+const isBoard = (parentId) => String(parentId).startsWith(BOARD_PREFIX)
+const pageName = (parentId) =>
+	parentId === STORY_PAGE ? 'storymap' : isBoard(parentId) ? `board:${String(parentId).slice(BOARD_PREFIX.length)}` : parentId === 'page:jm-funcmap' ? 'funcmap' : parentId
 const NOTE_W = 200
 
 const plain = (rich) =>
@@ -13,6 +26,8 @@ const plain = (rich) =>
 		.map((p) => (p.content ?? []).map((t) => t.text ?? '').join(''))
 		.join('\n')
 		.trim()
+
+const stripNumber = (text) => text.replace(/^\d+\.\s*/, '')
 
 export async function readRoom({ room, api = API }) {
 	const doc = await fetch(`${api}/doc?room=${room}`).then((r) => r.json())
@@ -36,9 +51,9 @@ const orderOf = (map) =>
 
 function placeUnderColumn(shape, anchors) {
 	const scored = anchors
-		.map(({ nodeId, x }) => ({
+		.map(({ nodeId, x, w = NOTE_W }) => ({
 			nodeId,
-			frac: Math.max(0, Math.min(shape.x + NOTE_W, x + NOTE_W) - Math.max(shape.x, x)) / NOTE_W,
+			frac: Math.max(0, Math.min(shape.x + NOTE_W, x + w) - Math.max(shape.x, x)) / NOTE_W,
 		}))
 		.filter((s) => s.frac > 0)
 		.sort((a, b) => b.frac - a.frac)
@@ -53,35 +68,80 @@ export function diffAgainstModel(shapes, model) {
 	const steps = model.steps ?? []
 	const modelOrder = steps.map((s) => s.id)
 
+	// A step in two releases appears on both of their boards. That is not a duplicate, so
+	// cards are collected per page and only compared within one.
+	const boardPages = [...new Set(shapes.filter((s) => isBoard(s.parentId)).map((s) => s.parentId))]
 	const story = shapes.filter((s) => s.parentId === STORY_PAGE)
+
+	const perBoard = boardPages.map((pid) => {
+		const page = shapes.filter((s) => s.parentId === pid)
+		return { pid, cards: byKind(page, 'step-card'), activities: byKind(page, 'activity'), stories: byKind(page, 'story') }
+	})
+	const wholeBoard = perBoard.find((b) => b.pid === `${BOARD_PREFIX}all`)
+	const cards = wholeBoard ? [...wholeBoard.cards, ...wholeBoard.activities] : []
 	const activities = byKind(story, 'activity')
 	const stories = byKind(story, 'story')
-	const duplicated = [...new Set([...duplicatesOf(activities), ...duplicatesOf(stories)])]
+	const duplicated = [...new Set([
+		...perBoard.flatMap((b) => [...duplicatesOf([...b.cards, ...b.activities]), ...duplicatesOf(b.stories)]),
+		...duplicatesOf(activities), ...duplicatesOf(stories),
+	])]
+	const cardBy = indexByNode(cards, duplicated)
 	const actBy = indexByNode(activities, duplicated)
 	const storyBy = indexByNode(stories, duplicated)
-	const reworded = []
-	for (const step of steps) {
-		const onStory = actBy.has(step.id) ? plain(actBy.get(step.id).props?.richText) : null
-		const field = step.activity ? 'activity' : 'card'
-		const was = step.activity ?? step.card
-		if (onStory && onStory !== was)
-			reworded.push({ id: step.id, field, page: 'storymap', was, now: onStory })
-	}
 
+	// ── wording ──────────────────────────────────────────────────────────────────
+	// Compare changed observations with the file, so an untouched projection does not
+	// veto an edit elsewhere. Distinct edits of the same field are conflicts. A duplicate
+	// within any one page makes that entity ambiguous across all projections.
+	const reworded = []
+	const rewordConflict = []
+	const observations = (records, id) => records.filter((s) => s.meta.journey.nodeId === id)
+	const resolveWording = (id, field, was, records, step = null) => {
+		if (duplicated.includes(id)) return
+		const changed = records.map((s) => ({
+			page: pageName(s.parentId),
+			now: s.meta.journey.kind === 'step-card' ? stripNumber(plain(s.props?.richText)) : plain(s.props?.richText),
+		})).filter((s) => s.now && s.now !== was)
+		const words = [...new Set(changed.map((s) => s.now))]
+		if (words.length > 1) {
+			rewordConflict.push({ id, field,
+				board: [...new Set(changed.filter((s) => s.page.startsWith('board:')).map((s) => s.now))].join(' | ') || null,
+				storymap: changed.find((s) => s.page === 'storymap')?.now ?? null,
+			})
+		} else if (words.length) {
+			reworded.push({ id, field, page: changed[0].page, ...(step ? { step } : {}), was, now: words[0] })
+		}
+	}
+	const legacyCards = perBoard.flatMap((b) => b.cards)
+	const allActivities = [...activities, ...perBoard.flatMap((b) => b.activities)]
+	const allStories = [...stories, ...perBoard.flatMap((b) => b.stories)]
 	for (const step of steps) {
+		const legacy = observations(legacyCards, step.id)
+		const activity = observations(allActivities, step.id)
+		if (step.activity != null) {
+			resolveWording(step.id, 'card', step.card, legacy)
+			resolveWording(step.id, 'activity', step.activity, activity)
+		} else resolveWording(step.id, 'card', step.card, [...legacy, ...activity])
 		;(step.stories ?? []).forEach((s, j) => {
 			const id = typeof s === 'string' ? `${step.id}-${j}` : (s.id ?? `${step.id}-${j}`)
-			const was = typeof s === 'string' ? s : s.card
-			const shape = storyBy.get(id)
-			if (!shape) return
-			const now = plain(shape.props?.richText)
-			if (now && now !== was) reworded.push({ id, field: 'story', page: 'storymap', step: step.id, was, now })
+			resolveWording(id, 'story', typeof s === 'string' ? s : s.card, observations(allStories, id), step.id)
 		})
 	}
 
+	// ── column order ─────────────────────────────────────────────────────────────
+	// Column order only round-trips from a whole-journey board: a release board shows a
+	// subset, so its left-to-right order says nothing about the steps it does not draw.
+	const boardOrder = orderOf(cardBy)
 	const storyOrder = orderOf(actBy)
+	const boardMoved = boardOrder.length && boardOrder.join() !== modelOrder.filter((id) => cardBy.has(id)).join()
 	const storyMoved = storyOrder.length && storyOrder.join() !== modelOrder.filter((id) => actBy.has(id)).join()
-	const reordered = storyMoved ? storyOrder : null
+
+	let reordered = null
+	let reorderConflict = null
+	if (boardMoved && storyMoved && boardOrder.join() !== storyOrder.join())
+		reorderConflict = { board: boardOrder, storymap: storyOrder }
+	else if (boardMoved) reordered = boardOrder
+	else if (storyMoved) reordered = storyOrder
 
 	const lines = byKind(story, 'release-line').sort((a, b) => a.y - b.y)
 	const declaredReleases = (model.releases ?? []).map((r) => r.id)
@@ -126,21 +186,26 @@ export function diffAgainstModel(shapes, model) {
 		}
 	}
 
+	const boardAnchors = new Map(perBoard.map((b) => [b.pid, [...indexByNode([...b.cards, ...b.activities], duplicated).entries()]
+		.map(([nodeId, s]) => ({ nodeId, x: s.x, w: s.props?.w ?? NOTE_W }))]))
 	const storyAnchors = [...actBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
 
 	const unclaimed = shapes
 		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
 		.map((s) => {
+			// A page this reader does not model still names itself, so a card added on the
+			// function map is not reported as if it were on the board.
 			const page = pageName(s.parentId)
-			const anchors = page === 'storymap' ? storyAnchors : []
+			const anchors = page === 'storymap' ? storyAnchors : page.startsWith('board:') ? (boardAnchors.get(s.parentId) ?? []) : []
 			const placed = anchors.length ? placeUnderColumn(s, anchors) : { column: null }
 			return { id: s.id, text: plain(s.props?.richText), page, ...placed }
 		})
 		.filter((s) => s.text)
 
-	const missing = modelOrder.filter((id) => !actBy.has(id) && !duplicated.includes(id))
+	const presentSteps = new Set([...legacyCards, ...allActivities].map((s) => s.meta.journey.nodeId))
+	const missing = modelOrder.filter((id) => !presentSteps.has(id) && !duplicated.includes(id))
 
-	return { reordered, reworded, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
+	return { reordered, reorderConflict, reworded, rewordConflict, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
 }
 
 // Preserve untouched YAML wrapping when writing individual edits.
@@ -171,6 +236,10 @@ export function applyDiff(path, diff, outPath = path) {
 		}
 		const node = findStep(steps, id)
 		if (!node) continue
+		if (node.get(field) !== was) {
+			skipped.push(`${id}.${field} wording changed in the file — read the canvas again`)
+			continue
+		}
 		node.set(field, now)
 		applied.push(`reworded ${id}.${field}`)
 	}
@@ -202,7 +271,11 @@ export function applyDiff(path, diff, outPath = path) {
 		applied.push(`reprioritised stories under ${step}`)
 	}
 
-	if (diff.reordered && diff.duplicated.length)
+	if (diff.rewordConflict.length)
+		skipped.push(`${diff.rewordConflict.length} wording conflict(s) across projections — resolve on the canvas`)
+
+	if (diff.reorderConflict) skipped.push('reorder refused — the two pages are in different orders')
+	else if (diff.reordered && diff.duplicated.length)
 		skipped.push(`reorder refused — ${diff.duplicated.join(', ')} appear more than once on the canvas`)
 	else if (diff.reordered) {
 		const index = new Map(diff.reordered.map((id, i) => [id, i]))

@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+// tldraw's own file format, used for what it is good at: moving a board between tools
+// without losing a pixel. It is not a journey file — it stores coordinates and colours,
+// not steps and citations. The two compose because `meta.journey` rides inside the
+// records, so a board can leave here, be opened in any tldraw, come back, and still be
+// read against its journey file.
 
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'

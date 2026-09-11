@@ -1,3 +1,8 @@
+// A test fixture, and nothing else — it is not a journey of any product.
+//
+// The shipped example is a real board and declares no stories, no Now row and no
+// ownership band, so those paths need a model of their own.
+
 export const fixtureModel = {
 	journey: 'fixture',
 	persona: 'A person who has to do the thing.',
@@ -15,21 +20,29 @@ export const fixtureModel = {
 			id: 'a',
 			card: 'Asks for the thing',
 			stories: [
-				{ id: 'a-0', card: 'Names it', release: 'r1' },
-				{ id: 'a-2', card: 'Confirms it', release: 'r1' },
-				{ id: 'a-1', card: 'Picks a target', release: 'r2' },
+				{ id: 'a-0', card: 'Names it', release: 'r1', status: 'exists', evidence: 'NamesIt' },
+				{ id: 'a-2', card: 'Confirms it', release: 'r1', status: 'exists', evidence: 'ConfirmsIt' },
+				{ id: 'a-1', card: 'Picks a target', release: 'r2', status: 'exists', evidence: 'PicksTarget' },
 			],
 		},
 		{
 			id: 'b',
 			card: 'Gets the thing',
-			stories: [{ id: 'b-see', card: 'Sees it arrive', release: 'r1' }],
+			// The gap moved from the step (badge: NOT_BUILT) to the story it actually blocks —
+			// a step is too coarse a grain to be a build unit.
+			stories: [{ id: 'b-see', card: 'Sees it arrive', release: 'r1', status: 'gap', question: 'Should delivery be push or pull?' }],
+			command: 'GetTheThing(id)',
+			events: ['ThingDelivered', 'DeliveryRefused'],
+			state: 'the thing',
+			readmodel: 'a delivery receipt',
 		},
 		{
 			id: 'c',
 			card: 'Uses the thing',
-			stories: [{ id: 'c-read', card: 'Reads the result', release: 'r1' }, 'An unplaced idea'],
+			stories: [{ id: 'c-read', card: 'Reads the result', release: 'r1', status: 'exists', evidence: 'ReadsResult' }, 'An unplaced idea'],
 		},
 	],
 	ownership: [{ id: 'own-setup', owner: 'Setup', from: 'a', to: 'b', note: 'operator-assisted is acceptable' }],
+	rules: [],
+	status: { undeployed: 'nothing is deployed', as_of: '2026-09-08' },
 }

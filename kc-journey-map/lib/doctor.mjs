@@ -54,7 +54,7 @@ for (const { name, ok: good, detail, fix } of checks) {
 
 const failed = checks.filter((c) => !c.ok)
 if (failed.length) {
-	console.log(`\n${failed.length} check(s) failed. Resolve the failed prerequisites before starting the canvas.`)
+	console.log(`\n${failed.length} check(s) failed. Resolve these prerequisites, or provide the journey YAML and Markdown without a canvas.`)
 	process.exit(1)
 }
 console.log('\nReady. npm run canvas')
