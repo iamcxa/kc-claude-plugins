@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:esc73128rg68pqmtpck3a90q:validation:attempt-1:revision-1",
+  "question": "Do close.py/uat-doc.py now satisfy AC-1..AC-4 (two-root flags, archived/folder-form entity discovery, debrief scan into the fence, real-sprint receipt regeneration) without regressing sibling scripts?",
+  "artifacts": [
+    {
+      "id": "artifact:esc73128rg68pqmtpck3a90q:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e6b241c4a0e7fa9cb1c51e81b75eb879ea21f8f0/ship-verify-uat-close-round-2/review/validation/validation-review.md",
+      "rev": "sha256:f0600e03534ffc698c3c07fcb4c72c24fe22fff5010a0bf67cd6f82905796b30",
+      "mediaType": "text/markdown",
+      "summary": "close.py/uat-doc.py read --dev-state/--ship-state, archived + folder-form entities, and scan _debriefs/ to record fence debrief status; AC-1..AC-4 verified against fixtures and the real ship-cloud-wrapper sprint receipt; dispatch.test.sh/watch.test.sh/contract-test.py show identical pre-existing conductor-pin failures before and after."
+    }
+  ]
+}

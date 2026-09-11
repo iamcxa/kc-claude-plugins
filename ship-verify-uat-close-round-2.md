@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:esc73128rg68pqmtpck3a90q:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:esc73128rg68pqmtpck3a90q-validation-1
+              briefing:
+                id: briefing:esc73128rg68pqmtpck3a90q:validation:attempt-1:revision-1
+                digest: sha256:da74ccdcb3b0bc2748b494984d1e615ccb726363aef8e5dd12e2e4c53eef0c46
+                room-ref: ./ship-verify-uat-close-round-2/review/validation/briefing-1
 ---
 
 The first real close of a batch (`sprint: ship-cloud-wrapper`, 2026-09-11) could not run: `close.py`
