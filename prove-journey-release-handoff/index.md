@@ -1,6 +1,6 @@
 ---
 title: Prove one journey-board to development handoff
-status: implementation
+status: validation
 product: kc-journey-map
 sprint: journey-planning-proof
 sprint-readiness: ready
