@@ -1,6 +1,6 @@
 ---
 title: "ship-flow POC: remove every station that duplicates a kc-dev-flow or Spacedock mechanism"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,11 +8,11 @@ planning-outcome:
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
 started: 2026-09-10T08:58:02Z
-completed:
-verdict:
+completed: 2026-09-11T00:51:03Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-remove-duplicated-stations
 issue:
-pr: 410
+pr: pr-merge:410
 mod-block:
 id: pzg36pjjn7tvtdtknpv9w82h
 gates:
@@ -86,6 +86,21 @@ gates:
                 id: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-4:revision-1
                 digest: sha256:8bc536d60475969ca83faaf19e04af6fcad607c87cf0f68a112594d1e5a85bc0
                 room-ref: ./ship-remove-duplicated-stations/review/validation/briefing-4
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pzg36pjjn7tvtdtknpv9w82h:validation:4
+                briefing: briefing:pzg36pjjn7tvtdtknpv9w82h:validation:attempt-4:revision-1
+                by: agent:first-officer
+                at: "2026-09-11T00:50:38.694114115Z"
+                decision: approve
+                reason: 'PR #410 merged by the Captain 2026-09-11 (merge commit 96defe1d); recording approve myself since the ship batch FO gate record for this entity did not land'
+                conn:
+                    quote: 410 合併了 (Captain, 2026-09-11)
+                    source: Captain chat 2026-09-11
+              application:
+                target-stage: done
+                state: consumed
+archived: 2026-09-11T00:51:03Z
 ---
 
 Under the Captain's 2026-09-10 ruling (design:
