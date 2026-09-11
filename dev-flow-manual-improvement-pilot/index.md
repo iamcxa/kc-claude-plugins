@@ -46,6 +46,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:3w83fmy975y617nrfhcy1mqq:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:3w83fmy975y617nrfhcy1mqq-validation-1
+              briefing:
+                id: briefing:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1
+                digest: sha256:4be0dadebb3429c74b68c29614bf3a596849b4315088fd2581a97f1c19fb65f2
+                room-ref: ./review/validation/briefing-1
 started: 2026-09-10T16:11:49Z
 worktree: .worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot
 ---

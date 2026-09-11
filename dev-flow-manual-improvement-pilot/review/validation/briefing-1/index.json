@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1",
+  "question": "Accept the bounded local experiment result and authorize one local commit of exactly kc-dev-flow/scripts/surface-map-check.py and scripts/kc-dev-flow-contract-test.py, retaining the documented manual-deduplication, incomplete usage and unclosed-native-state limits? No product push, PR, merge, installation, upstream work, recurring Routine or native terminalization is authorized.",
+  "artifacts": [
+    {
+      "id": "artifact:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/591ba148b788d58b1a81327bd485f467129f5919/dev-flow-manual-improvement-pilot/index.md",
+      "rev": "sha256:5ef86c8b331b3e34befb4c01d3be32061e8ce3a54d52d60916eaf3e5f5de1d9e",
+      "mediaType": "text/markdown",
+      "summary": "The selected Go-test default-exclusion defect is reproduced on the frozen main and repaired in two files with 50 gross changed lines. Independent validation passed 11 discriminating checks and exact fixture replay, detecting old, overbroad and explicit-map-bypass producers while preserving strict and ordinary Go enforcement. Three validation checklist items are done with all five ACs cited. PR-feedback-first queue evidence and manual duplicate refusal are retained, without automatic or concurrent deduplication assurance. Actor usage is partial or unknown, so no complete-cost or efficiency claim. Original/native closure remains incomplete, stopped upstream work stays stopped, and the exact binary patch remains uncommitted. Recommend the two-file local commit only."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:3w83fmy975y617nrfhcy1mqq:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c9c5752fda853737d4a937ad7f59564c5651ca53/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
