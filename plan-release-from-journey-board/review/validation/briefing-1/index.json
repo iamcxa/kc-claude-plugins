@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:r1fa7xv14afj9npcfe1wbx76:validation:attempt-1:revision-1",
+  "question": "Accept the bounded local release-planning validation and proceed to delivery preparation?",
+  "artifacts": [
+    {
+      "id": "artifact:r1fa7xv14afj9npcfe1wbx76:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3f146587b37b690dc24ee3f61165eaa5d0852587/plan-release-from-journey-board/index.md",
+      "rev": "sha256:65cbfae5aee76683a05620fac515e2511b0e171cfe16fdfa97798f6876b9491d",
+      "mediaType": "text/markdown",
+      "summary": "Exact candidate 74fe2308: two journey guidance edits plus approved registration, 3 files and 114 changed lines. Existing 38 tests passed; candidate brief passes existing admission while control fails; a fresh consumer derives shared work, rejects stale source pairing, and accepts standalone no-board input. Missing answer stays draft. Live UI/canvas/native admission and user acceptance are not claimed; RoboRev UNKNOWN is non-gating. No new PR or code push."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:r1fa7xv14afj9npcfe1wbx76:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/96defe1d2a4be5c9edd39db08be2649ad71fd28a/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
