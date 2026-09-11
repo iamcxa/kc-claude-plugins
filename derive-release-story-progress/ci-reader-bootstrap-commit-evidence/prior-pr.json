@@ -1,0 +1,12 @@
+{
+  "baseRefName": "codex/journey-release-inspection",
+  "baseRefOid": "818260a8c14b504dae8d3989ba9c710226255b74",
+  "body": "Engineers can explicitly refresh story progress from local development tasks while preserving independent planning and source files.\n\n## What changed\n\n- Add an explicit local-task progress refresh command.\n- Match journey, release and story identities without automatic source writes.\n- Show task provenance while keeping delivery acceptance pending.\n\n## Evidence\n\n- Producer affected progress/example checks: 9/9 passed.\n- Retained independent proof and six producer mutations cover matching, refusal and source safety.\n\n[Exact 10-file manifest](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/schema-comment-correction-evidence/unit-3-files.json): +427/-27; generated +0/-0. [Retained independent evidence](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/three-unit-independent-validation/README.md). CI cost per PR is unmeasured.\n\n---\nCandidate: aabb8e7e8320b65fa852feae961df2e438d8f002\nTask audit: [91](https://github.com/iamcxa/kc-claude-plugins/blob/6c2d5af977ffa659bbd94ab862e56be7c225ff6e/derive-release-story-progress/index.md)\n",
+  "headRefName": "codex/journey-local-progress",
+  "headRefOid": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+  "isDraft": true,
+  "number": 417,
+  "state": "OPEN",
+  "title": "feat(kc-journey-map): derive optional local task progress",
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/417"
+}

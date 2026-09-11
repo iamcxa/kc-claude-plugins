@@ -1,0 +1,5 @@
+# Approved CI repair commit
+
+Kent answered **批准** to the exact one-file CI repair commit after the First Officer confirmed the missing-Spacedock hosted failure. Created ordinary commit `a5c08cbdf812826125decb6b55a286c4bcd2f1be` on `codex/journey-local-progress`, exact parent/tree/subject/file hash matching the approved packet. `commit.json` records the +15/-0 workflow and preserved sibling patch hashes; target is clean. No hook bypass, amendment, restack or version change.
+
+[Concrete publication review](push-review.md) and `publication.json` bind the live OPEN Draft PR417 title/body/base/prior head to the new candidate and one exact mode-0600 proposed body. Native stack order stays 415/416/417. Exact base/candidate preflight passes. Prior local 5/5 reader proof and Linux hosted pending limitation are explicit; no test/reviewer/install/CI rerun or publication occurred. CI cost is unmeasured. Captain push/body-update authority remains pending; both comment drafts and all prior immutable records are preserved.

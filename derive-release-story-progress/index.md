@@ -589,3 +589,14 @@ The authorized PR415 comment-only draft is concrete and uncommitted, with measur
 ### Summary
 
 The PR416-only comment draft is complete and uncommitted, with consistent incremental counts and exact executable proof. Captain local-commit authority and later sibling propagation remain pending.
+
+## Stage Report: implementation (cycle 10)
+
+- DONE: Exact approved single-file CI repair is committed with matching parent/tree/subject, with sibling comment drafts preserved.
+  Approval provenance: Kent answered **批准** to the exact missing-reader CI repair commit. Ordinary commit `a5c08cbdf812826125decb6b55a286c4bcd2f1be`, parent `aabb8e7e8320b65fa852feae961df2e438d8f002`, tree `64ca7b19f431188830b43f6824f485e7c90206df`; approved subject and workflow +15/-0/file hash match. Target clean; both pending comment patches byte-identical. [Commit evidence](ci-reader-bootstrap-commit-evidence/commit.json). No product edits, hook bypass, tests/install/reviewer rerun or version bump.
+- DONE: Concrete PR417 push and full-body update packet is prepared without publication; local proof versus hosted pending is explicit.
+  [Full publication packet](ci-reader-bootstrap-commit-evidence/push-review.md) and [exact tuple/body hashes](ci-reader-bootstrap-commit-evidence/publication.json) preserve live title/base and relevant body content, adding only CI prerequisite/evidence/totals and the new Candidate. Existing stack 418 stays ordered 415/416/417; top-only fast-forward needs no restack. Exact base/candidate preflight passes. Local reader 5/5 remains distinct from pending Linux hosted verification; CI cost unmeasured. No push or gh write call. Earlier acceptance evidence and sibling drafts remain unchanged.
+
+### Summary
+
+The exact authorized CI repair local commit is complete. PR417 publication and exact body update are concrete and held for a separate Captain decision.

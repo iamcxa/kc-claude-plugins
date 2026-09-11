@@ -1,0 +1,26 @@
+{
+  "repo": "iamcxa/kc-claude-plugins",
+  "pr": 417,
+  "pr_url": "https://github.com/iamcxa/kc-claude-plugins/pull/417",
+  "native_stack": 418,
+  "stack_order": [
+    415,
+    416,
+    417
+  ],
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut/.context/local-stack/journey-local-progress",
+  "branch": "codex/journey-local-progress",
+  "base_branch": "codex/journey-release-inspection",
+  "base_sha": "818260a8c14b504dae8d3989ba9c710226255b74",
+  "prior_remote_head": "aabb8e7e8320b65fa852feae961df2e438d8f002",
+  "candidate": "a5c08cbdf812826125decb6b55a286c4bcd2f1be",
+  "title": "feat(kc-journey-map): derive optional local task progress",
+  "body_file": "/Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/journey-stack-recut/ci-reader-bootstrap-commit/pr-417-kxcwfezs.md",
+  "body_mode": "0600",
+  "body_sha256": "b3eff4c4e5a704d6da145308890f76b687767b9217540f0bf939eb2b374cbb16",
+  "prior_body_sha256": "92908b58884b7c22a684ef992de26ef2f2e70737e6f2f3da47946b8d197186c8",
+  "preflight_tree": "64ca7b19f431188830b43f6824f485e7c90206df",
+  "state_ci_proof_sha": "285c84b18c9b373fc85ff301123b19666076bc2e",
+  "publication": "not performed",
+  "restack": "not needed; top-only fast-forward"
+}
