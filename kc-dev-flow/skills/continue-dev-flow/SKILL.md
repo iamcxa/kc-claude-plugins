@@ -14,12 +14,10 @@ Continue by the selected profile's smallest sufficient route.
    `## Local Profile` immediately after start. Read only its frontmatter and
    marked block; never infer boundaries from headings or open the full README.
 2. Resolve repository root; recheck worktree, branch, shared-state owner and delivery state.
-   When this item is delivered through a reviewable delivery artifact, list the
-   open artifacts before creating or reusing a branch. An open unmerged artifact
-   that carries work this item builds on is the default base: branch from its
-   source branch and stack, rather than branching from the trunk or waiting for
-   it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
-   applies whoever owns the delivery ceremony.
+   For reviewable delivery, list open artifacts before creating or reusing a branch.
+   An open unmerged artifact carrying required work is the default base: branch
+   from its source and stack without waiting for merge. `delivery-branch-base.md`
+   owns this rule and exceptions regardless of ceremony owner.
 3. Read the exact committed work item and selected brief. A Pilot or
    Production new admission requires one Development Brief containing the
    problem, accepted outcome, complete non-goal list, route-back conditions, and
@@ -76,16 +74,12 @@ Continue by the selected profile's smallest sufficient route.
 
    Exit `0` continues only when stdout parses as one JSON object with
    `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.
-   Any other exit-`0` output reports `planning reconcile unavailable` and stops
-   before new dispatch or state mutation. Exit `1` reports the classified delta
-   and stops at that boundary. Exit `2` reports
-   `planning reconcile unavailable` and stops at the same boundary. If the
-   comparison finds an added, removed, changed, or moved item, report the
-   delta and stop before new dispatch or state mutation. The Captain must admit
-   the delta before an authorized actor commits a replacement snapshot. No
-   difference writes the provider or execution snapshot automatically. Do not
-   cancel a running worker. The stop applies to new dispatch and later state
-   changes.
+   Any other exit-`0` output reports `planning reconcile unavailable`.
+   Exit `1` reports the classified delta. Exit `2` reports
+   `planning reconcile unavailable`. All stop before new dispatch or state mutation.
+   The Captain admits deltas before an authorized actor commits a replacement snapshot.
+   No difference writes the provider or execution snapshot automatically.
+   Do not cancel a running worker.
 
    When `## Local Profile` binds one combined provider admission guard, use it
    for steps 4–7 instead of manual provider input or normalization. Continue
@@ -128,11 +122,8 @@ poll, or rewrite either authority.
 ## Load one route
 
 Resolve `../../scripts/profile-contract-loader.py` from this activated skill.
-Its manifest binds version, Local Profile interface, and canonical
-byte. Invoke it with the exact item and marked README; do not search hosts or
-store its path. It emits shared core, selected base, and selected stage only.
-Profile selection is per item, never a
-project-global mode; simultaneous items may load different routes.
+Its manifest binds version, Local Profile interface, and canonical bytes. Use the
+exact item and marked README; do not search hosts or store its path. It emits shared core, selected base, and selected stage only. Profiles are per item.
 For canonical admitted work with Acceptance criteria, the latest Stage Report
 cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
 uncovered criterion before the next gate. POCs use `review` below.
@@ -194,13 +185,12 @@ A loader refusal means an off-route stage, stale receipt, or incomplete adoption
 Resolve that condition; do not substitute another item's profile or general
 workflow prose.
 
-For every working-stage continuation and dispatched worker, after authority/profile/pin
+Each working continuation/worker, after authority/profile/pin
 checks, read repository-root `docs/architecture.md` before exploration or implementation.
-Use the map to choose focused task-relevant code/linked-doc reads; verify stale claims
-against code. If absent, POC continues; Pilot/Production requires a useful map first:
-FO assigns implementation a bounded context/code bootstrap before feature work;
-validation returns missing/stale maps to that owner. Follow `project-context-maintenance.md`
-and include these instructions in every dispatch,
+Use task-relevant code/docs; code overrides stale claims. If absent, POC
+continues; Pilot/Production needs a useful map: FO assigns implementation bounded
+context/code bootstrap before feature work; validation returns missing/stale maps
+to that owner. Follow `project-context-maintenance.md`; include these instructions in every dispatch,
 including Production recovery that skips shape. No empty or link-only map.
 
 For a superset state graph, route as follows:
