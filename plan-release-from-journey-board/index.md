@@ -1,6 +1,6 @@
 ---
 title: Plan a release from journey-board decisions into a development brief
-status: backlog
+status: ideation
 product: kc-journey-map
 source:
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Kent explicitly selected Pilot, approved the separate layer above PR 417, and replied 可以 to S2 registration and using it before merge to start this task. Enter ideation only; implementation remains gated.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
