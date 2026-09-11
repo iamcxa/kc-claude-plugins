@@ -731,89 +731,6 @@ require(
     "reference tree" not in gate_path.read_text(encoding="utf-8"),
     "release gate still uses a gameable percentage of the reference tree",
 )
-_routes, measured_components, measured_static_inputs = gate.assert_proportional_load(
-    loader, PLUGIN / "references"
-)
-require(
-    measured_components == static_components,
-    "release gate reported a different static prefix from its component account",
-)
-with tempfile.TemporaryDirectory(prefix="kc-dev-flow-static-load-") as temporary:
-    for profile, route in expected_routes.items():
-        logical_route = [logical for logical, _next_stage in route.values()]
-        for workflow_stage, (logical_stage, _next_stage) in route.items():
-            item = write_profile_work_item(
-                Path(temporary), profile, workflow_stage, logical_route
-            )
-            selected = loader.load_contracts(PLUGIN / "references", item)
-            canonical = dict(selected)
-            canonical["work_item"] = "<work-item>"
-            rendered = loader.render_text(canonical)
-            expected_header = {
-                key: canonical[key]
-                for key in (
-                    "schema",
-                    "work_item",
-                    "work_item_sha256",
-                    "receipt_schema",
-                    "profile",
-                    "workflow_stage",
-                    "logical_stage",
-                    "next_workflow_stage",
-                    "declared_receipts",
-                )
-            }
-            for key in (
-                "skip_to_workflow_stage",
-                "review_risks",
-                "implementation_exit_observation_declared",
-                "poc_artifact",
-                "poc_safety_boundary",
-                "poc_decision_ready_minutes",
-                "poc_decision_ready_reason",
-                "poc_proof_path",
-                "development_brief_sha256",
-            ):
-                if key in canonical:
-                    expected_header[key] = canonical[key]
-            try:
-                actual_header = json.loads(rendered.splitlines()[0])
-            except (IndexError, json.JSONDecodeError):
-                actual_header = None
-            require(
-                actual_header == expected_header,
-                f"default loader output header differs: {profile}/{workflow_stage}",
-            )
-            expected_chunks = [json.dumps(expected_header, sort_keys=True)]
-            expected_static_bytes = sum(static_components.values()) + len(
-                rendered.encode("utf-8")
-            )
-            require(
-                measured_static_inputs[f"{profile}/{workflow_stage}"]
-                == expected_static_bytes,
-                f"release gate does not count {profile}/{workflow_stage} default output",
-            )
-            for relative in (
-                "kernel.md",
-                f"profiles/{profile}/base.md",
-                f"profiles/{profile}/{logical_stage}.md",
-            ):
-                raw = (PLUGIN / "references" / relative).read_bytes()
-                expected_payload = (
-                    f"<contract path={json.dumps(relative)} "
-                    f"sha256={json.dumps(hashlib.sha256(raw).hexdigest())}>\n"
-                    f"{raw.decode('utf-8')}</contract>"
-                )
-                expected_chunks.append(f"\n{expected_payload}")
-                require(
-                    expected_payload in rendered,
-                    f"default loader output omits selected payload: {relative}",
-                )
-            require(
-                rendered == "\n".join(expected_chunks) + "\n",
-                f"default loader output order or framing differs: {profile}/{workflow_stage}",
-            )
-
 kernel = read("kc-dev-flow/references/kernel.md")
 normalized_kernel = " ".join(kernel.split())
 for phrase in [
@@ -2577,5 +2494,92 @@ with tempfile.TemporaryDirectory(prefix="plan-flow-offline-") as temporary:
         "PASS L" in lint_offline.stdout,
         f"plan-lint offline did not emit rules: {lint_offline.stdout}",
     )
+
+# Last, not with the other gate checks: a kernel that is both over the static
+# ceiling and off-contract must report the contract defect. Ordered the other
+# way, the byte total answers first and the specific claim is never reached.
+_routes, measured_components, measured_static_inputs = gate.assert_proportional_load(
+    loader, PLUGIN / "references"
+)
+require(
+    measured_components == static_components,
+    "release gate reported a different static prefix from its component account",
+)
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-static-load-") as temporary:
+    for profile, route in expected_routes.items():
+        logical_route = [logical for logical, _next_stage in route.values()]
+        for workflow_stage, (logical_stage, _next_stage) in route.items():
+            item = write_profile_work_item(
+                Path(temporary), profile, workflow_stage, logical_route
+            )
+            selected = loader.load_contracts(PLUGIN / "references", item)
+            canonical = dict(selected)
+            canonical["work_item"] = "<work-item>"
+            rendered = loader.render_text(canonical)
+            expected_header = {
+                key: canonical[key]
+                for key in (
+                    "schema",
+                    "work_item",
+                    "work_item_sha256",
+                    "receipt_schema",
+                    "profile",
+                    "workflow_stage",
+                    "logical_stage",
+                    "next_workflow_stage",
+                    "declared_receipts",
+                )
+            }
+            for key in (
+                "skip_to_workflow_stage",
+                "review_risks",
+                "implementation_exit_observation_declared",
+                "poc_artifact",
+                "poc_safety_boundary",
+                "poc_decision_ready_minutes",
+                "poc_decision_ready_reason",
+                "poc_proof_path",
+                "development_brief_sha256",
+            ):
+                if key in canonical:
+                    expected_header[key] = canonical[key]
+            try:
+                actual_header = json.loads(rendered.splitlines()[0])
+            except (IndexError, json.JSONDecodeError):
+                actual_header = None
+            require(
+                actual_header == expected_header,
+                f"default loader output header differs: {profile}/{workflow_stage}",
+            )
+            expected_chunks = [json.dumps(expected_header, sort_keys=True)]
+            expected_static_bytes = sum(static_components.values()) + len(
+                rendered.encode("utf-8")
+            )
+            require(
+                measured_static_inputs[f"{profile}/{workflow_stage}"]
+                == expected_static_bytes,
+                f"release gate does not count {profile}/{workflow_stage} default output",
+            )
+            for relative in (
+                "kernel.md",
+                f"profiles/{profile}/base.md",
+                f"profiles/{profile}/{logical_stage}.md",
+            ):
+                raw = (PLUGIN / "references" / relative).read_bytes()
+                expected_payload = (
+                    f"<contract path={json.dumps(relative)} "
+                    f"sha256={json.dumps(hashlib.sha256(raw).hexdigest())}>\n"
+                    f"{raw.decode('utf-8')}</contract>"
+                )
+                expected_chunks.append(f"\n{expected_payload}")
+                require(
+                    expected_payload in rendered,
+                    f"default loader output omits selected payload: {relative}",
+                )
+            require(
+                rendered == "\n".join(expected_chunks) + "\n",
+                f"default loader output order or framing differs: {profile}/{workflow_stage}",
+            )
+
 
 print("kc-dev-flow contract: PASS")
