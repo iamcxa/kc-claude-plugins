@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow owns the pr-merge extension: Residuals and without-it sections, synced to every adopter"
-status: validation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
