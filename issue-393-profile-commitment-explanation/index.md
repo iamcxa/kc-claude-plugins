@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:td0yhsww2jnwnrzh5c6wc6er:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:td0yhsww2jnwnrzh5c6wc6er-validation-1
+              briefing:
+                id: briefing:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1
+                digest: sha256:00f3031ccf91ead6ed40ca3655e26c5141a386e7a3d5c832e290075d281b4643
+                room-ref: ./review/validation/briefing-1
 worktree: .worktrees/spacedock-ensign-issue-393-profile-commitment-explanation
 pr: pr-merge:425
 ---

@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1",
+  "question": "Accept the validated profile-commitment repair delivered in PR #425?",
+  "artifacts": [
+    {
+      "id": "artifact:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d8a21edba8bc406c94ddb0d6f0bc67fe1f0acf38/issue-393-profile-commitment-explanation/index.md",
+      "rev": "sha256:8aebb145015194db91ef052dd92c02cd64b6970ab3e5bdd63d56ae2af7a6913e",
+      "mediaType": "text/markdown",
+      "summary": "Three checklist items complete, zero skipped or failed. Independent review, required CI, and complete native feedback pass. Captain announced and personally completed the reviewed PR merge; recording acceptance now is post-merge reconciliation, not a claim of earlier gate approval. No fresh Production model run or release claim."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:td0yhsww2jnwnrzh5c6wc6er:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c2c62bf9dff5c3af1e27eb643a15eadf9023485f/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
