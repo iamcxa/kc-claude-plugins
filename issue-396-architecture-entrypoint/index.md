@@ -57,6 +57,17 @@ gates:
                 id: briefing:m0e43swm7wrs71xy98ea43gp:validation:attempt-1:revision-1
                 digest: sha256:db828450a509750b8df4ef5e510076b829712a5af98b6e122dacfe483f7dfe35
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:m0e43swm7wrs71xy98ea43gp:validation:1
+                briefing: briefing:m0e43swm7wrs71xy98ea43gp:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T10:42:07.074138Z"
+                decision: approve
+                reason: 'Captain said 合併了 after reviewing the Ready delivery and personally merged PR #426 as iamcxa at 2026-09-11T10:36:52Z. Record observed acceptance now for post-merge reconciliation, without backdating. Final acceptance evidence explicitly covers AC-1 through AC-5 under the approved scope amendment, although ac-scan does not extract the separate prose evidence section. Exact reviewed head, required checks and native feedback match; fresh model chronology remains unproven.'
+              application:
+                target-stage: done
+                state: pending
 worktree: .worktrees/spacedock-ensign-issue-396-architecture-entrypoint
 pr: pr-merge:426
 ---
