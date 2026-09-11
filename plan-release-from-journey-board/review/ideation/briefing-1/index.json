@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:r1fa7xv14afj9npcfe1wbx76:ideation:attempt-1:revision-1",
+  "question": "Approve the two-file journey guidance implementation route with the recorded stop thresholds?",
+  "artifacts": [
+    {
+      "id": "artifact:r1fa7xv14afj9npcfe1wbx76:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b2a4d9ab8a6c7157e6c73ea146dd054eb58b1329/plan-release-from-journey-board/index.md",
+      "rev": "sha256:800c54334d52ec285f8b93f2c7078c980064832560579cb5a89c9f6d347ed6b7",
+      "mediaType": "text/markdown",
+      "summary": "Pilot shape recommends two existing journey guidance edits plus the already committed release registration. Existing dev-flow consumer is sufficient. Stop above 3 files, 220 total changed lines, or 160 conversation-reference changed lines against PR 417. Six AC falsifiers and actual changed-entry/independent consumer proof remain for build and validation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:r1fa7xv14afj9npcfe1wbx76:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/96defe1d2a4be5c9edd39db08be2649ad71fd28a/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    }
+  ]
+}
