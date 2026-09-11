@@ -22,8 +22,9 @@ documentation logic. This mod owns the small stage obligation between those laye
 ## Rule
 
 **Every approved task classifies its effect on the bound project context. When the
-task changes a described product behavior, architecture boundary, public contract,
-scope decision, or durable constraint, the approved context change lands in the same
+task introduces a retained explanation or changes a described product behavior,
+architecture boundary, public contract, scope decision, or durable constraint,
+the approved context change lands in the same
 delivery slice and fresh validation checks the changed claim against the delivered
 behavior.**
 
@@ -31,11 +32,80 @@ Use one of two classifications:
 
 - `none` — the task changes no claim made by the bound project context. Name the
   relevant described surface or explain why none is involved.
-- `update` — name the bound authority, the routed claim locator that becomes stale,
-  and the replacement claim already authorized by the task.
+- `update` — name the bound authority, the missing or stale routed claim, and
+  the initial or replacement explanation already authorized by the task.
 
 The classification is not permission to change product direction. Scope and
 irreversible decisions remain with their existing authority.
+
+## Architecture home
+
+Every Pilot and Production working route requires `docs/architecture.md`, relative
+to the repository root, as its maintained human overview. Existing README,
+ARCHITECTURE.md or other documentation does not waive this file. Keep one context
+authority, routed to this map; link the explanation from the bound context or README.
+Reuse existing detailed documentation through named links, not duplicate full prose.
+The overview must explain the core journey, responsibilities, boundaries/source of
+truth and a runnable check; an empty file or link-only stub does not satisfy it.
+
+Every continuation and dispatched worker reads the map after authority/profile/pin
+checks and before broad exploration, choosing an exploration strategy or implementing.
+Use it to select task-relevant code and linked documents; verify claims against code
+as needed. A stale map never overrides implementation. If a non-POC map is missing,
+the First Officer routes a bounded bootstrap to the authorized implementation worker:
+inspect existing context and task-relevant code, then create a useful initial map before
+feature implementation. Validation returns missing/stale maps to that owner; validators
+do not author the missing product documentation.
+This also applies to Production recovery that skips shape; do not require reading a
+nonexistent file or completing speculative design before work can proceed.
+
+POC is exempt from mandatory map creation; read an existing map when available,
+but its absence does not block. A disposable POC uses a small Exploration Brief
+outline of components, data flow, external boundaries and tentative assumptions;
+it needs no permanent documentation set or completed architecture before the experiment.
+Retained POC work still identifies a proportional linked explanation before implementation;
+it may reuse suitable existing reader documentation, adding a missing entry link.
+Execution logs/history/review records/deployment snapshots alone are not maintained
+reader documentation. When a retained POC needs a new explanation, `docs/architecture.md`
+is the default, not a prerequisite for running the POC.
+Explain retained components and responsibilities, inputs/outputs, persistence and
+source-of-truth boundaries, important package roles, and relevant code or commands.
+Pilot and Production extend this with applicable authorization, deployment, failure,
+recovery, and compatibility boundaries; omit irrelevant sections.
+
+Write for human readers: start with the input-to-output journey, responsibilities,
+key boundaries, and why relevant choices matter. Keep the core responsibilities,
+data flow, source of truth and runnable check in the overview; use named links to
+focused subsystem, contract or operational subpages for depth. Do not replace the
+overview with a link list, duplicate claims, dump workflow machinery/status/receipts,
+or catalogue every file. Follow the reader-oriented writing in
+`retained-document-policy.md` Rule 6.
+
+Keep each architecture page's non-diagram text within 1,000 units: count Chinese
+characters and English words together. Include headings, prose, lists, table text
+and captions; exclude only Mermaid diagram blocks. Split longer content into the
+linked subpages above, keeping each within the same limit. Do not evade the limit
+with prose in code blocks or oversized diagram labels; diagrams must remain readable
+on the page explaining their subject.
+
+Use Mermaid when complexity benefits from a diagram, choosing the form that helps:
+
+- Ordered multi-party, asynchronous or retry handoffs: sequence diagram.
+- Multiple components, services, storage or trust boundaries: architecture graph or flowchart.
+- Nontrivial branching: flowchart; lifecycle states: state diagram.
+
+A trivial local journey may remain brief prose; do not require every diagram type.
+Use plain text for directory trees, as in `retained-document-policy.md` Rule 7.
+
+Align retained claims with implemented behavior before the existing
+implementation/validation boundary. Keep hypotheses, proposed design, review history,
+deployment snapshots and mutable progress in the work item or planning authority.
+Apply `retained-document-policy.md` to touched explanations, including its render-and-check
+rule: render diagrams before commit and compare them against implementation.
+An accurate existing map needs no extra edit or review loop; changed implemented
+architecture updates the map and affected linked claims in the same delivery slice.
+Do not duplicate those claims or retrofit untouched archived work. Validation runs the claims' cited code/commands and follows the
+entry link under the existing `planned_check`; this adds no stage, gate or reviewer.
 
 ## Inputs
 
@@ -97,7 +167,7 @@ classifications, validation executes `planned_check` and replaces pending
 
 - No automatic rewriting, generated prose, watcher, lifecycle hook, or background
   job. The responsible stage worker or validator writes each field.
-- No mandatory filename, document format, tracker, or documentation site.
+- No prescribed tracker or documentation site; the architecture-map path is defined above.
 - No second product-context document, decision ledger, or mirrored task state.
 - No general documentation refresh unrelated to the approved behavior change.
 - No authority to create a task, schedule work, expand scope, or pause delivery beyond

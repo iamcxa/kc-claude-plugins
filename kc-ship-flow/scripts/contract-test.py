@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -27,12 +26,17 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit(f"kc-ship-flow contract: {message}")
 
 
-def run(command: list[str], label: str) -> None:
+def run(command: list[str], label: str, *, echo: bool = False) -> None:
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
     require(
         result.returncode == 0,
         f"{label} failed:\n{result.stdout}{result.stderr}",
     )
+    if echo:
+        # dispatch.test.sh/watch.test.sh's own "case N: PASS - ..." lines (and the final
+        # "N passed, 0 failed" summary) need to actually show up in a CI log, not just be
+        # discarded on a green run -- a required check is a mute PASS otherwise.
+        print(result.stdout, end="")
 
 
 STATIONS = [
@@ -57,18 +61,13 @@ for test_name, test_command in STATION_TESTS:
     require((SCRIPTS / test_name).is_file(), f"missing station test: {test_name}")
     run(test_command, f"kc-ship-flow {test_name}")
 
-# dispatch.sh/watch.sh's own test suites deliberately fail closed (not skip) when
-# `conductor` is absent, so a machine that is supposed to have it never reports a
-# false pass. contract-test.py is the repo-wide required-CI aggregate, though, and
-# the GitHub Actions runner has no Conductor CLI installed at all -- requiring it
-# here would turn every PR red for an optional external dependency. Run the suites
-# when conductor is present (still fail-closed on any real failure); print a named
-# skip, not a silent pass, when it is not.
-if shutil.which("conductor"):
-    run(["bash", str(SCRIPTS / "dispatch.test.sh")], "kc-ship-flow dispatch.test.sh")
-    run(["bash", str(SCRIPTS / "watch.test.sh")], "kc-ship-flow watch.test.sh")
-else:
-    print("kc-ship-flow contract: SKIPPED dispatch.test.sh/watch.test.sh (conductor not on PATH)")
+# dispatch.sh/watch.sh's own test suites run entirely against the self-contained fake
+# `conductor` under fixtures/fake-conductor-{dispatch,watch}/ -- no real conductor CLI is
+# needed (round 2: the fakes used to delegate --version/--help to a real binary, which is
+# why these were previously skipped here when conductor was absent from the CI runner).
+# Always run them, so a PR that breaks either suite is red, not silently skipped.
+run(["bash", str(SCRIPTS / "dispatch.test.sh")], "kc-ship-flow dispatch.test.sh", echo=True)
+run(["bash", str(SCRIPTS / "watch.test.sh")], "kc-ship-flow watch.test.sh", echo=True)
 
 for py_station in [
     "e2e-gate.py",

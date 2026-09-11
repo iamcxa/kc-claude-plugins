@@ -13,13 +13,10 @@ Continue by the selected profile's smallest sufficient route.
    the unique ordered `kc-dev-flow-static-local-profile` start/end marker pair, with
    `## Local Profile` immediately after start. Read only its frontmatter and
    marked block; never infer boundaries from headings or open the full README.
-2. Recheck the worktree, branch, shared-state owner, and remote delivery state.
-   When this item is delivered through a reviewable delivery artifact, list the
-   open artifacts before creating or reusing a branch. An open unmerged artifact
-   that carries work this item builds on is the default base: branch from its
-   source branch and stack, rather than branching from the trunk or waiting for
-   it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
-   applies whoever owns the delivery ceremony.
+2. Resolve repository root; recheck worktree, branch, shared-state owner and delivery state.
+   For reviewable delivery, list open artifacts before branch creation/reuse.
+   Stack on an unmerged dependency's source branch without waiting for merge.
+   `delivery-branch-base.md` owns this default and exceptions across ceremonies.
 3. Read the exact committed work item and selected brief. A Pilot or
    Production new admission requires one Development Brief containing the
    problem, accepted outcome, complete non-goal list, route-back conditions, and
@@ -76,16 +73,13 @@ Continue by the selected profile's smallest sufficient route.
 
    Exit `0` continues only when stdout parses as one JSON object with
    `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.
-   Any other exit-`0` output reports `planning reconcile unavailable` and stops
-   before new dispatch or state mutation. Exit `1` reports the classified delta
-   and stops at that boundary. Exit `2` reports
-   `planning reconcile unavailable` and stops at the same boundary. If the
-   comparison finds an added, removed, changed, or moved item, report the
-   delta and stop before new dispatch or state mutation. The Captain must admit
-   the delta before an authorized actor commits a replacement snapshot. No
-   difference writes the provider or execution snapshot automatically. Do not
-   cancel a running worker. The stop applies to new dispatch and later state
-   changes.
+   Any other exit-`0` output reports `planning reconcile unavailable`.
+   Exit `1` reports the classified delta. Exit `2` reports
+   `planning reconcile unavailable`. All stop before new dispatch or state mutation.
+   Stop for any added, removed, changed, or moved item.
+   The Captain must admit the delta before an authorized actor commits a replacement snapshot.
+   No difference writes the provider or execution snapshot automatically.
+   Do not cancel a running worker.
 
    When `## Local Profile` binds one combined provider admission guard, use it
    for steps 4–7 instead of manual provider input or normalization. Continue
@@ -128,43 +122,35 @@ poll, or rewrite either authority.
 ## Load one route
 
 Resolve `../../scripts/profile-contract-loader.py` from this activated skill.
-Its manifest binds version, Local Profile interface, and canonical
-byte. Invoke it with the exact item and marked README; do not search hosts or
-store its path. It emits shared core, selected base, and selected stage only.
-Profile selection is per item, never a
-project-global mode; simultaneous items may load different routes.
+The manifest binds version, Local Profile interface and canonical bytes. Use the
+exact item/marked README; never search hosts or store its path. It emits shared core, selected base, and selected stage only. Selection is per item; simultaneous items may load different routes.
 For canonical admitted work with Acceptance criteria, the latest Stage Report
 cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
 uncovered criterion before the next gate. POCs use `review` below.
 
-A selected stage may emit a `kc-dev-flow-conditional-references/v1` block;
-the loader's output already parses that block into `declared_receipts` — the
-receipt names this stage declares, each behind a trigger you evaluate. Read
-`declared_receipts` for those names instead of re-parsing the block for
-`receipt`. For each entry, still resolve `path` relative to the selected
-stage contract and read it only when its named `trigger` is true; otherwise
-leave it unread. Resolve the
-trigger first from accepted scope, then recheck it against the exact changed
-files before implementation exit or validation. `retained_document_change` is
-true only when the accepted output or exact diff adds, removes, or changes a
-retained document. `project_context_claim_may_change` is true only when accepted
-behavior, architecture, or a public contract may change a claim in the bound
-project context, or the exact diff changes that bound context. A Markdown work
-record alone satisfies neither trigger. `delivery_artifact_review` is true when
-this item is delivered through a reviewable delivery artifact — pull request,
-merge request, or forge equivalent — no matter who owns the ceremony; it is false
-only for a route that delivers without one. `pr_delivery_selected` is narrower:
-true only when no local delivery provider owns the PR ceremony, so the portable
-one applies. A repository whose provider mod owns the ceremony has the first
-trigger true and the second false. Read
-`implementation_exit_observation_declared` from the loader output; true loads
-the declared build observation and false performs no provider work. RoboRev's
-repository precondition is a
-Spacedock-registered state holder, so a repository without one leaves the trigger
-false and never loads the contract. A newly true trigger loads its reference
-before the stage verdict. Record a named receipt in the existing work item;
-`receipt: null` creates no receipt. A link is not activation. A reference cannot
-add stages, broaden scope, or become a standing policy bundle.
+Use loader `declared_receipts`; do not re-parse receipt names. Resolve each
+`kc-dev-flow-conditional-references/v1` entry's `path` relative to the selected
+stage. Read when its trigger is true; otherwise leave unread. Evaluate accepted
+scope, recheck the exact diff before implementation exit or validation, and load
+newly true references before the verdict.
+
+- `retained_document_change`: accepted output or diff adds, removes, or changes
+  a retained document.
+- `project_context_claim_may_change`: a Pilot/Production map is missing, retained
+  implementation needs its initial explanation, accepted behavior, architecture,
+  or a public contract may change a bound claim, or the diff changes that context.
+  A Markdown work record alone satisfies neither trigger.
+- `delivery_artifact_review`: PR, merge request or equivalent delivery, regardless
+  of ceremony owner; false for delivery without one.
+- `pr_delivery_selected`: no local provider owns PR ceremony. With a local
+  provider the first delivery trigger is true and this one false.
+- Use loader `implementation_exit_observation_declared`: true loads the build
+  observation; false performs no provider work. RoboRev requires a
+  Spacedock-registered state holder; without it keep the trigger false and
+  contract unread.
+
+Record named receipts in the existing item; `receipt: null` creates no receipt.
+A link is not activation. Do not let references add stages, scope, or standing policy.
 
 Before dispatch, the First Officer writes and commits the state-owned stage-pin
 sidecar, re-reads it, and dispatches only that envelope:
@@ -198,6 +184,13 @@ the Captain or an explicit `recovery_rollback` may re-record the full route.
 A loader refusal means an off-route stage, stale receipt, or incomplete adoption.
 Resolve that condition; do not substitute another item's profile or general
 workflow prose.
+
+Each working continuation/worker, after authority/profile/pin
+checks, read repository-root `docs/architecture.md` before exploration or implementation.
+Read task-relevant code/docs; code overrides stale claims. If absent, POC continues;
+otherwise FO assigns implementation useful context/code bootstrap before feature
+work; validation returns missing/stale maps to that owner. Follow `project-context-maintenance.md`; include these instructions in every dispatch,
+including Production recovery that skips shape. No empty or link-only map.
 
 For a superset state graph, route as follows:
 

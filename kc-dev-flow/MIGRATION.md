@@ -6,6 +6,20 @@ planning-item link, move it to a repository-owned provenance field and remove
 the canonical `source` field before either v4 admission validation or
 continuation. Preserve the value; do not reinterpret it as provider identity.
 
+## Retained architecture explanations
+
+Pilot/Production consumers now need a useful repository-root `docs/architecture.md`,
+even with existing architecture documentation. This intentional file requirement
+requires consumer action in normal implementation after a compatible upgrade:
+the authorized implementation owner routes existing authority to the overview, links
+deeper docs, and bootstraps a missing map before feature work. No upgrade-time schema,
+configuration, or record migration is required. POC creation remains exempt.
+Every continuation/worker reads available maps before exploration, including recovery
+build. See [Architecture home](references/project-context-maintenance.md#architecture-home).
+Same-stage pins retain their recorded contracts; never rewrite active pinned bytes
+or history automatically. Adopt the requirement at an authorized next-stage upgrade
+or refit; no receipt/state schema changes or untouched archived-task retrofit.
+
 ## Migrating a vendored 4.x adopter to installed contracts
 
 This migration makes the installed `kc-dev-flow` package the canonical runtime

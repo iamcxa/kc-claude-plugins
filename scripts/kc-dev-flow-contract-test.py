@@ -467,6 +467,7 @@ expected_manifest_resources = {
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",
     "references/pr-delivery.md",
+    "references/pr-merge-extension.md",
     "references/roborev-implementation-exit.md",
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
@@ -486,6 +487,65 @@ require(
     and len(str(installed_package["contract_digest"])) == 64,
     "installed manifest does not bind the exact canonical runtime surface",
 )
+# adopt-dev-flow's sync of `references/pr-merge-extension.md` into this
+# repository's `_mods/pr-merge.md` is prose (SKILL.md step 7), not a script;
+# this byte-for-byte comparison is the only drift detector for that copy.
+pr_merge_mod = read("docs/dev/_mods/pr-merge.md")
+pr_merge_extension_marker = "<!-- kc-dev-flow runtime extension:start -->\n"
+require(
+    pr_merge_mod.count(pr_merge_extension_marker) == 1,
+    "docs/dev/_mods/pr-merge.md runtime extension marker is not unique",
+)
+pr_merge_mod_extension = pr_merge_extension_marker + pr_merge_mod.split(pr_merge_extension_marker, 1)[1]
+pr_merge_extension_resource = read("kc-dev-flow/references/pr-merge-extension.md")
+if pr_merge_mod_extension != pr_merge_extension_resource:
+    first_diff = next(
+        (
+            index
+            for index, (mod_char, resource_char) in enumerate(
+                zip(pr_merge_mod_extension, pr_merge_extension_resource)
+            )
+            if mod_char != resource_char
+        ),
+        min(len(pr_merge_mod_extension), len(pr_merge_extension_resource)),
+    )
+    context_start = max(0, first_diff - 20)
+    require(
+        False,
+        "docs/dev/_mods/pr-merge.md extension block drifted from "
+        "kc-dev-flow/references/pr-merge-extension.md at byte "
+        f"{first_diff}: mod={pr_merge_mod_extension[context_start:first_diff + 20]!r} "
+        f"resource={pr_merge_extension_resource[context_start:first_diff + 20]!r}",
+    )
+# The block-drift check above only proves the synced extension matches the
+# plugin's copy; it says nothing about the released Spacedock body the
+# extension sits on top of. Pin that body's digest in contract-manifest.json
+# so a released-body edit is caught here even though block==resource still
+# holds (the two checks guard disjoint byte ranges of the same file).
+pr_merge_released_body = pr_merge_mod.split(pr_merge_extension_marker, 1)[0].rstrip("\n")
+pr_merge_released_body_bytes = pr_merge_released_body.encode("utf-8")
+pr_merge_released_body_pin = manifest.get("pr_merge_released_body", {})
+expected_released_body_sha256 = pr_merge_released_body_pin.get("sha256")
+actual_released_body_sha256 = hashlib.sha256(pr_merge_released_body_bytes).hexdigest()
+require(
+    isinstance(expected_released_body_sha256, str) and len(expected_released_body_sha256) == 64,
+    "contract-manifest.json is missing a pinned pr_merge_released_body.sha256",
+)
+if actual_released_body_sha256 != expected_released_body_sha256:
+    require(
+        False,
+        "docs/dev/_mods/pr-merge.md released Spacedock pr-merge body (bytes "
+        f"0..{len(pr_merge_released_body_bytes)}, everything before the "
+        "'<!-- kc-dev-flow runtime extension:start -->' marker) drifted from the "
+        "pin in kc-dev-flow/contract-manifest.json pr_merge_released_body.sha256: "
+        f"expected sha256:{expected_released_body_sha256} "
+        f"got sha256:{actual_released_body_sha256} "
+        f"(expected {pr_merge_released_body_pin.get('bytes')} bytes, got "
+        f"{len(pr_merge_released_body_bytes)}). A sha256 pin has no reference "
+        "bytes to diff against, so no first-differing byte offset is named "
+        "here; naming one would require vendoring a second copy of the "
+        "released body in kc-dev-flow/.",
+    )
 # `release` was a Production-only runtime state until it stranded a Pilot item
 # outside its declared route. Nothing else reads adoption prose, so the retired
 # state is guarded here rather than trusted to a reviewer.
@@ -815,9 +875,9 @@ for relative in [
 # is only read when a profile is being chosen.
 normalized_choose = " ".join(read("kc-dev-flow/skills/choose-work-profile/SKILL.md").split())
 require(
-    "asks whether a consumer must do something, not whether the change is published"
+    "Compatibility means a consumer must migrate, edit configuration, or rewrite owned records to upgrade; publication alone is not that trigger"
     in normalized_choose
-    and "it has to run a migration" in normalized_choose,
+    and "Unless you can state that consumers upgrade by taking the version without acting, recommend Production" in normalized_choose,
     "choose-work-profile no longer states the consumer-migration test",
 )
 for relative, phrases in {
@@ -826,7 +886,7 @@ for relative, phrases in {
         "POC — bounded exploration or technical proof",
     ],
     "kc-dev-flow/skills/choose-work-profile/SKILL.md": [
-        "Could credible negative evidence cancel or materially change the next commitment",
+        "Before acceptance, recommend the experiment if credible negative evidence could change the commitment",
         "kc-dev-flow-work-profile/v3",
     ],
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
@@ -926,6 +986,41 @@ for reference, trigger in [
         and "do not load the file when that trigger is false" in policy,
         f"conditional reference has stale adoption instructions: {reference}",
     )
+# These assertions cover instruction wiring; operator behavior needs the five scenarios.
+architecture_contracts = {
+    "kc-dev-flow/references/project-context-maintenance.md": [
+        "## Architecture home", "link the explanation from the bound context or README",
+        "Every Pilot and Production working route requires `docs/architecture.md`",
+        "POC is exempt from mandatory map creation", "an empty file or link-only stub does not satisfy it",
+        "Validation returns missing/stale maps to that owner", "validators do not author",
+        "components and responsibilities", "persistence and source-of-truth boundaries",
+        "important package roles", "authorization, deployment, failure, recovery, and compatibility",
+        "before implementation", "before the existing implementation/validation boundary",
+        "no extra edit or review loop", "same delivery slice",
+    ],
+    "kc-dev-flow/references/profiles/poc-exploration/base.md": ["A disposable POC needs no permanent architecture document", "POC is exempt from mandatory `docs/architecture.md`"],
+    "kc-dev-flow/references/profiles/poc-exploration/build.md": [
+        "components, data flow, external boundaries, and tentative assumptions", "before the first implementation edit",
+        "missing `docs/architecture.md` does not block POC",
+    ],
+    "kc-dev-flow/references/profiles/pilot-product-slice/shape.md": ["read `docs/architecture.md` before exploration", "bootstrap a useful missing map"],
+    "kc-dev-flow/references/profiles/production/shape.md": ["read `docs/architecture.md` before exploration", "bootstrap a useful missing map"],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "retained implementation needs its initial explanation", "a Pilot/Production map is missing",
+        "after authority/profile/pin checks, read repository-root `docs/architecture.md` before exploration or implementation",
+        "include these instructions in every dispatch, including Production recovery that skips shape",
+        "validation returns missing/stale maps to that owner",
+    ],
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md": ["initial retained explanation", "Every continuation/worker reads the map before exploration"],
+    "docs/dev/README.md": ["initial retained explanation", "missing Pilot/Production map"],
+    "kc-dev-flow/README.md": ["tentative architecture outline", "initial retained explanation", "Pilot/Production requires that useful overview"],
+    "kc-dev-flow/MIGRATION.md": ["requires consumer action", "never rewrite active pinned bytes", "POC creation remains exempt"],
+}
+for relative, clauses in architecture_contracts.items():
+    text = re.sub(r"\s+", " ", read(relative))
+    for clause in clauses:
+        require(clause in text, f"architecture entrypoint omits {relative}: {clause}")
+
 with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
     work_items = Path(temporary)
     for contracts_root in [PLUGIN / "references"]:
@@ -1075,9 +1170,44 @@ for label, section in (("3.x migration", migration_3x), ("2.x migration", migrat
         require(marker in section, f"{label} omits static Local Profile marker: {marker}")
 
 for phrase in [
+    "Use the first applicable path",
+    "Recorded unchanged choice",
+    "With no change requested, reuse the supported receipt and stop selection",
+    "Supplied acceptance",
+    "not a reconstructed conversation",
+    "Unaccepted recommendation",
+    "Only the unaccepted path requests a profile choice",
+    "For Production with no supplied route",
+    "Use the actual Captain answer",
     "structured Ask UI",
+    "Label unaccepted commitments as proposals",
+    "Without accepted exclusions, describe accepted work",
+    "explain both, including after acceptance",
+    "A candidate with unknown facts is not ready to record",
+    "The comparison explains scope, without replacing supplied acceptance",
+    "<work's declared true | false; omit if unknown>",
+    "<supplied or clock-read RFC3339 time; omit if unknown> # label capture here",
+    "**next commitment**, **unresolved assumption**, **observable result**, and **included work**",
+    "Repository age selects no profile",
+    "existing valuable state and consumers from disposable state",
+    "concrete actions through the same end-to-end journey on disposable inputs",
+    "the evidence or accepted duty that experiment cannot cover",
+    "do not create a selected receipt or claim success",
+    "Preserve an existing receipt while scope is unresolved",
+    "`basis`, included work into `obligations`, scope into `scope_boundary`",
 ]:
     require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
+handoff_steps = [
+    "Recorded unchanged choice", "Supplied acceptance", "Unaccepted recommendation",
+    "## Explain and resolve", "For Production with no supplied route",
+    "## Return the candidate receipt",
+]
+handoff_positions = [chooser.find(step) for step in handoff_steps]
+require(
+    all(pos >= 0 for pos in handoff_positions)
+    and handoff_positions == sorted(handoff_positions),
+    "chooser must route existing entry states before shared explanation and receipt return",
+)
 require_production_route(chooser, "`Production` (`production`)", "`shape -> build -> verify`")
 require(
     "shape -> build -> verify -> release" not in normalized_chooser,
@@ -2088,7 +2218,7 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
             command += ["--shape-mapping", str(shape_mapping)]
         if extra_args:
             command += extra_args
-        return subprocess.run(command, capture_output=True, text=True)
+        return subprocess.run(command, capture_output=True, text=True, timeout=60)
 
     round0 = run_surface_map_check(surface_map_round0_evidence)
     require(
@@ -2150,6 +2280,52 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
         "surface-map-check did not accept a fully-covering Evidence block for the DEV-66-shaped diff: "
         f"exit={full_coverage.returncode} stdout={full_coverage.stdout!r} stderr={full_coverage.stderr!r}",
     )
+
+
+    # Go colocates tests with production code; only the _test.go suffix is excluded.
+    surface_map_base = surface_map_candidate
+    (surface_map_repo / "internal").mkdir()
+    go_test_path = "internal/task_test.go"
+    (surface_map_repo / go_test_path).write_text("package internal\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", go_test_path],
+                   check=True, capture_output=True, timeout=60)
+    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "Go test"],
+                   check=True, capture_output=True, timeout=60)
+    surface_map_candidate = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
+    ).strip()
+    go_evidence = surface_map_repo / "go-evidence.md"
+    go_evidence.write_text("", encoding="utf-8")
+    go_default = run_surface_map_check(go_evidence)
+    require(go_default.returncode == 0 and f"excluded: {go_test_path}" in go_default.stdout,
+            f"Go test default exclusion failed: {go_default}")
+    go_strict = run_surface_map_check(go_evidence, extra_args=["--no-exclude"])
+    require(go_strict.returncode == 1 and f"missing SURFACE line: {go_test_path}" in go_strict.stdout,
+            f"Go test strict checking weakened: {go_strict}")
+    for target, pair, expected, diagnostic in (
+        ("AC-999", f"go test {go_test_path} | git restore {go_test_path}", 1, "unknown AC"),
+        ("AC-1", "true | true", 1, "without-it pair does not bind"),
+        ("AC-1", f"go test {go_test_path} | git restore {go_test_path}", 0, "1 files checked"),
+    ):
+        go_evidence.write_text(f"SURFACE: {go_test_path} -> {target} | {pair}\n", encoding="utf-8")
+        go_mapped = run_surface_map_check(go_evidence)
+        require(go_mapped.returncode == expected and diagnostic in go_mapped.stdout,
+                f"Explicit Go test mapping was not checked: {go_mapped}")
+    surface_map_base = surface_map_candidate
+    go_production_path = "internal/task.go"
+    (surface_map_repo / go_production_path).write_text("package internal\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", go_production_path],
+                   check=True, capture_output=True, timeout=60)
+    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "Go production"],
+                   check=True, capture_output=True, timeout=60)
+    surface_map_candidate = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
+    ).strip()
+    go_evidence.write_text("", encoding="utf-8")
+    go_production = run_surface_map_check(go_evidence)
+    require(go_production.returncode == 1
+            and f"missing SURFACE line: {go_production_path}" in go_production.stdout,
+            f"Non-test Go enforcement weakened: {go_production}")
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")

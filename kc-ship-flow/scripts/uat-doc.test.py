@@ -119,4 +119,37 @@ require(
     "dispatch.sh's actual fence file",
 )
 
+# --- AC-1: two-root discovery (flat + folder-form + archived), split roots and --state-dir ---
+def run_two_root(sprint, **kwargs):
+    argv = [sys.executable, str(SCRIPT), sprint]
+    for flag, value in kwargs.items():
+        argv += [f"--{flag.replace('_', '-')}", str(value)]
+    return subprocess.run(argv, capture_output=True, text=True)
+
+
+TWO_ROOT = FIXTURES / "two-root"
+split = run_two_root(
+    "ship-cloud-wrapper-r2",
+    dev_state=TWO_ROOT / "dev-state",
+    ship_state=TWO_ROOT / "ship-state",
+)
+require(
+    split.returncode == 0,
+    f"split dev-state/ship-state fixture did not exit 0: {split.returncode} stderr={split.stderr!r}",
+)
+require(
+    "## DEV-401" in split.stdout and "## DEV-402" in split.stdout and "## DEV-403" in split.stdout,
+    f"split-root run did not list all three tasks (flat, folder-form, archived): {split.stdout!r}",
+)
+
+merged = run_two_root("ship-cloud-wrapper-r2", state_dir=FIXTURES / "two-root-merged")
+require(
+    merged.returncode == 0,
+    f"--state-dir shorthand over a merged single dir did not exit 0: {merged.returncode} stderr={merged.stderr!r}",
+)
+require(
+    "## DEV-401" in merged.stdout and "## DEV-402" in merged.stdout and "## DEV-403" in merged.stdout,
+    f"--state-dir shorthand run did not list all three tasks: {merged.stdout!r}",
+)
+
 print("uat-doc test: all checks passed")

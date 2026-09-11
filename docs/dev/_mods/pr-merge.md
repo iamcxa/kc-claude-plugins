@@ -121,10 +121,32 @@ Do NOT archive yet. The entity stays at its current stage with `pr` set until th
 
 This bounded kc-dev-flow extension retains the exact released Spacedock
 `pr-merge` 0.12.2 body with one `--draft` adjustment, then overrides its unsafe
-delivery and split-root seams below. The structural hash assertion in
-`scripts/kc-dev-flow-contract-test.py` rejects any other drift in the released
-body. The runtime entry remains
+delivery and split-root seams below. Every adopter contract test compares its
+`docs/dev/_mods/pr-merge.md` released body (everything before this marker)
+against the sha256 pinned at `contract-manifest.json`
+`pr_merge_released_body.sha256`, and fails naming the pin key when the body
+drifts. The runtime entry remains
 `spacedock merge guard {slug} --verdict passed|rejected --workflow-dir {dir}`.
+
+### Residuals and without-it sections
+
+Two optional PR body sections extend the released template. When present, each
+is placed after `## Evidence` and before the `---` separator; each is omitted
+entirely when its source entity has no items for it.
+
+| Section | Bullets | Content |
+| --- | --- | --- |
+| `## Residuals` | at most three | Each bullet is a known limit. "Not tested" is never a residual. |
+| `## without-it unanswered` | one line per item | One retained durable addition the author cannot justify per line, cited by path or greppable symbol. |
+
+**Extraction rules:**
+
+| PR body section | Source in entity file | Transformation |
+| --- | --- | --- |
+| Residuals | Validation stage report's residual items | Copy at most three; drop any item phrased as "not tested". |
+| without-it unanswered | Implementation stage report's `without-it unanswered` items | One line per item, path or greppable symbol. |
+
+The released template's 60-120 word target excludes both sections.
 
 ### Portable delivery hardening from shipped Spacedock v0.27.0-pre3
 

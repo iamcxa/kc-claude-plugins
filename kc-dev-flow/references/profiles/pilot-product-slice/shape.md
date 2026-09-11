@@ -39,6 +39,8 @@ smallest maintainable slice.
 
 ## Required output
 
+- read `docs/architecture.md` before exploration; bootstrap a useful missing map
+  before implementation, following `project-context-maintenance.md`;
 - one accepted journey and explicit non-goals;
 - persistence, recovery, and data-safety boundaries;
 - task-specific acceptance checks able to falsify the slice;

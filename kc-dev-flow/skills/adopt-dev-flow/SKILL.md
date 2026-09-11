@@ -27,7 +27,10 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
 1. Add a concise `## Local Profile` near the workflow frontmatter, bounded by
    exactly one start marker `<!-- kc-dev-flow-static-local-profile:start -->`
    and one end marker `<!-- kc-dev-flow-static-local-profile:end -->`. Bind
-   existing authorities plus `Installed contract interface`, `Local mods`, and
+   existing authorities and their architecture entry: Pilot/Production requires
+   a useful repository-root `docs/architecture.md`, linking existing details without
+   duplication; POC creation is exempt. Follow `project-context-maintenance.md`.
+   Also bind `Installed contract interface`, `Local mods`, and
    the repository's work-item and state authorities. The activated skill anchors
    its own package root and supplies `../../scripts/profile-contract-loader.py`
    for that invocation; do not persist an installation path. A
@@ -137,8 +140,11 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    dispatch and names the README and declared local mods requiring review. Load a
    conditional reference only when the selected stage predicate fires. Bind
    `retained_document_change` to accepted or observed retained-document changes
-   and `project_context_claim_may_change` to a possible changed claim in the
-   repository's bound project context. Recheck both from the exact diff at
+   and `project_context_claim_may_change` to a missing Pilot/Production map, an
+   initial retained explanation or a possible changed bound-context claim.
+   Every continuation/worker reads the map before exploration; route a missing
+   non-POC map's bounded bootstrap before feature work, including recovery build. Recheck both
+   from the exact diff at
    implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
@@ -158,6 +164,14 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    rebases onto it will re-target a stacked branch and open an artifact carrying
    the parent's work. Record that as a refit requirement against the local
    provider copy; do not bind a stacked default over a ceremony that discards it.
+   When that local provider copy is Spacedock `pr-merge`, write
+   `../../references/pr-merge-extension.md` verbatim between its
+   `<!-- kc-dev-flow runtime extension:start -->` and
+   `<!-- kc-dev-flow runtime extension:end -->` markers in the repository's
+   `_mods/pr-merge.md` — append that marker pair after the released mod body if
+   absent — and never edit the released body above it. This is prose sync, not
+   a script: the repository's own contract test is the only drift detector, so
+   compare the marked block byte-for-byte against the resource after writing it.
    A missing delivery authority is a refit requirement. Do not classify its
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release
