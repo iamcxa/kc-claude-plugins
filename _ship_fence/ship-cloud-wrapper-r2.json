@@ -3,5 +3,10 @@
   "message_sha256": "b55b9f5bbf63e8e07b1161c532ff1aedf305edcb9258d3f94645780a192cabae",
   "session": "9ff36ec8-4bec-4bc6-92fa-814036e95564",
   "workspace": "0cc46893-ff8e-40c7-9958-21c62d38e089"
+ },
+ "ship-verify-uat-close-round-2": {
+  "message_sha256": "b7ff903d4051552cd6adfb52642789e6f661912ed50235b548dbf9f37e2bc1bd",
+  "session": null,
+  "workspace": null
  }
 }
