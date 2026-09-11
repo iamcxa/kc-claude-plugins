@@ -1,6 +1,6 @@
 ---
 title: "Pilot: one evidence-complete manual dev-flow improvement cycle"
-status: validation
+status: done
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -64,10 +64,13 @@ gates:
                 reason: Kent requested 開 PR after the exact two-file fix and independent validation were presented. This approves that candidate commit and expands delivery authority only to pushing its branch and creating a Draft PR against main. No merge, installation, Spacedock upstream work, recurring activation or original/native terminalization is authorized.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-10T16:11:49Z
 worktree: .worktrees/spacedock-ensign-dev-flow-manual-improvement-pilot
 pr: pr-merge:421
+verdict: PASSED
+completed: 2026-09-11T08:23:50Z
+archived: 2026-09-11T08:23:50Z
 ---
 
 # One manually triggered local dev-flow improvement cycle
