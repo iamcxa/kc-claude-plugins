@@ -1,0 +1,19 @@
+{
+  "name": "kc-journey-map",
+  "description": "Draw and inspect user journeys on an editable native canvas, with optional release details, evidence checks, and portable tldraw or PNG exports.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "journey-map",
+    "user-journey",
+    "story-map",
+    "figjam",
+    "canvas",
+    "tldraw",
+    "evidence-cited"
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Check that a kc-ship-flow batch workflow README's Local Profile table carries every
-required row before the first-officer skill dispatches a batch.
+required row before the run-batch skill dispatches a batch.
 
 usage: local-profile-check.py <readme.md>
 exit 0: every required row present.
@@ -25,6 +25,7 @@ REQUIRED_ROWS = [
     "E2E flows",
     "Pin",
     "Installed contract interface",
+    "Integrated head",
 ]
 
 

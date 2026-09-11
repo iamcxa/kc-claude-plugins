@@ -1,7 +1,7 @@
 {
   "name": "kc-ship-flow",
   "version": "0.1.0",
-  "description": "Batch delivery for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt",
+  "description": "Batch delivery wrapper over kc-dev-flow and Spacedock: dispatch dev tasks to Conductor cloud, watch to a prepared validation gate, e2e gate, UAT handoff, close receipt",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
@@ -18,8 +18,8 @@
   ],
   "interface": {
     "displayName": "KC Ship Flow",
-    "shortDescription": "Batch delivery: dispatch, accept by evidence, review, e2e gate, UAT handoff",
-    "longDescription": "Batch delivery workflow for kc-dev-flow adopters: dispatch, accept by evidence, review, e2e gate, UAT handoff, close receipt.",
+    "shortDescription": "Batch delivery wrapper: dispatch to Conductor cloud, watch, e2e gate, UAT handoff",
+    "longDescription": "Batch delivery wrapper over kc-dev-flow and Spacedock: dispatch dev tasks to Conductor cloud, watch to a prepared validation gate, e2e gate, UAT handoff, close receipt.",
     "developerName": "Kent Chen",
     "category": "Productivity",
     "capabilities": [

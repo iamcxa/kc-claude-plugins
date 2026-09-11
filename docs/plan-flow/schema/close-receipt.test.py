@@ -90,7 +90,7 @@ require_refusal("close-receipt.disposition-mismatch.json", "ship_debrief.defects
 # --- `additionalProperties: false` forbids -- reproduces batch ----------
 # --- ab2fb2635f0c's actual defect (a hand-written dev-debrief.json's -----
 # --- content pasted into the close receipt's own dev_debrief field) ------
-require_refusal("close-receipt.dev-debrief-wrapper-embedded.json", "dev_debrief")
+require_refusal("close-receipt.debrief-wrapper-embedded.json", "dev_debrief")
 
 # --- falsifier: a real close-receipt shape (batch ab2fb2635f0c, ids -------
 # --- replaced) with a `captain_stopped` issue and a mixed defect ---------

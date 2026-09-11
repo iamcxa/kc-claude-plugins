@@ -333,9 +333,134 @@ Stopped with change under the approved validity stop.
     print("POC close guard native regressions: PASS (durable prepare; latest direct/fresh proof; absent/malformed/uncovered ACs)")
 
 
+def pending_item_text() -> str:
+    return direct_item_text("change").replace("captain_wait_seconds: 0", "captain_wait_seconds: pending").replace("terminal_cleanup_seconds: 2", "terminal_cleanup_seconds: pending").replace("cleanup_status: complete", "cleanup_status: pending")
+
+
+def lifecycle_regressions(root: Path, spacedock: Path, *, fresh: bool = False, split: bool = False, body: str | None = None) -> dict:
+    repo = root / "repo"
+    workflow = repo / "docs/dev"
+    workflow.mkdir(parents=True, exist_ok=True)
+    history = []
+
+    def run(*args, input_text=None, ok=True):
+        result = subprocess.run(list(map(str, args)), cwd=repo, input=input_text, text=True, capture_output=True)
+        history.append({"argv": list(map(str, args)), "rc": result.returncode, "stdout": result.stdout, "stderr": result.stderr})
+        if ok:
+            require(result.returncode == 0, f"lifecycle failed: {args}: {result.stderr}")
+        return result
+
+    def git(*args, holder=repo):
+        return run("git", "-C", holder, *args)
+
+    def native(*args, **kwargs):
+        return run(spacedock, *args, "--workflow-dir", workflow, **kwargs)
+
+    def close(phase, *args, target=None, ok=True):
+        return run(sys.executable, GUARD_PATH, "--spacedock-bin", spacedock, "--workflow-dir", workflow, "--work-item", target or item, phase, *args, ok=ok)
+
+    template = (root.parent / "native/README.md").read_text()
+    (workflow / "README.md").write_text(template.replace("trunk: main", "state: .spacedock-state\ntrunk: main") if split else template)
+    (repo / ".gitignore").write_text("docs/dev/.spacedock-state/\n")
+    git("init", "-qb", "main")
+    git("config", "user.name", "Synthetic lifecycle")
+    git("config", "user.email", "synthetic@example.invalid")
+    git("add", ".gitignore", "docs/dev/README.md")
+    git("commit", "-qm", "synthetic workflow")
+    holder = repo
+    if split:
+        remote = root / "remote.git"
+        run("git", "init", "--bare", remote)
+        git("remote", "add", "origin", remote)
+        git("push", "-u", "origin", "main")
+        holder = workflow / ".spacedock-state"
+        git("worktree", "add", "--detach", holder, "HEAD")
+        git("switch", "--orphan", "spacedock-state/dev", holder=holder)
+        (holder / ".keep").touch()
+        git("add", ".keep", holder=holder)
+        git("commit", "-qm", "synthetic state", holder=holder)
+        git("push", "-u", "origin", "spacedock-state/dev", holder=holder)
+    report = "\n## Stage Report: implementation\n\n- DONE: Observe the synthetic falsifier.\n  Disposable local observation only.\n"
+    text = body if body is not None else pending_item_text() + report
+    if fresh:
+        text = text.replace("status: implementation", "status: validation").replace("poc_artifact: no-code", "poc_artifact: retained")
+        text += report.replace("Stage Report: implementation", "Stage Report: validation")
+    import re
+    text = re.sub(r"^id:.*\n", "", text, count=1, flags=re.MULTILINE)
+    native("new", "probe", input_text=text)
+    item = Path(json.loads(native("status", "--resolve", "probe", "--json").stdout)["path"])
+    native("state", "commit", "probe")
+    reviewed = json.loads(close("review").stdout)
+    require(reviewed["proof_stage"] == ("validation" if fresh else "implementation"), "wrong pending proof stage")
+    prepared = close("prepare", "--question", "Synthetic fixture only?", "--artifact", item, "--summary", "Synthetic pending observations").stdout
+    require("state=open" in prepared, "prepare did not leave an open human gate")
+    before = item.read_bytes()
+    require(close("consume", ok=False).returncode != 0 and item.read_bytes() == before, "unapproved consume advanced task")
+    require(close("check-final", ok=False).returncode != 0, "nonterminal close reported complete")
+    native("gate", "record", "probe", "--decision", "approve", "--actor", "person:captain", "--reason", "SYNTHETIC TEST ONLY; not Kent approval")
+    briefing = next((holder if split else workflow).rglob("index.json"))
+    frozen = briefing.read_bytes()
+    briefing.write_bytes(frozen.replace(b"Synthetic fixture only?", b"Tampered fixture question"))
+    tampered = close("consume", ok=False)
+    require(tampered.returncode != 0 and "frozen digest" in tampered.stderr, "tampered briefing accepted")
+    briefing.write_bytes(frozen)
+    item.write_text(item.read_text().replace("captain_wait_seconds: pending", "captain_wait_seconds: 12"))
+    native("state", "commit", "probe")
+    consumed = close("consume").stdout
+    require("route=approved-awaiting-merge" in consumed and "consumed=false" in consumed, "guard took terminal authority")
+    require(briefing.read_bytes() == frozen, "measurement changed frozen approval")
+    native("merge", "guard", "probe", "--verdict", "passed", "--json")
+    archived = next(path for path in holder.rglob("probe.md") if path != item)
+    interrupted = archived.read_bytes()
+    require(close("check-final", target=archived, ok=False).returncode != 0 and archived.read_bytes() == interrupted, "interrupted cleanup passed or mutated state")
+    failed = archived.read_text().replace("terminal_cleanup_seconds: pending", "terminal_cleanup_seconds: 3").replace("cleanup_status: pending", "cleanup_status: failed")
+    archived.write_text(failed)
+    require(close("check-final", target=archived, ok=False).returncode != 0, "failed cleanup passed")
+    archived.write_text(failed.replace("cleanup_status: failed", "cleanup_status: complete"))
+    final_bytes = archived.read_bytes()
+    require(native("state", "commit", "probe", ok=False).returncode != 0, "dirty archive silently published")
+    git("add", archived, holder=holder)
+    git("commit", "-qm", "synthetic final observations", "--", archived, holder=holder)
+    native("state", "commit", "probe")
+    require(json.loads(close("check-final", target=archived).stdout)["close_complete"], "completed cleanup refused")
+    require(archived.read_bytes() == final_bytes, "final check mutated archive")
+    require(native("gate", "consume", "probe", ok=False).returncode != 0, "terminal approval reused")
+    if split:
+        published = git("show", f"origin/spacedock-state/dev:{archived.relative_to(holder)}", holder=holder).stdout
+        require(published == archived.read_text(), "final observations missing from local remote")
+        require(git("rev-parse", "HEAD", holder=holder).stdout == git("rev-parse", "origin/spacedock-state/dev", holder=holder).stdout, "state publication incomplete")
+    return {"synthetic_only": True, "fresh": fresh, "split_root": split, "commands": history}
+
+
+def measurement_regressions(guard, root: Path) -> None:
+    pending = direct_item_text().replace("captain_wait_seconds: 0", "captain_wait_seconds: pending").replace("terminal_cleanup_seconds: 2", "terminal_cleanup_seconds: pending").replace("cleanup_status: complete", "cleanup_status: pending")
+    for phase in ("review", "prepare", "consume"):
+        item = write_item(root, pending.replace("status: implementation", "status: validation"))
+        require(guard.validate(item, phase)[1] == "proceed", f"pending refused in {phase}")
+    for field, value in (("captain_wait_seconds", "pending"), ("terminal_cleanup_seconds", "pending"), ("cleanup_status", "pending")):
+        line = f"  {field}: {value}\n"
+        for replacement in ("", line + line):
+            require_refusal(guard, root, pending.replace(line, replacement), "review", f"exactly one {field}")
+        for invalid in ("-1", "1.5", "unknown"):
+            require_refusal(guard, root, pending.replace(line, f"  {field}: {invalid}\n"), "review", field)
+    require_refusal(guard, root, pending, "check-final", "status done")
+    terminal = pending.replace("status: implementation", "status: done")
+    require_refusal(guard, root, terminal, "check-final", "cleanup_status=pending")
+    complete = terminal.replace("captain_wait_seconds: pending", "captain_wait_seconds: 12").replace("terminal_cleanup_seconds: pending", "terminal_cleanup_seconds: 3").replace("cleanup_status: pending", "cleanup_status: complete")
+    for status in ("complete", "not-applicable"):
+        item = write_item(root, complete.replace("cleanup_status: complete", f"cleanup_status: {status}"))
+        before = item.read_bytes()
+        require(guard.validate(item, "check-final")[3] == "done", "completed terminal record refused")
+        require(item.read_bytes() == before, "check-final mutated the record")
+    require_refusal(guard, root, complete.replace("cleanup_status: complete", "cleanup_status: failed"), "check-final", "cleanup_status=failed")
+    require_refusal(guard, root, complete.replace("captain_wait_seconds: 12", "captain_wait_seconds: pending"), "check-final", "captain_wait_seconds=pending")
+    require_refusal(guard, root, complete.replace("terminal_cleanup_seconds: 3", "terminal_cleanup_seconds: -1"), "check-final", "non-negative integer")
+
+
 with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     root = Path(temporary)
     guard = load_guard()
+    measurement_regressions(guard, root)
     direct = write_item(root, direct_item_text(), "direct")
     require(guard.validate(direct, "prepare")[2:] == ("direct", "implementation"), "direct POC was not accepted from implementation")
     require_refusal(guard, root, direct_item_text(elapsed=899), "prepare", "does not match")
@@ -452,6 +577,9 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     located = os.environ.get("SPACEDOCK_BIN") or shutil.which("spacedock")
     if located:
         native_regressions(root, Path(located).resolve())
+        for fresh, split in ((False, False), (True, True)):
+            lifecycle_regressions(root / f"lifecycle-{fresh}", Path(located).resolve(), fresh=fresh, split=split)
+        print("POC close lifecycle: PASS (pending direct/fresh; manual approval; frozen briefing; archive; retry; local remote)")
     else:
         print("POC close guard native regressions: SKIP (spacedock unavailable)")
 

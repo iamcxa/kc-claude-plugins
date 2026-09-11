@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kc-ship-close-receipt/v2",
+  "title": "kc-ship-close-receipt v2",
+  "description": "The cloud-wrapper redesign's close receipt (docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md, section 'closed'). Written by close.py once every task in the sprint shows a merged PR and a pushed-or-failed debrief, or is recorded captain_stopped. Slimmed relative to v1: no plan/approval receipt shas, no dev_debrief/ship_debrief blocks -- those belonged to the plan-flow batch-dir world this design replaces; debriefs are written by each worker via `spacedock debrief`, never by ship on a worker's behalf.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "sprint", "tasks", "e2e", "questions", "residuals", "receipt_sha256"],
+  "properties": {
+    "schema": {"const": "kc-ship-close-receipt/v2"},
+    "sprint": {"type": "string", "minLength": 1},
+    "tasks": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "workspace_id", "session_id", "pr", "merged_sha", "debrief"],
+        "properties": {
+          "slug": {"type": "string", "minLength": 1},
+          "workspace_id": {"type": ["string", "null"]},
+          "session_id": {"type": ["string", "null"]},
+          "pr": {"type": ["string", "null"], "description": "the task entity's own pr: frontmatter value, e.g. pr-merge:<N>"},
+          "merged_sha": {"type": ["string", "null"]},
+          "debrief": {"type": "string", "minLength": 1, "description": "a _debriefs/... path once pushed, or a 'failure: ...' string when pending, rejected twice, or captain_stopped"}
+        }
+      }
+    },
+    "e2e": {
+      "type": "object",
+      "required": ["result"],
+      "properties": {
+        "result": {"type": "string", "minLength": 1}
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task", "question", "answer"],
+        "properties": {
+          "task": {"type": "string"},
+          "question": {"type": "string"},
+          "answer": {"type": "string"}
+        }
+      }
+    },
+    "residuals": {"type": "array", "items": {"type": "string"}},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

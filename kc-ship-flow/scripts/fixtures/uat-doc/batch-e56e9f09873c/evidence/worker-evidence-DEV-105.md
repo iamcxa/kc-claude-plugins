@@ -11,7 +11,7 @@ SURFACE: scripts/ship-flow/e2e-gate.py -> AC-2 | grep -q "def milestone_name" sc
 WITHOUT_IT_COMMAND: bash scripts/ship-flow/e2e-cli.sh $(git rev-parse HEAD) docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml
 WITHOUT_IT_REMOVED_VARIANT: rm -f docs/ship-flow/flows/from-dispatch-to-one-slack-message.yaml
 WITHOUT_IT_OBSERVED: retained -> exit 0; removed -> exit 2; at BASE_SHA -> exit 2
-SELF_CHECK: 2026-09-06T02:21:12Z accept-evidence: ACCEPT
+SELF_CHECK: 2026-09-06T02:21:12Z acceptance-check: ACCEPT
 ROBOREV: UNAVAILABLE(reason: no reviewer binary in workspace)
 AC-1: flow exists with two Execute external steps; e2e-cli.sh at the candidate ran both and exited 0
 AC-2: e2e-gate.py with a milestone naming an existing flow ran e2e-cli.sh at the stacked head, recorded the log path, exit 0

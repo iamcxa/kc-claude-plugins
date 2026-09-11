@@ -15,7 +15,7 @@
 #
 # A step's command runs in the candidate tree with LINEAR_API_KEY, GH_TOKEN,
 # GITHUB_TOKEN, CONDUCTOR_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, and
-# CODEX_API_KEY stripped -- the same list without-it.sh strips.
+# CODEX_API_KEY stripped -- the same credential list any without-it check strips.
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then

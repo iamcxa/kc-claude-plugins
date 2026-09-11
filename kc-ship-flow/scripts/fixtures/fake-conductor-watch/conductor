@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Stub `conductor` for watch.test.sh. No network. Every invocation's argv is appended to
+# $FAKE_CONDUCTOR_LOG when set. --version/--help delegate to the real binary (already pinned
+# from it) so the pin check passes unchanged; auth whoami always succeeds; session status
+# always reports idle; sql returns one canned transcript per session id from
+# $FAKE_CONDUCTOR_TRANSCRIPTS (a JSON file: {"<session-id>": "<transcript text>"}).
+set -euo pipefail
+
+[ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
+
+REAL_CONDUCTOR="${FAKE_CONDUCTOR_REAL:?FAKE_CONDUCTOR_REAL must be set to the real conductor binary}"
+
+args=("$@")
+if [ "${1:-}" = "--json" ]; then
+  set -- "${@:2}"
+fi
+
+case "${1:-}" in
+  --version) exec "$REAL_CONDUCTOR" --version ;;
+  --help) exec "$REAL_CONDUCTOR" --help ;;
+esac
+
+if [ "${1:-}" = "auth" ] && [ "${2:-}" = "whoami" ]; then
+  echo "authenticated (fake)"
+  exit 0
+fi
+
+if [ "${1:-}" = "session" ] && [ "${2:-}" = "status" ]; then
+  echo '{"status":"idle"}'
+  exit 0
+fi
+
+if [ "${1:-}" = "sql" ]; then
+  query="${2:-}"
+  session_id=$(printf '%s' "$query" | sed -nE "s/.*session_id = '([^']*)'.*/\1/p")
+  python3 -c "
+import json, sys
+sid = sys.argv[1]
+store_path = sys.argv[2]
+try:
+    store = json.load(open(store_path))
+except OSError:
+    store = {}
+transcript = store.get(sid)
+rows = [{'transcript': transcript}] if transcript is not None else []
+print(json.dumps({'rows': rows, 'rowCount': len(rows), 'truncated': False}))
+" "$session_id" "${FAKE_CONDUCTOR_TRANSCRIPTS:?FAKE_CONDUCTOR_TRANSCRIPTS must be set}"
+  exit 0
+fi
+
+echo "fake-conductor: unhandled ${args[*]}" >&2
+exit 64

@@ -1,0 +1,77 @@
+name: kc-journey-map tests
+
+# Path-filtered model tests and server smoke; the browser is not exercised here.
+# GitHub Actions cost per PR is unmeasured.
+
+on:
+  pull_request:
+    paths:
+      - "kc-journey-map/lib/**"
+      - "kc-journey-map/server/**"
+      - "kc-journey-map/scripts/canvas-smoke.sh"
+      - "kc-journey-map/package.json"
+      - "kc-journey-map/package-lock.json"
+      - "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml"
+      - ".github/workflows/kc-journey-map-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-journey-map/lib/**"
+      - "kc-journey-map/server/**"
+      - "kc-journey-map/scripts/canvas-smoke.sh"
+      - "kc-journey-map/package.json"
+      - "kc-journey-map/package-lock.json"
+      - ".github/workflows/kc-journey-map-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  canvas:
+    name: model tests + boot smoke (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22.13.0", "24"]
+    defaults:
+      run:
+        working-directory: kc-journey-map
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: kc-journey-map/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Preflight
+        run: npm run doctor
+
+      - name: Install pinned Spacedock
+        env:
+          SPACEDOCK_VERSION: v0.27.2
+          SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+        run: |
+          set -euo pipefail
+          asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"
+          curl -fsSL -o /tmp/spacedock.tar.gz \
+            "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
+          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/spacedock.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Model tests
+        run: node --test lib/*.test.mjs
+
+      - name: Boot and render
+        run: bash scripts/canvas-smoke.sh

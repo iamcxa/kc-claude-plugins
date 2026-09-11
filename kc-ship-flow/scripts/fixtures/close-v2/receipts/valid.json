@@ -1,0 +1,28 @@
+{
+  "e2e": {
+    "result": "not recorded"
+  },
+  "questions": [
+    {
+      "answer": "trunk, per the Local Profile.",
+      "question": "Which base branch?",
+      "task": "DEV-301"
+    }
+  ],
+  "receipt_sha256": "868543944c6bf5832261503334a20e00eb851caf83dd3dec5e616b72f2871f7e",
+  "residuals": [
+    "fixture residual for AC-3 receipt shape"
+  ],
+  "schema": "kc-ship-close-receipt/v2",
+  "sprint": "ship-cloud-wrapper",
+  "tasks": {
+    "DEV-301": {
+      "debrief": "_debriefs/2026-09-10-01-claude-fable-5-1.md",
+      "merged_sha": "abc1230000000000000000000000000000000000",
+      "pr": "pr-merge:501",
+      "session_id": "sess-301",
+      "slug": "DEV-301",
+      "workspace_id": "ws-301"
+    }
+  }
+}
