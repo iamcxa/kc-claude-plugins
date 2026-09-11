@@ -1,6 +1,6 @@
 ---
 title: "fix(kc-dev-flow): make retained architecture explanations discoverable"
-status: validation
+status: done
 product: kc-dev-flow
 sprint: S7
 sprint-readiness: ready
@@ -67,9 +67,12 @@ gates:
                 reason: 'Captain said 合併了 after reviewing the Ready delivery and personally merged PR #426 as iamcxa at 2026-09-11T10:36:52Z. Record observed acceptance now for post-merge reconciliation, without backdating. Final acceptance evidence explicitly covers AC-1 through AC-5 under the approved scope amendment, although ac-scan does not extract the separate prose evidence section. Exact reviewed head, required checks and native feedback match; fresh model chronology remains unproven.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 worktree: .worktrees/spacedock-ensign-issue-396-architecture-entrypoint
 pr: pr-merge:426
+verdict: PASSED
+completed: 2026-09-11T10:42:15Z
+archived: 2026-09-11T10:42:16Z
 ---
 
 The selected route identifies one discoverable home for the architecture explanation before implementation, and retained documentation describes implemented behavior at the existing exit boundary.
