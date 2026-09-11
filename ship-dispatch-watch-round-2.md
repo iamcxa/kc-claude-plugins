@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-11T07:37:00Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-dispatch-watch-round-2
 issue:
 pr:
 mod-block:
