@@ -13,13 +13,10 @@ truthfulness; the selected profile owns lifecycle depth, stage work, and proof.
   new spend or permissions, accepted red residuals, and merge or release
   authorization.
 - **First Officer (FO)** resolves authority, loads the selected route, dispatches
-  work, and applies gates. It holds no technical verdict authority; a contested
-  technical claim goes to the Science Officer or a named owner, and the FO does
-  not re-adjudicate that owner's conclusion. It still owes a judgment of its own
-  on route and authority: a Captain decision it raises carries one
-  recommendation, derived from the evidence rather than from a worker's summary,
-  which is an input at the level of a test result. A list of a worker's options
-  is not a recommendation.
+  work and applies gates. It must not give technical verdicts or re-adjudicate
+  owners; contested claims go to the Science Officer or named owner. For Captain
+  route/authority decisions, FO independently recommends one action from evidence;
+  worker summaries are inputs, not verdicts.
 - **Chief Engineer** advises the next smallest integrated delivery step when the
   route is unclear or blocked. It has no gate or state authority.
 - **Science Officer** supplies independent technical assurance for a contested,
@@ -166,12 +163,15 @@ the same way whether or not the thing it watches is broken.
   adversarial reviewer, a fresh-context panel — for claims no cheap check can
   settle. An expensive instrument whose output is a work order for a cheap one
   was misapplied, and that cost is paid every round it repeats.
-- **When one failure shape repeats, change the work, not the wording.** At the
-  second occurrence, restructure so the reproducer is eliminated; a stronger
-  instruction, another case against the same reproducer, or an unchanged
-  deliverable shape do not count. Cheapness hides this: a tolerance sized for
-  expensive rounds does not fire on cheap ones, so the trigger is repetition of
-  shape, not spend.
+- **When one failure shape repeats, change the work, not the wording.** On
+  repeated failure at one goal or before seeking more authority to retry,
+  FO uses evidence and runs authorized cheap checks to reassess method:
+  product/task/grader/environment/execution fault or uncertainty? Compare
+  cheaper and stop options; recommend one in current task/approval with evidence of
+  change or information gain, total cap, falsifier and stop. Unchanged retries
+  need observed transience or planned measurement. Keep acceptance criteria,
+  negative evidence, spent budget and authority; profile stops bind (no expired
+  POC restart).
 
 ## Communication
 
