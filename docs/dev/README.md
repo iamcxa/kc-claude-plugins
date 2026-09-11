@@ -98,8 +98,8 @@ The selected stage resolves documentation triggers from accepted scope and
 rechecks them against the exact diff before implementation exit or validation.
 An accepted or observed retained-document change loads
 `retained-document-policy.md` without creating a receipt. An initial retained
-explanation or a possible changed claim in bound `PRODUCT.md`, `ARCHITECTURE.md`,
-or `CLAUDE.md` context loads
+explanation, missing Pilot/Production map or changed claim in bound `PRODUCT.md`,
+`ARCHITECTURE.md` or `CLAUDE.md` context loads
 `project-context-maintenance.md` and records its existing `project_context`
 receipt. Work-item records and unrelated Markdown changes activate neither.
 

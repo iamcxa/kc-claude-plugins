@@ -13,7 +13,7 @@ Continue by the selected profile's smallest sufficient route.
    the unique ordered `kc-dev-flow-static-local-profile` start/end marker pair, with
    `## Local Profile` immediately after start. Read only its frontmatter and
    marked block; never infer boundaries from headings or open the full README.
-2. Recheck the worktree, branch, shared-state owner, and remote delivery state.
+2. Resolve repository root; recheck worktree, branch, shared-state owner and delivery state.
    When this item is delivered through a reviewable delivery artifact, list the
    open artifacts before creating or reusing a branch. An open unmerged artifact
    that carries work this item builds on is the default base: branch from its
@@ -145,10 +145,9 @@ newly true references before the verdict.
 
 - `retained_document_change`: accepted output or diff adds, removes, or changes
   a retained document.
-- `project_context_claim_may_change`: retained implementation needs its initial
-  explanation, accepted behavior, architecture, or a public contract may change a
-  bound claim, or the diff changes that context. The existing policy
-  owns coverage and upkeep through the bound authority.
+- `project_context_claim_may_change`: a Pilot/Production map is missing, retained
+  implementation needs its initial explanation, accepted behavior, architecture,
+  or a public contract may change a bound claim, or the diff changes that context.
   A Markdown work record alone satisfies neither trigger.
 - `delivery_artifact_review`: PR, merge request or equivalent delivery, regardless
   of ceremony owner; false for delivery without one.
@@ -195,6 +194,15 @@ A loader refusal means an off-route stage, stale receipt, or incomplete adoption
 Resolve that condition; do not substitute another item's profile or general
 workflow prose.
 
+For every working-stage continuation and dispatched worker, after authority/profile/pin
+checks, read repository-root `docs/architecture.md` before exploration or implementation.
+Use the map to choose focused task-relevant code/linked-doc reads; verify stale claims
+against code. If absent, POC continues; Pilot/Production requires a useful map first:
+FO assigns implementation a bounded context/code bootstrap before feature work;
+validation returns missing/stale maps to that owner. Follow `project-context-maintenance.md`
+and include these instructions in every dispatch,
+including Production recovery that skips shape. No empty or link-only map.
+
 For a superset state graph, route as follows:
 
 | Profile | Workflow states used |
@@ -226,40 +234,28 @@ Fresh proof records its outcome in validation. Prepare through the guard, record
 return the POC outcome to planning. KC Dev Flow does not create downstream delivery work
 or preselect its profile; planning decides whether a new Development Brief exists.
 
-- Perform the selected stage mission and required output. Move to the loader's
-  `next_workflow_stage` when its stated stop condition is met.
-- Invoke `kc-dev-flow:chief-engineer` only for an unclear next step, a material
-  blocker, route drift, or a selected transition that needs delivery sequencing.
-- Invoke `kc-dev-flow:science-officer` only for a contested, high-risk,
-  hard-to-reverse, or low-confidence technical claim, or on Captain request.
-  Do not load the legacy `science-officer-em` adapter unless a consumer requests
-  its legacy report envelope.
-- Repair material findings with one owner and one final re-verification. Do not
-  create an open-ended implementation-review loop.
-- Use required deterministic gates at their declared boundaries. FO applies
-  them; provider labels and agent advice do not replace them.
-- Ask the Captain only for scope/profile change, irreversibility, new spend or
-  permission, accepted red residuals, and merge or release authority.
+- Complete selected mission/output, then follow `next_workflow_stage` at its stop condition.
+- Use `kc-dev-flow:chief-engineer` for unclear next steps, material blockers, route drift
+  or delivery sequencing; `kc-dev-flow:science-officer` for contested, high-risk,
+  hard-to-reverse or low-confidence claims, or Captain request. Load legacy
+  `science-officer-em` only when its report envelope is requested.
+- Assign findings one owner and final recheck; no open-ended review loop.
+- FO applies required deterministic gates at declared boundaries; advice/provider
+  labels do not replace them. Captain owns scope/profile changes, irreversibility,
+  spend/permission, accepted red residuals and merge/release authority.
 
-After the exact selected route and repository delivery authority are satisfied,
-terminalize through the existing state owner. Keep reports to decision, evidence
-that changes the decision, and next action.
+After route and delivery authority are satisfied, terminalize through the state
+owner. Report decision, material evidence and next action.
 
 ## Optional observations
 
-At implementation exit, inspect the loader's
-`implementation_exit_observation_declared` field. Direct POCs emit false; retained
-or safety-bound POCs and the higher profiles keep their existing value. When the loader output is true,
-read the selected build contract's `review_convergence` observation and provider
-contract it names — `../../references/roborev-implementation-exit.md` — as the
-method. Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, and
-`panel: none`; the actual host and implementation family is provenance only.
-Pass the selected profile's minimum severity and caps explicitly. A full route
-or named recovery risk emits true; recovery `[none]` emits false. A false or
-absent declaration performs no RoboRev probe or invocation. An unavailable
-fixed reviewer produces an honest non-gating `UNAVAILABLE` result.
-
-The installed manifest declares the provider contract; load it as a conditional
-reference. README policy, local mods, provider adapters, and
-Spacedock state stay repository-owned. Load improvement harvesting only on an explicit request; it
-never interrupts the selected product route.
+At implementation exit, use loader `implementation_exit_observation_declared`:
+direct POCs emit false; retained/safety-bound POCs and higher profiles retain their
+existing value. True loads the selected build's `review_convergence` observation and
+manifest-bound `../../references/roborev-implementation-exit.md` conditionally.
+Use fixed reviewer Codex `gpt-5.6-terra`, reasoning `medium`, `panel: none`, and the
+profile's explicit minimum severity/caps; host/implementation family is provenance.
+Full routes/named recovery risks emit true; recovery `[none]` emits false. False or
+absent performs no RoboRev probe/invocation. Unavailable reviewer: non-gating `UNAVAILABLE`.
+README policy, local mods, provider adapters and Spacedock state remain repository-owned.
+Improvement harvesting requires explicit request and never interrupts the product route.

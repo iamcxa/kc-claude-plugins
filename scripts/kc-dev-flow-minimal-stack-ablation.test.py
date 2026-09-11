@@ -921,7 +921,7 @@ def main() -> int:
     run_manual_contract_mutant(
         'architecture-initial-trigger-removed',
         'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
-        'retained implementation needs its initial\n  explanation',
+        'retained\n  implementation needs its initial explanation',
         'removed architecture obligation',
         'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: retained implementation needs its initial explanation',
     )
@@ -933,11 +933,11 @@ def main() -> int:
         'architecture entrypoint omits kc-dev-flow/references/profiles/poc-exploration/base.md: A disposable POC needs no permanent architecture document',
     )
     run_manual_contract_mutant(
-        'architecture-existing-home-reuse-removed',
+        'architecture-required-map-removed',
         'kc-dev-flow/references/project-context-maintenance.md',
-        'An accurate linked section satisfies the requirement',
+        'Every Pilot and Production working route requires `docs/architecture.md`',
         'removed architecture obligation',
-        'architecture entrypoint omits kc-dev-flow/references/project-context-maintenance.md: An accurate linked section satisfies the requirement',
+        'architecture entrypoint omits kc-dev-flow/references/project-context-maintenance.md: Every Pilot and Production working route requires `docs/architecture.md`',
     )
     run_manual_contract_mutant(
         'architecture-poc-timing-removed',
@@ -952,6 +952,20 @@ def main() -> int:
         'no extra edit or review loop',
         'removed architecture obligation',
         'architecture entrypoint omits kc-dev-flow/references/project-context-maintenance.md: no extra edit or review loop',
+    )
+    run_manual_contract_mutant(
+        'architecture-read-before-exploration-removed',
+        'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
+        'after authority/profile/pin\nchecks, read repository-root `docs/architecture.md` before exploration or implementation',
+        'read the map later',
+        'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: after authority/profile/pin checks',
+    )
+    run_manual_contract_mutant(
+        'architecture-recovery-dispatch-removed',
+        'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
+        'including Production recovery that skips shape',
+        'except recovery',
+        'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: include these instructions in every dispatch',
     )
     run_missing_close_guard_mutant()
     run_release_state_mutant()

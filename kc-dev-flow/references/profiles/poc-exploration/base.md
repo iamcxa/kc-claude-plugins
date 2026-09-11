@@ -23,7 +23,8 @@ observable stop point in the v3 receipt before build.
 - At `prove`, evaluate the question and abandonment condition the shared core's
   `backlog` exit bar already recorded. Do not rewrite either.
 - Record cleanup and what the experiment does not prove.
-- A disposable POC needs no permanent architecture document; retained work uses
+- POC is exempt from mandatory `docs/architecture.md`; read it when present.
+  A disposable POC needs no permanent architecture document; retained work follows
   triggered `project-context-maintenance.md`. Require a PR, Chief Engineer, Science
   Officer, or production operations only for repository policy or an observed boundary.
 
