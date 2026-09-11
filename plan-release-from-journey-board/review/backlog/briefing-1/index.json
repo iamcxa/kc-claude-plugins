@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1",
+  "question": "Enter Pilot ideation for the approved release planning brief and S2 registration?",
+  "artifacts": [
+    {
+      "id": "artifact:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7c025daf56aa755e5a4a493cd406bbedbc88e02e/plan-release-from-journey-board/index.md",
+      "rev": "sha256:ae8187cfca9e8eff5fb6a7482eb3252ece135c414064f34e5af173c3d64079a7",
+      "mediaType": "text/markdown",
+      "summary": "Captain selected Pilot and approved a separate layer above PR 417 plus pre-merge S2 registration. Shape the smallest existing-skill change for selected-release value questions and one Development Brief; preserve independent map/dev use and all remaining non-goals."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/96defe1d2a4be5c9edd39db08be2649ad71fd28a/docs/dev/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:ad9d090dd066b20472bd45da938dccfa0a48dc1799a53a57c44bdb18dbba98ee"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/36099fab28b9d19f73fc40e9d3e55614202e9b8a/docs/dev/ROADMAP.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:c29a37f7d244bdcbf44ceeb965afe9f0765ad941b5f36a2bbaec6817400d67ab"
+    }
+  ]
+}

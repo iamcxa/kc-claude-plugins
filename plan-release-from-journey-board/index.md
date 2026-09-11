@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: r1fa7xv14afj9npcfe1wbx76
+gates:
+    version: 1
+    records:
+        - id: gate:r1fa7xv14afj9npcfe1wbx76:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:r1fa7xv14afj9npcfe1wbx76-backlog-1
+              briefing:
+                id: briefing:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1
+                digest: sha256:2efc26b48657bc9d6f797d1af2109ce21a61f6ea776ebd70ed9d91b803362527
+                room-ref: ./review/backlog/briefing-1
 ---
 
 ## The problem
