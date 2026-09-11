@@ -26,6 +26,17 @@ gates:
                 id: briefing:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1
                 digest: sha256:2efc26b48657bc9d6f797d1af2109ce21a61f6ea776ebd70ed9d91b803362527
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:r1fa7xv14afj9npcfe1wbx76:backlog:1
+                briefing: briefing:r1fa7xv14afj9npcfe1wbx76:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T05:55:37.104718Z"
+                decision: approve
+                reason: Kent explicitly selected Pilot, approved the separate layer above PR 417, and replied 可以 to S2 registration and using it before merge to start this task. Enter ideation only; implementation remains gated.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
