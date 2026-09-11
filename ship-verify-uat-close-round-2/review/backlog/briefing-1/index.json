@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:esc73128rg68pqmtpck3a90q:backlog:attempt-1:revision-1",
+  "question": "Admit ship-verify-uat-close-round-2 into implementation under the POC profile, delivered by a cloud first officer?",
+  "artifacts": [
+    {
+      "id": "artifact:esc73128rg68pqmtpck3a90q:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1bfb4b3071609ab1686190a22d646905308a861a/ship-verify-uat-close-round-2/review/backlog/backlog-review.md",
+      "rev": "sha256:f7f65412f2e4f72530447e60b0665c98e4fae0d0f1e74d48587511dac09e7261",
+      "mediaType": "text/markdown",
+      "summary": "Round-2 hardening from the first real batch"
+    }
+  ]
+}

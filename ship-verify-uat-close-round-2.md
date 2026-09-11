@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: esc73128rg68pqmtpck3a90q
+gates:
+    version: 1
+    records:
+        - id: gate:esc73128rg68pqmtpck3a90q:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:esc73128rg68pqmtpck3a90q-backlog-1
+              briefing:
+                id: briefing:esc73128rg68pqmtpck3a90q:backlog:attempt-1:revision-1
+                digest: sha256:fb2811378adcf3f17083fee63acf82c4eb37439a500199980b0ce63eb663ff1e
+                room-ref: ./ship-verify-uat-close-round-2/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:esc73128rg68pqmtpck3a90q:backlog:1
+                briefing: briefing:esc73128rg68pqmtpck3a90q:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T07:37:04.168232Z"
+                decision: approve
+                reason: 'Captain approved in chat: 「確認」 2026-09-11 (after the plain-language summary of both r2 tasks)'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The first real close of a batch (`sprint: ship-cloud-wrapper`, 2026-09-11) could not run: `close.py`
