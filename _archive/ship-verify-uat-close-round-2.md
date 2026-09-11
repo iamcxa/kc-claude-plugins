@@ -1,6 +1,6 @@
 ---
 title: "ship-flow round 2: close.py and uat-doc.py read archived and folder-form entities from the dev state root, and record debriefs"
-status: validation
+status: done
 source:
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper-r2
 sprint-readiness: ready
 started: 2026-09-11T07:37:10Z
-completed:
-verdict:
+completed: 2026-09-11T11:11:53Z
+verdict: PASSED
 worktree:
 issue:
 pr: pr-merge:420
@@ -55,7 +55,8 @@ gates:
                 reason: 'Captain merged #420 in chat: 「合併420」 2026-09-11'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-11T11:11:53Z
 ---
 
 The first real close of a batch (`sprint: ship-cloud-wrapper`, 2026-09-11) could not run: `close.py`
