@@ -1,10 +1,10 @@
 ---
 title: Prove one journey-board to development handoff
-status: ideation
+status: implementation
 product: kc-journey-map
 sprint: journey-planning-proof
 sprint-readiness: ready
-started:
+started: 2026-09-11T04:57:31Z
 completed:
 verdict:
 worktree:
