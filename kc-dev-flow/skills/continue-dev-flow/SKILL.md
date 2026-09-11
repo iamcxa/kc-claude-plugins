@@ -14,10 +14,9 @@ Continue by the selected profile's smallest sufficient route.
    `## Local Profile` immediately after start. Read only its frontmatter and
    marked block; never infer boundaries from headings or open the full README.
 2. Resolve repository root; recheck worktree, branch, shared-state owner and delivery state.
-   For reviewable delivery, list open artifacts before creating or reusing a branch.
-   An open unmerged artifact carrying required work is the default base: branch
-   from its source and stack without waiting for merge. `delivery-branch-base.md`
-   owns this rule and exceptions regardless of ceremony owner.
+   For reviewable delivery, list open artifacts before branch creation/reuse.
+   Stack on an unmerged dependency's source branch without waiting for merge.
+   `delivery-branch-base.md` owns this default and exceptions across ceremonies.
 3. Read the exact committed work item and selected brief. A Pilot or
    Production new admission requires one Development Brief containing the
    problem, accepted outcome, complete non-goal list, route-back conditions, and
@@ -77,7 +76,8 @@ Continue by the selected profile's smallest sufficient route.
    Any other exit-`0` output reports `planning reconcile unavailable`.
    Exit `1` reports the classified delta. Exit `2` reports
    `planning reconcile unavailable`. All stop before new dispatch or state mutation.
-   The Captain admits deltas before an authorized actor commits a replacement snapshot.
+   Stop for any added, removed, changed, or moved item.
+   The Captain must admit the delta before an authorized actor commits a replacement snapshot.
    No difference writes the provider or execution snapshot automatically.
    Do not cancel a running worker.
 
@@ -122,8 +122,8 @@ poll, or rewrite either authority.
 ## Load one route
 
 Resolve `../../scripts/profile-contract-loader.py` from this activated skill.
-Its manifest binds version, Local Profile interface, and canonical bytes. Use the
-exact item and marked README; do not search hosts or store its path. It emits shared core, selected base, and selected stage only. Profiles are per item.
+The manifest binds version, Local Profile interface and canonical bytes. Use the
+exact item/marked README; never search hosts or store its path. It emits shared core, selected base, and selected stage only. Selection is per item; simultaneous items may load different routes.
 For canonical admitted work with Acceptance criteria, the latest Stage Report
 cites stable `AC-N` identifiers; Spacedock `--ac-scan` must report no unknown or
 uncovered criterion before the next gate. POCs use `review` below.
@@ -187,10 +187,9 @@ workflow prose.
 
 Each working continuation/worker, after authority/profile/pin
 checks, read repository-root `docs/architecture.md` before exploration or implementation.
-Use task-relevant code/docs; code overrides stale claims. If absent, POC
-continues; Pilot/Production needs a useful map: FO assigns implementation bounded
-context/code bootstrap before feature work; validation returns missing/stale maps
-to that owner. Follow `project-context-maintenance.md`; include these instructions in every dispatch,
+Read task-relevant code/docs; code overrides stale claims. POC permits absence;
+otherwise FO assigns implementation useful context/code bootstrap before feature
+work; validation returns missing/stale maps to that owner. Follow `project-context-maintenance.md`; include these instructions in every dispatch,
 including Production recovery that skips shape. No empty or link-only map.
 
 For a superset state graph, route as follows:
