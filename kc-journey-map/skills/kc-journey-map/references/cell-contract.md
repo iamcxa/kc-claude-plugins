@@ -75,6 +75,16 @@ built; see "Stories".
 The lints diagnose missing/unsupported status and missing/stale evidence — see `lib/lint.mjs` and the per-release
 contract generated from them (`lib/release-contract.mjs`).
 
+## Interpret task-derived colors
+
+With the optional progress skill, green means all explicitly required development
+tasks are done; red means required development work remains; violet means mapping
+or observation is unverified. Unknown stories stay in the release denominator.
+An empty scope cannot complete; all required stories done means **pending delivery
+acceptance**. Task state and source symbols do not prove target-user usability.
+Authored evidence stays separate. `lib/progress.test.mjs` exercises these meanings;
+`../../kc-journey-progress/SKILL.md` owns the task mapping contract.
+
 ## Lane 2 — System Flow (per step, narrative)
 
 **Asserts:** the call, route, or write the step performs, in prose for a reader of the
