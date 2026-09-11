@@ -45,6 +45,17 @@ gates:
                 id: briefing:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-1:revision-1
                 digest: sha256:e00d5805ee76e9a0e542f3b2ad1f0ff0ff623cd44efb2fdb461bfbf7b68f5fae
                 room-ref: ./ship-dispatch-watch-round-2/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:7z61dwwgjsffrpgk7ga4m60r:validation:1
+                briefing: briefing:7z61dwwgjsffrpgk7ga4m60r:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T08:45:23.397106078Z"
+                decision: approve
+                reason: 'Captain approved via chat: ''push it'' (immediately after gate presentation recommending approve; AC-1..AC-5 independently re-verified twice with matching results)'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 The first real batch (`sprint: ship-cloud-wrapper`, 2026-09-10/11) delivered two tasks through cloud
