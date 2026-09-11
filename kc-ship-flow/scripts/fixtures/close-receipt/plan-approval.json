@@ -1,14 +1,14 @@
 {
  "schema": "kc-plan-approval/v1",
- "receipt_sha256": "1016352e0223194577fab44e5cd3b5ba2c1d4bc7fbe9543bf33c814294467264",
+ "receipt_sha256": "d7013e0880ff8addbc1e5a0c7ae1b5c6f82d1273a5a32abd915d6eb1c1aaa879",
  "approver": "person:captain",
  "approved_at": "2026-09-03T14:06:59Z",
  "decision": "go",
  "max_workspaces": 3,
  "concurrency": 2,
  "repair_rounds": 2,
- "quote": "go · 3 workspaces · concurrency 2 · repair 2",
- "quote_source": "Captain, Ask UI in this conversation, 2026-09-03 evening, after 那就按建議走2",
+ "quote": "go \u00b7 3 workspaces \u00b7 concurrency 2 \u00b7 repair 2",
+ "quote_source": "Captain, Ask UI in this conversation, 2026-09-03 evening, after \u90a3\u5c31\u6309\u5efa\u8b70\u8d702",
  "defaults": {
   "findings_outside_brief": [
    "security",

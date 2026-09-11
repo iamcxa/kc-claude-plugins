@@ -1,7 +1,7 @@
 {
  "schema": "kc-ship-close-receipt/v1",
- "plan_receipt_sha256": "1016352e0223194577fab44e5cd3b5ba2c1d4bc7fbe9543bf33c814294467264",
- "approval_receipt_sha256": "a089ad9d6ef046b11fda8827b68765eeb742f3e26dffae1d90f3ae8afe55fd22",
+ "plan_receipt_sha256": "d7013e0880ff8addbc1e5a0c7ae1b5c6f82d1273a5a32abd915d6eb1c1aaa879",
+ "approval_receipt_sha256": "48cfc6e362a3a0548366dd56b76663c8f28008475e7e45f1ace2e3e7807b9cf1",
  "batch": {
   "entity": "batch-1016352e0223",
   "started_at": "2026-09-03T14:05:00Z",
@@ -149,5 +149,5 @@
   },
   "candidate_correction": "Require an approval fixture to carry `defaults` before it is reused past the PR that introduced the requirement (#372)."
  },
- "close_sha256": "8c079687c37396788728e45a4bb4ed3976d2ee30040e2900a90eaafd5b709363"
+ "close_sha256": "cf2bfe303d94542befebaae95d1f6602e683395cbad5685118310e9fa164b025"
 }

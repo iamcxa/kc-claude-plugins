@@ -27,14 +27,14 @@ kc-ship-flow is a thin wrapper over kc-dev-flow: it bundles the `docs/dev` tasks
 `sprint` value, sends each to its own Conductor cloud first officer, watches the set to a prepared
 `validation` gate, verifies at the integrated head, and hands the Captain one UAT. Anything a task
 already does per-task belongs to dev flow or Spacedock, not here; see
-`docs/superpowers/specs/2026-09-10-ship-flow-cloud-wrapper-design.md` (branch
-`docs/ship-flow-cloud-wrapper-spec`, not yet on `main`) for the full design and the ruling it
+`docs/dev/.spacedock-state/ship-cloud-dispatch-and-watch/design/2026-09-10-ship-flow-cloud-wrapper-design.md`
+on branch `spacedock-state/dev` for the full design and the ruling it
 implements. The batch moves through `dispatched -> watching -> verified -> uat -> closed`.
 
 <!-- kc-ship-flow-static-local-profile:start -->
 ## Local Profile
 
-This table is the first-officer skill's declared input before dispatching a batch, not the full README as a policy bundle. `kc-ship-flow/scripts/local-profile-check.py` verifies the table's required rows; nothing checks what else the skill reads.
+This table is the `run-batch` skill's declared input before dispatching a batch, not the full README as a policy bundle. `kc-ship-flow/scripts/local-profile-check.py` verifies the table's required rows; nothing checks what else the skill reads.
 
 | Role | Bound local authority |
 |---|---|

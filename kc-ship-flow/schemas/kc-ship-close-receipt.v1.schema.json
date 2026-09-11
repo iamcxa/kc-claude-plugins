@@ -59,7 +59,7 @@
               "rounds": {"type": "integer", "minimum": 0},
               "evidence_refusals": {"type": "array", "items": {"type": "string"}, "description": "this Issue's own WITHOUT_IT_OBSERVED line from its worker-evidence Evidence block, if recorded; accept-station refusals are a separate runtime event this writer does not read"},
               "code_refusals": {"type": "array", "items": {"type": "string"}, "description": "refusals sourced from the record -- a README defaults-decision bullet naming this Issue and a REFUSE, or a review/disposition-<PR>.json blocking disposition -- never a copy of `issues[*].residuals`; a single ['source: not recorded'] entry when the record names neither"},
-              "note": {"type": "string", "minLength": 1, "description": "optional; dev-debrief.py sets this to \"not dispatched\" for an issue whose outcome is carried, captain_stopped, or drift and has no worker-evidence file"}
+              "note": {"type": "string", "minLength": 1, "description": "optional; the batch's dev debrief record sets this to \"not dispatched\" for an issue whose outcome is carried, captain_stopped, or drift and has no worker-evidence file"}
             }
           }
         },
@@ -79,7 +79,7 @@
             "required": ["decision", "overturned"],
             "properties": {
               "decision": {"type": "string", "minLength": 1, "pattern": "\\S"},
-              "overturned": {"type": "boolean", "description": "true only when a later defaults-decision bullet names this one's timestamp or id together with 'retract', 'overturn', or 'correction'; ship-debrief.py marks the referenced decision, never the later note itself"}
+              "overturned": {"type": "boolean", "description": "true only when a later defaults-decision bullet names this one's timestamp or id together with 'retract', 'overturn', or 'correction'; the batch's ship debrief record marks the referenced decision, never the later note itself"}
             }
           },
           "description": "every `defaults` decision the batch record made and whether the Captain overturned it"
