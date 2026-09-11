@@ -10,51 +10,57 @@ this skill has recommendation and question authority only.
 
 ## Resolve the choice
 
-Ask first: **Could credible negative evidence cancel or materially change the
-next commitment this item asks the Captain to accept?** Yes recommends POC. No
-compares Pilot and Production using the existing delivery-risk boundaries.
+Read the exact work item and its `## Work profile receipt`. A receipt is stale
+when audience, lifespan, valuable state, mutation boundary, authority need, or
+operational commitment changes. Use the first applicable path:
 
-Read the exact work item and its `## Work profile receipt`. A Pilot or
-Production receipt records `semantics_unchanged` at every working stage from
-`ideation` onward, not only at `ideation`, making the shape's existing
-observable-semantics declaration machine-readable; the loader refuses any of
-those stages without it and refuses `validation` without an
-`equivalence_instrument` when it was declared `true`. Reuse an unchanged
-supported receipt. A v2 Pilot or Production receipt remains supported; an active
-v2 POC must finish on its pinned 3.x pair or be Captain re-recorded as v3. Treat
-any receipt as stale when audience, lifespan, valuable state, mutation boundary,
-authority need, or operational commitment changes.
+1. **Recorded unchanged choice:** With no change requested, reuse the supported
+   receipt and stop selection. v2 Pilot/Production is supported; active v2 POC
+   finishes on its pinned 3.x pair or is Captain re-recorded as v3. For unchanged v1
+   Pilot/Production, return a mechanical v3 candidate preserving `selected`,
+   current route, basis and obligations. For v1 POC, keep the choice and ask
+   only for missing v3 experiment fields.
+2. **Supplied acceptance:** Without a reusable receipt, keep a valid
+   supplied profile/route. Explain below, return the candidate from that answer,
+   not a reconstructed conversation.
+3. **Unaccepted recommendation:** Explain below as a proposal, then ask for the
+   choice. This includes a stale basis or profile that no longer contains the
+   scope, without valid acceptance.
 
-An unchanged v1 Pilot or Production receipt already records the Captain's
-profile choice. Return a mechanical v3 candidate with the same `selected`,
-current route, basis, and task-specific obligations. A v1 POC preserves its
-profile choice but cannot supply the new experiment contract mechanically: ask
-the Captain to complete the v3 POC fields without reopening the profile choice.
-Ask for a new selection only when its basis is stale or the selected profile no
-longer contains the accepted scope.
+## Explain and resolve
+
+Explain the **next commitment**, **unresolved assumption**,
+**observable result**, and **included work** from task facts and stated evidence
+gaps; do not invent assumptions. Label unaccepted
+commitments as proposals; future ambition is not accepted scope. Scaffolding
+means files, not a proved journey or fourth profile. Distinguish existing
+valuable state and consumers from disposable state an experiment may create.
+Repository age selects no profile.
+
+For an unproved journey, explain both, including after acceptance:
+
+- **Smallest experiment:** concrete actions through the same end-to-end journey
+  on disposable inputs, and observable result.
+- **Coverage limit:** the evidence or accepted duty that experiment cannot cover.
+
+The comparison explains scope, without replacing supplied acceptance.
+Before acceptance, recommend the experiment if credible negative evidence could
+change the commitment. No profile sequence is required.
 
 | Choice | Route | Use when |
 |---|---|---|
 | `POC / Exploration` (`poc-exploration`) | `build -> prove` | A disposable experiment must prove one real journey and its riskiest assumption. |
 | `Pilot / Product slice` (`pilot-product-slice`) | `shape -> build -> verify-deliver` | Limited real use creates persistent value and likely iteration. |
-| `Production` (`production`) | `shape -> build -> verify` by default; eligible recovery uses `build -> verify` | The scope accepts a production boundary or long-term operational commitment. |
-
-After selecting Production, ask one coupled route question only when an exact
-known failure has a concrete falsifier and rollback. The Captain may keep the
-full route or record recovery with `recovery_failure`, `recovery_falsifier`,
-`recovery_rollback`, and `review_risks`; uncertainty keeps the full route.
+| `Production` (`production`) | `shape -> build -> verify` by default; eligible recovery uses `build -> verify` | An operated release accepts production boundaries or long-term operational duties. |
 
 A POC label cannot downscope production credentials or data, destructive
 external mutation, irreversible migration, a compatibility break that makes a
 consumer act, unattended operation, broad exposure, SLO/support duty, or
 release/rollback ownership.
 
-The compatibility trigger asks whether a consumer must do something, not whether
-the change is published. Recommend Production when an existing consumer cannot
-upgrade by taking the new version — it has to run a migration, edit its own
-configuration, or rewrite records it owns. If you cannot state that consumers
-upgrade without acting, recommend Production; the error that costs more is the
-one that sends a migration out on a shorter route.
+Compatibility means a consumer must migrate, edit configuration, or rewrite
+owned records to upgrade; publication alone is not that trigger. Unless you can
+state that consumers upgrade by taking the version without acting, recommend Production.
 
 Check the shared core's brief admission bar in the same read. Pilot and
 Production require a Development Brief with the problem, accepted outcome,
@@ -69,35 +75,45 @@ keeps the item in `backlog`. A local runtime may separately require `sprint` and
 `sprint-readiness: ready`, but those fields do not invent or prove provider
 scheduling.
 
-Feature and bug labels do not select the route. A clear urgent bug may use a
-standalone Development Brief, an uncertain bug may use POC, and a scheduled
-feature or bug may carry a Planning Receipt. Choose from uncertainty and the
-accepted commitment, not the ticket label.
+Feature/bug labels do not select routes: a clear urgent bug may use a standalone
+Development Brief, an uncertain bug POC, and a scheduled item a Planning Receipt.
 
-Derive a recommendation from the task. Ask one clarifying question only when one
-missing fact — an incomplete exit bar included — could change the choice or
-leave the item unready to leave `backlog`. State the task-specific difference in architecture,
-implementation, testing, stages, and delivery. Use the host's best structured
-Ask UI when available; plain chat is the fallback. In a non-interactive worker,
-return `NEEDS_PROFILE_DECISION` and name the missing fact; never select
-automatically and never supply the missing part.
+Only the unaccepted path requests a profile choice. Ask one clarifying question
+if a missing fact could change the choice or block
+`backlog` exit. Explain task-specific architecture, implementation, testing,
+stages, and delivery. Use the host's structured Ask UI, or plain chat if
+unavailable. Misunderstanding, no answer, cancellation, or timeout leaves scope
+unresolved: do not create a selected receipt or claim success. Non-interactive
+workers return `NEEDS_PROFILE_DECISION` with the missing fact, without filling it in.
+
+For Production with no supplied route, ask one coupled route question only when
+an exact known failure has a concrete falsifier and rollback. The Captain may
+keep the full route or record recovery with `recovery_failure`,
+`recovery_falsifier`, `recovery_rollback`, and `review_risks`; uncertainty keeps
+the full route.
 
 ## Return the candidate receipt
+
+Use the actual Captain answer. A candidate with
+unknown facts is not ready to record. Pilot/Production receipts copy shape's
+observable-semantics declaration into `semantics_unchanged` from `ideation`.
+The loader refuses a missing value and `validation` without an
+`equivalence_instrument` when true.
 
 ```yaml
 work_profile:
   schema: kc-dev-flow-work-profile/v3
   selected: poc-exploration | pilot-product-slice | production
   recommended: poc-exploration | pilot-product-slice | production
-  basis: <audience, lifespan, state, mutation boundary, and commitment>
+  basis: <accepted commitment, assumption, result, audience, lifespan, and state>
   route: [<ordered logical working stages>]
   obligations:
     architecture: [<task-specific obligations>]
     implementation: [<task-specific obligations>]
     testing: [<task-specific obligations>]
-  scope_boundary: <what this profile excludes>
-  # Pilot and Production, every working stage from ideation onward.
-  semantics_unchanged: true | false
+  scope_boundary: <accepted limits, or positive accepted scope if none>
+  # Pilot/Production: required from ideation.
+  semantics_unchanged: <work's declared true | false; omit if unknown>
   # POC only; omit these fields for Pilot and Production.
   poc_decision: <the next commitment this evidence decides>
   poc_falsifier: <the cheapest credible negative evidence>
@@ -115,14 +131,18 @@ work_profile:
   promote_when: [<observable task-specific triggers>]
   decision:
     authority: <captain identity or bound authority>
-    at: <RFC3339 timestamp>
+    at: <supplied or clock-read RFC3339 time; omit if unknown> # label capture here
 ```
 
-The locally authorized actor re-reads the entity, records the receipt in the
-existing work item, syncs it through the existing safe transaction, and re-reads
-the committed result. Do not write a sidecar or start a working stage before
-that re-read. Returning a recovery item to the full route requires a new Captain
-decision unless its recorded rollback explicitly grants that exact rewrite.
+After the Captain accepts, put commitment, assumption, and result into `basis`,
+included work into `obligations`, scope into `scope_boundary`, and escalation
+conditions into `promote_when`; add no receipt key. Without accepted exclusions,
+describe accepted work; proposed restrictions stay outside the receipt.
+Preserve an existing receipt while scope is unresolved. Before a working stage,
+the locally authorized actor re-reads the entity, records the accepted receipt
+via the existing safe transaction and re-reads the committed result. No sidecar.
+Return recovery to the full route only with a new Captain decision or its
+recorded rollback's exact rewrite grant.
 
 ## Promotion
 
