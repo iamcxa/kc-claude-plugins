@@ -6,7 +6,7 @@
  },
  "ship-verify-uat-close-round-2": {
   "message_sha256": "b7ff903d4051552cd6adfb52642789e6f661912ed50235b548dbf9f37e2bc1bd",
-  "session": null,
-  "workspace": null
+  "session": "c3a91011-ce4c-43a7-a172-956c2c747551",
+  "workspace": "ac3018f5-1d7c-4083-a9da-8252621774ed"
  }
 }
