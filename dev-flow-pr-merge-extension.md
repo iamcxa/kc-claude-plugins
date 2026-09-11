@@ -45,6 +45,17 @@ gates:
                 id: briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-1:revision-1
                 digest: sha256:f42a4d3151de410f34d373333a095e2bf47134ea2d62924de5ab3a399657447d
                 room-ref: ./dev-flow-pr-merge-extension/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:rca7s3d89e103ajfdpbj2awe:validation:1
+                briefing: briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-11T08:25:02.488311Z"
+                decision: revise
+                reason: The extension text claims a structural hash assertion rejects drift in the released Spacedock body; FO mutated the released body (line 30) at f4b522e4 and both kc-dev-flow-contract-test.py and pr-merge-portable-delivery.test.py still PASS. The claim must become true (pinned hash of the pre-marker body, checked in the contract test) or be rewritten as the bounded claim the code supports.
+                conn:
+                    quote: 可以 (Captain, 2026-09-11, approving the kc-dev-flow-owned pr-merge extension plan with a drift check that fails CI)
+                    source: Captain chat 2026-09-11
 ---
 
 Every adopter's `docs/dev/_mods/pr-merge.md` wraps the released Spacedock pr-merge 0.12.2 body in a

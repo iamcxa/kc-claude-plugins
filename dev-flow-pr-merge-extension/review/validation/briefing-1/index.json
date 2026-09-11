@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rca7s3d89e103ajfdpbj2awe:validation:attempt-1:revision-1",
+  "question": "Approve validation of dev-flow-pr-merge-extension and merge #414?",
+  "artifacts": [
+    {
+      "id": "artifact:rca7s3d89e103ajfdpbj2awe:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3c703091f9e44ed041b3449e3083e1cf53369336/dev-flow-pr-merge-extension/review/validation/validation-review.md",
+      "rev": "sha256:e94d49b563a4b5cbc05c466c0555b868220dc0c561fda4fb0d8e1db7822dd8a9",
+      "mediaType": "text/markdown",
+      "summary": "AC-1..AC-4 evidenced; three mutations caught; scope confined to kc-dev-flow and the adopter mod"
+    }
+  ]
+}
