@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-dev-flow-pr-merge-extension
 issue:
-pr: 414
+pr: pr-merge:414
 mod-block:
 id: rca7s3d89e103ajfdpbj2awe
 gates:
