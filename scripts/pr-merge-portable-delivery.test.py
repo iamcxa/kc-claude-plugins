@@ -94,6 +94,9 @@ PROVIDER_STACK_TOP = "reserve both provider values for the top layer"
 PROVIDER_STACK_LOWER = "Every lower layer uses its own explicitly reviewed delivery-unit branch and base, carries no provider close line"
 README_BASE_POLICY = "**Local base policy: dependency-aware.**"
 README_STACK_BASE = "Dependent green layers use the reviewed sibling branch immediately below and its exact candidate SHA"
+RESIDUALS_HEADING = "## Residuals"
+WITHOUT_IT_HEADING = "## without-it unanswered"
+RESIDUALS_CAP_ROW = "| `## Residuals` | at most three |"
 
 
 def validate(text: str, readme: str = README) -> list[str]:
@@ -121,6 +124,14 @@ def validate(text: str, readme: str = README) -> list[str]:
         "required checks": CHECKS,
         "failed commit stop": "If state commit fails, stop; do not invoke the guard.",
         "no local terminal fallback": "Do not fall back to local merge.",
+        "residuals heading": RESIDUALS_HEADING,
+        "without-it unanswered heading": WITHOUT_IT_HEADING,
+        "residuals cap": RESIDUALS_CAP_ROW,
+        "residuals not-tested exclusion": '"Not tested" is never a residual.',
+        "residuals source": "Validation stage report's residual items",
+        "without-it source": "Implementation stage report's `without-it unanswered` items",
+        "optional sections placement": "placed after `## Evidence` and before the `---` separator",
+        "word target exclusion": "60-120 word target excludes both sections",
     }
     for label, phrase in required.items():
         if phrase not in text:
@@ -211,6 +222,14 @@ mutants = {
         ),
         "provider stack delivery-unit table drifted",
     ),
+    "residuals-cap-loosened": (
+        EXTENSION.replace(RESIDUALS_CAP_ROW, "| `## Residuals` | at most five |", 1),
+        "missing residuals cap",
+    ),
+    "residuals-not-tested-allowed": (
+        EXTENSION.replace('"Not tested" is never a residual.', "", 1),
+        "missing residuals not-tested exclusion",
+    ),
 }
 
 for name, (mutant, expected) in mutants.items():
@@ -236,5 +255,76 @@ for name, mutant in readme_mutants.items():
     if "README sibling-base policy drifted" not in failures:
         raise SystemExit(f"portable-delivery:{name}: mutant survived: {failures}")
     print(f"portable-delivery:{name}:REJECTED")
+
+
+RESIDUALS_CAP_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
+
+
+def parse_residuals_cap(text: str) -> int:
+    """Read the cap from the extension text itself so the AC-4 oracle below
+    reflects the shipped doc rather than a value hardcoded independently of it."""
+    match = re.search(r"\| `## Residuals` \| at most (\w+) \|", text)
+    if match is None or match.group(1) not in RESIDUALS_CAP_WORDS:
+        raise SystemExit("portable-delivery:FAIL cannot parse the Residuals cap from the extension text")
+    return RESIDUALS_CAP_WORDS[match.group(1)]
+
+
+def render_optional_sections(residuals: list[str], without_it: list[str], cap: int) -> str:
+    """AC-4 test oracle: no shipped code renders a PR body (an FO paraphrases
+    the mod's prose), so this mirrors the documented placement/extraction rule
+    for exercise against fixtures."""
+    kept_residuals = [item for item in residuals if item.strip().lower() != "not tested"][:cap]
+    body = ["## Evidence", "- 4/4 passed", ""]
+    if kept_residuals:
+        body += [RESIDUALS_HEADING, *(f"- {item}" for item in kept_residuals), ""]
+    if without_it:
+        body += [WITHOUT_IT_HEADING, *(f"- {item}" for item in without_it), ""]
+    body += ["---", "[abc123d](/owner/repo/blob/deadbeef/docs/dev/.spacedock-state/fixture.md)"]
+    return "\n".join(body)
+
+
+def section_line_index(rendered: str, heading: str) -> int:
+    return next((i for i, line in enumerate(rendered.splitlines()) if line == heading), -1)
+
+
+def bullets_under(rendered: str, heading: str) -> list[str]:
+    lines = rendered.splitlines()
+    start = section_line_index(rendered, heading)
+    if start < 0:
+        return []
+    items = []
+    for line in lines[start + 1:]:
+        if not line.startswith("- "):
+            break
+        items.append(line[2:])
+    return items
+
+
+both_fixture = render_optional_sections(
+    residuals=["known limit A", "known limit B", "known limit C", "known limit D", "not tested"],
+    without_it=["kc-dev-flow/scripts/example.py:helper", "docs/dev/README.md"],
+    cap=parse_residuals_cap(EXTENSION),
+)
+fixture_lines = both_fixture.splitlines()
+evidence_at = section_line_index(both_fixture, "## Evidence")
+residuals_at = section_line_index(both_fixture, RESIDUALS_HEADING)
+without_it_at = section_line_index(both_fixture, WITHOUT_IT_HEADING)
+separator_at = next((i for i, line in enumerate(fixture_lines) if line == "---"), -1)
+if not (evidence_at < residuals_at < without_it_at < separator_at):
+    raise SystemExit(f"portable-delivery:FAIL fixture-with-items: sections out of order: {both_fixture}")
+residual_bullets = bullets_under(both_fixture, RESIDUALS_HEADING)
+if len(residual_bullets) != 3 or "not tested" in residual_bullets:
+    raise SystemExit(
+        f"portable-delivery:FAIL fixture-with-items: Residuals cap or not-tested exclusion violated: {residual_bullets}"
+    )
+without_it_bullets = bullets_under(both_fixture, WITHOUT_IT_HEADING)
+if without_it_bullets != ["kc-dev-flow/scripts/example.py:helper", "docs/dev/README.md"]:
+    raise SystemExit(f"portable-delivery:FAIL fixture-with-items: without-it unanswered lines dropped: {without_it_bullets}")
+print("portable-delivery:fixture-with-items:PASS")
+
+neither_fixture = render_optional_sections(residuals=[], without_it=[], cap=parse_residuals_cap(EXTENSION))
+if RESIDUALS_HEADING in neither_fixture or WITHOUT_IT_HEADING in neither_fixture:
+    raise SystemExit(f"portable-delivery:FAIL fixture-without-items: heading rendered with no source items: {neither_fixture}")
+print("portable-delivery:fixture-without-items:PASS")
 
 print("portable-delivery:PASS")

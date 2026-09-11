@@ -21,6 +21,7 @@
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",
     "references/pr-delivery.md",
+    "references/pr-merge-extension.md",
     "references/roborev-implementation-exit.md",
     "references/profiles/poc-exploration/base.md",
     "references/profiles/poc-exploration/build.md",
@@ -39,5 +40,10 @@
     "scripts/linear-admission.py",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md"
-  ]
+  ],
+  "pr_merge_released_body": {
+    "boundary": "an adopter's docs/dev/_mods/pr-merge.md, the bytes before the first '<!-- kc-dev-flow runtime extension:start -->' line, trailing newlines stripped",
+    "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
+    "bytes": 10551
+  }
 }
