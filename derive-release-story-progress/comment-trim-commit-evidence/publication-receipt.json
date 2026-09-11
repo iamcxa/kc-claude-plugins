@@ -1,0 +1,249 @@
+{
+  "at": "2026-09-11T03:55:43.106683+00:00",
+  "approval": "Kent answered \u6279\u51c6 to exact three-layer push and full body update, including explicit lease-protected rewritten middle/top.",
+  "execution": {
+    "approval": "Kent answered \u6279\u51c6 to exact three-layer push/body-update packet, including history rewrite protected by explicit leases.",
+    "started": "2026-09-11T03:51:41.537614+00:00",
+    "units": [
+      {
+        "pr": 415,
+        "candidate": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+        "pushed": true,
+        "body_updated": true,
+        "readback_verified": true
+      },
+      {
+        "pr": 416,
+        "candidate": "d339355faf2c2833df91cf9dde42a5ee12098341",
+        "base_ref_verified": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+        "pr_base_snapshot_before_push": "0d69be164ccdcd1b3509f3577d6bd03a468f8f36",
+        "pushed": true,
+        "body_updated": true,
+        "readback_verified": true,
+        "base_snapshot_after_push": "c035e3ee792effb2708f646c2761d70ac17d9dbb"
+      },
+      {
+        "pr": 417,
+        "candidate": "36a969a6f890a63c541fad4bfa30071ac7115c64",
+        "base_ref_verified": "d339355faf2c2833df91cf9dde42a5ee12098341",
+        "pr_base_snapshot_before_push": "d339355faf2c2833df91cf9dde42a5ee12098341",
+        "pushed": true,
+        "body_updated": true,
+        "readback_verified": true,
+        "base_snapshot_after_push": "d339355faf2c2833df91cf9dde42a5ee12098341"
+      }
+    ]
+  },
+  "units": [
+    {
+      "pr": 415,
+      "remote": {
+        "baseRefName": "main",
+        "baseRefOid": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+        "headRefName": "codex/journey-planning",
+        "headRefOid": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+        "isDraft": true,
+        "state": "OPEN",
+        "title": "feat(kc-journey-map): add editable native planning canvas"
+      },
+      "actual_base_ref_sha": "96defe1d2a4be5c9edd39db08be2649ad71fd28a",
+      "approved_base_sha": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+      "body_sha256": "1212dcc1637b809c6d841528b435cca37e608ab3ed41b52579dc267cb9a77a22",
+      "checks": [
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560039398/job/103140701145",
+          "name": "model tests + boot smoke (node 22.13.0)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560039385/job/103140700992",
+          "name": "multi-profile route gate (live Spacedock)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560039392/job/103140701177",
+          "name": "review CI routing and static contracts",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560039384/job/103140701228",
+          "name": "version parity (plugin.json / marketplace.json / codex / README)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560039398/job/103140701032",
+          "name": "model tests + boot smoke (node 24)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://dashboard.gitguardian.com",
+          "name": "GitGuardian Security Checks",
+          "state": "SUCCESS"
+        }
+      ],
+      "worktree_clean": true
+    },
+    {
+      "pr": 416,
+      "remote": {
+        "baseRefName": "codex/journey-planning",
+        "baseRefOid": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+        "headRefName": "codex/journey-release-inspection",
+        "headRefOid": "d339355faf2c2833df91cf9dde42a5ee12098341",
+        "isDraft": true,
+        "state": "OPEN",
+        "title": "feat(kc-journey-map): add release evidence details and status borders"
+      },
+      "actual_base_ref_sha": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+      "approved_base_sha": "c035e3ee792effb2708f646c2761d70ac17d9dbb",
+      "body_sha256": "3426f4506cc54acf5f90364ba6e61bbe80982f329440dafe021d7e3df97ac968",
+      "checks": [
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560087496/job/103140839919",
+          "name": "model tests + boot smoke (node 22.13.0)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560087489/job/103140839889",
+          "name": "version parity (plugin.json / marketplace.json / codex / README)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560087491/job/103140839707",
+          "name": "multi-profile route gate (live Spacedock)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560087496/job/103140839710",
+          "name": "model tests + boot smoke (node 24)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://dashboard.gitguardian.com",
+          "name": "GitGuardian Security Checks",
+          "state": "SUCCESS"
+        }
+      ],
+      "worktree_clean": true
+    },
+    {
+      "pr": 417,
+      "remote": {
+        "baseRefName": "codex/journey-release-inspection",
+        "baseRefOid": "d339355faf2c2833df91cf9dde42a5ee12098341",
+        "headRefName": "codex/journey-local-progress",
+        "headRefOid": "36a969a6f890a63c541fad4bfa30071ac7115c64",
+        "isDraft": true,
+        "state": "OPEN",
+        "title": "feat(kc-journey-map): derive optional local task progress"
+      },
+      "actual_base_ref_sha": "d339355faf2c2833df91cf9dde42a5ee12098341",
+      "approved_base_sha": "d339355faf2c2833df91cf9dde42a5ee12098341",
+      "body_sha256": "140a77116170cfe55a0b2c9e598c34de0402e27014575bc9e397ac00a7b1b954",
+      "checks": [
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560094159/job/103140859181",
+          "name": "multi-profile route gate (live Spacedock)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560094172/job/103140859217",
+          "name": "model tests + boot smoke (node 22.13.0)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560094184/job/103140859405",
+          "name": "review CI routing and static contracts",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560094172/job/103140859366",
+          "name": "model tests + boot smoke (node 24)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/34560094147/job/103140859146",
+          "name": "version parity (plugin.json / marketplace.json / codex / README)",
+          "state": "SUCCESS"
+        },
+        {
+          "bucket": "pass",
+          "link": "https://dashboard.gitguardian.com",
+          "name": "GitGuardian Security Checks",
+          "state": "SUCCESS"
+        }
+      ],
+      "worktree_clean": true
+    }
+  ],
+  "stack": [
+    {
+      "id": 1039062,
+      "number": 418,
+      "node_id": "PRS_kwDORid8-c4AD9rW",
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/stacks/418",
+      "base": {
+        "ref": "main"
+      },
+      "open": true,
+      "created_at": "2026-09-11T00:48:35Z",
+      "pull_requests": [
+        {
+          "number": 415,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-planning",
+            "sha": "c035e3ee792effb2708f646c2761d70ac17d9dbb"
+          }
+        },
+        {
+          "number": 416,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-release-inspection",
+            "sha": "d339355faf2c2833df91cf9dde42a5ee12098341"
+          }
+        },
+        {
+          "number": 417,
+          "state": "open",
+          "draft": true,
+          "merged_at": null,
+          "head": {
+            "ref": "codex/journey-local-progress",
+            "sha": "36a969a6f890a63c541fad4bfa30071ac7115c64"
+          }
+        }
+      ]
+    }
+  ],
+  "ci_cost_per_pr": "unmeasured",
+  "base_drift": {
+    "approved": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+    "observed_main": "96defe1d2a4be5c9edd39db08be2649ad71fd28a",
+    "github_pr_base_snapshot": "c1564b218799b3baf07fc5e6c346bb6dcc476a7e",
+    "read_only_merge_tree": "ef10a5fd547c564bec3c7a47060b92b849391170",
+    "merge_preflight": "PASS, no conflicts; not combined runtime proof; no rebase or changed approval tuple"
+  },
+  "remaining": "All PRs remain Draft. Review/readiness/merge and delivery acceptance remain pending. Re-read current base and checks at any later gate."
+}
