@@ -64,6 +64,17 @@ gates:
                 id: briefing:r1fa7xv14afj9npcfe1wbx76:validation:attempt-1:revision-1
                 digest: sha256:8fa2785670e15e84c80801c26c889a222dabae47b0f5effa4ec28fc9dee8c089
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:r1fa7xv14afj9npcfe1wbx76:validation:1
+                briefing: briefing:r1fa7xv14afj9npcfe1wbx76:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T07:22:41.079454Z"
+                decision: approve
+                reason: Kent approved the presented validation result for exact candidate 74fe23086e4e34c5e288c46a43c6d559bd89ebf2 and proceeding to delivery preparation. Live UI/canvas/native admission limitations remain disclosed; code push, Draft PR creation and merge remain separately authorized.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
