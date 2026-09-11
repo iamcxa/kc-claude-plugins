@@ -1069,6 +1069,41 @@ for reference, trigger in [
         and "do not load the file when that trigger is false" in policy,
         f"conditional reference has stale adoption instructions: {reference}",
     )
+# These assertions cover instruction wiring; operator behavior needs the five scenarios.
+architecture_contracts = {
+    "kc-dev-flow/references/project-context-maintenance.md": [
+        "## Architecture home", "link the explanation from the bound context or README",
+        "Every Pilot and Production working route requires `docs/architecture.md`",
+        "POC is exempt from mandatory map creation", "an empty file or link-only stub does not satisfy it",
+        "Validation returns missing/stale maps to that owner", "validators do not author",
+        "components and responsibilities", "persistence and source-of-truth boundaries",
+        "important package roles", "authorization, deployment, failure, recovery, and compatibility",
+        "before implementation", "before the existing implementation/validation boundary",
+        "no extra edit or review loop", "same delivery slice",
+    ],
+    "kc-dev-flow/references/profiles/poc-exploration/base.md": ["A disposable POC needs no permanent architecture document", "POC is exempt from mandatory `docs/architecture.md`"],
+    "kc-dev-flow/references/profiles/poc-exploration/build.md": [
+        "components, data flow, external boundaries, and tentative assumptions", "before the first implementation edit",
+        "missing `docs/architecture.md` does not block POC",
+    ],
+    "kc-dev-flow/references/profiles/pilot-product-slice/shape.md": ["read `docs/architecture.md` before exploration", "bootstrap a useful missing map"],
+    "kc-dev-flow/references/profiles/production/shape.md": ["read `docs/architecture.md` before exploration", "bootstrap a useful missing map"],
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md": [
+        "retained implementation needs its initial explanation", "a Pilot/Production map is missing",
+        "after authority/profile/pin checks, read repository-root `docs/architecture.md` before exploration or implementation",
+        "include these instructions in every dispatch, including Production recovery that skips shape",
+        "validation returns missing/stale maps to that owner",
+    ],
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md": ["initial retained explanation", "Every continuation/worker reads the map before exploration"],
+    "docs/dev/README.md": ["initial retained explanation", "missing Pilot/Production map"],
+    "kc-dev-flow/README.md": ["tentative architecture outline", "initial retained explanation", "Pilot/Production requires that useful overview"],
+    "kc-dev-flow/MIGRATION.md": ["requires consumer action", "never rewrite active pinned bytes", "POC creation remains exempt"],
+}
+for relative, clauses in architecture_contracts.items():
+    text = re.sub(r"\s+", " ", read(relative))
+    for clause in clauses:
+        require(clause in text, f"architecture entrypoint omits {relative}: {clause}")
+
 with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
     work_items = Path(temporary)
     for contracts_root in [PLUGIN / "references"]:

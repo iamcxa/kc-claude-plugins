@@ -638,7 +638,7 @@ def main() -> int:
         "installed-digest-disabled",
         "        digest.update(raw)\n",
         "        digest.update(b\"\")\n",
-        "compatible next-stage upgrade did not bind the new package",
+        "feedback accepted changed package bytes",
     )
     run_loader_admission_mutant(
         "stage-pin-portable-identity-removed",
@@ -652,7 +652,7 @@ def main() -> int:
         "            previous.get(key) != value for key, value in exact.items()\n"
         "        ):\n",
         "        if False:\n",
-        "active stage accepted changed installed version or bytes",
+        "ideation accepted authority drift",
     )
     run_loader_multi_mutant(
         "local-interface-compatibility-disabled",
@@ -917,6 +917,55 @@ def main() -> int:
         "return the POC outcome to planning",
         "continue directly into delivery",
         "kc-dev-flow/skills/continue-dev-flow/SKILL.md omits the v4 POC contract: return the POC outcome to planning",
+    )
+    run_manual_contract_mutant(
+        'architecture-initial-trigger-removed',
+        'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
+        'retained\n  implementation needs its initial explanation',
+        'removed architecture obligation',
+        'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: retained implementation needs its initial explanation',
+    )
+    run_manual_contract_mutant(
+        'architecture-disposable-exemption-removed',
+        'kc-dev-flow/references/profiles/poc-exploration/base.md',
+        'A disposable POC needs no permanent architecture document',
+        'removed architecture obligation',
+        'architecture entrypoint omits kc-dev-flow/references/profiles/poc-exploration/base.md: A disposable POC needs no permanent architecture document',
+    )
+    run_manual_contract_mutant(
+        'architecture-required-map-removed',
+        'kc-dev-flow/references/project-context-maintenance.md',
+        'Every Pilot and Production working route requires `docs/architecture.md`',
+        'removed architecture obligation',
+        'architecture entrypoint omits kc-dev-flow/references/project-context-maintenance.md: Every Pilot and Production working route requires `docs/architecture.md`',
+    )
+    run_manual_contract_mutant(
+        'architecture-poc-timing-removed',
+        'kc-dev-flow/references/profiles/poc-exploration/build.md',
+        'before the first implementation edit',
+        'removed architecture obligation',
+        'architecture entrypoint omits kc-dev-flow/references/profiles/poc-exploration/build.md: before the first implementation edit',
+    )
+    run_manual_contract_mutant(
+        'architecture-no-churn-removed',
+        'kc-dev-flow/references/project-context-maintenance.md',
+        'no extra edit or review loop',
+        'removed architecture obligation',
+        'architecture entrypoint omits kc-dev-flow/references/project-context-maintenance.md: no extra edit or review loop',
+    )
+    run_manual_contract_mutant(
+        'architecture-read-before-exploration-removed',
+        'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
+        'after authority/profile/pin\nchecks, read repository-root `docs/architecture.md` before exploration or implementation',
+        'read the map later',
+        'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: after authority/profile/pin checks',
+    )
+    run_manual_contract_mutant(
+        'architecture-recovery-dispatch-removed',
+        'kc-dev-flow/skills/continue-dev-flow/SKILL.md',
+        'including Production recovery that skips shape',
+        'except recovery',
+        'architecture entrypoint omits kc-dev-flow/skills/continue-dev-flow/SKILL.md: include these instructions in every dispatch',
     )
     run_missing_close_guard_mutant()
     run_release_state_mutant()
