@@ -29,7 +29,43 @@ Kent confirmed the two-entry architecture, proactive board awareness, facts-befo
 
 ## Work profile receipt
 
-No profile has been selected for this new task. Recommend Pilot / Product slice: limited real use of existing local planning and development surfaces, with additive handoff behavior and no required consumer migration. The older task's Pilot choice does not select this one.
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    Kent selected Pilot for retained, limited real use of adaptive release
+    planning in the existing journey skill and a Development Brief handoff to
+    existing dev-flow shaping. Existing consumers need no migration.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Keep journey-map value planning and dev-flow technical shaping independently usable.
+      - Reuse the existing brief format and source identities without a second planning authority.
+      - Pin the smallest change surfaces and resolve the open-stack dependency before implementation.
+    implementation:
+      - Integrate only necessary selected-release questioning and handoff guidance in existing skills.
+      - Preserve map-only use, unknown evidence, deferred choices, and current admission authority.
+    testing:
+      - Exercise the changed entry with known answers, unknown evidence, and one actual development consumer.
+      - Use a changed-source and stale-brief contrast to falsify an inconsistent handoff.
+      - Run only existing checks relevant to the exact changed surfaces; add no standing harness or CI lane.
+  scope_boundary: >-
+    The accepted outcome and complete non-goal list in this task remain unchanged.
+    Excludes provider retirement, global sprint renaming, canvas writeback,
+    command retirement, automatic task admission, and consumer migration.
+  semantics_unchanged: false
+  promote_when:
+    - A required consumer migration, destructive external mutation, or long-term operational commitment enters scope.
+  decision:
+    authority: 'Captain Kent; explicit "Pilot" in this session'
+    at: '2026-09-11T05:44:44Z'
+```
+
+Selection is recorded; formal admission is still pending. The successful
+Release 3 source-to-brief exercise informs shaping but grants neither delivery
+acceptance nor authority to extend the predecessor stack.
 
 ## Non-goals
 
