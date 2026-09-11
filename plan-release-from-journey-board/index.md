@@ -45,6 +45,17 @@ gates:
                 id: briefing:r1fa7xv14afj9npcfe1wbx76:ideation:attempt-1:revision-1
                 digest: sha256:c10d134ec4085883bac62c867008a1581671e07f69fc1be597afdd0cccdadbdf
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:r1fa7xv14afj9npcfe1wbx76:ideation:1
+                briefing: briefing:r1fa7xv14afj9npcfe1wbx76:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-11T06:39:55.865713Z"
+                decision: approve
+                reason: Kent confirmed the presented two-file implementation plan and local commits after reviewing the integrated journey-map to dev-flow usage flow. Preserve the recorded thresholds and deferred delivery authority.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
