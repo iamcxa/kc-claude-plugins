@@ -10,6 +10,7 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/reference/review-runtime.md"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -18,6 +19,7 @@ on:
       - "kc-pr-flow/scripts/review-runtime.sh"
       - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/reference/review-runtime.md"
       - "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl"
       - ".github/workflows/review-runtime-tests.yml"
 
@@ -32,7 +34,8 @@ jobs:
   review-runtime:
     name: typed review runtime contract
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    # Exact-head local full suite: 468.61s; hosted duration remains unmeasured.
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
