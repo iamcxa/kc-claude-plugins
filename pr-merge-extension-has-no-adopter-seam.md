@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge extension has no adopter seam, so a fleet-wide title rule has nowhere to live"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved in chat 2026-09-13: "approve", after the FO presented the shaped route (kc-dev-flow ships a Python check-pr-title.py with a release-please verdict fixture; the extension states the rule and binds it to the delivery unit title), the four rejected alternatives, the measured feat(): x disagreement, and the four items shape marked not-settled.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
