@@ -900,6 +900,7 @@ for relative, phrases in {
         "any Captain intervention before decision-ready",
         "ends product proof",
         "Continue only to record a complete `change` outcome",
+        "Exploration Brief",
     ],
 }.items():
     normalized = " ".join(read(relative).split())
