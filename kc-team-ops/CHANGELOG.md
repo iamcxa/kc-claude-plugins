@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-team-ops-v1.7.0...kc-team-ops-v1.8.0) (2026-09-12)
+
+
+### Features
+
+* **kc-journey-map:** add editable native planning canvas ([#415](https://github.com/iamcxa/kc-claude-plugins/issues/415)) ([97a2680](https://github.com/iamcxa/kc-claude-plugins/commit/97a2680dbf0925921fc16fcab3858035d2cfcefe))
+
 ## [1.7.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-team-ops-v1.6.0...kc-team-ops-v1.7.0) (2026-08-31)
 
 
