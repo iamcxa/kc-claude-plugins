@@ -1,0 +1,81 @@
+{
+  "adjudication": {
+    "arm_labels_revealed_after_freeze": true,
+    "blind_candidate_ids": true,
+    "defect_classes_frozen": true
+  },
+  "evidence_tier": "real-pair-shape-only",
+  "pairs": [
+    {
+      "arms_terminal": true,
+      "config_frozen": true,
+      "fallback_expected": "delta",
+      "fallback_observed": "delta",
+      "no_cross_arm_visibility": true,
+      "no_scheduling_contamination": true,
+      "no_schema_or_tool_drift": true,
+      "pair_id": "pair-01",
+      "preregistered": true,
+      "required_lanes_frozen": true,
+      "shas_and_ancestry_frozen": true,
+      "timing_protocol_frozen": true
+    },
+    {
+      "arms_terminal": true,
+      "config_frozen": true,
+      "fallback_expected": "delta",
+      "fallback_observed": "delta",
+      "no_cross_arm_visibility": true,
+      "no_scheduling_contamination": true,
+      "no_schema_or_tool_drift": true,
+      "pair_id": "pair-02",
+      "preregistered": true,
+      "required_lanes_frozen": true,
+      "shas_and_ancestry_frozen": true,
+      "timing_protocol_frozen": true
+    },
+    {
+      "arms_terminal": true,
+      "config_frozen": true,
+      "fallback_expected": "initial",
+      "fallback_observed": "initial",
+      "no_cross_arm_visibility": true,
+      "no_scheduling_contamination": true,
+      "no_schema_or_tool_drift": true,
+      "pair_id": "pair-03",
+      "preregistered": true,
+      "required_lanes_frozen": true,
+      "shas_and_ancestry_frozen": true,
+      "timing_protocol_frozen": true
+    },
+    {
+      "arms_terminal": true,
+      "config_frozen": true,
+      "fallback_expected": "delta",
+      "fallback_observed": "delta",
+      "no_cross_arm_visibility": true,
+      "no_scheduling_contamination": true,
+      "no_schema_or_tool_drift": true,
+      "pair_id": "pair-04",
+      "preregistered": true,
+      "required_lanes_frozen": true,
+      "shas_and_ancestry_frozen": true,
+      "timing_protocol_frozen": true
+    },
+    {
+      "arms_terminal": true,
+      "config_frozen": true,
+      "fallback_expected": "resolve",
+      "fallback_observed": "resolve",
+      "no_cross_arm_visibility": true,
+      "no_scheduling_contamination": true,
+      "no_schema_or_tool_drift": true,
+      "pair_id": "pair-05",
+      "preregistered": true,
+      "required_lanes_frozen": true,
+      "shas_and_ancestry_frozen": true,
+      "timing_protocol_frozen": true
+    }
+  ],
+  "schema": "kc-pr-flow.real-pair-score-shape/v1"
+}
