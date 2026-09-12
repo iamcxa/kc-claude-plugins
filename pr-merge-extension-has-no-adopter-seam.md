@@ -18,10 +18,10 @@ id: 2f5a8kg1qwc5ba8jg3mcfjjw
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
-extension as a canonical resource. Relay ran the adopt-dev-flow sync on
-2026-09-12 and is the second adopter to do so, which is the residual #414
+extension as a canonical resource. The adopter `spacedock-dev/subspace-relay` ran the adopt-dev-flow sync on
+2026-09-12 at `main` `3b8f233` and is the second adopter to do so, which is the residual #414
 recorded for itself: *"Other adopters receive the block only after they run the
-adopt-dev-flow sync."* The sync found one rule in Relay's
+adopt-dev-flow sync."* The sync found one rule in that repository's
 `docs/dev/_mods/pr-merge.md` with no upstream home — the pull request title must
 be a Conventional Commits subject, refused by `scripts/check-pr-title.ts`. Both
 of its call sites are inside `## Hook: merge`: once before the draft is presented,
@@ -32,7 +32,7 @@ the sha-pinned released body, which may not be edited (Captain, 2026-09-11:
 nothing declares whether adopter prose after the `:end` marker may override a
 released section the way the extension's own `#### Local failure-policy override`
 and `### Split-root audit-link correction` subsections do, or with what
-precedence. The condition the rule guards is fleet-wide rather than Relay's:
+precedence. The condition the rule guards is fleet-wide rather than that repository's:
 `gh api repos/<r>` on 2026-09-12 reports `squash_merge_commit_title:
 COMMIT_OR_PR_TITLE` with squash, merge and rebase all enabled for
 `iamcxa/kc-claude-plugins`, `spacedock-dev/subspace-relay` and
@@ -56,7 +56,7 @@ declared answer instead of silence.
 
 - Editing the released Spacedock pr-merge body or its pinned `pr_merge_released_body.sha256`.
 - Changing Spacedock's shipped mod, its version stamp, or its merge-guard contract.
-- Relay's own 4.4.0 adoption, which is gated separately on its `slim-v0-terminal-review-pr58` stage boundary.
+- The `spacedock-dev/subspace-relay` adoption of kc-dev-flow 4.4.0, which is gated separately on that repository's `slim-v0-terminal-review-pr58` stage boundary.
 - Any Linear read or write.
 
 ## Acceptance criteria
@@ -74,7 +74,8 @@ declared answer instead of silence.
   extension block. `scripts/kc-dev-flow-contract-test.py` still exits 0 for a
   conforming adopter and non-zero naming the drift when the marked block changes
   by one character.
-- **AC-4** Relay's `docs/dev/_mods/pr-merge.md`, rebuilt in a scratch worktree as
+- **AC-4** `spacedock-dev/subspace-relay`'s `docs/dev/_mods/pr-merge.md` at `main`
+  `3b8f233`, rebuilt in a scratch worktree as
   pinned released body plus the verbatim extension, needs zero adopter-added
   prose for the title rule. Demonstrated by rebuilding the file and listing the
   behaviours the rebuild retains, not by asserting equivalence.
@@ -89,9 +90,10 @@ work_profile:
   route: [shape, build, verify-deliver]
   basis: >
     Captain approved in chat 2026-09-12 (「開」) after the Relay 4.4.0 adoption
-    audit. #414 selected POC because its falsifier was a single adopter and it
-    recorded "the sync path is rewritten if other adopters need more"; Relay is
-    that second adopter and the audit answered the question, so this is a defined
+    audit of `spacedock-dev/subspace-relay`. #414 selected POC because its falsifier
+    was a single adopter and it recorded "the sync path is rewritten if other
+    adopters need more"; that audit supplied the second adopter and answered the
+    question, so this is a defined
     slice rather than a fresh exploration. Not Production: it moves no release
     identity, credential, or standing deployment path, and ships through the
     release-please lane #414 already used. The design question Pilot's shape stage
@@ -102,7 +104,7 @@ work_profile:
     implementation: [references/pr-merge-extension.md; skills/adopt-dev-flow/SKILL.md; contract-manifest.json if a new resource is added; scripts/kc-dev-flow-contract-test.py]
     testing: [AC-1 to AC-4 at the candidate SHA; mutation proof on AC-2; drift mutation on AC-3]
   scope_boundary: >
-    No Spacedock edit; no Linear; no change to Relay's repository; no edit to the
+    No Spacedock edit; no Linear; no change to `spacedock-dev/subspace-relay`; no edit to the
     released pr-merge body or its pinned hash.
   semantics_unchanged: false
 ```
