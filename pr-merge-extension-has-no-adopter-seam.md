@@ -10,7 +10,7 @@ sprint-readiness: ready
 started:
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-pr-merge-extension-has-no-adopter-seam
 issue:
 pr:
 mod-block:
