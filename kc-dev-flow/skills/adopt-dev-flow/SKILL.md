@@ -172,6 +172,9 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    absent — and never edit the released body above it. This is prose sync, not
    a script: the repository's own contract test is the only drift detector, so
    compare the marked block byte-for-byte against the resource after writing it.
+   That drift comparison is bounded at the `:end` marker; an adopter may add its
+   own local prose after it, and `pr-merge-extension.md`'s own opening section
+   states the declared precedence for that region against the marked block.
    A missing delivery authority is a refit requirement. Do not classify its
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release

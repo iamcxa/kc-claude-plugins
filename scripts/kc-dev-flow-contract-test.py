@@ -105,6 +105,10 @@ required = [
     "kc-dev-flow/scripts/pr-review-handoff.py",
     "kc-dev-flow/scripts/pr-review-handoff.test.py",
     "kc-dev-flow/scripts/surface-map-check.py",
+    "kc-dev-flow/scripts/check-pr-title.py",
+    "kc-dev-flow/scripts/check-pr-title.test.py",
+    "kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv",
+    "kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
@@ -161,6 +165,7 @@ script_roles = {
         "kc-dev-flow/scripts/poc-close-guard.py",
         "kc-dev-flow/scripts/pr-review-handoff.py",
         "kc-dev-flow/scripts/surface-map-check.py",
+        "kc-dev-flow/scripts/check-pr-title.py",
     },
     "package-test": {
         "kc-dev-flow/scripts/profile-contract-loader.test.py",
@@ -168,6 +173,7 @@ script_roles = {
         "kc-dev-flow/scripts/poc-close-guard.test.py",
         "kc-dev-flow/scripts/pr-review-handoff.test.py",
         "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+        "kc-dev-flow/scripts/check-pr-title.test.py",
     },
     "release-proof": {
         "scripts/kc-dev-flow-contract-test.py",
@@ -350,6 +356,8 @@ for relative in [
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/scripts/pr-review-handoff.py",
     "kc-dev-flow/scripts/surface-map-check.py",
+    "kc-dev-flow/scripts/check-pr-title.py",
+    "kc-dev-flow/scripts/check-pr-title.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
 ]:
     require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
@@ -386,6 +394,10 @@ if not require_ablation_only:
     run(
         [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
         "portable PR delivery",
+    )
+    run(
+        [sys.executable, "kc-dev-flow/scripts/check-pr-title.test.py"],
+        "PR title check",
     )
 loader_path = PLUGIN / "scripts/profile-contract-loader.py"
 spec = importlib.util.spec_from_file_location("profile_contract_loader", loader_path)
@@ -473,6 +485,9 @@ expected_manifest_resources = {
     "scripts/poc-close-guard.py",
     "scripts/engage-reconcile.py",
     "scripts/linear-admission.py",
+    "scripts/check-pr-title.py",
+    "scripts/fixtures/pr-title/release-please-verdicts.tsv",
+    "scripts/fixtures/pr-title/capture-oracle.cjs",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md",
 } | {
@@ -492,12 +507,31 @@ require(
 # this byte-for-byte comparison is the only drift detector for that copy.
 pr_merge_mod = read("docs/dev/_mods/pr-merge.md")
 pr_merge_extension_marker = "<!-- kc-dev-flow runtime extension:start -->\n"
+pr_merge_extension_end_marker = "<!-- kc-dev-flow runtime extension:end -->\n"
 require(
     pr_merge_mod.count(pr_merge_extension_marker) == 1,
     "docs/dev/_mods/pr-merge.md runtime extension marker is not unique",
 )
-pr_merge_mod_extension = pr_merge_extension_marker + pr_merge_mod.split(pr_merge_extension_marker, 1)[1]
+require(
+    pr_merge_mod.count(pr_merge_extension_end_marker) == 1,
+    "docs/dev/_mods/pr-merge.md runtime extension end marker is not unique",
+)
+mod_extension_start = pr_merge_mod.index(pr_merge_extension_marker)
+mod_extension_end = pr_merge_mod.index(pr_merge_extension_end_marker) + len(pr_merge_extension_end_marker)
+require(
+    mod_extension_end > mod_extension_start,
+    "docs/dev/_mods/pr-merge.md runtime extension end marker precedes its start marker",
+)
+# Bounded at :end, not end-of-file: the extension's own "adopter-owned local
+# region" declaration lets an adopter append local prose after this file's
+# marker pair, and that appended prose is out of this comparison's scope by
+# design rather than an omission.
+pr_merge_mod_extension = pr_merge_mod[mod_extension_start:mod_extension_end]
 pr_merge_extension_resource = read("kc-dev-flow/references/pr-merge-extension.md")
+require(
+    pr_merge_extension_resource.endswith(pr_merge_extension_end_marker),
+    "kc-dev-flow/references/pr-merge-extension.md does not end at its own runtime extension end marker",
+)
 if pr_merge_mod_extension != pr_merge_extension_resource:
     first_diff = next(
         (

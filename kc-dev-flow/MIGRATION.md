@@ -324,6 +324,34 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-09-13 — the pull request title refusal ships from kc-dev-flow
+
+`references/pr-merge-extension.md` gained a `### Released title override`
+subsection and a new canonical resource, `scripts/check-pr-title.py`: a
+Node-free checker that refuses a pull request title release-please's own
+conventional-commits grammar cannot parse, self-tested at every run against
+the shipped `scripts/fixtures/pr-title/release-please-verdicts.tsv`. Every
+`pr-merge` adopter now runs this refusal before presenting the draft and
+before creating the pull request, for the single-PR case and for every
+native-stack layer. This closes a gap where a title release-please cannot
+parse lands no release and drops that pull request's commits from every
+future changelog by type, permanently and without a symptom, on any adopter
+that squash-merges under `COMMIT_OR_PR_TITLE`.
+
+The extension's own opening section now also states that content an adopter
+appends after its `<!-- kc-dev-flow runtime extension:end -->` marker is a
+declared adopter-owned local region: the contract test's drift comparison is
+bounded at that marker and does not read or restrict it. Before this change
+the comparison read to end-of-file, so any adopter prose placed there already
+failed the contract test; no adopter is known to have relied on that failure
+mode, so no repository needs a repair.
+
+Absorb this at the next compatible upgrade by re-syncing
+`docs/dev/_mods/pr-merge.md`'s marked block from the updated resource, exactly
+as `adopt-dev-flow` SKILL.md step 7 already prescribes. No receipt or Local
+Profile field changes; `local_profile_interface` is untouched, so no adopter
+needs a refit.
+
 ## 2026-09-04 — one name for the accepted goal, and no host variable gates admission
 
 The Linear Issue and the committed work item now carry the accepted goal under
