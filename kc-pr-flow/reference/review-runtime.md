@@ -189,6 +189,29 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 
 The same operations are available as `review_runtime_*` functions after sourcing the script. Runtime file and standard-input consumers read one bounded safe snapshot. The serialized `ShadowObservation/v1` file is the sole collector input authority; replay of its emitted JSONL is the sole receipt projection authority. Evidence verification uses the exact pointer snapshot plus the reviewed Git object and content hash, never a caller-supplied excerpt.
 
+## Conservative delta planner
+
+`scripts/review-plan.sh decide` consumes the S01 event, receipt, and config files plus one clean
+isolated worktree. With `KC_PR_FLOW_DELTA_FAST_PATH=on`, it snapshots those three files once,
+delegates receipt validation to the runtime owner, and emits one closed
+`kc-pr-flow.review-plan-decision/v1`. `resolve` means every changed hunk maps to exactly one
+known finding and may carry an APPROVE ceiling. `delta` means safe unseen work remains, preserves
+all predecessor capabilities, adds current signal coverage, and carries a COMMENT ceiling. Every
+identity, ancestry, input, object, diff, state-drift, or classification ambiguity emits `initial`.
+
+```bash
+KC_PR_FLOW_DELTA_FAST_PATH=on bash scripts/review-plan.sh decide \
+  --repo OWNER/REPO --pr NUMBER --base BASE_SHA --head HEAD_SHA \
+  --config-hash CONFIG_HASH --config-file review-config.json \
+  --repo-worktree REPO_DIR --predecessor-events terminal-events.jsonl \
+  --delta-receipt delta-receipt.json
+```
+
+The planner disables replace refs, external diff, textconv, rename/copy inference, global/system
+Git configuration, and global attributes. It reads bounded exact Git objects, validates clean
+base/head state before and after routing, and has no model, timing, network, confirmation, or
+posting authority.
+
 The paired scorer is a separate source-safe CLI:
 
 ```bash

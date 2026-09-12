@@ -1,5 +1,14 @@
 # Review Triage
 
+## Post-fix delta route
+
+A validated `review-plan-decision/v1` narrows only the current post-fix obligation. `initial`
+uses the unchanged triage below. `resolve` dispatches focused correctness over the returned exact
+range and rechecks every inherited finding. `delta` dispatches correctness plus all returned
+required capabilities over that range. Unknown hunks or signals never disappear: they select
+`delta` when safe and classifiable, otherwise `initial`. The plan cannot remove human
+confirmation or increase the event above its ceiling.
+
 ## Step 4: Triage — Agent Selection
 
 Use PR metadata from Step 2 to determine which review agents to dispatch. This saves context by avoiding unnecessary agents on small PRs.

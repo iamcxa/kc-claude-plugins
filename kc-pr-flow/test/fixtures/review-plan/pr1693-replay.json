@@ -1,0 +1,70 @@
+{
+  "pr_number": 42,
+  "repository": "acme/widgets",
+  "scenarios": [
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": "APPROVE", "mode": "resolve"},
+      "head": "fixed",
+      "history": "ancestor",
+      "id": "mapped-fix",
+      "receipt": "trusted",
+      "worktree": "clean"
+    },
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": "COMMENT", "mode": "delta"},
+      "head": "unseen",
+      "history": "ancestor",
+      "id": "unseen-append",
+      "receipt": "trusted",
+      "worktree": "clean"
+    },
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": null, "mode": "initial"},
+      "head": "unseen",
+      "history": "ancestor",
+      "id": "missing-predecessor",
+      "receipt": "missing",
+      "worktree": "clean"
+    },
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": null, "mode": "initial"},
+      "head": "unseen",
+      "history": "ancestor",
+      "id": "mutated-receipt",
+      "receipt": "mutated",
+      "worktree": "clean"
+    },
+    {
+      "config": "changed",
+      "expected": {"event_ceiling": null, "mode": "initial"},
+      "head": "unseen",
+      "history": "ancestor",
+      "id": "changed-config",
+      "receipt": "trusted",
+      "worktree": "clean"
+    },
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": null, "mode": "initial"},
+      "head": "unseen",
+      "history": "ancestor",
+      "id": "dirty-worktree",
+      "receipt": "trusted",
+      "worktree": "dirty"
+    },
+    {
+      "config": "trusted",
+      "expected": {"event_ceiling": null, "mode": "initial"},
+      "head": "unseen",
+      "history": "nonancestor",
+      "id": "nonancestor-history",
+      "receipt": "trusted",
+      "worktree": "clean"
+    }
+  ],
+  "schema": "kc-pr-flow.review-plan-replay/v2"
+}

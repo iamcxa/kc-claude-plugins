@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import fnmatch
+import re
 from pathlib import Path
 
 
@@ -69,15 +70,18 @@ expected_routes = {
     "kc-pr-flow/scripts/review-runtime.sh": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime-safe-io.py": {"runtime", "shadow", "post", "evaluation"},
     "kc-pr-flow/scripts/review-runtime.test.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-plan.sh": {"runtime"},
+    "kc-pr-flow/scripts/review-plan.test.sh": {"runtime"},
     "kc-pr-flow/test/fixtures/review-runtime/valid-events.jsonl": {"runtime"},
+    "kc-pr-flow/test/fixtures/review-plan/pr1693-replay.json": {"runtime"},
     "kc-pr-flow/scripts/review-shadow.test.sh": {"shadow"},
     "kc-pr-flow/scripts/review-post.sh": {"post"},
     "kc-pr-flow/test/fixtures/review-post/reviews.json": {"post"},
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
-    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"shadow", "evaluation", "cross_model"},
-    "kc-pr-flow/reference/review-triage.md": {"evaluation"},
+    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"runtime", "shadow", "evaluation", "cross_model"},
+    "kc-pr-flow/reference/review-triage.md": {"runtime", "evaluation"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
     "kc-pr-flow/reference/gh-api-patterns.md": set(),
     "PRODUCT.md": set(),
@@ -122,5 +126,37 @@ for name, text in texts.items():
         "review-architecture-diagrams.test.sh",
     ):
         require(retired not in text, f"{name}: retained non-owned check {retired}")
+
+runtime = texts["runtime"]
+for name, text in texts.items():
+    require(
+        ("bash kc-pr-flow/scripts/review-plan.test.sh" in text) == (name == "runtime"),
+        f"{name}: planner suite has the wrong workflow owner",
+    )
+
+core = re.search(r"^  review-runtime-core:(.*?)(?=^  \S|\Z)", runtime, re.MULTILINE | re.DOTALL)
+planner = re.search(r"^  review-delta-planner:(.*?)(?=^  \S|\Z)", runtime, re.MULTILINE | re.DOTALL)
+require(core is not None, "runtime: missing bounded core job")
+require(planner is not None, "runtime: missing bounded planner job")
+require("timeout-minutes: 12" in core.group(1), "runtime: core job has the wrong timeout")
+require("bash kc-pr-flow/scripts/review-runtime.test.sh" in core.group(1), "runtime: core job misses runtime suite")
+require("timeout-minutes: 4" in planner.group(1), "runtime: planner job has the wrong timeout")
+require(
+    'bash kc-pr-flow/scripts/review-plan.test.sh --case "${{ matrix.planner_case }}"' in planner.group(1),
+    "runtime: planner job does not run one closed selector",
+)
+planner_cases = re.findall(r"^          - ([a-z0-9-]+)$", planner.group(1), re.MULTILINE)
+require(
+    planner_cases == [
+        "receipt-contract",
+        "mode-router",
+        "trust-boundary",
+        "skill-wiring",
+        "s02-capability",
+        "s02-boundary",
+        "s02-gitlink",
+    ],
+    f"runtime: closed planner selectors differ: {planner_cases}",
+)
 
 print("review CI routing contract: PASS")
