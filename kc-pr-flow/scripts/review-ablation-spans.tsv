@@ -1,23 +1,14 @@
-# review-ablation span table — the AC-2 ablation, enumerated by a tree-wide sweep
-# of kc-pr-flow/ at f4f4840, re-derived against ec9502c.
+# review-ablation span table — the AC-2 ablation.
 # Columns: id\trelpath\tstart\tend\tkind\tremoval_text-or--\tsha256(text).
 # The sha column is GENERATED (review-ablation.sh arm --write-pins), never hand-typed.
-#
-# Re-derived after v2 handoff context added three lines before this gate. The
-# generated pins below bind the moved coordinates to their exact text. The retired
-# id is S8, `SKILL.md:1855` at f4f4840 — a tail restatement of the pre-emit gate
-# that merged PR #82 (85959dc) deleted as one of its 31 clause-complete duplicates.
-# Ids are not renumbered after a retirement, so S8 stays absent rather than being
-# reused for a different span. The ablation set covers each statement of the gate
-# in kc-pr-flow/: SKILL.md:1055 (S7), :1169 (S1), :1182 (S5), the S2-S4/S6 operative
-# body, plus review-triage.md and learned-patterns.md.
-S1	skills/kc-pr-review/SKILL.md	1205	1205	cut	-	1d066b679f6f63b2e20ce7e2bee52bb83bdeee333adc81792fbea96e314bca3b
-S2	skills/kc-pr-review/SKILL.md	1207	1212	cut	-	1b77bba6ea281095c45e57b9ac355ac42c62f86eb1fd845184c2555dad4202ed
-S3	skills/kc-pr-review/SKILL.md	1214	1214	cut	-	346a287af920611c64022f4a99a2a4419b5cbdfa7be93556e8d37da942c5ca9b
-S4	skills/kc-pr-review/SKILL.md	1216	1216	cut	-	a5627033b436e60bd9ee116dc54cd90629f43f106796c8904600a49670212f0e
-S5	skills/kc-pr-review/SKILL.md	1218	1218	cut	-	a9022b0db237b4ed8d06119bcb0157aacd77076bdedb7a54b25464ab11799f6c
-S6	skills/kc-pr-review/SKILL.md	1220	1220	cut_sub	 after the verification gate	d790114083e922cba7b5d0410f115cd265beca8528148fa5d9271f62ef185694
-S7	skills/kc-pr-review/SKILL.md	1091	1092	cut	-	091e1d9ea9b32d4ad3762ecfde737b347b7e74b0d7a5dc3cd59e2655b3abe395
+# Coordinates and pins are re-derived from final bytes; IDs stay stable.
+S1	skills/kc-pr-review/SKILL.md	1163	1163	cut	-	1d066b679f6f63b2e20ce7e2bee52bb83bdeee333adc81792fbea96e314bca3b
+S2	skills/kc-pr-review/SKILL.md	1165	1170	cut	-	1b77bba6ea281095c45e57b9ac355ac42c62f86eb1fd845184c2555dad4202ed
+S3	skills/kc-pr-review/SKILL.md	1172	1172	cut	-	346a287af920611c64022f4a99a2a4419b5cbdfa7be93556e8d37da942c5ca9b
+S4	skills/kc-pr-review/SKILL.md	1174	1174	cut	-	a5627033b436e60bd9ee116dc54cd90629f43f106796c8904600a49670212f0e
+S5	skills/kc-pr-review/SKILL.md	1176	1176	cut	-	a9022b0db237b4ed8d06119bcb0157aacd77076bdedb7a54b25464ab11799f6c
+S6	skills/kc-pr-review/SKILL.md	1178	1178	cut_sub	 after the verification gate	d790114083e922cba7b5d0410f115cd265beca8528148fa5d9271f62ef185694
+S7	skills/kc-pr-review/SKILL.md	1049	1050	cut	-	091e1d9ea9b32d4ad3762ecfde737b347b7e74b0d7a5dc3cd59e2655b3abe395
 S9	reference/review-triage.md	230	230	cut	-	ddb60957884e4ec6c85a19020b93e8918ed4bcba6af368afd7c336c151daeaba
 S10	reference/review-triage.md	232	236	cut	-	14b8e2944cc1233431d8b07979e7c6a0136c674a8d0ebdeaeaba180857a36a7d
 S11	reference/learned-patterns.md	13	15	cut	-	13b443b9f028d916ff8f206f83d0da5b2bcd652312a5b662d31bf8fbf5532002
