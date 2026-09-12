@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: 2f5a8kg1qwc5ba8jg3mcfjjw
+gates:
+    version: 1
+    records:
+        - id: gate:2f5a8kg1qwc5ba8jg3mcfjjw:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:2f5a8kg1qwc5ba8jg3mcfjjw-backlog-1
+              briefing:
+                id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:attempt-1:revision-1
+                digest: sha256:e7c2a8e136175ae56326a860fa6d3f28da6973585f4e01dcdd041c0c4fcc081e
+                room-ref: ./pr-merge-extension-has-no-adopter-seam/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:1
+                briefing: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-12T09:58:36.464777Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-12: 「開」 to filing at Pilot after the AC-1..AC-4 presentation, then 「推」 to advance. Scope is the two asks presented: carry the title rule in the extension, and declare the post-:end adopter region and its precedence.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the

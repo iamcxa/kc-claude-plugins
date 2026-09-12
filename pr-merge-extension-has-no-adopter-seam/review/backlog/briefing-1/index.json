@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:attempt-1:revision-1",
+  "question": "Admit this task into ideation at pilot-product-slice, with AC-1..AC-4 and the four non-goals as written?",
+  "artifacts": [
+    {
+      "id": "artifact:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/82cb87329fe5f275f41b7ec2caa890699919565d/pr-merge-extension-has-no-adopter-seam.backlog-review.md",
+      "rev": "sha256:fb69a2851d74ac9dce566d912a4ee74202606838a816b28d7c5265aeb9961d54",
+      "mediaType": "text/markdown",
+      "summary": "kc-dev-flow 4.4.0 pins the pr-merge released body but declares no adopter region, so a fleet-wide PR-title rule has nowhere to live. Pilot slice: carry the rule in the extension, and declare the post-:end adopter region and its precedence."
+    }
+  ]
+}
