@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge extension has no adopter seam, so a fleet-wide title rule has nowhere to live"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat 2026-09-12: 「開」 to filing at Pilot after the AC-1..AC-4 presentation, then 「推」 to advance. Scope is the two asks presented: carry the title rule in the extension, and declare the post-:end adopter region and its precedence.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
