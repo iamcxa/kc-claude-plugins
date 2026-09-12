@@ -37,6 +37,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:2f5a8kg1qwc5ba8jg3mcfjjw:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:2f5a8kg1qwc5ba8jg3mcfjjw-ideation-1
+              briefing:
+                id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:attempt-1:revision-1
+                digest: sha256:65f226cf1272408f974a5546994262f2a4e203b47e7961729b560b223b929e97
+                room-ref: ./pr-merge-extension-has-no-adopter-seam/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:1
+                briefing: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-12T17:10:40.357924Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-13: "approve", after the FO presented the shaped route (kc-dev-flow ships a Python check-pr-title.py with a release-please verdict fixture; the extension states the rule and binds it to the delivery unit title), the four rejected alternatives, the measured feat(): x disagreement, and the four items shape marked not-settled.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:attempt-1:revision-1",
+  "question": "Build the shaped route: ship the refusal from kc-dev-flow as a Python check-pr-title.py with its release-please verdict fixture, and have the extension state the title rule and bind it to the delivery unit title?",
+  "artifacts": [
+    {
+      "id": "artifact:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d92cc4f310cef73bcd72bb00a1b4af671bd63ad4/pr-merge-extension-has-no-adopter-seam.md",
+      "rev": "sha256:20ccc119c1fb9faaba8af016985547e472e1a86d2ad09b3670459b4cabc96e2b",
+      "mediaType": "text/markdown",
+      "summary": "Shape chose the kc-dev-flow-shipped Python checker over four rejected alternatives, retired the riskiest DESIGNED step to OBSERVED against release-please parser output, and measured that post-:end adopter prose is forbidden rather than merely undeclared. Stop numbers: \u003e13 files, \u003e700 gross lines, \u003e60 changed lines in kc-dev-flow-contract-test.py."
+    }
+  ]
+}
