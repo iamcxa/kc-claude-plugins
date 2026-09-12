@@ -3,30 +3,32 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { loadModel } from './read.mjs'
+import { readFileSync } from 'node:fs'
+import { loadModel, diffAgainstModel } from './read.mjs'
+import { buildAllPages } from './render.mjs'
 import { lintJourney } from './lint.mjs'
 import { buildReleaseContract } from './release-contract.mjs'
 
 const PKG_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const JOURNEY = join(PKG_ROOT, 'skills/kc-journey-map/references/journey.example.yaml')
 
-test("this skill's own journey file passes every lint", () => {
+test("the packaged fictional journey passes every lint", () => {
 	const model = loadModel(JOURNEY)
 	const violations = lintJourney(model, { repoRoot: PKG_ROOT, journeyPath: JOURNEY })
 	assert.deepEqual(violations, [], JSON.stringify(violations, null, 2))
 })
 
-test('every story in the migrated file carries a status', () => {
+test('every fictional story is explicitly unverified', () => {
 	const model = loadModel(JOURNEY)
 	const stories = (model.steps ?? []).flatMap((s) => s.stories ?? [])
 	assert.ok(stories.length > 0, 'the file has no stories to check')
 	assert.ok(
-		stories.every((s) => typeof s === 'object' && s.status),
-		'a story in the migrated file has no status'
+		stories.every((s) => typeof s === 'object' && s.status === 'unverified' && !s.evidence),
+		'a fictional story claims implementation evidence or lacks unverified status'
 	)
 })
 
-test('a release contract generates for every release the migrated file declares', () => {
+test('a release contract generates for every packaged release', () => {
 	const model = loadModel(JOURNEY)
 	assert.ok(model.releases.length > 0)
 	for (const release of model.releases) {
@@ -36,24 +38,21 @@ test('a release contract generates for every release the migrated file declares'
 	}
 })
 
-import { buildJourneyBoard } from './render.mjs'
-import { buildStoryMap } from './storymap.mjs'
-
-test('worked host selection evidence updates projections and contract', () => {
+test('the packaged native snapshot matches the source across all projections', () => {
 	const model = loadModel(JOURNEY)
-	const host = model.steps.flatMap((s) => s.stories ?? []).find((s) => s.id === 'ask-which-boards-to-draw')
-	assert.equal(host.status, 'exists')
-	assert.equal(host.evidence, 'buildAllPages')
-	assert.equal(host.question, undefined)
-	const release = model.releases.find((r) => r.id === host.release)
-	const text = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
-	for (const [records, kind] of [[buildStoryMap(model), 'story-border'], [buildJourneyBoard(model, { release }), 'story-border']]) {
-		assert.equal(records.find((s) => s.meta?.journey?.nodeId === host.id && s.meta.journey.kind === kind).props.color, 'green')
-		const stories = model.steps.flatMap((s) => s.stories ?? []).filter((s) => s.release === release.id)
-		const count = stories.filter((s) => s.status === 'exists').length
-		assert.equal(stories.length, 12)
-		assert.equal(count, 12)
-		assert.match(text(records.find((s) => s.meta?.journey?.nodeId === release.id && s.meta.journey.kind === 'release-label')), new RegExp(`${count}/${stories.length} (stories )?exist`))
+	const snapshot = JSON.parse(readFileSync(join(PKG_ROOT, 'skills/kc-journey-map/references/example/book-pickup.tldr'), 'utf8'))
+	assert.ok(snapshot.schema, 'the snapshot must retain the native tldraw schema')
+	const expected = buildAllPages(model, null, ['story-map', 'journey-board', 'function-map'])
+	const pages = (records) => records.filter((r) => r.typeName === 'page').map(({ id, name }) => ({ id, name })).sort((a, b) => a.id.localeCompare(b.id))
+	assert.deepEqual(pages(snapshot.records), pages(expected))
+	// Native layout normalization may change geometry; authored text, identities and status must agree.
+	const content = (records) => records.filter((r) => r.typeName === 'shape' && r.meta?.journey).map((r) => ({
+		id: r.id, parentId: r.parentId, journey: r.meta.journey,
+		richText: r.props.richText, color: r.props.color,
+	})).sort((a, b) => a.id.localeCompare(b.id))
+	assert.deepEqual(content(snapshot.records), content(expected))
+	const diff = diffAgainstModel(snapshot.records.filter((r) => r.typeName === 'shape'), model)
+	for (const [kind, changes] of Object.entries(diff)) {
+		assert.ok(Array.isArray(changes) ? changes.length === 0 : !changes, `unexpected snapshot drift: ${kind}`)
 	}
-	assert.match(buildReleaseContract(model, release.id), /Ask which boards[^\n]*\| exists \| `buildAllPages` \| — \|/)
 })
