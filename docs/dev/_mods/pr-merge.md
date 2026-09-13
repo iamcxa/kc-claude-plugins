@@ -617,5 +617,3 @@ Here `{state-owner}/{state-repo}` is `STATE_REPO`, `{state-sha}` is the full
 `STATE_SHA`, and `{state-relative-path}` is `STATE_RELATIVE_PATH`. Construct the
 reviewed body from that immutable tuple; never reconstruct it after approval.
 <!-- kc-dev-flow runtime extension:end -->
-
-## Our own rule below the <!-- kc-dev-flow runtime extension:end --> marker.
