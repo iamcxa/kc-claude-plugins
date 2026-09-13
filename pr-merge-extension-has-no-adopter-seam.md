@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge extension has no adopter seam, so a fleet-wide title rule has nowhere to live"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
