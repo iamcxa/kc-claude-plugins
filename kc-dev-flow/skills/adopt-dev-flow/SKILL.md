@@ -175,7 +175,11 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    That drift comparison is bounded at the `:end` marker; an adopter may add its
    own local prose after it, and `pr-merge-extension.md`'s own opening section
    states the declared precedence for that region against the marked block.
-   A missing delivery authority is a refit requirement. Do not classify its
+   The title refusal's self-test is grounded only against the fixture's
+   captured release-please version; when the repository's own release-please
+   version differs, re-derive the fixture as `pr-merge-extension.md`'s
+   "The title rule's oracle" section directs before trusting a green
+   self-test. A missing delivery authority is a refit requirement. Do not classify its
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release
    owner, and stop before delivery until the repository names that authority.

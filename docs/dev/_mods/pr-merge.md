@@ -128,10 +128,10 @@ against the sha256 pinned at `contract-manifest.json`
 drifts. The runtime entry remains
 `spacedock merge guard {slug} --verdict passed|rejected --workflow-dir {dir}`.
 
-Content an adopter appends after this file's own closing
-`<!-- kc-dev-flow runtime extension:end -->` marker is an adopter-owned local
-region. The contract test's drift comparison is bounded at that marker and
-does not read or restrict what an adopter writes below it. When adopter
+Content an adopter appends after this file's own closing runtime-extension
+end marker is an adopter-owned local region. The contract test's drift
+comparison is bounded at that marker and does not read or restrict what an
+adopter writes below it. When adopter
 prose in that region and this marked block instruct differently on the same
 subject, follow this marked block -- that precedence is a declared operating
 rule for the first officer, not something the byte-equality comparison above
@@ -447,6 +447,27 @@ unchecked layer title stops the stack before any push.
 If the captain asks to proceed past a refusal, explain that the refusal is
 the rule, not a tooling detour, and offer a corrected subject. Only a
 captain-authorised scope change to the work item removes the rule.
+
+### The title rule's oracle
+
+`check-pr-title.py` does not invent the grammar that decides a title. It
+implements the `<type>[(<scope>)][!]: <text>` shape release-please's own
+conventional-commits parser accepts, and self-tests that implementation
+against a committed fixture, `scripts/fixtures/pr-title/release-please-verdicts.tsv`,
+before it evaluates any real title -- see the fixture's own header for the
+release-please version and date it was captured from. The self-test proves
+only that the checker agrees with that captured version; it says nothing
+about whatever release-please version an adopter's own pipeline actually
+runs.
+
+**Version-skew stop condition.** Before trusting a green self-test, confirm
+the adopter's installed release-please version matches the fixture's
+captured version. On a mismatch, or on a reported adopter skew, re-derive the
+fixture against the adopter's own installed parser rather than assuming
+agreement across versions:
+
+    node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs > \
+      kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv
 
 ### Delivery topology decision
 

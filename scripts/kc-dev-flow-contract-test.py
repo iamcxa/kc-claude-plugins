@@ -516,6 +516,14 @@ require(
     pr_merge_mod.count(pr_merge_extension_end_marker) == 1,
     "docs/dev/_mods/pr-merge.md runtime extension end marker is not unique",
 )
+# Never quote the bare end-marker text inline in prose: a bare text search for
+# it (the adopter sync instruction is prose, not a script) would stop at the
+# first occurrence instead of the actual marker.
+require(
+    pr_merge_mod.count(pr_merge_extension_end_marker.rstrip("\n")) == 1,
+    "docs/dev/_mods/pr-merge.md quotes its own runtime extension end marker "
+    "somewhere other than the marker line itself -- never quote it inline",
+)
 mod_extension_start = pr_merge_mod.index(pr_merge_extension_marker)
 mod_extension_end = pr_merge_mod.index(pr_merge_extension_end_marker) + len(pr_merge_extension_end_marker)
 require(
