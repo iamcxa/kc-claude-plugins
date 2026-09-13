@@ -56,6 +56,25 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:2f5a8kg1qwc5ba8jg3mcfjjw:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:2f5a8kg1qwc5ba8jg3mcfjjw-validation-1
+              briefing:
+                id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:attempt-1:revision-1
+                digest: sha256:4b9fc940efd0d8a8884880aca6c4194b6a23179ec98770bd38a9522846c776ee
+                room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:2f5a8kg1qwc5ba8jg3mcfjjw:validation:1
+                briefing: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-13T23:20:01.127166Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-14: "approve", on the FO gate presenting candidate d3b047d7 — four acceptance criteria passing with every falsifier at that revision, cycle 2 three findings closed, the F1 regression re-verified in both directions, three non-blocking residuals, and the named risk that the post-:end adopter-region precedence is a first-officer operating rule rather than something byte-equality enforces. The gate question also authorized the delivery ceremony that opens a Draft PR to main.'
+              application:
+                target-stage: done
+                state: pending
 review-round:
     id: round:2f5a8kg1qwc5ba8jg3mcfjjw:validation:2
     stage: validation

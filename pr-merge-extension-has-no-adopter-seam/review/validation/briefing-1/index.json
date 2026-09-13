@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:attempt-1:revision-1",
+  "question": "Approve validation at candidate d3b047d7 and authorize the delivery ceremony, which opens a Draft PR to iamcxa/kc-claude-plugins main?",
+  "artifacts": [
+    {
+      "id": "artifact:2f5a8kg1qwc5ba8jg3mcfjjw:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c4f9f2f0bcc00bac14cbbc4926baeb70d07acfa9/pr-merge-extension-has-no-adopter-seam/index.md",
+      "rev": "sha256:73fab61ec8c7a9e076e1bbd7d3e8a45611979fbbccabdaebad8e301e3c7bf44a",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3: no blocking finding. All four acceptance criteria pass at d3b047d7 with every falsifier observed at that revision, and cycle 2 three findings are closed in the shipped bytes. Three residuals, none changing what a correctly-behaving adopter does. Trunk base. No PR exists yet."
+    }
+  ]
+}
