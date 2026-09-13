@@ -495,12 +495,6 @@ reverse_recovery:
 - SKIPPED: journey-slicing receipt (`journey_slices`)
   `multi_slice_required` is false — both asks edit the same two files and neither can land without re-syncing `docs/dev/_mods/pr-merge.md` in the same commit. The reference's own rule is that the receipt records a true trigger, so recording one here would assert a slice split that does not exist. Judgment recorded in `### Slice count` instead.
 
-**Worktree hazard, not a defect in the candidate.** A `kc-dev-flow-contract-test.py` run from an
-earlier stage (PID 25649) has been alive over ten hours inside this entity's code worktree, driven
-by a script that mutates `docs/dev/_mods/pr-merge.md` and reverts it. It is idle at the committed
-state and the worktree is clean, but it should be terminated before the correction round is
-dispatched into the same worktree. Not terminated here: it is another stage's process.
-
 ### Summary
 
 Shape selected the route the work item left open: the refusal ships from kc-dev-flow as a Node-free Python checker that the extension states and binds to the delivery unit's title, not as a rule each adopter binds itself. Four alternatives are recorded as rejected with the evidence that rejected them — the Local Profile binding route would fail every existing adopter closed, and the TypeScript route has nothing to run in a repository with no `package.json`. The riskiest DESIGNED step was retired to OBSERVED: release-please's parser is reachable inside this repository through the existing `scripts/fixtures/release-please-runtime` lockfile, and it disagrees with a hand-written grammar on `feat(): x` — the dangerous direction, now a fixture row.
@@ -639,6 +633,12 @@ round.
    only in this entity's `## Shape`, in the split-root state checkout, which no adopter receives.
    This is the same gap as finding 2 seen from the other end: fixing 2 gives these citations a real
    target.
+
+**Worktree hazard, not a defect in the candidate.** A `kc-dev-flow-contract-test.py` run from an
+earlier stage (PID 25649) has been alive over ten hours inside this entity's code worktree, driven
+by a script that mutates `docs/dev/_mods/pr-merge.md` and reverts it. It is idle at the committed
+state and the worktree is clean, but it should be terminated before the correction round is
+dispatched into the same worktree. Not terminated here: it is another stage's process.
 
 ### Summary
 
