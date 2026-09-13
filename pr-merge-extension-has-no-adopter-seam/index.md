@@ -730,7 +730,7 @@ Closed all three validation findings with one correction: removed the inline `:e
 - DONE: delivery base decision (`delivery-branch-base.md`), correcting cycle 1's account
   Cycle 1 reported that `git merge-tree --write-tree abbe9269 HEAD` "conflicts only on `docs/dev/_mods/profile-contract-loader.py`". It does not: the same 7 conflicts appear at `019e4715`, at `17915d9e`, and at `origin/main` with this candidate excluded entirely. The conflict set is #321-versus-trunk staleness, identical with and without this candidate, so the independence conclusion is stronger than cycle 1 stated it, not weaker. Trunk base, three files textually shared with #321 in disjoint sections. The topology ruling remains `pr-merge`'s `### Delivery topology decision`.
 - DONE: stop numbers re-measured at the candidate
-  `git diff --stat $(git merge-base origin/main HEAD) HEAD`: 10 changed files (limit 13), 516 gross changed lines (limit 700), 44 changed lines in `scripts/kc-dev-flow-contract-test.py` (limit 60). None crossed. Implementation reported 518 gross; the measured figure is 516.
+  `git diff --stat $(git merge-base origin/main HEAD) HEAD`: 10 changed files (limit 13), 518 gross changed lines -- 516 insertions plus 2 deletions -- (limit 700), 44 changed lines in `scripts/kc-dev-flow-contract-test.py` (limit 60). None crossed; the figures match implementation's.
 - DONE: remaining production obligations and promotion triggers
   None crossed. No production credential, data, irreversible migration, unattended operation, or SLO duty. `local_profile_interface` untouched, so no adopter Local Profile refit; `MIGRATION.md` carries the release obligation.
 - SKIPPED: when the receipt declares `semantics_unchanged: true`, the named `equivalence_instrument` observed to fail against `equivalence_instrument_failure`, the case it must flag
@@ -762,7 +762,7 @@ creation exactly as cycle 1's did.
    is the only mechanical reader, and it takes the first.
 2. **F2's version-skew remedy cannot run in an adopter checkout.** The new section's re-derive
    command is `node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs`, a path relative to
-   this repository's root, written 37 lines after the same file resolves `$KC_DEV_FLOW_ROOT` for
+   this repository's root, written in the same file that resolves `$KC_DEV_FLOW_ROOT` for
    exactly this reason. Observed (`refusal` kind) against a simulated adopter layout holding only the
    plugin tree: verbatim command -> `Cannot find module .../kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs`;
    with the plugin root substituted -> `Cannot find module .../scripts/fixtures/release-please-runtime/node_modules/release-please/build/src/commit.js`,
