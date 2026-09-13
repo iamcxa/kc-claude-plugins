@@ -654,3 +654,32 @@ acceptance criteria, and route to one implementation correction round touching
 environment reasons only: the machine reached load average 509 with a 10h-hung suite from an earlier
 stage in the same worktree, so the battery-abort observation could not be completed in three attempts;
 the candidate worktree is clean and unmodified after each.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: finding 1 -- remove the inline `:end` marker quotation
+  `kc-dev-flow/references/pr-merge-extension.md` and the resynced `docs/dev/_mods/pr-merge.md` no longer backtick-quote `<!-- kc-dev-flow runtime extension:end -->` inline; the sentence reads "after this file's own closing runtime-extension end marker" instead. Commit `17915d9e`.
+- DONE: finding 1 -- turn "never quote it inline" into an enforcement point
+  `scripts/kc-dev-flow-contract-test.py` adds `pr_merge_mod.count(bare_end_marker) == 1` beside the existing newline-form uniqueness check, 8 lines including its comment (well inside the 60-line stop number). Falsifier kind `mutation`, run in isolation against a copy of the committed file (not the full battery, per the host-load caution): reintroducing the inline quotation moves the bare count from 1 to 2, which the new require would now catch -- verified by direct count comparison, not by re-running the whole suite for one string check.
+- DONE: finding 2 -- name the version-skew stop condition
+  New `### The title rule's oracle` section in `pr-merge-extension.md` (synced verbatim into `docs/dev/_mods/pr-merge.md`) states the self-test only proves agreement with the fixture's captured release-please version, names the version-skew stop condition, and gives the `capture-oracle.cjs` re-derive command. `skills/adopt-dev-flow/SKILL.md` step 7 gets one pointer sentence to that section rather than a second copy of the explanation.
+- DONE: finding 3 -- shipped resources now cite a section that exists
+  `scripts/fixtures/pr-title/release-please-verdicts.tsv` and `capture-oracle.cjs` were already citing `kc-dev-flow/references/pr-merge-extension.md`, "The title rule's oracle" -- unchanged by this round, since fixing finding 2 gives that exact heading a real target in the shipped file. Verified: `grep -n "The title rule's oracle" kc-dev-flow/references/pr-merge-extension.md` now matches.
+- DONE: AC-1 and AC-3 mutations re-observed at the new candidate `17915d9e`
+  In-block byte change inside `### The title rule's oracle` -> exit non-zero naming byte 17781 and both paths; reverted, tree clean. Adopter prose appended after `:end` -> exit 0 (adopter-owned region unaffected), matching the pre-existing designed behavior. Released-body pin unchanged by this round (no edit before the `:start` marker).
+- DONE: full contract-test battery, run singly and bounded (host-load caution honored)
+  `python3 scripts/kc-dev-flow-contract-test.py` at the clean candidate: `PASS`, one bounded background invocation, no chaining with a mutation in the same command this time -- the first attempt chained mutate+run+revert and the run alone exceeded a 150s bound under transient load; split into separate steps for the retry, each observed to completion.
+- DONE: implementation-exit surface map check
+  `surface-map-check.py 019e4715 HEAD` against a 4-line evidence block for this round's 4 changed files (all mapped to AC-1/AC-3, `without-it` bound to each path): `surface-map-check: OK (4 files checked)`.
+- DONE: RoboRev implementation-exit observation
+  Unchanged from cycle 1: `UNAVAILABLE(reason: unavailable)` -- pinned model `gpt-5.6-terra` remains unconfirmable per the stage-def fetch's own 2026-09-13 probe (agent `codex` OK). No re-probe spent since the probe is dated the same day and nothing in this round changes agent/model availability. No claim filed, no provider query made.
+- DONE: stop numbers, re-measured against `origin/main` after commit
+  `git diff --stat $(git merge-base origin/main HEAD) HEAD`: 10 changed files (limit 13, unchanged from cycle 1 -- this round edits existing files only), 518 gross changed lines (limit 700), 44 changed lines in `kc-dev-flow-contract-test.py` (limit 60, up from 36).
+- DONE: worktree hazard the FO flagged
+  No `kc-dev-flow-contract-test.py` process alive in this worktree; load average 7-12 at the time of this round's runs. Nothing to terminate.
+- DONE: comment pass
+  Kept the one new code comment (`scripts/kc-dev-flow-contract-test.py`, why a bare text search over prose can stop at the first occurrence) -- a fact the require's own message doesn't state. No comment cut; none added elsewhere, since the rest of this round is shipped prose, not code.
+
+### Summary
+
+Closed all three validation findings with one correction: removed the inline `:end` marker quotation, gave the version-skew stop condition a named home in `pr-merge-extension.md`'s new "The title rule's oracle" section (which also grounds the two resources that already cited it), and turned the marker-quoting rule into a contract-test enforcement point instead of leaving it a convention. Fixed one process mistake from this round's own first attempt: a chained mutate-and-revert command left `docs/dev/_mods/pr-merge.md` reverted to the pre-fix commit via `git checkout --`, silently discarding the resync; caught by re-grepping for the marker text before trusting the first mutation run, and re-synced before proceeding. All re-observed mutations and the full battery pass at candidate `17915d9e`; stop numbers stay well inside their limits.
