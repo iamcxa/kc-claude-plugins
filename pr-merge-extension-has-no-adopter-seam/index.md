@@ -708,3 +708,103 @@ the candidate worktree is clean and unmodified after each.
 ### Summary
 
 Closed all three validation findings with one correction: removed the inline `:end` marker quotation, gave the version-skew stop condition a named home in `pr-merge-extension.md`'s new "The title rule's oracle" section (which also grounds the two resources that already cited it), and turned the marker-quoting rule into a contract-test enforcement point instead of leaving it a convention. Fixed one process mistake from this round's own first attempt: a chained mutate-and-revert command left `docs/dev/_mods/pr-merge.md` reverted to the pre-fix commit via `git checkout --`, silently discarding the resync; caught by re-grepping for the marker text before trusting the first mutation run, and re-synced before proceeding. All re-observed mutations and the full battery pass at candidate `17915d9e`; stop numbers stay well inside their limits.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: exact-revision journey evidence
+  Candidate `17915d9e`, base `7b103a10`, `origin/main` now `e0826132`. Journey step 4 driven from a cwd outside the worktree with `&& echo would-create-pr` standing in for `gh pr create`: this entity's own title exits 1 and `would-create-pr` never prints; `fix(kc-dev-flow): close three validation findings in pr-merge title-refusal prose` exits 0 printing `fix` and the create line runs; no argument exits 2.
+- DONE: AC-1 -- reachability plus released-body pin at the new candidate
+  Rebuilt the adopter mod as pre-marker released body + verbatim `references/pr-merge-extension.md`: byte-identical to `docs/dev/_mods/pr-merge.md` (37769 == 37769), so this round's `git checkout --` accident did not survive into the candidate. Released body 10551 bytes, sha256 `ea187ab4...` == `contract-manifest.json` `pr_merge_released_body.sha256`. Falsifier at the candidate: one byte appended before the `:start` marker -> exit 1 naming the pin key and 10551/10553. Reverted, tree clean.
+- DONE: AC-2 -- refusal checker exercised as a process, both falsifier kinds, on an isolated copy
+  `refusal`: exit 1 on a non-conventional sentence, exit 2 on a missing argument. `mutation` at two layers on `/tmp` copies (the candidate worktree was never mutated for AC-2): dropping the empty-scope condition alone reddens via self-test (exit 2 naming `'feat(): x'`); dropping it *and* bypassing the self-test reddens the per-row process assertion with `'feat(): x': expected exit 1, got 0`, plus the unreadable-fixture boundary case that the self-test is what implements. Checker bytes are unchanged from `019e4715`.
+- DONE: AC-3 -- contract test bounded at :end, both mutations re-observed at the new candidate
+  One byte inside the new `### The title rule's oracle` section -> exit 1 naming byte 17840 and both paths; `## The title rule (adopter-added probe)` appended after `:end` -> exit 0; baseline `--ablation-check` and the full non-ablation suite both exit 0. Reverted after each, `git status --short` empty.
+- DONE: AC-4 -- subspace-relay rebuild at the pinned SHA, behaviours listed
+  Relay's `docs/dev/_mods/pr-merge.md` read from `git show 3b8f233:` (153 lines, no extension markers). Unchanged from cycle 1 except for what this round added: the rebuild now also carries the version-skew stop condition. One measured fact this stage adds -- relay's `scripts/check-pr-title.ts` calls release-please's own `parseConventionalCommits` at runtime (`package.json` pins `17.11.1`), while the rebuild substitutes a regex self-tested against a fixture captured from `17.3.0`. The rebuild still needs zero adopter-added prose for the title rule; the oracle is weaker in kind, which is what the new section exists to disclose.
+- DONE: the oracle fixture re-derived against a second release-please version, not trusted
+  Installed release-please `17.11.1` in a scratch directory and ran all 13 fixture subjects through its `parseConventionalCommits`: verdicts identical to the committed TSV on all 13 rows. Cycle 1 grounded the TSV against `17.3.0`; this grounds it against the version the next adopter actually pins, and it is the observation two shipped resources already claim is recorded somewhere (see finding 3).
+- DONE: observe the full contract-test battery abort because `check-pr-title.test.py` failed -- cycle 1's FAILED item, now closed
+  `raise SystemExit("probe")` inserted after `rows = load_rows()`, then `python3 scripts/kc-dev-flow-contract-test.py` as its own bounded background invocation (load average 15, no chaining): exit 1 carrying `kc-dev-flow contract: PR title check failed:\nprobe`. The battery does reach the entry at runtime. Reverted, tree clean at `17915d9e`.
+- DONE: retry/recovery, duplicate, diagnostic, and data-safety results that apply
+  Unchanged from cycle 1 and re-observed: the refusal is idempotent and fires before the first push, so no partial state exists; exit 1 prints the rejected title, exit 2 prints which condition could not be decided; no network, no filesystem write, no shell interpolation of the title; the checker holds no state, so duplicate handling does not apply.
+- DONE: delivery base decision (`delivery-branch-base.md`), correcting cycle 1's account
+  Cycle 1 reported that `git merge-tree --write-tree abbe9269 HEAD` "conflicts only on `docs/dev/_mods/profile-contract-loader.py`". It does not: the same 7 conflicts appear at `019e4715`, at `17915d9e`, and at `origin/main` with this candidate excluded entirely. The conflict set is #321-versus-trunk staleness, identical with and without this candidate, so the independence conclusion is stronger than cycle 1 stated it, not weaker. Trunk base, three files textually shared with #321 in disjoint sections. The topology ruling remains `pr-merge`'s `### Delivery topology decision`.
+- DONE: stop numbers re-measured at the candidate
+  `git diff --stat $(git merge-base origin/main HEAD) HEAD`: 10 changed files (limit 13), 516 gross changed lines (limit 700), 44 changed lines in `scripts/kc-dev-flow-contract-test.py` (limit 60). None crossed. Implementation reported 518 gross; the measured figure is 516.
+- DONE: remaining production obligations and promotion triggers
+  None crossed. No production credential, data, irreversible migration, unattended operation, or SLO duty. `local_profile_interface` untouched, so no adopter Local Profile refit; `MIGRATION.md` carries the release obligation.
+- SKIPPED: when the receipt declares `semantics_unchanged: true`, the named `equivalence_instrument` observed to fail against `equivalence_instrument_failure`, the case it must flag
+  The work profile receipt declares `semantics_unchanged: false`, so the clause does not apply.
+- SKIPPED: provider feedback disposition when a delivery artifact exists
+  No delivery artifact exists. `gh pr list --head spacedock-ensign/pr-merge-extension-has-no-adopter-seam --state all` returns `[]`; entity `pr:` is empty. Draft creation is Captain-authorized through `pr-merge` and has not been reached.
+
+### Findings
+
+Cycle 1's three findings are closed in substance, and two of the three fixes introduced a new
+adopter-facing defect of the same shape. No acceptance criterion is falsified; all three land in
+`spacedock-dev/subspace-relay`'s checkout the next time it runs the sync, so they block Draft
+creation exactly as cycle 1's did.
+
+1. **F1's enforcement point restricts the adopter-owned region it was added to protect.**
+   `scripts/kc-dev-flow-contract-test.py:523` counts the bare end-marker text over
+   `pr_merge_mod` -- the whole file, including everything after `:end`. Observed at the candidate
+   (`refusal` kind): appending `Our own rule below the ...:end... marker.` *after* `:end` exits 1
+   with `never quote it inline`, a message written for the extension's own prose. The extension's
+   opening section says the comparison "does not read or restrict what an adopter writes below it"
+   and `skills/adopt-dev-flow/SKILL.md:175` says "an adopter may add its own local prose after it".
+   Both are now false for one string, and that declaration is this work item's accepted outcome.
+   **Ruling: bound the count to `pr_merge_mod[:mod_extension_end]`, not declare the exception.** The
+   hazard F1 answers is a search from `:start` that stops at the first bare occurrence (the FO's own
+   715-of-26184-character read); a quotation after the real `:end` cannot cause it, because the real
+   marker comes first. Falsifier pair the correction round owes: the in-block quotation must still
+   exit 1, the post-`:end` quotation must exit 0. Checked before ruling: `grep -rn "runtime
+   extension:end"` finds no consumer that reads the last occurrence -- the contract test's `.index()`
+   is the only mechanical reader, and it takes the first.
+2. **F2's version-skew remedy cannot run in an adopter checkout.** The new section's re-derive
+   command is `node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs`, a path relative to
+   this repository's root, written 37 lines after the same file resolves `$KC_DEV_FLOW_ROOT` for
+   exactly this reason. Observed (`refusal` kind) against a simulated adopter layout holding only the
+   plugin tree: verbatim command -> `Cannot find module .../kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs`;
+   with the plugin root substituted -> `Cannot find module .../scripts/fixtures/release-please-runtime/node_modules/release-please/build/src/commit.js`,
+   because the runtime lives at this repository's root, outside the plugin an adopter installs.
+   `check-pr-title.py` itself runs fine in that layout, so the checker ships correctly and only the
+   remedy is broken. Relay pins `17.11.1` against the fixture's `17.3.0`, so the next adopter is
+   already in the condition this section names and its agent will follow the instruction and fail.
+   **Ruling: delete the command from the extension rather than repair its path.** capture-oracle's
+   own comment already states the runtime is "repo root, not under kc-dev-flow/" -- re-derivation is
+   structurally a maintainer action. The section should say an adopter on skew stops and reports
+   upstream, matching its sibling's "a stop, not a skip"; `SKILL.md` step 7's "re-derive as ...
+   directs" changes to match.
+3. **F3 is half-closed: the cited section exists, the cited observation is not in it.**
+   `scripts/fixtures/pr-title/release-please-verdicts.tsv` (header) and `capture-oracle.cjs`
+   (comment) both state that agreement with subspace-relay's `17.11.1` pin "is a separate 2026-09-12
+   observation, recorded in `kc-dev-flow/references/pr-merge-extension.md`, 'The title rule's
+   oracle'". `grep -nE '17\.11|relay|subspace|agreement'` over that file returns one match, the word
+   "agreement" in an unrelated sentence. The claim is true -- this stage re-derived all 13 rows under
+   `17.11.1` and they match -- so the fix is to write the observation into the section the two
+   resources already point at, in the same edit as finding 2.
+
+**Repeat-shape rule, invoked deliberately.** These are the second round of one failure shape:
+adopter-facing prose that reads correctly in the only checkout where a source-repo-relative path
+resolves, because this repository adopts its own extension. Cycle 1's F1 and F3 were the first two
+instances; findings 1 and 2 above are the third and fourth. The kernel's verification discipline
+says to change the work rather than the wording at the second occurrence. Finding 2's ruling does
+that by removing the adopter-facing path instead of correcting it, and finding 1's ruling does it by
+making the shipped declaration true instead of adding an exception to it. Neither needs a new
+contract-test check; a path-shape require would be a fifth piece of wording against the same
+reproducer.
+
+### Summary
+
+All four acceptance criteria pass at candidate `17915d9e` with every falsifier observed at that
+revision, and cycle 1's one FAILED item is now closed: the full battery aborts with
+`PR title check failed` when `check-pr-title.test.py` fails, so the entry is reached at runtime. The
+oracle is now grounded against two release-please versions rather than one -- `17.11.1`, the version
+the next adopter pins, agrees with the committed fixture on all 13 rows. The rejection is not about
+the criteria: two of cycle 1's three fixes introduced a new defect in bytes that ship to adopters --
+the marker-count enforcement point restricts the adopter-owned region the extension declares
+unrestricted, and the version-skew remedy is a command no adopter can run -- while the third closed
+only its heading and not the observation two shipped resources attribute to it. All three route to
+one implementation correction round touching `references/pr-merge-extension.md`,
+`skills/adopt-dev-flow/SKILL.md`, and `scripts/kc-dev-flow-contract-test.py`, each with a ruling
+rather than a pair of options.
