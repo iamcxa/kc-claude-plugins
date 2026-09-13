@@ -654,3 +654,59 @@ acceptance criteria, and route to one implementation correction round touching
 environment reasons only: the machine reached load average 509 with a 10h-hung suite from an earlier
 stage in the same worktree, so the battery-abort observation could not be completed in three attempts;
 the candidate worktree is clean and unmodified after each.
+
+## FO disposition — correction round 1, authorized
+
+First Officer, 2026-09-13. Validation returned all four acceptance criteria passing
+at candidate `019e4715` and three adopter-facing prose defects that block Draft
+creation. All three ship to adopters and all three land in
+`spacedock-dev/subspace-relay`'s checkout, which is the next repository to run the
+sync. Routine finding disposition, one round, routed to `implementation` per the
+workflow's `feedback-to`. No acceptance criterion is reopened and no product scope
+changes.
+
+**Repair scope — the whole of it.**
+
+1. Remove the inline quotation of the closing runtime-extension marker from
+   `kc-dev-flow/references/pr-merge-extension.md` and re-sync
+   `docs/dev/_mods/pr-merge.md`. Validation's ruling stands: prose that names the
+   marker without reproducing its text loses no meaning, and the alternative
+   leaves the hazard in every adopter's file. Add the bare-form uniqueness
+   `require` beside the existing newline-form check in
+   `scripts/kc-dev-flow-contract-test.py`, which turns "never quote it inline"
+   into an enforcement point. Keep that file's total changed lines under 60.
+2. Name the version-skew stop condition in
+   `kc-dev-flow/references/pr-merge-extension.md`: when an adopter's release-please
+   differs from the version the committed fixture was captured against, the
+   adopter re-derives the fixture with `capture-oracle.cjs` before trusting a
+   green. The self-test proves agreement with the committed fixture only, never
+   with the adopter's parser.
+3. Repoint the citations in
+   `kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv` and
+   `kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` at the section
+   finding 2 creates. They currently cite a section that exists only in this
+   entity's `## Shape`, inside the split-root state checkout, which no adopter
+   receives.
+4. Close validation's one `FAILED` item, which failed on machine load rather than
+   on the candidate: prove the contract-test battery actually reaches
+   `check-pr-title.test.py` at runtime. Validation left the exact probe — insert
+   `raise SystemExit("probe")` after `rows = load_rows()` in
+   `check-pr-title.test.py`, run `python3 scripts/kc-dev-flow-contract-test.py`,
+   expect non-zero carrying `PR title check failed`, then revert.
+
+**Out of scope.** No acceptance criterion is re-argued; all four passed. No change
+to the released pr-merge body or its pin. No Spacedock edit, no Linear, no change
+to `spacedock-dev/subspace-relay`. No Draft PR: creation is the Captain's
+authorization through `pr-merge` and has not been reached.
+
+**Delivery base, recorded once so the correction round does not re-decide it.**
+Validation recommends trunk. PR #321 shares three files in disjoint sections and
+`git merge-tree` conflicts only on a file this candidate does not touch. The
+topology ruling itself belongs to `_mods/pr-merge.md` `### Delivery topology
+decision`, not to this round.
+
+**Machine hazard, cleared by the FO before this round.** A contract-test process
+the FO left running from its own falsifier check, alive over ten hours inside this
+entity's code worktree, was terminated. The worktree is clean at `019e4715`. The
+host's remaining load is not this entity's: 79 of the 189 defunct processes are
+children of `Conductor.app`, alive 3 days.
