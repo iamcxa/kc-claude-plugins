@@ -864,3 +864,71 @@ rather than a pair of options.
 ### Summary
 
 Closed all three validation-cycle-2 findings with the rulings the validator specified: bounded the marker-count enforcement point to the extension's own block instead of declaring an exception for it, deleted the capture-oracle.cjs re-derive command an adopter checkout cannot run (repeat-shape rule: stop rather than reword a second time), and recorded the 17.11.1 agreement observation two shipped fixtures already cite. Both falsifiers this round owed -- in-block quotation still exits 1 naming `never quote it inline`, post-`:end` quotation now exits 0 -- were observed at the real script against the real file, each as its own bounded step, not simulated and not conflated with AC-3's separate drift-comparison positive control. One process defect surfaced and was self-corrected: a concurrent mutation test's temporary content leaked into the first fix commit because it landed before that test's own background revert; caught by re-diffing before declaring done, fixed in a second commit, and the full battery plus surface-map-check were re-run at the corrected candidate `d3b047d7`. Stop numbers stay well inside their limits at 10 files / 527 lines / 47 lines in the contract test.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: exact-revision journey evidence
+  Candidate `d3b047d7`, base `7b103a10`, `origin/main` `e0826132` confirmed live by `git ls-remote --heads origin main`. Journey step 4 driven from cwd `/tmp` (outside the worktree) with `&& echo would-create-pr` standing in for `gh pr create`: this entity's own title exits 1 printing the rejected subject and `would-create-pr` never appears; `fix(kc-dev-flow): close validation cycle 2 findings in pr-merge title-refusal prose` exits 0 printing `fix` and the create line runs; no argument exits 2.
+- DONE: AC-1 -- refusal reachable after sync, released-body pin intact at the candidate
+  `docs/dev/_mods/pr-merge.md` splits at `:start` into a 10551-byte released body hashing `ea187ab4...`, equal to `contract-manifest.json` `pr_merge_released_body.sha256`; `## Hook: merge` reaches the refusal through the extension's `### Released title override`. Falsifier (`refusal`): three bytes inserted before `:start` in an isolated tree -> exit 1 naming the pin key and `expected 10551 bytes, got 10553`.
+- DONE: AC-2 -- refusal exercised as a process; cycle 2's mutation evidence binds to identical bytes
+  `git diff 019e4715 d3b047d7 -- kc-dev-flow/scripts/check-pr-title.py check-pr-title.test.py fixtures/pr-title/` is empty, so the checker, its self-test and the oracle fixture are byte-unchanged since the round cycle 2 mutated at two layers; that two-layer `mutation` evidence is not re-spent. Re-run here as a process at `d3b047d7`: non-conventional subject exits 1, `feat(): x` exits 1 (the empty-scope condition cycle 2 mutated), parseable subject exits 0, missing argument exits 2.
+- DONE: AC-3 -- post-`:end` declaration true in both directions, drift comparison still fires
+  Cycle 2's F1 regression re-checked by me at the candidate, not accepted from the report, on four independent `git archive` trees so no mutate/run/revert touched the real worktree. Unmutated tree: `kc-dev-flow contract: PASS`, exit 0 -- the instrument's green. `## Our own rule below the <!-- kc-dev-flow runtime extension:end --> marker.` appended after the real `:end` -> exit 0 `PASS`: the extension's "does not read or restrict what an adopter writes below it" and `SKILL.md`'s "an adopter may add its own local prose after it" are both true again. The same bare quotation placed inside the block -> exit 1, "within the extension's own block -- never quote it inline". One byte changed inside `### The title rule's oracle` -> exit 1 naming byte 17925 and both sides -- the narrowing did not swallow the drift comparison it sits beside. `references/pr-merge-extension.md` declares the region and its precedence ("follow this marked block"), bounded as a first-officer operating rule rather than something byte-equality enforces; `SKILL.md` step 7 states the region and points at that one home.
+- DONE: AC-4 -- relay rebuild at the pinned SHA, behaviours listed
+  Relay's `docs/dev/_mods/pr-merge.md` from `git show 3b8f233:` (153 lines, 22284 bytes, no extension markers). Rebuild = pinned released body + verbatim extension, 38134 bytes. Retains, each read out of the rebuilt file: the `COMMIT_OR_PR_TITLE` consequence sentence; the pre-presentation refusal run; the exit contract 0 present / 1 refuse / 2 refuse-undecided; the `&&` chain onto `gh pr create` so a non-zero exit means creation never runs; per-layer checking for a native stack; the "refusal is the rule, not a tooling detour" answer to a captain asking to proceed. Needs zero adopter-added prose for the title rule; `check-pr-title.py` replaces `node scripts/check-pr-title.ts`, and the oracle disclosure cycle 2 added is the section that discloses the weaker mechanism.
+- DONE: cycle 2's three findings closed at the shipped bytes
+  F1 closed -- verified above in both directions. F2 closed -- `grep -rn capture-oracle kc-dev-flow/references kc-dev-flow/skills` returns one hit, a descriptive clause, no command; the section and `SKILL.md` step 7 now carry the same "stop and report upstream" instruction. F3 closed -- the TSV header and `capture-oracle.cjs` cite "The title rule's oracle" for agreement with relay's `17.11.1` pin, and that section now states it (captured `17.3.0` 2026-09-12, separately re-derived at `17.11.1` the same day, all 13 rows agreeing).
+- DONE: retry/recovery, duplicate, diagnostic, and data-safety results that apply
+  Re-observed at the candidate: the refusal is idempotent, fires before the first push, and leaves no partial state; exit 1 names the rejected title, exit 2 names that the condition could not be decided; no network, no filesystem write, no shell interpolation of the title; the checker holds no state, so duplicate handling does not apply.
+- DONE: delivery base decision (`delivery-branch-base.md`)
+  `origin/main` is `e0826132` locally and at the remote, unchanged since cycle 2 measured it, so cycle 2's independence conclusion binds without re-running `merge-tree`: the 7 conflicts are #321-versus-trunk staleness, identical with and without this candidate. Trunk base. Topology ruling remains `pr-merge`'s `### Delivery topology decision`.
+- DONE: stop numbers re-measured at the candidate
+  `git diff --shortstat $(git merge-base origin/main HEAD) HEAD`: 10 changed files (limit 13); 529 gross changed lines, 527 insertions plus 2 deletions (limit 700); `scripts/kc-dev-flow-contract-test.py` 48 gross changed lines, 47 added plus 1 deleted (limit 60). None crossed.
+- DONE: remaining production obligations and promotion triggers
+  None crossed. No production credential or data, no irreversible migration, no unattended operation, no SLO duty. `local_profile_interface` untouched, so no adopter Local Profile refit. `MIGRATION.md` carries the release obligation at `## 2026-09-13 — the pull request title refusal ships from kc-dev-flow`.
+- SKIPPED: when the receipt declares `semantics_unchanged: true`, the named `equivalence_instrument` observed to fail against `equivalence_instrument_failure`, the case it must flag
+  The work profile receipt declares `semantics_unchanged: false`, so the clause does not apply.
+- SKIPPED: provider feedback disposition when a delivery artifact exists
+  No delivery artifact exists. `gh pr list --head spacedock-ensign/pr-merge-extension-has-no-adopter-seam --state all` returns `[]`; entity `pr:` is empty. Draft creation is Captain-authorized through `pr-merge` and has not been reached.
+
+### Findings
+
+**No blocking finding. All four acceptance criteria pass at `d3b047d7` and cycle 2's three
+findings are closed in the shipped bytes, both directions of the F1 regression re-verified here
+rather than accepted from the report.** The real worktree is clean at `d3b047d7`; every mutation
+ran in a throwaway `git archive` tree, so this round's process could not repeat the leak that cost
+`42bfa578`. Four residuals a Draft PR can carry, none of which changes an adopter's behaviour:
+
+1. **"this repository's root" is ambiguous in an adopter's own copy.** The oracle section explains
+   that `capture-oracle.cjs`'s runtime "lives at this repository's root" -- read inside
+   `subspace-relay`'s `_mods/pr-merge.md`, "this repository" is relay's root, not kc-dev-flow's.
+   Not raised as a finding: the sentence before it says do not re-derive from an adopter checkout
+   and the sentence after says report upstream, so either reading produces the same action. Raising
+   it would be a fifth piece of wording against the reproducer cycle 2 already invoked the
+   repeat-shape rule on.
+2. **The rebuild carries the refusal, not a subject-selection rule.** Relay's local section also
+   holds a table choosing the subject for a multi-commit branch by most-release-significant type;
+   the extension binds `UNIT_TITLE` as "reviewed" and states no selection rule. Relay keeping that
+   table is exactly the adopter-owned post-`:end` region this work item exists to declare, so the
+   answer it meets is the declared one rather than silence -- which is the accepted outcome, not a
+   gap against it.
+3. **Stop-number accounting differs by the deletions.** Implementation cycle 3 and validation
+   cycle 2 both reported 527 / 47; counting deletions as the section's "additions + deletions"
+   directs gives 529 / 48. Neither reading crosses 700 or 60.
+4. **Shape's Captain-owned question is still open by design** -- whether an adopter may substitute
+   its own equivalent checker, and what would have to be true for the substitute to count. Shape
+   placed it out of this slice; nothing in this round changes that.
+
+### Summary
+
+Recommend approval at candidate `d3b047d7`. AC-1 through AC-4 pass with every falsifier observed at
+this exact revision, and the one regression the last two cycles turned on -- the bare-marker check
+refusing the adopter-owned region the extension declares unrestricted -- is closed and re-verified
+in both directions: post-`:end` adopter prose quoting the marker now passes the full battery, an
+in-block quotation still exits 1, and the drift comparison beside it still names a one-byte change.
+The two rejections before this one were both about adopter-facing bytes rather than the criteria;
+this round found nothing in that class that changes what an adopting agent does. The process defect
+that caused three separate accidents in this item was removed rather than re-warned -- every
+mutation ran in its own disposable `git archive` tree, and the real worktree was never written to,
+so it stands clean at `d3b047d7`.
