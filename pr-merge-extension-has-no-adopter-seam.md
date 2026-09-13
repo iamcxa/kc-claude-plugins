@@ -540,3 +540,29 @@ One note to the first officer, out of this slice's scope: `spacedock 0.27.2` doe
 ### Summary
 
 The refusal ships from kc-dev-flow itself: `check-pr-title.py` self-tests against a committed release-please oracle fixture (captured from the real `17.3.0` parser installed under `scripts/fixtures/release-please-runtime`) before deciding, and the extension chains it ahead of draft presentation and PR creation for every delivery unit. The contract test's drift comparison is now bounded at the `:end` marker, closing the "nowhere to put an adopter rule" gap the work item opened with; both AC-3 mutations were observed running, not asserted. Residual, not a defect: AC-2's mutation falsifier reddens via the checker's own self-test (exit 2, naming the disagreeing row) rather than the silent exit-0-then-caught-later shape the AC's wording describes -- stronger, not weaker, and consistent with the fail-closed design the ideation stage anticipated. Already-recorded known limit, unchanged by this stage: a coordinated edit to both the fixture row and the checker's grammar passes both the self-test and the process test; only re-running `capture-oracle.cjs` against live release-please catches that, which is why the `.cjs` ships as a resource rather than a throwaway script.
+
+## FO note to validation — one finding from the first officer's own check
+
+Raised by the FO while falsifying the build's drift claim, 2026-09-13. Not a
+rejection: all three mutations behaved correctly (in-block edit exit 1 naming
+byte 1216; append after `:end` exit 0; released-body edit exit 1 naming
+`pr_merge_released_body.sha256`). Validation owns the judgment on this.
+
+The new prose quotes the closing marker inline, backtick-wrapped, at
+`docs/dev/_mods/pr-merge.md` line 132 and `kc-dev-flow/references/pr-merge-extension.md`
+line 14. The file therefore contains two occurrences of the marker text and one
+occurrence of the marker followed by a newline.
+
+`scripts/kc-dev-flow-contract-test.py` is safe: its constant is the
+newline-terminated form and it requires exactly one. A consumer that splits on
+the bare marker text is not — the FO's own first attempt did exactly that and
+silently measured a 715-character block instead of 26184, a 3% read that raised
+no error. `skills/adopt-dev-flow/SKILL.md` instructs an adopter to write the
+resource "between the markers" without stating which occurrence terminates it,
+and `spacedock-dev/subspace-relay` is the next repository that will follow that
+instruction.
+
+Two readings, and validation should pick one rather than inherit both: the
+inline quotation is safe because every implementation must use the
+newline-terminated form, in which case the skill should say so; or the marker
+should not appear inline at all.
