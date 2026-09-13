@@ -13,7 +13,7 @@ verdict:
 worktree: .worktrees/spacedock-ensign-pr-merge-extension-has-no-adopter-seam
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 id: 2f5a8kg1qwc5ba8jg3mcfjjw
 gates:
     version: 1
