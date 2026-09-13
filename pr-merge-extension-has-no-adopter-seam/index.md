@@ -57,13 +57,13 @@ gates:
                 target-stage: implementation
                 state: consumed
 review-round:
-    id: round:2f5a8kg1qwc5ba8jg3mcfjjw:validation:1
+    id: round:2f5a8kg1qwc5ba8jg3mcfjjw:validation:2
     stage: validation
-    cycle: 1
+    cycle: 2
     briefing:
-        id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:round-1
-        digest: sha256:32323abc7129f7a8aad46edf519e848c68176b5977fc8f2e1ea5a1cf38ad510e
-        room-ref: ./review/validation/round-1
+        id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:round-2
+        digest: sha256:e92cfd03cce53f7a9f3d7747353227ed2e4b3925a91616f2898fa57a57416d84
+        room-ref: ./review/validation/round-2
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
@@ -808,6 +808,31 @@ only its heading and not the observation two shipped resources attribute to it. 
 one implementation correction round touching `references/pr-merge-extension.md`,
 `skills/adopt-dev-flow/SKILL.md`, and `scripts/kc-dev-flow-contract-test.py`, each with a ruling
 rather than a pair of options.
+
+### Feedback Cycles
+
+- Cycle 2: REJECTED — fresh validation at candidate `17915d9e`; all four acceptance
+  criteria passed again and cycle 1's load-failed item closed, so the rejection was
+  once more about adopter-facing bytes and not about the criteria. Two of the three
+  findings were introduced by cycle 1's own fixes. F1 is a regression against this
+  work item's purpose: the bare marker-count check counted over the whole file and
+  sat before the block boundary was computed, so adopter prose after `:end`
+  mentioning the marker exited 1 — the contract test forbade exactly the region
+  this work exists to declare. **The FO's own cycle-1 repair scope caused it by
+  naming the check's placement and not its bound.** F2: the version-skew remedy
+  command is unrunnable from an adopter checkout, ruled deleted in favour of stop
+  and report upstream. F3: two shipped fixture files cite an agreement that was
+  true but recorded nowhere. Corrected at `d3b047d7`: 10 files, 527 gross lines, 47
+  in the contract test, against 13 / 700 / 60. The FO re-verified F1 in both
+  directions rather than accepting the report — post-`:end` prose quoting the
+  marker exits 0, an in-block quotation still exits 1 — and confirmed the released
+  body still matches its pin at 10551 bytes and the synced block is byte-identical
+  to the resource at 27581.
+- Cycle 2 also carried a near-miss worth keeping: a concurrent mutation-test run
+  raced the implementation commit and landed two temporary lines in
+  `docs/dev/_mods/pr-merge.md` at `42bfa578`. The worker caught it by re-diffing
+  before declaring done and removed them at `d3b047d7`. This is the third time in
+  this item that chaining mutate, run and revert in one command cost something.
 
 ## Stage Report: implementation (cycle 3)
 
