@@ -56,6 +56,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+review-round:
+    id: round:2f5a8kg1qwc5ba8jg3mcfjjw:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:round-1
+        digest: sha256:32323abc7129f7a8aad46edf519e848c68176b5977fc8f2e1ea5a1cf38ad510e
+        room-ref: ./review/validation/round-1
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
