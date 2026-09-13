@@ -10,6 +10,9 @@ const LEFT_W = 250
 const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
+const STORY_W = 200
+const STORY_H = 200
+const QUESTION_GAP = 10
 const GAP = 40
 
 export const STORY_PAGE_ID = 'page:page'
@@ -162,26 +165,35 @@ export function buildStoryMap(model, room = null, progress = null) {
 			list.push(story)
 			perColumn.set(story.step.id, list)
 		}
+		// Beside the card puts the question in the next column's lane, where that column's
+		// card covers it and the surviving sliver reads as the neighbour's question.
+		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
+		const columns = [...perColumn.values()]
+		const rowTop = [bandTop]
+		for (let j = 0; j < rows; j++) {
+			const q = Math.max(0, ...columns.map((l) => (l[j]?.question ? fitHeight(l[j].question, STORY_W) : 0)))
+			rowTop.push(rowTop[j] + STORY_PITCH + (q ? q + QUESTION_GAP : 0))
+		}
+
 		for (const [stepId, list] of perColumn) {
 			const i = steps.findIndex((s) => s.id === stepId)
 			list.forEach((story, j) => {
 				const x = X0 + i * PITCH
-				const y = bandTop + j * STORY_PITCH
+				const y = rowTop[j]
 				put.push({
 					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
 					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 				})
 
 				if (story.question) {
-					const w = 200
 					put.push({
 						...label({
 							id: `shape:sm-story-question-${story.id}`,
 							text: `? ${story.question}`,
-							x: x + 210,
-							y,
-							w,
-							h: fitHeight(story.question, w),
+							x,
+							y: y + STORY_H + QUESTION_GAP,
+							w: STORY_W,
+							h: fitHeight(story.question, STORY_W),
 							index: ix[n++],
 							parentId,
 							color: 'violet',
@@ -194,8 +206,8 @@ export function buildStoryMap(model, room = null, progress = null) {
 			})
 		}
 
-		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
-		bandTop += progress ? Math.max(rows * STORY_PITCH, fitHeight(text, LEFT_W)) : rows * STORY_PITCH
+		const bandH2 = rowTop[rows] - bandTop
+		bandTop += progress ? Math.max(bandH2, fitHeight(text, LEFT_W)) : bandH2
 	})
 
 	;(model.ownership ?? []).forEach((band, i) => {
