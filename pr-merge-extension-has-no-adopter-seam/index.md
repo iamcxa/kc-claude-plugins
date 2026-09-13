@@ -25,7 +25,7 @@ gates:
               briefing:
                 id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:attempt-1:revision-1
                 digest: sha256:e7c2a8e136175ae56326a860fa6d3f28da6973585f4e01dcdd041c0c4fcc081e
-                room-ref: ./pr-merge-extension-has-no-adopter-seam/review/backlog/briefing-1
+                room-ref: ./review/backlog/briefing-1
               resolution:
                 type: Resolution
                 id: resolution:spacedock:2f5a8kg1qwc5ba8jg3mcfjjw:backlog:1
@@ -44,7 +44,7 @@ gates:
               briefing:
                 id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:attempt-1:revision-1
                 digest: sha256:65f226cf1272408f974a5546994262f2a4e203b47e7961729b560b223b929e97
-                room-ref: ./pr-merge-extension-has-no-adopter-seam/review/ideation/briefing-1
+                room-ref: ./review/ideation/briefing-1
               resolution:
                 type: Resolution
                 id: resolution:spacedock:2f5a8kg1qwc5ba8jg3mcfjjw:ideation:1
@@ -654,6 +654,23 @@ acceptance criteria, and route to one implementation correction round touching
 environment reasons only: the machine reached load average 509 with a 10h-hung suite from an earlier
 stage in the same worktree, so the battery-abort observation could not be completed in three attempts;
 the candidate worktree is clean and unmodified after each.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation at candidate `019e4715`; all four acceptance
+  criteria passed and three adopter-facing prose defects blocked Draft creation, so
+  the rejection was never about the criteria. Findings routed to `implementation`
+  unchanged: F1 (the extension quotes its own closing runtime-extension marker
+  inline while `adopt-dev-flow` step 7 instructs a text-search sync, so an obeying
+  agent writes 14 lines instead of 477), F2 (no version-skew stop condition, so the
+  self-test proves agreement with its own committed fixture and never with the
+  adopter's parser), F3 (two shipped fixture files cite a section that exists only
+  in this entity's `## Shape`, which no adopter receives). One validation item
+  failed on host load rather than on the candidate and was routed with them.
+  Corrected at `17915d9e`: 10 files, 516 gross lines, 44 in the contract test,
+  against stop numbers 13 / 700 / 60. F1's fix carries an enforcement point rather
+  than a convention — the FO re-quoted the marker inline at the corrected candidate
+  and the contract test exits 1 naming it.
 
 ## Stage Report: implementation (cycle 2)
 
