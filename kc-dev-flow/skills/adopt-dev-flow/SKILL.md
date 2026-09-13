@@ -177,9 +177,10 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    states the declared precedence for that region against the marked block.
    The title refusal's self-test is grounded only against the fixture's
    captured release-please version; when the repository's own release-please
-   version differs, re-derive the fixture as `pr-merge-extension.md`'s
-   "The title rule's oracle" section directs before trusting a green
-   self-test. A missing delivery authority is a refit requirement. Do not classify its
+   version differs, stop and report the skew upstream to `kc-dev-flow`
+   rather than trusting a green self-test or re-deriving the fixture
+   locally, as `pr-merge-extension.md`'s "The title rule's oracle" section
+   directs. A missing delivery authority is a refit requirement. Do not classify its
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release
    owner, and stop before delivery until the repository names that authority.

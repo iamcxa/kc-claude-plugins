@@ -340,16 +340,19 @@ before it evaluates any real title -- see the fixture's own header for the
 release-please version and date it was captured from. The self-test proves
 only that the checker agrees with that captured version; it says nothing
 about whatever release-please version an adopter's own pipeline actually
-runs.
+runs. Captured 2026-09-12 from release-please `17.3.0`; the same 13 rows were
+separately re-derived against `17.11.1` -- the version `subspace-relay` pins
+-- on 2026-09-12, and all agreed.
 
-**Version-skew stop condition.** Before trusting a green self-test, confirm
-the adopter's installed release-please version matches the fixture's
-captured version. On a mismatch, or on a reported adopter skew, re-derive the
-fixture against the adopter's own installed parser rather than assuming
-agreement across versions:
-
-    node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs > \
-      kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv
+**Version-skew stop condition.** A mismatch between the adopter's installed
+release-please version and the fixture's captured version, or a reported
+adopter skew, is a stop, not a skip: do not trust the self-test and do not
+re-derive the fixture from an adopter checkout. `capture-oracle.cjs`'s own
+comment states its runtime lives at this repository's root, not under the
+installed `kc-dev-flow` package, so an adopter checkout cannot run it --
+re-derivation is structurally a `kc-dev-flow` maintainer action. Report the
+skew upstream to `kc-dev-flow` instead of assuming agreement across
+versions.
 
 ### Delivery topology decision
 
