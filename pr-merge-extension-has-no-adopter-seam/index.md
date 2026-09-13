@@ -898,7 +898,8 @@ Closed all three validation-cycle-2 findings with the rulings the validator spec
 findings are closed in the shipped bytes, both directions of the F1 regression re-verified here
 rather than accepted from the report.** The real worktree is clean at `d3b047d7`; every mutation
 ran in a throwaway `git archive` tree, so this round's process could not repeat the leak that cost
-`42bfa578`. Four residuals a Draft PR can carry, none of which changes an adopter's behaviour:
+`42bfa578`. Three residuals a Draft PR can carry, none of which changes what a correctly-behaving adopter
+does:
 
 1. **"this repository's root" is ambiguous in an adopter's own copy.** The oracle section explains
    that `capture-oracle.cjs`'s runtime "lives at this repository's root" -- read inside
@@ -913,12 +914,13 @@ ran in a throwaway `git archive` tree, so this round's process could not repeat 
    table is exactly the adopter-owned post-`:end` region this work item exists to declare, so the
    answer it meets is the declared one rather than silence -- which is the accepted outcome, not a
    gap against it.
-3. **Stop-number accounting differs by the deletions.** Implementation cycle 3 and validation
-   cycle 2 both reported 527 / 47; counting deletions as the section's "additions + deletions"
-   directs gives 529 / 48. Neither reading crosses 700 or 60.
-4. **Shape's Captain-owned question is still open by design** -- whether an adopter may substitute
-   its own equivalent checker, and what would have to be true for the substitute to count. Shape
-   placed it out of this slice; nothing in this round changes that.
+3. **A duplicated full `:end` marker line in the adopter region is refused, and should be.** This
+   item added the end-marker uniqueness require; it counts over the whole file, so an adopter that
+   reproduces the complete marker line below `:end` -- rather than the bare text, which passes --
+   exits 1 "runtime extension end marker is not unique". Observed in an isolated tree at the
+   candidate. Not a finding and not a fifth instance of F1: marker identity is what the next sync
+   slices the block by, so a second copy would break it, and both the extension and `SKILL.md`
+   scope their promise to the drift comparison rather than to the whole contract test.
 
 ### Summary
 
@@ -931,4 +933,6 @@ The two rejections before this one were both about adopter-facing bytes rather t
 this round found nothing in that class that changes what an adopting agent does. The process defect
 that caused three separate accidents in this item was removed rather than re-warned -- every
 mutation ran in its own disposable `git archive` tree, and the real worktree was never written to,
-so it stands clean at `d3b047d7`.
+so it stands clean at `d3b047d7`. One Captain-owned question shape deliberately left out of this
+slice is still open and unchanged by this round: whether an adopter may substitute its own
+equivalent checker, and what would have to be true for the substitute to count.
