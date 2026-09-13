@@ -566,3 +566,85 @@ Two readings, and validation should pick one rather than inherit both: the
 inline quotation is safe because every implementation must use the
 newline-terminated form, in which case the skill should say so; or the marker
 should not appear inline at all.
+
+## Stage Report: validation
+
+- DONE: exact-revision journey evidence
+  Candidate `019e4715`, base `7b103a10`. Journey step 4 driven through the real seam with `gh pr create` replaced by `echo would-create`: the released `**Title:** {entity title}` substitution (this work item's own title) exits 1 and the create command is never reached; `fix(kc-dev-flow): ship the pr-merge title refusal from kc-dev-flow itself` exits 0 printing `fix` and the create line runs. Checker invoked from a cwd outside the worktree, so `__file__`-relative fixture resolution is exercised, not assumed.
+- DONE: AC-1 -- reachability plus released-body pin at the candidate
+  Rebuilt an adopter mod as pinned released body + verbatim extension: byte-identical to `docs/dev/_mods/pr-merge.md`, released-body sha256 `ea187ab4...` == `contract-manifest.json` `pr_merge_released_body.sha256` at 10551 bytes. Falsifier run at the candidate: one byte appended inside the pre-marker body -> exit 1 naming `pr_merge_released_body.sha256` and the 10551/10552 byte counts. Reverted, tree clean.
+- DONE: AC-2 -- refusal checker exercised as a process, both falsifier kinds, and the implementation's residual closed
+  `refusal`: exit 1 on a non-conventional sentence, exit 2 on a checker copied without its `fixtures/` sibling, exit 2 on a missing argument. `mutation` at two layers -- dropping the empty-scope condition alone reddens via self-test (exit 2 naming `'feat(): x'`); dropping it *and* bypassing the self-test reddens the per-row process assertion with `'feat(): x': expected exit 1, got 0` and no other row. That second layer is what implementation recorded as a residual; it is now measured, and the AC's literal falsifier holds. Both mutations were run on an isolated copy; the candidate worktree was never mutated for AC-2.
+- DONE: AC-3 -- contract test bounded at :end, both mutations re-observed at the candidate
+  One byte inside the marked block -> exit 1 naming byte 15745 and both paths; `## The title rule (adopter-added probe)` appended after `:end` -> exit 0; baseline exit 0. Reverted after each, `git status --short` empty.
+- DONE: AC-4 -- subspace-relay rebuild at the pinned SHA, behaviours listed
+  Relay's `docs/dev/_mods/pr-merge.md` read from `git show 3b8f233:` (153 lines, no extension markers). Rebuild retains: the title rule (different mechanism -- `check-pr-title.py` replaces `node scripts/check-pr-title.ts`), the split-root audit link (`### Split-root audit-link correction` resolves the entity path through `spacedock status --resolve`, so relay's `{slug}/index.md` layout works without adopter prose), and the PR body template. Not retained, and corrected against implementation's account: relay's `### Fallback: no PR host available` is about `gh`/push *failing*, while the pinned body's `## Delivery without a PR` is about entities that produce *no diff* -- different conditions, not a substitution. The rebuild's answer to relay's condition is `#### Local failure-policy override`: stop, do not fall back to local merge. Relay's README at `3b8f233` declares only `state:` and `trunk:`, no `merge: local`, so implementation's "where relay declares a `merge: local` policy" is inaccurate; the behaviour change stands, its stated reason does not.
+- DONE: the oracle fixture re-derived from the live parser, not trusted
+  `node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` against release-please `17.3.0` installed under `scripts/fixtures/release-please-runtime`: all 13 data rows identical to the committed TSV; the only diff is the capture date in the header. Self-test and process test both read that TSV, so this is the only step that grounds it.
+- DONE: retry/recovery, duplicate, diagnostic, and data-safety results that apply
+  Recovery: the refusal is idempotent -- re-running after a corrected subject is the whole recovery path, and it fires before the first push, so no partial state exists. Diagnostics: exit 1 prints the rejected title; exit 2 prints which condition could not be decided (unreadable fixture, self-test disagreement naming the row, or bad usage). Data safety: the title crosses no shell interpolation, the checker has no network and no filesystem write. Duplicate handling: not applicable -- the checker holds no state.
+- DONE: delivery base decision (`delivery-branch-base.md`)
+  No open artifact shares this candidate's lineage: no reliance on unmerged behaviour. PR #321 (`fix/kc-dev-flow-adoption-correctness`, not draft) shares three files -- `kc-dev-flow/MIGRATION.md`, `kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `scripts/kc-dev-flow-contract-test.py` -- in disjoint sections. `git merge-tree --write-tree abbe9269 HEAD` conflicts only on `docs/dev/_mods/profile-contract-loader.py`, a file this candidate does not touch. Recommend trunk base with that textual overlap recorded; the topology ruling is `pr-merge`'s `### Delivery topology decision`, not this stage's.
+- DONE: stop numbers re-measured at the candidate
+  `git diff --stat origin/main...HEAD` (three-dot, since `origin/main` moved to `e0826132`): 10 changed files (limit 13), 462 gross changed lines (limit 700), 36 changed lines in `scripts/kc-dev-flow-contract-test.py` (limit 60). None crossed.
+- DONE: remaining production obligations and promotion triggers
+  None crossed. No production credential, data, irreversible migration, unattended operation, or SLO duty. Consumers absorb this by taking the new plugin version; `local_profile_interface` is untouched, so no adopter Local Profile refit. `MIGRATION.md` carries the release obligation.
+- SKIPPED: when the receipt declares `semantics_unchanged: true`, the named `equivalence_instrument` observed to fail against `equivalence_instrument_failure`, the case it must flag
+  The work profile receipt declares `semantics_unchanged: false`, so the clause does not apply.
+- SKIPPED: provider feedback disposition when a delivery artifact exists
+  No delivery artifact exists. `gh pr list` shows no PR for `spacedock-ensign/pr-merge-extension-has-no-adopter-seam`; entity `pr:` is empty. Draft creation is Captain-authorized through `pr-merge` and has not been reached.
+- FAILED: observe the full contract-test battery abort because `check-pr-title.test.py` failed
+  Three attempts, none completed: the machine reached load average 509 with 188 defunct processes and a separate `kc-dev-flow-contract-test.py` hung 10h+ in the same worktree from an earlier stage. Runs timed out at 400s and 1500s and were killed; the mutation was reverted each time and `git status --short` is empty. What is established instead: the full non-ablation suite exits 0 at the candidate; the battery entry `run([sys.executable, "kc-dev-flow/scripts/check-pr-title.test.py"], "PR title check")` sits inside the `not require_ablation_only` block and `run()` raises through `require()` on a non-zero exit; and that exact command, from the same ROOT cwd, is green clean and red under mutation. Unproven: that the battery reaches the entry at runtime.
+
+### Findings
+
+Three defects in bytes that ship to adopters. None falsifies an acceptance criterion; together they
+block Draft creation, because `spacedock-dev/subspace-relay` is the next repository to run the sync
+and all three land in its checkout. All three touch the same two files and belong in one correction
+round.
+
+1. **The extension quotes its own closing marker inline, and the sync instruction is a text search.**
+   `references/pr-merge-extension.md` line 14 and the synced `docs/dev/_mods/pr-merge.md` line 132
+   carry the `:end` marker text backtick-wrapped. `skills/adopt-dev-flow/SKILL.md` step 7 tells an
+   adopter to write the resource "verbatim between its `:start` and `:end` markers" -- a prose
+   instruction, not a script. An agent obeying it with a bare text search stops at the first
+   occurrence and writes 14 lines instead of 477. The first officer's own tool already produced that
+   shape: 715 characters read instead of 26184, silently. **Ruling: remove the inline quotation**
+   ("after this file's own closing runtime-extension end marker" loses no meaning). The alternative
+   -- keep it and document the newline-terminated form in the skill -- is wording against a failure
+   shape that has already repeated, and leaves the hazard in every adopter's file.
+   `scripts/kc-dev-flow-contract-test.py` itself is safe: its constant is newline-terminated and it
+   requires exactly one. Worth the FO's judgment as part of the same round: a
+   `pr_merge_mod.count("<!-- kc-dev-flow runtime extension:end -->") == 1` require on the *bare*
+   form, beside the existing newline-form uniqueness check, turns "never quote it inline" into an
+   enforcement point instead of a convention -- about four lines, well inside the 60-line stop number.
+2. **The extension never names the version-skew stop condition the design depends on.**
+   `grep -nE 'skew|17\.3|17\.11|capture-oracle|fixture|re-derive|release-please-verdicts'` over
+   `references/pr-merge-extension.md` and `skills/adopt-dev-flow/SKILL.md` returns nothing. Shape's
+   `### The title rule's oracle` states "a version skew between an adopter's release-please and the
+   captured fixture is a stop condition the extension names"; the shipped extension names no such
+   condition. The self-test proves only that the checker agrees with its own committed TSV, never
+   with the adopter's parser, so an adopter on a newer release-please gets a confident green from a
+   stale oracle with no instruction telling them when to re-derive.
+3. **Two shipped resources cite a section that does not exist.**
+   `scripts/fixtures/pr-title/release-please-verdicts.tsv` (header) and
+   `scripts/fixtures/pr-title/capture-oracle.cjs` (comment) both point at
+   `kc-dev-flow/references/pr-merge-extension.md`, "The title rule's oracle". That section exists
+   only in this entity's `## Shape`, in the split-root state checkout, which no adopter receives.
+   This is the same gap as finding 2 seen from the other end: fixing 2 gives these citations a real
+   target.
+
+### Summary
+
+All four acceptance criteria pass at candidate `019e4715`, each with its falsifier observed running
+at that revision rather than carried over from implementation, and AC-2's residual is closed by
+measurement: with the self-test bypassed, the per-row process assertion reddens on `feat(): x` alone,
+exactly as the AC words it. The oracle fixture was re-derived from the live release-please `17.3.0`
+parser and matches on all 13 rows, so the committed TSV is grounded rather than trusted. Three prose
+defects in adopter-facing bytes -- the inline `:end` marker quotation, the absent version-skew stop
+condition, and two resources citing a section that does not exist -- block Draft creation but not the
+acceptance criteria, and route to one implementation correction round touching
+`references/pr-merge-extension.md` and `skills/adopt-dev-flow/SKILL.md`. One item is FAILED for
+environment reasons only: the machine reached load average 509 with a 10h-hung suite from an earlier
+stage in the same worktree, so the battery-abort observation could not be completed in three attempts;
+the candidate worktree is clean and unmodified after each.
