@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: 1s5dc7neg6fvv1vskbq195hg
+gates:
+    version: 1
+    records:
+        - id: gate:1s5dc7neg6fvv1vskbq195hg:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:1s5dc7neg6fvv1vskbq195hg-backlog-1
+              briefing:
+                id: briefing:1s5dc7neg6fvv1vskbq195hg:backlog:attempt-1:revision-1
+                digest: sha256:8451943bb1d44e2eb6f39ae76814c9a7538199589fa31ad5f3ee55d08a88568b
+                room-ref: ./capture-oracle-never-caught-anything/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:1s5dc7neg6fvv1vskbq195hg:backlog:1
+                briefing: briefing:1s5dc7neg6fvv1vskbq195hg:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T06:35:34.73052Z"
+                decision: approve
+                reason: 'Captain instructed in chat 2026-09-14: 開移除單且立即執行 — open the removal task and run it immediately, after the FO produced the usage record showing three runs and zero bites and withdrew its own keep recommendation. The FO selected poc-exploration under that instruction and records it as overrulable to Pilot at the cost of one stage.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 PR #433 shipped `kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` as a

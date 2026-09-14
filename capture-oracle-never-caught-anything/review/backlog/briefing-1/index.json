@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:1s5dc7neg6fvv1vskbq195hg:backlog:attempt-1:revision-1",
+  "question": "Admit this removal into implementation at poc-exploration, with AC-1..AC-4 and the four non-goals as written?",
+  "artifacts": [
+    {
+      "id": "artifact:1s5dc7neg6fvv1vskbq195hg:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/113f5c8712f796a98504ea777ba7689bf539ec77/capture-oracle-never-caught-anything.backlog-review.md",
+      "rev": "sha256:5c0d9333e199fa8e98e4e1a25e012dd39c4e61077faec5c2cde2474138f6ea67",
+      "mediaType": "text/markdown",
+      "summary": "capture-oracle.cjs has three recorded runs and zero findings; the bite that motivated the design predates the file. Eight tracked references in six files. Removal only; the checker, the fixture rows and the stop condition are untouched."
+    }
+  ]
+}
