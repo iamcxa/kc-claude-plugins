@@ -275,3 +275,106 @@ reasoning: >-
   kc-dev-flow specification, tag alignment where cheap), that is a `change`-shaped follow-up, not a
   `proceed` this record supports.
 ```
+
+## Stage Report: validation
+
+- DONE: Recount the 22-item corpus and the 10-invented figure from the named revisions.
+  Re-derived the corpus independently: checked out `spacedock-state/dev@0daaab3db1415ec2259784c9b18b21c9940721a2`
+  into an isolated worktree and re-ran `spacedock status --workflow-dir <pinned> --json --fields
+  slug,status,sprint,product,title --limit 0` (94 total, 22 matching `product in
+  {kc-journey-map, kc-dev-flow}` and `status != done` — same corpus). The 12-bind / 10-invented /
+  3-strictly-worse split matches the implementation stage's table item-for-item, including the S7/S8
+  bare-Linear-link vs S9 real-prose distinction (confirmed against `docs/dev/ROADMAP.md` at
+  `origin/main@0bbf6233`). **One supporting claim is wrong and I would classify it differently.**
+  `poc-roadmap.md` states "zero live non-terminal items are currently stamped with those four
+  ordinals [S1, S2, S4, S5]" to argue release-shaped ROADMAP prose isn't actually attached to live
+  items. It is wrong: `show-release-stories-on-journey-boards` and `derive-release-story-progress`
+  both carry `sprint: S1`, `product: kc-journey-map`, and `kc-journey-map`'s own `### Sprint S1 —
+  inspect release stories with honest evidence states` heading (ROADMAP.md ~L454) does carry
+  release-shaped prose. This does not change the 12/10/3 count — both items were already counted in
+  the 12 "bound" group via content-match to journey release r2, not via the S1 heading, so the
+  outcome arithmetic is unaffected. What it does surface: `kc-dev-flow` and `kc-journey-map` each
+  independently number their own `S1`/`S2`/etc., stored as the bare string `S1` with no product
+  prefix in most entries (only the `S10` items use a `kc-dev-flow/`-prefixed form) — an ordinal
+  collision risk across products that is itself evidence for, not against, one of the problem
+  statement's own premises. Net: the recount confirms the headline figures and finds one overstated
+  supporting sentence that, corrected, does not move the verdict.
+- DONE: Test the finding on a second corpus.
+  Two adopter repos with a `docs/dev` workflow exist on this machine. `carlove-v1` has no
+  `docs/dev/.spacedock-state` yet (still on `TASK-TEMPLATE.md`, pre-spacedock) and could not run the
+  same classification. `subspace-v0` (`/Users/kent/conductor/repos/subspace-v0`) has
+  `docs/dev/.spacedock-state` with a `sprint:` field on its entities. Read all 122 entity files
+  directly (no `spacedock` binary run needed — parsed frontmatter): 107 non-terminal (`status !=
+  done`), of which **92 (86%) carry no `sprint` value at all** — a higher invented/unlabeled rate
+  than this repository's 45%, under the *existing* sprint mechanism, before any release contract is
+  even proposed. `subspace-v0` has no `ROADMAP.md`, no sprint-ordinal headings, and no
+  `docs/journey/` directory — the release-contract/journey-binding half of this POC (AC-2, AC-3) has
+  no analog there at all; only the grouping-rate half is comparable. Verdict: the grouping-rate
+  finding **holds and is not specific to this repository's roadmap habits** — a sibling repo shows
+  the same gap in starker form under the mechanism already in use, which argues that low grouping
+  rates are a practice problem independent of which mechanism (sprint or release) is chosen, not an
+  artifact of `kc-claude-plugins`' particular ROADMAP prose habits.
+- DONE: Separate the grouping-rate finding from the tag-binding finding and state which carries the
+  `stop`.
+  The **grouping-rate finding carries the `stop`**: only 1 of the 12 "bound" items (`dev-94`, S9)
+  binds to a ROADMAP heading with real release-shaped prose the corpus's own author would recognize
+  as a release description; the rest bind to a bare Linear-project link or a captain-named group
+  never written as a heading at all. Combined with only 3 of 22 items (14%) being strictly worse off
+  under a release contract than under the sprint ordinal today, this is a "no net benefit shown"
+  result — the burden was on the new mechanism to demonstrate improvement over the incumbent, and it
+  did not, independent of tags. The **tag-binding finding does not independently carry a `stop`**:
+  the POC's own falsifier's strong form ("no drafted release can be bound to the cut tags") did not
+  trigger on either `kc-journey-map-v0.2.0` or `-v0.2.1` — both bind approximately, by majority PR
+  content, not to nothing. The gap named ("no check today would catch a tag naming nothing") is a
+  missing automated check, not a structural impossibility. A tag-binding design that never claimed
+  1:1 tag-to-release equality — e.g. a many-to-many release↔tag mapping with a lint that flags a
+  commit whose scope doesn't match any story in its claimed release, rather than asserting exactly
+  one tag per release — is not falsified by this evidence and would survive it; it would still need
+  the not-yet-built check before "aligns with the real tag" could be trusted rather than hand-matched
+  as done here. If Kent wants the release route specifically to fix loose tag alignment, that
+  redesign is the shape to bring back, not this record's literal 1:1 claim.
+
+### Summary
+
+Independent recount confirms the implementation stage's headline figures (22-item corpus, 12
+bound / 10 invented / 3 strictly worse) hold at the named revisions, with one overstated supporting
+sentence (a false "zero items stamped S1/S2/S4/S5" claim) that does not change the count once
+corrected. A second corpus (`subspace-v0`, the only other on-machine repo with a spacedock-state
+`docs/dev` workflow) shows a worse grouping rate (86% unlabeled) under the existing sprint mechanism
+alone, before any release contract — the low-grouping-rate finding is not an artifact of this
+repository's roadmap habits. The `stop` is carried by the grouping-rate finding (no net benefit
+shown against the incumbent sprint ordinal), not by the tag-binding finding, whose falsifier did not
+trigger and which would survive a redesign that never claims 1:1 tag equality. Validation confirms
+`poc_outcome: stop`; recommend Kent's ruling stand as recorded, with the corrected S1/S2/S4/S5
+sentence noted for anyone re-reading `poc-roadmap.md`.
+
+Revision read: same as implementation — `kc-claude-plugins origin/main@0bbf6233831543b8e8874a44a73b4868f6a1ed50`,
+`spacedock-state/dev@0daaab3db1415ec2259784c9b18b21c9940721a2`. Second-corpus revision:
+`subspace-v0` local checkout at `/Users/kent/conductor/repos/subspace-v0`, `docs/dev/.spacedock-state`
+working tree read directly (122 files) on 2026-09-14; no separate pin taken since the repo is not
+part of this POC's scope boundary and the count is a one-off comparison, not a tracked claim.
+
+```yaml
+validation_outcome: confirms poc_outcome: stop
+recount:
+  corpus_count: 22
+  bound_count: 12
+  invented_count: 10
+  strictly_worse_count: 3
+  discrepancy_found: >-
+    poc-roadmap.md's "zero live items stamped S1/S2/S4/S5" claim is false — 2 kc-journey-map items
+    carry sprint: S1 and kc-journey-map's own S1 heading carries release-shaped prose. Does not
+    change the 12/10/3 count; both items were already counted as bound via journey-release
+    content-match, not via the S1 heading.
+second_corpus:
+  repo: subspace-v0
+  non_terminal_count: 107
+  no_sprint_value_count: 92
+  no_sprint_value_rate: 86%
+  release_contract_analog: none (no ROADMAP.md, no journey file — only grouping-rate half is comparable)
+  verdict: grouping-rate finding holds and replicates in starker form; not specific to this repo's roadmap habits
+claim_separation:
+  carries_the_stop: grouping-rate finding (no net benefit vs incumbent sprint ordinal)
+  does_not_independently_carry_the_stop: tag-binding finding (falsifier's strong form did not trigger; gap is a missing check, not a structural impossibility)
+  survives_redesign: a many-to-many tag-to-release binding with a scope-drift lint, never claiming 1:1 tag equality, is not falsified by this record
+```
