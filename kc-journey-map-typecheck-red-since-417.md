@@ -77,3 +77,40 @@ silence the error.
 * **AC-4** The added CI cost is stated as a measured number from the job's own timing, not an
   estimate.
 * **AC-5** `node --test lib/*.test.mjs` and `bash scripts/canvas-smoke.sh` still pass.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    The typecheck has been red since #417 and no check reported it, so the
+    repair is small but its guard must be proven by a real pull-request check
+    turning red on a reverted fix. That is an evidence round, not a one-shot
+    exploration. Scope stays inside kc-journey-map's own build tooling; no
+    consumer migrates and no production surface changes.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Type lib/records.mjs at its real exported shape; do not loosen tsconfig to pass.
+      - Keep lib as JavaScript; a declaration or JSDoc, not a TypeScript conversion.
+    implementation:
+      - npx tsc exits 0 on kc-journey-map.
+      - A named npm script runs the typecheck.
+      - kc-journey-map-tests.yml runs that script as a step.
+    testing:
+      - A call violating storyBorder's declared type fails tsc.
+      - Reverting the declaration fix reddens the CI step in a pull request.
+      - Existing model tests and canvas-smoke.sh still pass.
+      - The added CI cost is a measured number from the job's own timing.
+  scope_boundary: >-
+    kc-journey-map declaration typing and its typecheck CI step only. Excludes a
+    TypeScript conversion of lib, a production bundle step, a browser job, and
+    any change to PR #440 or the Mermaid sequence companion.
+  semantics_unchanged: true
+  promote_when:
+    - The fix requires consumers to change configuration or migrate records.
+    - The CI step is extended to gate anything beyond this package's typecheck.
+```
