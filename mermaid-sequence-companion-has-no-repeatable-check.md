@@ -15,6 +15,17 @@ issue:
 pr: 440
 mod-block:
 id: n2wd7aavte2k7p7nfj3aa2r5
+gates:
+    version: 1
+    records:
+        - id: gate:n2wd7aavte2k7p7nfj3aa2r5:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:n2wd7aavte2k7p7nfj3aa2r5-backlog-1
+              briefing:
+                id: briefing:n2wd7aavte2k7p7nfj3aa2r5:backlog:attempt-1:revision-1
+                digest: sha256:2d069b2db454bc8c7f6aa33b3e2577251b43b5a1bb81bec8668108c36e6578ba
+                room-ref: ./mermaid-sequence-companion-has-no-repeatable-check/review/backlog/briefing-1
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid

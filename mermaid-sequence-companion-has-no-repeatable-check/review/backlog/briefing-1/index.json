@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:n2wd7aavte2k7p7nfj3aa2r5:backlog:attempt-1:revision-1",
+  "question": "Admit this POC to run one independent verification of PR #440's Mermaid sequence companion at cfb804d, so the journey map can use Mermaid?",
+  "artifacts": [
+    {
+      "id": "artifact:n2wd7aavte2k7p7nfj3aa2r5:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ac97bfd4f04d3cd8210430c26b4c07392dba1cad/mermaid-sequence-companion-has-no-repeatable-check.md",
+      "rev": "sha256:9e345140ce8f77a542b88eba93e546bf8c1f960cdb9ddc7c8daaa7a28734706d",
+      "mediaType": "text/markdown",
+      "summary": "The committed seed is the reviewed artifact: backlog is the initial stage, so no prior stage report exists. PR #440 adds addSequencePage, @tldraw/mermaid 5.4.0, sequence-smoke.mjs and references/sequence.md, and no check in this repository touches any of it — kc-journey-map-tests.yml is server- and model-side only, tsconfig is never invoked, package.json has no build or typecheck script, and the browser smoke needs agent-browser plus hand-started services. Every validation line in the PR body is author-run. This POC runs the checks once at the pinned head cfb804d and reports a receipt; CI wiring was removed from the first draft when the Captain selected POC and is carried as a residual. AC-1..AC-5 cover typecheck with a falsifying mutation, production bundle plus measured Mermaid chunk weight, the seven-assertion browser smoke on isolated services, three tldraw/@tldraw-mermaid symbols cited by symbol, and the SKILL.md dropped-trigger disposition."
+    }
+  ]
+}
