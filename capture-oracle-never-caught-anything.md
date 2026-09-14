@@ -133,3 +133,18 @@ work_profile:
 ### Summary
 
 Removed `capture-oracle.cjs` and seven of its eight tracked references (manifest, both contract-test expected-resource sets, the oracle section's resource and synced mod), keeping the checker, every fixture row, and the released-body pin byte-for-byte unchanged; all four independently-runnable checks pass. The eighth reference — the regeneration-command comment inside `release-please-verdicts.tsv`'s own header — cannot be removed without violating AC-3's untouched-file requirement, so AC-1 fails on that single line; committed at `0e82f386` and escalating for a ruling. Diff also crossed the receipt's declared `poc_budget` (5 files / 107 gross lines vs. 6 files / 60 lines), driven almost entirely by the mandatory 82-line file deletion itself — flagged, not a reason to have stopped short of the accepted outcome.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: AC-1 — `git grep -n capture-oracle` over the tracked tree returns nothing
+  commit 13543f3c removed the four-line dead regeneration-command block (`Re-derive after any release-please version bump...` through the `node .../capture-oracle.cjs > ...` command) from `release-please-verdicts.tsv`'s header comment, per the Captain's amended AC-3. `git grep -n capture-oracle` now exits 1 (no matches).
+- DONE: AC-2 — unchanged from cycle 1, re-verified at the new candidate
+  `python3 scripts/kc-dev-flow-contract-test.py` → PASS in its own bounded invocation.
+- DONE: AC-3 (amended) — checker untouched; all 13 verdict rows byte-identical to `origin/main`; the header comment no longer names a deleted command
+  `python3 kc-dev-flow/scripts/check-pr-title.test.py` → PASS (13 fixture rows + 3 boundary cases); `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py` empty; `diff` of the 13 non-comment rows against `origin/main`'s copy is empty.
+- DONE: AC-4 — unchanged from cycle 1, re-verified at the new candidate
+  recomputed released-body sha256 = `ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57` / 10551 bytes, matching `contract-manifest.json`'s pin unchanged.
+
+### Summary
+
+Addressed the Captain's amendment: removed the dead `capture-oracle.cjs` regeneration command from `release-please-verdicts.tsv`'s header comment (commit 13543f3c), leaving the 13 verdict rows and the capture/agreement provenance untouched. All four acceptance criteria now pass at the new candidate, each check run as its own bounded invocation. Total diff across both cycles: 6 files, 10 added lines (within the amended `poc_budget`).
