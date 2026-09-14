@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: implementation
+status: validation
 product: kc-journey-map
 source:
 planning-window:
@@ -84,6 +84,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-10T18:49:46.913016Z"
                 reason: Kent explicitly requested the dev-flow kernel minimal-stack and without-it checks before local commit approval. The prior review proves behavior and recut safety, not complete minimal necessity; hold this proposal pending that bounded audit.
+            - id: gate-attempt:91n5fvm5qtpf6gxd4bwhxxkg-validation-3
+              briefing:
+                id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-3:revision-1
+                digest: sha256:490b7e0f9a7d88cd6b8d998221ed15f1a15ba4bbaf4d5130f16cea60d709f217
+                room-ref: ./review/validation/briefing-3
 review-round:
     id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:3
     stage: validation
