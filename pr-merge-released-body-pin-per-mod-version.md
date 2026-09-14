@@ -26,6 +26,20 @@ gates:
                 id: briefing:thvp8qgzr3eb1va9st822n2d:backlog:attempt-1:revision-1
                 digest: sha256:094d0d0043b8f7db3324312bbfa869599c3e2ad136d97ebe266277a0cdac9258
                 room-ref: ./pr-merge-released-body-pin-per-mod-version/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:thvp8qgzr3eb1va9st822n2d:backlog:1
+                briefing: briefing:thvp8qgzr3eb1va9st822n2d:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T13:45:33.005725Z"
+                decision: approve
+                reason: 'batch admission: the Captain approved the five-task r3 batch; ship FO records on the batch conn'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `kc-dev-flow/contract-manifest.json` (4.4.0, #414) pins `pr_merge_released_body.sha256` to one
