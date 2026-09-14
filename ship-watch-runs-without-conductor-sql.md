@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-watch-runs-without-conductor-sql
 issue:
-pr:
+pr: 451
 mod-block:
 id: 9xtwqxmktq2e15hr1qhx0bbb
 gates:
