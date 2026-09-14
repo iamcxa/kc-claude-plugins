@@ -10,3 +10,9 @@ Workspaces: see `ship-cloud-wrapper-r3.json` (five). Deferred, not in this batch
 - close: paused before plugin install / state init as "consequential"; nudged with the authorization.
 - dispatch: route done, Draft PR #445, validation attempt 1 prepared. FO verification at 18addead on macOS: dispatch.test.sh 13/16 — every `--resume` case fails because `git worktree list` prints physical paths and the script compares the logical `$repo_root` path (`/tmp` → `/private/tmp`). Worker's 16/16 was on Linux. Recorded `revise` with the reproduction; also 21/178 comment lines and a malformed `pr: "#445"`.
 - Cadence rule that held: the ship FO records every gate from the state branch with the batch conn; workers prepare and stop.
+
+## 2026-09-14 14:00–14:20Z second pass
+- dispatch: revised candidate d2696d8d — symlink case added (`git symbolic-ref` in the worktree), 17/17 on macOS, comments 12/165; PR #445 body was missing Residuals/without-it (asked, fixed). Validation attempt 2 approved on the batch conn → approved-awaiting-merge. Ready for the Captain to merge.
+- adopter, watch: ideation approved (watch: ruled the AC-1 exit code stays 2; brief author's error). Both in implementation.
+- close: backlog approved; worker idled after presenting its review — nudged to continue.
+- released-body: chose POC profile (not pilot); validation attempt 1 prepared at 44d478f8 with no branch pushed and no PR — asked to push and open the Draft PR before the FO verifies. Lesson: the boot must say "push the branch and open the Draft PR before preparing validation".
