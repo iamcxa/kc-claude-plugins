@@ -3,6 +3,7 @@ import { test } from 'node:test'
 import { buildStoryMap } from './storymap.mjs'
 import { buildJourneyBoard } from './render.mjs'
 import { fixtureModel as model } from './fixture.mjs'
+import { fitHeight } from './records.mjs'
 import { createTLSchema } from '@tldraw/tlschema'
 
 const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Boolean))
@@ -138,4 +139,31 @@ test('a question grows its row, so the row beneath it stays clear', () => {
 	const put = buildStoryMap(tall)
 	const q = kindOf(put, 'story-question')[0]
 	assert.ok(byId(put, 'shape:sm-story-below').y > q.y + q.props.h, 'the next row starts inside the question box')
+})
+
+// Every other box on the page takes its height from fitHeight; the banner took a
+// literal 70. Measured on a real board: 60px drawn against 88px of text.
+const labelText = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
+
+test('the one-journey banner is tall enough for its sentence', () => {
+	const long = { ...model, one_journey: 'A person asks for the thing once, and it arrives without them checking twice, and nobody has to be told which queue it went into or who is holding it now.' }
+	const banner = kindOf(buildStoryMap(long), 'one-journey')[0]
+	assert.ok(banner, 'no banner drawn')
+	assert.ok(
+		banner.props.h >= fitHeight(labelText(banner), banner.props.w),
+		`banner is ${banner.props.h}px for ${fitHeight(labelText(banner), banner.props.w)}px of text`
+	)
+})
+
+test('no drawn label is shorter than the text inside it', () => {
+	const long = { ...model, one_journey: 'A sentence long enough to wrap more than twice at the width this banner is given, which is how the clipping was first seen.' }
+	for (const s of buildStoryMap(long)) {
+		if (s.type !== 'geo' || !s.props?.richText) continue
+		const text = labelText(s)
+		if (!text.trim()) continue
+		assert.ok(
+			s.props.h >= fitHeight(text, s.props.w),
+			`${s.meta?.journey?.kind ?? s.id} is ${s.props.h}px for ${fitHeight(text, s.props.w)}px of text`
+		)
+	}
 })
