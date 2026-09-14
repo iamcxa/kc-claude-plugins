@@ -37,6 +37,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:1s5dc7neg6fvv1vskbq195hg:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:1s5dc7neg6fvv1vskbq195hg-validation-1
+              briefing:
+                id: briefing:1s5dc7neg6fvv1vskbq195hg:validation:attempt-1:revision-1
+                digest: sha256:7cccaedf558e0802261b65aa5c690b6649f3e8fe1832268889a1e9125ea3c93e
+                room-ref: ./capture-oracle-never-caught-anything/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:1s5dc7neg6fvv1vskbq195hg:validation:1
+                briefing: briefing:1s5dc7neg6fvv1vskbq195hg:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T07:19:00.04327Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-14: "approve", on the FO gate presenting candidate eca4eb82 — four acceptance criteria green, F1/F2/F3 closed, every reference to the deleted tool gone literally, AC-2 falsified on two independent check paths with distinct messages, and the named risk that the operational knowledge inside the deleted script now survives only in git history. The gate question also authorized the Draft PR.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 PR #433 shipped `kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` as a

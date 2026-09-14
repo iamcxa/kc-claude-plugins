@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:1s5dc7neg6fvv1vskbq195hg:validation:attempt-1:revision-1",
+  "question": "Approve this POC close at candidate eca4eb82 and authorize the Draft PR that deletes capture-oracle.cjs?",
+  "artifacts": [
+    {
+      "id": "artifact:1s5dc7neg6fvv1vskbq195hg:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7cb5c1bde4ebd0a1898cac90d61fa1a629c7872f/capture-oracle-never-caught-anything.md",
+      "rev": "sha256:75f68de4eb33dd4af6c3f97b4b656000519cef5d97709f310365cf626d751679",
+      "mediaType": "text/markdown",
+      "summary": "All four acceptance criteria green at eca4eb82; F1, F2 and F3 closed; every reference to the deleted tool gone literally, not just under AC-1 grep. Direction is change, not proceed, because the item left its POC envelope. 6 files, 10 insertions, 101 deletions."
+    }
+  ]
+}
