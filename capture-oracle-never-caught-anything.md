@@ -1,6 +1,6 @@
 ---
 title: "capture-oracle.cjs never caught anything, so it fails the retention rule it was kept under"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
