@@ -172,9 +172,12 @@ and leaves same-stage re-entry broken. A blanket tolerance drops the comparison 
 mechanism exists for.
 
 **The seam.** `work_item_authority` excludes `^## Stage Report(?:: [^\n]+)?$` and retains
-everything else. The POC `prove` contract is the only validation-stage contract that
-requires its worker to write a non-report body section. That single asymmetry, not the
-feedback schema, is the defect.
+everything else. `poc-close-guard.py`'s `one_yaml_section` is the only consumer that
+requires a validation-stage worker to write a non-report body section into the work item;
+it is checked by `grep -n '`## ' kc-dev-flow/references/profiles/*/*.md
+kc-dev-flow/references/pr-merge-extension.md kc-dev-flow/references/roborev-implementation-exit.md`,
+whose only hits are PR-body headings. That single asymmetry, not the feedback schema, is
+the defect.
 
 **What it costs.**
 
