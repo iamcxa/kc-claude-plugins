@@ -1,5 +1,5 @@
 ---
-title: "Rename the execution-grouping contract from sprint to release, so the execution record matches the planning artifact"
+title: "POC: does a release contract group work better than a sprint ordinal"
 status: backlog
 source:
 product: kc-dev-flow
@@ -19,89 +19,58 @@ id: tjxctad7413wyp3acfx8wzzp
 
 ## The problem
 
-`kc-journey-map` now plans a release into a Development Brief (PR #419, merged 2026-09-11),
-so the unit a planner hands to dev-flow is a release. The execution record still calls that
-unit a sprint: `profile-contract-loader.py` reads `^sprint:` and `^sprint-readiness:` with two
-hard-coded regexes and refuses dispatch when either is absent or not `ready`
-(`frontmatter sprint must name an iteration`, `frontmatter sprint-readiness must be 'ready'`).
-`docs/dev/ROADMAP.md` records the split twice in its own text: the `kc-journey-map` S1 and S2
-headings each say the stored `sprint: SN` is a compatibility identifier held "until the separate
-sprint-to-release contract migration". This is that migration.
+Dev-flow groups work with `sprint`, an ordinal. `docs/dev/ROADMAP.md` states the semantics itself:
+identifiers are `<product>/S<number>`, with "no cross-product chronology or rank", allocated by
+whichever heading lands in `main` first. Planning, meanwhile, has moved to releases:
+`kc-journey-map` keeps a `releases:` list of `{id, name, goal}` with every story carrying
+`release: rN`, and generates a per-release contract from it. `docs/dev/ROADMAP.md`'s own
+`kc-journey-map` S1 and S2 headings are written as releases but numbered as ordinals, and each says
+its stored `sprint: SN` is a compatibility identifier held until this migration.
 
-Two boundaries are already known. Spacedock does not own the field — `internal/status/parse.go`
-classifies `sprint`/`sprint-readiness` under the schema's `permissive_additions`, so the engine
-needs no change and `spacedock refit` is not in the chain. And `release` is not a free word inside
-kc-dev-flow: it was a Production route step, `route: [shape, build, verify, release]`, deleted in
-the v3 route change, and a stale receipt still carrying it throws `stale route for production`. A third meaning is already live in this repository's Local Profile, where `planning-outcome` is described as a Linear Project held as one user-value `release package`; grouping cannot simply reuse that field, because a standalone item records no `planning-outcome` at all.
+The Captain ruled on 2026-09-14 that the grouping should be a release, that the roadmap and a
+release register should be a kc-dev-flow specification rather than this repository's local policy,
+that the minimum is `roadmap.md` plus `releases.md` and must work with no user journey present,
+and that a release should line up with the repository's real release tag where possible. He then
+ruled that this starts as a POC to find out whether that route is actually smoother.
+
+Two assumptions in that route have never been executed. A release group must exist before work
+starts, while release-please derives a tag from merged commits and cuts it afterwards, so equality
+is impossible and only write-back could hold. And this repository publishes nine plugins on
+independent version streams, so a release spanning two products has two tags, not one.
 
 ## Accepted outcome
 
-An adopter names its execution group `release` in work-item frontmatter and dev-flow dispatches on
-it, while an adopter that has not migrated keeps dispatching on `sprint` unchanged. The package
-documents which word means the grouping field and which means the deleted route step, so neither
-`MIGRATION.md` nor a receipt error reads as a return to the retired route.
+A record that answers whether to adopt the release contract, produced by re-expressing this
+repository's real existing state rather than a fixture. It reports whether the live work items
+group into user-value releases without inventing releases nobody would have written, whether a
+release can carry a real tag by write-back, and what the two-product case costs. `proceed` returns
+a candidate contract shape to the Captain; `stop` records that the sprint ordinal stays.
 
 ## Non-goals
 
-- Changing Spacedock canonical fields, the entity schema, or anything `spacedock refit` syncs.
-- Changing planning-provider semantics: a Linear Cycle stays the planning window and a Linear
-  Project stays the planning outcome.
-- Rewriting adopter state automatically, or migrating `subspace-relay`, `carlove-v1`, or
-  `subspace-v0` inside this item.
-- Reviving the deleted `release` route step.
+- Editing `docs/dev/ROADMAP.md`, any work item's grouping fields, or any file in `kc-dev-flow`.
+- Building `roadmap.md` or `releases.md` as a shipped contract, or writing their schema into the package.
+- Changing `kc-journey-map`, its journey file, or its generated release contract.
+- Retiring the `sprint` field, which stays until a separate Captain-admitted item removes it.
+- Deciding delivery, merge, or release-please behavior.
 
 ## Acceptance criteria
 
-- **AC-1** A work item whose frontmatter carries `release` and `release-readiness: ready` and no
-  `sprint` key loads through `profile-contract-loader.py` at a first working stage without a
-  `ContractError`.
-- **AC-2** A work item carrying only `sprint` and `sprint-readiness: ready` still loads, and
-  `profile-contract-loader.test.py` and `profile-spacedock-route.test.py` exit 0.
-- **AC-3** An item carrying both keys with conflicting values is refused by a named error rather
-  than silently resolved to one of them.
-- **AC-4** `kc-dev-flow/MIGRATION.md` carries a dated entry naming the two meanings of `release`
-  (grouping field, deleted route step) and stating that migration is opt-in per adopter.
-- **AC-5** `docs/dev/ROADMAP.md`'s `kc-journey-map` S1 and S2 headings no longer defer to an
-  unscheduled migration.
+- **AC-1** A draft `releases.md` and `roadmap.md`, written outside the repository tree, cover every
+  non-terminal `kc-journey-map` and `kc-dev-flow` work item, or name the exact items that would need
+  a release nobody would have written.
+- **AC-2** The draft binds the `kc-journey-map` releases to the real journey file
+  `docs/journey/kc-journey-map/draw-a-journey.yaml` and its `r1`/`r2`/`r3` entries, and shows the
+  same two files standing alone for `kc-dev-flow`, which has no journey file.
+- **AC-3** Tag write-back is exercised against the real cut tags `kc-journey-map-v0.2.0` and
+  `kc-journey-map-v0.2.1`: each drafted release either carries the exact tag that shipped it or
+  names why no tag exists yet, and the check that would catch a tag naming nothing is named.
+- **AC-4** The two-product case is stated with its cost: what a release covering both
+  `kc-dev-flow` and `kc-journey-map` does about having two tags.
+- **AC-5** `poc_outcome` is recorded as `proceed`, `stop`, or `change`, with the exact revision read
+  and the count of items that needed an invented release.
 
 ## Route-back conditions
 
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
-
-## Work profile receipt
-
-```yaml
-work_profile:
-  schema: kc-dev-flow-work-profile/v3
-  selected: pilot-product-slice
-  recommended: pilot-product-slice
-  basis: >-
-    Kent selected Pilot on 2026-09-14. The contract change stays in the package
-    permanently rather than being a disposable experiment, and adopters are
-    expected to migrate one at a time. No consumer must act to take the new
-    version, so no Production compatibility trigger fires.
-  route: [shape, build, verify-deliver]
-  obligations:
-    architecture:
-      - Keep the grouping field distinct from the deleted `release` route step and from the Linear Project release package named by `planning-outcome`.
-      - Leave the Spacedock schema untouched; the field stays a workflow-owned permissive addition.
-      - Decide the second key pair's exact names before implementation, and record which one the loader reports in a refusal.
-    implementation:
-      - Change only the loader's frontmatter reading and the package documents that state the grouping contract.
-      - Migrate this repository's own `docs/dev` records and ROADMAP headings; leave other adopters unmigrated.
-    testing:
-      - Cover the three frontmatter cases named in AC-1 to AC-3 in the existing loader tests.
-      - Run the existing loader and route test suites; add no standing CI lane.
-  scope_boundary: >-
-    The accepted outcome and complete non-goal list in this task remain unchanged.
-    Excludes Spacedock schema or refit changes, planning-provider semantics,
-    automatic migration of other adopters, and reviving the deleted release route step.
-  semantics_unchanged: false
-  promote_when:
-    - An adopter must edit owned records or configuration to take the new version.
-    - The deleted `release` route step or a Spacedock canonical field enters scope.
-  decision:
-    authority: Kent (Captain)
-    at: 2026-09-14T00:00:00Z
-```
