@@ -91,3 +91,10 @@ it touches` table can show, so the thresholds are read from the diff and the
 table only tells you where to expect them.
 
 They are stop conditions, not budgets.
+
+## Gate rendering
+
+Before presenting this stage's gate, the First Officer renders the committed
+output as a PRFAQ, following the shared core's `## PRFAQ rendering`. It adds
+nothing to `## Required output` above; it is how a human reads what is already
+there.

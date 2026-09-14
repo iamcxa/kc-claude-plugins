@@ -181,3 +181,28 @@ facts, or turn deferred possibilities into findings.
 
 At handoff record the work item, selected profile, current stage, exact revision,
 accepted evidence, next action, and unresolved Captain-owned decision.
+
+## PRFAQ rendering
+
+Where a profile contract or the profile-selection skill calls for it, the work
+definition is rendered as a PRFAQ before the Captain is asked to accept it. The
+rendering is a reading surface, not a contract. The machine-read sections — the
+complete non-goal list, the work profile receipt, the `AC-N` bullets, the
+route-back conditions — stay where their readers expect them, and a PRFAQ that
+disagrees with the body it renders is a defect in the PRFAQ.
+
+- **Press release** — a headline a reader outside the project understands, and
+  one paragraph naming what someone can do that they could not before. Carry at
+  least one diagram of the change in shape or state, with prose under it rather
+  than over it. Quote the Captain's own words where they exist, verbatim in their
+  original language, with their date. Write it as though the work were done: at
+  this point it is a promise, and a later stage can be handed the same paragraph
+  and asked which of its sentences are now observed.
+- **FAQ** — one question per design decision, each answer three sentences or
+  fewer, each tracing to a section of the work definition. Cover what the next
+  worker has to be handed, what was considered and rejected and on what reason,
+  where the work stops and reports, and what sends it back rather than forward.
+- **Self-consistency** — state whether the work definition's own sections agree
+  with each other, quoting any pair that does not. Answer it by comparing those
+  sections against each other; a stage report is the producer's account of its
+  own work and does not settle it.
