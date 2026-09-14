@@ -70,6 +70,17 @@ gates:
                 id: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-1:revision-1
                 digest: sha256:efd40f70c6971a300a6cd74a83fe3f075d2ab8ba106d02777ceeed33944cab88
                 room-ref: ./admission-asks-who-was-bitten-and-who-will-run-it/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gzrgwdxkh6zkenkswkhasmjc:validation:1
+                briefing: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T23:58:24.067421Z"
+                decision: revise
+                reason: 'ship FO verification at PR #457 head 5537e44c on macOS: suites pass, but validate_admission_brief() runs only under --validate-admission, which no skill or stage contract invokes (grep: only the test and one README row). Replaying it on the three r4 briefs admitted today refuses all three, so the new bite/consumer refusal has no live caller — the defect class this task exists to close. Revise: wire the check into the admission step workers execute (choose-work-profile pilot/production), prove on the real closed r3 briefs and one conformant brief, and disclose in Residuals that current backlog briefs lack the Development Brief section shape (list the headings).'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
