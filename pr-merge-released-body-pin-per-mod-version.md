@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: thvp8qgzr3eb1va9st822n2d
+gates:
+    version: 1
+    records:
+        - id: gate:thvp8qgzr3eb1va9st822n2d:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:thvp8qgzr3eb1va9st822n2d-backlog-1
+              briefing:
+                id: briefing:thvp8qgzr3eb1va9st822n2d:backlog:attempt-1:revision-1
+                digest: sha256:094d0d0043b8f7db3324312bbfa869599c3e2ad136d97ebe266277a0cdac9258
+                room-ref: ./pr-merge-released-body-pin-per-mod-version/review/backlog/briefing-1
 ---
 
 `kc-dev-flow/contract-manifest.json` (4.4.0, #414) pins `pr_merge_released_body.sha256` to one

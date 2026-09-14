@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:thvp8qgzr3eb1va9st822n2d:backlog:attempt-1:revision-1",
+  "question": "Admit into implementation (build stage): pin the released pr-merge mod body per Spacedock mod version via a manifest table, as scoped by the recorded POC-exploration receipt (build -\u003e prove)?",
+  "artifacts": [
+    {
+      "id": "artifact:thvp8qgzr3eb1va9st822n2d:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4edd3b89b0d6333fbaded20649fb91daf113af11/pr-merge-released-body-pin-per-mod-version.md",
+      "rev": "sha256:29923ee1ec7b6ec4f05c47e8fa6338bcf63727691ff2ad4f21a716e43cbcca25",
+      "mediaType": "text/markdown",
+      "summary": "Backlog item th: kc-dev-flow's contract-manifest.json pins one pr_merge_released_body sha; a second adopter on Spacedock mod 0.27.0 fails the pin though its body is exactly what Spacedock shipped. Accepted outcome: a pr_merge_released_bodies table keyed by mod version, with a named-failure check instead of a skip. Non-goals: no Spacedock edit, no extension content change, no Linear. AC-1..AC-4 defined. Work profile: poc-exploration (build, prove); route-back N/A (no Development Brief route-back section recorded)."
+    }
+  ]
+}
