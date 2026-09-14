@@ -38,6 +38,51 @@ starts, while release-please derives a tag from merged commits and cuts it after
 is impossible and only write-back could hold. And this repository publishes nine plugins on
 independent version streams, so a release spanning two products has two tags, not one.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: poc-exploration
+  recommended: poc-exploration
+  basis: >-
+    Kent selected POC on 2026-09-14 to find out whether the release route is
+    smoother before its dependents are admitted. Two assumptions in that route
+    have never been executed: tag write-back against a tag that only exists
+    after merge, and a release covering two products with two version streams.
+    The output is a record, not code, and a stop is a valid outcome.
+  route: [build, prove]
+  obligations:
+    architecture:
+      - Re-express real existing state; do not design a schema before the record says the route holds.
+    implementation:
+      - Write the draft files outside the repository tree and record the result in this work item only.
+    testing:
+      - AC-1 to AC-5, read at one exact revision that the record names.
+  scope_boundary: >-
+    No edit to ROADMAP.md, to any work item's grouping fields, to kc-dev-flow,
+    or to kc-journey-map. No shipped contract, no schema, no retirement of the
+    sprint field.
+  poc_decision: Whether dev-flow adopts a package-owned release contract as its execution grouping, or keeps the sprint ordinal.
+  poc_falsifier: >-
+    Existence-disproof over this repository's real corpus: the live kc-journey-map
+    and kc-dev-flow work items cannot be grouped into user-value releases without
+    inventing releases nobody would have written, or no drafted release can be
+    bound to the cut tags kc-journey-map-v0.2.0 and kc-journey-map-v0.2.1.
+  poc_budget: One dispatch, and decision-ready inside 15 minutes; no provider requests and no file edits outside the work item.
+  poc_stop_when: >-
+    The record lists every non-terminal kc-journey-map and kc-dev-flow item against
+    a drafted release or names the items needing an invented one, each drafted
+    release carries its exact shipped tag or states why none exists, and the
+    two-product cost is stated. Work stops at that observation whichever way it falls.
+  poc_artifact: no-code
+  poc_safety_boundary: none
+  poc_decision_ready_minutes: 15
+  decision:
+    authority: Kent (Captain)
+    at: 2026-09-14T00:00:00Z
+```
+
 ## Accepted outcome
 
 A record that answers whether to adopt the release contract, produced by re-expressing this
