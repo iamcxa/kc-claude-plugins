@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: bxhtchz8rwth9hpeepzwg42t
+gates:
+    version: 1
+    records:
+        - id: gate:bxhtchz8rwth9hpeepzwg42t:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:bxhtchz8rwth9hpeepzwg42t-backlog-1
+              briefing:
+                id: briefing:bxhtchz8rwth9hpeepzwg42t:backlog:attempt-1:revision-1
+                digest: sha256:007faf1e65a7bcea86cc524eb49c563d28ff89b0e12b1ad3cc2389a8a31c4a0f
+                room-ref: ./journey-canvas-unreachable-from-another-machine/review/backlog/briefing-1
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open

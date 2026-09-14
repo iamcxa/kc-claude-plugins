@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:bxhtchz8rwth9hpeepzwg42t:backlog:attempt-1:revision-1",
+  "question": "Admit this bug, and at which work profile?",
+  "artifacts": [
+    {
+      "id": "artifact:bxhtchz8rwth9hpeepzwg42t:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/84a6ee90e36840fc5bbaa3040f13916b758272c9/journey-canvas-unreachable-from-another-machine.md",
+      "rev": "sha256:8ec921fa8ee9bdf02de6a56272b9d11d4593e0e4a6860c40a7109ec8317326cb",
+      "mediaType": "text/markdown",
+      "summary": "The committed seed is the reviewed artifact: backlog is the initial stage, so no prior stage report exists. A user could not open a journey canvas running on a remote VM from their own machine. The FO verified all three causes against the working tree rather than accepting the report: vite.config.mts sets only server port 3737 with no allowedHosts; App.tsx falls back to http://localhost:5858 when VITE_JOURNEY_API_URL is unset and useSync builds its socket URI from that value; and canvas-server.ts binds 127.0.0.1, which the report did not name and which is why the reporter's proxy fix was necessary rather than merely convenient. The report's claim that SERVER_URL is hard-coded is inaccurate — the environment override exists — so the defect is the default and the discoverability, not the absence of an escape hatch. The accepted outcome keeps the document API loopback-only and takes reachability from the frontend the operator already exposes. AC-1..AC-6 require a genuine two-machine or non-loopback demonstration, a synced edit rather than a page that merely loads, a mutation-resistant loopback bind, a named decision on the environment variable, the existing suites plus the new typecheck passing, and a one-sentence justification of the allowedHosts value for a tool that carries no authentication. Authentication, TLS, and any hosted mode are out of scope."
+    }
+  ]
+}
