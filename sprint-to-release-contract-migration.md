@@ -1,6 +1,6 @@
 ---
 title: "POC: does a release contract group work better than a sprint ordinal"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Captain said 派 for both ready items, after selecting POC and the kc-dev-flow/S10 grouping for this one. The seed carries the problem, accepted outcome, non-goals, AC-1..AC-5 and the v3 POC receipt with its decision, falsifier, budget and stop condition.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
