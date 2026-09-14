@@ -418,3 +418,68 @@ claim_separation:
   does_not_independently_carry_the_stop: tag-binding finding (falsifier's strong form did not trigger; gap is a missing check, not a structural impossibility)
   survives_redesign: a many-to-many tag-to-release binding with a scope-drift lint, never claiming 1:1 tag equality, is not falsified by this record
 ```
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Settle the falsifier — are journey release ids unique across this repository?
+  `find . -path "*/docs/journey/*" -type f` finds exactly one product journey file,
+  `docs/journey/kc-journey-map/draw-a-journey.yaml` (`releases: r1, r2, r3`). No collision at
+  `docs/journey/`. A second, non-`docs/journey/` file names `r1` too:
+  `kc-journey-map/skills/kc-journey-map/references/journey.example.yaml` (a teaching example, never
+  a `plan-release` source). Named residual, not a stop: bare ids are unique only by vacuity — the
+  moment a second real product journey exists (e.g. `docs/journey/kc-dev-flow/`, absent today per the
+  prior POC), both would start at `r1`. No qualification rule invented; AC-5's "copied without
+  transformation" holds for the current single-journey repository.
+- DONE: Loader accepts `release`+`release-readiness: ready`, still accepts `sprint` unchanged, refuses a conflicting pair by name (AC-1..AC-3).
+  `kc-dev-flow/scripts/profile-contract-loader.py` lines ~735-770: presence is judged on a non-empty
+  value (`^release:[ \t]*[^\s#]`) so the entity template's blank `sprint:` placeholder never collides
+  with a real `release` value; both pairs present raises `ContractError("frontmatter must not carry
+  both release and sprint")`. `profile-contract-loader.test.py` adds: release-only load at the first
+  working stage, sprint-only load (regression), release with a blank `sprint:` template line still
+  loads, three release placeholder refusals (`null`, `[r1]`, deferred readiness), and two
+  both-pairs-present refusals (differing values, and equal values — the equal-value case is a
+  deliberately broader refusal than AC-3's literal "conflicting values", since the field is scalar and
+  two scheduling identities on one item is refused regardless of whether they happen to agree; noted
+  here as a bounded design choice, not silent over-reach). A one-line change that would make each
+  test fail: removing the presence check collapses the release/sprint branch and fails the
+  release-only case; reverting `[^\s#]` to a bare `^release:`/`^sprint:` fails the blank-template case.
+  `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` exits 0 (5 sub-suites PASS).
+- DONE: AC-2 — `profile-contract-loader.test.py` and `profile-spacedock-route.test.py` exit 0.
+  Both run clean at commit `a5fd90de`. Also re-ran `scripts/kc-dev-flow-contract-test.py` (checks the
+  packaged docs against fixed prose, including the exact adopter sentence this change touched) and
+  `scripts/skill-frontmatter-lint.sh` (46/46 skills valid) — both exit 0.
+- DONE: AC-4 and AC-5 exercised against real committed content.
+  Filed `release-field-r1-evidence-record` via `spacedock new` (state commit `b36ef133`), frontmatter
+  `release: r1` / `release-readiness: defer` (deferred, not ready — proves the field/query without
+  entering `--next`'s dispatch queue). Byte equality: `grep -oE 'id: r1'
+  docs/journey/kc-journey-map/draw-a-journey.yaml` and the entity's `release:` line both read `r1`.
+  `spacedock status --workflow-dir docs/dev --where release=r1 --json` returns exactly one entity,
+  slug `release-field-r1-evidence-record`; `--where release=r2` returns zero; `--validate` exits 0
+  (`VALID`, pre-existing unrelated flat-entity warnings only); `--next --json` omits the item
+  (confirmed by grep). No r1 story in the journey file is open work today (all `status: exists`), so
+  the record is filed as labeled evidence rather than invented work — retention past this entity's
+  close is `without-it unanswered` for Kent.
+- DONE: Package documents that state the grouping contract.
+  Updated `kc-dev-flow/README.md` (the loader's canonical contract paragraph),
+  `kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`, and
+  this repository's own `docs/dev/README.md` adoption doc to state the `release`/`release-readiness`
+  alternative alongside unchanged `sprint`/`sprint-readiness`. `scripts/kc-dev-flow-contract-test.py`
+  (checks fixed adopter prose byte-for-byte after whitespace normalization) still exits 0 after these
+  edits.
+
+### Summary
+
+Falsifier settled: no real collision today (one product journey, one unrelated teaching example
+sharing `r1` as a label, named as a residual). Loader now accepts a scalar `release` +
+`release-readiness: ready` pair as an alternative to `sprint` + `sprint-readiness: ready`, refuses
+both pairs present by a named error, and treats presence as non-empty-value so the entity template's
+blank `sprint:` placeholder never false-collides. AC-1..AC-5 exercised: loader tests green, package
+docs updated, and one real committed entity carries `release: r1` end to end, queryable by
+`spacedock status --where release=r1`.
+
+Code branch fast-forwarded from dispatch tip `7b103a10` to `origin/main@ed452eb2` before starting —
+the dispatched worktree predated `docs/journey/kc-journey-map/draw-a-journey.yaml`'s merge (PR #428);
+AC-5 cannot be exercised without it. Validation should pin the same code SHA.
+
+Revisions: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5fd90de`
+(based on `origin/main@ed452eb2`). State `spacedock-state/dev@b36ef133`.
