@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-adopter-contract-test-ships-with-the-package
 issue:
-pr: "#450"
+pr: 450
 mod-block:
 id: t12w6e29mdcnrc4chs9ps27e
 gates:
