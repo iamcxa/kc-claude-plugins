@@ -64,6 +64,17 @@ gates:
                 id: briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-1:revision-1
                 digest: sha256:f260af715e173c411d22838065a2ed55a88fa63fb214ab0643e72cd76413ad73
                 room-ref: ./retire-the-provider-backed-planning-path/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:f0m9yytzq7sczkam7rrq9ym3:validation:1
+                briefing: briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T10:06:03.347894Z"
+                decision: approve
+                reason: 'Captain approved at the validation gate. A fresh reviewer re-ran all five suites at candidate 95b19de0 in an independently resolved checkout, both ideation-gate dispositions were verified with direct evidence, and AC-1/AC-5 were re-proven against dev-52''s real committed bytes. AC-2 and AC-4 carry implementation-stage evidence plus an FO direct read. Disclosed limit: the branch is a single squashed commit, so the L4-never-raised claim holds at the two real git endpoints only.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
