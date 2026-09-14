@@ -1,6 +1,6 @@
 ---
 title: "capture-oracle.cjs never caught anything, so it fails the retention rule it was kept under"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: dev-flow-pr-merge-adopter-seam
 sprint-readiness: ready
 started: 2026-09-14T06:35:34.73052Z
-completed:
-verdict:
+completed: 2026-09-14T07:27:17Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-capture-oracle-never-caught-anything
 issue:
 pr: pr-merge:435
-mod-block: merge:pr-merge
+mod-block:
 id: 1s5dc7neg6fvv1vskbq195hg
 gates:
     version: 1
@@ -55,7 +55,8 @@ gates:
                 reason: 'Captain approved in chat 2026-09-14: "approve", on the FO gate presenting candidate eca4eb82 — four acceptance criteria green, F1/F2/F3 closed, every reference to the deleted tool gone literally, AC-2 falsified on two independent check paths with distinct messages, and the named risk that the operational knowledge inside the deleted script now survives only in git history. The gate question also authorized the Draft PR.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T07:27:17Z
 ---
 
 PR #433 shipped `kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` as a
