@@ -7,11 +7,9 @@
 #          [--model NAME] [--effort LEVEL]
 # workflow-dir default: docs/dev. state-dir default: docs/ship/.spacedock-state.
 # Claim fence: <state-dir>/_ship_fence/<sprint>.json maps slug -> {workspace, session,
-#   message_sha256, history: [{round, workspace, session, archived}]}. `history` only
-#   exists once a slug has been resumed at least once; unresumed entries omit it.
-# --env-file: KEY=VALUE lines (blank lines and #-comments skipped), read into repeatable
-#   `conductor workspace create --env KEY=VALUE` argv. Values are never printed, logged,
-#   or written to the fence; only key names ever appear (as `--env KEY=***`).
+#   message_sha256, history: [{round, workspace, session, archived}]}; `history` exists
+#   only once a slug has been resumed. --env-file values are never printed, logged, or
+#   fenced -- only key names appear, as `--env KEY=***`.
 set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -123,8 +121,6 @@ for p in data.get('data', []):
   [ -n "$project_id" ] || die "project id not resolved for remote $remote_norm" 6
 fi
 
-# --env-file: KEY=VALUE lines -> repeatable `--env` argv. env_args carries real values
-# (conductor create argv only); env_display_args masks values for --dry-run/log output.
 env_args=()
 env_display_args=()
 check_env_file_perms() {
@@ -149,17 +145,10 @@ fi
 
 boot_gate_line='Gate decisions are recorded by the ship first officer with the Captain'"'"'s words. Sync state by merge, never rebase. Never record a gate decision.'
 
-# --resume SLUG: create a fresh workspace from the task's existing branch (resolved from
-# the entity's `worktree` frontmatter field via `git worktree list`, not guessed from a
-# naming convention), send a resume boot naming status/gate-attempt/pr/candidate SHA, and
-# record the new workspace/session in the fence under the slug -- the previous round's
-# ids move to a `history` array (r1, r2, ...) rather than being overwritten.
+# Asks the worktree itself rather than comparing paths against `git worktree list`,
+# whose paths are physical (symlinks resolved) and would miss a symlinked checkout.
 resolve_branch_for_worktree() {
-  local wt_path="$1"
-  git -C "$repo_root" worktree list --porcelain | awk -v p="$wt_path" '
-    $1=="worktree" { w=$2 }
-    $1=="branch" && w==p { sub("refs/heads/", "", $2); print $2; exit }
-  '
+  git -C "$1" symbolic-ref --short HEAD 2>/dev/null
 }
 
 do_resume() {
@@ -233,9 +222,7 @@ sys.exit(0 if sys.argv[2] in d else 1)
     || die "conductor workspace create returned no workspace id for $slug" 7
   sid=$(printf '%s' "$out" | python3 -c "import json,sys; print(json.load(sys.stdin).get('sessionId') or '')")
 
-  # Ready observation is a single non-blocking probe -- not a poll loop -- via the
-  # already-contracted `workspace status` verb; a not-yet-ready result just leaves the
-  # prior round's fence entry unarchived (still resolvable, never deleted).
+  # Single probe, not a poll loop; not-yet-ready just leaves the prior round unarchived.
   status_out=$(conductor workspace status "$wid" 2>&1) || status_out=""
   ready=0
   case "$status_out" in *[Rr][Ee][Aa][Dd][Yy]*) ready=1 ;; esac

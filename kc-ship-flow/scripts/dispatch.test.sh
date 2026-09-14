@@ -375,6 +375,26 @@ else
   fail m "--resume with no prior fence entry refuses"
 fi
 
+SYM_ROOT_PARENT="$(mktemp -d)"
+SYM_REPO_ROOT="$SYM_ROOT_PARENT/repo-symlink"
+ln -s "$REPO_ROOT" "$SYM_REPO_ROOT"
+out_n="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SYM_REPO_ROOT/kc-ship-flow/scripts/dispatch.sh" --resume "$RESUME_SLUG" --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$RESUME_FIXTURES/dev" --state-dir "$RESUME_STATE" 2>&1)"
+rc_n=$?
+ok=1
+[ "$rc_n" -eq 0 ] || ok=0
+grep -q -- "--branch $RESUME_BRANCH" <<<"$out_n" || ok=0
+if [ "$ok" = 1 ]; then
+  pass n "--resume resolves the branch when reached through a symlinked repo checkout"
+else
+  printf '  out=%s\n' "$out_n"
+  fail n "--resume resolves the branch when reached through a symlinked repo checkout"
+fi
+rm -rf "$SYM_ROOT_PARENT"
+
 cleanup_resume_wt
 trap - EXIT
 rm -rf "$RESUME_FIXTURES" "$RESUME_STATE_ORIGIN" "$RESUME_STATE_WT"
