@@ -76,3 +76,43 @@ and this repository's Local Profile.
 
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    Kent selected Pilot on 2026-09-14. Removing an intake path is a permanent
+    contract change, not a disposable experiment. No consumer must act to take
+    the new version: measured on 2026-09-14, none of the three adopter
+    repositories binds the reader or comparator in its Local Profile, and the
+    manifest's required_bindings carries no planning row. The one bound
+    consumer is this repository, and AC-4 carries that edit.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Keep `source` as free-text provenance that may hold a Linear URL, and remove only the tuple that turned it into planning evidence.
+      - Name where the removed engage-reconcile duty goes, or state that it goes nowhere because nothing consumed it.
+      - Leave delivery untouched; the close line belongs to pr-merge and kc-ship-flow.
+    implementation:
+      - Remove both scripts, their tests, and their manifest entries in one change.
+      - Strip the provider-backed route, engage reconcile, and partial-tuple refusal from shipped skills and references.
+      - Edit this repository's Local Profile and `dev-52-inventory-kc-dev-flow-removal-candidates` in the same delivery.
+    testing:
+      - Cover the two frontmatter cases in AC-1 in the existing loader tests.
+      - Run the package contract test and the existing loader and route suites; add no standing CI lane.
+  scope_boundary: >-
+    The accepted outcome and complete non-goal list in this task remain unchanged.
+    Excludes delivery close lines, any planner or plan object, other adopters'
+    records, and renaming the standalone term.
+  semantics_unchanged: false
+  promote_when:
+    - An adopter is found binding the reader or comparator and must edit owned records to upgrade.
+    - Delivery close lines or another plugin's contract enters scope.
+  decision:
+    authority: Kent (Captain)
+    at: 2026-09-14T00:00:00Z
+```
