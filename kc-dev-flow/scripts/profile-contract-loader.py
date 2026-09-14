@@ -590,7 +590,9 @@ def work_item_authority(text: str) -> str:
         ):
             fence = ""
         elif not fence and re.match(r"^ {0,3}#{1,2}(?:[ \t]+|$)", line):
-            report = re.fullmatch(r"## Stage Report(?:: [^\n]+)?\n?", line) is not None
+            report = re.fullmatch(
+                r"## (?:Stage Report(?:: [^\n]+)?|POC outcome|POC close measurement)\n?", line
+            ) is not None
         if not report:
             retained.append(line)
     if fence:
