@@ -1,6 +1,6 @@
 ---
 title: "The journey canvas is unreachable from anywhere but the machine it runs on"
-status: validation
+status: done
 source:
 product: kc-journey-map
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: journey-map-remote-access
 sprint-readiness: ready
 started: 2026-09-14T10:09:25Z
-completed:
-verdict:
+completed: 2026-09-14T14:17:54Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-journey-canvas-unreachable-from-another-machine
 issue:
 pr: pr-merge:442
@@ -74,7 +74,8 @@ gates:
                 reason: 'Captain accepted the delivery by merging PR #442 on 2026-09-14T14:17:32Z (merge commit ed452eb2), after the FO presented the validation gate with the eight passing acceptance criteria, the three named residuals, and the disclosed pkill incident. All eight ACs were independently re-derived at head 9ff318a0; both FO findings were closed by fresh demonstration on ports no earlier stage used.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T14:17:54Z
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
