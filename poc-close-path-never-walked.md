@@ -685,3 +685,50 @@ against the shipped loader rather than read. Nothing blocks the gate: the one fi
 cannot fail for the reason its name gives, covering a property two other checks already prove, and it
 is exactly the 12 lines RoboRev never observed. No PR was created — local verification is complete,
 the base is trunk, and the delivery ceremony is the first officer's with the Captain's approval.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: confirm the diff since cycle 1's approved candidate is exactly the deletion the Captain ruled
+  `git diff 6d340208 21a6ffeb --stat` → `profile-contract-loader.test.py | 12 -------`, 1 file
+  changed, 12 deletions, nothing else. Matches the FO's description; re-verified rather than taken on
+  trust.
+- DONE: confirm the deletion removed nothing load-bearing
+  Read the surrounding test body: `poc_corrected` now runs directly against `poc_correction_item` as
+  left by `poc_same_stage` (which already wrote `## POC outcome` and is asserted to persist). No
+  fixture state the removed block produced was consumed downstream; `near_miss_drift` is a separate
+  item untouched by the deletion.
+- DONE: AC-1 still holds at `21a6ffeb`
+  `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → PASS. Falsifier re-driven:
+  `git checkout e3cca913 -- kc-dev-flow/scripts/profile-contract-loader.py` then re-run → reddens with
+  `same-stage re-entry refused once the prove worker wrote POC outcome: ... ACTIVE_STAGE_PIN_MISMATCH`.
+  Restored via `git checkout HEAD --`; tree clean.
+- DONE: AC-2 still holds at `21a6ffeb`
+  `python3 kc-dev-flow/scripts/poc-close-guard.test.py` → PASS. Falsifier re-driven:
+  `git checkout e3cca913 -- kc-dev-flow/scripts/poc-close-guard.py` then re-run → reddens with
+  `wrong refusal for 'frontmatter started must not be empty': admitted_at must equal frontmatter
+  started`. Restored; tree clean.
+- DONE: independently re-drive the real falsifier for the deleted finding, rather than accept the
+  FO's quoted result
+  Widened the exclusion regex in `profile-contract-loader.py` (`POC outcome` →
+  `POC outcome\w*|POC close measurement`), re-ran the loader test: exit 1,
+  `a near-miss '## POC outcomes' heading was excluded from accepted authority` — same message and
+  same discriminating check (`near_miss_drift`) the FO reported. Confirms the property the deleted
+  case claimed to hold is still proven by a check that can actually fail for that reason. Restored;
+  `git status --short` empty both before and after.
+- DONE: `python3 scripts/kc-dev-flow-contract-test.py` exits 0
+  Own bounded invocation (900s cap, background+poll, not chained with a mutate). Tail:
+  `kc-dev-flow contract: PASS`, `EXIT:0`.
+- SKIPPED: re-litigating cycle 1's other findings (base decision, migration/architecture claims,
+  RoboRev disposition, promotion triggers, residuals)
+  Per the FO's scoping note: the only change since the cycle-1-approved candidate is the 12-line
+  test deletion, confirmed above. None of those findings reference the deleted lines or any file this
+  cycle touched; `git diff 6d340208 21a6ffeb` is the evidence they are unaffected. Re-confirmed one
+  live fact anyway since it costs nothing to check: `gh pr view 321` is still `OPEN`, so the trunk base
+  decision's "no shared lineage" reasoning is unchanged.
+
+### Summary
+
+Cycle 2 fixes nothing new; it confirms the Captain-ruled deletion of `poc_non_goals_refused` cost
+exactly what cycle 1's build reported and broke nothing. Both defect fixes (AC-1, AC-2) were
+re-falsified and re-passed at `21a6ffeb`, independent of the build's and the FO's own re-runs. The
+full contract suite passes. Candidate `21a6ffeb`, worktree clean, no PR. Nothing blocks the gate.
