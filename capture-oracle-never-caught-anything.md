@@ -1,6 +1,6 @@
 ---
 title: "capture-oracle.cjs never caught anything, so it fails the retention rule it was kept under"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain instructed in chat 2026-09-14: 開移除單且立即執行 — open the removal task and run it immediately, after the FO produced the usage record showing three runs and zero bites and withdrew its own keep recommendation. The FO selected poc-exploration under that instruction and records it as overrulable to Pilot at the cost of one stage.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 PR #433 shipped `kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` as a
