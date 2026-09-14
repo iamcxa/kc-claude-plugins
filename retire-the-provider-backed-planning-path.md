@@ -45,6 +45,17 @@ gates:
                 id: briefing:f0m9yytzq7sczkam7rrq9ym3:ideation:attempt-1:revision-1
                 digest: sha256:fabab197a41ee5c162c1e6f7ad6bb1d400dfad638abb94afb525bcc6dcf97ee5
                 room-ref: ./retire-the-provider-backed-planning-path/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:f0m9yytzq7sczkam7rrq9ym3:ideation:1
+                briefing: briefing:f0m9yytzq7sczkam7rrq9ym3:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T08:37:55.194949Z"
+                decision: approve
+                reason: 'Captain approved the ideation shape and took the recommended disposition of both residuals. Residual 1: move live_item and delivery_binding into docs/plan-flow before deleting linear-admission.py, so plan-lint.py''s L4 rule carries its own logic instead of reaching back into kc-dev-flow; AC-2 is read with that move as its precondition, not as a carve-out. Residual 2: the leave-delivery-untouched non-goal wins — the provider-backed delivery clauses in pr-delivery.md and pr-merge-extension.md stay, and AC-3 is read as scoped to intake, not delivery.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## The problem
