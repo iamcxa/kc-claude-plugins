@@ -83,6 +83,17 @@ gates:
                 id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-3:revision-1
                 digest: sha256:6516f1e77c6adf538b73358fa38f62b1fdb8499a98ec5bd063f57e8742664264
                 room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:tjxctad7413wyp3acfx8wzzp:validation:3
+                briefing: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-09-14T15:23:31.27725Z"
+                decision: approve
+                reason: 'Captain approved at the cycle-3 prove gate. The rejection''s finding was fixed rather than recorded as a limit: the qualified form no longer conflates under the same forced-collision exercise, the loader refuses a bare release with a named ContractError exercised against a real-shaped work item, the journey part is the journey file''s own slug, and four suites pass at a5bd9053 in an independently resolved checkout. The Captain did not rule on release-field-r1-evidence-record in this decision; it remains open.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
