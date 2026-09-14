@@ -1,5 +1,5 @@
 ---
-title: "POC: does a release contract group work better than a sprint ordinal"
+title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
 status: validation
 source:
 product: kc-dev-flow
@@ -53,106 +53,69 @@ gates:
 
 ## The problem
 
-Dev-flow groups work with `sprint`, an ordinal. `docs/dev/ROADMAP.md` states the semantics itself:
-identifiers are `<product>/S<number>`, with "no cross-product chronology or rank", allocated by
-whichever heading lands in `main` first. Planning, meanwhile, has moved to releases:
-`kc-journey-map` keeps a `releases:` list of `{id, name, goal}` with every story carrying
-`release: rN`, and generates a per-release contract from it. `docs/dev/ROADMAP.md`'s own
-`kc-journey-map` S1 and S2 headings are written as releases but numbered as ordinals, and each says
-its stored `sprint: SN` is a compatibility identifier held until this migration.
+`kc-journey-map` already hands dev-flow a release. Its `plan-release` mode prepares one Development
+Brief in the five-section admission format and, per `references/map-from-conversation.md` step 5,
+includes "the selected release/story IDs" inside those sections. Dev-flow already accepts that brief.
+Producer and consumer are connected.
 
-The Captain ruled on 2026-09-14 that the grouping should be a release, that the roadmap and a
-release register should be a kc-dev-flow specification rather than this repository's local policy,
-that the minimum is `roadmap.md` plus `releases.md` and must work with no user journey present,
-and that a release should line up with the repository's real release tag where possible. He then
-ruled that this starts as a POC to find out whether that route is actually smoother.
+What is missing is a structured landing place. Those identifiers arrive as brief prose, so nothing
+can ask which work items belong to a given release: the only queryable grouping field is `sprint`,
+whose value is an ordinal allocated by a `docs/dev/ROADMAP.md` heading and unrelated to any journey
+release. The import is legible to a reader and invisible to every query.
 
-Two assumptions in that route have never been executed. A release group must exist before work
-starts, while release-please derives a tag from merged commits and cuts it afterwards, so equality
-is impossible and only write-back could hold. And this repository publishes nine plugins on
-independent version streams, so a release spanning two products has two tags, not one.
+The Captain ruled on 2026-09-14 that the vocabulary unifies on `release` so the journey slice has a
+field to land in, and that the field is scalar: one release per work item. Shared or integration work
+keeps its multiple release/story origins in prose, matching `map-from-conversation.md` step 6, which
+carries multiple origins in task prose and refuses to invent a single story owner rather than forcing
+a scalar one.
 
-## Work profile receipt
-
-```yaml
-work_profile:
-  schema: kc-dev-flow-work-profile/v3
-  selected: poc-exploration
-  recommended: poc-exploration
-  basis: >-
-    Kent selected POC on 2026-09-14 to find out whether the release route is
-    smoother before its dependents are admitted. Two assumptions in that route
-    have never been executed: tag write-back against a tag that only exists
-    after merge, and a release covering two products with two version streams.
-    The output is a record, not code, and a stop is a valid outcome.
-  route: [build, prove]
-  obligations:
-    architecture:
-      - Re-express real existing state; do not design a schema before the record says the route holds.
-    implementation:
-      - Write the draft files outside the repository tree and record the result in this work item only.
-    testing:
-      - AC-1 to AC-5, read at one exact revision that the record names.
-  scope_boundary: >-
-    No edit to ROADMAP.md, to any work item's grouping fields, to kc-dev-flow,
-    or to kc-journey-map. No shipped contract, no schema, no retirement of the
-    sprint field.
-  poc_decision: Whether dev-flow adopts a package-owned release contract as its execution grouping, or keeps the sprint ordinal.
-  poc_falsifier: >-
-    Existence-disproof over this repository's real corpus: the live kc-journey-map
-    and kc-dev-flow work items cannot be grouped into user-value releases without
-    inventing releases nobody would have written, or no drafted release can be
-    bound to the cut tags kc-journey-map-v0.2.0 and kc-journey-map-v0.2.1.
-  poc_budget: One dispatch, and decision-ready inside 15 minutes; no provider requests and no file edits outside the work item.
-  poc_stop_when: >-
-    The record lists every non-terminal kc-journey-map and kc-dev-flow item against
-    a drafted release or names the items needing an invented one, each drafted
-    release carries its exact shipped tag or states why none exists, and the
-    two-product cost is stated. Work stops at that observation whichever way it falls.
-  poc_artifact: no-code
-  poc_safety_boundary: none
-  poc_decision_ready_minutes: 15
-  decision:
-    authority: Kent (Captain)
-    at: 2026-09-14T00:00:00Z
-```
+A prior POC on this entity asked a different question — whether release grouping outperforms the
+sprint ordinal — and recorded `stop`. That record and its validation stay below as evidence about
+grouping practice. They do not answer this admission, which is an interoperability requirement rather
+than a benefit comparison, and the Captain has not reopened them.
 
 ## Accepted outcome
 
-A record that answers whether to adopt the release contract, produced by re-expressing this
-repository's real existing state rather than a fixture. It reports whether the live work items
-group into user-value releases without inventing releases nobody would have written, whether a
-release can carry a real tag by write-back, and what the two-product case costs. `proceed` returns
-a candidate contract shape to the Captain; `stop` records that the sprint ordinal stays.
+A work item names its journey release in a frontmatter field called `release`, and
+`spacedock status --where release=<id>` returns that release's work items. The dispatch loader reads
+the same field, so an item carrying `release` and `release-readiness: ready` dispatches exactly as
+one carrying `sprint` does today. An adopter that has not migrated keeps dispatching on `sprint`
+unchanged.
 
 ## Non-goals
 
-- Editing `docs/dev/ROADMAP.md`, any work item's grouping fields, or any file in `kc-dev-flow`.
-- Building `roadmap.md` or `releases.md` as a shipped contract, or writing their schema into the package.
-- Changing `kc-journey-map`, its journey file, or its generated release contract.
-- Retiring the `sprint` field, which stays until a separate Captain-admitted item removes it.
-- Deciding delivery, merge, or release-please behavior.
+- A list-valued field, or any attempt to hold more than one release per work item.
+- Changing `kc-journey-map`, its journey file, the generated release contract, or what
+  `plan-release` writes into the brief.
+- Automatic migration of other adopters' records.
+- Retiring `sprint`, which stays accepted until a separate Captain-admitted item removes it.
+- Any claim that a release equals a release-please tag.
+- Reviving the deleted `release` route step, or renaming the `### Feedback Cycles` section.
 
 ## Acceptance criteria
 
-- **AC-1** A draft `releases.md` and `roadmap.md`, written outside the repository tree, cover every
-  non-terminal `kc-journey-map` and `kc-dev-flow` work item, or name the exact items that would need
-  a release nobody would have written.
-- **AC-2** The draft binds the `kc-journey-map` releases to the real journey file
-  `docs/journey/kc-journey-map/draw-a-journey.yaml` and its `r1`/`r2`/`r3` entries, and shows the
-  same two files standing alone for `kc-dev-flow`, which has no journey file.
-- **AC-3** Tag write-back is exercised against the real cut tags `kc-journey-map-v0.2.0` and
-  `kc-journey-map-v0.2.1`: each drafted release either carries the exact tag that shipped it or
-  names why no tag exists yet, and the check that would catch a tag naming nothing is named.
-- **AC-4** The two-product case is stated with its cost: what a release covering both
-  `kc-dev-flow` and `kc-journey-map` does about having two tags.
-- **AC-5** `poc_outcome` is recorded as `proceed`, `stop`, or `change`, with the exact revision read
-  and the count of items that needed an invented release.
+- **AC-1** A work item whose frontmatter carries `release` and `release-readiness: ready` and no
+  `sprint` key loads through `profile-contract-loader.py` at a first working stage without a
+  `ContractError`.
+- **AC-2** A work item carrying only `sprint` and `sprint-readiness: ready` still loads, and
+  `profile-contract-loader.test.py` and `profile-spacedock-route.test.py` exit 0.
+- **AC-3** An item carrying both key pairs with conflicting values is refused by a named error rather
+  than silently resolved to one of them.
+- **AC-4** `spacedock status --workflow-dir docs/dev --where release=<id>` returns exactly the items
+  carrying that value, exercised against a real committed item rather than a fixture.
+- **AC-5** A Development Brief produced by `kc-journey-map`'s `plan-release` names a release
+  identifier that is copied into the `release` field without transformation, shown end to end on one
+  real journey release from `docs/journey/kc-journey-map/draw-a-journey.yaml`.
 
 ## Route-back conditions
 
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
+
+## Prior POC record — a different question
+
+The two stage reports below were produced against the superseded POC framing. They are retained as
+evidence about grouping practice, not as acceptance evidence for the criteria above.
 
 ## Stage Report: implementation
 
