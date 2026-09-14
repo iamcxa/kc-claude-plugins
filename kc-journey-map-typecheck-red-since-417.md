@@ -200,3 +200,52 @@ surfaced that the known-facts list didn't have: `typescript` isn't a project dep
 so an un-pinned `npx tsc` in CI would silently fetch from the registry each run; the build stage
 should add it to `devDependencies` alongside the new script and CI step. The `paths:` filter is also
 missing `tsconfig.json`.
+
+## Stage Report: implementation
+
+- DONE: AC-1/AC-2 — add `kc-journey-map/lib/records.d.mts` declaring `storyBorder(story: TLShape): TLShape | null`.
+  `npx tsc` exits 0 at commit `fb84f89a`; violating probe `storyBorder(42)` failed `TS2345: Argument
+  of type 'number' is not assignable to parameter of type 'TLShape'`, then removed (not in diff).
+  No `@ts-ignore`, no `any`, `strict`/`skipLibCheck` unchanged.
+- DONE: AC-6 — `typescript: ^5.9.3` added to `devDependencies`; range resolves (`npm view
+  typescript@5.9.3 version` → `5.9.3`). `npm install` recorded it in `package-lock.json` (15-line
+  diff). After `rm -rf node_modules && npm ci`, `npx --offline tsc --version` → `Version 5.9.3`
+  with no registry fetch.
+- DONE: AC-3 — `typecheck` npm script (`tsc`) added; `Typecheck` CI step added to
+  `kc-journey-map-tests.yml` between `Preflight` and `Install pinned Spacedock` (before `Model
+  tests`). Local revert of `lib/records.d.mts` reproduces the original TS7016 exit 2. Live CI-red
+  demonstration on the pull request is deferred to verify-deliver — pushing a revert/re-add to
+  this PR's head was judged out of scope for the implementation checklist per advisor review.
+- DONE: AC-7 — `kc-journey-map/tsconfig.json` added to both `pull_request` and `push` `paths`
+  lists in `.github/workflows/kc-journey-map-tests.yml`.
+- DONE: AC-5 — `node --test lib/*.test.mjs`: 72/72 pass, exit 0. `bash scripts/canvas-smoke.sh`:
+  exit 0 (`ok 262 shapes across 5 pages`, `ok round trip clean`).
+- DONE: Commit on a feature branch with a Conventional Commit subject scoped to this plugin.
+  `fb84f89a` on `spacedock-ensign/kc-journey-map-typecheck-red-since-417`, staged the 4 in-scope
+  files only (`lib/records.d.mts`, `package.json`, `package-lock.json`,
+  `.github/workflows/kc-journey-map-tests.yml`); no version field touched.
+- DONE: Push the branch and open a DRAFT pull request whose body carries the reproduction, the
+  `.d.mts` finding, and the AC evidence.
+  PR #441 (draft): https://github.com/iamcxa/kc-claude-plugins/pull/441. Not marked ready, not
+  merged.
+- DONE: AC-4 — CI's measured `Typecheck` step duration, via `gh api
+  repos/iamcxa/kc-claude-plugins/actions/jobs/{id}` step timestamps on PR #441: 3s on node 22.13.0
+  (job 103924029150, `09:25:36Z`→`09:25:39Z`), 2s on node 24 (job 103924029553,
+  `09:25:35Z`→`09:25:37Z`). PR body updated with these numbers via `gh pr edit 441`.
+- DONE: Write the implementation receipt with every command, its exit code, and its output
+  excerpt.
+  `npx tsc` exit 0; probe `storyBorder(42)` exit 2 (TS2345), reverted; `npm install` exit 0;
+  `npm run typecheck` exit 0; `node --test lib/*.test.mjs` exit 0 (72 pass); `bash
+  scripts/canvas-smoke.sh` exit 0; `rm -rf node_modules && npm ci` exit 0; `npx --offline tsc
+  --version` exit 0 (`5.9.3`); `git commit` exit 0 (`fb84f89a`); `git push` exit 0; `gh pr create`
+  exit 0 (PR #441).
+
+### Summary
+
+Added `lib/records.d.mts` (the `.mjs`-matching extension, load-bearing per the ideation finding),
+pinned `typescript` as a devDependency, added a `typecheck` script and CI step, and added
+`tsconfig.json` to the workflow's `paths` filters. All local AC checks (1, 2, 5, 6, 7) pass with
+exit-code evidence; AC-4 is a measured CI number from PR #441's own job timing (3s / 2s), not an
+estimate. AC-3's local-revert reproduction is demonstrated; its live-CI-red demonstration on a real
+pull request is left to verify-deliver rather than pushed to this branch, per advisor review — the
+obligation lives in `work_profile.obligations.testing`, not this stage's checklist.
