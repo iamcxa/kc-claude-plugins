@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t12w6e29mdcnrc4chs9ps27e:backlog:attempt-1:revision-1",
+  "question": "Admit t1 (adopter-contract-test-ships-with-the-package) into backlog: ship a package-owned adopter contract test + CI recipe so adopters keep a wrapper, not a copy?",
+  "artifacts": [
+    {
+      "id": "artifact:t12w6e29mdcnrc4chs9ps27e:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b099feb156800fcde15940ab57840c8a7d149e8d/adopter-contract-test-ships-with-the-package.md",
+      "rev": "sha256:40bead412432e47114f643e2fa5b01596537b586f02cf3e51dfa9075f85c782b",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission for t1: kc-dev-flow ships scripts/adopter-contract-test.py plus an adopt-dev-flow CI recipe; AC-1..AC-4 defined; POC-exploration profile recorded (route build-\u003eprove); non-goals exclude Spacedock edits, adopter copies, and Linear access."
+    }
+  ]
+}

@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: t12w6e29mdcnrc4chs9ps27e
+gates:
+    version: 1
+    records:
+        - id: gate:t12w6e29mdcnrc4chs9ps27e:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:t12w6e29mdcnrc4chs9ps27e-backlog-1
+              briefing:
+                id: briefing:t12w6e29mdcnrc4chs9ps27e:backlog:attempt-1:revision-1
+                digest: sha256:3d1f9b27facc41f36f170d81c8312ec4a4e04292928f68ec23ac543682889968
+                room-ref: ./adopter-contract-test-ships-with-the-package/review/backlog/briefing-1
 ---
 
 `kc-dev-flow/MIGRATION.md` speaks of `scripts/kc-dev-flow-contract-test.py` as if every adopter
