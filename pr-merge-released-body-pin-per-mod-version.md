@@ -1,13 +1,13 @@
 ---
 title: "kc-dev-flow pins the released pr-merge body per Spacedock mod version, not one repository's copy"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper-r3
 sprint-readiness: ready
-started:
+started: 2026-09-14T13:47:42Z
 completed:
 verdict:
 worktree:
