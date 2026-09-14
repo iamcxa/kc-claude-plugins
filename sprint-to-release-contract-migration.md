@@ -142,7 +142,35 @@ a candidate contract shape to the Captain; `stop` records that the sprint ordina
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
 
-## Implementation — POC record
+## Stage Report: implementation
+
+- DONE: Count the invented-release rate against the real corpus.
+  22 non-terminal `kc-journey-map`/`kc-dev-flow` work items read via `spacedock status`; 12/22
+  (55%) bind to an already-named release, 10/22 (45%) need an invented or unlanded release, and
+  only 3/22 (14%) are strictly worse off under a release contract than under the sprint ordinal
+  today. Full per-item table in `poc-roadmap.md`.
+- DONE: Exercise tag write-back and journey binding against the real tags and journey file.
+  `kc-journey-map-v0.2.0` binds to r2 as majority content but also carries r1-shaped PR #415 (mixed
+  tag); `kc-journey-map-v0.2.1` binds to no release id (pure bugfix patch tag). Both are hand-matched
+  with no automated check today (`scripts/version-parity-check.sh` has no release-id notion; grepped
+  `kc-journey-map/lib/lint.mjs` and `lib/release-contract.mjs` at `origin/main` for "tag" — no hits).
+  `kc-journey-map` releases r1/r2/r3 read directly from `docs/journey/kc-journey-map/draw-a-journey.yaml`
+  `releases:`; `kc-dev-flow` has no journey file and stands alone on ROADMAP sprint prose.
+- DONE: Record `poc_outcome` with the exact revision, invented-release count, and two-product cost.
+  `poc_outcome: stop` at `origin/main@0bbf6233831543b8e8874a44a73b4868f6a1ed50` /
+  `spacedock-state/dev@0daaab3db1415ec2259784c9b18b21c9940721a2`; two-product cost is zero
+  occurrences for the named pair kc-dev-flow+kc-journey-map, but one same-shaped case
+  (`journey-map-poc`, kc-team-ops+kc-journey-map) already exists in the excluded 4-item set.
+
+### Summary
+
+Real-corpus POC on whether a release contract beats the sprint ordinal. 10 of 22 live
+`kc-journey-map`/`kc-dev-flow` items need an invented or unlanded release, but only 3 are actually
+worse off than under the sprint ordinal; both checked shipped tags bind only approximately to a
+release, hand-matched, with no automated check to catch a false binding; and the two-product cost
+this route was meant to justify has zero occurrences for the named pair (one same-shaped case
+exists one product-pair over). Recommendation recorded below: `stop` — keep the sprint ordinal, do
+not schedule a shipped release-contract migration on this evidence.
 
 Revision read: kc-claude-plugins `origin/main` @ `0bbf6233831543b8e8874a44a73b4868f6a1ed50`
 (2026-09-14T21:45:11+08:00) for `docs/dev/ROADMAP.md` and
