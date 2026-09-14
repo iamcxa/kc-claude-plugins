@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T13:50:50Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-watch-runs-without-conductor-sql
 issue:
 pr:
 mod-block:
