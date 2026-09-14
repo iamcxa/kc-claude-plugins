@@ -48,6 +48,20 @@ gates:
                 id: briefing:9xtwqxmktq2e15hr1qhx0bbb:ideation:attempt-1:revision-1
                 digest: sha256:2520572e6c21ecaed5fc95daa393b2f60a2a7173cf5667b3a91aec750dbba1ac
                 room-ref: ./ship-watch-runs-without-conductor-sql/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:9xtwqxmktq2e15hr1qhx0bbb:ideation:1
+                briefing: briefing:9xtwqxmktq2e15hr1qhx0bbb:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T14:02:53.155394Z"
+                decision: approve
+                reason: 'ideation read by the ship FO: shape grounded in dispatch.sh/watch.sh/contract/runbook. Ruling on the flagged AC-1 contradiction: keep the existing exit code (2) for a failing non-sql probe; AC-1''s ''5'' was the brief author''s error — correct AC-1 to ''exits non-zero as today (2)'' in the shape, non-goal #3 stands. Enter implementation.'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The Conductor SQL endpoint (`conductor sql`) returned "The SQL search API endpoint is temporarily disabled (HTTP 503)" from 2026-09-13 ~04:20 UTC through at least 2026-09-14 08:00 UTC (re-probed at filing: still 503). `dispatch.sh` 0.2.0 exits 5 when the `sql "SELECT 1"` probe fails, so the whole `qnow-clerk-poc` batch ran on a scratch copy with the probe replaced by a stderr note, and `watch.sh` could not read transcripts at all; the ship FO watched by hand. What did work for every read across the batch: `conductor --json session status <sid>` (idle/working), `conductor --json session message <sid> --limit N --offset M` (offset past the end returns no `sessionIndex`, so a binary search finds the tail), `conductor --json workspace status <ws>`, and the state branch.
