@@ -26,6 +26,17 @@ gates:
                 id: briefing:n2wd7aavte2k7p7nfj3aa2r5:backlog:attempt-1:revision-1
                 digest: sha256:2d069b2db454bc8c7f6aa33b3e2577251b43b5a1bb81bec8668108c36e6578ba
                 room-ref: ./mermaid-sequence-companion-has-no-repeatable-check/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:n2wd7aavte2k7p7nfj3aa2r5:backlog:1
+                briefing: briefing:n2wd7aavte2k7p7nfj3aa2r5:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T08:55:58.777138Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-14 with 「ok poc」 after the FO presented the #440 review, the coverage gap, the task, and the coupled scope question. Selecting POC ruled the scope question the same way: the CI wiring in AC-1/AC-2 of the first draft was removed and carried as a residual, because a POC runs the check once rather than building the gate. Sprint uses the task-scoped slug journey-map-mermaid-companion, which needs no ROADMAP registration on this workflow''s existing convention.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid
