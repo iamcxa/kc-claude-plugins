@@ -15,7 +15,9 @@ export default defineConfig(() => ({
 	server: {
 		port: 3737,
 		allowedHosts: [hostname(), ...extraHosts],
-		proxy: { '/connect': { target: 'http://127.0.0.1:5858', ws: true } },
+		proxy: {
+			'/connect': { target: `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`, ws: true },
+		},
 	},
 	optimizeDeps: { exclude: ['@tldraw/assets'] },
 }))

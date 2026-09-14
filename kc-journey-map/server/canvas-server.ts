@@ -10,6 +10,10 @@ import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
 const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
 const DEFAULT_ROOM = 'default'
 
+// Same allowlist source as vite.config.mts: the first operator-configured name, so the
+// printed URL resolves from the viewer's machine even when os.hostname() does not.
+const PRINT_HOST = (process.env.JOURNEY_ALLOWED_HOSTS ?? '').split(',').map((h) => h.trim()).find(Boolean) ?? hostname()
+
 const schema = createTLSchema()
 
 function validateRecord(record: any): string | null {
@@ -102,7 +106,6 @@ app.listen({ port: PORT, host: '127.0.0.1' }, (err, address) => {
 		console.error(err)
 		process.exit(1)
 	}
-	// The doc API itself stays loopback-only; this is the frontend port the operator opens,
-	// printed against the same hostname the Vite allowedHosts allowlist admits (see vite.config.mts).
-	console.log(`doc API on ${address}  (canvas: http://${hostname()}:3737/?room=${DEFAULT_ROOM})`)
+	// The doc API itself stays loopback-only; this is the frontend port the operator opens.
+	console.log(`doc API on ${address}  (canvas: http://${PRINT_HOST}:3737/?room=${DEFAULT_ROOM})`)
 })
