@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-poc-close-path-never-walked
 issue:
-pr:
+pr: "#443"
 mod-block: merge:pr-merge
 id: xve5t292zy54mncx0xm6m3v0
 gates:
