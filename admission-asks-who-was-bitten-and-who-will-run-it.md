@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-admission-asks-who-was-bitten-and-who-will-run-it
 issue:
-pr:
+pr: 457
 mod-block:
 id: gzrgwdxkh6zkenkswkhasmjc
 gates:
@@ -377,3 +377,16 @@ Ideation's main finding is that AC-1's named target (`plan-lint.py`) was already
 ### Summary
 
 Implemented all three mechanisms exactly where ideation named them: a preamble bite:/consumer: scan in `validate_admission_brief()`, a byte-identity collision check (repo-wide and optional cached-plugin) in `surface-map-check.py`'s existing per-file loop with a new `generated-copy:<name>` SURFACE escape hatch, and one added sentence in kc-ship-flow's `run-batch` SKILL.md. AC-3 was implemented at the dispatch checklist's narrower scope (one line, no new script) rather than ideation's floated sibling-script option, since the dispatch's own AC-3 wording asked only for the SKILL.md line. Both `kc-dev-flow/scripts/profile-contract-loader.test.py` and `scripts/kc-dev-flow-contract-test.py` pass (exit 0) after the change, and `python3 -m py_compile` succeeds on both touched scripts. Work committed on `spacedock-ensign/admission-asks-who-was-bitten-and-who-will-run-it` at 5537e44c.
+
+## Stage Report: validation
+
+- DONE: Local verification: profile-contract-loader.test.py and kc-dev-flow-contract-test.py both exit 0 at the exact candidate revision; re-run them fresh (not reused from the implementation report) and cite pass/fail.
+  Both re-run fresh at candidate `5537e44c9e80e364cd8a7d9e7cbeb2d71cb067a9` in the worktree: `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → all 6 suites PASS, exit 0 (a reverted preamble-scan block would flip the "admission bite/consumer preamble" suite to FAIL). `python3 scripts/kc-dev-flow-contract-test.py` → PASS, exit 0 (a reverted byte-identity block would flip the surface-map fixture assertions).
+- DONE: Draft PR via the pr-merge mod: push the branch to origin and open a Draft PR whose body has all four headings present with items or "none" (What changed / Evidence / Residuals / without-it unanswered), a `Candidate: <sha>` line, a split-root audit link to the spacedock-state/dev branch's committed entity file, and a line naming who runs the change after merge; set the entity's `pr:` field to the bare PR number and commit.
+  Preflighted `git merge-tree --write-tree origin/main 5537e44c` clean (no conflict markers), pushed `5537e44c9e80e364cd8a7d9e7cbeb2d71cb067a9` to `refs/heads/spacedock-ensign/admission-asks-who-was-bitten-and-who-will-run-it`, then `gh pr create --draft` opened https://github.com/iamcxa/kc-claude-plugins/pull/457. Body carries all four headings (Residuals: none; without-it unanswered: none), `Candidate: 5537e44c9e80e364cd8a7d9e7cbeb2d71cb067a9`, audit link `[gzr](/iamcxa/kc-claude-plugins/blob/ce2fbe4bc5a26ed6c4680504b9c87256df8a0044/admission-asks-who-was-bitten-and-who-will-run-it.md)` (spacedock-state/dev HEAD at push time), and a "Runs after merge" line naming the next Development Brief's backlog admitter and the ship FO's run-batch verification. `pr` field set to `457` via `spacedock status --set`.
+- DONE: Re-confirm AC-1..AC-4 hold at the candidate: no kernel/references/kernel.md edit; no new receipt/harness/LOC gate; the two new checks are refusal conditions inside existing scripts' existing call sites.
+  `git diff main...5537e44c --stat` at candidate: 9 files changed (4 fixtures, `profile-contract-loader.py`/`.test.py`, `surface-map-check.py`, `kc-ship-flow/skills/run-batch/SKILL.md`, `scripts/kc-dev-flow-contract-test.py`) — `references/kernel.md` not present in the diff (AC-4 kernel clause holds). No new JSON/YAML receipt schema, CI workflow, or LOC-counting file appears in the diff; the two new refusal conditions (bite:/consumer: preamble scan, byte-identity collision) live inside `validate_admission_brief()`'s and `surface-map-check.py`'s existing per-file loop, and AC-3's line is one added SKILL.md sentence at the existing `verified` step — no new call site (AC-1/AC-2/AC-3/AC-4 all hold).
+
+### Summary
+
+Re-ran both test suites fresh at candidate 5537e44c and both exit 0. Pushed the candidate SHA to a new remote branch and opened Draft PR #457 with the required four-heading body, Candidate line, split-root audit link, and runs-after-merge line; set `pr: 457` on the entity. Confirmed the diff touches no kernel file and adds no new receipt/harness/LOC gate — both new checks are refusal additions inside the two existing scripts' existing call sites, consistent with AC-1..AC-4.
