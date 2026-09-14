@@ -1,6 +1,7 @@
 ---
 title: "POC: validate the first cloud run of the dev-flow improvement loop"
 status: validation
+archived: 2026-09-15
 product: kc-dev-flow
 sprint: S8
 sprint-readiness: ready
@@ -369,3 +370,18 @@ The recorded Captain wait is 75 seconds, copied from the parent's `.context/orig
 ### Summary
 
 The renewed single cloud baseline reached the actual installed exact-main runtime and reported all three frozen cases passing. The useful next decision is the real Captain close; original cloud byte captures remain available, while exported evidence and scoped counters support only the bounded claims above.
+
+## Withdrawal
+
+Archived on the Captain's ruling of 2026-09-15, without a delivery verdict.
+
+This POC declared `poc_artifact: disposable` at profile choice, and it produced nothing: no branch and no
+worktree for it exist, and its `poc_outcome` was never recorded. Its `pr` field held
+`local-merge:accepted-cloud-experiment-change-outcome-no-product-diff`, which is prose where the merge
+sentinel contract requires a commit SHA, so `merge guard` read it as an open pull request and refused to
+finalize; that field has been cleared, which is what removed it from the startup hook's scan.
+
+Its validation gate carries an approve decision still in `pending` state. That approval is left unspent
+rather than converted: the only verdict that finalizes an entity with nothing to merge is `rejected`, and
+the experiment was not rejected — the Captain recorded on 2026-09-15 that its outcome is no longer
+recoverable. Archiving states that honestly; a verdict would not.
