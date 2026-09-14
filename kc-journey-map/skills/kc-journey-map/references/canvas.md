@@ -32,6 +32,15 @@ them. Unless the user asks to stop, cleanup may stop only owned test services th
 serve no delivered board link.
 These are operator checks, not automatic version detection or lifecycle protection.
 
+Identify an owned service by a process id captured when you started it, and stop that
+id. A command-line pattern is not an identifier: several worktrees of this repository
+run this same server on one machine, so `pkill -f canvas-server` matches a canvas
+someone else is reading. Without a captured id, read every line of `pgrep -fl` for the
+pattern and confirm the match set before stopping anything. Give each test service its
+own port and its own `JOURNEY_ROOMS_DIR` at startup; that is what makes a narrow match
+possible later. After stopping anything, health-check the services you did not intend
+to touch.
+
 From the plugin directory, when installation or startup is needed:
 
 ```bash
