@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-close-roster-is-the-fence-and-captain-stopped-validates
 issue:
-pr:
+pr: 455
 mod-block:
 id: 8ekqymrkgz5f9y0h8qaf6vp2
 gates:
