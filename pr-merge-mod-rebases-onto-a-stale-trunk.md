@@ -12,8 +12,8 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-pr-merge-mod-rebases-onto-a-stale-trunk
 issue:
-pr:
-mod-block:
+pr: 453
+mod-block: merge:pr-merge
 id: ab8tk40pm0t0wv2jpt7551d6
 gates:
     version: 1
