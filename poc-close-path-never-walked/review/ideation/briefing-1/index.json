@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:xve5t292zy54mncx0xm6m3v0:ideation:attempt-1:revision-1",
+  "question": "Build the shaped route — move the two POC outcome headings out of the accepted-authority projection by exact heading, and make poc-close-guard refuse an empty started by name — and keep the missing docs/architecture.md out of this slice?",
+  "artifacts": [
+    {
+      "id": "artifact:xve5t292zy54mncx0xm6m3v0:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/64a5ae9081ffac52ebd31ef2f5b64fc612dd8c47/poc-close-path-never-walked.md",
+      "rev": "sha256:95666efdf85e2572d43657c08c5d62ea7b56182cd1f2e2940a96f57526de852f",
+      "mediaType": "text/markdown",
+      "summary": "Shape ruled (b) over (a) and (c), rejecting (c) because bind_stage_pin also makes validation non-re-enterable once the prove worker writes, so no worker could record the direction (c) depends on. Defect 2 refuses by name because the whitespace repair alone turns a wrong answer into an uncaught KeyError. Stop numbers 8 files / 160 lines / 90 added in the loader test. One Captain decision open: repo-root docs/architecture.md does not exist and every Pilot item here carries that unmet obligation."
+    }
+  ]
+}

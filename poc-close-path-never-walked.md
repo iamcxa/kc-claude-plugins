@@ -37,6 +37,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:xve5t292zy54mncx0xm6m3v0:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:xve5t292zy54mncx0xm6m3v0-ideation-1
+              briefing:
+                id: briefing:xve5t292zy54mncx0xm6m3v0:ideation:attempt-1:revision-1
+                digest: sha256:7a09dc39e762c5d2d2646d8b5bcc18be148a058470d2d61aa2445fbe59042c4f
+                room-ref: ./poc-close-path-never-walked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:xve5t292zy54mncx0xm6m3v0:ideation:1
+                briefing: briefing:xve5t292zy54mncx0xm6m3v0:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T08:07:06.807083Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-14 ("按建議") on the FO gate presenting shape ruling (b): the two POC outcome headings leave the accepted-authority projection by exact heading. (c) was eliminated because bind_stage_pin also makes validation non-re-enterable once the prove worker writes, so no worker could record the direction it depends on; (a) collapses into (b) or leaves same-stage re-entry broken. Defect 2 refuses by name at the admitted_at comparison. The Captain also took the recommendation to keep the missing iamcxa/kc-claude-plugins docs/architecture.md out of this slice and admit it as its own item, with build proceeding against root ARCHITECTURE.md.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
