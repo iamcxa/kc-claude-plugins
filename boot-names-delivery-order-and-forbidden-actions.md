@@ -62,6 +62,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:v9mf30n3s03ev5dvtn08vsed:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:v9mf30n3s03ev5dvtn08vsed-validation-1
+              briefing:
+                id: briefing:v9mf30n3s03ev5dvtn08vsed:validation:attempt-1:revision-1
+                digest: sha256:6f69a6e01190285ceb15792930b764ea4226fe0bbaa4c37c016d1f0166e38716
+                room-ref: ./boot-names-delivery-order-and-forbidden-actions/review/validation/briefing-1
 ---
 
 bite: (1) 2026-09-14, two of five r3 workers (`pr-merge-released-body-pin-per-mod-version`, `ship-watch-runs-without-conductor-sql`) prepared their validation gate with the candidate existing only in the sandbox — no branch on origin, no PR — so the ship FO could not verify at a pinned SHA and had to message each worker to push first (two extra rounds, ~20 minutes each). (2) 2026-09-14, the `adopter-contract-test-ships-with-the-package` worker pushed a fixture branch to iamcxa/kc-claude-plugins for a live Actions probe (two runs, Kent pays the minutes), attempted `gh repo create` (403) and `PUT repos/…/branches/main/protection` (403); nothing changed only because the token lacked scope. The boot message (dispatch.sh 0.2.0 + #445 wording) forbids merging and gate decisions but says nothing about repository settings, repository creation, or CI runs outside the PR's own branch, and does not order delivery before validation.

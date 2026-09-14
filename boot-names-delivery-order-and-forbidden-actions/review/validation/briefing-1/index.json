@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:v9mf30n3s03ev5dvtn08vsed:validation:attempt-1:revision-1",
+  "question": "Approve validation for kc-ship-flow's boot-message delivery-order + forbidden-actions wording and watch.sh's pr-empty check — PR #456, candidate ce12aea237b64da43559133239ba064167b6e29e — ready to merge?",
+  "artifacts": [
+    {
+      "id": "artifact:v9mf30n3s03ev5dvtn08vsed:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/20ed550d71d729d158c5ca279265ed2ebb105b66/boot-names-delivery-order-and-forbidden-actions.md",
+      "rev": "sha256:4e206058b32345da15663b980f1b42c24e078679e06ee03207080c494010ddbb",
+      "mediaType": "text/markdown",
+      "summary": "Exact-revision evidence: worktree HEAD ce12aea2 matches PR #456's headRefOid exactly. dispatch.test.sh 19/19 passed (AC-1/AC-2 wording assertions); watch.test.sh 17/17 passed (AC-3's prepared-no-pr -\u003e question branch, case q). PR #456 feedback population is empty (fresh Draft, no reviews/comments). No production obligation silently taken on; the one accepted runtime-behavior change (watch.sh's question vs gate-prepared on empty pr:) is disclosed via semantics_unchanged: false. AC-4 (fixture hygiene, comment ratio) evidenced at implementation: no fixture copies an existing file, new fixture carries no real repository SHA, ~4 comment lines added, well under the 3% baseline."
+    }
+  ]
+}
