@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: dev-flow-pr-merge-adopter-seam
 sprint-readiness: ready
-started:
+started: 2026-09-14T06:35:34.73052Z
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-capture-oracle-never-caught-anything
