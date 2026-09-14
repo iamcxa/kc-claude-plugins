@@ -96,6 +96,13 @@ silence the error.
 * **AC-4** The added CI cost is stated as a measured number from the job's own timing, not an
   estimate.
 * **AC-5** `node --test lib/*.test.mjs` and `bash scripts/canvas-smoke.sh` still pass.
+* **AC-6** `typescript` is a `devDependencies` entry in `kc-journey-map/package.json` and is
+  present in `package-lock.json`, so the CI typecheck runs an installed compiler. `npx tsc
+  --version` after a clean `npm ci`, with the network unavailable to fetch a package, still
+  reports a version. Added on the Captain's 「一起做」 ruling, 2026-09-14.
+* **AC-7** `kc-journey-map/tsconfig.json` is in both the `pull_request` and `push` `paths` lists of
+  `.github/workflows/kc-journey-map-tests.yml`, and a tsconfig-only commit retriggers the job.
+  Added on the Captain's 「一起做」 ruling, 2026-09-14.
 
 ## Work profile receipt
 
