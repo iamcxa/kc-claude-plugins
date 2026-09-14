@@ -1,6 +1,6 @@
 ---
 title: "close.py closes only the tasks the batch dispatched, and its validator exempts Captain-stopped tasks from the merged_sha rule"
-status: backlog
+status: ideation
 source: "measured on the first close after #448 merged, ship-cloud-wrapper-r3, 2026-09-15 (questions log on spacedock-state/ship)"
 product: kc-ship-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 bite: 2026-09-15, `python3 kc-ship-flow/scripts/close.py ship-cloud-wrapper-r3 --dev-state … --ship-state …` at main 625c6b50. (1) It exited 3 `not all tasks merged` because three entities carrying `sprint: ship-cloud-wrapper-r3` with `sprint-readiness: defer` — never dispatched, absent from the fence — were counted as batch tasks; the ship FO had to move them to another sprint to close. (2) After that, `close.py --validate` refused the receipt it had just written: the two `captain_stopped` tasks (PRs #446 and #450, closed unmerged by the Captain) carry `merged_sha: null`, and #448's 40-hex rule has no exemption for them, so the first receipt the new validator ever saw failed on its own rule. The receipt was committed with the refusal disclosed.
