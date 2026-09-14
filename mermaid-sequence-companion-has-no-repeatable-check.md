@@ -1,6 +1,6 @@
 ---
 title: "The Mermaid sequence companion has no repeatable in-repo check, so the journey map cannot rely on Mermaid"
-status: ideation
+status: implementation
 source:
 product: kc-journey-map
 planning-window:
