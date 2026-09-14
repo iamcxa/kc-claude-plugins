@@ -208,3 +208,20 @@ Stop-number note: final diff is 7 files changed (within the 8-file cap) / 198 ch
 ### Summary
 
 Implemented AC-1/AC-2/AC-3 in `close.py`, `close.test.py`, and `kc-ship-close-receipt.v2.schema.json`, plus two new fixtures. One judgment call: `filter_dispatched_tasks` keeps a merged-but-unfenced task (not just fence-key members) to avoid regressing the #448 DEV-304 fixture that journey step 2's literal wording would have broken — escalation was attempted but no team-lead was reachable, so this is called out here for review rather than silently guessed past. All three test files (`close.test.py`, `pin.test.py`, `uat-doc.test.py`) pass. Diff is 7 files / 198 lines, slightly over the shape stage's 150-line estimate, attributable to required fixture/docstring content rather than scope growth.
+
+## Stage Report: validation
+
+- DONE: Run local verification: close.test.py, pin.test.py, uat-doc.test.py in kc-ship-flow/scripts must all print their pass line at exit 0 on the exact candidate revision; record the candidate SHA.
+  Candidate `e828c9b12384365e4b68c99cc37b56ec82538a63` (parent `625c6b504fe25d006083a9329f5acfa775a2800d`); all three printed their pass line at exit 0 — `close.test.py` asserts, among other things, exit 0 + a specific receipt task-key set for the new not-dispatched fixture and exit 1 naming `DEV-301`/`DEV-306` for the unchanged `bad-merged-sha` fixture (a case that would fail if the captain_stopped exemption over-widened).
+- DONE: Push the branch to origin and open a Draft PR through the pr-merge mod, with the required headings/lines and the AC-1 deviation disclosed.
+  Preflighted clean with `git merge-tree --write-tree 625c6b50.. e828c9b1..` (tree `497509bf`), pushed `spacedock-ensign/close-roster-is-the-fence-and-captain-stopped-validates`, title passed `check-pr-title.py` (reads `fix`), opened as Draft.
+- DONE: Set the entity's pr: field to the bare PR number and spacedock state commit.
+  Set after PR creation in the same stage; see frontmatter and the state-checkout commit noted in the completion message.
+- DONE: Count added comment lines in the diff against the repository's 3% baseline; delete any comment that merely narrates the diff rather than explaining a non-obvious why.
+  106 added lines in close.py+close.test.py, 9 are `#` comments (~8.5%, above the 3% baseline); read all nine — each explains a non-obvious why (RESERVED_FENCE_KEYS rationale, the single `_sha_ok` exemption clause, and the two new test sections' AC linkage), none merely narrates the following line, so none were deleted.
+- DONE: Confirm no fixture copies an existing repository file or a cached plugin file, and no real SHA of this repository appears in a fixture (AC-3).
+  `diff`'d both new fixtures against their nearest existing siblings (`debrief-scan/DEV-303.md`, `receipts/bad-merged-sha.json`) — both differ; grepped the two new 40-hex strings (`abc1230...`, `deadface0...`) against `git log --oneline` output — no match to a real commit SHA.
+
+### Summary
+
+Re-ran all three required test files at candidate `e828c9b1` (all pass, each on a falsifiable assertion, not a bare pass count); verified the comment-density overage is all non-narrating "why" comments so none needed deletion; confirmed AC-3's fixtures are original content with fake SHAs. Opened the Draft PR through the pr-merge mod's canonical delivery unit (clean preflight, checked title) with the AC-1 deviation disclosed in the body per this stage's instruction.
