@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T22:32:03Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-close-roster-is-the-fence-and-captain-stopped-validates
 issue:
 pr:
 mod-block:
