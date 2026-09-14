@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fafrpfqmdc3zqhq8asfbt83r:validation:attempt-1:revision-1",
+  "question": "Accept the delivery on PR #441 and close this task at done once the PR is merged?",
+  "artifacts": [
+    {
+      "id": "artifact:fafrpfqmdc3zqhq8asfbt83r:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/00c7d21efd90a66b00eba9d2560d13009774541d/kc-journey-map-typecheck-red-since-417.md",
+      "rev": "sha256:7c4bfa7d0b7c64802ec4219cd63be9a71ef19e3abc0c7900b0d01565049113b2",
+      "mediaType": "text/markdown",
+      "summary": "All seven acceptance criteria hold at PR #441's head 77d53153. AC-3, the reason the task exists, is demonstrated rather than asserted: a deliberate break commit made the new Typecheck step fail on a real pull-request run with the TS7016 line, and the downstream steps were skipped, so the step gates the job rather than reporting alongside a pass; the restore commit returned all six checks to green. Both halves are cited by job URL (red run 34828478902, green run 34828607519) and the break-and-revert pair is left on the branch as durable evidence whose net diff is zero. The ensign also confirmed locally that renaming the declaration to records.d.ts reddens tsc, so the .d.mts extension is load-bearing, that a violating call fails with TS2345, that npx --offline tsc --version reports 5.9.3 after a clean npm ci so the compiler is installed rather than fetched, and that the model tests and canvas smoke still pass. The Typecheck step costs 3s on node 22.13.0 and 2s on node 24, consistent across three independent runs. The diff is exactly four files with no version field touched. One claim is explicitly not demonstrated: AC-7's retrigger half. The ensign confirmed by reading that kc-journey-map/tsconfig.json is in both paths lists but pushed no tsconfig-only commit to observe a live retrigger; the FO separately confirmed that the filter string matches a tracked file at that exact path, which closes the realistic typo failure mode but is not the observation AC-7 names. PR #441 is Draft and green; merging and marking ready remain the Captain's decisions."
+    }
+  ]
+}

@@ -56,6 +56,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fafrpfqmdc3zqhq8asfbt83r:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fafrpfqmdc3zqhq8asfbt83r-validation-1
+              briefing:
+                id: briefing:fafrpfqmdc3zqhq8asfbt83r:validation:attempt-1:revision-1
+                digest: sha256:d50d32c163a8d8e1c1743c992ca2618228df8d5d7857750218cecedf704b4cea
+                room-ref: ./kc-journey-map-typecheck-red-since-417/review/validation/briefing-1
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
