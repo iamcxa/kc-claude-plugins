@@ -249,3 +249,67 @@ exit-code evidence; AC-4 is a measured CI number from PR #441's own job timing (
 estimate. AC-3's local-revert reproduction is demonstrated; its live-CI-red demonstration on a real
 pull request is left to verify-deliver rather than pushed to this branch, per advisor review — the
 obligation lives in `work_profile.obligations.testing`, not this stage's checklist.
+
+## Stage Report: validation
+
+- DONE: Re-derive every AC independently at PR #441's head.
+  Branch head at start `fb84f89a`; all commands re-run from a clean `npm ci` in the worktree, exit
+  codes recorded below rather than trusting the implementation receipt's prose.
+- DONE: AC-3's live falsifier.
+  Pushed `f2d7cba5` (deletes `lib/records.d.mts`) to the PR branch. CI run 34828478902: job
+  103925973113 (node 22.13.0) and job 103925972923 (node 24) both `Typecheck` step ->
+  `failure`, log quotes `TS7016: Could not find a declaration file for module
+  '../../lib/records.mjs' ... implicitly has an 'any' type`, exit code 2; downstream steps
+  (`Install pinned Spacedock`, `Model tests`, `Boot and render`) show `skipped`, confirming the
+  step gates the job rather than merely reporting alongside a pass. Pushed `77d53153` (revert)
+  restoring the file byte-identical to `fb84f89a`'s copy (`git diff fb84f89a HEAD --
+  lib/records.d.mts` empty). CI run 34828607519: job 103926375230 (node 22.13.0, 22s) and job
+  103926374997 (node 24, 28s) both `Typecheck` -> `success`, all 6 checks on PR #441 pass.
+  AC-3 holds, demonstrated rather than deferred.
+- DONE: Second falsifier, `.d.mts` vs `.d.ts`, local only.
+  `mv lib/records.d.mts lib/records.d.ts && npx tsc` -> exit 2, `TS7016` on the same import line;
+  reverted, working tree clean. Proves the `.mjs`-matching extension is load-bearing.
+- DONE: AC-2 — violating-call probe.
+  `server/client/App.tsx` call site changed to `storyBorder(42)`; `npx tsc` -> exit 2,
+  `TS2345: Argument of type 'number' is not assignable to parameter of type 'TLShape'`; probe
+  reverted, `git status --short` clean on HEAD `77d53153`.
+- DONE: AC-6 — offline compiler after clean install.
+  `rm -rf node_modules && npm ci` exit 0; `npx --offline tsc --version` -> `Version 5.9.3`, exit
+  0, no registry reachable. `package-lock.json` carries `"typescript": "^5.9.3"`.
+- DONE: AC-7 — paths-filter membership, honestly scoped.
+  Read (not observed as a live retrigger): `kc-journey-map/tsconfig.json` is present in both the
+  `pull_request` and `push` `paths:` lists of `.github/workflows/kc-journey-map-tests.yml`. No
+  tsconfig-only commit was pushed in this stage, so the retrigger claim in AC-7's second half is
+  unverified — stated as read-only, not demonstrated.
+- DONE: AC-4 — measured `Typecheck` step seconds, including this stage's own runs.
+  Implementation's original measurement (fb84f89a, job 103924029150/103924029553): 3s node
+  22.13.0, 2s node 24. This stage's red run (103925973113/103925972923): step failed at ~2s in
+  (skipped downstream, so no full-step duration comparable). This stage's green run
+  (103926375230/103926374997): `started_at`/`completed_at` via `gh api .../jobs/{id}` ->
+  09:33:36Z-09:33:39Z = 3s node 22.13.0; 09:33:41Z-09:33:43Z = 2s node 24. Consistent across all
+  three independent runs.
+- DONE: AC-5 — model tests and canvas smoke, re-run on final HEAD `77d53153`.
+  `node --test lib/*.test.mjs`: 72/72 pass, exit 0. `bash scripts/canvas-smoke.sh`: exit 0 (`ok
+  262 shapes across 5 pages`, `ok round trip clean`).
+- DONE: Scope and commit-message audit.
+  `git diff --stat origin/main...HEAD` (main fetched fresh): exactly 4 files —
+  `.github/workflows/kc-journey-map-tests.yml`, `kc-journey-map/lib/records.d.mts`,
+  `kc-journey-map/package-lock.json`, `kc-journey-map/package.json`; net diff identical to
+  `fb84f89a`'s (the break/revert pair nets to zero). No `plugin.json` or `marketplace.json` in the
+  diff. The durable fix commit `fb84f89a` is a Conventional Commit subject scoped to
+  `kc-journey-map`; the two evidence commits (`f2d7cba5`, `77d53153`) are this stage's deliberate,
+  authorized break-and-revert pair, left on the branch as durable falsifier evidence rather than
+  squashed away.
+- DONE: Leave PR #441 green and Draft.
+  `gh pr view 441` at close: `isDraft: true`, `state: OPEN`, `mergeable: MERGEABLE`, HEAD
+  `77d53153`, all 6 checks passing (confirmed via `gh pr checks 441` after the restore run).
+
+### Summary
+
+All seven ACs hold at PR #441's final head `77d53153bb432afd7085c29c38294237cf1d77bf`. AC-3, the
+reason this task exists, is demonstrated rather than deferred: a real pull-request run reddened
+with the TS7016 line and skipped downstream steps, then a restore run went green again, both cited
+by job URL. The only unmet claim is AC-7's retrigger half — the `paths:` membership is confirmed
+by reading the workflow file, but no tsconfig-only commit was pushed to observe a live retrigger,
+so that specific claim is left as "read, not observed" rather than asserted. Branch left Draft,
+green, and untouched beyond the authorized break-and-revert pair.
