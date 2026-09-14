@@ -1,0 +1,52 @@
+{
+  "e2e": {
+    "result": "not recorded"
+  },
+  "questions": [],
+  "receipt_sha256": "6e71bdcd34ceb574a63b098d2b9ade0b0985caace011f53aaadc05feafcc982c",
+  "residuals": [],
+  "schema": "kc-ship-close-receipt/v2",
+  "sprint": "ship-cloud-wrapper-r3",
+  "tasks": {
+    "adopter-contract-test-ships-with-the-package": {
+      "debrief": "failure: captain_stopped",
+      "merged_sha": null,
+      "pr": "450",
+      "session_id": "62536c2f-cf6c-4b9a-834e-68f62b85ccd4",
+      "slug": "adopter-contract-test-ships-with-the-package",
+      "workspace_id": "4878c599-b5ba-4f22-b3d3-2e83712b82f1"
+    },
+    "pr-merge-released-body-pin-per-mod-version": {
+      "debrief": "failure: captain_stopped",
+      "merged_sha": null,
+      "pr": "446",
+      "session_id": "1ca1e5d8-f39b-473d-8e2f-05da64760418",
+      "slug": "pr-merge-released-body-pin-per-mod-version",
+      "workspace_id": "2be65410-fd56-457e-aabf-0c8be7085155"
+    },
+    "ship-close-records-merged-sha-and-worker-debrief": {
+      "debrief": "_debriefs/2026-09-14-02-claude-claude-sonnet-5.md",
+      "merged_sha": "c5c17a0d7b2e0a7d8c3dfd5455b21beef7ee0378",
+      "pr": "pr-merge:448",
+      "session_id": "7b948fd6-2f6d-47de-ab68-cdc6c2a6544b",
+      "slug": "ship-close-records-merged-sha-and-worker-debrief",
+      "workspace_id": "d57fe285-25c6-4561-bf93-d07253277b3c"
+    },
+    "ship-dispatch-env-file-resume-and-gate-authority": {
+      "debrief": "_debriefs/2026-09-14-01-claude-claude-sonnet-5.md",
+      "merged_sha": "75b8b5a6977c3e42635e03cba7fe02dde3980c5e",
+      "pr": "pr-merge:445",
+      "session_id": "48d855a0-8e65-4ed0-b3ee-122fae6a4737",
+      "slug": "ship-dispatch-env-file-resume-and-gate-authority",
+      "workspace_id": "aa8abd25-daea-4410-9934-952fda853560"
+    },
+    "ship-watch-runs-without-conductor-sql": {
+      "debrief": "_debriefs/2026-09-15-04-claude-claude-sonnet-5.md",
+      "merged_sha": "625c6b504fe25d006083a9329f5acfa775a2800d",
+      "pr": "pr-merge:451",
+      "session_id": "f4f84aba-2225-4833-8c76-50b568de576c",
+      "slug": "ship-watch-runs-without-conductor-sql",
+      "workspace_id": "89347f82-a86b-4bf6-a7ea-0523fd144eac"
+    }
+  }
+}
