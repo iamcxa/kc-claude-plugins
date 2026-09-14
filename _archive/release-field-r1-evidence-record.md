@@ -2,6 +2,7 @@
 id: yz3we5ez1ad507vg956cwg0s
 title: "Evidence record: release r1 carried end to end into a work item's release field"
 status: backlog
+archived: 2026-09-15
 source:
 product: kc-dev-flow
 planning-window:
@@ -52,3 +53,11 @@ Retire this record once `sprint-to-release-contract-migration` closes and a
 real migrated adopter item supersedes it as AC-5 evidence; without-it
 disposition is Kent's call, flagged in `sprint-to-release-contract-migration`'s
 stage report.
+
+## Withdrawal
+
+Withdrawn on the Captain's ruling of 2026-09-15. Two reviewers judged this an evidence artifact rather
+than a deliverable this workflow tracks: its own body says it exists to carry evidence rather than to
+name work, and the evidence itself — the byte equality and the `--where release=r1` result — is
+recorded verbatim in `sprint-to-release-contract-migration`'s stage reports. It also carried a bare
+`release: r1`, which the qualified-release rule in PR #454 refuses.
