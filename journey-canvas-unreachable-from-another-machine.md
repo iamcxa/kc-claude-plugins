@@ -26,6 +26,17 @@ gates:
                 id: briefing:bxhtchz8rwth9hpeepzwg42t:backlog:attempt-1:revision-1
                 digest: sha256:007faf1e65a7bcea86cc524eb49c563d28ff89b0e12b1ad3cc2389a8a31c4a0f
                 room-ref: ./journey-canvas-unreachable-from-another-machine/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:bxhtchz8rwth9hpeepzwg42t:backlog:1
+                briefing: briefing:bxhtchz8rwth9hpeepzwg42t:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T10:08:35.846834Z"
+                decision: approve
+                reason: Captain approved in chat 2026-09-14 with 「Pilot」 to the FO's recommendation, after the FO verified all three causes against the working tree and corrected the report's inaccurate hard-coded claim. Pilot rather than POC because the fix shape is not in doubt but its proof is a cross-machine run, which is an evidence round rather than a one-shot exploration. The loopback-only document API bind is held as an accepted-outcome property, not an implementation detail.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
