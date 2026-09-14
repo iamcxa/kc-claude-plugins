@@ -80,6 +80,17 @@ gates:
                 id: briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-2:revision-1
                 digest: sha256:ee2b3bcccdf4c940c10a71719950542fa518c8f077b190c05625054e6989ba4c
                 room-ref: ./retire-the-provider-backed-planning-path/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:f0m9yytzq7sczkam7rrq9ym3:validation:2
+                briefing: briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-14T10:32:48.952444Z"
+                decision: approve
+                reason: Captain approved at the cycle-2 validation gate, after the rework rebased the candidate onto origin/main. A fresh reviewer re-ran all five suites at 5de5778a in an independently resolved detached checkout, checked the conflict resolution against a re-fetched origin/main, and diffed the whole branch to confirm nothing outside the disclosed scope changed. AC-4 and AC-5 carry implementation-stage evidence plus an FO direct read at the rebased tip.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
