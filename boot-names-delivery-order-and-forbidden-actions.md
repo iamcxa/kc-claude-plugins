@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T22:34:15Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-boot-names-delivery-order-and-forbidden-actions
 issue:
 pr:
 mod-block:
