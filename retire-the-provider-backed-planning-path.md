@@ -5,8 +5,8 @@ source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: kc-dev-flow/S10
+sprint-readiness: ready
 started:
 completed:
 verdict:
