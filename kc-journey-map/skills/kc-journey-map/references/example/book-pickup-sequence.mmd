@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    actor Reader
+    participant Desk
+    participant Catalog
+    Reader->>Desk: Request a book
+    Desk->>Catalog: Check availability
+    alt Available
+        Catalog-->>Desk: Copy ready
+        Desk-->>Reader: Collect the book
+    else Unavailable
+        Catalog-->>Desk: No copy yet
+        Desk-->>Reader: Offer a reservation
+    end

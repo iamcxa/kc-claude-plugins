@@ -99,11 +99,18 @@ New pins include `work_item_authority_sha256`. The loader's
 body bytes, including unknown fields and headings. It excludes these runtime
 fields: `status`, `started`, `completed`, `verdict`, `worktree`, `pr`, `mod-block`,
 `gates`, and `review-round`. It excludes a column-zero `## Stage Report` or
-`## Stage Report: <label>` section through the next level-one/two heading
-outside a code fence. Reports and runtime metadata carry evidence, not permission
-to change the goal, non-goals, criteria, or repair scope. Record authority changes
-outside reports; a report cannot override the accepted brief. Unknown sections
-remain bound. Unterminated code fences refuse loading.
+`## Stage Report: <label>` section, and the exact-match `## POC outcome` and
+`## POC close measurement` headings a POC prove stage writes, each through the
+next level-one/two heading outside a code fence. A near-miss heading (for
+example `## POC outcomes`) stays bound. Reports, POC outcome sections, and
+runtime metadata carry evidence, not permission to change the goal, non-goals,
+criteria, or repair scope. Record authority changes outside reports; a report
+cannot override the accepted brief. Unknown sections remain bound. Unterminated
+code fences refuse loading.
+
+Any future contract that requires a worker to write a body section outside
+`## Stage Report` strands its item the same way these two did; add its exact
+heading to this exclusion list rather than widening the match.
 
 Ordinary forward transitions compare `work_item_boundary_sha256`, the same
 projection with the two stage-evidence receipt fields `equivalence_instrument`

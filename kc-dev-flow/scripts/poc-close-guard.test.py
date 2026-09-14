@@ -463,6 +463,12 @@ with tempfile.TemporaryDirectory(prefix="poc-close-guard-") as temporary:
     measurement_regressions(guard, root)
     direct = write_item(root, direct_item_text(), "direct")
     require(guard.validate(direct, "prepare")[2:] == ("direct", "implementation"), "direct POC was not accepted from implementation")
+    empty_started = direct_item_text().replace("started: 2026-08-30T00:00:00Z", "started:")
+    require_refusal(guard, root, empty_started, "prepare", "frontmatter started must not be empty")
+    absent_started = direct_item_text().replace(
+        "status: implementation\nstarted: 2026-08-30T00:00:00Z\n", "status: implementation\n"
+    )
+    require_refusal(guard, root, absent_started, "prepare", "frontmatter started must not be empty")
     require_refusal(guard, root, direct_item_text(elapsed=899), "prepare", "does not match")
     require_refusal(guard, root, direct_item_text(interventions=1), "prepare", "requires direction change")
     require_refusal(guard, root, direct_item_text(ready_at="2026-08-30T00:15:01Z", elapsed=901), "prepare", "requires direction change")
