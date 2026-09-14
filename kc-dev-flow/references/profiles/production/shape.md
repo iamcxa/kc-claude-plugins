@@ -19,6 +19,11 @@ policy, rollout, and release boundary.
       "receipt": "reverse_recovery"
     },
     {
+      "path": "../../design-preview.md",
+      "trigger": "user_visible_surface_change",
+      "receipt": "design_preview"
+    },
+    {
       "path": "../../journey-slicing.md",
       "trigger": "multi_slice_required",
       "receipt": "journey_slices"
