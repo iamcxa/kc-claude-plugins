@@ -123,13 +123,9 @@ This bounded kc-dev-flow extension retains the exact released Spacedock
 `pr-merge` 0.12.2 body with one `--draft` adjustment, then overrides its unsafe
 delivery and split-root seams below. Every adopter contract test compares its
 `docs/dev/_mods/pr-merge.md` released body (everything before this marker)
-against the sha256 pinned in `contract-manifest.json`'s
-`pr_merge_released_bodies` table, keyed by that mod's own frontmatter
-`version:`. One fleet member's Spacedock `pr-merge` mod version does not
-describe another's, so the table carries one row per version; a version
-absent from the table fails by name (`mod version X not pinned by
-kc-dev-flow Y; add its released hash`) rather than skipping the check. The
-runtime entry remains
+against the sha256 pinned at `contract-manifest.json`
+`pr_merge_released_body.sha256`, and fails naming the pin key when the body
+drifts. The runtime entry remains
 `spacedock merge guard {slug} --verdict passed|rejected --workflow-dir {dir}`.
 
 Content an adopter appends after this file's own closing runtime-extension

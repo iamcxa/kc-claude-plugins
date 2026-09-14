@@ -43,9 +43,15 @@
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md"
   ],
-  "pr_merge_released_body": {
-    "boundary": "an adopter's docs/dev/_mods/pr-merge.md, the bytes before the first '<!-- kc-dev-flow runtime extension:start -->' line, trailing newlines stripped",
-    "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
-    "bytes": 10551
+  "pr_merge_released_bodies": {
+    "boundary": "an adopter's docs/dev/_mods/pr-merge.md, the bytes before the first '<!-- kc-dev-flow runtime extension:start -->' line, trailing newlines stripped, keyed by that mod's own frontmatter `version:` -- each entry hashed from the mod exactly as Spacedock released it, never an adopter's edited copy",
+    "0.12.3": {
+      "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
+      "bytes": 10551
+    },
+    "0.27.0": {
+      "sha256": "ba9e71a5935089c4bbf3053ef4d79f1601dfdbcda03694e92f9b81d471de65c8",
+      "bytes": 20120
+    }
   }
 }

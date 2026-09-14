@@ -175,6 +175,18 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    That drift comparison is bounded at the `:end` marker; an adopter may add its
    own local prose after it, and `pr-merge-extension.md`'s own opening section
    states the declared precedence for that region against the marked block.
+   The released body above the marker (everything the drift comparison does
+   not read) is separately enforced against `contract-manifest.json`'s
+   `pr_merge_released_bodies` table, keyed by the mod's own frontmatter
+   `version:` — one row per Spacedock `pr-merge` version in the fleet, each
+   hashed from the mod exactly as Spacedock released it. Run
+   `python3 scripts/kc-dev-flow-contract-test.py --check-pr-merge-released-body .`
+   from the repository root to verify this row alone. When adopting a
+   `pr-merge` version kc-dev-flow has not pinned yet, the check fails by name
+   (`mod version X not pinned by kc-dev-flow Y; add its released hash`); add a
+   `"<version>": {"sha256": ..., "bytes": ...}` entry hashed from the released
+   mod body (never from this repository's edited copy) rather than treating
+   the failure as a skip.
    The title refusal's self-test is grounded only against the fixture's
    captured release-please version; when the repository's own release-please
    version differs, stop and report the skew upstream to `kc-dev-flow`

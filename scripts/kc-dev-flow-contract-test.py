@@ -23,14 +23,88 @@ PLUGIN = ROOT / "kc-dev-flow"
 LOCAL_MODS = ROOT / "docs/dev/_mods"
 # --ablation-check skips the mechanism sub-suites run() shells out to, so an
 # assertion that relies on one of them guards nothing in that mode.
+# --check-pr-merge-released-body ROOT is the documented adopter recipe (see
+# adopt-dev-flow SKILL.md and references/pr-merge-extension.md): it runs only
+# the released-body pin check below against an arbitrary repository root, so
+# an adopter -- or a fixture standing in for one -- can verify its own
+# docs/dev/_mods/pr-merge.md without vendoring the full contract test.
 require_ablation_only = sys.argv[1:] == ["--ablation-check"]
-if sys.argv[1:] not in ([], ["--ablation-check"]):
-    raise SystemExit("usage: kc-dev-flow-contract-test.py [--ablation-check]")
+_check_released_body_root: Path | None = None
+if len(sys.argv) == 3 and sys.argv[1] == "--check-pr-merge-released-body":
+    _check_released_body_root = Path(sys.argv[2]).resolve()
+elif sys.argv[1:] not in ([], ["--ablation-check"]):
+    raise SystemExit(
+        "usage: kc-dev-flow-contract-test.py [--ablation-check|--check-pr-merge-released-body ROOT]"
+    )
 
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise SystemExit(f"kc-dev-flow contract: {message}")
+
+
+PR_MERGE_EXTENSION_START_MARKER = "<!-- kc-dev-flow runtime extension:start -->\n"
+
+
+def pr_merge_mod_version(mod_text: str) -> str:
+    require(mod_text.startswith("---\n"), "docs/dev/_mods/pr-merge.md has no frontmatter block")
+    frontmatter = mod_text.split("---\n", 2)[1]
+    match = re.search(r"^version:\s*(\S+)\s*$", frontmatter, re.MULTILINE)
+    require(match is not None, "docs/dev/_mods/pr-merge.md frontmatter is missing `version:`")
+    return match.group(1)
+
+
+def check_pr_merge_released_body(root: Path) -> None:
+    """The enforcement point named by kc-dev-flow/references/pr-merge-extension.md
+    and adopt-dev-flow: an adopter's docs/dev/_mods/pr-merge.md released body
+    (everything before the runtime-extension start marker) must match the
+    sha256 kc-dev-flow pinned for that mod's own frontmatter `version:` in
+    contract-manifest.json's `pr_merge_released_bodies` table, keyed by
+    version. A version absent from the table fails by name instead of
+    silently skipping -- one fleet member's pin cannot describe every
+    adopter's Spacedock mod version.
+    """
+    mod_path = root / "docs/dev/_mods/pr-merge.md"
+    manifest_path = root / "kc-dev-flow/contract-manifest.json"
+    plugin_manifest_path = root / "kc-dev-flow/.claude-plugin/plugin.json"
+    require(mod_path.is_file(), f"missing {mod_path}")
+    require(manifest_path.is_file(), f"missing {manifest_path}")
+    mod_text = mod_path.read_text(encoding="utf-8")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    kc_dev_flow_version = "unknown"
+    if plugin_manifest_path.is_file():
+        kc_dev_flow_version = json.loads(plugin_manifest_path.read_text(encoding="utf-8")).get(
+            "version", "unknown"
+        )
+    version = pr_merge_mod_version(mod_text)
+    table = manifest.get("pr_merge_released_bodies", {})
+    pin = table.get(version) if isinstance(table, dict) else None
+    require(
+        pin is not None,
+        f"mod version {version} not pinned by kc-dev-flow {kc_dev_flow_version}; add its released hash",
+    )
+    released_body_bytes = mod_text.split(PR_MERGE_EXTENSION_START_MARKER, 1)[0].rstrip("\n").encode("utf-8")
+    expected_sha256 = pin.get("sha256")
+    actual_sha256 = hashlib.sha256(released_body_bytes).hexdigest()
+    require(
+        isinstance(expected_sha256, str) and len(expected_sha256) == 64,
+        f"contract-manifest.json pr_merge_released_bodies[{version!r}] is missing a sha256 pin",
+    )
+    require(
+        actual_sha256 == expected_sha256,
+        f"{mod_path} released Spacedock pr-merge body at version {version} drifted from the pin in "
+        f"{manifest_path} pr_merge_released_bodies[{version!r}].sha256: "
+        f"expected sha256:{expected_sha256} got sha256:{actual_sha256} "
+        f"(expected {pin.get('bytes')} bytes, got {len(released_body_bytes)}). A sha256 pin has no "
+        "reference bytes to diff against, so no first-differing byte offset is named here; naming one "
+        "would require vendoring a second copy of the released body in kc-dev-flow/.",
+    )
+
+
+if _check_released_body_root is not None:
+    check_pr_merge_released_body(_check_released_body_root)
+    print(f"pr-merge-released-body:PASS {_check_released_body_root}")
+    raise SystemExit(0)
 
 
 def require_production_route(text: str, label: str, full: str) -> None:
@@ -563,33 +637,86 @@ if pr_merge_mod_extension != pr_merge_extension_resource:
     )
 # The block-drift check above only proves the synced extension matches the
 # plugin's copy; it says nothing about the released Spacedock body the
-# extension sits on top of. Pin that body's digest in contract-manifest.json
-# so a released-body edit is caught here even though block==resource still
-# holds (the two checks guard disjoint byte ranges of the same file).
-pr_merge_released_body = pr_merge_mod.split(pr_merge_extension_marker, 1)[0].rstrip("\n")
-pr_merge_released_body_bytes = pr_merge_released_body.encode("utf-8")
-pr_merge_released_body_pin = manifest.get("pr_merge_released_body", {})
-expected_released_body_sha256 = pr_merge_released_body_pin.get("sha256")
-actual_released_body_sha256 = hashlib.sha256(pr_merge_released_body_bytes).hexdigest()
-require(
-    isinstance(expected_released_body_sha256, str) and len(expected_released_body_sha256) == 64,
-    "contract-manifest.json is missing a pinned pr_merge_released_body.sha256",
-)
-if actual_released_body_sha256 != expected_released_body_sha256:
+# extension sits on top of. check_pr_merge_released_body pins that body's
+# digest per mod version in contract-manifest.json so a released-body edit is
+# caught here even though block==resource still holds (the two checks guard
+# disjoint byte ranges of the same file). Defined once above so
+# --check-pr-merge-released-body can run it standalone against a fixture
+# adopter without vendoring the rest of this file.
+check_pr_merge_released_body(ROOT)
+# Self-test: the pin must (a) pass a real adopter mod at a pinned version,
+# (b) fail by name when the mod's own version is absent from the table, and
+# (c) fail naming the drifted body and version when the released bytes change
+# by even one word. Exercised through --check-pr-merge-released-body -- the
+# same recipe a real adopter runs -- against static fixtures rather than a
+# reimplementation of the check, so a change to the check itself is proven
+# here too.
+pr_merge_fixture_dir = ROOT / "scripts/fixtures/pr-merge-released-body"
+pr_merge_manifest_json = read("kc-dev-flow/contract-manifest.json")
+pr_merge_plugin_json = read("kc-dev-flow/.claude-plugin/plugin.json")
+
+
+def run_pr_merge_released_body_check(mod_text: str) -> subprocess.CompletedProcess:
+    with tempfile.TemporaryDirectory(prefix="pr-merge-released-body-") as temporary:
+        fixture_root = Path(temporary)
+        (fixture_root / "docs/dev/_mods").mkdir(parents=True)
+        (fixture_root / "kc-dev-flow/.claude-plugin").mkdir(parents=True)
+        (fixture_root / "docs/dev/_mods/pr-merge.md").write_text(mod_text, encoding="utf-8")
+        (fixture_root / "kc-dev-flow/contract-manifest.json").write_text(
+            pr_merge_manifest_json, encoding="utf-8"
+        )
+        (fixture_root / "kc-dev-flow/.claude-plugin/plugin.json").write_text(
+            pr_merge_plugin_json, encoding="utf-8"
+        )
+        return subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts/kc-dev-flow-contract-test.py"),
+                "--check-pr-merge-released-body",
+                str(fixture_root),
+            ],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+
+
+for pr_merge_fixture_name, pr_merge_fixture_version in [
+    ("adopter-0.12.3-pr-merge.md", "0.12.3"),
+    ("adopter-0.27.0-pr-merge.md", "0.27.0"),
+]:
+    pr_merge_fixture_text = (pr_merge_fixture_dir / pr_merge_fixture_name).read_text(encoding="utf-8")
+    pr_merge_fixture_result = run_pr_merge_released_body_check(pr_merge_fixture_text)
     require(
-        False,
-        "docs/dev/_mods/pr-merge.md released Spacedock pr-merge body (bytes "
-        f"0..{len(pr_merge_released_body_bytes)}, everything before the "
-        "'<!-- kc-dev-flow runtime extension:start -->' marker) drifted from the "
-        "pin in kc-dev-flow/contract-manifest.json pr_merge_released_body.sha256: "
-        f"expected sha256:{expected_released_body_sha256} "
-        f"got sha256:{actual_released_body_sha256} "
-        f"(expected {pr_merge_released_body_pin.get('bytes')} bytes, got "
-        f"{len(pr_merge_released_body_bytes)}). A sha256 pin has no reference "
-        "bytes to diff against, so no first-differing byte offset is named "
-        "here; naming one would require vendoring a second copy of the "
-        "released body in kc-dev-flow/.",
+        pr_merge_fixture_result.returncode == 0,
+        f"pr-merge-released-body fixture {pr_merge_fixture_name} (pinned version "
+        f"{pr_merge_fixture_version}) should pass the adopter recipe: "
+        f"{pr_merge_fixture_result.stdout}{pr_merge_fixture_result.stderr}",
     )
+
+    pr_merge_released_prefix, _, pr_merge_rest = pr_merge_fixture_text.partition(pr_merge_extension_marker)
+    require(" the " in pr_merge_released_prefix, f"{pr_merge_fixture_name} has no ' the ' to mutate")
+    pr_merge_mutated_prefix = pr_merge_released_prefix.replace(" the ", " teh ", 1)
+    pr_merge_mutant_text = pr_merge_mutated_prefix + pr_merge_extension_marker + pr_merge_rest
+    pr_merge_mutant_result = run_pr_merge_released_body_check(pr_merge_mutant_text)
+    require(
+        pr_merge_mutant_result.returncode != 0
+        and "released Spacedock pr-merge body" in pr_merge_mutant_result.stderr
+        and f"at version {pr_merge_fixture_version}" in pr_merge_mutant_result.stderr,
+        "pr-merge-released-body one-word mutant of "
+        f"{pr_merge_fixture_name} should fail naming the body and version "
+        f"{pr_merge_fixture_version}: {pr_merge_mutant_result.stdout}{pr_merge_mutant_result.stderr}",
+    )
+
+pr_merge_unpinned_text = (pr_merge_fixture_dir / "adopter-unpinned-pr-merge.md").read_text(encoding="utf-8")
+pr_merge_unpinned_result = run_pr_merge_released_body_check(pr_merge_unpinned_text)
+require(
+    pr_merge_unpinned_result.returncode != 0
+    and "mod version 9.9.9 not pinned by kc-dev-flow" in pr_merge_unpinned_result.stderr
+    and "add its released hash" in pr_merge_unpinned_result.stderr,
+    "pr-merge-released-body unpinned-version fixture should fail by name: "
+    f"{pr_merge_unpinned_result.stdout}{pr_merge_unpinned_result.stderr}",
+)
 # `release` was a Production-only runtime state until it stranded a Pilot item
 # outside its declared route. Nothing else reads adoption prose, so the retired
 # state is guarded here rather than trusted to a reviewer.
