@@ -241,8 +241,20 @@ conditional_stage_references = {
         }
     ]
     + documentation_references,
-    ("poc-exploration", "prove.md"): delivery_references + documentation_references,
+    ("poc-exploration", "prove.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references + documentation_references,
     ("pilot-product-slice", "shape.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
         {
             "path": "../../reverse-recovery-audit.md",
             "trigger": "brownfield_capability_change",
@@ -252,15 +264,32 @@ conditional_stage_references = {
             "path": "../../journey-slicing.md",
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
+        },
+        {
+            "path": "../../design-preview.md",
+            "trigger": "user_visible_surface_change",
+            "receipt": "design_preview",
         },
     ]
     + documentation_references,
     ("pilot-product-slice", "build.md"): roborev_reference
     + delivery_references
     + documentation_references,
-    ("pilot-product-slice", "verify-deliver.md"): delivery_references
+    ("pilot-product-slice", "verify-deliver.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references
     + documentation_references,
     ("production", "shape.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
         {
             "path": "../../reverse-recovery-audit.md",
             "trigger": "brownfield_capability_change",
@@ -271,12 +300,24 @@ conditional_stage_references = {
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
         },
+        {
+            "path": "../../design-preview.md",
+            "trigger": "user_visible_surface_change",
+            "receipt": "design_preview",
+        },
     ]
     + documentation_references,
     ("production", "build.md"): roborev_reference
     + delivery_references
     + documentation_references,
-    ("production", "verify.md"): delivery_references + documentation_references,
+    ("production", "verify.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references + documentation_references,
 }
 for profile, names in profile_files.items():
     for name in names:
@@ -465,6 +506,8 @@ expected_manifest_resources = {
     "references/kernel.md",
     "references/reverse-recovery-audit.md",
     "references/journey-slicing.md",
+    "references/design-preview.md",
+    "references/prfaq.md",
     "references/retained-document-policy.md",
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",

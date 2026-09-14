@@ -14,6 +14,11 @@ smallest maintainable slice.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../prfaq.md",
+      "trigger": "captain_gate_presentation",
+      "receipt": null
+    },
+    {
       "path": "../../reverse-recovery-audit.md",
       "trigger": "brownfield_capability_change",
       "receipt": "reverse_recovery"
@@ -22,6 +27,11 @@ smallest maintainable slice.
       "path": "../../journey-slicing.md",
       "trigger": "multi_slice_required",
       "receipt": "journey_slices"
+    },
+    {
+      "path": "../../design-preview.md",
+      "trigger": "user_visible_surface_change",
+      "receipt": "design_preview"
     },
     {
       "path": "../../retained-document-policy.md",

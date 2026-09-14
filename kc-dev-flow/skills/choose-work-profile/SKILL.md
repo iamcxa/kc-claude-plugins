@@ -117,6 +117,13 @@ follow-on POC rather than widen this `poc_budget`. Ask the Captain only for
 the one fact the work item does not state — usually which assumption is
 riskiest.
 
+Before asking the Captain to accept this receipt, write the PRFAQ these fields
+answer into the work item body above the receipt, following
+`../../references/prfaq.md`. POC walks no shape stage, so this is the one point at which
+what the experiment proves is stated for a human and then frozen:
+`poc-exploration/base.md` evaluates this Brief at `prove` and forbids rewriting
+it there. This adds no field to the receipt below.
+
 ## Return the candidate receipt
 
 Use the actual Captain answer. A candidate with

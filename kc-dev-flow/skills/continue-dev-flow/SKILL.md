@@ -72,7 +72,7 @@ newly true references before the verdict.
   contract unread.
 
 Record named receipts in the existing item; `receipt: null` creates no receipt.
-A link is not activation. Do not let references add stages, scope, or standing policy.
+A link is not activation. A reference adds no stage, scope, or new obligation.
 
 Before dispatch, the First Officer writes and commits the state-owned stage-pin
 sidecar, re-reads it, and dispatches only that envelope:
