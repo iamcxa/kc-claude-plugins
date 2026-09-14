@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: journey-map-typecheck-red
 sprint-readiness: ready
-started:
+started: 2026-09-14T09:15:57Z
 completed:
 verdict:
 worktree:
