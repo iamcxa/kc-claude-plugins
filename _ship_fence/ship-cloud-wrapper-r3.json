@@ -3,5 +3,10 @@
   "message_sha256": "22f353b0c533a85a8973e025344c4f912483efe94401ceb41c8bfb6a8ec9231e",
   "session": "62536c2f-cf6c-4b9a-834e-68f62b85ccd4",
   "workspace": "4878c599-b5ba-4f22-b3d3-2e83712b82f1"
+ },
+ "pr-merge-released-body-pin-per-mod-version": {
+  "message_sha256": "a5ca08948a88ecbe8c10cec88f68517c570fd21468edad68fbc4edf11f26ae7f",
+  "session": null,
+  "workspace": null
  }
 }
