@@ -1,6 +1,6 @@
 ---
 title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
-status: validation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -93,7 +93,7 @@ gates:
                 reason: 'Captain approved at the cycle-3 prove gate. The rejection''s finding was fixed rather than recorded as a limit: the qualified form no longer conflates under the same forced-collision exercise, the loader refuses a bare release with a named ContractError exercised against a real-shaped work item, the journey part is the journey file''s own slug, and four suites pass at a5bd9053 in an independently resolved checkout. The Captain did not rule on release-field-r1-evidence-record in this decision; it remains open.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## The problem
