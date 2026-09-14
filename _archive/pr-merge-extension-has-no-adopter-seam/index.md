@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge extension has no adopter seam, so a fleet-wide title rule has nowhere to live"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: dev-flow-pr-merge-adopter-seam
 sprint-readiness: ready
 started:
-completed:
-verdict:
+completed: 2026-09-14T00:35:24Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-pr-merge-extension-has-no-adopter-seam
 issue:
 pr: pr-merge:433
-mod-block: merge:pr-merge
+mod-block:
 id: 2f5a8kg1qwc5ba8jg3mcfjjw
 gates:
     version: 1
@@ -74,7 +74,7 @@ gates:
                 reason: 'Captain approved in chat 2026-09-14: "approve", on the FO gate presenting candidate d3b047d7 — four acceptance criteria passing with every falsifier at that revision, cycle 2 three findings closed, the F1 regression re-verified in both directions, three non-blocking residuals, and the named risk that the post-:end adopter-region precedence is a first-officer operating rule rather than something byte-equality enforces. The gate question also authorized the delivery ceremony that opens a Draft PR to main.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 review-round:
     id: round:2f5a8kg1qwc5ba8jg3mcfjjw:validation:2
     stage: validation
@@ -83,6 +83,7 @@ review-round:
         id: briefing:2f5a8kg1qwc5ba8jg3mcfjjw:validation:round-2
         digest: sha256:e92cfd03cce53f7a9f3d7747353227ed2e4b3925a91616f2898fa57a57416d84
         room-ref: ./review/validation/round-2
+archived: 2026-09-14T00:35:24Z
 ---
 
 kc-dev-flow 4.4.0 pins the released pr-merge body's sha256 and ships the
