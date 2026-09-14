@@ -79,9 +79,16 @@ against a failure nobody has seen.
 - **AC-2** `python3 scripts/kc-dev-flow-contract-test.py` exits 0, with the path
   removed from both the manifest `resources` list and the test's own expected-resource
   sets. Re-adding the path to either side without the file exits non-zero.
-- **AC-3** `python3 kc-dev-flow/scripts/check-pr-title.test.py` exits 0 unchanged, and
-  `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv`
-  is empty — the checker and every fixture row are untouched.
+- **AC-3** `python3 kc-dev-flow/scripts/check-pr-title.test.py` exits 0 unchanged;
+  `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py` is empty; and every
+  one of the 13 verdict rows in `release-please-verdicts.tsv` is byte-identical to
+  `origin/main`. The file's header comment is not a verdict row: the lines naming the
+  deleted regeneration command are removed with it, because a shipped file telling a
+  reader to run a command that no longer exists is a false claim, not a stale one.
+  **Amended by the Captain on 2026-09-14** after the implementation stage reported
+  that AC-1 and AC-3 as first written were mutually exclusive on that header. The
+  original wording said the whole file; its intent was always the data the tool
+  produced.
 - **AC-4** The `### The title rule's oracle` section and its synced copy in
   `docs/dev/_mods/pr-merge.md` still state the version-skew stop condition and no
   longer name a re-derivation script; the synced block remains byte-identical to the
@@ -104,8 +111,8 @@ work_profile:
     and records it as overrulable to Pilot at the cost of one stage.
   poc_decision: Remove capture-oracle.cjs from the shipped surface, or keep it if removal cannot leave the contract test green and the stop condition intact.
   poc_falsifier: The contract test cannot pass without the path in its expected-resource sets, or removing the file forces a change to check-pr-title.py or any fixture row.
-  poc_budget: One implementation pass and one validation pass; at most 6 changed files and 60 gross changed lines.
-  poc_stop_when: Any edit would be needed inside check-pr-title.py, release-please-verdicts.tsv, the released pr-merge body, or scripts/fixtures/release-please-runtime.
+  poc_budget: One implementation pass, one correction, and one validation pass; at most 6 changed files and 60 ADDED lines. Amended by the Captain on 2026-09-14: the original 60 gross changed lines was impossible from the moment it was written, because the core act is deleting an 82-line file. Deletions are the outcome, not the spend.
+  poc_stop_when: Any edit would be needed inside check-pr-title.py, any verdict row of release-please-verdicts.tsv, the released pr-merge body, or scripts/fixtures/release-please-runtime. Amended with AC-3 on 2026-09-14; the file's header comment is outside this boundary.
   poc_artifact: retained
   poc_safety_boundary: The delivery ceremony's title refusal must keep working; the checker and its fixture are untouched, so the refusal path is not in scope.
   scope_boundary: No change to the checker, the fixture rows, the released body or its pin, the release-please runtime, or spacedock-dev/subspace-relay.
