@@ -849,3 +849,62 @@ force-push over the stale `a5fd90de` remote branch) remains the Captain's decisi
 
 Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@cc96278c8d13a10ae49482403ecf38884d0f72a1`.
 State: this report is the only write; `release-field-r1-evidence-record` was not touched.
+
+## Stage Report: validation (cycle 4)
+
+- DONE: Confirm the rebase dropped nothing from `#444` — diff the whole rebased branch against `origin/main`, confirm every removal `#444` made is still removed, and that no provider-backed/Planning Receipt/`planning-window`/`planning-outcome`/`linear-admission`/`engage-reconcile` wording was reintroduced except where a remaining hit is a line already identical on `origin/main`.
+  `git merge-base HEAD origin/main` (`origin/main@90e104be`) equals `origin/main`'s own tip, confirming the branch sits directly on
+  top of `#444`. `git diff origin/main...HEAD --name-only` lists exactly six files. `git diff origin/main...HEAD | grep -E '^\+'`
+  filtered for `provider-backed`, `planning receipt`, `planning-window`, `planning-outcome`, `linear-admission`, `engage reconcile`
+  (case-insensitive) returns zero matches — none of the added lines carry any of that wording. Per-file grep on the four
+  rebase-touched docs finds two residual hits, both in `docs/dev/README.md`: a `provider-backed layer` phrase in the "Delivery
+  branch base" table row and a `planning-window:`/`planning-outcome:` pair in the task-template YAML block. Line-by-line
+  `git show origin/main:docs/dev/README.md` confirms both are byte-identical to `origin/main`'s own copy — the table row at the same
+  line number, the YAML pair shifted two lines down (379-380 vs 374-375) only because this branch's own diff hunk (the
+  `sprint`-or-`release` scalar-grouping paragraph, verified via `git diff origin/main -- docs/dev/README.md`) inserted lines above
+  them; neither line is inside that hunk. Separately diffed `#444`'s own removal (`git diff 90e104be~1 90e104be -- <the four shared
+  files>`) to enumerate exactly what it deleted (the Linear-provider paragraph, the four planning-provider table rows, the
+  `Planning Receipt` tuple language, and the full `### Engage reconcile` section with its `linear-admission.py` invocation) — none of
+  that deleted text reappears in the `git diff origin/main...HEAD` added-lines set checked above. Removal held; no reintroduction.
+- DONE: Re-run the four required suites at the rebased commit `cc96278c` in a checkout resolved independently, and exercise the
+  qualified-release behaviour against a real-shaped work item.
+  Detached worktree `git worktree add --detach /tmp/validation-check-cc96278c cc96278c8d13a10ae49482403ecf38884d0f72a1` (clean
+  `git status`, never reused from the implementation worker's own worktree or cycle 3's validation worktree). All four suites exit 0:
+  `profile-contract-loader.test.py` (5 sub-suites PASS), `profile-spacedock-route.test.py` PASS, `kc-dev-flow-contract-test.py` PASS,
+  `skill-frontmatter-lint.sh` (46/46 skill directories valid). Built a standalone real-shaped work item at
+  `/tmp/release-recheck-cc96278c/item.md` (`status: implementation` — `poc-exploration`'s actual first working stage per `ROUTES`,
+  full frontmatter, a schema-matching `## Work profile receipt` yaml block including the required `poc_*` fields and the correct
+  `route: [build, prove]`). `release: r1` (bare) exits 2: `profile contract: frontmatter release must be qualified as
+  <journey>/<release-id>`. The same item edited to `release: draw-a-journey/r1` exits 0 (`--format json`) with
+  `"next_workflow_stage": "validation"`. Scratch item, scratch directory, and the detached worktree were removed after the check
+  (`rm -rf`, `git worktree remove --force`); `git worktree list` on the shared repo confirms it is gone.
+- DONE: Confirm nothing outside this entity's disclosed scope changed in the rebase — report every file the branch touches and
+  confirm each is one the accepted outcome asked for.
+  The six files from `git diff origin/main...HEAD --name-only`: `docs/dev/README.md`, `kc-dev-flow/README.md`,
+  `kc-dev-flow/scripts/profile-contract-loader.py`, `kc-dev-flow/scripts/profile-contract-loader.test.py`,
+  `kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`. The work-profile receipt's
+  `implementation` obligation says "Change the loader's frontmatter reading and the package documents that state the grouping
+  contract" — `profile-contract-loader.py` and its test are the loader; the other four are exactly the package documents that state
+  the `sprint`/`release` grouping contract (dev-flow's own `README.md` and `docs/dev/README.md` state the contract in prose;
+  `adopt-dev-flow` and `choose-work-profile` are the two skills whose text names the grouping field pair). No file outside those six
+  changed. No `kc-journey-map` file, no other adopter's record, and no `release`-route or `### Feedback Cycles` file changed, matching
+  the Non-goals list.
+
+### Summary
+
+Independently confirmed the rebase (`cc96278c`) dropped nothing from `#444`: the branch's merge-base with `origin/main` is
+`origin/main`'s own tip, none of the branch's added lines carry provider-backed/Planning Receipt/`planning-window`/`planning-outcome`/
+`linear-admission`/`engage-reconcile` wording, and the two residual hits of adjacent terms (`provider-backed layer`,
+`planning-window:`/`planning-outcome:`) in `docs/dev/README.md` are byte-identical to `origin/main`'s own unchanged lines, not
+reintroductions. Re-ran all four required suites at `cc96278c` in an independently resolved detached worktree — all exit 0 — and
+independently exercised the qualified-release behaviour on a fresh real-shaped standalone work item, distinct from the implementation
+worker's own fixture: a bare `release: r1` is refused (exit 2, named `ContractError`), `release: draw-a-journey/r1` is accepted (exit
+0, loaded contract). The rebase touches exactly six files, all inside the entity's disclosed scope (the loader, its test, and the
+four package documents that state the `sprint`/`release` grouping contract) — nothing else changed. AC-1 to AC-5 continue to hold on
+the qualified form per this and the prior three validation reports. No new findings. The one remaining open item is unchanged and
+still routed to the Captain: whether to re-qualify or withdraw `release-field-r1-evidence-record`, which carries a bare, unqualified
+`release: r1` and sits outside the qualified namespace since cycle 1's correction.
+
+Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@cc96278c8d13a10ae49482403ecf38884d0f72a1`
+(unchanged from cycle 4's implementation report — no code edits this cycle). State: real checkout untouched by this cycle's exercise;
+this report is the only write.
