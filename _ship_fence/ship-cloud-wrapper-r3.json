@@ -16,7 +16,7 @@
  },
  "ship-dispatch-env-file-resume-and-gate-authority": {
   "message_sha256": "4da12f145f62b538df6205840cdda2f551e2f8b9bf5dea4577da89e99d0e24d3",
-  "session": null,
-  "workspace": null
+  "session": "48d855a0-8e65-4ed0-b3ee-122fae6a4737",
+  "workspace": "aa8abd25-daea-4410-9934-952fda853560"
  }
 }
