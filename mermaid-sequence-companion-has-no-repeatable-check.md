@@ -115,3 +115,29 @@ work_profile:
   poc_safety_boundary: a throwaway worktree at cfb804d; no push to codex/journey-mermaid, no GitHub write
   poc_decision_ready_minutes: 30
 ```
+
+## Stage Report: implementation
+
+- DONE: Reset this worktree to PR #440's pinned head cfb804d64f1e0ef35862505ee68c26c51c176076 and record `git rev-parse HEAD` in the receipt before running anything.
+  Confirmed `HEAD is now at cfb804d6`; recorded in receipt.md.
+- DONE: AC-1 — run `npm ci && npx tsc` in kc-journey-map; record exit code. Then apply a throwaway type-breaking edit to server/client/sequence.ts, re-run `npx tsc`, record that it exits nonzero and name the error, and revert the edit.
+  `npx tsc` exits 2 even before the mutation (pre-existing `lib/records.mjs` TS7016, unrelated to this PR) — AC-1 fails as written; the mutation itself does add the expected `sequence.ts` TS2322 and was cleanly reverted (`git diff --stat` empty).
+- DONE: AC-2 — build a production client bundle with `npx vite build`; record the command, exit code, the emitted chunk list, and the measured byte size of the Mermaid chunk and of the total bundle. Confirm the dynamic `@tldraw/mermaid` import resolves in the output. Then remove `@tldraw/mermaid` from package.json dependencies, re-run the build, record that it fails, and revert.
+  Build exit 0, total dist 5,391,377 bytes, deterministic on rebuild; dynamic import resolves to `dist-esm-DTH9OtbL.js` exporting `createMermaidDiagram`; Mermaid weight reported as 1,924,564–3,398,433 bytes (method disclosed, no clean diff obtainable since the mutation build fails outright rather than producing a leaner bundle); mutation build exits 1 (rolldown fails to resolve `@tldraw/mermaid`); package.json and package-lock.json both restored, `npm ci` reinstalled the dependency, rebuild matched the original byte-for-byte.
+- DONE: AC-3 — start an isolated frontend and API pair for the test with a dedicated JOURNEY_API_PORT, a temporary JOURNEY_ROOMS_DIR, and a matching VITE_JOURNEY_API_URL; run `node scripts/sequence-smoke.mjs <origin>`; record both ports, the rooms dir, the room id, the script's JSON output, and the pass/fail of each of its seven assertions. If `agent-browser` is unavailable, say so plainly and mark AC-3 unmet — do not substitute a different check.
+  `agent-browser` 0.32.0 present and used; API on port 58234 with JOURNEY_ROOMS_DIR=/tmp/journey-rooms-smoke-mermaid-poc, frontend on port 58235 with matching VITE_JOURNEY_API_URL; script exit 0, all 13 assert() call sites passed (the script has 13, not 7 — noted and itemized in the receipt), full JSON output recorded.
+- DONE: AC-4 — confirm `editor.getTextOptions()`, `editor.options.maxPages`, and `createMermaidDiagram`'s `blueprintRender` option each exist in the installed tldraw@5.4.0 and @tldraw/mermaid@5.4.0 type declarations; cite each by greppable symbol and the declaration file it was read from.
+  All three confirmed in `@tldraw/editor/dist-cjs/index.d.ts` and `@tldraw/mermaid/dist-cjs/index.d.ts`, cited by symbol.
+- DONE: AC-5 — diff the kc-journey-map SKILL.md description between origin/main and cfb804d; confirm whether 產出 journey 圖 and 現況跟 journey 對不對 are dropped and sequence companion added; report the exact before/after trigger lists. Do not edit SKILL.md.
+  Both triggers confirmed dropped, `sequence companion` confirmed added; `gh pr view 440 --json body` read in full and contains no mention of the drop — AC-5 fails as written (neither restore nor disposition happened).
+- DONE: Write the receipt with every command verbatim, its exit code, and its output excerpt. State plainly which ACs hold, which fail, and which could not be run. Never report an AC as met from the PR body's claims.
+  Receipt written to `.spacedock-state/mermaid-sequence-companion-has-no-repeatable-check/implementation/receipt.md`; every command and exit code re-derived independently, none taken from the PR body.
+
+### Summary
+
+At PR #440's pinned head, AC-2, AC-3, and AC-4 hold with independently re-derived evidence; AC-1 and
+AC-5 fail. AC-1 fails for a reason unrelated to this PR (a pre-existing `lib/records.mjs` declaration
+gap already breaks `tsc` before any mutation is applied) but the AC's falsifier mechanism does still
+work once tested. AC-5 fails because the PR drops two SKILL.md triggers without dispositioning the
+drop in its body. No product code, CI, or npm scripts were changed; all throwaway mutations were
+reverted and the worktree is clean at `cfb804d64f1e0ef35862505ee68c26c51c176076`.
