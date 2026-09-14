@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ab8tk40pm0t0wv2jpt7551d6:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ab8tk40pm0t0wv2jpt7551d6-validation-1
+              briefing:
+                id: briefing:ab8tk40pm0t0wv2jpt7551d6:validation:attempt-1:revision-1
+                digest: sha256:fce7c6cf644f5e38b3eb714d5de5695e486335d651eb80d1d568dd698f97b17e
+                room-ref: ./pr-merge-mod-rebases-onto-a-stale-trunk/review/validation/briefing-1
 ---
 
 ## The problem

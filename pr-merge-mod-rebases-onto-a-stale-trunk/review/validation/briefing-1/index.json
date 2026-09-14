@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ab8tk40pm0t0wv2jpt7551d6:validation:attempt-1:revision-1",
+  "question": "Approve validation and deliver the pr-merge delivery-step correction?",
+  "artifacts": [
+    {
+      "id": "artifact:ab8tk40pm0t0wv2jpt7551d6:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a6d86906c9f7e892e3c657013ecd56e45a183154/pr-merge-mod-rebases-onto-a-stale-trunk.md",
+      "rev": "sha256:e4b5d7cd4c05c840eada92f04f5bdbd1c80354e6606b65b8a3c28954ffc1ad87",
+      "mediaType": "text/markdown",
+      "summary": "Validation: 4 of 4 checklist items DONE by a fresh reviewer. The mutation proof was independently reproduced in its own sandbox in both directions. The re-pinned pr_merge_released_body.sha256 was settled as repository-local, because no adopter vendors contract-manifest.json or the contract-test script. poc_outcome is proceed. One flagged nuance: the branch needs an ordinary rebase before delivery."
+    }
+  ]
+}
