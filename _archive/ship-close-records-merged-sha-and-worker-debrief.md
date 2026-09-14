@@ -1,6 +1,6 @@
 ---
 title: "close.py records merged_sha from the merged PR and matches each task's debrief by its worker, not the FO's"
-status: validation
+status: done
 source: "Captain 2026-09-14 「派」 (ship round 3, harden); findings recorded on spacedock-state/ship questions logs"
 product: kc-ship-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper-r3
 sprint-readiness: ready
 started: 2026-09-14T14:19:51Z
-completed:
-verdict:
+completed: 2026-09-14T16:09:22Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-close-records-merged-sha-and-worker-debrief
 issue:
 pr: pr-merge:448
@@ -83,7 +83,8 @@ gates:
                     source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T16:09:22Z
 ---
 
 Both close receipts the wrapper has produced carry `merged_sha: null`: `close-receipt-ship-cloud-wrapper-r2.json` (kc-claude-plugins `spacedock-state/ship`, 2026-09-11) and `close-receipt-qnow-clerk-poc.json` (qnow `spacedock-state/ship`, 2026-09-14). Nothing in `close.py` reads the merge commit, although every closed task carries the `pr: pr-merge:N` sentinel that names it. On 2026-09-11 the r2 fence also had to be corrected by hand because debrief matching picked the ship FO's own debrief (it names every slug in its Filed section) instead of each worker's.
