@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9xtwqxmktq2e15hr1qhx0bbb:ideation:attempt-1:revision-1",
+  "question": "Approve entering implementation on this shape (degradable sql probe in dispatch.sh + session-message fallback tail-reader in watch.sh, ~8 files / ~250 lines)? Flagged: AC-1 says a failing auth whoami should still exit 5, but the current code exits 2 for that probe (5 is reserved for the contract-mismatch check) and Non-goal #3 says the exit-code vocabulary does not change -- the shape keeps exit 2 and treats AC-1's '5' as a wording slip. Confirm that reading or correct the AC before implementation.",
+  "artifacts": [
+    {
+      "id": "artifact:9xtwqxmktq2e15hr1qhx0bbb:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a6d86906c9f7e892e3c657013ecd56e45a183154/ship-watch-runs-without-conductor-sql.md",
+      "rev": "sha256:b68cd01dfa4ccc66a4dd3094a42b8f37ae3558f9c2043aaec80b7305eceba55e",
+      "mediaType": "text/markdown",
+      "summary": "Ideation/shape stage complete: one accepted journey (OBSERVED sql-available path, DESIGNED sql-503-degraded path) grounded in the real dispatch.sh/watch.sh/pins/conductor-cli.contract code; semantics_unchanged=false with the three exact changes named; persistence/data-safety boundaries for the new questions-log write; an 8-row where-it-touches table reconciled against the journey; falsifiable AC-1..AC-4 checks; stop numbers (8 files / ~250 lines, session-message binary-search reader named as the runaway risk). 3/3 checklist items DONE. One discrepancy surfaced, not silently resolved: AC-1's stated exit-5 behavior for auth whoami conflicts with the actual exit-2 code path and the non-goal against changing exit codes."
+    }
+  ]
+}
