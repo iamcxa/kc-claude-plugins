@@ -44,6 +44,43 @@ gates:
 
 The Conductor SQL endpoint (`conductor sql`) returned "The SQL search API endpoint is temporarily disabled (HTTP 503)" from 2026-09-13 ~04:20 UTC through at least 2026-09-14 08:00 UTC (re-probed at filing: still 503). `dispatch.sh` 0.2.0 exits 5 when the `sql "SELECT 1"` probe fails, so the whole `qnow-clerk-poc` batch ran on a scratch copy with the probe replaced by a stderr note, and `watch.sh` could not read transcripts at all; the ship FO watched by hand. What did work for every read across the batch: `conductor --json session status <sid>` (idle/working), `conductor --json session message <sid> --limit N --offset M` (offset past the end returns no `sessionIndex`, so a binary search finds the tail), `conductor --json workspace status <ws>`, and the state branch.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >
+    Limited real use (ship first officers running the r3 batch and beyond) creates
+    persistent value in dispatch.sh/watch.sh; the sql outage is not a one-off and the
+    fallback path is likely to be iterated on. No production credentials, destructive
+    mutation, or irreversible migration is in scope; a consumer (the ship FO) can take
+    the new dispatch.sh/watch.sh versions without editing owned records or config.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - "pins/conductor-cli.contract marks sql as a degradable probe distinct from the fatal read-only probes"
+      - "watch.sh gains a once-per-run sql-unavailability detector that switches to the session status/message fallback reads"
+    implementation:
+      - "dispatch.sh prints one dated degraded notice and continues past a failed sql probe; other read-only probes stay fatal"
+      - "watch.sh reads Q: lines from the entity stage report and the session tail's last assistant text without calling sql"
+      - "first detection of sql unavailability writes one line to the batch questions log naming the degraded mode, probe output, and date"
+    testing:
+      - "fixture: fake conductor on PATH whose sql returns the 503 text and whose session message serves a recorded tail, exercising both the sql-available and sql-503 exit paths (AC-1..AC-4)"
+  scope_boundary: >
+    No change to the pinned Conductor CLI version or to the other read-only probes;
+    no transcript parsing beyond the last assistant text of the tail; no SQL
+    replacement service; no change to watch.sh's exit-code vocabulary.
+  semantics_unchanged: false
+  promote_when:
+    - "the degradable-sql fallback becomes load-bearing for a consumer outside kc-ship-flow's watch/dispatch pair"
+    - "the batch questions log format this task writes to becomes a durable cross-workflow contract"
+  decision:
+    authority: "person:captain via batch conn (quote: 准; source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile))"
+    at: "2026-09-14T13:45:44Z"
+```
+
 ## Accepted outcome
 
 1. `pins/conductor-cli.contract` marks `sql` as degradable: a failed sql probe makes `dispatch.sh` print a dated degraded notice and continue; the other read-only probes stay fatal.
