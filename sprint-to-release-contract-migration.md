@@ -1,6 +1,6 @@
 ---
 title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -52,7 +52,7 @@ gates:
                 reason: 'Captain said ok to the re-admission under the corrected scope: name the execution group release, scalar, so a journey release slice lands in a field instead of prose. The seed carries the rescoped problem, accepted outcome, non-goals, AC-1..AC-5 and a v3 POC receipt whose falsifier is the journey release id''s uniqueness across the repository.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
         - id: gate:tjxctad7413wyp3acfx8wzzp:validation
           stage: validation
           attempts:
