@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-dispatch-env-file-resume-and-gate-authority
 issue:
-pr: "#445"
+pr: 445
 mod-block:
 id: 0dg522wbqd0jpd2jeg8tjq4m
 gates:
