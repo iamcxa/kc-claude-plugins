@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.4.0...kc-dev-flow-v4.5.0) (2026-09-14)
+
+
+### Features
+
+* **kc-dev-flow:** ship the pull request title refusal and declare the adopter region ([#433](https://github.com/iamcxa/kc-claude-plugins/issues/433)) ([58748d7](https://github.com/iamcxa/kc-claude-plugins/commit/58748d733973cd798dbdcdc7f9531e26e0982244))
+
 ## [4.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.3.0...kc-dev-flow-v4.4.0) (2026-09-12)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.2.0...kc-journey-map-v0.2.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** draw a story's question under its own card, not beside it ([#431](https://github.com/iamcxa/kc-claude-plugins/issues/431)) ([e082613](https://github.com/iamcxa/kc-claude-plugins/commit/e082613202acbd579e9d8aa10f5d453221d29fee))
+* **kc-journey-map:** measure the one-journey banner instead of assuming 70px ([#434](https://github.com/iamcxa/kc-claude-plugins/issues/434)) ([6c899f2](https://github.com/iamcxa/kc-claude-plugins/commit/6c899f2cccf28d3460fc5bb6d3c5416738d9eb8f))
+
 ## [0.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.1.0...kc-journey-map-v0.2.0) (2026-09-12)
 
 

@@ -107,7 +107,7 @@
       "name": "kc-journey-map",
       "source": "./kc-journey-map",
       "description": "Draw and inspect user journeys on an editable native canvas, with optional release details, evidence checks, and portable tldraw or PNG exports.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "keywords": [
         "journey-map",
         "user-journey",
@@ -145,7 +145,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
-      "version": "4.4.0",
+      "version": "4.5.0",
       "keywords": [
         "development-workflow",
         "sprint",
