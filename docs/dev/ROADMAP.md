@@ -467,6 +467,18 @@ optional details load only on their trigger, and the contract suite plus bounded
 real-journey validation pass. Only then may the pending kc-dev-flow Release PR
 be merged.
 
+### Sprint S2 — the delivery step syncs the wrong branch
+
+1. `pr-merge-mod-rebases-onto-a-stale-trunk`
+
+Opened 2026-09-14 on captain direction after the defect bit during a live delivery. The
+`pr-merge` mod's on-approval sequence pushes the trunk to sync state commits that a split-root
+workflow never puts there, and then rebases onto the bare local trunk rather than the fetched
+remote one. This heading carries no dependency on `repo-platform/S1`.
+
+Exit: the corrected sequence is replayed against a deliberately stale local trunk and lands the
+candidate on the remote tip, and the package-owned extension block is proven byte-identical.
+
 ### Hazard carried forward
 
 `spacedock status --ac-scan`'s citation counter is not trustworthy — an AC citing three paths
