@@ -32,6 +32,8 @@ ROUTES = {
 
 PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
 PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
+# One separator: non-empty journey slug, non-empty release id, no nested slashes.
+RELEASE_QUALIFIED_RE = re.compile(r"^[^\s/]+/[^\s/]+$")
 POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
 POC_ARTIFACTS = {"no-code", "disposable", "retained"}
 RECOVERY_FIELDS = (
@@ -733,22 +735,53 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     necessity_active = schema == PROFILE_SCHEMA_V3 and profile in NECESSITY_PROFILES and not is_recovery
     first_workflow_stage = next(iter(ROUTES[profile]))
     if workflow_stage == first_workflow_stage:
-        sprint = _one_field(
-            frontmatter, r"^sprint:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter sprint"
-        )
-        if (
-            not sprint
-            or sprint.casefold() in {"null", "~", "true", "false"}
-            or sprint[0] in "[{&*!|>"
-        ):
-            raise ContractError("frontmatter sprint must name an iteration")
-        sprint_readiness = _one_field(
-            frontmatter,
-            r"^sprint-readiness:[ \t]*([^\n#]+?)[ \t]*$",
-            "frontmatter sprint-readiness",
-        )
-        if sprint_readiness != "ready":
-            raise ContractError("frontmatter sprint-readiness must be 'ready'")
+        # Presence means a non-empty value, not a bare key: the entity template
+        # ships `sprint:` (or, for a migrated adopter, `release:`) blank until
+        # scheduled, and a still-blank placeholder must not collide with the
+        # other pair's real value.
+        release_present = re.search(r"^release:[ \t]*[^\s#]", frontmatter, re.MULTILINE) is not None
+        sprint_present = re.search(r"^sprint:[ \t]*[^\s#]", frontmatter, re.MULTILINE) is not None
+        if release_present and sprint_present:
+            raise ContractError("frontmatter must not carry both release and sprint")
+        if release_present:
+            release = _one_field(
+                frontmatter, r"^release:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter release"
+            )
+            if (
+                not release
+                or release.casefold() in {"null", "~", "true", "false"}
+                or release[0] in "[{&*!|>"
+            ):
+                raise ContractError("frontmatter release must name a journey release")
+            if not RELEASE_QUALIFIED_RE.match(release):
+                # A bare id is unique only while one journey file exists.
+                raise ContractError(
+                    "frontmatter release must be qualified as <journey>/<release-id>"
+                )
+            release_readiness = _one_field(
+                frontmatter,
+                r"^release-readiness:[ \t]*([^\n#]+?)[ \t]*$",
+                "frontmatter release-readiness",
+            )
+            if release_readiness != "ready":
+                raise ContractError("frontmatter release-readiness must be 'ready'")
+        else:
+            sprint = _one_field(
+                frontmatter, r"^sprint:[ \t]*([^\n#]+?)[ \t]*$", "frontmatter sprint"
+            )
+            if (
+                not sprint
+                or sprint.casefold() in {"null", "~", "true", "false"}
+                or sprint[0] in "[{&*!|>"
+            ):
+                raise ContractError("frontmatter sprint must name an iteration")
+            sprint_readiness = _one_field(
+                frontmatter,
+                r"^sprint-readiness:[ \t]*([^\n#]+?)[ \t]*$",
+                "frontmatter sprint-readiness",
+            )
+            if sprint_readiness != "ready":
+                raise ContractError("frontmatter sprint-readiness must be 'ready'")
     if necessity_active:
         # Required at every working stage after ideation, not only at
         # ideation: a receipt cannot drop the declaration to skip the

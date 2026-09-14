@@ -181,9 +181,11 @@ adapters, or unrelated Spacedock state.
 
 The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
-route's first working stage it also requires one non-empty `sprint` and
-`sprint-readiness: ready` as local Spacedock execution mechanics, not planning
-evidence. Its
+route's first working stage it also requires one non-empty scalar grouping
+value — `sprint` and `sprint-readiness: ready` (unchanged), or `release` and
+`release-readiness: ready` naming one journey release qualified as
+`<journey>/<release-id>` (refused unqualified), never both — as local
+Spacedock execution mechanics, not planning evidence. Its
 `next_workflow_stage` is the normal next state. An eligible Production recovery
 instead emits `skip_to_workflow_stage: implementation` with no loaded ideation
 contract. Profiles are per item, so POC, Pilot, and Production items may run
@@ -202,11 +204,14 @@ Capture `title`, `product`, and the required Development Brief or Exploration
 Brief. Only the Captain admits it. `source` may hold a Linear Issue URL as
 free-text provenance; it is never read as planning evidence. This Spacedock
 adoption separately requires a shared `sprint` execution-group value and
-`sprint-readiness: ready`. Queued items carry `sprint-readiness: defer` until
-then, so the admitted execution set is `spacedock status --workflow-dir docs/dev
---where sprint=<group> --where sprint-readiness=ready`. Obtain and commit the
-supported profile receipt before moving to the selected route's first working
-state.
+`sprint-readiness: ready`, or a scalar `release` value naming one journey
+release, qualified as `<journey>/<release-id>` (unqualified refused), and
+`release-readiness: ready` — never both on one item. Queued items carry
+`sprint-readiness: defer` (or `release-readiness: defer`) until then, so the
+admitted execution set is `spacedock status --workflow-dir docs/dev --where
+sprint=<group> --where sprint-readiness=ready` or `--where release=<id> --where
+release-readiness=ready`. Obtain and commit the supported profile receipt
+before moving to the selected route's first working state.
 
 ### Development Brief
 

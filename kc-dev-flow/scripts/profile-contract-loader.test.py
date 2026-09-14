@@ -58,6 +58,8 @@ def write_work_item(
     route: list[str] | None = None,
     sprint: str | None = "kc-dev-flow/S2",
     sprint_readiness: str | None = "ready",
+    release: str | None = None,
+    release_readiness: str | None = None,
     poc_fields: dict[str, str] | None = None,
     recovery_fields: dict[str, str] | None = None,
     necessity_fields: dict[str, str] | None = None,
@@ -94,6 +96,10 @@ def write_work_item(
         frontmatter.append(f"sprint: {sprint}")
     if sprint_readiness is not None:
         frontmatter.append(f"sprint-readiness: {sprint_readiness}")
+    if release is not None:
+        frontmatter.append(f"release: {release}")
+    if release_readiness is not None:
+        frontmatter.append(f"release-readiness: {release_readiness}")
     receipt = [
         "---",
         "",
@@ -630,6 +636,114 @@ Stop when the planning tuple cannot express the work.
         require(
             rejected.returncode == 2 and error in rejected.stderr,
             f"first working stage accepted {description}",
+        )
+
+    release_only_item = write_work_item(
+        root, "poc-exploration", "implementation", "release-only",
+        sprint=None, sprint_readiness=None,
+        release="draw-a-journey/r1", release_readiness="ready",
+    )
+    release_only = MODULE.load_contracts(root, release_only_item)
+    require(
+        release_only["workflow_stage"] == "implementation",
+        "an item with release and release-readiness: ready did not load at the "
+        "first working stage",
+    )
+
+    sprint_only_item = write_work_item(
+        root, "poc-exploration", "implementation", "sprint-only",
+    )
+    sprint_only = MODULE.load_contracts(root, sprint_only_item)
+    require(
+        sprint_only["workflow_stage"] == "implementation",
+        "an item with only sprint and sprint-readiness: ready did not load at "
+        "the first working stage",
+    )
+
+    release_with_blank_sprint_item = write_work_item(
+        root, "poc-exploration", "implementation", "release-blank-sprint-template",
+        sprint="", sprint_readiness=None,
+        release="draw-a-journey/r1", release_readiness="ready",
+    )
+    release_with_blank_sprint = MODULE.load_contracts(
+        root, release_with_blank_sprint_item
+    )
+    require(
+        release_with_blank_sprint["workflow_stage"] == "implementation",
+        "a still-blank sprint: template placeholder collided with a real "
+        "release value instead of being treated as absent",
+    )
+
+    release_placeholder_refusals = [
+        (
+            {"sprint": None, "sprint_readiness": None, "release": "null", "release_readiness": "ready"},
+            "must name a journey release", "an item with a YAML null release",
+        ),
+        (
+            {"sprint": None, "sprint_readiness": None, "release": "[r1]", "release_readiness": "ready"},
+            "must name a journey release", "an item with a YAML collection release",
+        ),
+        (
+            {"sprint": None, "sprint_readiness": None, "release": "draw-a-journey/r1", "release_readiness": "defer"},
+            "must be 'ready'", "an item whose release remains deferred",
+        ),
+        (
+            {"sprint": None, "sprint_readiness": None, "release": "r1", "release_readiness": "ready"},
+            "must be qualified as <journey>/<release-id>", "an item with an unqualified bare release id",
+        ),
+    ]
+    for fields, error, description in release_placeholder_refusals:
+        work_item = write_work_item(
+            root, "poc-exploration", "implementation", "release-placeholder", **fields
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(work_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2 and error in rejected.stderr,
+            f"first working stage accepted {description}",
+        )
+
+    conflicting_pair_refusals = [
+        (
+            {"sprint": "kc-dev-flow/S2", "release": "r1", "release_readiness": "ready"},
+            "an item carrying release and a conflicting sprint value",
+        ),
+        (
+            {"sprint": "r1", "release": "r1", "release_readiness": "ready"},
+            "an item carrying release and sprint with the same value",
+        ),
+    ]
+    for fields, description in conflicting_pair_refusals:
+        work_item = write_work_item(
+            root, "poc-exploration", "implementation", "conflicting-pair", **fields
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(work_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2
+            and "must not carry both release and sprint" in rejected.stderr,
+            f"first working stage silently resolved {description} instead of "
+            "refusing by a named error",
         )
 
     all_markers = {
