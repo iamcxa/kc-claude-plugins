@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T08:25:39Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-retire-the-provider-backed-planning-path
 issue:
 pr:
 mod-block:
