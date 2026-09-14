@@ -5,8 +5,8 @@ source:
 product: kc-journey-map
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: journey-map-mermaid-companion
+sprint-readiness: ready
 started:
 completed:
 verdict:
@@ -28,41 +28,68 @@ No check in this repository exercises any of it. `.github/workflows/kc-journey-m
 `noEmit` over `server`, but no npm script and no CI step invokes `tsc`, and `package.json` has no
 `build` or `typecheck` script, so the PR body's "production build" claim has no in-repo command
 behind it. `scripts/sequence-smoke.mjs` needs `agent-browser` plus a frontend and API pair the
-operator starts by hand, and its path is not in the workflow's filter, so it never runs
-unattended. Every validation line in the PR body is an author-run observation at a SHA no
-automated check can re-reach.
+operator starts by hand. Every validation line in the PR body is an author-run observation that
+nothing in the repository can re-reach.
 
 ## Accepted outcome
 
-The Mermaid sequence companion is verified at a pinned SHA by a check this repository can re-run,
-and the journey map can use Mermaid without that evidence depending on one operator's machine. The
-client typecheck and the production bundle become in-repo commands wired into
-`kc-journey-map-tests.yml`, and the browser smoke is reachable by a documented invocation whose
-path appears in the workflow's trigger filter even if the browser leg stays operator-run.
+One independent run at PR #440's pinned head establishes whether the Mermaid sequence companion
+works, so the journey map can use Mermaid on the Captain's own machine. Evidence is a receipt
+naming the commands, the isolated ports and room, and each assertion — not a restatement of the
+author's observations.
 
 ## Non-goals
 
+* Wiring any of these checks into CI, adding npm scripts, or editing the workflow's `paths` filter.
 * Changing the converter pin, the Mermaid dialect, or `addSequencePage`'s semantics.
 * Reverse synchronization from canvas to `.mmd`, or a lossless exporter.
 * Marking PR #440 ready, merging it, or any version bump.
-* Adding a browser-driving job to CI if its measured per-PR cost is not stated.
 
 ## Acceptance criteria
 
-* **AC-1** `npm ci && npx tsc` in `kc-journey-map` exits 0 at PR #440's head, and a named npm
-  script plus a CI step in `kc-journey-map-tests.yml` runs it. A mutation that breaks
-  `server/client/sequence.ts` types makes that step fail.
-* **AC-2** A production client bundle is produced by a named npm script, runs in CI, and the
-  dynamic `@tldraw/mermaid` import resolves; a mutation removing the dependency makes it fail.
-  The added bundle weight of the Mermaid chunk is reported as a measured number.
-* **AC-3** `node scripts/sequence-smoke.mjs <origin>` passes against an isolated frontend and API
-  pair at PR #440's head, with the receipt naming the ports, the `JOURNEY_ROOMS_DIR`, the room id,
-  and each of its seven assertions. `kc-journey-map/scripts/sequence-smoke.mjs` and
-  `server/client/**` are in the workflow's `paths` filter.
+* **AC-1** At `cfb804d`, `npm ci && npx tsc` in `kc-journey-map` exits 0; a mutation that breaks
+  `server/client/sequence.ts` types makes the same command exit nonzero.
+* **AC-2** At `cfb804d`, a production client bundle builds (`npx vite build`) and the dynamic
+  `@tldraw/mermaid` import resolves in the output; the Mermaid chunk's added weight is reported as a
+  measured number. A mutation removing the dependency makes the build fail.
+* **AC-3** At `cfb804d`, `node scripts/sequence-smoke.mjs <origin>` passes against a frontend and
+  API pair started for the test, with the receipt naming both ports, the `JOURNEY_ROOMS_DIR`, the
+  room id, and each of its seven assertions.
 * **AC-4** `editor.getTextOptions()`, `editor.options.maxPages`, and `createMermaidDiagram`'s
-  `blueprintRender` option are confirmed to exist in the installed `tldraw@5.4.0` and
+  `blueprintRender` option are each confirmed present in the installed `tldraw@5.4.0` and
   `@tldraw/mermaid@5.4.0` type declarations, cited by symbol.
-* **AC-5** The `kc-journey-map` SKILL.md `description` trigger delta is dispositioned: PR #440
-  drops `產出 journey 圖` and `現況跟 journey 對不對` from the trigger list while adding
-  `sequence companion`. Either both dropped triggers are restored, or the PR body records the
-  Captain's decision to drop them.
+* **AC-5** The SKILL.md `description` trigger delta is dispositioned: PR #440 drops
+  `產出 journey 圖` and `現況跟 journey 對不對` while adding `sequence companion`. Either both dropped
+  triggers are restored, or the PR body records the decision to drop them.
+
+## Residual carried to the Captain
+
+Wiring the typecheck and the bundle build into `kc-journey-map-tests.yml`, and adding
+`scripts/sequence-smoke.mjs` to its `paths` filter, were in this task's first draft and were
+removed when the Captain selected POC on 2026-09-14: a POC runs the check once, it does not build
+the gate. Nothing has bitten yet, so no CI step is justified on evidence today. `server/client/**`
+needs no filter entry — the existing `server/**` pattern already covers it.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: poc-exploration
+  recommended: poc-exploration
+  route: [build, prove]
+  basis: The candidate already exists as PR #440; the only open question is whether it works at a commit someone else can re-reach.
+  obligations:
+    architecture: []
+    implementation: [No product change; mutations exist only to prove AC-1 and AC-2 can fail]
+    testing: [AC-1..AC-5]
+  scope_boundary: No CI edit, no npm script, no change to kc-journey-map product code beyond throwaway mutations.
+  semantics_unchanged: true
+  poc_decision: whether the Mermaid sequence companion works at cfb804d, so the journey map can use Mermaid
+  poc_falsifier: a check fails at the pinned head, or a claimed tldraw/@tldraw/mermaid symbol does not exist
+  poc_budget: one worker, no PR of its own
+  poc_stop_when: AC-1..AC-5 each hold or fail at cfb804d with a receipt
+  poc_artifact: retained
+  poc_safety_boundary: a throwaway worktree at cfb804d; no push to codex/journey-mermaid, no GitHub write
+  poc_decision_ready_minutes: 30
+```
