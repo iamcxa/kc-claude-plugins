@@ -78,6 +78,11 @@ gates:
                 at: "2026-09-14T14:54:09.107621Z"
                 decision: revise
                 reason: 'Captain rejected at the prove gate. The bare release id silently conflates across products: two entities from different products both carrying release: r1 are returned together by --where release=r1 with no refusal, no warning, and no journey-file cross-check anywhere, and product cannot disambiguate because product and release id are already independent axes in the live corpus. Concrete ask: qualify the identifier as <journey>/<release-id>, mirroring the existing <product>/S<number> convention that sprint already uses, and show the qualified form no longer conflates under the same forced-collision exercise.'
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-validation-3
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-3:revision-1
+                digest: sha256:6516f1e77c6adf538b73358fa38f62b1fdb8499a98ec5bd063f57e8742664264
+                room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-3
 ---
 
 ## The problem

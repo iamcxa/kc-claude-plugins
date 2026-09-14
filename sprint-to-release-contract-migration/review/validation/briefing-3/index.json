@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-3:revision-1",
+  "question": "Approve the corrected release field and deliver? One open item rides with it: release-field-r1-evidence-record still carries a bare release: r1, which the new loader would refuse — re-qualify it, or withdraw it as the evidence artifact the reviewer judged it to be.",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/57bf53d88acaa2253e105316e227975f55ccfb55/sprint-to-release-contract-migration.md",
+      "rev": "sha256:92ae3738e6a23537da51365bb39405a2d5afa88283b8abef2c2645505f5f8982",
+      "mediaType": "text/markdown",
+      "summary": "Prove, cycle 3: 5 of 5 checklist items DONE, all independently reproduced rather than reused. The forced-collision exercise no longer conflates on the qualified form. The loader refuses a bare release with a named ContractError and accepts the qualified form, exercised against a real-shaped work item rather than only the unit test. The journey part is the journey file's own slug, not the product directory. Four suites pass at a5bd9053 in an independently resolved checkout, and the sprint-mirror claim is bounded rather than asserting parity."
+    }
+  ]
+}
