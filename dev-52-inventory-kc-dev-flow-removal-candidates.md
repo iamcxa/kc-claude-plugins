@@ -3,8 +3,8 @@ title: "Inventory kc-dev-flow surfaces for removal candidates (POC)"
 status: backlog
 source: https://linear.app/duckbase-co/issue/DEV-52/inventory-kc-dev-flow-surfaces-for-removal-candidates-poc
 product: kc-dev-flow
-planning-window: Linear Cycle d1c96803-02fa-4323-b3a8-2fc44cc43699 2026-09-10T16:00:00.000Z/2026-09-24T16:00:00.000Z
-planning-outcome: Linear Project 4746021d-2930-4589-80a0-b7b3d1d70eeb kc-dev-flow slimming dogfood sha256:0599c390742642a1edf03e07a50c28635ff41d3ef77188e076cb2f02e6d85372
+planning-window:
+planning-outcome:
 sprint: S8
 sprint-readiness: ready
 started:
