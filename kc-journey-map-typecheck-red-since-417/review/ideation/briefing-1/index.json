@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fafrpfqmdc3zqhq8asfbt83r:ideation:attempt-1:revision-1",
+  "question": "Accept this shaping and let the build stage implement it, including the two scope additions it found — pinning typescript as a devDependency and adding tsconfig.json to the workflow's paths filter?",
+  "artifacts": [
+    {
+      "id": "artifact:fafrpfqmdc3zqhq8asfbt83r:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/706524e68197c5ec9492d63074a2cb7112d3ea49/kc-journey-map-typecheck-red-since-417.md",
+      "rev": "sha256:0486079e2011104ebe0f577740309121178b72dc53443dcba9b7a47a2e276387",
+      "mediaType": "text/markdown",
+      "summary": "The ensign reproduced TS7016 at origin/main (e3cca913, exit 2) in a disposable scratch worktree and verified the fix shape empirically rather than from documentation. Chosen form: a hand-written lib/records.d.mts declaring storyBorder(story: TLShape): TLShape | null. The .d.mts extension is load-bearing — identical content named records.d.ts left tsc red with the same TS7016, because bundler resolution maps a .mjs import to .d.mts first. JSDoc on records.mjs was rejected for editing the 13-export module being typed; tsconfig allowJs was rejected for pulling all 13 lib modules into strict checking at once. Only App.tsx:6 imports a .mjs module, so there is no wider class. Two facts were found that the task did not carry and that widen its scope: typescript is in neither package.json nor package-lock.json, so npx tsc fetches it from the registry on every run and a CI step would be unpinned; and the workflow's paths filter omits kc-journey-map/tsconfig.json, so a tsconfig-only edit would not retrigger the job. The FO independently confirmed all three checkable claims against the working tree: zero typescript matches in both manifests, exactly the 13 named exports in lib/records.mjs, and zero tsconfig matches in kc-journey-map-tests.yml. AC-1 and AC-2's falsifiers were demonstrated in the scratch worktree, not asserted. No file under lib, server, package.json, tsconfig.json or .github/workflows was modified."
+    }
+  ]
+}
