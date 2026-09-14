@@ -228,3 +228,18 @@ attempt. Scope is exactly validation's two proposals and nothing else.
 Out of scope: no acceptance criterion is re-argued, no verdict row changes, and no
 edit to `check-pr-title.py`, the released pr-merge body or its pin,
 `scripts/fixtures/release-please-runtime`, or `spacedock-dev/subspace-relay`.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: F2 — reword the dangling referent in the fixture header
+  commit eca4eb82; `kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv:7` now reads `not part of this file's capture.`, naming no deleted command. No verdict row moved: 13 non-comment rows diff empty against `origin/main`.
+- DONE: F3 — disambiguate the repo-root path from the package-relative path
+  same commit; `kc-dev-flow/references/pr-merge-extension.md` now reads `this repository's root-level scripts/fixtures/release-please-runtime`, and the identical bytes are re-synced into `docs/dev/_mods/pr-merge.md`'s marked extension block (not hand-edited).
+- DONE: re-verify all four acceptance criteria at the new candidate, each its own bounded run
+  `git grep capture-oracle` exit 1 (AC-1); `python3 scripts/kc-dev-flow-contract-test.py` → PASS exit 0 (AC-2); `python3 kc-dev-flow/scripts/check-pr-title.test.py` → PASS exit 0, `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py` empty, 13 verdict rows diff empty against `origin/main` (AC-3); recomputed released-body sha256 `ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57`/10551 bytes matches the manifest pin, and the mod's extension block is byte-identical to the resource, 27522 == 27522 chars (AC-4).
+- DONE: state whether "every reference is gone" now holds literally
+  `git grep -niE 'capture.oracle|capture-oracle|capture oracle'` over the tracked tree exits 1 (zero hits), including F2's prior dangling referent. The accepted outcome's "every reference to it are gone from the shipped surface" now holds literally, not just under AC-1's literal-string grep.
+
+### Summary
+
+Applied exactly validation's two proposed prose edits (commit eca4eb82) under the Captain's ruling, out-of-scope items untouched: `check-pr-title.py`, every verdict row, the released body and its pin, and `scripts/fixtures/release-please-runtime` all diff empty against `origin/main`. All four acceptance criteria re-verified green at the new candidate, and the broader case-insensitive/paraphrase grep now also returns zero — the accepted outcome's "every reference is gone" clause holds literally, closing F2 and F3.
