@@ -1,6 +1,6 @@
 ---
 title: "dispatch.sh carries worker credentials through workspace create --env, resumes a task in a fresh workspace, and states that gate decisions are the ship FO's"
-status: validation
+status: done
 source: "Captain 2026-09-14 「派」 (ship round 3, harden); findings recorded on spacedock-state/ship questions logs"
 product: kc-ship-flow
 planning-window:
@@ -8,11 +8,11 @@ planning-outcome:
 sprint: ship-cloud-wrapper-r3
 sprint-readiness: ready
 started: 2026-09-14T10:50:16Z
-completed:
-verdict:
+completed: 2026-09-14T16:09:34Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-ship-dispatch-env-file-resume-and-gate-authority
 issue:
-pr: 445
+pr: pr-merge:445
 mod-block:
 id: 0dg522wbqd0jpd2jeg8tjq4m
 gates:
@@ -77,7 +77,8 @@ gates:
                     source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T16:09:34Z
 ---
 
 On 2026-09-14 (qnow `qnow-clerk-poc`, DEV-146) the Captain provisioned Clerk keys mid-task. Conductor CLI 0.85.0 accepts environment variables only at `conductor workspace create --env KEY=VALUE` (repeatable); `session create` has none and an existing workspace cannot take new ones. The ship FO had to create a second workspace by hand from the task's branch with a hand-written resume boot, because `dispatch.sh` 0.2.0 has no credential surface and no resume mode. On 2026-09-11 (`ship-dispatch-watch-round-2`, task 7z) the Captain's chat approval and the worker's conn-delegated record collided on one gate attempt; today's batch proved the rule that holds: the ship FO records with the Captain's words, workers sync state by merge (never rebase) and never record.
