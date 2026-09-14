@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t12w6e29mdcnrc4chs9ps27e:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation (shape) output for t1: Pilot/Product-slice profile reconciled per the Captain's batch conn, and AC-1..AC-4 rewritten as falsifiable Verified-by/Falsified-by pairs — enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:t12w6e29mdcnrc4chs9ps27e:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1d1efeab928fc2b23546b9a00d6ab028549c6036/adopter-contract-test-ships-with-the-package.md",
+      "rev": "sha256:aaefa85dd5f24568f74303a5fcf184c781ed61cd304ca09c2330426f02938cc0",
+      "mediaType": "text/markdown",
+      "summary": "Ideation stage report: 2/2 checklist items DONE. Work profile receipt reconciled poc-exploration -\u003e pilot-product-slice (route [shape, build, verify-deliver]) citing the Captain's batch conn already recorded on the backlog gate resolution. Acceptance criteria AC-1..AC-4 rewritten from flat bullets into AC-N + Verified-by/Falsified-by execution-evidence pairs. No code/script/manifest changes in this pass; scope and non-goals unchanged."
+    }
+  ]
+}

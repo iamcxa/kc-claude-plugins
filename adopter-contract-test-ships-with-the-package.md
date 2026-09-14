@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:t12w6e29mdcnrc4chs9ps27e:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:t12w6e29mdcnrc4chs9ps27e-ideation-1
+              briefing:
+                id: briefing:t12w6e29mdcnrc4chs9ps27e:ideation:attempt-1:revision-1
+                digest: sha256:6c052a4dd49d892d7c47c762e2b174c4874df25c113ca8a9aa4324f5de3a5d30
+                room-ref: ./adopter-contract-test-ships-with-the-package/review/ideation/briefing-1
 ---
 
 `kc-dev-flow/MIGRATION.md` speaks of `scripts/kc-dev-flow-contract-test.py` as if every adopter
