@@ -26,6 +26,17 @@ gates:
                 id: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-1:revision-1
                 digest: sha256:d5fe505a9e6199259984e6b0b3913c79704d61f809c890b642be45320a4baa38
                 room-ref: ./sprint-to-release-contract-migration/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:tjxctad7413wyp3acfx8wzzp:backlog:1
+                briefing: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T13:42:57.235563Z"
+                decision: approve
+                reason: Captain said 派 for both ready items, after selecting POC and the kc-dev-flow/S10 grouping for this one. The seed carries the problem, accepted outcome, non-goals, AC-1..AC-5 and the v3 POC receipt with its decision, falsifier, budget and stop condition.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
