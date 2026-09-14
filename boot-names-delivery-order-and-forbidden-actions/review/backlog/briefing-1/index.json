@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:v9mf30n3s03ev5dvtn08vsed:backlog:attempt-1:revision-1",
+  "question": "Approve backlog admission: implement the boot-message delivery-order + forbidden-actions wording (AC-1/AC-2), watch.sh's question-not-gate-prepared check on empty pr: (AC-3), for kc-ship-flow's dispatch.sh/watch.sh — proceed to ideation/implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:v9mf30n3s03ev5dvtn08vsed:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/76f77a2015b8c428f5dc95965da029eaa99a81f5/boot-names-delivery-order-and-forbidden-actions.md",
+      "rev": "sha256:735d5ce91e3a11a1f9a283bba7b154869e2beee74099f704b70729048dc2ff0a",
+      "mediaType": "text/markdown",
+      "summary": "Seed entity: two r3 incidents (validation prepared with no pushed branch/PR; a worker attempted gh repo create / branch-protection PUT, both 403) show the boot message is missing delivery-order and forbidden-actions wording. AC-1..AC-4 define verbatim boot text, a watch.sh question-state check, and a diff-discipline bound. Profile recommendation: pilot."
+    }
+  ]
+}
