@@ -1,6 +1,6 @@
 ---
 title: "kc-journey-map's typecheck has been red since #417 and nothing reports it"
-status: implementation
+status: validation
 source:
 product: kc-journey-map
 planning-window:
@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-kc-journey-map-typecheck-red-since-417
 issue:
-pr:
+pr: 441
 mod-block:
 id: fafrpfqmdc3zqhq8asfbt83r
 gates:
