@@ -55,12 +55,12 @@ def read_work_item(path: Path) -> tuple[str, str, dict[str, object]]:
     try:
         item_id = LOADER._one_field(
             text[4:frontmatter_end],
-            r"^id:\s*([^\n#]+?)\s*$",
+            r"^id:[ \t]*([^\n#]+?)[ \t]*$",
             "frontmatter id",
         )
     except LOADER.ContractError as exc:
         raise CloseError(str(exc)) from exc
-    started = re.findall(r"^started:\s*([^\n#]+?)\s*$", text[4:frontmatter_end], re.MULTILINE)
+    started = re.findall(r"^started:[ \t]*([^\n#]+?)[ \t]*$", text[4:frontmatter_end], re.MULTILINE)
     if len(started) > 1:
         raise CloseError("work item must contain at most one frontmatter started")
     if started:
@@ -135,6 +135,8 @@ def parse_outcome(text: str, receipt: dict[str, object]) -> str:
     cleanup_at_decision = one_field(block, "cleanup_status_at_decision")
     if cleanup_at_decision not in {"pending", "complete", "failed", "not-applicable"}:
         raise CloseError("cleanup_status_at_decision is invalid")
+    if "started" not in receipt:
+        raise CloseError("frontmatter started must not be empty")
     if admitted_at != receipt["started"]:
         raise CloseError("admitted_at must equal frontmatter started")
     computed = (timestamp(decision_ready_at, "decision_ready_at") - timestamp(admitted_at, "admitted_at")).total_seconds()
