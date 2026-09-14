@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-2:revision-1",
+  "question": "The scalar release field carries a journey release slice end to end, but the bare id silently conflates across products. Send it back for one round to qualify the identifier, or accept it as-is with the collision recorded?",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/63839b0ef93a0ac7731539594ce1554fe2c40660/sprint-to-release-contract-migration.md",
+      "rev": "sha256:910928f7bd33cc7efa526b612f860b99bea999d94ee3b9431adafd393ad9151b",
+      "mediaType": "text/markdown",
+      "summary": "Prove: 3 of 3 checklist items DONE. All four suites reran green at a5fd90de in an independently resolved checkout, and the conflicting-pair refusal is a named ContractError. The falsifier fired when forced: two entities from different products both carrying release: r1 are returned together by --where release=r1 with no refusal, no warning, and no journey-file cross-check anywhere. Product and release id are already independent axes in the live corpus. The reviewer also judged release-field-r1-evidence-record an evidence artifact rather than a deliverable and left its withdrawal to the Captain."
+    }
+  ]
+}

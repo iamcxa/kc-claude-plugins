@@ -65,6 +65,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-14T14:06:42.899672Z"
                 reason: 'The Captain named the actual goal after this room was bound: unify the vocabulary to release so kc-journey-map''s release slices can be imported into dev-flow. This POC asked whether release grouping outperforms the sprint ordinal, which is a different question, so its stop does not answer the one the Captain is deciding.'
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-validation-2
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-2:revision-1
+                digest: sha256:838b3d78a9b52296fb0c52931f739ad667c55c271b783cbf9621b648bc2311be
+                room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-2
 ---
 
 ## The problem
