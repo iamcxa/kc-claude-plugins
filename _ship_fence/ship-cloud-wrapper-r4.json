@@ -8,5 +8,10 @@
   "message_sha256": "62f5b12fac0e8b8350fdaaa25ade5313624c4f259fbe413de4e934b6230cbe1c",
   "session": "6391a296-cd1a-48cd-b7bb-e387c3944bce",
   "workspace": "94744197-0f26-4765-bb6f-5439d81d6b17"
+ },
+ "close-roster-is-the-fence-and-captain-stopped-validates": {
+  "message_sha256": "451dddc9bd2acd1952b90588adfbd40fee32d07d56091bbfc6d1aea379032e48",
+  "session": null,
+  "workspace": null
  }
 }
