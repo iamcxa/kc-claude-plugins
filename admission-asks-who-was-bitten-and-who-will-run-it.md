@@ -26,6 +26,20 @@ gates:
                 id: briefing:gzrgwdxkh6zkenkswkhasmjc:backlog:attempt-1:revision-1
                 digest: sha256:b52c60eac0ce49a09a95c4f58679f4e081cfc0f3d3f60cad211deb21d63275e7
                 room-ref: ./admission-asks-who-was-bitten-and-who-will-run-it/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gzrgwdxkh6zkenkswkhasmjc:backlog:1
+                briefing: briefing:gzrgwdxkh6zkenkswkhasmjc:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T22:29:57.599568Z"
+                decision: approve
+                reason: 'backlog admission on the batch conn: brief carries bite, consumer, AC-1..4, non-goals, route-back. Enter ideation.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
