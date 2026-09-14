@@ -1,6 +1,6 @@
 ---
 title: "The Mermaid sequence companion has no repeatable in-repo check, so the journey map cannot rely on Mermaid"
-status: validation
+status: done
 source:
 product: kc-journey-map
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: journey-map-mermaid-companion
 sprint-readiness: ready
 started: 2026-09-14T08:57:36Z
-completed:
-verdict:
+completed: 2026-09-14T09:13:22Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-mermaid-sequence-companion-has-no-repeatable-check
 issue:
 pr: local-merge:1ea1a2ae
@@ -55,7 +55,8 @@ gates:
                 reason: 'POC outcome accepted. The Captain ruled in chat 2026-09-14 「不用再跑，codex 單獨跑過可以用」: no second fresh validation worker, and the Mermaid sequence companion is accepted as working at cfb804d. AC-2/3/4 hold on the implementation receipt; AC-1''s failure is a pre-existing declaration-file gap the FO re-derived on origin/main and is not this PR''s defect; AC-5 stays an open ask against PR #440. The Captain also ruled 「型別檢查修復」, which the FO carries forward as a separate item. This POC produced no candidate; PR #440 remains Draft and unruled.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T09:13:22Z
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid
