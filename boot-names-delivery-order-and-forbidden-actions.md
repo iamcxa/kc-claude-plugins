@@ -67,3 +67,48 @@ A worker that reaches validation has already pushed its branch and opened the Dr
 - Back to backlog if `dispatch.sh`'s boot text moves into a template file under another task; re-point AC-1/AC-2 at that file.
 
 Profile recommendation: pilot.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >
+    Every cloud worker dispatch.sh/watch.sh boots reads this text; audience is
+    every future worker on this and later sprints (not disposable), the fix
+    creates persistent value (prevents the two dated repeat-incident classes),
+    and likely iteration follows as boot wording gets exercised by more
+    workflows. No production credentials/data, destructive external mutation,
+    irreversible migration, or consumer-facing compatibility break is in
+    scope; no SLO/support/release-ownership duty attaches.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Locate the exact boot-header emission point(s) in dispatch.sh for
+        both --message-file boot and --resume before editing.
+      - Locate watch.sh's validation-gate-prepared reporting path and its
+        read of the entity's pr: field.
+    implementation:
+      - Add the two verbatim sentences (AC-1, AC-2) to the boot header text
+        used by both boot modes, not a copy in each.
+      - Change watch.sh to report question (not gate-prepared) when a
+        validation gate is prepared and pr: is empty, with a one-line reason.
+    testing:
+      - dispatch.test.sh asserts both verbatim sentences appear in
+        --dry-run output for both boot modes (AC-1, AC-2).
+      - A fixture state with a prepared validation gate and empty pr: proves
+        watch.sh reports question, not gate-prepared (AC-3).
+      - New fixtures do not copy an existing repository file or cached
+        plugin file and carry no real repository SHA; added comment lines
+        stay under the repository's 3% baseline (AC-4).
+  scope_boundary: >
+    No token-scope or GitHub-side enforcement change (Non-goal); no change to
+    the existing conn/gate-authority wording from #445 (Non-goal); this is
+    wording + a reporting-state check, not a new permission or auth mechanism.
+  semantics_unchanged: true
+  decision:
+    authority: "Captain batch approval, 2026-09-15, 「r4 現在開」 (conn recorded by the ship first officer; applied here per dispatch fc20223438b3)"
+    at: "2026-09-15T00:00:00Z"
+```
