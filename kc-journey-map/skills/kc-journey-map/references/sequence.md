@@ -79,3 +79,13 @@ This is agent-assisted reconciliation. It is not automatic reverse synchronizati
 or a lossless native-to-Mermaid exporter. Coordinates, styling, arbitrary shapes,
 and some native edits may have no Mermaid equivalent; preserve them in the backup
 and make any unresolved differences explicit.
+
+## Focused verification
+
+`node scripts/sequence-smoke.mjs <local-frontend-origin>` requires `agent-browser`
+and a frontend/API pair you started for the test. Use a separate `JOURNEY_API_PORT`,
+temporary `JOURNEY_ROOMS_DIR`, and matching `VITE_JOURNEY_API_URL`; a port number by
+itself is not evidence of isolation. The check creates its own UUID room and named
+browser session. It checks native numbering, edits, old-page preservation, malformed
+input refusal, explicit unnumbered source, and native backup content; it closes its
+browser session, while the operator owns the test services and disposable room data.

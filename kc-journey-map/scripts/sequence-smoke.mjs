@@ -4,10 +4,11 @@ import { execFileSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 
-const url = new URL(process.argv[2] ?? 'http://invalid')
+if (!process.argv[2]) throw new Error('Pass the origin of a local frontend you started for this test.')
+const url = new URL(process.argv[2])
 if (url.protocol !== 'http:' || !['localhost', '127.0.0.1'].includes(url.hostname) ||
-	!url.port || ['3737', '3738', '3739', '3740'].includes(url.port) || url.search || url.pathname !== '/') {
-	throw new Error('Pass an isolated local frontend origin on a separate port, without a room/query.')
+	url.username || url.password || url.search || url.hash || url.pathname !== '/') {
+	throw new Error('Pass an isolated local frontend origin, without credentials, a room, or a query.')
 }
 const session = `sequence-smoke-${randomUUID()}`
 url.searchParams.set('room', session)
