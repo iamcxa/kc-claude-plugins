@@ -1,6 +1,6 @@
 ---
 title: "The journey canvas is unreachable from anywhere but the machine it runs on"
-status: backlog
+status: ideation
 source:
 product: kc-journey-map
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Captain approved in chat 2026-09-14 with 「Pilot」 to the FO's recommendation, after the FO verified all three causes against the working tree and corrected the report's inaccurate hard-coded claim. Pilot rather than POC because the fix shape is not in doubt but its proof is a cross-machine run, which is an evidence round rather than a one-shot exploration. The loopback-only document API bind is held as an accepted-outcome property, not an implementation detail.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
