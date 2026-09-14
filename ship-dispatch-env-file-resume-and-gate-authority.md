@@ -289,3 +289,16 @@ Independently reran `dispatch.test.sh` (16/16 passed, unchanged from implementat
 ### Summary
 
 Fixed the ship FO's revise-gate finding: `resolve_branch_for_worktree` now asks the worktree itself (`git symbolic-ref --short HEAD`) instead of string-matching a logical path against `git worktree list`'s physical paths, which is what broke every `--resume` case on a symlinked checkout (e.g. macOS `/tmp` -> `/private/tmp`); a new symlink-routed test case (case n) was verified to fail against the old code and pass against the fix before being kept in the suite. Comment density in the diff dropped from 11.8% to 7.3% by deleting narration-only comments while keeping the ones stating facts (usage syntax, fence schema, the symlink bug rationale, the single-probe design note) the code can't state itself. The entity's `pr` field is now the bare number `445`; all 17 `dispatch.test.sh` cases pass on commit `d2696d8d`, pushed to both the code branch and PR #445 (Candidate line and evidence count updated).
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independently re-verify cycle-2 fixes: run `dispatch.test.sh` fresh at the latest commit, confirm 17/17 including case n; read `resolve_branch_for_worktree` directly
+  Fresh worktree run at HEAD `d2696d8d` (clean tree, no uncommitted changes): `dispatch.test: 17 passed, 0 failed` (a, a2, b, c, d, d2, d3, d4, e, f, i, j, k, l, l2, m, n). Direct read of `kc-ship-flow/scripts/dispatch.sh:150-152` confirms `resolve_branch_for_worktree() { git -C "$1" symbolic-ref --short HEAD 2>/dev/null; }` — asks the worktree itself via `symbolic-ref`, no logical/physical path string comparison remains.
+- DONE: Confirm the comment-density fix (~7.3%, down from 11.8%) by direct diff inspection, and confirm entity `pr` is bare `445`
+  `git diff 26cb22f7 -- kc-ship-flow/scripts/dispatch.sh` (written to a temp file to avoid a shell-quoting issue with the sandboxed `grep`/`ugrep`): 166 lines matching `^+` minus the 1 `+++` file-header line = 165 added lines; 12 match `^+[[:space:]]*#` → 12/165 = 7.3%, matching the cited figure exactly. `status --read ... --json` frontmatter shows `"pr":"445"` (bare number, not `"#445"`).
+- DONE: Confirm PR #445 still open/draft with Candidate line matching current HEAD; no merge or `gh pr ready`
+  `gh pr view 445 --json state,isDraft,headRefOid,body`: `state: OPEN`, `isDraft: true`, `headRefOid: d2696d8df5b74f2cc8bffad0ddcff82821172675` — matches local `git rev-parse HEAD` exactly, and the body's `Candidate:` line cites the same SHA. No merge or `gh pr ready` command was run.
+
+### Summary
+
+Re-verified all three cycle-2 claims independently rather than trusting the prior report's citations: reran the full suite fresh (17/17, unchanged), read the fixed function's source directly to confirm it resolves via the worktree itself rather than any path-string comparison, recomputed the comment-density ratio from the raw diff (12/165 = 7.3%, exact match), confirmed the entity's `pr` field is the bare number `445`, and confirmed PR #445 is still open/draft with its head SHA and body Candidate line matching the current HEAD commit. No code changes were needed; no merge action was taken.
