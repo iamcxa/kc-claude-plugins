@@ -1,6 +1,6 @@
 ---
 title: "The journey canvas is unreachable from anywhere but the machine it runs on"
-status: implementation
+status: validation
 source:
 product: kc-journey-map
 planning-window:
