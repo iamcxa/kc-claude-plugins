@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gzrgwdxkh6zkenkswkhasmjc:ideation:attempt-1:revision-1",
+  "question": "Approve gzr's ideation/shape (AC-1..4 mechanisms named, work profile receipt recorded as pilot-product-slice) to route to implementation? Notably AC-1's original target (plan-lint.py) was already stale — #444 moved brief admission to profile-contract-loader.py:validate_admission_brief() 7h before this brief opened — resolved via AC-1's own parenthetical, no route-back needed.",
+  "artifacts": [
+    {
+      "id": "artifact:gzrgwdxkh6zkenkswkhasmjc:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/75784031382602e93531d7d445fec112d3a0a29e/admission-asks-who-was-bitten-and-who-will-run-it.md",
+      "rev": "sha256:fdd438afed00eb6c79e5227ce7071815d25c27f4101bf6f1a6cf5ab966585328",
+      "mediaType": "text/markdown",
+      "summary": "Ideation stage report: 3/3 checklist items DONE, 0 skipped, 0 failed. All 4 ACs cite evidence. Work profile receipt recorded (pilot-product-slice, route shape-\u003ebuild-\u003everify-deliver, semantics_unchanged: false). AC-1/AC-2 mechanisms named with exact files/functions/line ranges grounded against #446/#450's actual diffs; AC-3 call site named in kc-ship-flow run-batch SKILL.md. Two open forks flagged for build (a --plugin-cache-dir flag for AC-2's cached-plugin comparison; a new sibling consumer-exists-check.py vs extending e2e-gate.py for AC-3), not pre-decided."
+    }
+  ]
+}

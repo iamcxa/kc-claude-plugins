@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:gzrgwdxkh6zkenkswkhasmjc:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:gzrgwdxkh6zkenkswkhasmjc-ideation-1
+              briefing:
+                id: briefing:gzrgwdxkh6zkenkswkhasmjc:ideation:attempt-1:revision-1
+                digest: sha256:defc1ab41d223924840192dd54badb4776694b473431fbb675f9ad6df9bcc034
+                room-ref: ./admission-asks-who-was-bitten-and-who-will-run-it/review/ideation/briefing-1
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
