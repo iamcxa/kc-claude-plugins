@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T10:50:16Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-dispatch-env-file-resume-and-gate-authority
 issue:
 pr:
 mod-block:
