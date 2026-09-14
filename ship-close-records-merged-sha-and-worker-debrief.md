@@ -26,6 +26,20 @@ gates:
                 id: briefing:fgvjsq1wsftn2r6ay4yxp2q1:backlog:attempt-1:revision-1
                 digest: sha256:b8a5bd66a43bbc4856d5f586e7bd2ac2ddc826390eef26cd52f69dd2d8eda87a
                 room-ref: ./ship-close-records-merged-sha-and-worker-debrief/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fgvjsq1wsftn2r6ay4yxp2q1:backlog:1
+                briefing: briefing:fgvjsq1wsftn2r6ay4yxp2q1:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T14:02:58.89206Z"
+                decision: approve
+                reason: backlog admission on the batch conn; brief carries AC-1..4, non-goals, route-back. Enter ideation.
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Both close receipts the wrapper has produced carry `merged_sha: null`: `close-receipt-ship-cloud-wrapper-r2.json` (kc-claude-plugins `spacedock-state/ship`, 2026-09-11) and `close-receipt-qnow-clerk-poc.json` (qnow `spacedock-state/ship`, 2026-09-14). Nothing in `close.py` reads the merge commit, although every closed task carries the `pr: pr-merge:N` sentinel that names it. On 2026-09-11 the r2 fence also had to be corrected by hand because debrief matching picked the ship FO's own debrief (it names every slug in its Filed section) instead of each worker's.
