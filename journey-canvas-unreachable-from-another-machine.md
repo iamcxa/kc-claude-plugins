@@ -104,6 +104,14 @@ opening a second port.
   pass. `canvas-smoke.sh` still starts and reaches the API on loopback.
 * **AC-6** The `allowedHosts` value is justified in one sentence: what it admits and why that is
   acceptable for a local development tool that carries no authentication.
+* **AC-7** `server/canvas-server.ts`'s startup line prints a URL that works from the machine the
+  operator will open it on, not a fixed `localhost`. Following that printed URL from host B reaches
+  a rendering board. Added on the Captain's 「一起做」 ruling, 2026-09-14.
+* **AC-8** The host allowlist is operator-extendable, so a DNS name the VM is actually reached by —
+  a cloud or Tailscale name that is not `os.hostname()` — can be admitted without editing tracked
+  files. The default with nothing configured still admits the machine's own hostname, and an
+  unrelated hostname is still refused with Vite's blocked-request response. Added on the Captain's
+  「一起做」 ruling, 2026-09-14.
 
 ## Work profile receipt
 
