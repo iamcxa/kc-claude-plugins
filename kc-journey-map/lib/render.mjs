@@ -3,6 +3,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
+import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
 import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
@@ -174,6 +175,10 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
+	const currentDocument = current.snapshot?.documents?.find((d) => d.state.id === TLDOCUMENT_ID)?.state
+	// Re-rendering projects the canonical YAML title into tldraw's native name.
+	const document = DocumentRecordType.create({ ...currentDocument, id: TLDOCUMENT_ID,
+		name: typeof model.title === 'string' ? model.title.trim() : '' })
 	// Preserve manually created pages.
 	const remove = (current.snapshot?.documents ?? [])
 		.map((d) => d.state)
@@ -183,7 +188,7 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	const res = await fetch(`${api}/doc?room=${roomId}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ put, remove }),
+		body: JSON.stringify({ put: [document, ...put], remove }),
 	})
 	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, coverage: releaseCoverage(model) }
 }

@@ -45,6 +45,11 @@ const expected = new Set(built.filter((r) => r.typeName === 'shape').map((r) => 
 const expectedPages = built.filter((r) => r.typeName === 'page').map((r) => r.name).sort()
 
 const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
+const document = doc.snapshot.documents.find((d) => d.state.typeName === 'document')?.state
+if (document?.name !== model.title) {
+  console.error(`FAIL: expected journey title ${JSON.stringify(model.title)}, got ${JSON.stringify(document?.name)}`)
+  process.exit(1)
+}
 const got = new Set(doc.snapshot.documents.map((d) => d.state).filter((r) => r.typeName === 'shape').map((r) => r.id))
 
 const missing = [...expected].filter((id) => !got.has(id))
