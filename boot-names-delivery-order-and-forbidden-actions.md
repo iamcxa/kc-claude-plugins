@@ -1,6 +1,6 @@
 ---
 title: "The boot message names the delivery order and the forbidden actions: push and open the Draft PR before preparing validation; never create repositories, change settings or branch protection, or run CI off the PR branch"
-status: backlog
+status: ideation
 source: "measured on ship-cloud-wrapper-r3, 2026-09-14/15 (questions log on spacedock-state/ship); Captain 2026-09-15 「r4 現在開」"
 product: kc-ship-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 bite: (1) 2026-09-14, two of five r3 workers (`pr-merge-released-body-pin-per-mod-version`, `ship-watch-runs-without-conductor-sql`) prepared their validation gate with the candidate existing only in the sandbox — no branch on origin, no PR — so the ship FO could not verify at a pinned SHA and had to message each worker to push first (two extra rounds, ~20 minutes each). (2) 2026-09-14, the `adopter-contract-test-ships-with-the-package` worker pushed a fixture branch to iamcxa/kc-claude-plugins for a live Actions probe (two runs, Kent pays the minutes), attempted `gh repo create` (403) and `PUT repos/…/branches/main/protection` (403); nothing changed only because the token lacked scope. The boot message (dispatch.sh 0.2.0 + #445 wording) forbids merging and gate decisions but says nothing about repository settings, repository creation, or CI runs outside the PR's own branch, and does not order delivery before validation.
