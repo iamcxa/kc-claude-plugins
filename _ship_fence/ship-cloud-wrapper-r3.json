@@ -1,43 +1,55 @@
 {
- "adopter-contract-test-ships-with-the-package": {
-  "message_sha256": "22f353b0c533a85a8973e025344c4f912483efe94401ceb41c8bfb6a8ec9231e",
-  "session": "62536c2f-cf6c-4b9a-834e-68f62b85ccd4",
-  "workspace": "4878c599-b5ba-4f22-b3d3-2e83712b82f1",
-  "pr": 450,
-  "candidate_sha": "c82ec84d463c090e079a1c1d6d4bfa0747712e1d",
-  "closed_reason": "Captain 2026-09-15: no consumer today; fixtures copy existing files"
- },
- "pr-merge-released-body-pin-per-mod-version": {
-  "message_sha256": "a5ca08948a88ecbe8c10cec88f68517c570fd21468edad68fbc4edf11f26ae7f",
-  "session": "1ca1e5d8-f39b-473d-8e2f-05da64760418",
-  "workspace": "2be65410-fd56-457e-aabf-0c8be7085155",
-  "pr": 446,
-  "candidate_sha": "92d79cd21a5f130f2fdbbf01cd9ec2159efb4ec7",
-  "closed_reason": "Captain 2026-09-15: 0.27.0 row has no consumer after the adopter check was cut"
- },
- "ship-close-records-merged-sha-and-worker-debrief": {
-  "message_sha256": "5e6df3bcd8b32a510738531f074f1ba7eac7cd413fd06333e4229f4ea779822e",
-  "session": "7b948fd6-2f6d-47de-ab68-cdc6c2a6544b",
-  "workspace": "d57fe285-25c6-4561-bf93-d07253277b3c",
-  "pr": 448,
-  "candidate_sha": "feeb97ce566b7fb0e33295094c1ff1ff8e053f16"
- },
- "ship-dispatch-env-file-resume-and-gate-authority": {
-  "message_sha256": "4da12f145f62b538df6205840cdda2f551e2f8b9bf5dea4577da89e99d0e24d3",
-  "session": "48d855a0-8e65-4ed0-b3ee-122fae6a4737",
-  "workspace": "aa8abd25-daea-4410-9934-952fda853560",
-  "pr": 445,
-  "candidate_sha": "d2696d8df5b74f2cc8bffad0ddcff82821172675"
- },
- "ship-watch-runs-without-conductor-sql": {
-  "message_sha256": "4ded98481d5755db1484b452e958e889a5abd75f8227f4e0ba1a48c9450f1db0",
-  "session": "f4f84aba-2225-4833-8c76-50b568de576c",
-  "workspace": "89347f82-a86b-4bf6-a7ea-0523fd144eac",
-  "pr": 451,
-  "candidate_sha": "828a0ce152d683355959c6d1363ff275fd3cd840"
- },
- "captain_stopped": [
-  "adopter-contract-test-ships-with-the-package",
-  "pr-merge-released-body-pin-per-mod-version"
- ]
+  "adopter-contract-test-ships-with-the-package": {
+    "candidate_sha": "c82ec84d463c090e079a1c1d6d4bfa0747712e1d",
+    "closed_reason": "Captain 2026-09-15: no consumer today; fixtures copy existing files",
+    "message_sha256": "22f353b0c533a85a8973e025344c4f912483efe94401ceb41c8bfb6a8ec9231e",
+    "pr": 450,
+    "session": "62536c2f-cf6c-4b9a-834e-68f62b85ccd4",
+    "workspace": "4878c599-b5ba-4f22-b3d3-2e83712b82f1"
+  },
+  "captain_stopped": [
+    "adopter-contract-test-ships-with-the-package",
+    "pr-merge-released-body-pin-per-mod-version"
+  ],
+  "pr-merge-released-body-pin-per-mod-version": {
+    "candidate_sha": "92d79cd21a5f130f2fdbbf01cd9ec2159efb4ec7",
+    "closed_reason": "Captain 2026-09-15: 0.27.0 row has no consumer after the adopter check was cut",
+    "message_sha256": "a5ca08948a88ecbe8c10cec88f68517c570fd21468edad68fbc4edf11f26ae7f",
+    "pr": 446,
+    "session": "1ca1e5d8-f39b-473d-8e2f-05da64760418",
+    "workspace": "2be65410-fd56-457e-aabf-0c8be7085155"
+  },
+  "ship-close-records-merged-sha-and-worker-debrief": {
+    "candidate_sha": "feeb97ce566b7fb0e33295094c1ff1ff8e053f16",
+    "debrief": {
+      "path": "_debriefs/2026-09-14-02-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "5e6df3bcd8b32a510738531f074f1ba7eac7cd413fd06333e4229f4ea779822e",
+    "pr": 448,
+    "session": "7b948fd6-2f6d-47de-ab68-cdc6c2a6544b",
+    "workspace": "d57fe285-25c6-4561-bf93-d07253277b3c"
+  },
+  "ship-dispatch-env-file-resume-and-gate-authority": {
+    "candidate_sha": "d2696d8df5b74f2cc8bffad0ddcff82821172675",
+    "debrief": {
+      "path": "_debriefs/2026-09-14-01-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "4da12f145f62b538df6205840cdda2f551e2f8b9bf5dea4577da89e99d0e24d3",
+    "pr": 445,
+    "session": "48d855a0-8e65-4ed0-b3ee-122fae6a4737",
+    "workspace": "aa8abd25-daea-4410-9934-952fda853560"
+  },
+  "ship-watch-runs-without-conductor-sql": {
+    "candidate_sha": "828a0ce152d683355959c6d1363ff275fd3cd840",
+    "debrief": {
+      "path": "_debriefs/2026-09-15-04-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "4ded98481d5755db1484b452e958e889a5abd75f8227f4e0ba1a48c9450f1db0",
+    "pr": 451,
+    "session": "f4f84aba-2225-4833-8c76-50b568de576c",
+    "workspace": "89347f82-a86b-4bf6-a7ea-0523fd144eac"
+  }
 }
