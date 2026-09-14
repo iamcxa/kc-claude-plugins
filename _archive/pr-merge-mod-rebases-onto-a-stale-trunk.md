@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge mod's delivery step syncs the wrong branch and rebases onto a stale local trunk"
-status: validation
+status: done
 source: Captain ruling 2026-09-14 in FO session, after the defect bit during PR #444 delivery
 product: repo-platform
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: repo-platform/S2
 sprint-readiness: ready
 started: 2026-09-14T13:43:33Z
-completed:
-verdict:
+completed: 2026-09-14T16:06:19Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-pr-merge-mod-rebases-onto-a-stale-trunk
 issue:
 pr: pr-merge:453
-mod-block: merge:pr-merge
+mod-block:
 id: ab8tk40pm0t0wv2jpt7551d6
 gates:
     version: 1
@@ -55,7 +55,8 @@ gates:
                 reason: Captain approved at the validation gate. A fresh reviewer independently reproduced the mutation proof in both directions in its own sandbox, settled the re-pinned pr_merge_released_body.sha256 as repository-local with named evidence, and confirmed the package-owned extension block untouched. poc_outcome is proceed.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T16:06:19Z
 ---
 
 ## The problem
