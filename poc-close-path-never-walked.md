@@ -433,3 +433,85 @@ the `[ \t]` repair alone converts a wrong answer into an uncaught `KeyError`. Th
 is written inside the Stage Report rather than as body sections: the same projection was
 probed against this item and a new top-level section changes its boundary digest, which
 would have stranded this item's own advance to implementation.
+
+## Stage Report: implementation
+
+- DONE: AC-1 — correction context or stated route, driven on a fixture, previous behaviour shown to fail
+  `work_item_authority` (`kc-dev-flow/scripts/profile-contract-loader.py`) now excludes exact-match `## POC outcome`
+  and `## POC close measurement` the same way `## Stage Report` is excluded. Pre-fix red, isolated to
+  `read_feedback_context`: raises `FEEDBACK_CONTEXT_MISMATCH: rejected work item or authority changed` against a
+  POC fixture at validation carrying `## POC outcome`; post-fix the same call accepts it. `bind_stage_pin`'s
+  same-stage branch was pre-fix red with `ACTIVE_STAGE_PIN_MISMATCH` on the same fixture, post-fix pinned
+  unchanged. Regression tests in `profile-contract-loader.test.py` (poc_same_stage, poc_corrected,
+  near_miss_drift, poc_non_goals_refused) cover: same-stage report-only re-entry, the feedback correction path,
+  a near-miss `## POC outcomes` heading staying bound (redder when the exclusion regex is widened to `POC
+  outcome\w*` — confirmed), and an added `## Non-goals` still refusing.
+- DONE: AC-2 — empty `started` reads as absent or refuses by name; regression covers empty/populated/absent; mutation reddens
+  `poc-close-guard.py`'s `started`/`id` frontmatter readers changed `\s*` to `[ \t]*` after the colon (matching
+  every other reader in this codebase); `parse_outcome` now refuses `"frontmatter started must not be empty"`
+  when `started` is absent from the receipt, at the point that consumes it — a no-artifact POC returns before
+  that point and is unaffected. Pre-fix red: empty case raised the wrong `admitted_at must equal frontmatter
+  started` refusal (comparing against the literal string `completed:`); absent case raised an uncaught
+  `KeyError: 'started'`. Both now raise the named refusal; populated case unchanged (`direct` fixture).
+- DONE: AC-3 — full contract suite exits 0; guard test passes with its addition named
+  `python3 scripts/kc-dev-flow-contract-test.py` exit 0, own bounded invocation (timeout 300s, ~70s actual).
+  `poc-close-guard.test.py` passes with 2 added lines-of-assertion (empty/absent `started`); no existing
+  assertion changed.
+- DONE: AC-4 — each test run against the unfixed tree first, failure recorded before the fix landed
+  Evidence above per defect; reproduced again standalone via direct module calls against
+  `git show e3cca913:kc-dev-flow/scripts/profile-contract-loader.py` for `read_feedback_context`.
+- DONE: runnable integrated slice
+  Commits `4dc230ac` (fix + AC-1/AC-2 core tests) and `6d340208` (added Non-goals coverage) on
+  `spacedock-ensign/poc-close-path-never-walked`, cut from `e3cca913`.
+- DONE: focused tests for owned logic and seam behavior
+  Same commits; no new production dependency, no new abstraction.
+- SKIPPED: diagnostics and bounded retry/recovery
+  No new runtime surface introduced; the fix narrows an existing hash exclusion and a regex, neither owns
+  retry/recovery behavior.
+- DONE: implementation-exit surface-map-check, every non-test changed file
+  `python3 kc-dev-flow/scripts/surface-map-check.py e3cca913 HEAD <evidence> --work-item <this file> --brief
+  <this file> --repo .` → `surface-map-check: OK (4 files checked)`, 2 test files excluded by the fixed
+  pattern. Evidence block below.
+- DONE: implementation-exit observation (RoboRev, Pilot: one request, no confirmation needed)
+  Capability probes green: CLI `v0.62.0` with `review`/`list --json`/`show --json`; daemon up 464h, `list
+  --json` resolved this repo; `codex` authenticated (`check-agents`). One request issued
+  (`roborev review e3cca913 4dc230ac --agent codex --model gpt-5.6-terra --reasoning medium --min-severity
+  medium --panel none --wait`); daemon's range semantics treated the start arg as exclusive, so the actual
+  diff reviewed was `da3f287f..4dc230ac` (includes the prior merged commit `e3cca913`, not just this slice) —
+  job 502, verdict `P`, output `SEVERITY_THRESHOLD_MET` (no medium+ finding) → `PASS(reason: passed)`.
+  request_count=1, confirmation_count=0. Residual: the later test-only commit `6d340208` was not
+  re-observed (no repair, no production-code change, request budget already spent).
+- DONE: stop numbers, measured against `e3cca913`
+  6 files changed (cap 8), 90 insertions + 9 deletions = 99 changed lines (cap 160),
+  `profile-contract-loader.test.py` 76 added lines (cap 90). No threshold crossed.
+- DONE: retained-document-policy Rules 1-3 and 6-8 on MIGRATION.md and ARCHITECTURE.md
+  Both repaired in place (Rule 8), present-tense factual claims only (Rule 1), the added MIGRATION.md
+  sentence ties to the exclusion-list rule rather than standing as a free log (Rule 2), no new heading or
+  provenance language added (Rule 6), no diagram touched (Rule 7); Rule 3's checks are the same grep/read
+  path the surrounding untouched prose in both files already relies on, unchanged by this edit. Rule 4/5 not
+  triggered — repair, not addition or deletion of a retained document. No duplicate of the edited claim found
+  elsewhere (`grep` across non-archived `.md`).
+- DONE: comment pass
+  0 comment lines added, 0 cut — confirmed by diffing added `+` lines against the code changes; the only `#`
+  characters added are inside regex character classes (`[^\n#]`), not comments.
+
+### Evidence
+
+```
+SURFACE: kc-dev-flow/scripts/profile-contract-loader.py -> AC-1 | python3 kc-dev-flow/scripts/profile-contract-loader.test.py | git checkout e3cca913 -- kc-dev-flow/scripts/profile-contract-loader.py
+SURFACE: kc-dev-flow/scripts/poc-close-guard.py -> AC-2 | python3 kc-dev-flow/scripts/poc-close-guard.test.py | git checkout e3cca913 -- kc-dev-flow/scripts/poc-close-guard.py
+SURFACE: kc-dev-flow/MIGRATION.md -> AC-1 | python3 kc-dev-flow/scripts/profile-contract-loader.test.py | git checkout e3cca913 -- kc-dev-flow/MIGRATION.md
+SURFACE: ARCHITECTURE.md -> AC-1 | python3 kc-dev-flow/scripts/profile-contract-loader.test.py | git checkout e3cca913 -- ARCHITECTURE.md
+```
+
+### Summary
+
+Fixed both defects as ruled in ideation: `work_item_authority` now excludes `## POC outcome` and
+`## POC close measurement` by exact heading, restoring same-stage re-entry and the
+`kc-dev-flow-feedback/v1` correction path after a POC prove stage; `poc-close-guard.py` refuses an empty or
+absent `started` by name instead of comparing against a captured `completed:` or crashing with `KeyError`.
+All four ACs reproduced red before green. Surface-map-check and the full contract suite pass at `6d340208`.
+RoboRev's one authorized Pilot request came back `PASS` with no findings against a slightly wider range than
+requested (daemon's inclusive-range semantics); no confirmation was needed or spent. Repaired MIGRATION.md
+and ARCHITECTURE.md in place under the retained-document policy; no other file in the "Where it touches"
+table needed an edit.
