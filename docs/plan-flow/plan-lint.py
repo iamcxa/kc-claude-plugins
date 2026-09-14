@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """plan-flow lint v0: eight rules over a Linear Project snapshot; supports fetch and offline lint modes."""
-import json, os, sys, urllib.request, hashlib, re, importlib.util, collections
+import json, os, sys, urllib.request, hashlib, re, collections
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import admission as la
 if len(sys.argv) < 2:
     print("Usage: plan-lint.py fetch <project-id> <snapshot.json> | plan-lint.py lint <snapshot.json> [receipt.json]")
     sys.exit(2)
@@ -26,8 +28,6 @@ elif mode == "lint":
     try: snap_data = json.load(open(SNAP_IN))
     except (FileNotFoundError, json.JSONDecodeError) as e: print(f"Error reading snapshot: {e}"); sys.exit(2)
     d = snap_data.get("project") or snap_data
-    guard=os.path.join(os.getcwd(),"kc-dev-flow/scripts/linear-admission.py")
-    spec = importlib.util.spec_from_file_location("la",guard); la = importlib.util.module_from_spec(spec); spec.loader.exec_module(la)
     fails=[]; results=[]
     def rule(name, ok, why=""):
         results.append({"rule":name,"pass":bool(ok),"why":why}); print(("PASS " if ok else "FAIL ")+name+(": "+why if why else "")); ok or fails.append(name)

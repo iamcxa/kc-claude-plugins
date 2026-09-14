@@ -395,6 +395,31 @@ returns to planning; plan-flow and ship-flow admissions wait on it.
 
 - [DEV-62](https://linear.app/duckbase-co/issue/DEV-62/poc-ship-flow-glue-on-one-issue-cloud-dispatch-pinned-sha-verify)
 
+### Sprint S10 — bootstrap, and the last ordinal group
+
+This is the final `kc-dev-flow` sprint ordinal; no further one is allocated for this product.
+
+The Captain ruled on 2026-09-14 that execution grouping becomes a release rather than an
+ordinal, that a roadmap and a release register become a kc-dev-flow specification, and that
+the route starts as a POC. That POC cannot leave `backlog` without a group under the scheme it
+exists to replace, because the loader requires a non-empty `sprint` and `sprint-readiness:
+ready` at the first working stage. This heading exists to unblock it and nothing else.
+
+1. `retire-the-provider-backed-planning-path` — Pilot. Dev-flow's only intake becomes a
+   committed brief; the Planning Receipt tuple, the engage reconcile, and both provider
+   scripts leave the package. Ordered first: it removes loader frontmatter reading that the
+   second item would otherwise have to change twice.
+2. `sprint-to-release-contract-migration` — POC. Whether a release contract groups work better
+   than this ordinal. Its slug predates the Captain's 2026-09-14 ruling and no longer describes
+   it; the minted id is the identity.
+
+Exit: the POC records `poc_outcome`. On `proceed`, admissions move to the release scheme and
+this heading forbids new ones. On `stop`, the ordinal stays and a new heading is allocated
+normally.
+
+The Captain authorized this registration and its use for both items before it is merged into
+`main`. This registration neither accepts delivery nor authorizes a merge.
+
 ## `kc-plugin-forge`
 
 ### Sprint S1 — clean-environment Phase 2
@@ -441,6 +466,18 @@ stage contracts load through the deterministic route boundary; recovery and
 optional details load only on their trigger, and the contract suite plus bounded
 real-journey validation pass. Only then may the pending kc-dev-flow Release PR
 be merged.
+
+### Sprint S2 — the delivery step syncs the wrong branch
+
+1. `pr-merge-mod-rebases-onto-a-stale-trunk`
+
+Opened 2026-09-14 on captain direction after the defect bit during a live delivery. The
+`pr-merge` mod's on-approval sequence pushes the trunk to sync state commits that a split-root
+workflow never puts there, and then rebases onto the bare local trunk rather than the fetched
+remote one. This heading carries no dependency on `repo-platform/S1`.
+
+Exit: the corrected sequence is replayed against a deliberately stale local trunk and lands the
+candidate on the remote tip, and the package-owned extension block is proven byte-identical.
 
 ### Hazard carried forward
 

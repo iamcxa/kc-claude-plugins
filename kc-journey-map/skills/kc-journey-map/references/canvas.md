@@ -32,6 +32,15 @@ them. Unless the user asks to stop, cleanup may stop only owned test services th
 serve no delivered board link.
 These are operator checks, not automatic version detection or lifecycle protection.
 
+Identify an owned service by a process id captured when you started it, and stop that
+id. A command-line pattern is not an identifier: several worktrees of this repository
+run this same server on one machine, so `pkill -f canvas-server` matches a canvas
+someone else is reading. Without a captured id, read every line of `pgrep -fl` for the
+pattern and confirm the match set before stopping anything. Give each test service its
+own port and its own `JOURNEY_ROOMS_DIR` at startup; that is what makes a narrow match
+possible later. After stopping anything, health-check the services you did not intend
+to touch.
+
 From the plugin directory, when installation or startup is needed:
 
 ```bash
@@ -50,8 +59,15 @@ either port is already answering.
 journey YAML with its Markdown explanation. Native PNG export requires the running
 canvas and `agent-browser`; it is not a dependency-free fallback.
 
-- Board: `http://localhost:3737/?room=<slug>`
-- Doc API: `http://127.0.0.1:5858` (loopback only)
+- Board: `http://<host>:3737/?room=<slug>` — `<host>` is the machine's own hostname, printed at
+  startup, and reachable from another machine on the network; a `/connect` proxy in
+  `vite.config.mts` forwards the sync socket to the doc API, so no separate port needs opening.
+- Doc API: `http://127.0.0.1:5858` (loopback only — reachability comes from the board's proxy, not
+  from widening this bind)
+
+Vite refuses a request whose Host header isn't the machine's own hostname or a name listed in
+`JOURNEY_ALLOWED_HOSTS` (comma-separated). Set that env var to admit a cloud or Tailscale DNS name
+without editing tracked files.
 
 Browser tabs show `<journey title> | tldraw canvas`. Rendering copies the YAML
 `title` into tldraw's native document name; changing that name updates connected

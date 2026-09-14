@@ -4,8 +4,12 @@ import { useEffect, useSyncExternalStore } from 'react'
 import { Editor, TLAssetStore, TLShape, Tldraw, serializeTldrawJson } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { storyBorder } from '../../lib/records.mjs'
+import { addSequencePage } from './sequence'
 
-const SERVER_URL = import.meta.env.VITE_JOURNEY_API_URL || 'http://localhost:5858'
+// Falls back to the page's own origin so the /connect proxy (see vite.config.mts)
+// reaches the loopback-bound doc API from whichever host served this page.
+const SERVER_URL =
+	import.meta.env.VITE_JOURNEY_API_URL || `${window.location.protocol}//${window.location.host}`
 
 function subscribeToLocation(onChange: () => void) {
 	window.addEventListener('popstate', onChange)
@@ -71,6 +75,7 @@ function RoomCanvas({ roomId }: { roomId: string }) {
 				deepLinks
 				onMount={(editor) => {
 					;(window as any).editor = editor
+					;(window as any).addSequencePage = (input: Parameters<typeof addSequencePage>[1]) => addSequencePage(editor, input)
 					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
 					const stopBorders = syncStoryBorders(editor)
 					const stopTitle = syncDocumentTitle(editor, roomId)

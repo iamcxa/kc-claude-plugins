@@ -279,10 +279,10 @@ Stop when the planning tuple cannot express the work.
         canonical_brief + "\n## Acceptance evidence\n\nHistorical evidence.\n",
     )
 
-    for mask in range(8):
-        values = tuple(
+    for mask in range(4):
+        values = ("https://example.test/free-text-source",) + tuple(
             value if mask & (1 << position) else ""
-            for position, value in enumerate(("source", "window", "outcome"))
+            for position, value in enumerate(("window", "outcome"))
         )
         receipt_item = write_work_item(
             root,
@@ -294,9 +294,25 @@ Stop when the planning tuple cannot express the work.
         )
         result = run_admission(receipt_item)
         require(
-            (result.returncode == 0) == (mask in {0, 7}),
-            f"Planning Receipt presence mask {mask} had wrong admission result",
+            (result.returncode == 0) == (mask in {0, 3}),
+            f"Planning Receipt presence mask {mask} had wrong admission result "
+            f"(source is free-text provenance, not part of the tuple)",
         )
+
+    source_only = write_work_item(
+        root,
+        "pilot-product-slice",
+        "ideation",
+        "standalone-source-empty-window-outcome",
+        planning_receipt=("https://linear.app/example/DEV-52", "", ""),
+        body=canonical_brief,
+    )
+    source_only_result = run_admission(source_only)
+    require(
+        source_only_result.returncode == 0,
+        "a source string with empty planning-window and planning-outcome was rejected: "
+        f"{source_only_result.stderr}",
+    )
 
     omitted_receipt = write_work_item(
         root,
@@ -326,11 +342,12 @@ Stop when the planning tuple cannot express the work.
         "pilot-product-slice",
         "ideation",
         "standalone-partial-planning-receipt-declaration",
+        planning_receipt=("https://linear.app/example/DEV-12", "Cycle 1", "Project 1"),
         body=canonical_brief,
     )
     partial_declaration.write_text(
         re.sub(
-            r"^(?:planning-window|planning-outcome):[^\n]*\n",
+            r"^planning-outcome:[^\n]*\n",
             "",
             partial_declaration.read_text(encoding="utf-8"),
             flags=re.MULTILINE,
@@ -1819,6 +1836,70 @@ README-POLICY-SENTINEL
         attempt=feedback["attempt"], write_pin=True, feedback_path=feedback_path,
     )
     require(replay.returncode == 2 and not replay.stdout, "old correction authorization was replayable")
+
+    poc_correction_item = write_work_item(root, "poc-exploration", "validation", "poc-correction-item")
+    poc_correction_pin = state / "poc-correction-pin.json"
+    poc_pinned = installed_run(
+        LOADER, poc_correction_item, pin=poc_correction_pin, attempt="validation-1", write_pin=True
+    )
+    require(poc_pinned.returncode == 0, poc_pinned.stderr)
+    poc_rejected_pin = json.loads(poc_correction_pin.read_bytes())
+    with poc_correction_item.open("a", encoding="utf-8") as stream:
+        stream.write(
+            "\n## POC outcome\n\n```yaml\npoc_outcome:\n  direction: change\n  evidence: fixture\n"
+            "  strongest_limit: fixture\n  reversal_fact: fixture\n  cleanup: complete\n```\n"
+        )
+    poc_same_stage = installed_run(
+        LOADER, poc_correction_item, pin=poc_correction_pin, attempt="validation-1", write_pin=True
+    )
+    require(
+        poc_same_stage.returncode == 0
+        and json.loads(poc_correction_pin.read_bytes()) == poc_rejected_pin,
+        f"same-stage re-entry refused once the prove worker wrote POC outcome: {poc_same_stage.stderr}",
+    )
+    poc_feedback = {
+        "schema": "kc-dev-flow-feedback/v1",
+        "from_stage": "validation",
+        "to_stage": "implementation",
+        "attempt": "implementation-poc-correction-1",
+        "rejected_pin_sha256": hashlib.sha256(
+            json.dumps(poc_rejected_pin, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest(),
+        "rejected_work_item_sha256": hashlib.sha256(poc_correction_item.read_bytes()).hexdigest(),
+        "rejected_revision": "c" * 40,
+        "rejection": "REJECTED: the POC direction needs a different falsifier.",
+        "repair_scope": ["Repair the POC outcome direction without changing the accepted outcome."],
+        "authorization": {
+            "decision": "revise", "by": "person:captain",
+            "reference": "Fixture approval of the POC correction scope.",
+        },
+    }
+    poc_feedback_path = state / "poc-feedback.json"
+    poc_feedback_path.write_text(json.dumps(poc_feedback), encoding="utf-8")
+    poc_corrected = installed_run(
+        LOADER, poc_correction_item, pin=poc_correction_pin,
+        attempt=poc_feedback["attempt"], write_pin=True, feedback_path=poc_feedback_path,
+    )
+    require(
+        poc_corrected.returncode == 0
+        and json.loads(poc_corrected.stdout)["workflow_stage"] == "implementation",
+        f"POC feedback context refused once the outcome heading left accepted authority: {poc_corrected.stderr}",
+    )
+    near_miss_item = write_work_item(root, "poc-exploration", "validation", "poc-near-miss")
+    near_miss_pin = state / "poc-near-miss-pin.json"
+    near_miss_seed = installed_run(
+        LOADER, near_miss_item, pin=near_miss_pin, attempt="validation-1", write_pin=True
+    )
+    require(near_miss_seed.returncode == 0, near_miss_seed.stderr)
+    with near_miss_item.open("a", encoding="utf-8") as stream:
+        stream.write("\n## POC outcomes\n\nNear-miss heading stays bound.\n")
+    near_miss_drift = installed_run(
+        LOADER, near_miss_item, pin=near_miss_pin, attempt="validation-1", write_pin=True
+    )
+    require(
+        near_miss_drift.returncode == 2 and not near_miss_drift.stdout,
+        "a near-miss '## POC outcomes' heading was excluded from accepted authority",
+    )
 
     for field in ("title", "source", "id", "unknown-authority"):
         changed_item = report_baseline.replace("---\n", f"---\n{field}: changed\n", 1)

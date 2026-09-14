@@ -24,87 +24,14 @@ Continue by the selected profile's smallest sufficient route.
    bullets. A POC item uses its complete v3 decision, falsifier, budget, and
    stop condition as the Exploration Brief. Do not read current execution state
    or revalidate and rewrite an already-admitted item's historical headings.
-4. Classify its optional Planning Receipt before provider access. The receipt is
-   exactly `source`, `planning-window`, and `planning-outcome`:
-   - when all Planning Receipt fields are absent, use the Captain-approved
-     committed brief as planning authority and do not invoke a provider reader or
-     comparator;
-   - when all Planning Receipt fields are present, run provider reconcile only
-     for the provider-backed branch below. For a new Pilot or Production
-     admission, first invoke this activated skill's installed profile loader in explicit
-     `--validate-admission` mode; default continuation never selects that mode;
-     and
-   - otherwise report `planning receipt incomplete` and stop before reading
-     execution state or mutating it.
-5. In the provider-backed branch, follow the exact work item's `source` to the
-   accepted planning item. Use installed sibling `../../scripts/linear-admission.py`
-   for Linear, or the bound local reader otherwise. Read the item for the problem,
-   decision, success condition, priority,
-   and human-facing status, and obtain the union of the provider's current Ready
-   set for the recorded planning window/outcome and every currently Ready
-   snapshot source even when its current window or outcome moved. Refuse a
-   truncated provider result. If `source` is not a resolvable planning link,
-   report `planning source unavailable` and stop before reading execution state.
-   If the reader or its inputs are unavailable, report `planning reconcile
-   unavailable` and stop at the same boundary. Do not promote the admission
-   snapshot into planning authority or invent, migrate, or rewrite its planning
-   item.
-6. Still in that branch, compare the current Ready set with the committed
-   execution snapshot selected through the adapter's local grouping. Compare
-   source identity and membership, `planning-window`, `planning-outcome`,
-   accepted goal, and non-goals; classify each difference as added, removed,
-   changed, or moved. Normalize both sets into ephemeral JSON lists whose items
-   contain `source`, `planning-window`, `planning-outcome`, `accepted-goal`, and
-   string-list `non-goals`. Do not commit or reuse those files. Refuse the
-   snapshot unless every item shares the exact window and outcome read from the
-   engaged item.
-7. Invoke the installed loader's sibling read-only engage comparator only in
-   the provider-backed branch. The activated skill supplies both package paths
-   for this invocation; do not store an installation path in the repository.
-
-   ```bash
-   python3 <planning-comparator> \
-     --snapshot <ephemeral-snapshot-json> \
-     --current <ephemeral-current-json> \
-     --expected-source <exact-work-item-source> \
-     --expected-window <exact-work-item-planning-window> \
-     --expected-outcome <exact-work-item-planning-outcome>
-   ```
-
-   Exit `0` continues only when stdout parses as one JSON object with
-   `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.
-   Any other exit-`0` output reports `planning reconcile unavailable`.
-   Exit `1` reports the classified delta. Exit `2` reports
-   `planning reconcile unavailable`. All stop before new dispatch or state mutation.
-   Stop for any added, removed, changed, or moved item.
-   The Captain must admit the delta before an authorized actor commits a replacement snapshot.
-   No difference writes the provider or execution snapshot automatically.
-   Do not cancel a running worker.
-
-   When `## Local Profile` binds one combined provider admission guard, use it
-   for steps 4–7 instead of manual provider input or normalization. Continue
-   only from one `kc-dev-flow-dispatch-envelope/v1` JSON object that binds the
-   current work-item and state revisions, snapshot, live read, clean comparator,
-   and loaded contracts. Empty stdout is the mechanical dispatch stop.
-
-   The same successful provider read also returns one ephemeral `delivery`
-   binding with `branch` and `close_line`; derive both from the same exact
-   reconciled `source`, never from work-item prose. A Linear adapter returns its
-   exact `branchName` and `Fixes TEAM-N`. A GitHub Issue adapter returns
-   `branch: null` and `Closes owner/repo#N`; null preserves the current delivery
-   branch. A non-empty branch is the exact forge head branch, even when the local
-   worktree branch differs. Append the close line exactly once to the reviewed
-   PR body. Missing, malformed, or source-mismatched bindings stop before branch
-   push or PR creation. This binding writes neither provider nor execution
-   state.
-8. Before dispatch and whenever execution proposes a scope change, compare the
+4. Before dispatch and whenever execution proposes a scope change, compare the
    accepted goal and complete non-goal list exactly with the admission snapshot.
    If either differs or must change, stop; do not replace the snapshot or
    candidate. Return a structured planning delta naming the changed premise,
    affected acceptance evidence, and recommended `change` or `stop`.
-9. Then read current execution state from its declared authority. Do not
+5. Then read current execution state from its declared authority. Do not
    enumerate the state tree or use provider status to advance execution.
-10. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
+6. Re-read `## Work profile receipt`. New choices use v3; compatible v2 Pilot
    and Production receipts remain loadable, while an active v2 POC must finish
    on its pinned 3.x pair or be Captain re-recorded. If the receipt is missing
    or stale before the first working stage, invoke
@@ -113,11 +40,6 @@ Continue by the selected profile's smallest sufficient route.
    upgrades mechanically. For a v1 POC, preserve the choice but use
    `kc-dev-flow:choose-work-profile` to complete the v3 POC fields with the
    Captain before dispatch.
-
-On a planning-provider change, migrate only unadmitted items. Active items keep
-their provider, reader, snapshot, source, window, outcome, and execution group
-through completion; new admissions use the replacement. Do not project, import,
-poll, or rewrite either authority.
 
 ## Load one route
 
