@@ -134,3 +134,47 @@ trunk.
 
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
+
+## Stage Report: implementation
+
+- DONE: Removed the local half's `git push origin "$BASE"` trunk push and its
+  "up to date with local state commits" claim.
+  `docs/dev/_mods/pr-merge.md` line 73, commit 88bb7eb9 on
+  `spacedock-ensign/pr-merge-mod-rebases-onto-a-stale-trunk`.
+- DONE: On-approval sequence now fetches `origin "$BASE"` and rebases onto
+  `"origin/$BASE"` instead of the bare local ref.
+  Same line; line 51's use-site list updated from "the push" to "the fetch".
+- DONE: Package-owned extension block (lines 119-542, between the start/end
+  markers) left byte-identical; only the pre-marker released body changed.
+  `python3 scripts/kc-dev-flow-contract-test.py` exits 0 after re-pinning
+  `kc-dev-flow/contract-manifest.json` `pr_merge_released_body.sha256` to
+  `754856b5…` / 10607 bytes (was `ea187ab4…` / 10551), the byte delta the
+  two-line edit produced.
+- DONE: AC-4 mutation proof — built a throwaway bare remote + local clone,
+  advanced the remote past the local's cached `origin/main` (staleness
+  confirmed: pre-fetch `origin/main` == stale local `main`), then replayed
+  both sequences from that identical stale starting point.
+  OLD sequence (`git push origin "$BASE"` then `git rebase "$BASE"`): push
+  rejected non-fast-forward ("Updates were rejected... fetch first"); rebase
+  then no-ops onto the stale local ref; resulting
+  `git merge-base feature origin/main` = `e7a7660…` != `origin/main` tip
+  `8a09030…` — candidate stayed behind, reproducing the PR #444 defect.
+  CORRECTED sequence (`git fetch origin "$BASE"` then
+  `git rebase "origin/$BASE"`): fetch updates the tracking ref
+  (`e7a7660..8a09030 main -> origin/main`), rebase replays `feature` onto it;
+  resulting merge-base = `8a09030…` == `origin/main` tip — match.
+- DONE: `poc_outcome: proceed` — the corrected sequence is the one the
+  pr-merge mod should carry. Settling command output: the AC-4 mutation
+  above (merge-base match for corrected, mismatch for old, from the same
+  stale start) plus `python3 scripts/kc-dev-flow-contract-test.py` → PASS
+  (exit 0).
+
+### Summary
+
+Two-line fix in `docs/dev/_mods/pr-merge.md`'s local half: the delivery
+sequence no longer pushes the trunk or claims it carries this split-root
+workflow's state, and it fetches before rebasing onto the remote-tracking
+ref rather than the bare (local) branch name. Re-pinned the released-body
+contract hash for the byte delta; extension block untouched.
+Proven by mutation against a deliberately stale local trunk in a disposable
+git sandbox, not by re-reading the prose.
