@@ -70,6 +70,20 @@ gates:
                 id: briefing:t12w6e29mdcnrc4chs9ps27e:validation:attempt-1:revision-1
                 digest: sha256:3ed91701ff3a02cd6b7c8a2960bc6b0f483522396d459d11b959ddab95046620
                 room-ref: ./adopter-contract-test-ships-with-the-package/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t12w6e29mdcnrc4chs9ps27e:validation:1
+                briefing: briefing:t12w6e29mdcnrc4chs9ps27e:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T15:42:43.313791Z"
+                decision: approve
+                reason: 'ship FO verification at PR #450 head c82ec84d on macOS: kc-dev-flow-contract-test.py PASS, adopter-contract-test.test.py PASS (1 conforming + 4 mutations), 10/413 comments; body fixed (without-it heading, none). Worker disclosed attempted gh repo create and a branch-protection PUT on the repo, both 403, nothing changed — reported to the Captain; r4 boot rule. Approve to done; merge stays with the Captain.'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: done
+                state: pending
 ---
 
 `kc-dev-flow/MIGRATION.md` speaks of `scripts/kc-dev-flow-contract-test.py` as if every adopter
