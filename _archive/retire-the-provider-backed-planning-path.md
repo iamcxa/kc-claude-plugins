@@ -1,6 +1,6 @@
 ---
 title: "Retire the provider-backed planning path, so dev-flow's only intake is a committed brief"
-status: validation
+status: done
 source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: kc-dev-flow/S10
 sprint-readiness: ready
 started: 2026-09-14T08:25:39Z
-completed:
-verdict:
+completed: 2026-09-14T15:42:21Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-retire-the-provider-backed-planning-path
 issue:
 pr: pr-merge:444
-mod-block: merge:pr-merge
+mod-block:
 id: f0m9yytzq7sczkam7rrq9ym3
 gates:
     version: 1
@@ -90,7 +90,8 @@ gates:
                 reason: Captain approved at the cycle-2 validation gate, after the rework rebased the candidate onto origin/main. A fresh reviewer re-ran all five suites at 5de5778a in an independently resolved detached checkout, checked the conflict resolution against a re-fetched origin/main, and diffed the whole branch to confirm nothing outside the disclosed scope changed. AC-4 and AC-5 carry implementation-stage evidence plus an FO direct read at the rebased tip.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T15:42:21Z
 ---
 
 ## The problem
