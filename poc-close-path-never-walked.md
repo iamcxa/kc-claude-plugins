@@ -1,6 +1,6 @@
 ---
 title: "The POC close path has never been walked end to end, and two defects sit on it"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Captain approved in chat 2026-09-14 after the FO presented both defects with their reproductions, the reason for one task rather than two, and the Pilot selection justified by the previous POC selection on this path running past budget and needing a mid-flight amendment.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
