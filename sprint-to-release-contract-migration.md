@@ -800,3 +800,52 @@ item, unchanged from cycle 3.
 Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5bd905385ab34b8111873df13dce42b352abb51`
 (unchanged from cycle 3 — no code edits this cycle). State: real checkout untouched by this cycle's exercise; this report is the
 only write.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Rebase the intact branch (`8e6da9b5`) onto `origin/main` after `#444` (`90e104be`, "retire the
+  provider-backed planning path") landed, resolving the four expected conflicts on meaning.
+  `git fetch origin main` then `git rebase origin/main` from the worktree at
+  `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-sprint-to-release-contract-migration`.
+  Conflicts landed on both replayed commits (`420064a3` and `8e6da9b5`) in the same four files: `docs/dev/README.md`,
+  `kc-dev-flow/README.md`, `kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`.
+  Resolved each hunk by hand: kept every `#444` removal (Planning Receipt tuple, `planning-window`/`planning-outcome` frontmatter
+  wiring in prose, the "Engage reconcile" section and its `linear-admission.py` invocation, the provider-backed-path prose)
+  removed, and carried this branch's `release`/`release-readiness` scalar-grouping material — including the qualified
+  `<journey>/<release-id>` refusal wording from `8e6da9b5` — forward into the post-`#444` text. `git rebase --continue` completed
+  with no further conflicts. Grepped all four resolved files for `provider-backed`, `planning receipt`, `planning-window`,
+  `planning-outcome`, `linear-admission`, and `engage reconcile` post-rebase: the only hits are pre-existing, untouched-by-either-side
+  occurrences already on `origin/main` (the task-template YAML's `planning-window:`/`planning-outcome:` fields and the unrelated
+  "provider-backed layer" delivery-branch-base row), verified identical to `origin/main`'s own copy of those lines.
+- DONE: Re-run all four required suites at the rebased commit.
+  New SHA: `cc96278c8d13a10ae49482403ecf38884d0f72a1` (rebased onto `origin/main@90e104be`). Working tree clean, branch
+  `spacedock-ensign/sprint-to-release-contract-migration`.
+  - `python3 kc-dev-flow/scripts/profile-contract-loader.py` — n/a (not a suite; loader itself, exercised below)
+  - `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` — PASS (5 sub-suites: legacy status-only forward and scope
+    refusal, report/authority/correction regressions, live feedback handoff and two report resumes, route mechanism, overall PASS)
+  - `python3 kc-dev-flow/scripts/profile-spacedock-route.test.py` — PASS
+  - `python3 scripts/kc-dev-flow-contract-test.py` — PASS
+  - `bash scripts/skill-frontmatter-lint.sh` — PASS (46/46 skill directories valid)
+  All four exit 0; none required a workaround.
+- DONE: Exercise the qualified-release behaviour against a real-shaped work item (not only the unit test) at the rebased SHA.
+  Built a standalone real-shaped work item at `/tmp/qual-test-item.md` (full frontmatter plus a `## Work profile receipt` YAML
+  block matching the loader's actual schema, `status: ideation` — the pilot route's real first working stage after the Spacedock
+  workflow-stage mapping, not the logical `shape` stage name). `release: draw-a-journey` (bare, unqualified) exits non-zero with
+  `profile contract: frontmatter release must be qualified as <journey>/<release-id>`. The same item edited to
+  `release: draw-a-journey/r1` exits 0 and emits a loaded contract JSON envelope with `next_workflow_stage: implementation`.
+  Scratch file deleted after the check; no state or code file touched by the exercise.
+
+### Summary
+
+Rebased the intact `sprint-to-release-contract-migration` branch onto `origin/main` after `#444` retired the provider-backed
+planning path, resolving all four expected conflicts (`docs/dev/README.md`, `kc-dev-flow/README.md`,
+`kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`) on meaning: every `#444` removal
+stays removed, this branch's `release`/`release-readiness` scalar-grouping and `<journey>/<release-id>` qualification material
+survives alongside it, and no provider-backed/Planning Receipt/`planning-window`/`planning-outcome`/`linear-admission`/`engage
+reconcile` wording was reintroduced. New SHA `cc96278c8d13a10ae49482403ecf38884d0f72a1`. All four required suites re-run and pass
+at that SHA. Re-confirmed directly against the real loader on a real-shaped standalone work item that a bare `release` value is
+refused and a qualified `<journey>/<release-id>` value is accepted. The branch was not pushed — delivery (including the noted
+force-push over the stale `a5fd90de` remote branch) remains the Captain's decision.
+
+Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@cc96278c8d13a10ae49482403ecf38884d0f72a1`.
+State: this report is the only write; `release-field-r1-evidence-record` was not touched.
