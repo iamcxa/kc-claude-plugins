@@ -1,6 +1,6 @@
 ---
 title: "capture-oracle.cjs never caught anything, so it fails the retention rule it was kept under"
-status: validation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -195,3 +195,36 @@ poc_close_measurement:
 ### Summary
 
 All four acceptance criteria pass at `13543f3c` and the deletion is sound — nothing in the candidate is wrong. Direction is `change` because the experiment left its POC envelope, not because the work failed: `poc-close-guard.py` itself refuses `direction: proceed` on this item, citing budget exhaustion and the Captain's mid-flight amendment. On the FO's scepticism question, the version-skew stop condition stays coherent for the adopter — their action was and remains "stop and report upstream", and the old prose already said an adopter checkout could not run the tool; what degraded is the maintainer's cost of answering, since the `build/src/commit.js` `parseConventionalCommits` path, the quiet-logger workaround, and the `{sha, message, files, pullRequest}` commit shape now live only in `git show origin/main:...capture-oracle.cjs`. That is the cost the Captain accepted on the three-runs-zero-bites record, and I read the shipped prose the same way. Re-derivation was not exercised: no direction turns on its result, and the runtime is byte-unchanged from the revision that produced three agreeing runs.
+
+## Captain ruling — fix F2 and F3, 2026-09-14
+
+The Captain instructed 改 after the FO presented validation's F2 and F3 with the
+recommendation to fix and the cost of a second correction pass. The item returns to
+`implementation` for those two prose edits and is proved again.
+
+**Recorded because the route was not the designed one.** A
+`kc-dev-flow-feedback/v1` correction context cannot bind after a POC prove stage:
+the prove stage writes `## POC outcome` and `## POC close measurement`, both
+non-report sections, into the accepted-authority region, so the current authority
+hash can never equal the rejected pin's and the loader answers
+`FEEDBACK_CONTEXT_MISMATCH`. Reproduced here before the FO changed approach. The
+POC profile's answer to findings is its `poc_outcome` direction, not a correction
+round — which is consistent, and is one more reason this item should have been
+Pilot. Raised as an upstream observation, not repaired here.
+
+So this pass is authorized by the Captain's ruling recorded in this section rather
+than by a feedback context, and is pinned as an ordinary `implementation-3`
+attempt. Scope is exactly validation's two proposals and nothing else.
+
+- **F2** `kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv` line 7:
+  replace `not re-derived by this file's capture command.` with `not part of this
+  file's capture.` No verdict row moves; the capture provenance and the `17.11.1`
+  agreement note stay.
+- **F3** `kc-dev-flow/references/pr-merge-extension.md`: prefix the repo-root path
+  `scripts/fixtures/release-please-runtime` with `this repository's root-level`, so
+  it is not read against the package-relative path four lines above. Re-sync the
+  identical bytes into the mod's marked block rather than hand-editing the mod.
+
+Out of scope: no acceptance criterion is re-argued, no verdict row changes, and no
+edit to `check-pr-title.py`, the released pr-merge body or its pin,
+`scripts/fixtures/release-please-runtime`, or `spacedock-dev/subspace-relay`.
