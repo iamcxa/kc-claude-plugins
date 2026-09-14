@@ -26,6 +26,17 @@ gates:
                 id: briefing:fafrpfqmdc3zqhq8asfbt83r:backlog:attempt-1:revision-1
                 digest: sha256:4d7dbe4d4448b4714b1f61fdec26054a509f5d16013d1a34935f518003637811
                 room-ref: ./kc-journey-map-typecheck-red-since-417/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fafrpfqmdc3zqhq8asfbt83r:backlog:1
+                briefing: briefing:fafrpfqmdc3zqhq8asfbt83r:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T09:15:17.246135Z"
+                decision: approve
+                reason: Captain approved in chat 2026-09-14 with 「可以」 to the FO's Pilot recommendation, after 「型別檢查修復」 in the same conversation. Pilot rather than POC because AC-3 requires a reverted fix to redden a real pull-request check, which is an evidence round rather than a one-shot exploration; the CI step is justified by a defect that already bit — the typecheck has been red since 3fd2fc59 (#417) and no check reported it.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
