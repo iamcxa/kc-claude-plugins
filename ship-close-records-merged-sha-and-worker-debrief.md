@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ship-close-records-merged-sha-and-worker-debrief
 issue:
-pr: 448
+pr: pr-merge:448
 mod-block:
 id: fgvjsq1wsftn2r6ay4yxp2q1
 gates:
