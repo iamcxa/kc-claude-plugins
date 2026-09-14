@@ -39,6 +39,7 @@ smallest maintainable slice.
 
 ## Required output
 
+- open the work item as a PRFAQ, following the shared core's `## Communication`;
 - read `docs/architecture.md` before exploration; bootstrap a useful missing map
   before implementation, following `project-context-maintenance.md`;
 - one accepted journey and explicit non-goals;
@@ -89,10 +90,3 @@ it touches` table can show, so the thresholds are read from the diff and the
 table only tells you where to expect them.
 
 They are stop conditions, not budgets.
-
-## Gate rendering
-
-Before presenting this stage's gate, the First Officer renders the committed
-output as a PRFAQ, following the shared core's `## PRFAQ rendering`. It adds
-nothing to `## Required output` above; it is how a human reads what is already
-there.

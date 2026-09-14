@@ -118,12 +118,11 @@ follow-on POC rather than widen this `poc_budget`. Ask the Captain only for
 the one fact the work item does not state — usually which assumption is
 riskiest.
 
-Before asking the Captain to accept this receipt, render the Exploration Brief
-as a PRFAQ, following the shared core's `## PRFAQ rendering`. POC walks no shape
-stage, so this is the one point at which what the experiment proves is stated for
-a human and then frozen: `poc-exploration/base.md` evaluates this Brief at
-`prove` and forbids rewriting it there. The rendering adds no field to the
-receipt below.
+The Exploration Brief opens as a PRFAQ, following the shared core's
+`## Communication`. POC walks no shape stage, so this is the one point at which
+what the experiment proves is stated for a human and then frozen:
+`poc-exploration/base.md` evaluates this Brief at `prove` and forbids rewriting
+it there. This adds no field to the receipt below.
 
 ## Return the candidate receipt
 
