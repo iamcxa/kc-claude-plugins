@@ -37,6 +37,11 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-backlog-2
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-2:revision-1
+                digest: sha256:99bbaef973a576be53fb75f38d7402302f463202de5d24ed9ac6b6bd1c3757d9
+                room-ref: ./sprint-to-release-contract-migration/review/backlog/briefing-2
         - id: gate:tjxctad7413wyp3acfx8wzzp:validation
           stage: validation
           attempts:

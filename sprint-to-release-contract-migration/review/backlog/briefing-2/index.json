@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-2:revision-1",
+  "question": "Re-admit this item from backlog under the corrected scope: name the execution group release, scalar, so a journey release slice lands in a field instead of prose?",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/3f29bc6fabd6249ea7f893871834f86867c0aa7b/sprint-to-release-contract-migration.md",
+      "rev": "sha256:350fa7252fe38b98d77a0f1104bd0cbefb71658b6eba671cf3f22b18d1cb84e1",
+      "mediaType": "text/markdown",
+      "summary": "Rescoped after the Captain named the real goal: interoperability with kc-journey-map, not a benefit comparison. kc-journey-map's plan-release already puts the selected release/story IDs in the brief, but only as prose, so no query can group by them. Captain ruled the field is scalar and selected POC over the recommended Pilot. The prior POC record and its validation are retained below as evidence about a different question."
+    }
+  ]
+}
