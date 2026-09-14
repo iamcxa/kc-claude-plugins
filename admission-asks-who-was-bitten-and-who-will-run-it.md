@@ -1,6 +1,6 @@
 ---
 title: "Admission asks who was bitten and who will run it: a brief carries `bite:` and `consumer:` lines, and a fixture that copies an existing file is refused"
-status: validation
+status: implementation
 source: "Captain 2026-09-15 「目前 dev flow 合約 or kernel 是否沒有 yagni 原則？為何會做出用不到的測試？」 then 「立這張 r4 票」"
 product: kc-dev-flow
 planning-window:
