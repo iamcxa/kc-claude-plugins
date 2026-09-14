@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T22:53:10Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-admission-asks-who-was-bitten-and-who-will-run-it
 issue:
 pr:
 mod-block:
