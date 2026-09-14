@@ -94,6 +94,11 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-validation-4
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-4:revision-1
+                digest: sha256:a8c649ce1f77ba0635857c3268f879264f59e75d1c41b4c9b0f77182ad0b1ea6
+                room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-4
 ---
 
 ## The problem

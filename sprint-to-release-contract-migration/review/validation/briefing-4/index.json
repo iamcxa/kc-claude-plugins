@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-4:revision-1",
+  "question": "Approve the rebased candidate and deliver? Delivery needs a force-push, because the remote branch still holds the pre-rebase form that predates the qualified-release correction.",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:validation:attempt-4:revision-1:item-1",
+      "uri": "git-root://state/85f3c1626fe07dcbed060745a0e44911c071efd4/sprint-to-release-contract-migration.md",
+      "rev": "sha256:fec1b66ceb8b03bfe33a0d7116a3093e1690f5ee6e81ae917f1d635665952a32",
+      "mediaType": "text/markdown",
+      "summary": "Validation after the post-#444 rebase: 3 of 3 checklist items DONE by a fresh reviewer at cc96278c. The whole branch was diffed against origin/main to confirm every #444 removal stays removed and nothing was reintroduced, the four suites reran in an independently resolved checkout, and the qualified-release refusal was exercised against a real-shaped work item."
+    }
+  ]
+}
