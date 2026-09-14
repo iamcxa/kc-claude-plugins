@@ -39,6 +39,7 @@
     "scripts/engage-reconcile.py",
     "scripts/linear-admission.py",
     "scripts/check-pr-title.py",
+    "scripts/adopter-contract-test.py",
     "scripts/fixtures/pr-title/release-please-verdicts.tsv",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md"
@@ -47,5 +48,12 @@
     "boundary": "an adopter's docs/dev/_mods/pr-merge.md, the bytes before the first '<!-- kc-dev-flow runtime extension:start -->' line, trailing newlines stripped",
     "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
     "bytes": 10551
+  },
+  "pr_merge_released_body_pin_per_mod_version": {
+    "boundary": "same boundary as pr_merge_released_body, keyed by the pr-merge local mod's own frontmatter `version:` so a mod-version bump that silently changes the released body (or a body edit under an unchanged version) is caught either way; adopter-contract-test.py is the sole reader",
+    "0.12.3": {
+      "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
+      "bytes": 10551
+    }
   }
 }

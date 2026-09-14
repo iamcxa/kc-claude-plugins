@@ -165,6 +165,7 @@ script_roles = {
         "kc-dev-flow/scripts/pr-review-handoff.py",
         "kc-dev-flow/scripts/surface-map-check.py",
         "kc-dev-flow/scripts/check-pr-title.py",
+        "kc-dev-flow/scripts/adopter-contract-test.py",
     },
     "package-test": {
         "kc-dev-flow/scripts/profile-contract-loader.test.py",
@@ -173,6 +174,7 @@ script_roles = {
         "kc-dev-flow/scripts/pr-review-handoff.test.py",
         "kc-dev-flow/scripts/profile-spacedock-route.test.py",
         "kc-dev-flow/scripts/check-pr-title.test.py",
+        "kc-dev-flow/scripts/adopter-contract-test.test.py",
     },
     "release-proof": {
         "scripts/kc-dev-flow-contract-test.py",
@@ -485,6 +487,7 @@ expected_manifest_resources = {
     "scripts/engage-reconcile.py",
     "scripts/linear-admission.py",
     "scripts/check-pr-title.py",
+    "scripts/adopter-contract-test.py",
     "scripts/fixtures/pr-title/release-please-verdicts.tsv",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md",

@@ -511,8 +511,13 @@ table rather than erroring; (2) edit the vendored `docs/dev/README.md`
 `stages.states` block to drop `release`; (3) re-vendor
 `profile-contract-loader.py` and `kernel.md` byte-for-byte, and the
 `production/verify.md` / (deleted) `production/release.md` contracts —
-`scripts/kc-dev-flow-contract-test.py`'s byte-parity check fails closed on a
-partial re-vendor; (4) re-record every committed Production v2 receipt
+`profile-contract-loader.py`'s own `load_installed_package()` computes a
+`contract_digest` over every declared resource, so a partial re-vendor changes
+that digest, and the shipped `scripts/adopter-contract-test.py` fails closed
+naming a leftover byte-identical canonical copy the re-vendor left behind
+(this repository's own `scripts/kc-dev-flow-contract-test.py` is a
+plugin-development suite, not a resource the package ships to adopters); (4)
+re-record every committed Production v2 receipt
 (`kc-dev-flow:choose-work-profile`, mechanically, under the same Captain
 selection — the profile did not change, only its route representation): the
 loader now computes `expected_route = [shape, build, verify]` for

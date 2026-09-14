@@ -225,6 +225,53 @@ If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty
 review stages.
 
+## CI recipe
+
+The package ships `scripts/adopter-contract-test.py` (declared in
+`contract-manifest.json`) as the read-only conformance check for an adopted
+repository. Wire it into CI rather than maintaining a repository-owned copy or
+test of it — the manifest's `resources` boundary in step 2 above applies to this
+check the same as any other declared capability.
+
+- Sparse-clone this repository (`kc-claude-plugins`) at a pinned
+  `kc-dev-flow-vX.Y.Z` tag, checking out only the `kc-dev-flow` directory:
+
+  ```bash
+  git clone --depth 1 --branch kc-dev-flow-vX.Y.Z --filter=blob:none --sparse \
+    https://github.com/<org>/kc-claude-plugins.git kc-dev-flow-src
+  git -C kc-dev-flow-src sparse-checkout set kc-dev-flow
+  ```
+
+- Export `KC_DEV_FLOW_ROOT` pointing at the sparse-checked-out `kc-dev-flow`
+  directory (`kc-dev-flow-src/kc-dev-flow` above) and run the check against the
+  adopter repository's own checkout:
+
+  ```bash
+  python3 "$KC_DEV_FLOW_ROOT/scripts/adopter-contract-test.py" --repo "$(pwd)"
+  ```
+
+- Wire this into one CI job and make that job's status a required check on the
+  adopter's default-branch protection (or forge equivalent), the same way any
+  other required gate is configured. A job whose trigger is path-classified
+  (only runs when specific paths change) cannot be marked required until it
+  has run at least once on the target branch — a PR touching unrelated paths
+  would otherwise wait forever on a check that never starts. Either drop the
+  path filter for this job (it is cheap to run unconditionally) or land one
+  unfiltered run before flipping it to required.
+
+- The adopter keeps a short wrapper, not a copy of the checker, so the
+  installed check stays the single source of truth as the package upgrades:
+
+  ```bash
+  #!/usr/bin/env bash
+  set -euo pipefail
+  python3 "${KC_DEV_FLOW_ROOT:?set KC_DEV_FLOW_ROOT to the sparse-cloned kc-dev-flow package}/scripts/adopter-contract-test.py" --repo "$(git rev-parse --show-toplevel)"
+  ```
+
+  `adopter-contract-test.py` defaults `--local-profile` to
+  `docs/dev/README.md` under `--repo`; pass `--local-profile` explicitly when
+  the marked block lives elsewhere.
+
 ## Upgrade
 
 Compare the active stage pin with the currently installed manifest. During an
