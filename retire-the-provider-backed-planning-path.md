@@ -26,6 +26,17 @@ gates:
                 id: briefing:f0m9yytzq7sczkam7rrq9ym3:backlog:attempt-1:revision-1
                 digest: sha256:928bbdba36ae552ea731cc789b8ee494aca34d2538d925fb82d9fa56ecfdcf06
                 room-ref: ./retire-the-provider-backed-planning-path/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:f0m9yytzq7sczkam7rrq9ym3:backlog:1
+                briefing: briefing:f0m9yytzq7sczkam7rrq9ym3:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T08:24:57.489062Z"
+                decision: approve
+                reason: Captain said 開工 for this entity in the session, after selecting Pilot and the S10 grouping; the seed carries the Development Brief, AC-1..AC-5 and the v3 Pilot receipt.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
