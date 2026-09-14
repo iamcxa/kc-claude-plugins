@@ -62,6 +62,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:t12w6e29mdcnrc4chs9ps27e:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:t12w6e29mdcnrc4chs9ps27e-validation-1
+              briefing:
+                id: briefing:t12w6e29mdcnrc4chs9ps27e:validation:attempt-1:revision-1
+                digest: sha256:3ed91701ff3a02cd6b7c8a2960bc6b0f483522396d459d11b959ddab95046620
+                room-ref: ./adopter-contract-test-ships-with-the-package/review/validation/briefing-1
 ---
 
 `kc-dev-flow/MIGRATION.md` speaks of `scripts/kc-dev-flow-contract-test.py` as if every adopter

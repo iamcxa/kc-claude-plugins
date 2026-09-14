@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:t12w6e29mdcnrc4chs9ps27e:validation:attempt-1:revision-1",
+  "question": "Approve validation for t1: adopter-contract-test.py ships with AC-1/2/4 regression-green and AC-3 verified end-to-end via real GitHub Actions runs (pass on conforming, fail-naming-row on a mutated fixture); Draft PR #450 open under the Captain's batch conn — approve to route to done (merge authority), or hold/revise?",
+  "artifacts": [
+    {
+      "id": "artifact:t12w6e29mdcnrc4chs9ps27e:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/69535642675295749580967dbab814714faba923/adopter-contract-test-ships-with-the-package.md",
+      "rev": "sha256:3e917ec4c9078adbd173e2d9221cc9db54df654fdaccd4801f90eec969623141",
+      "mediaType": "text/markdown",
+      "summary": "Validation stage report: 3/3 checklist DONE, all 4 ACs evidenced. AC-1/AC-2/AC-4 regression suites re-run green at c82ec84d. AC-3 exercised live: real Actions runs 34861859207 (pass, conforming) and 34861970754 (fail, LOCAL_PROFILE_REFIT_REQUIRED, check-run conclusion=failure) on a disposable branch of this repo (no throwaway repo creatable with sandbox token); one residual — could not flip branch-protection 'required' (403, token lacks administration:write) though the check-run mechanism a required gate would key off is proven. Draft PR #450 opened (base main \u003c- spacedock-ensign/adopter-contract-test-ships-with-the-package), body has What changed/Evidence/Residuals/Without-it-unanswered/Candidate; edited in by the FO to add the missing 'Without it unanswered' section the batch's PR-body contract requires."
+    }
+  ]
+}
