@@ -1,6 +1,6 @@
 ---
 title: Derive release story progress from local development tasks
-status: validation
+status: done
 product: kc-journey-map
 source:
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: S1
 sprint-readiness: ready
 started: 2026-09-10T16:09:10Z
-completed:
-verdict:
+completed: 2026-09-14T16:13:55Z
+verdict: PASSED
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-stack-recut
 issue:
 pr: pr-merge:417
@@ -99,7 +99,7 @@ gates:
                 reason: 'Captain approved the successor validation attempt. The work is already on main: PR #417 merged 2026-09-11 as 3fd2fc59, and the entity''s cycle-2 validation bound the ten-file candidate to commit 947501df with a matched manifest hash, every AC retaining its prior independent verdict. The earlier terminal approval was superseded by a rework and can never be re-spent, which is why this attempt exists; no fresh validation run was required for code that landed four days ago.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 review-round:
     id: round:91n5fvm5qtpf6gxd4bwhxxkg:validation:3
     stage: validation
@@ -108,6 +108,7 @@ review-round:
         id: briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:round-3
         digest: sha256:5c4768c7a9d3173fd2e6b1d06a9fa65cdb823af734c354c68e4f55b28c8dfddb
         room-ref: ./review/validation/round-3
+archived: 2026-09-14T16:13:55Z
 ---
 
 ## The problem
