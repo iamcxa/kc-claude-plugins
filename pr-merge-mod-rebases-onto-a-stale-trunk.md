@@ -38,6 +38,52 @@ have deferred them to the merge on GitHub.
 Line 73 sits before the `<!-- kc-dev-flow runtime extension:start -->` marker at line 119, so this
 is the repository's own policy half of the mod, not the package-owned extension.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: poc-exploration
+  recommended: poc-exploration
+  basis: >-
+    Kent selected POC on 2026-09-14. The correction is two lines of prose in this
+    repository's own policy half of the mod; there is no design question a shape
+    stage would answer. One thing is genuinely unproven: that the corrected
+    sequence lands the candidate on the remote tip under the exact condition that
+    bit during PR #444, a stale local trunk.
+  route: [build, prove]
+  obligations:
+    architecture:
+      - Change only the local half; the package-owned extension block is off limits.
+    implementation:
+      - Remove the trunk push, add the fetch, and name the remote-tracking ref in the rebase.
+    testing:
+      - AC-1 to AC-4, with AC-4 replayed against a deliberately stale local trunk.
+  scope_boundary: >-
+    The accepted outcome and complete non-goal list in this task remain unchanged.
+    Excludes the extension block, the captain-approval guardrail, the local-merge
+    fallback, and any other repository's mod.
+  poc_decision: Whether the corrected delivery sequence is the one the pr-merge mod should carry.
+  poc_falsifier: >-
+    Mutation: set the local trunk deliberately behind the remote, replay the
+    corrected sequence, and see whether the candidate still lands on the remote
+    tip. The current sequence does not; if the corrected one also does not, the
+    correction is wrong.
+  poc_budget: One dispatch, and decision-ready inside 15 minutes — the same ceiling the Captain set for the other POC in this session on 2026-09-14, not a derived one.
+  poc_stop_when: >-
+    With the local trunk set behind the remote, the replayed sequence produces a
+    candidate whose merge-base with origin/main equals origin/main's tip and
+    `python3 scripts/kc-dev-flow-contract-test.py` exits 0 — or it does not, and
+    the exact command output showing the stale base is recorded. Work stops at
+    that observation whichever way it falls.
+  poc_artifact: retained
+  poc_safety_boundary: the local half of docs/dev/_mods/pr-merge.md, above the extension start marker
+  poc_decision_ready_minutes: 15
+  decision:
+    authority: Kent (Captain)
+    at: 2026-09-14T00:00:00Z
+```
+
 ## Accepted outcome
 
 The delivery sequence fetches the remote trunk and rebases the candidate onto it, and no longer
