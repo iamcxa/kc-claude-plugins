@@ -1,6 +1,6 @@
 ---
 title: "kc-journey-map's typecheck has been red since #417 and nothing reports it"
-status: validation
+status: done
 source:
 product: kc-journey-map
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: journey-map-typecheck-red
 sprint-readiness: ready
 started: 2026-09-14T09:15:57Z
-completed:
-verdict:
+completed: 2026-09-14T13:45:43Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-kc-journey-map-typecheck-red-since-417
 issue:
 pr: pr-merge:441
@@ -74,7 +74,8 @@ gates:
                 reason: 'Captain accepted the delivery by merging PR #441 on 2026-09-14T13:45:11Z (merge commit 0bbf6233), after the FO presented the validation gate asking whether to accept and close at done once the PR merged. All seven acceptance criteria held at head 77d53153, with AC-3''s live CI falsifier demonstrated by a red run (34828478902) and a green restore run (34828607519). The single residual is AC-7''s retrigger half, confirmed by reading the two paths lists rather than by observing a tsconfig-only retrigger; the FO separately confirmed the filter string matches a tracked file at that exact path.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T13:45:43Z
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
