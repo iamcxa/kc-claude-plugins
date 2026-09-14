@@ -38,12 +38,17 @@ manifest's `required_bindings` list contains no planning row at all, so no adopt
 
 The Captain ruled on 2026-09-14 that work reaches dev-flow either from his own dictation or by
 expanding a plan, and that the flow no longer takes over the Linear route. A user may still start
-in Linear; dev-flow simply stops reading it.
+in Linear; dev-flow simply stops reading it. The Captain defined the plan in that ruling as what a
+user journey map converts into dev-flow input, and that producer already exists and is already
+aligned: `kc-journey-map`'s `plan-release` mode loads the five-section admission format from
+`kc-dev-flow:adopt-dev-flow` and emits a reviewed Development Brief. Both intake paths therefore
+produce the same artifact and differ only in who authored it, so no new input format is owed.
 
 ## Accepted outcome
 
 Dev-flow has one intake: a committed Development Brief or Exploration Brief. Who authored that
-brief — the Captain dictating, or a planner expanding a plan — is outside dev-flow's contract.
+brief — the Captain dictating, or `kc-journey-map`'s `plan-release` converting a journey map — is
+outside dev-flow's contract, and dev-flow gains no reader for either.
 `source` survives as free-text provenance and may hold a Linear URL. The Planning Receipt tuple,
 its partial-tuple refusal, the engage-reconcile step, and both provider scripts leave the package
 and this repository's Local Profile.
@@ -52,7 +57,7 @@ and this repository's Local Profile.
 
 - Stopping anyone from starting work in Linear, or removing Linear from the Captain's own habits.
 - The `Fixes DEV-N` close line and anything else `pr-merge` or `kc-ship-flow` owns at delivery.
-- Defining the plan object, or building any planner that produces one.
+- Changing `kc-journey-map`, or building any second producer of a Development Brief.
 - Renaming the `standalone` term once it is the only intake.
 - Editing any other adopter's records.
 - Reviving the retired local Linear reader that 4.3.0 already removed.
@@ -106,7 +111,7 @@ work_profile:
       - Run the package contract test and the existing loader and route suites; add no standing CI lane.
   scope_boundary: >-
     The accepted outcome and complete non-goal list in this task remain unchanged.
-    Excludes delivery close lines, any planner or plan object, other adopters'
+    Excludes delivery close lines, any change to kc-journey-map, other adopters'
     records, and renaming the standalone term.
   semantics_unchanged: false
   promote_when:
