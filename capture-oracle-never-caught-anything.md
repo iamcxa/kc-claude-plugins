@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-capture-oracle-never-caught-anything
 issue:
-pr:
+pr: "#435"
 mod-block: merge:pr-merge
 id: 1s5dc7neg6fvv1vskbq195hg
 gates:
