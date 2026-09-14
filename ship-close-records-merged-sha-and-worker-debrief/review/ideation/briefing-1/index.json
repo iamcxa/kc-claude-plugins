@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fgvjsq1wsftn2r6ay4yxp2q1:ideation:attempt-1:revision-1",
+  "question": "Approve entity for implementation: does the ideation report (Work profile receipt, accepted journey, where-it-touches, stop numbers, and falsifiable AC-1..AC-4 checks) sufficiently scope the close.py merged_sha/debrief-matching fix to enter a pilot-shape build worktree?",
+  "artifacts": [
+    {
+      "id": "artifact:fgvjsq1wsftn2r6ay4yxp2q1:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e50758d022c59ee526a4a1d61f52a29d48133785/ship-close-records-merged-sha-and-worker-debrief.md",
+      "rev": "sha256:bdf997dec3655ebd99422df0d9404b1872a238840a38a121cb09a756c0ddbf18",
+      "mediaType": "text/markdown",
+      "summary": "Ideation stage (ensign, repaired once for a missing Stop numbers subsection) verified close.py copies merged_sha verbatim from the fence with no gh call (close.py:248), and reproduced the real r2 debrief-matching defect directly against docs/dev/.spacedock-state/_debriefs/ (the batch FO's debrief sorts before each worker's own and would be picked first). Recorded a pilot-product-slice Work profile receipt (semantics_unchanged: false, with basis), an 8-step OBSERVED/DESIGNED accepted journey, a where-it-touches table across close.py/close.test.py/fixtures/schema, Stop numbers (delivery base 26cb22f7; changed-files stop 12; changed-lines stop 350; named runaway area: the FO-excluding debrief heuristic, with a stated bound), and falsifiable acceptance checks mapped to AC-1..AC-4 that name today's actual failure mode rather than restating the requirement."
+    }
+  ]
+}
