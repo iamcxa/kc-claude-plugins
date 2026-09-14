@@ -75,6 +75,11 @@ gates:
               application:
                 target-stage: done
                 state: superseded
+            - id: gate-attempt:f0m9yytzq7sczkam7rrq9ym3-validation-2
+              briefing:
+                id: briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-2:revision-1
+                digest: sha256:ee2b3bcccdf4c940c10a71719950542fa518c8f077b190c05625054e6989ba4c
+                room-ref: ./retire-the-provider-backed-planning-path/review/validation/briefing-2
 ---
 
 ## The problem

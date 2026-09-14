@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-2:revision-1",
+  "question": "Approve validation at the rebased candidate and deliver: dev-flow's provider-backed planning intake is retired, leaving a committed brief as the only intake?",
+  "artifacts": [
+    {
+      "id": "artifact:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/435eca0de95bd012d2d1f82f3b4fd022029b2755/retire-the-provider-backed-planning-path.md",
+      "rev": "sha256:331c995f7a6d995a3510eae12a52e9211412816c6ea0e2427069783548c96eb9",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 2 after the rework: 5 of 5 checklist items DONE by a fresh reviewer at rebased commit 5de5778a. All five suites re-run in an independently resolved detached checkout, all PASS including the now-61-mutant ablation suite. The conflict resolution was checked against a re-fetched origin/main rather than the prior report's prose, and a full branch diff shows no file outside the disclosed scope changed."
+    }
+  ]
+}
