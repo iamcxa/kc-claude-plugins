@@ -1,6 +1,6 @@
 ---
 title: "close.py records merged_sha from the merged PR and matches each task's debrief by its worker, not the FO's"
-status: implementation
+status: validation
 source: "Captain 2026-09-14 「派」 (ship round 3, harden); findings recorded on spacedock-state/ship questions logs"
 product: kc-ship-flow
 planning-window:
