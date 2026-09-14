@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-pr-merge-released-body-pin-per-mod-version
 issue:
-pr:
+pr: 446
 mod-block:
 id: thvp8qgzr3eb1va9st822n2d
 gates:
@@ -91,6 +91,11 @@ work_profile:
   recommended: poc-exploration
   route: [build, prove]
   basis: Defect found by the first non-kc adopter to sync the 4.4.0 extension; falsifier is the two-adopter fixture pair passing and failing for the named reason.
+  profile_choice_note: >-
+    Kept poc-exploration over the batch's pilot default because the kernel's own
+    admission loader (profile-contract-loader.py DEVELOPMENT_BRIEF_SECTIONS) requires
+    "## The problem" and "## Route-back conditions" headings for Pilot/Production, and
+    this brief has neither, so Pilot is not admissible as currently shaped.
   obligations:
     architecture: [Pin table keyed by mod version; adopter test reads the mod's own version]
     implementation: [manifest table; recipe change; adopt-dev-flow doc; fixtures for 0.12.3 and 0.27.0]
