@@ -97,3 +97,16 @@ work_profile:
   poc_safety_boundary: kc-dev-flow/, docs/dev/_mods/pr-merge.md, scripts/ tests only
   poc_decision_ready_minutes: 15
 ```
+
+## Stage Report: implementation
+
+- DONE: Add pr_merge_released_bodies table to kc-dev-flow/contract-manifest.json keyed by Spacedock mod version (at least 0.12.3 and 0.27.0), each entry hashed from the mod exactly as Spacedock released it, never an adopter's edited copy.
+  commit 44d478f8; 0.12.3 hash reused unchanged from the retired singular pin; 0.27.0 hash computed from the cached spacedock plugin's pristine `mods/pr-merge.md` (version: 0.27.0, no adopter marker present) at `/home/vercel-sandbox/.claude/plugins/cache/spacedock/spacedock/0.27.2/mods/pr-merge.md`.
+- DONE: Change the adopter contract-test recipe to read the adopter mod's frontmatter version: and enforce that row, failing by name ("mod version X not pinned by kc-dev-flow Y; add its released hash") when the version is absent from the table, instead of skipping; update adopt-dev-flow docs and references/pr-merge-extension.md to name the table as the enforcement point.
+  `check_pr_merge_released_body()` in scripts/kc-dev-flow-contract-test.py reads `version:` from the mod's own frontmatter and looks up that row; a manual run against the unpinned fixture printed exactly `kc-dev-flow contract: mod version 9.9.9 not pinned by kc-dev-flow 4.5.0; add its released hash` and exited 1. `references/pr-merge-extension.md` and `docs/dev/_mods/pr-merge.md`'s synced block (byte-identical, per the existing drift check) now name `pr_merge_released_bodies`; `adopt-dev-flow/SKILL.md` documents adding a version row and the `--check-pr-merge-released-body` recipe.
+- DONE: Add fixtures for both pinned mod versions (0.12.3 and 0.27.0); python3 scripts/kc-dev-flow-contract-test.py and pr-merge-portable-delivery.test.py both exit 0, and a one-word edit to either released body fails naming the body and version.
+  Fixtures at scripts/fixtures/pr-merge-released-body/{adopter-0.12.3,adopter-0.27.0,adopter-unpinned}-pr-merge.md. A new self-test block in kc-dev-flow-contract-test.py runs `--check-pr-merge-released-body` (the adopter recipe, via subprocess) against each: both pinned fixtures pass; a `" the "→" teh "` one-word mutant of each released-body prefix fails with `released Spacedock pr-merge body ... at version {0.12.3|0.27.0}`; the unpinned fixture (version 9.9.9) fails with the not-pinned message. Both `python3 scripts/kc-dev-flow-contract-test.py` and `python3 scripts/pr-merge-portable-delivery.test.py` exit 0 (verified locally after `pip install jsonschema`, a pre-existing unrelated environment dependency the close-receipt sub-suite needs).
+
+### Summary
+
+Replaced the single `pr_merge_released_body.sha256` pin with a `pr_merge_released_bodies` table keyed by Spacedock mod version, so kc-claude-plugins' own 0.12.3 copy and any other adopter's version (0.27.0 confirmed via the cached Spacedock 0.27.2 plugin's pristine mod) are each guarded by their own released-body hash instead of one value describing the whole fleet. The contract test now fails by name on an unpinned version rather than skipping, and a new `--check-pr-merge-released-body ROOT` mode is the documented, fixture-tested adopter recipe for verifying that row standalone.
