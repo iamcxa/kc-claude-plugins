@@ -67,11 +67,13 @@ grep -qi "answers to your questions arrive as further messages from this sender;
 grep -qF "$CONN_QUOTE" <<<"$msg_body_a" || ok=0
 grep -qF "$CONN_SOURCE" <<<"$msg_body_a" || ok=0
 grep -qi "sync state by merge, never rebase" <<<"$msg_body_a" || ok=0
+grep -qF "Gate decisions are recorded by the ship first officer with the Captain's words." <<<"$msg_body_a" || ok=0
+grep -qF "Never record a gate decision." <<<"$msg_body_a" || ok=0
 if [ "$ok" = 1 ]; then
-  pass a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, merge-not-rebase"
+  pass a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording"
 else
   printf '  msg=%s\n' "$msg_body_a"
-  fail a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, merge-not-rebase"
+  fail a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording"
 fi
 
 mkdir -p "$STATE_DIR/_ship_fence"
@@ -189,6 +191,193 @@ else
   printf '  out=%s\n' "$out_f"
   fail f "a slug containing a single quote is handled as data"
 fi
+
+ENV_FILE="$(mktemp)"
+chmod 600 "$ENV_FILE"
+printf 'DATABASE_URL=postgres://secret-value-xyz\nAPI_KEY=super-secret-token\n' > "$ENV_FILE"
+out_i="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  FAKE_CONDUCTOR_LOG="$LOG" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run --env-file "$ENV_FILE" \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_i=$?
+ok=1
+[ "$rc_i" -eq 0 ] || ok=0
+grep -q -- "--env DATABASE_URL=\*\*\*" <<<"$out_i" || ok=0
+grep -q -- "--env API_KEY=\*\*\*" <<<"$out_i" || ok=0
+grep -q "secret-value-xyz" <<<"$out_i" && ok=0
+grep -q "super-secret-token" <<<"$out_i" && ok=0
+grep -q "secret-value-xyz\|super-secret-token" "$LOG" 2>/dev/null && ok=0
+if [ "$ok" = 1 ]; then
+  pass i "--env-file dry-run prints --env KEY=*** per key, never the value, never logs it"
+else
+  printf '  out=%s\n' "$out_i"
+  fail i "--env-file dry-run prints --env KEY=*** per key, never the value, never logs it"
+fi
+rm -f "$ENV_FILE"
+
+ENV_FILE_WR="$(mktemp)"
+chmod 644 "$ENV_FILE_WR"
+printf 'KEY=value\n' > "$ENV_FILE_WR"
+out_j="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run --env-file "$ENV_FILE_WR" \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_j=$?
+if [ "$rc_j" -ne 0 ] && grep -qi "world-readable" <<<"$out_j"; then
+  pass j "a world-readable --env-file refuses before any conductor call"
+else
+  printf '  out=%s\n' "$out_j"
+  fail j "a world-readable --env-file refuses before any conductor call"
+fi
+rm -f "$ENV_FILE_WR"
+
+# --- --resume: a fresh workspace from the task's existing branch ---
+RESUME_BRANCH="dispatch-test-resume-$$"
+RESUME_WT_REL=".worktrees/dispatch-test-resume-$$"
+RESUME_WT_ABS="$REPO_ROOT/$RESUME_WT_REL"
+cleanup_resume_wt() {
+  git -C "$REPO_ROOT" worktree remove --force "$RESUME_WT_ABS" >/dev/null 2>&1
+  git -C "$REPO_ROOT" branch -D "$RESUME_BRANCH" >/dev/null 2>&1
+}
+trap cleanup_resume_wt EXIT
+git -C "$REPO_ROOT" worktree add -q -b "$RESUME_BRANCH" "$RESUME_WT_ABS" HEAD
+
+RESUME_FIXTURES="$(mktemp -d)"
+cp -r "$FIXTURES/dev" "$RESUME_FIXTURES/dev"
+RESUME_SLUG="resume-fixture-task"
+RESUME_SPRINT="ship-cloud-wrapper-resume-fixture"
+RESUME_ID="$(spacedock status --workflow-dir "$RESUME_FIXTURES/dev" --next-id)"
+cat > "$RESUME_FIXTURES/dev/.spacedock-state/$RESUME_SLUG.md" <<EOF
+---
+title: "fixture: $RESUME_SLUG"
+sprint: $RESUME_SPRINT
+sprint-readiness: ready
+status: implementation
+pr: https://example.test/pr/1
+worktree: $RESUME_WT_REL
+id: $RESUME_ID
+gates:
+    version: 1
+    records:
+        - id: gate:$RESUME_ID:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:$RESUME_ID-validation-1
+---
+
+Fixture entity for resume tests.
+EOF
+
+RESUME_NOFENCE_SLUG="resume-fixture-nofence"
+RESUME_NOFENCE_ID="$(spacedock status --workflow-dir "$RESUME_FIXTURES/dev" --next-id)"
+cat > "$RESUME_FIXTURES/dev/.spacedock-state/$RESUME_NOFENCE_SLUG.md" <<EOF
+---
+title: "fixture: $RESUME_NOFENCE_SLUG"
+sprint: ship-cloud-wrapper-resume-nofence
+sprint-readiness: ready
+status: implementation
+worktree: $RESUME_WT_REL
+id: $RESUME_NOFENCE_ID
+---
+
+Fixture entity with no recorded fence entry.
+EOF
+
+RESUME_STATE_ORIGIN="$(mktemp -d)"
+RESUME_STATE_WT="$(mktemp -d)"
+git init -q --bare "$RESUME_STATE_ORIGIN/origin.git"
+git clone -q "$RESUME_STATE_ORIGIN/origin.git" "$RESUME_STATE_WT/seed" 2>/dev/null
+mkdir -p "$RESUME_STATE_WT/seed/_ship_fence"
+python3 -c "
+import json
+json.dump({'$RESUME_SLUG': {'workspace': 'ws-prior-round', 'session': 'sess-prior-round', 'message_sha256': 'priorsha'}},
+          open('$RESUME_STATE_WT/seed/_ship_fence/$RESUME_SPRINT.json', 'w'))
+"
+git -C "$RESUME_STATE_WT/seed" add _ship_fence
+git -C "$RESUME_STATE_WT/seed" -c user.name=fixture -c user.email=fixture@example.test \
+  commit -q -m seed
+git -C "$RESUME_STATE_WT/seed" push -q origin HEAD:refs/heads/main 2>/dev/null
+git clone -q "$RESUME_STATE_ORIGIN/origin.git" "$RESUME_STATE_WT/wt" 2>/dev/null
+git -C "$RESUME_STATE_WT/wt" -c user.name=fixture -c user.email=fixture@example.test \
+  checkout -q -b resume-state origin/main
+git -C "$RESUME_STATE_WT/wt" push -q -u origin resume-state 2>/dev/null
+RESUME_STATE="$RESUME_STATE_WT/wt"
+
+out_k="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  FAKE_CONDUCTOR_ALLOW_CREATE=1 PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" --resume "$RESUME_SLUG" \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$RESUME_FIXTURES/dev" --state-dir "$RESUME_STATE" 2>&1)"
+rc_k=$?
+fence_k="$RESUME_STATE/_ship_fence/$RESUME_SPRINT.json"
+ok=1
+[ "$rc_k" -eq 0 ] || ok=0
+[ "$(python3 -c "import json; print(json.load(open('$fence_k'))['$RESUME_SLUG']['workspace'])" 2>/dev/null)" = "ws-fixture-1" ] || ok=0
+hist_len="$(python3 -c "import json; print(len(json.load(open('$fence_k'))['$RESUME_SLUG'].get('history', [])))" 2>/dev/null)"
+[ "$hist_len" = "1" ] || ok=0
+prior_ws="$(python3 -c "import json; print(json.load(open('$fence_k'))['$RESUME_SLUG']['history'][0]['workspace'])" 2>/dev/null)"
+[ "$prior_ws" = "ws-prior-round" ] || ok=0
+prior_archived="$(python3 -c "import json; print(json.load(open('$fence_k'))['$RESUME_SLUG']['history'][0]['archived'])" 2>/dev/null)"
+[ "$prior_archived" = "True" ] || ok=0
+committed_k="$(git -C "$RESUME_STATE" log --oneline -- _ship_fence 2>/dev/null | wc -l | tr -d ' ')"
+[ "$committed_k" -ge 2 ] || ok=0
+if [ "$ok" = 1 ]; then
+  pass k "--resume creates a fresh workspace, keeps the prior round in history, marks it archived once ready"
+else
+  printf '  out=%s\n' "$out_k"
+  fail k "--resume creates a fresh workspace, keeps the prior round in history, marks it archived once ready"
+fi
+
+out_l="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" --resume "$RESUME_SLUG" --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$RESUME_FIXTURES/dev" --state-dir "$RESUME_STATE" 2>&1)"
+rc_l=$?
+ok=1
+[ "$rc_l" -eq 0 ] || ok=0
+grep -q -- "--branch $RESUME_BRANCH" <<<"$out_l" || ok=0
+grep -q "^conductor workspace create " <<<"$out_l" || ok=0
+if [ "$ok" = 1 ]; then
+  pass l "--resume --dry-run resolves the task's branch via git worktree and makes no create call"
+else
+  printf '  out=%s\n' "$out_l"
+  fail l "--resume --dry-run resolves the task's branch via git worktree and makes no create call"
+fi
+
+msgfile_l=$(grep -oE -- '--message-file [^ ]+' <<<"$out_l" | head -n1 | cut -d' ' -f2)
+msg_body_l="$(cat "$msgfile_l" 2>/dev/null)"
+ok=1
+grep -qF "Entity status: implementation" <<<"$msg_body_l" || ok=0
+grep -qF "Latest gate attempt: gate-attempt:$RESUME_ID-validation-1" <<<"$msg_body_l" || ok=0
+grep -qF "PR: https://example.test/pr/1" <<<"$msg_body_l" || ok=0
+grep -qE "Candidate SHA: [0-9a-f]{40}" <<<"$msg_body_l" || ok=0
+grep -qF "Gate decisions are recorded by the ship first officer with the Captain's words." <<<"$msg_body_l" || ok=0
+if [ "$ok" = 1 ]; then
+  pass l2 "resume boot message names entity status, latest gate attempt, pr, and candidate SHA"
+else
+  printf '  msg=%s\n' "$msg_body_l"
+  fail l2 "resume boot message names entity status, latest gate attempt, pr, and candidate SHA"
+fi
+
+out_m="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \
+  PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" --resume "$RESUME_NOFENCE_SLUG" --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$RESUME_FIXTURES/dev" --state-dir "$RESUME_STATE" 2>&1)"
+rc_m=$?
+if [ "$rc_m" -ne 0 ] && grep -qi "nothing to resume" <<<"$out_m"; then
+  pass m "--resume with no prior fence entry refuses"
+else
+  printf '  out=%s\n' "$out_m"
+  fail m "--resume with no prior fence entry refuses"
+fi
+
+cleanup_resume_wt
+trap - EXIT
+rm -rf "$RESUME_FIXTURES" "$RESUME_STATE_ORIGIN" "$RESUME_STATE_WT"
 
 rm -rf "$STATE_DIR"
 rm -f "$LOG"

@@ -35,7 +35,7 @@ print_help() {
   echo
   echo "Workspace:"
   [ "$DROP" = "workspace list" ] || echo "  conductor workspace list [--creator <userId>] [--limit <n>] [--offset <n>]"
-  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--message-file <path>] [--json]"
+  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--env <KEY=VALUE>] [--message-file <path>] [--json]"
   [ "$DROP" = "workspace status" ] || echo "  conductor workspace status [workspaceId]"
   echo
   echo "Session:"
