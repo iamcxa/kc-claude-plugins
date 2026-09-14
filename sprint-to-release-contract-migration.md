@@ -483,3 +483,132 @@ AC-5 cannot be exercised without it. Validation should pin the same code SHA.
 
 Revisions: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5fd90de`
 (based on `origin/main@ed452eb2`). State `spacedock-state/dev@b36ef133`.
+
+## Stage Report: validation (cycle 2, prove)
+
+- DONE: Re-run the loader tests, contract test, and frontmatter lint at the
+  candidate commit, in a checkout resolved independently rather than reused
+  from the implementation worker's worktree.
+  `git worktree add --detach /tmp/validation-check-a5fd90de a5fd90de` from
+  the code worktree, `git status --porcelain` empty. All four green at
+  `a5fd90de51c899ba68241755daa08293724d5fd4`:
+  `profile-contract-loader.test.py` (5 sub-suites PASS, includes the
+  release-only, sprint-only, blank-`sprint:`-template, three placeholder
+  refusals, and two conflicting-pair refusals named in cycle 2's report),
+  `profile-spacedock-route.test.py` PASS, `kc-dev-flow-contract-test.py`
+  PASS, `skill-frontmatter-lint.sh` (46/46 skills valid). Confirmed the
+  conflicting-pair refusal is a named `ContractError`, not a silent
+  resolution: `profile-contract-loader.py` raises
+  `ContractError("frontmatter must not carry both release and sprint")`
+  when both `^release:[ \t]*[^\s#]` and `^sprint:[ \t]*[^\s#]` match — the
+  `[^\s#]` presence check is why a still-blank `sprint:` template placeholder
+  never false-collides with a real `release` value (exercised by the
+  `release-blank-sprint-template` sub-case, also passing).
+- DONE: Attack the falsifier — create a second journey file in a disposable
+  copy, name a release `r1` in it too, and report what `--where release=r1`
+  actually does.
+  Built a disposable copy of both the code worktree and the state checkout
+  (never committed, never pushed), added
+  `docs/journey/kc-dev-flow/draw-a-journey.yaml` with its own `releases: [{id:
+  r1, ...}]`, and filed a second entity (`spacedock new`, product:
+  kc-team-ops, `release: r1`) alongside the real
+  `release-field-r1-evidence-record` (product: kc-dev-flow, `release: r1`,
+  which itself already references `kc-journey-map`'s r1). **Answer: yes, it
+  conflates them, and nothing at any layer refuses or warns.**
+  `spacedock status --where release=r1 --json` returns both entities as one
+  result set:
+  `{"slug":"disposable-fixture-r1-collision","product":"kc-team-ops","release":"r1",...}`,
+  `{"slug":"release-field-r1-evidence-record","product":"kc-dev-flow","release":"r1",...}`
+  — indistinguishable except by reading `product` yourself, which the query
+  does not do. `--validate` still returns `VALID` (only pre-existing,
+  unrelated flat-entity-room warnings). The loader's own regex never opens
+  `docs/journey/` at all — its check is shape-only (presence via
+  `[^\s#]`, null/collection rejection) — so **the second journey file I
+  created had zero effect on any command**; no code path today consults a
+  journey file to verify a release id is real or unique. Sharper than the
+  fixture shows: `product` cannot serve as an implicit disambiguator even in
+  the live corpus, because the real `release-field-r1-evidence-record`
+  already carries `product: kc-dev-flow` while naming `kc-journey-map`'s r1 —
+  release id and product are independent axes today, not just in this
+  fixture. This is the named residual from cycle 2's report, now demonstrated
+  rather than inferred: bare release ids are unique only because exactly one
+  product journey file exists; a second one collides silently the moment it
+  exists, with no refusal, no warning, and no journey-file cross-check
+  anywhere in the loader or the query path.
+- DONE: Judge whether `release-field-r1-evidence-record` belongs in this
+  workflow.
+  **Verdict: artifact, not a deliverable — recommend withdrawal, but not by
+  me.** Three rules, all pointing the same way. (1) `docs/dev/README.md`
+  frontmatter declares `entity-type: task`; the backlog section describes an
+  admitted item as carrying "the required Development Brief or Exploration
+  Brief." This entity's own body says "this record exists to carry the
+  evidence rather than to name new work" and its Non-goals disclaim naming
+  work — it fails the entity-type test by its own text, not by my inference.
+  (2) CLAUDE.md's without-it test: the evidence it exists to hold (byte
+  equality, the `--where release=r1` query result) already lives verbatim in
+  cycle 2's implementation stage report above; removing the entity breaks
+  nothing that isn't already recorded elsewhere. (3) The entity's own
+  route-back condition names this migration's close as its retirement
+  trigger, and this validation stage is that close. I am not withdrawing it
+  myself: its own text says "without-it disposition is Kent's call," and
+  CLAUDE.md's mis-delete cost applies. One tension worth naming plainly
+  rather than laundering: AC-4/AC-5 required exercising the query "against a
+  real committed item rather than a fixture," and this entity is itself
+  fixture-shaped (`release-readiness: defer`, no open work, filed solely to
+  carry evidence) — it satisfies the letter of "real committed item" (it is
+  committed, not a throwaway file) while being, in substance, a fixture,
+  because no real r1 story was open to serve as evidence directly.
+
+### Summary
+
+All four required checks (loader tests, route test, contract test, skill
+lint) reran green at `a5fd90de` in an independently resolved checkout. The
+conflicting-pair refusal is confirmed as a named `ContractError`, and the
+blank `sprint:` template placeholder is confirmed non-colliding by
+construction (presence requires a non-empty value). The falsifier is
+answered directly: two entities naming the same bare `release: r1` from
+different products **are silently conflated** by `spacedock status --where
+release=r1` — returned together, indistinguishable without manually reading
+`product`, with no refusal or warning at any layer, and no code path
+consults a journey file to check real-world uniqueness. This is the residual
+cycle 2 named (unique only by vacuity, one product journey today) now
+demonstrated empirically rather than argued. `release-field-r1-evidence-record`
+is judged an evidence artifact rather than a workflow deliverable by its own
+declared entity type and Non-goals, and by the without-it test — recommend
+Kent rule on withdrawal per its own route-back condition; not withdrawn here.
+
+```yaml
+poc_outcome: proceed
+evidence: >-
+  AC-1..AC-3 (loader tests) and AC-4/AC-5 (real committed entity, query
+  round-trip) all pass at candidate commit a5fd90de51c899ba68241755daa08293724d5fd4,
+  reconfirmed in an independently resolved detached worktree with a clean
+  git status. The falsifier's precondition (two real product journeys
+  naming the same release id) does not hold in the live repository today
+  (one product journey, docs/journey/kc-journey-map/draw-a-journey.yaml);
+  under that precondition the carry is byte-exact and the query returns
+  exactly one entity, matching the receipt's poc_stop_when first branch.
+strongest_limit: >-
+  Demonstrated by construction, not inferred: a second product journey
+  naming the same bare release id collides silently. spacedock status
+  --where release=r1 conflates entities from different products with no
+  refusal, no warning, and no journey-file cross-check anywhere in the
+  loader or query path — confirmed via a disposable second journey file
+  and a disposable second entity, and independently via the live corpus,
+  where the real release-field-r1-evidence-record already carries
+  product: kc-dev-flow for kc-journey-map's r1, showing product cannot
+  serve as an implicit disambiguator even today. No qualification rule
+  exists; none is proposed by this record (out of the accepted scope
+  boundary, which excludes inventing one).
+reversal_fact: >-
+  A second product journey file appearing under docs/journey/ (e.g.
+  docs/journey/kc-dev-flow/) that reuses r1/r2/r3-shaped ids reverses the
+  "unique by vacuity" premise this migration shipped under, and would
+  silently conflate real work items across products under one release
+  query with no error surfaced anywhere.
+cleanup: >-
+  Disposable journey file, disposable entity, and disposable code/state
+  copies used for the falsifier were created outside any tracked worktree
+  and were not committed; none persist. release-field-r1-evidence-record
+  (the real, committed evidence entity) is left in place per its own
+  Kent's-call route-back condition — not cleaned up by this stage.
