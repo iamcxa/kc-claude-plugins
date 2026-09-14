@@ -1,6 +1,6 @@
 ---
 title: "Admission asks who was bitten and who will run it: a brief carries `bite:` and `consumer:` lines, and a fixture that copies an existing file is refused"
-status: ideation
+status: implementation
 source: "Captain 2026-09-15 「目前 dev flow 合約 or kernel 是否沒有 yagni 原則？為何會做出用不到的測試？」 then 「立這張 r4 票」"
 product: kc-dev-flow
 planning-window:
@@ -61,7 +61,7 @@ gates:
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
