@@ -1,6 +1,6 @@
 {
   "name": "kc-ship-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Batch delivery wrapper over kc-dev-flow and Spacedock: dispatch dev tasks to Conductor cloud, watch to a prepared validation gate, e2e gate, UAT handoff, close receipt",
   "author": {
     "name": "Kent Chen",

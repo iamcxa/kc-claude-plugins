@@ -20,8 +20,8 @@ observable stop point in the v3 receipt before build.
   not retest stable dependencies merely because they are present.
 - Integrate before polishing. A report, isolated layer, or mock-only path is not
   the real journey.
-- At `prove`, evaluate the question and abandonment condition the shared core's
-  `backlog` exit bar already recorded. Do not rewrite either.
+- At `prove`, evaluate the Exploration Brief the v3 receipt recorded at profile
+  choice. Do not rewrite it.
 - Record cleanup and what the experiment does not prove.
 - POC is exempt from mandatory `docs/architecture.md`; read it when present.
   A disposable POC needs no permanent architecture document; retained work follows

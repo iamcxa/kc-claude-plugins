@@ -128,6 +128,15 @@ against the sha256 pinned at `contract-manifest.json`
 drifts. The runtime entry remains
 `spacedock merge guard {slug} --verdict passed|rejected --workflow-dir {dir}`.
 
+Content an adopter appends after this file's own closing runtime-extension
+end marker is an adopter-owned local region. The contract test's drift
+comparison is bounded at that marker and does not read or restrict what an
+adopter writes below it. When adopter
+prose in that region and this marked block instruct differently on the same
+subject, follow this marked block -- that precedence is a declared operating
+rule for the first officer, not something the byte-equality comparison above
+enforces on the adopter's region.
+
 ### Residuals and without-it sections
 
 Two optional PR body sections extend the released template. When present, each
@@ -394,6 +403,74 @@ For push, mergeability, repository-resolution, and `gh` failures, stop, preserve
 Captain decline remains an explicit choice prompt: ask whether to keep the
 branch pending, revise the proposed delivery, or cancel it. If the captain asks
 about local delivery, explain that local merge cannot authenticate the product PR required for terminalization and do not claim or write terminal success.
+
+### Released title override
+
+This overrides the released draft-presentation line
+`**Title:** {entity title}` and the released inline-body create command's
+`--title "{entity title}"` argument; do not present or send either
+`{entity title}` substitution. Every delivery unit's title is the refusal-
+checked `UNIT_TITLE` from the canonical Draft delivery unit above -- the
+single-PR case and every layer of a native stack, since each layer carries
+its own reviewed title.
+
+A pull request title release-please cannot parse under its own conventional-
+commits grammar produces no release and drops that pull request's commits
+from every future changelog by type, permanently and without a symptom,
+whenever the delivery authority squash-merges under `COMMIT_OR_PR_TITLE`.
+
+Resolve `KC_DEV_FLOW_ROOT` as the activated `kc-dev-flow` package root, the
+same root `skills/continue-dev-flow/SKILL.md` resolves
+`scripts/profile-contract-loader.py` from. An unresolvable root, or an absent
+`scripts/check-pr-title.py`, is a stop, not a skip: do not present an
+unchecked draft and do not fall back to local merge -- the local
+failure-policy override above already forbids that fallback for delivery
+failures.
+
+Before presenting the draft, run:
+
+`python3 "$KC_DEV_FLOW_ROOT/scripts/check-pr-title.py" "$UNIT_TITLE"`
+
+Exit `0`: present the draft with `UNIT_TITLE` as its title; the checker's
+stdout names the type it read. Exit `1`: refuse -- do not present the draft
+and do not reach the create command above. Exit `2`: the checker could not
+decide, treated the same as exit `1`.
+
+On captain approval, chain that same refusal-checked `UNIT_TITLE` bytes ahead
+of the canonical Draft delivery unit's create command above with `&&`, so a
+non-zero exit from the check means the create command never runs.
+
+For a native stack, repeat the refusal check once per layer against that
+layer's own reviewed title before that layer's own draft presentation; an
+unchecked layer title stops the stack before any push.
+
+If the captain asks to proceed past a refusal, explain that the refusal is
+the rule, not a tooling detour, and offer a corrected subject. Only a
+captain-authorised scope change to the work item removes the rule.
+
+### The title rule's oracle
+
+`check-pr-title.py` does not invent the grammar that decides a title. It
+implements the `<type>[(<scope>)][!]: <text>` shape release-please's own
+conventional-commits parser accepts, and self-tests that implementation
+against a committed fixture, `scripts/fixtures/pr-title/release-please-verdicts.tsv`,
+before it evaluates any real title -- see the fixture's own header for the
+release-please version and date it was captured from. The self-test proves
+only that the checker agrees with that captured version; it says nothing
+about whatever release-please version an adopter's own pipeline actually
+runs. Captured 2026-09-12 from release-please `17.3.0`; the same 13 rows were
+separately re-derived against `17.11.1` -- the version `subspace-relay` pins
+-- on 2026-09-12, and all agreed.
+
+**Version-skew stop condition.** A mismatch between the adopter's installed
+release-please version and the fixture's captured version, or a reported
+adopter skew, is a stop, not a skip: do not trust the self-test and do not
+re-derive the fixture from an adopter checkout. `capture-oracle.cjs`'s own
+comment states its runtime lives at this repository's root, not under the
+installed `kc-dev-flow` package, so an adopter checkout cannot run it --
+re-derivation is structurally a `kc-dev-flow` maintainer action. Report the
+skew upstream to `kc-dev-flow` instead of assuming agreement across
+versions.
 
 ### Delivery topology decision
 

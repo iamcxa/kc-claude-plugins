@@ -937,6 +937,13 @@ def main() -> int:
         'architecture entrypoint omits kc-dev-flow/references/profiles/poc-exploration/base.md: A disposable POC needs no permanent architecture document',
     )
     run_manual_contract_mutant(
+        'poc-exploration-brief-pin-removed',
+        'kc-dev-flow/references/profiles/poc-exploration/base.md',
+        'evaluate the Exploration Brief the v3 receipt recorded at profile',
+        'removed exploration brief pin at profile',
+        'kc-dev-flow/references/profiles/poc-exploration/base.md omits the v4 POC contract: Exploration Brief',
+    )
+    run_manual_contract_mutant(
         'architecture-required-map-removed',
         'kc-dev-flow/references/project-context-maintenance.md',
         'Every Pilot and Production working route requires `docs/architecture.md`',

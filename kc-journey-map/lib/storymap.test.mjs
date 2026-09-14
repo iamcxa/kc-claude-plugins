@@ -103,3 +103,39 @@ test('story map borders all three states and counts exists alone', () => {
 	delete three.steps[0].stories[0].status
 	assert.equal(kindOf(buildStoryMap(three), 'story-border').length, 2)
 })
+
+// Measured on a real board before the fix: 170px of 200 hidden, the card on top.
+const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + r.props.w, y2: r.y + r.props.h })
+const overlap = (a, b) => Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1) > 1 && Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1) > 1
+
+test('a question never renders underneath another story card', () => {
+	const questions = kindOf(buildStoryMap(model), 'story-question')
+	assert.ok(questions.length, 'fixture draws no question, so this proves nothing')
+	const cards = kindOf(buildStoryMap(model), 'story').map((s) => ({ id: s.meta.journey.nodeId, box: { x1: s.x, y1: s.y, x2: s.x + 200, y2: s.y + 200 + s.props.growY } }))
+	for (const q of questions) {
+		const hit = cards.find((c) => c.id !== q.meta.journey.nodeId && overlap(spans(q), c.box))
+		assert.equal(hit, undefined, `question on ${q.meta.journey.nodeId} is covered by story ${hit?.id}`)
+	}
+})
+
+test('a question is drawn under its own story, in its own column', () => {
+	const put = buildStoryMap(model)
+	for (const q of kindOf(put, 'story-question')) {
+		const own = byId(put, `shape:sm-story-${q.meta.journey.nodeId}`)
+		assert.equal(q.x, own.x, `question on ${q.meta.journey.nodeId} is not in its story's column`)
+		assert.ok(q.y >= own.y + 200, `question on ${q.meta.journey.nodeId} does not sit below its story`)
+	}
+})
+
+test('a question grows its row, so the row beneath it stays clear', () => {
+	const tall = {
+		releases: [{ id: 'r', name: 'Release' }],
+		steps: [{ id: 'a', card: 'Act', stories: [
+			{ id: 'q', card: 'Asks', release: 'r', status: 'gap', question: 'x'.repeat(400) },
+			{ id: 'below', card: 'Next', release: 'r', status: 'gap' },
+		] }],
+	}
+	const put = buildStoryMap(tall)
+	const q = kindOf(put, 'story-question')[0]
+	assert.ok(byId(put, 'shape:sm-story-below').y > q.y + q.props.h, 'the next row starts inside the question box')
+})

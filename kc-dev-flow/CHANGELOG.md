@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.3.0...kc-dev-flow-v4.4.0) (2026-09-12)
+
+
+### Features
+
+* **kc-dev-flow:** derive the POC receipt's experiment contract at profile choice ([#427](https://github.com/iamcxa/kc-claude-plugins/issues/427)) ([a1a81b6](https://github.com/iamcxa/kc-claude-plugins/commit/a1a81b6f27fc4d4bcb2e1916b3f742743cc0245c))
+* **kc-dev-flow:** pin the advisory seats to opus + xhigh, and add the ship-flow UAT observation template ([#365](https://github.com/iamcxa/kc-claude-plugins/issues/365)) ([3b37000](https://github.com/iamcxa/kc-claude-plugins/commit/3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8))
+* **kc-dev-flow:** pr-merge extension is a canonical resource with Residuals and without-it sections ([#414](https://github.com/iamcxa/kc-claude-plugins/issues/414)) ([0882930](https://github.com/iamcxa/kc-claude-plugins/commit/0882930d9ec6944529fb93dbe8413706d4ae9d8f))
+* **kc-plugin-forge:** run Phase 2 RED/GREEN in a clean runner with a scenario file slot ([#368](https://github.com/iamcxa/kc-claude-plugins/issues/368)) ([90cd4fc](https://github.com/iamcxa/kc-claude-plugins/commit/90cd4fca6f1bd8337090e3012b52020b0d6fb89f))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** drop the unread host field from the dispatch envelope ([#370](https://github.com/iamcxa/kc-claude-plugins/issues/370)) ([1283046](https://github.com/iamcxa/kc-claude-plugins/commit/1283046b605285f259da0a2a728cfa37bf1cf3dd))
+* **kc-dev-flow:** exclude Go test files from surface mapping ([#421](https://github.com/iamcxa/kc-claude-plugins/issues/421)) ([790278b](https://github.com/iamcxa/kc-claude-plugins/commit/790278b7165682bfae8b0e61e091b40989328a16))
+* **kc-dev-flow:** explain profile commitments and preserve scope ([#425](https://github.com/iamcxa/kc-claude-plugins/issues/425)) ([08b420a](https://github.com/iamcxa/kc-claude-plugins/commit/08b420a9668fea6e80171b6ad0fbc8d8faf8b990))
+* **kc-dev-flow:** point the POC freeze at the Exploration Brief that holds it ([#429](https://github.com/iamcxa/kc-claude-plugins/issues/429)) ([baf108b](https://github.com/iamcxa/kc-claude-plugins/commit/baf108b1f2dea1524ead6ae7768075bf3793728e))
+* **kc-dev-flow:** repair direct POC close preparation and review ([#407](https://github.com/iamcxa/kc-claude-plugins/issues/407)) ([c2c62bf](https://github.com/iamcxa/kc-claude-plugins/commit/c2c62bf9dff5c3af1e27eb643a15eadf9023485f))
+* **kc-dev-flow:** require architecture maps outside poc ([#426](https://github.com/iamcxa/kc-claude-plugins/issues/426)) ([41ae056](https://github.com/iamcxa/kc-claude-plugins/commit/41ae056c24a4342e5555909811b3805b1b7a3fb1))
+* **kc-dev-flow:** resume pinned reports and authorized corrections ([#390](https://github.com/iamcxa/kc-claude-plugins/issues/390)) ([6991fd0](https://github.com/iamcxa/kc-claude-plugins/commit/6991fd09f43aa6af766ed5eea752c20598051db4))
+* **kc-dev-flow:** separate pending and final POC close measurements ([#412](https://github.com/iamcxa/kc-claude-plugins/issues/412)) ([c9c5752](https://github.com/iamcxa/kc-claude-plugins/commit/c9c5752fda853737d4a937ad7f59564c5651ca53))
+* **kc-dev-flow:** unify the accepted-goal heading and stop gating admission on a host variable ([#367](https://github.com/iamcxa/kc-claude-plugins/issues/367)) ([ad13fe2](https://github.com/iamcxa/kc-claude-plugins/commit/ad13fe23e620f42844b34cb8d535e3466060c5ab))
+
 ## [4.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.2.0...kc-dev-flow-v4.3.0) (2026-09-03)
 
 

@@ -92,6 +92,32 @@ keep the full route or record recovery with `recovery_failure`,
 `recovery_falsifier`, `recovery_rollback`, and `review_risks`; uncertainty keeps
 the full route.
 
+## Shape the POC receipt
+
+This section fires only when the recommendation is POC; Pilot and Production
+selection reads nothing past this point.
+
+Derive `poc_decision` from the next commitment named in "Resolve the choice" —
+restate it, do not invent a new one. Derive the smallest verifiable case: the
+shortest real path that exercises the declared falsifier using shell, a CLI, a
+library, or existing repository code, not the smallest path that merely
+compiles. Treat anything the repository, a prior `poc_outcome`, or the work
+item already establishes as proven; do not schedule `poc_falsifier` against
+it. Name which kernel falsifier kind the riskiest assumption calls for —
+`refusal` (does the system reject this case), `mutation` (does a consumer
+notice a changed producer), `existence-disproof` (no sampled input settles it)
+— and pick the cheapest instrument of that kind that can fail; reserve an
+expensive one for a claim no cheap check settles. State `poc_stop_when` as the
+concrete disproof observation: the exact output, error, or absence a run must
+produce, not "if it doesn't work." `poc_budget` is a ceiling on time, model,
+provider, or review — never a scope restatement; when the item states no
+ceiling, leave the field unfilled and name the missing fact instead of
+deriving one. When several riskiest assumptions compete, falsify whichever
+failure would most change `poc_decision` first, and route the rest to a
+follow-on POC rather than widen this `poc_budget`. Ask the Captain only for
+the one fact the work item does not state — usually which assumption is
+riskiest.
+
 ## Return the candidate receipt
 
 Use the actual Captain answer. A candidate with
