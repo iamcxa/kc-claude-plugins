@@ -43,49 +43,26 @@ That led to three per-item routes:
 One repository can carry all three. The promise belongs to the work item, not
 to the repository's identity.
 
-## Planning must remain replaceable
+## Planning is a committed brief, not a provider read
 
 Planning and execution answer different questions. Every route begins with one
 admitted brief. Pilot and Production use a Development Brief that fixes the
 problem, accepted outcome, complete non-goal list, route-back conditions, and
 one canonical `## Acceptance criteria` section with stable `AC-N` identifiers
 for new admission. Explicit admission validation rejects evidence-only or dual
-sections and a partial Planning Receipt; default continuation leaves prior
-admitted headings untouched. POC uses the decision, falsifier, budget, and stop
-condition already stored in `kc-dev-flow-work-profile/v3` as its Exploration
-Brief. Feature and bug labels do not change this engine.
+sections; default continuation leaves prior admitted headings untouched. POC
+uses the decision, falsifier, budget, and stop condition already stored in
+`kc-dev-flow-work-profile/v3` as its Exploration Brief. Feature and bug labels
+do not change this engine.
 
-A Planning Receipt is optional and complete or absent. Provider-backed work
-records exactly `source`, `planning-window`, and `planning-outcome`. Its planning
-item owns discussion, the accepted goal, priority, and human-facing status; its
-window owns time and its outcome owns the accepted result. The committed
-execution snapshot preserves those inputs without becoming another planning
-authority.
-
-At every provider-backed engage, a repository-local reader normalizes the
-provider's current Ready set, including every still-Ready snapshot source
-outside the original window/outcome, and the committed execution snapshot. The
-First Officer supplies the source, window, and outcome read from the exact work
-item; the installed loader's sibling read-only comparator checks the normalized snapshot against
-those expected values and classifies every delta. The First Officer continues
-only on one parsed `status: clean` result. The Captain admits a delta before an
-authorized actor commits the replacement snapshot. Because reconcile writes
-neither side, it is not synchronization. An adopter can combine that read,
-exact snapshot binding, comparator, and a success-only envelope behind one
-repository-local guard. The command creates no execution record and grants no
-delivery authority.
-
-Without a Planning Receipt, the Captain-approved committed work item is the
-planning authority. It invokes no planning provider or comparator and invents
-no Cycle or Release/Milestone. A partial receipt is invalid rather than a reason
-to guess which authority applies.
-
-That boundary lets a repository replace GitHub Projects with Linear, or the
-reverse, without changing KC Dev Flow. Open provider-backed work not yet
-admitted to execution may move; an admitted item keeps its provider and reader
-until completion. Standalone work has no provider to migrate. Runtime adapters
+The Captain-approved committed work item is the sole planning authority.
+`source` is free-text provenance — it may hold a Linear URL or any other
+reference — and is never read as planning evidence. KC Dev Flow invokes no
+planning provider, reader, or comparator, and invents no Cycle or
+Release/Milestone. Who authored the brief — the Captain dictating it, or a
+journey map converted into one — is outside this contract. Runtime adapters
 decide task, worktree, and worker cardinality, retry, resume, and delivery
-ceremony. Their local grouping is not a provider Cycle or Milestone authority.
+ceremony; their local grouping is not a provider Cycle or Milestone authority.
 No projector, importer, polling loop, or bidirectional sync is part of the
 portable package.
 

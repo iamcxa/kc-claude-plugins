@@ -279,10 +279,10 @@ Stop when the planning tuple cannot express the work.
         canonical_brief + "\n## Acceptance evidence\n\nHistorical evidence.\n",
     )
 
-    for mask in range(8):
-        values = tuple(
+    for mask in range(4):
+        values = ("https://example.test/free-text-source",) + tuple(
             value if mask & (1 << position) else ""
-            for position, value in enumerate(("source", "window", "outcome"))
+            for position, value in enumerate(("window", "outcome"))
         )
         receipt_item = write_work_item(
             root,
@@ -294,9 +294,25 @@ Stop when the planning tuple cannot express the work.
         )
         result = run_admission(receipt_item)
         require(
-            (result.returncode == 0) == (mask in {0, 7}),
-            f"Planning Receipt presence mask {mask} had wrong admission result",
+            (result.returncode == 0) == (mask in {0, 3}),
+            f"Planning Receipt presence mask {mask} had wrong admission result "
+            f"(source is free-text provenance, not part of the tuple)",
         )
+
+    source_only = write_work_item(
+        root,
+        "pilot-product-slice",
+        "ideation",
+        "standalone-source-empty-window-outcome",
+        planning_receipt=("https://linear.app/example/DEV-52", "", ""),
+        body=canonical_brief,
+    )
+    source_only_result = run_admission(source_only)
+    require(
+        source_only_result.returncode == 0,
+        "a source string with empty planning-window and planning-outcome was rejected: "
+        f"{source_only_result.stderr}",
+    )
 
     omitted_receipt = write_work_item(
         root,
@@ -326,11 +342,12 @@ Stop when the planning tuple cannot express the work.
         "pilot-product-slice",
         "ideation",
         "standalone-partial-planning-receipt-declaration",
+        planning_receipt=("https://linear.app/example/DEV-12", "Cycle 1", "Project 1"),
         body=canonical_brief,
     )
     partial_declaration.write_text(
         re.sub(
-            r"^(?:planning-window|planning-outcome):[^\n]*\n",
+            r"^planning-outcome:[^\n]*\n",
             "",
             partial_declaration.read_text(encoding="utf-8"),
             flags=re.MULTILINE,

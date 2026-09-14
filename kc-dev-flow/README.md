@@ -80,14 +80,12 @@ not another agent, review, or gate.
   useful overview even with existing architecture docs, which it links for depth.
   Every continuation/worker reads the map before exploration; a missing non-POC map
   is bootstrapped before feature work. See [Architecture home](references/project-context-maintenance.md#architecture-home).
-- **Planning Receipt** — optional and complete or absent; the exact `source`,
-  `planning-window`, and `planning-outcome` tuple activates the adopter's
-  read-only provider reconcile. A partial tuple stops.
-
-Without a Planning Receipt, the Captain-approved committed brief is the planning
-authority. KC Dev Flow invokes no planning provider and invents no Cycle or
-Release/Milestone. Feature and bug labels use the same engine; uncertainty,
-risk, urgency, and the accepted commitment select the brief and profile.
+The Captain-approved committed brief is the sole planning authority. `source`
+is free-text provenance and may hold a Linear URL or any other reference; KC
+Dev Flow never reads it as planning evidence, invokes no planning provider, and
+invents no Cycle or Release/Milestone. Feature and bug labels use the same
+engine; uncertainty, risk, urgency, and the accepted commitment select the
+brief and profile.
 
 ## Seats and gates
 
@@ -141,7 +139,6 @@ configuration or rewrite its own records is Production.
 ## Distribution and adoption
 
 The script surface has four roles. Runtime helpers are the loader, POC close
-guard, provider-backed comparator, optional workspace-neutral Linear admission
 guard, and conditional PR handoff. `*.test.py` files are package self-tests used
 by release proof. Adopters copy no canonical runtime file; adapters for other
 planning providers and release gates stay outside the plugin directory.
@@ -166,38 +163,13 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
 Its explicit `--validate-admission` mode additionally validates the canonical
-Development Brief and complete-or-absent Planning Receipt for a new Pilot or
-Production admission. Default loading does not inspect acceptance headings.
-
-Provider-backed adopters invoke the installed loader's sibling
-`scripts/engage-reconcile.py` as their read-only compare mechanism; a
-Linear-backed adopter may use the installed sibling `scripts/linear-admission.py`
-as its complete read-only admission guard. Standalone adopters invoke neither.
-The comparator checks
-ephemeral normalized admission and current Ready sets against the
-caller-supplied expected source, window, and outcome, then compares accepted
-goal and non-goals. A completed comparison returns `0` with a JSON
-`status: clean` result, `1` with added/removed/changed/moved identities, or `2`
-for invalid input. It invokes no provider or execution runtime. The
+Development Brief for a new Pilot or Production admission. Default loading does
+not inspect acceptance headings. The
 [design rationale](./RATIONALE.md) owns the planning/execution explanation.
 
 At a route's first working stage, the loader also requires one non-empty
 `sprint` and `sprint-readiness: ready` in work-item frontmatter for the packaged
-Spacedock route. Those are local execution mechanics, not Planning Receipt
-evidence. For a complete receipt, the planning provider owns the accepted window
-and outcome. At every engage, the adopter's read-only planning reader normalizes
-the provider's current Ready set and the admitted snapshot; that current set also
-includes every still-Ready snapshot source outside the original window/outcome.
-The installed comparator classifies their difference. Any delta stops before new
-dispatch or mutation until the Captain admits it. A standalone item skips this
-provider path.
-An adopter may bind one read-only admission command that owns workspace
-authentication, current provider read, exact state snapshot, comparator
-invocation, and success-only dispatch-envelope emission. The package supplies
-that command for Linear; other providers may keep a repository-local adapter.
-That seam
-adds no provider, persistence, synchronization, or launch authority to the
-portable package.
+Spacedock route. Those are local execution mechanics, not planning evidence.
 
 Everything else under `references/` is conditional. Selecting a profile or
 installing the package activates none of it; a reference link is not activation.

@@ -23,12 +23,9 @@ its package manifest binds plugin version, contract digest, Local Profile
 interface, and exact canonical resources. The loader emits three policy
 artifacts: shared core, selected profile base, and selected current stage. Its
 explicit admission mode first validates one canonical `AC-N`
-Development Brief and a complete-or-absent Planning Receipt for new Pilot or
-Production work; default loading leaves already-admitted headings unchanged.
-The repository-local provider guard owns workspace authentication, current
-read, exact snapshot reconciliation, and success-only dispatch-envelope
-emission without creating execution state; it receives the installed loader
-anchor for the invocation and uses its sibling comparator. The selected build contract contains that profile's typed exit
+Development Brief for new Pilot or Production work; default loading leaves
+already-admitted headings unchanged. `source` is free-text provenance and may
+hold a Linear URL, but the loader never reads it as planning evidence. The selected build contract contains that profile's typed exit
 observation. A selected stage may also contain a typed conditional-reference
 descriptor; its referenced file remains unread unless the named trigger is
 true. The loader rejects a stage outside the selected route. It takes and
