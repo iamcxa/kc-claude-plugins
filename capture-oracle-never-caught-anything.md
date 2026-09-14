@@ -111,3 +111,18 @@ work_profile:
   scope_boundary: No change to the checker, the fixture rows, the released body or its pin, the release-please runtime, or spacedock-dev/subspace-relay.
   semantics_unchanged: false
 ```
+
+## Stage Report: implementation
+
+- DONE: AC-2 — contract test exits 0 with the path removed from both the manifest resources list and the test's own expected-resource sets; re-adding it to one side exits non-zero
+  commit 0e82f386; `python3 scripts/kc-dev-flow-contract-test.py` → PASS; re-adding the entry to one expected set alone reproduced `missing kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs` exit 1, then reverted with `git diff --stat` showing 0 residual lines before commit.
+- DONE: AC-3 — checker and every fixture row untouched
+  `python3 kc-dev-flow/scripts/check-pr-title.test.py` → PASS (13 fixture rows + 3 boundary cases); `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv` is empty.
+- DONE: AC-4 — oracle section states the version-skew stop condition without naming a re-derivation script; synced block byte-identical; released body pin unchanged
+  edited `kc-dev-flow/references/pr-merge-extension.md`'s stop-condition paragraph and re-synced the identical bytes into `docs/dev/_mods/pr-merge.md`'s marked extension block (script-free sync per `kc-dev-flow-contract-test.py`'s own note that this copy is prose, not scripted); contract test's block-drift check passed in the same PASS run; recomputed sha256 of the released body independently = `ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57` / 10551 bytes, matching `contract-manifest.json`'s pin unchanged.
+- FAILED: AC-1 — `git grep -n capture-oracle` over the tracked tree returns nothing
+  one hit remains: `kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv:10`, the regeneration-command comment in the file's own header. Editing it would break AC-3's requirement that this file's diff against `origin/main` stay empty, and crosses this work item's own `poc_stop_when: ... release-please-verdicts.tsv`. AC-1 and AC-3 conflict on this one line as literally written; left the file untouched pending a Captain/FO ruling on whether AC-1 excludes this header comment or the stale reference is an accepted residual. Cost of leaving it: the comment now names a regeneration command (`node .../capture-oracle.cjs`) that no longer exists.
+
+### Summary
+
+Removed `capture-oracle.cjs` and seven of its eight tracked references (manifest, both contract-test expected-resource sets, the oracle section's resource and synced mod), keeping the checker, every fixture row, and the released-body pin byte-for-byte unchanged; all four independently-runnable checks pass. The eighth reference — the regeneration-command comment inside `release-please-verdicts.tsv`'s own header — cannot be removed without violating AC-3's untouched-file requirement, so AC-1 fails on that single line; committed at `0e82f386` and escalating for a ruling. Diff also crossed the receipt's declared `poc_budget` (5 files / 107 gross lines vs. 6 files / 60 lines), driven almost entirely by the mandatory 82-line file deletion itself — flagged, not a reason to have stopped short of the accepted outcome.
