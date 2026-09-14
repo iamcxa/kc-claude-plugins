@@ -515,3 +515,105 @@ RoboRev's one authorized Pilot request came back `PASS` with no findings against
 requested (daemon's inclusive-range semantics); no confirmation was needed or spent. Repaired MIGRATION.md
 and ARCHITECTURE.md in place under the retained-document policy; no other file in the "Where it touches"
 table needed an edit.
+
+## Stage Report: validation
+
+- DONE: exact-revision journey evidence
+  Candidate `6d340208`, worktree clean, branch `spacedock-ensign/poc-close-path-never-walked`.
+  `origin/main` is exactly `e3cca913`, so the candidate already sits on trunk and the ceremony's
+  rebase is a no-op; no commit has touched `kc-dev-flow/scripts/`, `kc-dev-flow/MIGRATION.md`, or
+  `ARCHITECTURE.md` on trunk since the cut. Journey steps 6 and 8 driven below.
+- DONE: AC-1 — POC correction context accepted, previous behaviour shown to fail
+  `profile-contract-loader.test.py` PASS at HEAD; reverting only `profile-contract-loader.py` to
+  `e3cca913` reddens it with `same-stage re-entry refused once the prove worker wrote POC outcome:
+  ... ACTIVE_STAGE_PIN_MISMATCH`. Instrument seen to fail, then restored (tree clean).
+- DONE: AC-2 — empty `started` refuses by name; the refusal sits at the comparison
+  `poc-close-guard.test.py` PASS at HEAD; reverting only `poc-close-guard.py` to `e3cca913` reddens
+  it with `wrong refusal for 'frontmatter started must not be empty': admitted_at must equal
+  frontmatter started`. Falsifier kind `refusal`, driven and read. Restored (tree clean).
+- DONE: AC-3 — full contract suite exits 0
+  `python3 scripts/kc-dev-flow-contract-test.py` → `kc-dev-flow contract: PASS`, `EXIT=0`, own
+  bounded invocation (900s cap, background+poll, load average 10-19, never chained with a mutate).
+- DONE: AC-4 — both defects reproduced against pre-fix behaviour at the candidate revision
+  The two reverts above are that reproduction, re-run by this stage rather than taken from the build
+  report.
+- DONE: first officer item 2 — the `started` refusal sits at the `admitted_at` comparison, and a
+  no-artifact POC still closes
+  Driven, not read: `parse_outcome` called with a receipt carrying neither `poc_artifact` nor
+  `started`, against a work item whose frontmatter `started:` is empty, returns `stop`. The refusal
+  is reached only after the `poc_artifact` early return.
+- DONE: first officer item 3 — the `MIGRATION.md` and `ARCHITECTURE.md` edits are true of the
+  shipped bytes
+  Twelve direct `work_item_authority` probes at HEAD, each claim to one probe: `## Stage Report:`,
+  `## POC outcome` and `## POC close measurement` excluded; `## POC outcomes`, `## POC outcome
+  extra`, a three-space-indented copy, a `###` copy and `## Non-goals` all stay bound; the exclusion
+  spans its body and stops at the next level-one and level-two heading; a fenced copy starts no
+  exclusion. All twelve pass. `ARCHITECTURE.md`'s clause is probes 2 and 3.
+- DONE: first officer item 1 — whether the RoboRev range leaves a shipped line unreviewed
+  `roborev show 502 --json` gives `git_ref` `da3f287f..4dc230ac` and a prompt reading `Reviewing 2
+  commits: e3cca91, 4dc230a`. The reviewed set is a superset of this slice: every non-test line lives
+  in `4dc230ac`. Unobserved: the 12 added lines of `6d340208`, all in
+  `profile-contract-loader.test.py`. Zero production lines unreviewed. The build report's
+  "exclusive"/"inclusive" wording contradicts itself; the `git_ref` above is the fact.
+- DONE: retry/recovery, duplicate, diagnostic, and data-safety results that apply
+  Recovery: the documented repair for a stranded item ("re-run the ordinary pin command at the same
+  attempt") is `poc_same_stage`, green. Data safety: first feedback entry compares full document
+  bytes — `receipt["sha256"]` is `sha256(raw)` over the whole file at `resolve_work_item`, and the
+  authority projection is a second, separate comparison; the probes above show every brief-bearing
+  section stays retained. No new runtime surface, so no retry, duplicate, or diagnostic result
+  applies.
+- DONE: base decision under `delivery-branch-base.md`
+  Trunk. `#321` is the only open artifact sharing a file (`profile-contract-loader.py`,
+  `profile-contract-loader.test.py`, `MIGRATION.md`) and shares no lineage: its loader hunk is
+  `validate_admission_brief` (~L159) against this slice's `work_item_authority` (~L590), its test
+  hunk ~L230 against ~L1820. The Local Profile's base policy is dependency-aware and
+  `delivery-base-trunk-test-conflates-file-and-lineage` records the same ruling with precedent.
+- DONE: remaining production obligations and promotion triggers
+  No promotion trigger: consumers absorb this by taking the new version, none must migrate. Release
+  obligation met — the `MIGRATION.md` entry exists and release-please owns the version. Verified,
+  not assumed: `contract_digest` changes `a7fdd4d3…` → `45f43089…` (all three edited package files
+  are declared manifest resources), and no expected digest is pinned anywhere in the tree.
+- SKIPPED: the named `equivalence_instrument` observed to fail
+  The work profile receipt declares `semantics_unchanged: false`, so no equivalence instrument is
+  owed.
+- SKIPPED: provider feedback disposition when a delivery artifact exists
+  No PR exists (`pr:` empty). RoboRev is observation, not provider feedback or delivery authority,
+  per the workflow README.
+
+### Finding: `poc_non_goals_refused` cannot fail for the reason it names
+
+Not blocking, and it is a test-only finding; the shipped behaviour it describes is correct.
+
+`poc_non_goals_refused` (the whole of `6d340208`) appends `## Non-goals` after
+`rejected_work_item_sha256` was taken, then asserts exit 2. On a first, non-resuming feedback entry
+the loader compares full document bytes before it compares the authority projection, so *any* append
+refuses there. Driven: replacing the appended `## Non-goals` with `## Stage Report: extra` — an
+explicitly excluded heading — leaves the suite green. The test therefore proves nothing about the
+exclusion set. Restored; tree clean.
+
+The property it was meant to hold is already proven twice over, discriminatingly: by `near_miss_drift`
+(a bound heading appended, same-stage re-pin, exit 2) and by this stage's direct probe. Repair
+options, for the Captain: move the append onto the same-stage re-pin path where the authority
+comparison is the only discriminator, or delete the case as a removal candidate. Not repaired here —
+a test file is code, and a code repair returns to implementation for one final re-verification.
+
+### Residuals
+
+- `started:` followed by a space or tab captures that whitespace and takes the old `admitted_at must
+  equal frontmatter started` refusal rather than the named one. No observed producer: across the 91
+  state entities, 66 carry a bare `started:` and none carry trailing whitespace. A narrower capture
+  group would close it.
+- An absent `started` is refused with `frontmatter started must not be empty`. Ideation ruled empty
+  and absent indistinguishable on purpose; recorded as known, not a defect.
+- `poc_corrected` asserts `workflow_stage` only. `recorded_workflow_stage` is set at the
+  `feedback_context is not None` branch independently of profile and is already asserted by the Pilot
+  correction case, so journey step 6 holds by construction.
+
+### Summary
+
+Both fixes hold at `6d340208` and both instruments were seen to fail in this stage, not quoted from
+the build. Every claim the slice writes into `MIGRATION.md` and `ARCHITECTURE.md` was exercised
+against the shipped loader rather than read. Nothing blocks the gate: the one finding is a test that
+cannot fail for the reason its name gives, covering a property two other checks already prove, and it
+is exactly the 12 lines RoboRev never observed. No PR was created — local verification is complete,
+the base is trunk, and the delivery ceremony is the first officer's with the Captain's approval.
