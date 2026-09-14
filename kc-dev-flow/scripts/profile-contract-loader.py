@@ -500,7 +500,7 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
     frontmatter = text[4:frontmatter_end]
     receipt_values: list[str] = []
     declared_receipt_fields: list[bool] = []
-    for field in ("source", "planning-window", "planning-outcome"):
+    for field in ("planning-window", "planning-outcome"):
         matches = re.findall(
             rf"^{re.escape(field)}:[ \t]*([^\n#]*?)[ \t]*$",
             frontmatter,

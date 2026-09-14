@@ -324,6 +324,28 @@ available, or how its PR and state-holder providers operate. Present changes to
 those authority and proof semantics explicitly; do not hide them inside a
 mechanical re-vendor.
 
+## 2026-09-14 — the provider-backed intake path is retired
+
+`scripts/linear-admission.py`, `scripts/engage-reconcile.py`, their tests, and
+their `contract-manifest.json` entries are removed. The Planning Receipt tuple
+(`planning-window`/`planning-outcome`, complete or absent), the partial-tuple
+refusal, and the engage-reconcile comparison at every provider-backed engage
+are gone. `source` survives unchanged as free-text provenance — it may still
+hold a Linear URL — but the loader never reads it as planning evidence; only
+`planning-window`/`planning-outcome` remain subject to the complete-or-absent
+rule, and neither is produced by anything in the package anymore. An adopter
+still binding a planning reader or comparator in its Local Profile drops that
+binding on upgrade; the sections below describing that binding as part of the
+3.x-to-4.x and 2.x cutovers remain accurate as history for adopters who ran
+those upgrades before this date, but no current package resource supports
+them. `docs/plan-flow/plan-lint.py`'s own L4 admission rule, which reached into
+`linear-admission.py` for `live_item`/`delivery_binding`, now carries that
+logic itself in `docs/plan-flow/admission.py`; that script belongs to
+`plan-flow`, not this package. Delivery — the `Fixes DEV-N` close line and the
+`delivery.branch`/`delivery.close_line` clauses in `pr-delivery.md` and
+`pr-merge-extension.md` — is untouched; those clauses describe a producer that
+no longer exists and so can never fire, which is accepted, not a defect.
+
 ## 2026-09-13 — the pull request title refusal ships from kc-dev-flow
 
 `references/pr-merge-extension.md` gained a `### Released title override`
