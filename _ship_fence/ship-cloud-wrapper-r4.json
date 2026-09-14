@@ -12,6 +12,8 @@
  "close-roster-is-the-fence-and-captain-stopped-validates": {
   "message_sha256": "451dddc9bd2acd1952b90588adfbd40fee32d07d56091bbfc6d1aea379032e48",
   "session": "3319fb1a-64ee-4b2e-9de8-f9fc1e73b900",
-  "workspace": "26b8a27b-6162-4f0e-ac51-5f5aa420ab63"
+  "workspace": "26b8a27b-6162-4f0e-ac51-5f5aa420ab63",
+  "pr": 455,
+  "candidate_sha": "e828c9b12384365e4b68c99cc37b56ec82538a63"
  }
 }

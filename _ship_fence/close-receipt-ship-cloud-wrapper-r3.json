@@ -3,12 +3,13 @@
     "result": "not recorded"
   },
   "questions": [],
-  "receipt_sha256": "6e71bdcd34ceb574a63b098d2b9ade0b0985caace011f53aaadc05feafcc982c",
+  "receipt_sha256": "b8a2fa677b711503152a4f459ca8431a9ac6ad47557f6016e2add788735c2181",
   "residuals": [],
   "schema": "kc-ship-close-receipt/v2",
   "sprint": "ship-cloud-wrapper-r3",
   "tasks": {
     "adopter-contract-test-ships-with-the-package": {
+      "closed": "captain_stopped",
       "debrief": "failure: captain_stopped",
       "merged_sha": null,
       "pr": "450",
@@ -17,6 +18,7 @@
       "workspace_id": "4878c599-b5ba-4f22-b3d3-2e83712b82f1"
     },
     "pr-merge-released-body-pin-per-mod-version": {
+      "closed": "captain_stopped",
       "debrief": "failure: captain_stopped",
       "merged_sha": null,
       "pr": "446",
