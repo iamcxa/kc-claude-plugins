@@ -700,3 +700,27 @@ resolved here.
 
 Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5bd9053` (based on cycle 2's
 `origin/main@ed452eb2`). State: real checkout untouched by the exercise; this report is this cycle's only state write.
+
+### Feedback Cycles
+
+#### Cycle 1 — rejected at the prove gate, 2026-09-14
+
+The Captain rejected `validation` attempt 2 and authorized one correction. Finding, demonstrated
+rather than inferred: two entities from different products both carrying `release: r1` were returned
+together by `spacedock status --where release=r1`, with no refusal, no warning, and `--validate`
+still `VALID`; no code path opened a journey file, so nothing checked that a release id was real or
+unique, and `product` could not disambiguate because product and release id are independent axes in
+the live corpus.
+
+Assignment: qualify the identifier as `<journey>/<release-id>` and repeat the forced-collision
+exercise on the qualified form, naming where the qualification is enforced rather than asserting it.
+The accepted outcome, the non-goal list, AC-1 to AC-5 and the scalar shape were not reopened.
+
+Correction delivered at `a5bd9053`: `profile-contract-loader.py` gained a qualified-form check that
+refuses an unqualified value, so enforcement is in the loader rather than documentation-only. The
+`<journey>` part is the journey file's own `journey:` slug, not the product directory. The
+forced-collision exercise no longer conflates. The worker bounded the sprint-mirror claim rather than
+repeating it: `sprint` has no equivalent enforcement, so `release` is now stricter, not parallel.
+
+Carried forward for the Captain: `release-field-r1-evidence-record` still holds a bare, unqualified
+`release: r1` and is now outside the qualified namespace.
