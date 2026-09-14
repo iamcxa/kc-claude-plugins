@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: journey-map-remote-access
 sprint-readiness: ready
-started:
+started: 2026-09-14T10:09:25Z
 completed:
 verdict:
 worktree:
