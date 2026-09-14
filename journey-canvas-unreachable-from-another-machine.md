@@ -1,6 +1,6 @@
 ---
 title: "The journey canvas is unreachable from anywhere but the machine it runs on"
-status: implementation
+status: validation
 source:
 product: kc-journey-map
 planning-window:
@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-journey-canvas-unreachable-from-another-machine
 issue:
-pr:
+pr: 442
 mod-block:
 id: bxhtchz8rwth9hpeepzwg42t
 gates:
