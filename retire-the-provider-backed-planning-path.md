@@ -12,8 +12,8 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-retire-the-provider-backed-planning-path
 issue:
-pr:
-mod-block:
+pr: 444
+mod-block: merge:pr-merge
 id: f0m9yytzq7sczkam7rrq9ym3
 gates:
     version: 1
