@@ -16,6 +16,8 @@
 #   FAKE_CONDUCTOR_AUTH_FAIL     when 1, `auth whoami` fails (exit 3).
 #   FAKE_CONDUCTOR_ALLOW_CREATE  when 1, `workspace create` succeeds; otherwise it errors
 #                                loudly (exit 64) since --dry-run must never reach it.
+#   FAKE_CONDUCTOR_SQL_FAIL      when 1, `sql` prints the real Conductor 503 outage text
+#                                to stderr and exits non-zero (sql-503-degraded fixture).
 set -euo pipefail
 
 [ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
@@ -43,6 +45,7 @@ print_help() {
   echo
   echo "Session:"
   [ "$DROP" = "session status" ] || echo "  conductor session status <sessionId>"
+  [ "$DROP" = "session message" ] || echo "  conductor session message <sessionId> [--limit <n>] [--offset <n>]"
   echo
   echo "Other commands:"
   [ "$DROP" = "sql" ] || echo "  conductor sql <query>               Run a read-only SQL query over session_transcripts_view"
@@ -77,6 +80,10 @@ if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "list" ]; then
 fi
 
 if [ "${1:-}" = "sql" ] || { [ "${1:-}" = "--json" ] && [ "${2:-}" = "sql" ]; }; then
+  if [ "${FAKE_CONDUCTOR_SQL_FAIL:-0}" = 1 ]; then
+    echo "The SQL search API endpoint is temporarily disabled (HTTP 503)" >&2
+    exit 1
+  fi
   echo '{"rows": [], "rowCount": 0, "truncated": false}'
   exit 0
 fi

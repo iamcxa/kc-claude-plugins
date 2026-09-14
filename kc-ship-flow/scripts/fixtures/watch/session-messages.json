@@ -1,0 +1,9 @@
+{
+  "sess-quota": ["You've hit your session limit · resets 9pm (Asia/Taipei)"],
+  "sess-question": ["Two files touch this rename. Should I update both, or just the one named in the task?"],
+  "sess-stopped": ["Done. Pushed the branch and opened the draft PR."],
+  "sess-resumed-after-quota": ["Resumed and finished the refactor; running the tests now."],
+  "sess-quote-slug": ["Done. Nothing else to report."],
+  "sess-question-q-marker": ["Renaming both call sites now.\n\nQ: should the deprecated alias stay for one release or be removed outright?"],
+  "sess-question-decision-marker": ["Decision: I will treat the missing config key as a hard failure rather than defaulting it, unless told otherwise."]
+}

@@ -51,6 +51,7 @@ check_contract() {
   help_text=$(conductor --help 2>&1) || die "conductor unavailable: $help_text" 2
   missing=""
   while IFS= read -r line; do
+    line="${line%%#*}"
     [ -n "$line" ] || continue
     cmd=""
     ok=1
@@ -88,7 +89,10 @@ whoami_out=$(conductor auth whoami 2>&1) || die "conductor unavailable" 2
 sender_id=$(printf '%s\n' "$whoami_out" | sed -nE 's/^User ID[[:space:]]+//p' | head -n1)
 [ -n "$sender_id" ] || die "conductor unavailable: no User ID in auth whoami output" 2
 conductor workspace list --limit 1 >/dev/null 2>&1 || die "conductor unavailable: workspace list probe failed" 2
-conductor --json sql "SELECT 1" >/dev/null 2>&1 || die "conductor unavailable: sql probe failed" 2
+# sql is a degradable probe (pins/conductor-cli.contract): a failure here is a dated
+# stderr notice, not fatal -- dispatch.sh itself never reads sql again after this.
+sql_probe_out=$(conductor --json sql "SELECT 1" 2>&1) || \
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) degraded: conductor sql probe failed, continuing without it ($sql_probe_out)" >&2
 
 trunk=$(sed -n 's/^trunk: *//p' "$workflow_dir/README.md" | head -n1)
 trunk=${trunk:-main}

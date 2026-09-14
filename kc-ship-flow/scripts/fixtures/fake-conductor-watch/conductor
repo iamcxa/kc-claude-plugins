@@ -16,6 +16,13 @@
 #                                 absent from the map reports "idle" (the prior fixed
 #                                 behaviour), so existing callers that never set this still
 #                                 see every session idle.
+#   FAKE_CONDUCTOR_SQL_FAIL       when 1, `sql` prints the real Conductor 503 outage text
+#                                 to stderr and exits non-zero (sql-503-degraded fixture).
+#   FAKE_CONDUCTOR_SESSION_MESSAGES  JSON file: {"<session-id>": ["<msg 0 text>", ...]};
+#                                 answers `session message <sid> --limit 1 --offset M`
+#                                 with {"sessionIndex": M, "text": messages[M]} when
+#                                 M < len(messages), else {} (no sessionIndex -- the
+#                                 empty-tail signal the binary-search fallback stops on).
 set -euo pipefail
 
 [ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
@@ -40,6 +47,7 @@ print_help() {
   echo
   echo "Session:"
   [ "$DROP" = "session status" ] || echo "  conductor session status <sessionId>"
+  [ "$DROP" = "session message" ] || echo "  conductor session message <sessionId> [--limit <n>] [--offset <n>]"
   echo
   echo "Other commands:"
   [ "$DROP" = "sql" ] || echo "  conductor sql <query>               Run a read-only SQL query over session_transcripts_view"
@@ -98,7 +106,39 @@ print(json.dumps({'status': store.get(sid, 'idle')}))
   exit 0
 fi
 
+if [ "${1:-}" = "session" ] && [ "${2:-}" = "message" ]; then
+  session_id="${3:-}"
+  shift 3 || true
+  limit=1
+  offset=0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --limit) limit=$2; shift ;;
+      --offset) offset=$2; shift ;;
+    esac
+    shift
+  done
+  python3 -c "
+import json, sys
+sid, offset, store_path = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+try:
+    store = json.load(open(store_path)) if store_path else {}
+except OSError:
+    store = {}
+messages = store.get(sid) or []
+if offset < len(messages):
+    print(json.dumps({'sessionIndex': offset, 'text': messages[offset]}))
+else:
+    print(json.dumps({}))
+" "$session_id" "$offset" "${FAKE_CONDUCTOR_SESSION_MESSAGES:-}"
+  exit 0
+fi
+
 if [ "${1:-}" = "sql" ]; then
+  if [ "${FAKE_CONDUCTOR_SQL_FAIL:-0}" = 1 ]; then
+    echo "The SQL search API endpoint is temporarily disabled (HTTP 503)" >&2
+    exit 1
+  fi
   query="${2:-}"
   session_id=$(printf '%s' "$query" | sed -nE "s/.*session_id = '([^']*)'.*/\1/p")
   python3 -c "

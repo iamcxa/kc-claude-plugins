@@ -154,7 +154,93 @@ else
   fail k "version-only change proceeds and prints the version, unchanged-surface line"
 fi
 
-rm -f "$TRANSCRIPTS" "$LOG"
+# --- sql-503-degraded path (AC-1..AC-4): same fixture entities/fence, driven through
+# `session message` instead of `sql`, forced via FAKE_CONDUCTOR_SQL_FAIL. ---
+SESSION_MESSAGES="$FIXTURES/session-messages.json"
+
+DEGRADED_LOG="$(mktemp)"
+run_watch_degraded() {
+  local state_dir="$1"
+  FAKE_CONDUCTOR_SQL_FAIL=1 FAKE_CONDUCTOR_SESSION_MESSAGES="$SESSION_MESSAGES" \
+    FAKE_CONDUCTOR_LOG="$DEGRADED_LOG" \
+    FAKE_CONDUCTOR_WORKSPACE_STATUS="$WORKSPACE_STATUS" \
+    PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+    bash "$SCRIPT" ship-cloud-wrapper --once \
+    --workflow-dir "$FIXTURES/dev" --state-dir "$state_dir" 2>&1
+}
+
+STATE_L="$(fresh_state)"
+: > "$DEGRADED_LOG"
+out_l1="$(run_watch_degraded "$STATE_L")"
+rc_l1=$?
+ok=1
+[ "$rc_l1" -eq 0 ] || ok=0
+grep -qx "task-gate-prepared gate-prepared" <<<"$out_l1" || ok=0
+grep -qx "task-folder-gate gate-prepared" <<<"$out_l1" || ok=0
+grep -qx "task-pending pending" <<<"$out_l1" || ok=0
+grep -qx "task-quota quota" <<<"$out_l1" || ok=0
+grep -qx "task-question question" <<<"$out_l1" || ok=0
+grep -qx "task-question-q-marker question" <<<"$out_l1" || ok=0
+grep -qx "task-question-decision-marker question" <<<"$out_l1" || ok=0
+grep -qx "task-stopped stopped" <<<"$out_l1" && ok=0
+grep -qx "task-resumed-after-quota stopped" <<<"$out_l1" && ok=0
+grep -qx "it's-a-slug stopped" <<<"$out_l1" && ok=0
+if [ "$ok" = 1 ]; then
+  pass l "degraded (sql-503) first poll: same decisive signals as the sql-available path (AC-2)"
+else
+  printf '  out=%s\n' "$out_l1"
+  fail l "degraded (sql-503) first poll: same decisive signals as the sql-available path (AC-2)"
+fi
+
+if ! grep -q "session_transcripts_view" "$DEGRADED_LOG"; then
+  pass m "degraded run never queries session_transcripts_view; tail reads go through session message (AC-2)"
+else
+  printf '  log=%s\n' "$(cat "$DEGRADED_LOG")"
+  fail m "degraded run never queries session_transcripts_view; tail reads go through session message (AC-2)"
+fi
+
+out_l2="$(run_watch_degraded "$STATE_L")"
+if grep -qx "task-stopped stopped" <<<"$out_l2" \
+  && grep -qx "task-resumed-after-quota stopped" <<<"$out_l2" \
+  && grep -qx "it's-a-slug stopped" <<<"$out_l2"; then
+  pass n "degraded: second consecutive idle poll confirms stopped, same as the sql-available path (AC-3)"
+else
+  printf '  out=%s\n' "$out_l2"
+  fail n "degraded: second consecutive idle poll confirms stopped, same as the sql-available path (AC-3)"
+fi
+rm -rf "$STATE_L"
+
+STATE_O="$(fresh_state)"
+run_watch_degraded "$STATE_O" >/dev/null
+line_count=$(wc -l < "$STATE_O/_ship_questions/ship-cloud-wrapper.log" 2>/dev/null | tr -d ' ')
+today="$(date -u +%Y-%m-%d)"
+ok=1
+[ "$line_count" = 1 ] || ok=0
+grep -q "sql-503" "$STATE_O/_ship_questions/ship-cloud-wrapper.log" 2>/dev/null || ok=0
+grep -q "$today" "$STATE_O/_ship_questions/ship-cloud-wrapper.log" 2>/dev/null || ok=0
+grep -q "503" "$STATE_O/_ship_questions/ship-cloud-wrapper.log" 2>/dev/null || ok=0
+if [ "$ok" = 1 ]; then
+  pass o "questions log gets exactly one line naming sql-503, the probe output, and today's date (AC-4)"
+else
+  printf '  log=%s\n' "$(cat "$STATE_O/_ship_questions/ship-cloud-wrapper.log" 2>/dev/null)"
+  fail o "questions log gets exactly one line naming sql-503, the probe output, and today's date (AC-4)"
+fi
+rm -rf "$STATE_O"
+
+STATE_P="$(fresh_state)"
+out_p="$(run_watch "$STATE_P")"
+rc_p=$?
+ok=1
+[ "$rc_p" -eq 0 ] || ok=0
+[ ! -e "$STATE_P/_ship_questions" ] || ok=0
+rm -rf "$STATE_P"
+if [ "$ok" = 1 ]; then
+  pass p "sql-available run never writes the questions log (no degraded transition to record)"
+else
+  fail p "sql-available run never writes the questions log (no degraded transition to record)"
+fi
+
+rm -f "$TRANSCRIPTS" "$LOG" "$DEGRADED_LOG"
 
 printf '\nwatch.test: %s passed, %s failed\n' "$PASS" "$FAIL"
 if [ "$FAIL" -gt 0 ]; then
