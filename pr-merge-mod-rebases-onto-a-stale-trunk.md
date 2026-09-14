@@ -1,13 +1,13 @@
 ---
 title: "The pr-merge mod's delivery step syncs the wrong branch and rebases onto a stale local trunk"
-status: ideation
+status: implementation
 source: Captain ruling 2026-09-14 in FO session, after the defect bit during PR #444 delivery
 product: repo-platform
 planning-window:
 planning-outcome:
 sprint: repo-platform/S2
 sprint-readiness: ready
-started:
+started: 2026-09-14T13:43:33Z
 completed:
 verdict:
 worktree:
