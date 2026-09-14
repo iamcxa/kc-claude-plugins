@@ -52,16 +52,26 @@ Just before writing the receipt, every merged task's `merged_sha` is resolved fr
 `origin` remote, same helper `uat-doc.py` uses). A task whose `gh`-reported state is not `MERGED`
 is refused: non-zero exit, the slug and state printed, no receipt written.
 
+Before any merged/debrief check runs, the sprint-matching task set is scoped to the fence's own
+roster: an entity whose slug is neither a fence key (excluding the batch-level `questions`,
+`residuals`, `e2e`, `captain_stopped` siblings) nor already merged is dropped and named once on
+stderr as `close: <slug> not dispatched, skipping` -- a sprint carrying a deferred, never-dispatched
+sibling no longer blocks the batch.
+
 Exit 0 printing the messages (and, outside `--dry-run`, the receipt path once written).
 Exit 3 printing `not all tasks merged` when a non-`--dry-run` run finds a task that is neither
 merged nor recorded `captain_stopped`, or naming a task whose `gh`-confirmed PR state is not
 `MERGED`. Exit 2 on a usage error, no task found for the sprint, or a fence file that parses as
 JSON but is malformed (json.JSONDecodeError, KeyError, TypeError).
 
+A `captain_stopped` task's receipt entry carries `merged_sha: null` (unchanged -- it was never
+merged) plus a new `closed: "captain_stopped"` marker.
+
 `--validate <receipt.json>` exits 0 when every task entry in the receipt carries a non-empty
-`debrief` field (a path or a `failure: ...` string) and a `merged_sha` that is exactly 40 hex
-characters; exits 1 naming the task(s) missing either, or on a receipt that is not valid JSON, or
-whose `schema` is not `kc-ship-close-receipt/v2`.
+`debrief` field (a path or a `failure: ...` string) and either a `merged_sha` that is exactly 40
+hex characters, or a null `merged_sha` paired with `closed: "captain_stopped"`; exits 1 naming the
+task(s) missing either, or on a receipt that is not valid JSON, or whose `schema` is not
+`kc-ship-close-receipt/v2`.
 """
 from __future__ import annotations
 
@@ -84,6 +94,10 @@ HERE = Path(__file__).resolve().parent
 SCHEMA_PATH = HERE.parent / "schemas" / "kc-ship-close-receipt.v2.schema.json"
 MERGED_RE = re.compile(r"^pr-merge:(\d+)$")
 MERGED_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+# Batch-level siblings of the fence file that are never a dispatched slug's own key --
+# `dispatch.sh` writes one top-level key per claimed slug plus these structural keys.
+RESERVED_FENCE_KEYS = {"questions", "residuals", "e2e", "captain_stopped"}
 
 
 def _load_uat_doc():
@@ -245,6 +259,23 @@ def commit_and_push_fence(ship_state, fence_path, sprint):
         print(f"close: git push failed: {push.stderr.strip()}", file=sys.stderr)
 
 
+def filter_dispatched_tasks(tasks, record):
+    """Scope batch membership to the fence's own roster (the r3 bug fix): drop a sprint-matching
+    entity, printed once to stderr as `close: <slug> not dispatched, skipping`, unless its slug is
+    a fence key (excluding the batch-level `RESERVED_FENCE_KEYS` siblings) or it is already merged
+    (`pr: pr-merge:<N>` proves dispatch even when nothing claimed the slug in the fence, e.g. a
+    task dispatched outside `dispatch.sh`). A deferred, never-dispatched, unmerged sibling no
+    longer blocks the batch on `not all tasks merged`."""
+    fence_slugs = set(record) - RESERVED_FENCE_KEYS
+    kept = {}
+    for slug, task in tasks.items():
+        if slug in fence_slugs or is_merged(task):
+            kept[slug] = task
+        else:
+            print(f"close: {slug} not dispatched, skipping", file=sys.stderr)
+    return kept
+
+
 class NotMergedError(Exception):
     """A task's PR is not confirmed `MERGED` -- `gh` reported another state, or could not be
     asked at all (state is then `None`, detail names why)."""
@@ -317,6 +348,8 @@ def build_receipt(sprint, tasks, record):
             "merged_sha": fence.get("merged_sha"),
             "debrief": build_debrief_field(record, slug, captain_stopped),
         }
+        if slug in captain_stopped:
+            per_task[slug]["closed"] = "captain_stopped"
     body = {
         "schema": "kc-ship-close-receipt/v2",
         "sprint": sprint,
@@ -336,6 +369,7 @@ def run_close(sprint, dev_state, ship_state, dry_run, no_commit=False):
         print(f"close: no docs/dev entities found for sprint {sprint!r} under {dev_state}", file=sys.stderr)
         return 2
     record = uat_doc.load_batch_record(ship_state, sprint)
+    tasks = filter_dispatched_tasks(tasks, record)
 
     # Scan `_debriefs/` before printing messages -- even in --dry-run -- so a task whose worker
     # already pushed a debrief the fence hasn't recorded yet gets no message either.
@@ -417,10 +451,16 @@ def validate_receipt(path):
         print(f"close: missing debrief field for: {', '.join(missing)}", file=sys.stderr)
         return 1
 
-    bad_sha = sorted(
-        slug for slug, task in tasks.items()
-        if not (isinstance(task.get("merged_sha"), str) and MERGED_SHA_RE.match(task["merged_sha"]))
-    )
+    def _sha_ok(task):
+        # The one exemption AC-2 asks for: captain_stopped never merged, so its null merged_sha is
+        # accepted only paired with the closed marker. Every other null/short/non-hex shape --
+        # including a merged task missing its sha -- still fails exactly as before.
+        merged_sha = task.get("merged_sha")
+        if isinstance(merged_sha, str) and MERGED_SHA_RE.match(merged_sha):
+            return True
+        return merged_sha is None and task.get("closed") == "captain_stopped"
+
+    bad_sha = sorted(slug for slug, task in tasks.items() if not _sha_ok(task))
     if bad_sha:
         print(
             f"close: missing or invalid merged_sha (must be 40 hex chars) for: {', '.join(bad_sha)}",
