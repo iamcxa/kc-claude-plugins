@@ -1,13 +1,13 @@
 ---
 title: "POC: does a release contract group work better than a sprint ordinal"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: kc-dev-flow/S10
 sprint-readiness: ready
-started:
+started: 2026-09-14T13:43:29Z
 completed:
 verdict:
 worktree:
