@@ -16,3 +16,4 @@ Workspaces: see `ship-cloud-wrapper-r3.json` (five). Deferred, not in this batch
 - adopter, watch: ideation approved (watch: ruled the AC-1 exit code stays 2; brief author's error). Both in implementation.
 - close: backlog approved; worker idled after presenting its review — nudged to continue.
 - released-body: chose POC profile (not pilot); validation attempt 1 prepared at 44d478f8 with no branch pushed and no PR — asked to push and open the Draft PR before the FO verifies. Lesson: the boot must say "push the branch and open the Draft PR before preparing validation".
+- 14:42Z released-body: PR #446 (+2136/-37, two full released-mod fixtures) verified on macOS (contract test PASS, portable-delivery 16/16); body lacked a Candidate line and used a code-branch audit link (fixed on request). Validation approved → approved-awaiting-merge. close: ideation approved → implementation.
