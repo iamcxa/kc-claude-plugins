@@ -62,6 +62,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:9xtwqxmktq2e15hr1qhx0bbb:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:9xtwqxmktq2e15hr1qhx0bbb-validation-1
+              briefing:
+                id: briefing:9xtwqxmktq2e15hr1qhx0bbb:validation:attempt-1:revision-1
+                digest: sha256:96a4a031330952d59a6ebf9178c733cc1f11e687c90032289f3fc800d86a5c5b
+                room-ref: ./ship-watch-runs-without-conductor-sql/review/validation/briefing-1
 ---
 
 The Conductor SQL endpoint (`conductor sql`) returned "The SQL search API endpoint is temporarily disabled (HTTP 503)" from 2026-09-13 ~04:20 UTC through at least 2026-09-14 08:00 UTC (re-probed at filing: still 503). `dispatch.sh` 0.2.0 exits 5 when the `sql "SELECT 1"` probe fails, so the whole `qnow-clerk-poc` batch ran on a scratch copy with the probe replaced by a stderr note, and `watch.sh` could not read transcripts at all; the ship FO watched by hand. What did work for every read across the batch: `conductor --json session status <sid>` (idle/working), `conductor --json session message <sid> --limit N --offset M` (offset past the end returns no `sessionIndex`, so a binary search finds the tail), `conductor --json workspace status <ws>`, and the state branch.

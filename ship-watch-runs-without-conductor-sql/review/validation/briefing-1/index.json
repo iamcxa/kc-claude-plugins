@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9xtwqxmktq2e15hr1qhx0bbb:validation:attempt-1:revision-1",
+  "question": "Approve this validation pass for delivery (Draft PR via the pr-merge mod, per the local profile)? Local verification is complete: dispatch.test.sh 12/12, watch.test.sh 16/16, contract-test.py PASS at the exact implementation candidate 7ff8a17f, no regression to the unmodified sql-available path. AC-1's exit-5 vs exit-2 wording was already ruled at the ideation gate (keep exit 2, per non-goal #3) and re-confirmed here. Both promote_when triggers (fallback becoming load-bearing outside kc-ship-flow; questions-log becoming a durable cross-workflow contract) remain unmet.",
+  "artifacts": [
+    {
+      "id": "artifact:9xtwqxmktq2e15hr1qhx0bbb:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b19567ae5ddf8cd32ffe72439b9ba7b86fe6f548/ship-watch-runs-without-conductor-sql.md",
+      "rev": "sha256:7cdcfff9c20b98ccf747a74086f064c170454c79f677ed2b6405e53ea33647ae",
+      "mediaType": "text/markdown",
+      "summary": "Validation stage complete: exact-revision re-run of both test suites and the contract test at implementation candidate 7ff8a17f (dispatch.test.sh 12/12, watch.test.sh 16/16, contract-test.py PASS), with the sql-available path proven unregressed. Retry/recovery and data-safety claims directly re-exercised, not just re-read: write-once-per-degraded-transition placement, session_tail_text's bounded 40-probe termination on a stale session id (empty result, one probe), and a forced questions-log write failure degrading to a stderr warning + exit 0 rather than killing watch.sh. AC-1's wording correction (exit 2, not 5) is already captain-visible from the ideation gate ruling; no new note needed. Both receipt promote_when triggers remain unmet. 3/3 checklist items DONE, all four ACs evidenced."
+    }
+  ]
+}
