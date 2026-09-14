@@ -1,6 +1,6 @@
 ---
 title: "capture-oracle.cjs never caught anything, so it fails the retention rule it was kept under"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -10,7 +10,7 @@ sprint-readiness: ready
 started:
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-capture-oracle-never-caught-anything
 issue:
 pr:
 mod-block:
