@@ -14,6 +14,11 @@ question.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../prfaq.md",
+      "trigger": "captain_gate_presentation",
+      "receipt": null
+    },
+    {
       "path": "../../delivery-branch-base.md",
       "trigger": "delivery_artifact_review",
       "receipt": null
@@ -46,7 +51,6 @@ Future close measurements stay `pending` through approval. Outcome acceptance
 is not completed cleanup: follow `continue-dev-flow` Advance, then run the
 guard's read-only `check-final` against the archived task.
 
-- mark up the work item's press release, following the shared core's `## Communication`;
 - observed journey result and artifact revision;
 - result of the critical-risk check;
 - cleanup status;

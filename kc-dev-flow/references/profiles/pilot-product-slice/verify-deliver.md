@@ -14,6 +14,11 @@ data safety, and deliver it through the repository's declared authority.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../prfaq.md",
+      "trigger": "captain_gate_presentation",
+      "receipt": null
+    },
+    {
       "path": "../../delivery-branch-base.md",
       "trigger": "delivery_artifact_review",
       "receipt": null
@@ -39,7 +44,6 @@ data safety, and deliver it through the repository's declared authority.
 
 ## Required output
 
-- mark up the work item's press release, following the shared core's `## Communication`;
 - when the receipt declares `semantics_unchanged: true`, the named
   `equivalence_instrument` observed to fail against
   `equivalence_instrument_failure`, the case it must flag;
