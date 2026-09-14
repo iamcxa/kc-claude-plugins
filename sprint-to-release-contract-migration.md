@@ -42,6 +42,17 @@ gates:
                 id: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-2:revision-1
                 digest: sha256:99bbaef973a576be53fb75f38d7402302f463202de5d24ed9ac6b6bd1c3757d9
                 room-ref: ./sprint-to-release-contract-migration/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:tjxctad7413wyp3acfx8wzzp:backlog:2
+                briefing: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-14T14:18:19.027062Z"
+                decision: approve
+                reason: 'Captain said ok to the re-admission under the corrected scope: name the execution group release, scalar, so a journey release slice lands in a field instead of prose. The seed carries the rescoped problem, accepted outcome, non-goals, AC-1..AC-5 and a v3 POC receipt whose falsifier is the journey release id''s uniqueness across the repository.'
+              application:
+                target-stage: ideation
+                state: pending
         - id: gate:tjxctad7413wyp3acfx8wzzp:validation
           stage: validation
           attempts:
