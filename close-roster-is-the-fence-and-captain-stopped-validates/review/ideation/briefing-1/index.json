@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8ekqymrkgz5f9y0h8qaf6vp2:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation shape for 8e — fence-scoped task set (AC-1) + captain_stopped merged_sha exemption (AC-2) — to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:8ekqymrkgz5f9y0h8qaf6vp2:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2243d7cd622381d1275b5f6542ae43665914c0ff/close-roster-is-the-fence-and-captain-stopped-validates.md",
+      "rev": "sha256:f41b03b88b4925ab94159055693eb09cb180bf6869945fdfcc9755b0259f8732",
+      "mediaType": "text/markdown",
+      "summary": "Shape traces both bugs to exact close.py/uat-doc.py/schema locations: AC-1 scopes run_close's task set to fence keys (dropping sprint-matched-but-undispatched entities, stderr 'not dispatched' skip); AC-2 adds a closed:captain_stopped marker build_receipt writes and validate_receipt's bad_sha accepts only alongside null merged_sha, schema widened to allow null+optional closed enum. Observable semantics change declared (batch-membership test, receipt shape) — not semantics_unchanged. Stop numbers: 8 files / 150 lines against main@625c6b50. AC-3 (no real SHAs, no duplicated fixtures) is a build-time constraint on the two new fixtures named in the where-it-touches table; not yet evidenced because no fixture exists until implementation."
+    }
+  ]
+}
