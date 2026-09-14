@@ -45,6 +45,17 @@ gates:
                 id: briefing:n2wd7aavte2k7p7nfj3aa2r5:validation:attempt-1:revision-1
                 digest: sha256:a7ab82eaae46bc0ea1ce34b27bd31e073ead05c836fa428b38b93e6fcefdf56c
                 room-ref: ./mermaid-sequence-companion-has-no-repeatable-check/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:n2wd7aavte2k7p7nfj3aa2r5:validation:1
+                briefing: briefing:n2wd7aavte2k7p7nfj3aa2r5:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T09:12:56.795946Z"
+                decision: approve
+                reason: 'POC outcome accepted. The Captain ruled in chat 2026-09-14 「不用再跑，codex 單獨跑過可以用」: no second fresh validation worker, and the Mermaid sequence companion is accepted as working at cfb804d. AC-2/3/4 hold on the implementation receipt; AC-1''s failure is a pre-existing declaration-file gap the FO re-derived on origin/main and is not this PR''s defect; AC-5 stays an open ask against PR #440. The Captain also ruled 「型別檢查修復」, which the FO carries forward as a separate item. This POC produced no candidate; PR #440 remains Draft and unruled.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid
