@@ -1,6 +1,6 @@
 ---
 title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
-status: validation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
