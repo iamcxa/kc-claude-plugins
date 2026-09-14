@@ -70,6 +70,20 @@ gates:
                 id: briefing:8ekqymrkgz5f9y0h8qaf6vp2:validation:attempt-1:revision-1
                 digest: sha256:4c080e08cb1a3b9463174dae81532d49d6e8b1e56c39e710f09e141a411f9aa4
                 room-ref: ./close-roster-is-the-fence-and-captain-stopped-validates/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8ekqymrkgz5f9y0h8qaf6vp2:validation:1
+                briefing: briefing:8ekqymrkgz5f9y0h8qaf6vp2:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T22:54:24.187723Z"
+                decision: approve
+                reason: 'ship FO verification at PR #455 head e828c9b1 on macOS: close.test.py and uat-doc.test.py pass; re-closing the real r3 batch with this close.py regenerates a receipt that validates (closed: captain_stopped on the two Captain-closed tasks); the AC-1 deviation (keep merged tasks lacking a fence entry) is disclosed and accepted. Approve to done; merge stays with the Captain.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: done
+                state: pending
 ---
 
 bite: 2026-09-15, `python3 kc-ship-flow/scripts/close.py ship-cloud-wrapper-r3 --dev-state … --ship-state …` at main 625c6b50. (1) It exited 3 `not all tasks merged` because three entities carrying `sprint: ship-cloud-wrapper-r3` with `sprint-readiness: defer` — never dispatched, absent from the fence — were counted as batch tasks; the ship FO had to move them to another sprint to close. (2) After that, `close.py --validate` refused the receipt it had just written: the two `captain_stopped` tasks (PRs #446 and #450, closed unmerged by the Captain) carry `merged_sha: null`, and #448's 40-hex rule has no exemption for them, so the first receipt the new validator ever saw failed on its own rule. The receipt was committed with the refusal disclosed.
