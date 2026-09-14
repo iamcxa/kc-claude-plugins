@@ -26,6 +26,20 @@ gates:
                 id: briefing:8ekqymrkgz5f9y0h8qaf6vp2:backlog:attempt-1:revision-1
                 digest: sha256:a4abe55b7f086322b4f438e04bcced96ed7fed0cd2fabbb3fdfb4994c786de58
                 room-ref: ./close-roster-is-the-fence-and-captain-stopped-validates/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:8ekqymrkgz5f9y0h8qaf6vp2:backlog:1
+                briefing: briefing:8ekqymrkgz5f9y0h8qaf6vp2:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T22:30:03.889959Z"
+                decision: approve
+                reason: 'backlog admission on the batch conn: brief carries bite, consumer, AC-1..4, non-goals, route-back. Enter ideation.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 bite: 2026-09-15, `python3 kc-ship-flow/scripts/close.py ship-cloud-wrapper-r3 --dev-state … --ship-state …` at main 625c6b50. (1) It exited 3 `not all tasks merged` because three entities carrying `sprint: ship-cloud-wrapper-r3` with `sprint-readiness: defer` — never dispatched, absent from the fence — were counted as batch tasks; the ship FO had to move them to another sprint to close. (2) After that, `close.py --validate` refused the receipt it had just written: the two `captain_stopped` tasks (PRs #446 and #450, closed unmerged by the Captain) carry `merged_sha: null`, and #448's 40-hex rule has no exemption for them, so the first receipt the new validator ever saw failed on its own rule. The receipt was committed with the refusal disclosed.
