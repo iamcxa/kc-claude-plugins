@@ -53,6 +53,14 @@ canvas and `agent-browser`; it is not a dependency-free fallback.
 - Board: `http://localhost:3737/?room=<slug>`
 - Doc API: `http://127.0.0.1:5858` (loopback only)
 
+Browser tabs show `<journey title> | tldraw canvas`. Rendering copies the YAML
+`title` into tldraw's native document name; changing that name updates connected
+tabs without a reload. An empty name falls back to the room identifier. Room
+storage and `.tldr` exports preserve native names, while re-rendering restores the
+YAML title (or clears the name when the YAML has no title). Native renames do not
+write back to YAML. For isolated local checks, `VITE_JOURNEY_API_URL` can point the
+client at a separate `JOURNEY_API_PORT` server.
+
 Open the live canvas for normal review; Process step 5 in `SKILL.md` owns visual
 verification and optional PNG output. A native `.tldr` backup preserves unread canvas
 edits and is separate from image output. Read back or preserve those edits before

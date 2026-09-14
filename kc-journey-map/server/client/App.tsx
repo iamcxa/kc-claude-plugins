@@ -1,10 +1,24 @@
 // Adapted from tldraw's `templates/simple-server-example` (MIT).
 import { useSync } from '@tldraw/sync'
+import { useEffect, useSyncExternalStore } from 'react'
 import { Editor, TLAssetStore, TLShape, Tldraw, serializeTldrawJson } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { storyBorder } from '../../lib/records.mjs'
 
-const SERVER_URL = `http://localhost:5858`
+const SERVER_URL = import.meta.env.VITE_JOURNEY_API_URL || 'http://localhost:5858'
+
+function subscribeToLocation(onChange: () => void) {
+	window.addEventListener('popstate', onChange)
+	return () => window.removeEventListener('popstate', onChange)
+}
+
+function syncDocumentTitle(editor: Editor, roomId: string) {
+	const update = () => {
+		document.title = `${editor.getDocumentSettings().name.trim() || roomId} | tldraw canvas`
+	}
+	update()
+	return editor.store.listen(update, { scope: 'document' })
+}
 
 const noAssets: TLAssetStore = {
 	async upload() {
@@ -36,12 +50,19 @@ function syncStoryBorders(editor: Editor) {
 }
 
 export default function App() {
-	const roomId = new URLSearchParams(window.location.search).get('room') || 'default'
+	const search = useSyncExternalStore(subscribeToLocation, () => window.location.search)
+	const roomId = new URLSearchParams(search).get('room') || 'default'
+	return <RoomCanvas key={roomId} roomId={roomId} />
+}
 
+function RoomCanvas({ roomId }: { roomId: string }) {
 	const store = useSync({
 		uri: `${SERVER_URL}/connect/${roomId}`,
 		assets: noAssets,
 	})
+	useEffect(() => {
+		if (store.status !== 'synced-remote') document.title = `${roomId} | tldraw canvas`
+	}, [roomId, store.status])
 
 	return (
 		<div style={{ position: 'fixed', inset: 0 }}>
@@ -51,7 +72,9 @@ export default function App() {
 				onMount={(editor) => {
 					;(window as any).editor = editor
 					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
-					return syncStoryBorders(editor)
+					const stopBorders = syncStoryBorders(editor)
+					const stopTitle = syncDocumentTitle(editor, roomId)
+					return () => { stopBorders(); stopTitle() }
 				}}
 			/>
 		</div>
