@@ -1,6 +1,6 @@
 ---
 title: "The POC close path has never been walked end to end, and two defects sit on it"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: dev-flow-poc-close-path
 sprint-readiness: ready
 started:
-completed:
-verdict:
+completed: 2026-09-14T10:37:42Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-poc-close-path-never-walked
 issue:
 pr: pr-merge:443
-mod-block: merge:pr-merge
+mod-block:
 id: xve5t292zy54mncx0xm6m3v0
 gates:
     version: 1
@@ -83,7 +83,8 @@ gates:
                 reason: 'Captain approved in chat 2026-09-14 on the FO gate presenting candidate 21a6ffeb: cycle 2 confirmed his ruled deletion of poc_non_goals_refused broke nothing, both fixes were re-falsified and re-passed independently of the build and of the FO, and no residual was carried forward. The gate question also authorized the Draft PR.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T10:37:42Z
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
