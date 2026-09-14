@@ -1,6 +1,6 @@
 ---
 title: "Retire the provider-backed planning path, so dev-flow's only intake is a committed brief"
-status: ideation
+status: implementation
 source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved the ideation shape and took the recommended disposition of both residuals. Residual 1: move live_item and delivery_binding into docs/plan-flow before deleting linear-admission.py, so plan-lint.py''s L4 rule carries its own logic instead of reaching back into kc-dev-flow; AC-2 is read with that move as its precondition, not as a carve-out. Residual 2: the leave-delivery-untouched non-goal wins — the provider-backed delivery clauses in pr-delivery.md and pr-merge-extension.md stay, and AC-3 is read as scoped to intake, not delivery.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
