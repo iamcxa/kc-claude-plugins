@@ -1,6 +1,6 @@
 ---
 title: Plan a release from journey-board decisions into a development brief
-status: validation
+status: done
 product: kc-journey-map
 source:
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: S2
 sprint-readiness: ready
 started: 2026-09-11T05:56:22Z
-completed:
-verdict:
+completed: 2026-09-14T08:23:22Z
+verdict: PASSED
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/tacoma/.context/worktrees/journey-release-planning
 issue:
 pr: pr-merge:419
-mod-block: merge:pr-merge
+mod-block:
 id: r1fa7xv14afj9npcfe1wbx76
 gates:
     version: 1
@@ -74,7 +74,8 @@ gates:
                 reason: Kent approved the presented validation result for exact candidate 74fe23086e4e34c5e288c46a43c6d559bd89ebf2 and proceeding to delivery preparation. Live UI/canvas/native admission limitations remain disclosed; code push, Draft PR creation and merge remain separately authorized.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T08:23:22Z
 ---
 
 ## The problem
