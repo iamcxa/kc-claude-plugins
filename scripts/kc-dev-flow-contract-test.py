@@ -108,7 +108,6 @@ required = [
     "kc-dev-flow/scripts/check-pr-title.py",
     "kc-dev-flow/scripts/check-pr-title.test.py",
     "kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv",
-    "kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
@@ -487,7 +486,6 @@ expected_manifest_resources = {
     "scripts/linear-admission.py",
     "scripts/check-pr-title.py",
     "scripts/fixtures/pr-title/release-please-verdicts.tsv",
-    "scripts/fixtures/pr-title/capture-oracle.cjs",
     "skills/adopt-dev-flow/SKILL.md",
     "skills/continue-dev-flow/SKILL.md",
 } | {

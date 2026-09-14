@@ -347,12 +347,11 @@ separately re-derived against `17.11.1` -- the version `subspace-relay` pins
 **Version-skew stop condition.** A mismatch between the adopter's installed
 release-please version and the fixture's captured version, or a reported
 adopter skew, is a stop, not a skip: do not trust the self-test and do not
-re-derive the fixture from an adopter checkout. `capture-oracle.cjs`'s own
-comment states its runtime lives at this repository's root, not under the
-installed `kc-dev-flow` package, so an adopter checkout cannot run it --
-re-derivation is structurally a `kc-dev-flow` maintainer action. Report the
-skew upstream to `kc-dev-flow` instead of assuming agreement across
-versions.
+re-derive the fixture from an adopter checkout -- re-derivation reaches the
+parser directly out of this repository's own
+`scripts/fixtures/release-please-runtime`, so it is structurally a
+`kc-dev-flow` maintainer action. Report the skew upstream to `kc-dev-flow`
+instead of assuming agreement across versions.
 
 ### Delivery topology decision
 
