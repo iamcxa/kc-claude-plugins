@@ -191,7 +191,9 @@ A single released-body pin can't describe every adopter's Spacedock mod version 
 - `pr-merge-portable-delivery.test.py`: 16/16 checks passed (exit 0); released-body bytes in both fixtures unchanged.
 
 ---
-[th](/iamcxa/kc-claude-plugins/blob/44d478f8/docs/dev/.spacedock-state/pr-merge-released-body-pin-per-mod-version.md)
+[th](/iamcxa/kc-claude-plugins/blob/7b2dc88f02096969eaa5dc1747e9a0fbb25ce4d8/pr-merge-released-body-pin-per-mod-version.md)
+
+Candidate: 92d79cd21a5f130f2fdbbf01cd9ec2159efb4ec7
 ```
 
 Residuals and without-it unanswered are both omitted — neither this validation stage nor the implementation stage report flagged an item for either section. No `issue:` is set in frontmatter, so no `Closes` line.
