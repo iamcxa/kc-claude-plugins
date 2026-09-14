@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fgvjsq1wsftn2r6ay4yxp2q1:validation:attempt-1:revision-1",
+  "question": "Approve entity for delivery: PR #448 (Draft) resolves merged_sha via gh pr view, fixes worker-vs-FO debrief matching, and tightens --validate/schema per AC-1..AC-4, with both test suites green and no real repo SHA in fixtures. Approve to leave the validation gate consumed as approved-awaiting-merge (Draft PR stays open; no merge/ready taken here)?",
+  "artifacts": [
+    {
+      "id": "artifact:fgvjsq1wsftn2r6ay4yxp2q1:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e14091628455e6fe5ed727e85e1059f291065af9/ship-close-records-merged-sha-and-worker-debrief.md",
+      "rev": "sha256:559c49d3afd951a06ea0cc3985d23b5bed19e11d7b6e66059e3cce5a21f4570a",
+      "mediaType": "text/markdown",
+      "summary": "Validation (fresh ensign) re-verified AC-1..AC-4 directly against candidate feeb97ce (not restated from ideation): close.test.py 19/19 and uat-doc.test.py both pass; gh-backed merged_sha resolver, Shipped-section debrief matcher, and validate_receipt's 40-hex gate all read as designed; grep for 40-hex values in fixtures/close-v2 resolves to no real object in this repo (independently re-checked against the PR's actual diff: only abc123.../def303.../def404... synthetic values). Draft PR #448 opened through the pr-merge mod with the required What changed/Evidence/Residuals/without-it-unanswered sections and a literal Candidate line; base main, head spacedock-ensign/ship-close-records-merged-sha-and-worker-debrief; 0 PR comments; all 3 CI checks green (GitGuardian, multi-profile route gate, version parity); no merge or ready-for-review action taken. Residuals named in the PR body: gh timeout path untested, ambiguous multi-worker Shipped-match ordering, and a transient-null window between build_receipt and --validate. Carried-forward, non-blocking format gap: the entity's own Work profile receipt YAML lacks the work_profile: wrapper key surface-map-check.py's loader expects."
+    }
+  ]
+}
