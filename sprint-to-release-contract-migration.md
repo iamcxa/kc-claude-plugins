@@ -68,3 +68,40 @@ documents which word means the grouping field and which means the deleted route 
 
 The accepted outcome or non-goals changed. Stop and return a structured planning delta that names
 the changed premise, affected acceptance evidence, and recommended change or stop.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    Kent selected Pilot on 2026-09-14. The contract change stays in the package
+    permanently rather than being a disposable experiment, and adopters are
+    expected to migrate one at a time. No consumer must act to take the new
+    version, so no Production compatibility trigger fires.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Keep the grouping field distinct from the deleted `release` route step and from the Linear Project release package named by `planning-outcome`.
+      - Leave the Spacedock schema untouched; the field stays a workflow-owned permissive addition.
+      - Decide the second key pair's exact names before implementation, and record which one the loader reports in a refusal.
+    implementation:
+      - Change only the loader's frontmatter reading and the package documents that state the grouping contract.
+      - Migrate this repository's own `docs/dev` records and ROADMAP headings; leave other adopters unmigrated.
+    testing:
+      - Cover the three frontmatter cases named in AC-1 to AC-3 in the existing loader tests.
+      - Run the existing loader and route test suites; add no standing CI lane.
+  scope_boundary: >-
+    The accepted outcome and complete non-goal list in this task remain unchanged.
+    Excludes Spacedock schema or refit changes, planning-provider semantics,
+    automatic migration of other adopters, and reviving the deleted release route step.
+  semantics_unchanged: false
+  promote_when:
+    - An adopter must edit owned records or configuration to take the new version.
+    - The deleted `release` route step or a Spacedock canonical field enters scope.
+  decision:
+    authority: Kent (Captain)
+    at: 2026-09-14T00:00:00Z
+```
