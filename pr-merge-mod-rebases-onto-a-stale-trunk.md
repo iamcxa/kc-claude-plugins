@@ -1,6 +1,6 @@
 ---
 title: "The pr-merge mod's delivery step syncs the wrong branch and rebases onto a stale local trunk"
-status: backlog
+status: ideation
 source: Captain ruling 2026-09-14 in FO session, after the defect bit during PR #444 delivery
 product: repo-platform
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain said 派 for both ready items, after selecting POC and opening repo-platform/S2 for this one. The seed carries the problem with the observed PR #444 evidence, accepted outcome, non-goals, AC-1..AC-4 and the v3 POC receipt.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
