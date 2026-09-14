@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8ekqymrkgz5f9y0h8qaf6vp2:validation:attempt-1:revision-1",
+  "question": "Approve validation for 8e — PR #455 (Draft, candidate e828c9b1) — to enter done?",
+  "artifacts": [
+    {
+      "id": "artifact:8ekqymrkgz5f9y0h8qaf6vp2:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0788e48ede39416e6170dda79bbcdaa8aa93233e/close-roster-is-the-fence-and-captain-stopped-validates.md",
+      "rev": "sha256:179b25f4c040e7b9837feebb9e264666f49f6b044d2b1e3fdb78bbd01857124b",
+      "mediaType": "text/markdown",
+      "summary": "All 3 test suites (close.test.py, pin.test.py, uat-doc.test.py) pass at candidate e828c9b12384365e4b68c99cc37b56ec82538a63 (parent 625c6b50). Draft PR #455 opened via pr-merge mod, base main \u003c- spacedock-ensign/close-roster-is-the-fence-and-captain-stopped-validates, clean merge-tree preflight, title passes check-pr-title.py. AC-1 satisfied with a disclosed deviation: filter_dispatched_tasks keeps an already-merged-but-unfenced slug (not fence-key-only) to avoid regressing the existing #448 DEV-304 fixture; r3 falsification replay still passes. AC-2 (captain_stopped merged_sha exemption, single _sha_ok or-clause, schema widened) evidenced in the implementation stage report and independently reverified. AC-3 confirmed: two new fixtures diff clean against nearest existing siblings, fake SHAs only. Comment density 8.5% vs 3% baseline, all 9 comments explain non-obvious why (reviewed individually, none narrate the diff). pr: field set to 455. Residuals: none. Without-it unanswered: none."
+    }
+  ]
+}
