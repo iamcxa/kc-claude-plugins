@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-sprint-to-release-contract-migration
 issue:
-pr: 454
+pr: pr-merge:454
 mod-block: merge:pr-merge
 id: tjxctad7413wyp3acfx8wzzp
 gates:
