@@ -1,0 +1,25 @@
+# release-please-verdicts.tsv
+# Captured 2026-09-12 from release-please 17.3.0, this repository's own
+# lockfile at scripts/fixtures/release-please-runtime/ (run `npm ci` there
+# first). Agreement with subspace-relay's 17.11.1 pin on these rows is a
+# separate 2026-09-12 observation, recorded in
+# kc-dev-flow/references/pr-merge-extension.md, "The title rule's oracle" --
+# not re-derived by this file's capture command.
+# Re-derive after any release-please version bump, or on a reported adopter
+# skew, with:
+#   node kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs > \
+#     kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv
+# columns: subject<TAB>verdict(parses|drops)<TAB>reason
+feat(): x	drops	empty scope; a (\w+)(\(.*\))?!?: regex would pass it -- the dangerous direction
+Revert "feat: x"	drops	reverts read as prose, not as a type
+feat x	drops	no colon delimiter
+Add a thing	drops	no conventional-commit type prefix
+feat:x	parses	no space after the colon is still a commit
+FEAT: x	parses	the type is not case-normalised before parsing
+feat: 	parses	an empty description still parses
+  feat: x	parses	leading whitespace is tolerated
+feat(two words): x	parses	scope content is unconstrained
+feat(a)!: x	parses	breaking marker
+fix(a,b): x	parses	comma in scope is unconstrained content
+chore(deps): bump x	parses	refusing a correctly non-releasing type moves the judgement call back to draft time
+docs(dev): state the rule	parses	same reasoning as chore
