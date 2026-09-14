@@ -48,6 +48,17 @@ gates:
                 id: briefing:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-1:revision-1
                 digest: sha256:64149f3a3ef7033272e25949d0d91406e3d8e105ddd37a66a50f092e20ef7ce3
                 room-ref: ./ship-dispatch-env-file-resume-and-gate-authority/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:0dg522wbqd0jpd2jeg8tjq4m:validation:1
+                briefing: briefing:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T13:50:44.082566Z"
+                decision: revise
+                reason: 'dispatch.test.sh at 18addead on macOS: 13 passed, 3 failed (cases k, l, l2 — every --resume case): ''no git worktree found at <repo>/.worktrees/...; cannot resolve resume branch''. resolve_branch_for_worktree compares $repo_root/$wt_field (logical path, /tmp/...) with ''git worktree list --porcelain'' (physical path, /private/tmp/...), so any symlinked checkout — the Captain''s machine — fails. Fix by comparing physical paths or resolving the branch from the worktree itself; add a symlinked-path case to the suite. Also: 21 comment lines in 178 added dispatch.sh lines (11.8%, baseline 3%) — delete the ones that narrate the code; entity pr field is ''"#445"'', must be bare 445.'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
 ---
 
 On 2026-09-14 (qnow `qnow-clerk-poc`, DEV-146) the Captain provisioned Clerk keys mid-task. Conductor CLI 0.85.0 accepts environment variables only at `conductor workspace create --env KEY=VALUE` (repeatable); `session create` has none and an existing workspace cannot take new ones. The ship FO had to create a second workspace by hand from the task's branch with a hand-written resume boot, because `dispatch.sh` 0.2.0 has no credential surface and no resume mode. On 2026-09-11 (`ship-dispatch-watch-round-2`, task 7z) the Captain's chat approval and the worker's conn-delegated record collided on one gate attempt; today's batch proved the rule that holds: the ship FO records with the Captain's words, workers sync state by merge (never rebase) and never record.
