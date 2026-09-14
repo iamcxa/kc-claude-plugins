@@ -5,7 +5,7 @@ source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
-sprint: ship-cloud-wrapper-r3
+sprint: ship-cloud-wrapper-r4
 sprint-readiness: defer
 started:
 completed:
