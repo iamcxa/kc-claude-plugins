@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T13:43:29Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-sprint-to-release-contract-migration
 issue:
 pr:
 mod-block:
