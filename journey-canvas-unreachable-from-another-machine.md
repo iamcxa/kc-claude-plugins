@@ -122,3 +122,203 @@ work_profile:
     - The canvas is exposed to an untrusted network or beyond the operator's own machines.
     - Any access control, credential, or tenancy boundary is accepted.
 ```
+
+## Ideation: proxy the sync path through Vite, derive the client URL from the page origin
+
+Decision: keep the document API bound to `127.0.0.1`; add `server.allowedHosts: [hostname()]` and a
+`server.proxy` entry for `/connect` (`ws: true`) to `kc-journey-map/vite.config.mts`; change
+`server/client/App.tsx`'s `SERVER_URL` fallback from the hardcoded `http://localhost:5858` to the
+page's own origin (`${window.location.protocol}//${window.location.host}`); keep
+`VITE_JOURNEY_API_URL` with its current override meaning. All four pieces were exercised live, not
+just designed on paper (see Evidence below).
+
+**Worktree staleness flag for build.** This dispatch's worktree (`montpellier-v1`) has
+`kc-journey-map` checked out at `7b103a10`, which predates the `VITE_JOURNEY_API_URL` fallback
+entirely — `server/client/App.tsx` there reads `const SERVER_URL = \`http://localhost:5858\`` with no
+env override, contradicting this task's own "verified facts" section. `origin/main` (`e3cca913`) has
+the fallback exactly as the entity file states. All reproduction and design work below reads and runs
+against `origin/main` content in a disposable worktree (`git worktree add /tmp/journey-repro
+origin/main`), not this dispatch's stale checkout. The build stage must confirm it starts from an
+up-to-date checkout before touching these files, or it will silently re-add the fallback as new work.
+
+### Reproduction (both failures, real error text)
+
+Set up: `git worktree add /tmp/journey-repro origin/main`, `npm install`, then ran the doc API and
+Vite dev server directly (not through the `canvas` npm script, to pick non-default ports and stay off
+the live canvas already running on 5858/3737 in this environment) — `JOURNEY_API_PORT=15858 npx tsx
+server/canvas-server.ts` and `npx vite dev --host --port 13737 --strictPort`.
+
+1. **Vite host rejection**, reproduced with a Host header naming an unrelated/VM-style hostname
+   against the LAN-reachable listener:
+   ```
+   curl -i http://10.222.107.198:13737/ -H "Host: some-remote-vm.example.com:13737"
+   HTTP/1.1 403 Forbidden
+   Blocked request. This host ("some-remote-vm.example.com") is not allowed.
+   To allow this host, add "some-remote-vm.example.com" to `server.allowedHosts` in vite.config.js.
+   ```
+   Refinement over the entity's causal chain: the **same request with a bare IP Host header returns
+   200**, not 403 — Vite's own `allowedHosts` check exempts IP literals; it only blocks DNS/mDNS
+   hostnames. AC-1 says the operator opens the board "over host A's hostname," so this failure is
+   real and does need fixing, but a URL built from a raw IP would already load the page today with
+   zero config change (it would still hit failure 2 below).
+2. **Sync socket failure**, reproduced from a genuinely separate network namespace (a Docker
+   container standing in for host B, not this machine's own loopback) fetching the served bundle and
+   then opening the same URL the browser would:
+   ```
+   curl http://10.222.107.198:13737/App.tsx | grep SERVER_URL
+   const SERVER_URL = import.meta.env.VITE_JOURNEY_API_URL || "http://localhost:5858";
+   ```
+   ```
+   docker run --rm node:22-alpine node -e "
+     const ws = new WebSocket('ws://localhost:5858/connect/default');
+     ws.onerror = (e) => { console.log('ERROR', e.message || e.type); process.exit(0); };
+   "
+   ERROR Received network error or non-101 status code.
+   ```
+   `localhost:5858` inside the container resolves to the container itself, not host A — exactly the
+   defect the entity file names: the browser's own machine has nothing listening on 5858.
+
+### Evidence tier (checklist item 2)
+
+No true second physical machine or VM was available in this environment. What was used: a Docker
+container (`curlimages/curl`, `node:22-alpine`) as host B — a genuinely separate network namespace,
+reachable only over this machine's LAN IP (`10.222.107.198`), not loopback. This is the "equivalent
+isolation" tier the checklist names, weaker than a literal second machine but stronger than loading
+over this machine's own LAN hostname from itself (which would still resolve `localhost` inside the
+*server's* process correctly and could mask the bug). **Label this as container-equivalent evidence,
+not a two-machine run**, in any receipt built on top of this report. The build stage should use the
+same container recipe (documented above, reusable verbatim) unless a real second machine or VM
+becomes available, in which case that is strictly better evidence for the same claim.
+
+### Design, verified live in the scratch worktree
+
+Added to `vite.config.mts` (scratch copy only, reverted after testing — no code changed in this
+stage):
+```ts
+import { hostname } from 'node:os'
+...
+server: {
+  port: 3737,
+  allowedHosts: [hostname()],
+  proxy: { '/connect': { target: 'http://127.0.0.1:15858', ws: true } },
+},
+```
+Restarted Vite with this config, then from the same container:
+```
+docker run --rm node:22-alpine node -e "
+  const ws = new WebSocket('ws://10.222.107.198:13737/connect/proxytest');
+  ws.onopen = () => { console.log('OPEN via proxy - SUCCESS'); };
+"
+OPEN via proxy - SUCCESS
+```
+and the loopback-bound doc API immediately showed the room: `curl 127.0.0.1:15858/health` ->
+`"rooms":["proxytest"],"active":[{"roomId":"proxytest","sessions":1,...}]`. The proxy correctly
+forwards the WebSocket upgrade for `/connect`, not just plain HTTP — Vite's `proxy` entry with
+`ws: true` handles the upgrade itself; no second config block is needed for the WS case.
+
+**Client URL derivation (checklist item 4).** `useSync`'s `ClientWebSocketAdapter` calls
+`httpToWs(uri)` (`uri.replace(/^http(s)?:/, 'ws$1:')`) before opening the socket
+(`node_modules/@tldraw/sync-core/dist-cjs/lib/ClientWebSocketAdapter.js:371,519`), so passing an
+`http(s)://` origin — not a `ws(s)://` one — is correct and matches today's code shape. Replace the
+`App.tsx` fallback:
+```ts
+const SERVER_URL = import.meta.env.VITE_JOURNEY_API_URL || `${window.location.protocol}//${window.location.host}`
+```
+`VITE_JOURNEY_API_URL` **kept**, same meaning, same precedence (`||`, left side wins when set). No
+two-sources-of-truth risk: when the env var is unset there is exactly one computed value (the page's
+own origin); the proxy is transport-level infrastructure the client never has an opinion about. When
+the env var *is* set, it bypasses the proxy entirely and talks straight to that URL, exactly as it
+does today — unchanged behavior for anyone already relying on it.
+
+**allowedHosts value (checklist item 5, AC-6).** `[hostname()]` — verified this machine's
+`os.hostname()` is `KentMacBookPro-2.local`; a request with that exact Host header returns 200, and
+an unrelated hostname (`attacker.example.com`) still returns 403 against the same running server.
+One sentence: it admits exactly the one DNS name that legitimately resolves to this operator's own
+machine and nothing else, which is acceptable for an unauthenticated local dev tool because the
+resulting exposure shape is identical to what `--host` already accepts on the LAN today — not wider.
+Rejected `allowedHosts: true`: it would accept *any* Host header, which does not just extend LAN
+reachability — it removes Vite's DNS-rebinding protection outright, so a malicious page loaded in the
+operator's own browser from *any* network could use DNS rebinding to make same-origin requests
+against the loopback-bound dev server regardless of who else is on the LAN. `[hostname()]` does not
+have that property because the attacker cannot make their DNS resolve to the operator's literal
+`os.hostname()` string and also pass the Host check by coincidence.
+
+**Companion change needed for AC-1 to be reachable at all (not yet in the entity's file list, naming
+it here for build):** `server/canvas-server.ts`'s startup log currently prints
+`` `canvas: http://localhost:3737/?room=${DEFAULT_ROOM}` `` — a hardcoded loopback URL. That is "the
+URL the agent hands out." It must be changed to use the same `hostname()` value the `allowedHosts`
+entry admits, or the operator is handed a URL that fails before even reaching the host check.
+
+### Blast radius (checklist item 6)
+
+`scripts/canvas-smoke.sh`, `lib/journey-render.mjs`, and `lib/journey-read.mjs` all talk to the doc
+API directly as same-machine Node processes — `fetch(`http://127.0.0.1:${port}/doc...`)` — and never
+go through Vite. Read each file; none references `SERVER_URL`, `VITE_JOURNEY_API_URL`, or a Vite
+port. The proxy and `allowedHosts` changes are Vite-only and client-only; **none of the three need
+adjusting.**
+
+### AC-3 falsifier (checklist item 7)
+
+With the design in place, a direct request from the container to the doc-API's LAN address is
+refused (times out — no listener on that interface):
+```
+docker run --rm curlimages/curl:latest -m 5 -w "exit=%{exitcode}\n" http://10.222.107.198:15858/health
+exit=28
+```
+Mutation shown live, then discarded: temporarily changed the scratch copy's
+`app.listen({ port: PORT, host: '127.0.0.1' })` to `host: '0.0.0.0'`, ran it on a disposable port, and
+the identical container request succeeded — `{"ok":true,...}` (200). This confirms the falsifier
+actually discriminates a widened bind from the accepted one, not just a network fluke. The mutant file
+was reverted from a backup immediately after (`git diff` on the scratch worktree is clean); no code
+change was made to any tracked repository.
+
+### Incident during reproduction — disclosed, contained, no data loss
+
+While killing my own scratch background processes I ran `pkill -f "tsx watch
+./server/canvas-server.ts"` without scoping it to my process, which also matched and killed an
+unrelated, already-running doc-API server belonging to a live canvas session in
+`tacoma/.context/worktrees/journey-release-planning/kc-journey-map` (room
+`beirut-local-web-gate-review-20260914`, 2 active sessions at the time). I restarted the same command
+in that exact directory within seconds. Room state there is SQLite-backed
+(`server/rooms.ts:23`, files confirmed on disk at `.rooms/*.db`), not in-memory only, so no document
+data was lost — the health check now shows both of that workspace's rooms present with active
+sessions reconnected. The only user-visible effect was a momentary WebSocket disconnect/reconnect for
+whoever was viewing that board. Flagging this so Kent knows it happened; no further action taken
+against that workspace.
+
+## Stage Report: ideation
+
+- DONE: Reproduced both failures with real error text — Vite's 403 `Blocked request... allowedHosts`
+  against a VM-style hostname, and the sync socket's `Received network error or non-101 status code`
+  from a genuinely separate network namespace — before designing anything.
+- DONE: Named the evidence tier plainly: no real second machine/VM was available; a Docker container
+  (separate network namespace, LAN-reachable only) stood in for host B, labeled as container-equivalent,
+  not a two-machine run.
+- DONE: Designed and live-verified the reachability path — `allowedHosts: [hostname()]` plus a Vite
+  `proxy` entry for `/connect` with `ws: true` — including an actual WebSocket opened through the
+  proxy from the container and landing in the loopback-bound doc API's room list.
+- DONE: Decided the client URL derivation (`window.location` origin) and ruled `VITE_JOURNEY_API_URL`
+  kept with unchanged precedence and meaning; verified `useSync`'s `httpToWs` conversion makes an
+  `http(s)://` origin the correct value to pass, matching today's code shape.
+- DONE: Chose `allowedHosts: [hostname()]`, justified in one sentence, verified live (matching
+  hostname passes, unrelated hostname still 403), and named the concrete attacker capability a
+  wildcard/`true` value would add that this narrower value does not.
+- DONE: Checked blast radius — `canvas-smoke.sh`, `journey-render.mjs`, `journey-read.mjs` all reach
+  the API directly over loopback as same-machine processes, none touch Vite; confirmed by reading
+  each file, none need adjusting.
+- DONE: Demonstrated the AC-3 falsifier live — direct off-machine request to the API port times out
+  under the accepted design; the same request against a temporarily widened bind (`0.0.0.0`, scratch
+  copy, discarded after) succeeds, proving the falsifier discriminates.
+- DONE: Wrote this shaping report into the entity's ideation room. No code was changed in any tracked
+  repository; all edits during this stage were to a disposable `/tmp/journey-repro` worktree, reverted
+  before this report was written.
+
+### Summary
+
+The fix is a Vite-side proxy plus a narrow `allowedHosts` allowlist and a same-origin client URL —
+three small, already-verified-working pieces, not a redesign. The document API's loopback bind is
+untouched and its refusal was demonstrated under both the accepted design and a discarded widened-bind
+mutant. The one operational note beyond the ACs: the "URL the agent hands out" (currently hardcoded to
+`localhost` in `canvas-server.ts`'s startup log) must change alongside `allowedHosts`, or the fix is
+unreachable from the first URL the operator sees. Evidence throughout is container-equivalent, not a
+two-machine run — named plainly per the honesty bar, since no second machine was available here.
