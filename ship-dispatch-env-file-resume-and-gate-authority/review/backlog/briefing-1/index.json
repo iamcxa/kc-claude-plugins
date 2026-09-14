@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:0dg522wbqd0jpd2jeg8tjq4m:backlog:attempt-1:revision-1",
+  "question": "Approve backlog scope: dispatch.sh gains --env-file credential passthrough, --resume for fresh-workspace resume, updated boot-header gate-authority wording, contract coverage, and dry-run rehearsal — proceed to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:0dg522wbqd0jpd2jeg8tjq4m:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b099feb156800fcde15940ab57840c8a7d149e8d/ship-dispatch-env-file-resume-and-gate-authority.md",
+      "rev": "sha256:b912860a51fc75a752ec05e89ef98bd647b21b3001fb8f1d5e468b260e4d8e7e",
+      "mediaType": "text/markdown",
+      "summary": "Initial-stage gate: seed entity itself is the reviewed artifact (no prior stage report). Captain-sourced finding from 2026-09-14 ship round 3 harden batch; Accepted outcome lists 5 items covering --env-file, --resume, boot header wording, pins/conductor-cli.contract coverage, and --dry-run rehearsal for both modes. Profile: pilot (matches entity's own recommendation; batch is 'harden' round on an already-shipped tool, not a from-scratch spike, and touches a shared pins contract file also edited by a sibling entity — pilot's review rigor fits; no kernel admission rule forbids pilot here)."
+    }
+  ]
+}
