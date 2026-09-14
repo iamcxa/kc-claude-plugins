@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T13:47:42Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-pr-merge-released-body-pin-per-mod-version
 issue:
 pr:
 mod-block:
