@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:0dg522wbqd0jpd2jeg8tjq4m:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:0dg522wbqd0jpd2jeg8tjq4m-validation-1
+              briefing:
+                id: briefing:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-1:revision-1
+                digest: sha256:64149f3a3ef7033272e25949d0d91406e3d8e105ddd37a66a50f092e20ef7ce3
+                room-ref: ./ship-dispatch-env-file-resume-and-gate-authority/review/validation/briefing-1
 ---
 
 On 2026-09-14 (qnow `qnow-clerk-poc`, DEV-146) the Captain provisioned Clerk keys mid-task. Conductor CLI 0.85.0 accepts environment variables only at `conductor workspace create --env KEY=VALUE` (repeatable); `session create` has none and an existing workspace cannot take new ones. The ship FO had to create a second workspace by hand from the task's branch with a hand-written resume boot, because `dispatch.sh` 0.2.0 has no credential surface and no resume mode. On 2026-09-11 (`ship-dispatch-watch-round-2`, task 7z) the Captain's chat approval and the worker's conn-delegated record collided on one gate attempt; today's batch proved the rule that holds: the ship FO records with the Captain's words, workers sync state by merge (never rebase) and never record.

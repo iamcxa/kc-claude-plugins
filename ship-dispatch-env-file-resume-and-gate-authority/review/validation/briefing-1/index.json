@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-1:revision-1",
+  "question": "Approve validation: dispatch.sh --env-file/--resume/gate-authority-wording implementation is independently re-verified (16/16 tests, all 5 ACs cross-checked against source) and Draft PR #445 is open against main — approve to enter done (merge authority remains separate via merge guard)?",
+  "artifacts": [
+    {
+      "id": "artifact:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d37505081e8536a12492e65d299479c925d3909f/ship-dispatch-env-file-resume-and-gate-authority.md",
+      "rev": "sha256:eae21f96d3a6f0d14b190429fa8744066da135710a8907ff3046532fb1dbd9fb",
+      "mediaType": "text/markdown",
+      "summary": "Validation stage report: independent rerun of dispatch.test.sh (16/16 passed), all 5 Accepted-outcome items cross-checked directly against dispatch.sh source and pins/conductor-cli.contract diff (not just report citation). origin/main merge was a no-op (already up to date; anticipated sibling conflict on pins/conductor-cli.contract had not landed on main yet — flagged as open question, not a defect). Draft PR #445 opened via pr-merge mod (base main, no ready, no merge). Entity pr field set to #445."
+    }
+  ]
+}
