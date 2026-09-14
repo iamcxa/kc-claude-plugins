@@ -327,3 +327,34 @@ Retired the provider-backed planning path: `linear-admission.py` and `engage-rec
 ### Summary
 
 Re-ran all five named suites green at an independently-resolved checkout of candidate commit `95b19de0`. Both Captain-dispositioned residuals hold with direct diff/grep evidence. AC-1/AC-5 re-proven against `dev-52`'s real committed bytes via a fresh direct call. One honest limit surfaced: the branch is a single squashed commit, so the implementation report's step-ordering narrative (never leaving L4 broken mid-session) is provable only at the two real git endpoints (parent, candidate) — both pass — not at any finer commit-by-commit granularity, because no finer granularity was committed. This is a gap in the evidence trail, not a found defect; no AC fails and no residual is newly outstanding.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: The branch rebases cleanly onto `origin/main` and the three conflicts are resolved on their meaning.
+  `git rebase origin/main` conflicted in `kc-dev-flow/MIGRATION.md`, `kc-dev-flow/contract-manifest.json`, and `scripts/kc-dev-flow-contract-test.py` — the exact three files named in the rework spec, against the same two merged pull requests (`58748d73` #433, `da3f287f` #435). Resolved and continued; `git status` is clean, `git log --oneline -1` shows the rebased tip `5de5778a` (parent `e3cca913`, current `origin/main`). No fourth conflict appeared.
+- DONE: `MIGRATION.md` keeps both dated entries.
+  The 2026-09-14 retirement entry (this branch) now sits above the 2026-09-13 pull-request-title-refusal entry (`main`, #433) in the dated log, newest-first, matching the file's existing convention; neither entry's body text was altered, only reordered with a restored blank line between them.
+- DONE: `contract-manifest.json` keeps every resource `main` added and loses every one this branch removed.
+  `scripts/check-pr-title.py` and `scripts/fixtures/pr-title/release-please-verdicts.tsv` (added by #435/#433) stay in the `resources` array; `scripts/engage-reconcile.py` and `scripts/linear-admission.py` (removed by this branch) are absent. `python3 -c "import json; json.load(open('kc-dev-flow/contract-manifest.json'))"` confirms valid JSON post-edit.
+- DONE: `scripts/kc-dev-flow-contract-test.py` keeps every title-refusal assertion `main` added, and it passes.
+  Same conflict shape and same resolution as the manifest (`expected_manifest_resources` set) — `check-pr-title.py`/its fixture kept, `engage-reconcile.py`/`linear-admission.py` dropped. The surrounding required-file list, script-role classification, and retired-control assertions that `git` auto-merged cleanly (no conflict markers there) were left untouched. Verified by running the suite itself (below), not by re-reading the diff.
+- DONE: All five suites re-run at the rebased commit `5de5778a`, all PASS.
+  Listed with output in "Full test evidence" below.
+- DONE: The two ideation-gate dispositions hold after the rebase.
+  `docs/plan-flow/admission.py`'s imports at the rebased tip: `hashlib`, `os`, `re`, `subprocess`, `__future__.annotations` — stdlib only, nothing from `kc-dev-flow` (checked via `ast.parse` + `ast.walk`, not string grep). `git diff --stat origin/main -- kc-dev-flow/references/pr-delivery.md kc-dev-flow/references/pr-merge-extension.md` → empty output, confirming byte-for-byte no diff against the current `origin/main` tip (`e3cca913`), not the stale base the prior validation ran against.
+
+### Full test evidence (rebased commit `5de5778a`, in order)
+
+- `python3 scripts/kc-dev-flow-contract-test.py` → `kc-dev-flow contract: PASS` (exit 0)
+- `python3 scripts/kc-dev-flow-contract-test.py --ablation-check` → `kc-dev-flow contract: PASS` (exit 0)
+- `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` → all four named sub-suites PASS, overall `profile contract loader test: PASS`
+- `python3 scripts/kc-dev-flow-minimal-stack-ablation.test.py` → `kc-dev-flow minimal-stack ablation: PASS`, 61 named mutants all REJECTED, baseline PASS, exit 0
+- `python3 kc-ship-flow/scripts/contract-test.py` → `kc-ship-flow contract: PASS`; `dispatch.test: 10 passed, 0 failed`; `watch.test: 11 passed, 0 failed`
+
+### Known residual
+
+None outstanding against this rework's scope. The mutant count (61) differs from the prior report's "~55"/"59" figures because `origin/main`'s two intervening pull requests added mutants of their own (e.g. the pull-request-title-refusal coverage); this is the rebased suite's real, current count, not a discrepancy to explain away.
+
+### Summary
+
+Rebased `spacedock-ensign/retire-the-provider-backed-planning-path` onto `origin/main` (tip `e3cca913`), resolving the three predicted conflicts on their meaning — both `MIGRATION.md` dated entries kept, `contract-manifest.json` and `kc-dev-flow-contract-test.py` keep `main`'s title-refusal additions and lose this branch's `linear-admission.py`/`engage-reconcile.py` removals. New candidate SHA `5de5778a`. All five suites re-run green at that commit. Both Captain-dispositioned residuals re-verified directly against the rebased tree: `admission.py` imports nothing from `kc-dev-flow`, and `pr-delivery.md`/`pr-merge-extension.md` show zero diff against current `origin/main`.
