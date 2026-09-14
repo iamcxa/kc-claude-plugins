@@ -178,3 +178,74 @@ ref rather than the bare (local) branch name. Re-pinned the released-body
 contract hash for the byte delta; extension block untouched.
 Proven by mutation against a deliberately stale local trunk in a disposable
 git sandbox, not by re-reading the prose.
+
+## Stage Report: validation
+
+- DONE: Re-ran the mutation proof myself in a fresh disposable sandbox
+  (bare remote + two independent clones, one advancing `main` past the
+  other's cached `origin/main` to reproduce the exact staleness condition).
+  OLD sequence (`git push origin "$BASE"` then `git rebase "$BASE"`): push
+  rejected non-fast-forward, rebase no-ops onto the stale cached ref,
+  `git merge-base feature origin/main` = `03f1e73…` while the actual remote
+  tip is `8b59ed7…` — mismatch, reproducing the PR #444 defect independent
+  of the implementer's own run. CORRECTED sequence (`git fetch origin
+  "$BASE"` then `git rebase "origin/$BASE"`), replayed from the same stale
+  starting point in a second disposable sandbox: fetch updates
+  `origin/main` (`9ed301d..4ec8cd8`), rebase replays onto it, resulting
+  `git merge-base feature origin/main` = `4ec8cd8…` == the remote tip
+  `4ec8cd8…` — match. Both directions shown, not read from the
+  implementation report.
+- DONE: `pr_merge_released_body.sha256` scope settled — it stays
+  repository-local, does not propagate to adopters. Evidence: neither
+  `kc-dev-flow/contract-manifest.json` nor
+  `scripts/kc-dev-flow-contract-test.py` exists anywhere under the checked
+  adopter worktrees (`subspace-v0/quebec-v1`, `carlove-v1/kyoto`); carlove's
+  own `docs/dev/_mods/pr-merge.md` has no runtime-extension marker at all
+  and a completely different on-approval sequence, so nothing currently
+  syncs this file or its pin outward. The pinned pre-marker body is this
+  repo's own dogfooded copy of the upstream Spacedock `pr-merge` release,
+  vendored once at adopt time — not part of the extension block that
+  `spacedock:refit` / `adopt-dev-flow` push to adopters. The script is
+  classified `release-proof` (top-level `scripts/`, absent from
+  `contract-manifest.json`'s own `resources` list), i.e. a pre-publish
+  self-check kc-claude-plugins runs on itself, not a shipped runtime
+  artifact.
+- DONE: Extension-block byte-identity re-checked directly rather than
+  trusting the implementation report's `python3
+  scripts/kc-dev-flow-contract-test.py` run. Literal diff against the
+  current `origin/main` tip (`0bbf6233`) shows the extension block
+  differs — but only because `origin/main` advanced two unrelated commits
+  (`da3f287f`, `58748d73`, a PR-title-refusal feature) past this branch's
+  merge-base (`7b103a10`) after the branch forked; both `docs/dev/_mods/pr-merge.md`
+  and `kc-dev-flow/references/pr-merge-extension.md` moved together on
+  main, so the two files stay mutually consistent for anyone rebasing.
+  Diffing the extension block between HEAD and the branch's own
+  merge-base is byte-identical (empty diff), confirming this candidate's
+  edit itself never touched the extension range; `python3
+  scripts/kc-dev-flow-contract-test.py` exits 0 at the candidate commit
+  in this worktree, checked directly, not re-read. Residual: this branch
+  needs an ordinary rebase onto current `origin/main` before delivery to
+  pick up the unrelated title-refusal commits — routine pre-merge
+  housekeeping, not a defect in this change.
+- DONE: AC-1 and AC-2 re-checked by direct grep against the candidate
+  file rather than the stage report's prose: no `git push origin "$BASE"`
+  and no "up to date with local state commits" sentence remain anywhere
+  in the file; the on-approval line now reads `git fetch origin "$BASE"`
+  then `git rebase "origin/$BASE"`.
+
+### Summary
+
+Independently reproduced both directions of the AC-4 mutation proof in a
+fresh sandbox (old sequence loses the rebase target under a stale local
+trunk, corrected sequence lands on the remote tip), confirmed AC-1/AC-2 by
+direct grep, confirmed AC-3 (contract test exits 0) at the candidate
+commit, and settled the re-pinned hash's scope as repository-local — no
+adopter currently vendors `contract-manifest.json` or the contract-test
+script, and carlove's own mod file has already diverged past the point
+where a shared pin could apply. The extension-block "byte-identical to
+origin/main" check needed refinement: literal diff against the current tip
+shows drift, but that drift is entirely from two unrelated commits that
+landed on main after this branch forked, not from this edit — verified by
+diffing the extension block against the branch's own merge-base instead,
+which is empty. Recommend: proceed to delivery after an ordinary rebase
+onto current `origin/main`.
