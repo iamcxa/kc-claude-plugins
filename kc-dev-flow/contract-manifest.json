@@ -43,7 +43,7 @@
   ],
   "pr_merge_released_body": {
     "boundary": "an adopter's docs/dev/_mods/pr-merge.md, the bytes before the first '<!-- kc-dev-flow runtime extension:start -->' line, trailing newlines stripped",
-    "sha256": "ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57",
-    "bytes": 10551
+    "sha256": "754856b594f329565a839843691f62ae2367d2015ccc6c073a4ec1e8905e3743",
+    "bytes": 10607
   }
 }
