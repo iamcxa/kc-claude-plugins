@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-1:revision-1",
+  "question": "PR #457 (Draft, candidate 5537e44c9e80e364cd8a7d9e7cbeb2d71cb067a9) delivers AC-1..4: profile-contract-loader.py's validate_admission_brief() refuses a bite:/consumer:-missing preamble; surface-map-check.py refuses an unexcused byte-identical file/plugin-cache copy; run-batch's verified step checks the named consumer exists; no kernel/references/kernel.md edit, no new receipt/harness/LOC gate. Local tests (profile-contract-loader.test.py, kc-dev-flow-contract-test.py) pass fresh at candidate. Approve to route to done (merge)?",
+  "artifacts": [
+    {
+      "id": "artifact:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3dbabf529c441c42fd678c655e27eee78770b263/admission-asks-who-was-bitten-and-who-will-run-it.md",
+      "rev": "sha256:e71ea7398992b06ae095814d22b6066651cc33e72c02f4b7bc5736aa4c277192",
+      "mediaType": "text/markdown",
+      "summary": "Validation stage report: 3/3 checklist DONE, 0 skipped, 0 failed. All 4 ACs cite evidence, cross-checked against git diff main...5537e44c --stat (9 files, no kernel.md, no new receipt/harness/LOC gate). Draft PR iamcxa/kc-claude-plugins#457 opened base main, all four required body headings present, Candidate line, split-root audit link to spacedock-state/dev, and a runs-after-merge line naming the next brief admitter and the ship first officer's run-batch verification. Entity pr: field set to 457."
+    }
+  ]
+}
