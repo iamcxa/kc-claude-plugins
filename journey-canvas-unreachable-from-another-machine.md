@@ -64,6 +64,17 @@ gates:
                 id: briefing:bxhtchz8rwth9hpeepzwg42t:validation:attempt-1:revision-1
                 digest: sha256:7c943f802d1984bf6c17c69e25ec3e20f549838b390e32cc090a0a0e9a2aef52
                 room-ref: ./journey-canvas-unreachable-from-another-machine/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:bxhtchz8rwth9hpeepzwg42t:validation:1
+                briefing: briefing:bxhtchz8rwth9hpeepzwg42t:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T14:17:47.423671Z"
+                decision: approve
+                reason: 'Captain accepted the delivery by merging PR #442 on 2026-09-14T14:17:32Z (merge commit ed452eb2), after the FO presented the validation gate with the eight passing acceptance criteria, the three named residuals, and the disclosed pkill incident. All eight ACs were independently re-derived at head 9ff318a0; both FO findings were closed by fresh demonstration on ports no earlier stage used.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
