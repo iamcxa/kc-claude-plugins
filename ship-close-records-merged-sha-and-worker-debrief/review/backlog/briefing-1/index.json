@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fgvjsq1wsftn2r6ay4yxp2q1:backlog:attempt-1:revision-1",
+  "question": "Approve entity for ideation: close.py should resolve merged_sha via gh pr view and match debriefs by worker (not the ship FO), per AC-1..AC-4. Proceed to ideation under the pilot profile?",
+  "artifacts": [
+    {
+      "id": "artifact:fgvjsq1wsftn2r6ay4yxp2q1:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0daaab3db1415ec2259784c9b18b21c9940721a2/ship-close-records-merged-sha-and-worker-debrief.md",
+      "rev": "sha256:b26813a6aa4d4f57eea6280e74f0b2a48974f0da6bce4f535217d155f18150c1",
+      "mediaType": "text/markdown",
+      "summary": "Backlog seed: close.py writes null merged_sha and can mis-match debriefs to the ship FO instead of the task's own worker (r2 fence needed a hand correction). Accepted outcome resolves merged_sha from gh pr view's mergeCommit.oid, refuses close on a non-MERGED PR, prefers a worker-authored debrief naming the slug under ## Shipped, and close.py --validate rejects a v2 receipt with a null/non-40-hex merged_sha. Fixtures must not pin a real SHA from this repo. Profile recommendation: pilot (harden round, retained code with fixtures)."
+    }
+  ]
+}
