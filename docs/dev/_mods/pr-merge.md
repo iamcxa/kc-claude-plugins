@@ -466,7 +466,7 @@ separately re-derived against `17.11.1` -- the version `subspace-relay` pins
 release-please version and the fixture's captured version, or a reported
 adopter skew, is a stop, not a skip: do not trust the self-test and do not
 re-derive the fixture from an adopter checkout -- re-derivation reaches the
-parser directly out of this repository's own
+parser directly out of this repository's root-level
 `scripts/fixtures/release-please-runtime`, so it is structurally a
 `kc-dev-flow` maintainer action. Report the skew upstream to `kc-dev-flow`
 instead of assuming agreement across versions.

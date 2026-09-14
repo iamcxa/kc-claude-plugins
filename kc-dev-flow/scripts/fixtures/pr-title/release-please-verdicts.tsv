@@ -4,7 +4,7 @@
 # first). Agreement with subspace-relay's 17.11.1 pin on these rows is a
 # separate 2026-09-12 observation, recorded in
 # kc-dev-flow/references/pr-merge-extension.md, "The title rule's oracle" --
-# not re-derived by this file's capture command.
+# not part of this file's capture.
 # columns: subject<TAB>verdict(parses|drops)<TAB>reason
 feat(): x	drops	empty scope; a (\w+)(\(.*\))?!?: regex would pass it -- the dangerous direction
 Revert "feat: x"	drops	reverts read as prose, not as a type
