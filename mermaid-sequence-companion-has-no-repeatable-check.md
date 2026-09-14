@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:n2wd7aavte2k7p7nfj3aa2r5:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:n2wd7aavte2k7p7nfj3aa2r5-validation-1
+              briefing:
+                id: briefing:n2wd7aavte2k7p7nfj3aa2r5:validation:attempt-1:revision-1
+                digest: sha256:a7ab82eaae46bc0ea1ce34b27bd31e073ead05c836fa428b38b93e6fcefdf56c
+                room-ref: ./mermaid-sequence-companion-has-no-repeatable-check/review/validation/briefing-1
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid

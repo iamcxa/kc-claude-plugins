@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:n2wd7aavte2k7p7nfj3aa2r5:validation:attempt-1:revision-1",
+  "question": "Close this POC with the recorded outcome: the Mermaid sequence companion works at cfb804d, AC-1's failure is a pre-existing repository defect, and AC-5 is an open ask against PR #440?",
+  "artifacts": [
+    {
+      "id": "artifact:n2wd7aavte2k7p7nfj3aa2r5:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/be8289d7951d2fd1f805f28c3a0f189d5abca4cb/mermaid-sequence-companion-has-no-repeatable-check/implementation/receipt.md",
+      "rev": "sha256:7f2350beb1e94a1f797955d7caccaaf35f5241e4573c10c592fa447cae979550",
+      "mediaType": "text/markdown",
+      "summary": "The Captain waived a second, fresh validation run on 2026-09-14 (「不用再跑，codex 單獨跑過可以用」), so this gate is ruled on the implementation receipt plus the FO's own re-derivation. AC-2, AC-3 and AC-4 hold at cfb804d: the production bundle builds and the dynamic @tldraw/mermaid import resolves, the browser smoke passed all 13 assertions against an isolated frontend (58235) and API (58234) pair with a dedicated JOURNEY_ROOMS_DIR, and the three tldraw/@tldraw-mermaid symbols exist in the installed 5.4.0 declarations. AC-1 fails for a reason outside this PR: kc-journey-map/lib carries no declaration file, so App.tsx's import of lib/records.mjs already breaks npx tsc; the FO confirmed both the import line and the missing .d.ts on origin/main, where lib/records.mjs was last touched by #417. AC-5 fails as an open ask against PR #440: the SKILL.md description drops 產出 journey 圖 and 現況跟 journey 對不對 while the PR body never records that decision. Mermaid's weight is ~1.9-3.4 MB of a ~5.1 MB JS payload, entirely behind the lazy dynamic import. This POC produced no candidate of its own; pr carries a local-merge no-product-diff sentinel so the terminal ceremony cannot act on PR #440, which stays Draft and the Captain's to rule."
+    }
+  ]
+}
