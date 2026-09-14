@@ -45,6 +45,17 @@ gates:
                 id: briefing:fafrpfqmdc3zqhq8asfbt83r:ideation:attempt-1:revision-1
                 digest: sha256:92c9240fd715c0724aa64abdbfbd7a46bd6a6db4632285100ee3115eaecb7df5
                 room-ref: ./kc-journey-map-typecheck-red-since-417/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fafrpfqmdc3zqhq8asfbt83r:ideation:1
+                briefing: briefing:fafrpfqmdc3zqhq8asfbt83r:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T09:20:51.682381Z"
+                decision: approve
+                reason: 'Captain approved the shaping in chat 2026-09-14 with 「一起做」, ruling that the two scope additions the ensign found are in: pin typescript as a devDependency so the CI step runs an installed compiler rather than an unpinned registry fetch, and add kc-journey-map/tsconfig.json to the workflow''s pull_request and push paths filters. The FO''s stated basis was that an unpinned compiler makes the typecheck step itself unreliable. The chosen fix form is lib/records.d.mts; the .d.mts extension was verified empirically against records.d.ts, which left tsc red.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
