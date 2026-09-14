@@ -600,9 +600,10 @@ a test file is code, and a code repair returns to implementation for one final r
 ### Residuals
 
 - `started:` followed by a space or tab captures that whitespace and takes the old `admitted_at must
-  equal frontmatter started` refusal rather than the named one. No observed producer: across the 91
-  state entities, 66 carry a bare `started:` and none carry trailing whitespace. A narrower capture
-  group would close it.
+  equal frontmatter started` refusal rather than the named one. No observed producer: across the 90
+  state entities present on 2026-09-14, 67 carry a bare `started:`, 12 carry a timestamp, and none
+  carry a whitespace-only value (`grep -lE '^started:[ \t]+$' *.md` returns nothing). A narrower
+  capture group would close it.
 - An absent `started` is refused with `frontmatter started must not be empty`. Ideation ruled empty
   and absent indistinguishable on purpose; recorded as known, not a defect.
 - `poc_corrected` asserts `workflow_stage` only. `recorded_workflow_stage` is set at the
