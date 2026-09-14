@@ -1833,6 +1833,16 @@ surface_map_production_work_item = surface_map_fixtures / "production-work-item-
 surface_map_shape_mapping = surface_map_fixtures / "shape-mapping-fixture.txt"
 surface_map_shape_mismatch_evidence = surface_map_fixtures / "shape-mapping-mismatch-evidence.md"
 surface_map_full_coverage_evidence = surface_map_fixtures / "full-coverage-evidence.md"
+surface_map_byte_identical_copy_evidence = surface_map_fixtures / "byte-identical-copy-evidence.md"
+surface_map_byte_identical_generated_copy_evidence = (
+    surface_map_fixtures / "byte-identical-generated-copy-evidence.md"
+)
+surface_map_plugin_cache_copy_undeclared_evidence = (
+    surface_map_fixtures / "plugin-cache-copy-undeclared-evidence.md"
+)
+surface_map_plugin_cache_copy_generated_evidence = (
+    surface_map_fixtures / "plugin-cache-copy-generated-evidence.md"
+)
 for fixture in (
     surface_map_work_item,
     surface_map_round0_evidence,
@@ -1844,6 +1854,10 @@ for fixture in (
     surface_map_shape_mapping,
     surface_map_shape_mismatch_evidence,
     surface_map_full_coverage_evidence,
+    surface_map_byte_identical_copy_evidence,
+    surface_map_byte_identical_generated_copy_evidence,
+    surface_map_plugin_cache_copy_undeclared_evidence,
+    surface_map_plugin_cache_copy_generated_evidence,
 ):
     require(fixture.is_file(), f"missing surface-map fixture: {fixture}")
 
@@ -1872,7 +1886,9 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
     (surface_map_repo / "docs/dev/README.md").write_text("candidate\n", encoding="utf-8")
     (surface_map_repo / "scripts/kc-dev-flow-contract-test.py").write_text("# candidate\n", encoding="utf-8")
     (surface_map_repo / "scripts/ship-flow/e2e-cli.sh").write_text("#!/bin/sh\n", encoding="utf-8")
-    (surface_map_repo / "scripts/ship-flow/parse-execute-external.py").write_text("# candidate\n", encoding="utf-8")
+    (surface_map_repo / "scripts/ship-flow/parse-execute-external.py").write_text(
+        "# candidate parse-execute-external\n", encoding="utf-8"
+    )
     (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow.yaml").write_text("steps: []\n", encoding="utf-8")
     (surface_map_repo / "scripts/fixtures/ship-flow/dev-50-cli-flow-failing.yaml").write_text(
         "steps: []\n", encoding="utf-8"
@@ -2017,6 +2033,98 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
     require(go_production.returncode == 1
             and f"missing SURFACE line: {go_production_path}" in go_production.stdout,
             f"Non-test Go enforcement weakened: {go_production}")
+
+    # Two PRs (#446, #450) closed unmerged because large chunks of their diff
+    # were byte-identical copies of files already in the repo. surface-map-check
+    # now refuses a changed file whose bytes duplicate another path already in
+    # the candidate tree, unless the SURFACE line declares `generated-copy:<name>`
+    # with a non-empty without-it naming the generating command.
+    surface_map_base = surface_map_candidate
+    (surface_map_repo / "docs/dev/_mods").mkdir(parents=True, exist_ok=True)
+    (surface_map_repo / "docs/dev/_mods/pr-merge.md").write_text(
+        "Shared merge doc body used by an adopter pin fixture.\n", encoding="utf-8"
+    )
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"],
+                    check=True, capture_output=True, timeout=60)
+    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "add source doc"],
+                    check=True, capture_output=True, timeout=60)
+    surface_map_base = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
+    ).strip()
+
+    copy_path = "scripts/fixtures/surface-map/adopter-0.27.0-pr-merge.md"
+    (surface_map_repo / "scripts/fixtures/surface-map").mkdir(parents=True, exist_ok=True)
+    (surface_map_repo / copy_path).write_text(
+        "Shared merge doc body used by an adopter pin fixture.\n", encoding="utf-8"
+    )
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"],
+                    check=True, capture_output=True, timeout=60)
+    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "add byte-identical copy"],
+                    check=True, capture_output=True, timeout=60)
+    surface_map_candidate = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
+    ).strip()
+
+    byte_identical_undeclared = run_surface_map_check(surface_map_byte_identical_copy_evidence)
+    require(
+        byte_identical_undeclared.returncode == 1
+        and "byte-identical" in byte_identical_undeclared.stdout,
+        "surface-map-check did not refuse an undeclared byte-identical copy: "
+        f"exit={byte_identical_undeclared.returncode} stdout={byte_identical_undeclared.stdout!r} "
+        f"stderr={byte_identical_undeclared.stderr!r}",
+    )
+
+    byte_identical_declared = run_surface_map_check(surface_map_byte_identical_generated_copy_evidence)
+    require(
+        byte_identical_declared.returncode == 0,
+        "surface-map-check refused a byte-identical copy declared generated-copy: "
+        f"exit={byte_identical_declared.returncode} stdout={byte_identical_declared.stdout!r} "
+        f"stderr={byte_identical_declared.stderr!r}",
+    )
+
+    # --plugin-cache-dir: refuse a changed file whose bytes duplicate a file
+    # already cached on disk under an installed plugin, unless declared.
+    surface_map_base = surface_map_candidate
+    plugin_mirror_path = "scripts/ship-flow/adopter-cache-mirror.sh"
+    plugin_mirror_content = "# vendored plugin script\necho mirror\n"
+    (surface_map_repo / plugin_mirror_path).write_text(plugin_mirror_content, encoding="utf-8")
+    subprocess.run(["git", "-C", str(surface_map_repo), "add", "-A"],
+                    check=True, capture_output=True, timeout=60)
+    subprocess.run(["git", "-C", str(surface_map_repo), *git_user, "commit", "-m", "add plugin-cache mirror"],
+                    check=True, capture_output=True, timeout=60)
+    surface_map_candidate = subprocess.check_output(
+        ["git", "-C", str(surface_map_repo), "rev-parse", "HEAD"], text=True, timeout=60
+    ).strip()
+
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-plugin-cache-") as plugin_cache_name:
+        plugin_cache_dir = Path(plugin_cache_name)
+        (plugin_cache_dir / "vendor").mkdir(parents=True)
+        (plugin_cache_dir / "vendor" / "adopter-cache-mirror.sh").write_text(
+            plugin_mirror_content, encoding="utf-8"
+        )
+
+        plugin_cache_undeclared = run_surface_map_check(
+            surface_map_plugin_cache_copy_undeclared_evidence,
+            extra_args=["--plugin-cache-dir", str(plugin_cache_dir)],
+        )
+        require(
+            plugin_cache_undeclared.returncode == 1
+            and "byte-identical" in plugin_cache_undeclared.stdout,
+            "surface-map-check did not refuse an undeclared plugin-cache byte-identical copy: "
+            f"exit={plugin_cache_undeclared.returncode} stdout={plugin_cache_undeclared.stdout!r} "
+            f"stderr={plugin_cache_undeclared.stderr!r}",
+        )
+
+        plugin_cache_declared = run_surface_map_check(
+            surface_map_plugin_cache_copy_generated_evidence,
+            extra_args=["--plugin-cache-dir", str(plugin_cache_dir)],
+        )
+        require(
+            plugin_cache_declared.returncode == 0,
+            "surface-map-check refused a plugin-cache byte-identical copy declared generated-copy: "
+            f"exit={plugin_cache_declared.returncode} stdout={plugin_cache_declared.stdout!r} "
+            f"stderr={plugin_cache_declared.stderr!r}",
+        )
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 

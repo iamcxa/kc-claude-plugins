@@ -45,7 +45,10 @@ Advance one commissioned `docs/ship` batch entity through its five stages in ord
 3. `verified` — `kc-ship-flow/scripts/e2e-gate.py --root <code checkout> --flows docs/ship/flows
    <targets>` runs the e2e flow check at the Local Profile's `Integrated head` (`--root` and
    `--flows` are always required; `--flows` is the Local Profile table's "E2E flows" row value).
-   The exact target arguments are a separate task's to fix.
+   The exact target arguments are a separate task's to fix. Verification also confirms each
+   task's brief-named `consumer:` (a path or symbol) exists at the candidate; a consumer that
+   no longer exists at the candidate is a verification failure, not merely a note for the
+   Captain.
 4. `uat` (gate) — `kc-ship-flow/scripts/uat-doc.py` writes the UAT document from the batch record;
    the Captain records the gate decision per task and merges. Acceptance, review, and merge are
    dev flow's and Spacedock's own — this skill never opens, reviews, or merges a PR itself.

@@ -64,6 +64,7 @@ def write_work_item(
     recovery_fields: dict[str, str] | None = None,
     necessity_fields: dict[str, str] | None = None,
     planning_receipt: tuple[str, str, str] = ("", "", ""),
+    preamble: str | None = None,
     body: str = "",
 ) -> Path:
     if route is None:
@@ -100,8 +101,14 @@ def write_work_item(
         frontmatter.append(f"release: {release}")
     if release_readiness is not None:
         frontmatter.append(f"release-readiness: {release_readiness}")
+    if preamble is None:
+        preamble = (
+            "bite: Fixture-observed failure the change repairs.\n"
+            "consumer: fixture/consumer.py"
+        )
     receipt = [
         "---",
+        preamble,
         "",
         "## Work profile receipt",
         "",
@@ -134,6 +141,51 @@ def write_work_item(
         ]
     )
     path.write_text("\n".join(frontmatter + receipt) + body, encoding="utf-8")
+    return path
+
+
+def write_admission_brief(
+    root: Path,
+    name: str,
+    *,
+    preamble_paragraph: str,
+    bite: str | None,
+    consumer: str | None,
+) -> Path:
+    """Build an admission-brief-shaped fixture for validate_admission_brief.
+
+    Mirrors write_work_item's frontmatter/body join convention so
+    frontmatter_end and the preamble span land where
+    validate_admission_brief expects them.
+    """
+    path = root / "work-items" / f"{name}.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frontmatter = ["---", "status: ideation", "---"]
+    preamble_block = ["", preamble_paragraph, ""]
+    if bite is not None:
+        preamble_block.append(f"bite: {bite}")
+    if consumer is not None:
+        preamble_block.append(f"consumer: {consumer}")
+    preamble_block.append("")
+    sections = [
+        ("The problem", "Rows silently disappear during the nightly import job."),
+        ("Accepted outcome", "Dropped rows are retried once and logged."),
+        ("Non-goals", "- Rewriting the importer from scratch"),
+        (
+            "Acceptance criteria",
+            "- **AC-1** Dropped rows are retried once and logged",
+        ),
+        (
+            "Route-back conditions",
+            "- If retries still drop rows, route back to ideation",
+        ),
+    ]
+    body: list[str] = []
+    for heading, content in sections:
+        body.extend([f"## {heading}", "", content, ""])
+    path.write_text(
+        "\n".join(frontmatter + preamble_block + body), encoding="utf-8"
+    )
     return path
 
 
@@ -2741,5 +2793,111 @@ else:
         require(sd_status(route_workflow, feedback_slug) == "validation", "correction consumed validation")
         print("profile contract loader test: live feedback handoff and two report resumes PASS")
         print("profile contract loader test: route mechanism PASS")
+
+    # AC-1: admission briefs shaped like PR #446 and #450 (a preamble
+    # paragraph with no bite:/consumer: lines) are refused by
+    # validate_admission_brief -- nobody had checked whether the change
+    # repaired a real observed failure (bite) with a real downstream
+    # consumer (consumer).
+    pr446_shape_paragraph = (
+        "This admission adds a shared helper so future work items can "
+        "reuse the same parsing logic instead of duplicating it."
+    )
+    pr450_shape_paragraph = (
+        "This admission tightens a validator so a broader class of "
+        "malformed input is caught earlier in the pipeline."
+    )
+    for label, paragraph in (
+        ("pr446-shape", pr446_shape_paragraph),
+        ("pr450-shape", pr450_shape_paragraph),
+    ):
+        missing_both = write_admission_brief(
+            root, f"{label}-missing-both", preamble_paragraph=paragraph,
+            bite=None, consumer=None,
+        )
+        try:
+            MODULE.validate_admission_brief(missing_both, "pilot-product-slice")
+        except MODULE.ContractError as exc:
+            require(
+                "bite" in str(exc) or "consumer" in str(exc),
+                f"{label}: wrong missing-bite/consumer refusal: {exc}",
+            )
+        else:
+            raise SystemExit(
+                f"profile contract loader test: accepted {label} admission with no bite:/consumer:"
+            )
+
+        complete = write_admission_brief(
+            root, f"{label}-complete", preamble_paragraph=paragraph,
+            bite="The nightly import silently drops rows with a null vendor_id.",
+            consumer="scripts/import/vendor_backfill.py",
+        )
+        digest = MODULE.validate_admission_brief(complete, "pilot-product-slice")
+        require(
+            digest == hashlib.sha256(
+                "\n\n".join(
+                    f"## {heading}\n\n{content}" for heading, content in (
+                        ("The problem", "Rows silently disappear during the nightly import job."),
+                        ("Accepted outcome", "Dropped rows are retried once and logged."),
+                        ("Non-goals", "- Rewriting the importer from scratch"),
+                        ("Acceptance criteria", "- **AC-1** Dropped rows are retried once and logged"),
+                        ("Route-back conditions", "- If retries still drop rows, route back to ideation"),
+                    )
+                ).encode("utf-8")
+            ).hexdigest(),
+            f"{label}: accepted admission returned an unexpected digest",
+        )
+
+        missing_bite = write_admission_brief(
+            root, f"{label}-missing-bite", preamble_paragraph=paragraph,
+            bite=None, consumer="scripts/import/vendor_backfill.py",
+        )
+        try:
+            MODULE.validate_admission_brief(missing_bite, "pilot-product-slice")
+        except MODULE.ContractError as exc:
+            require("bite" in str(exc), f"{label}: missing-bite refusal did not name bite: {exc}")
+        else:
+            raise SystemExit(
+                f"profile contract loader test: accepted {label} admission missing bite:"
+            )
+
+        missing_consumer = write_admission_brief(
+            root, f"{label}-missing-consumer", preamble_paragraph=paragraph,
+            bite="The nightly import silently drops rows with a null vendor_id.",
+            consumer=None,
+        )
+        try:
+            MODULE.validate_admission_brief(missing_consumer, "pilot-product-slice")
+        except MODULE.ContractError as exc:
+            require(
+                "consumer" in str(exc),
+                f"{label}: missing-consumer refusal did not name consumer: {exc}",
+            )
+        else:
+            raise SystemExit(
+                f"profile contract loader test: accepted {label} admission missing consumer:"
+            )
+
+        for field, placeholder in (("bite", "TBD"), ("consumer", "null")):
+            kwargs = {
+                "bite": "The nightly import silently drops rows with a null vendor_id.",
+                "consumer": "scripts/import/vendor_backfill.py",
+            }
+            kwargs[field] = placeholder
+            placeholder_brief = write_admission_brief(
+                root, f"{label}-placeholder-{field}", preamble_paragraph=paragraph, **kwargs
+            )
+            try:
+                MODULE.validate_admission_brief(placeholder_brief, "pilot-product-slice")
+            except MODULE.ContractError as exc:
+                require(
+                    field in str(exc),
+                    f"{label}: placeholder {field} refusal did not name {field}: {exc}",
+                )
+            else:
+                raise SystemExit(
+                    f"profile contract loader test: accepted {label} admission with placeholder {field}:"
+                )
+    print("profile contract loader test: admission bite/consumer preamble PASS")
 
 print("profile contract loader test: PASS")
