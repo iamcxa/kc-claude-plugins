@@ -47,14 +47,21 @@ invoke it (not done here: no Conductor call is made by this script either way, m
 "the code is rewritten after" scope -- printing the exact argv is the station's contract, the
 Captain or a wrapper around this script is the one that executes it).
 
+Just before writing the receipt, every merged task's `merged_sha` is resolved fresh from
+`gh pr view <N> --repo <owner/repo> --json state,mergeCommit` (repo guessed from `dev-state`'s
+`origin` remote, same helper `uat-doc.py` uses). A task whose `gh`-reported state is not `MERGED`
+is refused: non-zero exit, the slug and state printed, no receipt written.
+
 Exit 0 printing the messages (and, outside `--dry-run`, the receipt path once written).
 Exit 3 printing `not all tasks merged` when a non-`--dry-run` run finds a task that is neither
-merged nor recorded `captain_stopped`. Exit 2 on a usage error, no task found for the sprint, or a
-fence file that parses as JSON but is malformed (json.JSONDecodeError, KeyError, TypeError).
+merged nor recorded `captain_stopped`, or naming a task whose `gh`-confirmed PR state is not
+`MERGED`. Exit 2 on a usage error, no task found for the sprint, or a fence file that parses as
+JSON but is malformed (json.JSONDecodeError, KeyError, TypeError).
 
 `--validate <receipt.json>` exits 0 when every task entry in the receipt carries a non-empty
-`debrief` field (a path or a `failure: ...` string); exits 1 naming the task(s) missing it, or on
-a receipt that is not valid JSON, or whose `schema` is not `kc-ship-close-receipt/v2`.
+`debrief` field (a path or a `failure: ...` string) and a `merged_sha` that is exactly 40 hex
+characters; exits 1 naming the task(s) missing either, or on a receipt that is not valid JSON, or
+whose `schema` is not `kc-ship-close-receipt/v2`.
 """
 from __future__ import annotations
 
@@ -76,6 +83,7 @@ except ImportError:
 HERE = Path(__file__).resolve().parent
 SCHEMA_PATH = HERE.parent / "schemas" / "kc-ship-close-receipt.v2.schema.json"
 MERGED_RE = re.compile(r"^pr-merge:(\d+)$")
+MERGED_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _load_uat_doc():
@@ -123,14 +131,31 @@ def debrief_message(task, record, slug):
 
 
 DEBRIEF_SCAN_NAME_RE = re.compile(r"\A[^/]+\.md\Z")
+SHIPPED_HEADING_RE = re.compile(r"^## Shipped\s*$", re.MULTILINE)
+NEXT_HEADING_RE = re.compile(r"^## ", re.MULTILINE)
+
+
+def _shipped_section(text):
+    """Text between a `## Shipped` heading and the next `## `-level heading (or EOF); `""` if no
+    `## Shipped` heading is present. Matching is scoped to this section only -- a slug mentioned
+    elsewhere in the file (e.g. a batch/FO debrief's `## Filed (backlog)` section) is never
+    matched. This is the whole exclusion of the ship FO's own debrief: no separate FO-identity
+    signal is used, per the ideation journey's bound on this function."""
+    m = SHIPPED_HEADING_RE.search(text)
+    if not m:
+        return ""
+    rest = text[m.end():]
+    nxt = NEXT_HEADING_RE.search(rest)
+    return rest[:nxt.start()] if nxt else rest
 
 
 def find_debrief_path(dev_state, slug):
-    """Best match under `<dev-state>/_debriefs/*.md` naming `slug` -- either the frontmatter
-    `scope:` field or the body mentions it, matched as a whole slug token (never a shorter slug
-    that happens to be a prefix of a longer one, e.g. `ship-verify-uat-close` must not match a
-    debrief that only names `ship-verify-uat-close-round-2`). Returns the fence-relative path
-    (`_debriefs/<name>.md`) of the first match in sorted order, or None."""
+    """Best match under `<dev-state>/_debriefs/*.md` whose `## Shipped` section names `slug`,
+    matched as a whole slug token (never a shorter slug that happens to be a prefix of a longer
+    one, e.g. `ship-verify-uat-close` must not match a debrief that only names
+    `ship-verify-uat-close-round-2`). A slug named only outside `## Shipped` never matches -- see
+    `_shipped_section`. Returns the fence-relative path (`_debriefs/<name>.md`) of the first match
+    in sorted order, or None."""
     debriefs_dir = Path(dev_state) / "_debriefs"
     if not debriefs_dir.is_dir():
         return None
@@ -142,7 +167,7 @@ def find_debrief_path(dev_state, slug):
             text = path.read_text(encoding="utf-8")
         except OSError:
             continue
-        if pattern.search(text):
+        if pattern.search(_shipped_section(text)):
             return f"_debriefs/{path.name}"
     return None
 
@@ -218,6 +243,50 @@ def commit_and_push_fence(ship_state, fence_path, sprint):
             push = _git("push")
     if push.returncode != 0:
         print(f"close: git push failed: {push.stderr.strip()}", file=sys.stderr)
+
+
+class NotMergedError(Exception):
+    """A task's PR is not confirmed `MERGED` -- `gh` reported another state, or could not be
+    asked at all (state is then `None`, detail names why)."""
+
+    def __init__(self, slug, state):
+        self.slug = slug
+        self.state = state
+        super().__init__(f"{slug}: {state}")
+
+
+def _gh_pr_view(pr_number, cwd, repo_hint):
+    """Run `gh pr view <N> --json state,mergeCommit`; return `(state, oid_or_detail)` -- the
+    second value is the 40-hex oid when `state == "MERGED"`, otherwise a reason string (including
+    when `gh` itself could not be run or its output parsed, `state` is then `None`)."""
+    argv = ["gh", "pr", "view", str(pr_number), "--json", "state,mergeCommit"]
+    if repo_hint:
+        argv += ["--repo", repo_hint]
+    try:
+        result = subprocess.run(argv, capture_output=True, text=True, cwd=str(cwd), timeout=30)
+    except OSError as exc:
+        return None, f"gh not runnable: {exc}"
+    if result.returncode != 0:
+        return None, (result.stderr or result.stdout).strip() or f"gh exited {result.returncode}"
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        return None, f"gh output unparsable: {exc}"
+    return data.get("state"), (data.get("mergeCommit") or {}).get("oid")
+
+
+def resolve_merged_shas(tasks, record, dev_state, repo_hint):
+    """For every `pr-merge:<N>` task, confirm the merge and write `record[slug]['merged_sha']` in
+    place (same mutate-in-place convention as `scan_and_record_debriefs`). Raises
+    `NotMergedError` on the first task not confirmed `MERGED` -- caller must not write a receipt."""
+    for slug in sorted(tasks):
+        task = tasks[slug]
+        if not is_merged(task):
+            continue
+        state, detail = _gh_pr_view(merged_pr_number(task), dev_state, repo_hint)
+        if state != "MERGED":
+            raise NotMergedError(slug, state or detail or "unknown")
+        record.setdefault(slug, {})["merged_sha"] = detail
 
 
 def print_debrief_messages(tasks, record):
@@ -306,6 +375,13 @@ def run_close(sprint, dev_state, ship_state, dry_run, no_commit=False):
         )
         return 0
 
+    repo_hint = uat_doc.resolve_repo_hint(dev_state)
+    try:
+        resolve_merged_shas(tasks, record, dev_state, repo_hint)
+    except NotMergedError as exc:
+        print(f"close: {exc.slug} not merged (state: {exc.state})", file=sys.stderr)
+        return 3
+
     receipt = build_receipt(sprint, tasks, record)
     out_dir = Path(ship_state) / "_ship_fence"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -339,6 +415,17 @@ def validate_receipt(path):
     missing = sorted(slug for slug, task in tasks.items() if not task.get("debrief"))
     if missing:
         print(f"close: missing debrief field for: {', '.join(missing)}", file=sys.stderr)
+        return 1
+
+    bad_sha = sorted(
+        slug for slug, task in tasks.items()
+        if not (isinstance(task.get("merged_sha"), str) and MERGED_SHA_RE.match(task["merged_sha"]))
+    )
+    if bad_sha:
+        print(
+            f"close: missing or invalid merged_sha (must be 40 hex chars) for: {', '.join(bad_sha)}",
+            file=sys.stderr,
+        )
         return 1
 
     if jsonschema is None:

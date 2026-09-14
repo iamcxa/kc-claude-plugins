@@ -14,6 +14,11 @@ data safety, and deliver it through the repository's declared authority.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../prfaq.md",
+      "trigger": "captain_gate_presentation",
+      "receipt": null
+    },
+    {
       "path": "../../delivery-branch-base.md",
       "trigger": "delivery_artifact_review",
       "receipt": null

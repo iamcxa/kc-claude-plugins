@@ -47,31 +47,22 @@ receive placeholder reviews or receipts.
 Read only this section before resolving the selected item. Do not read this full
 README as a policy bundle.
 
-Linear is this repository's planning provider for new provider-backed
-admissions, not an iteration authority. A Linear Project is the planning
-outcome and release package, its Cycle is the planning window, and active
-`unstarted` or `started` Issues select candidates. Spacedock tasks are execution
-records, and `source` links the accepted Linear Issue. At every provider-backed
-engage, compare the current Project/Cycle active set with the committed SD
-snapshot. A difference requires Captain admission and never writes either side
-automatically. Existing admitted work keeps its recorded provider and reader;
-GitHub Project #4 remains historical and receives no new admissions. A
-standalone Captain-approved brief leaves `source`, `planning-window`, and
-`planning-outcome` empty and invokes no provider reader or comparator.
+Every item in this repository uses its Captain-approved committed brief — a
+Development Brief or Exploration Brief — as its sole planning authority.
+`source` is free-text provenance and may hold a Linear Issue URL or any other
+reference; it is never read as planning evidence, and this repository invokes
+no planning provider, reader, or comparator. GitHub Project #4 and the prior
+Linear-Cycle/Project binding remain historical and receive no new admissions.
 
 | Role | Bound local authority |
 |---|---|
 | Project context | Root `PRODUCT.md`, `ARCHITECTURE.md`, and `CLAUDE.md` |
-| Planning items | Linear Issues in team `dev`; new provider-backed admissions only |
-| Planning window | Linear Cycle |
-| Planning outcome | Linear Project as one user-value release package |
-| Planning reader and admission guard | Installed sibling `linear-admission.py`; organization `duckbase-co`; read `LINEAR_API_KEY` only from the process environment, accept no credential argument or prompt, reconcile exact Project/Cycle active Issues, and emit the engaged Issue's exact `branchName` plus `Fixes DEV-N` |
-| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |
+| Planning items | Captain-approved committed brief; `source` may hold a Linear Issue URL as free-text provenance |
 | Work items | Spacedock execution records under `docs/dev/` |
 | Execution grouping | Shared SD `sprint` value; `docs/dev/ROADMAP.md` registers legacy or local group identifiers only |
 | Execution state | `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
 | Profile receipt | `## Work profile receipt` in the exact work item |
-| Profile loader | Installed `profile-contract-loader.py` supplied by the activated `kc-dev-flow` skill; default loading preserves admitted headings, while only the Linear admission guard selects `--validate-admission` for new Pilot or Production work |
+| Profile loader | Installed `profile-contract-loader.py` supplied by the activated `kc-dev-flow` skill; default loading preserves admitted headings, and `--validate-admission` validates a new Pilot or Production Development Brief at backlog admission |
 | POC close guard | Installed sibling `poc-close-guard.py` supplied by the activated skill |
 | Installed contract interface | `kc-dev-flow-local-profile/v1` |
 | Local mods | `docs/dev/_mods/pr-merge.md` |
@@ -190,9 +181,11 @@ adapters, or unrelated Spacedock state.
 
 The command validates and hash-binds that item's supported receipt and current status,
 then emits the shared core, one selected base, and one selected stage. At a
-route's first working stage it also requires one non-empty `sprint` and
-`sprint-readiness: ready` as local Spacedock execution mechanics. They do not
-prove a Planning Receipt. Its
+route's first working stage it also requires one non-empty scalar grouping
+value — `sprint` and `sprint-readiness: ready` (unchanged), or `release` and
+`release-readiness: ready` naming one journey release qualified as
+`<journey>/<release-id>` (refused unqualified), never both — as local
+Spacedock execution mechanics, not planning evidence. Its
 `next_workflow_stage` is the normal next state. An eligible Production recovery
 instead emits `skip_to_workflow_stage: implementation` with no loaded ideation
 contract. Profiles are per item, so POC, Pilot, and Production items may run
@@ -208,62 +201,21 @@ repository mechanics; it does not repeat the profile contract.
 ### `backlog` — queue and select
 
 Capture `title`, `product`, and the required Development Brief or Exploration
-Brief. Only the Captain admits it. Provider-backed work records the complete
-`source`, `planning-window`, and `planning-outcome` tuple; standalone work records
-none of it. A partial tuple stops. This Spacedock adoption separately requires a
-shared `sprint` execution-group value and `sprint-readiness: ready`. Queued items
-carry `sprint-readiness: defer` until then, so the admitted execution set is
-`spacedock status --workflow-dir docs/dev --where sprint=<group> --where
-sprint-readiness=ready`. Obtain and commit the supported profile receipt before
-moving to the selected route's first working state.
-
-### Engage reconcile
-
-For a new Linear-backed Pilot or Production admission, pin the full state commit
-and run the combined guard. Resolve installed `../../scripts/linear-admission.py`
-from the active skill as `$KC_DEV_FLOW_LINEAR_ADMISSION` for this invocation;
-never persist it. No manual MCP read, copied provider JSON, or hand-written
-normalization is accepted:
-
-```bash
-python3 "$KC_DEV_FLOW_LINEAR_ADMISSION" \
-  --workflow-dir docs/dev \
-  --work-item "$EXACT_COMMITTED_WORK_ITEM" \
-  --profile-loader "$KC_DEV_FLOW_LOADER" \
-  --local-profile docs/dev/README.md \
-  --linear-workspace duckbase-co \
-  --state-revision "$EXACT_40_HEX_STATE_REVISION" \
-  --timeout 30
-```
-
-Success stdout is one `kc-dev-flow-dispatch-envelope/v1` object. Every
-authentication, canonical-brief, pagination, snapshot, comparator, race, or
-timeout refusal has empty stdout, so the First Officer has no dispatch input.
-Its ephemeral `delivery` binding supplies the exact forge head branch and PR
-close line. The command is read-only and never creates a task or workspace.
-
-For a complete Planning Receipt, before reading execution state or dispatching
-new work, run the read-only planning reader for the union of the snapshot's
-`planning-window`/`planning-outcome` Ready set and every currently Ready snapshot
-source outside those bounds. Refuse a truncated result. Compare that union with
-every non-terminal committed SD entity sharing its `sprint` (a `done` or archived
-item has left the active set and is not a removed planning item): source membership, window,
-outcome, accepted outcome, and non-goals. Normalize both sets into ephemeral JSON
-lists and refuse the snapshot unless every item shares the engaged item's exact
-window and outcome. Run the bound planning comparator with `--expected-source`,
-`--expected-window`, and `--expected-outcome` set to the exact engaged work item
-values. Exit `0` continues only when stdout parses as one JSON object with
-`status: clean` and empty delta arrays. Any other output stops before new
-dispatch or state mutation: exit `1` reports added, removed, changed, and moved
-items; exit `2` or an invalid exit-`0` payload reports unavailable input. The
-Captain admits every delta before an authorized actor commits the replacement
-snapshot. Do not cancel a running worker. This is reconcile, not projection or
-sync: neither side is written automatically. A standalone item skips this whole
-provider branch and uses its Captain-approved committed brief.
+Brief. Only the Captain admits it. `source` may hold a Linear Issue URL as
+free-text provenance; it is never read as planning evidence. This Spacedock
+adoption separately requires a shared `sprint` execution-group value and
+`sprint-readiness: ready`, or a scalar `release` value naming one journey
+release, qualified as `<journey>/<release-id>` (unqualified refused), and
+`release-readiness: ready` — never both on one item. Queued items carry
+`sprint-readiness: defer` (or `release-readiness: defer`) until then, so the
+admitted execution set is `spacedock status --workflow-dir docs/dev --where
+sprint=<group> --where sprint-readiness=ready` or `--where release=<id> --where
+release-readiness=ready`. Obtain and commit the supported profile receipt
+before moving to the selected route's first working state.
 
 ### Development Brief
 
-A Linear Issue used for admission has this body shape without a
+A Development Brief used for admission has this body shape without a
 `## Human-readable release brief` wrapper:
 
 ```markdown
@@ -294,10 +246,8 @@ the latest Stage Report with no unknown or uncovered criterion.
 Active only for Pilot and full-route Production. An eligible recovery creates no
 worker, briefing, report, or gate here; re-read its hash-bound receipt, apply the
 implementation skip, and load `build`. Otherwise load the selected `shape`
-contract. For a complete Planning Receipt, copy the planning item's accepted
-outcome and non-goals into the work item as an admission snapshot; it is not a
-second accepted-goal authority. For standalone work, the Captain-approved
-committed Development Brief already holds that authority. Record task-specific
+contract. The Captain-approved committed Development Brief holds the
+accepted-goal authority. Record task-specific
 acceptance evidence as execution evidence.
 Its conditional references load only when their predicates fire: reverse
 recovery for a proposed addition, replacement, removal, or missing claim in

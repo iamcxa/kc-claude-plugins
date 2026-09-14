@@ -68,15 +68,16 @@ complete non-goal list, route-back conditions, and one canonical
 `## Acceptance criteria` section. Its concrete bullets use unique ascending
 `AC-N` identifiers; an evidence-only or dual-section new admission is refused.
 Existing admitted prose is not migrated or rewritten. POC
-requires the four concrete v3 Exploration Brief fields. A Planning Receipt is
-optional: all of `source`, `planning-window`, and `planning-outcome` selects the
-provider-backed path; none selects standalone Captain authority; a partial tuple
-keeps the item in `backlog`. A local runtime may separately require `sprint` and
-`sprint-readiness: ready`, but those fields do not invent or prove provider
-scheduling.
+requires the four concrete v3 Exploration Brief fields. `source` is free-text
+provenance and may hold a Linear URL or any other reference; it is never read as
+planning evidence. A local runtime may separately require `sprint` and
+`sprint-readiness: ready`, or the scalar `release` and `release-readiness: ready`
+naming one journey release, qualified as `<journey>/<release-id>` and refused
+unqualified (never both pairs on one item), but those fields do
+not invent or prove provider scheduling.
 
 Feature/bug labels do not select routes: a clear urgent bug may use a standalone
-Development Brief, an uncertain bug POC, and a scheduled item a Planning Receipt.
+Development Brief, and an uncertain bug POC.
 
 Only the unaccepted path requests a profile choice. Ask one clarifying question
 if a missing fact could change the choice or block
@@ -117,6 +118,13 @@ failure would most change `poc_decision` first, and route the rest to a
 follow-on POC rather than widen this `poc_budget`. Ask the Captain only for
 the one fact the work item does not state — usually which assumption is
 riskiest.
+
+Before asking the Captain to accept this receipt, write the PRFAQ these fields
+answer into the work item body above the receipt, following
+`../../references/prfaq.md`. POC walks no shape stage, so this is the one point at which
+what the experiment proves is stated for a human and then frozen:
+`poc-exploration/base.md` evaluates this Brief at `prove` and forbids rewriting
+it there. This adds no field to the receipt below.
 
 ## Return the candidate receipt
 

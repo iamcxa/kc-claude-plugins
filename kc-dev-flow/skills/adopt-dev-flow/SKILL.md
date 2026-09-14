@@ -1,26 +1,24 @@
 ---
 name: adopt-dev-flow
-description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving any existing planning provider, local execution grouping, workflow runtime, and delivery provider.
+description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving any existing local execution grouping, workflow runtime, and delivery provider.
 ---
 
 # Adopt Dev Flow
 
 Bind the existing repository to one shared core and profile-native routes. Do not
-replace a working planning provider, workflow runtime, or delivery provider.
+replace a working workflow runtime or delivery provider.
 
 ## Audit
 
 Read `../../references/kernel.md` and the existing repository authorities. Map
-project context, required briefs, any planning provider, local execution
-groups, execution state, delivery, scope, and observation. A provider-backed
-item keeps one external planning authority and a complete Planning Receipt; a
-standalone item uses its Captain-approved committed brief. The workflow runtime
-owns only its admitted snapshot, execution record, and evidence. Each item has
-one planning authority and one execution-record authority. Classify the relevant
-seams as working, broken, stubbed, or missing; repair the cheapest compatible
-seam. Before interpreting an existing `source` as Planning Receipt data,
-preserve repository-local free text in a repository-owned field and remove the
-canonical `source` field. Do not reinterpret provenance as provider identity.
+project context, required briefs, local execution groups, execution state,
+delivery, scope, and observation. Every item uses its Captain-approved committed
+brief — a Development Brief or Exploration Brief — as its sole planning
+authority; `source` is free-text provenance, may hold a Linear URL or any other
+reference, and is never parsed or read. The workflow runtime owns only its
+admitted snapshot, execution record, and evidence. Each item has one planning
+authority and one execution-record authority. Classify the relevant seams as
+working, broken, stubbed, or missing; repair the cheapest compatible seam.
 
 ## Adopt
 
@@ -33,55 +31,33 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    Also bind `Installed contract interface`, `Local mods`, and
    the repository's work-item and state authorities. The activated skill anchors
    its own package root and supplies `../../scripts/profile-contract-loader.py`
-   for that invocation; do not persist an installation path. A
-   repository that supports Planning Receipts binds its provider, read-only
-   reader, and installed engage comparator. Linear uses installed sibling
-   `linear-admission.py`; other providers keep a repository-local adapter. That
-   sibling needs `LINEAR_API_KEY` in the invoking process environment, which is
-   provider credential rather than host binding, and a state authority at
-   `<workflow-dir>/.spacedock-state` that is its own committed git root. It reads
-   no other environment variable to decide whether to run, so a VM, a CI runner,
-   and a plain shell are all supported hosts. A repository whose state lives
-   inline in the workflow directory has no such root; the reader refuses it with
-   `state authority is not <workflow-dir>/.spacedock-state`, so raise that layout
-   as a refit requirement against the package and keep the repository-local
-   adapter until then. Work with no planning provider at all records no Planning
-   Receipt, invokes no reader, and needs no credential. The
-   reader normalizes the union of current Ready
-   items for one planning window/outcome and every currently Ready snapshot
-   source even when it moved; it refuses a truncated result and exposes source
-   identity, accepted goal, and non-goals without writing either system. A
-   standalone adopter binds the Captain-approved committed brief and installs no
-   provider adapter. Do not mirror live provider status into a Roadmap or
-   execution record.
+   for that invocation; do not persist an installation path. Every adopter binds
+   the Captain-approved committed brief as its sole planning authority and
+   installs no provider reader, adapter, or comparator. Do not mirror live
+   provider status into a Roadmap or execution record.
 2. Read `../../contract-manifest.json` beside the activated skill. It declares
    the contract interface, Local Profile interface, and exact plugin-owned
    runtime resources. Run its sibling installed loader from that same package;
    do not search host caches, inspect host names, copy canonical resources into
-   the repository, or add a repository fallback. Provider-backed work uses its
-   reader and installed `engage-reconcile.py`; standalone uses neither. The
-   selected stage owns each typed conditional-reference trigger; installation
-   does not load a reference. Local provider paths, README policy, local mods,
-   and Spacedock state remain repository-owned. The manifest's `resources` list
-   is the boundary for what adoption adds to the repository: adoption binds
-   existing repository authorities and adds no repository-owned reader,
-   adapter, script, test, or check for a capability a declared resource already
-   supplies. A capability the package lacks is a refit requirement raised
-   against the package, with one exception: a planning provider the package
-   does not support keeps a repository-local adapter.
+   the repository, or add a repository fallback. The selected stage owns each
+   typed conditional-reference trigger; installation does not load a reference.
+   Local provider paths, README policy, local mods, and Spacedock state remain
+   repository-owned. The manifest's `resources` list is the boundary for what
+   adoption adds to the repository: adoption binds existing repository
+   authorities and adds no repository-owned reader, adapter, script, test, or
+   check for a capability a declared resource already supplies. A capability the
+   package lacks is a refit requirement raised against the package.
 3. Select a profile before the first working stage and store the v3 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
    the exact work item so simultaneous items cannot borrow each other's route.
    Require the Development Brief for Pilot and Production or the v3 Exploration
-   Brief for POC. A Planning Receipt is complete or absent: provider-backed work
-   records `source`, `planning-window`, and `planning-outcome`; standalone work
-   records none of them. A partial tuple stops. Local `sprint` and
-   `sprint-readiness` remain runtime grouping and readiness mechanics, not
-   planning evidence. When the provider uses Issue bodies as admission packets,
-   each body starts directly with `## The problem` and omits both an
-   `## Agent execution contract` section and a `## Human-readable release brief`
-   wrapper, carrying these headings in this order:
+   Brief for POC. Local `sprint` and `sprint-readiness` remain runtime grouping
+   and readiness mechanics, not planning evidence; `release` and
+   `release-readiness` are the scalar alternative naming one journey release,
+   qualified as `<journey>/<release-id>` and refused unqualified, never both
+   pairs on one item. A Development Brief used for admission has this body
+   shape without a `## Human-readable release brief` wrapper:
 
    ```markdown
    ## The problem
@@ -100,28 +76,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    delta that names the changed premise, affected acceptance evidence, and
    recommended change or stop.
    ```
-
-   The Issue and the committed work item carry the accepted goal under the same
-   heading, and `linear-admission.py` reads no other name for it.
-   The reader takes Non-goals from `- ` or `* ` bullets, while
-   `profile-contract-loader.py` takes the work item's from `- ` bullets, so a
-   snapshot copied out of an Issue rewrites `* ` as `- `.
-4. For a complete Planning Receipt, the engage reconcile is read-only: invoke
-   the reader and normalize the provider's current Ready set and committed
-   execution snapshot into ephemeral comparator inputs. Refuse a snapshot whose
-   items do not all share the engaged item's exact `planning-window` and
-   `planning-outcome`. Bind that exact source, window, and outcome when invoking
-   the installed sibling comparator.
-   Only exit `0` with one parsed `status: clean` result and empty delta arrays
-   continues. Any other output stops: exit `1` reports the classified delta,
-   while exit `2` or an invalid exit-`0` payload reports unavailable input.
-   Report added, removed, changed, and moved items and stop before new dispatch
-   or state mutation when any difference exists. The Captain admits every delta
-   before an authorized actor commits a replacement snapshot. Never mutate
-   either side automatically or cancel a running worker. Without a Planning
-   Receipt, skip the provider reader and comparator and use the Captain-approved
-   committed brief as planning authority.
-5. Map the logical routes to the runtime. A runtime with one superset graph uses:
+4. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot and Production add `ideation`. No
    profile adds a state the others skip, so a runtime that owns one stage graph
    per workflow cannot strand an item outside its declared route. Production's
@@ -130,7 +85,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    provider's merge verdict is the sole terminal consumer. Backlog and done
    remain non-working states. Preserve an extra local terminal state only
    through an explicit mapping; it does not silently join every profile route.
-6. Make each working stage a small installed-loader invocation or pointer. Pass
+5. Make each working stage a small installed-loader invocation or pointer. Pass
    the exact work item, marked Local Profile, stage-pin sidecar, and runtime-owned
    attempt identity. Before dispatch, write and commit one
    `kc-dev-flow-stage-pin/v1` record, re-read it, and dispatch only its emitted
@@ -148,7 +103,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
-7. Derive the two delivery triggers from the audited delivery authority rather
+6. Derive the two delivery triggers from the audited delivery authority rather
    than asking. Set `delivery_artifact_review` true when that authority delivers
    through a pull request, merge request, or forge equivalent — a forge remote
    plus an existing delivery-artifact history is sufficient evidence — no matter
@@ -184,9 +139,9 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    absence as a route that delivers without a review artifact, do not invent
    direct Git delivery, a trunk push, forge ceremony, merge guard, or release
    owner, and stop before delivery until the repository names that authority.
-8. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
+7. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
-9. Resolve the implementation-exit observation by its precondition first. The
+8. Resolve the implementation-exit observation by its precondition first. The
    installed `roborev-implementation-exit.md` claims single-flight through a
    Spacedock-registered state holder, so the observation is in scope only for a
    repository running Spacedock with kc-dev-flow. Without that state authority,
@@ -207,7 +162,7 @@ canonical `source` field. Do not reinterpret provenance as provider identity.
    adoption defect: the observation would emit and resolve nothing at every
    future implementation exit, so record it as a refit requirement instead of
    leaving a permanent silent `UNAVAILABLE`.
-10. From at least one arbitrary installed root with host-specific environment
+9. From at least one arbitrary installed root with host-specific environment
    variables absent, re-run every profile-stage combination this repository will
    use and prove that unselected profile and stage markers are absent. Snapshot
    README policy, local-mod bytes and modes, provider adapters, and state before
@@ -237,9 +192,7 @@ semantics for Captain acceptance before refitting the named README or local mod.
 After that accepted refit, the next-stage invocation explicitly adds
 `--accept-local-profile-refit`; an ordinary compatible upgrade never uses it.
 
-For a provider-backed adopter, run one clean, one delta, and one invalid-input
-comparator invocation through the installed package. A standalone adopter has
-no comparator to exercise. Re-run every profile-stage combination and prove
+Re-run every profile-stage combination and prove
 that unselected profile and stage markers are absent. The manifest makes a
 missing declared reference an installed-package defect; do not repair it by
 creating a repository copy.
@@ -264,24 +217,12 @@ now declares by disposition, not by filename alone:
 
 | Retired repository artifact | Upgrade disposition |
 |---|---|
-| a repository-local Linear planning reader, built as this skill instructed before the package declared `scripts/linear-admission.py` | Delete the reader and its tests. The installed sibling `linear-admission.py` owns the current Ready read, carried snapshot sources, and comparator invocation. It reads `LINEAR_API_KEY` through `os.environ` in `linear-admission.py` and has no `.env` reader, so a key kept in a `.env` file moves into the invoking environment before the first engage. |
 | `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
 | `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
 
 Keep `retained-document-policy.md` and `project-context-maintenance.md` as typed
 installed conditional references; do not copy them into the repository, fold
 them into the shared core, or load either for an unrelated work record.
-
-Changing the planning provider is item-scoped. Migrate only open planning items
-that have not been admitted to execution. An admitted provider-backed item keeps
-its existing planning item and provider until completion; the old provider must
-remain available for those items. A standalone item has no provider to migrate.
-New provider-backed admissions use the replacement provider. During the drain,
-providers may differ across snapshots, but each item retains one planning
-authority. Keep admitted execution snapshots, planning bindings, execution
-history, and delivery artifacts unchanged. Reconcile each provider-backed
-snapshot through its own reader. Do not install an execution-to-provider
-projector, provider importer, polling loop, or bidirectional sync.
 
 ## Boundary
 

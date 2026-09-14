@@ -6,15 +6,12 @@ from __future__ import annotations
 import ast
 import importlib.util
 import hashlib
-import http.server
 import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import threading
-import time
 from pathlib import Path
 
 
@@ -96,9 +93,6 @@ required = [
     "kc-dev-flow/references/roborev-implementation-exit.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
-    "kc-dev-flow/scripts/engage-reconcile.py",
-    "kc-dev-flow/scripts/engage-reconcile.test.py",
-    "kc-dev-flow/scripts/linear-admission.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -148,6 +142,12 @@ for retired in [
     "docs/dev/_mods/engage-reconcile.py",
     "scripts/kc-dev-flow/engage-reconcile.py",
     "scripts/kc-dev-flow/linear-admission.py",
+    # The provider-backed intake path retired 2026-09-14: dev-flow's only intake
+    # is now a committed brief, whether Kent dictates it or kc-journey-map's
+    # plan-release converts a journey map into one.
+    "kc-dev-flow/scripts/engage-reconcile.py",
+    "kc-dev-flow/scripts/engage-reconcile.test.py",
+    "kc-dev-flow/scripts/linear-admission.py",
     # This blind-evaluation adapter had no caller outside its own test. Keep the
     # retired experiment from silently returning as release or runtime surface.
     "scripts/kc-dev-flow-loader-eval.py",
@@ -159,8 +159,6 @@ for retired in [
 script_roles = {
     "runtime": {
         "kc-dev-flow/scripts/profile-contract-loader.py",
-        "kc-dev-flow/scripts/engage-reconcile.py",
-        "kc-dev-flow/scripts/linear-admission.py",
         "kc-dev-flow/scripts/poc-close-guard.py",
         "kc-dev-flow/scripts/pr-review-handoff.py",
         "kc-dev-flow/scripts/surface-map-check.py",
@@ -168,7 +166,6 @@ script_roles = {
     },
     "package-test": {
         "kc-dev-flow/scripts/profile-contract-loader.test.py",
-        "kc-dev-flow/scripts/engage-reconcile.test.py",
         "kc-dev-flow/scripts/poc-close-guard.test.py",
         "kc-dev-flow/scripts/pr-review-handoff.test.py",
         "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -244,8 +241,20 @@ conditional_stage_references = {
         }
     ]
     + documentation_references,
-    ("poc-exploration", "prove.md"): delivery_references + documentation_references,
+    ("poc-exploration", "prove.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references + documentation_references,
     ("pilot-product-slice", "shape.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
         {
             "path": "../../reverse-recovery-audit.md",
             "trigger": "brownfield_capability_change",
@@ -255,15 +264,32 @@ conditional_stage_references = {
             "path": "../../journey-slicing.md",
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
+        },
+        {
+            "path": "../../design-preview.md",
+            "trigger": "user_visible_surface_change",
+            "receipt": "design_preview",
         },
     ]
     + documentation_references,
     ("pilot-product-slice", "build.md"): roborev_reference
     + delivery_references
     + documentation_references,
-    ("pilot-product-slice", "verify-deliver.md"): delivery_references
+    ("pilot-product-slice", "verify-deliver.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references
     + documentation_references,
     ("production", "shape.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
         {
             "path": "../../reverse-recovery-audit.md",
             "trigger": "brownfield_capability_change",
@@ -274,12 +300,24 @@ conditional_stage_references = {
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
         },
+        {
+            "path": "../../design-preview.md",
+            "trigger": "user_visible_surface_change",
+            "receipt": "design_preview",
+        },
     ]
     + documentation_references,
     ("production", "build.md"): roborev_reference
     + delivery_references
     + documentation_references,
-    ("production", "verify.md"): delivery_references + documentation_references,
+    ("production", "verify.md"): [
+        {
+            "path": "../../prfaq.md",
+            "trigger": "captain_gate_presentation",
+            "receipt": None,
+        },
+    ]
+    + delivery_references + documentation_references,
 }
 for profile, names in profile_files.items():
     for name in names:
@@ -348,8 +386,6 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
-    "kc-dev-flow/scripts/engage-reconcile.py",
-    "kc-dev-flow/scripts/engage-reconcile.test.py",
     "kc-dev-flow/scripts/poc-close-guard.py",
     "kc-dev-flow/scripts/poc-close-guard.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -365,10 +401,6 @@ if not require_ablation_only:
     run(
         [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
         "profile loader",
-    )
-    run(
-        [sys.executable, "kc-dev-flow/scripts/engage-reconcile.test.py"],
-        "engage reconcile",
     )
     run(
         [sys.executable, "kc-dev-flow/scripts/poc-close-guard.test.py"],
@@ -474,6 +506,8 @@ expected_manifest_resources = {
     "references/kernel.md",
     "references/reverse-recovery-audit.md",
     "references/journey-slicing.md",
+    "references/design-preview.md",
+    "references/prfaq.md",
     "references/retained-document-policy.md",
     "references/project-context-maintenance.md",
     "references/delivery-branch-base.md",
@@ -482,8 +516,6 @@ expected_manifest_resources = {
     "references/roborev-implementation-exit.md",
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
-    "scripts/engage-reconcile.py",
-    "scripts/linear-admission.py",
     "scripts/check-pr-title.py",
     "scripts/fixtures/pr-title/release-please-verdicts.tsv",
     "skills/adopt-dev-flow/SKILL.md",
@@ -832,40 +864,34 @@ require_production_route(
 for phrase in [
     "one planning authority per item",
     "one execution-record authority",
-    "planning item owns discussion, the accepted goal, priority, and human-facing status",
-    "planning window owns time",
-    "planning outcome owns the accepted result",
     "admitted execution set and its accepted goal and non-goals are snapshots, not planning authorities",
-    "local execution grouping does not prove a Planning Receipt",
     "runtime owns execution and evidence",
-    "execution-to-planning-provider projector",
-    "No reconcile result writes either side automatically",
-    "Captain admits the delta",
 ]:
     require(phrase in normalized_kernel, f"kernel omits provider-neutral planning boundary: {phrase}")
 normalized_continuation_policy = " ".join(
     read("kc-dev-flow/skills/continue-dev-flow/SKILL.md").split()
 )
+for forbidden in [
+    "linear-admission.py",
+    "engage-reconcile",
+    "Planning Receipt",
+    "provider-backed branch",
+]:
+    require(
+        forbidden not in normalized_continuation_policy,
+        f"continuation still describes the retired provider-backed intake: {forbidden}",
+    )
 for phrase in [
-    "exact work item's `source`",
-    "shares the exact window and outcome read from the engaged item",
-    "stdout parses as one JSON object with `status: clean`",
-    "Exit `1` reports the classified delta",
-    "Exit `2` reports `planning reconcile unavailable`",
-    "added, removed, changed, or moved item",
-    "Captain must admit the delta",
+    "compare the accepted goal and complete non-goal list exactly with the admission snapshot",
+    "structured planning delta naming the changed premise",
 ]:
     require(
         phrase in normalized_continuation_policy,
-        f"continuation omits provider engage behavior: {phrase}",
+        f"continuation omits the scope-check boundary: {phrase}",
     )
 for phrase in [
     "Development Brief is required",
-    "Planning Receipt is optional",
-    "complete or absent",
-    "partial Planning Receipt",
     "Captain-approved committed work item",
-    "does not invoke the planning reader or comparator",
     "compare the accepted goal and complete non-goal list exactly",
     "structured planning delta",
     "affected acceptance evidence",
@@ -887,7 +913,7 @@ for phrase in [
     "An item leaves `backlog` only after its required brief is admitted",
     "Development Brief",
     "Exploration Brief",
-    "local execution grouping does not prove a Planning Receipt",
+    "local execution grouping does not create provider scheduling metadata",
 ]:
     require(phrase in normalized_kernel, f"kernel backlog exit bar is missing: {phrase}")
 require(
@@ -968,15 +994,14 @@ require(
     "poc_handoff" not in normalized_continue,
     "continuation still owns downstream POC handoff",
 )
-for phrase in [
+for forbidden in [
     "one ephemeral `delivery` binding",
     "exact `branchName` and `Fixes TEAM-N`",
     "`branch: null` and `Closes owner/repo#N`",
-    "stop before branch push or PR creation",
 ]:
     require(
-        phrase in normalized_continue,
-        f"continuation omits provider delivery linkage: {phrase}",
+        forbidden not in normalized_continue,
+        f"continuation still derives delivery from the retired provider-backed read: {forbidden}",
     )
 normalized_pr_delivery = " ".join(
     read("kc-dev-flow/references/pr-delivery.md").split()
@@ -1260,45 +1285,32 @@ require(
 )
 require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
 for phrase in [
-    "repository that supports Planning Receipts",
-    "standalone adopter binds the Captain-approved committed brief",
-    "A Planning Receipt is complete or absent",
+    "Every adopter binds the Captain-approved committed brief as its sole planning authority",
+    "installs no provider reader, adapter, or comparator",
     "Local `sprint` and `sprint-readiness` remain runtime grouping and readiness mechanics",
-    "Linear uses installed sibling `linear-admission.py`",
-    "other providers keep a repository-local adapter",
-    "installed engage comparator",
-    "every currently Ready snapshot source",
-    "For a provider-backed adopter, run one clean, one delta, and one invalid-input comparator invocation",
-    "A standalone adopter has no comparator to exercise",
-    "For a complete Planning Receipt, the engage reconcile is read-only",
-    "do not persist an installation path",
-    "exact source, window, and outcome",
-    "do not all share",
-    "Captain admits every delta",
-    "parsed `status: clean` result",
-    "starts directly with `## The problem`",
-    "omits both an `## Agent execution contract` section",
-    "Provider-backed work uses its reader",
-    "standalone uses neither",
-    "preserve repository-local free text in a repository-owned field",
-    "remove the canonical `source` field",
-    "Do not reinterpret provenance as provider identity",
+    "A capability the package lacks is a refit requirement raised against the package",
     "A missing delivery authority is a refit requirement",
     "do not invent direct Git delivery",
     "adds no repository-owned reader, adapter, script, test, or check for a capability a declared resource already supplies",
     "commit it only when the Captain names a consumer that reads it",
-    "a repository-local Linear planning reader",
-    "needs `LINEAR_API_KEY` in the invoking process environment, which is provider credential rather than host binding",
-    "a state authority at `<workflow-dir>/.spacedock-state` that is its own committed git root",
-    "It reads no other environment variable to decide whether to run",
-    "Work with no planning provider at all records no Planning Receipt, invokes no reader, and needs no credential",
-    "raise that layout as a refit requirement against the package and keep the repository-local adapter",
-    "The Issue and the committed work item carry the accepted goal under the same heading, and `linear-admission.py` reads no other name for it",
+    "`source` is free-text provenance",
+    "never parsed or read",
 ]:
     require(phrase in normalized_adopter, f"adopter omits scheduling binding: {phrase}")
+for forbidden in [
+    "linear-admission.py",
+    "engage-reconcile",
+    "Planning Receipt",
+    "provider-backed",
+    "a repository-local Linear planning reader",
+]:
+    require(
+        forbidden not in normalized_adopter,
+        f"adopter still describes the retired provider-backed path: {forbidden}",
+    )
 adopt_steps = [int(value) for value in re.findall(r"^(\d+)\.", adopter, re.MULTILINE)]
 require(
-    adopt_steps == list(range(1, 11)),
+    adopt_steps == list(range(1, 10)),
     f"adopter steps must be unique and sequential: {adopt_steps}",
 )
 for forbidden in [
@@ -1365,7 +1377,7 @@ for phrase in [
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 continuation_authority_order = [
     "Read the exact committed work item and selected brief.",
-    "Classify its optional Planning Receipt before provider access.",
+    "Before dispatch and whenever execution proposes a scope change, compare the",
     "Then read current execution state from its declared authority.",
 ]
 continuation_authority_positions = []
@@ -1378,27 +1390,22 @@ require(
     "continuation must resolve the brief and optional receipt before execution state",
 )
 for phrase in [
-    "all Planning Receipt fields are absent",
-    "all Planning Receipt fields are present",
-    "report `planning receipt incomplete`",
-    "run provider reconcile only for the provider-backed branch",
-    "Invoke the installed loader's sibling read-only engage comparator only in the provider-backed branch.",
-    "Captain-approved committed brief",
-    "If `source` is not a resolvable planning link, report `planning source unavailable`",
-    "stop before reading execution state",
-    "Do not promote the admission snapshot into planning authority",
-    "The Captain must admit the delta before an authorized actor commits a replacement snapshot.",
-    "Do not cancel a running worker.",
-    "No difference writes the provider or execution snapshot automatically.",
-    "every currently Ready snapshot source",
-    "Refuse a truncated provider result",
-    "stdout parses as one JSON object with `status: clean`",
     "compare the accepted goal and complete non-goal list exactly",
     "do not replace the snapshot or candidate",
     "affected acceptance evidence",
     "recommended `change` or `stop`",
 ]:
     require(phrase in normalized_continue, f"continuation planning disambiguation omits: {phrase}")
+for forbidden in [
+    "linear-admission.py",
+    "engage-reconcile",
+    "Planning Receipt",
+    "provider-backed branch",
+]:
+    require(
+        forbidden not in normalized_continue,
+        f"continuation still describes the retired provider-backed intake: {forbidden}",
+    )
 for phrase in [
     "retained_document_change",
     "project_context_claim_may_change",
@@ -1436,17 +1443,28 @@ for phrase in [
     "The first version of KC Dev Flow",
     "carrying the whole workshop",
     "kc-dev-flow-work-profile/v3",
-    "A Planning Receipt is optional and complete or absent",
-    "Without a Planning Receipt, the Captain-approved committed work item",
+    "The Captain-approved committed work item is the sole",
+    "planning authority",
+    "`source` is free-text provenance",
+    "never read as planning evidence",
+    "invokes no planning provider, reader, or comparator",
     "Runtime adapters decide task, worktree, and worker cardinality",
     "returns `poc_outcome` to planning",
     "directional evidence",
     "What would prove this wrong",
     "Load the work, not the ceremony",
-    "The First Officer supplies the source, window, and outcome read from the exact work item",
-    "The First Officer continues only on one parsed `status: clean` result",
 ]:
     require(phrase in normalized_rationale, f"rationale omits: {phrase}")
+for forbidden in [
+    "linear-admission.py",
+    "engage-reconcile",
+    "Planning Receipt",
+    "provider-backed",
+]:
+    require(
+        forbidden not in normalized_rationale,
+        f"rationale still describes the retired provider-backed intake: {forbidden}",
+    )
 for forbidden in [
     "committed Spacedock entity set is the snapshot",
     "bind each task to its planning selection",
@@ -1529,27 +1547,34 @@ normalized_workflow = " ".join(workflow.split())
 ship_readme = read("docs/ship-flow/README.md")
 normalized_ship_readme = " ".join(ship_readme.split())
 for phrase in [
-    "Linear is this repository's planning provider for new provider-backed admissions, not an iteration authority.",
-    "`source` links the accepted Linear Issue.",
-    "At every provider-backed engage, compare the current Project/Cycle active set with the committed SD snapshot.",
-    "Existing admitted work keeps its recorded provider and reader",
-    "GitHub Project #4 remains historical and receives no new admissions.",
-    "A standalone Captain-approved brief leaves `source`, `planning-window`, and `planning-outcome` empty",
-    "A difference requires Captain admission and never writes either side automatically.",
-    "| Planning reader and admission guard | Installed sibling `linear-admission.py`",
-    "| Planning comparator | Installed sibling `engage-reconcile.py` supplied by the activated `kc-dev-flow` skill; no stored installation path |",
-    "reconcile exact Project/Cycle active Issues",
+    "Every item in this repository uses its Captain-approved committed brief",
+    "`source` is free-text provenance and may hold a Linear Issue URL or any other",
+    "it is never read as planning evidence, and this repository invokes",
+    "no planning provider, reader, or comparator",
+    "GitHub Project #4 and the prior",
+    "Linear-Cycle/Project binding remain historical and receive no new admissions.",
 ]:
     require(phrase in normalized_workflow, f"self-adoption omits Linear cutover boundary: {phrase}")
+for forbidden in [
+    "linear-admission.py",
+    "engage-reconcile.py",
+    "Planning reader and admission guard",
+    "Planning comparator",
+    "provider-backed admissions",
+    "At every provider-backed engage",
+]:
+    require(
+        forbidden not in normalized_workflow,
+        f"self-adoption still describes the retired provider-backed intake: {forbidden}",
+    )
 require(
     "GitHub Issues plus Project #4 is this repository's default planning provider"
     not in normalized_workflow,
     "self-adoption restored GitHub Project as the default for new admissions",
 )
 for phrase in [
-    "For a complete Planning Receipt, copy the planning item's accepted outcome and non-goals into the work item as an admission snapshot",
-    "it is not a second accepted-goal authority",
-    "For standalone work, the Captain-approved committed Development Brief already holds that authority.",
+    "The Captain-approved committed Development Brief holds the",
+    "accepted-goal authority.",
     "Record task-specific acceptance evidence as execution evidence.",
 ]:
     require(phrase in normalized_workflow, f"self-adoption misstates brief authority: {phrase}")
@@ -1677,15 +1702,11 @@ for phrase in [
     )
 require("](./MIGRATION.md)" in package_readme, "package README omits migration guide")
 require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
-require(
-    "checks ephemeral normalized admission and current Ready sets against the caller-supplied expected source, window, and outcome"
-    in normalized_package_readme,
-    "package README overclaims comparator provenance binding",
-)
-require(
-    "binds the exact engaged source" not in normalized_package_readme,
-    "package README still overclaims comparator provenance binding",
-)
+for forbidden in ["linear-admission.py", "engage-reconcile.py", "Planning Receipt"]:
+    require(
+        forbidden not in normalized_package_readme,
+        f"package README still describes the retired provider-backed intake: {forbidden}",
+    )
 require(
     "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
     "root README omits migration guide",
@@ -1694,9 +1715,14 @@ architecture = " ".join(read("ARCHITECTURE.md").split())
 for phrase in [
     "one canonical `AC-N` Development Brief",
     "default loading leaves already-admitted headings unchanged",
-    "success-only dispatch-envelope emission without creating execution state",
+    "`source` is free-text provenance",
+    "never reads it as planning evidence",
 ]:
     require(phrase in architecture, f"architecture omits admission boundary: {phrase}")
+require(
+    "linear-admission" not in architecture and "engage-reconcile" not in architecture,
+    "architecture still describes the retired provider-backed intake",
+)
 validation_runbook = read("docs/dev/runbooks/validation-evidence.md")
 normalized_validation_runbook = " ".join(validation_runbook.split())
 for stale in ["selected policy mods", "Write all six lines", "the EM selects"]:
@@ -1713,386 +1739,6 @@ for phrase in [
 for name in ["chief-engineer", "science-officer", "science-officer-em"]:
     require(name in package_readme, f"package README omits {name}")
     require(name in root_readme, f"root README omits {name}")
-
-linear_admission = PLUGIN / "scripts/linear-admission.py"
-linear_source = linear_admission.read_text(encoding="utf-8")
-for mechanism in [
-    '"--validate-admission"',
-    '"GIT_NO_REPLACE_OBJECTS": "1"',
-    '"state or work-item revision changed during admission"',
-    '"status") != "clean"',
-    '"branchName"',
-    '"delivery": delivery',
-    '"kc-dev-flow-dispatch-envelope/v1"',
-    '"committed snapshot Non-goals must be a \'- \' bullet list"',
-]:
-    require(mechanism in linear_source, f"Linear admission omits retained mechanism: {mechanism}")
-
-
-class LinearFixture(http.server.BaseHTTPRequestHandler):
-    def log_message(self, _format: str, *args: object) -> None:
-        return
-
-    def do_POST(self) -> None:
-        fixture = self.server
-        length = int(self.headers.get("Content-Length", "0"))
-        request = json.loads(self.rfile.read(length))
-        query, variables = request["query"], request["variables"]
-        fixture.queries.append(query)
-        if fixture.scenario == "unauthorized":
-            self.send_error(401)
-            return
-        if fixture.scenario == "timeout":
-            time.sleep(0.2)
-        if fixture.scenario in {"state-race", "work-item-race"} and not fixture.raced:
-            fixture.raced = True
-            if fixture.scenario == "state-race":
-                (fixture.state / "race.md").write_text("race\n", encoding="utf-8")
-                subprocess.run(["git", "-C", str(fixture.state), "add", "race.md"], check=True)
-                subprocess.run(
-                    ["git", "-C", str(fixture.state), "-c", "user.name=fixture",
-                     "-c", "user.email=fixture@example.test", "commit", "-m", "race"],
-                    check=True, capture_output=True,
-                )
-            else:
-                fixture.work_item.write_text(
-                    fixture.work_item.read_text(encoding="utf-8") + "changed\n",
-                    encoding="utf-8",
-                )
-        content = fixture.project_content
-        cycle_id = fixture.cycle_id
-        goal, non_goal = fixture.goal, fixture.non_goal
-        goal_heading = (
-            "## Goal"
-            if fixture.scenario == "legacy-goal-heading"
-            else "## Accepted outcome"
-        )
-        if fixture.scenario == "project-drift":
-            content += " changed"
-        if fixture.scenario == "cycle-drift":
-            cycle_id = "22222222-2222-4222-8222-222222222222"
-        if fixture.scenario == "goal-drift":
-            goal += " changed"
-        if fixture.scenario == "non-goal-drift":
-            non_goal += " changed"
-        state_type = "completed" if fixture.scenario == "removed" else "started"
-
-        def issue(identifier: str = "DEV-12") -> dict[str, object]:
-            issue_state = "completed" if identifier == "DEV-11" else state_type
-            reported_identifier = (
-                "DEV-99"
-                if fixture.scenario == "mismatched-identifier" and "AdmissionIssue" in query
-                else identifier
-            )
-            branch_name = (
-                "feature/not-the-engaged-issue"
-                if fixture.scenario == "invalid-branch"
-                else f"feature/{reported_identifier.lower()}-fixture"
-            )
-            item = {
-                "id": identifier.lower(), "identifier": reported_identifier,
-                "url": f"https://linear.app/{fixture.workspace}/issue/{identifier}/fixture",
-                "description": f"{goal_heading}\n\n{goal}\n\n## Non-goals\n\n* {non_goal}\n",
-                "state": {"type": issue_state},
-                "project": {"id": fixture.project_id, "name": fixture.project_name, "content": content},
-                "cycle": {"id": cycle_id, "startsAt": fixture.starts, "endsAt": fixture.ends},
-            }
-            if "branchName" in query:
-                item["branchName"] = branch_name
-            return item
-
-        if "AdmissionIssue" in query:
-            data = {
-                "viewer": {"organization": {"id": "org", "urlKey": (
-                    "wrong" if fixture.scenario == "wrong-org" else fixture.workspace
-                )}},
-                "issue": issue(str(variables["id"])),
-            }
-        elif "AdmissionProject" in query:
-            data = {"project": {"id": fixture.project_id, "name": fixture.project_name, "content": content}}
-        else:
-            nodes = [] if fixture.scenario == "removed" else [issue("DEV-13"), issue()]
-            if fixture.scenario == "added":
-                nodes.append(issue("DEV-14"))
-            page = {"hasNextPage": fixture.scenario == "truncated", "endCursor": None}
-            data = {"issues": {"nodes": nodes, "pageInfo": page}}
-        encoded = json.dumps({"data": data}).encode("utf-8")
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(encoded)))
-        self.end_headers()
-        try:
-            self.wfile.write(encoded)
-        except BrokenPipeError:
-            pass
-
-
-with tempfile.TemporaryDirectory(prefix="linear-admission-contract-") as temporary:
-    fixture_root = Path(temporary)
-    workflow = fixture_root / "docs/dev"
-    state = workflow / ".spacedock-state"
-    state.mkdir(parents=True)
-    project_id = "11111111-1111-4111-8111-111111111111"
-    cycle_id = "33333333-3333-4333-8333-333333333333"
-    project_name, project_content = "Project One", "One accepted package."
-    starts, ends = "2026-08-27T16:00:00.000Z", "2026-09-10T16:00:00.000Z"
-    goal, non_goal = "Emit one exact envelope.", "No provider writes."
-    workspace_slug = "qnow"
-    source = f"https://linear.app/{workspace_slug}/issue/DEV-12/fixture"
-    project_digest = hashlib.sha256(f"{project_name}\n{project_content}".encode()).hexdigest()
-    window = f"Linear Cycle {cycle_id} {starts}/{ends}"
-    outcome = f"Linear Project {project_id} {project_name} sha256:{project_digest}"
-    work_item = state / "dev-12.md"
-    work_item.write_text(
-        f"""---
-status: implementation
-source: {source}
-planning-window: "{window}"
-planning-outcome: "{outcome}"
-sprint: dev-12
-sprint-readiness: ready
----
-
-## Work profile receipt
-
-```yaml
-work_profile:
-  schema: kc-dev-flow-work-profile/v3
-  selected: pilot-product-slice
-  recommended: pilot-product-slice
-  route: [shape, build, verify-deliver]
-  basis: fixture
-  semantics_unchanged: false
-```
-
-## The problem
-
-Manual provider input is not repeatable.
-
-## Accepted outcome
-
-{goal}
-
-## Non-goals
-
-- {non_goal}
-
-## Acceptance criteria
-
-- **AC-1** A current read emits one exact envelope.
-
-## Route-back conditions
-
-Stop on any planning drift.
-""",
-        encoding="utf-8",
-    )
-    (state / "dev-13.md").write_text(
-        work_item.read_text(encoding="utf-8").replace("DEV-12", "DEV-13"),
-        encoding="utf-8",
-    )
-    # Archived and finished in Linear too: only an active snapshot item that
-    # Linear has closed counts as a removed planning item.
-    (state / "_archive").mkdir()
-    (state / "_archive/dev-11.md").write_text(
-        work_item.read_text(encoding="utf-8")
-        .replace("DEV-12", "DEV-11")
-        .replace("status: implementation", "status: done", 1),
-        encoding="utf-8",
-    )
-    subprocess.run(["git", "init", str(state)], check=True, capture_output=True)
-    subprocess.run(["git", "-C", str(state), "add", "dev-12.md", "dev-13.md", "_archive/dev-11.md"], check=True)
-    subprocess.run(
-        ["git", "-C", str(state), "-c", "user.name=fixture",
-         "-c", "user.email=fixture@example.test", "commit", "-m", "fixture"],
-        check=True, capture_output=True,
-    )
-    revision = subprocess.check_output(["git", "-C", str(state), "rev-parse", "HEAD"], text=True).strip()
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), LinearFixture)
-    server.scenario, server.queries, server.raced = "clean", [], False
-    server.state, server.work_item = state, work_item
-    server.workspace = workspace_slug
-    server.project_id, server.project_name, server.project_content = project_id, project_name, project_content
-    server.cycle_id, server.starts, server.ends = cycle_id, starts, ends
-    server.goal, server.non_goal = goal, non_goal
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-
-    def admit(
-        scenario: str,
-        *,
-        key: str | None = "test-key",
-        timeout: str = "5",
-        reader: Path = linear_admission,
-        workflow_dir: Path = workflow,
-    ) -> subprocess.CompletedProcess[str]:
-        server.scenario, server.raced = scenario, False
-        env = os.environ.copy()
-        if key is None:
-            env.pop("LINEAR_API_KEY", None)
-        else:
-            env["LINEAR_API_KEY"] = key
-        return subprocess.run(
-            [sys.executable, str(reader), "--workflow-dir", str(workflow_dir),
-             "--work-item", str(work_item),
-             "--profile-loader", str(PLUGIN / "scripts/profile-contract-loader.py"),
-             "--local-profile", str(ROOT / "docs/dev/README.md"),
-             "--linear-workspace", workspace_slug, "--state-revision", revision,
-             "--timeout", timeout, "--graphql-url", f"http://127.0.0.1:{server.server_port}/graphql"],
-            cwd=ROOT, env=env, text=True, capture_output=True,
-        )
-
-    before = (revision, work_item.read_bytes())
-    requests_before = len(server.queries)
-    refused = admit("missing-key", key=None)
-    require(
-        refused.returncode == 2
-        and not refused.stdout
-        and "LINEAR_API_KEY is unavailable" in refused.stderr,
-        f"missing-key was not refused for the credential: {refused.stderr}",
-    )
-    require(len(server.queries) == requests_before, "a missing credential reached Linear")
-    started_at = time.monotonic()
-    clean = admit("clean")
-    journey_ms = round((time.monotonic() - started_at) * 1000)
-    require(clean.returncode == 0, f"clean Linear admission failed: {clean.stderr}")
-    envelope = json.loads(clean.stdout)
-    require(
-        set(envelope) == {
-            "schema", "linear_organization", "delivery", "work_item_sha256",
-            "state_revision", "snapshot_sha256", "live_read_sha256", "reconcile",
-            "development_brief_sha256", "plugin_version", "contract_digest",
-            "local_profile_interface", "profile_contract_hashes", "command_elapsed_ms",
-        },
-        f"dispatch envelope key set drifted: {sorted(envelope)}",
-    )
-    require(
-        envelope["schema"] == "kc-dev-flow-dispatch-envelope/v1"
-        and envelope.get("delivery") == {
-            "branch": "feature/dev-12-fixture",
-            "close_line": "Fixes DEV-12",
-        }
-        and envelope["reconcile"] == {"added": [], "changed": [], "moved": [], "removed": [], "status": "clean"}
-        and envelope["snapshot_sha256"] == envelope["live_read_sha256"]
-        and envelope["plugin_version"] == installed_package["version"]
-        and envelope["contract_digest"] == installed_package["contract_digest"]
-        and envelope["local_profile_interface"] == "kc-dev-flow-local-profile/v1"
-        and envelope["command_elapsed_ms"] <= journey_ms <= 60000,
-        f"full-boundary admission receipt is invalid: {envelope} / {journey_ms}",
-    )
-    legacy_heading = admit("legacy-goal-heading")
-    require(
-        legacy_heading.returncode == 2
-        and not legacy_heading.stdout
-        and "needs one Accepted outcome section" in legacy_heading.stderr,
-        f"the retired Goal heading was still admitted: {legacy_heading.stderr}",
-    )
-    inline_workflow = fixture_root / "inline"
-    inline_workflow.mkdir()
-    inline = admit("clean", workflow_dir=inline_workflow)
-    require(
-        inline.returncode == 2
-        and not inline.stdout
-        and "state authority is not <workflow-dir>/.spacedock-state" in inline.stderr,
-        f"inline state layout was not named in the refusal: {inline.stderr}",
-    )
-    with tempfile.TemporaryDirectory(prefix="linear-delivery-mutants-") as temporary:
-        mutant_root = Path(temporary)
-        branch_mutant = mutant_root / "branch-read-removed.py"
-        branch_source, branch_count = re.subn(
-            r" url branchName description", " url description", linear_source, count=1
-        )
-        require(branch_count == 1, "Linear branch-read mutant anchor changed")
-        branch_mutant.write_text(branch_source, encoding="utf-8")
-        refused = admit("clean", reader=branch_mutant)
-        require(
-            refused.returncode == 2 and not refused.stdout,
-            "linear-delivery-branch-read-removed mutant survived",
-        )
-
-        goal_heading_mutant = mutant_root / "retired-goal-heading-restored.py"
-        goal_heading_source, goal_heading_count = re.subn(
-            r'"accepted-goal": section\(description, "Accepted outcome"\),',
-            '"accepted-goal": section(description, "Goal"),',
-            linear_source,
-            count=1,
-        )
-        require(goal_heading_count == 1, "Linear goal-heading mutant anchor changed")
-        goal_heading_mutant.write_text(goal_heading_source, encoding="utf-8")
-        survived = admit("legacy-goal-heading", reader=goal_heading_mutant)
-        require(
-            survived.returncode == 0,
-            f"retired-goal-heading-restored mutant still refused: {survived.stderr}",
-        )
-
-        state_mutant = mutant_root / "state-authority-message-removed.py"
-        state_source, state_count = re.subn(
-            r'^        if not state\.is_dir\(\):\n'
-            r'            raise AdmissionError\("state authority is not <workflow-dir>/\.spacedock-state"\)\n',
-            "",
-            linear_source,
-            count=1,
-            flags=re.MULTILINE,
-        )
-        require(state_count == 1, "Linear state-authority mutant anchor changed")
-        state_mutant.write_text(state_source, encoding="utf-8")
-        survived = admit("clean", reader=state_mutant, workflow_dir=inline_workflow)
-        require(
-            survived.returncode == 2
-            and "state authority is not <workflow-dir>/.spacedock-state" not in survived.stderr,
-            f"state-authority-message-removed mutant kept the message: {survived.stderr}",
-        )
-
-        envelope_mutant = mutant_root / "delivery-envelope-removed.py"
-        envelope_source, envelope_count = re.subn(
-            r'^            "delivery": delivery,\n',
-            "",
-            linear_source,
-            count=1,
-            flags=re.MULTILINE,
-        )
-        require(envelope_count == 1, "Linear delivery-envelope mutant anchor changed")
-        envelope_mutant.write_text(envelope_source, encoding="utf-8")
-        survived = admit("clean", reader=envelope_mutant)
-        survived_envelope = json.loads(survived.stdout) if survived.returncode == 0 else {}
-        require(
-            survived.returncode != 0 or survived_envelope.get("delivery") != envelope["delivery"],
-            "linear-delivery-envelope-removed mutant survived",
-        )
-    for scenario, classification in (
-        ("project-drift", "moved"), ("cycle-drift", "moved"),
-        ("goal-drift", "changed"), ("non-goal-drift", "changed"),
-        ("added", "added"), ("removed", "removed"),
-    ):
-        refused = admit(scenario)
-        require(
-            refused.returncode == 2 and not refused.stdout and f'"{classification}"' in refused.stderr,
-            f"{scenario} did not stop with {classification}: {refused.stderr}",
-        )
-    for scenario in (
-        "wrong-org", "unauthorized", "truncated", "invalid-branch",
-        "mismatched-identifier",
-    ):
-        refused = admit(scenario)
-        require(refused.returncode == 2 and not refused.stdout, f"{scenario} emitted an envelope")
-    timed_out = admit("timeout", timeout="0.05")
-    require(timed_out.returncode == 2 and not timed_out.stdout, "timeout emitted an envelope")
-    require(before == (revision, work_item.read_bytes()), "Linear outcomes changed state or work-item bytes")
-    require(all("mutation" not in query.casefold() for query in server.queries), "Linear reader sent a mutation")
-    require(
-        any("AdmissionIssue" in query and "branchName" in query for query in server.queries),
-        "Linear reader did not request branchName",
-    )
-    raced = admit("work-item-race")
-    require(raced.returncode == 2 and not raced.stdout, "changing work-item bytes emitted an envelope")
-    subprocess.run(
-        ["git", "-C", str(state), "restore", "--source", revision, "--", "dev-12.md"],
-        check=True,
-    )
-    raced = admit("state-race")
-    require(raced.returncode == 2 and not raced.stdout, "changing state revision emitted an envelope")
-    server.shutdown()
-    server.server_close()
 
 for phrase in [
     "A dispatch message to a cloud build worker carries no bootstrap or download line",
@@ -2373,7 +2019,6 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-surface-map-") as surface_m
             f"Non-test Go enforcement weakened: {go_production}")
 
 run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
-run([sys.executable, "-m", "py_compile", str(linear_admission)], "Linear admission compile")
 
 plan_lint = ROOT / "docs/plan-flow/plan-lint.py"
 require(plan_lint.is_file(), f"missing {plan_lint}")

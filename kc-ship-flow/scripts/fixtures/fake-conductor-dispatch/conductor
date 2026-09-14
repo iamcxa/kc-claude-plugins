@@ -18,6 +18,8 @@
 #                                loudly (exit 64) since --dry-run must never reach it.
 #   FAKE_CONDUCTOR_SQL_FAIL      when 1, `sql` prints the real Conductor 503 outage text
 #                                to stderr and exits non-zero (sql-503-degraded fixture).
+#   FAKE_CONDUCTOR_WORKSPACE_STATUS  text `workspace status <id>` prints (default "ready");
+#                                    set to e.g. "provisioning" to prove the not-yet-ready path.
 set -euo pipefail
 
 [ -n "${FAKE_CONDUCTOR_LOG:-}" ] && printf '%s\n' "$*" >> "$FAKE_CONDUCTOR_LOG"
@@ -40,7 +42,7 @@ print_help() {
   echo
   echo "Workspace:"
   [ "$DROP" = "workspace list" ] || echo "  conductor workspace list [--creator <userId>] [--limit <n>] [--offset <n>]"
-  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--message-file <path>] [--json]"
+  [ "$DROP" = "workspace create" ] || echo "  conductor workspace create [--project-id <id>] [--branch <name>] [--name <name>] [--agent <agent>] [--model <model>] [--effort <level>] [--env <KEY=VALUE>] [--message-file <path>] [--json]"
   [ "$DROP" = "workspace status" ] || echo "  conductor workspace status [workspaceId]"
   echo
   echo "Session:"
@@ -93,6 +95,11 @@ if [ "${1:-}" = "project" ] && [ "${2:-}" = "list" ]; then
 import json
 print(json.dumps({'data': [{'id': '$PROJECT_ID', 'name': 'fixture', 'gitRemote': '$REMOTE'}], 'offset': 0, 'hasMore': False}))
 "
+  exit 0
+fi
+
+if [ "${1:-}" = "workspace" ] && [ "${2:-}" = "status" ]; then
+  echo "Status  ${FAKE_CONDUCTOR_WORKSPACE_STATUS:-ready}"
   exit 0
 fi
 
