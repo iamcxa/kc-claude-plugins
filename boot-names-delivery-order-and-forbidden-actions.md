@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-boot-names-delivery-order-and-forbidden-actions
 issue:
-pr:
+pr: 456
 mod-block:
 id: v9mf30n3s03ev5dvtn08vsed
 gates:
