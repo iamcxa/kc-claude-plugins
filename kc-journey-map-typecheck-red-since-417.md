@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-kc-journey-map-typecheck-red-since-417
 issue:
-pr: 441
+pr: pr-merge:441
 mod-block:
 id: fafrpfqmdc3zqhq8asfbt83r
 gates:
