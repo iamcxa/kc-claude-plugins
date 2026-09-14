@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fastify/websocket": "^11.0.0",
+    "@tldraw/mermaid": "5.4.0",
     "@tldraw/sync": "5.4.0",
     "@tldraw/sync-core": "5.4.0",
     "fastify": "^5.8.1",

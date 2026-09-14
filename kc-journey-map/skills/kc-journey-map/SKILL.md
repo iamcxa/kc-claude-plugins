@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Use when drawing a user journey from what a codebase actually does, checking an existing journey against current reality, or preparing a selected release from an existing board for development. Triggers on "journey map", "user journey", "畫 user journey", "產出 journey 圖", "journey vs reality", "現況跟 journey 對不對", "fill the journey board", "plan this release", "準備這個 release 開發", or a FigJam/screenshot of a journey board handed over to complete. Renders from a journey file kept in the repository onto an editable canvas — the user journey (story map) by default, plus a per-release journey board or a function map of commands and events, each drawn only on request — and generates a per-release contract naming each story's status and evidence, where every claim of `exists` cites a symbol a lint re-checks and journey-board status cards name what is unproven, unmerged, or undeployed.
+description: Draw or check a user journey against code, prepare a selected release for development, or add an editable Mermaid sequence companion to a journey canvas. Triggers on "journey map", "user journey", "畫 user journey", "journey vs reality", "fill the journey board", "plan this release", "準備這個 release 開發", "sequence companion", or a journey board handed over to complete. Repository YAML renders the story map by default, with optional release details or function maps; a repository .mmd renders an optional native sequence page. Evidence checks distinguish implemented stories from gaps and unverified claims.
 ---
 
 # Journey Map
@@ -24,6 +24,12 @@ is judged against.
 | **plan-release** | planning/resuming an existing board or preparing a selected release for development | reviewed Development Brief, or draft with the missing decision — `references/map-from-conversation.md` |
 | **draw** | no journey exists yet | the board, derived from code |
 | **check** | a journey exists — board, screenshot, or a list of cards | the mismatch table **first**, then the corrected board |
+| **sequence companion** | a sequence is requested, or handoffs/branches need explanation alongside a journey | an optional native editable page from repository `.mmd` — `references/sequence.md` |
+
+Claude and Codex use this same entrypoint and sequence reference. Offer a sequence
+companion when actors, handoffs, or branches would clarify a journey; do not make it
+a required projection or change a settled story-map-only choice. Default new sequence
+sources to `autonumber`, while respecting an explicit numbering preference.
 
 Map mode comes before draw/check and is held to a different bar: it asserts intent, so
 it cites nothing and badges nothing. See `references/cell-contract.md`.
