@@ -68,15 +68,14 @@ complete non-goal list, route-back conditions, and one canonical
 `## Acceptance criteria` section. Its concrete bullets use unique ascending
 `AC-N` identifiers; an evidence-only or dual-section new admission is refused.
 Existing admitted prose is not migrated or rewritten. POC
-requires the four concrete v3 Exploration Brief fields. A Planning Receipt is
-optional: all of `source`, `planning-window`, and `planning-outcome` selects the
-provider-backed path; none selects standalone Captain authority; a partial tuple
-keeps the item in `backlog`. A local runtime may separately require `sprint` and
+requires the four concrete v3 Exploration Brief fields. `source` is free-text
+provenance and may hold a Linear URL or any other reference; it is never read as
+planning evidence. A local runtime may separately require `sprint` and
 `sprint-readiness: ready`, but those fields do not invent or prove provider
 scheduling.
 
 Feature/bug labels do not select routes: a clear urgent bug may use a standalone
-Development Brief, an uncertain bug POC, and a scheduled item a Planning Receipt.
+Development Brief, and an uncertain bug POC.
 
 Only the unaccepted path requests a profile choice. Ask one clarifying question
 if a missing fact could change the choice or block

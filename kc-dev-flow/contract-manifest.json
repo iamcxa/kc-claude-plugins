@@ -38,8 +38,6 @@
     "references/profiles/production/verify.md",
     "scripts/profile-contract-loader.py",
     "scripts/poc-close-guard.py",
-    "scripts/engage-reconcile.py",
-    "scripts/linear-admission.py",
     "scripts/check-pr-title.py",
     "scripts/fixtures/pr-title/release-please-verdicts.tsv",
     "skills/adopt-dev-flow/SKILL.md",

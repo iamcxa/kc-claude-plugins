@@ -28,41 +28,32 @@ truthfulness; the selected profile owns lifecycle depth, stage work, and proof.
   general-purpose agent gatekeeper.
 
 Keep one project-context authority, one planning authority per item, one
-planning-window authority, one planning-outcome authority, one execution-record
-authority, and one delivery authority.
+execution-record authority, and one delivery authority.
 Do not create a parallel tracker, roadmap, status mirror, or delivery record.
 
 ## Planning and routing invariants
 
 A Development Brief is required for Pilot and Production; POC uses its
-Exploration Brief. A Planning Receipt is optional and must be complete or absent:
-a partial Planning Receipt is invalid. With one, the planning item owns
-discussion, the accepted goal, priority, and human-facing status; the planning
-window owns time; and the planning outcome owns the accepted result. The
-admitted execution set and its accepted goal and non-goals are snapshots, not
-planning authorities. The runtime owns execution and evidence. Provider-backed
-work uses the read-only engage comparator and stops before new dispatch
-or state mutation on any delta or unavailable result. The Captain admits the
-delta before replacement. Without a Planning Receipt, the Captain-approved
-committed work item is the planning authority and does not invoke the planning
-reader or comparator.
+Exploration Brief. The Captain-approved committed work item is the sole
+planning authority. `source` is free-text provenance, may hold a Linear URL or
+any other reference, and is never read as planning evidence. The admitted
+execution set and its accepted goal and non-goals are snapshots, not planning
+authorities. The runtime owns execution and evidence.
 
 Before dispatch and on any execution-time scope proposal, compare the accepted
 goal and complete non-goal list exactly with the admission snapshot. A mismatch
 stops without rewriting the snapshot or candidate and returns a structured
 planning delta naming the changed premise, affected acceptance evidence, and
 recommended `change` or `stop`. Runtime adapters own task and execution-context
-cardinality. Do not add an execution-to-planning-provider projector, importer,
-polling loop, or bidirectional sync. No reconcile result writes either side
-automatically.
+cardinality.
 
 The Captain selects one profile per work item; a recommendation is not a
 selection. The profile loader hash-binds the exact committed work item and loads
 only this core, that profile's base, and its current stage contract. It fails
 closed outside the selected route. Profile contracts own route-specific fields,
 proof depth, and recovery rules. An item leaves `backlog` only after its required
-brief is admitted. A local execution grouping does not prove a Planning Receipt
-or create provider scheduling metadata. Skipping an inactive stage adds no
+brief is admitted. A local execution grouping does not create provider
+scheduling metadata. Skipping an inactive stage adds no
 synthetic obligation and cannot remove the route's only authorization boundary.
 
 ## Shared boundaries

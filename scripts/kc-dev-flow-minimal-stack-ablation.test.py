@@ -17,10 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = Path("scripts/kc-dev-flow-multi-profile-gate.py")
 LOADER = Path("kc-dev-flow/scripts/profile-contract-loader.py")
 LOADER_TEST = Path("kc-dev-flow/scripts/profile-contract-loader.test.py")
-RECONCILE = Path("kc-dev-flow/scripts/engage-reconcile.py")
-RECONCILE_TEST = Path("kc-dev-flow/scripts/engage-reconcile.test.py")
 CONTRACT_TEST = Path("scripts/kc-dev-flow-contract-test.py")
-LINEAR_ADMISSION = Path("kc-dev-flow/scripts/linear-admission.py")
 
 
 class AblationError(RuntimeError):
@@ -51,10 +48,8 @@ def copy_repository_fixture(destination: Path) -> None:
         ).split(b"\0")
         if encoded
     }
-    # The runner and a newly packaged runtime must be provable before their
-    # first commit too.
+    # The runner itself must be provable before its first commit too.
     tracked.add(os.fsencode(Path(__file__).resolve().relative_to(ROOT)))
-    tracked.add(os.fsencode(LINEAR_ADMISSION))
     for encoded in tracked:
         relative = Path(os.fsdecode(encoded))
         source = ROOT / relative
@@ -402,58 +397,6 @@ def run_poc_entry_mutant() -> None:
         )
 
 
-def run_reconcile_exit_mutant() -> None:
-    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
-        fixture = Path(temporary)
-        shutil.copytree(ROOT / "kc-dev-flow", fixture / "kc-dev-flow")
-        replace_once(
-            fixture / RECONCILE,
-            '    return 1 if result["status"] == "delta" else 0\n',
-            "    return 0\n",
-        )
-        reject(
-            "reconcile-delta-exit-disabled",
-            execute([sys.executable, str(fixture / RECONCILE_TEST)], fixture),
-            "membership delta returned 0",
-        )
-
-
-def run_reconcile_wiring_mutant() -> None:
-    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
-        fixture = Path(temporary)
-        copy_repository_fixture(fixture)
-        continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
-        replace_once(
-            continuation,
-            "7. Invoke the installed loader's sibling read-only engage comparator only in\n"
-            "   the provider-backed branch. The activated skill supplies both package paths\n",
-            "7. Continue without invoking the engage comparator.\n",
-        )
-        reject(
-            "reconcile-wiring-removed",
-            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
-            "continuation planning disambiguation omits: Invoke the installed loader's sibling read-only engage comparator only in the provider-backed branch.",
-        )
-
-
-def run_reconcile_clean_output_wiring_mutant() -> None:
-    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-ablation-") as temporary:
-        fixture = Path(temporary)
-        copy_repository_fixture(fixture)
-        continuation = fixture / "kc-dev-flow/skills/continue-dev-flow/SKILL.md"
-        replace_once(
-            continuation,
-            "   Exit `0` continues only when stdout parses as one JSON object with\n"
-            "   `status: clean` and empty `added`, `removed`, `changed`, and `moved` arrays.\n",
-            "   Exit `0` continues without validating stdout.\n",
-        )
-        reject(
-            "reconcile-clean-output-wiring-removed",
-            execute([sys.executable, str(fixture / CONTRACT_TEST), "--ablation-check"], fixture),
-            "continuation omits provider engage behavior: stdout parses as one JSON object with `status: clean`",
-        )
-
-
 def run_manual_contract_mutant(
     name: str, relative: str, before: str, after: str, evidence: str
 ) -> None:
@@ -735,9 +678,6 @@ def main() -> int:
     )
     run_scheduling_mutant()
     run_poc_entry_mutant()
-    run_reconcile_exit_mutant()
-    run_reconcile_wiring_mutant()
-    run_reconcile_clean_output_wiring_mutant()
     run_loader_admission_mutant(
         "canonical-admission-heading-removed",
         '    "Acceptance criteria",\n',
@@ -774,80 +714,11 @@ def main() -> int:
         "        if len(matches) != 1:\n",
         "standalone admission with an omitted Planning Receipt was rejected",
     )
-    run_manual_contract_mutant(
-        "linear-reader-removed",
-        str(LINEAR_ADMISSION),
-        "        request = urllib.request.Request(\n",
-        '        raise AdmissionError("reader removed")\n        request = urllib.request.Request(\n',
-        "clean Linear admission failed",
-    )
-    run_manual_contract_mutant(
-        "linear-credential-guard-removed",
-        str(LINEAR_ADMISSION),
-        "        if not key:\n",
-        "        if False:\n",
-        "missing-key was not refused for the credential",
-    )
-    run_manual_contract_mutant(
-        "linear-workspace-binding-removed",
-        str(LINEAR_ADMISSION),
-        '        if not isinstance(organization, dict) or organization.get("urlKey") != args.linear_workspace:\n',
-        "        if False:\n",
-        "wrong-org emitted an envelope",
-    )
-    run_manual_contract_mutant(
-        "admission-loader-invocation-removed",
-        str(LINEAR_ADMISSION),
-        '             "--validate-admission"],\n',
-        '             "--invalid-admission-mode"],\n',
-        'Linear admission omits retained mechanism: "--validate-admission"',
-    )
-    run_manual_contract_mutant(
-        "state-binding-final-check-removed",
-        str(LINEAR_ADMISSION),
-        "        if final_head != args.state_revision or final_status or work_item.read_bytes() != committed:\n",
-        "        if False:\n",
-        "changing work-item bytes emitted an envelope",
-    )
-    run_manual_contract_mutant(
-        "terminal-sibling-exclusion-removed",
-        str(LINEAR_ADMISSION),
-        '            if path.startswith("_archive/") or fields.get("status") == "done":\n                continue\n',
-        "",
-        "clean Linear admission failed",
-    )
-    run_manual_contract_mutant(
-        "comparator-payload-stop-removed",
-        str(LINEAR_ADMISSION),
-        '        if compared.returncode != 0 or reconciliation.get("status") != "clean" or not empty:\n',
-        "        if False:\n",
-        'Linear admission omits retained mechanism: "status") != "clean"',
-    )
-    run_manual_contract_mutant(
-        "success-only-envelope-stop-removed",
-        str(LINEAR_ADMISSION),
-        '        print(f"linear admission: {exc}", file=sys.stderr)\n',
-        '        print(f"linear admission: {exc}")\n',
-        "missing-key was not refused for the credential",
-    )
     run_kernel_contract_mutant(
         "required-development-brief-removed",
         "A Development Brief is required",
         "A Development Brief is optional",
         "kernel omits brief boundary: Development Brief is required",
-    )
-    run_kernel_contract_mutant(
-        "standalone-path-removed",
-        "A Planning Receipt is optional",
-        "A Planning Receipt is required",
-        "kernel omits brief boundary: Planning Receipt is optional",
-    )
-    run_manual_contract_mutant(
-        "partial-receipt-accepted",
-        "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
-        "report `planning receipt incomplete`",
-        "continue with the available planning fields",
-        "continuation planning disambiguation omits: report `planning receipt incomplete`",
     )
     run_kernel_contract_mutant(
         "runtime-topology-restored",

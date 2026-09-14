@@ -13,9 +13,10 @@ You are facilitating, not deciding. The map is theirs; the discipline is yours.
   intent. `references/cell-contract.md` explains why the three pages have different bars.
 - **Do not set `status` on a story.** `gap` belongs to draw mode, where there is a codebase
   a story can be absent from.
-- **Do not decide the first release.** Draw what they say the first release is, including
-  when you think it is too big. If you think it is too big, say so once, in one sentence,
-  and then draw theirs.
+- **Do not decide the first release.** Show the whole journey first, then follow
+  `release-slicing.md` to propose a smaller complete slice in prose. Change boundaries
+  after the human accepts. A broad release can remain drawn without being ready for
+  development; an oversized candidate must return to reduction before handoff.
 - **Do not restart.** If a map already exists, take it as given and extend it. Re-asking
   what they already answered is how a facilitator loses the room.
 - **One question at a time.** A list of six questions gets one answer and five shrugs.
@@ -37,17 +38,12 @@ and edge cases go under the main path, not beside it.
 
 Write these as `steps[].stories[]`, each with an `id`.
 
-**4. The first release — the one that makes it plannable.** Ask it in these words, or as
-close as the room allows:
-
-> If we could only ship a thin line through this whole story, what is the smallest set of
-> these that a person could still complete the journey with?
-
-Then draw the line. Everything above it is release 1; everything below is later. A release
-is a horizontal band across every activity, which is why the question is about a *line*
-and not about a list of features.
-
-Write these as `releases[]` and `stories[].release`.
+**4. Propose the first release after showing the whole map.** Render the backbone and
+stories with unplaced or explicitly provisional release membership first. Follow
+`release-slicing.md`: analyze the smallest complete outcome, explain retained and
+deferred stories in prose, resolve the one remaining human choice, then write accepted
+`releases[]` and `stories[].release` boundaries. Keep deferred paths visible. Do not make
+the user discover the whole journey through a sequence of scope questions.
 
 ## What to say when a release leaves an activity empty
 
@@ -93,7 +89,10 @@ Spacedock task observation; preserve each unknown independently. Reuse assigned 
 deferred dispositions unless a changed premise affects them. Keep later-release
 unknowns visible without blocking an independent current release.
 
-**3. Ask the remaining decision.** Ask one unresolved value, scope or acceptance
+**3. Propose the minimum complete slice.** Follow `release-slicing.md` for the
+removal test, necessary constraints, factual dependencies and appetite/fit assessment.
+Explain the reduction in prose before changing the map; an optional retained story or
+an oversized/incomplete candidate returns to a smaller proposal. Then ask one unresolved value, scope or acceptance
 question at a time, with a recommendation and its effect. Use the host's available
 interaction tool; when unavailable, ask in plain text. Do not reopen settled
 answers unless their premises changed. No answer, interruption or abandonment
@@ -129,7 +128,11 @@ evidence; it is not the Development Brief. A current-scope decision still missin
 keeps the brief draft, while a technical unknown can pass to shaping if it does not
 change the accepted value, scope or acceptance.
 
-**6. Hand off technical shaping once.** Give the reviewed brief and factual evidence
+**6. Check, then hand off technical shaping once.** Run the guarded
+`journey-handoff.mjs` command in `release-slicing.md` against the final source, pre-cut
+baseline, accepted assessment and existing brief. A refusal keeps the handoff draft;
+return to the reduction proposal or missing decision, without bypassing the guard with
+the input brief. On pass, give that unchanged brief and factual evidence
 to existing dev-flow ideation under its selected profile. It owns technical gaps,
 dependencies and without-it analysis: what necessary work remains if a proposed
 change is omitted. Journey planning does not pre-split cards into implementation
@@ -145,7 +148,8 @@ provider Planning Receipt. After admission, changed planning premises return a
 planning delta naming the premise, affected acceptance evidence and recommended
 change or stop; do not automatically rewrite running tasks.
 
-This route adds guidance without migrating journey files, commands or consumers.
+This route keeps the journey YAML and dev-flow brief formats; its guarded handoff
+command checks the selected release without migrating existing map consumers.
 Render when requested using the existing canvas contract; if unavailable, deliver
 the source and Markdown with that limit stated. Do not claim rendered, deployed
 or usable behavior from source inspection or local checks.

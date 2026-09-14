@@ -500,7 +500,7 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
     frontmatter = text[4:frontmatter_end]
     receipt_values: list[str] = []
     declared_receipt_fields: list[bool] = []
-    for field in ("source", "planning-window", "planning-outcome"):
+    for field in ("planning-window", "planning-outcome"):
         matches = re.findall(
             rf"^{re.escape(field)}:[ \t]*([^\n#]*?)[ \t]*$",
             frontmatter,
@@ -590,7 +590,9 @@ def work_item_authority(text: str) -> str:
         ):
             fence = ""
         elif not fence and re.match(r"^ {0,3}#{1,2}(?:[ \t]+|$)", line):
-            report = re.fullmatch(r"## Stage Report(?:: [^\n]+)?\n?", line) is not None
+            report = re.fullmatch(
+                r"## (?:Stage Report(?:: [^\n]+)?|POC outcome|POC close measurement)\n?", line
+            ) is not None
         if not report:
             retained.append(line)
     if fence:

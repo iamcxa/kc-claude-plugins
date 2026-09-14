@@ -9,10 +9,12 @@
   "scripts": {
     "doctor": "node lib/doctor.mjs",
     "precanvas": "node lib/doctor.mjs",
-    "canvas": "concurrently -n server,client -c red,blue \"tsx watch ./server/canvas-server.ts\" \"vite dev --host\""
+    "canvas": "concurrently -n server,client -c red,blue \"tsx watch ./server/canvas-server.ts\" \"vite dev --host\"",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@fastify/websocket": "^11.0.0",
+    "@tldraw/mermaid": "5.4.0",
     "@tldraw/sync": "5.4.0",
     "@tldraw/sync-core": "5.4.0",
     "fastify": "^5.8.1",
@@ -28,6 +30,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "concurrently": "^9.1.2",
     "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
     "vite": "^8.0.16"
   }
 }
