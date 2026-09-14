@@ -48,7 +48,7 @@ skipped, and forcing past it trains the habit of overriding a guard that is norm
 
 ## Hook: merge
 
-Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})` — the workflow's configured integration trunk (default `main` when no `trunk:` key is set). `dispatch trunk` emits exactly a **bare branch name** (e.g. `main`), so `$( )` yields `$BASE` clean (command substitution strips the single trailing newline). Always quote `"$BASE"` at use sites — the push, the rebase, the draft, and the `gh pr create --base` below.
+Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})` — the workflow's configured integration trunk (default `main` when no `trunk:` key is set). `dispatch trunk` emits exactly a **bare branch name** (e.g. `main`), so `$( )` yields `$BASE` clean (command substitution strips the single trailing newline). Always quote `"$BASE"` at use sites — the fetch, the rebase, the draft, and the `gh pr create --base` below.
 
 **PR APPROVAL GUARDRAIL — Do NOT push or create a PR without explicit captain approval.** Before presenting the draft, construct the full PR body so the captain reviews the actual prose that will land on GitHub.
 
@@ -70,7 +70,7 @@ Then present the draft to the captain:
 
 Wait for the captain's explicit approval before pushing. Do NOT infer approval from silence, acknowledgment of the summary, or the gate approval that preceded this step — only an explicit "push it", "go ahead", "yes", or equivalent counts.
 
-**On approval:** First, push the trunk to ensure the remote is up to date with local state commits: `git push origin "$BASE"`. Then rebase the worktree branch onto the trunk: `git rebase "$BASE"` (from the worktree directory). Then push the worktree branch: `git push origin {branch}`. If any step fails (no remote, auth error, rebase conflict), report to the captain and fall back to local merge.
+**On approval:** First, fetch the trunk to ensure the remote-tracking ref reflects the remote: `git fetch origin "$BASE"` (from the worktree directory). Then rebase the worktree branch onto the fetched remote-tracking ref: `git rebase "origin/$BASE"` (from the worktree directory). Then push the worktree branch: `git push origin {branch}`. If any step fails (no remote, auth error, rebase conflict), report to the captain and fall back to local merge.
 
 Then create the PR by running `gh pr create --draft --base "$BASE" --head {branch} --title "{entity title}" --body "{constructed body}"` against the body already constructed above — do not rebuild it. If `gh` is not available, warn the captain and fall back to local merge.
 
