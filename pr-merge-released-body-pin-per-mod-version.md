@@ -40,6 +40,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:thvp8qgzr3eb1va9st822n2d:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:thvp8qgzr3eb1va9st822n2d-validation-1
+              briefing:
+                id: briefing:thvp8qgzr3eb1va9st822n2d:validation:attempt-1:revision-1
+                digest: sha256:1b72b42e8245644747d509cb66189cf726e553fc04b5c7625f6692b1e4b3148b
+                room-ref: ./pr-merge-released-body-pin-per-mod-version/review/validation/briefing-1
 ---
 
 `kc-dev-flow/contract-manifest.json` (4.4.0, #414) pins `pr_merge_released_body.sha256` to one

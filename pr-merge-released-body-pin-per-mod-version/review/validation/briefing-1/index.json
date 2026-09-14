@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:thvp8qgzr3eb1va9st822n2d:validation:attempt-1:revision-1",
+  "question": "Approve validation: pr_merge_released_bodies table (0.12.3, 0.27.0), fail-by-name adopter recipe, docs, and fixtures — AC-1..AC-4 evidenced, candidate 44d478f8; approve to route to terminal delivery (Draft PR via pr-merge), or revise/hold?",
+  "artifacts": [
+    {
+      "id": "artifact:thvp8qgzr3eb1va9st822n2d:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1367202ff8c838b31ecd0a1fd94a3d807425cbe3/pr-merge-released-body-pin-per-mod-version.md",
+      "rev": "sha256:2891e6747f67a4c4c2782148d95df18d3db69897a1275261209e2ca4377c40a4",
+      "mediaType": "text/markdown",
+      "summary": "Validation stage complete at candidate 44d478f8: contract-test PASS (0.12.3/0.27.0 fixtures pass, unpinned fixture fails-by-name, one-word mutants fail naming body+version); pr-merge-portable-delivery.test.py 16/16; extension-block byte-for-byte drift check still holds. poc_outcome direction=proceed recorded; poc_close_measurement fields pending (open POC, not yet closed). AC-1..AC-4 each cited with concrete evidence. Candidate PR body constructed (not pushed) per docs/dev/_mods/pr-merge.md's template as the delivery artifact; pushing the branch and opening the Draft PR needs a separate explicit push authorization not carried by this stage."
+    }
+  ]
+}
