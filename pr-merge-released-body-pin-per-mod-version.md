@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow pins the released pr-merge body per Spacedock mod version, not one repository's copy"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 `kc-dev-flow/contract-manifest.json` (4.4.0, #414) pins `pr_merge_released_body.sha256` to one
