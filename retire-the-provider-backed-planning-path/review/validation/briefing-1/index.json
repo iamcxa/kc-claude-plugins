@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-1:revision-1",
+  "question": "Approve validation and deliver: dev-flow's provider-backed planning intake is retired, leaving a committed brief as the only intake?",
+  "artifacts": [
+    {
+      "id": "artifact:f0m9yytzq7sczkam7rrq9ym3:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7b01cd3b92eb8844eba8d5d9ff1e5ae28cd9e704/retire-the-provider-backed-planning-path.md",
+      "rev": "sha256:10793032e86951a22636f4bc1ff74f2f53cc4658fe42acf560e3eda2e715ed56",
+      "mediaType": "text/markdown",
+      "summary": "Validation: 4 of 4 checklist items DONE by a fresh reviewer. All five suites re-run (not re-read) at candidate 95b19de0 in an independently resolved checkout, all PASS. Both Captain dispositions verified with direct evidence. AC-1 and AC-5 re-proven against dev-52's real committed bytes. One disclosed evidence-trail limit: the branch is a single squashed commit."
+    }
+  ]
+}
