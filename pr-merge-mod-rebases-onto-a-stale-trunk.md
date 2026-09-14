@@ -5,8 +5,8 @@ source: Captain ruling 2026-09-14 in FO session, after the defect bit during PR 
 product: repo-platform
 planning-window:
 planning-outcome:
-sprint:
-sprint-readiness: defer
+sprint: repo-platform/S2
+sprint-readiness: ready
 started:
 completed:
 verdict:
