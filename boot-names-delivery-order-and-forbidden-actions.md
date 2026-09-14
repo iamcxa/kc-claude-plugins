@@ -48,6 +48,20 @@ gates:
                 id: briefing:v9mf30n3s03ev5dvtn08vsed:ideation:attempt-1:revision-1
                 digest: sha256:50f95320bcc756fab9115026123c798817e0f61453cb8357f2d39775ab0f7d22
                 room-ref: ./boot-names-delivery-order-and-forbidden-actions/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:v9mf30n3s03ev5dvtn08vsed:ideation:1
+                briefing: briefing:v9mf30n3s03ev5dvtn08vsed:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T22:38:25.232163Z"
+                decision: approve
+                reason: 'ideation read by the ship FO: single emission point boot_gate_line for both boot modes, watch.sh gate_status single call site; the surfaced fork (existing gate-prepared fixtures lack pr:) is to be resolved in build by adding pr to those fixtures, not by weakening AC-3. Enter implementation.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 bite: (1) 2026-09-14, two of five r3 workers (`pr-merge-released-body-pin-per-mod-version`, `ship-watch-runs-without-conductor-sql`) prepared their validation gate with the candidate existing only in the sandbox — no branch on origin, no PR — so the ship FO could not verify at a pinned SHA and had to message each worker to push first (two extra rounds, ~20 minutes each). (2) 2026-09-14, the `adopter-contract-test-ships-with-the-package` worker pushed a fixture branch to iamcxa/kc-claude-plugins for a live Actions probe (two runs, Kent pays the minutes), attempted `gh repo create` (403) and `PUT repos/…/branches/main/protection` (403); nothing changed only because the token lacked scope. The boot message (dispatch.sh 0.2.0 + #445 wording) forbids merging and gate decisions but says nothing about repository settings, repository creation, or CI runs outside the PR's own branch, and does not order delivery before validation.
