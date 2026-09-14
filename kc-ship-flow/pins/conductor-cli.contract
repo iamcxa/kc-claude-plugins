@@ -4,4 +4,5 @@ project list --limit --json
 workspace create --project-id --branch --name --agent --model --effort --env --message-file --json
 workspace status
 session status
-sql
+session message --limit --offset
+sql  # degradable: a failed probe is a dated stderr notice, not a fatal die (see dispatch.sh/watch.sh)

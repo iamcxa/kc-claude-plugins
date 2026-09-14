@@ -192,6 +192,37 @@ else
   fail f "a slug containing a single quote is handled as data"
 fi
 
+out_g="$(FAKE_CONDUCTOR_SQL_FAIL=1 FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+  FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_g=$?
+ok=1
+[ "$rc_g" -eq 0 ] || ok=0
+[ "$(grep -c "degraded" <<<"$out_g")" -eq 1 ] || ok=0
+grep -q "503" <<<"$out_g" || ok=0
+grep -q "task-ready-one" <<<"$out_g" || ok=0
+if [ "$ok" = 1 ]; then
+  pass g "a failed sql probe is non-fatal: exits 0, prints exactly one dated degraded notice, still lists ready tasks (AC-1)"
+else
+  printf '  out=%s\n' "$out_g"
+  fail g "a failed sql probe is non-fatal: exits 0, prints exactly one dated degraded notice, still lists ready tasks (AC-1)"
+fi
+
+out_h="$(FAKE_CONDUCTOR_SQL_FAIL=1 FAKE_CONDUCTOR_AUTH_FAIL=1 FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" \
+  FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" PATH="$FAKE_CONDUCTOR_DIR:$PATH" \
+  bash "$SCRIPT" ship-cloud-wrapper-fixture --dry-run \
+  --conn-quote "$CONN_QUOTE" --conn-source "$CONN_SOURCE" \
+  --workflow-dir "$FIXTURES/dev" --state-dir "$STATE_DIR" 2>&1)"
+rc_h=$?
+if [ "$rc_h" -eq 2 ] && grep -q "conductor unavailable" <<<"$out_h"; then
+  pass h "auth whoami still fails fatally (exit 2) even when sql is also degraded -- only sql is a degradable probe (AC-1)"
+else
+  printf '  out=%s\n' "$out_h"
+  fail h "auth whoami still fails fatally (exit 2) even when sql is also degraded -- only sql is a degradable probe (AC-1)"
+fi
+
 ENV_FILE="$(mktemp)"
 chmod 600 "$ENV_FILE"
 printf 'DATABASE_URL=postgres://secret-value-xyz\nAPI_KEY=super-secret-token\n' > "$ENV_FILE"

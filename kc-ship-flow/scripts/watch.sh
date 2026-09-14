@@ -40,6 +40,7 @@ check_contract() {
   help_text=$(conductor --help 2>&1) || die "conductor unavailable: $help_text" 2
   missing=""
   while IFS= read -r line; do
+    line="${line%%#*}"
     [ -n "$line" ] || continue
     cmd=""
     ok=1
@@ -74,7 +75,23 @@ check_contract
 
 conductor auth whoami >/dev/null 2>&1 || die "conductor unavailable" 2
 conductor workspace list --limit 1 >/dev/null 2>&1 || die "conductor unavailable: workspace list probe failed" 2
-conductor --json sql "SELECT 1" >/dev/null 2>&1 || die "conductor unavailable: sql probe failed" 2
+
+# sql is a degradable probe (pins/conductor-cli.contract), checked once per process
+# invocation -- never re-probed per poll cycle, even in the looping (non-`--once`) mode.
+# On failure, watch.sh switches its idle-session tail read from `sql` to a `session
+# message` binary-search fallback (see transcript_exit/transcript_exit_fallback below)
+# and records the degraded mode to the batch questions log on this first detection.
+sql_available=1
+sql_probe_out=$(conductor --json sql "SELECT 1" 2>&1) || sql_available=0
+if [ "$sql_available" != 1 ]; then
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) degraded: conductor sql probe failed, using session-message fallback ($sql_probe_out)" >&2
+  questions_log_dir="$state_dir/_ship_questions"
+  {
+    mkdir -p "$questions_log_dir" &&
+    printf 'degraded-mode=sql-503 date=%s probe_output=%s\n' \
+      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$sql_probe_out" >> "$questions_log_dir/$sprint.log"
+  } 2>/dev/null || echo "warning: could not write questions log for sprint=$sprint" >&2
+fi
 
 fence_file="$state_dir/_ship_fence/$sprint.json"
 [ -f "$fence_file" ] || die "no fence records for sprint=$sprint: $fence_file" 2
@@ -194,6 +211,95 @@ print('question' if is_question else 'stopped')
 "
 }
 
+session_tail_text() {
+  # Fallback tail-reader for the sql-503-degraded path: binary-searches
+  # `conductor --json session message <sid> --limit 1 --offset M` for the highest
+  # offset that still returns a message (a `sessionIndex` key), since an offset past
+  # the end returns a JSON object with no `sessionIndex` key -- the empty-tail signal.
+  # Bounded at MAX_PROBES so a stale/unknown session id cannot loop unboundedly;
+  # prints the last found message's text, or empty when none was ever found.
+  local session_id="$1"
+  python3 -c "
+import json
+import subprocess
+import sys
+
+session_id = sys.argv[1]
+MAX_PROBES = 40
+
+def probe(offset):
+    out = subprocess.run(
+        ['conductor', '--json', 'session', 'message', session_id, '--limit', '1', '--offset', str(offset)],
+        capture_output=True, text=True,
+    )
+    if out.returncode != 0:
+        return None
+    try:
+        return json.loads(out.stdout)
+    except ValueError:
+        return None
+
+probes = 0
+last_present = None
+
+probes += 1
+first = probe(0)
+if first is None or 'sessionIndex' not in first:
+    print('')
+    raise SystemExit
+last_present = first
+
+lo, hi = 0, 1
+found_boundary = False
+while probes < MAX_PROBES:
+    probes += 1
+    resp = probe(hi)
+    if resp is None or 'sessionIndex' not in resp:
+        found_boundary = True
+        break
+    lo = hi
+    last_present = resp
+    hi *= 2
+
+if found_boundary:
+    while hi - lo > 1 and probes < MAX_PROBES:
+        mid = (lo + hi) // 2
+        probes += 1
+        resp = probe(mid)
+        if resp is not None and 'sessionIndex' in resp:
+            lo = mid
+            last_present = resp
+        else:
+            hi = mid
+
+print((last_present or {}).get('text', ''))
+" "$session_id"
+}
+
+transcript_exit_fallback() {
+  # sql-503-degraded counterpart to transcript_exit(): applies the same quota/question
+  # phrase and marker rules to the session-message tail-reader's last message text
+  # instead of the sql-sourced transcript's last assistant block.
+  local session_id="$1"
+  session_tail_text "$session_id" | python3 -c "
+import re
+import sys
+
+last_block = sys.stdin.read()
+
+# 'usage limit reached' is an unverified guess at a second phrasing of the same banner.
+if re.search(r'hit your session limit|usage limit reached', last_block, re.IGNORECASE):
+    print('quota')
+    raise SystemExit
+
+lines = [line for line in last_block.splitlines() if line.strip()]
+last_line = lines[-1].strip() if lines else ''
+question_line = re.compile(r'^(Q:|Question:|Decision:|Could you)', re.IGNORECASE)
+is_question = last_line.endswith('?') or any(question_line.match(l.strip()) for l in lines)
+print('question' if is_question else 'stopped')
+"
+}
+
 slugs=$(python3 -c '
 import json, sys
 d = json.load(open(sys.argv[1]))
@@ -251,7 +357,11 @@ except ValueError:
       idle_streak_set "$slug" 0
       continue
     fi
-    verdict=$(transcript_exit "$session")
+    if [ "$sql_available" = 1 ]; then
+      verdict=$(transcript_exit "$session")
+    else
+      verdict=$(transcript_exit_fallback "$session")
+    fi
     case "$verdict" in
       quota|question)
         echo "$slug $verdict"
