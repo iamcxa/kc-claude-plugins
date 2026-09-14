@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: kc-dev-flow/S10
 sprint-readiness: ready
-started:
+started: 2026-09-14T08:25:39Z
 completed:
 verdict:
 worktree:
