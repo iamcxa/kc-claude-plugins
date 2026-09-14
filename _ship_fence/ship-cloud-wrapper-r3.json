@@ -21,7 +21,7 @@
  },
  "ship-watch-runs-without-conductor-sql": {
   "message_sha256": "4ded98481d5755db1484b452e958e889a5abd75f8227f4e0ba1a48c9450f1db0",
-  "session": null,
-  "workspace": null
+  "session": "f4f84aba-2225-4833-8c76-50b568de576c",
+  "workspace": "89347f82-a86b-4bf6-a7ea-0523fd144eac"
  }
 }
