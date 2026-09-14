@@ -37,4 +37,22 @@ The Conductor SQL endpoint (`conductor sql`) returned "The SQL search API endpoi
 3. The degraded mode is recorded in the batch questions log with the probe output and date.
 4. Fixture: a fake `conductor` on PATH whose `sql` returns the 503 text and whose `session message` serves a recorded tail; both exit paths are exercised.
 
+
+## Acceptance criteria
+
+* **AC-1** With a `conductor` on PATH whose `sql` prints the 503 text, `dispatch.sh --dry-run` exits 0 and prints one dated degraded notice on stderr; with `auth whoami` failing it still exits 5.
+* **AC-2** `watch.sh <sprint> --once` against the same fake exits `gate-prepared` when the state branch shows a prepared gate, `question` when the session tail's last assistant text or the stage report carries a `Q:` line, `pending` otherwise, without calling `sql`.
+* **AC-3** The fake `conductor` serves `session status` and `session message --limit N --offset M` from recorded files; `watch.test.sh` covers both exits in AC-2 and the sql-available path unchanged.
+* **AC-4** The batch questions log receives one line naming the degraded mode, the probe output and the date, written by `watch.sh` on first detection.
+
+## Non-goals
+
+- No change to the pinned Conductor CLI version or to the other read-only probes.
+- No transcript parsing beyond the last assistant text of the tail; no SQL replacement service.
+- No change to the exit-code vocabulary of `watch.sh`.
+
+## Route-back conditions
+
+- Back to backlog if `conductor session message --offset` stops returning `sessionIndex` for the tail on CLI 0.85.0, or if the used-surface probe shape has to change to make the fallback work (that is the dispatch task's file).
+
 Profile recommendation: pilot.
