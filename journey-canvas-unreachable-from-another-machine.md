@@ -85,3 +85,40 @@ opening a second port.
   pass. `canvas-smoke.sh` still starts and reaches the API on loopback.
 * **AC-6** The `allowedHosts` value is justified in one sentence: what it admits and why that is
   acceptable for a local development tool that carries no authentication.
+
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    A real user hit this on a remote VM and could not open the board at all.
+    The fix shape is not in doubt, but its proof is a cross-machine run: a page
+    that loads on one host proves nothing about a sync socket reaching another.
+    That is an evidence round, not a one-shot exploration. Scope stays inside
+    this package's own dev-server wiring; no consumer migrates.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Keep the document API bound to 127.0.0.1; reachability comes from the exposed frontend.
+      - Do not add authentication, TLS, or an access-control surface to a local development tool.
+    implementation:
+      - The board opens over a non-loopback hostname with no environment variable set.
+      - The sync path reaches the document API from inside the machine, not across the network.
+      - Name the decision on VITE_JOURNEY_API_URL — kept with its current meaning, or removed cleanly.
+    testing:
+      - Two machines, or an equivalent that does not resolve to loopback.
+      - An edit on the remote viewer appears on the host, not merely a page that renders.
+      - A mutation widening the API bind is rejected, not accepted as the fix.
+      - Existing model tests, canvas smoke, and the new typecheck still pass.
+  scope_boundary: >-
+    kc-journey-map's vite config, client sync URL derivation, and the dev-server
+    proxy only. Excludes authentication, TLS, hosted or multi-tenant modes,
+    binding the document API off loopback, and PR #440 / PR #441.
+  semantics_unchanged: false
+  promote_when:
+    - The canvas is exposed to an untrusted network or beyond the operator's own machines.
+    - Any access control, credential, or tenancy boundary is accepted.
+```
