@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: fafrpfqmdc3zqhq8asfbt83r
+gates:
+    version: 1
+    records:
+        - id: gate:fafrpfqmdc3zqhq8asfbt83r:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fafrpfqmdc3zqhq8asfbt83r-backlog-1
+              briefing:
+                id: briefing:fafrpfqmdc3zqhq8asfbt83r:backlog:attempt-1:revision-1
+                digest: sha256:4d7dbe4d4448b4714b1f61fdec26054a509f5d16013d1a34935f518003637811
+                room-ref: ./kc-journey-map-typecheck-red-since-417/review/backlog/briefing-1
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fafrpfqmdc3zqhq8asfbt83r:backlog:attempt-1:revision-1",
+  "question": "Admit the kc-journey-map typecheck repair, and at which work profile?",
+  "artifacts": [
+    {
+      "id": "artifact:fafrpfqmdc3zqhq8asfbt83r:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9337e19958357ebbca5d4fac148e5ba870d7ca35/kc-journey-map-typecheck-red-since-417.md",
+      "rev": "sha256:9f3ba6581c7c80da4277ccff4a49c444017990dea17800725afa7f8d809555e7",
+      "mediaType": "text/markdown",
+      "summary": "The committed seed is the reviewed artifact: backlog is the initial stage, so no prior stage report exists. App.tsx imports lib/records.mjs, kc-journey-map/lib ships no declaration file, and npx tsc exits 2 with TS7016; both the import and the missing declaration are on origin/main, where lib/records.mjs was last touched by 3fd2fc59 (#417). The POC on PR #440 measured it at cfb804d on 2026-09-14. Nothing reported it because no npm script and no CI step ever compiles the client. The accepted outcome is tsc exiting 0 plus a named script wired into kc-journey-map-tests.yml; the declaration fix is chosen for the module's real exported shape. AC-1..AC-5 cover a clean typecheck with no ts-ignore or any, a declared shape a violating call can redden, a CI step a revert turns red in a pull request, the measured CI cost, and the existing model tests and canvas smoke still passing. The next stage owes the chosen declaration form and evidence that the CI step fails on the reverted fix."
+    }
+  ]
+}
