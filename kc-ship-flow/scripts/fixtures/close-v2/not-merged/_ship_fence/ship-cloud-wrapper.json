@@ -1,0 +1,9 @@
+{
+  "DEV-305": {
+    "workspace": "ws-305",
+    "session": "sess-305",
+    "message_sha256": "e5",
+    "debrief": {"status": "pushed", "path": "_debriefs/fixture-305.md"}
+  },
+  "questions": []
+}

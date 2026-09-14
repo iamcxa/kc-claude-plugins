@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Behavior contract for kc-ship-flow/scripts/close.py.
+"""Behavior contract for kc-ship-flow/scripts/close.py. Pins AC-1..AC-4:
 
-Pins the entity's own AC-2 and AC-3:
-
-AC-2: `python3 kc-ship-flow/scripts/close.py ship-cloud-wrapper --dry-run --state-dir <fixture>`
-prints one `conductor message create --session <id>` argv per merged task and none for an
-unmerged one, and exits 3 printing `not all tasks merged` when asked to write the receipt with an
-unmerged task present.
-
-AC-3: `python3 kc-ship-flow/scripts/close.py --validate <receipt.json>` exits 0 on the fixture
-receipt and exits 1 on a copy missing any task's `debrief` field.
+AC-1: a fake `gh pr view N` stub gates `merged_sha` in the written receipt; refuses (non-zero,
+slug + state named, no receipt) a task whose stub-reported state is not `MERGED`.
+AC-2: `find_debrief_path` matches a `## Shipped`-section mention of the slug, never the ship FO's
+own debrief (named only outside `## Shipped`). Also the original AC-2: dry-run prints one
+`conductor message create` argv per merged task, exits 3 with an unmerged task present.
+AC-3: `--validate <receipt.json>` exits 0/1 on `debrief` and on a null/non-40-hex `merged_sha`.
+AC-4: every AC-1 case runs against a fake `gh` (never real, never a real repo SHA); removing it
+from `PATH` flips an otherwise-closeable batch to a failure, proving the gh-call path is exercised.
 """
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -22,6 +22,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "close.py"
 FIXTURES = HERE / "fixtures" / "close-v2"
+FAKE_GH_DIR = FIXTURES / "fake-gh"
+FAKE_GH_RESPONSES = FAKE_GH_DIR / "responses.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -29,8 +31,36 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit(f"close test: {message}")
 
 
-def run(argv):
-    return subprocess.run([sys.executable, str(SCRIPT), *argv], capture_output=True, text=True)
+def run(argv, gh_responses=None, path_override=None):
+    """Run close.py with a fake `gh` on `PATH` by default so no case falls through to a real `gh`
+    binary; `path_override` replaces `PATH` entirely (AC-4's stub-removed case)."""
+    env = dict(os.environ)
+    env["PATH"] = path_override if path_override is not None else f"{FAKE_GH_DIR}{os.pathsep}{env.get('PATH', '')}"
+    env["FAKE_GH_RESPONSES"] = str(gh_responses or FAKE_GH_RESPONSES)
+    return subprocess.run([sys.executable, str(SCRIPT), *argv], capture_output=True, text=True, env=env)
+
+
+def write_closeable_scratch(scratch):
+    """Copy the single-task `closeable` fixture (DEV-301, `pr-merge:501`) into `scratch`; returns
+    the `_ship_fence` dir. Shared by the closeable-run and the AC-4 no-gh-on-PATH assertions."""
+    (scratch / "DEV-301.md").write_text(
+        (FIXTURES / "closeable" / "DEV-301.md").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    fence_dir = scratch / "_ship_fence"
+    fence_dir.mkdir()
+    (fence_dir / "ship-cloud-wrapper.json").write_text(
+        (FIXTURES / "closeable" / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    return fence_dir
+
+
+# close.py's own module, imported directly to call find_debrief_path/debrief_status/build_receipt.
+import importlib.util as _importlib_util  # noqa: E402
+
+close_spec = _importlib_util.spec_from_file_location("close_module", SCRIPT)
+close_module = _importlib_util.module_from_spec(close_spec)
+close_spec.loader.exec_module(close_module)
 
 
 # --- AC-2, dry-run: one message per merged task, none for the unmerged one ---
@@ -53,22 +83,12 @@ require(
     f"exit={live.returncode} stdout={live.stdout!r} stderr={live.stderr!r}",
 )
 
-# --- closing all-merged, all-debriefed fixture writes the receipt ----------
+# --- AC-1 bullet 1: closing an all-merged fixture writes merged_sha from the fake gh stub's oid --
 with tempfile.TemporaryDirectory() as scratch_name:
     scratch = Path(scratch_name)
-    for name in ("DEV-301.md",):
-        (scratch / name).write_text((FIXTURES / "closeable" / name).read_text(encoding="utf-8"), encoding="utf-8")
-    fence_dir = scratch / "_ship_fence"
-    fence_dir.mkdir()
-    (fence_dir / "ship-cloud-wrapper.json").write_text(
-        (FIXTURES / "closeable" / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8"),
-        encoding="utf-8",
-    )
+    fence_dir = write_closeable_scratch(scratch)
     closeable = run(["ship-cloud-wrapper", "--state-dir", str(scratch)])
-    require(
-        closeable.returncode == 0,
-        f"closeable fixture did not exit 0: {closeable.returncode} stdout={closeable.stdout!r} stderr={closeable.stderr!r}",
-    )
+    require(closeable.returncode == 0, f"closeable fixture did not exit 0: {closeable.returncode} stderr={closeable.stderr!r}")
     receipt_path = fence_dir / "close-receipt-ship-cloud-wrapper.json"
     require(receipt_path.is_file(), f"closeable run did not write a receipt at {receipt_path}")
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
@@ -77,6 +97,45 @@ with tempfile.TemporaryDirectory() as scratch_name:
         receipt["tasks"]["DEV-301"]["debrief"] == "_debriefs/2026-09-10-01-claude-fable-5-1.md",
         "written receipt did not carry the pushed debrief's path",
     )
+    require(
+        receipt["tasks"]["DEV-301"]["merged_sha"] == "abc1230000000000000000000000000000000000",
+        f"written receipt's merged_sha did not come from the fake gh stub's oid: {receipt['tasks']['DEV-301']!r}",
+    )
+
+# --- AC-4: removing the fake gh stub from PATH flips the same closeable fixture to a failure --
+with tempfile.TemporaryDirectory() as scratch_name:
+    scratch = Path(scratch_name)
+    fence_dir = write_closeable_scratch(scratch)
+    no_gh = run(["ship-cloud-wrapper", "--state-dir", str(scratch)], path_override="/usr/bin:/bin")
+    require(no_gh.returncode != 0, f"closing succeeded with no gh on PATH -- resolution isn't gating: exit={no_gh.returncode}")
+    require(
+        not (fence_dir / "close-receipt-ship-cloud-wrapper.json").is_file(),
+        "a receipt was written even though gh could not be called to confirm the merge",
+    )
+
+# --- AC-1 bullet 2: a pr-merge task whose gh-confirmed state is not MERGED is refused, no receipt --
+not_merged_dir = FIXTURES / "not-merged"
+not_merged = run(["ship-cloud-wrapper", "--state-dir", str(not_merged_dir)])
+require(not_merged.returncode != 0, f"a non-MERGED gh state did not fail the close: exit={not_merged.returncode}")
+require(
+    "DEV-305" in (not_merged.stdout + not_merged.stderr) and "OPEN" in (not_merged.stdout + not_merged.stderr),
+    f"the not-merged refusal did not name the slug and state: stdout={not_merged.stdout!r} stderr={not_merged.stderr!r}",
+)
+require(
+    not (not_merged_dir / "_ship_fence" / "close-receipt-ship-cloud-wrapper.json").is_file(),
+    "a receipt was written for a batch containing a task whose PR is not actually MERGED",
+)
+
+# --- AC-2: find_debrief_path matches a worker's own `## Shipped` section, never the FO's file --
+fo_exclude_dir = FIXTURES / "debrief-fo-exclude"
+require(
+    close_module.find_debrief_path(fo_exclude_dir, "slug-alpha") == "_debriefs/02-worker.md",
+    "find_debrief_path picked the FO's debrief (or nothing) instead of the worker's Shipped file",
+)
+require(
+    close_module.find_debrief_path(fo_exclude_dir, "slug-beta") is None,
+    "find_debrief_path matched a slug named only outside any '## Shipped' section",
+)
 
 # --- AC-3: --validate on the fixture receipt vs. a copy missing `debrief` --
 valid = run(["--validate", str(FIXTURES / "receipts" / "valid.json")])
@@ -89,6 +148,14 @@ require(
     f"exit={missing.returncode} stderr={missing.stderr!r}",
 )
 
+# --- AC-3: --validate refuses a null merged_sha and a short/non-40-hex merged_sha, naming both --
+bad_sha = run(["--validate", str(FIXTURES / "receipts" / "bad-merged-sha.json")])
+require(
+    bad_sha.returncode == 1 and "DEV-301" in bad_sha.stderr and "DEV-306" in bad_sha.stderr,
+    f"--validate did not refuse null (DEV-301) and short (DEV-306) merged_sha, naming both: "
+    f"exit={bad_sha.returncode} stderr={bad_sha.stderr!r}",
+)
+
 # --- close.py's own readers against a fence file dispatch.sh/watch.sh actually produce ---
 # Same reconciliation as uat-doc.test.py: `debrief_status`/`build_receipt` must read the
 # top-level `<slug> -> {workspace, session, message_sha256}` shape dispatch.sh actually commits
@@ -96,12 +163,6 @@ require(
 # fixtures/watch/state/_ship_fence/ship-cloud-wrapper.json -- verified against dispatch.sh's real
 # writes in dispatch.test.sh cases (b)/(e)), with close.py's own `merged_sha`/`debrief` additions
 # layered on top of one slug's object, not nested under a "tasks" key.
-import importlib.util as _importlib_util  # noqa: E402
-
-close_spec = _importlib_util.spec_from_file_location("close_module", SCRIPT)
-close_module = _importlib_util.module_from_spec(close_spec)
-close_spec.loader.exec_module(close_module)
-
 dispatch_fence = json.loads(
     (HERE / "fixtures" / "watch" / "state" / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8")
 )

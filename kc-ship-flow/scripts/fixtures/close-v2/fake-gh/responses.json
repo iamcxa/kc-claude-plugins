@@ -1,0 +1,6 @@
+{
+  "501": {"state": "MERGED", "mergeCommit": {"oid": "abc1230000000000000000000000000000000000"}},
+  "503": {"state": "MERGED", "mergeCommit": {"oid": "def3030000000000000000000000000000000000"}},
+  "504": {"state": "MERGED", "mergeCommit": {"oid": "def4040000000000000000000000000000000000"}},
+  "505": {"state": "OPEN", "mergeCommit": null}
+}
