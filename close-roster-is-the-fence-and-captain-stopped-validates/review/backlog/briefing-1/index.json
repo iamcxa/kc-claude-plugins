@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:8ekqymrkgz5f9y0h8qaf6vp2:backlog:attempt-1:revision-1",
+  "question": "Admit 8e into implementation for ship-cloud-wrapper-r4 (pilot profile): close.py roster fix from fence's dispatched slugs (AC-1) and captain_stopped merged_sha exemption (AC-2)?",
+  "artifacts": [
+    {
+      "id": "artifact:8ekqymrkgz5f9y0h8qaf6vp2:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/76f77a2015b8c428f5dc95965da029eaa99a81f5/close-roster-is-the-fence-and-captain-stopped-validates.md",
+      "rev": "sha256:03f6d0deb87758ec4eb81e823bae8d27eccbc93afcb91f61b38faf2720f25acf",
+      "mediaType": "text/markdown",
+      "summary": "Seed bite from r3 close: close.py counted deferred non-dispatched entities as batch tasks (exit 3), and its own captain_stopped receipt failed --validate's 40-hex merged_sha rule. Accepted outcome: fence-derived roster + captain_stopped exemption. 3 ACs, no schema/debrief changes, route-back if #445 fence shape changes slug semantics."
+    }
+  ]
+}
