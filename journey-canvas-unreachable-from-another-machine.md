@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T10:09:25Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-journey-canvas-unreachable-from-another-machine
 issue:
 pr:
 mod-block:
