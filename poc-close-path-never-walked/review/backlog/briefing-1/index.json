@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:xve5t292zy54mncx0xm6m3v0:backlog:attempt-1:revision-1",
+  "question": "Admit this into ideation at pilot-product-slice, with AC-1..AC-4 and the four non-goals as written?",
+  "artifacts": [
+    {
+      "id": "artifact:xve5t292zy54mncx0xm6m3v0:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cdea4d00c7f99a3fc895ec106db05b4e6979c4a0/poc-close-path-never-walked.backlog-review.md",
+      "rev": "sha256:9fc6430aa564f8d57226f42e6964e9d5a96d28a04cc24ecb96878fa996bbae64",
+      "mediaType": "text/markdown",
+      "summary": "Two defects on the POC close path, both reproduced by driving it rather than reading it: a feedback context can never bind after a prove stage, and poc-close-guard misreads an empty started field as the next frontmatter key. One task because they are one unexercised path; Pilot because the fix for the first is a contract ruling the FO must not make alone."
+    }
+  ]
+}

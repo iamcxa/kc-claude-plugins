@@ -15,6 +15,28 @@ issue:
 pr:
 mod-block:
 id: xve5t292zy54mncx0xm6m3v0
+gates:
+    version: 1
+    records:
+        - id: gate:xve5t292zy54mncx0xm6m3v0:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:xve5t292zy54mncx0xm6m3v0-backlog-1
+              briefing:
+                id: briefing:xve5t292zy54mncx0xm6m3v0:backlog:attempt-1:revision-1
+                digest: sha256:428b3078ab6c5b24debe880d41a5fbe352e745e8b981d87cef75bd5e73592ad2
+                room-ref: ./poc-close-path-never-walked/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:xve5t292zy54mncx0xm6m3v0:backlog:1
+                briefing: briefing:xve5t292zy54mncx0xm6m3v0:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T07:48:37.215439Z"
+                decision: approve
+                reason: Captain approved in chat 2026-09-14 after the FO presented both defects with their reproductions, the reason for one task rather than two, and the Pilot selection justified by the previous POC selection on this path running past budget and needing a mid-flight amendment.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
