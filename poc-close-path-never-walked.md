@@ -68,6 +68,22 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-14T08:54:26.879129Z"
                 reason: 'Captain asked why a test that cannot fail is not simply deleted. He is right and the gate question is now wrong: it offered to record poc_non_goals_refused as a residual, which contradicts the retention rule this repository just spent two pull requests establishing. Returning to implementation to delete the case, then re-validating and re-presenting.'
+            - id: gate-attempt:xve5t292zy54mncx0xm6m3v0-validation-2
+              briefing:
+                id: briefing:xve5t292zy54mncx0xm6m3v0:validation:attempt-2:revision-1
+                digest: sha256:88054d3590b9c05c5ca4e3b7be2e2ad4e11e8a3dd4b0ad61fe5108dc6ec4c5b9
+                room-ref: ./poc-close-path-never-walked/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:xve5t292zy54mncx0xm6m3v0:validation:2
+                briefing: briefing:xve5t292zy54mncx0xm6m3v0:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-14T10:11:19.74465Z"
+                decision: approve
+                reason: 'Captain approved in chat 2026-09-14 on the FO gate presenting candidate 21a6ffeb: cycle 2 confirmed his ruled deletion of poc_non_goals_refused broke nothing, both fixes were re-falsified and re-passed independently of the build and of the FO, and no residual was carried forward. The gate question also authorized the Draft PR.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any

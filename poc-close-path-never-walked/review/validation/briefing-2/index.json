@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:xve5t292zy54mncx0xm6m3v0:validation:attempt-2:revision-1",
+  "question": "Approve validation at candidate 21a6ffeb and authorize the Draft PR to iamcxa/kc-claude-plugins main?",
+  "artifacts": [
+    {
+      "id": "artifact:xve5t292zy54mncx0xm6m3v0:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/b6d76316f86a016ff953657d98dd83c7dff9bb18/poc-close-path-never-walked.md",
+      "rev": "sha256:dff81445aa69273f2fd79ae7fbc46afc4e5b955dd371dc5aa40b1a58af74df18",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 confirms the Captain-ruled deletion of poc_non_goals_refused broke nothing. Both fixes re-falsified and re-passed at 21a6ffeb independently of the build and of the FO. No blocking finding, no residual carried forward on that test. Base trunk; origin/main is the branch base, so the ceremony rebase is a no-op."
+    }
+  ]
+}
