@@ -1,6 +1,6 @@
 ---
 title: "The Mermaid sequence companion has no repeatable in-repo check, so the journey map cannot rely on Mermaid"
-status: backlog
+status: ideation
 source:
 product: kc-journey-map
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: 'Captain approved in chat 2026-09-14 with 「ok poc」 after the FO presented the #440 review, the coverage gap, the task, and the coupled scope question. Selecting POC ruled the scope question the same way: the CI wiring in AC-1/AC-2 of the first draft was removed and carried as a residual, because a POC runs the check once rather than building the gate. Sprint uses the task-scoped slug journey-map-mermaid-companion, which needs no ROADMAP registration on this workflow''s existing convention.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 PR #440 (`codex/journey-mermaid`, head `cfb804d64f1e0ef35862505ee68c26c51c176076`) adds a Mermaid
