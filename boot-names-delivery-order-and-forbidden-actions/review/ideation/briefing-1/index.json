@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:v9mf30n3s03ev5dvtn08vsed:ideation:attempt-1:revision-1",
+  "question": "Approve ideation/shape for kc-ship-flow's boot-message delivery-order + forbidden-actions wording and watch.sh's pr-empty check — proceed to implementation/build?",
+  "artifacts": [
+    {
+      "id": "artifact:v9mf30n3s03ev5dvtn08vsed:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b524191b9f31e465fccfd25aa24789a46f919846/boot-names-delivery-order-and-forbidden-actions.md",
+      "rev": "sha256:8ce00d1c5dba7cecfa0770838a61d8eb545c41aa0e25f7cf00e11204c640d6df",
+      "mediaType": "text/markdown",
+      "summary": "Shape confirms both boot modes already share one emission point (dispatch.sh:150 boot_gate_line, called from :201 resume and :324 boot) and watch.sh's gate check funnels through one function/call site (gate_status at :129-157, called once from poll_once at :310-319), so AC-1/AC-2/AC-3 are each a single shared-place change. AC-4 is a fixture-hygiene constraint on the tests, not separate production code. Surfaced fork for build: two existing gate-prepared fixtures lack a pr: field entirely and need a non-real pr: value to keep passing under AC-3's literal empty condition — recommended (a), explicitly flagged so the 3 flipped assertions aren't mistaken for a regression."
+    }
+  ]
+}
