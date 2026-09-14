@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-1:revision-1",
+  "question": "Admit this POC from backlog into implementation: does a release contract (roadmap.md + releases.md, journey-bindable, tag write-back) group work better than the sprint ordinal?",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/824296b487fe8e9fabd9f8765e8fbb26cc5f6c19/sprint-to-release-contract-migration.md",
+      "rev": "sha256:8ae99244a83ca44feade008d55c3728b09d352b72ed44023b38b6439fa501f72",
+      "mediaType": "text/markdown",
+      "summary": "Captain ruled the grouping should become a release and that the route starts as a POC. Two assumptions are unexecuted: tag write-back against a tag that exists only after merge, and a release spanning two of this repository's nine independent version streams. Backlog is the initial stage, so the committed seed is the reviewed artifact."
+    }
+  ]
+}

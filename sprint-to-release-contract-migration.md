@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: tjxctad7413wyp3acfx8wzzp
+gates:
+    version: 1
+    records:
+        - id: gate:tjxctad7413wyp3acfx8wzzp:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-backlog-1
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:backlog:attempt-1:revision-1
+                digest: sha256:d5fe505a9e6199259984e6b0b3913c79704d61f809c890b642be45320a4baa38
+                room-ref: ./sprint-to-release-contract-migration/review/backlog/briefing-1
 ---
 
 ## The problem
