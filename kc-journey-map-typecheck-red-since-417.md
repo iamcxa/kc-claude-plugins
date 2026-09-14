@@ -114,3 +114,63 @@ work_profile:
     - The fix requires consumers to change configuration or migrate records.
     - The CI step is extended to gate anything beyond this package's typecheck.
 ```
+
+## Stage Report: ideation
+
+- DONE: Reproduce the defect first.
+  `npm ci && npx tsc` at `origin/main` (e3cca913), run from a scratch worktree, exits 2:
+  `server/client/App.tsx(6,29): error TS7016: Could not find a declaration file for module
+  '../../lib/records.mjs'. ... implicitly has an 'any' type.`
+- DONE: Read what lib/records.mjs actually exports.
+  13 exports: `richText`, `note`, `releaseLine`, `label`, `pageLink`, `fitHeight`, `indexes`,
+  `page`, `STORY_STATUS_COLORS`, `storyBorder`, `storyProgress`, `releaseProgressText`,
+  `withStoryStatus`. Only `storyBorder` is imported today (App.tsx:6), called at App.tsx:39 with
+  a `TLShape` argument (App.tsx already imports `TLShape` from `tldraw` for sibling code at
+  line 35-36).
+- DONE: Choose the declaration form.
+  Hand-written `lib/records.d.mts` — note the `.d.mts` extension, not `.d.ts`. Empirically
+  verified: a `lib/records.d.ts` with the identical content left `tsc` still red with the same
+  TS7016 (bundler resolution maps a `.mjs` import to `.d.mts` first); renaming the same content to
+  `lib/records.d.mts` made `tsc` exit 0. This is the load-bearing fact that rules out the naming
+  a "chosen but standard" .d.ts would silently get wrong.
+  JSDoc types on records.mjs: rejected — requires editing the 13-export file being typed, higher
+  blast radius than an additive declaration file for one consumed export.
+  tsconfig `allowJs`: rejected — pulls all of `lib/*.mjs` (13 modules) into strict-mode checking
+  at once, an uncontrolled scope expansion versus typing one call site.
+- DONE: Check for the same class of defect elsewhere.
+  `grep -rnE "from ['\"].*\.mjs['\"]" server lib --include='*.ts' --include='*.tsx'` returns only
+  App.tsx:6. No other class-open import.
+- DONE: Name the npm script and CI step.
+  Script: add `"typecheck": "tsc"` to `package.json` `scripts`. Precondition found during
+  reproduction: `typescript` is not in `package.json`/`package-lock.json` at all — `npx tsc`
+  silently network-fetched TypeScript 5.9.3 from the registry rather than running an installed
+  binary. Add `"typescript": "^5.9.3"` to `devDependencies` (matching this package's existing
+  caret-range convention) so `npm ci` installs it and the CI step runs an installed `tsc`, not an
+  uncached `npx` fetch. Workflow step: a new `Typecheck` step in `kc-journey-map-tests.yml`,
+  placed after `Preflight` and before `Model tests` (fail fast on a type error before the slower
+  model-test suite runs). `paths:` filter gap found: today's filter (`lib/**`, `server/**`,
+  `canvas-smoke.sh`, `package.json`, `package-lock.json`, the workflow file itself) omits
+  `kc-journey-map/tsconfig.json` — an edit to tsconfig alone would not retrigger the job. Add
+  `kc-journey-map/tsconfig.json` to both the `pull_request` and `push` filter lists.
+- DONE: State how AC-3's falsifier will be demonstrated.
+  On the branch carrying the fix, delete or revert `lib/records.d.mts` (or rename it back to
+  `records.d.ts`) and open a PR. Demonstrated concretely in this stage with the reproduction
+  worktree: reverting to no declaration file reproduces the original `TS7016` exit-2 failure above;
+  reverting to the wrong extension (`records.d.ts`) reproduces the same TS7016 failure. Either
+  revert makes the new `Typecheck` CI step fail with that TS7016 line in its log output.
+- DONE: Write the shaping report into the entity's ideation room.
+  This report. No file under `lib/`, `server/`, `package.json`, `tsconfig.json`, or
+  `.github/workflows/` was modified in this repo checkout — all reproduction and falsifier
+  commands ran in a disposable `git worktree` at `/tmp/kcjm-typecheck-check` (removed after use),
+  never in this workflow's own worktree or the montpellier-v1 checkout.
+
+### Summary
+
+Reproduced TS7016 at `origin/main` (exit 2) and confirmed the fix shape empirically, not just by
+reading docs: `lib/records.d.mts` (the `.mjs`-matching extension) with `storyBorder(story: TLShape):
+TLShape | null` makes `tsc` exit 0, and a call-site type violation (`storyBorder(42)`) fails `tsc`
+with TS2345 — both AC-1 and AC-2's falsifier are demonstrated, not asserted. One class-defining fact
+surfaced that the known-facts list didn't have: `typescript` isn't a project dependency at all today,
+so an un-pinned `npx tsc` in CI would silently fetch from the registry each run; the build stage
+should add it to `devDependencies` alongside the new script and CI step. The `paths:` filter is also
+missing `tsconfig.json`.
