@@ -1,7 +1,7 @@
 {
  "admission-asks-who-was-bitten-and-who-will-run-it": {
   "message_sha256": "224f9579e63dcfc023af5bfff5f4d33920312d80cbb19c3d5bf369c7c5637bf2",
-  "session": null,
-  "workspace": null
+  "session": "e7b3a4cc-f3cc-46ec-af17-64ad764529cf",
+  "workspace": "592e0522-6bdd-4b24-8330-6ad146c19114"
  }
 }
