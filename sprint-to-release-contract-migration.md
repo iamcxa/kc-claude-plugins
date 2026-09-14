@@ -1,13 +1,13 @@
 ---
 title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
-status: validation
+status: backlog
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: kc-dev-flow/S10
 sprint-readiness: ready
-started: 2026-09-14T13:43:29Z
+started:
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-sprint-to-release-contract-migration
