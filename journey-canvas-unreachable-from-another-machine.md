@@ -424,3 +424,83 @@ variable to a name that resolves is still handed the name that does not. AC-7 re
 URL to work from the machine the operator will open it on.
 
 Neither finding is a defect in the accepted design; both are in the implementation of it.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Merged `origin/main` into the branch — not rebased. Brought in `0bbf6233` (PR #441:
+  `typecheck` npm script, `typescript` devDependency, `lib/records.d.mts`) and one unrelated
+  `kc-dev-flow` commit. Clean merge, no conflicts, nothing to favor either side on.
+- DONE: F1 — `vite.config.mts`'s `/connect` proxy target now reads
+  `` `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}` ``, matching `canvas-server.ts` and
+  `lib/render.mjs`/`read.mjs`/`journey-tldr.mjs`. Demonstrated live: API started on port 25858
+  (not 5858), Vite proxying to it on port 23737; a shape drawn via `agent-browser` against
+  `localhost:23737` landed in the loopback API's `/doc` snapshot for that room (1 `geo` shape) —
+  a synced shape, not just a loaded page.
+- DONE: F2 — `canvas-server.ts` now prints the startup URL using `PRINT_HOST`, the first
+  `JOURNEY_ALLOWED_HOSTS` entry when set, else `hostname()`. Quoted both cases from the running
+  process: with nothing set, `doc API on http://127.0.0.1:25858  (canvas: http://MacBookPro.localdomain:3737/?room=default)`;
+  with `JOURNEY_ALLOWED_HOSTS=my-tailscale-name.ts.net,extra2` set, `doc API on
+  http://127.0.0.1:25858  (canvas: http://my-tailscale-name.ts.net:3737/?room=default)`.
+- DONE: Frontend port `3737` duplication (`vite.config.mts` `port:`, `canvas-server.ts` startup
+  line) left as-is. `3737` is already a hardcoded literal in half a dozen other places in the
+  package outside this task's 4-file scope (`lib/doctor.mjs`, `lib/journey-export.mjs`,
+  `lib/records.mjs`, `lib/journey-tldr.mjs`, the skill's example README) — unifying only these two
+  would not actually prevent package-wide drift, so nothing keeps them from drifting except that
+  the port has not changed since it was introduced; a future change needs a repo-wide grep for
+  `3737`, not just these two files.
+- DONE: Re-ran acceptance evidence on fresh, non-default ports (API 35858, Vite 33737,
+  `JOURNEY_ALLOWED_HOSTS=verify-name.example`), all against a genuinely separate network namespace
+  (Docker container, same recipe as ideation) plus a same-machine LAN-IP `agent-browser` pass for
+  the application-level edit, matching the tiers the ideation/implementation stages already used —
+  no second physical machine was available here either:
+  - AC-1/AC-6/AC-8: `curl` with `Host: verify-name.example:33737` -> 200; `Host: $(hostname):33737`
+    (default-admitted) -> 200; `Host: attacker.example.com:33737` -> 403 `Blocked request...`.
+    Same 200 confirmed again from inside the Docker container.
+  - AC-2: WebSocket opened from inside the Docker container through the proxy
+    (`ws://192.168.0.91:33737/connect/verifyroom`) -> `OPEN`; `/health` on the loopback API showed
+    the room registered. Full application-level round trip via `agent-browser` at
+    `http://192.168.0.91:33737/?room=verifyedit2`: created a shape client-side, then
+    `curl 127.0.0.1:35858/doc?room=verifyedit2` showed 1 shape landed — an edit made from the
+    LAN-reachable board reached the loopback-bound host API.
+  - AC-3: off-machine `curl` from the same Docker container to `192.168.0.91:35858/health`
+    (the accepted `127.0.0.1` bind) timed out, `exit=28`. Falsifier: temporarily changed
+    `host: '127.0.0.1'` to `'0.0.0.0'` in the tracked file, restarted, same container request
+    returned `200`; reverted from a pre-edit backup immediately after — `git diff` on
+    `canvas-server.ts` showed only the intended change before commit.
+  - AC-7: covered by the F2 evidence above.
+  - Evidence tier, named plainly: container-equivalent for the network-boundary claims (AC-1/2/3/6/8),
+    same-machine LAN-IP browser round trip for the AC-2 application-level edit. No real second
+    machine or VM was available in this environment.
+- DONE: `node --test lib/*.test.mjs` — 77/77 pass, exit 0 (checks story-map/journey-board/function-map
+  geometry and layout invariants; a broken proxy or URL change does not touch this suite, so it is
+  evidence of no regression, not of F1/F2). `bash scripts/canvas-smoke.sh` — exit 0, doc API reachable
+  on loopback, 102 shapes rendered and round-tripped (would fail if the merge broke the doc API's own
+  request handling). `npm run typecheck` — now exists as of the merged `origin/main`; ran, exit 0 (a
+  type error in any touched file would fail this, including the new `PRINT_HOST` derivation).
+- DONE: Comment audit — this diff (post-simplification) adds 2 new comment lines against 7 new
+  non-comment lines (const/blank/proxy object literal/console.log), ~22%, above the repo's 3.0%
+  baseline for a diff this size. Started with 4 added comment lines (2 near `PRINT_HOST`, 2 replacing
+  the startup-line comment); deleted the second pair as a restatement of the fallback logic already
+  visible in the code next to it (`.find(Boolean) ?? hostname()`), restoring the pre-existing
+  one-line startup comment unchanged. The surviving 2-line comment on `PRINT_HOST` states a fact the
+  code in this file cannot: that `vite.config.mts`, a different file, derives its `allowedHosts` from
+  the same `JOURNEY_ALLOWED_HOSTS` source.
+- DONE: Pushed `9ff318a0` to `spacedock-ensign/journey-canvas-unreachable-from-another-machine`;
+  PR #442 updated, still Draft, not merged, not marked ready. All 5 CI checks green: `model tests +
+  boot smoke (node 22.13.0)`, `model tests + boot smoke (node 24)`, `version parity`, `multi-profile
+  route gate (live Spacedock)`, `GitGuardian Security Checks`.
+- DONE: This receipt (commands, exit codes, and output excerpts for every check above) is the stage
+  report itself; both F1 and F2 are closed, each demonstrated live on a non-default port/host as the
+  checklist required, not merely re-read from the diff.
+
+### Summary
+
+Both FO-confirmed findings are fixed and demonstrated: the `/connect` proxy target now follows
+`JOURNEY_API_PORT` like every sibling script, and the startup URL prefers the operator's
+`JOURNEY_ALLOWED_HOSTS` entry over a possibly-unreachable `os.hostname()`. `origin/main` (PR #441's
+typecheck wiring) merged cleanly. All three required checks — model tests, canvas smoke, and the
+now-real `npm run typecheck` — pass, and the full acceptance-criteria evidence was re-run on fresh
+ports/hosts rather than reused from the prior cycle. Evidence tier is named plainly throughout:
+container-equivalent for network-boundary claims, same-machine LAN-IP browser for the one
+application-level edit check, since no second physical machine was available. PR #442 is pushed,
+green, and stays Draft.
