@@ -11,6 +11,7 @@ on:
       - "kc-journey-map/scripts/canvas-smoke.sh"
       - "kc-journey-map/package.json"
       - "kc-journey-map/package-lock.json"
+      - "kc-journey-map/tsconfig.json"
       - "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml"
       - ".github/workflows/kc-journey-map-tests.yml"
   push:
@@ -21,6 +22,7 @@ on:
       - "kc-journey-map/scripts/canvas-smoke.sh"
       - "kc-journey-map/package.json"
       - "kc-journey-map/package-lock.json"
+      - "kc-journey-map/tsconfig.json"
       - ".github/workflows/kc-journey-map-tests.yml"
 
 permissions:
@@ -54,6 +56,9 @@ jobs:
 
       - name: Preflight
         run: npm run doctor
+
+      - name: Typecheck
+        run: npm run typecheck
 
       - name: Install pinned Spacedock
         env:
