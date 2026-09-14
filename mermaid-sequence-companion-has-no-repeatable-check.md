@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-mermaid-sequence-companion-has-no-repeatable-check
 issue:
-pr: local-merge:poc-verified-mermaid-works-at-cfb804d-no-product-diff
+pr: local-merge:1ea1a2ae
 mod-block:
 id: n2wd7aavte2k7p7nfj3aa2r5
 gates:
