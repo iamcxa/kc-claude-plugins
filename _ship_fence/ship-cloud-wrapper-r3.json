@@ -4,14 +4,16 @@
   "session": "62536c2f-cf6c-4b9a-834e-68f62b85ccd4",
   "workspace": "4878c599-b5ba-4f22-b3d3-2e83712b82f1",
   "pr": 450,
-  "candidate_sha": "c82ec84d463c090e079a1c1d6d4bfa0747712e1d"
+  "candidate_sha": "c82ec84d463c090e079a1c1d6d4bfa0747712e1d",
+  "closed_reason": "Captain 2026-09-15: no consumer today; fixtures copy existing files"
  },
  "pr-merge-released-body-pin-per-mod-version": {
   "message_sha256": "a5ca08948a88ecbe8c10cec88f68517c570fd21468edad68fbc4edf11f26ae7f",
   "session": "1ca1e5d8-f39b-473d-8e2f-05da64760418",
   "workspace": "2be65410-fd56-457e-aabf-0c8be7085155",
   "pr": 446,
-  "candidate_sha": "92d79cd21a5f130f2fdbbf01cd9ec2159efb4ec7"
+  "candidate_sha": "92d79cd21a5f130f2fdbbf01cd9ec2159efb4ec7",
+  "closed_reason": "Captain 2026-09-15: 0.27.0 row has no consumer after the adopter check was cut"
  },
  "ship-close-records-merged-sha-and-worker-debrief": {
   "message_sha256": "5e6df3bcd8b32a510738531f074f1ba7eac7cd413fd06333e4229f4ea779822e",
@@ -33,5 +35,9 @@
   "workspace": "89347f82-a86b-4bf6-a7ea-0523fd144eac",
   "pr": 451,
   "candidate_sha": "b7a4e9e0570944c86240d667f0c2966b74668169"
- }
+ },
+ "captain_stopped": [
+  "adopter-contract-test-ships-with-the-package",
+  "pr-merge-released-body-pin-per-mod-version"
+ ]
 }
