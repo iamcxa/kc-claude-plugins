@@ -1,6 +1,6 @@
 ---
 title: "The journey canvas is unreachable from anywhere but the machine it runs on"
-status: ideation
+status: implementation
 source:
 product: kc-journey-map
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved the shaping in chat 2026-09-14 with 「一起做」, ruling both additions in: the startup line in canvas-server.ts must print a URL the operator can actually open, and the host allowlist must be operator-extendable rather than fixed to os.hostname(). The FO''s stated basis was that an unchanged startup URL leaves the first thing the user sees broken — which is the exact complaint that opened this task — and that a fixed allowlist would still refuse a cloud or Tailscale name. The design itself was live-verified in a scratch worktree, including a real WebSocket through the proxy into the loopback-bound API; evidence tier is container-equivalent and labelled as such.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
