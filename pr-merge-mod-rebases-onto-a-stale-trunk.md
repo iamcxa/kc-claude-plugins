@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T13:43:33Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-pr-merge-mod-rebases-onto-a-stale-trunk
 issue:
 pr:
 mod-block:
