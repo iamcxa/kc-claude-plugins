@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-3:revision-1",
+  "question": "Finalize this entity: its work is already merged to main as PR #417, but its earlier terminal approval was superseded by a rework and never replaced, so it has sat at implementation while its code shipped.",
+  "artifacts": [
+    {
+      "id": "artifact:91n5fvm5qtpf6gxd4bwhxxkg:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/7ee06d3ba4971c66e3a7391157e0142dd4683092/derive-release-story-progress/index.md",
+      "rev": "sha256:f18c0e5c3818823a996a1a9dcc785ec7a3c5fe7504fe670985f456c5e713c4a4",
+      "mediaType": "text/markdown",
+      "summary": "PR #417 merged 2026-09-11 as 3fd2fc59. The entity carries ideation, implementation, validation and validation cycle-2 stage reports; the cycle-2 validation bound the ten-file candidate to commit 947501df with a matched manifest hash and every AC retaining its prior independent verdict. Its validation gate was approved with target-stage done but is recorded superseded, and superseded authority is never re-spent, so this is a successor attempt. Approving lets merge guard finalize on the existing pr-merge:417 sentinel."
+    }
+  ]
+}
