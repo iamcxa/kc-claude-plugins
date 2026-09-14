@@ -1,6 +1,6 @@
 ---
 title: "Retire the provider-backed planning path, so dev-flow's only intake is a committed brief"
-status: implementation
+status: validation
 source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
