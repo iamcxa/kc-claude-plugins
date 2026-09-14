@@ -399,3 +399,28 @@ plus the startup-log hostname fix the Captain's 「一起做」 ruling added. `a
 `npm run typecheck` not existing as a script — ran `tsc` directly and found one pre-existing,
 unrelated error, left unfixed per this stage's four-file scope. Draft PR #442 is open on
 `origin/main`, not touching PR #440 or #441.
+
+## FO findings at validation entry, PR #442 head
+
+The validation ensign was dispatched with these two findings to resolve and terminated on a session
+rate limit before reporting. The findings themselves are confirmed here from source by the FO, so
+they survive the dispatch failure; the demonstrations the checklist asked for are still owed.
+
+**F1 — the proxy target port is fixed while every sibling derives it.** `vite.config.mts` proxies
+`/connect` to `http://127.0.0.1:5858`. `canvas-server.ts` reads
+`Number(process.env.JOURNEY_API_PORT ?? 5858)`, and `lib/render.mjs`, `lib/read.mjs` and
+`lib/journey-tldr.mjs` each build their API base as
+`http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`. The new proxy is the only place in the
+package that hardcodes the port with no environment fallback, so a canvas started on any other port
+serves a page whose sync path points at nothing. `references/canvas.md` documents running the client
+against "a separate `JOURNEY_API_PORT` server", so this breaks a documented workflow rather than a
+hypothetical one. `scripts/canvas-smoke.sh` sets `JOURNEY_API_PORT=0` but reaches the API directly
+and never traverses the proxy, which is why CI stays green.
+
+**F2 — the printed URL ignores the allowlist the operator configured.** `canvas-server.ts` prints
+`http://${hostname()}:3737/...`. `JOURNEY_ALLOWED_HOSTS` exists precisely because `os.hostname()`
+may not resolve from the viewer's machine, which is the reported failure. An operator who sets that
+variable to a name that resolves is still handed the name that does not. AC-7 requires the printed
+URL to work from the machine the operator will open it on.
+
+Neither finding is a defect in the accepted design; both are in the implementation of it.
