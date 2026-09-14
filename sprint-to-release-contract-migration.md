@@ -17,6 +17,8 @@ mod-block:
 id: tjxctad7413wyp3acfx8wzzp
 ---
 
+## The problem
+
 `kc-journey-map` now plans a release into a Development Brief (PR #419, merged 2026-09-11),
 so the unit a planner hands to dev-flow is a release. The execution record still calls that
 unit a sprint: `profile-contract-loader.py` reads `^sprint:` and `^sprint-readiness:` with two
@@ -30,7 +32,7 @@ Two boundaries are already known. Spacedock does not own the field — `internal
 classifies `sprint`/`sprint-readiness` under the schema's `permissive_additions`, so the engine
 needs no change and `spacedock refit` is not in the chain. And `release` is not a free word inside
 kc-dev-flow: it was a Production route step, `route: [shape, build, verify, release]`, deleted in
-the v3 route change, and a stale receipt still carrying it throws `stale route for production`.
+the v3 route change, and a stale receipt still carrying it throws `stale route for production`. A third meaning is already live in this repository's Local Profile, where `planning-outcome` is described as a Linear Project held as one user-value `release package`; grouping cannot simply reuse that field, because a standalone item records no `planning-outcome` at all.
 
 ## Accepted outcome
 
