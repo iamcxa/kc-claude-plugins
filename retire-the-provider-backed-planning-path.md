@@ -1,6 +1,6 @@
 ---
 title: "Retire the provider-backed planning path, so dev-flow's only intake is a committed brief"
-status: backlog
+status: ideation
 source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Captain said 開工 for this entity in the session, after selecting Pilot and the S10 grouping; the seed carries the Development Brief, AC-1..AC-5 and the v3 Pilot receipt.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## The problem
