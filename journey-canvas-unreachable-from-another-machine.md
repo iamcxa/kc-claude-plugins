@@ -349,3 +349,53 @@ mutant. The one operational note beyond the ACs: the "URL the agent hands out" (
 `localhost` in `canvas-server.ts`'s startup log) must change alongside `allowedHosts`, or the fix is
 unreachable from the first URL the operator sees. Evidence throughout is container-equivalent, not a
 two-machine run — named plainly per the honesty bar, since no second machine was available here.
+
+## Stage Report: implementation
+
+- DONE: AC-6/AC-8 — `server.allowedHosts` in `vite.config.mts` defaults to `[os.hostname()]`;
+  `JOURNEY_ALLOWED_HOSTS` (comma-separated) extends it. Verified live: own hostname 200, extra name
+  200, unrelated hostname 403 `Blocked request`.
+- DONE: Added `server.proxy` entry for `/connect` with `ws: true` in `vite.config.mts`, target
+  `http://127.0.0.1:5858` (the doc API's real default port). Verified an actual WebSocket opened
+  through the proxy from a Docker container lands in the loopback API's room list.
+- DONE: AC-4 — `App.tsx`'s `SERVER_URL` fallback is now `` `${window.location.protocol}//${window.location.host}` ``;
+  `VITE_JOURNEY_API_URL` kept, same `||` precedence, same meaning — set wins and bypasses the proxy
+  entirely, unset computes exactly one value (page origin).
+- DONE: AC-7 — `canvas-server.ts`'s startup line now prints `http://${hostname()}:3737/...` instead
+  of a fixed `localhost`, matching the hostname `allowedHosts` admits. The `doc API on ${address}`
+  prefix `canvas-smoke.sh` greps is untouched.
+- DONE: AC-3 — confirmed live: off-machine request to the accepted `127.0.0.1` bind times out
+  (`exit=28` from a Docker container hitting the LAN IP); the same request against a scratch mutant
+  (`host: '0.0.0.0'`) succeeds (200). Mutant reverted from backup immediately after; `git diff` on
+  `canvas-server.ts` showed only the intended `hostname()`/import change before commit.
+- DONE: AC-1/AC-2 — from a Docker container (separate network namespace, LAN-IP-reachable only, no
+  `VITE_JOURNEY_API_URL` set): fetched the served bundle confirming `SERVER_URL` derives from
+  `window.location`, opened a real WebSocket through the proxy, and confirmed the room registered.
+  Additionally, via `agent-browser` (same machine, real LAN IP — a weaker, separately labeled tier
+  than the container above) opened the board, drew a shape, and confirmed via loopback
+  `curl .../doc?room=...` that the shape landed in the doc API's snapshot — the full edit round trip
+  through the real tldraw sync client. Evidence tier: container-equivalent for page/socket, same-machine
+  LAN-IP browser round trip for the application-level edit; no second physical machine was available.
+- DONE: AC-5 — `node --test lib/*.test.mjs`: 77/77 pass, exit 0. `bash scripts/canvas-smoke.sh`:
+  exit 0, doc API still reachable on loopback. `npm run typecheck` does not exist as a package
+  script; ran `npx tsc --noEmit -p tsconfig.json` directly — exit 2, one pre-existing error
+  (`App.tsx(6,29): TS7016`, untyped `.mjs` import) confirmed identical on a clean `origin/main`
+  checkout via `git stash`/`tsc`/`git stash pop`; unrelated to and unaffected by this diff.
+- DONE: Committed on `spacedock-ensign/journey-canvas-unreachable-from-another-machine`
+  (`6007f0bb`), staged only the four touched files (`vite.config.mts`, `App.tsx`,
+  `canvas-server.ts`, `canvas.md`), no version field edited.
+- DONE: Pushed and opened draft PR https://github.com/iamcxa/kc-claude-plugins/pull/442 carrying
+  reproduction, design, AC evidence, and evidence-tier labeling. Not marked ready, not merged.
+- DONE: Worktree was stale (`7b103a10`, predating this repo's `VITE_JOURNEY_API_URL` fallback,
+  exactly as ideation's staleness flag warned); fast-forwarded to `origin/main` (`e3cca913`,
+  `HEAD..origin/main` was a clean ancestor, no local commits lost) before touching any file.
+
+### Summary
+
+Implemented the three-piece design from ideation exactly as approved: `allowedHosts` +
+operator-extendable env var, a `/connect` WebSocket proxy, and a same-origin client URL fallback,
+plus the startup-log hostname fix the Captain's 「一起做」 ruling added. `app.listen` still binds
+`127.0.0.1`; AC-3's falsifier was re-run live and discriminates correctly. The one residual is
+`npm run typecheck` not existing as a script — ran `tsc` directly and found one pre-existing,
+unrelated error, left unfixed per this stage's four-file scope. Draft PR #442 is open on
+`origin/main`, not touching PR #440 or #441.
