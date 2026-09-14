@@ -1,6 +1,6 @@
 ---
 title: "The boot message names the delivery order and the forbidden actions: push and open the Draft PR before preparing validation; never create repositories, change settings or branch protection, or run CI off the PR branch"
-status: implementation
+status: validation
 source: "measured on ship-cloud-wrapper-r3, 2026-09-14/15 (questions log on spacedock-state/ship); Captain 2026-09-15 「r4 現在開」"
 product: kc-ship-flow
 planning-window:
@@ -129,7 +129,11 @@ work_profile:
     No token-scope or GitHub-side enforcement change (Non-goal); no change to
     the existing conn/gate-authority wording from #445 (Non-goal); this is
     wording + a reporting-state check, not a new permission or auth mechanism.
-  semantics_unchanged: true
+  semantics_unchanged: false
+  # Corrected from an initial true: AC-3 deliberately changes watch.sh's
+  # observable poll output for the prepared+empty-pr: state (implicit
+  # gate-prepared -> explicit question), which is a runtime-behaviour change,
+  # not a no-op wording addition. AC-1/AC-2 are additive boot text only.
   decision:
     authority: "Captain batch approval, 2026-09-15, 「r4 現在開」 (conn recorded by the ship first officer; applied here per dispatch fc20223438b3)"
     at: "2026-09-15T00:00:00Z"
