@@ -535,3 +535,21 @@ green, and stays Draft.
 ### Summary
 
 All 8 ACs hold at PR #442 head (`9ff318a0`), independently re-derived, not re-read from the prior receipts. Both FO findings (F1: proxy port hardcoded; F2: printed URL ignores allowlist) are closed by fresh demonstration on ports/hosts not used by any prior stage. The env-var parsing duplication between `vite.config.mts` and `canvas-server.ts` is safe as implemented (verified the printed host is always a member of the admitted set) but structurally fragile — no shared source, no test catches drift if the two parsers diverge. The `3737` literal duplication is a pre-existing, out-of-scope condition, not a regression; left as a named residual per the prior stage's answer. Evidence tier is named plainly throughout: container-namespace and LAN-IP-browser, no true second physical machine available in this environment, consistent with every prior stage's own labeling. One claim is narrower than requested: AC-4's "bypasses the proxy" was confirmed by code precedence plus room registration, not by an isolated WebSocket-frame trace, because the CLI network log used here does not surface WS handshakes. PR #442 is untouched — still Draft, still green, head SHA unchanged.
+
+### Incident during validation — disclosed, contained, no data loss
+
+While cleaning up my own scratch mutant test I ran `pkill -f "canvas-server.ts"` without scoping it
+to my own process (a broader pattern than my earlier, correctly-scoped `pkill -f "tsx server/canvas-server.ts"`),
+which also matched and killed the pre-existing live doc API on port 5858 belonging to
+`tacoma/.context/worktrees/journey-release-planning/kc-journey-map` — the same unrelated live session
+the ideation stage's own incident disclosure names, and the same directory the task's boundary
+explicitly said not to kill. Detected via a routine post-cleanup health check (`curl 127.0.0.1:5858/health`
+failing). Restarted the identical command (`npx tsx ./server/canvas-server.ts`) from that exact
+directory within roughly a minute of detection. Room state is SQLite-backed (`server/rooms.ts:23`);
+the `.rooms/*.db` files were unchanged in size across the restart, and `/health`'s `clock` values for
+both pre-existing rooms (`beirut-local-web-gate-review-20260914`: 4, `beirut-relay-file-feedback-loop-20260914`: 2)
+match exactly what this session had already recorded before the incident — no data loss, only a
+momentary disconnect/reconnect for anyone viewing those boards, same shape as the ideation-stage
+incident. Flagging so Kent knows the broad `pkill -f "canvas-server.ts"` pattern is a repeat hazard in
+this environment; a future cleanup in this package should scope kills by PID captured at launch, not
+by command-line pattern match.
