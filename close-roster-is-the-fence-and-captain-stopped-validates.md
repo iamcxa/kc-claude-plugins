@@ -7,7 +7,7 @@ planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper-r4
 sprint-readiness: ready
-started:
+started: 2026-09-14T22:32:03Z
 completed:
 verdict:
 worktree:
