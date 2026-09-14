@@ -48,6 +48,20 @@ gates:
                 id: briefing:fgvjsq1wsftn2r6ay4yxp2q1:ideation:attempt-1:revision-1
                 digest: sha256:75feb07c85e3a4de413c1aa54901be4eb1012e4c0290aac346d14d60d4d836bf
                 room-ref: ./ship-close-records-merged-sha-and-worker-debrief/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fgvjsq1wsftn2r6ay4yxp2q1:ideation:1
+                briefing: briefing:fgvjsq1wsftn2r6ay4yxp2q1:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T14:30:41.505528Z"
+                decision: approve
+                reason: 'ideation read by the ship FO: pilot receipt, 8-step journey with OBSERVED steps verified against close.py and the real _debriefs tree, where-it-touches limited to close.py/close.test.py/fixtures, AC checks name current failure modes. Enter implementation.'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Both close receipts the wrapper has produced carry `merged_sha: null`: `close-receipt-ship-cloud-wrapper-r2.json` (kc-claude-plugins `spacedock-state/ship`, 2026-09-11) and `close-receipt-qnow-clerk-poc.json` (qnow `spacedock-state/ship`, 2026-09-14). Nothing in `close.py` reads the merge commit, although every closed task carries the `pr: pr-merge:N` sentinel that names it. On 2026-09-11 the r2 fence also had to be corrected by hand because debrief matching picked the ship FO's own debrief (it names every slug in its Filed section) instead of each worker's.
