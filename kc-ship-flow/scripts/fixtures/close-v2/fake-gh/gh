@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Stub `gh` for close.test.py's AC-1 cases: `gh pr view <N> --json state,mergeCommit [--repo ..]`.
+# FAKE_GH_RESPONSES (required): JSON file mapping PR number -> {"state", "mergeCommit": {"oid"}}.
+set -euo pipefail
+
+if [ "${1:-}" = "pr" ] && [ "${2:-}" = "view" ]; then
+  PR_NUM="${3:-}"
+  RESPONSES="${FAKE_GH_RESPONSES:?FAKE_GH_RESPONSES must be set}"
+  python3 -c "
+import json, sys
+with open('$RESPONSES', encoding='utf-8') as f:
+    data = json.load(f)
+pr = data.get('$PR_NUM')
+if pr is None:
+    print(f'fake-gh: no fixture response for PR $PR_NUM', file=sys.stderr)
+    sys.exit(1)
+print(json.dumps(pr))
+"
+  exit 0
+fi
+
+echo "fake-gh: unhandled $*" >&2
+exit 64
