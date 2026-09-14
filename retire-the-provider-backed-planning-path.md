@@ -143,3 +143,89 @@ work_profile:
     authority: Kent (Captain)
     at: 2026-09-14T00:00:00Z
 ```
+
+## Stage Report: ideation
+
+- DONE: The removed surface is enumerated exactly: every shipped skill, reference, script, test, and contract-manifest entry that states the provider-backed route, the Planning Receipt tuple, the engage reconcile, or the partial-tuple refusal, named by greppable symbol, with the loader's two frontmatter reads separated from the prose that merely describes them.
+  See "### Removed-surface enumeration" below.
+
+- DONE: Where the engage-reconcile duty goes is settled: either a named successor owner, or the evidence that nothing consumed it, carrying two search strategies and the boundary at which they stopped.
+  See "### `engage-reconcile.py` consumer trace" below — no successor; nothing outside the provider-backed branch invokes it.
+
+- DONE: The surviving `source` boundary is proven, not asserted: what the loader must still accept once the tuple leaves, exercised against a real committed work item that carries a Linear URL in `source`.
+  See "### `source`-boundary proof" below — exercised against `dev-52-inventory-kc-dev-flow-removal-candidates`'s real content via `validate_admission_brief`.
+
+### Removed-surface enumeration
+
+Scope: `kc-dev-flow/` shipped package content only. Excludes `.worktrees/`, `.context/` (historical snapshots, not live), and `kc-ship-flow/scripts/fixtures/**/DEV-*.md` (already-empty `planning-window`/`planning-outcome` frontmatter keys, no assertion of the provider route — no action).
+
+**Skills (prose to strip of the provider-backed route, engage reconcile, Planning Receipt tuple, partial-tuple refusal):**
+- `kc-dev-flow/skills/adopt-dev-flow/SKILL.md` — provider-backed classification, `linear-admission.py` binding instructions, engage-reconcile invocation steps, the removal-candidate table row for a repository-local Linear reader.
+- `kc-dev-flow/skills/choose-work-profile/SKILL.md` — "a partial tuple" / provider-backed-path selection language.
+- `kc-dev-flow/skills/continue-dev-flow/SKILL.md` — step 4 (classify Planning Receipt), step 5 (`linear-admission.py` invocation), step 7 (engage-reconcile invocation with `--expected-window`/`--expected-outcome`).
+
+**References:**
+- `kc-dev-flow/references/kernel.md` — "one planning-window authority, one planning-outcome authority" line; Planning Receipt complete-or-absent rule.
+- `kc-dev-flow/references/pr-delivery.md` — provider-backed delivery branch/close-line clauses. **Flagged, not removed — see residual 2 below** (collides with non-goal "leave delivery untouched").
+- `kc-dev-flow/references/pr-merge-extension.md` — same provider-backed delivery clause, duplicated. Same residual.
+
+**Top-level package docs (shipped, not skill/reference, still in scope for AC-3):**
+- `kc-dev-flow/README.md` — Planning Receipt definition, provider-backed comparator/reader description.
+- `kc-dev-flow/MIGRATION.md` — historical provider-backed migration steps referencing `linear-admission.py`/`engage-reconcile.py`.
+- `kc-dev-flow/RATIONALE.md` — Planning Receipt rationale, provider-backed engage description.
+
+**Scripts (definitions — removed whole per AC-2):**
+- `kc-dev-flow/scripts/linear-admission.py` (whole file, including `delivery_binding()` — see residual 2).
+- `kc-dev-flow/scripts/engage-reconcile.py` (whole file).
+
+**Tests (removed or edited per AC-2):**
+- `kc-dev-flow/scripts/engage-reconcile.test.py` — removed whole (tests a file being removed).
+- No standalone `linear-admission.test.py` exists; its coverage lives in `scripts/kc-dev-flow-contract-test.py` (repo-level, not shipped) and must be edited there.
+- `kc-dev-flow/scripts/profile-contract-loader.test.py` — edited, not removed: presence-mask tests (`Planning Receipt presence mask …`) and the partial-tuple-rejection test exercise the exact code path AC-1 changes.
+
+**`contract-manifest.json`:**
+- `kc-dev-flow/contract-manifest.json` lines declaring `"scripts/engage-reconcile.py"` and `"scripts/linear-admission.py"` as resources — both entries removed.
+
+**The loader's two frontmatter reads (code, not prose) — `kc-dev-flow/scripts/profile-contract-loader.py::validate_admission_brief`:**
+Only one function in the shipped loader reads `source`/`planning-window`/`planning-outcome`, and only for `profile in {"pilot-product-slice", "production"}` (POC skips it entirely — matches the ideation stage-def's "POC moves directly from backlog to implementation"). Two `raise ContractError("Planning Receipt must be complete or absent")` sites inside it, corresponding to AC-1's two shapes:
+1. `declared_receipt_fields` check (`any(...) and not all(...)`) — fires when a field key is entirely absent from frontmatter.
+2. `present` check (`any(present) and not all(present)`, `present = [not is_placeholder_scalar(value) ...]`) — fires when a key is declared but its value is empty/placeholder. **This is the site the `source`-boundary proof below exercises.**
+
+**Repo-level test scripts (not shipped, but AC-2 requires them to exit 0 / stay accurate):**
+- `scripts/kc-dev-flow-contract-test.py` — extensive literal-string assertions on the prose being removed (lines matching the enumerated skill/reference text above) plus a full `linear-admission.py` compile/contract test block. All of this must be edited alongside the package, or `kc-dev-flow-contract-test.py` will fail against its own fixtures once the prose it asserts on is gone.
+  - Distinguish: `docs/dev/_mods/engage-reconcile.py`, `scripts/kc-dev-flow/engage-reconcile.py`, `scripts/kc-dev-flow/linear-admission.py` referenced in this file are **absence assertions** (proving the 4.3.0-retired local reader stays retired) — these stay, they assert nothing exists at those paths.
+- `scripts/kc-dev-flow-minimal-stack-ablation.test.py` — same class of literal-string prose assertions plus direct `Path(...)` references to both scripts.
+
+**Local Profile (this repository, AC-4 — separate from the shipped package):**
+- `docs/dev/README.md` lines 50, 54, 59-60, 65, 68-69, 86, 195, 212, 223, 245, 247, 297 — planning-provider binding table rows, Engage reconcile section, provider-backed base-policy clause.
+- `ARCHITECTURE.md`, `docs/dev/ROADMAP.md` — one-line mentions, prose-only, no enforcement.
+
+**Out of scope, flagged as stale prose (not touched, not this task's non-goal list, but will drift):**
+- `kc-journey-map/skills/kc-journey-map/references/map-from-conversation.md:144` — one mention of "provider Planning Receipt" in a sibling plugin. Non-goal excludes changing `kc-journey-map`; this line goes stale and is not this task's responsibility to fix.
+
+### `engage-reconcile.py` consumer trace
+
+Two search strategies, both stopped at the same boundary:
+1. **Path-string grep** — `grep -rn "engage-reconcile.py" --include="*.py" --include="*.md" --include="*.json" .` (excluding `.worktrees/`, `.context/`) surfaces exactly: its own definition, its own test, the `contract-manifest.json` declaration, `linear-admission.py:298` (`comparator = profile_loader.parent / "engage-reconcile.py"`, invoked as a subprocess at line ~406), `continue-dev-flow/SKILL.md` step 7 (same subprocess invocation, documented), and prose in `README.md`/`MIGRATION.md`/`docs/dev/README.md` describing it. No other call site.
+2. **Symbol grep** — `grep -rn "reconcile(" --include="*.py" .` for its defined names (`ReconcileError`, `valid_text`, `reject_duplicate_fields`, `by_source`, `comparable`) across the whole tree (including `docs/plan-flow`, `kc-ship-flow`) returns zero hits outside `engage-reconcile.py`/`engage-reconcile.test.py` itself — ruling out a dynamic `importlib` consumer the path-grep could miss (the pattern that caught the `linear-admission.py` finding below).
+
+Both searches stop at "invoked only from inside the provider-backed branch of `linear-admission.py` and `continue-dev-flow`." No successor owner exists or is needed — the whole duty leaves with the branch that invokes it.
+
+**Residual 1 (does not block this stage, needs Captain disposition before/with build):** `docs/plan-flow/plan-lint.py` — a *different* script in this repo, not `kc-dev-flow`'s package — does `importlib.util.spec_from_file_location` on `kc-dev-flow/scripts/linear-admission.py` (not `engage-reconcile.py`) and calls `la.live_item(i)` / `la.delivery_binding(i, ...)` for its own "L4 admission" lint rule. This is live, not stale: `kc-ship-flow/scripts/fixtures/real-AC367-r2.md` pins a real commit SHA and a `WITHOUT_IT_COMMAND` exercising `plan-lint.py`'s L4 output, and `kc-ship-flow/scripts/contract-test.py` asserts a `"kc-plan-lint/v1"` schema pass. Deleting `linear-admission.py` per AC-2 breaks `plan-lint.py`'s L4 rule at runtime (`ImportError`/`AttributeError` on the missing file/attribute). This is not a route-back — the accepted outcome and non-goals name only dev-flow's package and this repo's Local Profile, and `plan-flow` is neither — but AC-2 as written ("absent," no carve-out) collides with a live consumer AC-2 didn't anticipate. Two options, not chosen here: (a) move `live_item`/`delivery_binding` into `docs/plan-flow` before deleting `linear-admission.py`, or (b) retire `plan-lint.py`'s L4 rule. Memory notes `plan-flow` is a layer Kent owns directly (plan-flow decides WHEN/HOW TO PLAN, dev-flow decides HOW TO BUILD) — this ensign does not rule on which option.
+
+**Residual 2 (same class, smaller):** `linear-admission.py::delivery_binding()` (line ~166, called at line ~357) is the sole producer of the `branch`/`close_line` pair that `kc-dev-flow/references/pr-delivery.md`, `pr-merge-extension.md`, and `docs/dev/_mods/pr-merge.md` describe as `delivery.branch`/`delivery.close_line` for "provider-backed" delivery. The non-goal list says "Leave delivery untouched; the close line belongs to `pr-merge` and `kc-ship-flow`." AC-3 says no shipped reference may state a provider-backed route as a requirement. Once `linear-admission.py` is gone, the provider-backed delivery clause in `pr-delivery.md`/`pr-merge-extension.md` has no producer and can never fire (dead conditional, not broken), but it still *states* a provider-backed route — a literal AC-3 hit that the non-goal appears to carve out. Flagging the tension; not resolving it here.
+
+### `source`-boundary proof
+
+Exercised `kc-dev-flow/scripts/profile-contract-loader.py::validate_admission_brief` directly (via `importlib`) against the real committed content of `docs/dev/.spacedock-state/dev-52-inventory-kc-dev-flow-removal-candidates.md` (the AC-5 target, `source: https://linear.app/duckbase-co/issue/DEV-52/...`):
+
+- Unmodified (full tuple: `source` + non-empty `planning-window` + `planning-outcome`) → **accepted**, returns a sha256 digest. This is today's already-passing case; AC-1's second clause ("an item that still carries all three loads the same way with no provider invocation") only requires removing the provider invocation elsewhere — the loader already accepts this shape.
+- `planning-window`/`planning-outcome` values stripped to empty, `source` left as the Linear URL (the shape AC-1's first clause and AC-5 require) → **rejected today**: `ContractError: Planning Receipt must be complete or absent`, raised by the `present` check (case 2 in the enumeration above — keys declared, values empty).
+
+This is the exact, and only, code change `validate_admission_brief` needs for AC-1: `source` must stop being counted as a Planning-Receipt-tuple member in both the `declared_receipt_fields` and `present` checks, leaving only `planning-window`+`planning-outcome` subject to the complete-or-absent rule. Proven against real content, not asserted.
+
+**Search boundary (adopter checkouts on disk, 2026-09-14):** extended the entity's own two-adopter-repo check with a direct grep for `linear-admission|engage-reconcile` across `/Users/kent/conductor/workspaces/subspace-v0/quebec-v1`, `/Users/kent/conductor/workspaces/carlove-v1/kyoto`, `/Users/kent/Project/carlove` (excluding `node_modules`, `.git/`, `/plugins/cache/`). Only hit: a stale `.context/` snapshot in `quebec-v1`, not live. Not searched: adopter repositories not present on this machine.
+
+### Summary
+
+Enumerated the shipped provider-backed surface by greppable symbol, traced `engage-reconcile.py` to zero consumers outside the branch being removed (two independent search strategies), and proved empirically — against `dev-52`'s real committed content — the exact loader check AC-1 must change. Surfaced two residuals for Captain disposition before or during build: `docs/plan-flow/plan-lint.py` has a live, tested `importlib` dependency on `linear-admission.py` that AC-2 doesn't carve out, and the provider-backed delivery clauses in `pr-delivery.md`/`pr-merge-extension.md` lose their sole producer while a non-goal says leave delivery untouched. Neither blocks ideation completion; both are findings this stage exists to surface, not defects in this stage's own work.
