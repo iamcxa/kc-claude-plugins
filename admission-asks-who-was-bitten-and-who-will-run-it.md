@@ -48,6 +48,20 @@ gates:
                 id: briefing:gzrgwdxkh6zkenkswkhasmjc:ideation:attempt-1:revision-1
                 digest: sha256:defc1ab41d223924840192dd54badb4776694b473431fbb675f9ad6df9bcc034
                 room-ref: ./admission-asks-who-was-bitten-and-who-will-run-it/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gzrgwdxkh6zkenkswkhasmjc:ideation:1
+                briefing: briefing:gzrgwdxkh6zkenkswkhasmjc:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T23:01:56.46505Z"
+                decision: approve
+                reason: 'ideation read by the ship FO: AC-1 correctly re-targeted from plan-lint.py to profile-contract-loader.py validate_admission_brief() per the brief''s own route-back clause (#444 landed first); AC-2 at surface-map-check.py; AC-3 as a small sibling script beside e2e-gate.py under run-batch step 3. Pilot receipt recorded. Enter implementation.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
