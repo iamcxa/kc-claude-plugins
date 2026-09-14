@@ -7,10 +7,10 @@ planning-window:
 planning-outcome:
 sprint: journey-map-mermaid-companion
 sprint-readiness: ready
-started:
+started: 2026-09-14T08:57:36Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-mermaid-sequence-companion-has-no-repeatable-check
 issue:
 pr: 440
 mod-block:
