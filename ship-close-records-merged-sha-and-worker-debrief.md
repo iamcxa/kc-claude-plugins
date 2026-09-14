@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T14:19:51Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-ship-close-records-merged-sha-and-worker-debrief
 issue:
 pr:
 mod-block:
