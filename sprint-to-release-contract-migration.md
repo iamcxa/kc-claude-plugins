@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:tjxctad7413wyp3acfx8wzzp:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:tjxctad7413wyp3acfx8wzzp-validation-1
+              briefing:
+                id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-1:revision-1
+                digest: sha256:994ba9e4ef6ed42c15369de18901760324070f9d84361ee45dcaebba5ffb4fb8
+                room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-1
 ---
 
 ## The problem

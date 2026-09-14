@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-1:revision-1",
+  "question": "Accept the POC's stop: keep the sprint ordinal and do not schedule a release-contract migration on this evidence?",
+  "artifacts": [
+    {
+      "id": "artifact:tjxctad7413wyp3acfx8wzzp:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/711f60c58c77b8d12ef3c6ecea72652d3f7e8220/sprint-to-release-contract-migration.md",
+      "rev": "sha256:595b624573839e074f80c805e59513fbf2293504c32c67f7f51244ba1597b70e",
+      "mediaType": "text/markdown",
+      "summary": "Validation: 3 of 3 checklist items DONE by a fresh reviewer told to attack the stop rather than confirm it. The recount reproduces the 22-item corpus and the 12/10/3 split exactly and catches one false supporting sentence that does not move the count. A second corpus, subspace-v0, shows 86% of 107 non-terminal items carrying no sprint value at all under the existing mechanism. The grouping-rate finding carries the stop; the tag-binding finding does not, and a design that never claims 1:1 tag equality would survive it."
+    }
+  ]
+}
