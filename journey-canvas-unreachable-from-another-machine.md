@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-journey-canvas-unreachable-from-another-machine
 issue:
-pr: 442
+pr: pr-merge:442
 mod-block:
 id: bxhtchz8rwth9hpeepzwg42t
 gates:
