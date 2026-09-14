@@ -151,6 +151,32 @@ checkout's code/fixtures/history) or DESIGNED (the accepted outcome's requiremen
 | `kc-ship-flow/scripts/fixtures/close-v2/**` (`dry-run/`, `closeable/`, `debrief-scan/`, `receipts/`) | New/adjusted fixtures: a `pr-merge` task + fake `gh` stub; a three-file debrief set patterned on -03(FO)/-04/-05(worker) with a `## Shipped` heading; `receipts/invalid-merged-sha.json` | 2, 4, 6, 8 |
 | `kc-ship-flow/schemas/kc-ship-close-receipt.v2.schema.json` | `merged_sha` pattern/format tightening (if the schema gate is used for AC-3, alongside the hand-rolled check) | 6 |
 
+### Stop numbers
+
+Delivery base: `26cb22f7` (current tip of
+`conductor/ship-cloud-wrapper-r3-ship-close-records-merged-sha-and-worker-debrief`, matching
+`origin/main`'s `fix(kc-dev-flow): restore the POC close path after a prove stage (#443)` — the
+commit this branch was cut from; all counts below are the diff against this ref).
+
+- **Changed-files stop: 12.** The where-it-touches table names 4 paths, one of which
+  (`fixtures/close-v2/**`) is itself ~6-8 files (a new `gh` stub, a `pr-merge` fixture task, a
+  three-file debrief trio, one new invalid-`merged_sha` receipt) — predicting ~10-11 touched files
+  total. Stop and report to the FO rather than continuing past 12 changed files; a slice that needs
+  more has drifted past this fixture set.
+- **Changed-lines stop: 350.** `close.py`'s four touched functions (`build_receipt`,
+  `find_debrief_path`, `scan_and_record_debriefs`, `validate_receipt`) total ~90 lines today;
+  `close.test.py` is 195 lines today and the new AC-1..AC-4 cases are sized similarly to its
+  existing per-AC blocks (~20-40 lines each); fixtures are small JSON/markdown. Stop and report
+  past 350 added/changed lines (diff against `26cb22f7`) rather than continuing.
+- **Named runaway area: the debrief-matching heuristic (`find_debrief_path` → `## Shipped`-aware,
+  FO-excluding matcher, journey stop 4).** There is no existing field that flags a debrief as
+  "the ship FO's own" — the r2 fixture only shows it indirectly (a batch-scoped `scope:` plus a
+  "Filed (backlog)"-only mention). Without a bound, implementation could balloon into speculative
+  heuristics (session-id cross-referencing, multiple heading-format variants, worker-identity
+  lookups) well past what the -03/-04/-05 fixture needs. Bound: match on the `## Shipped` heading
+  plus first-match-in-sorted-order among files whose `## Shipped` (not the whole body) names the
+  slug; do not add any FO-identity signal beyond "the match came from a non-`## Shipped` section."
+
 ## Task-specific acceptance checks
 
 **AC-1** — `gh pr view` resolution, refusal on non-merged state.
