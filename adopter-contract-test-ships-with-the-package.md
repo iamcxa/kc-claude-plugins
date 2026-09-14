@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow ships the adopter contract test and its CI recipe; adopters keep a wrapper, not a copy"
-status: backlog
+status: ideation
 source:
 product: kc-dev-flow
 planning-window:
@@ -39,7 +39,7 @@ gates:
                     source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 `kc-dev-flow/MIGRATION.md` speaks of `scripts/kc-dev-flow-contract-test.py` as if every adopter
