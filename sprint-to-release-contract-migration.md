@@ -625,3 +625,78 @@ cleanup: >-
   and were not committed; none persist. release-field-r1-evidence-record
   (the real, committed evidence entity) is left in place per its own
   Kent's-call route-back condition — not cleaned up by this stage.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Qualify the release identifier as `<journey>/<release-id>`, mirroring the `<product>/S<number>` convention that `sprint` already uses for exactly this reason.
+  `kc-dev-flow/scripts/profile-contract-loader.py` gains `RELEASE_QUALIFIED_RE = re.compile(r"^[^\s/]+/[^\s/]+$")` and a check
+  raising `ContractError("frontmatter release must be qualified as <journey>/<release-id>")` for any release value that fails it, placed
+  after the existing null/collection checks and before the readiness check. `<journey>` is the journey file's own slug (`journey:` field,
+  e.g. `draw-a-journey`), not the product directory — confirmed by reading `docs/journey/kc-journey-map/draw-a-journey.yaml` line 5
+  (`journey: draw-a-journey`) and `kc-journey-map/skills/kc-journey-map/SKILL.md` lines 115-116, which name the path shape itself
+  `docs/journey/<product>/<journey>.yaml`. The **sprint mirror is bounded, not literal**: grepping the repo for a `<product>/S<number>`
+  enforcement on `sprint` finds none — the loader's sprint branch accepts any non-empty, non-null, non-collection scalar, and cycle 2's
+  validation stage already recorded that most corpus `sprint` values are a bare `S1` with no product prefix. `release` is now stricter
+  than the thing it mirrors; the loader comment and the four updated doc paragraphs (`kc-dev-flow/README.md`,
+  `kc-dev-flow/skills/adopt-dev-flow/SKILL.md`, `kc-dev-flow/skills/choose-work-profile/SKILL.md`, `docs/dev/README.md`) say so rather
+  than claiming parity. `profile-contract-loader.test.py`'s three release-accepting fixtures and one deferred-readiness refusal fixture
+  moved from bare `r1` to `draw-a-journey/r1`; a new refusal case (`release: "r1", release_readiness: "ready"`) asserts the exact
+  `"must be qualified as <journey>/<release-id>"` string. `python3 kc-dev-flow/scripts/profile-contract-loader.test.py` exits 0 (5
+  sub-suites PASS). One-line falsifier: reverting the `RELEASE_QUALIFIED_RE` check fails only the new refusal case; reverting the test
+  fixtures back to bare `r1` fails the three accepting cases against the now-stricter loader.
+- DONE: Repeat the forced-collision exercise from the prove report on the qualified form — a disposable second journey also naming r1, entities in two products — and show it no longer conflates.
+  Built a disposable copy of the shared state checkout (`docs/dev/.spacedock-state`, `git status --porcelain` on the real checkout
+  confirms it was never touched) plus a disposable second journey file, `docs/journey/kc-dev-flow/build-dev-flow.yaml`
+  (`journey: build-dev-flow`, `releases: [{id: r1, ...}]`) alongside the real `docs/journey/kc-journey-map/draw-a-journey.yaml`
+  (`journey: draw-a-journey`, `id: r1` at line 170). Filed two disposable entities via `spacedock new` in the disposable copy:
+  `disposable-fixture-draw-a-journey-r1` (`product: kc-journey-map`, `release: draw-a-journey/r1`) and
+  `disposable-fixture-build-dev-flow-r1` (`product: kc-team-ops`, `release: build-dev-flow/r1`). **Result: no conflation.**
+  `--where release=draw-a-journey/r1` returns exactly `disposable-fixture-draw-a-journey-r1`; `--where release=build-dev-flow/r1` returns
+  exactly `disposable-fixture-build-dev-flow-r1`; `--where release=r1` (bare) returns exactly one entity — the real, pre-existing
+  `release-field-r1-evidence-record` (`release: r1`, unqualified) — which is evidence, not noise: it shows the one bare-id entity in the
+  corpus is now the sole occupant of a namespace the two new qualified entities no longer share. `--validate` still returns `VALID`
+  (same pre-existing unrelated flat-entity-room warnings as before, unchanged in kind or count). Disposable copies, the disposable
+  journey file, and both disposable entities were created under `/tmp`, never committed, never pushed, and deleted (`rm -rf`) after the
+  exercise; the real state checkout and real journey file were read-only inputs throughout.
+- DONE: Decide and name where the qualification is enforced.
+  **Decision: the loader refuses an unqualified value; the convention is not documentation-only.** What makes it true:
+  `RELEASE_QUALIFIED_RE` in `profile-contract-loader.py`, exercised on a real (non-fixture) standalone work item, not just the unit
+  test — `python3 kc-dev-flow/scripts/profile-contract-loader.py --work-item <item with release: r1, release-readiness: ready>` exits 2
+  with `frontmatter release must be qualified as <journey>/<release-id>` on stderr; the same item with `release: draw-a-journey/r1`
+  exits 0 with a loaded contract. Scope of that enforcement, named precisely: it fires only `if workflow_stage == first_workflow_stage`
+  inside the Python loader (i.e. at dispatch into a route's first working stage). `spacedock new` itself accepts a bare value with no
+  refusal (as filed for `release-field-r1-evidence-record` before this round), `--validate` does not check release shape at all, and
+  `spacedock status --where` does exact-string matching with no namespace awareness — the no-conflation property demonstrated above is
+  a **consequence** of authors writing qualified strings, checked once at dispatch time, not a property the query layer itself
+  guarantees. AC-5's "copied without transformation" now means the `<release-id>` half is byte-equal to the journey file's `id:` value;
+  the `<journey>/` prefix is the qualification this round adds, not a transformation of the id itself.
+- DONE: The four suites still pass at the new candidate.
+  `profile-contract-loader.test.py` (5 sub-suites PASS), `profile-spacedock-route.test.py` PASS, `kc-dev-flow-contract-test.py` PASS
+  (doc-prose pins unaffected — grepped for a pinned `release-readiness`/`scalar grouping` string before editing the four docs; none
+  exists), `skill-frontmatter-lint.sh` (46/46 skills valid) — all four re-run clean after every edit in this cycle, not only at the end.
+- DONE: AC-1 to AC-5 still hold with the qualified form, including AC-5's end-to-end carry from the real journey file.
+  AC-1/AC-2/AC-3 are the loader-test claim above (release-only load, sprint-only regression, both-pairs refusal — unaffected by
+  qualification since the both-present check fires before the qualification check is reached). AC-4/AC-5 are the disposable
+  forced-collision exercise above, which sources its release-id half directly from the real journey file
+  (`docs/journey/kc-journey-map/draw-a-journey.yaml`, `id: r1`) the same way cycle 2's real committed entity did. The real committed
+  `release-field-r1-evidence-record` was left untouched per this round's instruction ("stays in place for this round... not withdrawn
+  myself") and per the ensign rule against editing entity YAML frontmatter that is not this stage's own; no committed entity in the
+  repository yet carries a qualified value. That is a named gap, not a hidden one: closing it is one of two decisions —
+  re-qualify `release-field-r1-evidence-record` to `draw-a-journey/r1`, or withdraw it — that the entity's own text already routes to
+  Kent, and this round does not resolve it by picking one unasked.
+
+### Summary
+
+The release identifier is now qualified as `<journey>/<release-id>` (journey = the journey file's own `journey:` slug, not the
+product directory) and enforced by a new `RELEASE_QUALIFIED_RE` check in `profile-contract-loader.py` that refuses an unqualified
+value with a named `ContractError`, exercised both in the updated unit test and directly against a standalone real-shaped work item.
+The forced-collision exercise from the prove report was repeated with a disposable second journey (`build-dev-flow`, also naming
+`r1`) and two disposable entities in two products: the qualified queries each return exactly one entity and no longer conflate; the
+one remaining bare `release=r1` query returns only the pre-existing real evidence entity, now stranded outside the qualified
+namespace. The sprint-mirror claim is stated as bounded (release is stricter than sprint, which has no equivalent enforcement),
+matching what a grep of the loader and the corpus actually shows. All four suites pass. The real committed
+`release-field-r1-evidence-record` still carries a bare value; whether to re-qualify or withdraw it is named as Kent's open call, not
+resolved here.
+
+Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5bd9053` (based on cycle 2's
+`origin/main@ed452eb2`). State: real checkout untouched by the exercise; this report is this cycle's only state write.
