@@ -50,8 +50,15 @@ either port is already answering.
 journey YAML with its Markdown explanation. Native PNG export requires the running
 canvas and `agent-browser`; it is not a dependency-free fallback.
 
-- Board: `http://localhost:3737/?room=<slug>`
-- Doc API: `http://127.0.0.1:5858` (loopback only)
+- Board: `http://<host>:3737/?room=<slug>` — `<host>` is the machine's own hostname, printed at
+  startup, and reachable from another machine on the network; a `/connect` proxy in
+  `vite.config.mts` forwards the sync socket to the doc API, so no separate port needs opening.
+- Doc API: `http://127.0.0.1:5858` (loopback only — reachability comes from the board's proxy, not
+  from widening this bind)
+
+Vite refuses a request whose Host header isn't the machine's own hostname or a name listed in
+`JOURNEY_ALLOWED_HOSTS` (comma-separated). Set that env var to admit a cloud or Tailscale DNS name
+without editing tracked files.
 
 Browser tabs show `<journey title> | tldraw canvas`. Rendering copies the YAML
 `title` into tldraw's native document name; changing that name updates connected

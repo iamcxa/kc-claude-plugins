@@ -1,4 +1,5 @@
 // Adapted from tldraw's `templates/simple-server-example` (MIT).
+import { hostname } from 'node:os'
 import websocketPlugin from '@fastify/websocket'
 import fastify from 'fastify'
 import type { RawData } from 'ws'
@@ -101,5 +102,7 @@ app.listen({ port: PORT, host: '127.0.0.1' }, (err, address) => {
 		console.error(err)
 		process.exit(1)
 	}
-	console.log(`doc API on ${address}  (canvas: http://localhost:3737/?room=${DEFAULT_ROOM})`)
+	// The doc API itself stays loopback-only; this is the frontend port the operator opens,
+	// printed against the same hostname the Vite allowedHosts allowlist admits (see vite.config.mts).
+	console.log(`doc API on ${address}  (canvas: http://${hostname()}:3737/?room=${DEFAULT_ROOM})`)
 })
