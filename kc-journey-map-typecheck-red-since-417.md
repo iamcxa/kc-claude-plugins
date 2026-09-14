@@ -1,6 +1,6 @@
 ---
 title: "kc-journey-map's typecheck has been red since #417 and nothing reports it"
-status: backlog
+status: ideation
 source:
 product: kc-journey-map
 planning-window:
@@ -36,7 +36,7 @@ gates:
                 reason: Captain approved in chat 2026-09-14 with 「可以」 to the FO's Pilot recommendation, after 「型別檢查修復」 in the same conversation. Pilot rather than POC because AC-3 requires a reverted fix to redden a real pull-request check, which is an evidence round rather than a one-shot exploration; the CI step is justified by a defect that already bit — the typecheck has been red since 3fd2fc59 (#417) and no check reported it.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
