@@ -48,6 +48,20 @@ gates:
                 id: briefing:thvp8qgzr3eb1va9st822n2d:validation:attempt-1:revision-1
                 digest: sha256:1b72b42e8245644747d509cb66189cf726e553fc04b5c7625f6692b1e4b3148b
                 room-ref: ./pr-merge-released-body-pin-per-mod-version/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:thvp8qgzr3eb1va9st822n2d:validation:1
+                briefing: briefing:thvp8qgzr3eb1va9st822n2d:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T14:42:06.929287Z"
+                decision: approve
+                reason: 'ship FO verification at PR #446 head 92d79cd2 on macOS: kc-dev-flow-contract-test.py PASS, pr-merge-portable-delivery.test.py 16/16; body carries Candidate, Residuals, without-it and a state-branch audit link. Approve to done; merge stays with the Captain.'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: done
+                state: pending
 ---
 
 `kc-dev-flow/contract-manifest.json` (4.4.0, #414) pins `pr_merge_released_body.sha256` to one
