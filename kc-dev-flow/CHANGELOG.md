@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.5.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.5.0...kc-dev-flow-v4.5.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** drop capture-oracle.cjs, which never caught anything ([#435](https://github.com/iamcxa/kc-claude-plugins/issues/435)) ([da3f287](https://github.com/iamcxa/kc-claude-plugins/commit/da3f287fa72a839580ce8622ee754570d75b5ef9))
+* **kc-dev-flow:** restore the POC close path after a prove stage ([#443](https://github.com/iamcxa/kc-claude-plugins/issues/443)) ([26cb22f](https://github.com/iamcxa/kc-claude-plugins/commit/26cb22f79805b733a31cd65db4d88ef9aae21c4a))
+
 ## [4.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.4.0...kc-dev-flow-v4.5.0) (2026-09-14)
 
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.2.1...kc-journey-map-v0.3.0) (2026-09-14)
+
+
+### Features
+
+* **kc-journey-map:** add native Mermaid sequence companions ([#440](https://github.com/iamcxa/kc-claude-plugins/issues/440)) ([3509e5b](https://github.com/iamcxa/kc-claude-plugins/commit/3509e5b0c3f7695a1dfa923096e654c5df41c9de))
+* **kc-journey-map:** guard minimal release handoffs ([#449](https://github.com/iamcxa/kc-claude-plugins/issues/449)) ([fe1abba](https://github.com/iamcxa/kc-claude-plugins/commit/fe1abbadb59919ac2668d30531c22682ff0a40fe))
+
+
+### Bug Fixes
+
+* **kc-journey-map:** make the canvas reachable from another machine ([#442](https://github.com/iamcxa/kc-claude-plugins/issues/442)) ([ed452eb](https://github.com/iamcxa/kc-claude-plugins/commit/ed452eb2209e94524a34d1c0ca351fd60e4b692b))
+* **kc-journey-map:** show journey names in canvas tabs ([#436](https://github.com/iamcxa/kc-claude-plugins/issues/436)) ([e3cca91](https://github.com/iamcxa/kc-claude-plugins/commit/e3cca9133bfb139c6cca456b372be0a563d0637d))
+* **kc-journey-map:** type lib/records.mjs and run the typecheck in CI ([#441](https://github.com/iamcxa/kc-claude-plugins/issues/441)) ([0bbf623](https://github.com/iamcxa/kc-claude-plugins/commit/0bbf6233831543b8e8874a44a73b4868f6a1ed50))
+
 ## [0.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.2.0...kc-journey-map-v0.2.1) (2026-09-14)
 
 
