@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow pins the released pr-merge body per Spacedock mod version, not one repository's copy"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
