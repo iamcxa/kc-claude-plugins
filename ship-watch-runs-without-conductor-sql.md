@@ -1,6 +1,6 @@
 ---
 title: "watch.sh runs without the Conductor SQL endpoint: sql is a degradable surface, session status and session message are the fallback reads"
-status: implementation
+status: validation
 source: "Captain 2026-09-14 「派」 (ship round 3, harden); findings recorded on spacedock-state/ship questions logs"
 product: kc-ship-flow
 planning-window:
