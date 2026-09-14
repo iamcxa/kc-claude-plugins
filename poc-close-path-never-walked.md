@@ -1,6 +1,6 @@
 ---
 title: "The POC close path has never been walked end to end, and two defects sit on it"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
