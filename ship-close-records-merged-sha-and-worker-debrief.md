@@ -259,3 +259,16 @@ than a restated requirement.
 ### Summary
 
 Read `close.py`/`close.test.py` in full and confirmed two things directly: `merged_sha` is copied verbatim from the fence with no `gh` call anywhere in the script, and the real `docs/dev/.spacedock-state/_debriefs/` tree reproduces the r2 debrief-matching bug exactly (the batch FO's debrief, `2026-09-11-03-...md`, sorts before each worker's own debrief and would be the first regex match for both slugs). That evidence anchors the OBSERVED/DESIGNED journey, the where-it-touches table, and falsifiable AC-1..AC-4 checks the build stage can implement against.
+
+## Stage Report: implementation
+
+- DONE: close.py resolves merged_sha via `gh pr view N --json state,mergeCommit` and refuses (non-zero, slug+state named, no receipt) a non-MERGED task; find_debrief_path prefers a worker's own `## Shipped`-naming debrief and never matches the ship FO's, per the ideation journey/AC-1/AC-2.
+  `resolve_merged_shas`/`_gh_pr_view` (close.py:248-281) and `_shipped_section`/`find_debrief_path` (close.py:138-172); close.test.py's not-merged and debrief-fo-exclude cases exercise both against the r2-pattern fixture (commit feeb97ce).
+- DONE: close.py --validate refuses a v2 receipt whose merged_sha is null or not 40-hex (AC-3); close.test.py covers AC-1..AC-3 with a fake gh stub on PATH and no real SHA from this repository pinned anywhere (AC-4).
+  `validate_receipt`'s new `MERGED_SHA_RE` check (close.py:425-432) plus schema pattern tightening; `bad-merged-sha.json` fixture flips both cases (null + short) from pass to refusal; `fake-gh/` stub is on PATH by default in every `run()` call, and the AC-4 case proves removing it from PATH flips a would-succeed close to a failure (`git log --all` has none of the fixtures' synthetic 40-hex values).
+- DONE: Stayed within the ideation stop numbers (delivery base 26cb22f7; <=12 changed files, <=350 changed lines) and ran kc-dev-flow/scripts/surface-map-check.py against the candidate diff at exit.
+  `git diff --numstat 26cb22f7` (post-commit feeb97ce): 12 files changed, 303 insertions(+), 46 deletions(-) = 349 changed lines, at the stop-number boundary; `surface-map-check.py` exits 0 ("OK (2 files checked)") for the two non-excluded surfaces (close.py -> AC-1, the schema -> AC-3), run against a wrapper-corrected copy of the entity's own Work profile receipt (see note below).
+
+### Summary
+
+Added a `gh pr view`-backed merged_sha resolver (refusing non-MERGED tasks) and restricted debrief matching to each file's `## Shipped` section, which excludes the ship FO's own debrief without any separate FO-identity signal, reproducing and fixing the exact r2 defect. `--validate` and the schema now both refuse a null/non-40-hex merged_sha. All new behavior is covered by close.test.py against a fake `gh` stub on PATH, with no real repository SHA pinned in any fixture; `close.test.py` and `uat-doc.test.py` both pass. Note for the FO: the entity's own "## Work profile receipt" YAML lacks the `work_profile:` wrapper key `surface-map-check.py`'s loader requires (an ideation-stage format gap); the check above ran against a wrapper-corrected copy of the same receipt content rather than editing the entity's body outside this stage's scope.
