@@ -1,6 +1,6 @@
 ---
 title: "kc-journey-map's typecheck has been red since #417 and nothing reports it"
-status: ideation
+status: implementation
 source:
 product: kc-journey-map
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved the shaping in chat 2026-09-14 with 「一起做」, ruling that the two scope additions the ensign found are in: pin typescript as a devDependency so the CI step runs an installed compiler rather than an unpinned registry fetch, and add kc-journey-map/tsconfig.json to the workflow''s pull_request and push paths filters. The FO''s stated basis was that an unpinned compiler makes the typecheck step itself unreliable. The chosen fix form is lib/records.d.mts; the .d.mts extension was verified empirically against records.d.ts, which left tsc red.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `kc-journey-map/server/client/App.tsx` imports `storyBorder` from `../../lib/records.mjs`, and
