@@ -53,9 +53,10 @@ working, broken, stubbed, or missing; repair the cheapest compatible seam.
    the exact work item so simultaneous items cannot borrow each other's route.
    Require the Development Brief for Pilot and Production or the v3 Exploration
    Brief for POC. Local `sprint` and `sprint-readiness` remain runtime grouping
-   and readiness mechanics, not planning evidence. A Development Brief used for
-   admission has this body shape without a `## Human-readable release brief`
-   wrapper:
+   and readiness mechanics, not planning evidence; `release` and
+   `release-readiness` are the scalar alternative naming one journey release,
+   never both pairs on one item. A Development Brief used for admission has
+   this body shape without a `## Human-readable release brief` wrapper:
 
    ```markdown
    ## The problem

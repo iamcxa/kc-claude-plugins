@@ -71,8 +71,9 @@ Existing admitted prose is not migrated or rewritten. POC
 requires the four concrete v3 Exploration Brief fields. `source` is free-text
 provenance and may hold a Linear URL or any other reference; it is never read as
 planning evidence. A local runtime may separately require `sprint` and
-`sprint-readiness: ready`, but those fields do not invent or prove provider
-scheduling.
+`sprint-readiness: ready`, or the scalar `release` and `release-readiness: ready`
+naming one journey release (never both pairs on one item), but those fields do
+not invent or prove provider scheduling.
 
 Feature/bug labels do not select routes: a clear urgent bug may use a standalone
 Development Brief, and an uncertain bug POC.

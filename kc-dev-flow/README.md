@@ -168,8 +168,13 @@ not inspect acceptance headings. The
 [design rationale](./RATIONALE.md) owns the planning/execution explanation.
 
 At a route's first working stage, the loader also requires one non-empty
-`sprint` and `sprint-readiness: ready` in work-item frontmatter for the packaged
-Spacedock route. Those are local execution mechanics, not planning evidence.
+scalar grouping value — either `release` and `release-readiness: ready`, or the
+unchanged `sprint` and `sprint-readiness: ready` — in work-item frontmatter for
+the packaged Spacedock route. `release` names one journey release identifier
+(scalar; shared or integration work keeps multiple origins in prose rather than
+a list). A work item must not carry both pairs — the loader refuses that
+combination by a named error rather than resolving it silently. Those are local
+execution mechanics, not planning evidence.
 
 Everything else under `references/` is conditional. Selecting a profile or
 installing the package activates none of it; a reference link is not activation.
