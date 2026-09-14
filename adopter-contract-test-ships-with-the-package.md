@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T13:49:19Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-adopter-contract-test-ships-with-the-package
 issue:
 pr:
 mod-block:
