@@ -26,6 +26,17 @@ gates:
                 id: briefing:ab8tk40pm0t0wv2jpt7551d6:backlog:attempt-1:revision-1
                 digest: sha256:b4b5fb22b6072ee06356a7bd5e709d025e922db6ad4926e0f41a7481f55c4c06
                 room-ref: ./pr-merge-mod-rebases-onto-a-stale-trunk/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ab8tk40pm0t0wv2jpt7551d6:backlog:1
+                briefing: briefing:ab8tk40pm0t0wv2jpt7551d6:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T13:43:03.714887Z"
+                decision: approve
+                reason: 'Captain said 派 for both ready items, after selecting POC and opening repo-platform/S2 for this one. The seed carries the problem with the observed PR #444 evidence, accepted outcome, non-goals, AC-1..AC-4 and the v3 POC receipt.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## The problem
