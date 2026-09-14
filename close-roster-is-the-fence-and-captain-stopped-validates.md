@@ -1,6 +1,6 @@
 ---
 title: "close.py closes only the tasks the batch dispatched, and its validator exempts Captain-stopped tasks from the merged_sha rule"
-status: implementation
+status: validation
 source: "measured on the first close after #448 merged, ship-cloud-wrapper-r3, 2026-09-15 (questions log on spacedock-state/ship)"
 product: kc-ship-flow
 planning-window:
