@@ -99,6 +99,17 @@ gates:
                 id: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-4:revision-1
                 digest: sha256:a8c649ce1f77ba0635857c3268f879264f59e75d1c41b4c9b0f77182ad0b1ea6
                 room-ref: ./sprint-to-release-contract-migration/review/validation/briefing-4
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:tjxctad7413wyp3acfx8wzzp:validation:4
+                briefing: briefing:tjxctad7413wyp3acfx8wzzp:validation:attempt-4:revision-1
+                by: person:captain
+                at: "2026-09-14T16:00:59.61995Z"
+                decision: approve
+                reason: 'Captain approved delivery at the post-rebase validation gate, conditional on the force-push targeting feature branches rather than main — confirmed: both targets are spacedock-ensign/* branches. A fresh reviewer diffed the whole branch against origin/main to confirm no #444 removal was reintroduced, reran the four suites in an independently resolved checkout, and exercised the qualified-release refusal against a real-shaped work item at cc96278c.'
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
