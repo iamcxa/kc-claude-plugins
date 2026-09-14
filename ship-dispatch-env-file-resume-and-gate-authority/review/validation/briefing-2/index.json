@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-2:revision-1",
+  "question": "Approve validation (attempt 2): all three revise-gate findings addressed — resolve_branch_for_worktree now resolves from the worktree itself (fixes the macOS symlinked-checkout bug, case n added), comment density down to 7.3% (from 11.8%, toward the ~3% baseline), and pr field corrected to bare 445. 17/17 tests pass, PR #445 Candidate line matches HEAD d2696d8d. Approve to enter done (merge authority remains separate via merge guard)?",
+  "artifacts": [
+    {
+      "id": "artifact:0dg522wbqd0jpd2jeg8tjq4m:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/c7ec80e687d76699c5139bc25dffc30d9c8f39dd/ship-dispatch-env-file-resume-and-gate-authority.md",
+      "rev": "sha256:8daff6f3de8536e59985ba2844af3d1a0c628041531b3a532ff2a9f0b2dcd119",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle-2 stage report: independent re-verification of all three attempt-1 revise findings. (1) Symlink bug fixed — resolve_branch_for_worktree now uses git -C $1 symbolic-ref --short HEAD, confirmed by direct source read; new test case n (symlinked repo root) added, 17/17 total pass. (2) Comment density reduced 11.8% -\u003e 7.3% (12/165 added lines), confirmed by direct diff inspection. (3) pr field corrected from string \"#445\" to bare 445, confirmed via status --read --json. PR #445 remains OPEN/draft, headRefOid d2696d8d matches HEAD and the body's Candidate line, no merge/gh pr ready run."
+    }
+  ]
+}
