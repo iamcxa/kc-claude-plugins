@@ -10,7 +10,7 @@ sprint-readiness: ready
 started: 2026-09-14T09:15:57Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-kc-journey-map-typecheck-red-since-417
 issue:
 pr:
 mod-block:
