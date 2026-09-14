@@ -45,7 +45,10 @@ export function buildStoryMap(model, room = null, progress = null) {
 	)
 	const hasOwnership = (model.ownership ?? []).length > 0
 	const Y_BAND = Y_PERSONA + headH + GAP
-	const oneJourneyH = model.one_journey ? 70 : 0
+	// Every other box measures its text; this one took a literal 70 and clipped the
+	// last line of any sentence that wrapped past two.
+	const oneJourneyW = Math.max(600, steps.length * PITCH - 20)
+	const oneJourneyH = model.one_journey ? fitHeight(`ONE JOURNEY\n${model.one_journey}`, oneJourneyW) + 10 : 0
 	const Y_BACKBONE = Y_BAND + (hasOwnership ? bandH + GAP : 0) + oneJourneyH
 	const Y_STORIES = Y_BACKBONE + 260
 
@@ -93,7 +96,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 				text: `ONE JOURNEY\n${model.one_journey}`,
 				x: X0,
 				y: Y_BACKBONE - oneJourneyH,
-				w: Math.max(600, steps.length * PITCH - 20),
+				w: oneJourneyW,
 				h: oneJourneyH - 10,
 				index: ix[n++],
 				parentId,
