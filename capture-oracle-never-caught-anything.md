@@ -148,3 +148,50 @@ Removed `capture-oracle.cjs` and seven of its eight tracked references (manifest
 ### Summary
 
 Addressed the Captain's amendment: removed the dead `capture-oracle.cjs` regeneration command from `release-please-verdicts.tsv`'s header comment (commit 13543f3c), leaving the 13 verdict rows and the capture/agreement provenance untouched. All four acceptance criteria now pass at the new candidate, each check run as its own bounded invocation. Total diff across both cycles: 6 files, 10 added lines (within the amended `poc_budget`).
+
+## POC outcome
+
+```yaml
+poc_outcome:
+  direction: change
+  admitted_at: 2026-09-14T06:35:34.73052Z
+  decision_ready_at: 2026-09-14T07:03:34.73052Z
+  decision_ready_elapsed_seconds: 1680
+  captain_interventions_before_decision_ready: 1
+  evidence: All four AC checks green at candidate 13543f3c. kc-dev-flow-contract-test.py PASS exit 0; check-pr-title.test.py PASS exit 0 (13 fixture rows + 3 boundary cases); git grep -n capture-oracle exit 1 over the tracked tree, against 8 hits in 6 files on origin/main; the 13 verdict rows diff empty against origin/main; released body sha256 ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57 at 10551 bytes recomputed independently and matching the manifest pin; synced extension block byte-identical to the resource at the contract test's own marker boundary (27515 == 27515 chars).
+  strongest_limit: The deletion is sound; direction is change because the experiment left its POC envelope, not because the candidate is wrong. Decision-ready took 1680s against a 15-minute limit and the Captain intervened mid-flight to amend AC-3 and poc_stop_when, which the receipt anticipated as overrulable to Pilot at the cost of one stage. Second limit - re-derivation was not exercised here, so "re-deriving remains possible" rests on scripts/fixtures/release-please-runtime being byte-unchanged from the revision that produced three agreeing runs, not on a fresh run.
+  reversal_fact: git show origin/main:kc-dev-flow/scripts/fixtures/pr-title/capture-oracle.cjs restores the deleted tool verbatim, including the three facts that left the shipped surface with it - the build/src/commit.js parseConventionalCommits import path, the quiet-logger workaround for release-please's default debug logger, and the {sha, message, files, pullRequest} commit shape the parser expects.
+  cleanup_status_at_decision: complete
+```
+
+## POC close measurement
+
+```yaml
+poc_close_measurement:
+  captain_wait_seconds: pending
+  terminal_cleanup_seconds: pending
+  cleanup_status: pending
+```
+
+## Stage Report: validation
+
+- DONE: Record one `poc_outcome`: direction, exact evidence, strongest limit, reversal fact, and cleanup
+  `## POC outcome` above, direction `change`. Verified parseable by the shipped consumer: `poc-close-guard.py`'s `parse_outcome` returns `change`, and `validate_measurements(final=False)` accepts the `## POC close measurement` block. Falsifiers seen to fail on the same harness — flipping to `direction: proceed` raises `budget exhaustion or Captain intervention requires direction change`; deleting `reversal_fact` raises `work item must contain exactly one reversal_fact`.
+- DONE: observed journey result and artifact revision
+  Candidate `13543f3c`, worktree clean (`git diff HEAD --stat` empty after both mutations reverted). AC-1: `git grep -n capture-oracle` and `git grep -niE 'capture.?oracle'` both exit 1; the same grep on `origin/main` returns 8 hits across 6 files, so the instrument fires. AC-2: `kc-dev-flow-contract-test.py` PASS exit 0. AC-3: `check-pr-title.test.py` PASS exit 0 (13 fixture rows + 3 boundary cases); `git diff origin/main -- kc-dev-flow/scripts/check-pr-title.py` empty; the 13 non-comment verdict rows `diff` empty against `origin/main`, with the 4 removed header lines being exactly the dead regeneration command. AC-4: released body recomputed independently at sha256 `ea187ab4d1771ce3cb549c2619278a77bc904e39c0fb2b61770ed94d12f5cf57` / 10551 bytes, matching the pin; synced block byte-identical to the resource (27515 == 27515) at the contract test's own marker-inclusive boundary.
+- DONE: result of the critical-risk check
+  The receipt's `poc_falsifier` is that the contract test cannot pass without the path in its expected-resource sets. Both sides were mutated and each reddened with a *distinct* message, proving two separate check paths rather than one reached twice: re-adding to `contract-manifest.json` `resources` gave `profile contract: installed resource missing: scripts/fixtures/pr-title/capture-oracle.cjs` exit 1; re-adding to `kc-dev-flow-contract-test.py`'s `expected_manifest_resources` gave `installed manifest does not bind the exact canonical runtime surface` exit 1. Each run was its own bounded invocation; both reverted, tree clean before the green run. Falsifier not hit — the contract test passes with the path gone from both sides.
+- DONE: cleanup status
+  `complete` at decision. The experiment's product is the deletion itself; no scaffolding, flag, shim, or transitional duplicate was created. `scripts/fixtures/release-please-runtime` untouched (`git diff origin/main --stat` empty), satisfying its non-goal. Terminal cleanup durations stay `pending` in `## POC close measurement` per the profile's "never fabricated zero".
+- DONE: unproved limits and any promotion trigger
+  Promotion trigger observed and it is why direction is `change`: decision-ready at 1680s against the receipt's 15-minute limit, plus one Captain intervention before decision-ready (the 2026-09-14 amendment of AC-3 and `poc_stop_when`). The receipt anticipated this as "overrulable to Pilot at the cost of one stage". Three further limits below.
+
+### Findings
+
+- **F1 — blocks the close path, needs the FO.** Frontmatter `started:` is empty, so `poc-close-guard.py` resolves `receipt["started"]` to the literal string `completed:` and rejects any `admitted_at` with `admitted_at must equal frontmatter started`. Reproduced against the real entity; the block parses once `started` carries a value. The FO must set `started: 2026-09-14T06:35:34.73052Z` — the backlog gate's resolution `at`, compared as an exact string, so the `.73052` suffix must match. Root cause isolated to `\s*` crossing the newline in the guard's `^started:\s*([^\n#]+?)\s*$` when the field is empty, which silently captures the next frontmatter key instead of erroring; that is a latent guard defect, out of this item's scope.
+- **F2 — one reference to the deleted tool survives, and AC-1's grep cannot see it.** `kc-dev-flow/scripts/fixtures/pr-title/release-please-verdicts.tsv:7` still reads `not re-derived by this file's capture command.` — a dangling referent to `capture-oracle.cjs` phrased without the literal string. AC-1 passes as written and AC-3's amendment drew its line at *false instructions* ("telling a reader to run a command that no longer exists"), which this is not; but the accepted outcome says "every reference to it are gone". Proposed one-clause fix: `not part of this file's capture.` The receipt's one correction was spent at cycle 2, so spending another is the Captain's call — recorded, not repaired.
+- **F3 — path-root ambiguity, cosmetic.** The rewritten stop condition names `scripts/fixtures/release-please-runtime` (repo root) four lines below `scripts/fixtures/pr-title/release-please-verdicts.tsv` (kc-dev-flow package relative) in the same section. Both true, different roots, no disambiguator now that the deleted file's "repo root, not under kc-dev-flow/" note is gone. Proposed: prefix the first with `this repository's root-level`.
+
+### Summary
+
+All four acceptance criteria pass at `13543f3c` and the deletion is sound — nothing in the candidate is wrong. Direction is `change` because the experiment left its POC envelope, not because the work failed: `poc-close-guard.py` itself refuses `direction: proceed` on this item, citing budget exhaustion and the Captain's mid-flight amendment. On the FO's scepticism question, the version-skew stop condition stays coherent for the adopter — their action was and remains "stop and report upstream", and the old prose already said an adopter checkout could not run the tool; what degraded is the maintainer's cost of answering, since the `build/src/commit.js` `parseConventionalCommits` path, the quiet-logger workaround, and the `{sha, message, files, pullRequest}` commit shape now live only in `git show origin/main:...capture-oracle.cjs`. That is the cost the Captain accepted on the three-runs-zero-bites record, and I read the shipped prose the same way. Re-derivation was not exercised: no direction turns on its result, and the runtime is byte-unchanged from the revision that produced three agreeing runs.
