@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow ships the adopter contract test and its CI recipe; adopters keep a wrapper, not a copy"
-status: implementation
+status: validation
 source:
 product: kc-dev-flow
 planning-window:
