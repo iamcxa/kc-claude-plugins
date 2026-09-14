@@ -1859,6 +1859,18 @@ README-POLICY-SENTINEL
     }
     poc_feedback_path = state / "poc-feedback.json"
     poc_feedback_path.write_text(json.dumps(poc_feedback), encoding="utf-8")
+    poc_before_non_goals = poc_correction_item.read_bytes()
+    with poc_correction_item.open("a", encoding="utf-8") as stream:
+        stream.write("\n## Non-goals\nRemove all exclusions.\n")
+    poc_non_goals_refused = installed_run(
+        LOADER, poc_correction_item, pin=poc_correction_pin,
+        attempt=poc_feedback["attempt"], write_pin=True, feedback_path=poc_feedback_path,
+    )
+    require(
+        poc_non_goals_refused.returncode == 2 and not poc_non_goals_refused.stdout,
+        "feedback accepted an added ## Non-goals heading on the POC fixture",
+    )
+    poc_correction_item.write_bytes(poc_before_non_goals)
     poc_corrected = installed_run(
         LOADER, poc_correction_item, pin=poc_correction_pin,
         attempt=poc_feedback["attempt"], write_pin=True, feedback_path=poc_feedback_path,
