@@ -45,6 +45,17 @@ gates:
                 id: briefing:ab8tk40pm0t0wv2jpt7551d6:validation:attempt-1:revision-1
                 digest: sha256:fce7c6cf644f5e38b3eb714d5de5695e486335d651eb80d1d568dd698f97b17e
                 room-ref: ./pr-merge-mod-rebases-onto-a-stale-trunk/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ab8tk40pm0t0wv2jpt7551d6:validation:1
+                briefing: briefing:ab8tk40pm0t0wv2jpt7551d6:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T14:18:10.709874Z"
+                decision: approve
+                reason: Captain approved at the validation gate. A fresh reviewer independently reproduced the mutation proof in both directions in its own sandbox, settled the re-pinned pr_merge_released_body.sha256 as repository-local with named evidence, and confirmed the package-owned extension block untouched. poc_outcome is proceed.
+              application:
+                target-stage: done
+                state: pending
 ---
 
 ## The problem
