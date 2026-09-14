@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:f0m9yytzq7sczkam7rrq9ym3:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:f0m9yytzq7sczkam7rrq9ym3-ideation-1
+              briefing:
+                id: briefing:f0m9yytzq7sczkam7rrq9ym3:ideation:attempt-1:revision-1
+                digest: sha256:fabab197a41ee5c162c1e6f7ad6bb1d400dfad638abb94afb525bcc6dcf97ee5
+                room-ref: ./retire-the-provider-backed-planning-path/review/ideation/briefing-1
 ---
 
 ## The problem

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:f0m9yytzq7sczkam7rrq9ym3:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation shape and dispose of two residuals: does plan-lint.py's live importlib dependency on linear-admission.py get a carve-out or a move, and does the provider-backed delivery clause stay under the leave-delivery-untouched non-goal?",
+  "artifacts": [
+    {
+      "id": "artifact:f0m9yytzq7sczkam7rrq9ym3:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0df5e1da0f6f6fc0c1cc3c319d3ec770654ac9a3/retire-the-provider-backed-planning-path.md",
+      "rev": "sha256:51843dabfd64d2ebb9d46e90a30f3adb10aaa4433b2d11a854dd071b4b935b53",
+      "mediaType": "text/markdown",
+      "summary": "Ideation: 3 of 3 checklist items DONE. The shipped provider surface is enumerated by symbol; engage-reconcile.py traced to zero consumers outside the branch being removed via two independent search strategies; the exact loader change AC-1 needs was proven empirically against dev-52's real committed content. Two residuals need Captain disposition before build."
+    }
+  ]
+}
