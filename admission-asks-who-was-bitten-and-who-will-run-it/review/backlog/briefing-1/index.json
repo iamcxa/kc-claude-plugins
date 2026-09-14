@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gzrgwdxkh6zkenkswkhasmjc:backlog:attempt-1:revision-1",
+  "question": "Admit gzr (r4 pilot #1 of the batch, conn-quote 'r4 現在開') into backlog: brief names bite (two r3 PRs closed unmerged post-gate, iamcxa/kc-claude-plugins#446 and #450) and consumer (plan-lint.py / surface-map-check.py / kc-ship-flow run-batch), scope is the 4 ACs above with no kernel Minimal-necessity text change — approve to route to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:gzrgwdxkh6zkenkswkhasmjc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/76f77a2015b8c428f5dc95965da029eaa99a81f5/admission-asks-who-was-bitten-and-who-will-run-it.md",
+      "rev": "sha256:e93c1ab1aa1a93c9f0624fc337802ef4a4c04131d3ee55c67390fb15728d2cee",
+      "mediaType": "text/markdown",
+      "summary": "Initial-stage gate: committed backlog seed is the reviewed artifact. Brief carries source (Captain quote), sprint ship-cloud-wrapper-r4, and 4 ACs with verified/falsified pairs plus non-goals and a route-back condition. Profile: pilot (brief's own recommendation; kernel §Captain owns profile choice records this as recommendation-only, nothing in kernel forbids pilot for this scope)."
+    }
+  ]
+}

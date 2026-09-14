@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: gzrgwdxkh6zkenkswkhasmjc
+gates:
+    version: 1
+    records:
+        - id: gate:gzrgwdxkh6zkenkswkhasmjc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:gzrgwdxkh6zkenkswkhasmjc-backlog-1
+              briefing:
+                id: briefing:gzrgwdxkh6zkenkswkhasmjc:backlog:attempt-1:revision-1
+                digest: sha256:b52c60eac0ce49a09a95c4f58679f4e081cfc0f3d3f60cad211deb21d63275e7
+                room-ref: ./admission-asks-who-was-bitten-and-who-will-run-it/review/backlog/briefing-1
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
