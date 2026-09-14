@@ -53,3 +53,179 @@ On 2026-09-14 (qnow `qnow-clerk-poc`, DEV-146) the Captain provisioned Clerk key
 5. Rehearsal: a `--dry-run` of both modes prints the create command with `--env KEY=***`.
 
 Profile recommendation: pilot.
+
+## Ideation: technical approach (Pilot shape)
+
+### Journey statement
+
+1. DESIGNED — Captain provisions a credential mid-task and hands the ship FO a
+   `KEY=VALUE` file. `dispatch.sh --resume <slug> --env-file <path> --conn-quote
+   ... --conn-source ...` reads and validates the file (refuses if
+   world-readable), builds repeatable `--env KEY=VALUE` argv entries, and never
+   writes a value anywhere it persists.
+2. DESIGNED — `dispatch.sh` resolves the task's branch (entity frontmatter
+   first, fence record as fallback), reads the entity's current `status`,
+   latest gate-attempt id, `pr`, and the branch's current SHA, and composes a
+   resume boot message naming all four.
+3. DESIGNED — `conductor workspace create --project-id ... --branch <task
+   branch> --env KEY=VALUE [...] --message-file <resume-boot> --json` runs;
+   `dispatch.sh` records the new workspace/session under the slug in the fence
+   file, moving the prior round's ids into a `history` array (`round: "r1"`,
+   `"r2"`, …) rather than discarding them.
+4. DESIGNED — the ship FO (a person or `watch.sh`) polls the new workspace to
+   ready via the existing `conductor workspace status` / `session status`
+   probes (both already in the contract; no new Conductor verb is added).
+   Only after that poll reports ready does `dispatch.sh`/the operator mark the
+   prior workspace's fence entry as archived — this is fence-local
+   bookkeeping, not a Conductor API call (Conductor's CLI has no
+   archive/close/delete verb; confirmed against `pins/conductor-cli.contract`
+   and `scripts/fixtures/fake-conductor-dispatch/conductor`'s synthesized
+   `--help`, which mirrors the real 0.85.0 surface).
+5. DESIGNED — every boot message (fresh dispatch and resume) now carries the
+   literal sentence "Gate decisions are recorded by the ship first officer
+   with the Captain's words. Sync state by merge, never rebase. Never record a
+   gate decision.", replacing the bare "Sync state by merge, never rebase."
+   line.
+6. OBSERVED (unhappy path, unchanged) — `check_contract` still runs before any
+   mutating call in both fresh-dispatch and resume mode; a used-surface
+   mismatch still refuses with exit 5 before any `--env`-bearing invocation is
+   attempted.
+
+`semantics_unchanged`: no. This changes boot-message wording (item 5), the
+fence's on-disk JSON shape (adds `history`, additive/backward-compatible —
+see reverse-recovery receipt), and `pins/conductor-cli.contract`'s declared
+surface (adds the `--env` token).
+
+Non-goals: no workspace-archive/delete Conductor call is added (none exists to
+call); no change to `watch.sh`'s or `close.py`'s fence-reading of the
+top-level `workspace`/`session` fields; no change to the read-only probe
+lines in the contract file; no multi-credential-file merge (one `--env-file`
+per invocation).
+
+### Persistence, recovery, data-safety boundaries
+
+- Credential values live only in process memory and in the transient
+  `--message-file`-adjacent argv passed to `conductor workspace create`; they
+  are never written to the fence, the boot message, `stdout`/`stderr`, or any
+  git-tracked file. The fence and any printed/dry-run line carry key names
+  only (`--env KEY=***` in dry-run and log-safe echoes).
+- `--env-file` must not be world-readable (checked before it is read) —
+  refuse and exit before touching Conductor.
+- Fence writes keep the existing single-file, path-scoped commit pattern
+  already used for claim/dispatch commits (`git add _ship_fence/<sprint>.json`
+  + scoped commit); resume reuses the same commit shape, one commit for the
+  claim-carryforward and one for the recorded new workspace id, matching the
+  existing two-commit-per-dispatch pattern.
+- Resume is additive to the fence schema: the top-level `workspace`/`session`
+  fields are overwritten to the new round's ids (so unmodified `watch.sh` and
+  `close.py` keep working unchanged), and the prior round's ids move to a new
+  `history` array field that only resume ever writes or reads. No existing
+  reader is broken by the new field.
+- The previous workspace is never deleted or force-torn-down; "archived" is a
+  fence-local marker set after a ready observation, so a failed poll leaves
+  both workspaces resolvable.
+
+### Task-specific acceptance checks
+
+- `--env-file` with a world-readable file exits non-zero before any
+  `conductor` call (proven by a `FAKE_CONDUCTOR_LOG` that stays empty).
+- A valid `--env-file` produces one `--env KEY=VALUE` per line in the real
+  invocation's argv, and `--env KEY=***` (never the value) in `--dry-run`
+  output and any echoed/log line.
+- `--resume <slug>` with no prior fence entry for that slug refuses (there is
+  nothing to resume).
+- `--resume <slug>` with a prior fence entry produces a resume boot message
+  containing the entity's status, latest gate-attempt id, `pr`, and a SHA, and
+  a fence write that keeps the prior workspace/session id retrievable via
+  `history` rather than overwriting it silently.
+- Both fresh-dispatch and resume boot messages contain the new three-sentence
+  gate-authority wording verbatim; the old bare "Sync state by merge, never
+  rebase." line no longer appears alone.
+- `pins/conductor-cli.contract` gains the `--env` token; a contract test
+  proves `check_contract` refuses when `--env` is dropped from a fixture
+  `--help`, matching the existing `FAKE_CONDUCTOR_DROP_SHAPE` pattern.
+
+### Where it touches
+
+| path | lines now | lines after |
+|---|---|---|
+| `kc-ship-flow/scripts/dispatch.sh` | 209 | ~300 (est.) |
+| `kc-ship-flow/pins/conductor-cli.contract` | 7 | 7 (one token added to the existing `workspace create` line) |
+| `kc-ship-flow/scripts/dispatch.test.sh` | 200 | ~280 (est., new cases for env-file, resume, gate wording) |
+| `kc-ship-flow/scripts/fixtures/fake-conductor-dispatch/conductor` | ~90 (unread beyond line 60) | +`--env` token in synthesized `--help`; unverified until reopened |
+
+`lines after` estimates for `dispatch.sh`/`dispatch.test.sh` are unverified
+against the current tree beyond the read spans above; recorded as the
+build stage's own count-against-diff obligation, not a prior estimate carried
+forward.
+
+### Stop numbers
+
+Diff base: `main` at this entity's `started` timestamp (2026-09-14T10:50:16Z).
+Stop and report rather than continuing past: 5 changed files, ~150 changed
+lines, or if the resume-mode branch/SHA-resolution logic (item 2 above) grows
+past a single helper function — that is the area most likely to run away,
+since "read from the entity or the fence" is not yet pinned to one concrete
+field name and could sprawl into a multi-source resolver.
+
+### Reverse-recovery audit (`brownfield_capability_change`)
+
+```yaml
+reverse_recovery:
+  trigger: "add --env-file passthrough, --resume, gate-authority boot wording, and --env/--branch contract coverage to existing dispatch.sh 0.2.0 and pins/conductor-cli.contract"
+  boundary: "kc-ship-flow/scripts/dispatch.sh dispatch journey; search: kc-ship-flow/{scripts,pins,skills,CLAUDE.md}"
+  layers:
+    - surface: "--env-file / --env passthrough"
+      location: MISSING
+      completeness: MISSING
+      need: REQUIRED
+      evidence: "grep for env|resume across scripts/pins/skills found no existing flag or fence field; accepted outcome names DEV-146 as the forcing incident"
+      disproof_hook: "grep -n -- '--env' kc-ship-flow/scripts/dispatch.sh returns nothing pre-change"
+    - surface: "--branch contract coverage"
+      location: "kc-ship-flow/pins/conductor-cli.contract:4 (already lists --branch on the workspace create line)"
+      completeness: WORKING
+      need: REQUIRED
+      evidence: "line 4 read directly: 'workspace create --project-id --branch --name --agent --model --effort --message-file --json'"
+      disproof_hook: "grep -- '--branch' kc-ship-flow/pins/conductor-cli.contract"
+    - surface: "--resume / fresh-workspace resume"
+      location: MISSING
+      completeness: MISSING
+      need: REQUIRED
+      evidence: "dispatch.sh has one code path: query readiness, dispatch every not-yet-fenced slug; no resume flag, no per-slug targeting, no fence history field"
+      disproof_hook: "grep -n resume kc-ship-flow/scripts/dispatch.sh returns nothing pre-change"
+    - surface: "workspace archive/close Conductor verb"
+      location: MISSING
+      completeness: MISSING
+      need: NO_OBSERVED_CONSUMER
+      evidence: "pins/conductor-cli.contract lists auth whoami, workspace list/create/status, session status, sql only; scripts/fixtures/fake-conductor-dispatch/conductor's synthesized --help (mirroring real 0.85.0) has no archive/close/delete verb; two searches (contract file, fixture help text) found none"
+      disproof_hook: "grep -iE 'archive|close|delete' kc-ship-flow/pins/conductor-cli.contract kc-ship-flow/scripts/fixtures/fake-conductor-dispatch/conductor"
+    - surface: "boot-header gate-authority wording"
+      location: "kc-ship-flow/scripts/dispatch.sh:165 ('Sync state by merge, never rebase.' only)"
+      completeness: STUB
+      need: REQUIRED
+      evidence: "current line states the sync rule but never states who records a gate decision; skills/run-batch/SKILL.md:50 already documents Captain-recorded gate decisions at the workflow level, so the boot message is the stub that needs the FO-recorded wording, not a contradiction to resolve"
+      disproof_hook: "grep -n 'Gate decisions are recorded' kc-ship-flow/scripts/dispatch.sh returns nothing pre-change"
+  decision: build
+```
+
+No existing capability is replaced or contradicted: `--branch` coverage
+already exists and is left as-is (only `--env` is a genuinely new token);
+`workspace archive` is confirmed absent from the Conductor CLI surface, so
+"archived" is designed as fence-local bookkeeping rather than inventing an
+unsupported contract call; the fence schema change is additive (`history`
+field) so `watch.sh` and `close.py` require no change; the gate-authority
+sentence extends a stub line rather than overwriting a different existing
+claim.
+
+## Stage Report: ideation
+
+- DONE: Load the Pilot `shape` contract and produce a technical approach for the four surfaces
+  Journey statement, persistence/recovery boundaries, acceptance checks, where-it-touches table, and stop numbers recorded above.
+- DONE: Run reverse-recovery review since this adds new claims to existing dispatch.sh 0.2.0 and pins/conductor-cli.contract
+  Receipt above: `--env-file`/`--resume`/archive-verb classified MISSING (build), `--branch` classified WORKING (already covered, left alone), gate wording classified STUB (extend, not replace); decision `build`.
+- DONE: Record the admission snapshot into the work item as ideation's Stage Report
+  Accepted outcome (5 items, backlog-approved 2026-09-14, `resolution:backlog:1`) is this entity's Development Brief authority; non-goals recorded in the journey statement's `semantics_unchanged: no` paragraph above (no archive/delete Conductor call, no fence-reader changes in `watch.sh`/`close.py`, no multi-file `--env-file` merge).
+
+### Summary
+
+Reverse-recovery audit found `--env-file`, `--resume`, and any workspace-archive Conductor verb genuinely MISSING (build them), `--branch` contract coverage already WORKING (leave it, add only `--env`), and the boot-header gate wording a STUB to extend rather than replace. The chosen designs (additive fence `history` field, fence-local archive bookkeeping, three-sentence gate-authority replacement text) keep `watch.sh` and `close.py` untouched. Open risk carried to build: resolving the resume branch/SHA from "the entity or the fence" is not yet pinned to one field and is named as the stop-number watch area.
