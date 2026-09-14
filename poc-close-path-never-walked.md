@@ -528,6 +528,48 @@ requested (daemon's inclusive-range semantics); no confirmation was needed or sp
 and ARCHITECTURE.md in place under the retained-document policy; no other file in the "Where it touches"
 table needed an edit.
 
+### Cycle 2 — `poc_non_goals_refused` deleted on the Captain's ruling
+
+- DONE: delete `poc_non_goals_refused`, one pass, nothing else
+  Removed the 12-line case (commit `21a6ffeb`) — the fixture setup, the `## Non-goals` append, the
+  refusal assertion, and the restore. `poc_corrected` now runs directly against the item as left by
+  `poc_same_stage`. Independently verified the validation finding before deleting: swapping the
+  appended heading for `## Stage Report: extra` (an explicitly excluded heading) still leaves the
+  suite green at HEAD — a first, non-resuming feedback entry compares full document bytes
+  (`receipt["sha256"] != feedback["rejected_work_item_sha256"]`) before the authority projection, so
+  any appended byte refuses there regardless of what the heading is. `near_miss_drift` was not
+  touched.
+- DONE: `profile-contract-loader.test.py` exits 0 with the case gone
+  Own bounded run, tail: `profile contract loader test: PASS`.
+- DONE: `kc-dev-flow-contract-test.py` exits 0
+  Own bounded invocation (300s cap), `EXIT:0`, `kc-dev-flow contract: PASS`.
+- DONE: `near_miss_drift` still present and passing
+  Present at its original lines; suite PASS above includes it.
+- DONE: reverting the exclusion reddens the surviving coverage — checked against both loader forms
+  Reverting `profile-contract-loader.py` whole-file to `e3cca913` reddens the suite, but at
+  `poc_same_stage` (the earlier assertion), before the script reaches `near_miss_drift` — a full
+  revert removes the same-stage re-entry fix first, masking any later assertion. A direct
+  `work_item_authority` probe on the reverted module shows why: pre-fix, nothing POC-related is
+  excluded, so the near-miss heading changes the digest too and `near_miss_drift`'s own
+  `returncode == 2` assertion would still hold — a bare revert does not exercise what makes
+  `near_miss_drift` discriminating. Its real falsifier, re-confirmed here: widen the exclusion match
+  to `POC outcome\w*` (so the near-miss heading is wrongly excluded) — the suite reddens exactly at
+  `near_miss_drift`: `a near-miss '## POC outcomes' heading was excluded from accepted authority`.
+  Restored; tree clean both times.
+- DONE: stop numbers re-measured against the merge-base
+  Base `e3cca913` (`git merge-base HEAD origin/main`, unchanged from build). 6 files changed, 90
+  insertions + 9 deletions = 99 changed lines (cap 160), `profile-contract-loader.test.py` 64 added
+  lines (cap 90) — identical to the original build measurement, since this cycle's net change to
+  that file is zero (12 lines added then removed).
+
+### Summary (cycle 2)
+
+Deleted `poc_non_goals_refused` per the Captain's ruling after independently reproducing why it
+cannot fail for the reason its name gives. `near_miss_drift` is untouched and remains the
+discriminating proof for the exclusion set, re-confirmed here against its actual falsifier
+(over-broad matching), not against a whole-file revert that reddens a different, earlier check
+first. Both suites pass at `21a6ffeb`; stop numbers unchanged from the original build measurement.
+
 ## Stage Report: validation
 
 - DONE: exact-revision journey evidence
