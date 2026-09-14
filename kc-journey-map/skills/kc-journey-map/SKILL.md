@@ -36,8 +36,13 @@ it cites nothing and badges nothing. See `references/cell-contract.md`.
 
 On an explicit planning/resume request, inspect the relevant existing journey source
 and selected release before asking questions. Follow the conversation reference for
-map and plan-release; the evidence process below is for draw/check. Preparing a
-brief does not require rendering or start development.
+map and plan-release; read `references/release-slicing.md` when proposing release
+boundaries or preparing a handoff. Show the whole map before the prose reduction
+proposal, use Ask UI for unresolved human choices, and change boundaries after
+acceptance. `lib/journey-handoff.mjs` refuses a development handoff that fails the
+recorded slice checks; drawing a broad map remains allowed. The evidence process
+below is for draw/check. Preparing an existing-map brief does not require re-rendering
+or start development. Claude and Codex share these planning and handoff instructions.
 
 In check mode the mismatches are the deliverable. Do not quietly redraw someone's board
 into the "right" answer: quote their card, state the code fact, name the verdict.
