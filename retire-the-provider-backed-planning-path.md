@@ -1,6 +1,6 @@
 ---
 title: "Retire the provider-backed planning path, so dev-flow's only intake is a committed brief"
-status: validation
+status: implementation
 source: Captain ruling 2026-09-14 in FO session
 product: kc-dev-flow
 planning-window:
@@ -74,7 +74,7 @@ gates:
                 reason: 'Captain approved at the validation gate. A fresh reviewer re-ran all five suites at candidate 95b19de0 in an independently resolved checkout, both ideation-gate dispositions were verified with direct evidence, and AC-1/AC-5 were re-proven against dev-52''s real committed bytes. AC-2 and AC-4 carry implementation-stage evidence plus an FO direct read. Disclosed limit: the branch is a single squashed commit, so the L4-never-raised claim holds at the two real git endpoints only.'
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 ---
 
 ## The problem
