@@ -1,6 +1,6 @@
 ---
 title: "Name the execution group release, so a journey release slice lands in a field instead of prose"
-status: validation
+status: done
 source:
 product: kc-dev-flow
 planning-window:
@@ -8,12 +8,12 @@ planning-outcome:
 sprint: kc-dev-flow/S10
 sprint-readiness: ready
 started: 2026-09-14T14:18:36Z
-completed:
-verdict:
+completed: 2026-09-14T16:06:26Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-sprint-to-release-contract-migration
 issue:
 pr: pr-merge:454
-mod-block: merge:pr-merge
+mod-block:
 id: tjxctad7413wyp3acfx8wzzp
 gates:
     version: 1
@@ -109,7 +109,8 @@ gates:
                 reason: 'Captain approved delivery at the post-rebase validation gate, conditional on the force-push targeting feature branches rather than main — confirmed: both targets are spacedock-ensign/* branches. A fresh reviewer diffed the whole branch against origin/main to confirm no #444 removal was reintroduced, reran the four suites in an independently resolved checkout, and exercised the qualified-release refusal against a real-shaped work item at cc96278c.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
+archived: 2026-09-14T16:06:27Z
 ---
 
 ## The problem
