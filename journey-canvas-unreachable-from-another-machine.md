@@ -56,6 +56,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:bxhtchz8rwth9hpeepzwg42t:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:bxhtchz8rwth9hpeepzwg42t-validation-1
+              briefing:
+                id: briefing:bxhtchz8rwth9hpeepzwg42t:validation:attempt-1:revision-1
+                digest: sha256:7c943f802d1984bf6c17c69e25ec3e20f549838b390e32cc090a0a0e9a2aef52
+                room-ref: ./journey-canvas-unreachable-from-another-machine/review/validation/briefing-1
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open

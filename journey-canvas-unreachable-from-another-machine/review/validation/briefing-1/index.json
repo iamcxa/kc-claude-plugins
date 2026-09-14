@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:bxhtchz8rwth9hpeepzwg42t:validation:attempt-1:revision-1",
+  "question": "Accept the delivery on PR #442 and close this task at done once the PR is merged?",
+  "artifacts": [
+    {
+      "id": "artifact:bxhtchz8rwth9hpeepzwg42t:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b59f142ef57c415c474ffe8605756977a54028e6/journey-canvas-unreachable-from-another-machine.md",
+      "rev": "sha256:18129ffd030c14084f5824532ecd76558cc0d43f25b54bdf39f87fa189e537c8",
+      "mediaType": "text/markdown",
+      "summary": "All eight acceptance criteria hold at PR #442 head 9ff318a0, independently re-derived rather than re-read. Both FO findings are closed by fresh demonstration on ports no earlier stage used: the /connect proxy target now derives from JOURNEY_API_PORT and a shape drawn through Vite on port 47373 landed in a doc API running on 47858, and the startup line prints the operator's first JOURNEY_ALLOWED_HOSTS entry when set — quoted in both states, with the printed name then confirmed loadable at 200. The document API still binds 127.0.0.1; an off-machine request timed out while a freshly re-run scratch mutant widening the bind returned 200, so the falsifier discriminates. The allowlist admits the machine's own hostname and configured entries at 200 and still refuses an unrelated hostname at 403. node --test, canvas-smoke.sh and npm run typecheck all exit 0, the typecheck now being a real script merged from PR #441. The FO confirmed the branch carries a genuine merge commit c53580f7 rather than a rebase, the diff is the four in-scope files, and PR #442 is Draft with its head untouched by the validation stage. Three residuals are named rather than hidden. The env-var parsing is duplicated across vite.config.mts and canvas-server.ts; it is safe as implemented because the printed host is structurally always a member of the admitted set, but no test catches a future divergence. The frontend port 3737 remains a literal in both files and in four pre-existing files elsewhere in the package, so unifying only these two would not close the class. AC-4's bypasses-the-proxy half rests on operator precedence in the code plus room registration, not an isolated WebSocket trace. Evidence tier is container-namespace and LAN-IP browser throughout; no second physical machine was available, labelled plainly at every stage. Separately, and disclosed by the ensign itself: a broad pkill -f pattern during its own cleanup killed the Captain's unrelated live canvas on port 5858, which it detected, restarted from the same directory, and verified lossless against SQLite-backed room state and unchanged clock values. The FO confirmed that instance is up with both original rooms present. This is the second such incident in this task and the hazard is the pkill pattern, not the fix."
+    }
+  ]
+}
