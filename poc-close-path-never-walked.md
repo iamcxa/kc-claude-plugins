@@ -1,6 +1,6 @@
 ---
 title: "The POC close path has never been walked end to end, and two defects sit on it"
-status: validation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -56,6 +56,18 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:xve5t292zy54mncx0xm6m3v0:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:xve5t292zy54mncx0xm6m3v0-validation-1
+              briefing:
+                id: briefing:xve5t292zy54mncx0xm6m3v0:validation:attempt-1:revision-1
+                digest: sha256:cf53ae5690a14e8c3ebbde43852e5947c95bde0833d797b1407120e559c86420
+                room-ref: ./poc-close-path-never-walked/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-14T08:54:26.879129Z"
+                reason: 'Captain asked why a test that cannot fail is not simply deleted. He is right and the gate question is now wrong: it offered to record poc_non_goals_refused as a residual, which contradicts the retention rule this repository just spent two pull requests establishing. Returning to implementation to delete the case, then re-validating and re-presenting.'
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
@@ -596,6 +608,19 @@ The property it was meant to hold is already proven twice over, discriminatingly
 options, for the Captain: move the append onto the same-stage re-pin path where the authority
 comparison is the only discriminator, or delete the case as a removal candidate. Not repaired here —
 a test file is code, and a code repair returns to implementation for one final re-verification.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED by the Captain's ruling rather than by the reviewer. Validation
+  at `6d340208` raised `poc_non_goals_refused` as one non-blocking finding and the FO
+  presented it as a residual to record. The Captain asked why a test that cannot fail
+  is not simply deleted. **He is right and the FO's recommendation was both looser and
+  more expensive than his rule**: recording it costs a later item — backlog, gate,
+  build, verify, delivery — where deleting it now costs one build pass and one verify
+  on an item already at the gate. The validation gate was withdrawn because its
+  question offered the wrong disposition. Routed to `implementation`: delete the case.
+  The property it was meant to hold stays proven by `near_miss_drift` and by
+  validation's own direct probe, both of which discriminate where this case does not.
 
 ### Residuals
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:xve5t292zy54mncx0xm6m3v0:validation:attempt-1:revision-1",
+  "question": "Approve validation at candidate 6d340208 and authorize the Draft PR, leaving poc_non_goals_refused as a recorded residual rather than returning to implementation to repair it?",
+  "artifacts": [
+    {
+      "id": "artifact:xve5t292zy54mncx0xm6m3v0:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8ade2b4abb30ebdc349aea12ad76dd533f82e694/poc-close-path-never-walked.md",
+      "rev": "sha256:eedd07867c8a1c0d4ea38e10b1039bf2f548c3e3c12c9ed3781f0fd497a40245",
+      "mediaType": "text/markdown",
+      "summary": "Both fixes hold and both instruments were seen to fail in this stage rather than quoted from the build. One non-blocking finding: the test poc_non_goals_refused cannot fail for the reason it names, because the loader compares full document bytes before the authority projection on a first feedback entry. The property is already proven discriminatingly twice over. Repairing it is a code change that returns to implementation."
+    }
+  ]
+}
