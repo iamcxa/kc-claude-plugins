@@ -180,19 +180,26 @@ scope, authority, or the next action. Do not replay the session, re-prove settle
 facts, or turn deferred possibilities into findings.
 
 The work definition opens as a PRFAQ: a press release written as though the work
-were done, then an FAQ. The general form is assumed; these are the parts it does
-not supply.
+were done, then an FAQ. The general form is assumed; only these are added.
 
-- Carry at least one diagram of the change in shape or state, with prose under it
-  rather than over it.
-- Quote the Captain's own words where they exist, verbatim in their original
-  language, with their date.
-- Keep each FAQ answer to three sentences or fewer, pointing at the section below
-  that carries the detail. Do not restate an `AC-N` bullet: a section-scoped
+- At least one diagram of the change in shape or state, with prose under it.
+- The Captain's own words where they exist, verbatim in their original language,
+  with their date.
+- Each FAQ answer in three sentences or fewer, pointing at the section that
+  carries the detail. Do not restate an `AC-N` bullet — a section-scoped
   extractor reads those, and a second copy is a second source.
 - The machine-read sections — the complete non-goal list, the work profile
-  receipt, the `AC-N` bullets, the route-back conditions — keep their headings and
-  their place.
+  receipt, the `AC-N` bullets, the route-back conditions — keep their headings
+  and their place.
+
+A stage that verifies the work reuses that press release verbatim, marking each
+sentence `observed` or `not run`, and adds no paragraph of its own. Its FAQ
+answers evidence rather than design:
+
+- For each acceptance criterion, was the evidence run or read? `PASS` spells
+  both the same way.
+- Which guard was watched refusing, and what stayed green beside it? The green
+  sibling is what shows the guard discriminates rather than merely exists.
 
 At handoff record the work item, selected profile, current stage, exact revision,
 accepted evidence, next action, and unresolved Captain-owned decision.

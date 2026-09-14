@@ -39,6 +39,7 @@ data safety, and deliver it through the repository's declared authority.
 
 ## Required output
 
+- open the report as a PRFAQ, following the shared core's `## Communication`;
 - when the receipt declares `semantics_unchanged: true`, the named
   `equivalence_instrument` observed to fail against
   `equivalence_instrument_failure`, the case it must flag;
