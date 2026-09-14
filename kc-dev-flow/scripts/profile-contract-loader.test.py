@@ -641,7 +641,7 @@ Stop when the planning tuple cannot express the work.
     release_only_item = write_work_item(
         root, "poc-exploration", "implementation", "release-only",
         sprint=None, sprint_readiness=None,
-        release="r1", release_readiness="ready",
+        release="draw-a-journey/r1", release_readiness="ready",
     )
     release_only = MODULE.load_contracts(root, release_only_item)
     require(
@@ -663,7 +663,7 @@ Stop when the planning tuple cannot express the work.
     release_with_blank_sprint_item = write_work_item(
         root, "poc-exploration", "implementation", "release-blank-sprint-template",
         sprint="", sprint_readiness=None,
-        release="r1", release_readiness="ready",
+        release="draw-a-journey/r1", release_readiness="ready",
     )
     release_with_blank_sprint = MODULE.load_contracts(
         root, release_with_blank_sprint_item
@@ -684,8 +684,12 @@ Stop when the planning tuple cannot express the work.
             "must name a journey release", "an item with a YAML collection release",
         ),
         (
-            {"sprint": None, "sprint_readiness": None, "release": "r1", "release_readiness": "defer"},
+            {"sprint": None, "sprint_readiness": None, "release": "draw-a-journey/r1", "release_readiness": "defer"},
             "must be 'ready'", "an item whose release remains deferred",
+        ),
+        (
+            {"sprint": None, "sprint_readiness": None, "release": "r1", "release_readiness": "ready"},
+            "must be qualified as <journey>/<release-id>", "an item with an unqualified bare release id",
         ),
     ]
     for fields, error, description in release_placeholder_refusals:

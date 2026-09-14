@@ -170,11 +170,15 @@ not inspect acceptance headings. The
 At a route's first working stage, the loader also requires one non-empty
 scalar grouping value — either `release` and `release-readiness: ready`, or the
 unchanged `sprint` and `sprint-readiness: ready` — in work-item frontmatter for
-the packaged Spacedock route. `release` names one journey release identifier
-(scalar; shared or integration work keeps multiple origins in prose rather than
-a list). A work item must not carry both pairs — the loader refuses that
-combination by a named error rather than resolving it silently. Those are local
-execution mechanics, not planning evidence.
+the packaged Spacedock route. `release` names one journey release identifier,
+qualified as `<journey>/<release-id>` — a shape `sprint`'s `<product>/S<number>`
+convention gestures at but does not itself enforce — scalar; shared or
+integration work keeps multiple origins in prose rather than a list. The
+loader refuses an unqualified `release` value by a named error
+(`RELEASE_QUALIFIED_RE` in `profile-contract-loader.py`); `sprint` carries no
+equivalent check. A work item must not carry both pairs — the loader refuses
+that combination by a named error rather than resolving it silently. Those are
+local execution mechanics, not planning evidence.
 
 Everything else under `references/` is conditional. Selecting a profile or
 installing the package activates none of it; a reference link is not activation.

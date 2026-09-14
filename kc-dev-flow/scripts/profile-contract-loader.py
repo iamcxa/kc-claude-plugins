@@ -32,6 +32,8 @@ ROUTES = {
 
 PROFILE_SCHEMA_V2 = "kc-dev-flow-work-profile/v2"
 PROFILE_SCHEMA_V3 = "kc-dev-flow-work-profile/v3"
+# One separator: non-empty journey slug, non-empty release id, no nested slashes.
+RELEASE_QUALIFIED_RE = re.compile(r"^[^\s/]+/[^\s/]+$")
 POC_FIELDS = ("poc_decision", "poc_falsifier", "poc_budget", "poc_stop_when")
 POC_ARTIFACTS = {"no-code", "disposable", "retained"}
 RECOVERY_FIELDS = (
@@ -751,6 +753,11 @@ def resolve_work_item(path: Path) -> dict[str, str]:
                 or release[0] in "[{&*!|>"
             ):
                 raise ContractError("frontmatter release must name a journey release")
+            if not RELEASE_QUALIFIED_RE.match(release):
+                # A bare id is unique only while one journey file exists.
+                raise ContractError(
+                    "frontmatter release must be qualified as <journey>/<release-id>"
+                )
             release_readiness = _one_field(
                 frontmatter,
                 r"^release-readiness:[ \t]*([^\n#]+?)[ \t]*$",
