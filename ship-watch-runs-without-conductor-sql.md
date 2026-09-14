@@ -26,6 +26,20 @@ gates:
                 id: briefing:9xtwqxmktq2e15hr1qhx0bbb:backlog:attempt-1:revision-1
                 digest: sha256:febac74edab36f79f750a791eb8cd67413792deeea1893aabffb75ea4a16f4c4
                 room-ref: ./ship-watch-runs-without-conductor-sql/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:9xtwqxmktq2e15hr1qhx0bbb:backlog:1
+                briefing: briefing:9xtwqxmktq2e15hr1qhx0bbb:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-14T13:45:44.467595Z"
+                decision: approve
+                reason: 'batch admission: the Captain approved the five-task r3 batch; ship FO records on the batch conn'
+                conn:
+                    quote: 准
+                    source: Captain chat 2026-09-14, approving the ship-cloud-wrapper-r3 batch of five (pilot profile)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The Conductor SQL endpoint (`conductor sql`) returned "The SQL search API endpoint is temporarily disabled (HTTP 503)" from 2026-09-13 ~04:20 UTC through at least 2026-09-14 08:00 UTC (re-probed at filing: still 503). `dispatch.sh` 0.2.0 exits 5 when the `sql "SELECT 1"` probe fails, so the whole `qnow-clerk-poc` batch ran on a scratch copy with the probe replaced by a stderr note, and `watch.sh` could not read transcripts at all; the ship FO watched by hand. What did work for every read across the batch: `conductor --json session status <sid>` (idle/working), `conductor --json session message <sid> --limit N --offset M` (offset past the end returns no `sessionIndex`, so a binary search finds the tail), `conductor --json workspace status <ws>`, and the state branch.
