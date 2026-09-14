@@ -45,6 +45,17 @@ gates:
                 id: briefing:bxhtchz8rwth9hpeepzwg42t:ideation:attempt-1:revision-1
                 digest: sha256:3e494dbfc3815456c33914b406825d60f5d1b2994ce62ec7545a6520cd76db7b
                 room-ref: ./journey-canvas-unreachable-from-another-machine/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:bxhtchz8rwth9hpeepzwg42t:ideation:1
+                briefing: briefing:bxhtchz8rwth9hpeepzwg42t:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-14T10:26:08.089055Z"
+                decision: approve
+                reason: 'Captain approved the shaping in chat 2026-09-14 with 「一起做」, ruling both additions in: the startup line in canvas-server.ts must print a URL the operator can actually open, and the host allowlist must be operator-extendable rather than fixed to os.hostname(). The FO''s stated basis was that an unchanged startup URL leaves the first thing the user sees broken — which is the exact complaint that opened this task — and that a fixed allowlist would still refuse a cloud or Tailscale name. The design itself was live-verified in a scratch worktree, including a real WebSocket through the proxy into the loopback-bound API; evidence tier is container-equivalent and labelled as such.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open
