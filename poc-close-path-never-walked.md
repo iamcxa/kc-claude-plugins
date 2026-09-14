@@ -1,6 +1,6 @@
 ---
 title: "The POC close path has never been walked end to end, and two defects sit on it"
-status: ideation
+status: implementation
 source:
 product: kc-dev-flow
 planning-window:
@@ -55,7 +55,7 @@ gates:
                 reason: 'Captain approved in chat 2026-09-14 ("按建議") on the FO gate presenting shape ruling (b): the two POC outcome headings leave the accepted-authority projection by exact heading. (c) was eliminated because bind_stage_pin also makes validation non-re-enterable once the prove worker writes, so no worker could record the direction it depends on; (a) collapses into (b) or leaves same-stage re-entry broken. Defect 2 refuses by name at the admitted_at comparison. The Captain also took the recommendation to keep the missing iamcxa/kc-claude-plugins docs/architecture.md out of this slice and admit it as its own item, with build proceeding against root ARCHITECTURE.md.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Running a POC to close surfaced two defects on the same path, neither of which any
