@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:bxhtchz8rwth9hpeepzwg42t:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:bxhtchz8rwth9hpeepzwg42t-ideation-1
+              briefing:
+                id: briefing:bxhtchz8rwth9hpeepzwg42t:ideation:attempt-1:revision-1
+                digest: sha256:3e494dbfc3815456c33914b406825d60f5d1b2994ce62ec7545a6520cd76db7b
+                room-ref: ./journey-canvas-unreachable-from-another-machine/review/ideation/briefing-1
 ---
 
 A user ran the journey canvas on a remote VM, was handed a URL by the agent, and could not open

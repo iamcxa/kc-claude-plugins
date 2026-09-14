@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:bxhtchz8rwth9hpeepzwg42t:ideation:attempt-1:revision-1",
+  "question": "Accept this shaping and let the build stage implement it, including the startup-URL fix it found and a ruling on how the host allowlist handles a hostname the operator reaches the VM by?",
+  "artifacts": [
+    {
+      "id": "artifact:bxhtchz8rwth9hpeepzwg42t:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/56e124260e21d5ac37058aa825c62e3960742787/journey-canvas-unreachable-from-another-machine.md",
+      "rev": "sha256:074746874d03369f1fcfb9093b3d3539a480d450578fefd797f1acdcc70d69a2",
+      "mediaType": "text/markdown",
+      "summary": "The ensign reproduced both failures with quoted error text before designing — Vite's 403 blocked-request page against a VM-style hostname, and the sync socket's non-101 status from a separate network namespace. The design is three small pieces, each live-verified rather than asserted: allowedHosts limited to the machine's own hostname, a Vite proxy entry for /connect with ws enabled so the WebSocket upgrade is forwarded, and a client sync URL derived from window.location, with VITE_JOURNEY_API_URL kept at unchanged precedence. A real WebSocket was opened through the proxy from a container and landed in the loopback-bound API's room list. AC-3's falsifier was shown to discriminate: an off-machine request to the API port times out under the accepted design and succeeds against a temporarily widened 0.0.0.0 bind in a scratch copy. Blast radius was checked by reading canvas-smoke.sh, journey-render.mjs and journey-read.mjs, all same-machine loopback callers that never touch Vite. Two items need a ruling. First, a scope addition the ACs did not carry: canvas-server.ts's startup line prints canvas: http://localhost:3737, which the FO confirmed, so the first URL the operator is handed stays unreachable unless it changes with the rest. Second, a residual risk the FO raises: allowedHosts limited to the machine's own hostname admits os.hostname() and, by Vite's own rules, bare IP addresses, but not a different DNS name the operator may actually reach the VM by, such as a cloud or Tailscale name; the build stage should rule whether the allowlist is operator-extendable rather than fixed. Evidence throughout is container-equivalent and labelled as such; no second machine was available."
+    }
+  ]
+}
