@@ -74,6 +74,55 @@ sprint ordinal — and recorded `stop`. That record and its validation stay belo
 grouping practice. They do not answer this admission, which is an interoperability requirement rather
 than a benefit comparison, and the Captain has not reopened them.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v3
+  selected: poc-exploration
+  recommended: pilot-product-slice
+  basis: >-
+    Kent selected POC on 2026-09-14 over the recommended Pilot. One assumption in
+    the accepted outcome has never been executed: that a journey release
+    identifier can be carried into the field without transformation. Journey
+    files name their releases r1, r2, r3, which are unique inside one journey and
+    not across the repository, so the identifier may need qualifying before it can
+    be a grouping value at all. A disposable run settles that before the contract
+    change is committed to.
+  route: [build, prove]
+  obligations:
+    architecture:
+      - Keep the field scalar; shared work keeps multiple origins in prose, as kc-journey-map already does.
+      - Decide nothing about kc-journey-map's own output; the transformation, if any, belongs on the dev-flow side.
+    implementation:
+      - Change the loader's frontmatter reading and the package documents that state the grouping contract.
+    testing:
+      - AC-1 to AC-5, with AC-5 carried end to end on a real journey release rather than a fixture.
+  scope_boundary: >-
+    The accepted outcome and complete non-goal list in this task remain unchanged.
+    Excludes a list-valued field, any change to kc-journey-map, other adopters'
+    records, retiring sprint, and any release-equals-tag claim.
+  poc_decision: Whether a scalar `release` field carries a journey release slice end to end without transforming the identifier.
+  poc_falsifier: >-
+    Existence-disproof over the real journey files: if two journeys both name a
+    release `r1`, a bare journey release id is not unique across the repository,
+    AC-5's "copied without transformation" is false, and the design owes a
+    qualification rule it does not currently have.
+  poc_budget: One dispatch, and decision-ready inside 15 minutes — the same ceiling the Captain set for the earlier POCs in this session on 2026-09-14, not a derived one.
+  poc_stop_when: >-
+    The record either carries one real journey release from
+    `docs/journey/kc-journey-map/draw-a-journey.yaml` into a committed work item's
+    `release` field and returns it from `spacedock status --where release=<id>`, or
+    names the exact collision or transformation that blocks it, with the command
+    output that settled it. Work stops at that observation whichever way it falls.
+  poc_artifact: retained
+  poc_safety_boundary: the kc-dev-flow loader and its tests, plus this repository's own docs/dev records
+  poc_decision_ready_minutes: 15
+  decision:
+    authority: Kent (Captain)
+    at: 2026-09-14T00:00:00Z
+```
+
 ## Accepted outcome
 
 A work item names its journey release in a frontmatter field called `release`, and
