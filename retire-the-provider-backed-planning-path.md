@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: f0m9yytzq7sczkam7rrq9ym3
+gates:
+    version: 1
+    records:
+        - id: gate:f0m9yytzq7sczkam7rrq9ym3:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:f0m9yytzq7sczkam7rrq9ym3-backlog-1
+              briefing:
+                id: briefing:f0m9yytzq7sczkam7rrq9ym3:backlog:attempt-1:revision-1
+                digest: sha256:928bbdba36ae552ea731cc789b8ee494aca34d2538d925fb82d9fa56ecfdcf06
+                room-ref: ./retire-the-provider-backed-planning-path/review/backlog/briefing-1
 ---
 
 ## The problem

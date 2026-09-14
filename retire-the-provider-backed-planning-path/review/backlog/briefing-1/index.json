@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:f0m9yytzq7sczkam7rrq9ym3:backlog:attempt-1:revision-1",
+  "question": "Admit this Pilot from backlog into ideation: dev-flow's only intake becomes a committed brief, and the Planning Receipt tuple, the engage reconcile, and both provider scripts leave the package?",
+  "artifacts": [
+    {
+      "id": "artifact:f0m9yytzq7sczkam7rrq9ym3:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5e40c3b508c5fb174cd4edb07284b0d7c71e5e71/retire-the-provider-backed-planning-path.md",
+      "rev": "sha256:1c53d1d3778cea289d9083c8f4eb29d5f1b01ab1ea8ae5e22fc1857da1539cfd",
+      "mediaType": "text/markdown",
+      "summary": "Captain ruled on 2026-09-14 that the flow stops taking over the Linear route. Measured: 1 of 89 active items carries a complete Planning Receipt and it never started; no adopter binds the reader or comparator; the manifest has no planning required-binding. Backlog is the initial stage, so the committed seed is the reviewed artifact."
+    }
+  ]
+}
