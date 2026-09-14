@@ -1,6 +1,6 @@
 ---
 title: "dispatch.sh carries worker credentials through workspace create --env, resumes a task in a fresh workspace, and states that gate decisions are the ship FO's"
-status: ideation
+status: implementation
 source: "Captain 2026-09-14 「派」 (ship round 3, harden); findings recorded on spacedock-state/ship questions logs"
 product: kc-ship-flow
 planning-window:
