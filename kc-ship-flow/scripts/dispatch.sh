@@ -147,7 +147,7 @@ if [ -n "$env_file" ]; then
   done < "$env_file"
 fi
 
-boot_gate_line='Gate decisions are recorded by the ship first officer with the Captain'"'"'s words. Sync state by merge, never rebase. Never record a gate decision.'
+boot_gate_line='Gate decisions are recorded by the ship first officer with the Captain'"'"'s words. Sync state by merge, never rebase. Never record a gate decision. Before preparing the validation gate: push your branch to origin and open the Draft PR through the pr-merge mod; the gate question names the PR number and the candidate SHA. Never create a repository, change repository settings or branch protection, add secrets, or run CI on any branch other than this task'"'"'s own; a needed permission is a `Q:` line, not an attempt.'
 
 # Asks the worktree itself rather than comparing paths against `git worktree list`,
 # whose paths are physical (symlinks resolved) and would miss a symlinked checkout.

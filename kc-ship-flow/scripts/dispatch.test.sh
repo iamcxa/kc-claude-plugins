@@ -69,11 +69,13 @@ grep -qF "$CONN_SOURCE" <<<"$msg_body_a" || ok=0
 grep -qi "sync state by merge, never rebase" <<<"$msg_body_a" || ok=0
 grep -qF "Gate decisions are recorded by the ship first officer with the Captain's words." <<<"$msg_body_a" || ok=0
 grep -qF "Never record a gate decision." <<<"$msg_body_a" || ok=0
+grep -qF "Before preparing the validation gate: push your branch to origin and open the Draft PR through the pr-merge mod; the gate question names the PR number and the candidate SHA." <<<"$msg_body_a" || ok=0
+grep -qF "Never create a repository, change repository settings or branch protection, add secrets, or run CI on any branch other than this task's own; a needed permission is a \`Q:\` line, not an attempt." <<<"$msg_body_a" || ok=0
 if [ "$ok" = 1 ]; then
-  pass a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording"
+  pass a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording, AC-1/AC-2 delivery-order and forbidden-actions wording"
 else
   printf '  msg=%s\n' "$msg_body_a"
-  fail a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording"
+  fail a2 "boot message carries sender id, 12-hex token, no-Captain-message sentence, conn-quote/source, gate-authority wording, AC-1/AC-2 delivery-order and forbidden-actions wording"
 fi
 
 mkdir -p "$STATE_DIR/_ship_fence"
@@ -386,11 +388,13 @@ grep -qF "Latest gate attempt: gate-attempt:$RESUME_ID-validation-1" <<<"$msg_bo
 grep -qF "PR: https://example.test/pr/1" <<<"$msg_body_l" || ok=0
 grep -qE "Candidate SHA: [0-9a-f]{40}" <<<"$msg_body_l" || ok=0
 grep -qF "Gate decisions are recorded by the ship first officer with the Captain's words." <<<"$msg_body_l" || ok=0
+grep -qF "Before preparing the validation gate: push your branch to origin and open the Draft PR through the pr-merge mod; the gate question names the PR number and the candidate SHA." <<<"$msg_body_l" || ok=0
+grep -qF "Never create a repository, change repository settings or branch protection, add secrets, or run CI on any branch other than this task's own; a needed permission is a \`Q:\` line, not an attempt." <<<"$msg_body_l" || ok=0
 if [ "$ok" = 1 ]; then
-  pass l2 "resume boot message names entity status, latest gate attempt, pr, and candidate SHA"
+  pass l2 "resume boot message names entity status, latest gate attempt, pr, candidate SHA, and AC-1/AC-2 delivery-order and forbidden-actions wording"
 else
   printf '  msg=%s\n' "$msg_body_l"
-  fail l2 "resume boot message names entity status, latest gate attempt, pr, and candidate SHA"
+  fail l2 "resume boot message names entity status, latest gate attempt, pr, candidate SHA, and AC-1/AC-2 delivery-order and forbidden-actions wording"
 fi
 
 out_m="$(FAKE_CONDUCTOR_PROJECT_ID="$FIXTURE_PROJECT_ID" FAKE_CONDUCTOR_REMOTE="$REAL_REMOTE" \

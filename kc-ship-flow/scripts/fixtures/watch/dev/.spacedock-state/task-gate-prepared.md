@@ -3,6 +3,7 @@ title: "fixture: gate prepared at validation"
 status: validation
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
+pr: "https://example.test/pr/0"
 id: fixgateprep000000000000
 gates:
     version: 1

@@ -3,6 +3,7 @@ title: "fixture: folder-form entity, gate prepared at validation"
 status: validation
 sprint: ship-cloud-wrapper
 sprint-readiness: ready
+pr: "https://example.test/pr/0"
 id: fixfoldergate00000000000
 gates:
     version: 1
