@@ -724,3 +724,63 @@ repeating it: `sprint` has no equivalent enforcement, so `release` is now strict
 
 Carried forward for the Captain: `release-field-r1-evidence-record` still holds a bare, unqualified
 `release: r1` and is now outside the qualified namespace.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Re-run the forced-collision exercise on the qualified form in a disposable copy and report what a qualified `--where` and a bare `--where release=r1` each return now.
+  Detached worktree `git worktree add --detach /tmp/validation-check-a5bd9053 a5bd9053` (clean `git status`), plus a fresh `cp -R` of
+  the real `.spacedock-state` into `/tmp/docs-dev-disposable/.spacedock-state` with a copied `README.md` (never the real checkout,
+  never committed, never pushed). Filed two disposable entities via `spacedock new --workflow-dir /tmp/docs-dev-disposable`:
+  `disposable-recheck-draw-a-journey-r1` (`product: kc-journey-map`, `release: draw-a-journey/r1`) and
+  `disposable-recheck-build-dev-flow-r1` (`product: kc-team-ops`, `release: build-dev-flow/r1`). Results: `--where
+  release=draw-a-journey/r1` returns exactly `disposable-recheck-draw-a-journey-r1`; `--where release=build-dev-flow/r1` returns
+  exactly `disposable-recheck-build-dev-flow-r1`; bare `--where release=r1` returns exactly the one pre-existing real
+  `release-field-r1-evidence-record` (`product: kc-dev-flow`), and neither disposable entity appears in that result. No conflation,
+  reproduced independently rather than reused from cycle 3's own report. Disposable directory, both disposable entities, and the
+  detached worktree were deleted after the exercise; `git status --porcelain -- sprint-to-release-contract-migration.md
+  release-field-r1-evidence-record.md` on the real state checkout is empty.
+- DONE: Confirm the loader refuses an unqualified value and accepts a qualified one against a real-shaped work item (not only the unit test), and confirm `<journey>` is the journey file's own `journey:` slug rather than the product directory name.
+  Built two standalone real-shaped work items (full frontmatter + `## Work profile receipt` yaml block, `status: implementation` —
+  the route's first working stage — not copied from the test's `write_work_item` fixture generator) at `/tmp/release-qual-check/`.
+  `python3 kc-dev-flow/scripts/profile-contract-loader.py --work-item .../unqualified-item.md` (`release: r1`) exits 2:
+  `profile contract: frontmatter release must be qualified as <journey>/<release-id>`. The same item with `release:
+  draw-a-journey/r1` exits 0 and emits a loaded contract JSON envelope (`"workflow_stage": "implementation", "profile":
+  "poc-exploration"`). `<journey>` confirmed as the journey file's own slug: `grep -n "journey:"
+  docs/journey/kc-journey-map/draw-a-journey.yaml` line 5 reads `journey: draw-a-journey`, distinct from the product directory name
+  `kc-journey-map` — the qualified value used above (`draw-a-journey/r1`) is that slug, not the directory.
+- DONE: The four suites pass at the new candidate in a checkout resolved independently.
+  Same detached worktree (`/tmp/validation-check-a5bd9053` @ `a5bd905385ab34b8111873df13dce42b352abb51`, clean git status, never
+  reused from the implementation worker's own worktree). `profile-contract-loader.test.py` (5 sub-suites PASS, confirmed by grep to
+  include the qualified-form fixtures — `draw-a-journey/r1` accept cases and the `must be qualified as <journey>/<release-id>`
+  refusal case), `profile-spacedock-route.test.py` PASS, `kc-dev-flow-contract-test.py` PASS, `skill-frontmatter-lint.sh` (46/46
+  skills valid). All four exit 0.
+- DONE: AC-1 to AC-5 still hold with the qualified form including AC-5's end-to-end carry, checked directly rather than by re-reading cycle 3's report.
+  AC-1/AC-2/AC-3 are the loader-test and direct-CLI results above (release-only load, sprint-only unaffected, both-pairs refusal
+  unaffected by the qualification check since it fires after the both-present check). AC-4/AC-5 are the independent forced-collision
+  exercise above: the qualified queries each return exactly one entity, sourced from the real journey file's `id: r1` the same way
+  cycle 2's real committed entity did, with the `<journey>/` prefix added and the `<release-id>` half unchanged byte-for-byte.
+- DONE: Confirm the sprint-mirror claim in the docs and code comment is bounded rather than asserting a parity that does not exist.
+  `kc-dev-flow/README.md` line ~188: "a shape `sprint`'s `<product>/S<number>` convention gestures at but does not itself
+  enforce" and "`sprint` carries no equivalent check" — states the asymmetry rather than claiming parity.
+  `docs/dev/README.md` lines ~193-195 and ~213-215 state the qualification and the unqualified-refusal fact without a sprint-parity
+  claim. `choose-work-profile/SKILL.md` line 75 states the alternative field pair without a mirror claim. The loader's own comment
+  (`profile-contract-loader.py` line 739, "ships `sprint:` (or, for a migrated adopter, `release:`) blank until") and the
+  `RELEASE_QUALIFIED_RE` comment ("One separator: non-empty journey slug, non-empty release id, no nested slashes") describe the
+  mechanism, not a sprint-parity assertion. No bounded-claim regression found.
+
+### Summary
+
+Independently reproduced cycle 3's forced-collision correction: a fresh disposable copy, not the prior worker's, shows the qualified
+queries return exactly one entity each and the bare `release=r1` query returns only the pre-existing unqualified evidence record —
+no conflation. Confirmed directly against the real loader on a real-shaped standalone work item (not only the unit test) that an
+unqualified `release: r1` is refused (exit 2, named `ContractError`) and `release: draw-a-journey/r1` is accepted (exit 0, loaded
+contract), and that `<journey>` is the journey file's own `journey:` slug (`draw-a-journey`), not the product directory
+(`kc-journey-map`). All four required suites pass at `a5bd9053` in an independently resolved detached worktree. AC-1 to AC-5 hold
+with the qualified form, including AC-5's end-to-end carry from the real journey file. The sprint-mirror claim in code and docs is
+bounded (`sprint` has no equivalent enforcement) rather than asserting a parity that does not exist. No new findings; recommend the
+Captain's ruling on `release-field-r1-evidence-record` (re-qualify to `draw-a-journey/r1` or withdraw) as the one remaining open
+item, unchanged from cycle 3.
+
+Revision: code `kc-claude-plugins` `spacedock-ensign/sprint-to-release-contract-migration@a5bd905385ab34b8111873df13dce42b352abb51`
+(unchanged from cycle 3 — no code edits this cycle). State: real checkout untouched by this cycle's exercise; this report is the
+only write.
