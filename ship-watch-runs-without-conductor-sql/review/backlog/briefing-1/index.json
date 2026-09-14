@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:9xtwqxmktq2e15hr1qhx0bbb:backlog:attempt-1:revision-1",
+  "question": "Approve entering ideation for: make the Conductor sql probe degradable in dispatch.sh and have watch.sh fall back to session status/message reads when sql is unavailable (503)?",
+  "artifacts": [
+    {
+      "id": "artifact:9xtwqxmktq2e15hr1qhx0bbb:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b099feb156800fcde15940ab57840c8a7d149e8d/ship-watch-runs-without-conductor-sql.md",
+      "rev": "sha256:b666451f535199fe68eacc7caba1ef25ab353d81b7502cbd3199b2f5ab95841a",
+      "mediaType": "text/markdown",
+      "summary": "Conductor SQL endpoint has been 503 since 2026-09-13; propose treating sql as a degradable probe (fatal-\u003edegraded notice) and adding a fallback read path in watch.sh using session status/message, with a fixture exercising both paths."
+    }
+  ]
+}
