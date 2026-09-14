@@ -6,7 +6,7 @@ product: kc-dev-flow
 planning-window:
 planning-outcome:
 sprint: ship-cloud-wrapper-r4
-sprint-readiness: defer
+sprint-readiness: ready
 started:
 completed:
 verdict:
