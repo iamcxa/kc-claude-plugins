@@ -15,6 +15,17 @@ issue:
 pr:
 mod-block:
 id: ab8tk40pm0t0wv2jpt7551d6
+gates:
+    version: 1
+    records:
+        - id: gate:ab8tk40pm0t0wv2jpt7551d6:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ab8tk40pm0t0wv2jpt7551d6-backlog-1
+              briefing:
+                id: briefing:ab8tk40pm0t0wv2jpt7551d6:backlog:attempt-1:revision-1
+                digest: sha256:b4b5fb22b6072ee06356a7bd5e709d025e922db6ad4926e0f41a7481f55c4c06
+                room-ref: ./pr-merge-mod-rebases-onto-a-stale-trunk/review/backlog/briefing-1
 ---
 
 ## The problem

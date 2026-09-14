@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ab8tk40pm0t0wv2jpt7551d6:backlog:attempt-1:revision-1",
+  "question": "Admit this POC from backlog into implementation: correct the pr-merge mod's delivery step so it fetches and rebases onto the remote trunk instead of pushing and rebasing onto a stale local one?",
+  "artifacts": [
+    {
+      "id": "artifact:ab8tk40pm0t0wv2jpt7551d6:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f6118d87f71b08f41c6434a0baeac3030b39f697/pr-merge-mod-rebases-onto-a-stale-trunk.md",
+      "rev": "sha256:7c6aff657812619f5ab425fe89a2880d071f7e88a9d0fd9ad509126bf810efc4",
+      "mediaType": "text/markdown",
+      "summary": "Both defects were observed during the PR #444 delivery on 2026-09-14: the trunk push was refused non-fast-forward, and the following line would have rebased onto that same stale local trunk. The line sits in the repository's own policy half of the mod, above the package extension marker. Backlog is the initial stage, so the committed seed is the reviewed artifact."
+    }
+  ]
+}
