@@ -163,7 +163,11 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
 `base.md`, and that stage's contract — the `build.md` one carrying the typed
 implementation-exit observation.
 Its explicit `--validate-admission` mode additionally validates the canonical
-Development Brief for a new Pilot or Production admission. Default loading does
+Development Brief for a new Pilot or Production admission, including a
+concrete `bite:`/`consumer:` line in the preamble. `continue-dev-flow`'s
+new-admission dispatch (the first working-stage load after `backlog`) is the
+caller that adds this flag and stops the dispatch on refusal; a later stage's
+dispatch for an already-admitted item omits it. Default loading does
 not inspect acceptance headings. The
 [design rationale](./RATIONALE.md) owns the planning/execution explanation.
 
