@@ -1,0 +1,21 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gzrgwdxkh6zkenkswkhasmjc:validation:round-1",
+  "question": "Does validate_admission_brief() (AC-1's mechanism) have a live caller on the actual admission dispatch path, or only test/doc mentions?",
+  "artifacts": [
+    {
+      "id": "artifact:pr-457-candidate",
+      "uri": "https://github.com/iamcxa/kc-claude-plugins/pull/457",
+      "mediaType": "text/html",
+      "rev": "sha256:5537e44c9e80e364cd8a7d9e7cbeb2d71cb067a9"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:validation-gate-resolution",
+      "label": "Validation gate resolution:spacedock:gzrgwdxkh6zkenkswkhasmjc:validation:1, decision revise, at 2026-09-14T23:58:24.067421Z"
+    }
+  ]
+}
