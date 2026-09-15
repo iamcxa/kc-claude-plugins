@@ -12,7 +12,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-admission-asks-who-was-bitten-and-who-will-run-it
 issue:
-pr: 457
+pr: pr-merge:457
 mod-block:
 id: gzrgwdxkh6zkenkswkhasmjc
 gates:
