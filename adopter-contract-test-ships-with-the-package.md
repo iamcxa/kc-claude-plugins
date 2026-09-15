@@ -1,18 +1,18 @@
 ---
 title: "kc-dev-flow ships the adopter contract test and its CI recipe; adopters keep a wrapper, not a copy"
-status: validation
+status: backlog
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
-sprint: ship-cloud-wrapper-r3
-sprint-readiness: ready
+sprint:
+sprint-readiness: defer
 started: 2026-09-14T13:49:19Z
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-adopter-contract-test-ships-with-the-package
 issue:
-pr: 450
+pr:
 mod-block:
 id: t12w6e29mdcnrc4chs9ps27e
 gates:
@@ -92,6 +92,14 @@ suite, not an adopter check. The first outside adopter to refit (qnow, PR #1184,
 hand-wrote a 251-line copy plus a CI job, took three Codex/FO correction rounds on it, and the
 Captain then removed it (「拿掉」 2026-09-13): a guard that belongs to the package must not be
 maintained per product repository, and the installed loader already fails closed at dispatch.
+
+
+## Captain closure (2026-09-15)
+
+PR #450 was closed unmerged by the Captain (2026-09-15) during ship-cloud-wrapper-r3: the change had no
+consumer at the time and its fixtures copied existing files. Returned to backlog, deferred; the branch
+`spacedock-ensign/adopter-contract-test-ships-with-the-package` still exists on origin. Re-admission requires a `bite:` and a
+`consumer:` line (kc-dev-flow 4.6.0 admission rule).
 
 ## Accepted outcome
 

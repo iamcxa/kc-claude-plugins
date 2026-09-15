@@ -1,18 +1,18 @@
 ---
 title: "kc-dev-flow pins the released pr-merge body per Spacedock mod version, not one repository's copy"
-status: validation
+status: backlog
 source:
 product: kc-dev-flow
 planning-window:
 planning-outcome:
-sprint: ship-cloud-wrapper-r3
-sprint-readiness: ready
+sprint:
+sprint-readiness: defer
 started: 2026-09-14T13:47:42Z
 completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-pr-merge-released-body-pin-per-mod-version
 issue:
-pr: 446
+pr:
 mod-block:
 id: thvp8qgzr3eb1va9st822n2d
 gates:
@@ -72,6 +72,14 @@ branch) carries the released mod at `version: 0.27.0` (16640 bytes); its adopter
 fails on the pin although its body is exactly what Spacedock shipped. One sha cannot describe
 "the released body" across adopters on different Spacedock mod versions; the qnow test now skips
 the check with a named residual when versions differ, which leaves that adopter's body unguarded.
+
+
+## Captain closure (2026-09-15)
+
+PR #446 was closed unmerged by the Captain (2026-09-15) during ship-cloud-wrapper-r3: the change had no
+consumer at the time and its fixtures copied existing files. Returned to backlog, deferred; the branch
+`spacedock-ensign/pr-merge-released-body-pin-per-mod-version` still exists on origin. Re-admission requires a `bite:` and a
+`consumer:` line (kc-dev-flow 4.6.0 admission rule).
 
 ## Accepted outcome
 
