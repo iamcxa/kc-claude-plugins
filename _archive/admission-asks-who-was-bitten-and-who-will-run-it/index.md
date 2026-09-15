@@ -1,6 +1,6 @@
 ---
 title: "Admission asks who was bitten and who will run it: a brief carries `bite:` and `consumer:` lines, and a fixture that copies an existing file is refused"
-status: validation
+status: done
 source: "Captain 2026-09-15 「目前 dev flow 合約 or kernel 是否沒有 yagni 原則？為何會做出用不到的測試？」 then 「立這張 r4 票」"
 product: kc-dev-flow
 planning-window:
@@ -8,8 +8,8 @@ planning-outcome:
 sprint: ship-cloud-wrapper-r4
 sprint-readiness: ready
 started: 2026-09-14T22:53:10Z
-completed:
-verdict:
+completed: 2026-09-15T01:13:38Z
+verdict: PASSED
 worktree: .worktrees/spacedock-ensign-admission-asks-who-was-bitten-and-who-will-run-it
 issue:
 pr: pr-merge:457
@@ -99,7 +99,7 @@ gates:
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 review-round:
     id: round:gzrgwdxkh6zkenkswkhasmjc:validation:1
     stage: validation
@@ -108,6 +108,7 @@ review-round:
         id: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:round-1
         digest: sha256:47f319ce2027001ca5dd2018038cbe6585db1e53e85a44ff2b2bd9e72c0df1e8
         room-ref: ./review/validation/round-1
+archived: 2026-09-15T01:13:38Z
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
