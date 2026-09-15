@@ -15,10 +15,12 @@ diffs and reviews.
 /plugin install kc-journey-map@kc-claude-plugins
 ```
 
-Then, once, inside the installed plugin directory — the canvas is a local Node service, not
-a hosted one:
+The canvas is a local Node service, not a hosted one, so its dependencies have to be
+installed once. The skill does this from its own plugin root when installation or startup
+is needed — you only run it by hand to use the CLI below directly:
 
 ```bash
+cd ~/.claude/plugins/cache/kc-claude-plugins/kc-journey-map/<version>
 npm ci
 npm run doctor
 ```
