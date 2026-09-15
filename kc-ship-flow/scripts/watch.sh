@@ -127,7 +127,10 @@ json.dump(d, open(path, 'w'), indent=1, sort_keys=True)
 }
 
 gate_status() {
-  # prints "prepared" or "not-prepared"; entity missing/unparseable counts as not-prepared.
+  # prints "prepared", "prepared-no-pr", or "not-prepared"; entity missing/unparseable
+  # counts as not-prepared. "prepared-no-pr" is a gate prepared while the entity's `pr:`
+  # field is empty or absent -- AC-3: this must not read as gate-prepared, since the ship
+  # FO cannot verify at a pinned PR/SHA yet.
   python3 -c "
 import sys
 import yaml
@@ -151,7 +154,7 @@ for rec in records:
     if rec.get('stage') == stage:
         attempts = rec.get('attempts') or []
         if attempts and 'resolution' not in attempts[-1]:
-            print('prepared')
+            print('prepared' if (data.get('pr') or '').strip() else 'prepared-no-pr')
             raise SystemExit
 print('not-prepared')
 " "$1" "$2"
@@ -314,6 +317,11 @@ poll_once() {
     gs=$(gate_status "$entity_path" "$stage")
     if [ "$gs" = prepared ]; then
       echo "$slug gate-prepared"
+      idle_streak_set "$slug" 0
+      continue
+    fi
+    if [ "$gs" = prepared-no-pr ]; then
+      echo "$slug question (gate prepared but pr: is empty -- push and open the Draft PR before validation)"
       idle_streak_set "$slug" 0
       continue
     fi

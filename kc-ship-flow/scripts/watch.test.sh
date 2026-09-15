@@ -53,6 +53,7 @@ ok=1
 [ "$rc_a1" -eq 0 ] || ok=0
 grep -qx "task-gate-prepared gate-prepared" <<<"$out_a1" || ok=0
 grep -qx "task-folder-gate gate-prepared" <<<"$out_a1" || ok=0
+grep -q "^task-gate-prepared-no-pr question" <<<"$out_a1" || ok=0
 grep -qx "task-pending pending" <<<"$out_a1" || ok=0
 grep -qx "task-quota quota" <<<"$out_a1" || ok=0
 grep -qx "task-question question" <<<"$out_a1" || ok=0
@@ -79,6 +80,13 @@ if ! grep -q "sess-gate-prepared\|sess-folder-gate" "$LOG"; then
 else
   printf '  log=%s\n' "$(cat "$LOG")"
   fail c "gate-prepared short-circuits before any session/sql call"
+fi
+
+if ! grep -q "sess-gate-prepared-no-pr" "$LOG"; then
+  pass q "prepared-but-empty-pr also short-circuits before any session/sql call (AC-3)"
+else
+  printf '  log=%s\n' "$(cat "$LOG")"
+  fail q "prepared-but-empty-pr also short-circuits before any session/sql call (AC-3)"
 fi
 
 out_a2="$(run_watch "$STATE_A")"
@@ -177,6 +185,7 @@ ok=1
 [ "$rc_l1" -eq 0 ] || ok=0
 grep -qx "task-gate-prepared gate-prepared" <<<"$out_l1" || ok=0
 grep -qx "task-folder-gate gate-prepared" <<<"$out_l1" || ok=0
+grep -q "^task-gate-prepared-no-pr question" <<<"$out_l1" || ok=0
 grep -qx "task-pending pending" <<<"$out_l1" || ok=0
 grep -qx "task-quota quota" <<<"$out_l1" || ok=0
 grep -qx "task-question question" <<<"$out_l1" || ok=0
