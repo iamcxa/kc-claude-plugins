@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.6.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.5.1...kc-dev-flow-v4.6.0) (2026-09-15)
+
+
+### Features
+
+* **kc-dev-flow:** accept a qualified release as the execution grouping field ([#454](https://github.com/iamcxa/kc-claude-plugins/issues/454)) ([5b9095e](https://github.com/iamcxa/kc-claude-plugins/commit/5b9095e7151a86fb98dcbf4e8dd3153dc02a322e))
+* **kc-dev-flow:** admission refuses a brief missing bite:/consumer:, surface-map-check refuses an unexcused byte-identical copy ([#457](https://github.com/iamcxa/kc-claude-plugins/issues/457)) ([7c8fd14](https://github.com/iamcxa/kc-claude-plugins/commit/7c8fd145797c2809fe4a629e3092159487a1002c))
+* **kc-dev-flow:** render the work definition as a PRFAQ before the Captain accepts it ([#439](https://github.com/iamcxa/kc-claude-plugins/issues/439)) ([2b9e1b2](https://github.com/iamcxa/kc-claude-plugins/commit/2b9e1b221141d6129d8605b37af1f5178509304a))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** pr-merge delivery fetches trunk and rebases onto remote-tracking ref ([#453](https://github.com/iamcxa/kc-claude-plugins/issues/453)) ([4639b3c](https://github.com/iamcxa/kc-claude-plugins/commit/4639b3c416eaf6bf5b450905d875860552d5e908))
+* **kc-dev-flow:** retire the provider-backed planning path ([#444](https://github.com/iamcxa/kc-claude-plugins/issues/444)) ([90e104b](https://github.com/iamcxa/kc-claude-plugins/commit/90e104be86db67dd1ce5d251549f38d756adc797))
+
 ## [4.5.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v4.5.0...kc-dev-flow-v4.5.1) (2026-09-14)
 
 

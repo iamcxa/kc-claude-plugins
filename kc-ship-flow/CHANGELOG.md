@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-ship-flow-v0.2.0...kc-ship-flow-v0.3.0) (2026-09-15)
+
+
+### Features
+
+* **kc-dev-flow:** admission refuses a brief missing bite:/consumer:, surface-map-check refuses an unexcused byte-identical copy ([#457](https://github.com/iamcxa/kc-claude-plugins/issues/457)) ([7c8fd14](https://github.com/iamcxa/kc-claude-plugins/commit/7c8fd145797c2809fe4a629e3092159487a1002c))
+* **kc-ship-flow:** boot names delivery order and forbidden actions; watch reports question on empty pr: ([#456](https://github.com/iamcxa/kc-claude-plugins/issues/456)) ([5213312](https://github.com/iamcxa/kc-claude-plugins/commit/52133121eea21c865f697db14cefc9261738da32))
+* **kc-ship-flow:** dispatch.sh --env-file, --resume, and gate-authority boot wording ([#445](https://github.com/iamcxa/kc-claude-plugins/issues/445)) ([75b8b5a](https://github.com/iamcxa/kc-claude-plugins/commit/75b8b5a6977c3e42635e03cba7fe02dde3980c5e))
+
+
+### Bug Fixes
+
+* **kc-ship-flow:** close.py records merged_sha via gh and matches worker debriefs ([#448](https://github.com/iamcxa/kc-claude-plugins/issues/448)) ([c5c17a0](https://github.com/iamcxa/kc-claude-plugins/commit/c5c17a0d7b2e0a7d8c3dfd5455b21beef7ee0378))
+* **kc-ship-flow:** close.py scopes tasks to the fence and validates captain_stopped ([#455](https://github.com/iamcxa/kc-claude-plugins/issues/455)) ([d6cde86](https://github.com/iamcxa/kc-claude-plugins/commit/d6cde86c8ca3b4e960857ec8c7377b0cf0d963e7))
+* **kc-ship-flow:** make sql a degradable probe, watch.sh falls back to session message ([#451](https://github.com/iamcxa/kc-claude-plugins/issues/451)) ([625c6b5](https://github.com/iamcxa/kc-claude-plugins/commit/625c6b504fe25d006083a9329f5acfa775a2800d))
+
 ## [0.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-ship-flow-v0.1.0...kc-ship-flow-v0.2.0) (2026-09-12)
 
 
