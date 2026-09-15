@@ -2,7 +2,8 @@
   "admission-asks-who-was-bitten-and-who-will-run-it": {
     "candidate_sha": "874bbcef59933a4accd24e9d070d834b69e90c7c",
     "debrief": {
-      "path": "_debriefs/2026-09-15-06-claude-claude-sonnet-5.md",
+      "corrected_by": "ship FO 2026-09-15: close.py matched -06 (close-roster worker, names all three slugs); the worker own debrief is -07",
+      "path": "_debriefs/2026-09-15-07-claude-claude-sonnet-5.md",
       "status": "pushed"
     },
     "message_sha256": "224f9579e63dcfc023af5bfff5f4d33920312d80cbb19c3d5bf369c7c5637bf2",
