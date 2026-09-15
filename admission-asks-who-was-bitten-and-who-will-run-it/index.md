@@ -81,6 +81,14 @@ gates:
                 conn:
                     quote: r4 現在開
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+review-round:
+    id: round:gzrgwdxkh6zkenkswkhasmjc:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:round-1
+        digest: sha256:47f319ce2027001ca5dd2018038cbe6585db1e53e85a44ff2b2bd9e72c0df1e8
+        room-ref: ./review/validation/round-1
 ---
 
 Two PRs in the ship-cloud-wrapper-r3 batch passed every gate — backlog admission, ideation, the
