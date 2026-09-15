@@ -1,0 +1,84 @@
+diff --git a/kc-dev-flow/README.md b/kc-dev-flow/README.md
+index 098f87cf..d84ec38b 100644
+--- a/kc-dev-flow/README.md
++++ b/kc-dev-flow/README.md
+@@ -163,7 +163,11 @@ For a selected work item it emits exactly `references/kernel.md`, that profile's
+ `base.md`, and that stage's contract — the `build.md` one carrying the typed
+ implementation-exit observation.
+ Its explicit `--validate-admission` mode additionally validates the canonical
+-Development Brief for a new Pilot or Production admission. Default loading does
++Development Brief for a new Pilot or Production admission, including a
++concrete `bite:`/`consumer:` line in the preamble. `continue-dev-flow`'s
++new-admission dispatch (the first working-stage load after `backlog`) is the
++caller that adds this flag and stops the dispatch on refusal; a later stage's
++dispatch for an already-admitted item omits it. Default loading does
+ not inspect acceptance headings. The
+ [design rationale](./RATIONALE.md) owns the planning/execution explanation.
+ 
+diff --git a/kc-dev-flow/skills/choose-work-profile/SKILL.md b/kc-dev-flow/skills/choose-work-profile/SKILL.md
+index 22900811..5e96fbf3 100644
+--- a/kc-dev-flow/skills/choose-work-profile/SKILL.md
++++ b/kc-dev-flow/skills/choose-work-profile/SKILL.md
+@@ -67,7 +67,15 @@ Production require a Development Brief with the problem, accepted outcome,
+ complete non-goal list, route-back conditions, and one canonical
+ `## Acceptance criteria` section. Its concrete bullets use unique ascending
+ `AC-N` identifiers; an evidence-only or dual-section new admission is refused.
+-Existing admitted prose is not migrated or rewritten. POC
++The preamble between the frontmatter close and the first `## ` heading also
++carries a concrete `bite:` line (the failure this repairs) and `consumer:`
++line (what executes the change after merge); this recommendation stage does
++not itself run the check — `continue-dev-flow`'s new-admission dispatch runs
++`profile-contract-loader.py --validate-admission` and stops on refusal before
++this receipt reaches its first working stage, so do not accept a Pilot or
++Production choice for a brief you can see is missing either line; naming that
++gap here is cheaper than a refused dispatch. Existing admitted prose is not
++migrated or rewritten. POC
+ requires the four concrete v3 Exploration Brief fields. `source` is free-text
+ provenance and may hold a Linear URL or any other reference; it is never read as
+ planning evidence. A local runtime may separately require `sprint` and
+diff --git a/kc-dev-flow/skills/continue-dev-flow/SKILL.md b/kc-dev-flow/skills/continue-dev-flow/SKILL.md
+index 655cf545..0de316a4 100644
+--- a/kc-dev-flow/skills/continue-dev-flow/SKILL.md
++++ b/kc-dev-flow/skills/continue-dev-flow/SKILL.md
+@@ -24,6 +24,13 @@ Continue by the selected profile's smallest sufficient route.
+    bullets. A POC item uses its complete v3 decision, falsifier, budget, and
+    stop condition as the Exploration Brief. Do not read current execution state
+    or revalidate and rewrite an already-admitted item's historical headings.
++   A Pilot or Production item's new admission is the dispatch whose target
++   `workflow_stage` is that profile's first route stage (`ideation`) with no
++   prior stage pin recorded for this item; that dispatch's loader invocation
++   (below) adds `--validate-admission` and stops on a non-zero exit, quoting
++   the exact `profile contract: ...` stderr line to the Captain rather than
++   dispatching. A subsequent stage's dispatch for the same already-admitted
++   item omits the flag.
+ 4. Before dispatch and whenever execution proposes a scope change, compare the
+    accepted goal and complete non-goal list exactly with the admission snapshot.
+    If either differs or must change, stop; do not replace the snapshot or
+@@ -86,6 +93,27 @@ python3 <activated-skill-package>/scripts/profile-contract-loader.py \
+   --write-stage-pin
+ ```
+ 
++At a Pilot or Production item's new admission (per step 3 above), add
++`--validate-admission` to that same invocation:
++
++```bash
++python3 <activated-skill-package>/scripts/profile-contract-loader.py \
++  --work-item <exact-committed-work-item> \
++  --local-profile <workflow-readme> \
++  --stage-pin <state-owned-stage-pin> \
++  --stage-attempt <runtime-owned-attempt> \
++  --write-stage-pin \
++  --validate-admission
++```
++
++A non-zero exit is a refusal, not a contract to fix by hand: stop before
++writing the stage pin or dispatching, and surface the exact `profile
++contract: ...` stderr line to the Captain. POC and any subsequent-stage
++dispatch for an already-admitted item omit `--validate-admission`; the loader
++itself is the enforcement point (`validate_admission_brief` returns
++immediately for a profile other than `pilot-product-slice`/`production`), so
++including the flag on a POC or later-stage dispatch is inert, not incorrect.
++
+ `ACTIVE_STAGE_PIN_MISMATCH` requires restoring the changed pinned input.
+ An unchanged `local_profile_interface` permits a next-boundary upgrade.
+ `LOCAL_PROFILE_REFIT_REQUIRED` emits no envelope/pin: obtain Captain acceptance
