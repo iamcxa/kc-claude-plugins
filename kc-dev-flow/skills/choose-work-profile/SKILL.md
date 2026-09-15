@@ -67,7 +67,15 @@ Production require a Development Brief with the problem, accepted outcome,
 complete non-goal list, route-back conditions, and one canonical
 `## Acceptance criteria` section. Its concrete bullets use unique ascending
 `AC-N` identifiers; an evidence-only or dual-section new admission is refused.
-Existing admitted prose is not migrated or rewritten. POC
+The preamble between the frontmatter close and the first `## ` heading also
+carries a concrete `bite:` line (the failure this repairs) and `consumer:`
+line (what executes the change after merge); this recommendation stage does
+not itself run the check — `continue-dev-flow`'s new-admission dispatch runs
+`profile-contract-loader.py --validate-admission` and stops on refusal before
+this receipt reaches its first working stage, so do not accept a Pilot or
+Production choice for a brief you can see is missing either line; naming that
+gap here is cheaper than a refused dispatch. Existing admitted prose is not
+migrated or rewritten. POC
 requires the four concrete v3 Exploration Brief fields. `source` is free-text
 provenance and may hold a Linear URL or any other reference; it is never read as
 planning evidence. A local runtime may separately require `sprint` and

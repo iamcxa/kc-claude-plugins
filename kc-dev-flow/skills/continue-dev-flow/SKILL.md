@@ -24,6 +24,13 @@ Continue by the selected profile's smallest sufficient route.
    bullets. A POC item uses its complete v3 decision, falsifier, budget, and
    stop condition as the Exploration Brief. Do not read current execution state
    or revalidate and rewrite an already-admitted item's historical headings.
+   A Pilot or Production item's new admission is the dispatch whose target
+   `workflow_stage` is that profile's first route stage (`ideation`) with no
+   prior stage pin recorded for this item; that dispatch's loader invocation
+   (below) adds `--validate-admission` and stops on a non-zero exit, quoting
+   the exact `profile contract: ...` stderr line to the Captain rather than
+   dispatching. A subsequent stage's dispatch for the same already-admitted
+   item omits the flag.
 4. Before dispatch and whenever execution proposes a scope change, compare the
    accepted goal and complete non-goal list exactly with the admission snapshot.
    If either differs or must change, stop; do not replace the snapshot or
@@ -85,6 +92,27 @@ python3 <activated-skill-package>/scripts/profile-contract-loader.py \
   --stage-attempt <runtime-owned-attempt> \
   --write-stage-pin
 ```
+
+At a Pilot or Production item's new admission (per step 3 above), add
+`--validate-admission` to that same invocation:
+
+```bash
+python3 <activated-skill-package>/scripts/profile-contract-loader.py \
+  --work-item <exact-committed-work-item> \
+  --local-profile <workflow-readme> \
+  --stage-pin <state-owned-stage-pin> \
+  --stage-attempt <runtime-owned-attempt> \
+  --write-stage-pin \
+  --validate-admission
+```
+
+A non-zero exit is a refusal, not a contract to fix by hand: stop before
+writing the stage pin or dispatching, and surface the exact `profile
+contract: ...` stderr line to the Captain. POC and any subsequent-stage
+dispatch for an already-admitted item omit `--validate-admission`; the loader
+itself is the enforcement point (`validate_admission_brief` returns
+immediately for a profile other than `pilot-product-slice`/`production`), so
+including the flag on a POC or later-stage dispatch is inert, not incorrect.
 
 `ACTIVE_STAGE_PIN_MISMATCH` requires restoring the changed pinned input.
 An unchanged `local_profile_interface` permits a next-boundary upgrade.

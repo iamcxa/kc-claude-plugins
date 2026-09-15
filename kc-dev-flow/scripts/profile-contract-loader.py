@@ -500,6 +500,20 @@ def validate_admission_brief(path: Path, profile: str) -> str | None:
 
     frontmatter_end = text.find("\n---\n", 4)
     frontmatter = text[4:frontmatter_end]
+
+    preamble_start = frontmatter_end + 5
+    heading_match = re.search(r"^## ", text[preamble_start:], re.MULTILINE)
+    preamble_end = (
+        preamble_start + heading_match.start() if heading_match else len(text)
+    )
+    preamble = text[preamble_start:preamble_end]
+    for field in ("bite", "consumer"):
+        matches = re.findall(rf"^{field}:[ \t]*(.*)$", preamble, flags=re.MULTILINE)
+        if len(matches) != 1 or is_placeholder_scalar(matches[0]):
+            raise ContractError(
+                f"admission brief must carry a concrete {field}: line in its preamble"
+            )
+
     receipt_values: list[str] = []
     declared_receipt_fields: list[bool] = []
     for field in ("planning-window", "planning-outcome"):

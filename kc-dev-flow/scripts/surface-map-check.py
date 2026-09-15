@@ -14,6 +14,7 @@ is exactly the kind of unchecked input this script exists to remove.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import re
 import subprocess
@@ -46,6 +47,7 @@ EXCLUDE_SUFFIXES = (".test.py", "_test.py", ".test.ts", ".spec.ts", "_test.go")
 AC_HEADING_RE = re.compile(r"\*\*AC-(\d+)\s*\*\*")
 AC_TARGET_RE = re.compile(r"^AC-(\d+)$")
 LIFECYCLE_TARGET_RE = re.compile(r"^lifecycle:[A-Za-z0-9_-]+$")
+GENERATED_COPY_TARGET_RE = re.compile(r"^generated-copy:[A-Za-z0-9_.-]+$")
 LITERAL_TARGETS = {"falsifier", "safety-boundary"}
 FORBIDDEN_WITHOUT_IT = {"true", ":", "exit 0"}
 
@@ -87,6 +89,43 @@ def git_changed_files(base: str, candidate: str, *, repo: Path) -> list[tuple[st
         # Renames carry old\tnew; the last column is always the current path.
         entries.append((parts[0][0], parts[-1]))
     return sorted(entries, key=lambda entry: entry[1])
+
+
+def git_blob_map(repo: Path, sha: str) -> dict[str, str]:
+    """Map every path in the tree at `sha` to its git blob sha1."""
+    result = subprocess.run(
+        ["git", "-C", str(repo), "ls-tree", "-r", sha],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise CheckError(f"git ls-tree failed: {result.stderr.strip()}")
+    mapping: dict[str, str] = {}
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+        meta, _, path = line.partition("\t")
+        fields = meta.split()
+        if len(fields) < 3 or not path:
+            continue
+        mapping[path] = fields[2]
+    return mapping
+
+
+def hash_plugin_cache_dir(cache_dir: Path) -> dict[str, list[str]]:
+    """Map git-blob-style sha1 -> relative paths for every file under cache_dir."""
+    if not cache_dir.is_dir():
+        raise CheckError(f"--plugin-cache-dir does not exist: {cache_dir}")
+    mapping: dict[str, list[str]] = {}
+    for file_path in sorted(cache_dir.rglob("*")):
+        if not file_path.is_file():
+            continue
+        content = file_path.read_bytes()
+        digest = hashlib.sha1(
+            f"blob {len(content)}\0".encode("utf-8") + content
+        ).hexdigest()
+        mapping.setdefault(digest, []).append(str(file_path.relative_to(cache_dir)))
+    return mapping
 
 
 def is_excluded(path: str) -> bool:
@@ -146,7 +185,11 @@ def target_problem(path: str, target: str, declared_acs: set[str], is_deleted: b
         return None
     if target == "removal":
         return None if is_deleted else f"invalid target: {path} -> {target}"
-    if target in LITERAL_TARGETS or LIFECYCLE_TARGET_RE.match(target):
+    if (
+        target in LITERAL_TARGETS
+        or LIFECYCLE_TARGET_RE.match(target)
+        or GENERATED_COPY_TARGET_RE.match(target)
+    ):
         return None
     return f"invalid target: {path} -> {target}"
 
@@ -185,6 +228,16 @@ def parse_args() -> argparse.Namespace:
         help="check every changed file, ignoring the fixed test/fixture exclusion pattern",
     )
     parser.add_argument("--repo", type=Path, default=None)
+    parser.add_argument(
+        "--plugin-cache-dir",
+        type=Path,
+        default=None,
+        help=(
+            "optional: also refuse a changed file whose bytes are byte-identical "
+            "to a file already present under this directory, unless declared "
+            "generated-copy:<name>"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -237,12 +290,53 @@ def main() -> int:
             raise CheckError("--shape-mapping is required for production profile")
         shape_map = parse_mapping(read_text(args.shape_mapping, label="shape mapping"))
 
+    path_to_blob = git_blob_map(repo, args.candidate_sha)
+    blob_to_paths: dict[str, list[str]] = {}
+    for entry_path, blob_sha in path_to_blob.items():
+        blob_to_paths.setdefault(blob_sha, []).append(entry_path)
+
+    plugin_cache_hashes: dict[str, list[str]] | None = None
+    if args.plugin_cache_dir is not None:
+        plugin_cache_hashes = hash_plugin_cache_dir(
+            args.plugin_cache_dir.expanduser().resolve()
+        )
+
     for path in checked:
         entry = surface_map.get(path)
         if entry is None:
             violations.append(f"missing SURFACE line: {path}")
             continue
         target, without_it, removed_variant = entry
+
+        blob_sha = path_to_blob.get(path)
+        collision_other_path: str | None = None
+        if blob_sha is not None:
+            for other_path in blob_to_paths.get(blob_sha, []):
+                if other_path != path:
+                    collision_other_path = other_path
+                    break
+        collision_plugin_file: str | None = None
+        if plugin_cache_hashes is not None and blob_sha is not None:
+            plugin_matches = plugin_cache_hashes.get(blob_sha, [])
+            if plugin_matches:
+                collision_plugin_file = plugin_matches[0]
+        if collision_other_path is not None or collision_plugin_file is not None:
+            excused = (
+                GENERATED_COPY_TARGET_RE.match(target) is not None
+                and without_it.strip() != ""
+            )
+            if not excused:
+                if collision_other_path is not None:
+                    violations.append(
+                        "byte-identical copy without generated-copy declaration: "
+                        f"{path} == {collision_other_path}"
+                    )
+                if collision_plugin_file is not None:
+                    violations.append(
+                        "byte-identical copy of cached-plugin file without "
+                        f"generated-copy declaration: {path} == {collision_plugin_file}"
+                    )
+
         problem = target_problem(path, target, declared_acs, path in deleted_paths)
         if problem:
             violations.append(problem)
