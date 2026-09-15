@@ -9,6 +9,15 @@ own debrief (named only outside `## Shipped`). Also the original AC-2: dry-run p
 AC-3: `--validate <receipt.json>` exits 0/1 on `debrief` and on a null/non-40-hex `merged_sha`.
 AC-4: every AC-1 case runs against a fake `gh` (never real, never a real repo SHA); removing it
 from `PATH` flips an otherwise-closeable batch to a failure, proving the gh-call path is exercised.
+
+close-roster-is-the-fence-and-captain-stopped-validates adds two more:
+AC-1 (roster): the batch's task set is scoped to the fence's own roster -- a sprint-matching
+entity absent from the fence and never merged (e.g. a deferred, never-dispatched sibling) is
+dropped, named once on stderr as `not dispatched`, and closing the rest of the batch still
+succeeds and writes a receipt that omits it.
+AC-2 (captain_stopped validates): a `captain_stopped` task's receipt entry carries `merged_sha:
+null` and `closed: "captain_stopped"`, and `--validate` accepts it; the pre-existing
+bad-merged-sha fixture (a null/short `merged_sha` with no `closed` marker) still fails.
 """
 from __future__ import annotations
 
@@ -252,5 +261,55 @@ with tempfile.TemporaryDirectory() as scratch_name:
         set(scan_receipt["tasks"]) == {"DEV-303", "DEV-304"},
         f"receipt task set did not include the fence-less merged task: {sorted(scan_receipt['tasks'])!r}",
     )
+
+# --- AC-1 (roster): a sprint-matching entity absent from the fence and never merged is dropped,
+# named once on stderr as "not dispatched", and the batch still closes -- the r3 bug fix ---
+not_dispatched_dir = FIXTURES / "not-dispatched"
+with tempfile.TemporaryDirectory() as scratch_name:
+    scratch = Path(scratch_name)
+    for name in ("DEV-301.md", "DEV-307.md"):
+        (scratch / name).write_text(
+            (not_dispatched_dir / name).read_text(encoding="utf-8"), encoding="utf-8"
+        )
+    fence_dir = scratch / "_ship_fence"
+    fence_dir.mkdir()
+    (fence_dir / "ship-cloud-wrapper.json").write_text(
+        (not_dispatched_dir / "_ship_fence" / "ship-cloud-wrapper.json").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    not_dispatched = run(["ship-cloud-wrapper", "--state-dir", str(scratch)])
+    require(
+        not_dispatched.returncode == 0,
+        f"a batch with a deferred, never-dispatched sibling did not close: "
+        f"exit={not_dispatched.returncode} stdout={not_dispatched.stdout!r} stderr={not_dispatched.stderr!r}",
+    )
+    require(
+        "close: DEV-307 not dispatched, skipping" in not_dispatched.stderr,
+        f"the never-dispatched sibling was not named 'not dispatched' on stderr: {not_dispatched.stderr!r}",
+    )
+    nd_receipt_path = fence_dir / "close-receipt-ship-cloud-wrapper.json"
+    require(nd_receipt_path.is_file(), f"the batch did not write a receipt at {nd_receipt_path}")
+    nd_receipt = json.loads(nd_receipt_path.read_text(encoding="utf-8"))
+    require(
+        set(nd_receipt["tasks"]) == {"DEV-301"},
+        f"the written receipt did not omit the never-dispatched sibling: {sorted(nd_receipt['tasks'])!r}",
+    )
+
+# --- AC-2 (captain_stopped validates): --validate accepts a captain_stopped task's null
+# merged_sha paired with the closed marker; the existing bad-merged-sha fixture still fails ---
+captain_stopped_receipt = run(["--validate", str(FIXTURES / "receipts" / "captain-stopped.json")])
+require(
+    captain_stopped_receipt.returncode == 0,
+    f"--validate refused a captain_stopped task's null merged_sha: "
+    f"exit={captain_stopped_receipt.returncode} stderr={captain_stopped_receipt.stderr!r}",
+)
+bad_sha_still_fails = run(["--validate", str(FIXTURES / "receipts" / "bad-merged-sha.json")])
+require(
+    bad_sha_still_fails.returncode == 1
+    and "DEV-301" in bad_sha_still_fails.stderr
+    and "DEV-306" in bad_sha_still_fails.stderr,
+    f"adding the captain_stopped exemption widened the bad-merged-sha refusal: "
+    f"exit={bad_sha_still_fails.returncode} stderr={bad_sha_still_fails.stderr!r}",
+)
 
 print("close test: all checks passed")

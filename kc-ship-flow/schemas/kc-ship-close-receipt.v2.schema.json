@@ -21,8 +21,15 @@
           "workspace_id": {"type": ["string", "null"]},
           "session_id": {"type": ["string", "null"]},
           "pr": {"type": ["string", "null"], "description": "the task entity's own pr: frontmatter value, e.g. pr-merge:<N>"},
-          "merged_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$", "description": "the 40-hex mergeCommit.oid gh pr view reported; never null or short once a task's receipt entry is written"},
-          "debrief": {"type": "string", "minLength": 1, "description": "a _debriefs/... path once pushed, or a 'failure: ...' string when pending, rejected twice, or captain_stopped"}
+          "merged_sha": {
+            "oneOf": [
+              {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              {"type": "null"}
+            ],
+            "description": "the 40-hex mergeCommit.oid gh pr view reported; null only for a captain_stopped task (see closed), which was never merged"
+          },
+          "debrief": {"type": "string", "minLength": 1, "description": "a _debriefs/... path once pushed, or a 'failure: ...' string when pending, rejected twice, or captain_stopped"},
+          "closed": {"enum": ["captain_stopped"], "description": "present only when the Captain closed this task unmerged; pairs with merged_sha: null"}
         }
       }
     },

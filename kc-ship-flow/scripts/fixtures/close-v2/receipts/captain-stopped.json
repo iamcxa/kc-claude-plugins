@@ -1,0 +1,20 @@
+{
+  "schema": "kc-ship-close-receipt/v2",
+  "sprint": "ship-cloud-wrapper",
+  "e2e": {"result": "not recorded"},
+  "questions": [],
+  "residuals": [],
+  "receipt_sha256": "deadface00000000000000000000000000000000000000000000000000000000",
+  "tasks": {
+    "DEV-301": {
+      "slug": "DEV-301", "workspace_id": "ws-301", "session_id": "sess-301",
+      "pr": "pr-merge:501", "merged_sha": "abc1230000000000000000000000000000000000",
+      "debrief": "_debriefs/2026-09-10-01-claude-fable-5-1.md"
+    },
+    "DEV-308": {
+      "slug": "DEV-308", "workspace_id": "ws-308", "session_id": "sess-308",
+      "pr": null, "merged_sha": null, "closed": "captain_stopped",
+      "debrief": "failure: captain_stopped"
+    }
+  }
+}
