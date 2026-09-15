@@ -81,6 +81,11 @@ gates:
                 conn:
                     quote: r4 現在開
                     source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+            - id: gate-attempt:gzrgwdxkh6zkenkswkhasmjc-validation-2
+              briefing:
+                id: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-2:revision-1
+                digest: sha256:f1cc5049d852c2f605eba7bc1b926e3f6fc1ada8f9cab2d41ed8cbb899ac028a
+                room-ref: ./review/validation/briefing-2
 review-round:
     id: round:gzrgwdxkh6zkenkswkhasmjc:validation:1
     stage: validation

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-2:revision-1",
+  "question": "Correction round validation/1 closed (revise -\u003e corrected -\u003e re-verified). PR #457 now ready-for-review at candidate 874bbcef59933a4accd24e9d070d834b69e90c7c: continue-dev-flow's Before-dispatch loader invocation wires --validate-admission at a Pilot/Production item's new admission; independently re-verified refusal against adopter-contract-test-ships-with-the-package (exact stderr match), and AC-1..4 still hold (no kernel.md edit, no new receipt/harness/LOC gate). Approve to route to done (merge)?",
+  "artifacts": [
+    {
+      "id": "artifact:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/c81c8a515e20ff553658e98d7cc6933e3e3cd690/admission-asks-who-was-bitten-and-who-will-run-it/index.md",
+      "rev": "sha256:3986e8d6fc60ac67f1e15ef5af5131ecc2a7fe15c62be9e5483dd6f6fc7092c2",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 2 stage report: 5/5 checklist DONE, 0 skipped, 0 failed. Independently re-ran both test suites fresh at candidate 874bbcef; independently replayed --validate-admission against adopter-contract-test-ships-with-the-package.md, exact refusal text matches PR body. Confirmed continue-dev-flow/SKILL.md's Before-dispatch invocation genuinely carries --validate-admission at new admission. PR #457 body reflects corrected Candidate line, correction-round bullet, exact refusal texts in Evidence, and Residuals disclosure (0/89 backlog entities satisfy admission shape, five required headings listed verbatim). AC-1..4 re-confirmed against git diff main...874bbcef --stat (12 files, no kernel.md, no new receipt/harness/LOC gate). Correction round validation/1 recorded and closed (round:gzrgwdxkh6zkenkswkhasmjc:validation:1)."
+    }
+  ]
+}
