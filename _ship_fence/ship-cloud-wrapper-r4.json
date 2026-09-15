@@ -1,23 +1,35 @@
 {
- "admission-asks-who-was-bitten-and-who-will-run-it": {
-  "message_sha256": "224f9579e63dcfc023af5bfff5f4d33920312d80cbb19c3d5bf369c7c5637bf2",
-  "session": "e7b3a4cc-f3cc-46ec-af17-64ad764529cf",
-  "workspace": "592e0522-6bdd-4b24-8330-6ad146c19114",
-  "pr": 457,
-  "candidate_sha": "874bbcef59933a4accd24e9d070d834b69e90c7c"
- },
- "boot-names-delivery-order-and-forbidden-actions": {
-  "message_sha256": "62f5b12fac0e8b8350fdaaa25ade5313624c4f259fbe413de4e934b6230cbe1c",
-  "session": "6391a296-cd1a-48cd-b7bb-e387c3944bce",
-  "workspace": "94744197-0f26-4765-bb6f-5439d81d6b17",
-  "pr": 456,
-  "candidate_sha": "ce12aea237b64da43559133239ba064167b6e29e"
- },
- "close-roster-is-the-fence-and-captain-stopped-validates": {
-  "message_sha256": "451dddc9bd2acd1952b90588adfbd40fee32d07d56091bbfc6d1aea379032e48",
-  "session": "3319fb1a-64ee-4b2e-9de8-f9fc1e73b900",
-  "workspace": "26b8a27b-6162-4f0e-ac51-5f5aa420ab63",
-  "pr": 455,
-  "candidate_sha": "e828c9b12384365e4b68c99cc37b56ec82538a63"
- }
+  "admission-asks-who-was-bitten-and-who-will-run-it": {
+    "candidate_sha": "874bbcef59933a4accd24e9d070d834b69e90c7c",
+    "debrief": {
+      "path": "_debriefs/2026-09-15-06-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "224f9579e63dcfc023af5bfff5f4d33920312d80cbb19c3d5bf369c7c5637bf2",
+    "pr": 457,
+    "session": "e7b3a4cc-f3cc-46ec-af17-64ad764529cf",
+    "workspace": "592e0522-6bdd-4b24-8330-6ad146c19114"
+  },
+  "boot-names-delivery-order-and-forbidden-actions": {
+    "candidate_sha": "ce12aea237b64da43559133239ba064167b6e29e",
+    "debrief": {
+      "path": "_debriefs/2026-09-15-05-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "62f5b12fac0e8b8350fdaaa25ade5313624c4f259fbe413de4e934b6230cbe1c",
+    "pr": 456,
+    "session": "6391a296-cd1a-48cd-b7bb-e387c3944bce",
+    "workspace": "94744197-0f26-4765-bb6f-5439d81d6b17"
+  },
+  "close-roster-is-the-fence-and-captain-stopped-validates": {
+    "candidate_sha": "e828c9b12384365e4b68c99cc37b56ec82538a63",
+    "debrief": {
+      "path": "_debriefs/2026-09-15-06-claude-claude-sonnet-5.md",
+      "status": "pushed"
+    },
+    "message_sha256": "451dddc9bd2acd1952b90588adfbd40fee32d07d56091bbfc6d1aea379032e48",
+    "pr": 455,
+    "session": "3319fb1a-64ee-4b2e-9de8-f9fc1e73b900",
+    "workspace": "26b8a27b-6162-4f0e-ac51-5f5aa420ab63"
+  }
 }
