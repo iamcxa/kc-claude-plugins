@@ -67,14 +67,24 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 
 Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, and **cross-model second opinion** via Google's agy / Antigravity CLI (`/gemini review|challenge|consult` — same usage as `/codex`, routed through Google's `agy` for a non-OpenAI outside voice; participates in a gstack cross-model review dashboard when gstack is installed).
 
-Also draws **user journey maps from the code** (`kc-journey-map`) — three lanes per step (what a person does / what the system does / what must stay true), every system claim cited to a `file:line` read that session, and a mandatory status card naming what is unproven, unmerged, or undeployed. Renders to FigJam when a Figma file is available, and always to a self-contained HTML + PNG.
-
-**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, checking a journey map against what the code actually does, or want an independent cross-model review / adversarial challenge / consult from Gemini.
+**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, or want an independent cross-model review / adversarial challenge / consult from Gemini.
 
 **Prerequisite:** Linear MCP enabled.
 
 ```bash
 /plugin install kc-team-ops@kc-claude-plugins
+```
+
+### [kc-journey-map](./kc-journey-map/)
+
+Draws **user journey maps from the code**, on an editable tldraw canvas you can share a link to. Every story carries a status — `gap`, `unverified` or `exists` — and an `exists` story carries an evidence symbol that must still grep in the repository; `lib/lint.mjs` fails the file otherwise. Three projections on request (story map, per-release journey board, function map), plus a generated release contract per release. The versioned artifact is a YAML file in your repository, not the picture: layout is computed from the model's order, so a reordered board is a one-line diff.
+
+**Use when:** You need to say what a system does today and be believed, check an existing journey board against what the code actually does, or slice the next release out of a story map.
+
+**Requires:** Node >= 22.13.0 and `npm ci` inside the plugin directory — the canvas is a local service. `agent-browser` for PNG/`.tldr` export, `spacedock` for task progress, and the Figma MCP for FigJam are each optional; see [the plugin README](./kc-journey-map/) for what you lose without each.
+
+```bash
+/plugin install kc-journey-map@kc-claude-plugins
 ```
 
 ### [kc-pr-flow](./kc-pr-flow/)
@@ -130,6 +140,7 @@ Add to `.claude/settings.json`:
     "kc-nightwatch@kc-claude-plugins": true,
     "kc-hyperfocus@kc-claude-plugins": true,
     "kc-team-ops@kc-claude-plugins": true,
+    "kc-journey-map@kc-claude-plugins": true,
     "kc-pr-flow@kc-claude-plugins": true,
     "kc-dev-flow@kc-claude-plugins": true
   }
