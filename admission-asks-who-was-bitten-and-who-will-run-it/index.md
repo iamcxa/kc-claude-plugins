@@ -86,6 +86,20 @@ gates:
                 id: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-2:revision-1
                 digest: sha256:f1cc5049d852c2f605eba7bc1b926e3f6fc1ada8f9cab2d41ed8cbb899ac028a
                 room-ref: ./review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gzrgwdxkh6zkenkswkhasmjc:validation:2
+                briefing: briefing:gzrgwdxkh6zkenkswkhasmjc:validation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-09-15T00:28:21.39098Z"
+                decision: approve
+                reason: 'ship FO verification at PR #457 head 874bbcef on macOS: profile-contract-loader.test.py PASS, kc-dev-flow-contract-test.py PASS; --validate-admission now wired into continue-dev-flow''s new-admission dispatch and named in choose-work-profile and the README; real-brief replay refuses the closed adopter brief and the unshaped r4 brief for the missing bite: line; Residuals disclose that 0 of 89 current briefs carry the shape and list the six required headings. Approve to done; merge stays with the Captain.'
+                conn:
+                    quote: r4 現在開
+                    source: Captain chat 2026-09-15, opening the ship-cloud-wrapper-r4 batch of three (pilot profile)
+              application:
+                target-stage: done
+                state: pending
 review-round:
     id: round:gzrgwdxkh6zkenkswkhasmjc:validation:1
     stage: validation
