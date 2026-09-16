@@ -1,7 +1,7 @@
 ---
 id:
 title: release-please excludes workflow-state paths for every plugin
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: prod
 merge: pr
