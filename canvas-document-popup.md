@@ -46,6 +46,17 @@ gates:
                 id: briefing:canvas-document-popup:ideation:attempt-2:revision-1
                 digest: sha256:48533ea0e5c80eddc7b7d0b31bd532c79b62b66a42ac172baaa5d1cbc93c1163
                 room-ref: ./canvas-document-popup/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:canvas-document-popup:ideation:2
+                briefing: briefing:canvas-document-popup:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-16T15:38:23.564281Z"
+                decision: approve
+                reason: 'Captain approved the ideation design and ruled option 1: operator env map only, supplied by the canvas startup step rather than hand-written, with no origin-matching default.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-16T14:10:56Z
 ---
 
