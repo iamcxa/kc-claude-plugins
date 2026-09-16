@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: prod
 merge: pr
 worktree: .worktrees/spacedock-ensign-release-please-exclude-paths
-pr: 467
+pr: pr-merge:467
 gates:
     version: 1
     records:
