@@ -1,7 +1,7 @@
 ---
 id:
 title: release-please excludes workflow-state paths for every plugin
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: prod
 merge: pr
@@ -47,7 +47,7 @@ gates:
                 reason: 'Captain judged the ideation gate passed: design approved and scope narrowed to a single kc-dev-flow exclude-paths edit; docs/dev2 gains no entry.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
