@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-please-exclude-paths:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-please-exclude-paths-ideation-1
+              briefing:
+                id: briefing:release-please-exclude-paths:ideation:attempt-1:revision-1
+                digest: sha256:57b89d55f0d274519220ea7c4414d3f10d58d6f707ed6010e4647634a2ba23eb
+                room-ref: ./release-please-exclude-paths/review/ideation/briefing-1
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-please-exclude-paths:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design and the narrowing to a single kc-dev-flow config edit?",
+  "artifacts": [
+    {
+      "id": "artifact:release-please-exclude-paths:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2cf589ab8f72be4623d24a8af209fcc5eaba7132/review/release-please-exclude-paths/ideation/review.md",
+      "rev": "sha256:ff903dc9abec8437185b4619b52cc4d2c068fee46a9d9a8cd46e53da929f4b62",
+      "mediaType": "text/markdown",
+      "summary": "FO recommends approve. Independent re-run confirms the worker's finding; the Stop condition's narrowing to AC-1 only is pre-authorized. One correction: AC-2 is not satisfied by the class-level probe and carries into implementation for the version-parity-check.sh fixture run."
+    }
+  ]
+}
