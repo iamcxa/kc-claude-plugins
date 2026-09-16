@@ -103,11 +103,14 @@ so the same record resolves against whatever host each viewer typed. A `.tldr` e
 the bytes as a data URL, which makes the file self-contained and large.
 
 **Sharing.** The board's top-right panel opens a Cloudflare quick tunnel to the share
-front-end and prints the URL; stopping it closes the tunnel, and so does stopping the doc API.
-The tunnel is refused with 409 when the share front-end is not running.
+front-end and shows the URL; stopping it closes the tunnel, and so does stopping the doc API.
+The tunnel is refused with 409 when the share front-end is not running, and the panel says so
+when a front-end dies under a tunnel that is still open — Cloudflare serves 502 for that, which
+looks like a broken link rather than a stopped process.
 
 **Saving.** The same panel writes the board to `JOURNEY_SAVE_DIR` (`./docs/journey`) under a
-name you confirm. Writes are confined to that directory, an empty board is refused, and the
+name you confirm, or downloads a `.tldr` through the browser when the repository is not where
+it belongs. Writes are confined to that directory, an empty board is refused, and the
 button reads `overwrite` when the target already exists — these files are usually untracked,
 so an overwrite has no undo.
 

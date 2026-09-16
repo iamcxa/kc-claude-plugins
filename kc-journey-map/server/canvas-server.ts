@@ -92,15 +92,18 @@ app.register(async (app) => {
 		}
 	})
 
-	app.get('/tunnel', async () => tunnelStatus())
+	app.get('/tunnel', async () => await tunnelStatus())
 
 	app.post('/tunnel', async (_req, res) => {
 		const result = await startTunnel()
 		if ('error' in result) return res.status(result.status).send({ error: result.error })
-		return { ...tunnelStatus(), url: result.url }
+		return { ...(await tunnelStatus()), url: result.url }
 	})
 
-	app.delete('/tunnel', async () => ({ stopped: stopTunnel(), ...tunnelStatus() }))
+	app.delete('/tunnel', async () => {
+		const stopped = stopTunnel()
+		return { stopped, ...(await tunnelStatus()) }
+	})
 
 	app.get('/health', async () => ({
 		ok: true,

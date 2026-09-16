@@ -99,6 +99,7 @@ curl -sf -X POST -H 'Content-Type: application/json' \
 echo "ok  save confined"
 
 curl -sf "http://127.0.0.1:$PORT/tunnel" | grep -q '"running":false' || { echo "FAIL: a tunnel is reported before one was asked for"; exit 1; }
+curl -sf "http://127.0.0.1:$PORT/tunnel" | grep -q '"targetUp":false' || { echo "FAIL: a missing share front-end is reported as up"; exit 1; }
 GUARD=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://127.0.0.1:$PORT/tunnel")
 [ "$GUARD" = "409" ] || { echo "FAIL: expected 409 with no share front-end running, got $GUARD"; exit 1; }
 echo "ok  tunnel refuses a missing front-end"

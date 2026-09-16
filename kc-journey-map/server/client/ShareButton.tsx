@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { serializeTldrawJson, useEditor } from 'tldraw'
 
-type Status = { running: boolean; url: string | null }
+type Status = { running: boolean; url: string | null; targetUp: boolean }
 
 // A shared page gets the SPA fallback HTML here, so the content type decides, not the status.
 async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
@@ -67,6 +67,18 @@ export function ShareButton({ roomId }: { roomId: string }) {
 			setNote('link copied')
 		})
 
+	const download = () =>
+		guard(async () => {
+			const file = await serializeTldrawJson(editor)
+			const href = URL.createObjectURL(new Blob([file], { type: 'application/vnd.tldraw+json' }))
+			const link = document.createElement('a')
+			link.href = href
+			link.download = `${roomId}.tldr`
+			link.click()
+			URL.revokeObjectURL(href)
+			setNote('downloaded')
+		})
+
 	const save = () =>
 		guard(async () => {
 			const file = await serializeTldrawJson(editor)
@@ -95,14 +107,25 @@ export function ShareButton({ roomId }: { roomId: string }) {
 					</button>
 				</>
 			) : (
-				<button type="button" className="tlui-button" disabled={busy} onClick={() => setName(`${roomId}.tldr`)}>
-					save
-				</button>
+				<>
+					<button type="button" className="tlui-button" disabled={busy} onClick={() => setName(`${roomId}.tldr`)}>
+						save
+					</button>
+					<button type="button" className="tlui-button" disabled={busy} onClick={download}>
+						download
+					</button>
+				</>
 			)}
 			{status.running && status.url && (
-				<button type="button" className="tlui-button" disabled={busy} onClick={copy} title={status.url}>
-					copy link
-				</button>
+				<>
+					<span style={{ fontSize: 11, userSelect: 'all', opacity: 0.8 }}>{status.url}</span>
+					<button type="button" className="tlui-button" disabled={busy} onClick={copy}>
+						copy link
+					</button>
+				</>
+			)}
+			{status.running && !status.targetUp && (
+				<span style={{ fontSize: 11, color: '#b00' }}>share front-end is down</span>
 			)}
 			<button type="button" className="tlui-button" disabled={busy} onClick={toggleTunnel}>
 				{busy ? '…' : status.running ? 'stop sharing' : 'share'}

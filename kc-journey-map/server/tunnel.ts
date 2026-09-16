@@ -13,8 +13,15 @@ type StartResult = { url: string } | { error: string; status: number }
 let child: ChildProcess | null = null
 let url: string | null = null
 
-export function tunnelStatus(): { running: boolean; url: string | null; target: string } {
-	return { running: child !== null, url, target: TARGET }
+// A tunnel outlives the front-end it points at, and then serves 502 while still looking
+// healthy here; the caller needs both facts.
+export async function tunnelStatus(): Promise<{
+	running: boolean
+	url: string | null
+	target: string
+	targetUp: boolean
+}> {
+	return { running: child !== null, url, target: TARGET, targetUp: await targetReachable() }
 }
 
 function targetReachable(): Promise<boolean> {
