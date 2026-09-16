@@ -245,3 +245,24 @@ presence of the config key rather than its path content; a real commit touching 
 the single unresolved decision — apply the Stop condition, implementation edits only
 `kc-dev-flow`'s `exclude-paths` — rather than deciding it unilaterally, since it narrows
 the originally-scoped two-package edit to one.
+
+## Stage Report: implementation
+
+- DONE: Exact delivered artifact recorded: the precise release-please-config.json change, nothing else
+  One line added to `kc-dev-flow`'s package entry: `"exclude-paths": ["docs/dev"]`, matching every sibling's existing value verbatim. Commit `b6774358` in worktree `spacedock-ensign-release-please-exclude-paths`, `1 file changed, 1 insertion(+)`.
+- DONE: AC-1 evidence: scripts/version-parity-check.sh exits 0 on the candidate revision, and every package key prints an exclude-paths value
+  `bash scripts/version-parity-check.sh` on commit `b6774358` exits 0 ("Version parity: all plugins consistent"). `python3 -c` over `release-please-config.json` prints a non-empty `exclude-paths` for all 10 package keys (`e2e-pipeline`, `kc-plugin-forge`, `kc-nightwatch`, `kc-hyperfocus`, `kc-team-ops`, `kc-journey-map`, `kc-pr-flow`, `kc-dev-flow`, `kc-ship-flow`, `kc-dev-flow-2`), each `['docs/dev']`.
+- DONE: AC-2 evidence: the pinned release-please fixture harness run against a commit touching only a workflow-state path, with its resolved package list captured verbatim in this report (a class-level probe does NOT satisfy this)
+  `npm ci` against `scripts/fixtures/release-please-runtime`'s pinned `release-please@17.3.0` lockfile, then a Node script instantiating release-please's own `CommitSplit`/`CommitExclude` classes with `packagePaths = Object.keys(config.packages)` and `includeEmpty: true` (mirroring `manifest.js`'s own construction), run against the candidate `release-please-config.json` with three real `Commit` objects:
+  - `files: ['docs/dev/foo.md']` -> `resolved packages = [(none)]`
+  - `files: ['docs/dev2/foo.md']` -> `resolved packages = [(none)]`
+  - `files: []` (empty/path-less commit) -> `resolved packages = [(none)]`
+  Re-run against the pre-fix config (`git show HEAD~1:release-please-config.json` before this stage's commit) as a control: the empty commit resolved to `[kc-dev-flow]` there, confirming both that `kc-dev-flow` was the live gap this change closes and that the docs/dev and docs/dev2 results are unchanged before/after (neither path is ever bucketed to any package, regardless of `exclude-paths` content) — matching the ideation-stage finding and the approved Stop condition.
+- DONE: Rollback exercised or explicitly reasoned: the change reverts as a single commit with no state, tag or manifest entanglement
+  `git revert --no-commit HEAD` on commit `b6774358` produced a clean single-file, single-line revert (`1 file changed, 1 deletion(-)`, no conflicts); aborted with `git revert --abort` to restore the fix without leaving a revert commit, since only the fix itself belongs in this stage.
+- DONE: Material limits recorded: what the evidence does not establish
+  See Summary — the probe reproduces the routing classes directly, not release-please's GitHub-API commit-fetch path; it does not exercise the CI-triggered `marketplace-parity.yml` job itself (out of scope: no CI job change) or a real end-to-end Release PR run.
+
+### Summary
+
+Added `"exclude-paths": ["docs/dev"]` to `kc-dev-flow`'s entry in `release-please-config.json`, closing the one remaining gap the 2026-09-03 empty-commit incident left (`CLAUDE.md` "Two release-please traps"). Per the ideation gate's approved Stop condition, `docs/dev2` gains no `exclude-paths` entry anywhere — verified here by re-running the same reproduction the ideation stage used, now against the actual committed candidate config plus a before/after control, rather than citing the ideation-stage class-level probe alone. Limit: the reproduction runs release-please's routing classes directly against synthetic `Commit` objects; it does not exercise release-please's own commit-fetch/GitHub-API layer or a live CI run of `marketplace-parity.yml`.

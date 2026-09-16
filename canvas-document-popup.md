@@ -7,6 +7,17 @@ profile:
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:canvas-document-popup:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:canvas-document-popup-backlog-1
+              briefing:
+                id: briefing:canvas-document-popup:backlog:attempt-1:revision-1
+                digest: sha256:25de7ada15242d51c6400cb3aa5a9c36d5bab3aac42cddd75afc65f838471fc9
+                room-ref: ./canvas-document-popup/review/backlog/briefing-1
 ---
 
 Human-led architecture review follows a chain on the journey canvas: green Action →

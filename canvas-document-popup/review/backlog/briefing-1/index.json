@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:canvas-document-popup:backlog:attempt-1:revision-1",
+  "question": "Select the profile and approve the outcome, scope, exclusions and stop condition for canvas-document-popup (issue #465).",
+  "artifacts": [
+    {
+      "id": "artifact:canvas-document-popup:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c9491bb80fd0ce71e359368687ebdf1a6a4c5962/review/canvas-document-popup/backlog/review.md",
+      "rev": "sha256:4e0a894611d2768ecd9d10991d1d72ad03a0b845904fd4f75f2959166516fd80",
+      "mediaType": "text/markdown",
+      "summary": "FO admission record for issue #465. Recommended profile: prod, on the live-canvas and export-portability boundaries. Seven issue checkboxes translated into five ACs, with items 6 and 7 folded into verification clauses. Ideation will start with FO-led design alignment against the running canvas, not an immediate dispatch."
+    }
+  ]
+}
