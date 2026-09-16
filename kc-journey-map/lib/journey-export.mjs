@@ -9,9 +9,10 @@ if (!room || !out) {
 	process.exit(2)
 }
 
+const CANVAS = process.env.JOURNEY_CANVAS ?? `http://localhost:${process.env.JOURNEY_CANVAS_PORT ?? 3737}`
 const sh = (args) => execFileSync('agent-browser', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
 
-sh(['open', `http://localhost:3737/?room=${room}`, '--viewport', '1600x1000'])
+sh(['open', `${CANVAS}/?room=${room}`, '--viewport', '1600x1000'])
 
 const script = `
 (async () => {

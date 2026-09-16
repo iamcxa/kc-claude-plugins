@@ -40,8 +40,8 @@ const portFree = (port) =>
 	})
 
 for (const [port, what] of [
-	[5858, 'doc API'],
-	[3737, 'canvas'],
+	[Number(process.env.JOURNEY_API_PORT ?? 5858), 'doc API'],
+	[Number(process.env.JOURNEY_CANVAS_PORT ?? 3737), 'canvas'],
 ]) {
 	if (await portFree(port)) ok(`port ${port}`, `free (${what})`)
 	else bad(`port ${port}`, `in use (${what})`, 'stop the other canvas, or free the port — several sessions cannot share one')

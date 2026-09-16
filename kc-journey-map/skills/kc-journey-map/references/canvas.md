@@ -70,6 +70,13 @@ canvas and `agent-browser`; it is not a dependency-free fallback.
   `vite.config.mts` forwards the sync socket to the doc API, so no separate port needs opening.
 - Doc API: `http://127.0.0.1:5858` (loopback only — reachability comes from the board's proxy, not
   from widening this bind)
+- Share board: `npm run share` serves the same rooms on `http://127.0.0.1:3738` for viewers. It
+  proxies the board and its images and nothing else; the operator endpoints exist only on the
+  board above, so a viewer cannot control the tunnel or write into the repository.
+
+`JOURNEY_API_PORT`, `JOURNEY_CANVAS_PORT` and `JOURNEY_SHARE_PORT` move all three; the preflight,
+the export scripts and the proxies read the same variables, so a second canvas does not need any
+file edited.
 
 Vite refuses a request whose Host header isn't the machine's own hostname or a name listed in
 `JOURNEY_ALLOWED_HOSTS` (comma-separated). Set that env var to admit a cloud or Tailscale DNS name
@@ -87,6 +94,26 @@ Open the live canvas for normal review; Process step 5 in `SKILL.md` owns visual
 verification and optional PNG output. A native `.tldr` backup preserves unread canvas
 edits and is separate from image output. Read back or preserve those edits before
 redrawing; the renderer does not apply them to the source automatically.
+
+## Images, sharing and saving
+
+**Images.** Paste or drop one and it is stored as a file under `JOURNEY_ASSETS_DIR`
+(`./.assets`), while the record keeps an `asset:<name>` src rather than an absolute origin —
+so the same record resolves against whatever host each viewer typed. A `.tldr` export inlines
+the bytes as a data URL, which makes the file self-contained and large.
+
+**Sharing.** The board's top-right panel opens a Cloudflare quick tunnel to the share
+front-end and prints the URL; stopping it closes the tunnel, and so does stopping the doc API.
+The tunnel is refused with 409 when the share front-end is not running.
+
+**Saving.** The same panel writes the board to `JOURNEY_SAVE_DIR` (`./docs/journey`) under a
+name you confirm. Writes are confined to that directory, an empty board is refused, and the
+button reads `overwrite` when the target already exists — these files are usually untracked,
+so an overwrite has no undo.
+
+**There is no identity check on a shared board.** Anyone holding the link can edit or clear
+it. That is the whole access control, which is why the tunnel is meant for one ad-hoc
+discussion and not for a standing URL.
 
 ## Three projections, drawn by request
 
@@ -234,8 +261,10 @@ read again. The [worked example](example/README.md) provides exact reproduction
 commands; record counts depend on the model and selected projections.
 
 **A `.tldr` is not a journey file.** It stores coordinates and colours, not steps,
-citations or rules. Import replaces the whole target document. Use it to carry a board
-between tools, never as the artifact that goes in git.
+citations or rules. Import replaces the whole target document. Where a journey file exists it
+stays the artifact of record, and a `.tldr` never replaces it. A board with no journey behind
+it — an ad-hoc discussion canvas — has nothing else to keep, and the save button exists to
+put that snapshot in the repository.
 
 ## The two directions
 
@@ -306,4 +335,6 @@ not an open-source one. It permits use in a Development Environment — internal
 development, testing or staging, not reachable by customers or the public. It forbids
 Production use without a commercial licence and forbids interfering with licence-key
 enforcement, which is why the board shows a "Get a license for production" watermark.
-Do not deploy this board for anyone outside the team.
+Do not deploy this board for anyone outside the team. A quick tunnel puts the board on a
+public hostname, so the link belongs to the people in that discussion and the tunnel is closed
+when it ends.

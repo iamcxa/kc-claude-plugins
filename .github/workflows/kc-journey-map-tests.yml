@@ -12,6 +12,7 @@ on:
       - "kc-journey-map/package.json"
       - "kc-journey-map/package-lock.json"
       - "kc-journey-map/tsconfig.json"
+      - "kc-journey-map/vite*.config.mts"
       - "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml"
       - ".github/workflows/kc-journey-map-tests.yml"
   push:
@@ -23,6 +24,7 @@ on:
       - "kc-journey-map/package.json"
       - "kc-journey-map/package-lock.json"
       - "kc-journey-map/tsconfig.json"
+      - "kc-journey-map/vite*.config.mts"
       - ".github/workflows/kc-journey-map-tests.yml"
 
 permissions:
