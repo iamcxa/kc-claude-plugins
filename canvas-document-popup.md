@@ -65,6 +65,17 @@ gates:
                 id: briefing:canvas-document-popup:validation:attempt-1:revision-1
                 digest: sha256:4beda26b53bcc8424e64474df4cb1e25bc7d2a24aa6454ca427d48f706cef90e
                 room-ref: ./canvas-document-popup/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:canvas-document-popup:validation:1
+                briefing: briefing:canvas-document-popup:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-16T23:00:59.849068Z"
+                decision: approve
+                reason: 'Captain approved the validation verdict for 6f4ec0e3 and ruled option B: the browser evidence script stays manual for now, CI wiring deferred because the plugin is likely to change further.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-16T14:10:56Z
 ---
 
