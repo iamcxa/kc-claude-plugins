@@ -1,7 +1,7 @@
 ---
 id:
 title: release-please excludes workflow-state paths for every plugin
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: prod
 merge: pr
@@ -75,8 +75,11 @@ gates:
                 reason: Captain approved the validation verdict for b6774358 after the AC-2 amendment.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-16T07:15:47Z
+verdict: PASSED
+completed: 2026-09-16T14:06:22Z
+archived: 2026-09-16T14:06:22Z
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
