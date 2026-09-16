@@ -96,3 +96,21 @@ not adoption. Owner-stop attestation is explicit caller input, not liveness
 verification. POSIX/local-filesystem locking does not establish cross-clone or
 distributed reliability. Historical seven-skill loading evidence predates the
 new evaluator skill; it does not prove this new entry's discovery or behavior.
+
+## Manually invoked learning delivery and notices
+
+The `learn` skill now binds a named task's archived SD state and original merged
+GitHub PR using existing read commands, delegates evaluation/materialization,
+and preserves explicit commit/PR authority. These are skill instructions, not
+an automatic collector or mechanically authenticated provider evidence.
+
+The recorder's affected 14-case suite passed, retaining the nine local evaluation
+controls and adding delivery/notice cases: a 12-process delivery claim race,
+simulated accepted send with lost response and matching-PR recovery, no-change
+refusal, candidate/plan mismatch, stale owner/digest/token, merged-state regression,
+torn delivery/ack files, and presentation-version acknowledgement. Reading notices
+on an empty repository leaves no state directory; acknowledged uncertain delivery
+remains inspectable. Provider responses and sends in these tests are explicitly
+simulated. No live GitHub PR, remote merge, hook or automatic startup was exercised.
+The same tests preserve immutable completed evaluation bytes while delivery state
+changes. The earlier skill-discovery evidence predates the new `learn` entry.

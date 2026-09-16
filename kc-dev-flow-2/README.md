@@ -5,8 +5,9 @@ start/resume entry, profile principles, stage skills, retained advisory roles,
 read-only routing lint, and an adoptable Spacedock workflow with a POC adaptation.
 Existing kc-dev-flow projects stay on their selected variant; this package does
 not migrate them automatically or claim full safeguard parity or a one-third
-size reduction. Local learning evaluation produces proposals only; there is no
-custom runtime loader, installed hook, background launcher or automatic adoption.
+size reduction. Learning uses an explicitly invoked evaluation/delivery loop;
+there is no custom runtime loader, installed hook, background launcher or automatic
+adoption.
 
 ## Controlled trial
 
@@ -138,7 +139,14 @@ Git history and SD records do not prove which content was used at a historical
 stage entry. This package does not fix the baseline's skipped-pin bug or
 claim equivalent tamper detection.
 
-## Local learning proposals
+## Manual learning loop
+
+Use [`kc-dev-flow-2:learn`](skills/learn/SKILL.md) for one explicitly named closed
+task. FO verifies committed SD archive state and the original repository-qualified
+merged GitHub PR through existing read interfaces, then delegates independent
+evaluation. Missing or contradictory evidence holds learning without reopening
+the development task. This is skill-led verification; the Python helper still
+records supplied facts and does not authenticate SD or GitHub.
 
 Use [`kc-dev-flow-2:evaluate-learning`](skills/evaluate-learning/SKILL.md) for a
 bounded independent assessment of explicitly supplied task evidence. Its three
@@ -157,7 +165,7 @@ It stores one atomic record under the Git common directory's
 claim token binds completion to its pending attempt. Invalid results leave that
 claim repairable; duplicate triggers observe it rather than launch another job.
 A completed record contains both evaluation and local proposal; no-change has no
-proposal. No command writes project learning.md, AGENTS.md or workflow state.
+proposal. No recorder command writes learning.md, AGENTS.md or workflow state.
 
 Pending ownership is not process liveness. Torn/missing records are uncertain;
 recovery requires a current record digest and an explicit caller attestation
@@ -166,12 +174,37 @@ Completed results cannot be replaced through this CLI. POSIX file locking and
 atomic replacement cover cooperating callers on local filesystems, not separate
 clones, distributed locks or protection from a process with the same file access.
 
-A local receipt/proposal is not an active practice. Project learning becomes
-usable only through the separately authorized review/merge path; this helper does
-not implement or certify it. Real SD/GitHub collection, host hooks, background
-launching, Draft PR creation, issue reporting, deduplication across machines and
-startup notification remain future work. The independent semantic quality of
-learning proposals requires agent evidence beyond recorder tests.
+A changed result can be materialized by an author in an owned isolated worktree,
+changing only root learning.md. The evaluated integration commit/learning blob
+must still match before publication. User commit and delivery authority remain
+required; a no-change result creates no branch or PR. A job-derived branch/body
+marker supports all-state PR lookup. Reuse a fully matching existing PR; conflicting
+or unknown provider evidence holds rather than sending another one.
+
+The recorder keeps delivery ownership/observations in a separate atomic sidecar,
+leaving completed evaluation bytes immutable. It binds the reviewed result, repo,
+branch, candidate and learning blobs, plus exact PR title/body. Claiming records
+uncertainty before remote effects; existing claims grant no automatic resend.
+FO uses existing Git/gh commands to publish a Draft PR and record observed state.
+A failed response does not prove the send failed. Explicit stopped-owner recovery
+requires a current digest and successful provider reconciliation; unknown stays
+held, matched PRs are reused and merged observations cannot regress through the
+CLI. These are local consistency checks over caller-attested provider facts.
+
+On `dev` or `learn` invocation, `learning.py notices` exposes unread results,
+including no-change, pending and uncertain states. FO acknowledges a snapshot
+only after presenting it; a changed digest remains unread. `notices --all` also
+makes acknowledged jobs available for explicit inspection/recovery. Read-only
+queries create no learning directory when none exists. Context injection alone
+is not notification, and a crash before acknowledgement can repeat a notice.
+
+A receipt or PR is not an active practice. Subsequent work reads the currently
+adopted integration version of learning.md, after its separately authorized
+review/merge path. A recorded merge does not prove a practice improves future
+work. Harness hooks, automatic polling/background launch, issue reporting and
+cross-clone deduplication remain future work; the notice step is not an every-host
+SessionStart guarantee. See the learn skill for the fixed CLI plan/observation
+schemas, provider checks, recovery and exact delivery authority boundaries.
 
 ## Maintenance and evidence
 
