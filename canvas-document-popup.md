@@ -1,7 +1,7 @@
 ---
 id:
 title: read a Markdown and Mermaid document in a journey-canvas popup
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
