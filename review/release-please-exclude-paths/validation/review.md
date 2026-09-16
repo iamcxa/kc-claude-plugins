@@ -53,7 +53,14 @@ Three routes:
    into CI, which the entity's own approved Non-goals forbid ("no new CI job").
 3. **Drop AC-2** — loses the measurement that justified adding nothing for `docs/dev2`.
 
-FO recommends route 1.
+The Captain ruled route 1 on 2026-09-16. AC-2's verification clause on the task is
+amended accordingly, with the original wording and the reason preserved beside it. The
+amendment names the pre-change control as required evidence, which the original clause
+did not. This gate was withdrawn before that edit and re-prepared afterwards.
+
+With AC-2 amended, both criteria are met on `b6774358`: AC-1 by the parity check and the
+config read, AC-2 by the resolved package lists for four commit shapes against the
+candidate and against the pre-change revision.
 
 ## Goal sufficiency
 

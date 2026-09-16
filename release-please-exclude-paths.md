@@ -56,6 +56,10 @@ gates:
                 id: briefing:release-please-exclude-paths:validation:attempt-1:revision-1
                 digest: sha256:3f03a568c1ee3431a91d3132e766338aa52214c3917f9bc2c7286599240eee9a
                 room-ref: ./release-please-exclude-paths/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-16T13:58:07.805049Z"
+                reason: 'Captain ruled route A on AC-2: amend the verification clause to the pinned-class reproduction with its pre-fix control. Withdrawing the open binding before editing the criterion, then re-preparing.'
 started: 2026-09-16T07:15:47Z
 ---
 
@@ -96,10 +100,21 @@ It would fail if the key were added to the wrong package or a sibling's value dr
 **AC-2**: The excluded set is decided by measurement, not assumption: the record names
 whether a commit touching only a workflow-state path is attributed to a package, and the
 config matches that finding.
-Verified by: the pinned release-please fixture inside `scripts/version-parity-check.sh`
-run against a commit that touches only a workflow-state path, with its resolved package
-list captured in the stage report. A config entry with no supporting fixture output fails
-this criterion.
+Verified by: release-please at the version this repository's own fixture lockfile pins
+(`scripts/fixtures/release-please-runtime`), driven through its own `CommitSplit` and
+`CommitExclude` as `manifest.js` constructs them, run against both the candidate config
+and the revision before the change, with each commit shape's resolved package list
+captured in the stage report. The pre-change control is required: without it the
+measurement cannot show the guard changed anything. A config entry with no supporting
+resolved-package output fails this criterion.
+
+Amended 2026-09-16 on the Captain's ruling (route A at the validation gate). The
+original clause named "the pinned release-please fixture inside
+`scripts/version-parity-check.sh` run against a commit that touches only a
+workflow-state path". No script in this repository resolves a commit's package list;
+that clause conflated the existing first-release-tag fixture harness with an
+instrument that does not exist. Building one would add a CI-wired script this task's
+Non-goals forbid.
 
 ## Design definition (ideation)
 
