@@ -76,6 +76,7 @@
     },
     "kc-dev-flow": {
       "release-type": "simple",
+      "exclude-paths": ["docs/dev"],
       "component": "kc-dev-flow",
       "extra-files": [
         { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
