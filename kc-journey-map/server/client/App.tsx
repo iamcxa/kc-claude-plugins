@@ -1,9 +1,13 @@
 // Adapted from tldraw's `templates/simple-server-example` (MIT).
 import { useSync } from '@tldraw/sync'
-import { useEffect, useMemo, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import { Editor, TLAssetStore, TLShape, Tldraw, serializeTldrawJson } from 'tldraw'
 import 'tldraw/tldraw.css'
+import { parseGithubBlobUrl } from '../../lib/repo-doc.mjs'
 import { storyBorder } from '../../lib/records.mjs'
+import { DocPopup, type DocTarget } from './DocPopup'
+import './doc-popup.css'
 import { ShareButton } from './ShareButton'
 import { addSequencePage } from './sequence'
 
@@ -13,6 +17,33 @@ const SERVER_URL =
 	import.meta.env.VITE_JOURNEY_API_URL || `${window.location.protocol}//${window.location.host}`
 
 const APP_NAME = 'kc-journey-map'
+
+function parseChapterUrl(url: string): DocTarget | null {
+	const parsed = parseGithubBlobUrl(url)
+	return parsed && { ...parsed, sourceUrl: url }
+}
+
+// tldraw's HyperlinkButton (shared by note/geo/bookmark/image/video shapes)
+// always renders `<a target="_blank">` with no override slot in TLComponents.
+// A capture-phase click listener on the editor container is the only seam
+// available to intercept before the browser's default new-tab navigation fires.
+function useChapterPopupIntercept(editor: Editor | null, onOpen: (target: DocTarget, trigger: HTMLElement) => void) {
+	useEffect(() => {
+		if (!editor) return
+		const container = editor.getContainer()
+		const handler = (e: MouseEvent) => {
+			const anchor = (e.target as HTMLElement)?.closest?.('a.tl-hyperlink-button') as HTMLAnchorElement | null
+			if (!anchor) return
+			const target = parseChapterUrl(anchor.href)
+			if (!target) return // not a chapter link (e.g. a blame/evidence link) — let it open normally
+			e.preventDefault()
+			e.stopPropagation()
+			onOpen(target, anchor)
+		}
+		container.addEventListener('click', handler, { capture: true })
+		return () => container.removeEventListener('click', handler, { capture: true })
+	}, [editor, onOpen])
+}
 
 function subscribeToLocation(onChange: () => void) {
 	window.addEventListener('popstate', onChange)
@@ -81,6 +112,10 @@ function RoomCanvas({ roomId }: { roomId: string }) {
 		if (store.status !== 'synced-remote') document.title = `${roomId} | ${APP_NAME}`
 	}, [roomId, store.status])
 
+	const [editor, setEditor] = useState<Editor | null>(null)
+	const [popup, setPopup] = useState<{ target: DocTarget; trigger: HTMLElement } | null>(null)
+	useChapterPopupIntercept(editor, (target, trigger) => setPopup({ target, trigger }))
+
 	return (
 		<div style={{ position: 'fixed', inset: 0 }}>
 			<Tldraw
@@ -93,9 +128,19 @@ function RoomCanvas({ roomId }: { roomId: string }) {
 					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
 					const stopBorders = syncStoryBorders(editor)
 					const stopTitle = syncDocumentTitle(editor, roomId)
+					setEditor(editor)
 					return () => { stopBorders(); stopTitle() }
 				}}
 			/>
+			{popup &&
+				createPortal(
+					// tldraw's InFrontOfTheCanvas slot sits under an ancestor
+					// (.tl-canvas__in-front) that sets pointer-events: none, so nothing
+					// rendered there is hit-testable; mount as a sibling of the canvas
+					// container instead.
+					<DocPopup target={popup.target} returnFocusTo={popup.trigger} onClose={() => setPopup(null)} />,
+					document.body,
+				)}
 		</div>
 	)
 }
