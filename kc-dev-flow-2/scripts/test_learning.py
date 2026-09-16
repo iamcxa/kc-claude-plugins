@@ -218,6 +218,142 @@ class LearningTests(unittest.TestCase):
         self.assertEqual(observed["proposal"], {"add": [NEW], "remove": []})
         self.assertEqual(observed["evaluation"]["decisions"], [self.decision("add", NEW)])
 
+    def delivery_fixture(self, changed=True):
+        claim = self.claim()
+        result = self.complete(claim, self.result_file([self.decision("add", NEW) if changed else self.decision("no-change")]))
+        head = subprocess.check_output(["git", "-C", self.repo, "rev-parse", "HEAD"], text=True).strip()
+        plan = {"schema_version": 1, "result_digest": result["digest"], "repository": "example/project",
+                "branch": "learning/" + claim["job"], "marker": "<!-- kc-dev-flow-2 learning " + claim["job"] + " -->",
+                "base_branch": "main", "base_commit": head, "candidate_commit": head,
+                "source_learning_blob": "absent", "candidate_learning_blob": "c" * 40,
+                "worktree": str(self.base / "isolated-candidate"), "title": "Synthetic learning proposal"}
+        plan["body"] = "Synthetic provider simulation only.\n" + plan["marker"] + "\n"
+        self.plan = self.base / "plan.json"
+        self.plan.write_text(json.dumps(plan))
+        return claim, plan
+
+    def observed(self, plan, state, draft=True):
+        value = {key: plan[key] for key in ("repository", "branch", "candidate_commit", "marker")}
+        value.update(state=state, pr="example/project#2" if state in ("open", "merged", "closed") else None,
+                     merge_commit="d" * 40 if state == "merged" else None,
+                     draft=draft if state in ("open", "merged", "closed") else None,
+                     evidence=["Synthetic provider response, not real remote evidence"])
+        path = self.base / "observation.json"
+        path.write_text(json.dumps(value))
+        return path
+
+    def deliver(self, claim, code=0):
+        return self.cli("delivery-claim", "--job", claim["job"], "--owner", "delivery-owner", "--plan", self.plan, code=code)
+
+    def reconcile(self, claim, plan, state, expected=None, owner_state="stopped", code=0):
+        record = self.cli("notices", "--all")["notices"][0]
+        return self.cli("delivery-recover", "--job", claim["job"], "--expected", expected or record["delivery"]["digest"],
+                        "--owner-state", owner_state, "--reason", "Synthetic owner stopped; provider lookup inspected",
+                        "--owner", "new-owner", "--plan", self.plan, "--observation", self.observed(plan, state), code=code)
+
+    def test_notices_no_directory_creation_and_digest_ack(self):
+        self.assertEqual(self.cli("notices"), {"notices": []})
+        self.assertEqual(self.cli("notices", "--all"), {"notices": []})
+        self.assertEqual(self.cli("read", "--job", "a" * 64)["state"], "missing")
+        self.assertFalse((self.repo / ".git/kc-dev-flow-2").exists())
+        claim = self.claim()
+        pending = self.cli("notices")["notices"][0]
+        self.assertNotIn("token", json.dumps(pending))
+        self.cli("ack", "--job", claim["job"], "--expected", pending["notice_digest"])
+        self.assertEqual(self.cli("notices"), {"notices": []})
+        self.complete(claim, self.result_file([self.decision("no-change")]))
+        self.cli("ack", "--job", claim["job"], "--expected", pending["notice_digest"], code=1)
+        done = self.cli("notices")["notices"][0]
+        self.assertIsNone(done["proposal"])
+        self.cli("ack", "--job", claim["job"], "--expected", done["notice_digest"])
+        acknowledgement = self.record_path(claim["job"]).parent / "acknowledgement.json"
+        acknowledgement.write_text('{"digest":')
+        self.assertTrue(self.cli("notices")["notices"][0]["unread"])
+        self.assertEqual(acknowledgement.read_text(), '{"digest":')
+
+    def test_no_change_and_mismatched_plan_cannot_claim_delivery(self):
+        claim, plan = self.delivery_fixture(changed=False)
+        self.deliver(claim, code=1)
+        self.assertFalse((self.record_path(claim["job"]).parent / "delivery.json").exists())
+        self.pack["task_id"] = "changed-task"
+        self.write_pack()
+        claim, plan = self.delivery_fixture()
+        for field, value in (("result_digest", "0" * 64), ("branch", "arbitrary"), ("marker", "wrong"), ("base_branch", "bad..branch")):
+            self.plan.write_text(json.dumps({**plan, field: value}))
+            self.deliver(claim, code=1)
+        self.assertFalse((self.record_path(claim["job"]).parent / "delivery.json").exists())
+
+    def test_delivery_claim_race_and_interrupted_remote_response(self):
+        claim, plan = self.delivery_fixture()
+        result_bytes = self.record_path(claim["job"]).read_bytes()
+        commands = self.argv("delivery-claim", "--job", claim["job"], "--owner", "racing-owner", "--plan", self.plan)
+        processes = [subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for _ in range(12)]
+        values = [json.loads(process.communicate(timeout=20)[0]) for process in processes]
+        winners = [value for value in values if value.get("delivery_claimed")]
+        self.assertEqual(len(winners), 1, values)
+        winner = winners[0]
+        # Simulated provider accepted one send; caller died before recording its response.
+        remote = self.base / "simulated-provider.json"
+        remote.write_text(json.dumps({"pr": "example/project#2", "sends": 1, "candidate": plan["candidate_commit"]}))
+        replay = self.deliver(claim)
+        self.assertNotIn("delivery_token", replay)
+        self.assertEqual(replay["delivery"]["state"], "uncertain")
+        self.cli("ack", "--job", claim["job"], "--expected", replay["notice_digest"])
+        self.assertEqual(self.cli("notices"), {"notices": []})
+        inspectable = self.cli("notices", "--all")["notices"][0]
+        self.assertEqual(inspectable["delivery"]["digest"], replay["delivery"]["digest"])
+        self.assertNotIn("token", json.dumps(inspectable))
+        recovered = self.reconcile(claim, plan, "open")
+        self.assertFalse(recovered["delivery_claimed"])
+        self.assertEqual(json.loads(remote.read_text())["sends"], 1)
+        self.cli("delivery-record", "--job", claim["job"], "--token", winner["delivery_token"],
+                 "--observation", self.observed(plan, "open"), code=1)
+        self.assertEqual(self.record_path(claim["job"]).read_bytes(), result_bytes)
+        self.assertEqual(self.cli("notices")["notices"][0]["delivery"]["state"], "open")
+
+    def test_delivery_recovery_and_observation_boundaries(self):
+        claim, plan = self.delivery_fixture()
+        sent = self.deliver(claim)
+        self.reconcile(claim, plan, "absent", owner_state="running", code=1)
+        self.reconcile(claim, plan, "unknown", code=1)
+        self.reconcile(claim, plan, "absent", expected="0" * 64, code=1)
+        renewed = self.reconcile(claim, plan, "absent")
+        self.assertTrue(renewed["delivery_claimed"])
+        self.assertNotEqual(sent["delivery_token"], renewed["delivery_token"])
+        bad = self.observed(plan, "open")
+        value = json.loads(bad.read_text()); value["candidate_commit"] = "f" * 40
+        bad.write_text(json.dumps(value))
+        self.cli("delivery-record", "--job", claim["job"], "--token", renewed["delivery_token"], "--observation", bad, code=1)
+        # A matching existing PR already made ready is an observation, not new creation.
+        opened = self.cli("delivery-record", "--job", claim["job"], "--token", renewed["delivery_token"],
+                          "--observation", self.observed(plan, "open", draft=False))
+        self.assertEqual(opened["delivery"]["state"], "open")
+        self.reconcile(claim, plan, "absent", code=1)
+        merged = self.cli("delivery-record", "--job", claim["job"], "--token", renewed["delivery_token"],
+                         "--observation", self.observed(plan, "merged", draft=False))
+        self.cli("ack", "--job", claim["job"], "--expected", opened["notice_digest"], code=1)
+        before = (self.record_path(claim["job"]).parent / "delivery.json").read_bytes()
+        self.cli("delivery-record", "--job", claim["job"], "--token", renewed["delivery_token"],
+                 "--observation", self.observed(plan, "open"), code=1)
+        self.reconcile(claim, plan, "closed", code=1)
+        self.assertEqual((self.record_path(claim["job"]).parent / "delivery.json").read_bytes(), before)
+        self.assertEqual(merged["delivery"]["observation"]["merge_commit"], "d" * 40)
+
+    def test_torn_delivery_is_visible_and_requires_explicit_reconciliation(self):
+        claim, plan = self.delivery_fixture()
+        self.deliver(claim)
+        path = self.record_path(claim["job"]).parent / "delivery.json"
+        path.write_bytes(b'{"state":')
+        for output in (self.deliver(claim), self.cli("notices")["notices"][0]):
+            self.assertEqual(output["delivery"]["state"], "uncertain")
+            self.assertNotIn("delivery_token", output)
+        self.assertEqual(path.read_bytes(), b'{"state":')
+        renewed = self.reconcile(claim, plan, "absent")
+        self.assertTrue(renewed["delivery_claimed"])
+        archived = list(path.parent.glob("prior-delivery-*.json"))
+        self.assertEqual(len(archived), 1)
+        self.assertEqual(archived[0].read_bytes(), b'{"state":')
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -192,6 +192,159 @@ def view(directory):
     return result
 
 
+def sha(value):
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value)
+
+
+def delivery_plan(value, key, result_digest):
+    keys(value, "schema_version result_digest repository branch marker base_branch base_commit candidate_commit source_learning_blob candidate_learning_blob worktree title body")
+    require(type(value["schema_version"]) is int and value["schema_version"] == 1, "plan schema")
+    require(value["result_digest"] == result_digest, "plan does not bind current completed result")
+    require(isinstance(value["repository"], str) and re.fullmatch(r"[a-z0-9][a-z0-9_.-]*/[a-z0-9][a-z0-9_.-]*", value["repository"]), "repository must be lowercase owner/repo")
+    require(value["branch"] == "learning/" + key, "branch must derive from job")
+    require(value["marker"] == "<!-- kc-dev-flow-2 learning " + key + " -->", "marker must derive from job")
+    for name in ("base_branch", "worktree", "title", "body"):
+        text(value[name])
+    require(Path(value["worktree"]).is_absolute(), "worktree must be absolute")
+    require(subprocess.run(["git", "check-ref-format", "--branch", value["base_branch"]],
+                           cwd="/", capture_output=True).returncode == 0, "invalid base branch")
+    for name in ("base_commit", "candidate_commit", "candidate_learning_blob"):
+        require(sha(value[name]), "invalid " + name)
+    require(value["source_learning_blob"] == "absent" or sha(value["source_learning_blob"]), "invalid source learning blob")
+    require(value["body"].count(value["marker"]) == 1, "body must contain the job marker once")
+    return value
+
+
+def observation(value, plan):
+    keys(value, "state repository branch candidate_commit marker pr merge_commit draft evidence")
+    require(value["state"] in ("open", "merged", "closed", "absent", "unknown"), "observation state")
+    for name in ("repository", "branch", "candidate_commit", "marker"):
+        require(value[name] == plan[name], "observation mismatch: " + name)
+    strings(value["evidence"])
+    require(value["evidence"], "provider observation needs evidence")
+    ref = value["pr"]
+    require(ref is None or (isinstance(ref, str) and re.fullmatch(re.escape(plan["repository"]) + r"#[1-9][0-9]*", ref)), "invalid repository-qualified PR")
+    if value["state"] in ("open", "merged", "closed"):
+        require(ref is not None and type(value["draft"]) is bool, "observed PR needs identity and draft state")
+    else:
+        require(value["draft"] is None, "non-PR observation has no draft state")
+        if value["state"] == "absent":
+            require(ref is None, "absent lookup cannot name a PR")
+    require((sha(value["merge_commit"]) if value["state"] == "merged" else value["merge_commit"] is None), "merge commit does not match observed state")
+    return value
+
+
+def inspect_delivery(directory, result_digest):
+    path = directory / "delivery.json"
+    raw = path.read_bytes() if path.exists() else None
+    digest = hashlib.sha256(b"missing" if raw is None else raw).hexdigest()
+    record = None
+    if raw is not None:
+        try:
+            record = strict_json(raw)
+            keys(record, "schema_version state owner token plan observation recovery")
+            require(type(record["schema_version"]) is int and record["schema_version"] == 1, "delivery schema")
+            delivery_plan(record["plan"], directory.name, result_digest)
+            text(record["owner"])
+            require(isinstance(record["token"], str) and re.fullmatch(r"[0-9a-f]{64}", record["token"]), "delivery token")
+            require(record["state"] in ("uncertain", "open", "merged", "closed"), "delivery state")
+            if record["observation"] is not None:
+                observed = observation(record["observation"], record["plan"])
+                expected = observed["state"] if observed["state"] in ("open", "merged", "closed") else "uncertain"
+                require(record["state"] == expected, "delivery state disagrees with observation")
+            else:
+                require(record["state"] == "uncertain", "missing delivery observation")
+        except (ValueError, TypeError, KeyError, UnicodeError):
+            record = None
+    return raw, digest, record
+
+
+def notice(directory):
+    result = view(directory)
+    if result["state"] == "missing":
+        return result
+    raw, digest, delivery = inspect_delivery(directory, result["digest"])
+    shown = {"state": "missing" if raw is None else "uncertain", "digest": digest}
+    if delivery:
+        shown.update({k: v for k, v in delivery.items() if k != "token"})
+    result["delivery"] = shown
+    result["notice_digest"] = hashlib.sha256(encoded([result["digest"], digest])).hexdigest()
+    try:
+        acknowledged = read_json(directory / "acknowledgement.json")
+        keys(acknowledged, "digest")
+        result["unread"] = acknowledged["digest"] != result["notice_digest"]
+    except (OSError, ValueError, TypeError):
+        result["unread"] = True
+    return result
+
+
+def delivery_operation(args, directory):
+    require(directory.is_dir(), "job missing")
+    with locked(directory):
+        _, result_digest, result = inspect(directory)
+        if args.command == "ack":
+            current = notice(directory)
+            require(args.expected == current["notice_digest"], "notice changed since presentation")
+            atomic_write(directory / "acknowledgement.json", encoded({"digest": args.expected}))
+            return {"job": directory.name, "acknowledged": args.expected}
+        require(result is not None and result["state"] == "completed" and result["proposal"] is not None,
+                "delivery requires a completed result with changes")
+        raw, digest, record = inspect_delivery(directory, result_digest)
+        if args.command == "delivery-claim":
+            plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
+            text(args.owner)
+            if raw is not None:
+                if record:
+                    require(record["plan"] == plan, "existing delivery plan differs")
+                return notice(directory)
+            record = {"schema_version": 1, "state": "uncertain", "owner": args.owner,
+                      "token": secrets.token_hex(32), "plan": plan, "observation": None, "recovery": None}
+        elif args.command == "delivery-record":
+            require(record is not None, "delivery missing or uncertain; reconcile explicitly")
+            require(secrets.compare_digest(record["token"], args.token), "stale or foreign delivery token")
+            observed = observation(read_json(args.observation), record["plan"])
+            require(observed["state"] != "absent", "absence requires explicit recovery")
+            previous = record["observation"]
+            if previous and previous["pr"]:
+                require(observed["pr"] == previous["pr"], "cannot replace or forget observed PR")
+            require(record["state"] != "merged" or observed["state"] == "merged", "merged delivery cannot regress")
+            if previous and previous["state"] == "merged":
+                require(observed["merge_commit"] == previous["merge_commit"], "merged identity changed")
+            record = {**record, "state": observed["state"] if observed["state"] != "unknown" else "uncertain",
+                      "observation": observed}
+        else:
+            require(args.owner_state == "stopped", "verify delivery owner stopped before recovery")
+            require(args.expected == digest, "delivery changed since observation")
+            text(args.reason)
+            text(args.owner)
+            plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
+            observed = observation(read_json(args.observation), plan)
+            require(observed["state"] != "unknown", "unknown provider result cannot authorize recovery")
+            if record:
+                require(record["plan"] == plan, "recovery cannot change reviewed plan")
+                previous = record["observation"]
+                if previous and previous["pr"]:
+                    require(observed["pr"] == previous["pr"], "cannot replace or forget observed PR")
+                require(record["state"] != "merged" or observed["state"] == "merged", "merged delivery cannot regress")
+                if previous and previous["state"] == "merged":
+                    require(observed["merge_commit"] == previous["merge_commit"], "merged identity changed")
+            archive = directory / ("prior-delivery-" + digest + ".json")
+            prior = raw if raw is not None else b"null\n"
+            if archive.exists():
+                require(archive.read_bytes() == prior, "delivery recovery archive conflict")
+            else:
+                atomic_write(archive, prior)
+            record = {"schema_version": 1, "state": observed["state"] if observed["state"] != "absent" else "uncertain",
+                      "owner": args.owner, "token": secrets.token_hex(32), "plan": plan, "observation": observed,
+                      "recovery": {"prior_digest": digest, "reason": args.reason, "owner_state": "stopped (caller attestation)"}}
+        atomic_write(directory / "delivery.json", encoded(record))
+        output = notice(directory)
+        if args.command in ("delivery-claim", "delivery-recover"):
+            output["delivery_token"] = record["token"]
+            output["delivery_claimed"] = args.command == "delivery-claim" or observed["state"] == "absent"
+        return output
+
+
 def pending(value, owner, recovery=None):
     text(owner)
     return {"schema_version": 1, "state": "pending", "input": value, "owner": owner,
@@ -204,6 +357,13 @@ def operate(args):
         ["git", "-C", args.repo, "rev-parse", "--path-format=absolute", "--git-common-dir"],
         text=True, stderr=subprocess.PIPE).strip()
     home = Path(common) / "kc-dev-flow-2" / "learning"
+    if args.command == "notices":
+        return {"notices": [item for path in sorted(home.glob("*"))
+                            if path.is_dir() and re.fullmatch(r"[0-9a-f]{64}", path.name)
+                            for item in [notice(path)] if args.all or item.get("unread")]}
+    if args.command.startswith("delivery-") or args.command == "ack":
+        require(re.fullmatch(r"[0-9a-f]{64}", args.job), "invalid job identifier")
+        return delivery_operation(args, home / args.job)
     value = pack(read_json(args.input)) if args.command in ("claim", "recover") else None
     if value is not None:
         if reasons := eligibility(value):
@@ -267,6 +427,25 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", required=True)
     commands = parser.add_subparsers(dest="command", required=True)
+    notices = commands.add_parser("notices")
+    notices.add_argument("--all", action="store_true", help="include acknowledged jobs for explicit inspection/recovery")
+    ack = commands.add_parser("ack")
+    ack.add_argument("--job", required=True)
+    ack.add_argument("--expected", required=True)
+    deliver = commands.add_parser("delivery-claim")
+    observe = commands.add_parser("delivery-record")
+    resume = commands.add_parser("delivery-recover")
+    for command in (deliver, observe, resume):
+        command.add_argument("--job", required=True)
+    for command in (deliver, resume):
+        command.add_argument("--plan", required=True)
+        command.add_argument("--owner", required=True)
+    for command in (observe, resume):
+        command.add_argument("--observation", required=True)
+    observe.add_argument("--token", required=True)
+    resume.add_argument("--expected", required=True)
+    resume.add_argument("--owner-state", choices=("running", "unknown", "stopped"), required=True)
+    resume.add_argument("--reason", required=True)
     claim = commands.add_parser("claim")
     claim.add_argument("--input", required=True)
     claim.add_argument("--owner", required=True)

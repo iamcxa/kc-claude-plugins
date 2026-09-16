@@ -16,6 +16,17 @@ item from the request and authoritative project/task records. Reuse established
 context; do not guess between projects or tasks. Read applicable project
 conventions and the existing context needed for the requested work.
 
+After resolving the code root, run the packaged `scripts/learning.py --repo
+<absolute-code-root> notices`. Present relevant unread learning results to the
+user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
+merge; pending proposals are not active rules. Only after actual presentation,
+run `ack --job <job> --expected <notice_digest>` for each shown snapshot. Context
+injection or reading alone is not presentation. A changed digest stays unread;
+interruption may repeat a notice. Read failure holds that learning action, not
+unrelated approved development. This entry-level check is not a host SessionStart
+hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
+notices do not authorize evaluation, delivery, retry or merge.
+
 For existing work, preserve its recorded variant/profile, approved outcome,
 scope, non-goals and stop condition. Read current state, reports and delivery
 status instead of assuming a prior conversation is current. An invalid profile,
