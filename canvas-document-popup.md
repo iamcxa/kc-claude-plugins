@@ -3,7 +3,7 @@ id:
 title: read a Markdown and Mermaid document in a journey-canvas popup
 status: backlog
 variant: kc-dev-flow-2
-profile:
+profile: pilot
 merge: pr
 worktree:
 pr:
