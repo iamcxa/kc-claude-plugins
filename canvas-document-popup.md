@@ -1,7 +1,7 @@
 ---
 id:
 title: read a Markdown and Mermaid document in a journey-canvas popup
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -56,7 +56,7 @@ gates:
                 reason: 'Captain approved the ideation design and ruled option 1: operator env map only, supplied by the canvas startup step rather than hand-written, with no origin-matching default.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-16T14:10:56Z
 ---
 
