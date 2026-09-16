@@ -1,5 +1,9 @@
 # Cell contract
 
+This contract governs generated-map modes. For a human-drawn architecture review,
+use [human-led-review.md](human-led-review.md) instead: a green Action identifies
+its role, and a question is not automatically a story or a status-bearing cell.
+
 What each lane may assert, and what it may not. A board that breaks these reads as
 "this works today" when it does not — the failure this skill exists to prevent.
 
