@@ -5,7 +5,8 @@ start/resume entry, profile principles, stage skills, retained advisory roles,
 read-only routing lint, and an adoptable Spacedock workflow with a POC adaptation.
 Existing kc-dev-flow projects stay on their selected variant; this package does
 not migrate them automatically or claim full safeguard parity or a one-third
-size reduction. There is no custom runtime loader, hook or learning worker.
+size reduction. Local learning evaluation produces proposals only; there is no
+custom runtime loader, installed hook, background launcher or automatic adoption.
 
 ## Controlled trial
 
@@ -137,25 +138,40 @@ Git history and SD records do not prove which content was used at a historical
 stage entry. This package does not fix the baseline's skipped-pin bug or
 claim equivalent tamper detection.
 
-## Planned learning — not implemented
+## Local learning proposals
 
-Thin host hooks will check authoritative closed-and-landed tasks and deduplicate;
-a Stop event itself is not task closure. A bounded independent background worker
-will propose additions/removals to project learning.md through an isolated Draft
-PR. No-change records a result without an empty PR; rules become active after
-observed merge, never automatic merge. SessionStart will expose unannounced
-pending/adopted/failed results to FO. Background lifetime, durable results,
-concurrent proposals and exclusion of the learner's own PR require proof.
+Use [`kc-dev-flow-2:evaluate-learning`](skills/evaluate-learning/SKILL.md) for a
+bounded independent assessment of explicitly supplied task evidence. Its three
+outcomes are add, no-change and remove; a rewrite combines remove/add. Entries
+contain Applicability, Practice and Evidence. One task supports one case; reading
+a rule or green tests alone does not prove improvement. No applicable case is
+not grounds for deletion, and unknown attribution stays unknown. Fixed project
+rules require separate user-approved adoption into AGENTS.md; no auto-promotion,
+scores or maturity system is introduced.
 
-Entries contain Applicability, Practice and Evidence. One supported task is one
-case; benefit on a later matching task is repetition under that condition.
-Reading a rule or green tests alone do not show benefit; unknown attribution
-stays unknown, and no applicable case is not grounds for deletion. Applicable
-counterevidence can justify revision/removal. No scores or maturity system.
-AGENTS.md promotion requires approval as a project convention, with duplicate
-learning removed after adoption. Scoped, reproducible dev-flow bugs will use one
-configured issue target and standing deduplication policy; no external actions
-are implemented by this package.
+The skill documents the strict evidence-pack and evaluation JSON formats and
+commands for `scripts/learning.py`. This stdlib helper records eligibility from
+caller-supplied closure/merge facts; it does **not** verify SD or GitHub truth.
+It stores one atomic record under the Git common directory's
+`kc-dev-flow-2/learning/`, shared by linked worktrees in the same clone. An opaque
+claim token binds completion to its pending attempt. Invalid results leave that
+claim repairable; duplicate triggers observe it rather than launch another job.
+A completed record contains both evaluation and local proposal; no-change has no
+proposal. No command writes project learning.md, AGENTS.md or workflow state.
+
+Pending ownership is not process liveness. Torn/missing records are uncertain;
+recovery requires a current record digest and an explicit caller attestation
+that the prior owner stopped. It preserves prior bytes and revokes the old token.
+Completed results cannot be replaced through this CLI. POSIX file locking and
+atomic replacement cover cooperating callers on local filesystems, not separate
+clones, distributed locks or protection from a process with the same file access.
+
+A local receipt/proposal is not an active practice. Project learning becomes
+usable only through the separately authorized review/merge path; this helper does
+not implement or certify it. Real SD/GitHub collection, host hooks, background
+launching, Draft PR creation, issue reporting, deduplication across machines and
+startup notification remain future work. The independent semantic quality of
+learning proposals requires agent evidence beyond recorder tests.
 
 ## Maintenance and evidence
 
@@ -166,6 +182,7 @@ and its dependencies. Run from a complete checkout's repository root:
 ```sh
 python3 kc-dev-flow-2/scripts/lint-skills.py
 python3 kc-dev-flow-2/scripts/test_lint_skills.py
+python3 kc-dev-flow-2/scripts/test_learning.py
 python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
 ```
 

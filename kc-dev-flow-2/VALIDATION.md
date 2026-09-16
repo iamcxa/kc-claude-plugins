@@ -71,10 +71,28 @@ summary. It proves local installation/discovery of the adoption content, not
 model execution, entry behavior, reference following or remote publication.
 Maintenance lint requires the full source repository's frontmatter checker.
 
-Learning automation is unimplemented. The baseline skipped-stage-pin bug is not
+The baseline skipped-stage-pin bug is not
 fixed; historical stage-entry content sealing is omitted. Direct POC eligibility,
 Production recovery exceptions, retained-role execution across hosts, automated
 gate correctness, and complete Claude/Codex lifecycle parity remain unproven.
 Use explicit workflow paths and check the live worker roster after resuming an
 orchestrator; a resumed orchestrator does not establish that an old worker exists.
 These limits remain until separately scoped evidence establishes otherwise.
+
+## Local learning recorder
+
+The local slice adds an evaluate-learning skill and a stdlib recorder for
+explicitly supplied evidence packs. Tests in disposable Git repositories cover
+add/no-change/remove and mixed proposals; same-clone linked-worktree concurrent
+claims; ineligible inputs; invalid/stale completion; explicit interruption
+recovery; missing/torn records; and concurrent atomic completion. Synthetic
+results test schema, ownership and persistence, not whether an agent selected
+the right practice or whether a learning improved a real outcome.
+
+Closure, merge, source PR and evidence are caller-supplied facts. The helper
+performs no SD/provider queries, model calls, hook installation, background launch,
+PR/issue posting or learning.md/AGENTS.md edits. A receipt records an evaluation,
+not adoption. Owner-stop attestation is explicit caller input, not liveness
+verification. POSIX/local-filesystem locking does not establish cross-clone or
+distributed reliability. Historical seven-skill loading evidence predates the
+new evaluator skill; it does not prove this new entry's discovery or behavior.
