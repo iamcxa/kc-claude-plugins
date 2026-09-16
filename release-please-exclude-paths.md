@@ -1,7 +1,7 @@
 ---
 id:
 title: release-please excludes workflow-state paths for every plugin
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: prod
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: Captain approved profile prod and the admission record's outcome, scope and exclusions.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
