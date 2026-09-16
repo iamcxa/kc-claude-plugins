@@ -3,6 +3,12 @@
 An editable tldraw board an agent can write to, so a journey can be worked on in a
 room with other people instead of only read as a PNG.
 
+For human-drawn architecture review, [human-led-review.md](human-led-review.md)
+owns meaning, preservation and verification. The YAML authority, regeneration,
+projection and readback rules below concern generated maps, not that mode. Reuse
+the service lifecycle and native sizing guidance where applicable; do not import a
+whole document over an existing human drawing to add one answer.
+
 ## The split that makes it worth having
 
 The journey file in the repository is the source of truth. The room is a rendering of

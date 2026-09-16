@@ -1,9 +1,17 @@
 ---
 name: kc-journey-map
-description: Draw or check a user journey against code, prepare a selected release for development, or add an editable Mermaid sequence companion to a journey canvas. Triggers on "journey map", "user journey", "畫 user journey", "journey vs reality", "fill the journey board", "plan this release", "準備這個 release 開發", "sequence companion", or a journey board handed over to complete. Repository YAML renders the story map by default, with optional release details or function maps; a repository .mmd renders an optional native sequence page. Evidence checks distinguish implemented stories from gaps and unverified claims.
+description: Draw or check a user journey, prepare a selected release for development, add an editable Mermaid sequence companion, or answer architecture questions on a human-drawn journey canvas. Triggers on "journey map", "user journey", "畫 user journey", "journey vs reality", "fill the journey board", "plan this release", "準備這個 release 開發", "sequence companion", or human-led architecture review. Generated maps use repository YAML; human-led review preserves the drawing and connects one question at a time to technical documentation and separate implementation evidence.
 ---
 
 # Journey Map
+
+**Route human-led review first.** When the human owns the drawing and asks architecture
+questions on it, use [human-led architecture review](references/human-led-review.md).
+Claude and Codex share that reference. In that mode it replaces the generated-map
+cell, process, rendering, source-placement and verification defaults below: preserve
+the native drawing, answer one selected question, and separate the technical contract
+from implementation evidence. Do not infer check mode merely because a board exists.
+The remaining defaults apply to the existing generated-map modes.
 
 Map intent, draw or check a journey against code, or prepare an existing release for
 development. Draw/check establish evidence and render the requested projections.
@@ -20,6 +28,7 @@ is judged against.
 
 | Mode | Trigger | Output |
 |---|---|---|
+| **human-led architecture review** | human-drawn actions and questions; the human directs the review | one short bound answer, its owning technical chapter, then separate evidence — `references/human-led-review.md` |
 | **map** | nothing is built yet, or the question is what to build | a story map with releases, drawn from a conversation — `references/map-from-conversation.md` |
 | **plan-release** | planning/resuming an existing board or preparing a selected release for development | reviewed Development Brief, or draft with the missing decision — `references/map-from-conversation.md` |
 | **draw** | no journey exists yet | the board, derived from code |
