@@ -1,0 +1,33 @@
+{
+  "name": "kc-dev-flow-2",
+  "version": "0.1.0",
+  "description": "Optional experimental development flow with profile principles, stage skills, and retained advisory roles.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "development-workflow",
+    "experimental",
+    "profiles",
+    "claude-code",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Dev Flow 2 (Experimental)",
+    "shortDescription": "Optional experimental development flow",
+    "longDescription": "Explicitly select an experimental profile-based flow with a thin start/resume entry, stage skills, and advisory roles. Existing workflows are not migrated automatically; full lifecycle parity remains unproven.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use kc-dev-flow-2 to start or resume explicitly selected experimental work"
+    ],
+    "brandColor": "#2563EB"
+  }
+}

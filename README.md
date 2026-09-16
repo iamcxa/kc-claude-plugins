@@ -110,6 +110,19 @@ before updating the installed plugin used for ordinary continuation.
 /plugin install kc-dev-flow@kc-claude-plugins
 ```
 
+### [kc-dev-flow-2 (experimental)](./kc-dev-flow-2/)
+
+Optional experimental flow with a thin start/resume entry, profile principles,
+stage skills, and retained advisory roles. It requires explicit selection and
+Spacedock orchestration; existing kc-dev-flow projects are not migrated.
+
+**Use when:** You want a controlled trial and accept the documented omissions.
+Full safeguard parity, learning automation, and a one-third size reduction are
+not established. No released tag exists yet. Follow the package's
+[local trial instructions](./kc-dev-flow-2/README.md#controlled-trial) and
+[validation limits](./kc-dev-flow-2/VALIDATION.md); Claude's entry is
+`/kc-dev-flow-2:dev`, and Codex shorthand remains unverified.
+
 ## Adding to Your Project
 
 Add to `.claude/settings.json`:
