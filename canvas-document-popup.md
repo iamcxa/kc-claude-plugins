@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-canvas-document-popup
-pr:
+pr: 468
 gates:
     version: 1
     records:
