@@ -37,6 +37,10 @@ gates:
                 id: briefing:canvas-document-popup:ideation:attempt-1:revision-1
                 digest: sha256:d4ad0aa41a3e5f4655539b2c4b5ce81278e5e5a34ba2859e898bf1d8872749a7
                 room-ref: ./canvas-document-popup/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-16T14:44:43.608229Z"
+                reason: 'Captain reported the popup cannot be closed. FO reproduced: the Close button is visible but not hittable. The stage''s evidence claim is contradicted, so the binding is withdrawn before any correction.'
 started: 2026-09-16T14:10:56Z
 ---
 
@@ -397,3 +401,37 @@ tldraw's own Escape handler silently suppressing the browser's native dialog-clo
 is recorded as a seam with its fix and the greppable symbol that explains it. AC-1's
 shared-board-origin path and AC-5's export/import round trip are named as not yet
 verified, for implementation to close.
+
+## Material finding — the Close control does not work
+
+Reported by the Captain on the disposable preview: the popup could not be closed.
+FO reproduced it against the same preview on port 3799.
+
+**Observed.** With the popup open, the Close button is present, visible, and has a
+sane bounding box (`x 1036.9, y 151.5, w 50.1, h 21` at a 1440x900 viewport).
+`playwright` clicking it times out and the dialog stays open. The decisive
+measurement: `document.elementFromPoint` at that button's own bounding-box centre
+returns `<html>`. Every ancestor in the chain computes `pointer-events: auto`, so this
+is not a pointer-events problem — nothing inside the dialog is hit-testable where the
+dialog is painted.
+
+**Mechanism.** The popup calls `showModal()`, which promotes the dialog into the top
+layer, while being rendered inside tldraw's `InFrontOfTheCanvas` slot, inside
+`.tl-container`. The painted position and the hit-test geometry disagree, so pointer
+events never reach the dialog's contents.
+
+**Why the stage's own evidence missed it.** The stage reported "verified via real
+Playwright runs … focus/selection restored, all four AC-4 states correct". Those runs
+exercised Escape, which is delivered to the focused element and does not go through
+hit-testing. Escape closing the dialog is reproducible; the Close button was never
+actually clicked. A keyboard path passing is not evidence a pointer path works.
+
+**Classification: Material.** Released user and normal workflow: the Captain, reading
+a document on the canvas. Observable harm: the popup cannot be dismissed by the
+control the design says to provide. Affected value acceptance criterion: `value-ac[AC-3]`
+("Closing the popup — by the Close control and by Escape") and `value-ac[AC-4]`
+("Open on GitHub stays available in every one of them" — the same controls row).
+Trigger evidence: the reproduction above.
+
+Scope and profile are unchanged; the design's D1 and D2 are untouched by this. The
+correction is where the dialog lives in the component tree, not what it fetches.
