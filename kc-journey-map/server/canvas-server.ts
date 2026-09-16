@@ -4,7 +4,10 @@ import websocketPlugin from '@fastify/websocket'
 import fastify from 'fastify'
 import type { RawData } from 'ws'
 import { createTLSchema } from '@tldraw/tlschema'
+import { loadAsset, storeAsset } from './assets'
 import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
+import { saveBoard, saveDir, saveTarget } from './save'
+import { startTunnel, stopTunnel, tunnelStatus } from './tunnel'
 
 // Separate ports keep checks from mutating another running canvas.
 const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
@@ -31,7 +34,10 @@ function validateRecord(record: any): string | null {
 	}
 }
 
-const app = fastify()
+// A .tldr carrying inlined image bytes exceeds fastify's 1 MiB default on PUT /doc.
+const BODY_LIMIT = Number(process.env.JOURNEY_BODY_LIMIT ?? 64 * 1024 * 1024)
+
+const app = fastify({ bodyLimit: BODY_LIMIT })
 app.register(websocketPlugin)
 
 function roomIdOf(req: any): string {
@@ -52,6 +58,51 @@ app.register(async (app) => {
 
 		socket.off('message', collect)
 		for (const message of caughtMessages) socket.emit('message', message)
+	})
+
+	app.addContentTypeParser('*', (_req, _payload, done) => done(null))
+
+	app.put('/uploads/:id', async (req, res) => {
+		await storeAsset((req.params as any).id as string, req.raw, req.headers['content-type'])
+		return res.send({ ok: true })
+	})
+
+	app.get('/uploads/:id', async (req, res) => {
+		const { data, contentType } = await loadAsset((req.params as any).id as string)
+		res.header('Content-Security-Policy', "default-src 'none'")
+		res.header('X-Content-Type-Options', 'nosniff')
+		res.header('Content-Type', contentType)
+		return res.send(data)
+	})
+
+	app.get('/save', async (req) => {
+		const name = (req.query as any)?.name as string | undefined
+		return { dir: saveDir(), ...(name ? saveTarget(name) : {}) }
+	})
+
+	app.post('/save', async (req, res) => {
+		const body = (req.body ?? {}) as { name?: string; file?: string }
+		if (typeof body.name !== 'string' || typeof body.file !== 'string') {
+			return res.status(400).send({ error: 'name and file are required' })
+		}
+		try {
+			return await saveBoard(body.name, body.file)
+		} catch (e) {
+			return res.status(400).send({ error: (e as Error).message })
+		}
+	})
+
+	app.get('/tunnel', async () => await tunnelStatus())
+
+	app.post('/tunnel', async (_req, res) => {
+		const result = await startTunnel()
+		if ('error' in result) return res.status(result.status).send({ error: result.error })
+		return { ...(await tunnelStatus()), url: result.url }
+	})
+
+	app.delete('/tunnel', async () => {
+		const stopped = stopTunnel()
+		return { stopped, ...(await tunnelStatus()) }
 	})
 
 	app.get('/health', async () => ({

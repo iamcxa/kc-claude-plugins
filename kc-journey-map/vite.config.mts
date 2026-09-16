@@ -9,14 +9,20 @@ const extraHosts = (process.env.JOURNEY_ALLOWED_HOSTS ?? '')
 	.map((h) => h.trim())
 	.filter(Boolean)
 
+const API = `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+
 export default defineConfig(() => ({
 	plugins: [react()],
 	root: import.meta.dirname + '/server/client',
 	server: {
-		port: 3737,
+		port: Number(process.env.JOURNEY_CANVAS_PORT ?? 3737),
 		allowedHosts: [hostname(), ...extraHosts],
 		proxy: {
-			'/connect': { target: `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`, ws: true },
+			'/connect': { target: API, ws: true },
+			'/uploads/': { target: API },
+			// Operator-only, and deliberately absent from vite.share.config.mts.
+			'/tunnel': { target: API },
+			'/save': { target: API },
 		},
 	},
 	optimizeDeps: { exclude: ['@tldraw/assets'] },

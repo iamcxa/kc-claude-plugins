@@ -5,11 +5,12 @@ import { readFileSync, writeFileSync } from 'node:fs'
 
 const [mode, a, b] = process.argv.slice(2)
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
+const CANVAS = process.env.JOURNEY_CANVAS ?? `http://localhost:${process.env.JOURNEY_CANVAS_PORT ?? 3737}`
 
 if (mode === 'export') {
 	if (!a || !b) usage()
 	const sh = (args) => execFileSync('agent-browser', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
-	sh(['open', `http://localhost:3737/?room=${a}`, '--viewport', '1400x900'])
+	sh(['open', `${CANVAS}/?room=${a}`, '--viewport', '1400x900'])
 
 	let json
 	for (let attempt = 0; attempt < 12; attempt++) {
