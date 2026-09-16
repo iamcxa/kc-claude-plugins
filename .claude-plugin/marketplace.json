@@ -170,6 +170,19 @@
         "uat",
         "close-receipt"
       ]
+    },
+    {
+      "name": "kc-dev-flow-2",
+      "source": "./kc-dev-flow-2",
+      "description": "Optional experimental development flow with profile principles, stage skills, and retained advisory roles.",
+      "version": "0.1.0",
+      "keywords": [
+        "development-workflow",
+        "experimental",
+        "profiles",
+        "claude-code",
+        "codex"
+      ]
     }
   ]
 }
