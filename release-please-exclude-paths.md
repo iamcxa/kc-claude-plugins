@@ -5,7 +5,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: prod
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-release-please-exclude-paths
 pr:
 gates:
     version: 1
@@ -48,6 +48,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-09-16T07:15:47Z
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
