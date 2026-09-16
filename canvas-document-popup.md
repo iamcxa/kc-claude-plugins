@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:canvas-document-popup:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:canvas-document-popup-ideation-1
+              briefing:
+                id: briefing:canvas-document-popup:ideation:attempt-1:revision-1
+                digest: sha256:d4ad0aa41a3e5f4655539b2c4b5ce81278e5e5a34ba2859e898bf1d8872749a7
+                room-ref: ./canvas-document-popup/review/ideation/briefing-1
 started: 2026-09-16T14:10:56Z
 ---
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:canvas-document-popup:ideation:attempt-1:revision-1",
+  "question": "Approve the canvas-document-popup design, and choose the repo-to-checkout mapping mechanism?",
+  "artifacts": [
+    {
+      "id": "artifact:canvas-document-popup:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/786a8c34dc0e0ed51480736a4af4a48f9f2752a9/review/canvas-document-popup/ideation/review.md",
+      "rev": "sha256:3c60612d66e1b25110f9c7d7394c2024b81be3c4eb32e9d7bb200b2ef1bcb23a",
+      "mediaType": "text/markdown",
+      "summary": "FO recommends approve. Preview verified live on 3799 and the Captain's 3742 untouched; worktree clean. One open question: env-map-only versus env map plus a zero-config self-checkout default. Worker and FO recommend the latter. Both stay inside Pilot."
+    }
+  ]
+}
