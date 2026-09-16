@@ -98,3 +98,38 @@ exported diagram remains understandable with a working source link in a tldraw h
 that does not have this viewer.
 Verified by: an export/import round trip whose output is opened in a tldraw host
 without the viewer, with the source link followed successfully.
+
+## Captain's design decisions (FO-led alignment, 2026-09-16)
+
+These are settled. Ideation reflects them; it does not re-open them.
+
+**D1 — where the server gets the document: from the repository checkout on the
+machine running the canvas server.** The browser never talks to GitHub, so no
+credential reaches it and private repositories work without one. Accepted limit: a
+reviewer on the shared board origin can only read documents that the server's machine
+has checked out; anything else degrades to the unavailable-document state with Open on
+GitHub retained, which AC-4 already requires.
+
+**D2 — which revision the popup shows: the ref carried in the canonical link, read
+with `git show <ref>:<path>`.** Not the current working tree. This is what makes the
+issue's rule implementable — the review branch while a document is under review, the
+verified chapter on `main` after merge — and it makes the popup show exactly what the
+link points at rather than whatever happens to be checked out.
+
+### Architecture facts these rest on
+
+Verified by FO against `main` before the decision:
+
+- The document API is Fastify on `JOURNEY_API_PORT` (default 5858), bound to
+  `127.0.0.1` only.
+- The client is served by Vite on port 3737 by default; the Captain's instance runs on
+  3742.
+- Vite proxies exactly one path, `/connect` (websocket), to the loopback API.
+- The shared board origin works through Vite's `allowedHosts`, extended by
+  `JOURNEY_ALLOWED_HOSTS`.
+- Nothing in the package fetches anything over the network: no HTTP client, no GitHub
+  integration.
+
+So the shape is one new route on the Fastify server plus one new Vite proxy entry,
+following the existing `/connect` pattern. `human-led-review.md` lines 114-122 already
+constrain the viewer and prescribe no renderer architecture.
