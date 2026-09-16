@@ -18,6 +18,17 @@ gates:
                 id: briefing:canvas-document-popup:backlog:attempt-1:revision-1
                 digest: sha256:25de7ada15242d51c6400cb3aa5a9c36d5bab3aac42cddd75afc65f838471fc9
                 room-ref: ./canvas-document-popup/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:canvas-document-popup:backlog:1
+                briefing: briefing:canvas-document-popup:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-16T07:21:13.098661Z"
+                decision: approve
+                reason: Captain selected profile pilot and approved the admission record's outcome, scope, exclusions and stop condition.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Human-led architecture review follows a chain on the journey canvas: green Action →
