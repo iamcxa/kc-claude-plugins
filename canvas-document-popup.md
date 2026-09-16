@@ -543,3 +543,26 @@ scope and profile were explicitly out of bounds for this round.
 ### Summary
 
 Root cause was not the top-layer/containing-block geometry the cycle-1 report guessed — a fresh `getComputedStyle` measurement showed `pointer-events: none` inherited unbroken from tldraw's `.tl-canvas__in-front` wrapper down to the Close button, making the entire dialog non-hit-testable; the cycle-1 "every ancestor computes auto" claim did not reproduce and is superseded. Fix: portal `DocPopup` to `document.body`, fully outside tldraw's DOM subtree, rather than patching `pointer-events` locally, because the slot's opt-out-by-default contract (pointer-events plus an `editor.markEventAsHandled` coupling) doesn't fit a canvas-independent modal. Re-verification replaced Escape-only checks with real pointer clicks on both interactive controls, plus the specific `elementFromPoint`-at-centre assertion this round asked for; all pass, including a spot-check that Close remains clickable in the AC-4 unavailable-state render. Real kc-journey-map worktree untouched; only the disposable preview was edited.
+
+## Correction to FO's own root-cause claim
+
+FO's Material finding above states "Every ancestor in the chain computes
+`pointer-events: auto`, so this is not a pointer-events problem", and offers a
+top-layer geometry mechanism. **That claim is wrong and is withdrawn.** The correction
+round's fresh measurement is the correct one: `pointer-events: none` inherits unbroken
+from tldraw's `InFrontOfTheCanvas` wrapper down to the Close button.
+
+Confirmed independently in tldraw's own stylesheet,
+`node_modules/tldraw/tldraw.css`: `.tl-canvas__in-front { position: absolute; inset: 0;
+pointer-events: none; }`. The slot is click-through by default, by design, for
+canvas-space overlays.
+
+How FO got it wrong: the ancestor-chain measurement was read through a truncated view
+of the command output. The visible tail showed `.tl-container` and its parents, all
+`auto`; the head of the chain — the dialog, the popup chrome and the
+`.tl-canvas__in-front` wrapper — was cut off and never read. The observation that
+`elementFromPoint` returned `<html>` was correct; the explanation attached to it was
+not.
+
+The finding's classification, its Material status and the AC it maps to are unchanged.
+Only the stated mechanism was wrong, and the fix chosen does not depend on it.
