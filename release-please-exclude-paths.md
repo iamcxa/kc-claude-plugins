@@ -7,6 +7,17 @@ profile:
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:release-please-exclude-paths:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-please-exclude-paths-backlog-1
+              briefing:
+                id: briefing:release-please-exclude-paths:backlog:attempt-1:revision-1
+                digest: sha256:cc5651b4964772c44a55ddeff8de95f71f5c450536eb581f23499da2b9174b2c
+                room-ref: ./release-please-exclude-paths/review/backlog/briefing-1
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
