@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { serializeTldrawJson, useEditor } from 'tldraw'
 
-type Status = { running: boolean; url: string | null; targetUp: boolean }
+// `targetUp` is absent from an older server; unknown must not read as down.
+type Status = { running: boolean; url: string | null; targetUp?: boolean }
 
 // A shared page gets the SPA fallback HTML here, so the content type decides, not the status.
 async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
@@ -124,7 +125,7 @@ export function ShareButton({ roomId }: { roomId: string }) {
 					</button>
 				</>
 			)}
-			{status.running && !status.targetUp && (
+			{status.running && status.targetUp === false && (
 				<span style={{ fontSize: 11, color: '#b00' }}>share front-end is down</span>
 			)}
 			<button type="button" className="tlui-button" disabled={busy} onClick={toggleTunnel}>
