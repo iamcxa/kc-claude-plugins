@@ -37,6 +37,17 @@ gates:
                 id: briefing:release-please-exclude-paths:ideation:attempt-1:revision-1
                 digest: sha256:57b89d55f0d274519220ea7c4414d3f10d58d6f707ed6010e4647634a2ba23eb
                 room-ref: ./release-please-exclude-paths/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-please-exclude-paths:ideation:1
+                briefing: briefing:release-please-exclude-paths:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-16T07:15:05.502068Z"
+                decision: approve
+                reason: 'Captain judged the ideation gate passed: design approved and scope narrowed to a single kc-dev-flow exclude-paths edit; docs/dev2 gains no entry.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
