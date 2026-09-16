@@ -19,11 +19,34 @@ claude --plugin-dir /absolute/path/to/kc-claude-plugins/kc-dev-flow-2
 ```
 
 Then invoke `/kc-dev-flow-2:dev`. This is a local package trial, not a published
-marketplace release. Codex includes a native manifest with `skills: "./skills/"`;
-native installation and discovery found all seven skills in both the packaging
-baseline and the subsequent 34-file SD adoption snapshot.
-Its shorthand invocation and the new entry's model behavior remain unproven.
-See [validation scope](VALIDATION.md) for the historical evidence and its limits.
+marketplace release.
+
+For Codex, the marketplace path below is the reviewed **repository root**, not
+its `kc-dev-flow-2` subdirectory. Preserve an existing installation; install and
+remove only when this trial owns that local plugin change:
+
+```sh
+codex -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  plugin add kc-dev-flow-2@kc-claude-plugins
+
+codex -C /absolute/path/to/project \
+  -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  -c 'plugins.kc-dev-flow-2@kc-claude-plugins.enabled=true'
+
+# After the trial, remove the plugin installed for this trial.
+codex -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  plugin remove kc-dev-flow-2@kc-claude-plugins
+```
+
+In the fresh Codex session, request `kc-dev-flow-2:dev` by its exact name. The
+commands use per-invocation marketplace overrides; plugin installation itself
+persists locally until removed. Bare `/dev`, entry execution and role behavior
+remain unproven. Earlier installation/discovery checks found seven skills before
+the Engineering Reviewer rename; see [validation scope](VALIDATION.md) for the
+historical evidence and its limits.
 
 Spacedock's plugin and CLI are required for orchestration. A project must have an
 explicitly selected experimental variant/profile and an approved workflow before
@@ -81,7 +104,7 @@ all profiles or repeat the entire shared rules. Unknown selections, missing
 inputs/references or unresolved authority conflicts require a hold report.
 These are skill instructions, not mechanically unskippable runtime gates.
 
-SO (Science Officer) provides independent technical assurance; CE (Chief Engineer)
+Engineering Reviewer provides independent technical assurance; CE (Chief Engineer)
 advises the next smallest integrated delivery step. Their agents and skills retain
 the existing role boundaries and Opus/xhigh policy. Neither is a routine gate,
 and POC defaults to no consultation. Exact `kc-dev-flow-2:` references prevent

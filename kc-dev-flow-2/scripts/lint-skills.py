@@ -11,7 +11,7 @@ import subprocess
 VARIANT = "kc-dev-flow-2"
 STAGES = ("ideation", "implementation", "validation")
 PROFILES = ("poc", "pilot", "prod")
-ROLES = ("science-officer", "chief-engineer")
+ROLES = ("engineering-reviewer", "chief-engineer")
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 BASIC_LINT = DEFAULT_ROOT.parent / "scripts/skill-frontmatter-lint.sh"
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")

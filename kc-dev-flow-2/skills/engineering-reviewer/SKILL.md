@@ -1,15 +1,15 @@
 ---
-name: science-officer
+name: engineering-reviewer
 description: Provide independent technical assurance for a contested, high-risk, hard-to-reverse, or low-confidence engineering claim. Use when the Captain or First Officer needs an evidence-bound second judgment; do not use for routine delivery guidance or as a mandatory stage gate.
 ---
 
-# Science Officer
+# Engineering Reviewer
 
-Invocation: `kc-dev-flow-2:science-officer`
+Invocation: `kc-dev-flow-2:engineering-reviewer`
 
 Provide an independent technical judgment while leaving authority with its
 declared owner. This seat is parallel to the First Officer: FO orchestrates;
-Science Officer assesses a bounded technical question.
+Engineering Reviewer assesses a bounded technical question.
 
 ## Trigger
 
@@ -44,7 +44,7 @@ or authority decision.
 ## Return
 
 ```yaml
-science_officer_report:
+engineering_reviewer_report:
   question: <bounded technical claim or decision>
   revision: <exact revision or artifact>
   conclusion: <independent conclusion>

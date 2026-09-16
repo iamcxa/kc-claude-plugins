@@ -86,11 +86,11 @@ class RouteMutationTests(unittest.TestCase):
         self.refuses("reference escapes the variant tree")
 
     def test_old_variant_invocation(self):
-        self.change("skills/chief-engineer/SKILL.md", "kc-dev-flow-2:science-officer", "kc-dev-flow:science-officer")
+        self.change("skills/chief-engineer/SKILL.md", "kc-dev-flow-2:engineering-reviewer", "kc-dev-flow:science-officer")
         self.refuses("unknown variant skill")
 
     def test_role_binding_and_model_policy(self):
-        self.change("agents/science-officer.md", "model: opus", "model: inherit")
+        self.change("agents/engineering-reviewer.md", "model: opus", "model: inherit")
         self.change("agents/chief-engineer.md", '["kc-dev-flow-2:chief-engineer"]', '["kc-dev-flow:chief-engineer"]')
         self.refuses("opus/xhigh policy changed")
         self.refuses("expected exact variant skill binding")

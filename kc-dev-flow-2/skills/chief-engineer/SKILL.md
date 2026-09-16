@@ -60,5 +60,5 @@ by the Captain or another named owner. This skill has no gate or state authority
 
 Do not adjudicate a population of findings, demand dissent, create a new gate,
 advance workflow state, mutate provider state, accept risk for the Captain, or
-act as an independent validator. Use `kc-dev-flow-2:science-officer` when a
+act as an independent validator. Use `kc-dev-flow-2:engineering-reviewer` when a
 contested or high-risk technical claim needs independent assurance.
