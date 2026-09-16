@@ -29,6 +29,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-16T14:10:56Z
 ---
 
 Human-led architecture review follows a chain on the journey canvas: green Action →
