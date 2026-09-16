@@ -281,8 +281,8 @@ rulings and this gate itself, both outside the sequence above.
 |---|---|---|
 | AC-1 (open in place, no new tab) | Playwright run against the live preview: `context.pages().length` unchanged (1→1) before/after click, popup opens inline. Verified on localhost only. | Same run against the shared-board-origin path (`JOURNEY_ALLOWED_HOSTS`) — not yet verified. |
 | AC-2 (Markdown+Mermaid render, autonumber, no script execution) | Playwright run: rendered SVG contains `class="sequenceNumber"` text nodes `1`–`4` (dumped and inspected directly, not string-matched); `window.__popup_xss_fired` from an embedded `<script>` in the fixture stayed `false` after popup open. | Same fixture pattern ported into the candidate's own test fixtures. |
-| AC-3 (Close/Escape restores focus, selection, viewport, diagram) | Playwright run: `editor.getSelectedShapeIds()` identical before open and after Escape-close; `document.activeElement` after close === the exact trigger `<a>`; dialog element removed from DOM. `verify.mjs` is the automated test AC-3 asks for, currently preview-only. | Port `verify.mjs`'s assertions into the candidate's test suite; viewport-unchanged (camera position, not just selection) not yet asserted. |
-| AC-4 (loading/unavailable/inaccessible/missing-heading, Open on GitHub always present) | Playwright run against 4 seeded links: bad ref → unavailable; bad path → unavailable; unmapped repo (D1 case) → unavailable; bad heading → missing-heading banner + chapter body. "Open on GitHub" renders unconditionally in the popup chrome (verified by reading `DocPopup.tsx`'s structure — chrome is outside the per-state switch). | A genuinely private GitHub repo (the preview used an unmapped local repo as D1's analog, not a real private-repo denial). |
+| AC-3 (Close/Escape restores focus, selection, viewport, diagram) | (Cycle 2) Playwright run with a **real pointer click** on the rendered Close button (`locator.click()`, not `.evaluate()` or a key press): dialog removed from DOM, focus returns to the exact trigger `<a>`, `editor.getSelectedShapeIds()` and `editor.getCamera()` identical before open and after close. `document.elementFromPoint` at the Close button's own bounding-box centre resolves to the button itself. Escape re-verified independently afterward (same assertions), confirming the portal fix preserved it. `verify-real-clicks.mjs` is the automated test; `verify.mjs` (cycle 1, Escape-only) kept for the Mermaid/no-new-tab regression it still proves. | Port `verify-real-clicks.mjs`'s real-click assertions into the candidate's test suite. |
+| AC-4 (loading/unavailable/inaccessible/missing-heading, Open on GitHub always present) | Playwright run against 4 seeded links: bad ref → unavailable; bad path → unavailable; unmapped repo (D1 case) → unavailable; bad heading → missing-heading banner + chapter body. (Cycle 2) The bad-ref/unavailable state re-checked with the same real-click-and-hit-test method used for AC-3 — Close is hit-testable and click-closable there too, not only in the `ready` render. "Open on GitHub": `document.elementFromPoint` at its own bounding-box centre resolves to the link itself, and a real click opens a new tab targeting `target.sourceUrl` (`context.waitForEvent('page')`), confirming the control's actual effect, not just its presence in the DOM. | A genuinely private GitHub repo (the preview used an unmapped local repo as D1's analog, not a real private-repo denial). |
 | AC-5 (export/import round trip readable in a viewer-less tldraw host) | Not exercised. Reasoning only: the chapter link lives in the shape's native `url` prop (`T.linkUrl`, confirmed in `TLNoteShape.mjs`), not custom metadata, so ordinary tldraw export/import and the stock `HyperlinkButton` render it identically with no popup present. | An actual export → import → open-in-bare-tldraw round trip. Not yet verified. |
 
 ## A seam worth recording precisely
@@ -308,6 +308,22 @@ A second, smaller seam: `repo-doc.ts`'s ref resolution tries the raw ref and
 the parser's single split between ref and path can pick the wrong boundary. Flagged
 as an implementation obligation (progressive `rev-parse` over ref prefixes), not
 solved here.
+
+A third seam, the one this correction round exists to record: tldraw's
+`InFrontOfTheCanvas` slot renders inside `.tl-canvas__in-front`
+(`position: absolute; pointer-events: none`), itself inside `.tl-canvas`
+(`contain: strict; overflow: clip`) — CSS confirmed by reading `tldraw.css`.
+`pointer-events` is inherited down the DOM tree regardless of `showModal()`'s
+top-layer paint promotion, so nothing rendered in that slot is ever hit-testable
+unless it (or an ancestor inside the slot) explicitly sets `pointer-events: auto`.
+Measured live with a script computing `getComputedStyle(el).pointerEvents` up the
+Close button's ancestor chain: `button` → `.doc-popup-chrome` → `dialog.doc-popup`
+→ `.tl-canvas__in-front` all read `none`, and `document.elementFromPoint` at the
+button's own bounding-box centre returned `<html>` — the whole dialog, backdrop
+included, was invisible to hit-testing, not just the Close button. This
+contradicts the cycle-1 stage report's claim that "every ancestor computes
+`pointer-events: auto`"; that claim did not reproduce against the unmodified
+cycle-1 code and is superseded by this measurement.
 
 ## Unresolved decision for the Captain
 
@@ -359,9 +375,12 @@ every popup.
 - Env used: `JOURNEY_API_PORT=5959 JOURNEY_VITE_PORT=3799
   JOURNEY_ROOMS_DIR=/tmp/cdp-preview-20260916/.rooms
   JOURNEY_DOC_REPOS=demo-owner/demo-repo=/tmp/cdp-preview-20260916`.
-- Reproducible checks: `/tmp/cdp-preview-20260916/verify.mjs` (the AC-1/AC-2/AC-3
-  Playwright assertions above) and `/tmp/cdp-preview-20260916.patch` (the diff against
-  the real `kc-journey-map` package, for review without touching the worktree).
+- Reproducible checks: `/tmp/cdp-preview-20260916/verify.mjs` (cycle 1, AC-1/AC-2/
+  no-new-tab/Mermaid Playwright assertions, still passing), `verify-real-clicks.mjs`
+  (cycle 2, the real-pointer-click Close/Escape/Open-on-GitHub evidence — see
+  "Correction" section below), and `/tmp/cdp-preview-20260916.patch` (regenerated
+  against the current corrected state; diff against the real `kc-journey-map`
+  package, for review without touching the worktree).
 - The fixture document lives in a throwaway git repo initialized inside the preview
   copy itself (`git init` in `/tmp/cdp-preview-20260916`, unrelated to
   `kc-claude-plugins`), with a `main` and a `review` branch, demonstrating D1 (server
@@ -435,3 +454,92 @@ Trigger evidence: the reproduction above.
 
 Scope and profile are unchanged; the design's D1 and D2 are untouched by this. The
 correction is where the dialog lives in the component tree, not what it fetches.
+
+## Correction — the dialog now mounts outside tldraw's canvas subtree
+
+**Root cause, measured fresh (see the third seam above).** The cycle-1 "every
+ancestor computes `pointer-events: auto`" claim did not reproduce. A live
+`getComputedStyle` walk of the Close button's ancestor chain, against the
+unmodified cycle-1 code, showed `pointer-events: none` inherited from
+`.tl-canvas__in-front` (tldraw's `InFrontOfTheCanvas` wrapper, deliberately
+click-through by default so canvas-space overlays don't block the canvas
+underneath them) down through `.doc-popup`, `.doc-popup-chrome`, and the Close
+button itself — none of it overridden. `document.elementFromPoint` at the
+button's centre landed on `<html>` because nothing in the dialog's subtree was
+hit-testable at all, not because of a top-layer/containing-block geometry
+mismatch.
+
+**Mechanism chosen: `createPortal(<DocPopup .../>, document.body)`, rendered as
+a sibling of `.tl-container` instead of inside `InFrontOfTheCanvas`.** `DocPopup`
+itself is unchanged — same `<dialog>`, same `showModal()`, same capture-phase
+Escape fix from the seam above. Only its React mount target moved
+(`server/client/App.tsx`): the `Tldraw` component's `components.InFrontOfTheCanvas`
+slot is removed; the popup's open/closed `useState` still lives in `RoomCanvas`,
+and the portal is rendered as a sibling of `<Tldraw>`.
+
+**Why a portal instead of a local `pointer-events: auto` override.** A CSS
+override on `.doc-popup` alone would have closed this specific measured gap, but
+would have left the dialog nested inside `.tl-canvas__in-front`, which also wires
+`onPointerDown`/`onPointerUp` to `editor.markEventAsHandled` — a coupling meant
+for canvas-space annotations, not a viewport-level modal that has no
+relationship to the canvas's pan/zoom or tool state. `InFrontOfTheCanvas` exists
+for content that overlays the canvas and may need editor context; `DocPopup`
+needs neither — it never reads `editor` and never needs to move with the camera.
+Portaling to `document.body` removes the slot's entire opt-out-by-default
+contract (pointer-events, the handled-event coupling, and any future tldraw
+z-index layer it could collide with) in one change, rather than defeating one
+symptom of being in the wrong place.
+
+**Re-verification method fix.** `verify-real-clicks.mjs` (new,
+`/tmp/cdp-preview-20260916/verify-real-clicks.mjs`) replaces "press Escape and
+call that verification" with real `locator.click()` calls on the rendered Close
+button and the "Open on GitHub" link — the same input path a person uses — and
+asserts the control's effect: the dialog element is gone from the DOM, focus is
+on the original trigger, canvas selection and camera are byte-identical, and (per
+this round's specific ask) `document.elementFromPoint` at each control's own
+bounding-box centre resolves to that control or a descendant of it, for both the
+Close button and the Open-on-GitHub link. Escape is re-verified independently in
+the same run rather than assumed to still work post-fix. All 9 assertions pass;
+full output is in the cycle-2 stage report below. The AC-4 unavailable-state
+render was spot-checked with the same real-click method (Close is hit-testable
+and click-closable there too, not only in the `ready` state).
+
+**What did not change.** `DocPopup.tsx`'s data fetching, Markdown/Mermaid
+rendering, sanitization, and heading-scroll logic; the Escape capture-phase fix;
+D1/D2; scope; acceptance criteria; ports (server `5959`, Vite `3799`, both
+already confirmed free and distinct from `3742`/`3737`/`5858` in cycle 1, and
+still the only listeners on those ports — `lsof` re-checked before this round's
+runs). The Vite dev server picked up `App.tsx` via HMR; no restart was needed
+(confirmed via the dev server's own log timestamps advancing past the edit).
+`git -C <the real kc-journey-map worktree> status --porcelain` is empty — only
+the disposable copy at `/tmp/cdp-preview-20260916` was touched.
+
+**Not verified in this round, unchanged from cycle 1.** AC-1's shared-board-origin
+path and AC-5's export/import round trip — neither is affected by where the
+dialog mounts, and neither was in scope for this correction.
+
+## Stage Report: ideation (cycle 2)
+
+This cycle is a correction round; the checklist below is the standing ideation
+checklist, not a rewrite of it — items untouched by the Close-control defect are
+marked DONE with a pointer back to the unaffected cycle-1 evidence, since D1/D2,
+scope and profile were explicitly out of bounds for this round.
+
+- DONE: Smallest useful end-to-end slice defined: who reads a document this way, and the real seams it crosses
+  Unaffected by this round; cycle-1 "Smallest useful end-to-end slice" section still holds. Portaling the dialog to `document.body` changes a DOM mount point, not a seam the slice crosses.
+- DONE: The Captain's recorded D1 and D2 decisions are reflected as settled, not re-argued or re-opened
+  Untouched, per the dispatch's explicit instruction. No edits to D1/D2 or their supporting "Architecture facts" section this round.
+- DONE: PRFAQ and Mermaid present with matching actors, order, branches, approvals and stops
+  Untouched; the Close/Escape branch in the "Sequence" diagram already reads "Close control OR Escape" and needs no change — the fix is where the dialog mounts, not the interaction contract.
+- DONE: Acceptance evidence named per AC, distinguishing what a browser run proves from what an HTTP or parser result proves
+  AC-3 and AC-4 rows in "Acceptance evidence" rewritten this round: real `locator.click()` on Close and on Open-on-GitHub (not Escape, not `.evaluate()`), asserting dialog removal / restored focus+selection+camera / a real new-tab open, plus the `elementFromPoint`-at-centre check this round specifically requires. `verify-real-clicks.mjs` → `ALL 9 CHECKS PASSED`; `verify.mjs` (cycle 1) re-run clean as a regression check (no new tab, Mermaid renders, script doesn't fire).
+- DONE: A preview the Captain can click: built in a throwaway checkout, served on a port that is neither 3742 nor the default 3737, and explicitly labelled disposable rather than the candidate
+  Same disposable checkout and ports reused (server 5959, Vite 3799; `lsof` re-confirmed only those listeners on 5959/3799, 3742 untouched), per the dispatch's instruction to keep the preview disposable on its existing non-conflicting ports. `server/client/App.tsx` edited to portal `DocPopup` to `document.body`; picked up via Vite HMR, no restart. `git -C <real kc-journey-map worktree> status --porcelain` empty.
+- DONE: Any obligation that would push this past Pilot identified and left to the Captain, not absorbed
+  Untouched; "Obligations that would push this past Pilot" section unaffected by a DOM-mount-point fix.
+- DONE: Unresolved decisions identified for the Captain rather than decided by the worker
+  Untouched; the repo→checkout mapping question in "Unresolved decision for the Captain" is unaffected by this round.
+
+### Summary
+
+Root cause was not the top-layer/containing-block geometry the cycle-1 report guessed — a fresh `getComputedStyle` measurement showed `pointer-events: none` inherited unbroken from tldraw's `.tl-canvas__in-front` wrapper down to the Close button, making the entire dialog non-hit-testable; the cycle-1 "every ancestor computes auto" claim did not reproduce and is superseded. Fix: portal `DocPopup` to `document.body`, fully outside tldraw's DOM subtree, rather than patching `pointer-events` locally, because the slot's opt-out-by-default contract (pointer-events plus an `editor.markEventAsHandled` coupling) doesn't fit a canvas-independent modal. Re-verification replaced Escape-only checks with real pointer clicks on both interactive controls, plus the specific `elementFromPoint`-at-centre assertion this round asked for; all pass, including a spot-check that Close remains clickable in the AC-4 unavailable-state render. Real kc-journey-map worktree untouched; only the disposable preview was edited.
