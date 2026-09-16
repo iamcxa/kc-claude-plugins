@@ -65,6 +65,17 @@ gates:
                 id: briefing:release-please-exclude-paths:validation:attempt-2:revision-1
                 digest: sha256:701fcc34441d333545c598ade420b3d14925a63ea9a038d36c99afae5d51cdf9
                 room-ref: ./release-please-exclude-paths/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-please-exclude-paths:validation:2
+                briefing: briefing:release-please-exclude-paths:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-16T14:01:13.005101Z"
+                decision: approve
+                reason: Captain approved the validation verdict for b6774358 after the AC-2 amendment.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-16T07:15:47Z
 ---
 
