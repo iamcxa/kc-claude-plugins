@@ -37,8 +37,9 @@ worker availability, dispatch, reports, gates and recovery; a resumed FO does
 not establish that its old worker still exists. Stage skills own profile routing
 and load the selected references in each worker's context.
 
-If the project has not adopted this variant, route setup through SD's existing
-configuration/adoption responsibility before dispatch. Invoking this entry does
+If adoption is absent or the selected profile does not match the ordered stage
+graph, follow the [SD adoption reference](../../references/sd/adoption.md) through
+`spacedock:commission` or `spacedock:refit` before dispatch. Invoking this entry does
 not migrate an old variant, rewrite a workflow or install a package. Keep existing
 work on its recorded variant unless a migration is explicitly approved. This
 entry grants no new repair, approval, delivery or route-exception authority.

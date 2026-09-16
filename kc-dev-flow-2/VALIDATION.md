@@ -29,9 +29,9 @@ The three trials use different tasks and source snapshots. Their results cannot
 be combined into a same-version, full-lifecycle, two-host acceptance claim.
 Timing and list-price telemetry do not establish lower cost or a size reduction.
 
-## Current checks and exclusions
+## Packaging baseline checks
 
-A model-free native Codex check installed this local candidate through the
+At packaging commit `8ca9700`, a model-free native Codex check installed the local candidate through the
 repository marketplace, matched all 33 package files to the candidate, and found
 all seven enabled skills through the host's `skills/list` interface, including
 `dev`. A pre-install control found no skills for this plugin. Removal restored
@@ -39,7 +39,7 @@ the prior configuration and removed the temporary cache. This establishes local
 installation and discovery, not model invocation, shorthand resolution, reference
 following, worker inheritance, or remote publication.
 
-Candidate checks passed: routing lint, 15 mutation tests, repository skill
+Packaging baseline checks passed: routing lint, 15 mutation tests, repository skill
 frontmatter, the native Codex manifest validator, and six model-free Spacedock
 stage/host dispatch handoffs with refusal controls (CLI 0.27.2). Claude marketplace
 schema and installation checks passed in a temporary home; no model smoke test
@@ -48,9 +48,28 @@ index to include the new files without staging the review candidate.
 Public-content checks found no blocking or secret-pattern hits; a heuristic email
 warning refers to the synthetic fixture author `fixture@example.invalid`.
 
-Transport tests exercise synthetic stage state and emitted artifacts, not models,
-independent review, gate presentation, or successful delivery. Maintenance lint
-requires the full source repository's frontmatter checker.
+## SD adoption checks and exclusions
+
+The adoption addition promotes the Pilot fixture into one split-root workflow
+source with a small POC adaptation. The existing CLI test now exercises both
+ordered graphs across POC/Pilot/Prod, synthetic gate successors, exact stage-skill
+handoffs on both hosts, canonical mod discovery, and implementation/validation
+reuse of a real stamped task worktree. The copied mod stays byte-identical to the
+explicitly supplied active SD package. Merge guard arms `pr-merge` and requests
+hook invocation; it does not execute that hook. The no-hook negative control
+finalizes locally, showing why pre-activation registration review is required.
+Fresh validation is declared and transported, not a worker execution claim.
+
+These tests use disposable code/state repos, synthetic state and labelled gate
+decisions, not real user approval or product work. No model, PR creation, hook
+body or remote merge runs. No actual project was commissioned or migrated.
+A subsequent model-free Codex install matched all 34 adoption-snapshot files and
+listed the seven enabled skills, including `dev`; the pre-install control found
+none. Cleanup restored the prior configuration bytes and removed the cache.
+That snapshot predates this evidence paragraph and the corresponding README
+summary. It proves local installation/discovery of the adoption content, not
+model execution, entry behavior, reference following or remote publication.
+Maintenance lint requires the full source repository's frontmatter checker.
 
 Learning automation is unimplemented. The baseline skipped-stage-pin bug is not
 fixed; historical stage-entry content sealing is omitted. Direct POC eligibility,

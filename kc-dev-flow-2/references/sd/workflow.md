@@ -1,9 +1,11 @@
 ---
-commissioned-by: kc-dev-flow-2@fixture
+commissioned-by: kc-dev-flow-2
 entity-type: task
+id-style: slug
 entity-label: task
 entity-label-plural: tasks
-state: $inline
+state: .spacedock-state
+trunk: main
 stages:
   defaults:
     worktree: false
@@ -15,51 +17,53 @@ stages:
     - name: ideation
       gate: true
     - name: implementation
+      worktree: true
       context-sections:
         - Review-finding disposition
+        - Delivery authority
     - name: validation
+      worktree: true
       fresh: true
       feedback-to: implementation
       gate: true
       context-sections:
         - Review-finding disposition
+        - Delivery authority
     - name: done
       terminal: true
 ---
 
-# Pilot dispatch fixture
+# Development workflow
 
-The test copies this definition to README.md in a disposable standalone
-repository, keeping the source template out of README-based workflow discovery.
-Inline state and no per-stage worktree are deliberate fixture isolation choices,
-not a replacement for a shipping project's ownership policy. Synthetic stage
-snapshots test transport; they do not witness user approvals or worker execution.
-No local delivery/merge hook is configured: hold any future live terminalization
-until its delivery authority and merge guard path are concretely bound.
+This is the adopted workflow's authority for SD stages and task schema. Resolve
+its absolute directory and retain `--workflow-dir` on SD commands, including
+worker reads and recovery. Skills guide work; SD owns dispatch, gates and state.
 
 ## File Naming
 
-Each synthetic task is a flat `<slug>.md` file beside the copied workflow README.
+Each task is a flat `<slug>.md` file in the resolved state checkout. Keep existing
+IDs and tasks in their recorded workflow; new work does not migrate old work.
 
 ## Schema
 
-Each task records `id`, `title`, `status`, `variant: kc-dev-flow-2`,
-`profile: pilot`, and `source: synthetic-cli-fixture`. Status is one of the five
-declared stages. No approval or worker completion is fabricated. The AC scanner
-test adds a labelled synthetic report header with no evidence, solely to exercise
-its required report context; it does not represent historical stage work.
-The work item body carries scope and acceptance criteria. A live run would first
-need actual admission, host skill discovery and the existing SD gate procedure.
+Record `id`, `title`, `status`, `variant: kc-dev-flow-2`, and the user's selected
+`profile`. The five-stage route accepts `pilot` or `prod`; the POC adaptation
+removes ideation from both frontmatter and Stages and accepts `poc` only.
+Before admission and dispatch, FO checks that the selected profile matches this
+workflow's actual ordered stages. Unknown/mismatched profiles require a hold,
+not an invented transition or default. SD does not enforce this profile rule.
+Preserve the approved outcome, scope, non-goals, budget and stop condition in the
+body. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Stages
 
 ### `backlog`
 
-The user selects Pilot and approves the outcome, scope and budget. FO records
-the choice; this boundary has no worker or placeholder report.
+The user selects the compatible profile and approves outcome, scope and budget.
+FO records the choice; this boundary has no worker or placeholder report.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
-  exclusions and evidence needed before design starts.
+  exclusions and evidence needed before the next declared stage starts.
 
 ### `ideation`
 
@@ -99,7 +103,7 @@ return to the affected user decision. Apply Review-finding disposition to repair
 ### `validation`
 
 A fresh ensign invokes `kc-dev-flow-2:validation` before useful work and checks
-the exact artifact against the accepted Pilot outcome. It assesses the work;
+the exact artifact against the accepted profile outcome. It assesses the work;
 it does not silently take over implementation. Rejection uses the supported
 feedback path after the distinct FO disposition described below.
 
@@ -116,7 +120,7 @@ feedback path after the distinct FO disposition described below.
 The terminal state remains behind SD's merge-finalize boundary. Consuming a
 terminal gate approval is not completion; a live run requires the declared
 delivery evidence and successful `merge guard` with an explicit verdict.
-This fixture does not implement that delivery path or execute gate/merge actions.
+Apply Delivery authority below; a pending PR or missing hook is not completion.
 
 ## Review-finding disposition
 
@@ -162,33 +166,59 @@ Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
 or Polish may use the recorded FO decline above within existing risk acceptance.
 
+## Delivery authority
+
+The adopted `_mods/pr-merge.md` is the unmodified mod from the activated SD
+package. Before delivery, confirm the file still matches the reviewed source
+(or an explicitly approved project customization) and its merge hook is
+registered. Missing/changed delivery configuration requires a hold: `merge: pr`
+alone does not block SD's no-hook local-finalize route.
+
+Project and Captain authority constrain hook instructions: present the exact
+candidate and PR body before authorized push/create; create a Draft PR where
+required, and request ready only after the required CI is green. Approval of a
+validation gate is not permission to push, create or merge a PR. Preserve manual
+merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
+an owned worktree unless the specific action is authorized. An upstream hook's
+default fallback is not that grant. A failure holds delivery pending an explicit
+choice. These are orchestration instructions, not added mechanical guardrails.
+
+Use SD's pending terminal approval and existing merge hook; do not invent another
+PR stage. Observe the actual repository-qualified PR merge before recording its
+landed sentinel and running SD merge guard to finalize/archive. CI green, PR
+creation, gate approval and a locally manufactured sentinel do not prove merge.
+
 ## Workflow State
 
-All state stays in the disposable fixture repository. Generated dispatch files
-remain CLI transport artifacts; no emitted prompt is sent to a model by the test.
-Use `${SPACEDOCK_BIN:-spacedock}` and forward its envelope unchanged in a future
-authorized live run; no wrapper loader or unsupported `stage.skill` field exists.
+The README and `_mods` stay in the code repository; mutable task state lives in
+`.spacedock-state`, an ignored linked checkout of this workflow's distinct orphan
+state branch. Commission/refit owns setup; a fresh clone uses SD state init.
+Implementation and validation share the task's registered code worktree; validation
+uses a fresh worker. POC uses independent validation in this variant; direct POC
+eligibility and special Production recovery routes are not implemented.
 
 ## Task Template
 
 ```markdown
 ---
-id: <unique-fixture-id>
-title: Synthetic Pilot dispatch boundary
+id: <task-id>
+title: <bounded outcome>
 status: backlog
 variant: kc-dev-flow-2
-profile: pilot
-source: synthetic-cli-fixture
+profile: <selected-profile>
+merge: pr
+worktree:
+pr:
 ---
 
-This synthetic snapshot tests CLI transport, not prior approvals or completed work.
+<Why this outcome matters.>
 
 ## Scope
 
-Read the declared stage and produce a dispatch pointer; do not execute it.
+<Approved scope, non-goals, budget and stop condition.>
 
 ## Acceptance criteria
 
-**AC-1**: The pointer resolves to the selected variant's stage instruction.
-Verified by: model-free CLI artifact and stage-definition inspection.
+**AC-1**: <Observable outcome.>
+Verified by: <Reproducible evidence and its limits.>
 ```

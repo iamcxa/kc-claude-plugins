@@ -2,10 +2,10 @@
 
 An optional experimental alternative to kc-dev-flow. It provides a thin
 start/resume entry, profile principles, stage skills, retained advisory roles,
-read-only routing lint, and a standalone Pilot fixture for Spacedock CLI tests.
+read-only routing lint, and an adoptable Spacedock workflow with a POC adaptation.
 Existing kc-dev-flow projects stay on their selected variant; this package does
 not migrate them automatically or claim full safeguard parity or a one-third
-size reduction. There is no runtime loader, hook or learning worker.
+size reduction. There is no custom runtime loader, hook or learning worker.
 
 ## Controlled trial
 
@@ -20,13 +20,15 @@ claude --plugin-dir /absolute/path/to/kc-claude-plugins/kc-dev-flow-2
 
 Then invoke `/kc-dev-flow-2:dev`. This is a local package trial, not a published
 marketplace release. Codex includes a native manifest with `skills: "./skills/"`;
-native installation and discovery found all seven skills in this candidate.
+native installation and discovery found all seven skills in both the packaging
+baseline and the subsequent 34-file SD adoption snapshot.
 Its shorthand invocation and the new entry's model behavior remain unproven.
 See [validation scope](VALIDATION.md) for the historical evidence and its limits.
 
 Spacedock's plugin and CLI are required for orchestration. A project must have an
 explicitly selected experimental variant/profile and an approved workflow before
-stage work; invoking the entry does not adopt or rewrite a project workflow.
+stage work. Follow the [SD adoption reference](references/sd/adoption.md) through
+SD commission/refit; invoking the entry does not rewrite a project workflow.
 
 ## Entry
 
@@ -35,7 +37,7 @@ the explicit project/workflow/task and approved selection, then hands orchestrat
 to `spacedock:first-officer`. Stage skills keep their own profile routes; the entry
 does not migrate existing work or duplicate SD's control loop. Claude plugin skills
 use `/kc-dev-flow-2:dev`, not a bare `/dev`; Codex shorthand resolution remains
-unverified. Historical loading evidence predates this seventh skill and does not
+unverified. Earlier six-skill model reads and later seven-skill discovery do not
 prove the new entry executes correctly.
 
 ## Framework
@@ -52,14 +54,15 @@ advance state, create authority or substitute for an approval.
 | [pilot](references/profiles/pilot.md) | backlog -> ideation -> implementation -> validation -> done |
 | [prod](references/profiles/prod.md) | backlog -> ideation -> implementation -> validation -> done |
 
-Backlog is initial and gated; ideation is gated; validation is gated, normally
-fresh, with feedback to implementation; done is terminal. Backlog and done are
-state boundaries, not worker stages. POC skips ideation without a placeholder
-review. Its two working-stage positions do not imply two workers: an eligible
-direct POC records proof in implementation and uses the validation terminal
-gate; fresh POC uses independent review. Approved recovery and reuse exceptions
-remain intended behavior. Their eligibility mapping after loader removal,
-including direct POC and Production recovery, is **not implemented or proven**.
+Backlog is initial and gated; ideation is gated where present; validation is gated
+and fresh, with feedback to implementation; done is terminal. Backlog and done
+are state boundaries, not worker stages. SD follows ordered stages, so POC uses
+a separate four-stage workflow while Pilot/Prod share the five-stage definition.
+Only adopt the needed route. Profile remains a user choice on each task and
+selects skill rules, not graph transitions. FO holds a profile/graph mismatch;
+that check is an instruction, not a new runtime enforcement mechanism.
+POC skips ideation and currently uses independent validation. Direct POC
+eligibility and special Production recovery are **not implemented or proven**.
 
 ## Authority and loading
 
@@ -93,7 +96,7 @@ use a PRFAQ with Mermaid whose actors, order, branches and approval boundaries
 match the prose. Add a suitable design-skill preview or HTML draft when needed.
 Write material corrections back to the same definition before user approval.
 Implementation follows approved scope; validation checks the exact result and
-returns repairs through the supported feedback route. Direct POC must not gain
+returns repairs through the supported feedback route. POC must not gain
 an ideation stage or extra design gate through this convention.
 
 When work changes retained documents or behavior they describe, stage skills load
@@ -102,7 +105,7 @@ unique content and rendered diagram agreement. Validation also checks whether
 its decisive checks can catch relevant errors, reusing existing counterexamples.
 These conditional practices add no mandatory architecture file or global audit.
 
-The [Pilot workflow](references/sd/pilot/workflow.md) defines limited FO design
+The [workflow source](references/sd/workflow.md) defines limited FO design
 corrections and nonblocking dispositions. Template adoption grants no editing
 permission; approved decisions and worker evidence remain protected.
 
@@ -140,7 +143,7 @@ and its dependencies. Run from a complete checkout's repository root:
 ```sh
 python3 kc-dev-flow-2/scripts/lint-skills.py
 python3 kc-dev-flow-2/scripts/test_lint_skills.py
-python3 kc-dev-flow-2/scripts/test_sd_dispatch.py
+python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
 ```
 
 Lint reuses `scripts/skill-frontmatter-lint.sh` scoped to this tree and checks
@@ -151,26 +154,26 @@ The [Agent Skills specification](https://agentskills.io/specification) defines
 frontmatter and directory conventions; complete format validation is a separate
 authoring check, not a claim made by this CLI.
 
-The [Pilot fixture](references/sd/pilot/workflow.md) is copied to README.md only
-inside disposable repositories, so it does not become a source-tree workflow.
-Its CLI test uses the installed `${SPACEDOCK_BIN:-spacedock}`, labels seeded stage
-states synthetic, and emits six handoffs across three stages and Claude/Codex
-host shapes. It reads each generated dispatch artifact and runs its exact
-stage-definition fetch command, including ideation's PRFAQ/Mermaid Gate content.
-Negative controls exercise wrong-stage stamped entry and a removed stage.
-They also compare bold AC declarations with plain unrecognized declarations
-through SD's real AC scanner, and mixed host markers with cleaned child-process
-markers through automatic dispatch-host detection. A synthetic report header is
-scanner input only; no worker evidence or approval is invented.
-`--keep` retains successful fixture repos and raw CLI evidence outside this tree;
-failure evidence is retained by default. Fixture seed commits are local synthetic
-state, not real work-item transitions or user approvals.
+The [adoption reference](references/sd/adoption.md) uses SD commission/refit,
+split-root state, code worktrees and the activated SD package's unmodified
+`pr-merge` mod. The mod is installed into the adopting workflow, not vendored here.
+The workflow's delivery rules preserve project Draft PR, CI and manual merge
+requirements and restrict unapproved fallback; those are FO instructions, not new
+mechanical controls. Adoption checks actual `merge: pr-merge` hook discovery before
+activation: SD can finalize locally when no hook or blocking record exists.
 
-These checks prove CLI transport and refusal boundaries, not skill discovery,
-reference reading, model behavior, independent review, actual gate presentation
-or successful closure. No emitted prompt is executed. The fixture has no local
-delivery hook: future live closure stays on hold until its authority and SD
-merge-finalize path are concretely bound; terminal gate approval alone is not done.
+The CLI test copies the workflow source into disposable code/state repositories.
+It checks six stage/host handoffs, stage-definition fetches, PRFAQ/Mermaid gate
+context, finding disposition and delivery authority. Both route graphs across
+three profiles exercise synthetic gate successors and stamped implementation /
+validation worktree reuse. Fresh validation is declared configuration, not an
+executed independent worker. Copied canonical hook discovery and merge-guard
+arming pass; the missing-hook control demonstrates local finalization's limit.
+Existing wrong-stage, removed-stage, AC-scanner and host-marker controls remain.
+`--keep` retains successful repos and raw evidence; failure evidence is retained
+by default. Synthetic approvals and local archive controls are test inputs,
+not real user acceptance, hook execution or remote delivery. No prompt is sent
+to a model. A real project still needs approved configuration and observed merge.
 
 For an authorized native Claude trial, remove foreign markers for that process
 only: `env -u CODEX_THREAD_ID -u PI_CODING_AGENT_DIR claude <approved arguments>`.
