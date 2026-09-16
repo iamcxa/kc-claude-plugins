@@ -328,3 +328,19 @@ Added `"exclude-paths": ["docs/dev"]` to `kc-dev-flow`'s entry in `release-pleas
 ### Summary
 
 Independently verified AC-1 (exit 0, exclude-paths present on all 10 packages including kc-dev-flow) and re-ran the CommitSplit/CommitExclude class-level reproduction both prior workers used, getting identical results plus a before/after control. Settled the contested AC-2 question by reading `version-parity-check.sh` and `release-please-config-check.sh` in full: neither imports release-please or resolves a commit's package list, and the repo's only other release-please-fixture consumer (`release-metadata.test.sh`) answers a different question (first-release tag string, not commit routing). AC-2's verification clause names an instrument this repository does not have; the class-level reproduction is the best available substitute and independently confirms the underlying measurement claim, but does not satisfy AC-2's literal text. Recommend PASS on the candidate with AC-2's wording flagged Needs-decision for the Captain — not a candidate defect.
+
+## Delivery record
+
+Captain authorized push and Draft PR creation on 2026-09-16.
+
+- Approved revision at the validation gate: `b6774358`.
+- Delivered revision: `cfc164f7`, the same commit rebased onto `origin/main` after
+  `#466` landed. The patch is byte-identical (`git show` output diffed clean) and the
+  resulting `release-please-config.json` has the same SHA-256 under both revisions
+  (`6673b375a064e079…`). Only the base moved; no product byte changed after approval.
+- Branch: `spacedock-ensign/release-please-exclude-paths`.
+- Repository: `iamcxa/kc-claude-plugins`, base `main`.
+- PR title: `fix(release-please): give kc-dev-flow the exclude-paths guard`.
+
+Recorded before the push so a lost or ambiguous create response is resolved by
+checking for this branch's existing PR rather than by creating a second one.
