@@ -1,7 +1,7 @@
 ---
 id:
 title: read a Markdown and Mermaid document in a journey-canvas popup
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: Captain selected profile pilot and approved the admission record's outcome, scope, exclusions and stop condition.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Human-led architecture review follows a chain on the journey canvas: green Action →
