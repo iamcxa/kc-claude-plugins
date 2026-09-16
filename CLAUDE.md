@@ -1,6 +1,6 @@
 # kc-claude-plugins
 
-Public marketplace repo containing seven plugins: `e2e-pipeline`, `kc-plugin-forge`, `kc-nightwatch`, `kc-hyperfocus`, `kc-team-ops`, `kc-pr-flow`, and `kc-dev-flow`. Plugins may keep their own `CLAUDE.md` for plugin-internal conventions. This file documents **repo-wide rules** that apply to PRs touching any plugin or the marketplace manifest.
+Public marketplace repo containing nine plugins: `e2e-pipeline`, `kc-plugin-forge`, `kc-nightwatch`, `kc-hyperfocus`, `kc-team-ops`, `kc-pr-flow`, `kc-dev-flow`, `kc-journey-map`, and `kc-ship-flow`. Plugins may keep their own `CLAUDE.md` for plugin-internal conventions. This file documents **repo-wide rules** that apply to PRs touching any plugin or the marketplace manifest.
 
 ## Plugin Versioning & Release — release-please (MANDATORY)
 
@@ -114,4 +114,4 @@ Plugin-internal rules (trigger conditions, internal agent registry, shared-confi
 - `kc-plugin-forge/CLAUDE.md`
 - `kc-pr-flow/CLAUDE.md`
 
-`kc-team-ops` does not currently have a CLAUDE.md.
+`kc-team-ops`, `kc-journey-map`, and `kc-ship-flow` do not currently have a CLAUDE.md.
