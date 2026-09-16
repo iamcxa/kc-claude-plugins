@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:canvas-document-popup:ideation:attempt-2:revision-1",
+  "question": "Approve the canvas-document-popup design, and choose the repo-to-checkout mapping mechanism?",
+  "artifacts": [
+    {
+      "id": "artifact:canvas-document-popup:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/cef05fa684f9659778418fca39c81f6542043d22/review/canvas-document-popup/ideation/review.md",
+      "rev": "sha256:b225386f0c040383f118d8e410605a15c30287202649273c11362856c329aa10",
+      "mediaType": "text/markdown",
+      "summary": "Close-control defect fixed by portaling the dialog out of tldraw's click-through slot; FO re-ran its own failing reproduction and the click now lands. FO's first root-cause explanation was wrong and is withdrawn on the task. One open question: env-map-only versus env map plus a zero-config self-checkout default; both recommend the latter."
+    }
+  ]
+}

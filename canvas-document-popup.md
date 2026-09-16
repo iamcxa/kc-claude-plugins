@@ -41,6 +41,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-16T14:44:43.608229Z"
                 reason: 'Captain reported the popup cannot be closed. FO reproduced: the Close button is visible but not hittable. The stage''s evidence claim is contradicted, so the binding is withdrawn before any correction.'
+            - id: gate-attempt:canvas-document-popup-ideation-2
+              briefing:
+                id: briefing:canvas-document-popup:ideation:attempt-2:revision-1
+                digest: sha256:48533ea0e5c80eddc7b7d0b31bd532c79b62b66a42ac172baaa5d1cbc93c1163
+                room-ref: ./canvas-document-popup/review/ideation/briefing-2
 started: 2026-09-16T14:10:56Z
 ---
 
