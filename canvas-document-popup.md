@@ -699,3 +699,17 @@ named cost, not as an absence of risk.
 
 No further retained-document edit is taken for this. The script is discoverable through
 `npm run`, and adding a reminder line to `references/canvas.md` was not approved.
+
+## Delivery record
+
+Captain authorized push and Draft PR creation on 2026-09-17.
+
+- Delivered revision: `6f4ec0e3`, already based on current `origin/main` (`d701df3d`);
+  no rebase was needed and no product byte changed after approval.
+- Branch: `spacedock-ensign/canvas-document-popup`.
+- Repository: `iamcxa/kc-claude-plugins`, base `main`.
+- PR title: `feat(kc-journey-map): open a linked document chapter in a canvas popup`.
+- The body carries `Closes #465`.
+
+Recorded before the push so a lost or ambiguous create response is resolved by
+checking this branch's existing PR rather than by creating a second one.
