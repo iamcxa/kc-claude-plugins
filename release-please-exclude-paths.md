@@ -3,7 +3,7 @@ id:
 title: release-please excludes workflow-state paths for every plugin
 status: backlog
 variant: kc-dev-flow-2
-profile:
+profile: prod
 merge: pr
 worktree:
 pr:
