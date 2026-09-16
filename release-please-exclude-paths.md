@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-please-exclude-paths:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-please-exclude-paths-validation-1
+              briefing:
+                id: briefing:release-please-exclude-paths:validation:attempt-1:revision-1
+                digest: sha256:3f03a568c1ee3431a91d3132e766338aa52214c3917f9bc2c7286599240eee9a
+                room-ref: ./release-please-exclude-paths/review/validation/briefing-1
 started: 2026-09-16T07:15:47Z
 ---
 

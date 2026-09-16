@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-please-exclude-paths:validation:attempt-1:revision-1",
+  "question": "Approve delivery of b6774358, and rule on AC-2's verification clause?",
+  "artifacts": [
+    {
+      "id": "artifact:release-please-exclude-paths:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/07df2e81b02d5023091fa335de9ae0f10b3434e1/review/release-please-exclude-paths/validation/review.md",
+      "rev": "sha256:6d9ad2c829b261cfa153b34d7b6e7726924a0d8031b1fc4c24dff62f893a015e",
+      "mediaType": "text/markdown",
+      "summary": "Validator PASS; FO independently confirmed no instrument in this repo resolves a commit's package list. AC-2's clause is an FO-authored defect, classified Needs decision. FO recommends amending it to the pinned-class reproduction with its HEAD~1 control. Goal sufficiency and minimal necessity both confirmed."
+    }
+  ]
+}
