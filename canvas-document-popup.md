@@ -571,3 +571,38 @@ not.
 
 The finding's classification, its Material status and the AC it maps to are unchanged.
 Only the stated mechanism was wrong, and the fix chosen does not depend on it.
+
+## Captain's ruling — repo to local-checkout mapping (2026-09-16)
+
+**Option 1: the operator env map only. No zero-config origin-matching default.**
+
+Rejected the default on measured grounds: every installed copy of this plugin has no
+`.git` (the local install and both marketplace cache versions; the sync helper runs
+`rsync --exclude '.git'`), so an origin check in the server's own checkout can only
+fire when the server is launched from a source checkout. It also measures the wrong
+repository — what the server code came from, not what the link points at — which is
+never an adopter's own repository. kc-journey-map currently has no adopter, so
+building the default now would be hypothetical scale, which Pilot excludes.
+
+**The map is supplied by the canvas startup step, not hand-written by the Captain.**
+`skills/kc-journey-map/references/canvas.md` already requires the agent starting the
+canvas to set per-service environment at startup ("Give each test service its own port
+and its own `JOURNEY_ROOMS_DIR` at startup"). `JOURNEY_DOC_REPOS` joins that same
+action. The starting agent already holds both halves: the absolute path of the
+repository it is drawing the journey for, and that repository's
+`git remote get-url origin`. An adopter therefore configures nothing.
+
+### Scope addition, FO-taken, one line
+
+This ruling adds one item to implementation: the `JOURNEY_DOC_REPOS` startup line in
+`references/canvas.md`'s existing startup step. Taken into scope rather than deferred
+because without it nothing ever sets the map and the popup cannot resolve any
+document — the delivered capability would have no route to being configured. It is the
+same retained-document class as the `human-led-review.md` update that stays out of
+scope, but that one describes a capability while this one is the capability's only
+configuration path. If the Captain wants it split out, say so and implementation ships
+the server route alone.
+
+If a future adopter needs zero configuration, the correct signal is the repository the
+canvas was launched in (`git -C <launch dir> remote get-url origin`), not the
+repository the server code came from. Not built now.
