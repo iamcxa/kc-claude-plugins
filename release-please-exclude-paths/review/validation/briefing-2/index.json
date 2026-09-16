@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-please-exclude-paths:validation:attempt-2:revision-1",
+  "question": "Approve the validation verdict for b6774358?",
+  "artifacts": [
+    {
+      "id": "artifact:release-please-exclude-paths:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/6fc1fb10a87eb202f900dd11677f6b25270c007c/review/release-please-exclude-paths/validation/review.md",
+      "rev": "sha256:9dc1eecc1e6095a281bd7a3848877c92b8a533e058f7c248bf7e0a655e36506a",
+      "mediaType": "text/markdown",
+      "summary": "Validator PASS. AC-2's clause amended on the Captain's route-A ruling; both criteria now met on b6774358, AC-2 with its required pre-change control. Goal sufficiency and minimal necessity confirmed. Approval is not push or PR authorization."
+    }
+  ]
+}

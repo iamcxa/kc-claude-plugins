@@ -60,6 +60,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-16T13:58:07.805049Z"
                 reason: 'Captain ruled route A on AC-2: amend the verification clause to the pinned-class reproduction with its pre-fix control. Withdrawing the open binding before editing the criterion, then re-preparing.'
+            - id: gate-attempt:release-please-exclude-paths-validation-2
+              briefing:
+                id: briefing:release-please-exclude-paths:validation:attempt-2:revision-1
+                digest: sha256:701fcc34441d333545c598ade420b3d14925a63ea9a038d36c99afae5d51cdf9
+                room-ref: ./release-please-exclude-paths/review/validation/briefing-2
 started: 2026-09-16T07:15:47Z
 ---
 
