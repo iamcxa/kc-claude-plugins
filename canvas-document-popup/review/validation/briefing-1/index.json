@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:canvas-document-popup:validation:attempt-1:revision-1",
+  "question": "Approve the validation verdict for 6f4ec0e3, and decide what runs the browser evidence script?",
+  "artifacts": [
+    {
+      "id": "artifact:canvas-document-popup:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/18cfdd2da62b868e4914cf591816607425a00cf3/review/canvas-document-popup/validation/review.md",
+      "rev": "sha256:0d57c806e3b9492c27e84a62cade3b33a6cf7bd8f4bf329b903ebcf4f5b1472d",
+      "mediaType": "text/markdown",
+      "summary": "Validator PASSED and closed AC-1's open half with real non-localhost browser evidence; FO confirmed its load-bearing claims. One necessity question: the 399-line browser check is 48 percent of the diff and nothing runs it. FO recommends wiring it into CI behind a path filter, and will measure the cost before proposing the change."
+    }
+  ]
+}

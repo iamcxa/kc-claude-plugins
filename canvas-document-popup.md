@@ -57,6 +57,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:canvas-document-popup:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:canvas-document-popup-validation-1
+              briefing:
+                id: briefing:canvas-document-popup:validation:attempt-1:revision-1
+                digest: sha256:4beda26b53bcc8424e64474df4cb1e25bc7d2a24aa6454ca427d48f706cef90e
+                room-ref: ./canvas-document-popup/review/validation/briefing-1
 started: 2026-09-16T14:10:56Z
 ---
 
