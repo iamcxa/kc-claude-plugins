@@ -1,7 +1,7 @@
 ---
 id:
 title: read a Markdown and Mermaid document in a journey-canvas popup
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -75,8 +75,11 @@ gates:
                 reason: 'Captain approved the validation verdict for 6f4ec0e3 and ruled option B: the browser evidence script stays manual for now, CI wiring deferred because the plugin is likely to change further.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-16T14:10:56Z
+verdict: PASSED
+completed: 2026-09-16T23:18:57Z
+archived: 2026-09-16T23:18:58Z
 ---
 
 Human-led architecture review follows a chain on the journey canvas: green Action →
