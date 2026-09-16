@@ -18,6 +18,17 @@ gates:
                 id: briefing:release-please-exclude-paths:backlog:attempt-1:revision-1
                 digest: sha256:cc5651b4964772c44a55ddeff8de95f71f5c450536eb581f23499da2b9174b2c
                 room-ref: ./release-please-exclude-paths/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-please-exclude-paths:backlog:1
+                briefing: briefing:release-please-exclude-paths:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-16T06:57:25.493101Z"
+                decision: approve
+                reason: Captain approved profile prod and the admission record's outcome, scope and exclusions.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 A single empty commit to `main` once bumped all seven plugins minor with the same
