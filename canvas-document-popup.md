@@ -671,3 +671,20 @@ Delivered the canvas-document-popup viewer: a Fastify `/repo-doc` route resolvin
 ### Summary
 
 Independent verdict: PASSED. Re-tested the exact Close-button click defect the Captain caught in cycle 1 against the delivered commit, on my own fresh server/Vite instance and fixture repo — it closes correctly via a real pointer click, not just Escape. The implementation report's one open question, AC-1's shared-board-origin half, is now settled with real browser evidence: Chrome's `--host-resolver-rules` launch arg (exposed by `agent-browser --args`) maps a fake non-localhost hostname without root or `/etc/hosts`, and a full open→render→close loop against `JOURNEY_ALLOWED_HOSTS` passed over that origin, closing the gap the implementation stage reported as unprovable in this environment. `npm run share`'s missing proxy and CI's browser exclusion were confirmed directly from their own config files, not taken on the report's word. AC-5 and three of AC-4's four branches were checked by code reading rather than re-executed and are listed above as unconfirmed, not contradicted.
+
+## Captain's ruling — what runs the browser evidence script (2026-09-17)
+
+**Option B: keep it manual for now. Do not wire it into CI in this task.** The
+Captain's reason: this plugin is likely to change further, so the CI wiring is
+deferred rather than rejected.
+
+Accepted residual, stated plainly rather than softened: nothing enforces these 31
+checks. The defect the Captain found in this task — a Close control that was visible
+but not clickable — is exactly the class that an unrun check does not catch. Under this
+ruling the protection is a person choosing to run `npm run check:popup-browser`, which
+`package.json` already exposes. FO recommended wiring it in and the Captain ruled
+otherwise; that is the Captain's call to make and it is recorded as a deferral with a
+named cost, not as an absence of risk.
+
+No further retained-document edit is taken for this. The script is discoverable through
+`npm run`, and adding a reminder line to `references/canvas.md` was not approved.
