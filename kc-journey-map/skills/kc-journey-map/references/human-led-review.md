@@ -12,6 +12,8 @@ These are operator instructions, not runtime enforcement or a new renderer.
   deployment or acceptance. Preserve existing human colors unless asked to change them.
 - Human questions form the next layer. A question may have nested subquestions.
   Preserve its wording, hierarchy, geometry, layout and existing arrows.
+- Added cards follow the existing canvas language unless the human requests translation;
+  the conversation's language alone does not change the drawing's language.
 - A question can inform a later user story. It is not automatically an actionable
   or user-visible story, a task, or accepted release scope. Create those artifacts
   when the human requests that separate planning step.
@@ -60,8 +62,11 @@ Use the review branch while the document is under review. After merge, inspect t
 published chapter on `main` and then update the document link. Verify the remote
 content and actual heading anchor before advertising the link as usable; a locally
 present file, guessed anchor or successful request for the file alone is insufficient.
-If unpublished or inaccessible, state that limit and identify the local path/heading
-as unpublished. Do not insert a fabricated working link. Publishing is a separate
+If unpublished or inaccessible, visibly label the answer or an adjacent native card
+with the document path and chapter plus its unpublished/pending-verification state.
+Custom metadata alone is insufficient: the native export must explain the answer's
+document reference without a custom viewer. Do not advertise an unverified URL as
+working or insert a fabricated working link. Publishing is a separate
 action within the user's authority; link verification does not grant push permission.
 
 Evidence links stay pinned to the inspected SHA, including after a documentation

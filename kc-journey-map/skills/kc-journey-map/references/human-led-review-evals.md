@@ -30,6 +30,8 @@ short answer. The green Action is ‘Collect parcel’; other questions can wait
 **Setup:** Two questions under that Action; an existing adequate protocol chapter;
 source handler and route matching the chapter; published review-branch chapter.
 The room also contains an unrelated generated story map with its YAML available.
+Run a language variant with English canvas cards and a Chinese conversational
+request that does not ask for translation.
 
 **Score:** Routes to human-led review; green remains a role; answers the selected
 question and waits. Adds a short native rectangle with a connector bound to that
@@ -37,6 +39,8 @@ question's ID, the exact verified chapter link, and separate source evidence wit
 inspected SHA and blame ranges. No YAML regeneration, story-status mutation/lint,
 release handoff, standard board creation or unsolicited question cards. Compare
 human text, geometry, arrows and unrelated records against the input snapshot.
+In the language variant, added cards remain English while conversational replies
+may follow the user's Chinese; do not infer translation permission.
 
 ## Nested questions and explicit batch scope
 
@@ -65,6 +69,9 @@ does not create one document per question or put the full explanation on the can
 Reports the new text as unpublished/under review. Does not advertise a remote link
 as proving that new text until the actual remote chapter is verified. Evidence remains
 separate and pinned to inspected source; no push is inferred from document editing.
+The answer or an adjacent native card visibly names the unpublished/pending document
+path and chapter. Verify that this label survives native export and is understandable
+without reading custom shape metadata or using a custom viewer.
 
 ## Code disagrees with documentation; no decision yet
 
