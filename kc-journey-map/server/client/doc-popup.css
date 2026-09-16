@@ -1,0 +1,34 @@
+.doc-popup {
+	width: min(760px, 90vw);
+	max-height: 85vh;
+	padding: 0;
+	border: 1px solid #333;
+	border-radius: 8px;
+	overflow: hidden;
+}
+.doc-popup::backdrop {
+	background: rgba(0, 0, 0, 0.4);
+}
+.doc-popup-chrome {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 12px;
+	background: #f4f4f4;
+	border-bottom: 1px solid #ddd;
+}
+.doc-popup-body {
+	padding: 16px 20px;
+	overflow: auto;
+	max-height: calc(85vh - 44px);
+}
+.doc-popup-unavailable {
+	color: #a33;
+}
+.doc-popup-missing-heading {
+	color: #a70;
+	font-style: italic;
+}
+.doc-popup-mermaid svg {
+	max-width: 100%;
+}

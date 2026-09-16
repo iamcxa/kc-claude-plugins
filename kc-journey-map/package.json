@@ -11,14 +11,19 @@
     "precanvas": "node lib/doctor.mjs",
     "canvas": "concurrently -n server,client -c red,blue \"tsx watch ./server/canvas-server.ts\" \"vite dev --host\"",
     "share": "vite dev --config vite.share.config.mts",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "check:popup-browser": "node scripts/popup-browser-check.mjs"
   },
   "dependencies": {
     "@fastify/websocket": "^11.0.0",
     "@tldraw/mermaid": "5.4.0",
     "@tldraw/sync": "5.4.0",
     "@tldraw/sync-core": "5.4.0",
+    "dompurify": "3.4.15",
     "fastify": "^5.8.1",
+    "github-slugger": "^2.0.0",
+    "marked": "16.4.2",
+    "mermaid": "11.16.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "tldraw": "5.4.0",

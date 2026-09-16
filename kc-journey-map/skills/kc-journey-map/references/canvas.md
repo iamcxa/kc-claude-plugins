@@ -44,8 +44,11 @@ run this same server on one machine, so `pkill -f canvas-server` matches a canva
 someone else is reading. Without a captured id, read every line of `pgrep -fl` for the
 pattern and confirm the match set before stopping anything. Give each test service its
 own port and its own `JOURNEY_ROOMS_DIR` at startup; that is what makes a narrow match
-possible later. After stopping anything, health-check the services you did not intend
-to touch.
+possible later. Also set `JOURNEY_DOC_REPOS=<owner>/<repo>=<absolute path>` at startup,
+from `git -C <the repository being drawn for> remote get-url origin` and that
+repository's own absolute path — this is what lets a technical-document chapter link
+on the canvas open in place; an adopter configures nothing beyond this. After stopping
+anything, health-check the services you did not intend to touch.
 
 From the plugin directory, when installation or startup is needed:
 
