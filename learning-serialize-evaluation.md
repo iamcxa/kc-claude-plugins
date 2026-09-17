@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-learning-serialize-evaluation
-pr: 473
+pr: pr-merge:473
 gates:
     version: 1
     records:
