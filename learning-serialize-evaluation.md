@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -47,7 +47,7 @@ gates:
                 reason: Captain approved the design at 7ea6a081 with AC-4 amended and D1, D2, D3 as recommended.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-17T03:23:59Z
 ---
 
