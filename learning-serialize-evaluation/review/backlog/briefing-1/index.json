@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learning-serialize-evaluation:backlog:attempt-1:revision-1",
+  "question": "Select the profile and approve the outcome, scope, non-goals and stop condition for learning-serialize-evaluation?",
+  "artifacts": [
+    {
+      "id": "artifact:learning-serialize-evaluation:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8a6f4bd77e980fce594f57185ea6fd2a0afa7d58/review/learning-serialize-evaluation/backlog/review.md",
+      "rev": "sha256:5074091e7c7b9379d7407cd3f9906d67f36bfae3ce4eb10657e2517305729330",
+      "mediaType": "text/markdown",
+      "summary": "Serialize learning evaluation per Captain option 1; recommended profile pilot."
+    }
+  ]
+}

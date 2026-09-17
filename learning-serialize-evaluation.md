@@ -7,6 +7,17 @@ profile:
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:learning-serialize-evaluation:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:learning-serialize-evaluation-backlog-1
+              briefing:
+                id: briefing:learning-serialize-evaluation:backlog:attempt-1:revision-1
+                digest: sha256:aaa127818701563086ee037152e348e01ea2fd87b8527128c67be950df131025
+                room-ref: ./learning-serialize-evaluation/review/backlog/briefing-1
 ---
 
 Two closed tasks were evaluated for learning while neither learning PR had merged.
