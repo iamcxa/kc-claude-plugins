@@ -509,3 +509,29 @@ else. Then fresh independent validation.
 
 The `gate record --round` recorder is not run: this workflow keeps no validation
 briefing room (`briefing.json`, `briefing.review.jsonl`) before a gate is prepared.
+
+## Stage Report: implementation (cycle 2)
+
+### Correction round 1
+
+Candidate before this round: b2984a12. FO disposition (validation attempt 1) authorized
+fix for F1, F2, F3, F4, F5; declined F5's `ensure_ascii=False` item (unchanged).
+
+- DONE: F1 — committed test for AC-4's "hold before existence check" mutation, reached by CLI calls only
+  Added `test_reclaim_settled_job_bypasses_hold_despite_pending_sibling` (job A settled no-change, job B pending, re-claim A -> existing view, no token). Commit 6b511198. Mutation (hold moved before the `if not directory.is_dir()` reclaim guard, run via `timeout 110 python3 kc-dev-flow-2/scripts/test_learning.py`): FAILED, 2 failures — the new test refuses the legitimate reclaim, and `test_distinct_jobs_cannot_both_claim` also breaks (2 != 1 winners) because this textual mutation also pulled the sibling scan out of the store lock. Restored via `git checkout --`.
+- DONE: F2 — committed test for D3's absent-delivery-recover refusal on a released job
+  Added `test_delivery_recover_absent_refused_on_released_job`. Commit 6b511198. Mutation (removed the `release_raw is None` require in the `observed["state"] == "absent"` branch of `delivery_operation`'s delivery-recover path), run via `timeout 110 python3 kc-dev-flow-2/scripts/test_learning.py`: FAILED, exactly this 1 test (delivery-recover returned `delivery_claimed: true` on the released job instead of refusing). Restored via `git checkout --`.
+- DONE: F3 — README names release's enforcement point and the re-open residual
+  README now states no CLI command removes or rewrites `release.json` (the enforcement point for "irreversible") and that a released job re-observed `open` blocks again. Commit 6b511198.
+- DONE: F4 — learn SKILL.md gives the exact release invocation and refusal shape
+  Added the `release --job --expected --owner --reason` command block and named the `blocking` list's fields (job id, record state, delivery state, released flag) and exit 1. Commit 6b511198.
+- DONE: F5 — corrected both flagged comments
+  Store-lock comment now names `test_linked_worktree_multiprocess_claim_race`'s raw `home.iterdir()` count as what a lock-in-home would perturb (not `notices`, which already filters to 64-hex names). The `test_three_outcomes...` comment now says "wipe the store" instead of "settle", matching what `shutil.rmtree` actually does. `ensure_ascii=False` left unchanged per the FO's decline. Commit 6b511198.
+- DONE: Correction to the implementation stage report's prior claim
+  The original report stated the AC-4 two-sibling state (a settled job coexisting with an independently pending job) was "unreachable through legitimate `claim` calls." That was wrong — validation reached it with CLI-only calls (no-change job, then a second pending job, then re-claim the first). Retracted; F1's committed test now covers exactly that state.
+- DONE: Full committed suite and lint-skills.py on the corrected candidate
+  `timeout 110 python3 kc-dev-flow-2/scripts/test_learning.py`: 21 tests, OK. `timeout 60 python3 kc-dev-flow-2/scripts/lint-skills.py`: PASS. Worktree clean at 6b511198; no push, no PR; all fixture repos disposable (`tempfile`/`mkdtemp`), the real learning store untouched.
+
+### Summary
+
+Closed F1-F5 from validation attempt 1's FO disposition: two new committed tests (AC-4's coexisting-siblings reclaim, D3's absent-recover refusal on a released job) each shown to fail under their named mutation on the full committed suite; README and SKILL.md now name enforcement points and exact commands instead of bare claims; two comments corrected to match actual behavior. Retracted the prior report's incorrect "unreachable" claim. Candidate for fresh validation: 6b511198.
