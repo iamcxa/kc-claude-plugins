@@ -70,7 +70,14 @@ Use [learning.py](../../scripts/learning.py) `claim` with the explicit code root
 Only a newly returned claim token authorizes one independent bounded evaluator
 assignment using `kc-dev-flow-2:evaluate-learning`; hand that token only to its
 assigned evaluator. Existing claims/results are read, not automatically retried.
-Use the existing explicit recovery procedure when an owner has stopped.
+A new job's `claim` is refused while another job in the same local store is
+pending or has a completed proposal whose delivery is not settled (merged,
+closed, or explicitly released); the refusal names the blocking job. Finish or
+release that job first — `claim` for the same job's identical evidence still
+returns its existing view. Use the existing explicit recovery procedure when
+an owner has stopped. When the Captain declines to deliver a completed
+proposal, run `learning.py release` with a reason so it stops blocking later
+jobs; a release cannot be undone through the CLI.
 The evaluator completes its own claim; FO checks the actual resulting record.
 No-change ends with a local notice and creates no branch or PR.
 

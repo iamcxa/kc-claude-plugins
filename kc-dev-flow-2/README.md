@@ -170,6 +170,12 @@ It stores one atomic record under the Git common directory's
 `kc-dev-flow-2/learning/`, shared by linked worktrees in the same clone. An opaque
 claim token binds completion to its pending attempt. Invalid results leave that
 claim repairable; duplicate triggers observe it rather than launch another job.
+A store-wide lock also serializes new claims against each other: while one job's
+evaluation is pending, or its completed proposal has no settled delivery (merged,
+closed, or explicitly released), a `claim` for any other job in the same store is
+refused, naming the blocking job. Re-claiming the same job is unaffected. A
+proposal the Captain declines to deliver needs an explicit, irreversible
+`release` so it cannot hold later jobs indefinitely.
 A completed record contains both evaluation and local proposal; no-change has no
 proposal. No recorder command writes learning.md, AGENTS.md or workflow state.
 
