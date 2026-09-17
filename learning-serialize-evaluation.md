@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:learning-serialize-evaluation:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:learning-serialize-evaluation-ideation-1
+              briefing:
+                id: briefing:learning-serialize-evaluation:ideation:attempt-1:revision-1
+                digest: sha256:fe077286c1fdf80c18ef3ae3fa25218b5b68e93a9ffd3292ceb2de1e76aeaf6c
+                room-ref: ./learning-serialize-evaluation/review/ideation/briefing-1
 started: 2026-09-17T03:23:59Z
 ---
 

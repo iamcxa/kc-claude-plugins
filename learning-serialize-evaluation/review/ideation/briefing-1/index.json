@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learning-serialize-evaluation:ideation:attempt-1:revision-1",
+  "question": "Approve the learning-serialize-evaluation design with D1-D3 as recommended?",
+  "artifacts": [
+    {
+      "id": "artifact:learning-serialize-evaluation:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c54576d08dceff14da6fe8e7f98342d50b188a8e/review/learning-serialize-evaluation/ideation/review.md",
+      "rev": "sha256:a22b7e765bde4b3f0c66f80933881b14cb5f0cb0d0a62a15774d6b23768b15cd",
+      "mediaType": "text/markdown",
+      "summary": "Store-lock claim hold plus explicit release sidecar; independent review fixes applied; D1-D3 recommended."
+    }
+  ]
+}
