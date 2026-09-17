@@ -2,6 +2,7 @@
 """Exercise local learning ownership and persistence in disposable Git repositories."""
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -214,6 +215,182 @@ class LearningTests(unittest.TestCase):
         winners = [value for value in values if value.get("claimed")]
         self.assertEqual(len(winners), 1, values)
         self.assertEqual(len(self.learning_home()), 1)
+
+    def make_plan(self, job, result_digest):
+        head = subprocess.check_output(["git", "-C", self.repo, "rev-parse", "HEAD"], text=True).strip()
+        plan = {"schema_version": 1, "result_digest": result_digest, "repository": "example/project",
+                "branch": "learning/" + job, "marker": "<!-- kc-dev-flow-2 learning " + job + " -->",
+                "base_branch": "main", "base_commit": head, "candidate_commit": head,
+                "source_learning_blob": "absent", "candidate_learning_blob": "c" * 40,
+                "worktree": str(self.base / "isolated-released"), "title": "Synthetic learning proposal"}
+        plan["body"] = "Synthetic provider simulation only.\n" + plan["marker"] + "\n"
+        self.plan = self.base / "plan.json"
+        self.plan.write_text(json.dumps(plan))
+        return plan
+
+    def test_settled_sibling_releases_hold(self):
+        def unblocked(suffix):
+            self.pack["task_id"] = f"released-{suffix}"
+            self.write_pack()
+            result = self.cli("claim", "--input", self.input, "--owner", "session-c")
+            self.assertTrue(result["claimed"])
+
+        with self.subTest(state="no-change"):
+            self.reset_store()
+            self.pack["task_id"] = "settled-no-change"
+            self.write_pack()
+            holder = self.claim()
+            self.complete(holder, self.result_file([self.decision("no-change")]))
+            unblocked("no-change")
+
+        with self.subTest(state="delivery-merged"):
+            self.reset_store()
+            self.pack["task_id"] = "settled-merged"
+            self.write_pack()
+            holder, plan = self.delivery_fixture()
+            claimed = self.deliver(holder)
+            self.cli("delivery-record", "--job", holder["job"], "--token", claimed["delivery_token"],
+                     "--observation", self.observed(plan, "merged", draft=False))
+            unblocked("merged")
+
+        with self.subTest(state="delivery-closed"):
+            self.reset_store()
+            self.pack["task_id"] = "settled-closed"
+            self.write_pack()
+            holder, plan = self.delivery_fixture()
+            claimed = self.deliver(holder)
+            self.cli("delivery-record", "--job", holder["job"], "--token", claimed["delivery_token"],
+                     "--observation", self.observed(plan, "closed", draft=False))
+            unblocked("closed")
+
+        with self.subTest(state="release-delivery-missing"):
+            self.reset_store()
+            self.pack["task_id"] = "settled-release-missing"
+            self.write_pack()
+            holder = self.claim()
+            self.complete(holder, self.result_file([self.decision("add", NEW)]))
+            pre = self.cli("notices", "--all")["notices"][0]
+            self.cli("release", "--job", holder["job"], "--expected", pre["notice_digest"],
+                     "--owner", "captain-declined", "--reason", "Captain declined; no proposal ever sent")
+            unblocked("release-missing")
+
+        with self.subTest(state="release-after-absent-reconciliation"):
+            self.reset_store()
+            self.pack["task_id"] = "settled-release-absent"
+            self.write_pack()
+            holder, plan = self.delivery_fixture()
+            self.deliver(holder)
+            self.reconcile(holder, plan, "absent")
+            pre = self.cli("notices", "--all")["notices"][0]
+            self.cli("release", "--job", holder["job"], "--expected", pre["notice_digest"],
+                     "--owner", "captain-declined", "--reason", "Captain declined after confirmed absence")
+            unblocked("release-absent")
+
+    def test_release_refusals_and_irreversibility(self):
+        self.pack["task_id"] = "release-blank-fields"
+        self.write_pack()
+        holder, plan = self.delivery_fixture()
+        blank_notice = self.cli("notices", "--all")["notices"][0]
+        self.cli("release", "--job", holder["job"], "--expected", blank_notice["notice_digest"],
+                 "--owner", " ", "--reason", "Synthetic reason", code=1)
+        self.cli("release", "--job", holder["job"], "--expected", blank_notice["notice_digest"],
+                 "--owner", "captain-declined", "--reason", " ", code=1)
+
+        self.reset_store()
+        self.pack["task_id"] = "release-pending"
+        self.write_pack()
+        pending_job = self.claim()
+        pending_notice = self.cli("notices", "--all")["notices"][0]
+        self.cli("release", "--job", pending_job["job"], "--expected", pending_notice["notice_digest"],
+                 "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+
+        self.reset_store()
+        self.pack["task_id"] = "release-no-change"
+        self.write_pack()
+        no_change_job = self.claim()
+        self.complete(no_change_job, self.result_file([self.decision("no-change")]))
+        no_change_notice = self.cli("notices", "--all")["notices"][0]
+        self.cli("release", "--job", no_change_job["job"], "--expected", no_change_notice["notice_digest"],
+                 "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+
+        for state in ("open", "merged", "closed"):
+            with self.subTest(delivery=state):
+                self.reset_store()
+                self.pack["task_id"] = f"release-delivery-{state}"
+                self.write_pack()
+                job, job_plan = self.delivery_fixture()
+                claim_delivery = self.deliver(job)
+                self.cli("delivery-record", "--job", job["job"], "--token", claim_delivery["delivery_token"],
+                         "--observation", self.observed(job_plan, state, draft=False))
+                job_notice = self.cli("notices", "--all")["notices"][0]
+                self.cli("release", "--job", job["job"], "--expected", job_notice["notice_digest"],
+                         "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+
+        self.reset_store()
+        self.pack["task_id"] = "release-delivery-uncertain"
+        self.write_pack()
+        unc_job, unc_plan = self.delivery_fixture()
+        self.deliver(unc_job)
+        unc_notice = self.cli("notices", "--all")["notices"][0]
+        self.cli("release", "--job", unc_job["job"], "--expected", unc_notice["notice_digest"],
+                 "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+
+        self.reset_store()
+        self.pack["task_id"] = "release-primary"
+        self.write_pack()
+        holder = self.claim()
+        self.complete(holder, self.result_file([self.decision("add", NEW)]))
+        record_before = self.record_path(holder["job"]).read_bytes()
+        delivery_path = self.record_path(holder["job"]).parent / "delivery.json"
+        self.assertFalse(delivery_path.exists())
+        pre_release_notice = self.cli("notices", "--all")["notices"][0]
+
+        self.cli("release", "--job", holder["job"], "--expected", "0" * 64,
+                 "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+
+        released = self.cli("release", "--job", holder["job"], "--expected", pre_release_notice["notice_digest"],
+                            "--owner", "captain-declined", "--reason", "Captain declined; no proposal ever sent")
+        release_path = self.record_path(holder["job"]).parent / "release.json"
+        release_bytes = release_path.read_bytes()
+
+        # Already-released precedes staleness: retrying with the pre-release digest still returns
+        # the current view and writes nothing (a stale-digest error would fire if order were reversed).
+        replay = self.cli("release", "--job", holder["job"], "--expected", pre_release_notice["notice_digest"],
+                          "--owner", "captain-declined", "--reason", "Captain declined; no proposal ever sent")
+        self.assertEqual(replay, released)
+        self.assertEqual(release_path.read_bytes(), release_bytes)
+        self.assertEqual(self.record_path(holder["job"]).read_bytes(), record_before)
+        self.assertFalse(delivery_path.exists())
+
+        self.make_plan(holder["job"], released["digest"])
+        self.deliver(holder, code=1)
+
+        self.cli("ack", "--job", holder["job"], "--expected", pre_release_notice["notice_digest"], code=1)
+        self.assertTrue(self.cli("notices")["notices"][0]["unread"])
+
+    def expected_notice_digest(self, *parts):
+        payload = json.dumps(list(parts), sort_keys=True, ensure_ascii=False, indent=2) + "\n"
+        return hashlib.sha256(payload.encode()).hexdigest()
+
+    def test_same_job_reclaim_ignores_hold(self):
+        self.pack["task_id"] = "reclaim-self"
+        self.write_pack()
+        first = self.claim()  # pending; also the blocking sibling for any other new job
+        self.assertIn("token", first)
+
+        again = self.claim()  # re-claim of the same job's identical evidence bypasses the hold
+        self.assertNotIn("token", again)
+        self.assertEqual(again["job"], first["job"])
+        self.assertEqual(again["state"], "pending")
+
+        self.pack["task_id"] = "reclaim-third"
+        self.write_pack()
+        self.cli("claim", "--input", self.input, "--owner", "session-third", code=1)
+
+        notice = self.cli("read", "--job", first["job"])
+        computed = self.expected_notice_digest(notice["digest"], hashlib.sha256(b"missing").hexdigest())
+        match = next(item for item in self.cli("notices", "--all")["notices"] if item["job"] == first["job"])
+        self.assertEqual(match["notice_digest"], computed)
 
     def test_ineligible_and_invalid_input_create_no_claim(self):
         original = copy.deepcopy(self.pack)
