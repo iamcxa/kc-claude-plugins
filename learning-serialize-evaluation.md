@@ -86,6 +86,11 @@ Verified by: `test_learning.py` cases for each refusal.
 view, and every existing `test_learning.py` case still passes.
 Verified by: the full `test_learning.py` run on the candidate revision.
 
+Amended 2026-09-17 on the Captain's ruling: an existing test whose setup depends on
+claiming a second job while an earlier one is unsettled may have that setup changed
+so each earlier job is settled or isolated first; its assertions stay unchanged.
+Validation compares each such test's assertions against `32cd8890`.
+
 ## Design (ideation, pilot)
 
 Design read at code revision `32cd8890` (`origin/main`, checked out detached in the
