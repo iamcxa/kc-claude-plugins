@@ -309,8 +309,10 @@ async function main() {
 	}
 
 	// --- shared-board-origin (AC-1's still-needed half) ---
-	// Host is a reserved header; CDP cannot rewrite it for a real navigation, so
-	// only the HTTP layer (allowedHosts itself) is checked here, not AC-1 in a browser.
+	// This checks the shared-board origin at the HTTP layer only, via curl against
+	// allowedHosts. A browser run over a non-localhost origin is achievable by
+	// mapping the host at Chromium's DNS layer through agent-browser --args
+	// --host-resolver-rules=MAP <host> 127.0.0.1; this script does not do that.
 	try {
 		const { stdout: okStatus } = await run('curl', ['-s', '-o', '/dev/null', '-w', '%{http_code}', '--resolve', `sharedorigin.test:${vitePort}:127.0.0.1`, `http://sharedorigin.test:${vitePort}/`])
 		const { stdout: blockedStatus } = await run('curl', ['-s', '-o', '/dev/null', '-w', '%{http_code}', '--resolve', `notallowed.test:${vitePort}:127.0.0.1`, `http://notallowed.test:${vitePort}/`])
@@ -319,7 +321,7 @@ async function main() {
 	} catch (e) {
 		check('shared-board-origin HTTP-layer check ran', false, String(e))
 	}
-	console.log('LIMIT: AC-1 shared-board-origin half not verified by a browser run in this environment — see comment above.')
+	console.log('LIMIT: shared-board-origin is checked at the HTTP layer only here; this script does not run the AC-1 browser check — see comment above.')
 
 	// --- AC-5: export/import round trip, opened in a bare tldraw host with no viewer ---
 	// Capture the export while the candidate's own Vite is still up, then stop it before
