@@ -56,6 +56,17 @@ gates:
                 id: briefing:learning-serialize-evaluation:validation:attempt-1:revision-1
                 digest: sha256:d612ab81afaae47a2098d8bfac86a02668e080cfede3ae4c86b839e108a4f771
                 room-ref: ./learning-serialize-evaluation/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:learning-serialize-evaluation:validation:1
+                briefing: briefing:learning-serialize-evaluation:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-17T08:06:22.406894Z"
+                decision: approve
+                reason: Captain approved validation attempt 3 PASSED at candidate 93258e23 with the recorded limits.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-17T03:23:59Z
 ---
 
