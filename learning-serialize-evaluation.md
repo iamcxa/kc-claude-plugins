@@ -406,7 +406,7 @@ profile.
 
 Designed a local-store hold in `claim` (sibling scan under a store lock, before any directory is created) and an explicit, non-reversible `release` sidecar for proposals the Captain declines to deliver, with no change to completed records or delivery identity. A disposable-repo run at `32cd8890` reproduced the gap (second job claimed while the first had an undelivered proposal); both live jobs are merged, so adoption strands nothing. Three decisions (D1-D3) are left for the Captain.
 
-### Correction round 1
+Correction round 1.
 
 - DONE: AC-4 conflict with existing tests — whole suite checked by prototype in `/tmp`: exactly two tests break; fixture changes named per test; "AC-4 amendment needed" line added. Landed in Acceptance evidence, "AC-4 existing suite under the hold".
 - DONE: Store lock moved out of `home` to `kc-dev-flow-2/learning.lock`; prototype showed lock-in-home fails the race test's `iterdir` count. Landed in Hold predicate, "Where it runs", and Sequence.
@@ -512,7 +512,7 @@ briefing room (`briefing.json`, `briefing.review.jsonl`) before a gate is prepar
 
 ## Stage Report: implementation
 
-### Correction round 1
+Correction round 1.
 
 Candidate before this round: b2984a12. FO disposition (validation attempt 1) authorized
 fix for F1, F2, F3, F4, F5; declined F5's `ensure_ascii=False` item (unchanged).
