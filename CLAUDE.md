@@ -23,11 +23,8 @@ Version lives in release-please's component manifest and is propagated to `<plug
 
 - **Never push an empty commit to `main`.** In manifest mode a commit that touches no
   file is attributed to every plugin: one empty `feat(kc-dev-flow): …` bumped all seven
-  plugins minor with the same changelog line. Every plugin except `kc-dev-flow` now
-  carries `exclude-paths` in `release-please-config.json`, because release-please 17.x
-  drops path-less commits from a package that has any `exclude-paths` (its issue #2891);
-  keep it, and add it to `kc-dev-flow` after `kc-dev-flow-v4.2.0` is tagged. To force a
-  version, set per-package `release-as`, never an empty commit.
+  plugins minor with the same changelog line. To force a version, set per-package
+  `release-as`, never an empty commit.
 - **A squash-merged PR's title is the commit subject release-please reads.** An
   entity-titled PR (`kc-dev-flow: unify …`) is invisible to the changelog and to the
   bump. Retitle to `<type>(<plugin>): …` before merging; DEV-74 moves this into the
