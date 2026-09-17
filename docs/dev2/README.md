@@ -75,9 +75,9 @@ The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using th
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
 worker authors the PRFAQ and optional preview. When `## FO alignment` records
-alignment as needed, FO records the alignment result there before dispatching
-the worker. Missing skill or profile authority requires a hold report rather
-than a baseline or default-profile substitution.
+alignment as needed, FO records the alignment result as a `Result:` line
+before dispatching the worker. Missing skill or profile authority requires a
+hold report rather than a baseline or default-profile substitution.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.

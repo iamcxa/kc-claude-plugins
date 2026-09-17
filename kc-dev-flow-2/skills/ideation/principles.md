@@ -1,9 +1,10 @@
 # Ideation principles
 
 FO owns goal and direction alignment. Before design, check `## FO alignment` in
-the task file; when it records alignment as needed but no result, stop and
-report instead of starting the design. Ask for research when missing facts can
-change the decision; the worker authors the requested artifact, not user approval.
+the task file; when the heading is absent, or it records alignment as needed
+with no `Result:` line, stop and report instead of starting the design. Ask for
+research when missing facts can change the decision; the worker authors the
+requested artifact, not user approval.
 Prefer the smallest working mechanism for the accepted goal. Before proposing an
 existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
 use or repair what exists before adding a replacement. Record its conclusion in
