@@ -18,6 +18,17 @@ gates:
                 id: briefing:learning-serialize-evaluation:backlog:attempt-1:revision-1
                 digest: sha256:aaa127818701563086ee037152e348e01ea2fd87b8527128c67be950df131025
                 room-ref: ./learning-serialize-evaluation/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:learning-serialize-evaluation:backlog:1
+                briefing: briefing:learning-serialize-evaluation:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-17T03:23:25.509686Z"
+                decision: approve
+                reason: Captain approved profile pilot and the admission record's outcome, scope, non-goals and stop condition.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Two closed tasks were evaluated for learning while neither learning PR had merged.
