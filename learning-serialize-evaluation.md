@@ -37,6 +37,17 @@ gates:
                 id: briefing:learning-serialize-evaluation:ideation:attempt-1:revision-1
                 digest: sha256:fe077286c1fdf80c18ef3ae3fa25218b5b68e93a9ffd3292ceb2de1e76aeaf6c
                 room-ref: ./learning-serialize-evaluation/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:learning-serialize-evaluation:ideation:1
+                briefing: briefing:learning-serialize-evaluation:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-17T03:50:39.896371Z"
+                decision: approve
+                reason: Captain approved the design at 7ea6a081 with AC-4 amended and D1, D2, D3 as recommended.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-17T03:23:59Z
 ---
 
