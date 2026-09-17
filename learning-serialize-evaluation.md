@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -573,3 +573,25 @@ Validation attempt 2, candidate 6b511198 (base 32cd8890).
 ### Summary
 
 Candidate 6b511198 closes F1-F5. The two new committed tests each fail alone under the mutations validation attempt 1 used against the suite (F1 with the store lock kept, F2 full suite). All 21 tests pass. One mutation per AC fails the relevant check, and an independent CLI journey plus a 12-process concurrent claim across a linked worktree confirm the hold, release and same-job re-claim. Every assertion from 32cd8890 is kept. Recommend PASSED. Three new Polish-level doc/test findings (F6-F8) go to FO disposition. No repair made.
+
+## FO disposition — validation attempt 2
+
+Candidate `6b511198`. Validation recommended PASSED; F1–F5 confirmed closed. Captain
+ruled 2026-09-17 to return the candidate to implementation for a documentation-only
+correction round.
+
+- **F6 — Polish, fix authorized.** learn SKILL.md says release's `--expected` comes from
+  `read`/`notices`; `read` returns `view`, which carries no `notice_digest` (FO
+  confirmed in `operate`), so an FO following the text is refused. Point it at
+  `notices` only.
+- **F7 — Polish, fix authorized.** README "(a PR the Captain thought closed reopens)"
+  describes a path `release` refuses (closed deliveries cannot be released); README and
+  SKILL.md omit that a job directory with a torn or missing record blocks new claims
+  (D1), which the code and a test enforce. Correct the first, add the second.
+- **F8 — Polish, declined and recorded as a limit.** Removing `release`'s explicit
+  open/merged/closed refusal leaves the suite green because the following check still
+  refuses all three with a different message. Behaviour is covered; the message is not.
+
+Assignment: documentation edits for F6 and F7 in `kc-dev-flow-2/skills/learn/SKILL.md`
+and `kc-dev-flow-2/README.md` only; no code or test change. Then fresh independent
+validation.
