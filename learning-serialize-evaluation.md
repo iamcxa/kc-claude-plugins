@@ -3,7 +3,7 @@ id:
 title: serialize learning evaluation while another learning job is in flight
 status: backlog
 variant: kc-dev-flow-2
-profile:
+profile: pilot
 merge: pr
 worktree:
 pr:
