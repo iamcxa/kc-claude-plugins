@@ -60,18 +60,24 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 ### `backlog`
 
 The user selects the compatible profile and approves outcome, scope and budget.
-FO records the choice; this boundary has no worker or placeholder report.
+FO records the choice; this boundary has no worker or placeholder report. FO
+also records, under a `## FO alignment` heading in the task file, whether FO
+direction alignment with the Captain is needed before ideation and why; a
+stated reason is the whole record when not needed.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
-  exclusions and evidence needed before the next declared stage starts.
+  exclusions and evidence needed before the next declared stage starts, and the
+  `## FO alignment` need and reason.
 
 ### `ideation`
 
 The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
-worker authors the PRFAQ and optional preview. Missing skill or profile authority
-requires a hold report rather than a baseline or default-profile substitution.
+worker authors the PRFAQ and optional preview. When `## FO alignment` records
+alignment as needed, FO records the alignment result as a `Result:` line
+before dispatching the worker. Missing skill or profile authority requires a
+hold report rather than a baseline or default-profile substitution.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.
