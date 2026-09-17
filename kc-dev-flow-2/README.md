@@ -171,14 +171,17 @@ It stores one atomic record under the Git common directory's
 claim token binds completion to its pending attempt. Invalid results leave that
 claim repairable; duplicate triggers observe it rather than launch another job.
 A store-wide lock also serializes new claims against each other: while one job's
-evaluation is pending, or its completed proposal has no settled delivery (merged,
-closed, or explicitly released), a `claim` for any other job in the same store is
-refused, naming the blocking job. Re-claiming the same job is unaffected. A
-proposal the Captain declines to deliver needs an explicit `release`; no CLI
-command removes or rewrites `release.json`, so a release cannot be undone. A
-released job re-observed `open` (a PR the Captain thought closed reopens)
-blocks again — a release stops a job from blocking, it does not stop the
-provider from reporting new facts about it.
+directory has a torn or missing record, its evaluation is pending, or its
+completed proposal has no settled delivery (merged, closed, or explicitly
+released), a `claim` for any other job in the same store is refused, naming the
+blocking job. Re-claiming the same job is unaffected. A proposal the Captain
+declines to deliver needs an explicit `release`; no CLI command removes or
+rewrites `release.json`, so a release cannot be undone. A closed delivery
+cannot be released; a released job whose delivery was missing or confirmed
+absent can still later be observed `open` (a PR turns up that the release
+believed did not exist) — that observation blocks again, because a release
+stops a job from blocking, it does not stop the provider from reporting new
+facts about it.
 A completed record contains both evaluation and local proposal; no-change has no
 proposal. No recorder command writes learning.md, AGENTS.md or workflow state.
 

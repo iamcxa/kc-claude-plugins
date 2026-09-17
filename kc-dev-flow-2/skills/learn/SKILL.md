@@ -70,24 +70,24 @@ Use [learning.py](../../scripts/learning.py) `claim` with the explicit code root
 Only a newly returned claim token authorizes one independent bounded evaluator
 assignment using `kc-dev-flow-2:evaluate-learning`; hand that token only to its
 assigned evaluator. Existing claims/results are read, not automatically retried.
-A new job's `claim` is refused while another job in the same local store is
-pending or has a completed proposal whose delivery is not settled (merged,
-closed, or explicitly released); the refusal is exit 1 with a `blocking` list
-naming each blocking job's id, record state, delivery state and released flag.
-Finish or release that job first — `claim` for the same job's identical
-evidence still returns its existing view. Use the existing explicit recovery
-procedure when an owner has stopped. When the Captain declines to deliver a
-completed proposal:
+A new job's `claim` is refused while another job in the same local store has a
+directory with a torn or missing record, is pending, or has a completed
+proposal whose delivery is not settled (merged, closed, or explicitly
+released); the refusal is exit 1 with a `blocking` list naming each blocking
+job's id, record state, delivery state and released flag. Finish or release
+that job first — `claim` for the same job's identical evidence still returns
+its existing view. Use the existing explicit recovery procedure when an owner
+has stopped. When the Captain declines to deliver a completed proposal:
 
 ```sh
 python3 /absolute/plugin/scripts/learning.py --repo "$CODE_ROOT" release \
   --job JOB --expected NOTICE_DIGEST --owner SESSION --reason "Captain declined; ..."
 ```
 
-`--expected` is the job's current `notice_digest` from `read`/`notices`. No CLI
-command removes or rewrites `release.json`, so a release cannot be undone; a
-released job also gains no delivery authority (`delivery-claim` and an absent
-`delivery-recover` both refuse it).
+`--expected` is the job's current `notice_digest` from `notices` (`read` returns
+no `notice_digest`). No CLI command removes or rewrites `release.json`, so a
+release cannot be undone; a released job also gains no delivery authority
+(`delivery-claim` and an absent `delivery-recover` both refuse it).
 The evaluator completes its own claim; FO checks the actual resulting record.
 No-change ends with a local notice and creates no branch or PR.
 
