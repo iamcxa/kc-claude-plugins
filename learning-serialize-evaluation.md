@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -472,3 +472,40 @@ Implemented the approved hold (`sibling_status`/`blocking_siblings` under a stor
 ### Summary
 
 Candidate b2984a12 delivers the hold, store lock and release as designed, with D1-D3 as recommended. Each AC holds under my own CLI journey, and one mutation per AC fails the relevant check. The AC-4 amendment removes no assertion. Recommend PASSED. Two test-coverage gaps (F1, F2) and three doc/comment Polish items go to FO disposition. No repair was made.
+
+## FO disposition — validation attempt 1
+
+Candidate `b2984a12`. Validation recommended PASSED with findings F1–F5. Captain ruled
+2026-09-17 to return the candidate to implementation for one correction round.
+
+- **F1 — Material, owned, fix authorized.** Released user and workflow: FO running
+  `learn` for a second task while an earlier job is settled but another is pending.
+  Harm: a regression that runs the hold before the existing-job check passes CI.
+  Boundary: `value-ac[AC-4]` names this mutation as one its test must catch.
+  Trigger: validation removed the ordering and the committed suite stayed 19/19; FO
+  confirmed `test_same_job_reclaim_ignores_hold` holds only one job, and the hold
+  excludes the claimed job's own key. The uncommitted `/tmp/ac4_seam.py` is not
+  committed evidence, and the "unreachable" claim is refuted by CLI-only construction.
+- **F2 — Material, owned, fix authorized.** Released workflow: Captain declines a
+  proposal, FO releases it. Harm: removing the `delivery-recover` refusal of `absent`
+  on a released job passes CI, reopening a send path the Captain closed.
+  Boundary: `value-ac[AC-3]` lists that refusal; `captain-ruling[2026-09-17]` D3.
+  Trigger: validation removed the check and the suite stayed 19/19.
+- **F3 — Polish, fix authorized.** README calls `release` irreversible without naming
+  its enforcement point (`contract[CLAUDE.md#commit--pr-conventions-per-user-preferences]`
+  absolute-claim rule), and omits that a released job re-observed `open` blocks again.
+- **F4 — Polish, fix authorized.** learn SKILL.md gives no exact `release` invocation or
+  refusal shape.
+- **F5 — Polish.** Fix authorized for the store-lock comment that says `notices` depends
+  on the directory count and the test comment saying "settle" where the code wipes the
+  store. Declined: `ensure_ascii=False` in error output, harmless.
+- **Recorded limits, not repaired:** the store lock has no timeout, so a frozen claimer
+  holds new claims until it exits; a corrupted `release.json` leaves the job blocking
+  with manual repair as the only exit; cross-clone coordination stays out of scope.
+
+Assignment: add committed tests for F1 and F2, each shown to fail under its mutation
+with the command and result recorded; apply F3, F4 and the F5 fixes; change nothing
+else. Then fresh independent validation.
+
+The `gate record --round` recorder is not run: this workflow keeps no validation
+briefing room (`briefing.json`, `briefing.review.jsonl`) before a gate is prepared.
