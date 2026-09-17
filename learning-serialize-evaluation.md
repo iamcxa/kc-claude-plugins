@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: Captain approved profile pilot and the admission record's outcome, scope, non-goals and stop condition.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Two closed tasks were evaluated for learning while neither learning PR had merged.
