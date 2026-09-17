@@ -88,8 +88,8 @@ Verified by: the full `test_learning.py` run on the candidate revision.
 
 ## Design (ideation, pilot)
 
-Design read at code revision `32cd8890` (worktree `iamcxa/trim-kc-dev-flow-third`
-line of `kc-dev-flow-2`). The Captain's option 1 ruling is settled: serialize,
+Design read at code revision `32cd8890` (`origin/main`, checked out detached in the
+dev2-adoption worktree). The Captain's option 1 ruling is settled: serialize,
 add no re-evaluation or supersede operation.
 
 ### Existing-code capability check
@@ -114,7 +114,8 @@ add no re-evaluation or supersede operation.
 **Press release.** When a learning job's proposal is still unsettled, `learning.py
 claim` for any other job in the same clone's learning store now refuses, names the
 blocking job and why, and creates nothing. The FO then finishes that job — completes
-its evaluation, delivers and records the PR as merged or closed — or, when the Captain
+its evaluation, delivers and records the PR as merged or closed (a closed PR recorded
+open again blocks again) — or, when the Captain
 declines to deliver a proposal that was never sent, records an explicit `release`
 with a reason. The next job therefore always evaluates against a `learning.md` basis
 that no other local proposal is about to move.
@@ -145,27 +146,46 @@ bound to the record digest) and a new `inspect_release` (sidecar, same strict st
 | directory exists, record missing/torn/invalid (`uncertain`) | any | any | **blocks** (decision D1) |
 | `pending` | any | any | **blocks** |
 | `completed`, `proposal` null | any | any | releases |
-| `completed` with proposal | `merged` or `closed` | any | releases |
+| `completed` with proposal | `merged` | any | releases (sticky: regression refused) |
+| `completed` with proposal | `closed` | any | releases while closed (not sticky, see below) |
 | `completed` with proposal | `missing` (no `delivery.json`) | none/invalid | **blocks** |
 | `completed` with proposal | `missing` | valid | releases |
 | `completed` with proposal | `uncertain`, observation `absent` | valid | releases (decision D2) |
 | `completed` with proposal | `uncertain`, observation null/`unknown`, or torn | any | **blocks** |
 | `completed` with proposal | `open` | any | **blocks** (a provider fact outranks a release) |
 
-Correctness without locking siblings: every releasing state is monotone in the current
-code — a completed record cannot change (`recover` refuses), `merged` cannot regress
-(`delivery-record`/`delivery-recover`), and nothing removes a release. A sibling seen
-mid-transition (`pending`, or a directory created but not yet written) reads as
-blocking, i.e. fails closed. `atomic_write` means no half-written file is read as valid.
+Correctness without locking siblings. Three releasing states cannot be undone: a
+completed no-change record (`recover` refuses completed), delivery `merged` (the only
+state `delivery-record`/`delivery-recover` guard against regression) and a release (no
+command removes it). **`closed` is not sticky:** `delivery-record` only refuses leaving
+`merged`, so it can move a delivery from `closed` back to `open` with the same PR
+(the engineering reviewer reproduced this with exit 0 in a `/tmp` repo). That path is
+pre-existing and this design leaves it unchanged. Under the hold it fails closed: a
+scan that saw `closed` let one new claim through, and the next scan after the PR is
+recorded `open` blocks again. The residual — a claim admitted in the window before a
+re-open is recorded — is the same as a PR re-opened on GitHub and not yet observed,
+which no local lock can see. A sibling seen mid-transition (`pending`, or a directory
+created but not yet written) reads as blocking. `atomic_write` means no half-written
+file is read as valid.
 
 Where it runs: in `operate`'s claim branch, only when the job directory does not
-already exist. New order: `home.mkdir` -> take a store lock `home/.store.lock`
-(blocking `flock`, held only for scan + `directory.mkdir()`) -> re-check existence
--> scan siblings -> refuse or `mkdir` -> release store lock -> existing per-job
-`locked` + pending write. The store lock closes the race where two *different* new
-jobs scan at the same time; a directory created but not yet written reads as
-`uncertain` and blocks, so the lock need not cover the record write. Per-job
-operations never take the store lock, so there is no lock-order inversion.
+already exist, and after the pack, eligibility and `--owner` checks (so invalid or
+ineligible input still creates nothing). New order: `home.mkdir` -> take a store lock
+at `<git-common-dir>/kc-dev-flow-2/learning.lock`, a sibling of `home`, not inside it
+(blocking `flock`, held only for scan + `directory.mkdir()`) -> re-check existence ->
+scan siblings -> refuse or `mkdir` -> release store lock -> existing per-job `locked`
++ pending write. Outside `home` the lock file does not change listings of `home`
+(`test_linked_worktree_multiprocess_claim_race` counts `home.iterdir()`; with the lock
+inside `home` that assertion failed `2 != 1` in the prototype below), and `notices`
+already filters `home` to 64-hex directories either way. The store lock closes the race
+where two *different* new jobs scan at the same time. Per-job operations never take the
+store lock, so there is no lock-order inversion.
+
+**Dependency on D1.** The lock may stop before the pending record write only because a
+directory without a readable record counts as `uncertain` and blocks (D1 = block). If
+the Captain rules D1 the other way, a racing claim could see job B's directory before
+its record exists and pass; the store lock must then also cover the pending record
+write.
 
 Refusal: exit 1, existing error shape plus a structured field:
 `{"state": "error", "error": "learning job in flight; …", "blocking": [{"job": JOB, "record": STATE, "delivery": STATE, "released": BOOL}]}`
@@ -175,13 +195,17 @@ listing every blocking sibling. No job directory or record is created.
 
 `learning.py --repo R release --job JOB --expected NOTICE_DIGEST --owner SESSION --reason REASON`
 
-Under the job's `locked`, in order, refuses when: job id invalid or directory missing;
-`--reason` or `--owner` blank; record is not `completed` with a proposal (pending,
-uncertain and no-change are refused — no-change never blocks); `--expected` differs
-from the current `notice_digest`; delivery is `open`, `merged` or `closed`; delivery is
-torn or `uncertain` without an `absent` observation (reconcile via `delivery-recover`
-first). If a valid `release.json` already exists it returns the current notice view
-and writes nothing.
+Check order, under the job's `locked`:
+1. refuse: job id invalid or directory missing; `--reason` or `--owner` blank;
+2. refuse: record is not `completed` with a proposal (pending, uncertain and no-change
+   are refused — no-change never blocks);
+3. **already released:** a valid `release.json` exists -> return the current notice view
+   and write nothing. This runs **before** the staleness check, because the release
+   itself changes `notice_digest`, so a retry carrying the pre-release digest must see
+   the existing release rather than a stale-digest error;
+4. refuse: `--expected` differs from the current `notice_digest`;
+5. refuse: delivery is `open`, `merged` or `closed`; delivery is torn or `uncertain`
+   without an `absent` observation (reconcile via `delivery-recover` first).
 
 Writes only `release.json` via `atomic_write`:
 `{"schema_version": 1, "owner", "reason", "result_digest", "delivery_digest", "authority": "caller attestation"}`,
@@ -227,19 +251,19 @@ not triggered.
 flowchart TD
     FO[FO runs learning.py claim for job B] --> EX{job B directory exists?}
     EX -- yes --> VIEW[return existing view, same-job rules unchanged]
-    EX -- no --> LOCK[take store lock home/.store.lock]
+    EX -- no --> LOCK[take store lock kc-dev-flow-2/learning.lock beside home]
     LOCK --> SCAN[scan sibling jobs: inspect, inspect_delivery, inspect_release]
     SCAN --> BLK{any sibling blocking?}
     BLK -- "yes: record uncertain or pending; proposal with delivery missing, uncertain or open and not released" --> REFUSE[exit 1, blocking list names job and states, nothing created]
-    BLK -- "no: no-change, merged, closed, or released" --> MK[mkdir job B, unlock, write pending record, return token]
+    BLK -- "no: no-change, merged, currently closed, or released" --> MK[mkdir job B, unlock, write pending record, return token]
     REFUSE --> ROUTE{FO resolves job A}
     ROUTE -- "pending or uncertain" --> REC[complete, or recover a stopped owner then complete]
-    ROUTE -- "proposal to deliver" --> DEL[delivery-claim, send Draft PR, delivery-record merged or closed]
+    ROUTE -- "proposal to deliver" --> DEL[delivery-claim, send Draft PR, delivery-record merged or closed; closed can be re-recorded open and block again]
     ROUTE -- "Captain declines delivery" --> CAP[Captain decision recorded]
     CAP --> REL[FO runs release for job A with expected digest, owner, reason]
     REL --> RCHK{record completed with proposal, digest current, delivery missing or absent-reconciled?}
+    RCHK -- "already released, checked before digest" --> RVIEW[return view, no write]
     RCHK -- "no: pending, no-change, stale digest, open, merged, closed, unreconciled" --> RREF[exit 1, no write]
-    RCHK -- "already released" --> RVIEW[return view, no write]
     RCHK -- yes --> RW[write release.json only, record.json and delivery.json untouched]
     REC --> FO
     DEL --> FO
@@ -270,11 +294,14 @@ mutation that must make it fail.
   blocking; remove `merged`/`closed` from the settled set; ignore `release.json`.
 - **AC-3** `test_release_refusals_and_irreversibility` — refuses blank reason, pending
   record, no-change record, stale `--expected`, delivery `open`, `merged`, `closed`,
-  delivery uncertain without absent observation; a second `release` writes nothing
-  (`release.json` bytes equal); `record.json` and `delivery.json` bytes unchanged by
+  delivery uncertain without absent observation; a second `release` carrying the
+  **pre-release** `--expected` digest returns the view and writes nothing
+  (`release.json` bytes equal, exit 0 — proves the already-released check precedes the
+  staleness check); `record.json` and `delivery.json` bytes unchanged by
   release; `delivery-claim` and `absent` `delivery-recover` refused on a released job;
   `release` then `notices` shows it unread and a pre-release `ack` digest is rejected.
-  Mutations: delete each refusal check (its assertion fails); write the release into
+  Mutations: delete each refusal check (its assertion fails); move the staleness check
+  before the already-released check (the second release exits 1); write the release into
   `record.json` (byte check fails); omit release from `notice_digest` (stale-ack
   check fails).
 - **AC-4** `test_same_job_reclaim_ignores_hold` — with a blocking sibling present,
@@ -283,6 +310,29 @@ mutation that must make it fail.
   the candidate revision, and a no-release notice asserting
   `notice_digest == sha256(encoded([record_digest, delivery_digest]))`. Mutation:
   always fold a release digest in (fails).
+- **AC-4 existing suite under the hold.** Prototype run 2026-09-17 in a `/tmp` copy of
+  `learning.py`/`test_learning.py` at `32cd8890` (minimal hold: pending/uncertain block,
+  proposal blocks unless delivery merged/closed; lock beside `home`), whole suite, 14
+  tests: 12 pass unchanged, 2 fail. With the two fixture edits below, 14/14 pass. Lock
+  inside `home` additionally failed `test_linked_worktree_multiprocess_claim_race`
+  (`2 != 1`).
+  - `test_three_outcomes_and_mixed_preserve_project_files` — iterations 2-4 were refused
+    (iteration 1 left a completed proposal with no delivery, which blocks every later
+    new claim). Minimal change: isolate each iteration by removing the disposable
+    repo's `.git/kc-dev-flow-2` store after its assertions. All original assertions,
+    including root `learning.md`/`AGENTS.md` bytes, are unchanged.
+  - `test_torn_and_missing_record_are_uncertain_not_automatic_retries` — the second
+    iteration's new claim was refused by the first iteration's recovered `pending` job.
+    Minimal change: at the end of each iteration, `complete` the renewed claim with a
+    no-change decision (settling it). The existing assertion that the old token is
+    refused runs before that and is unchanged.
+  - No other existing test creates two distinct jobs whose earlier one is unsettled:
+    `test_no_change_and_mismatched_plan_cannot_claim_delivery` claims a second job after
+    a no-change sibling, which releases.
+
+**AC-4 amendment needed:** the FO is asking the Captain whether these fixture edits,
+which keep each test's original assertions, satisfy AC-4's "every existing
+`test_learning.py` case still passes".
 
 Not yet verified: all of the above are future implementation checks.
 
@@ -331,3 +381,13 @@ profile.
 ### Summary
 
 Designed a local-store hold in `claim` (sibling scan under a store lock, before any directory is created) and an explicit, non-reversible `release` sidecar for proposals the Captain declines to deliver, with no change to completed records or delivery identity. A disposable-repo run at `32cd8890` reproduced the gap (second job claimed while the first had an undelivered proposal); both live jobs are merged, so adoption strands nothing. Three decisions (D1-D3) are left for the Captain.
+
+### Correction round 1
+
+- DONE: AC-4 conflict with existing tests — whole suite checked by prototype in `/tmp`: exactly two tests break; fixture changes named per test; "AC-4 amendment needed" line added. Landed in Acceptance evidence, "AC-4 existing suite under the hold".
+- DONE: Store lock moved out of `home` to `kc-dev-flow-2/learning.lock`; prototype showed lock-in-home fails the race test's `iterdir` count. Landed in Hold predicate, "Where it runs", and Sequence.
+- DONE: Monotonicity corrected — only `merged` is regression-guarded; `closed` not sticky, pre-existing, fails closed on the next scan. Landed in the table (split `merged`/`closed` rows), the correctness paragraph, PRFAQ and Sequence.
+- DONE: Lock not covering the record write now stated as dependent on D1 = block, with the alternative. Landed in "Dependency on D1".
+- DONE: `release` check order pinned (already-released before staleness) and added to the AC-3 test and its mutation. Landed in Explicit release and AC-3.
+- DONE: Header corrected: `32cd8890` is `origin/main`.
+- D1-D3 left open; Scope, AC, profile and option 1 unchanged. Mermaid re-rendered with @mermaid-js/mermaid-cli (exit 0).
