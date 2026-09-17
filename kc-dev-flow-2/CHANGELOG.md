@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.2.0...kc-dev-flow-2-v0.3.0) (2026-09-17)
+
+
+### Features
+
+* **kc-dev-flow-2:** require a recorded FO alignment decision before ideation ([#474](https://github.com/iamcxa/kc-claude-plugins/issues/474)) ([5e7d3f8](https://github.com/iamcxa/kc-claude-plugins/commit/5e7d3f87df9919f763b07ffcfae62c1afe19efce))
+* **kc-dev-flow-2:** serialize learning evaluation while another job is in flight ([#473](https://github.com/iamcxa/kc-claude-plugins/issues/473)) ([66e226a](https://github.com/iamcxa/kc-claude-plugins/commit/66e226a67a672859afa5c528a4eb078c6814f87c))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** name the gated-stage dispatch view and the install/adoption routes ([#471](https://github.com/iamcxa/kc-claude-plugins/issues/471)) ([a6b45c7](https://github.com/iamcxa/kc-claude-plugins/commit/a6b45c7e7726c827c81c59e9c8c81c487da56cd3))
+
 ## [0.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.1.0...kc-dev-flow-2-v0.2.0) (2026-09-16)
 
 

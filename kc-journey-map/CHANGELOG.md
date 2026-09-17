@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.4.0...kc-journey-map-v0.4.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** correct the popup check's shared-board-origin LIMIT line ([#475](https://github.com/iamcxa/kc-claude-plugins/issues/475)) ([41bfb6c](https://github.com/iamcxa/kc-claude-plugins/commit/41bfb6c0483a1580c23548100fdf0cd5f5bb1a50))
+
 ## [0.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.3.0...kc-journey-map-v0.4.0) (2026-09-16)
 
 
