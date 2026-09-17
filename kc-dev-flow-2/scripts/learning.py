@@ -492,8 +492,9 @@ def operate(args):
     if args.command == "claim":
         home.mkdir(parents=True, exist_ok=True)
         if not directory.is_dir():
-            # Sibling of home, not inside it: a lock file inside home would perturb
-            # home.iterdir() counts that other callers (notices, the race test) rely on.
+            # Sibling of home, not inside it: test_linked_worktree_multiprocess_claim_race
+            # counts raw home.iterdir() results, which a lock file inside home would perturb;
+            # notices already filters to 64-hex names regardless.
             with (home.parent / "learning.lock").open("a") as store:
                 fcntl.flock(store, fcntl.LOCK_EX)
                 try:

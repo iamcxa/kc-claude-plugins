@@ -89,7 +89,7 @@ class LearningTests(unittest.TestCase):
                     self.assertEqual(done["proposal"]["add"], [NEW] if "add" in actions else [])
                     self.assertEqual(done["proposal"]["remove"], [ENTRY] if "remove" in actions else [])
                 self.assertEqual(self.cli("read", "--job", claim["job"]), done)
-                # Each iteration is its own job; settle it so it does not hold the next.
+                # Each iteration is its own job; wipe the store so it does not hold the next.
                 shutil.rmtree(self.repo / ".git/kc-dev-flow-2")
         self.assertEqual((self.repo / "learning.md").read_text(), "existing rules\n")
         self.assertEqual((self.repo / "AGENTS.md").read_text(), "existing authority\n")
@@ -391,6 +391,39 @@ class LearningTests(unittest.TestCase):
         computed = self.expected_notice_digest(notice["digest"], hashlib.sha256(b"missing").hexdigest())
         match = next(item for item in self.cli("notices", "--all")["notices"] if item["job"] == first["job"])
         self.assertEqual(match["notice_digest"], computed)
+
+    def test_reclaim_settled_job_bypasses_hold_despite_pending_sibling(self):
+        self.pack["task_id"] = "reclaim-settled-a"
+        self.write_pack()
+        first = self.claim()
+        settled = self.complete(first, self.result_file([self.decision("no-change")]))
+        self.assertEqual(settled["state"], "completed")
+
+        self.pack["task_id"] = "reclaim-settled-b"
+        self.write_pack()
+        pending_sibling = self.claim()  # A is settled (no-change); B is a genuinely new, pending job
+        self.assertIn("token", pending_sibling)
+
+        self.pack["task_id"] = "reclaim-settled-a"
+        self.write_pack()
+        again = self.claim()  # re-claim of A's identical evidence, while B is independently pending
+        self.assertNotIn("token", again)
+        self.assertEqual(again["job"], first["job"])
+        self.assertEqual(again["state"], "completed")
+
+    def test_delivery_recover_absent_refused_on_released_job(self):
+        self.pack["task_id"] = "released-absent-recover"
+        self.write_pack()
+        holder, plan = self.delivery_fixture()
+        self.deliver(holder)
+        self.reconcile(holder, plan, "absent")
+        notice = self.cli("notices", "--all")["notices"][0]
+        self.cli("release", "--job", holder["job"], "--expected", notice["notice_digest"],
+                 "--owner", "captain-declined", "--reason", "Captain declined after confirmed absence")
+        delivery_path = self.record_path(holder["job"]).parent / "delivery.json"
+        before = delivery_path.read_bytes()
+        self.reconcile(holder, plan, "absent", code=1)
+        self.assertEqual(delivery_path.read_bytes(), before)
 
     def test_ineligible_and_invalid_input_create_no_claim(self):
         original = copy.deepcopy(self.pack)
