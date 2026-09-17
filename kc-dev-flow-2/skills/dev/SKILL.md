@@ -45,8 +45,15 @@ selection/scope and bounded outcome to `spacedock:first-officer`. Retain that
 workflow directory as `--workflow-dir` on SD commands; cwd alone is not the
 binding. If FO is already active, continue there. SD owns stage selection, live
 worker availability, dispatch, reports, gates and recovery; a resumed FO does
-not establish that its old worker still exists. Stage skills own profile routing
-and load the selected references in each worker's context.
+not establish that its old worker still exists. An entity sitting in a stage
+declared `gate: true` is excluded from `spacedock status --next` and from
+`--boot`'s DISPATCHABLE table before the concurrency check runs (Spacedock
+v0.27.0, `internal/status/format.go`, `dispatchAnalysis`, reason `gate`), so an
+empty dispatchable view does not mean no worker is available; three of this
+workflow's five stages (`backlog`, `ideation`, `validation`) declare `gate: true`,
+so that empty view is this workflow's normal case, not the exception. Stage
+skills own profile routing and load the selected references in each worker's
+context.
 
 If adoption is absent or the selected profile does not match the ordered stage
 graph, follow the [SD adoption reference](../../references/sd/adoption.md) through
