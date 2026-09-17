@@ -510,7 +510,7 @@ else. Then fresh independent validation.
 The `gate record --round` recorder is not run: this workflow keeps no validation
 briefing room (`briefing.json`, `briefing.review.jsonl`) before a gate is prepared.
 
-## Stage Report: implementation (cycle 2)
+## Stage Report: implementation
 
 ### Correction round 1
 
