@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learning-serialize-evaluation:validation:attempt-1:revision-1",
+  "question": "Approve validation of learning-serialize-evaluation at candidate 93258e23?",
+  "artifacts": [
+    {
+      "id": "artifact:learning-serialize-evaluation:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5692658dc3b5a7c062d8d04bc49a409cfbbdb9e1/review/learning-serialize-evaluation/validation/review.md",
+      "rev": "sha256:773ebe4a0eb01e872ab58ad6de05deab70cb253f5d547ec41cc8ba0e08e6d0d6",
+      "mediaType": "text/markdown",
+      "summary": "Validation attempt 3 PASSED; F1-F7 closed; four recorded limits."
+    }
+  ]
+}

@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:learning-serialize-evaluation:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:learning-serialize-evaluation-validation-1
+              briefing:
+                id: briefing:learning-serialize-evaluation:validation:attempt-1:revision-1
+                digest: sha256:d612ab81afaae47a2098d8bfac86a02668e080cfede3ae4c86b839e108a4f771
+                room-ref: ./learning-serialize-evaluation/review/validation/briefing-1
 started: 2026-09-17T03:23:59Z
 ---
 
