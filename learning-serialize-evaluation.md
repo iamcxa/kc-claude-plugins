@@ -595,3 +595,18 @@ correction round.
 Assignment: documentation edits for F6 and F7 in `kc-dev-flow-2/skills/learn/SKILL.md`
 and `kc-dev-flow-2/README.md` only; no code or test change. Then fresh independent
 validation.
+
+## Stage Report: implementation
+
+- DONE: F6 — learn SKILL.md points `release`'s `--expected` at the correct source
+  Changed "`--expected` is the job's current `notice_digest` from `read`/`notices`" to "from `notices` (`read` returns no `notice_digest`)". Commit 93258e23.
+- DONE: F7 — README's misleading parenthetical corrected; both docs state the D1 (torn/missing record) blocking case
+  README: "(a PR the Captain thought closed reopens)" replaced with the reachable path — a closed delivery cannot be released, and a released job whose delivery was missing or confirmed absent can later be observed `open`. README and SKILL.md both now list "a job's directory has a torn or missing record" alongside pending/undelivered-proposal in the blocking-states sentence. Commit 93258e23.
+- DONE: Edits scoped to documentation only
+  `git status --short` on this stage shows only `kc-dev-flow-2/README.md` and `kc-dev-flow-2/skills/learn/SKILL.md`; no `learning.py` or `test_learning.py` change.
+- DONE: Full committed suite and lint-skills.py recorded on the corrected candidate
+  `timeout 120 python3 kc-dev-flow-2/scripts/test_learning.py`: 21 tests, OK (51.3s). `timeout 60 python3 kc-dev-flow-2/scripts/lint-skills.py`: PASS. Worktree clean at 93258e23; no push, no PR; real learning store untouched (no code was run against it).
+
+### Summary
+
+Closed F6 and F7 from validation attempt 2's FO disposition, documentation-only: SKILL.md's `release --expected` source corrected to `notices` (not `read`), and README's incorrect "closed PR reopens" parenthetical replaced with the actually-reachable released-then-observed-`open` path; both docs now name the D1 torn/missing-record blocking case. F8 stays declined per the FO's prior ruling (message-only gap, behavior covered). Candidate for fresh validation: 93258e23.
