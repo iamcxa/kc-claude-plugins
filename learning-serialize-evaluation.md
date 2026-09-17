@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
